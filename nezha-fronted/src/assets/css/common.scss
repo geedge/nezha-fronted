@@ -253,6 +253,37 @@ td .nz-icon-gear:before{
 .el-scrollbar {
   background-color: $--background-color-empty;
 }
+/* el-picker 下拉时间选择器 */
+.el-picker-panel__footer {
+  border-top: 1px solid $--border-color-light !important;
+  span {
+    color: $--color-text-regular !important;
+  }
+  .el-button--text {
+    span {
+      color: $--color-primary !important;
+    }
+  }
+  .el-button--default {
+    margin-left: 10px;
+    color: $--button-primary-color !important;
+    background: $--picker-page-background-color !important;
+    border: 1px solid $--border-color-light !important;
+  }
+  .el-button.is-plain:hover {
+    background-color: $--picker-page-background-color !important;
+    border-color: $--picker-page-btn-border-color !important;
+    span {
+      color: $--picker-page-btn-color !important;
+    }
+  }
+}
+.el-date-table th {
+  border-bottom: 1px solid $--border-color-light !important;
+}
+.el-date-picker__time-header {
+  border-bottom: 1px solid $--picker-page-border-color !important;
+}
 //.editor-core {
 //  p {
 //    color: $--color-text-regular;

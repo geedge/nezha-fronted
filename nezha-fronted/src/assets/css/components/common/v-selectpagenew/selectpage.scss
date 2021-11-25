@@ -1,107 +1,77 @@
 .el-picker-panel,.sp-base.sp-inputs,.sp-base.sp-input,.el-picker-panel__footer{
-  background: $--input-background-color;
+  background: $--input-background-color !important;
 }
 .sp-search,.sp-result-area,.sp-pagination {
-  background-color: $--background-color-empty;
+  background-color: $--background-color-empty !important;
 }
 .el-date-table td.today.available span {
   color: $--select-page-color !important;
 }
 .sp-table {
   th {
-    color: $--color-text-primary;
+    color: $--color-text-primary !important;
   }
   td {
-    color: $--color-text-regular;
+    color: $--color-text-regular !important;
   }
 }
 .sp-page-info,.sp-result-message {
-  color: $--color-text-regular;
+  color: $--color-text-regular !important;
 }
 .sp-selected-tag {
-  color: $--color-text-regular;
-  background-color: $--select-page-tag-background-color;
+  color: $--color-text-regular !important;
+  background-color: $--select-page-tag-background-color !important;
   i {
-    color: $--color-text-regular;
+    color: $--color-text-regular !important;
   }
 }
 .sp-selected-tag:hover {
-  background-color: $--background-color-empty;
+  background-color: $--background-color-empty !important;
   i:hover {
-    color: $--color-text-primary;
+    color: $--color-text-primary !important;
   }
 }
 .sp-search-input {
-  background-color: $--select-page-background-color;
-  border: 1px solid $--border-color-light;
-  color: $--color-text-regular;
+  background-color: $--select-page-background-color !important;
+  border: 1px solid $--border-color-light !important;
+  color: $--color-text-regular !important;
 }
 .sp-base.sp-inputs,.sp-base.sp-input {
-  border: 1px solid $--border-color-light;
+  border: 1px solid $--border-color-light !important;
 }
 .sp-base.sp-inputs:hover,.sp-base.sp-input:hover,.sp-base.sp-inputs:focus,.sp-base.sp-input:focus {
-  border: 1px solid $--border-color-light-hover;
+  border: 1px solid $--border-color-light-hover !important;
 }
 .v-dropdown-container.v-dropdown-no-border {
-  border: 1px solid $--border-color-light;
+  border: 1px solid $--border-color-light !important;
 }
 div.sp-result-area table.sp-table tbody tr.sp-over td {
-  background-color: $--select-page-hover-background-color;
-  color: $--button-light-hover-color;
+  background-color: $--select-page-hover-background-color !important;
+  color: $--button-light-hover-color !important;
   cursor: pointer;
 }
 div.sp-result-area table.sp-table tbody tr.sp-selected td {
-  color: $--select-page-focus-color;
+  color: $--select-page-focus-color !important;
   cursor: default;
 }
 div.sp-pagination ul li a:hover {
-  color: $--color-text-regular;
+  color: $--color-text-regular !important;
 }
 div.v-selectpage div.sp-input-container div.sp-input {
-  color: $--color-text-regular;
+  color: $--color-text-regular !important;
 }
 div.v-selectpage div.sp-input-container.sp-open div.sp-input {
-  border: 1px solid #aaa;
+  border: 1px solid #aaa !important;
   border-radius: 2px;
-  color: $--color-text-regular;
+  color: $--color-text-regular !important;
 }
 .sp-button {
   .sp-caret {
-    color: $--color-text-regular;
+    color: $--color-text-regular !important;
   }
 }
 .sp-button.open {
   .sp-caret {
-    color: $--color-text-regular;
+    color: $--color-text-regular !important;
   }
-}
-.el-picker-panel__footer {
-  border-top: 1px solid $--border-color-light;
-  span {
-    color: $--color-text-regular;
-  }
-  .el-button--text {
-    span {
-      color: $--color-primary;
-    }
-  }
-  .el-button--default {
-    margin-left: 10px;
-    color: $--button-primary-color;
-    background: $--select-page-btn-background-color;
-    border: 1px solid $--border-color-light;
-  }
-  .el-button.is-plain:hover {
-    background-color: $--select-page-btn-background-color;
-    border-color: $--select-page-btn-border-color;
-    span {
-      color: $--select-page-btn-color;
-    }
-  }
-}
-.el-date-table th {
-  border-bottom: 1px solid $--border-color-light;
-}
-.el-date-picker__time-header {
-  border-bottom: 1px solid $--select-page-border-color;
 }

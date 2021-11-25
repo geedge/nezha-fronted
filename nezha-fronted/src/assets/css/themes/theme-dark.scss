@@ -139,16 +139,20 @@ $--click-search-items-border-color: $--background-color-copy; // border
 $--click-search-items-border-bottom-color: #2E2E2E; // border-BOTTOM
 $--click-search-items-color: $--color-text-regular; // color
 
-// 时间选着器 selectPage 主题颜色
+// 第三方插件 下拉多选搜索 selectPage 主题颜色
 $--select-page-background-color: $--background-color-empty;
 $--select-page-hover-background-color: $--button-light-hover-background-color;
 $--select-page-focus-color: #666666;
 $--select-page-color: $--button-primary-color;
 $--select-page-tag-background-color: $--background-color-empty;
 $--select-page-border-color: $--border-color-light;
-$--select-page-btn-color: mix(#FFF, $--color-primary, 15%);
-$--select-page-btn-border-color:  mix(#FFF, $--color-primary, 15%);
-$--select-page-btn-background-color: $--background-color-base;
+
+/* el-picker 下拉时间选择器 */
+$--picker-page-background-color: $--select-page-tag-background-color;
+$--picker-page-border-color: $--select-page-border-color;
+$--picker-page-btn-color: mix(#FFF, $--color-primary, 15%);
+$--picker-page-btn-border-color:  mix(#FFF, $--color-primary, 15%);
+$--picker-page-btn-background-color: $--background-color-base;
 
 // icon字色
 $--nz-icon-color: $--button-primary-color;

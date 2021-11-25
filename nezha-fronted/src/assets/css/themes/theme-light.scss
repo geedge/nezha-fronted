@@ -144,9 +144,13 @@ $--select-page-focus-color: #CCCCCC;
 $--select-page-color: #232F3E;
 $--select-page-tag-background-color: #e4eaee;
 $--select-page-border-color: $--border-color-base-focus;
-$--select-page-btn-color: $--color-primary;
-$--select-page-btn-border-color: $--color-primary;
-$--select-page-btn-background-color: $--color-text-disabled;
+
+/* el-picker 下拉时间选择器 */
+$--picker-page-background-color: $--background-color-empty;
+$--picker-page-border-color: $--select-page-border-color;
+$--picker-page-btn-color: $--color-primary;
+$--picker-page-btn-border-color: $--color-primary;
+$--picker-page-btn-background-color: $--color-text-disabled;
 
 
 // icon 字色
