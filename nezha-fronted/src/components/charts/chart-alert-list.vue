@@ -517,7 +517,7 @@ export default {
       const axiosArr = []
       const paramStr = this.currentMsg ? JSON.stringify(this.promQueryParamConvert(this.currentMsg)) : null
       if (paramStr && paramStr.trim() != '""') {
-        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\s+/g, '')) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))))
+        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '')) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))))
         this.legend = []
         this.chartDatas = []
         axios.all(axiosArr).then(res => {
@@ -760,7 +760,7 @@ export default {
       this.getAlerScreetList()
     },
     promQueryParamConvert (obj) {
-      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'').replace(/\s+/g, '') + ')'
+      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '') + ')'
       let intoLabels = false
       obj.labels = JSON.parse(obj.labels)
       if (Object.keys(obj.labels).length > 0) {

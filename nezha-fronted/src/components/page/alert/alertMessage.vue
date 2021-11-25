@@ -511,7 +511,7 @@ export default {
       if (this.$refs.messageChart) {
         this.$refs.messageChart.startLoading()
         const axiosArr = []
-        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\s+/g, '')) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))))
+        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '')) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))))
         this.legend = []
         this.chartDatas = []
         axios.all(axiosArr).then(res => {
@@ -904,7 +904,7 @@ export default {
     },
     promQueryParamConvert (alert) {
       const obj = { ...alert }
-      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'').replace(/\s+/g, '') + ')'
+      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '') + ')'
       let intoLabels = false
       obj.labels = JSON.parse(obj.labels)
       if (Object.keys(obj.labels).length > 0) {

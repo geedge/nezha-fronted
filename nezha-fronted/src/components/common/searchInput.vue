@@ -1097,6 +1097,8 @@ export default {
             setTimeout('document.getElementById("one-input").focus()', 500)
             this.input_list = false
             this.delcriteriaBool = false
+          } else if(this.searchMsg.searchLabelList.find(key => this.select_list[this.sreach_num].label == key.label).readonly) {
+            this.input_sreach = ''
           } else {
             if (this.input_sreach == '') {
               this.delcriteriaBool = true
