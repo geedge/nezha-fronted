@@ -132,6 +132,12 @@ export default {
       setTimeout(() => {
         this.searchInputShow = true
       }, 100)
+    },
+    targetTab (n) {
+      this.searchInputShow = false
+      setTimeout(() => {
+        this.searchInputShow = true
+      }, 100)
     }
   },
   methods: {

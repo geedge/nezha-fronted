@@ -4,6 +4,7 @@
       :obj='obj'
     :layout="[]"
     :tabs="tabs"
+      :targetTab="targetTab"
     @changeTab="changeTab"
     :title="'Session ID'"
   >

@@ -4,6 +4,7 @@
       :showTitle='showTitle'
       :obj='obj'
       :api="url"
+      :targetTab="targetTab"
       style="height: 100%"
       :custom-table-title.sync="tools.customTableTitle"
       :layout="['searchInput', 'elementSet']"

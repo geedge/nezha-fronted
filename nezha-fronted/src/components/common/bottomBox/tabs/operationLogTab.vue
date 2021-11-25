@@ -2,11 +2,12 @@
  <nz-bottom-data-list
       :showTitle='showTitle'
       :obj='obj'
-    :api="url"
-    :custom-table-title.sync="tools.customTableTitle"
-    :layout="['searchInput', 'elementSet']"
-    :search-msg="searchMsg"
-    :tabs="tabs"
+      :api="url"
+      :custom-table-title.sync="tools.customTableTitle"
+      :layout="['searchInput', 'elementSet']"
+      :search-msg="searchMsg"
+      :tabs="tabs"
+      :targetTab="targetTab"
     @changeTab="changeTab"
     @search="search"
   >
