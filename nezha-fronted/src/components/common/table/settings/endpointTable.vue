@@ -263,8 +263,7 @@ export default {
           label: this.$t('project.endpoint.state'),
           prop: 'state',
           show: true,
-          minWidth: 200,
-          sortable: 'custom'
+          minWidth: 200
         }
         // {
         //   label: this.$t('project.endpoint.status'),
