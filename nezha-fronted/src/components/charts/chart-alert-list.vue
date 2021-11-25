@@ -105,7 +105,7 @@
             :showOption="false"
             :chart-alert-list="true"
           ></alertMessageTable>
-          <Pagination :pageObj="screenPageObj"  @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination" ></Pagination>
+          <Pagination :pageObj="screenPageObj"  @pageNo='screenPageNo' @pageSize='screenPageSize' ref="screenPagination" ></Pagination>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
         <div class="export-xlsx">
@@ -915,6 +915,7 @@ export default {
       // this.$refs.alertListTable.$refs.alertListTable.clearSelection()
       // this.$refs.alertListScreenTable.$refs.dataTable.clearSelection()
       this.screenPageObj = { ...this.pageObj }
+      this.$refs.screenPagination.pageSize = this.screenPageObj.pageSize
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, area, errorMsg) {
