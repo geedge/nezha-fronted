@@ -146,7 +146,7 @@
   text-transform: capitalize;
 }
 .personal-dropdown {
-  border-bottom: 1px solid #E7EAED;
+  border-bottom: 1px solid $--border-color-light;
   padding: 0 20px;
   .personal-dropdown__username {
     max-width: 109px;
@@ -278,6 +278,12 @@ td .nz-icon-gear:before{
     }
   }
 }
+.el-date-range-picker__time-header {
+  border-bottom: 1px solid $--border-color-light;
+}
+.el-date-range-picker__content.is-left {
+  border-right: 1px solid $--border-color-light;
+}
 .el-date-table th {
   border-bottom: 1px solid $--border-color-light !important;
 }
@@ -294,6 +300,15 @@ td .nz-icon-gear:before{
   }
   .el-input__inner:hover {
     border-color: $--border-color-light-hover;
+  }
+}
+.sub-box.detail-view-sub-box {
+  .top-tools.top-tools--sub {
+    padding: 0 15px 0 0;
+    margin-right: 15px;
+    margin-left: 20px;
+    border: none;
+    border-bottom: 1px solid $--border-color-light;
   }
 }
 //.editor-core {

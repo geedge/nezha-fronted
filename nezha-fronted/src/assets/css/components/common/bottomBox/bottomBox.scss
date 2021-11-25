@@ -22,7 +22,6 @@
   }
 }
 .bottom-data-list .sub-container {
-  padding: 10px;
   height: calc(100% - 64px);
   background-color: $--background-color-base;
   overflow-y: auto;
@@ -55,10 +54,23 @@
 .has-sub-popper {
   color: $--color-danger;
 }
+.sub-box.detail-view-sub-box {
+  padding: 0 !important;
+  height: 100%;
+  .sub-list__tabs {
+    height: calc(100% - 12px);
+    border: 1px solid $--border-color-light;
+  }
+}
 .sub-box.bottom-box {
   height: 50%;
   position: relative;
   padding: 0;
+  .bottom-data-list {
+    .sub-container {
+      padding: 10px;
+    }
+  }
 }
 .sub-list {
   height: calc(100% - 9px);
