@@ -49,6 +49,7 @@
   }
   .main-container{
     padding-right: 0 !important;
+    width: calc(100% - 10px);
   }
 }
 .project-calendar .el-input__inner {

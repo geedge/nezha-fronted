@@ -84,6 +84,7 @@
       .nz-table2 {
         box-sizing: border-box;
         padding: 0;
+        height: 100%;
       }
     }
   }
@@ -147,9 +148,4 @@
 }
 .symbol-select .el-input__inner {
   padding-left: 8px;
-}
-.list-page.endpoint,.list-page.asset {
-  .nz-table2 {
-    height: 100%;
-  }
 }
