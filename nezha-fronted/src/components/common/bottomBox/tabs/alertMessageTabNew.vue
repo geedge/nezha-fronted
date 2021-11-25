@@ -264,7 +264,7 @@ export default {
       if (this.$refs.messageChart) {
         this.$refs.messageChart.startLoading()
         const axiosArr = []
-        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + escape(this.currentMsg.alertRule.expr.replace(/\s+/g, '')) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step + '&filter=' + escape(unescape(this.promQueryParamLabels(this.currentMsg.labels)))))
+        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\s+/g, '')) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))))
         this.legend = []
         this.chartDatas = []
         axios.all(axiosArr).then(res => {
@@ -738,7 +738,7 @@ export default {
       const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
       const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
       this.expressions = [this.currentMsg.alertRule.expr]
-      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + escape(this.currentMsg.alertRule.expr) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit + '&filter=' + escape(unescape(this.promQueryParamLabels(this.currentMsg.labels)))).then(res => {
+      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(this.currentMsg.alertRule.expr) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))).then(res => {
         this.chartLoading = false
         const logData = [res.data]
         this.resultType = res.data.resultType

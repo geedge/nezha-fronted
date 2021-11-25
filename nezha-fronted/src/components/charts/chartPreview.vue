@@ -418,7 +418,7 @@ export default {
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {
             const filterItem = ele
-            const query = escape(filterItem.expression)
+            const query = encodeURIComponent(filterItem.expression)
             // if(chartItem.type === 'table'&&chartItem.param&&chartItem.param.last == 1){
             //   return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
             // }
@@ -1662,7 +1662,7 @@ export default {
         const step = bus.getStep(startTime, endTime)
         axiosArr = this.chart.elements.map((ele) => {
           const filterItem = ele
-          const query = escape(filterItem.expression)
+          const query = encodeURIComponent(filterItem.expression)
           let str = ''
           if ((chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 'table') && chartItem.param) { // 如果是这三个 默认给null
             chartItem.param.nullType = chartItem.param.nullType || 'null'

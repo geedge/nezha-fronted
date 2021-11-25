@@ -4,7 +4,7 @@ const RIGHT = 39
 const DOWN = 40
 const TAB = 9
 const ENTER = 13
-const ESCAPE = 27
+const encodeURIComponent = 27
 
 export default {
   methods: {
@@ -82,10 +82,10 @@ export default {
       }
     },
     processKey (e) {
-      if (![LEFT, UP, RIGHT, DOWN, ESCAPE, ENTER, TAB].includes(e.keyCode)) this.populate()
+      if (![LEFT, UP, RIGHT, DOWN, encodeURIComponent, ENTER, TAB].includes(e.keyCode)) this.populate()
     },
     processControl (e) {
-      if ([LEFT, UP, RIGHT, DOWN, ESCAPE, ENTER, TAB].includes(e.keyCode)) {
+      if ([LEFT, UP, RIGHT, DOWN, encodeURIComponent, ENTER, TAB].includes(e.keyCode)) {
         switch (e.keyCode) {
           case LEFT:
             if (this.pagination) this.$refs.page.switchPage('previous')
@@ -103,7 +103,7 @@ export default {
           case ENTER:
             if (this.highlight !== -1) this.selectItem(this.list[this.highlight])
             break
-          case ESCAPE:
+          case encodeURIComponent:
             this.close()
             break
         }

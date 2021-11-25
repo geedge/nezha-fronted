@@ -261,7 +261,7 @@ export default {
       this.filter.end_time = endTime
       const step = bus.getStep(startTime, endTime)
       const query = params.elements[0].expression
-      this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step).then(response => {
+      this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step).then(response => {
         this.$refs.metricSet.loading = false
         if (response.status === 'success') {
           if (response.data.result) {

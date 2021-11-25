@@ -1004,7 +1004,7 @@ export default {
           this.$nextTick(() => {
             const axiosArr = chartItem.elements.map((ele) => {
               const filterItem = ele
-              let query = escape(filterItem.expression)
+              let query = encodeURIComponent(filterItem.expression)
               if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea' || chartInfo.type === 'table') && chartInfo.param) { // 如果是这三个 默认给null
                 chartInfo.param.nullType = chartInfo.param.nullType || 'null'
                 query += '&nullType=' + chartInfo.param.nullType

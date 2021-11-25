@@ -333,7 +333,7 @@ export default {
         const requestArr = []
         this.expressions.forEach((item, index) => {
           if (item != '' && this.from.trim() != fromRoute.chartTemp) {
-            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + escape(item) + '&start=' + this.$stringTimeParseToUnix(this.startTime) + '&end=' + this.$stringTimeParseToUnix(this.endTime) + '&limit=' + limit))
+            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(this.startTime) + '&end=' + this.$stringTimeParseToUnix(this.endTime) + '&limit=' + limit))
           } else if (item != '' && this.from.trim() == fromRoute.chartTemp) {
             requestArr.push(logsTempData[index % 2])
           }
@@ -416,7 +416,7 @@ export default {
         const requestArr = []
         this.expressions.forEach((item, index) => {
           if (item != '' && this.from.trim() != fromRoute.chartTemp) {
-            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + escape(item) + '&start=' + this.$stringTimeParseToUnix(this.searchTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.searchTime[1]) + '&limit=' + limit))
+            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(this.searchTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.searchTime[1]) + '&limit=' + limit))
           } else if (item != '' && this.from.trim() == fromRoute.chartTemp) {
             requestArr.push(logsTempData[index % 2])
           }
