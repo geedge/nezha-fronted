@@ -45,7 +45,7 @@
               @hide="alertMessageHover(scope.row.alertRule, false)"
               trigger="hover">
               <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :severity-data="severityData" :that="scope.row.alertRule" @showText="$emit('showText',scope.row)"></alertRuleInfo>
-              <span slot="reference" class="data-column__span">{{scope.row.alertRule?scope.row.alertRule.name : '--'}}</span>
+              <span slot="reference">{{scope.row.alertRule?scope.row.alertRule.name : '--'}}</span>
             </el-popover>
           </div>
           <template v-else>-</template>
