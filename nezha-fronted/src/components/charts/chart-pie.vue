@@ -56,7 +56,7 @@
         <div class="chart-no-data" v-show="noData">No Data</div>
         <div class='legend-container' ref="legendArea" v-show="firstShow">
           <div v-for="(item, index) in legend" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
-            <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+            <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span><span class="legend-container__span">{{item.alias?item.alias:item.name}}</span>
           </div>
         </div>
         <!--全屏-->
@@ -73,7 +73,7 @@
             <div :id="'pie-chart-screen-'+chartIndex" ref="pieChartScreen" style="width: 100%;height: 100%;"></div>
             <div :id="'screenLegendArea'+chartIndex"   class="legend-container legend-container-screen">
               <div v-for="(item, index) in legendScreen" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
-                <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+                <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span><span class="legend-container__span">{{item.alias?item.alias:item.name}}</span>
                 <br/><!--bgColorList[index]-->
               </div>
             </div>

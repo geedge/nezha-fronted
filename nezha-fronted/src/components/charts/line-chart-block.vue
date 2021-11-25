@@ -78,7 +78,7 @@
         <template v-if="!hasLegendOptions">
           <div class='legend-container' ref="legendArea" v-show="firstShow">
             <div v-for="(item, index) in legendListMore" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
-              <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+              <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span><span class="legend-container__span">{{item.alias?item.alias:item.name}}</span>
             </div>
           </div>
         </template>
@@ -96,7 +96,7 @@
               <tr v-for="(item, index) in legendListMore" :key="'legend_' + item.name+'_'+index">
                 <td>
                   <div :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" >
-                    <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+                    <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span><span class="legend-container__span">{{item.alias?item.alias:item.name}}</span>
                   </div>
                 </td>
                 <template v-for="(legendOption, i) in legendOptions">
@@ -158,7 +158,7 @@
           <template v-if="!hasLegendOptions">
             <div :id="'screenLegendArea'+chartIndex"  @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" class="legend-container legend-container-screen" v-show="showLegend">
               <div v-for="(item, index) in screenLegendListMore" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
-                <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+                <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span><span class="legend-container__span">{{item.alias?item.alias:item.name}}</span>
                 <br/><!--bgColorList[index]-->
               </div>
             </div>
@@ -177,7 +177,7 @@
                 <tr v-for="(item, index) in screenLegendListMore" :key="'legend_' + item.name+'_'+index">
                   <td>
                     <div :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}" >
-                      <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+                      <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span><span class="legend-container__span">{{item.alias?item.alias:item.name}}</span>
                     </div>
                   </td>
                   <template v-for="(legendOption, i) in screenLegendOptions">
