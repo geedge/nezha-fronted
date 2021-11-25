@@ -560,7 +560,7 @@ export default {
       this.panelLock = boolean
     },
     chartBySync () {
-      this.$post('visual/panel/chart/syncTmpl', { pid: this.obj.id }).then(res => {
+      this.$post('visual/panel/chart/syncTmpl', { panelId: this.showPanel.id }).then(res => {
         if (res.code === 200) {
           this.getTableData(this.obj.id)
           this.$message.success(this.$t('tip.syncSuccess'))
