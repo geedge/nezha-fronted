@@ -250,7 +250,7 @@ export default {
       this.tableData = []
       this.tableDataCopy = ''
       setTimeout(() => {
-        this.$get('/prom/api/v1/query?query=' + encodeURIComponent("{endpoint='" + this.currentEndpoint.id + "'}") + '&time=' + this.formatTime).then(response => {
+        this.$get('/prom/api/v1/query?query=' + encodeURIComponent("{endpoint_id='" + this.currentEndpoint.id + "'}") + '&time=' + this.formatTime).then(response => {
           this.loading = false
           if (response.status === 'success') {
             const results = response.data.result
