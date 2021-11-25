@@ -68,6 +68,7 @@
             @tableDataSort="tableDataSort"
             @del="deleteMessage"
             @showText="showText"
+            @addSilence="addSilence"
             @messageDetail="messageDetail"
             ref="alertListTable"
             :form="'chartList'"
@@ -159,6 +160,7 @@
       </div>
       <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isPreview && data.resizable&&!isLock"></span>
     </div>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box></transition>
   </div>
 </template>
 
@@ -171,13 +173,15 @@ import pickTime from '../common/pickTime'
 import chart from '../page/dashboard/overview/chart'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
 import chartDataList from '@/components/common/mixin/chartDataList'
+import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 export default {
   name: 'chartTable',
   components: {
     loading: loading,
     chart: chart,
     'pick-time': pickTime,
-    alertMessageTable: alertMessageTable
+    alertMessageTable: alertMessageTable,
+    alertSilenceBox
   },
   props: {
     // 看板id
@@ -207,6 +211,7 @@ export default {
   data () {
     return {
       currentMsg: null,
+      silenceBoxShow: false,
       tableHeight: 0,
       data: {}, // 该图表信息,chartItem
       unit: {},
@@ -323,7 +328,22 @@ export default {
       logData: [],
       chartLoading: false,
       dialogShowText: false,
-      dialogText: ''
+      dialogText: '',
+      blankSilenceObject: {
+        id: '',
+        startAt: '',
+        endAt: '',
+        ruleId: '',
+        type: 'asset',
+        linkId: '',
+        remark: '',
+        time: [],
+        matchers: [
+          { name: '', value: '', regex: 0 }
+        ],
+        name: ''
+      },
+      objectSilence: {},
     }
   },
   computed: {
@@ -630,7 +650,7 @@ export default {
       this.$get('/alert/message', queryParam).then(response => {
         if (response.code === 200) {
           this.storedTableData = response.data.list
-          this.storedScreanTableData = response.data.list
+          this.storedScreanTableData = JSON.parse(JSON.stringify(response.data.list))
           this.pageObj.total = response.data.total
           this.isError = false
           this.errorContent = ''
@@ -690,7 +710,7 @@ export default {
       this.$get('/alert/message', queryParam).then(response => {
         if (response.code == 200) {
           this.storedTableData = response.data.list
-          this.storedScreanTableData = response.data.list
+          this.storedScreanTableData = JSON.parse(JSON.stringify(response.data.list))
           const axiosAll = []
           this.$nextTick(() => {
             this.storedScreanTableData.forEach((item) => {
@@ -1094,6 +1114,43 @@ export default {
     showText (row) {
       this.dialogShowText = true
       this.dialogText = row.alertRule.trbShot
+    },
+    addSilence (row, type) {
+      this.blankSilenceObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
+      this.blankSilenceObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'yyyy-MM-dd hh:mm:ss')
+      this.objectSilence = JSON.parse(JSON.stringify(this.blankSilenceObject))
+      this.objectSilence.name = 'Quick silence'
+      if (type !== 'alertMessage' && type !== 'alertRule') {
+        this.objectSilence.matchers = [
+          { name: type, value: row.name, regex: 0 },
+          { name: type + '_id', value: row.id, regex: 0 }
+        ]
+      } else if (type === 'alertMessage') {
+        if (typeof row.labels === 'string') row.labels = JSON.parse(row.labels)
+        const labels = JSON.parse(JSON.stringify(row.labels))
+        this.objectSilence.matchers = []
+        const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type']
+        Object.keys(labels).forEach((key, i) => {
+          if (filterArr.indexOf(key) != -1) {
+            return
+          }
+          this.objectSilence.matchers.push(
+            { name: key, value: labels[key], regex: 0 }
+          )
+        })
+      } else if (type === 'alertRule') {
+        this.objectSilence.matchers = [
+          { name: 'alertName', value: row.name, regex: 0 }
+        ]
+      }
+      this.silenceBoxShow = true
+    },
+    closeSilenceBox (refresh) {
+      this.silenceBoxShow = false
+      if (refresh) {
+        this.delFlag = true
+        this.getAlertList()
+      }
     }
   },
   created () {
