@@ -67,10 +67,15 @@ router.beforeEach((to, from, next) => {
       if (store.getters.menuList.length === 0) {
         Vue.http.get(configUrl).then(config => {
           post(config.body.baseUrl + 'sys/user/permissions', { token: localStorage.getItem('nz-token') }).then(res => {
-            store.commit('setMenuList', sortByOrderNum(res.data.menus))
-            store.commit('setButtonList', res.data.buttons)
-            store.commit('setRoleList', res.data.roles)
-            resolve()
+            if (res.code === 200) {
+              store.commit('setMenuList', sortByOrderNum(res.data.menus))
+              store.commit('setButtonList', res.data.buttons)
+              store.commit('setRoleList', res.data.roles)
+              resolve()
+            } else {
+              localStorage.removeItem('nz-token')
+              next({ path: '/login' })
+            }
           })
         })
       } else {
