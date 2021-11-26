@@ -1,5 +1,5 @@
 <template>
-  <div class="info-content">
+  <div class="info-content" v-if="showInfo">
     <div class="info-box" v-loading="loading">
       <div class="info-box-title">Module info</div>
       <div class="info-box-content">
@@ -56,6 +56,7 @@ export default {
   data () {
     return {
       loading: true,
+      showInfo: false,
       moduleInfo: {}
     }
   },
@@ -65,7 +66,9 @@ export default {
       this.loading = false
       if (res.code === 200) {
         this.moduleInfo = res.data
+        this.showInfo = true
       } else {
+        this.showInfo = false
         this.$message.error(res.msg)
       }
     })
