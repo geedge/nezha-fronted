@@ -983,8 +983,8 @@ export default {
               endTime = this.filter.end_time
             }
           } else if (filterType === 'showFullScreen') { // 全屏时间查询
-            startTime = this.filter.start_time
-            endTime = this.filter.end_time
+            startTime = this.filter.showFullScreenStart_time
+            endTime = this.filter.showFullScreenEnd_time
             // this.$parent.refreshTime(startTime,endTime);全屏查询，不更新panel列表的时间条件
           } else {
             startTime = this.filter.start_time
@@ -1824,8 +1824,8 @@ export default {
     },
     searchData (chartId, searchTime) {
       if (searchTime) { // 全屏时间查询
-        this.filter.start_time = bus.timeFormate(searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-        this.filter.end_time = bus.timeFormate(searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+        this.filter.showFullScreenStart_time = bus.timeFormate(searchTime[0], 'yyyy-MM-dd hh:mm:ss')
+        this.filter.showFullScreenEnd_time = bus.timeFormate(searchTime[1], 'yyyy-MM-dd hh:mm:ss')
       }
       this.dataList.forEach((item, index) => {
         if (item.id === chartId) {
