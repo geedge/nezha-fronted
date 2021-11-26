@@ -74,7 +74,7 @@ export default {
   },
   data () {
     return {
-      username: sessionStorage.getItem('nz-username'),
+      username: localStorage.getItem('nz-username'),
       name: localStorage.getItem('nz-user-name'),
       language: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en',
       // 顶部菜单相关

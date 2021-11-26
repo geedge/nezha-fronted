@@ -358,7 +358,9 @@ export default {
     },
     initDialog () {
       // 此时初始化，才能获得screenShowArea对象，否则此对象为undefined，无法初始化图表
-      this.$refs.pickTime.$refs.timePicker.setCustomTime()
+      if (this.$refs.pickTime) {
+        this.$refs.pickTime.$refs.timePicker.setCustomTime()
+      }
       const chartType = this.chart.type
       if (chartType === 'table') {
         //
