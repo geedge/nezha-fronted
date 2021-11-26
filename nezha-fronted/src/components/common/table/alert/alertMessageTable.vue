@@ -13,7 +13,7 @@
     @header-dragend="dragend"
     @sort-change="tableDataSort"
     @selection-change="selectionChange"
-    @row-dblclick="(row)=>{$emit('messageDetail', row)}"
+    @row-dblclick="(row)=>{rowDblclick(row)}"
   >
     <el-table-column
       :resizable="false"
@@ -591,6 +591,12 @@ export default {
     // Severity Label
     returnSeverityLabel (key) {
       return this.$t(this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label)
+    },
+    rowDblclick (row) {
+      if (!this.showOption) {
+        return
+      }
+      this.$emit('messageDetail', row)
     }
     /* plpsscrolly(el,self){
         if (el._ps_.scrollbarYTop > 50) {
