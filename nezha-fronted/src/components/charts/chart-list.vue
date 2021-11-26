@@ -349,7 +349,8 @@ export default {
       // chartDataCacheGroup:new Map,//图表数据缓存，用于查询：id:{}
       stepWidth: null,
 
-      tempDom: { height: '', width: '' }
+      tempDom: { height: '', width: '' },
+      childrenScrollTop: 0
       // showShadow:false,
     }
   },
@@ -508,6 +509,7 @@ export default {
       this.cleanData()
       // 内含 panelId,开始时间,结束时间
       this.filter = filter
+      this.childrenScrollTop = 0
       this.pagePanelId = this.filter.panelId
       this.getData(this.filter)
     },
@@ -766,7 +768,7 @@ export default {
                 if (!item.isLoaded) {
                   // 获得当前显示在浏览器的图表，从后台获取数据
                   const chartBox = document.getElementById('chart-' + item.id)
-                  this.handleElementInViewport(chartBox, 0, item, index)
+                  this.handleElementInViewport(chartBox, this.childrenScrollTop, item, index)
                 }
                 if (item.type === 'group') {
                   this.$refs['editChart' + item.id][0].$refs.listGroup.getData(params)
@@ -778,6 +780,7 @@ export default {
       })
     },
     loadChartData (scrollTop) {
+      this.childrenScrollTop = scrollTop
       if (this.dataList.length > 0) {
         this.dataList.forEach((item, index) => {
           if (!item.isLoaded) {
@@ -1898,6 +1901,9 @@ export default {
       this.$post('visual/panel/chart/syncTmpl', { ids: [item.id] }).then(res => {
         if (res.code === 200) {
           this.getData(this.filter)
+          // setTimeout(() => {
+          //   this.refreshChart(item.id)
+          // }, 100)
           this.$message.success(this.$t('tip.syncSuccess'))
         } else {
           this.$message.error(res.msg)
