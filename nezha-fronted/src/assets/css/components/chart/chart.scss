@@ -1,6 +1,8 @@
 .panel-chart {
   border: 1px solid $--chart-box-border-color;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 
   .chart-header {
     display: flex;
@@ -65,6 +67,105 @@
           }
         }
       }
+    }
+  }
+}
+.nz-chart {
+  height: calc(100% - 39px);
+
+  .nz-chart__component {
+    display: flex;
+    height: 100%;
+
+    .chart__canvas {
+      flex: 1;
+    }
+    &.nz-chart__component--bottom {
+      flex-direction: column;
+      .legend-container {
+        width: 100%;
+        max-height: 80px;
+        min-height: 25px;
+      }
+    }
+    &.nz-chart__component--right {
+      flex-direction: row;
+    }
+    &.nz-chart__component--left {
+      flex-direction: row-reverse;
+    }
+    &.nz-chart__component--right, &.nz-chart__component--left {
+      .legend-container {
+        flex-direction: column;
+        width: unset;
+        max-width: 50%;
+        max-height: unset;
+        min-height: unset;
+      }
+    }
+  }
+}
+.legend-container {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: auto;
+  font-size: 12px;
+  text-align: left;
+  line-height: 18px;
+  padding: 0 10px 3px 10px;
+  box-sizing: border-box;
+
+  .legend-item {
+    white-space: nowrap;
+    margin-right: 10px;
+    cursor: pointer;
+    display: inline-block;
+    line-height: 20px;
+  }
+  .legend-item, .legend--table-row {
+    &.legend-item--inactive, &.row--inactive {
+      color: $--color-text-secondary;
+
+      .legend-shape {
+        background-color: $--background-color-1 !important;
+      }
+    }
+  }
+
+  // 表格类型
+  .legend--table {
+    display: table;
+    width: 100%;
+
+    .legend--table-row {
+      display: table-row;
+      width: 100%;
+    }
+    .legend--table-row:not(:first-of-type):hover {
+      background-color: $--background-color-1;
+      cursor: pointer;
+    }
+    .legend--table-row:first-of-type {
+      color:#33a2e5;
+      font-weight: bold;
+      font-size: 12px;
+      .legend--table-cell:not(:first-of-type) {
+        cursor: pointer;
+      }
+    }
+    .legend--table-cell:first-of-type {
+      max-width: 600px;
+      width: 90%;
+    }
+    .legend--table-cell {
+      display: table-cell;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      word-break: break-all;
+      padding: 1px 5px;
+      box-sizing: border-box;
+      min-width: 50px;
     }
   }
 }

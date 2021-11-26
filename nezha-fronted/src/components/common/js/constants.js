@@ -366,3 +366,50 @@ export const fromRoute = {
   apiKey: 'apiKey',
   chartTemp: 'chartTemp'
 }
+
+export const chartDataSource = [
+  {
+    label: 'metrics',
+    value: 1
+  },
+  {
+    label: 'logs',
+    value: 2
+  },
+  {
+    label: 'misc',
+    value: 4
+  },
+  {
+    label: 'system',
+    value: 3
+  }
+]
+
+export const chartType = {
+  line: 'line',
+  stackArea: 'stackArea',
+  point: 'point',
+  bar: 'bar',
+  table: 'table',
+  singleStat: 'singleStat',
+  gauge: 'gauge',
+  pie: 'pie',
+  treemap: 'treemap',
+  log: 'log',
+  text: 'text',
+  url: 'url',
+  group: 'group',
+  diagram: 'diagram',
+  assetInfo: 'assetInfo',
+  endpointInfo: 'endpointInfo',
+  topology: 'topology',
+  map: 'map'
+}
+
+export const chartLegendPlacement = {
+  hidden: 'hidden',
+  left: 'left',
+  right: 'right',
+  bottom: 'bottom'
+}

@@ -80,7 +80,7 @@
           </template>
         </div>
         <div id="tableList" class="table-list">
-          <div id="dashboardScrollbar" ref="dashboardScrollbar" class="table-list-box" style="overflow: auto;">
+          <div id="dashboardScrollbar" ref="dashboardScrollbar" class="table-list-box">
             <div class="box-content" v-loading="chartListLoading">
               <chart-list
                 ref="chartList"
@@ -88,6 +88,7 @@
                 :data-list="dataList"
                 :from="fromRoute.panel"
                 :panel-lock="panelLock"
+                :time-range="searchTime"
                 @on-edit-chart="editChart"
                 @on-refresh-time="refreshTime"
                 @on-remove-chart="delChart"
@@ -357,7 +358,6 @@ export default {
         this.$get('visual/panel/chart/' + data.id).then(res => {
           if (res.code === 200) {
             const chartData = res.data.data
-            // console.log(typeof chartData.param)
             if (typeof chartData.param === 'string') {
               chartData.param = chartData.param ? JSON.parse(chartData.param) : {}
             }
@@ -456,7 +456,6 @@ export default {
     },
     // 获取数据,用在子页面
     getData (params) {
-      console.info(0)
       if (!this.hasButton('panel_view')) {
         return
       }
@@ -470,7 +469,6 @@ export default {
       }
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
-          console.info(1)
           this.chartListLoading = false
           this.dataList = chartData.data.list.map(item => {
             return {

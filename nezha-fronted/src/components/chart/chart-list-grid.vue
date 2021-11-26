@@ -775,7 +775,7 @@ export default {
       if (!params.panelId) {
         this.finshGetData = false
         return
-      } // 没有panelId不调用接口
+      }
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         response = chartData
         console.log(chartData)

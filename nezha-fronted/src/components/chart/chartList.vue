@@ -11,7 +11,7 @@
       :vertical-compact="true"
     >
       <grid-item
-        v-for="(item, index) in copyDataList"
+        v-for="item in copyDataList"
         :key="item.id"
         :h="item.h"
         :i="item.i"
@@ -27,6 +27,7 @@
         <panel-chart
           :ref="'chart' + item.id"
           :chart-info="item"
+          :time-range="timeRange"
         ></panel-chart>
       </grid-item>
     </grid-layout>
@@ -43,10 +44,6 @@
 <script>
 import VueGridLayout from 'vue-grid-layout'
 import { fromRoute } from '@/components/common/js/constants'
-import bus from '@/libs/bus'
-import chartTempData from '@/components/charts/chartTempData'
-import axios from 'axios'
-import chartDataFormat from '@/components/charts/chartDataFormat'
 import panelChart from '@/components/chart/panelChart'
 
 export default {
@@ -55,6 +52,7 @@ export default {
     // TODO isModel
     from: { type: String },
     obj: Object,
+    timeRange: Array, // 时间范围
     panelLock: { type: Boolean, default: true },
     dataList: Array // 看板中所有图表信息
   },
@@ -104,9 +102,16 @@ export default {
       handler (n, o) {
         this.noData = !n || n.length < 1
         this.copyDataList = n.map(item => {
+          let param = {}
+          try {
+            param = JSON.parse(item.param)
+          } catch (e) {
+            console.info(e)
+          }
           return {
             ...item,
-            i: item.id
+            i: item.id,
+            param
           }
         })
       }
