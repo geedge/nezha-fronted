@@ -974,8 +974,21 @@ export default {
       const searchLabel = Object.assign({}, this.searchLabel)
       searchLabel.format = this.importBox.format
       delete searchLabel.statistics
+      if (this.searchCheckBox) {
+        Object.keys(this.searchCheckBox).forEach(key => {
+          if (searchLabel[key]) {
+            if (searchLabel[key].prototype.toString.call(val) === '[object Object]') {
+              Object.assign(searchLabel[key], this.searchCheckBox[key])
+            } else if (searchLabel[key].prototype.toString.call(val) === '[object Array]') {
+              searchLabel[key].concat(this.searchCheckBox[key])
+            }
+          } else {
+            searchLabel[key] = this.searchCheckBox[key]
+          }
+        })
+      }
       this.$set(searchLabel, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
-      this.exportExcel({ ...searchLabel, state: this.state })
+      this.exportExcel('alert/message/export', { ...searchLabel, state: this.state })
       this.closeDialog()
     },
     exportAll () {
@@ -983,8 +996,21 @@ export default {
       temp.pageSize = -1
       delete temp.statistics
       temp.format = this.importBox.format
+      if (this.searchCheckBox) {
+        Object.keys(this.searchCheckBox).forEach(key => {
+          if (temp[key]) {
+            if (temp[key].prototype.toString.call(val) === '[object Object]') {
+              Object.assign(temp[key], this.searchCheckBox[key])
+            } else if (temp[key].prototype.toString.call(val) === '[object Array]') {
+              temp[key].concat(this.searchCheckBox[key])
+            }
+          } else {
+            temp[key] = this.searchCheckBox[key]
+          }
+        })
+      }
       this.$set(temp, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
-      this.exportExcel({ ...temp, state: this.state })
+      this.exportExcel('alert/message/export', { ...temp, state: this.state })
       this.closeDialog()
     },
     getTimeString () {
@@ -1001,7 +1027,7 @@ export default {
     formatNum (num) {
       return num > 9 ? num : '0' + num
     },
-    exportExcel (params) {
+    exportExcel (url, params, fileName) {
       for (const item in params) {
         if (params[item]) {
           if (item === 'alertMessageState') {
@@ -1103,16 +1129,16 @@ export default {
       const params = JSON.parse(JSON.stringify(this.searchLabel))
       params.format = this.importBox.format
       delete params.statistics
-      if (this.params2) {
-        Object.keys(this.params2).forEach(key => {
+      if (this.searchCheckBox) {
+        Object.keys(this.searchCheckBox).forEach(key => {
           if (params[key]) {
             if (params[key].prototype.toString.call(val) === '[object Object]') {
-              Object.assign(params[key], this.params2[key])
+              Object.assign(params[key], this.searchCheckBox[key])
             } else if (params[key].prototype.toString.call(val) === '[object Array]') {
-              params[key].concat(this.params2[key])
+              params[key].concat(this.searchCheckBox[key])
             }
           } else {
-            params[key] = this.params2[key]
+            params[key] = this.searchCheckBox[key]
           }
         })
       }
