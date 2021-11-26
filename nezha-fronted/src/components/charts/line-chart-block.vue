@@ -451,7 +451,7 @@ export default {
         }
         getChart(this.chartIndex).setOption({
           yAxis: {
-           ...option.yAxis
+            ...option.yAxis
           }
         })
       }
@@ -1056,8 +1056,8 @@ export default {
         this.$nextTick(() => {
           const vm = this
           setTimeout(function () {
-            const divHeight = self.$refs.legendArea.offsetHeight
-            if (!chartInfo.height) {
+            const divHeight = self.$refs.legendArea ? self.$refs.legendArea.offsetHeight : 0
+            if (!chartInfo.height && getChart(self.chartIndex)) {
               getChart(self.chartIndex).resize({ height: (250 - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
             } else {
               getChart(self.chartIndex).resize({ height: (chartInfo.height * vm.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
@@ -1682,7 +1682,7 @@ export default {
               this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
               query += '&nullType=' + this.chartInfo.param.nullType
             }
-            axiosArr = [this.$get('/prom/api/v1/query_range?query=' + query+ '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)]
+            axiosArr = [this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)]
           }
         }
         // 一个图表

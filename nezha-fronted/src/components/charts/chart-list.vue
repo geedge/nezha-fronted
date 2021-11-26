@@ -634,10 +634,6 @@ export default {
 
     // 获取panel详情数据,获取panel下所有chart列表
     getData (params) {
-      if (this.finshGetData) {
-        return
-      }
-      this.finshGetData = true
       const param = {
         panelId: params.panelId,
         query: params.query,
@@ -710,21 +706,16 @@ export default {
             }
           })
         })
-        this.finshGetData = false
         return
       }
       if (!param.query) delete param.query
       // 根据panelId获得panel下的所有图表
       // const groupId = true ? '&groupId=0' : ''
       if (!params.panelId) {
-        this.finshGetData = false
         return
       } // 没有panelId不调用接口
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
-          setTimeout(() => {
-            this.finshGetData = false
-          }, 100)
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
           })
