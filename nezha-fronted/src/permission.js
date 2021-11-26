@@ -20,7 +20,16 @@ router.beforeEach((to, from, next) => {
           if (res.inited === 0) {
             next({ path: '/setup' })
           } else {
-            next()
+            if (new Date().getTime() - to.query.t < 5 * 60 * 1000) {
+              next()
+            } else {
+              next({
+                path: to.path,
+                query: {
+                  t: new Date().getTime()
+                }
+              })
+            }
           }
         }
       })
