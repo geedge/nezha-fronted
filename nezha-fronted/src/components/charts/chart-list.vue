@@ -1481,7 +1481,7 @@ export default {
     },
     getEndpointInfoChartData (chartInfo) {
       const detail = []
-      this.$refs['editChart' + chartInfo.id][0].showLoad()
+      this.$refs['editChart' + chartInfo.id][0] && this.$refs['editChart' + chartInfo.id][0].showLoad()
       chartInfo.name = this.$t('project.chart.endpointInfo')
       chartInfo.from = fromRoute.endpoint
       const basicInfo = JSON.parse(JSON.stringify(this.obj))

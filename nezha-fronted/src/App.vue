@@ -15,6 +15,11 @@ export default {
     browserWindowZoom
   },
   async created () {
+    const herfSpiltArr = window.location.href.split('/')
+    if (herfSpiltArr[3] !== '#') {
+      herfSpiltArr[3] = '#'
+      window.location.href = herfSpiltArr.join('/')
+    }
     const Timestamp = new Date().getTime()
     const url = 'static/config.json?Timestamp=' + Timestamp
     const result = await this.$http.get(url)
@@ -24,6 +29,8 @@ export default {
       sessionStorage.clear()
       localStorage.clear()
       localStorage.setItem('nz-version', version)
+      herfSpiltArr[2] = herfSpiltArr[2] + '?t=' + new Date().getTime()
+      window.location.href = herfSpiltArr[0] + '//' + herfSpiltArr[2]
     }
   }
 }
