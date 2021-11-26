@@ -1425,7 +1425,7 @@ export default {
             }
             break
           case 'resize': {
-            const dom = document.getElementById('topology-camvas' + this.topologyIndexF)
+            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
             const domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
@@ -1436,7 +1436,7 @@ export default {
             if (this.$refs.topTool) {
               this.$refs.topTool.scaleNum = parseInt(data * 100)
             }
-            const dom = document.getElementById('topology-camvas' + this.topologyIndexF)
+            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
             const domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
@@ -1897,7 +1897,7 @@ export default {
           index: 0,
           list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
         }
-        const dom = document.getElementById('topology-camvas' + this.topologyIndexF)
+        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
         const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
       })
@@ -2000,7 +2000,7 @@ export default {
             this.$store.commit('setShowTopoScreen', this.topoScreenState)
             this.$nextTick(() => {
               getTopology(this.topologyIndex).lock(1)
-              const dom = document.getElementById('topology-camvas' + this.topologyIndexF)
+              const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
               const domRect = dom ? dom.getBoundingClientRect() : {}
               getTopology(this.topologyIndex).canvasPos = domRect
               this.reload()
@@ -2028,7 +2028,7 @@ export default {
       this.editTopologyFlag = false
       this.$nextTick(() => {
         getTopology(this.topologyIndex).lock(1)
-        const dom = document.getElementById('topology-camvas' + this.topologyIndexF)
+        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
         const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         this.$store.commit('setShowTopoScreen', this.topoScreenState)
@@ -2076,7 +2076,7 @@ export default {
       this.$nextTick(() => {
         this.previewData = topologyData
         getTopology(this.topologyIndex).lock(1)
-        const dom = document.getElementById('topology-camvas' + this.topologyIndexF)
+        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
         const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         this.initPens(topologyData)
