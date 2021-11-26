@@ -884,7 +884,7 @@ export default {
     getChartData (chartInfo, pos, filterType) {
       const chartItem = chartInfo
       if (chartItem.type === 'group') {
-        this.$refs['editChart' + chartItem.id][0].setData(chartItem)
+        this.$refs['editChart' + chartItem.id][0] && this.$refs['editChart' + chartItem.id][0].setData(chartItem)
         return
       }
       if (chartItem.type === 'assetInfo') {
@@ -1686,7 +1686,7 @@ export default {
       if (this.obj) {
         this.$set(chartInfo, 'param', { endpointId: this.obj.id })
       }
-      this.$refs['editChart' + chartInfo.id][0].getAlertList(null, null, chartInfo)
+      this.$refs['editChart' + chartInfo.id][0] && this.$refs['editChart' + chartInfo.id][0].getAlertList(null, null, chartInfo)
     },
     getAlertRuleChartData (chartInfo) {
       const vm = this

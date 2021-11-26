@@ -1057,14 +1057,14 @@ export default {
           const vm = this
           setTimeout(function () {
             const divHeight = self.$refs.legendArea ? self.$refs.legendArea.offsetHeight : 0
-            if (!chartInfo.height && getChart(self.chartIndex)) {
-              getChart(self.chartIndex).resize({ height: (250 - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
+            if (!chartInfo.height) {
+              getChart(self.chartIndex) && getChart(self.chartIndex).resize({ height: (250 - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
             } else {
-              getChart(self.chartIndex).resize({ height: (chartInfo.height * vm.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
+              getChart(self.chartIndex) && getChart(self.chartIndex).resize({ height: (chartInfo.height * vm.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
             }
             if (dataArg && dataArg.length > 0) {
-              getChart(self.chartIndex).clear()
-              getChart(self.chartIndex).setOption(option)// 创建图表
+              getChart(self.chartIndex) && getChart(self.chartIndex).clear()
+              getChart(self.chartIndex) && getChart(self.chartIndex).setOption(option)// 创建图表
               self.noData = false
             } else {
               self.noData = true
@@ -1076,8 +1076,8 @@ export default {
               } else if (self.$refs.resizeBox.offsetWidth < 500) {
                 option.xAxis.splitNumber = 5
               }
-              getChart(self.chartIndex).clear()
-              getChart(self.chartIndex).setOption(option)// 创建图表
+              getChart(self.chartIndex) && getChart(self.chartIndex).clear()
+              getChart(self.chartIndex) && getChart(self.chartIndex).setOption(option)// 创建图表
             }
             self.$refs['localLoading' + self.chartIndex].endLoading()
             self.firstShow = true // 展示操作按键
@@ -1087,7 +1087,7 @@ export default {
           getChart(this.chartIndex).on('magictypechanged', function (params) {
             self.isStackArea = !self.isStackArea
             if (self.isStackArea) {
-              getChart(self.chartIndex).setOption({
+              getChart(self.chartIndex) && getChart(self.chartIndex).setOption({
                 toolbox: {
                   feature: {
                     dataZoom: {
@@ -1160,7 +1160,7 @@ export default {
                 }
               })
             } else {
-              getChart(self.chartIndex).setOption({
+              getChart(self.chartIndex) && getChart(self.chartIndex).setOption({
                 toolbox: {
                   feature: {
                     dataZoom: {

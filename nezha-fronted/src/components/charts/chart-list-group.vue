@@ -1430,7 +1430,7 @@ export default {
       if (this.additionalInfo) {
         this.$set(chartInfo, 'param', { endpointId: this.additionalInfo.id })
       }
-      this.$refs['editChart' + chartInfo.id][0].getAlertList(filterType)
+      this.$refs['editChart' + chartInfo.id][0] && this.$refs['editChart' + chartInfo.id][0].getAlertList(filterType)
     },
     getAlertRuleChartData (chartInfo) {
       const vm = this
