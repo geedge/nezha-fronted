@@ -63,7 +63,7 @@ export default {
         newPin: '',
         confirmPin: ''
       },
-      sysUser: sessionStorage.getItem('nz-username'),
+      sysUser: localStorage.getItem('nz-username'),
       rules: {
         pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         newPin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: validatePass, trigger: 'blur' }],
@@ -73,7 +73,7 @@ export default {
     }
   },
   created () {
-    this.user.username = this.curUser && this.curUser != '' ? this.curUser : sessionStorage.getItem('nz-username')
+    this.user.username = this.curUser && this.curUser != '' ? this.curUser : localStorage.getItem('nz-username')
   },
   methods: {
     dialogOpened: function () {

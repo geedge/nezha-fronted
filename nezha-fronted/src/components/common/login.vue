@@ -167,7 +167,7 @@ export default {
                 localStorage.setItem('nz-language-list', JSON.stringify(langList))
               }
             })
-            sessionStorage.setItem('nz-token', res.data.authToken)
+            localStorage.setItem('nz-token', res.data.authToken)
             if (res.data.authFlag === 1) {
               if (res.data.authBind === 0) {
                 this.verifyShow = true
@@ -189,7 +189,7 @@ export default {
                 })
               }
             } else {
-              sessionStorage.setItem('nz-username', this.loginData.username)
+              localStorage.setItem('nz-username', this.loginData.username)
               localStorage.setItem('nz-username', this.loginData.username)
               localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
               localStorage.setItem('nz-language', this.lang)
@@ -210,7 +210,7 @@ export default {
       }
       this.$post('/mfa/verify', params).then(res => {
         if (res.code === 200) {
-          sessionStorage.setItem('nz-username', this.loginData.username)
+          localStorage.setItem('nz-username', this.loginData.username)
           localStorage.setItem('nz-username', this.loginData.username)
           localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
           localStorage.setItem('nz-language', this.lang)

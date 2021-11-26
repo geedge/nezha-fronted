@@ -249,7 +249,7 @@ export default {
     queryTypeInfos () {
       this.noStyleSuggestions = {}
       if (this.historyParam && this.historyParam.useHistory) {
-        const username = sessionStorage.getItem('nz-username')
+        const username = localStorage.getItem('nz-username')
         const historyJson = localStorage.getItem(this.historyParam.key)
         if (historyJson && historyJson !== 'undefined') {
           const historyObj = JSON.parse(historyJson)

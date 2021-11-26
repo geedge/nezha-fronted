@@ -99,7 +99,7 @@ export default {
       })
       this.terminal.open(document.getElementById(this.obj.uuid))
 
-      const token = sessionStorage.getItem('nz-token')
+      const token = localStorage.getItem('nz-token')
       let baseUrl = this.$axios.defaults.baseURL
       if (baseUrl.startsWith('/')) {
         baseUrl = 'ws://' + window.location.host + baseUrl

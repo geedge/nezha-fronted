@@ -151,7 +151,7 @@ export default {
   },
   data () {
     return {
-      username: sessionStorage.getItem('nz-username'),
+      username: localStorage.getItem('nz-username'),
       mfaEnable: localStorage.getItem('nz-mfa-enable'),
       authBindShow: false,
       fileShow: false,

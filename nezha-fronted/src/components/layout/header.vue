@@ -168,7 +168,7 @@ export default {
 
     initEvent () {
       bus.$on('login', () => {
-        this.username = sessionStorage.getItem('nz-username')
+        this.username = localStorage.getItem('nz-username')
         // this.refreshLang()
       })
       if (window.history && window.history.pushState) {
@@ -181,14 +181,20 @@ export default {
     },
     shrink () {
       this.$store.commit('isShrink')
+    },
+    testUser () {
+      if (this.username != localStorage.getItem('nz-username')) {
+        window.location.reload()
+      }
     }
   },
   mounted () {
     this.$i18n.locale = this.language
-    if (sessionStorage.getItem('nz-token')) {
+    if (localStorage.getItem('nz-token')) {
       this.initEvent()
       this.getLinkData()
     }
+    window.addEventListener('visibilitychange', this.testUser)
   },
   computed: {
     linkData () {

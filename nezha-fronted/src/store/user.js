@@ -46,7 +46,7 @@ const user = {
   },
   actions: {
     loginSuccess (store, res) {
-      sessionStorage.setItem('nz-token', res.data.token)
+      localStorage.setItem('nz-token', res.data.token)
       localStorage.setItem('nz-sys-name', res.data.systemName)
       if (res.systemLogo) {
         localStorage.setItem('nz-sys-logo', res.data.systemLogo)
@@ -84,9 +84,9 @@ const user = {
       })
     },
     logoutSuccess (store, res) {
-      sessionStorage.removeItem('nz-username')
       localStorage.removeItem('nz-username')
-      sessionStorage.removeItem('nz-token')
+      localStorage.removeItem('nz-username')
+      localStorage.removeItem('nz-token')
     }
   }
 }

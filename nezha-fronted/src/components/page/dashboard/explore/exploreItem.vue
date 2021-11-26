@@ -809,7 +809,7 @@ export default {
       const expressions = this.expressions.filter(item => {
         return item && item != ''
       })
-      const username = sessionStorage.getItem('nz-username')
+      const username = localStorage.getItem('nz-username')
       if (historyJson && historyJson != 'undefined' && historyJson != '') {
         const historyObj = JSON.parse(historyJson)
         let history = historyObj[username]

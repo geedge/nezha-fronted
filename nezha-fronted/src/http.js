@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 axios.interceptors.request.use(config => {
-  const token = sessionStorage.getItem('nz-token')
+  const token = localStorage.getItem('nz-token')
   if (token) {
     config.headers.Authorization = token // 请求头token
   }

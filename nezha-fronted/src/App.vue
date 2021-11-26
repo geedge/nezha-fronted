@@ -26,7 +26,7 @@ export default {
     this.$axios.defaults.baseURL = result.body.baseUrl
     const version = result.body.version
     if (version !== localStorage.getItem('nz-version')) {
-      sessionStorage.clear()
+      localStorage.clear()
       localStorage.clear()
       localStorage.setItem('nz-version', version)
       herfSpiltArr[2] = herfSpiltArr[2] + '?t=' + new Date().getTime()

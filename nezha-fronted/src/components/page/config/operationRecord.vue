@@ -60,7 +60,7 @@ export default {
       url: 'sys/log',
       tableId: 'operationLogTable', // 需要分页的table的id，用于记录每页数量,
       mainTableHeight: this.$tableHeight.profile,
-      username: sessionStorage.getItem('nz-username'),
+      username: localStorage.getItem('nz-username'),
       layout: [],
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [
