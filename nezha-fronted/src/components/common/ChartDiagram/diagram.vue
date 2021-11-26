@@ -336,7 +336,7 @@ import alertTable from '../project/popData/alertTable'
 import assetTable from '../project/popData/assetTable'
 import endpointTable from '../project/popData/endpointTable'
 import topoTooltip from '../project/L5/topoTooltip'
-import { getMetricTypeValue, dealLegendAlias} from '../js/tools'
+import { getMetricTypeValue, dealLegendAlias } from '../js/tools'
 import bus from '../../../libs/bus'
 import CanvasContextMenu from '@/components/common/project/L5/CanvasContextMenu'
 // 注册到画布
@@ -699,6 +699,9 @@ export default {
         }, 100)
       } else {
         Promise.all(promiseArr).then((res) => {
+          if (!getTopology(this.topologyIndex)) {
+            return
+          }
           getTopology(this.topologyIndex).open(data)
           getTopology(this.topologyIndex).lock(1)
           this.objChange = false
@@ -781,6 +784,9 @@ export default {
     // 打开topology数据
     openTopologyData (data) {
       return new Promise(resolve => {
+        if (!document.getElementById('topology-canvas' + this.topologyIndexF)) {
+          return
+        }
         if (!getTopology(this.topologyIndex)) {
           const options = {
             ...canvasOptions
@@ -1388,7 +1394,8 @@ export default {
             }
             break
           case 'resize': {
-            const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+            const domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
             }
@@ -1398,7 +1405,8 @@ export default {
             if (this.$refs.topTool) {
               this.$refs.topTool.scaleNum = parseInt(data * 100)
             }
-            const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+            const domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
             }
@@ -1916,7 +1924,8 @@ export default {
           index: 0,
           list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
         }
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+        const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         getTopology(this.topologyIndex).resize()
       }, 100)
@@ -2038,7 +2047,8 @@ export default {
       this.$nextTick(() => {
         this.previewData = topologyData
         getTopology(this.topologyIndex).lock(1)
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+        const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         this.initPens(topologyData)
         // this.reload()
@@ -2063,7 +2073,8 @@ export default {
 
     winResize () {
       setTimeout(() => {
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
+        const dom = document.getElementById('topology-canvas' + this.topologyIndex)
+        const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
           getTopology(this.topologyIndex).open(this.oldTopologyData)
@@ -2074,7 +2085,7 @@ export default {
           x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
           y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
         }
-        getTopology(this.topologyIndex).data.pens.forEach(item => {
+        getTopology(this.topologyIndex) && getTopology(this.topologyIndex).data.pens.forEach(item => {
           if (flag) {
             return
           }

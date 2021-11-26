@@ -1069,17 +1069,19 @@ export default {
             } else {
               self.noData = true
               option = chartConfig.getOptionNoData('noData')
-              if (self.$refs.resizeBox.offsetWidth < 200) {
-                option.xAxis.splitNumber = 1
-              } else if (self.$refs.resizeBox.offsetWidth < 300) {
-                option.xAxis.splitNumber = 3
-              } else if (self.$refs.resizeBox.offsetWidth < 500) {
-                option.xAxis.splitNumber = 5
+              if (self.$refs.resizeBox && getChart(self.chartIndex)) {
+                if (self.$refs.resizeBox.offsetWidth < 200) {
+                  option.xAxis.splitNumber = 1
+                } else if (self.$refs.resizeBox.offsetWidth < 300) {
+                  option.xAxis.splitNumber = 3
+                } else if (self.$refs.resizeBox.offsetWidth < 500) {
+                  option.xAxis.splitNumber = 5
+                }
+                getChart(self.chartIndex) && getChart(self.chartIndex).clear()
+                getChart(self.chartIndex) && getChart(self.chartIndex).setOption(option)// 创建图表
               }
-              getChart(self.chartIndex) && getChart(self.chartIndex).clear()
-              getChart(self.chartIndex) && getChart(self.chartIndex).setOption(option)// 创建图表
             }
-            self.$refs['localLoading' + self.chartIndex].endLoading()
+            self.$refs['localLoading' + self.chartIndex] && self.$refs['localLoading' + self.chartIndex].endLoading()
             self.firstShow = true // 展示操作按键
           }, 800)
 

@@ -695,6 +695,9 @@ export default {
         promiseArr.push(pensPromise(item, arr, index))
       })
       Promise.all(promiseArr).then((res) => {
+        if (!getTopology(this.topologyIndex)) {
+          return
+        }
         getTopology(this.topologyIndex).open(data)
         getTopology(this.topologyIndex).lock(1)
         this.objChange = false
@@ -719,7 +722,7 @@ export default {
         getTopology(this.topologyIndex).centerView()
         this.penToolTipScale = getTopology(this.topologyIndex).data.scale
         setTimeout(() => {
-          getTopology(this.topologyIndex)&&getTopology(this.topologyIndex).data.pens.forEach(item => {
+          getTopology(this.topologyIndex) && getTopology(this.topologyIndex).data.pens.forEach(item => {
             if (item.animatePlay) {
               item.stopAnimate()
               setTimeout(() => {
