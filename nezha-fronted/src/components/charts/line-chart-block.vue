@@ -1071,7 +1071,7 @@ export default {
         this.$nextTick(() => {
           const vm = this
           setTimeout(function () {
-            const divHeight = self.$refs.legendArea ? self.$refs.legendArea.offsetHeight : 0
+            const divHeight = self.$refs.legendArea && self.$refs.legendArea.offsetHeight > 20 ? self.$refs.legendArea.offsetHeight : 27
             if (!chartInfo.height) {
               getChart(self.chartIndex) && getChart(self.chartIndex).resize({ height: (250 - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
             } else {
@@ -1962,7 +1962,7 @@ export default {
         this.computeLegendData(this.legendListMore, this.seriesItemArr, 'local')
       }
       this.$nextTick(() => {
-        const divHeight = this.$refs.legendArea.offsetHeight
+        const divHeight = this.$refs.legendArea && this.$refs.legendArea.offsetHeight > 20 ? this.$refs.legendArea.offsetHeight : 27
         if (!this.chartInfo.height) {
           getChart(this.chartIndex).resize({ height: (400 - divHeight - this.$chartResizeTool.titleHeight - this.$chartResizeTool.chartBlankHeight) })
         } else {
