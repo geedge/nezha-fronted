@@ -168,7 +168,7 @@
         </div>
       </template>
 
-      <chart-alert-list v-if="chart.type === 'alertList'" :showTitle="false" ref="alertListChart" id="chartAlertListPreview" :chart-info="chart" :chart-data="chart"  class="height-100"></chart-alert-list>
+      <chart-alert-list v-if="chart.type === 'alertList'" :show-option="false" :showTitle="false" ref="alertListChart" id="chartAlertListPreview" :chart-info="chart" :chart-data="chart"  class="height-100"></chart-alert-list>
 
       <template v-if="chart.type==='text'">
           <div  id="chartTextPreview" class="chart-text-preview height-100">

@@ -74,6 +74,7 @@
             :form="'chartList'"
             :fromPath="'/alertList'"
             style="height: calc(100% - 50px)"
+            :showOption="showOption"
             :showTopBtn="false"
           ></alertMessageTable>
           <Pagination :pageObj="pageObj" @pageNo='pageNo'  @pageSize='pageSize' ref="Pagination" :append-to-body="false" pop-class="out-popper-fix" style="margin-top: 15px;"></Pagination>
@@ -205,6 +206,7 @@ export default {
     chartData: {},
     id: { type: String },
     from: { type: String },
+    showOption: { type: Boolean, default: true },
     isLock: { type: Boolean, default: false }
   },
   mixins: [chartDataList],
