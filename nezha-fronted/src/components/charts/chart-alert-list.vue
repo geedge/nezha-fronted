@@ -343,7 +343,7 @@ export default {
         ],
         name: ''
       },
-      objectSilence: {},
+      objectSilence: {}
     }
   },
   computed: {
@@ -792,7 +792,7 @@ export default {
       return r
     },
     promQueryParamLabels (labels) {
-      const obj = JSON.parse(labels)
+      const obj = labels.constructor === Object ? labels : JSON.stringify(labels)
       const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type']
       filterArr.forEach(key => {
         delete obj[key]
