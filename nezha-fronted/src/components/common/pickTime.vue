@@ -148,8 +148,10 @@ export default {
     },
     dateChange (time) {
       this.searchTime = time
-      this.$emit('change', this.searchTime)
-      this.refreshDataFunc()
+      setTimeout(() => {
+        this.$emit('change', this.searchTime)
+        this.refreshDataFunc()
+      }, 100)
     },
     antiShake () {
       if (this.timer) {
