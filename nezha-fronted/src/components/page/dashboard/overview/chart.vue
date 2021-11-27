@@ -413,6 +413,7 @@ export default {
       return params.title
     },
     defaultTooltipFormatter: function (params) {
+      let showFlag = false
       let minusFlag = true
       let str = '<div>'
       params instanceof Array || (params = [params])
@@ -435,6 +436,10 @@ export default {
               [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
           str += '<br/>'
           minusFlag = false
+        }
+        showFlag = showFlag || item.data[1]
+        if (isNaN(item.data[1] + '')) {
+          return
         }
         const val = Number(item.data[1])
         str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
@@ -472,7 +477,11 @@ export default {
         str += '</div>'
       })
       str += '</div>'
-      return str
+      if (!showFlag) {
+        return ''
+      } else {
+        return str
+      }
     },
     queryAlias: function (i) {
       let alias = null

@@ -813,6 +813,7 @@ export default {
           formatter: function (params) {
             let str = '<div>'
             let sum = 0
+            let showFlag = false
             let minusFlag = true
             params.forEach((item, i) => {
               const tip = legend[item.seriesIndex]
@@ -834,6 +835,10 @@ export default {
                 str += bus.timeFormate(tData)
                 str += '</div>'
                 minusFlag = false
+              }
+              showFlag = showFlag || item.data[1]
+              if (isNaN(item.data[1] + '')) {
+                return
               }
               const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
               let paramsDot = bus.countDecimals(item.data[1])
@@ -887,7 +892,11 @@ export default {
             }
 
             str += '</div>'
-            return str
+            if (!showFlag) {
+              return ''
+            } else {
+              return str
+            }
           }
         },
         legend: {
@@ -1004,11 +1013,11 @@ export default {
         series: dataArg
       }
       if (!maxValueCopies.copies) {
-          option.yAxis.min = 0
-          option.yAxis.max = 1
-        } else {
-          option.yAxis.max = undefined
-        }
+        option.yAxis.min = 0
+        option.yAxis.max = 1
+      } else {
+        option.yAxis.max = undefined
+      }
       if (unit.type == 'Time') {
         delete option.yAxis.maxInterval
       }
@@ -1127,6 +1136,7 @@ export default {
                   formatter: function (params) {
                     let str = '<div>'
                     let sum = 0
+                    let showFlag = false
                     params.forEach((item, i) => {
                       const tip = self.legendMagicType[item.seriesIndex]
                       const color = self.bgColorList[item.seriesIndex]
@@ -1140,6 +1150,10 @@ export default {
                         str += '<div style="margin-bottom: 5px">'
                         str += bus.timeFormate(tData)
                         str += '</div>'
+                      }
+                      showFlag = showFlag || item.data[1]
+                      if (isNaN(item.data[1] + '')) {
+                        return
                       }
                       const val = formatScientificNotation(item.data[1], 2)
                       sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
@@ -1163,7 +1177,11 @@ export default {
                     }
 
                     str += '</div>'
-                    return str
+                    if (!showFlag) {
+                      return ''
+                    } else {
+                      return str
+                    }
                   }
                 }
               })
@@ -1295,6 +1313,7 @@ export default {
                   formatter: function (params) {
                     let str = '<div>'
                     let sum = 0
+                    let showFlag = false
                     let minusFlag = true
                     params.forEach((item, i) => {
                       const tip = self.legendMagicType[item.seriesIndex]
@@ -1316,6 +1335,10 @@ export default {
                         str += bus.timeFormate(tData)
                         str += '</div>'
                         minusFlag = false
+                      }
+                      showFlag = showFlag || item.data[1]
+                      if (isNaN(item.data[1] + '')) {
+                        return
                       }
                       const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
                       const val = formatScientificNotation(item.data[1], 2)
@@ -1373,7 +1396,11 @@ export default {
                     }
 
                     str += '</div>'
-                    return str
+                    if (!showFlag) {
+                      return ''
+                    } else {
+                      return str
+                    }
                   }
                 }
               })
@@ -1918,11 +1945,11 @@ export default {
         }
       }
       if (!maxValueCopies.copies) {
-          option.yAxis.min = 0
-          option.yAxis.max = 1
-        } else {
-          option.yAxis.max = undefined
-        }
+        option.yAxis.min = 0
+        option.yAxis.max = 1
+      } else {
+        option.yAxis.max = undefined
+      }
       if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
         delete option.yAxis.maxInterval
       }
@@ -1965,11 +1992,11 @@ export default {
         }
       }
       if (!maxValueCopies.copies) {
-          option.yAxis.min = 0
-          option.yAxis.max = 1
-        } else {
-          option.yAxis.max = undefined
-        }
+        option.yAxis.min = 0
+        option.yAxis.max = 1
+      } else {
+        option.yAxis.max = undefined
+      }
       if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
         delete option.yAxis.maxInterval
       }

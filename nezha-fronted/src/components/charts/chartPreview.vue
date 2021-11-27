@@ -924,6 +924,7 @@ export default {
           formatter: function (params) {
             let str = '<div>'
             let sum = 0
+            let showFlag = false
             params.forEach((item, i) => {
               const tip = legend[item.seriesIndex]
               const color = self.bgColorList[item.seriesIndex]
@@ -933,6 +934,10 @@ export default {
                 str += [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('-') + ' ' +
                     [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
                 str += '<br/>'
+              }
+              showFlag = showFlag || item.data[1]
+              if (isNaN(item.data[1] + '')) {
+                return
               }
               const val = formatScientificNotation(item.data[1], 2)
               sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
@@ -960,7 +965,11 @@ export default {
               str += '</div>'
             }
             str += '</div>'
-            return str
+            if (!showFlag) {
+              return ''
+            } else {
+              return str
+            }
           }
         },
         legend: {
