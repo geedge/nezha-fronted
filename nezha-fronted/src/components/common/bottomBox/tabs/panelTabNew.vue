@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width-height chart-list asset-detail">
+  <div class="full-width-height chart-list asset-detail" v-loading="panelTabLoading">
     <nz-bottom-data-list
       :showTitle='showTitle'
       :obj='obj'
@@ -144,6 +144,7 @@ export default {
   data () {
     return {
       fromRoute,
+      panelTabLoading: false,
       panelLock: true,
       showTopBtn: false, // top按钮
       visible: false,
@@ -560,7 +561,9 @@ export default {
       this.panelLock = boolean
     },
     chartBySync () {
+      this.panelTabLoading = true
       this.$post('visual/panel/chart/syncTmpl', { panelId: this.showPanel.id }).then(res => {
+        this.panelTabLoading = false
         if (res.code === 200) {
           this.getTableData(this.obj.id)
           this.$message.success(this.$t('tip.syncSuccess'))

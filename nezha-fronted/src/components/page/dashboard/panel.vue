@@ -1,5 +1,5 @@
 <template>
-  <div class="panel list-page">
+  <div class="panel list-page" v-loading="panelTabLoading">
     <div class="main-list">
       <div>
         <transition name="el-zoom-in-center">
@@ -120,6 +120,7 @@ export default {
   data () {
     return {
       fromRoute,
+      panelTabLoading: false,
       overScroll10: false,
       isLoading: true,
       panelLock: true,
@@ -320,7 +321,9 @@ export default {
       this.rightBox.chartTemp.show = true
     },
     chartBySync () {
+      this.panelTabLoading = true
       this.$post('visual/panel/chart/syncTmpl', { panelId: this.showPanel.id }).then(res => {
+        this.panelTabLoading = false
         if (res.code === 200) {
           this.getData(this.filter)
           this.$message.success(this.$t('tip.syncSuccess'))
