@@ -445,6 +445,8 @@ export default {
         if (!maxValueCopies.copies) {
           option.yAxis.min = 0
           option.yAxis.max = 1
+        } else {
+          option.yAxis.max = undefined
         }
         if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
           delete option.yAxis.maxInterval
@@ -559,6 +561,8 @@ export default {
         if (!maxValueCopies.copies) {
           option.yAxis.min = 0
           option.yAxis.max = 1
+        } else {
+          option.yAxis.max = undefined
         }
         if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
           delete option.yAxis.maxInterval
@@ -1000,9 +1004,11 @@ export default {
         series: dataArg
       }
       if (!maxValueCopies.copies) {
-        option.yAxis.min = 0
-        option.yAxis.max = 1
-      }
+          option.yAxis.min = 0
+          option.yAxis.max = 1
+        } else {
+          option.yAxis.max = undefined
+        }
       if (unit.type == 'Time') {
         delete option.yAxis.maxInterval
       }
@@ -1912,9 +1918,11 @@ export default {
         }
       }
       if (!maxValueCopies.copies) {
-        option.yAxis.min = 0
-        option.yAxis.max = 1
-      }
+          option.yAxis.min = 0
+          option.yAxis.max = 1
+        } else {
+          option.yAxis.max = undefined
+        }
       if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
         delete option.yAxis.maxInterval
       }
@@ -1957,9 +1965,11 @@ export default {
         }
       }
       if (!maxValueCopies.copies) {
-        option.yAxis.min = 0
-        option.yAxis.max = 1
-      }
+          option.yAxis.min = 0
+          option.yAxis.max = 1
+        } else {
+          option.yAxis.max = undefined
+        }
       if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
         delete option.yAxis.maxInterval
       }

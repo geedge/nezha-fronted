@@ -191,7 +191,7 @@ export default {
       dialogText: '',
       url: 'alert/message',
       // 导出相关
-      importBox: { show: false, title: this.$t('overall.importExcel'), type: 1, record: 'all', format: 1 },
+      importBox: { show: false, title: this.$t('overall.exportExcel'), type: 1, record: 'all', format: 1 },
       deleteBox: { show: false, ids: '', remark: '', state: 2 },
       // 详情相关
       graphShow: false,
