@@ -829,6 +829,7 @@ export default {
     // chartSite用于区分是全屏显示还是局部显示
     initChart (chartInfo, dataArg, ele, legend) {
       const self = this
+      self.isStackArea = false
       let minTime = null
       let maxTime = null
       if (dataArg.length > 0 && dataArg[0].data &&
@@ -936,31 +937,30 @@ export default {
                 str += '<br/>'
               }
               showFlag = showFlag || item.data[1]
-              if (isNaN(item.data[1] + '')) {
-                return
+              if (!isNaN(item.data[1] + '')) {
+                const val = formatScientificNotation(item.data[1], 2)
+                sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
+                str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
+                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
+                str += '<div style="padding-left: 10px;">'
+                str += (function () {
+                  if (chartInfo.from == 'endpoint') {
+                    return val == 1 ? 'up' : 'down'
+                  }
+                  return chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, 2)
+                }())
+                str += '</div>'
+                str += '</div>'
               }
-              const val = formatScientificNotation(item.data[1], 2)
-              sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
-              str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
-              str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
-              str += '<div style="padding-left: 10px;">'
-              str += (function () {
-                if (chartInfo.from == 'endpoint') {
-                  return val == 1 ? 'up' : 'down'
-                }
-                return chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, 2)
-              }())
-              str += '</div>'
-              str += '</div>'
             })
             if (chartInfo.type === 'stackArea' || self.isStackArea) {
-              sum = parseFloat(Number(sum).toFixed(2))
+              sum = parseFloat(Number(sum).toFixed(6))
               str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
               str += '<div style="line-height: 18px; font-size: 12px;padding-left:20px;">'
               str += self.$t('dashboard.panel.chartTotal')
               str += '</div>'
               str += '<div style="padding-left: 10px;">'
-              str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, 2)
+              str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, 6)
               str += '</div>'
               str += '</div>'
             }
@@ -1088,6 +1088,7 @@ export default {
 
         this.$refs.loadingPreview.endLoading()
       })
+      this.echartModalStore.off('magictypechanged')
       this.echartModalStore.on('magictypechanged', function (params) {
         self.isStackArea = !self.isStackArea
         if (self.isStackArea) {

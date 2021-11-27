@@ -647,6 +647,7 @@ export default {
       this.legendMagicType = legend
       this.chartInfo = chartInfo
       const self = this
+      self.isStackArea = false
       this.chartType = '' // 图表类型
       if (chartInfo.type === 4) { // line,bar
         this.chartType = 'line'
@@ -837,49 +838,48 @@ export default {
                 minusFlag = false
               }
               showFlag = showFlag || item.data[1]
-              if (isNaN(item.data[1] + '')) {
-                return
-              }
-              const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
-              let paramsDot = bus.countDecimals(item.data[1])
-              if (paramsDot < self.chartDot) {
-                paramsDot = self.chartDot
-              } else if (paramsDot > 6) {
-                paramsDot = 6
-              }
-              const val = formatScientificNotation(item.data[1], paramsDot)
-              sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
-
-              str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
-              str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
-              str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
-              str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
-              if (previousItem) {
-                str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'
-                const previousval = formatScientificNotation(previousItem.data[1], paramsDot)
-                let minusVal = 0
-                if (previousval <= val) {
-                  minusVal = val - previousval
-                  str += '+'
-                } else {
-                  minusVal = previousval - val
-                  str += '-'
+              if (!isNaN(item.data[1] + '')) {
+                const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
+                let paramsDot = bus.countDecimals(item.data[1])
+                if (paramsDot < self.chartDot) {
+                  paramsDot = self.chartDot
+                } else if (paramsDot > 6) {
+                  paramsDot = 6
                 }
+                const val = formatScientificNotation(item.data[1], paramsDot)
+                sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
 
-                str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, -1, paramsDot)
-                str += '</span>'
-              } else if (tip.alias.indexOf('Previous ') !== -1) {
-                str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
-                str += '</span>'
+                str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
+                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
+                str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
+                str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
+                if (previousItem) {
+                  str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'
+                  const previousval = formatScientificNotation(previousItem.data[1], paramsDot)
+                  let minusVal = 0
+                  if (previousval <= val) {
+                    minusVal = val - previousval
+                    str += '+'
+                  } else {
+                    minusVal = previousval - val
+                    str += '-'
+                  }
+
+                  str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, -1, paramsDot)
+                  str += '</span>'
+                } else if (tip.alias.indexOf('Previous ') !== -1) {
+                  str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
+                  str += '</span>'
+                }
+                str += '</div>'
+                str += '</div>'
               }
-              str += '</div>'
-              str += '</div>'
             })
             if (self.data.type === 'stackArea' || self.isStackArea) {
               if (!self.stackTotalColor || self.stackTotalColor == '') {
                 self.stackTotalColor = randomcolor()
               }
-              sum = parseFloat(Number(sum).toFixed(2))
+              sum = parseFloat(Number(sum).toFixed(6))
               str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
               str += '<div style="line-height: 18px; font-size: 12px;padding-left:0px;">'
               str += `<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${self.stackTotalColor};}'></span>`
@@ -1101,6 +1101,7 @@ export default {
           }, 800)
 
           window.addEventListener('resize', this.chartResize)
+          getChart(this.chartIndex).off('magictypechanged')
           getChart(this.chartIndex).on('magictypechanged', function (params) {
             self.isStackArea = !self.isStackArea
             if (self.isStackArea) {
@@ -1152,26 +1153,25 @@ export default {
                         str += '</div>'
                       }
                       showFlag = showFlag || item.data[1]
-                      if (isNaN(item.data[1] + '')) {
-                        return
+                      if (!isNaN(item.data[1] + '')) {
+                        const val = formatScientificNotation(item.data[1], 2)
+                        sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
+                        str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
+                        str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
+                        str += '<div style="padding-left: 10px;">'
+                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
+                        str += '</div>'
+                        str += '</div>'
                       }
-                      const val = formatScientificNotation(item.data[1], 2)
-                      sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
-                      str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
-                      str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
-                      str += '<div style="padding-left: 10px;">'
-                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
-                      str += '</div>'
-                      str += '</div>'
                     })
                     if (self.data.type === 'stackArea' || self.isStackArea) {
-                      sum = parseFloat(Number(sum).toFixed(2))
+                      sum = parseFloat(Number(sum).toFixed(6))
                       str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                       str += '<div style="line-height: 18px; font-size: 12px;padding-left:20px;">'
                       str += self.$t('dashboard.panel.chartTotal')
                       str += '</div>'
                       str += '<div style="padding-left: 10px;">'
-                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, 2)
+                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, self.chartDot)
                       str += '</div>'
                       str += '</div>'
                     }
@@ -1276,7 +1276,7 @@ export default {
               self.echartModalStore.off('finished')
             })
           }, 100)
-
+          this.echartModalStore.off('magictypechanged')
           this.echartModalStore.on('magictypechanged', function (params) {
             self.isStackArea = !self.isStackArea
             if (self.isStackArea) {
@@ -1337,54 +1337,53 @@ export default {
                         minusFlag = false
                       }
                       showFlag = showFlag || item.data[1]
-                      if (isNaN(item.data[1] + '')) {
-                        return
-                      }
-                      const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
-                      const val = formatScientificNotation(item.data[1], 2)
-                      sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
-                      str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
-                      str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
-                      str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
-                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, self.chartDot)
-                      if (previousItem) {
-                        str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'
-                        const previousval = formatScientificNotation(previousItem.data[1], 2)
-                        let minusVal = 0
-                        if (previousval <= val) {
-                          minusVal = val - previousval
-                          str += '+'
-                        } else {
-                          minusVal = previousval - val
-                          str += '-'
-                        }
+                      if (!isNaN(item.data[1] + '')) {
+                        const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
+                        const val = formatScientificNotation(item.data[1], 2)
+                        sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
+                        str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
+                        str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
+                        str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
+                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, self.chartDot)
+                        if (previousItem) {
+                          str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'
+                          const previousval = formatScientificNotation(previousItem.data[1], 2)
+                          let minusVal = 0
+                          if (previousval <= val) {
+                            minusVal = val - previousval
+                            str += '+'
+                          } else {
+                            minusVal = previousval - val
+                            str += '-'
+                          }
 
-                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, self.chartDot)
-                        str += '</span>'
-                      } else if (tip.alias.indexOf('Previous ') !== -1) {
-                        str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
-                        str += '</span>'
-                      }
-                      str += '</div>'
-                      if (previousItem) {
-                        str += '<div style="padding-left: 10px;">'
-                        const previousval = formatScientificNotation(previousItem.data[1], 2)
-                        let minusVal = 0
-                        if (previousval <= val) {
-                          minusVal = val - previousval
-                          str += '+'
-                        } else {
-                          minusVal = previousval - val
-                          str += '-'
+                          str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, self.chartDot)
+                          str += '</span>'
+                        } else if (tip.alias.indexOf('Previous ') !== -1) {
+                          str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
+                          str += '</span>'
                         }
+                        str += '</div>'
+                        if (previousItem) {
+                          str += '<div style="padding-left: 10px;">'
+                          const previousval = formatScientificNotation(previousItem.data[1], 2)
+                          let minusVal = 0
+                          if (previousval <= val) {
+                            minusVal = val - previousval
+                            str += '+'
+                          } else {
+                            minusVal = previousval - val
+                            str += '-'
+                          }
 
-                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, self.chartDot)
+                          str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, self.chartDot)
+                          str += '</div>'
+                        }
                         str += '</div>'
                       }
-                      str += '</div>'
                     })
                     if (self.data.type === 'stackArea' || self.isStackArea) {
-                      sum = parseFloat(Number(sum).toFixed(2))
+                      sum = parseFloat(Number(sum).toFixed(6))
                       str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                       str += '<div style="line-height: 18px; font-size: 12px;padding-left:20px;">'
                       str += self.$t('dashboard.panel.chartTotal')
