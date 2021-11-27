@@ -468,6 +468,7 @@ export default {
       if (!limit) {
         limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
       }
+      this.$refs.logDetail && this.$refs.logDetail.resetOperation()
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {

@@ -182,6 +182,12 @@ export default {
     }
   },
   methods: {
+    resetOperation () {
+      this.operations = {
+        levels: [0, 1, 2, 3, 4, 5, 6],
+        descending: true
+      }
+    },
     exportLog () {
       this.$emit('exportLog', this.operations)
     },
