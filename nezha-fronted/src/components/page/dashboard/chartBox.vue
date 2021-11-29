@@ -394,6 +394,7 @@
                 :expression-list="expressions"
                 :id="promqlKeys[index-1]"
                 :index="index-1"
+                :required = 'true'
                 :type="promqlType"
                 :key="promqlKeys[index-1]"
                 :plugins="['metric-selector', 'metric-input', 'remove']"
@@ -791,7 +792,14 @@ export default {
       this.$set(this.editChart, 'unit', Number.parseInt(unit))
     },
     expressionChange: function () {
-
+      if (this.expressions[0]) {
+        this.editChart.elements = []
+        this.expressions.forEach((expr, i) => {
+          this.editChart.elements.push({ id: this.elementIds[i], expression: expr, type: 'expert', legend: this.legends[i] })
+        })
+      } else {
+        this.editChart.elements = []
+      }
     },
     addExpression () {
       this.expressions.push('')
