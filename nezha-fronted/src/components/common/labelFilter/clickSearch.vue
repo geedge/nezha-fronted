@@ -214,6 +214,8 @@ export default {
           this.$nextTick(() => {
             this.needMore(type, item, true)
           })
+        } else if (!value.length) {
+          this.$refs[`${type}_${item.id}_cascader`][0].$el.querySelector('.el-input__inner').style.width = ''
         }
 
         /* 组织参数 */
