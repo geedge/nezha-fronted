@@ -1727,6 +1727,7 @@ export default {
               }
             })
             this.setColor(legend.length)
+            legend.forEach((t, i) => { t.color = this.bgColorList[i] })
             this.initChart(this.chart, series, this.$refs.screenShowArea, legend)
           }
         }).catch(error => {
