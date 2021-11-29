@@ -21,7 +21,7 @@
       <el-row v-if="!single" class="color-tab">
         <div v-for="item in valueArr" :key="item.key" :class="[keyName==item.name?'color-active':'']" @click="colorTabChange(item)">{{item.name}}</div>
       </el-row>
-      <sketch v-model="colors" :disableAlpha="true" @input="updateValue" :presetColors="presetColors"/>
+      <sketch v-model="colors" :disableAlpha="disableAlpha" @input="updateValue" :presetColors="presetColors"/>
     </div>
   </span>
 </template>
@@ -67,6 +67,10 @@ export default {
           '#7C2EA3', '#8F3BB8', '#B877D9'
         ]
       }
+    },
+    disableAlpha: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {},
@@ -89,7 +93,12 @@ export default {
   methods: {
     updateValue (color) {
       this.colors = color.hex
-      this.$emit('colorChange', color.hex, this.keyName)
+      if (!this.disableAlpha) {
+        this.colors = color.hex8
+        this.$emit('colorChange', color.hex8, this.keyName)
+      } else {
+        this.$emit('colorChange', color.hex, this.keyName)
+      }
     },
     changeColor () {
       this.showColorPicker = !this.showColorPicker

@@ -427,7 +427,7 @@
                         >
                           <el-input v-model="item2.expressions[eindex].key" placeholder="key" size="mini" ></el-input>
                         </el-form-item>
-                        =
+                        <span class="param-box-row-eq">=</span>
                         <el-form-item
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expressions.'+eindex+'.value'"
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
@@ -542,7 +542,7 @@
           <div class="right-box-line"></div>
           <div id="module-box-preview" ref="previewBoxScrollbar"  class="configs-copy-value"  style="overflow: auto;">
             <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
-            <pre style="overflow-y: auto;height:100%">{{configsCopyValue}}</pre>
+            <pre>{{configsCopyValue}}</pre>
           </div>
         </el-form>
       </div>

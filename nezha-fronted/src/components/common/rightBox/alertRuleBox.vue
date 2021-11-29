@@ -87,7 +87,7 @@
           <el-form-item
             v-if="showSnmpTrap"
             :label="$t('alert.config.threshold')"
-            prop="threshold" class="half-form-item"
+            prop="threshold" class="half-form-item alert-box-threshold"
             style="display: inline-block;"
             :rules="[
               { required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' },
@@ -115,7 +115,7 @@
             <el-input id="alert-box-input-inr" v-model.number="editAlertRule.inr" :placeholder="$t('alert.config.inrPlaceholder')" size="small" type="text" :disabled="!showSnmpTrap"></el-input>
           </el-form-item>
           <!--last-->
-          <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.for')" prop="last"  class="half-form-item" :rules=" [
+          <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.for')" prop="last"  class="half-form-item alert-box-duration" :rules=" [
           { required: showSnmpTrap, message: this.$t('validate.required'), trigger: 'change' },
         ]">
             <el-input id="alert-box-input-last" :controls="false" v-model.number="editAlertRule.last" placeholder="" size="small" :disabled="!showSnmpTrap" type="text">

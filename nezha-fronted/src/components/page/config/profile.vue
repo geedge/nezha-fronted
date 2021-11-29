@@ -15,7 +15,7 @@
               <span :class="(mfaEnable == '1' || mfaLevel > 0)?'MfaName':'name'">
                 {{userList.name}}
               </span>
-              <span class="profile-left__header-username__span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span>
+              <span class="profile-left__header-username-span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span>
             </div>
           </el-popover>
           <el-popover

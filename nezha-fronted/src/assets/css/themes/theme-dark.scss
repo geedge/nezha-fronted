@@ -14,6 +14,8 @@ $--background-color-1: #444440;
 $--background-color-2: #000;
 // 背景色 copy
 $--background-color-copy: #454545;
+// 禁用背景色
+$--background-color-disabled: #222329;
 
 // 左侧菜单背景色
 $--left-menu-background-color-base: #2D2E35;
@@ -33,6 +35,8 @@ $--color-text-regular: #BEBEBE;
 $--color-text-secondary: #999998;
 // 链接字色
 $--color-text-link: #3C92F1;
+// 禁用字色
+$--color-text-disabled: #505050;
 
 /* 4.边框色 */
 // 普通边框色
@@ -127,7 +131,6 @@ $--button-icon-hover-border-color: $--button-icon-border-color; // hover边框�
 $--button-icon-active-border-color: $--color-text-primary; // focus边框色
 
 /* Asset */
-$--asset-label-btn-icon-color: $--button-primary-color; //icon
 $--asset-label-btn-border-color: $--border-color-light; // border
 $--asset-label-btn-background-color: #222329; // background
 
@@ -136,10 +139,66 @@ $--click-search-items-border-color: $--background-color-copy; // border
 $--click-search-items-border-bottom-color: #2E2E2E; // border-BOTTOM
 $--click-search-items-color: $--color-text-regular; // color
 
-// selectPage
+// 第三方插件 下拉多选搜索 selectPage 主题颜色
 $--select-page-background-color: $--background-color-empty;
 $--select-page-hover-background-color: $--button-light-hover-background-color;
 $--select-page-focus-color: #666666;
+$--select-page-color: $--button-primary-color;
+$--select-page-tag-background-color: $--background-color-empty;
+$--select-page-border-color: $--border-color-light;
+
+/* el-picker 下拉时间选择器 */
+$--picker-page-background-color: $--select-page-tag-background-color;
+$--picker-page-border-color: $--select-page-border-color;
+$--picker-page-btn-color: mix(#FFF, $--color-primary, 15%);
+$--picker-page-btn-border-color:  mix(#FFF, $--color-primary, 15%);
+$--picker-page-btn-background-color: $--background-color-base;
+
+// icon字色
+$--nz-icon-color: $--button-primary-color;
+$--span-nz-icon-border-color: $--border-color-light-hover;
+
+// value
+$--value-background-color: $--background-color-empty;
+$--value-input-background-color: $--background-color-base;
+$--value-color: $--table-header-font-color;
+
+// time picker
+$--time-picker-hover-color: #FFFFFF;
+
+/* overview */
+// color
+$--overview-asset-icon-color: $--time-picker-hover-color;
+$--overview-project-icon-color: $--time-picker-hover-color;
+$--overview-module-icon-color: $--time-picker-hover-color;
+$--overview-endpoint-icon-color: $--time-picker-hover-color;
+$--overview-alert-icon-color: $--time-picker-hover-color;
+// background
+$--overview-module-icon-background-color: #5F80D5;
+$--overview-endpoint-icon-background-color: #7F87EA;
+$--overview-alert-icon-background-color: #EFA25D;
+$--overview-asset-icon-background-color: #568FFF;
+$--overview-project-icon-background-color: #4DB4FF;
+// border
+$--overview-border-color: $--background-color-empty;
+
+/* system */
+$--system-input-background-color: #C0C4CC;
+
+/* profile */
+$--profile-span-color: $--time-picker-hover-color;
+$--profile-span-border-color: #87C0FF;
+$--profile-span-background-color: $--overview-asset-icon-background-color;
+$--profile-2FA-background-color: $--background-color-empty;
+$--profile-2FA-color: #3C92F1;
+
+/* guide */
+$--guide-border-color: $--select-page-focus-color;
+$--guide-icon-border-color: $--time-picker-hover-color;
+$--guide-icon-color: $--time-picker-hover-color;
+
+/* detail */
+$--detail-left-background-color: $--background-color-base;
 
 /* 13.panel */
 $--chart-title-hover-background-color: #323238;

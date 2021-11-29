@@ -220,14 +220,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .full-width-height{
-    width: 100%;
-    height: 100%;
-  }
-  .control-icon-unchecked {
-    color: #bcbec2;
-    cursor: not-allowed;
-    background-color: #f4f4f5;
-  }
-</style>

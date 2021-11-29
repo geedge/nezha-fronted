@@ -4,6 +4,9 @@
   display: flex;
   .no-resize{
     background: rgba(255,255,255,0);
+    .el-textarea__inner {
+      border: 1px solid $--border-color-light;
+    }
   }
 
   .query-row {

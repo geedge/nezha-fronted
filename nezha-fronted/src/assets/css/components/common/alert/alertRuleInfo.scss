@@ -68,19 +68,17 @@
 .alert-rule-box{
   display: flex;
   justify-content:space-between;
-  border-bottom: 1px solid $--border-color-light;
 }
 .alert-rule-title{
   text-align: left;
   width: 110px;
-  border-right: 1px solid $--border-color-light;
   color: $--color-text-regular;
   padding: 0 3px 0 13px;
 }
 .alert-rule-value{
   text-align: left;
   width: 150px;
-  color: #1a1a1a;
+  color: $--color-text-regular;
   padding: 0 3px 0 13px;
   word-wrap: break-word;
   white-space: normal;

@@ -1,32 +1,60 @@
-.main-list--project {
-  .main-list{
+.main-list--project.main-list {
     height: 100%;
     width: 100%;
     display: flex;
     background-color: $--background-color-base;
     overflow-x: auto;
-    .projectList{
-      flex: 1;
-      width: calc(50% - 10px);
-      margin-right: 10px;
-      min-width: 745px;
+  .projectList{
+    flex: 1;
+    width: calc(50% - 10px);
+    margin-right: 10px;
+    min-width: 745px;
+  }
+  .projectTopo{
+    flex: 1;
+    width: calc(50% - 10px);
+    margin-right: 10px;
+    min-width: 435px;
+    div.page {
+      textarea {
+        display: none;
+      }
     }
-    .projectTopo{
-      flex: 1;
-      width: calc(50% - 10px);
-      margin-right: 10px;
-      min-width: 435px;
-
+    .project-box.list-page {
+      width: 100%;
+      height: calc(100% - 8px)!important;
+      position: relative;
+      border-radius: 2px;
+      .main-list {
+        height: 100% !important;
+        overflow: visible;
+        .top-tools div:nth-of-type(1) {
+          color: $--color-text-primary;
+        }
+        //.nz-table2 {
+        //  padding: 0 !important;
+        //  border: 1px solid $--border-color-base !important;
+        //}
+        .right-bottom-zoom {
+          .zoom-option {
+            color: $--color-text-regular !important;
+          }
+          .zoom-option:hover {
+            color: $--color-text-regular !important;
+          }
+        }
+      }
     }
-    .hide{
-      display: none;
-    }
-    .ml10{
-      margin-left: 10px;
-    }
+  }
+  .hide{
+    display: none;
+  }
+  .ml10{
+    margin-left: 10px;
   }
   .main-container{
     padding-right: 0 !important;
+    width: calc(100% - 10px);
   }
 }
 .project-calendar .el-input__inner {
@@ -61,7 +89,7 @@
     }
   }
   .pagination-bottom{
-    width: calc(100% - 30px);
-    bottom: 18px;
+    width: calc(100% - 30px) !important;
+    bottom: 18px !important;
   }
 }

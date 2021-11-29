@@ -14,6 +14,8 @@ $--background-color-1: #EFEFEF;
 $--background-color-2: #F9F9F9;
 // 背景色 copy
 $--background-color-copy: #fdf5e0;
+// 禁用背景色
+$--background-color-disabled: #DEDEDE;
 
 // 左侧菜单背景色
 $--left-menu-background-color-base: #202F3F;
@@ -33,6 +35,8 @@ $--color-text-regular: #666665;
 $--color-text-secondary: #999998;
 // 链接字色
 $--color-text-link: #3C92F1;
+// 禁用字色
+$--color-text-disabled: #FFFFFF;
 
 /* 4.边框色 */
 // 普通边框色(覆盖element-ui内置变量)
@@ -125,7 +129,6 @@ $--button-icon-hover-border-color: $--border-color-base; // hover边框色
 $--button-icon-active-border-color: mix(#FFF, $--color-primary, 10%); // focus边框色
 
 /* Asset */
-$--asset-label-btn-icon-color: $--color-primary; //icon
 $--asset-label-btn-border-color: mix(#FFF, $--color-primary, 60%); // border
 $--asset-label-btn-background-color: #FFF4E8; // background
 
@@ -135,9 +138,65 @@ $--click-search-items-border-bottom-color: $--border-color-base; // border
 $--click-search-items-color: $--color-primary; // color
 
 // selectPage
-$--select-page-background-color: $--background-color-empty;
+$--select-page-background-color: $--background-color-base;
 $--select-page-hover-background-color: #f6f8fa;
 $--select-page-focus-color: #CCCCCC;
+$--select-page-color: #232F3E;
+$--select-page-tag-background-color: #e4eaee;
+$--select-page-border-color: $--border-color-base-focus;
+
+/* el-picker 下拉时间选择器 */
+$--picker-page-background-color: $--background-color-empty;
+$--picker-page-border-color: $--select-page-border-color;
+$--picker-page-btn-color: $--color-primary;
+$--picker-page-btn-border-color: $--color-primary;
+$--picker-page-btn-background-color: $--color-text-disabled;
+
+
+// icon 字色
+$--nz-icon-color: $--color-primary; //icon
+$--span-nz-icon-border-color: $--asset-label-btn-border-color;
+
+// value
+$--value-background-color: #5C6BC0;
+$--value-color: $--color-text-disabled;
+$--value-input-background-color: $--value-color;
+
+// time picker
+$--time-picker-hover-color: $--value-color;
+
+/* overview */
+$--overview-asset-icon-color: #80A7F4;
+$--overview-project-icon-color: #F6B275;
+$--overview-module-icon-color: #7AD0BC;
+$--overview-endpoint-icon-color: #969DEA;
+$--overview-alert-icon-color: #EE9A87;
+// background
+$--overview-module-icon-background-color: $--value-color;
+$--overview-endpoint-icon-background-color: $--value-color;
+$--overview-alert-icon-background-color: $--value-color;
+$--overview-asset-icon-background-color: $--value-color;
+$--overview-project-icon-background-color: $--value-color;
+// border
+$--overview-border-color: #E5EAEF;
+
+/* system */
+$--system-input-background-color: $--background-color-empty;
+
+/* profile */
+$--profile-span-color: $--color-text-link;
+$--profile-span-border-color: $--color-text-link;
+$--profile-span-background-color: mix(#FFF, $--color-text-link, 90%);
+$--profile-2FA-background-color: $--profile-span-background-color;
+$--profile-2FA-color: $--color-text-link;
+
+/* guide */
+$--guide-border-color: #18171D;
+$--guide-icon-border-color: #666666;
+$--guide-icon-color: $--guide-icon-border-color;
+
+/* detail */
+$--detail-left-background-color: $--table-row-hover-background-color;
 
 /* 13.panel */
 $--chart-title-hover-background-color: $--background-color-1;

@@ -40,15 +40,6 @@
     justify-content: space-between;
     padding: 14px 20px;
 
-    &.top-tools--sub {
-      align-items: center;
-      padding: 0 70px 0 15px;
-      height: 44px;
-      background-color: $--background-color-empty;
-      border: 1px solid $--border-color-light;
-      box-sizing: border-box;
-    }
-
     .top-tool-right {
       display: flex;
       flex-shrink: 0;
@@ -130,7 +121,7 @@
       width: 200px;
       line-height: 40px;
       font-size: 16px;
-      color: #202F3F;
+      color: $--color-text-regular;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
@@ -275,18 +266,18 @@
           outline: none;
           transition:all .2s;
         }
-        .el-dropdown {
-          border: 1px solid $--border-color-light;
-        }
         .table-operation-item.table-operation-item--disable{
-          border: 1px solid $--border-color-base;
-          background-color: $--border-color-base;
+          border: 1px solid $--button-light-border-color;
+          background-color: $--background-color-disabled;
           opacity: 0.6;
           outline: none;
           i {
             font-size: 14px;
-            color: $--background-color-empty;
+            color: $--color-text-disabled;
           }
+        }
+        .table-operation-item.table-operation-item--disable:hover {
+          background-color: $--background-color-disabled;
         }
         &>.table-operation-item {
           justify-content: center;
@@ -310,7 +301,7 @@
         .table-operation-item.table-operation-item--more {
           justify-content: center;
           align-items: center;
-          border: 1px solid $--border-color-base;
+          border: 1px solid $--button-icon-border-color;
           width: 30px;
           i {
             color: $--color-text-secondary;
@@ -324,6 +315,7 @@
   .el-table__body-wrapper {
     overflow: auto;
     background-color: $--table-body-background-color;
+    height: 100% !important;
   }
   .el-table__fixed-body-wrapper {
     top: 42px !important;
@@ -527,4 +519,8 @@
 
 ::-webkit-scrollbar-corner {
   background-color: $--background-color-empty;
+}
+.full-width-height{
+  width: 100%;
+  height: 100%;
 }

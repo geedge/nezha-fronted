@@ -32,44 +32,44 @@
     word-break: break-all;
     display: inline-block;
   }
-  .nz-alert-tag_normal {
-    border-color: $--color-text-link;
-    .nz-alert-tag__label {
-      border-right: 1px solid $--color-text-link;
-      background-color: $--color-text-link;
-      color: white;
-    }
+}
+.nz-alert-tag_normal {
+  border-color: $--color-text-link;
+  .nz-alert-tag__label {
+    border-right: 1px solid $--color-text-link;
+    background-color: $--color-text-link;
+    color: white;
   }
-  .nz-alert-tag_success {
-    border-color: #50d050;
-    .nz-alert-tag__label {
-      border-right: 1px solid #50d050;
-      background-color: #50d050;
-      color: white;
-    }
+}
+.nz-alert-tag_success {
+  border-color: #50d050;
+  .nz-alert-tag__label {
+    border-right: 1px solid #50d050;
+    background-color: #50d050;
+    color: white;
   }
-  .nz-alert-tag_info {
-    border-color: $--color-text-secondary;
-    .nz-alert-tag__label {
-      border-right: 1px solid $--color-text-secondary;
-      background-color: $--color-text-secondary;
-      color: white;
-    }
+}
+.nz-alert-tag_info {
+  border-color: $--color-text-secondary;
+  .nz-alert-tag__label {
+    border-right: 1px solid $--color-text-secondary;
+    background-color: $--color-text-secondary;
+    color: white;
   }
-  .nz-alert-tag_danger {
-    border-color: #d64f40;
-    .nz-alert-tag__label {
-      border-right: 1px solid #d64f40;
-      background-color: #d64f40;
-      color: white;
-    }
+}
+.nz-alert-tag_danger {
+  border-color: #d64f40;
+  .nz-alert-tag__label {
+    border-right: 1px solid #d64f40;
+    background-color: #d64f40;
+    color: white;
   }
-  .nz-alert-tag_warning {
-    border-color: #e6a23c;
-    .nz-alert-tag__label {
-      border-right: 1px solid #e6a23c;
-      background-color: #e6a23c;
-      color: white;
-    }
+}
+.nz-alert-tag_warning {
+  border-color: #e6a23c;
+  .nz-alert-tag__label {
+    border-right: 1px solid #e6a23c;
+    background-color: #e6a23c;
+    color: white;
   }
 }

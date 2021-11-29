@@ -16,6 +16,9 @@
       padding-left: 32px;
     }
   }
+  .el-form-item__label {
+    line-height: 16px !important;
+  }
 }
 
 .right-box__header {
@@ -119,13 +122,6 @@
 
     .el-form-item {
       margin-bottom: 16px;
-      .el-form-item__label{
-        padding-bottom: 6px;
-        font-size: 14px;
-        line-height: 16px;
-        color: #666;
-      }
-
       .el-input__inner:hover {
         border-color: $--border-color-light-hover;
       }
@@ -167,7 +163,7 @@
           justify-content: space-between;
           .form__labels-label__span {
             i {
-              color: $--asset-label-btn-icon-color;
+              color: $--nz-icon-color;
             }
           }
         }
@@ -182,7 +178,7 @@
       background-color: $--asset-label-btn-background-color;
 
       i {
-        color: $--asset-label-btn-icon-color;
+        color: $--nz-icon-color;
       }
     }
     .form__flex-container {
@@ -357,4 +353,10 @@
       }
     }
   }
+}
+.right-box-sub-title {
+  background: $--right-box-sub-title-background-color !important;
+}
+.meta-option-box {
+  color: $--color-text-regular;
 }

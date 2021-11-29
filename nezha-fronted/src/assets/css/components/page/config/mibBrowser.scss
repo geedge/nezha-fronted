@@ -21,7 +21,7 @@
   }
   #browser-advanced {
     border-radius: 0;
-    border-right: 1px solid $--border-color-base-focus;
+    border-right: 1px solid $--border-color-light;
   }
   .mib-browser-btn-group {
     position: relative;
@@ -60,7 +60,7 @@
     display: flex;
     height: calc(100% - 55px);
     width: 100%;
-    border: 1px solid $--border-color-base;
+    border: 1px solid $--border-color-light;
     border-radius: 4px;
     box-sizing: border-box;
   }
@@ -90,14 +90,14 @@
     width: 100%;
     background-color: $--background-color-base;
     cursor: ns-resize;
-    border: 1px solid $--border-color-base;
+    border: 1px solid $--border-color-light;
     border-left: none;
     border-right: none;
   }
   .mib-browser-detail-row {
     line-height: 25px;
     background-color: $--background-color-empty;
-    border-bottom: 1px solid $--border-color-base;
+    border-bottom: 1px solid $--border-color-light;
     font-size: 14px;
     display: flex;
   }
@@ -122,11 +122,11 @@
   /*第一列宽75%*/
   .mib-browser-detail-row>div:last-of-type {
     width: 75%;
-    border-left: 1px solid $--border-color-base;
+    border-left: 1px solid $--border-color-light;
     word-break: break-all;
   }
   .mib-browser-detail-row:not(:last-of-type) {
-    border-bottom: 1px solid $--border-color-base;
+    border-bottom: 1px solid $--border-color-light;
     height: 25px;
   }
   .mib-browser-detail-row:last-of-type {
@@ -144,7 +144,7 @@
   }
   .left-right-resize {
     width: 2px;
-    border: 1px solid $--border-color-base;
+    border: 1px solid $--border-color-light;
     background-color: $--background-color-base;
     cursor: ew-resize;
     height: 100%;
@@ -163,6 +163,9 @@
       .el-table {
         height: calc(100% - 20px) !important;
         width: calc(100% - 20px) !important;
+        .el-table__header-wrapper th {
+          background-color: $--background-color-base;
+        }
       }
       .el-table__body-wrapper td {
         padding: 2px 0 !important;
@@ -174,7 +177,7 @@
     line-height: 30px;
     color: $--color-text-primary;
     font-size: 16px;
-    border-bottom: 1px solid $--border-color-base;
+    border-bottom: 1px solid $--border-color-light;
     padding: 0 5px 0 8px;
     display: flex;
     justify-content: space-between;

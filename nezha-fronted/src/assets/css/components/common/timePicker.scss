@@ -19,9 +19,12 @@
     line-height: 30px;
   }
 }
+.el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover {
+  color: $--color-primary !important;
+}
 .nz-dashboard-dropdown-bg {
   background: $--color-primary;
-  color: #fff !important;
+  color: $--time-picker-hover-color !important;
 }
 .calendar-dropdown-title {
   white-space: nowrap;
