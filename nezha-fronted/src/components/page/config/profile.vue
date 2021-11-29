@@ -71,7 +71,7 @@
         </div>
       </div>
     </div>
-    <operation-record style="width: calc(100% - 370px);padding: 11px 10px 7px 10px;pxbox-shadow: 0 1px 2px 0 rgba(0,0,0,0.06);border-radius: 2px;" />
+    <operation-record class="profile-right"/>
     <el-dialog :visible.sync="authBindShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
                :show-close="true" width="620px" class="nz-dialog" @closed="closeDialog">
 

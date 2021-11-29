@@ -48,7 +48,7 @@
   padding: 2px 5px;
   border-radius: 4px;
 }
-/deep/.active-icon{
+.active-icon{
   margin-top: 0;
 }
 .contentTable{
@@ -61,13 +61,13 @@
 .tabelH100{
   height: 100% !important;
 }
-/deep/.too-long-split{
+.too-long-split{
   vertical-align: bottom;
 }
-/deep/.el-tooltip{
+.el-tooltip{
   display: inline-block;
 }
-/deep/.alert-clean-pop.el-popover{
+.alert-clean-pop.el-popover{
   top: -30px !important;
 }
 .pointer{
@@ -98,6 +98,6 @@
   color: white;
   border-radius: 4px;
 }
-/deep/ .nz-message .el-textarea textarea{
+.nz-message .el-textarea textarea{
   height: 108px !important;
 }
