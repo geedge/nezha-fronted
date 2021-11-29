@@ -62,6 +62,10 @@
   .query-row .metric-selector-input-box {
     width: calc(100% - 120px);
   }
+
+  .el-input-number--small {
+    width: 100%;
+  }
 }
 .severity-item{
   color: $--color-text-secondary;
