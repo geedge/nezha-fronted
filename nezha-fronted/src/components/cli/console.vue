@@ -157,7 +157,7 @@ export default {
       })
       this.term.open(terminalContainer)
       this.term.focus()
-      const token = sessionStorage.getItem('nz-token')
+      const token = localStorage.getItem('nz-token')
       let baseUrl = JSON.parse(JSON.stringify(this.$axios.defaults.baseURL))
       const protocol = window.location.protocol.indexOf('https') > -1 ? 'wss' : 'ws'
       if (baseUrl.startsWith('/')) {

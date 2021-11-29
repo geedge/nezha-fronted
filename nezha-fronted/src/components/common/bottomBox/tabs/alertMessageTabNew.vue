@@ -2,6 +2,7 @@
   <div class="full-width-height">
     <nz-bottom-data-list
       :showTitle='showTitle'
+      :obj='obj'
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :layout="['searchInput', 'elementSet']"
@@ -54,6 +55,18 @@
                class="line-chart-block-modal nz-dialog endpoint-dialog"
                width="90%"
                @close="dialogClose">
+      <el-popover
+        v-if="isError"
+        placement="top-start"
+        :close-delay=10
+        trigger="hover"
+        popper-class="chart-error-popper">
+        <div >{{errorContent}}</div>
+        <span slot="reference"  class="panel-info-corner panel-info-corner--error">
+                <i class="nz-icon nz-icon-warning fa-model" ></i>
+                <span class="panel-info-corner-inner"></span>
+            </span>
+      </el-popover>
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
@@ -203,7 +216,9 @@ export default {
       logData: [],
       chartLoading: false,
       dialogShowText: false,
-      dialogText: ''
+      dialogText: '',
+      isError: false,
+      errorContent: ''
     }
   },
   methods: {
@@ -249,8 +264,7 @@ export default {
       if (this.$refs.messageChart) {
         this.$refs.messageChart.startLoading()
         const axiosArr = []
-        const paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg))
-        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + paramStr.substring(1, paramStr.length - 1) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
+        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\r|\n+/g, '')) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))))
         this.legend = []
         this.chartDatas = []
         axios.all(axiosArr).then(res => {
@@ -322,6 +336,17 @@ export default {
                   }
                 } else {
                   this.$message.error(response.data.error)
+                }
+              } else {
+                this.$refs.messageChart.endLoading()
+                this.chartLoading = false
+                this.isError = true
+                if (response.msg) {
+                  this.errorContent = response.msg
+                } else if (response.error) {
+                  this.errorContent = response.error
+                } else {
+                  this.errorContent = response
                 }
               }
             })
@@ -401,7 +426,7 @@ export default {
     },
     promQueryParamConvert (alert) {
       const obj = { ...alert }
-      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'') + ')'
+      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '') + ')'
       let intoLabels = false
       obj.labels = JSON.parse(obj.labels)
       if (Object.keys(obj.labels).length > 0) {
@@ -431,6 +456,14 @@ export default {
         }())
       }
       return r
+    },
+    promQueryParamLabels (labels) {
+      const obj = JSON.parse(labels)
+      const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type']
+      filterArr.forEach(key => {
+        delete obj[key]
+      })
+      return JSON.stringify(obj)
     },
     // asset弹框控制
     tabControl (data) {
@@ -705,7 +738,7 @@ export default {
       const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
       const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
       this.expressions = [this.currentMsg.alertRule.expr]
-      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + this.currentMsg.alertRule.expr + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit).then(res => {
+      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(this.currentMsg.alertRule.expr) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))).then(res => {
         this.chartLoading = false
         const logData = [res.data]
         this.resultType = res.data.resultType

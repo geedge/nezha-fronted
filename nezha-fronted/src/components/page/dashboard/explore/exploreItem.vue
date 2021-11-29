@@ -464,11 +464,12 @@ export default {
       if (!limit) {
         limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
       }
+      this.$refs.logDetail && this.$refs.logDetail.resetOperation()
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {
           if (item != '') {
-            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&limit=' + limit))
+            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&limit=' + limit))
           }
         })
         if (requestArr.length > 0) {
@@ -611,7 +612,7 @@ export default {
               const step = bus.getStep(this.filterTime[0], this.filterTime[1])
               promqlInputIndexs.push(index)
               queryExpression.push(item)
-              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step=' + step + '&nullType=null'))
+              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step=' + step + '&nullType=null'))
             }
           })
           if (requestArr.length > 0) {
@@ -668,8 +669,11 @@ export default {
 
                   this.$refs['promql-' + promqlIndex][0].setError('')
                 } else {
-                  // console.log(response)
-                  this.$refs['promql-' + promqlIndex][0].setError(response.error)
+                  if (response.error) {
+                    this.$refs['promql-' + promqlIndex][0].setError(response.error)
+                  } else {
+                    this.$refs['promql-' + promqlIndex][0].setError(response)
+                  }
                 }
               })
 
@@ -693,7 +697,7 @@ export default {
           const requestArr = []
           this.expressions.forEach((item, index) => {
             if (item !== '') {
-              requestArr.push(this.$get('/prom/api/v1/query?query=' + item))
+              requestArr.push(this.$get('/prom/api/v1/query?query=' + encodeURIComponent(item)))
             }
           })
           if (requestArr.length > 0) {
@@ -759,6 +763,7 @@ export default {
     },
     expressionChange () {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+      this.pageObj.pageNo = 1
       // console.log(this.filterTime,nowTimeType);
       this.setSearchTime(nowTimeType.type, nowTimeType.value)
       if (this.showMetrics) {
@@ -801,7 +806,7 @@ export default {
       const expressions = this.expressions.filter(item => {
         return item && item != ''
       })
-      const username = sessionStorage.getItem('nz-username')
+      const username = localStorage.getItem('nz-username')
       if (historyJson && historyJson != 'undefined' && historyJson != '') {
         const historyObj = JSON.parse(historyJson)
         let history = historyObj[username]

@@ -104,6 +104,7 @@
 <script>
 import * as echarts from 'echarts'
 import chartConfig from '@/components/page/dashboard/overview/chartConfig'
+import { dealLegendAlias } from '@/components/common/js/tools'
 export default {
   name: 'logTab',
   props: {
@@ -178,6 +179,12 @@ export default {
     }
   },
   methods: {
+    resetOperation () {
+      this.operations = {
+        levels: [0, 1, 2, 3, 4, 5, 6],
+        descending: true
+      }
+    },
     exportLog () {
       this.$emit('exportLog', this.operations)
     },
@@ -478,7 +485,7 @@ export default {
           host += '}'
         }
         // 处理legend别名
-        alias = this.dealLegendAlias(host, row.elements.legend)
+        alias = dealLegendAlias(host, row.elements.legend)
         if (!alias || alias === '') {
           alias = host
         }
@@ -486,23 +493,6 @@ export default {
         alias = row.elements.legend
       }
       return alias
-    },
-    dealLegendAlias: function (legend, expression) {
-      if (/\{\{.+\}\}/.test(expression)) {
-        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          const reg = new RegExp(label + '=".+?"')
-          let value = null
-          if (reg.test(legend)) {
-            const find = legend.match(reg)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          }
-          return value || label
-        })
-        return labelValue
-      } else {
-        return expression
-      }
     },
     tooltipFormatter (params, a, b) {
       const vm = this

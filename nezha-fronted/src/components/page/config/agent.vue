@@ -190,7 +190,7 @@ export default {
     toDownloadAgent: function () {
       this.getAllDc()
       this.showAgentDownload = true
-      this.token = sessionStorage.getItem('nz-token')
+      this.token = localStorage.getItem('nz-token')
       axios.get('/healthy').then(response => {
         const url = response.request.responseURL
         this.ipAddr = url.split('/healthy')[0]

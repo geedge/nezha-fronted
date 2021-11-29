@@ -246,7 +246,7 @@ export default {
       this.tableData = []
       this.tableDataCopy = ''
       setTimeout(() => {
-        this.$get("/prom/api/v1/query?query={endpoint='" + this.currentEndpoint.id + "'}&time=" + this.formatTime).then(response => {
+        this.$get('/prom/api/v1/query?query=' + encodeURIComponent("{endpoint_id='" + this.currentEndpoint.id + "'}") + '&time=' + this.formatTime).then(response => {
           this.loading = false
           if (response.status === 'success') {
             const results = response.data.result
@@ -448,13 +448,13 @@ export default {
       }
       const axiosArr = []
       for (const endpoint of this.selectedEndpoints) {
-        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + endpoint.element + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
+        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(endpoint.element) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
       }
       if (this.$refs.pickTime && this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length) { // 判断是否需要添加比较
         const startTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
         const endTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
         for (const endpoint of this.selectedEndpoints) {
-          axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + endpoint.element + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step))
+          axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(endpoint.element) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step))
         }
       }
       this.legend = []

@@ -138,7 +138,7 @@
         </div>
       </template>
 
-      <chart-alert-list v-if="chart.type === 'alertList'" :showTitle="false" ref="alertListChart" id="chartAlertListPreview" :chart-info="chart" :chart-data="chart"  class="height-100"></chart-alert-list>
+      <chart-alert-list v-if="chart.type === 'alertList'" :show-option="false" :showTitle="false" ref="alertListChart" id="chartAlertListPreview" :chart-info="chart" :chart-data="chart"  class="height-100"></chart-alert-list>
 
       <template v-if="chart.type==='text'">
           <div  id="chartTextPreview" class="chart-text-preview height-100">
@@ -170,7 +170,7 @@ import chartAlertList from './chart-alert-list'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import diagram from '@/components/common/ChartDiagram/diagram'
 import moment from 'moment-timezone'
-import { formatScientificNotation } from '@/components/common/js/tools'
+import { formatScientificNotation, dealLegendAlias } from '@/components/common/js/tools'
 export default {
   name: 'chartPreview',
   components: {
@@ -302,6 +302,9 @@ export default {
     },
     initDialog () {
       // 此时初始化，才能获得screenShowArea对象，否则此对象为undefined，无法初始化图表
+      if (this.$refs.pickTime) {
+        this.$refs.pickTime.$refs.timePicker.setCustomTime()
+      }
       const chartType = this.chart.type
       if (chartType === 'table') {
         //
@@ -361,11 +364,16 @@ export default {
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {
             const filterItem = ele
-            const query = filterItem.expression
+            const query = encodeURIComponent(filterItem.expression)
             // if(chartItem.type === 'table'&&chartItem.param&&chartItem.param.last == 1){
             //   return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
             // }
-            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+            let str = ''
+            if ((chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 'table') && chartItem.param) { // 如果是这三个 默认给null
+              chartItem.param.nullType = chartItem.param.nullType || 'null'
+              str += '&nullType=' + chartItem.param.nullType
+            }
+            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
           })
           // 一个图表的所有element单独获取数据
           axios.all(axiosArr).then((res) => {
@@ -510,7 +518,7 @@ export default {
                             host = chartItem.elements[innerPos].expression
                           }
                           // 处理legend别名
-                          let alias = this.dealLegendAlias(host, chartItem.elements[innerPos].legend)
+                          let alias = dealLegendAlias(host, chartItem.elements[innerPos].legend)
                           if (!alias || alias === '') {
                             alias = host
                           }
@@ -765,6 +773,7 @@ export default {
     // chartSite用于区分是全屏显示还是局部显示
     initChart (chartInfo, dataArg, ele, legend) {
       const self = this
+      self.isStackArea = false
       let minTime = null
       let maxTime = null
       if (dataArg.length > 0 && dataArg[0].data &&
@@ -860,6 +869,7 @@ export default {
           formatter: function (params) {
             let str = '<div>'
             let sum = 0
+            let showFlag = false
             params.forEach((item, i) => {
               const tip = legend[item.seriesIndex]
               const color = self.bgColorList[item.seriesIndex]
@@ -870,33 +880,40 @@ export default {
                     [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
                 str += '<br/>'
               }
-              const val = formatScientificNotation(item.data[1], 2)
-              sum += self.numberWithEConvent(val)
-              str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
-              str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
-              str += '<div style="padding-left: 10px;">'
-              str += (function () {
-                if (chartInfo.from == 'endpoint') {
-                  return val == 1 ? 'up' : 'down'
-                }
-                return chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, 2)
-              }())
-              str += '</div>'
-              str += '</div>'
+              showFlag = showFlag || item.data[1]
+              if (!isNaN(item.data[1] + '')) {
+                const val = formatScientificNotation(item.data[1], 2)
+                sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
+                str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
+                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
+                str += '<div style="padding-left: 10px;">'
+                str += (function () {
+                  if (chartInfo.from == 'endpoint') {
+                    return val == 1 ? 'up' : 'down'
+                  }
+                  return chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, 2)
+                }())
+                str += '</div>'
+                str += '</div>'
+              }
             })
             if (chartInfo.type === 'stackArea' || self.isStackArea) {
-              sum = parseFloat(Number(sum).toFixed(2))
+              sum = parseFloat(Number(sum).toFixed(6))
               str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
               str += '<div style="line-height: 18px; font-size: 12px;padding-left:20px;">'
               str += self.$t('dashboard.panel.chartTotal')
               str += '</div>'
               str += '<div style="padding-left: 10px;">'
-              str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, 2)
+              str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, 6)
               str += '</div>'
               str += '</div>'
             }
             str += '</div>'
-            return str
+            if (!showFlag) {
+              return ''
+            } else {
+              return str
+            }
           }
         },
         legend: {
@@ -1015,6 +1032,7 @@ export default {
 
         this.$refs.loadingPreview.endLoading()
       })
+      this.echartModalStore.off('magictypechanged')
       this.echartModalStore.on('magictypechanged', function (params) {
         self.isStackArea = !self.isStackArea
         if (self.isStackArea) {
@@ -1046,7 +1064,7 @@ export default {
                     str += '<br/>'
                   }
                   const val = formatScientificNotation(item.data[1], 2)
-                  sum += self.numberWithEConvent(val)
+                  sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
                   str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                   str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
                   str += '<div style="padding-left: 10px;">'
@@ -1600,11 +1618,16 @@ export default {
         const step = bus.getStep(startTime, endTime)
         axiosArr = this.chart.elements.map((ele) => {
           const filterItem = ele
-          const query = filterItem.expression
-          if (chartItem.type === 'table' && chartItem.param && chartItem.param.last == 1) {
-            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(endTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+          const query = encodeURIComponent(filterItem.expression)
+          let str = ''
+          if ((chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 'table') && chartItem.param) { // 如果是这三个 默认给null
+            chartItem.param.nullType = chartItem.param.nullType || 'null'
+            str += '&nullType=' + chartItem.param.nullType
           }
-          return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+          if (chartItem.type === 'table' && chartItem.param && chartItem.param.last == 1) {
+            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(endTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
+          }
+          return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
         })
         // 一个图表
         axios.all(axiosArr).then(res => {
@@ -1673,7 +1696,7 @@ export default {
                       if (!host || host === '') {
                         host = this.chart.elements[pos].expression
                       }
-                      let alias = this.dealLegendAlias(host, this.chart.elements[pos].legend)
+                      let alias = dealLegendAlias(host, this.chart.elements[pos].legend)
                       if (!alias || alias === '') {
                         alias = host
                       }
@@ -1712,23 +1735,6 @@ export default {
           }
         })
       })
-    },
-    dealLegendAlias: function (legend, expression) {
-      if (/\{\{.+\}\}/.test(expression)) {
-        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          const reg = new RegExp(label + '=".+?"')
-          let value = null
-          if (reg.test(legend)) {
-            const find = legend.match(reg)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          }
-          return value || label
-        })
-        return labelValue
-      } else {
-        return expression
-      }
     },
     screenPageNo (val) {
       this.screenPageObj.pageNo = val

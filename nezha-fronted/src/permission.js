@@ -38,7 +38,16 @@ router.beforeEach((to, from, next) => {
             if (res.inited === 0) {
               next({ path: '/setup' })
             } else {
-              next()
+              if (localStorage.getItem('nz-token')) {
+                next({
+                  path: 'overview',
+                  query: {
+                    t: +new Date()
+                  }
+                })
+              } else {
+                next()
+              }
             }
           }
         })
@@ -52,7 +61,7 @@ router.beforeEach((to, from, next) => {
         }
       })
     })
-  } else if (sessionStorage.getItem('nz-token')) {
+  } else if (localStorage.getItem('nz-token')) {
     const i18nRequest = new Promise(resolve => {
       // 从localStorage加载i18n
       if (!store.getters.i18nIsReady) {
@@ -76,12 +85,17 @@ router.beforeEach((to, from, next) => {
     const permissionRequest = new Promise(resolve => {
       if (store.getters.menuList.length === 0) {
         Vue.http.get(configUrl).then(config => {
-          post(config.body.baseUrl + 'sys/user/permissions', { token: sessionStorage.getItem('nz-token') }).then(res => {
-            store.commit('setMenuList', sortByOrderNum(res.data.menus))
-            store.commit('setButtonList', res.data.buttons)
-            store.commit('setRoleList', res.data.roles)
-            document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`))
-            resolve()
+          post(config.body.baseUrl + 'sys/user/permissions', { token: localStorage.getItem('nz-token') }).then(res => {
+            if (res.code === 200) {
+              store.commit('setMenuList', sortByOrderNum(res.data.menus))
+              store.commit('setButtonList', res.data.buttons)
+              store.commit('setRoleList', res.data.roles)
+              document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`))
+              resolve()
+            } else {
+              localStorage.removeItem('nz-token')
+              next({ path: '/login' })
+            }
           })
         })
       } else {

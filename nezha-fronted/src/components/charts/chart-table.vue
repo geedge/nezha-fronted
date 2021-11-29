@@ -88,6 +88,7 @@
             </div>
           </div>
           <el-table :data="seriesItemScreen" border height="95%" style="margin-top: 10px;"
+                    ref="tableScreen"
                     @sort-change="tableDataSortScreen" tooltip-effect="light">
             <el-table-column :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" prop="time"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
@@ -101,7 +102,7 @@
             <el-table-column :label="$t('dashboard.panel.chartTableColumn.value')" class-name="costom-value" min-width="90" prop="value"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
-                <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}" >
+                <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}" >
                   <span style="padding: 0px 10px;">{{ scope.row.value}}</span>
                 </div>
               </template>
@@ -352,6 +353,8 @@ export default {
 
       this.seriesItemScreen = this.seriesItem
       this.screenModal = true
+      this.screenPageObj.pageNo = 1
+      this.screenPageObj.pageSize = this.pageObj.pageSize
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, area, errorMsg) {
@@ -390,6 +393,7 @@ export default {
           }
           this.mapping = mapping
           item.mapping = mapping
+          item.oldValue = item.value
           item.value = mapping ? mapping.text.replace('{{value}}', item.value).replace('{{name}}', item.element.alias) : chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(value, null, 2)
         }
         return item
@@ -607,23 +611,6 @@ export default {
     tableDataSortScreen (item) {
       this.orderByScreen = { order: item.order, prop: item.prop }
       this.seriesItemScreen = this.filterShowData(this.storedScreanTableData, this.screenPageObj, 'seriesScreen')
-    },
-    dealLegendAlias: function (legend, expression) {
-      if (/\{\{.+\}\}/.test(expression)) {
-        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          const reg = new RegExp(label + '=".+?"')
-          let value = null
-          if (reg.test(legend)) {
-            const find = legend.match(reg)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          }
-          return value || label
-        })
-        return labelValue
-      } else {
-        return expression
-      }
     },
     // 获取格式
     getNumStr (num) {

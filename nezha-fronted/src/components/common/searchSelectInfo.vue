@@ -240,12 +240,12 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   searchMetrics: [
     {
       id: 1,
-      name: i18n.t('project.metrics.metrics'),
+      name: 'Metrics',
       searchType: 'alertTypes'
     },
     {
       id: 2,
-      name: i18n.t('overall.logs'),
+      name: 'Logs',
       searchType: 'alertTypes'
     },
     {

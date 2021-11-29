@@ -720,6 +720,10 @@ export const tableSet = {
     return function (obj1, obj2) {
       let val1 = obj1[prop]
       let val2 = obj2[prop]
+      if (prop === 'value') {
+        val1 = obj1.oldValue
+        val2 = obj2.oldValue
+      }
       if (!isNaN(val1) && !isNaN(val2) && prop === 'value') {
         val1 = Number(val1)
         val2 = Number(val2)
@@ -754,7 +758,11 @@ export const tableSet = {
     return function (obj1, obj2) {
       let val1 = obj1[prop]
       let val2 = obj2[prop]
-      if (!isNaN(Number(val1)) && !isNaN(Number(val2)) && prop !== 'time') {
+      if (prop === 'value') {
+        val1 = obj1.oldValue
+        val2 = obj2.oldValue
+      }
+      if (!isNaN(Number(val1)) && !isNaN(Number(val2)) && prop === 'value') {
         val1 = Number(val1)
         val2 = Number(val2)
       }
@@ -864,3 +872,21 @@ export function formatScientificNotation (value, dot = 2) {
     return getTdDom(dom.parentElement);
   }
 } */
+/* 处理legend的别名 */
+export function dealLegendAlias (legend, expression) {
+  if (/\{\{.+\}\}/.test(expression)) {
+    const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
+      const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
+      const reg = new RegExp('\\b' + label + '=".+?"')
+      let value = null
+      if (reg.test(legend)) {
+        const find = legend.match(reg)[0]
+        value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
+      }
+      return value || label
+    })
+    return labelValue
+  } else {
+    return expression
+  }
+}

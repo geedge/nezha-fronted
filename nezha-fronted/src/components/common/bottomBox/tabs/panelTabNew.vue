@@ -1,7 +1,8 @@
 <template>
-  <div class="full-width-height chart-list panel-tab-new">
-   <nz-bottom-data-list
+  <div class="full-width-height chart-list panel-tab-new asset-detail" v-loading="panelTabLoading">
+    <nz-bottom-data-list
       :showTitle='showTitle'
+      :obj='obj'
       :layout="[]"
       :tabs="tabs"
       :targetTab="targetTab"
@@ -41,6 +42,9 @@
               <el-dropdown-item v-has="'panel_chart_add'">
                 <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
               </el-dropdown-item>
+              <el-dropdown-item v-has="'panel_chart_edit'">
+                <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
+              </el-dropdown-item>
             </template>
           </top-tool-more-options>
         </div>
@@ -74,6 +78,9 @@
               <el-dropdown-item v-has="'panel_chart_add'">
                 <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
               </el-dropdown-item>
+              <el-dropdown-item v-has="'panel_chart_edit'">
+                <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
+              </el-dropdown-item>
             </template>
           </top-tool-more-options>
         </div>
@@ -93,7 +100,7 @@
           <div class="table-list" id="tableList">
             <div ref="dashboardScrollbar" id="dashboardScrollbar" style="height: 100%; overflow: auto;">
               <div class="box-content">
-                <chart-list :draggable="draggable" :from="from" :is-model="from === fromRoute.model" :obj="obj" @on-edit-chart="editChart"
+                <chart-list :nowTimeType='nowTimeType' :draggable="draggable" :from="from" :is-model="from === fromRoute.model" :obj="obj" @on-edit-chart="editChart"
                             @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock" :panel-data-list="panelDataList"
                             @on-add-group-item-chart="addGroupItem"></chart-list>
               </div>
@@ -137,6 +144,7 @@ export default {
   data () {
     return {
       fromRoute,
+      panelTabLoading: false,
       panelLock: true,
       showTopBtn: false, // top按钮
       visible: false,
@@ -213,7 +221,8 @@ export default {
       // ---图表相关参数--end
       scrollbarWrap: null,
       panelDataList: [],
-      batchDeleteObjs: []
+      batchDeleteObjs: [],
+      nowTimeType: {}
     }
   },
   components: {
@@ -347,6 +356,7 @@ export default {
       // this.searchTime = [...val];
       if (this.$refs.pickTime) {
         const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+        this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.setSearchTime(nowTimeType.type, nowTimeType.value)
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
@@ -551,9 +561,11 @@ export default {
       this.panelLock = boolean
     },
     chartBySync () {
-      this.$post('visual/panel/chart/syncTmpl', { pid: this.obj.id }).then(res => {
+      this.panelTabLoading = true
+      this.$post('visual/panel/chart/syncTmpl', { panelId: this.showPanel.id }).then(res => {
+        this.panelTabLoading = false
         if (res.code === 200) {
-          this.getTableData()
+          this.getTableData(this.obj.id)
           this.$message.success(this.$t('tip.syncSuccess'))
         } else {
           this.$message.error(res.msg)

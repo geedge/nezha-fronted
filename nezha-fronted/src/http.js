@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 axios.interceptors.request.use(config => {
-  const token = sessionStorage.getItem('nz-token')
+  const token = localStorage.getItem('nz-token')
   if (token) {
     config.headers.Authorization = token // 请求头token
   }
@@ -58,6 +58,8 @@ axios.interceptors.response.use(
       if (accountErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.hash) == -1) {
         window.location.href = '/'
       }
+    } else {
+      return response
     }
     return response
   },
@@ -76,6 +78,8 @@ export function get (url, params) {
         resolve(err.response.data)
       } else if (err.message) {
         resolve(err.message)
+      } else {
+        resolve(err)
       }
     })
   })
@@ -90,6 +94,8 @@ export function post (url, params, headers) {
         resolve(err.response.data)
       } else if (err.message) {
         resolve(err.message)
+      } else {
+        resolve(err)
       }
     })
   })
@@ -104,6 +110,8 @@ export function put (url, params, headers) {
         resolve(err.response.data)
       } else if (err.message) {
         resolve(err.message)
+      } else {
+        resolve(err)
       }
     })
   })
@@ -118,6 +126,8 @@ export function del (url, params) {
         resolve(err.response.data)
       } else if (err.message) {
         resolve(err.message)
+      } else {
+        resolve(err)
       }
     })
   })

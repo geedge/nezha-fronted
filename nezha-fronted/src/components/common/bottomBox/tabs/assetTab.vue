@@ -2,6 +2,7 @@
   <div>
     <nz-bottom-data-list
       :showTitle='showTitle'
+      :obj='obj'
       :targetTab.sync="targetTab"
       :api="url"
       style="height: 100%"

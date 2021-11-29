@@ -65,11 +65,13 @@
             @tableDataSort="tableDataSort"
             @del="deleteMessage"
             @showText="showText"
+            @addSilence="addSilence"
             @messageDetail="messageDetail"
             ref="alertListTable"
             :form="'chartList'"
             :fromPath="'/alertList'"
             style="height: calc(100% - 50px)"
+            :showOption="showOption"
             :showTopBtn="false"
           ></alertMessageTable>
           <Pagination :pageObj="pageObj" @pageNo='pageNo'  @pageSize='pageSize' ref="Pagination" :append-to-body="false" pop-class="out-popper-fix" style="margin-top: 15px;"></Pagination>
@@ -101,7 +103,7 @@
             :showOption="false"
             :chart-alert-list="true"
           ></alertMessageTable>
-          <Pagination :pageObj="screenPageObj"  @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination" ></Pagination>
+          <Pagination :pageObj="screenPageObj"  @pageNo='screenPageNo' @pageSize='screenPageSize' ref="screenPagination" ></Pagination>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
         <div class="export-xlsx">
@@ -155,6 +157,7 @@
       </div>
       <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isPreview && data.resizable&&!isLock"></span>
     </div>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box></transition>
   </div>
 </template>
 
@@ -167,13 +170,15 @@ import pickTime from '../common/pickTime'
 import chart from '../page/dashboard/overview/chart'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
 import chartDataList from '@/components/common/mixin/chartDataList'
+import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 export default {
   name: 'chartTable',
   components: {
     loading: loading,
     chart: chart,
     'pick-time': pickTime,
-    alertMessageTable: alertMessageTable
+    alertMessageTable: alertMessageTable,
+    alertSilenceBox
   },
   props: {
     // 看板id
@@ -197,12 +202,14 @@ export default {
     chartData: {},
     id: { type: String },
     from: { type: String },
+    showOption: { type: Boolean, default: true },
     isLock: { type: Boolean, default: false }
   },
   mixins: [chartDataList],
   data () {
     return {
       currentMsg: null,
+      silenceBoxShow: false,
       tableHeight: 0,
       data: {}, // 该图表信息,chartItem
       unit: {},
@@ -319,7 +326,22 @@ export default {
       logData: [],
       chartLoading: false,
       dialogShowText: false,
-      dialogText: ''
+      dialogText: '',
+      blankSilenceObject: {
+        id: '',
+        startAt: '',
+        endAt: '',
+        ruleId: '',
+        type: 'asset',
+        linkId: '',
+        remark: '',
+        time: [],
+        matchers: [
+          { name: '', value: '', regex: 0 }
+        ],
+        name: ''
+      },
+      objectSilence: {}
     }
   },
   computed: {
@@ -493,7 +515,7 @@ export default {
       const axiosArr = []
       const paramStr = this.currentMsg ? JSON.stringify(this.promQueryParamConvert(this.currentMsg)) : null
       if (paramStr && paramStr.trim() != '""') {
-        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + paramStr.substring(1, paramStr.length - 1) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
+        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '')) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))))
         this.legend = []
         this.chartDatas = []
         axios.all(axiosArr).then(res => {
@@ -626,7 +648,7 @@ export default {
       this.$get('/alert/message', queryParam).then(response => {
         if (response.code === 200) {
           this.storedTableData = response.data.list
-          this.storedScreanTableData = response.data.list
+          this.storedScreanTableData = JSON.parse(JSON.stringify(response.data.list))
           this.pageObj.total = response.data.total
           this.isError = false
           this.errorContent = ''
@@ -686,7 +708,7 @@ export default {
       this.$get('/alert/message', queryParam).then(response => {
         if (response.code == 200) {
           this.storedTableData = response.data.list
-          this.storedScreanTableData = response.data.list
+          this.storedScreanTableData = JSON.parse(JSON.stringify(response.data.list))
           const axiosAll = []
           this.$nextTick(() => {
             this.storedScreanTableData.forEach((item) => {
@@ -736,7 +758,7 @@ export default {
       this.getAlerScreetList()
     },
     promQueryParamConvert (obj) {
-      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'') + ')'
+      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '') + ')'
       let intoLabels = false
       obj.labels = JSON.parse(obj.labels)
       if (Object.keys(obj.labels).length > 0) {
@@ -766,6 +788,14 @@ export default {
         }())
       }
       return r
+    },
+    promQueryParamLabels (labels) {
+      const obj = labels.constructor === Object ? labels : JSON.stringify(labels)
+      const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type']
+      filterArr.forEach(key => {
+        delete obj[key]
+      })
+      return JSON.stringify(obj)
     },
     elementsetShow (s, e) {
       const eventfixed = {
@@ -899,6 +929,9 @@ export default {
       // this.$refs.alertListTable.$refs.alertListTable.clearSelection()
       // this.$refs.alertListScreenTable.$refs.dataTable.clearSelection()
       this.screenPageObj = { ...this.pageObj }
+      if (this.$refs.screenPagination && this.$refs.screenPagination.pageSize) {
+        this.$refs.screenPagination.pageSize = this.screenPageObj.pageSize
+      }
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, area, errorMsg) {
@@ -974,7 +1007,7 @@ export default {
       const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000)
       const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
       this.expressions = [this.currentMsg.alertRule.expr]
-      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + this.currentMsg.alertRule.expr + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit).then(res => {
+      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(this.currentMsg.alertRule.expr) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))).then(res => {
         this.chartLoading = false
         const logData = [res.data]
         this.resultType = res.data.resultType
@@ -1077,6 +1110,43 @@ export default {
     showText (row) {
       this.dialogShowText = true
       this.dialogText = row.alertRule.trbShot
+    },
+    addSilence (row, type) {
+      this.blankSilenceObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
+      this.blankSilenceObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'yyyy-MM-dd hh:mm:ss')
+      this.objectSilence = JSON.parse(JSON.stringify(this.blankSilenceObject))
+      this.objectSilence.name = 'Quick silence'
+      if (type !== 'alertMessage' && type !== 'alertRule') {
+        this.objectSilence.matchers = [
+          { name: type, value: row.name, regex: 0 },
+          { name: type + '_id', value: row.id, regex: 0 }
+        ]
+      } else if (type === 'alertMessage') {
+        if (typeof row.labels === 'string') row.labels = JSON.parse(row.labels)
+        const labels = JSON.parse(JSON.stringify(row.labels))
+        this.objectSilence.matchers = []
+        const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type']
+        Object.keys(labels).forEach((key, i) => {
+          if (filterArr.indexOf(key) != -1) {
+            return
+          }
+          this.objectSilence.matchers.push(
+            { name: key, value: labels[key], regex: 0 }
+          )
+        })
+      } else if (type === 'alertRule') {
+        this.objectSilence.matchers = [
+          { name: 'alertName', value: row.name, regex: 0 }
+        ]
+      }
+      this.silenceBoxShow = true
+    },
+    closeSilenceBox (refresh) {
+      this.silenceBoxShow = false
+      if (refresh) {
+        this.delFlag = true
+        this.getAlertList()
+      }
     }
   },
   created () {

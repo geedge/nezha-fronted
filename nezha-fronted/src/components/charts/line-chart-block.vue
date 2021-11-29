@@ -206,7 +206,7 @@ import chartDataFormat from './chartDataFormat'
 import { randomcolor } from '../common/js/radomcolor/randomcolor.js'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { getChart, setChart, lineChartMove, getMousePoint } from '../common/js/common'
-import { getMetricTypeValue, chartResizeTool, formatScientificNotation } from '../common/js/tools'
+import { getMetricTypeValue, chartResizeTool, formatScientificNotation, dealLegendAlias } from '../common/js/tools'
 import moment from 'moment-timezone'
 import chartDataList from '@/components/common/mixin/chartDataList'
 
@@ -399,7 +399,6 @@ export default {
       const hasGrey = highlightNum < this.isGrey.length // 是否有置灰的
       const curIsGrey = this.isGrey[index] // 当前legend的状态
       const currentIsTheOnlyOneHighlight = !curIsGrey && highlightNum === 1 // 当前legend是否是目前唯一高亮的
-
       const echart = getChart(this.chartIndex)
       if (echart) {
         if (!hasGrey) { // 1.除当前legend外全置灰
@@ -424,6 +423,34 @@ export default {
           })
           this.$set(this.isGrey, index, !this.isGrey[index])
         }
+        const chartInfo = this.data
+        const dataArg = this.seriesItem.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
+        const maxValueCopies = this.getMaxValue(dataArg, chartInfo)
+        const maxValue = maxValueCopies.maxValue
+        // const minValue = maxValueCopies.minValue
+        // const dot = maxValueCopies.dot
+        const copies = maxValueCopies.copies
+        const unit = maxValueCopies.unit
+        const option = {
+          yAxis: {
+            minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
+            maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+          }
+        }
+        if (!maxValueCopies.copies) {
+          option.yAxis.min = 0
+          option.yAxis.max = 1
+        } else {
+          option.yAxis.max = undefined
+        }
+        if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+          delete option.yAxis.maxInterval
+        }
+        getChart(this.chartIndex).setOption({
+          yAxis: {
+            ...option.yAxis
+          }
+        })
       }
     },
     clickLegend2 (legendName, index) {
@@ -488,7 +515,6 @@ export default {
       const hasGrey = highlightNum < this.isGreyScreen.length // 是否有置灰的
       const curIsGrey = this.isGreyScreen[index] // 当前legend的状态
       const currentIsTheOnlyOneHighlight = !curIsGrey && highlightNum === 1 // 当前legend是否是目前唯一高亮的
-
       const echart = this.echartModalStore
       if (echart) {
         if (!hasGrey) { // 1.除当前legend外全置灰
@@ -513,6 +539,34 @@ export default {
           })
           this.$set(this.isGreyScreen, index, !this.isGreyScreen[index])
         }
+        const chartInfo = this.data
+        const dataArg = this.seriesItemScreen.filter((seriesItem, seriesIndex) => !this.isGreyScreen[seriesIndex])
+        const maxValueCopies = this.getMaxValue(dataArg, chartInfo)
+        const maxValue = maxValueCopies.maxValue
+        // const minValue = maxValueCopies.minValue
+        // const dot = maxValueCopies.dot
+        const copies = maxValueCopies.copies
+        const unit = maxValueCopies.unit
+        const option = {
+          yAxis: {
+            minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
+            maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+          }
+        }
+        if (!maxValueCopies.copies) {
+          option.yAxis.min = 0
+          option.yAxis.max = 1
+        } else {
+          option.yAxis.max = undefined
+        }
+        if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+          delete option.yAxis.maxInterval
+        }
+        echart.setOption({
+          yAxis: {
+            ...option.yAxis
+          }
+        })
       }
     },
     clickScreenLegend2 (legendName, index) {
@@ -588,6 +642,7 @@ export default {
       this.legendMagicType = legend
       this.chartInfo = chartInfo
       const self = this
+      self.isStackArea = false
       this.chartType = '' // 图表类型
       if (chartInfo.type === 4) { // line,bar
         this.chartType = 'line'
@@ -611,7 +666,7 @@ export default {
         // chartId='screenShowArea';
       }
       const chartWidth = ele.clientWidth
-      this.stepWidth = document.getElementById('listContainer').offsetWidth / 12
+      this.stepWidth = this.chartInfo.groupId ? (document.getElementById('listContainer').offsetWidth / 12) - 10 : document.getElementById('listContainer').offsetWidth / 12
       const stackIconBorderColor = (chartInfo.type === 'stackArea' ? '#53a3cb' : '#7e7e7e')
       const stackIconChooseBorderColor = (chartInfo.type === 'stackArea' ? '#7e7e7e' : '#53a3cb')
       let maxValueCopies = this.getMaxValue(dataArg, chartInfo)
@@ -627,7 +682,7 @@ export default {
       let dot = this.chartDot = maxValueCopies.dot
       const copies = maxValueCopies.copies
       const unit = maxValueCopies.unit
-      const oldDot = maxValueCopies.oldDot
+      // const oldDot = maxValueCopies.oldDot
       let option = {
         title: {
           show: false
@@ -754,6 +809,7 @@ export default {
           formatter: function (params) {
             let str = '<div>'
             let sum = 0
+            let showFlag = false
             let minusFlag = true
             params.forEach((item, i) => {
               const tip = legend[item.seriesIndex]
@@ -776,45 +832,49 @@ export default {
                 str += '</div>'
                 minusFlag = false
               }
-              const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
-              let paramsDot = bus.countDecimals(item.data[1])
-              if (paramsDot < self.chartDot) {
-                paramsDot = self.chartDot
-              } else if (paramsDot > 6) {
-                paramsDot = 6
-              }
-              const val = formatScientificNotation(item.data[1], paramsDot)
-              sum += self.numberWithEConvent(val)
-              str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
-              str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
-              str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
-              str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
-              if (previousItem) {
-                str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
-                const previousval = formatScientificNotation(item.data[1], paramsDot)
-                let minusVal = 0
-                if (previousval <= val) {
-                  minusVal = val - previousval
-                  str += '+'
-                } else {
-                  minusVal = previousval - val
-                  str += '-'
+              showFlag = showFlag || item.data[1]
+              if (!isNaN(item.data[1] + '')) {
+                const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
+                let paramsDot = bus.countDecimals(item.data[1])
+                if (paramsDot < self.chartDot) {
+                  paramsDot = self.chartDot
+                } else if (paramsDot > 6) {
+                  paramsDot = 6
                 }
+                const val = formatScientificNotation(item.data[1], paramsDot)
+                sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
 
-                str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, -1, paramsDot)
-                str += '</span>'
-              } else if (tip.alias.indexOf('Previous ') !== -1) {
-                str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
-                str += '</span>'
+                str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
+                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
+                str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
+                str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
+                if (previousItem) {
+                  str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'
+                  const previousval = formatScientificNotation(previousItem.data[1], paramsDot)
+                  let minusVal = 0
+                  if (previousval <= val) {
+                    minusVal = val - previousval
+                    str += '+'
+                  } else {
+                    minusVal = previousval - val
+                    str += '-'
+                  }
+
+                  str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, -1, paramsDot)
+                  str += '</span>'
+                } else if (tip.alias.indexOf('Previous ') !== -1) {
+                  str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
+                  str += '</span>'
+                }
+                str += '</div>'
+                str += '</div>'
               }
-              str += '</div>'
-              str += '</div>'
             })
             if (self.data.type === 'stackArea' || self.isStackArea) {
               if (!self.stackTotalColor || self.stackTotalColor == '') {
                 self.stackTotalColor = randomcolor()
               }
-              sum = parseFloat(Number(sum).toFixed(2))
+              sum = parseFloat(Number(sum).toFixed(6))
               str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
               str += '<div style="line-height: 18px; font-size: 12px;padding-left:0px;">'
               str += `<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${self.stackTotalColor};}'></span>`
@@ -827,7 +887,11 @@ export default {
             }
 
             str += '</div>'
-            return str
+            if (!showFlag) {
+              return ''
+            } else {
+              return str
+            }
           }
         },
         legend: {
@@ -946,6 +1010,8 @@ export default {
       if (!maxValueCopies.copies) {
         option.yAxis.min = 0
         option.yAxis.max = 1
+      } else {
+        option.yAxis.max = undefined
       }
       if (unit.type == 'Time') {
         delete option.yAxis.maxInterval
@@ -1000,38 +1066,41 @@ export default {
         this.$nextTick(() => {
           const vm = this
           setTimeout(function () {
-            const divHeight = self.$refs.legendArea.offsetHeight
+            const divHeight = self.$refs.legendArea && self.$refs.legendArea.offsetHeight > 20 ? self.$refs.legendArea.offsetHeight : 27
             if (!chartInfo.height) {
-              getChart(self.chartIndex).resize({ height: (250 - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
+              getChart(self.chartIndex) && getChart(self.chartIndex).resize({ height: (250 - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
             } else {
-              getChart(self.chartIndex).resize({ height: (chartInfo.height * vm.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
+              getChart(self.chartIndex) && getChart(self.chartIndex).resize({ height: (chartInfo.height * vm.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
             }
             if (dataArg && dataArg.length > 0) {
-              getChart(self.chartIndex).clear()
-              getChart(self.chartIndex).setOption(option)// 创建图表
+              getChart(self.chartIndex) && getChart(self.chartIndex).clear()
+              getChart(self.chartIndex) && getChart(self.chartIndex).setOption(option)// 创建图表
               self.noData = false
             } else {
               self.noData = true
               option = chartConfig.getOptionNoData('noData')
-              if (self.$refs.resizeBox.offsetWidth < 200) {
-                option.xAxis.splitNumber = 1
-              } else if (self.$refs.resizeBox.offsetWidth < 300) {
-                option.xAxis.splitNumber = 3
-              } else if (self.$refs.resizeBox.offsetWidth < 500) {
-                option.xAxis.splitNumber = 5
+              if (self.$refs.resizeBox && getChart(self.chartIndex)) {
+                if (self.$refs.resizeBox.offsetWidth < 200) {
+                  option.xAxis.splitNumber = 1
+                } else if (self.$refs.resizeBox.offsetWidth < 300) {
+                  option.xAxis.splitNumber = 3
+                } else if (self.$refs.resizeBox.offsetWidth < 500) {
+                  option.xAxis.splitNumber = 5
+                }
+                getChart(self.chartIndex) && getChart(self.chartIndex).clear()
+                getChart(self.chartIndex) && getChart(self.chartIndex).setOption(option)// 创建图表
               }
-              getChart(self.chartIndex).clear()
-              getChart(self.chartIndex).setOption(option)// 创建图表
             }
-            self.$refs['localLoading' + self.chartIndex].endLoading()
+            self.$refs['localLoading' + self.chartIndex] && self.$refs['localLoading' + self.chartIndex].endLoading()
             self.firstShow = true // 展示操作按键
           }, 800)
 
           window.addEventListener('resize', this.chartResize)
+          getChart(this.chartIndex).off('magictypechanged')
           getChart(this.chartIndex).on('magictypechanged', function (params) {
             self.isStackArea = !self.isStackArea
             if (self.isStackArea) {
-              getChart(self.chartIndex).setOption({
+              getChart(self.chartIndex) && getChart(self.chartIndex).setOption({
                 toolbox: {
                   feature: {
                     dataZoom: {
@@ -1063,6 +1132,7 @@ export default {
                   formatter: function (params) {
                     let str = '<div>'
                     let sum = 0
+                    let showFlag = false
                     params.forEach((item, i) => {
                       const tip = self.legendMagicType[item.seriesIndex]
                       const color = self.bgColorList[item.seriesIndex]
@@ -1077,34 +1147,41 @@ export default {
                         str += bus.timeFormate(tData)
                         str += '</div>'
                       }
-                      const val = formatScientificNotation(item.data[1], 2)
-                      sum += self.numberWithEConvent(val)
-                      str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
-                      str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
-                      str += '<div style="padding-left: 10px;">'
-                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
-                      str += '</div>'
-                      str += '</div>'
+                      showFlag = showFlag || item.data[1]
+                      if (!isNaN(item.data[1] + '')) {
+                        const val = formatScientificNotation(item.data[1], 2)
+                        sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
+                        str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
+                        str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
+                        str += '<div style="padding-left: 10px;">'
+                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
+                        str += '</div>'
+                        str += '</div>'
+                      }
                     })
                     if (self.data.type === 'stackArea' || self.isStackArea) {
-                      sum = parseFloat(Number(sum).toFixed(2))
+                      sum = parseFloat(Number(sum).toFixed(6))
                       str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                       str += '<div style="line-height: 18px; font-size: 12px;padding-left:20px;">'
                       str += self.$t('dashboard.panel.chartTotal')
                       str += '</div>'
                       str += '<div style="padding-left: 10px;">'
-                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, 2)
+                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, self.chartDot)
                       str += '</div>'
                       str += '</div>'
                     }
 
                     str += '</div>'
-                    return str
+                    if (!showFlag) {
+                      return ''
+                    } else {
+                      return str
+                    }
                   }
                 }
               })
             } else {
-              getChart(self.chartIndex).setOption({
+              getChart(self.chartIndex) && getChart(self.chartIndex).setOption({
                 toolbox: {
                   feature: {
                     dataZoom: {
@@ -1194,7 +1271,7 @@ export default {
               self.echartModalStore.off('finished')
             })
           }, 100)
-
+          this.echartModalStore.off('magictypechanged')
           this.echartModalStore.on('magictypechanged', function (params) {
             self.isStackArea = !self.isStackArea
             if (self.isStackArea) {
@@ -1231,6 +1308,7 @@ export default {
                   formatter: function (params) {
                     let str = '<div>'
                     let sum = 0
+                    let showFlag = false
                     let minusFlag = true
                     params.forEach((item, i) => {
                       const tip = self.legendMagicType[item.seriesIndex]
@@ -1253,51 +1331,54 @@ export default {
                         str += '</div>'
                         minusFlag = false
                       }
-                      const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
-                      const val = formatScientificNotation(item.data[1], 2)
-                      sum += self.numberWithEConvent(val)
-                      str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
-                      str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
-                      str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
-                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, self.chartDot)
-                      if (previousItem) {
-                        str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
-                        const previousval = formatScientificNotation(previousItem.data[1], 2)
-                        let minusVal = 0
-                        if (previousval <= val) {
-                          minusVal = val - previousval
-                          str += '+'
-                        } else {
-                          minusVal = previousval - val
-                          str += '-'
-                        }
+                      showFlag = showFlag || item.data[1]
+                      if (!isNaN(item.data[1] + '')) {
+                        const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
+                        const val = formatScientificNotation(item.data[1], 2)
+                        sum += isNaN(self.numberWithEConvent(val)) ? 0 : Number(self.numberWithEConvent(val))
+                        str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
+                        str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
+                        str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
+                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, self.chartDot)
+                        if (previousItem) {
+                          str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'
+                          const previousval = formatScientificNotation(previousItem.data[1], 2)
+                          let minusVal = 0
+                          if (previousval <= val) {
+                            minusVal = val - previousval
+                            str += '+'
+                          } else {
+                            minusVal = previousval - val
+                            str += '-'
+                          }
 
-                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, self.chartDot)
-                        str += '</span>'
-                      } else if (tip.alias.indexOf('Previous ') !== -1) {
-                        str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
-                        str += '</span>'
-                      }
-                      str += '</div>'
-                      if (previousItem) {
-                        str += '<div style="padding-left: 10px;">'
-                        const previousval = formatScientificNotation(previousItem.data[1], 2)
-                        let minusVal = 0
-                        if (previousval <= val) {
-                          minusVal = val - previousval
-                          str += '+'
-                        } else {
-                          minusVal = previousval - val
-                          str += '-'
+                          str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, self.chartDot)
+                          str += '</span>'
+                        } else if (tip.alias.indexOf('Previous ') !== -1) {
+                          str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
+                          str += '</span>'
                         }
+                        str += '</div>'
+                        if (previousItem) {
+                          str += '<div style="padding-left: 10px;">'
+                          const previousval = formatScientificNotation(previousItem.data[1], 2)
+                          let minusVal = 0
+                          if (previousval <= val) {
+                            minusVal = val - previousval
+                            str += '+'
+                          } else {
+                            minusVal = previousval - val
+                            str += '-'
+                          }
 
-                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, self.chartDot)
+                          str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, self.chartDot)
+                          str += '</div>'
+                        }
                         str += '</div>'
                       }
-                      str += '</div>'
                     })
                     if (self.data.type === 'stackArea' || self.isStackArea) {
-                      sum = parseFloat(Number(sum).toFixed(2))
+                      sum = parseFloat(Number(sum).toFixed(6))
                       str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                       str += '<div style="line-height: 18px; font-size: 12px;padding-left:20px;">'
                       str += self.$t('dashboard.panel.chartTotal')
@@ -1309,7 +1390,11 @@ export default {
                     }
 
                     str += '</div>'
-                    return str
+                    if (!showFlag) {
+                      return ''
+                    } else {
+                      return str
+                    }
                   }
                 }
               })
@@ -1573,6 +1658,7 @@ export default {
             this.echartModalStore.showLoading();
           }
           */
+      const self = this
       let axiosArr = []
       this.$nextTick(() => {
         let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
@@ -1588,7 +1674,7 @@ export default {
         if (type === 'list') { // 普通模式,主控台使用
           axiosArr = this.data.elements.map((ele) => {
             const filterItem = ele
-            let query = filterItem.expression
+            let query = encodeURIComponent(filterItem.expression)
             if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
               !this.chartInfo.param && (this.chartInfo.param = {})
               this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
@@ -1601,7 +1687,7 @@ export default {
             endTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
             this.data.elements.forEach((ele) => {
               const filterItem = ele
-              let query = filterItem.expression
+              let query = encodeURIComponent(filterItem.expression)
               if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
                 !this.chartInfo.param && (this.chartInfo.param = {})
                 this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
@@ -1613,14 +1699,14 @@ export default {
         } else if (type === 'dashboard') { // 概览模式,指标概览中使用
           // 概览模式,需要区分单独一个和多个
           if (this.stableFilter.chartCount === 'multiple') {
-            let query = this.data.name
+            let query = encodeURIComponent(this.data.name)
             if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
               this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
               query += '&nullType=' + this.chartInfo.param.nullType
             }
             axiosArr = [this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)]
           } else {
-            let query = this.data.elements[0].expression
+            let query = encodeURIComponent(this.data.elements[0].expression)
             if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
               this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
               query += '&nullType=' + this.chartInfo.param.nullType
@@ -1680,7 +1766,7 @@ export default {
                         label: {
                           distance: this.computeDistance(chartDataFormat.getUnit(this.data.unit ? this.data.unit : 2).compute(this.data.param.threshold)),
                           formatter: function (params) {
-                            return chartDataFormat.getUnit(this.data.unit ? this.data.unit : 2).compute(params.value)
+                            return chartDataFormat.getUnit(self.data ? self.data.unit : 2).compute(params.value)
                           }
                         },
                         lineStyle: {
@@ -1718,7 +1804,7 @@ export default {
                       if (!host || host === '') {
                         host = elements.expression
                       }
-                      let alias = this.dealLegendAlias(host, elements.legend)
+                      let alias = dealLegendAlias(host, elements.legend)
                       if (!alias || alias === '') {
                         alias = host
                       }
@@ -1816,23 +1902,6 @@ export default {
       this.$refs['localLoading' + this.chartIndex].startLoading()
       this.divFirstShow = true
     },
-    dealLegendAlias: function (legend, expression) {
-      if (/\{\{.+\}\}/.test(expression)) {
-        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          const reg = new RegExp(label + '=".+?"')
-          let value = null
-          if (reg.test(legend)) {
-            const find = legend.match(reg)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          }
-          return value || label
-        })
-        return labelValue
-      } else {
-        return expression
-      }
-    },
     // 获取格式
     getNumStr (num) {
       if (num >= 1000) {
@@ -1863,18 +1932,32 @@ export default {
       const copies = maxValueCopies.copies
       const unit = maxValueCopies.unit
       // const oldDot = maxValueCopies.oldDot
-      getChart(this.chartIndex).setOption({
-        series: this.seriesItem,
+      const option = {
         yAxis: {
           minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
           maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+        }
+      }
+      if (!maxValueCopies.copies) {
+        option.yAxis.min = 0
+        option.yAxis.max = 1
+      } else {
+        option.yAxis.max = undefined
+      }
+      if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+        delete option.yAxis.maxInterval
+      }
+      getChart(this.chartIndex).setOption({
+        series: this.seriesItem,
+        yAxis: {
+          ...option.yAxis
         }
       })
       if (this.hasLegendOptions) {
         this.computeLegendData(this.legendListMore, this.seriesItemArr, 'local')
       }
       this.$nextTick(() => {
-        const divHeight = this.$refs.legendArea.offsetHeight
+        const divHeight = this.$refs.legendArea && this.$refs.legendArea.offsetHeight > 20 ? this.$refs.legendArea.offsetHeight : 27
         if (!this.chartInfo.height) {
           getChart(this.chartIndex).resize({ height: (400 - divHeight - this.$chartResizeTool.titleHeight - this.$chartResizeTool.chartBlankHeight) })
         } else {
@@ -1896,11 +1979,25 @@ export default {
       const copies = maxValueCopies.copies
       const unit = maxValueCopies.unit
       // const oldDot = maxValueCopies.oldDot
-      this.echartModalStore.setOption({
-        series: this.seriesItemScreen,
+      const option = {
         yAxis: {
           minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
           maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+        }
+      }
+      if (!maxValueCopies.copies) {
+        option.yAxis.min = 0
+        option.yAxis.max = 1
+      } else {
+        option.yAxis.max = undefined
+      }
+      if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+        delete option.yAxis.maxInterval
+      }
+      this.echartModalStore.setOption({
+        series: this.seriesItemScreen,
+        yAxis: {
+          ...option.yAxis
         }
       })
       if (this.hasLegendOptions) {

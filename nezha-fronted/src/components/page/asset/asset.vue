@@ -517,6 +517,7 @@ export default {
           this.getTableData()
           clearTimeout(this.timer)
           this.timer = ''
+          this.scrollbarToTop()
         }, 1000)
       } else {
         clearTimeout(this.timer)
@@ -524,8 +525,20 @@ export default {
           this.getTableData()
           clearTimeout(this.timer)
           this.timer = ''
+          this.scrollbarToTop()
         }, 1000)
       }
+    },
+    scrollbarToTop () {
+      this.$nextTick(() => {
+        const wraps = document.querySelectorAll('.el-table__body-wrapper')
+        wraps.forEach(wrap => {
+          if (wrap) {
+            wrap.scrollTop = 0
+            wrap.scrollLeft = 0
+          }
+        })
+      })
     },
     getDcData () {
       return new Promise(resolve => {
@@ -673,7 +686,7 @@ export default {
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      if (this.$route.path === '/asset' && !this.titleSearchList.model.children.length) {
+      if (this.$route.path === '/asset' && this.titleSearchList) {
         this.$set(this.searchLabel, 'statistics', 1)
       }/* else {
         delete this.searchLabel.statistics

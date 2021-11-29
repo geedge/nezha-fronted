@@ -1,8 +1,10 @@
 <template>
  <nz-bottom-data-list
-    :showTitle='showTitle'
+      :showTitle='showTitle'
+      :obj='obj'
     :layout="[]"
     :tabs="tabs"
+      :targetTab="targetTab"
     @changeTab="changeTab"
     :title="'Session ID'"
   >
@@ -91,7 +93,7 @@ export default {
       })
       this.terminal.open(document.getElementById(this.obj.uuid))
 
-      const token = sessionStorage.getItem('nz-token')
+      const token = localStorage.getItem('nz-token')
       let baseUrl = this.$axios.defaults.baseURL
       if (baseUrl.startsWith('/')) {
         baseUrl = 'ws://' + window.location.host + baseUrl

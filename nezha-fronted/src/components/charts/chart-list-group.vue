@@ -213,6 +213,7 @@ import chartBarStatis from './chart-bar-statistics'
 import logs from './logs'
 import { fromRoute } from '@/components/common/js/constants'
 import chartTempData from '@/components/charts/chartTempData'
+import { dealLegendAlias } from '@/components/common/js/tools'
 // import visNetwork from './visNetwork'
 export default {
   name: 'chartList',
@@ -289,7 +290,7 @@ export default {
       dragging: null,
       // chartDataCacheGroup:new Map,//图表数据缓存，用于查询：id:{}
       stepHeight: 50,
-
+      childrenScrollTop: 0,
       tempDom: { height: '', width: '' }
       // showShadow:false,
     }
@@ -408,6 +409,7 @@ export default {
       this.cleanData()
       // 内含 panelId,开始时间,结束时间
       this.filter = filter
+      this.childrenScrollTop = 0
       this.pagePanelId = this.filter.panelId
       this.getData(this.filter)
     },
@@ -510,10 +512,11 @@ export default {
         // this.getChartData(item, index, this.filter)
         this.setChartSize(item, index)
         const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];
-        this.handleElementInViewport(chartBox, 0, item, index, true)
+        this.handleElementInViewport(chartBox,  this.childrenScrollTop, item, index, true)
       })
     },
     loadChartData (scrollTop) {
+      this.childrenScrollTop = scrollTop
       if (this.dataList.length > 0) {
         this.dataList.forEach((item, index) => {
           this.setChartSize(item, index)
@@ -703,7 +706,7 @@ export default {
           this.$nextTick(() => {
             const axiosArr = chartItem.elements.map((ele) => {
               const filterItem = ele
-              let query = filterItem.expression
+              let query = encodeURIComponent(filterItem.expression)
               if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea' || chartInfo.type === 'table') && chartInfo.param) { // 如果是这三个 默认给null
                 chartInfo.param.nullType = chartInfo.param.nullType || 'null'
                 query += '&nullType=' + chartInfo.param.nullType
@@ -870,7 +873,7 @@ export default {
                               host = chartItem.elements[innerPos].expression
                             }
                             // 处理legend别名
-                            let alias = this.$refs['editChart' + chartItem.id][0].dealLegendAlias(host, chartItem.elements[innerPos].legend)
+                            let alias = dealLegendAlias(host, chartItem.elements[innerPos].legend)
                             if (!alias || alias === '') {
                               alias = host
                             }
@@ -1106,7 +1109,7 @@ export default {
             host += '}'
           }
           // 处理legend别名
-          let alias = this.$refs['editChart' + chartInfo.id][0].dealLegendAlias(host, chartInfo.elements[0].legend)
+          let alias = dealLegendAlias(host, chartInfo.elements[0].legend)
           if (!alias || alias === '') {
             alias = host
           }
@@ -1196,7 +1199,7 @@ export default {
         const endTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss')
         // const step = bus.getStep(startTime, endTime)
         this.$nextTick(() => {
-          let query = chartInfo.elements[0].expression
+          let query = encodeURIComponent(chartInfo.elements[0].expression)
           if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea') && chartInfo.param) {
             chartInfo.param.nullType = chartInfo.param.nullType || 'null'
             query += '&nullType=' + chartInfo.param.nullType
@@ -1397,7 +1400,7 @@ export default {
       if (this.additionalInfo) {
         this.$set(chartInfo, 'param', { endpointId: this.additionalInfo.id })
       }
-      this.$refs['editChart' + chartInfo.id][0].getAlertList(filterType)
+      this.$refs['editChart' + chartInfo.id][0] && this.$refs['editChart' + chartInfo.id][0].getAlertList(filterType)
     },
     getAlertRuleChartData (chartInfo) {
       const vm = this

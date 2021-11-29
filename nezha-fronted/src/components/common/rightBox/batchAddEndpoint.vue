@@ -200,8 +200,9 @@ export default {
           data: function (row) {
             if (row.project && row.project.name.length > 15) {
               return row.project.name.substring(0, 12) + '...'
+            } else {
+              return row.project.name
             }
-            return ''
           }
         },
         {

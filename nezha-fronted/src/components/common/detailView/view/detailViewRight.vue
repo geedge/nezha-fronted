@@ -2,23 +2,23 @@
   <div class="sub-box detail-view-sub-box">
       <div class="sub-list__tabs">
       <!--机柜-->
-      <cabinet-tab :showTitle="false" v-if="from === fromRoute.dc && targetTab === 'cabinet'" :tabs="tabs.dc.cabinet" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
+      <cabinet-tab :showTitle="false" v-if="from === fromRoute.dc && targetTab === 'cabinet'" :tabs="tabs.dc.cabinet" v-show="subResizeShow" :obj="obj" @changeTab="changeTab" :targetTab="targetTab"></cabinet-tab>
       <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.dc && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.dc.alertMessage" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
       <!--告警信息-->
-      <alert-message-tab :showTitle="false" v-if="((from === fromRoute.alertRule || from === fromRoute.asset || from === fromRoute.endpoint || from === fromRoute.project ) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
+      <alert-message-tab :showTitle="false" v-if="((from === fromRoute.alertRule || from === fromRoute.asset || from === fromRoute.endpoint || from === fromRoute.project ) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab" :targetTab="targetTab"></alert-message-tab>
       <!--asset页的endpoint列表-->
-      <endpoint-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
+      <endpoint-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab" :targetTab="targetTab"></endpoint-tab>
 
       <!--terminal-log的记录和回放-->
-      <terminal-log-cmd-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'cmdTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.cmd" @changeTab="changeTab"></terminal-log-cmd-tab>
-      <terminal-log-record-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'recordTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.record" @changeTab="changeTab"></terminal-log-record-tab>
-      <terminal-log-monitor-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'monitorTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.monitor" @changeTab="changeTab" @exit="closeSubList"></terminal-log-monitor-tab>
+      <terminal-log-cmd-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'cmdTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.cmd" @changeTab="changeTab" :targetTab="targetTab"></terminal-log-cmd-tab>
+      <terminal-log-record-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'recordTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.record" @changeTab="changeTab" :targetTab="targetTab"></terminal-log-record-tab>
+      <terminal-log-monitor-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'monitorTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.monitor" @changeTab="changeTab" @exit="closeSubList" :targetTab="targetTab"></terminal-log-monitor-tab>
 
-      <asset-tab :showTitle="false" v-if="from === fromRoute.dc && targetTab === 'asset'" :tabs="tabs.dc.asset" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></asset-tab>
+      <asset-tab :showTitle="false" v-if="from === fromRoute.dc && targetTab === 'asset'" :tabs="tabs.dc.asset" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab="targetTab"></asset-tab>
 
       <!--user列表的两个日志-->
-      <operation-log-tab :showTitle="false" v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" :tabs="tabs.user.operationLog" @changeTab="changeTab"></operation-log-tab>
-      <terminal-log-tab :showTitle="false" v-if="from === fromRoute.user && targetTab === 'terminalLogTab'" :from="from" :obj="obj" :tabs="tabs.user.terminalLog" @changeTab="changeTab"></terminal-log-tab>
+      <operation-log-tab :showTitle="false" v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" :tabs="tabs.user.operationLog" @changeTab="changeTab" :targetTab="targetTab"></operation-log-tab>
+      <terminal-log-tab :showTitle="false" v-if="from === fromRoute.user && targetTab === 'terminalLogTab'" :from="from" :obj="obj" :tabs="tabs.user.terminalLog" @changeTab="changeTab" :targetTab="targetTab"></terminal-log-tab>
       <!-- asset列表的3个 -->
       <panel-tab-new @getTableData="getTableData" :paramsType="'asset'" :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.panel" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
       <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessage" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
@@ -40,7 +40,7 @@
        <alertMessageTabNew v-if="from === fromRoute.alertRule && targetTab === 'alertRuleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
        <alertRuleEvalLog v-if="from === fromRoute.alertRule && targetTab === 'evalLog'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertRuleEvalLog>
        <!--model 下滑-->
-      <asset-tab :showTitle="false" v-if="(from === fromRoute.model) && targetTab === 'asset'" :tabs="tabs.model" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></asset-tab>
+      <asset-tab :showTitle="false" v-if="(from === fromRoute.model) && targetTab === 'asset'" :tabs="tabs.model" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab="targetTab"></asset-tab>
     </div>
   </div>
 </template>

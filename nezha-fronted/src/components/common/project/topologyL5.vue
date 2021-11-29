@@ -151,7 +151,7 @@
               <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
             </div>
           </div>
-          <div :class="['page',fromOverView?'overview-page':'']" :style="{
+          <div :class="['page topo-page',fromOverView?'overview-page':'']" :style="{
             border: fromOverView ? 'none' :`1px solid $--color-text-regular`
           }">
             <!--画布部分-->
@@ -174,7 +174,7 @@
               <CanvasContextMenu :index="topologyIndexF" :props.sync="props"></CanvasContextMenu>
             </div>
             <!--所有节点上的小图标-->
-            <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
+            <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&!fromPrev"
                  :key="index"
                  v-show="(item.rect.y + offsetY  - (48*(fromOverView?penToolTipScale:1)) > -10) && (item.rect.center.x + offsetX - (24*(fromOverView?penToolTipScale:1)) > - 10)"
                  :style="{position: 'absolute',top:item.rect.y + offsetY  - (48*(fromOverView?penToolTipScale:1))+'px',left:item.rect.center.x + offsetX - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
@@ -362,7 +362,7 @@ import alertTable from './popData/alertTable'
 import assetTable from './popData/assetTable'
 import endpointTable from './popData/endpointTable'
 import topoTooltip from './L5/topoTooltip'
-import { getMetricTypeValue } from '../js/tools'
+import { getMetricTypeValue, dealLegendAlias } from '../js/tools'
 import bus from '../../../libs/bus'
 // 注册到画布
 registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
@@ -373,7 +373,7 @@ const canvasOptions = {
   translateKey: 'None',
   disableEmptyLine: true,
   autoExpandDistance: 0,
-  minScale: 0.01,
+  minScale: 0.2,
   scaleKey: -1
 }
 export default {
@@ -686,7 +686,8 @@ export default {
                 resolve({ data: '', status: 'no query' })
               })
             }
-            query += '&nullType=' + 'connected'
+            query = encodeURIComponent(query)
+            query += '&nullType=' + 'null'
             return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
           })
         }
@@ -694,6 +695,9 @@ export default {
         promiseArr.push(pensPromise(item, arr, index))
       })
       Promise.all(promiseArr).then((res) => {
+        if (!getTopology(this.topologyIndex)) {
+          return
+        }
         getTopology(this.topologyIndex).open(data)
         getTopology(this.topologyIndex).lock(1)
         this.objChange = false
@@ -718,7 +722,7 @@ export default {
         getTopology(this.topologyIndex).centerView()
         this.penToolTipScale = getTopology(this.topologyIndex).data.scale
         setTimeout(() => {
-          getTopology(this.topologyIndex).data.pens.forEach(item => {
+          getTopology(this.topologyIndex) && getTopology(this.topologyIndex).data.pens.forEach(item => {
             if (item.animatePlay) {
               item.stopAnimate()
               setTimeout(() => {
@@ -767,7 +771,10 @@ export default {
     },
     // 打开topology数据
     openTopologyData (data) {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
+        if (!document.getElementById('topology-canvas' + this.topologyIndexF)) {
+          return
+        }
         if (!getTopology(this.topologyIndex)) {
           const canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
           canvas.open(data)
@@ -1008,7 +1015,7 @@ export default {
                   host = pen.data.expressArr[innerPos]
                 }
                 // 处理legend别名
-                let alias = this.dealLegendAlias(host, pen.data.legends[innerPos])
+                let alias = dealLegendAlias(host, pen.data.legends[innerPos])
                 if (!alias || alias === '') {
                   alias = host
                 }
@@ -1021,23 +1028,6 @@ export default {
         })
       }
       return res
-    },
-    dealLegendAlias: function (legend, expression) {
-      if (/\{\{.+\}\}/.test(expression)) {
-        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          const reg = new RegExp(label + '=".+?"')
-          let value = null
-          if (reg.test(legend)) {
-            const find = legend.match(reg)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          }
-          return value || label
-        })
-        return labelValue
-      } else {
-        return expression
-      }
     },
     // 获取project Info
     getProjectData (n) {
@@ -1099,7 +1089,7 @@ export default {
     // 摘除已选择的module
     modulesDiff (data) {
       this.modules = this.allModules
-      if (getTopology(this.topologyIndex).data.pens) {
+      if (getTopology(this.topologyIndex) && getTopology(this.topologyIndex).data.pens) {
         getTopology(this.topologyIndex).data.pens.forEach(item => {
           if (item.type == 0) {
             this.modules = this.modules.filter(item1 => item.data.moduleId !== item1.id)
@@ -1441,7 +1431,8 @@ export default {
             }
             break
           case 'resize': {
-            const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+            const domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
             }
@@ -1451,7 +1442,8 @@ export default {
             if (this.$refs.topTool) {
               this.$refs.topTool.scaleNum = parseInt(data * 100)
             }
-            const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+            const domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
             }
@@ -1911,7 +1903,8 @@ export default {
           index: 0,
           list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
         }
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+        const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
       })
     },
@@ -2013,7 +2006,8 @@ export default {
             this.$store.commit('setShowTopoScreen', this.topoScreenState)
             this.$nextTick(() => {
               getTopology(this.topologyIndex).lock(1)
-              const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+              const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+              const domRect = dom ? dom.getBoundingClientRect() : {}
               getTopology(this.topologyIndex).canvasPos = domRect
               this.reload()
             })
@@ -2040,7 +2034,8 @@ export default {
       this.editTopologyFlag = false
       this.$nextTick(() => {
         getTopology(this.topologyIndex).lock(1)
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+        const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         this.$store.commit('setShowTopoScreen', this.topoScreenState)
       })
@@ -2087,7 +2082,8 @@ export default {
       this.$nextTick(() => {
         this.previewData = topologyData
         getTopology(this.topologyIndex).lock(1)
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+        const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         this.initPens(topologyData)
         // this.reload()

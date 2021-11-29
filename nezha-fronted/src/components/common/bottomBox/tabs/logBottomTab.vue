@@ -1,6 +1,7 @@
 <template>
  <nz-bottom-data-list
       :showTitle='showTitle'
+      :obj='obj'
     :custom-tool="true"
     :layout="[]"
     :show-pagination="false"
@@ -114,7 +115,7 @@ export default {
           if (item != '') {
             let expr = item
             this.matchContent && (expr = `${item} ${this.matchSymbol} "${this.matchContent}"`)
-            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + expr + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&limit=' + limit))
+            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(expr) + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&limit=' + limit))
           }
         })
         axios.all(requestArr).then(res => {

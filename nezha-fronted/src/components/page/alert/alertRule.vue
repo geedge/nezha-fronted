@@ -308,6 +308,9 @@ export default {
             schedDays: response.data.schedDays ? response.data.schedDays.split(',').map(item => Number(item)) : [],
             receiverShow: response.data.receiver ? response.data.receiver.split(',').map(item => Number(item)) : []
           }
+          if (this.object.inr == 0) {
+            this.object.inr = undefined
+          }
           if (copyFlag) {
             this.object.id = ''
             this.object.name = this.object.name + '-copy'

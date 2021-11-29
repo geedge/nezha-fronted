@@ -57,7 +57,7 @@ const user = {
         system_bgImg: localStorage.getItem('nz-sys-bgImg'),
         dateFormat: localStorage.getItem('nz-default-dateFormat')
       }
-      sessionStorage.setItem('nz-token', res.data.token)
+      localStorage.setItem('nz-token', res.data.token)
       localStorage.setItem('nz-sys-name', res.data.systemName || defaultAppearance.system_name)
       if (res.systemLogo || defaultAppearance.system_logo) {
         localStorage.setItem('nz-sys-logo', res.data.systemLogo || defaultAppearance.system_logo)
@@ -100,9 +100,9 @@ const user = {
       })
     },
     logoutSuccess (store, res) {
-      sessionStorage.removeItem('nz-username')
       localStorage.removeItem('nz-username')
-      sessionStorage.removeItem('nz-token')
+      localStorage.removeItem('nz-username')
+      localStorage.removeItem('nz-token')
     }
   }
 }

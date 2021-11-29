@@ -15,7 +15,7 @@ export default {
     'sp-select': () => import('v-selectpage/src/components/Select'),
     'sp-page': () => import('./Pagination'),
     'sp-list': () => import('v-selectpage/src/components/List'),
-    'sp-table': () => import('v-selectpage/src/components/Table')
+    'sp-table': () => import('./Table')
   },
   provide () {
     return {

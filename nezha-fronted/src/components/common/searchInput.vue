@@ -39,7 +39,7 @@
                             <i class="nz-icon nz-icon-close" style="cursor: pointer" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
-                            <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" :readonly="val.readonly"  @keyup="enter(val, $event)" @click="stop_click">
+                            <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" :readonly="val.readonly"  @keydown="enter(val, $event)" @click="stop_click">
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'select'">
                               <el-scrollbar v-if="selectInfoList[val.label].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
@@ -227,7 +227,7 @@
                     </li>
 <!-- 最开始的input框-->
                     <li class="select_input" v-if="change_sreach_show">
-                        <input type="text" @click="read_input" v-model="no_condition" @keyup="enter_one" id="one-input" @keydown="clear_search_list" :placeholder="placeholder">
+                        <input type="text" @click="read_input" v-model="no_condition" @keyup="enter_one" :id="'one-input' + position" @keydown="clear_search_list" :placeholder="placeholder">
                     </li>
                 </ul>
               </el-scrollbar>
@@ -456,7 +456,10 @@ export default {
     defaultItem: {},
     defaultValue: {},
     inTransform: {},
-    position: {},
+    position: {
+      type: String,
+      default: ''
+    },
     single: {},
     showHistory: {
       type: Boolean,
@@ -528,7 +531,9 @@ export default {
       this.change_sreach_show = true
       this.input_list = false
       const _this = this
-      setTimeout('document.getElementById("one-input").focus()', 500)
+      setTimeout(() => {
+        document.getElementById('one-input' + this.position).focus()
+      }, 500)
       setTimeout(function () {
         _this.getHeight()
       })
@@ -700,7 +705,9 @@ export default {
       this.change_sreach_show = true
       this.input_list = false
       const _this = this
-      setTimeout('document.getElementById("one-input").focus()', 500)
+      setTimeout(() => {
+        document.getElementById('one-input' + this.position).focus()
+      }, 500)
       setTimeout(function () {
         _this.getHeight()
       })
@@ -719,7 +726,9 @@ export default {
       this.change_sreach_show = true
       this.input_list = false
       const _this = this
-      setTimeout('document.getElementById("one-input").focus()', 500)
+      setTimeout(() => {
+        document.getElementById('one-input' + this.position).focus()
+      }, 500)
       setTimeout(function () {
         _this.getHeight()
       })
@@ -954,7 +963,7 @@ export default {
       this.sreach_num = this.select_list.length
       this.select_list.forEach(val => {
         this.searchLabelList.forEach((item, index) => {
-          if (val.id == item.id) {
+          if (val.label == item.label) {
             this.searchLabelList.splice(index, 1)
           }
         })
@@ -1053,6 +1062,7 @@ export default {
     },
     // input框监听是按删除还是回车
     enter (val, e) {
+      console.log(val, e)
       const keyCode = window.event ? e.keyCode : e.which
       if (val == 'ID' && keyCode == 13) {
         const id = /^[0-9]*$/
@@ -1078,14 +1088,19 @@ export default {
             })
             this.select_list.splice(this.sreach_num, 1)
             this.change_sreach_show = true
-            setTimeout('document.getElementById("one-input").focus()', 500)
+            setTimeout(() => {
+              document.getElementById('one-input' + this.position).focus()
+            }, 500)
             this.input_list = false
             this.delBool = false
+          } else if (this.searchMsg.searchLabelList.find(key => this.select_list[this.sreach_num].label == key.label).readonly) {
+            this.input_sreach = ''
           }
         }
       } else {
+        console.log(this.searchMsg.searchLabelList.find(key => this.select_list[this.sreach_num].label == key.label))
         if (keyCode == 8) {
-          if (this.delcriteriaBool) {
+          if (this.delcriteriaBool || !this.input_sreach) {
             this.searchMsg.searchLabelList.forEach((val, k) => {
               if (this.select_list[this.sreach_num].label == val.label) {
                 this.searchLabelList.splice(k + 1, 0, val)
@@ -1094,9 +1109,13 @@ export default {
             })
             this.select_list.splice(this.sreach_num, 1)
             this.change_sreach_show = true
-            setTimeout('document.getElementById("one-input").focus()', 500)
+            setTimeout(() => {
+              document.getElementById('one-input' + this.position).focus()
+            }, 500)
             this.input_list = false
             this.delcriteriaBool = false
+          } else if (this.searchMsg.searchLabelList.find(key => this.select_list[this.sreach_num].label == key.label).readonly) {
+            this.input_sreach = ''
           } else {
             if (this.input_sreach == '') {
               this.delcriteriaBool = true
@@ -1109,7 +1128,9 @@ export default {
         if (this.select_list[this.sreach_num].type !== 'select') {
           if (this.input_sreach !== '') {
             this.zhezhao_click()
-            setTimeout('document.getElementById("one-input").focus()', 500)
+            setTimeout(() => {
+              document.getElementById('one-input' + this.position).focus()
+            }, 500)
             this.input_list = false
           }
         } else {
@@ -1164,7 +1185,7 @@ export default {
         this.input_list = true
         this.change_sreach_show = false
         this.sreach_num = ind
-        this.input_sreach = this.select_list[ind].val
+        this.input_sreach = this.select_list[ind].val ? this.select_list[ind].val : ''
         if (this.select_list[ind].type == 'input') {
           this.downBool = true
         } else {
@@ -1299,7 +1320,9 @@ export default {
             this.no_condition = ''
             this.sreach_num = this.select_list.length
           }
-          setTimeout('document.getElementById("one-input").focus()', 500)
+          setTimeout(() => {
+            document.getElementById('one-input' + this.position).focus()
+          }, 500)
           this.input_list = !this.input_list
           const _this = this
           setTimeout(function () {

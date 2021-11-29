@@ -1,5 +1,5 @@
 <template>
-  <div class="panel list-page">
+  <div class="panel list-page" v-loading="panelTabLoading">
     <div class="main-list">
       <div>
         <transition name="el-zoom-in-center">
@@ -86,6 +86,7 @@
                 ref="chartList"
                 :class="{'show-top':showTopBtn}"
                 :data-list="dataList"
+                :nowTimeType="nowTimeType"
                 :from="fromRoute.panel"
                 :panel-lock="panelLock"
                 :time-range="searchTime"
@@ -94,6 +95,7 @@
                 @on-remove-chart="delChart"
                 @on-add-group-item-chart="addGroupItem"
               ></chart-list>
+              <chart-list :nowTimeType="nowTimeType" ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @panel-list-loading="load" @on-add-group-item-chart="addGroupItem"></chart-list>
             </div>
           </div>
         </div>
@@ -131,6 +133,7 @@ export default {
   data () {
     return {
       fromRoute,
+      panelTabLoading: false,
       overScroll10: false,
       isLoading: true,
       panelLock: false,
@@ -225,7 +228,8 @@ export default {
       filterPanel: '',
       // ---图表相关参数--end
       scrollbarWrap: null,
-      batchDeleteObjs: []
+      batchDeleteObjs: [],
+      nowTimeType: {}
     }
   },
   components: {
@@ -255,13 +259,8 @@ export default {
       this.showPanel = val
       this.showPanel.type = 'dashboard'
       this.filter.panelId = this.showPanel.id
-      // let curTime = this.$refs.calendarPanel.getCurrentTime();
-      const curTime = this.searchTime
-      this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss')
-      this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss')
-      // this.$refs.chartList.initCurrentRecordNum();
-      // this.$refs.chartList.cleanData()
-      this.getData(this.filter)
+      this.dateChange()
+      this.$refs.chartList.cleanData()
     },
 
     del (u) {
@@ -327,7 +326,9 @@ export default {
       this.rightBox.chartTemp.show = true
     },
     chartBySync () {
+      this.panelTabLoading = true
       this.$post('visual/panel/chart/syncTmpl', { panelId: this.showPanel.id }).then(res => {
+        this.panelTabLoading = false
         if (res.code === 200) {
           this.getData(this.filter)
           this.$message.success(this.$t('tip.syncSuccess'))
@@ -486,6 +487,7 @@ export default {
     // 选择日期变化
     dateChange (val) {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+      this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
       this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
       this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')

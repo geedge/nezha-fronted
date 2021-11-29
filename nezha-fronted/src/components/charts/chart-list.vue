@@ -225,7 +225,7 @@ import chartGroup from './chart-group'
 import logs from './logs'
 import { fromRoute } from '@/components/common/js/constants'
 import chartTempData from '@/components/charts/chartTempData'
-import { chartResizeTool } from '@/components/common/js/tools'
+import { chartResizeTool, dealLegendAlias } from '@/components/common/js/tools'
 export default {
   name: 'chartList',
   props: {
@@ -236,7 +236,8 @@ export default {
     obj: Object,
     panelLock: { type: Boolean, default: false },
     hasGroup: { type: Boolean, default: true },
-    panelDataList: Array
+    panelDataList: Array,
+    nowTimeType: {}
   },
 
   components: {
@@ -280,7 +281,8 @@ export default {
       // chartDataCacheGroup:new Map,//图表数据缓存，用于查询：id:{}
       stepWidth: null,
 
-      tempDom: { height: '', width: '' }
+      tempDom: { height: '', width: '' },
+      childrenScrollTop: 0
       // showShadow:false,
     }
   },
@@ -439,6 +441,7 @@ export default {
       this.cleanData()
       // 内含 panelId,开始时间,结束时间
       this.filter = filter
+      this.childrenScrollTop = 0
       this.pagePanelId = this.filter.panelId
       this.getData(this.filter)
     },
@@ -565,10 +568,6 @@ export default {
 
     // 获取panel详情数据,获取panel下所有chart列表
     getData (params) {
-      if (this.finshGetData) {
-        return
-      }
-      this.finshGetData = true
       const param = {
         panelId: params.panelId,
         query: params.query,
@@ -641,21 +640,16 @@ export default {
             }
           })
         })
-        this.finshGetData = false
         return
       }
       if (!param.query) delete param.query
       // 根据panelId获得panel下的所有图表
       // const groupId = true ? '&groupId=0' : ''
       if (!params.panelId) {
-        this.finshGetData = false
         return
       } // 没有panelId不调用接口
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
-          setTimeout(() => {
-            this.finshGetData = false
-          }, 100)
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
           })
@@ -706,7 +700,7 @@ export default {
                 if (!item.isLoaded) {
                   // 获得当前显示在浏览器的图表，从后台获取数据
                   const chartBox = document.getElementById('chart-' + item.id)
-                  this.handleElementInViewport(chartBox, 0, item, index)
+                  this.handleElementInViewport(chartBox, this.childrenScrollTop, item, index)
                 }
                 if (item.type === 'group') {
                   this.$refs['editChart' + item.id][0].$refs.listGroup.getData(params)
@@ -718,6 +712,7 @@ export default {
       })
     },
     loadChartData (scrollTop) {
+      this.childrenScrollTop = scrollTop
       if (this.dataList.length > 0) {
         this.dataList.forEach((item, index) => {
           if (!item.isLoaded) {
@@ -821,7 +816,7 @@ export default {
     getChartData (chartInfo, pos, filterType) {
       const chartItem = chartInfo
       if (chartItem.type === 'group') {
-        this.$refs['editChart' + chartItem.id][0].setData(chartItem)
+        this.$refs['editChart' + chartItem.id][0] && this.$refs['editChart' + chartItem.id][0].setData(chartItem)
         return
       }
       if (chartItem.type === 'assetInfo') {
@@ -905,7 +900,12 @@ export default {
           let startTime = ''
           let endTime = ''
           if (filterType === 'refresh') { // 刷新
-            const now = new Date(bus.computeTimezone(new Date().getTime()))
+            let now = null
+            if (this.nowTimeType.id === 0 && this.nowTimeType.value === -1) {
+              now = new Date(this.filter.start_time)
+            } else {
+              now = new Date(bus.computeTimezone(new Date().getTime()))
+            }
             const origin = new Date(this.filter.end_time)
             const numInterval = now.getTime() - origin.getTime()
             if (numInterval >= 60000) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
@@ -918,8 +918,8 @@ export default {
               endTime = this.filter.end_time
             }
           } else if (filterType === 'showFullScreen') { // 全屏时间查询
-            startTime = this.filter.start_time
-            endTime = this.filter.end_time
+            startTime = this.filter.showFullScreenStart_time
+            endTime = this.filter.showFullScreenEnd_time
             // this.$parent.refreshTime(startTime,endTime);全屏查询，不更新panel列表的时间条件
           } else {
             startTime = this.filter.start_time
@@ -930,7 +930,7 @@ export default {
           this.$nextTick(() => {
             const axiosArr = chartItem.elements.map((ele) => {
               const filterItem = ele
-              let query = filterItem.expression
+              let query = encodeURIComponent(filterItem.expression)
               if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea' || chartInfo.type === 'table') && chartInfo.param) { // 如果是这三个 默认给null
                 chartInfo.param.nullType = chartInfo.param.nullType || 'null'
                 query += '&nullType=' + chartInfo.param.nullType
@@ -1096,7 +1096,7 @@ export default {
                               host = chartItem.elements[innerPos].expression
                             }
                             // 处理legend别名
-                            let alias = this.$refs['editChart' + chartItem.id][0].dealLegendAlias(host, chartItem.elements[innerPos].legend)
+                            let alias = dealLegendAlias(host, chartItem.elements[innerPos].legend)
                             if (!alias || alias === '') {
                               alias = host
                             }
@@ -1336,7 +1336,7 @@ export default {
             host += '}'
           }
           // 处理legend别名
-          let alias = this.$refs['editChart' + chartInfo.id][0].dealLegendAlias(host, chartInfo.elements[0].legend)
+          let alias = dealLegendAlias(host, chartInfo.elements[0].legend)
           if (!alias || alias === '') {
             alias = host
           }
@@ -1416,7 +1416,7 @@ export default {
     },
     getEndpointInfoChartData (chartInfo) {
       const detail = []
-      this.$refs['editChart' + chartInfo.id][0].showLoad()
+      this.$refs['editChart' + chartInfo.id][0] && this.$refs['editChart' + chartInfo.id][0].showLoad()
       chartInfo.name = this.$t('project.chart.endpointInfo')
       chartInfo.from = fromRoute.endpoint
       const basicInfo = JSON.parse(JSON.stringify(this.obj))
@@ -1447,7 +1447,6 @@ export default {
         const arr = []
         arr.push(this.$get(`/asset/asset/${assetId}`))
         arr.push(this.$get(`/asset/asset/feature/${assetId}`))
-        console.log(this.$refs['editChart' + chartInfo.id][0])
         if (this.$refs['editChart' + chartInfo.id][0]) {
           this.$refs['editChart' + chartInfo.id][0].showLoad()
         }
@@ -1619,7 +1618,7 @@ export default {
       if (this.obj) {
         this.$set(chartInfo, 'param', { endpointId: this.obj.id })
       }
-      this.$refs['editChart' + chartInfo.id][0].getAlertList(null, null, chartInfo)
+      this.$refs['editChart' + chartInfo.id][0] && this.$refs['editChart' + chartInfo.id][0].getAlertList(null, null, chartInfo)
     },
     getAlertRuleChartData (chartInfo) {
       const vm = this
@@ -1760,8 +1759,8 @@ export default {
     },
     searchData (chartId, searchTime) {
       if (searchTime) { // 全屏时间查询
-        this.filter.start_time = bus.timeFormate(searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-        this.filter.end_time = bus.timeFormate(searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+        this.filter.showFullScreenStart_time = bus.timeFormate(searchTime[0], 'yyyy-MM-dd hh:mm:ss')
+        this.filter.showFullScreenEnd_time = bus.timeFormate(searchTime[1], 'yyyy-MM-dd hh:mm:ss')
       }
       this.dataList.forEach((item, index) => {
         if (item.id === chartId) {
@@ -1834,6 +1833,9 @@ export default {
       this.$post('visual/panel/chart/syncTmpl', { ids: [item.id] }).then(res => {
         if (res.code === 200) {
           this.getData(this.filter)
+          // setTimeout(() => {
+          //   this.refreshChart(item.id)
+          // }, 100)
           this.$message.success(this.$t('tip.syncSuccess'))
         } else {
           this.$message.error(res.msg)

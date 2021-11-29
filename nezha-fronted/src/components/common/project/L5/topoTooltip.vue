@@ -40,6 +40,7 @@ import { fromRoute } from '@/components/common/js/constants'
 import chartTempData from '@/components/charts/chartTempData'
 import axios from 'axios'
 import chartDataFormat from '@/components/charts/chartDataFormat'
+import { dealLegendAlias } from '@/components/common/js/tools'
 export default {
   name: 'topoTooltip',
   components: {
@@ -73,7 +74,7 @@ export default {
   data () {
     return {
       tempDom: { height: 250, width: '' },
-      chartDataTemp: { id: 8832, prev: null, next: null, panelId: 0, title: '123', span: 12, height: 0, createAt: '2021-01-27 07:36:19', unit: 2, weight: 0, pid: null, buildIn: null, seq: null, param: { last: 0, legendValue: { total: 'off', min: 'off', avg: 'off', last: 'off', max: 'off' }, threshold: '', url: '', nullType: 'connected' }, sync: null, asset: null, isLoaded: true, from: '__vue_devtool_undefined__', draggable: true, resizable: true, editable: true },
+      chartDataTemp: { id: 8832, prev: null, next: null, panelId: 0, title: '123', span: 12, height: 0, createAt: '2021-01-27 07:36:19', unit: 2, weight: 0, pid: null, buildIn: null, seq: null, param: { last: 0, legendValue: { total: 'off', min: 'off', avg: 'off', last: 'off', max: 'off' }, threshold: '', url: '', nullType: 'null' }, sync: null, asset: null, isLoaded: true, from: '__vue_devtool_undefined__', draggable: true, resizable: true, editable: true },
       chartData: {},
       filter: {
         end_time: bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss'),
@@ -107,7 +108,7 @@ export default {
       chartData.param = {
         legendValue: { total: 'off', min: 'off', avg: 'off', last: 'off', max: 'off' },
         last: 0,
-        nullType: 'connected',
+        nullType: 'null',
         threshold: '',
         url: '',
         valueMapping: { mapping: [{ color: { bac: '#fff', text: '#000' }, text: '', value: '' }], type: 'text' },
@@ -136,7 +137,7 @@ export default {
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {
             const filterItem = ele
-            let query = filterItem.expression
+            let query = encodeURIComponent(filterItem.expression)
             if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea' || chartInfo.type === 'table') && chartInfo.param) { // 如果是这三个 默认给null
               chartInfo.param.nullType = chartInfo.param.nullType || 'null'
               query += '&nullType=' + chartInfo.param.nullType
@@ -299,7 +300,7 @@ export default {
                             host = chartItem.elements[innerPos].expression
                           }
                           // 处理legend别名
-                          let alias = this.$refs['editChart' + chartItem.type].dealLegendAlias(host, chartItem.elements[innerPos].legend)
+                          let alias = dealLegendAlias(host, chartItem.elements[innerPos].legend)
                           if (!alias || alias === '') {
                             alias = host
                           }

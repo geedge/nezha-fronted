@@ -109,6 +109,18 @@
                class="line-chart-block-modal nz-dialog endpoint-dialog"
                width="90%"
                @close="dialogClose">
+      <el-popover
+        v-if="isError"
+        placement="top-start"
+        :close-delay=10
+        trigger="hover"
+        popper-class="chart-error-popper">
+        <div >{{errorContent}}</div>
+        <span slot="reference"  class="panel-info-corner panel-info-corner--error">
+                <i class="nz-icon nz-icon-warning fa-model" ></i>
+                <span class="panel-info-corner-inner"></span>
+            </span>
+      </el-popover>
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
@@ -176,7 +188,7 @@ export default {
       dialogText: '',
       url: 'alert/message',
       // 导出相关
-      importBox: { show: false, title: this.$t('overall.importExcel'), type: 1, record: 'all', format: 1 },
+      importBox: { show: false, title: this.$t('overall.exportExcel'), type: 1, record: 'all', format: 1 },
       deleteBox: { show: false, ids: '', remark: '', state: 2 },
       // 详情相关
       graphShow: false,
@@ -347,7 +359,9 @@ export default {
         { name: 'XLSX', value: 1 },
         { name: 'CSV', value: 2 },
         { name: 'JSON', value: 3 }
-      ]
+      ],
+      errorContent: '',
+      isError: false
     }
   },
   computed: {
@@ -445,16 +459,13 @@ export default {
       })
     },
     messageDetail (row) {
+      console.log(row)
       if (row.alertRule.type == 3) {
         return
       }
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
-        if (row.alertRule.type !== 1) {
-          this.graphShow = false
-        } else {
-          this.graphShow = true
-        }
+        this.graphShow = true
         this.$nextTick(() => {
           this.searchTimeDialog = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
           this.queryDate()
@@ -475,7 +486,7 @@ export default {
           this.queryChartDate()
         })
       } else if (this.currentMsg.alertRule.type === 2) {
-        this.queryLogData(1000)
+        this.queryLogData(100)
       }
     },
     queryChartDate () {
@@ -497,8 +508,7 @@ export default {
       if (this.$refs.messageChart) {
         this.$refs.messageChart.startLoading()
         const axiosArr = []
-        const paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg))
-        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + paramStr.substring(1, paramStr.length - 1) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
+        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '')) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))))
         this.legend = []
         this.chartDatas = []
         axios.all(axiosArr).then(res => {
@@ -571,6 +581,17 @@ export default {
                 } else {
                   this.$message.error(response.data.error)
                 }
+              } else {
+                this.$refs.messageChart.endLoading()
+                this.chartLoading = false
+                this.isError = true
+                if (response.msg) {
+                  this.errorContent = response.msg
+                } else if (response.error) {
+                  this.errorContent = response.error
+                } else {
+                  this.errorContent = response
+                }
               }
             })
             this.$nextTick(() => {
@@ -630,12 +651,12 @@ export default {
     },
     queryLogData (limit) { // log的chart和table是一个请求
       if (!limit) {
-        limit = 1000
+        limit = 100
       }
       const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000)
       const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
       this.expressions = [this.currentMsg.alertRule.expr]
-      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + this.currentMsg.alertRule.expr + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit).then(res => {
+      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(this.currentMsg.alertRule.expr) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))).then(res => {
         this.chartLoading = false
         const logData = [res.data]
         this.resultType = res.data.resultType
@@ -855,6 +876,7 @@ export default {
           this.getTableData()
           clearTimeout(this.timer)
           this.timer = ''
+          this.scrollbarToTop()
         }, 1000)
       } else {
         clearTimeout(this.timer)
@@ -862,12 +884,24 @@ export default {
           this.getTableData()
           clearTimeout(this.timer)
           this.timer = ''
+          this.scrollbarToTop()
         }, 1000)
       }
     },
+    scrollbarToTop () {
+      this.$nextTick(() => {
+        const wraps = document.querySelectorAll('.el-table__body-wrapper')
+        wraps.forEach(wrap => {
+          if (wrap) {
+            wrap.scrollTop = 0
+            wrap.scrollLeft = 0
+          }
+        })
+      })
+    },
     promQueryParamConvert (alert) {
       const obj = { ...alert }
-      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'') + ')'
+      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '') + ')'
       let intoLabels = false
       obj.labels = JSON.parse(obj.labels)
       if (Object.keys(obj.labels).length > 0) {
@@ -897,6 +931,14 @@ export default {
         }())
       }
       return r
+    },
+    promQueryParamLabels (labels) {
+      const obj = JSON.parse(labels)
+      const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type']
+      filterArr.forEach(key => {
+        delete obj[key]
+      })
+      return JSON.stringify(obj)
     },
     // asset弹框控制
     tabControl (data) {
@@ -929,8 +971,21 @@ export default {
       const searchLabel = Object.assign({}, this.searchLabel)
       searchLabel.format = this.importBox.format
       delete searchLabel.statistics
+      if (this.searchCheckBox) {
+        Object.keys(this.searchCheckBox).forEach(key => {
+          if (searchLabel[key]) {
+            if (searchLabel[key].prototype.toString.call(val) === '[object Object]') {
+              Object.assign(searchLabel[key], this.searchCheckBox[key])
+            } else if (searchLabel[key].prototype.toString.call(val) === '[object Array]') {
+              searchLabel[key].concat(this.searchCheckBox[key])
+            }
+          } else {
+            searchLabel[key] = this.searchCheckBox[key]
+          }
+        })
+      }
       this.$set(searchLabel, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
-      this.exportExcel({ ...searchLabel, state: this.state })
+      this.exportExcel('alert/message/export', { ...searchLabel, state: this.state })
       this.closeDialog()
     },
     exportAll () {
@@ -938,8 +993,21 @@ export default {
       temp.pageSize = -1
       delete temp.statistics
       temp.format = this.importBox.format
+      if (this.searchCheckBox) {
+        Object.keys(this.searchCheckBox).forEach(key => {
+          if (temp[key]) {
+            if (temp[key].prototype.toString.call(val) === '[object Object]') {
+              Object.assign(temp[key], this.searchCheckBox[key])
+            } else if (temp[key].prototype.toString.call(val) === '[object Array]') {
+              temp[key].concat(this.searchCheckBox[key])
+            }
+          } else {
+            temp[key] = this.searchCheckBox[key]
+          }
+        })
+      }
       this.$set(temp, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
-      this.exportExcel({ ...temp, state: this.state })
+      this.exportExcel('alert/message/export', { ...temp, state: this.state })
       this.closeDialog()
     },
     getTimeString () {
@@ -956,7 +1024,7 @@ export default {
     formatNum (num) {
       return num > 9 ? num : '0' + num
     },
-    exportExcel (params) {
+    exportExcel (url, params, fileName) {
       for (const item in params) {
         if (params[item]) {
           if (item === 'alertMessageState') {
@@ -1058,16 +1126,16 @@ export default {
       const params = JSON.parse(JSON.stringify(this.searchLabel))
       params.format = this.importBox.format
       delete params.statistics
-      if (this.params2) {
-        Object.keys(this.params2).forEach(key => {
+      if (this.searchCheckBox) {
+        Object.keys(this.searchCheckBox).forEach(key => {
           if (params[key]) {
             if (params[key].prototype.toString.call(val) === '[object Object]') {
-              Object.assign(params[key], this.params2[key])
+              Object.assign(params[key], this.searchCheckBox[key])
             } else if (params[key].prototype.toString.call(val) === '[object Array]') {
-              params[key].concat(this.params2[key])
+              params[key].concat(this.searchCheckBox[key])
             }
           } else {
-            params[key] = this.params2[key]
+            params[key] = this.searchCheckBox[key]
           }
         })
       }

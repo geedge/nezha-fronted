@@ -397,11 +397,12 @@ export default {
       return params.title
     },
     defaultTooltipFormatter: function (params) {
+      let showFlag = false
       let minusFlag = true
       let str = '<div>'
       params instanceof Array || (params = [params])
       params.forEach((item, i) => {
-        const alias = this.queryAlias(i)
+        const alias = this.queryAlias(item.seriesIndex)
         if (i === 0 && alias.indexOf('Previous ') === -1) {
           const value = item.data[0]
           const tData = new Date(value)
@@ -420,43 +421,50 @@ export default {
           str += '<br/>'
           minusFlag = false
         }
-        const val = Number(item.data[1])
-        str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
-        str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${alias || item.seriesName}:  </div>`
-        str += '<div style="padding-left: 10px;">'
-        let dot = bus.countDecimals(val)
-        // console.log(dot,val)
-        if (dot < this.chartDot) {
-          dot = this.chartDot
-        } else if (dot > 6) {
-          dot = 6
-        }
-        str += chartDataFormat.getUnit(this.unit).compute(val, null, -1, dot)
-        const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
-        if (previousItem) {
-          str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
-          const previousval = formatScientificNotation(previousItem.data[1], dot)
-          let minusVal = 0
-          if (previousval <= val) {
-            minusVal = val - previousval
-            str += '+'
-          } else {
-            minusVal = previousval - val
-            str += '-'
+        showFlag = showFlag || item.data[1]
+        if (!isNaN(item.data[1] + '')) {
+          const val = Number(item.data[1])
+          str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
+          str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${alias || item.seriesName}:  </div>`
+          str += '<div style="padding-left: 10px;">'
+          let dot = bus.countDecimals(val)
+          // console.log(dot,val)
+          if (dot < this.chartDot) {
+            dot = this.chartDot
+          } else if (dot > 6) {
+            dot = 6
           }
+          str += chartDataFormat.getUnit(this.unit).compute(val, null, -1, dot)
+          const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
+          if (previousItem) {
+            str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'
+            const previousval = formatScientificNotation(previousItem.data[1], dot)
+            let minusVal = 0
+            if (previousval <= val) {
+              minusVal = val - previousval
+              str += '+'
+            } else {
+              minusVal = previousval - val
+              str += '-'
+            }
 
-          str += chartDataFormat.getUnit(this.unit).compute(minusVal, null, -1, dot)
-          str += '</span>'
-        } else if (alias.indexOf('Previous ') !== -1) {
-          str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
-          str += '</span>'
+            str += chartDataFormat.getUnit(this.unit).compute(minusVal, null, -1, dot)
+            str += '</span>'
+          } else if (alias.indexOf('Previous ') !== -1) {
+            str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+            str += '</span>'
+          }
+          str += '</div>'
+
+          str += '</div>'
         }
-        str += '</div>'
-
-        str += '</div>'
       })
       str += '</div>'
-      return str
+      if (!showFlag) {
+        return ''
+      } else {
+        return str
+      }
     },
     queryAlias: function (i) {
       let alias = null

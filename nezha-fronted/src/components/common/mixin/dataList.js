@@ -96,7 +96,7 @@ export default {
             })
           }
           if (this.detailType === 'view') {
-            this.$refs.dataDetail.$refs.dataTable.scrollTop = 0
+            this.$refs.dataDetail && (this.$refs.dataDetail.$refs.dataTable.scrollTop = 0)
           }
         }
       })
@@ -241,7 +241,11 @@ export default {
         if (typeof row.labels === 'string') row.labels = JSON.parse(row.labels)
         const labels = JSON.parse(JSON.stringify(row.labels))
         this.objectSilence.matchers = []
+        const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type']
         Object.keys(labels).forEach((key, i) => {
+          if (filterArr.indexOf(key) != -1) {
+            return
+          }
           this.objectSilence.matchers.push(
             { name: key, value: labels[key], regex: 0 }
           )

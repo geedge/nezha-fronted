@@ -508,13 +508,13 @@ export default {
           host: this.customConnect.host,
           port: this.customConnect.port,
           authType: this.customConnect.authType,
-          authUsername: encodeURIComponent(this.customConnect.authUsername),
+          authUsername: encodeURIComponentComponent(this.customConnect.authUsername),
           authPin: this.encode(this.customConnect.authPin),
-          authPriKey: encodeURIComponent(this.customConnect.authPriKey),
-          authUserTip: encodeURIComponent(this.customConnect.authUserTip),
-          authPinTip: encodeURIComponent(this.customConnect.authPinTip),
-          authProtocolPort: encodeURIComponent(this.customConnect.authProtocolPort),
-          authProtocol: encodeURIComponent(this.customConnect.authProtocol)
+          authPriKey: encodeURIComponentComponent(this.customConnect.authPriKey),
+          authUserTip: encodeURIComponentComponent(this.customConnect.authUserTip),
+          authPinTip: encodeURIComponentComponent(this.customConnect.authPinTip),
+          authProtocolPort: encodeURIComponentComponent(this.customConnect.authProtocolPort),
+          authProtocol: encodeURIComponentComponent(this.customConnect.authProtocol)
         }
       }
       this.editableTabsValue = newTabName
@@ -948,7 +948,7 @@ export default {
     },
     encode (str) {
       // 对编码的字符串转化base64
-      const base64 = encodeURIComponent(btoa(str))
+      const base64 = encodeURIComponentComponent(btoa(str))
       return base64
     },
     closeAssetCustom () {

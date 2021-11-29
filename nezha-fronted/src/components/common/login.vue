@@ -168,7 +168,7 @@ export default {
                 localStorage.setItem('nz-language-list', JSON.stringify(langList))
               }
             })
-            sessionStorage.setItem('nz-token', res.data.authToken)
+            localStorage.setItem('nz-token', res.data.authToken)
             if (res.data.authFlag === 1) {
               if (res.data.authBind === 0) {
                 this.verifyShow = true
@@ -190,7 +190,7 @@ export default {
                 })
               }
             } else {
-              sessionStorage.setItem('nz-username', this.loginData.username)
+              localStorage.setItem('nz-username', this.loginData.username)
               localStorage.setItem('nz-username', this.loginData.username)
               localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
               localStorage.setItem('nz-language', this.lang)
@@ -211,7 +211,7 @@ export default {
       }
       this.$post('/mfa/verify', params).then(res => {
         if (res.code === 200) {
-          sessionStorage.setItem('nz-username', this.loginData.username)
+          localStorage.setItem('nz-username', this.loginData.username)
           localStorage.setItem('nz-username', this.loginData.username)
           localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
           localStorage.setItem('nz-language', this.lang)
@@ -303,7 +303,7 @@ export default {
     },
     downloadTxt () {
       const element = document.createElement('a')
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.fileContent))
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponentComponent(this.fileContent))
       element.setAttribute('download', 'Nezha recovery codes')
       element.style.display = 'none'
       element.click()

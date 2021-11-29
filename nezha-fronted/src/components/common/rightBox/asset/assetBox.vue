@@ -614,6 +614,14 @@ export default {
     selectType (type) {
       this.editAsset.type = { ...type }
       this.editAsset.typeId = type.id ? type.id : ''
+      this.editAsset.authType = ''
+      this.editAsset.authUsername = ''
+      this.editAsset.authPin = ''
+      this.editAsset.authUserTip = ''
+      this.editAsset.authPinTip = ''
+      this.editAsset.snmpCredentialId = ''
+      this.editAsset.authProtocolPort = ''
+      this.editAsset.pid = ''
     },
     addLabel ([groupId, metaId]) {
       const label = this.options.metaOptions.find(m => m.id === metaId)
@@ -649,7 +657,9 @@ export default {
         this.editAsset.brandId = parseInt(this.editAsset.brandAndModel[0])
         this.editAsset.modelId = parseInt(this.editAsset.brandAndModel[1])
       }
-
+      if (this.editAsset.type.authProtocol !== assetConstants.authProtocolData.ssh) {
+        this.editAsset.authType = ''
+      }
       this.$refs.form.validate((valid) => {
         if (valid) {
           const params = JSON.parse(JSON.stringify(this.editAsset))
