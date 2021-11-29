@@ -659,11 +659,8 @@ export default {
       }
       if (chartSite === 'local') {
         setChart(this.chartIndex, echarts.init(ele))
-        // getChart(this.chartIndex) = echarts.init(ele);
-        // chartId='lineChartArea';
       } else if (chartSite === 'screen') {
         this.echartModalStore = echarts.init(ele)
-        // chartId='screenShowArea';
       }
       const chartWidth = ele.clientWidth
       this.stepWidth = this.chartInfo.groupId ? (document.getElementById('listContainer').offsetWidth / 12) - 10 : document.getElementById('listContainer').offsetWidth / 12
