@@ -227,7 +227,7 @@
                     </li>
 <!-- 最开始的input框-->
                     <li class="select_input" v-if="change_sreach_show">
-                        <input type="text" @click="read_input" v-model="no_condition" @keyup="enter_one" id="one-input" @keydown="clear_search_list" :placeholder="placeholder">
+                        <input type="text" @click="read_input" v-model="no_condition" @keyup="enter_one" :id="'one-input' + position" @keydown="clear_search_list" :placeholder="placeholder">
                     </li>
                 </ul>
               </el-scrollbar>
@@ -456,7 +456,10 @@ export default {
     defaultItem: {},
     defaultValue: {},
     inTransform: {},
-    position: {},
+    position: {
+      type: String,
+      default: ''
+    },
     single: {},
     showHistory: {
       type: Boolean,
@@ -528,7 +531,9 @@ export default {
       this.change_sreach_show = true
       this.input_list = false
       const _this = this
-      setTimeout('document.getElementById("one-input").focus()', 500)
+      setTimeout(() => {
+        document.getElementById('one-input' + this.position).focus()
+      }, 500)
       setTimeout(function () {
         _this.getHeight()
       })
@@ -700,7 +705,9 @@ export default {
       this.change_sreach_show = true
       this.input_list = false
       const _this = this
-      setTimeout('document.getElementById("one-input").focus()', 500)
+      setTimeout(() => {
+        document.getElementById('one-input' + this.position).focus()
+      }, 500)
       setTimeout(function () {
         _this.getHeight()
       })
@@ -719,7 +726,9 @@ export default {
       this.change_sreach_show = true
       this.input_list = false
       const _this = this
-      setTimeout('document.getElementById("one-input").focus()', 500)
+      setTimeout(() => {
+        document.getElementById('one-input' + this.position).focus()
+      }, 500)
       setTimeout(function () {
         _this.getHeight()
       })
@@ -1053,6 +1062,7 @@ export default {
     },
     // input框监听是按删除还是回车
     enter (val, e) {
+      console.log(val, e)
       const keyCode = window.event ? e.keyCode : e.which
       if (val == 'ID' && keyCode == 13) {
         const id = /^[0-9]*$/
@@ -1078,12 +1088,17 @@ export default {
             })
             this.select_list.splice(this.sreach_num, 1)
             this.change_sreach_show = true
-            setTimeout('document.getElementById("one-input").focus()', 500)
+            setTimeout(() => {
+              document.getElementById('one-input' + this.position).focus()
+            }, 500)
             this.input_list = false
             this.delBool = false
+          } else if (this.searchMsg.searchLabelList.find(key => this.select_list[this.sreach_num].label == key.label).readonly) {
+            this.input_sreach = ''
           }
         }
       } else {
+        console.log(this.searchMsg.searchLabelList.find(key => this.select_list[this.sreach_num].label == key.label))
         if (keyCode == 8) {
           if (this.delcriteriaBool || !this.input_sreach) {
             this.searchMsg.searchLabelList.forEach((val, k) => {
@@ -1094,7 +1109,9 @@ export default {
             })
             this.select_list.splice(this.sreach_num, 1)
             this.change_sreach_show = true
-            setTimeout('document.getElementById("one-input").focus()', 500)
+            setTimeout(() => {
+              document.getElementById('one-input' + this.position).focus()
+            }, 500)
             this.input_list = false
             this.delcriteriaBool = false
           } else if (this.searchMsg.searchLabelList.find(key => this.select_list[this.sreach_num].label == key.label).readonly) {
@@ -1111,7 +1128,9 @@ export default {
         if (this.select_list[this.sreach_num].type !== 'select') {
           if (this.input_sreach !== '') {
             this.zhezhao_click()
-            setTimeout('document.getElementById("one-input").focus()', 500)
+            setTimeout(() => {
+              document.getElementById('one-input' + this.position).focus()
+            }, 500)
             this.input_list = false
           }
         } else {
@@ -1301,7 +1320,9 @@ export default {
             this.no_condition = ''
             this.sreach_num = this.select_list.length
           }
-          setTimeout('document.getElementById("one-input").focus()', 500)
+          setTimeout(() => {
+            document.getElementById('one-input' + this.position).focus()
+          }, 500)
           this.input_list = !this.input_list
           const _this = this
           setTimeout(function () {
