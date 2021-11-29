@@ -17,11 +17,11 @@ const chartData = {
         height: 6,
         updateBy: 1,
         updateAt: '2021-11-10 07:06:09',
-        type: 'line',
+        type: 'area',
         unit: 2,
         weight: 0,
         param: '{' +
-          '   "style":"line",' +
+          '   "style":"area",' +
           '   "stack":false,' +
           '   "legend":{' +
           '        "placement":"bottom",' +
@@ -29,10 +29,10 @@ const chartData = {
           '    },' +
           '    "thresholds":[{' +
           '        "color":"#eee",' +
-          '        "val":"10.1"' +
+          '        "val":"0.9"' +
           '    },{' +
           '        "color":"#aaa",' +
-          '        "val":"base"' +
+          '        "val":"1.1"' +
           '    }],' +
           '    "nullType":"zero"' +
           '}',
@@ -130,22 +130,22 @@ const chartData = {
         height: 4,
         updateBy: 1,
         updateAt: '2021-11-10 09:05:13',
-        type: 'line',
+        type: 'point',
         unit: 2,
         weight: 1,
         param: '{' +
-          '   "style":"line",' +
-          '   "stack":true,' +
+          '   "style":"point",' +
+          '   "stack":false,' +
           '    "legend":{' +
           '        "placement":"right"' +
           //  '        "values":["min","max","avg","first","last","total"]' +
           '    },' +
           '    "thresholds":[{' +
-          '        "color":"#eee",' +
-          '        "val":"10.1"' +
+          '        "color":"#ff0000",' +
+          '        "val":"100"' +
           '    },{' +
-          '        "color":"#aaa",' +
-          '        "val":"base"' +
+          '        "color":"#00ff00",' +
+          '        "val":"250"' +
           '    }],' +
           '    "nullType":"zero"' +
           '}',

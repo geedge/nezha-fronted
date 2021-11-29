@@ -14,7 +14,7 @@ import {randomcolor} from "@/components/common/js/radomcolor/randomcolor";
 export function getOption (type) {
   let chartOption = null
   switch (type) {
-    case chartType.stackArea: {
+    case chartType.area: {
       chartOption = lodash.cloneDeep(chartTimeSeriesAreaOption)
       break
     }
@@ -48,7 +48,7 @@ export function getOption (type) {
 }
 
 export function isTimeSeries (type) {
-  return type === chartType.line || type === chartType.stackArea || type === chartType.point
+  return type === chartType.line || type === chartType.area || type === chartType.point
 }
 
 export function initColor (colorNum = 20) {

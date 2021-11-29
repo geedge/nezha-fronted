@@ -1,5 +1,9 @@
 <template>
-  <div :class="legendPlacement" class="nz-chart__component nz-chart__component--time-series">
+  <div
+    :class="legendPlacement"
+    class="nz-chart__component nz-chart__component--time-series" @mouseenter="mouseEnterChart"
+    @mouseleave="mouseLeaveChart"
+  >
     <div :id="`chart-canvas-${chartInfo.id}`" class="chart__canvas"></div>
     <chart-legend
       v-if="hasLegend"
@@ -14,17 +18,15 @@
 import legend from './legend'
 import chartMixin from '@/components/chart/chartMixin'
 import * as echarts from 'echarts'
-import lodash from 'lodash'
 import moment from 'moment-timezone'
 import bus from '@/libs/bus'
 import { formatScientificNotation } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/charts/chartDataFormat'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { chartType, chartLegendPlacement } from '@/components/common/js/constants'
-import { setChart } from '@/components/common/js/common'
+import { getChart, setChart } from '@/components/common/js/common'
 import { initColor } from '@/components/chart/chart/tools'
 
-let myChart = null
 export default {
   name: 'chart-time-series', // x轴是时间的图，包括折线、柱状、堆叠、散点
   components: {
@@ -33,7 +35,8 @@ export default {
   mixins: [chartMixin],
   data () {
     return {
-      stackTotalColor: null
+      stackTotalColor: null,
+      isStack: false
     }
   },
   computed: {
@@ -64,30 +67,39 @@ export default {
       this.legends = []
       chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
 
-      const { minTime, maxTime, minValue, maxValue } = this.getMinMaxFromData(this.chartData[0])
-      chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime, maxTime)
+      const { minTime, maxTime, minValue, maxValue } = this.getMinMaxFromData(this.chartData) // 此处时间是秒
+      chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime * 1000, maxTime * 1000) // 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter()
       chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue)
       setTimeout(() => {
-        myChart = echarts.init(document.getElementById(`chart-canvas-${this.chartInfo.id}`))
+        const myChart = echarts.init(document.getElementById(`chart-canvas-${this.chartInfo.id}`))
         setChart(this.chartInfo.id, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
         myChart.setOption(chartOption)
+        this.initToolboxEvent(myChart) // 初始化toolbox事件
       })
     },
-    getMinMaxFromData (originalData) {
+    getMinMaxFromData (originalDatas) {
       let minTime = null
       let maxTime = null
       let minValue = null
       let maxValue = null
-      if (!lodash.isEmpty(originalData)) {
-        minTime = originalData[0][0]
-        maxTime = originalData[originalData.length - 1][0]
-        const sorted = originalData.sort((a, b) => {
-          return a[1] - b[1]
+      // 将数据提为二维数组
+      let datas = []
+      originalDatas.forEach((originalData, expressionIndex) => {
+        originalData.forEach((data, dataIndex) => {
+          datas = [...datas, ...data.values]
         })
-        minValue = sorted[0][1]
-        maxValue = sorted[sorted.length - 1][1]
-      }
+      })
+      const timeSorted = datas.sort((a, b) => {
+        return a[0] - b[0]
+      })
+      const valueSorted = datas.sort((a, b) => {
+        return a[1] - b[1]
+      })
+      minTime = timeSorted[0][0]
+      maxTime = timeSorted[timeSorted.length - 1][0]
+      minValue = valueSorted[0][1]
+      maxValue = valueSorted[valueSorted.length - 1][1]
       return { minTime, maxTime, minValue, maxValue }
     },
     xAxisLabelFormatter (minTime, maxTime) {
@@ -121,7 +133,7 @@ export default {
     tooltipFormatter () {
       const self = this
       return function (params) {
-        let str = '<div>'
+        let str = '<div class="nz-chart__tooltip">'
         let sum = 0
         params.forEach((item, i) => {
           const color = self.colorList[item.seriesIndex]
@@ -134,44 +146,53 @@ export default {
           }
           const val = formatScientificNotation(item.data[1], paramsDot)
           sum += self.numberWithEConvent(val)
-          // TODO 改成class
-          str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
-          str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${item.seriesName}  </div>`
-          str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
-          str += chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(val, null, -1, paramsDot)
-          if (previousItem) {
-            str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
-            const previousval = formatScientificNotation(item.data[1], paramsDot)
-            let minusVal = 0
-            if (previousval <= val) {
-              minusVal = val - previousval
-              str += '+'
-            } else {
-              minusVal = previousval - val
-              str += '-'
-            }
 
-            str += chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(minusVal, null, -1, paramsDot)
-            str += '</span>'
+          let previousDom = ''
+          if (previousItem) {
+            const previousVal = formatScientificNotation(item.data[1], paramsDot)
+            let minusVal = 0
+            let operator
+            if (previousVal <= val) {
+              minusVal = val - previousVal
+              operator = '+'
+            } else {
+              minusVal = previousVal - val
+              operator = '-'
+            }
+            previousDom = `
+              <span>${operator}${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(minusVal, null, -1, paramsDot)}</span>
+            `
           }
-          str += '</div>'
-          str += '</div>'
+          str += `
+            <div class="tooltip__row">
+              <div class="row__label">
+                <span class="row__color-block" style="background-color: ${color}"></span>
+                <span>${item.seriesName}</span>
+              </div>
+              <div class="row__value">
+                <span>${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(val, null, -1, paramsDot)}</span>
+                ${previousDom}
+              </div>
+            </div>
+          `
         })
-        if (self.chartInfo.type === chartType.stackArea) {
-          if (!self.stackTotalColor || self.stackTotalColor == '') {
+        if (self.chartInfo.type === chartType.area) {
+          if (!self.stackTotalColor) {
             self.stackTotalColor = randomcolor()
           }
           sum = parseFloat(Number(sum).toFixed(2))
-          // TODO 改成class
-          str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
-          str += '<div style="line-height: 18px; font-size: 12px;padding-left:0px;">'
-          str += `<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${self.stackTotalColor};}'></span>`
-          str += self.$t('dashboard.panel.chartTotal')
-          str += '</div>'
-          str += '<div style="padding-left: 10px;">'
-          str += chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(sum, null, self.chartDot)
-          str += '</div>'
-          str += '</div>'
+
+          str += `
+            <div class="tooltip__row">
+              <div class="row__label">
+                <span class="row__color-block" style="background-color: ${self.stackTotalColor}"></span>
+                <span>${self.$t('dashboard.panel.chartTotal')}</span>
+              </div>
+              <div class="row__value">
+                <span>${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(sum, null, self.chartDot)}</span>
+              </div>
+            </div>
+          `
         }
 
         str += '</div>'
@@ -198,11 +219,98 @@ export default {
         } */
         return unit.compute(value, index, -1, 2)
       }
+    },
+    initToolboxEvent (myChart) {
+      const self = this
+      myChart.on('magictypechanged', function (params) {
+        self.isStack = !self.isStack
+        if (self.isStack) {
+          myChart.setOption({
+            toolbox: {
+              feature: {
+                dataZoom: {
+                  yAxisIndex: false,
+                  title: {
+                    zoom: self.$t('overall.toolBox.zoom'),
+                    back: self.$t('overall.toolBox.back')
+                  }
+                },
+                magicType: {
+                  type: ['stack'],
+                  title: {
+                    stack: self.$t('overall.toolBox.stack')
+                  },
+                  iconStyle: {
+                    borderColor: '#7e7e7e'
+                  },
+                  emphasis: {
+                    borderColor: '#53a3cb'
+                  }
+                }
+              }
+            }
+          })
+        } else {
+          myChart.setOption({
+            toolbox: {
+              feature: {
+                dataZoom: {
+                  yAxisIndex: false,
+                  title: {
+                    zoom: self.$t('overall.toolBox.zoom'),
+                    back: self.$t('overall.toolBox.back')
+                  }
+                },
+                magicType: {
+                  type: ['stack'],
+                  title: {
+                    stack: self.$t('overall.toolBox.stack')
+                  },
+                  iconStyle: {
+                    borderColor: '#7e7e7e'
+                  },
+                  emphasis: {
+                    borderColor: '#7e7e7e'
+                  }
+                }
+              }
+            }
+          })
+        }
+      })
+    },
+    mouseEnterChart () {
+      const myChart = getChart(this.chartInfo.id)
+      if (myChart) {
+        setTimeout(() => {
+          myChart.setOption({
+            toolbox: {
+              show: true
+            }
+          })
+        }, 300)
+      }
+    },
+    mouseLeaveChart () {
+      const myChart = getChart(this.chartInfo.id)
+      if (myChart) {
+        setTimeout(() => {
+          myChart.setOption({
+            toolbox: {
+              show: false
+            }
+          })
+        }, 300)
+      }
     }
   },
   mounted () {
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
+    try {
+      this.isStack = this.chartInfo.param.legend.stack
+    } catch (e) {}
+
     this.initChart(this.chartOption)
   }
 }

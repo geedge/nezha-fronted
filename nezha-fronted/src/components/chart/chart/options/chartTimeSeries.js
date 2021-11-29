@@ -1,4 +1,5 @@
 import { initColor } from '@/components/chart/chart/tools'
+import i18n from '@/components/common/i18n'
 export const chartTimeSeriesLineOption = {
   title: {
     show: false
@@ -7,7 +8,31 @@ export const chartTimeSeriesLineOption = {
     show: false
   },
   toolbox: {
-    show: false
+    show: false,
+    top: '0',
+    right: '18',
+    showTitle: false,
+    feature: {
+      dataZoom: {
+        yAxisIndex: false,
+        title: {
+          zoom: i18n.t('overall.toolBox.zoom'),
+          back: i18n.t('overall.toolBox.back')
+        }
+      },
+      magicType: {
+        type: ['stack'],
+        title: {
+          stack: i18n.t('overall.toolBox.stack')
+        },
+        iconStyle: {
+          borderColor: '#7e7e7e'
+        },
+        emphasis: {
+          borderColor: '#7e7e7e'
+        }
+      }
+    }
   },
   tooltip: {
     trigger: 'axis',
@@ -18,9 +43,9 @@ export const chartTimeSeriesLineOption = {
   color: initColor(),
   grid: {
     left: 20,
-    right: 20,
-    top: 20,
-    bottom: 10,
+    right: 35,
+    top: 35,
+    bottom: 15,
     containLabel: true
   },
   xAxis: {
@@ -92,8 +117,18 @@ export const chartTimeSeriesLineOption = {
   useUTC: false // 使用本地时间
 }
 export const chartTimeSeriesAreaOption = {
-
+  ...chartTimeSeriesLineOption,
+  series: [{
+    ...chartTimeSeriesLineOption.series[0],
+    areaStyle: {}
+  }]
 }
 export const chartTimeSeriesScatterOption = {
-
+  ...chartTimeSeriesLineOption,
+  toolbox: {},
+  series: [{
+    name: '',
+    type: 'scatter',
+    data: []
+  }]
 }

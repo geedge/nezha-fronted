@@ -24,7 +24,22 @@ export default {
           s.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
           if (chartInfo.param.stack) { // 堆叠
             s.stack = 'Total'
-            s.areaStyle = {}
+          }
+          if (!lodash.isEmpty(chartInfo.param.thresholds)) { // 阈值
+            s.markLine = {
+              symbol: 'circle',
+              symbolSize: 5
+            }
+            s.markLine.data = chartInfo.param.thresholds.map(threshold => {
+              return {
+                yAxis: threshold.val,
+                lineStyle: {
+                  color: threshold.color,
+                  width: 2,
+                  type: 'dotted'
+                }
+              }
+            })
           }
           series.push(s)
           colorIndex++

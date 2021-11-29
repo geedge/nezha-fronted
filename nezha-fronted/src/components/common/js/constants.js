@@ -388,7 +388,7 @@ export const chartDataSource = [
 
 export const chartType = {
   line: 'line',
-  stackArea: 'stackArea',
+  area: 'area',
   point: 'point',
   bar: 'bar',
   table: 'table',

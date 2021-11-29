@@ -97,6 +97,7 @@
     &.nz-chart__component--right, &.nz-chart__component--left {
       .legend-container {
         flex-direction: column;
+        padding-top: 25px;
         width: unset;
         max-width: 50%;
         max-height: unset;
@@ -166,6 +167,37 @@
       padding: 1px 5px;
       box-sizing: border-box;
       min-width: 50px;
+    }
+  }
+}
+.nz-chart__tooltip {
+  .tooltip__row {
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    justify-content: space-between;
+    min-width: 150px;
+    max-width: 600px;
+    line-height: 18px;
+    font-size: 12px;
+
+    .row__label {
+      max-width: 500px;
+      white-space: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+
+      .row__color-block {
+        display: inline-block;
+        margin-right: 5px;
+        border-radius: 10px;
+        width: 15px;
+        height: 5px;
+      }
+    }
+    .row__value {
+      padding-left: 5px;
     }
   }
 }
