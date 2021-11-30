@@ -3,6 +3,7 @@
     <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
                     format="yyyy/MM/dd HH:mm:ss" @change="dateChange" v-model="searchTime" type="datetimerange"
                     popper-class="panel-time-picker-popper time-picker-popover__select-top"
+                    :default-time="['00:00:00', '23:59:59']"
                     :range-separator="$t('dashboard.panel.to')"
                     :start-placeholder="$t('dashboard.panel.startTime')"
                     :end-placeholder="$t('dashboard.panel.endTime')" align="right">
