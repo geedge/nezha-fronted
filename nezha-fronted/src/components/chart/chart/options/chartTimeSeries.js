@@ -1,5 +1,6 @@
 import { initColor } from '@/components/chart/chart/tools'
 import i18n from '@/components/common/i18n'
+import { stackIconSvg } from '@/components/common/js/constants'
 export const chartTimeSeriesLineOption = {
   title: {
     show: false
@@ -7,6 +8,7 @@ export const chartTimeSeriesLineOption = {
   legend: {
     show: false
   },
+  animation: false,
   toolbox: {
     show: false,
     top: '0',
@@ -20,17 +22,12 @@ export const chartTimeSeriesLineOption = {
           back: i18n.t('overall.toolBox.back')
         }
       },
-      magicType: {
-        type: ['stack'],
-        title: {
-          stack: i18n.t('overall.toolBox.stack')
-        },
-        iconStyle: {
-          borderColor: '#7e7e7e'
-        },
-        emphasis: {
-          borderColor: '#7e7e7e'
-        }
+      // stack使用自定义按钮
+      myStack: {
+        show: true,
+        title: i18n.t('overall.toolBox.stack'),
+        icon: stackIconSvg,
+        iconStyle: {}
       }
     }
   },

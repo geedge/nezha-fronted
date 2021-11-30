@@ -40,6 +40,7 @@ export default {
     }
   },
   methods: {
+    // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh) {
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''

@@ -23,7 +23,7 @@ import bus from '@/libs/bus'
 import { formatScientificNotation } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/charts/chartDataFormat'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
-import { chartType, chartLegendPlacement } from '@/components/common/js/constants'
+import { chartLegendPlacement } from '@/components/common/js/constants'
 import { getChart, setChart } from '@/components/common/js/common'
 import { initColor } from '@/components/chart/chart/tools'
 
@@ -69,14 +69,18 @@ export default {
 
       const { minTime, maxTime, minValue, maxValue } = this.getMinMaxFromData(this.chartData) // 此处时间是秒
       chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime * 1000, maxTime * 1000) // 需转为毫秒
-      chartOption.tooltip.formatter = this.tooltipFormatter()
+      chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
       chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue)
+      if (chartOption.toolbox.feature) {
+        chartOption.toolbox.feature.myStack.iconStyle.borderColor = this.isStack ? this.toolboxIconColor.active : this.toolboxIconColor.inactive
+        chartOption.toolbox.feature.myStack.onclick = this.stackEvent() // 自定义stack事件
+      }
+      /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
-        const myChart = echarts.init(document.getElementById(`chart-canvas-${this.chartInfo.id}`))
-        setChart(this.chartInfo.id, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
+        const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartInfo.id}`)) : getChart(this.chartInfo.id)
         myChart.setOption(chartOption)
-        this.initToolboxEvent(myChart) // 初始化toolbox事件
-      })
+        setChart(this.chartInfo.id, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
+      }, 200)
     },
     getMinMaxFromData (originalDatas) {
       let minTime = null
@@ -130,7 +134,7 @@ export default {
         }
       }
     },
-    tooltipFormatter () {
+    tooltipFormatter (hasTotal) { // 堆叠图需要total数据
       const self = this
       return function (params) {
         let str = '<div class="nz-chart__tooltip">'
@@ -176,7 +180,7 @@ export default {
             </div>
           `
         })
-        if (self.chartInfo.type === chartType.area) {
+        if (hasTotal) {
           if (!self.stackTotalColor) {
             self.stackTotalColor = randomcolor()
           }
@@ -220,87 +224,33 @@ export default {
         return unit.compute(value, index, -1, 2)
       }
     },
-    initToolboxEvent (myChart) {
+    stackEvent () {
       const self = this
-      myChart.on('magictypechanged', function (params) {
+      // 若isStack=true,则将stack取消，并删掉tooltip的total；否则激活stack。
+      // stack状态改变后，icon颜色需要改变
+      return function () {
+        const myChart = getChart(self.chartInfo.id)
+        const option = myChart.getOption()
+        // 改变颜色
+        option.toolbox[0].feature.myStack.iconStyle.borderColor = self.isStack ? self.toolboxIconColor.inactive : self.toolboxIconColor.active
+        // 切换stack状态
+        option.series.forEach((s, i) => {
+          self.isStack ? (s.stack = i) : (s.stack = 'Total')
+        })
         self.isStack = !self.isStack
-        if (self.isStack) {
-          myChart.setOption({
-            toolbox: {
-              feature: {
-                dataZoom: {
-                  yAxisIndex: false,
-                  title: {
-                    zoom: self.$t('overall.toolBox.zoom'),
-                    back: self.$t('overall.toolBox.back')
-                  }
-                },
-                magicType: {
-                  type: ['stack'],
-                  title: {
-                    stack: self.$t('overall.toolBox.stack')
-                  },
-                  iconStyle: {
-                    borderColor: '#7e7e7e'
-                  },
-                  emphasis: {
-                    borderColor: '#53a3cb'
-                  }
-                }
-              }
-            }
-          })
-        } else {
-          myChart.setOption({
-            toolbox: {
-              feature: {
-                dataZoom: {
-                  yAxisIndex: false,
-                  title: {
-                    zoom: self.$t('overall.toolBox.zoom'),
-                    back: self.$t('overall.toolBox.back')
-                  }
-                },
-                magicType: {
-                  type: ['stack'],
-                  title: {
-                    stack: self.$t('overall.toolBox.stack')
-                  },
-                  iconStyle: {
-                    borderColor: '#7e7e7e'
-                  },
-                  emphasis: {
-                    borderColor: '#7e7e7e'
-                  }
-                }
-              }
-            }
-          })
-        }
-      })
-    },
-    mouseEnterChart () {
-      const myChart = getChart(this.chartInfo.id)
-      if (myChart) {
-        setTimeout(() => {
-          myChart.setOption({
-            toolbox: {
-              show: true
-            }
-          })
-        }, 300)
+        // 改变tooltip
+        option.tooltip[0].formatter = self.tooltipFormatter(self.isStack)
+        myChart.setOption(option)
       }
-    },
-    mouseLeaveChart () {
-      const myChart = getChart(this.chartInfo.id)
-      if (myChart) {
-        setTimeout(() => {
-          myChart.setOption({
-            toolbox: {
-              show: false
-            }
-          })
-        }, 300)
+    }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      handler (n) {
+        if (!this.isInit) {
+          this.initChart(this.chartOption)
+        }
       }
     }
   },
@@ -308,9 +258,8 @@ export default {
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
     try {
-      this.isStack = this.chartInfo.param.legend.stack
+      this.isStack = this.chartInfo.param.stack
     } catch (e) {}
-
     this.initChart(this.chartOption)
   }
 }

@@ -17,12 +17,12 @@ const chartData = {
         height: 6,
         updateBy: 1,
         updateAt: '2021-11-10 07:06:09',
-        type: 'area',
+        type: 'line',
         unit: 2,
         weight: 0,
         param: '{' +
           '   "style":"area",' +
-          '   "stack":false,' +
+          '   "stack":true,' +
           '   "legend":{' +
           '        "placement":"bottom",' +
           '        "values":["min","max","avg","first","last","total"]' +

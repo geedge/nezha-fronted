@@ -95,7 +95,7 @@
                 @on-remove-chart="delChart"
                 @on-add-group-item-chart="addGroupItem"
               ></chart-list>
-              <chart-list :nowTimeType="nowTimeType" ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @panel-list-loading="load" @on-add-group-item-chart="addGroupItem"></chart-list>
+              <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :nowTimeType="nowTimeType" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @on-add-group-item-chart="addGroupItem"></chart-list>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="nz-chart__no-data"
+  <div class="nz-chart__no-data"></div>
 </template>
 
 <script>

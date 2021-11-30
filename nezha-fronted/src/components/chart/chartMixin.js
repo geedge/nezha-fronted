@@ -1,11 +1,17 @@
 import lodash from 'lodash'
 import { getMetricTypeValue } from '@/components/common/js/tools'
+import { getChart } from '@/components/common/js/common'
 export default {
   data () {
     return {
       colorList: [],
       chartDot: 2,
-      legends: [] // { name, alias, color, statistics: [{type: min, value: xxx}, ...] }
+      isInit: true, // 是否是初始化，初始化时为true，初始化结束后设为false；用于刷新操作不重复绑定事件
+      legends: [], // { name, alias, color, statistics: [{type: min, value: xxx}, ...] }
+      toolboxIconColor: {
+        active: '#53a3cb',
+        inactive: '#7e7e7e'
+      }
     }
   },
   props: {
@@ -101,6 +107,30 @@ export default {
         return labelValue
       } else {
         return aliasExpression
+      }
+    },
+    mouseEnterChart () {
+      const myChart = getChart(this.chartInfo.id)
+      if (myChart) {
+        setTimeout(() => {
+          myChart.setOption({
+            toolbox: {
+              show: true
+            }
+          })
+        }, 300)
+      }
+    },
+    mouseLeaveChart () {
+      const myChart = getChart(this.chartInfo.id)
+      if (myChart) {
+        setTimeout(() => {
+          myChart.setOption({
+            toolbox: {
+              show: false
+            }
+          })
+        }, 300)
       }
     }
   }
