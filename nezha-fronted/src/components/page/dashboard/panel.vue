@@ -105,21 +105,7 @@
     <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
-      <chart-box
-        v-if="rightBox.chart.show"
-        ref="addChartModal"
-        :chart="chart"
-        :from="fromRoute.panel"
-        :panel-data="panelData"
-        :show-panel="showPanel"
-        @close="closeChartBox"
-        @reload="panelReload"
-        @reloadOnlyPanel="panelReloadOnlyPanel"
-        @delete-chart="delChart"
-        @on-create-success="createSuccess"
-        @on-delete-success="delChartOk"
-      ></chart-box>
-<!--      <chart-right-box-->
+<!--      <chart-box-->
 <!--        v-if="rightBox.chart.show"-->
 <!--        ref="addChartModal"-->
 <!--        :chart="chart"-->
@@ -132,7 +118,21 @@
 <!--        @delete-chart="delChart"-->
 <!--        @on-create-success="createSuccess"-->
 <!--        @on-delete-success="delChartOk"-->
-<!--      ></chart-right-box>-->
+<!--      ></chart-box>-->
+      <chart-right-box
+        v-if="rightBox.chart.show"
+        ref="addChartModal"
+        :chart="chart"
+        :from="fromRoute.panel"
+        :panel-data="panelData"
+        :show-panel="showPanel"
+        @close="closeChartBox"
+        @reload="panelReload"
+        @reloadOnlyPanel="panelReloadOnlyPanel"
+        @delete-chart="delChart"
+        @on-create-success="createSuccess"
+        @on-delete-success="delChartOk"
+      ></chart-right-box>
     </transition>
     <transition name="right-box">
       <chart-temp-box v-if="rightBox.chartTemp.show" :from="fromRoute.panel" :obj="chart" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess"></chart-temp-box>
@@ -193,7 +193,7 @@ export default {
         type: 'line',
         span: 12,
         datasource: '1',
-        height: '400',
+        height: 4,
         unit: 2,
         param: { url: '', threshold: '' },
         elements: [{ expression: '', legend: '', type: 'expert', id: '' }],
