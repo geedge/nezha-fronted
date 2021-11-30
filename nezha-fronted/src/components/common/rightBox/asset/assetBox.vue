@@ -248,7 +248,7 @@
                 </el-popover>
               </div>
               <div>
-                <el-switch v-model="editAsset.clientEnable" :active-value="1" :inactive-value="0" active-color="#ee9d3f" size="small"></el-switch>
+                <el-switch v-model="editAsset.clientEnable" :active-value="1" :inactive-value="0" active-icon-class="switch-open" inactive-icon-class="switch-shut" size="small"></el-switch>
               </div>
             </div>
             <transition name="el-zoom-in-top">

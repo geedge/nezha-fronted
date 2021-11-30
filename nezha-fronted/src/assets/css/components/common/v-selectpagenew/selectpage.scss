@@ -1,5 +1,5 @@
-.el-picker-panel,.sp-base.sp-inputs,.sp-base.sp-input,.el-picker-panel__footer{
-  background: $--input-background-color !important;
+.sp-base.sp-inputs,.sp-base.sp-input{
+  background: $--background-color-empty !important;
 }
 .sp-search,.sp-result-area,.sp-pagination {
   background-color: $--background-color-empty !important;
@@ -20,7 +20,7 @@
 }
 .sp-selected-tag {
   color: $--color-text-regular !important;
-  background-color: $--select-page-tag-background-color !important;
+  background-color: $--background-color-base !important;
   i {
     color: $--color-text-regular !important;
   }

@@ -53,11 +53,11 @@
                 </el-select>
               </el-popover>
             </template>
-            <template v-if="item.prop == 'state'"><el-switch v-model="scope.row.state" active-color="#ee9d3f" :active-value="1" :inactive-value="0" /></template>
+            <template v-if="item.prop == 'state'"><el-switch v-model="scope.row.state" active-icon-class="switch-open" inactive-icon-class="switch-shut" active-color="#ee9d3f" :active-value="1" :inactive-value="0" /></template>
           </template>
           <template v-else>
             <template v-if="item.prop == 'state'">
-              <el-switch :disabled="true" v-model="scope.row.state" active-color="#ee9d3f" :active-value="1" :inactive-value="0" />
+              <el-switch :disabled="true" v-model="scope.row.state" active-icon-class="switch-open" inactive-icon-class="switch-shut" :active-value="1" :inactive-value="0" />
             </template>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>

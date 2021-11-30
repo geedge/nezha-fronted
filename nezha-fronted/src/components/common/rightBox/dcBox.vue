@@ -45,7 +45,8 @@
                 v-model="editDc.state"
                 active-value="ON"
                 inactive-value="OFF"
-                active-color="#ee9d3f"
+                active-icon-class="switch-open"
+                inactive-icon-class="switch-shut"
               >
               </el-switch>
             </el-form-item>

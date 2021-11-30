@@ -24,19 +24,19 @@
         </el-form-item>
         <!--ping-->
         <el-form-item label="Ping">
-          <el-switch :active-value="1" :inactive-value="0" active-color="#ee9d3f" id="asset-state-ping-status"
+          <el-switch :active-value="1" :inactive-value="0" active-icon-class="switch-open" inactive-icon-class="switch-shut" id="asset-state-ping-status"
                      v-model="editAssetState.ping">
           </el-switch>
         </el-form-item>
         <!--monitor-->
         <el-form-item :label="$t('config.assetState.monitor')">
-          <el-switch :active-value="1" :inactive-value="0" active-color="#ee9d3f" id="asset-state-monitor-status"
+          <el-switch :active-value="1" :inactive-value="0" active-icon-class="switch-open" inactive-icon-class="switch-shut" id="asset-state-monitor-status"
                      v-model="editAssetState.monitor">
           </el-switch>
         </el-form-item>
         <!--alert-->
         <el-form-item :label="$t('config.assetState.alert')">
-          <el-switch :active-value="1" :inactive-value="0" active-color="#ee9d3f" id="asset-state-alert-status"
+          <el-switch :active-value="1" :inactive-value="0" active-icon-class="switch-open" inactive-icon-class="switch-shut" id="asset-state-alert-status"
                      v-model="editAssetState.alert">
           </el-switch>
         </el-form-item>

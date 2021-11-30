@@ -9,6 +9,16 @@
       background-color: $--background-color-base;
     }
   }
+  .half-form-item.el-form-item {
+    display: inline-block;
+    width: 230px;
+    .el-form-item__content {
+      width: 230px;
+      .el-input.el-input--small,.el-input.el-input-group--append {
+        width: calc(100% - 18px);
+      }
+    }
+  }
 }
 .system-config-form{
   width: 61.8% !important;
@@ -299,14 +309,4 @@
   color:#F66C6C;
   font-size: 12px;
   line-height: 20px;
-}
-.half-form-item.el-form-item {
-  display: inline-block;
-  width: 230px;
-  .el-form-item__content {
-    width: 230px;
-   .el-input.el-input--small,.el-input.el-input-group--append {
-     width: calc(100% - 18px);
-   }
-  }
 }

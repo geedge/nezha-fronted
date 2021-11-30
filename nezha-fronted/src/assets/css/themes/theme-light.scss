@@ -152,7 +152,6 @@ $--picker-page-btn-color: $--color-primary;
 $--picker-page-btn-border-color: $--color-primary;
 $--picker-page-btn-background-color: $--color-text-disabled;
 
-
 // icon 字色
 $--nz-icon-color: $--color-primary; //icon
 $--span-nz-icon-border-color: $--asset-label-btn-border-color;
@@ -198,12 +197,18 @@ $--guide-icon-color: $--guide-icon-border-color;
 /* detail */
 $--detail-left-background-color: $--table-row-hover-background-color;
 
+/* Export */
+$--export-span-background-color: $--background-color-base;
+
+/* switch */
+$--switch-background-color: #dcdfe6;
+
 /* 13.panel */
 $--chart-title-hover-background-color: $--background-color-1;
 $--chart-box-border-color: $--border-color-light;
 
 /* 14.popover */
-$--popover-background-color: $--background-color-empty;
+$--popover-background-color: $--color-text-disabled;
 
 /* 15.侧滑 */
 $--right-box-shadow: -3px 0 8px -3px #ccc;

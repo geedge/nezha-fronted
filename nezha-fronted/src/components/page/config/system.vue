@@ -68,17 +68,17 @@
               <el-input v-model.number="basic.default_cabinet_usize" id="system-baisc-default_cabinet_usize"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.unsaved')" prop="unsaved_change">
-              <el-switch v-model="basic.unsaved_change" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off' id="system-baisc-unsaved_change">
+              <el-switch v-model="basic.unsaved_change" active-icon-class="switch-open" inactive-icon-class="switch-shut"  active-value='on' inactive-value='off' id="system-baisc-unsaved_change">
               </el-switch>
             </el-form-item>
             <div class="system-title">{{$t('config.system.basic.pinPolicy')}}&nbsp;<span class="el-form-item__tip">({{$t('config.system.basic.pinPolicyValue')}})</span></div>
             <el-form-item :label="$t('config.system.basic.gloEnable')" prop="mfa_auth_enable">
-              <el-switch v-model="basic.mfa_auth_enable" active-color="rgb(238, 157, 63)"  :active-value='"1"' :inactive-value='"0"' id="system-basic-mfs_change">
+              <el-switch v-model="basic.mfa_auth_enable" active-icon-class="switch-open" inactive-icon-class="switch-shut"  :active-value='"1"' :inactive-value='"0"' id="system-basic-mfs_change">
               </el-switch>
 <!--              <div class="el-form-item__tip">{{$t('config.system.basic.TwoFactorAuthentication')}}</div>-->
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.enable')" prop="enable">
-              <el-switch v-model="basic.pin_policy.enable" active-color="rgb(238, 157, 63)"  active-value='1' inactive-value='0' id="system-basic-enable">
+              <el-switch v-model="basic.pin_policy.enable" active-icon-class="switch-open" inactive-icon-class="switch-shut"  active-value='1' inactive-value='0' id="system-basic-enable">
               </el-switch>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.length')" prop="length">

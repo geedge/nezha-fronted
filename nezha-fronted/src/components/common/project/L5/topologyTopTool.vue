@@ -31,7 +31,8 @@
         v-model="option.grid"
         :active-value="true"
         :inactive-value="false"
-        active-color="#ee9d3f"
+        active-icon-class="switch-open"
+        inactive-icon-class="switch-shut"
         @change="changeOption('grid')">
       </el-switch>
     </div>
@@ -41,7 +42,8 @@
         v-model="option.rule"
         :active-value="true"
         :inactive-value="false"
-        active-color="#ee9d3f"
+        active-icon-class="switch-open"
+        inactive-icon-class="switch-shut"
         @change="changeOption('rule')">
       </el-switch>
     </div>

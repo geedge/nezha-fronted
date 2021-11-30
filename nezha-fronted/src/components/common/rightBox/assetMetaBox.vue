@@ -28,7 +28,8 @@
               <el-switch
                 @change="switchSearch"
                 v-model="editAssetMeta.search"
-                active-color="#ee9d3f"
+                active-icon-class="switch-open"
+                inactive-icon-class="switch-shut"
                 active-value="1"
                 inactive-value="0">
               </el-switch>
@@ -36,7 +37,8 @@
             <el-form-item :label='$t("config.assetLabel.display")' prop="display">
               <el-switch
                 v-model="editAssetMeta.display"
-                active-color="#ee9d3f"
+                active-icon-class="switch-open"
+                inactive-icon-class="switch-shut"
                 active-value="1"
                 inactive-value="0">
               </el-switch>
@@ -103,7 +105,8 @@
                   <el-switch
                     v-model="editAssetMeta.param.interval"
                     @change="$forceUpdate()"
-                    active-color="#ee9d3f">
+                    active-icon-class="switch-open"
+                    inactive-icon-class="switch-shut">
                   </el-switch>
                 </el-row>
               </div>

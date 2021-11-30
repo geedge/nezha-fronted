@@ -42,7 +42,7 @@
             <transition name="el-zoom-in-top">
               <div v-if="dropdownShow" class="endpoint-query-dropdown el-popover" style="right: 11px;top: 33px;">
                 <span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span>
-                <el-switch v-model="hideSameLabels" active-color="#ee9d3f" size="small"></el-switch>
+                <el-switch v-model="hideSameLabels" active-icon-class="switch-open" inactive-icon-class="switch-shut" size="small"></el-switch>
               </div>
             </transition>
           </button>

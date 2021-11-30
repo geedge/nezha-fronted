@@ -190,7 +190,7 @@ td .nz-icon-gear:before{
 }
 .el-textarea {
   .el-textarea__inner {
-    background-color: $--input-background-color !important;
+    background-color: $--background-color-empty !important;
   }
   .el-input__count {
     background-color: $--input-background-color !important;
@@ -253,43 +253,6 @@ td .nz-icon-gear:before{
 .el-scrollbar {
   background-color: $--background-color-empty;
 }
-/* el-picker 下拉时间选择器 */
-.el-picker-panel__footer {
-  border-top: 1px solid $--border-color-light !important;
-  span {
-    color: $--color-text-regular !important;
-  }
-  .el-button--text {
-    span {
-      color: $--color-primary !important;
-    }
-  }
-  .el-button--default {
-    margin-left: 10px;
-    color: $--button-primary-color !important;
-    background: $--picker-page-background-color !important;
-    border: 1px solid $--border-color-light !important;
-  }
-  .el-button.is-plain:hover {
-    background-color: $--picker-page-background-color !important;
-    border-color: $--picker-page-btn-border-color !important;
-    span {
-      color: $--picker-page-btn-color !important;
-    }
-  }
-}
-.el-date-range-picker__time-header {
-  border-bottom: 1px solid $--border-color-light;
-}
-.el-date-range-picker__content.is-left {
-  border-right: 1px solid $--border-color-light;
-}
-.el-date-table th {
-  border-bottom: 1px solid $--border-color-light !important;
-}
-.el-date-picker__time-header {
-  border-bottom: 1px solid $--picker-page-border-color !important;
-}
 .el-input-group.el-input-group--prepend,.query-input-inactive.el-input {
   .el-input-group__prepend {
     background-color: $--background-color-empty;
@@ -310,6 +273,55 @@ td .nz-icon-gear:before{
     border: none;
     border-bottom: 1px solid $--border-color-light;
   }
+}
+.el-dialog__wrapper.nz-dialog {
+  .el-upload-dragger {
+    background-color: $--background-color-empty;
+    border: 1px dashed $--border-color-light;
+  }
+  .el-upload-dragger:hover {
+    border: 1px dashed $--color-primary;
+  }
+  .el-message-box__btns {
+    .el-button {
+      background-color: $--background-color-empty;
+      border: 1px solid $--border-color-light;
+    }
+    .el-button:hover {
+      border: 1px solid $--color-primary;
+    }
+    .el-button:nth-of-type(3) {
+      margin-left: 10px;
+    }
+    .nz-btn.nz-btn-size-normal {
+      background-color: $--color-warning;
+      border: 1px solid $--color-warning;
+      color: $--button-primary-color;
+    }
+    .nz-btn.nz-btn-size-normal:hover {
+      background-color: #fe9f37;
+    }
+  }
+}
+.el-dialog {
+  .el-radio-button {
+    width: 142px;
+    .el-radio-button__inner {
+      width: 100%;
+      background-color: $--popover-background-color;
+      border-color: $--border-color-light;
+    }
+  }
+  .el-radio-button.is-active .el-radio-button__inner{
+    background-color: $--color-warning;
+    border-color: $--color-warning;
+  }
+}
+.switch-open {
+  background-color: $--color-primary;
+}
+.switch-shut {
+  background-color: $--switch-background-color;
 }
 //.editor-core {
 //  p {
