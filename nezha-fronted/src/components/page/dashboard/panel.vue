@@ -105,7 +105,34 @@
     <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
-      <chart-box v-if="rightBox.chart.show" ref="addChartModal" :chart="chart" :from="fromRoute.panel" :panel-data="panelData" :show-panel="showPanel" @close="closeChartBox" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
+      <chart-box
+        v-if="rightBox.chart.show"
+        ref="addChartModal"
+        :chart="chart"
+        :from="fromRoute.panel"
+        :panel-data="panelData"
+        :show-panel="showPanel"
+        @close="closeChartBox"
+        @reload="panelReload"
+        @reloadOnlyPanel="panelReloadOnlyPanel"
+        @delete-chart="delChart"
+        @on-create-success="createSuccess"
+        @on-delete-success="delChartOk"
+      ></chart-box>
+<!--      <chart-right-box-->
+<!--        v-if="rightBox.chart.show"-->
+<!--        ref="addChartModal"-->
+<!--        :chart="chart"-->
+<!--        :from="fromRoute.panel"-->
+<!--        :panel-data="panelData"-->
+<!--        :show-panel="showPanel"-->
+<!--        @close="closeChartBox"-->
+<!--        @reload="panelReload"-->
+<!--        @reloadOnlyPanel="panelReloadOnlyPanel"-->
+<!--        @delete-chart="delChart"-->
+<!--        @on-create-success="createSuccess"-->
+<!--        @on-delete-success="delChartOk"-->
+<!--      ></chart-right-box>-->
     </transition>
     <transition name="right-box">
       <chart-temp-box v-if="rightBox.chartTemp.show" :from="fromRoute.panel" :obj="chart" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess"></chart-temp-box>
@@ -118,6 +145,7 @@
 
 <script>
 import ChartBox from './chartBox'
+import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import ChartList from '../../chart/chartList'
 import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
@@ -164,6 +192,7 @@ export default {
         name: '',
         type: 'line',
         span: 12,
+        datasource: '1',
         height: '400',
         unit: 2,
         param: { url: '', threshold: '' },
@@ -239,7 +268,8 @@ export default {
     'panel-box': panelBox,
     topToolMoreOptions,
     selectPanel,
-    chartTempBox
+    chartTempBox,
+    chartRightBox
   },
   methods: {
     // 刷新
@@ -414,12 +444,12 @@ export default {
             this.rightBox.chart.show = false
             const chartList = this.$refs.chartList.dataList
             for (let i = 0; i < chartList.length; i++) {
-              /*if (chartList[i].id === data.id) {
+              /* if (chartList[i].id === data.id) {
                 chartList.splice(i, 1)
               }
               if (chartList[i].type === 'group') {
                 chartList[i].children = chartList[i].children.filter((item) => item.id !== data.id)
-              }*/
+              } */
               // if(data.next != -1){
               //   if(chartList[i].id === data.next){
               //     nextChart = chartList[i]
@@ -431,7 +461,7 @@ export default {
               //   }
               // }
             }
-            //this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop)
+            // this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop)
             // if(nextChart&&prevChart){ //删除图表为中间位置
             //   prevChart.next = nextChart.id;
             //   nextChart.prev = prevChart.id;
@@ -702,6 +732,9 @@ export default {
           wrap.scrollTop = currentTop
         }
       }, 20)
+    },
+    load () {
+
     }
   },
   created () {

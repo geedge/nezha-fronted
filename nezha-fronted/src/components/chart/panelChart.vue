@@ -8,6 +8,7 @@
     <!-- chart -->
     <!-- 数据查询后传入chart组件，chart组件内不查询，只根据接传递的数据来渲染 -->
     <chart
+      ref="chart"
       :chart-data="chartData"
       :chart-info="chartInfo"
     ></chart>
@@ -106,7 +107,43 @@ export default {
         case 4: {
           break
         }
+        case 'hexagonFigure': {
+          this.getHexagonFigureData().then(res => {
+            this.chartData = res
+          })
+          break
+        }
       }
+    },
+    getHexagonFigureData () {
+      return new Promise(resolve => {
+        this.$get('stat/alertMessage/topN', { size: 48, dimension: 'module' }).then(response => {
+          if (response.code === 200) {
+            const moduleData = response.data.list
+            moduleData.sort((a, b) => b.alertNum - a.alertNum)
+            const alertTopModules = moduleData.slice(0, 48)
+            const requests = alertTopModules.map(a => axios.get(`stat/alertMessage/severity?moduleId=${a.id}`))
+            const moduleStateData = []
+            axios.all(requests).then(result => {
+              result.forEach((alert, i) => {
+                const severityData = {}
+                alert.data.data.list && alert.data.data.list.forEach(a => {
+                  severityData[a.name] = a.num
+                })
+                !severityData.P1 && (severityData.P1 = 0)
+                !severityData.P2 && (severityData.P2 = 0)
+                !severityData.P3 && (severityData.P3 = 0)
+                moduleStateData.push({ ...alertTopModules[i], alert: [severityData] })
+              })
+              console.log(moduleStateData)
+              resolve(moduleStateData)
+            })
+          }
+        })
+      })
+    },
+    resize() {
+      this.$refs.chart.resize()
     }
   },
   mounted () {

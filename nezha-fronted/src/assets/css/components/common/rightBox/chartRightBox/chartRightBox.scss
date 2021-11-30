@@ -1,0 +1,16 @@
+.right-box__container{
+  .chart-config{
+    .el-form {
+      padding-top: 0px;
+    }
+    .chart-title .nz-icon-arrow-down{
+      display: inline-block;
+      transition: transform .3s;
+    }
+    .chart-title .nz-icon-arrow-down.is-active{
+      transform: rotate(
+          -90deg
+      );
+    }
+  }
+}

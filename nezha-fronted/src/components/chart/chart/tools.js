@@ -51,6 +51,10 @@ export function isTimeSeries (type) {
   return type === chartType.line || type === chartType.area || type === chartType.point
 }
 
+export function isHexagonFigure (type) {
+  return type === chartType.hexagonFigure
+}
+
 export function initColor (colorNum = 20) {
   const colorList = [
     '#FF5200', '#3685FF', '#FF8D00', '#00DCA2',

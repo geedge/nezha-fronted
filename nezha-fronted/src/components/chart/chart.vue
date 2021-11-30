@@ -8,6 +8,13 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
       ></chart-time-series>
+<!--      <chartHexagon-->
+<!--        :ref="'chart'+chartInfo.id"-->
+<!--        v-if="isHexagonFigure(chartInfo.type)"-->
+<!--        :chart-data="chartData"-->
+<!--        :chart-info="chartInfo"-->
+<!--        :chart-option="chartOption"-->
+<!--      ></chartHexagon>-->
     </template>
   </div>
 </template>
@@ -30,7 +37,8 @@ import chartTimeSeries from './chart/chartTimeSeries'
 import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
-import { getOption, isTimeSeries } from './chart/tools'
+import chartHexagon from './chart/chartHexagon'
+import { getOption, isTimeSeries, isHexagonFigure } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -52,7 +60,8 @@ export default {
     chartTimeSeries,
     chartTreemap,
     chartUrl,
-    chartValue
+    chartValue,
+    chartHexagon
   },
   props: {
     chartInfo: Object,
@@ -76,7 +85,11 @@ export default {
     }
   },
   methods: {
-    isTimeSeries
+    isTimeSeries,
+    isHexagonFigure,
+    resize () {
+      this.$refs['chart' + this.chartInfo.id].resize()
+    }
   },
   mounted () {
   }

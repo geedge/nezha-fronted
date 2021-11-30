@@ -91,6 +91,7 @@ export default {
     },
     containerResizedEvent (i, newH, newW, newHPx, newWPx) {
       // TODO 重新渲染图表
+      // this.$refs['chart' + i].resize()
     }
   },
   mounted () {

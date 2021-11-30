@@ -404,7 +404,8 @@ export const chartType = {
   assetInfo: 'assetInfo',
   endpointInfo: 'endpointInfo',
   topology: 'topology',
-  map: 'map'
+  map: 'map',
+  hexagonFigure: 'hexagonFigure'
 }
 
 export const chartLegendPlacement = {

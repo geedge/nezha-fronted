@@ -56,7 +56,7 @@
   padding: 0 30px;
   overflow-x: hidden;
   overflow-y: auto;
-
+  box-sizing: border-box;
   .el-textarea__inner {
     padding: 5px 70px 4px 15px;
   }
