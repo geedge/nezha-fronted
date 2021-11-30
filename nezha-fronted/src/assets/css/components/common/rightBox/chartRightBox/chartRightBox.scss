@@ -3,6 +3,13 @@
     .el-form {
       padding-top: 0px;
     }
+    .chart-title-config {
+      border: 1px solid $--border-color-light;
+      border-radius: 2px;
+      display: flex;
+      padding: 8px 10px;
+      justify-content: space-between;
+    }
     .chart-title .nz-icon-arrow-down{
       display: inline-block;
       transition: transform .3s;

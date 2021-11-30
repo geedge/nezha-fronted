@@ -5,7 +5,7 @@
           <el-row
           :key="'ele' + index" class="element-item form-row-item" style="" v-for="index of chartConfig.elements.length"
         >
-          <div class="chart-title">
+          <div class="chart-title chart-title-config">
             <span class="endpoint-title-content">
               <i class="nz-icon nz-icon-arrow-down" :class="expressionsShow[index-1]?'':'is-active'" @click="showExpression(index)"></i>
             </span>

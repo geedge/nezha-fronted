@@ -105,12 +105,11 @@ export default {
           break
         }
         case 4: {
-          break
-        }
-        case 'hexagonFigure': {
-          this.getHexagonFigureData().then(res => {
-            this.chartData = res
-          })
+          if (this.chartInfo.type === 'hexagonFigure') {
+            this.getHexagonFigureData().then(res => {
+              this.chartData = res
+            })
+          }
           break
         }
       }

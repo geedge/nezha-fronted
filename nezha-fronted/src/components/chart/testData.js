@@ -457,7 +457,7 @@ const chartData = {
         type: 'hexagonFigure',
         unit: 2,
         weight: 2,
-        dataSource: 'hexagonFigure',
+        dataSource: 4,
         param: '{' +
           '   "from":"module",' +
           '   "length":"48",' +

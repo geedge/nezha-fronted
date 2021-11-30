@@ -8,13 +8,13 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
       ></chart-time-series>
-<!--      <chartHexagon-->
-<!--        :ref="'chart'+chartInfo.id"-->
-<!--        v-if="isHexagonFigure(chartInfo.type)"-->
-<!--        :chart-data="chartData"-->
-<!--        :chart-info="chartInfo"-->
-<!--        :chart-option="chartOption"-->
-<!--      ></chartHexagon>-->
+      <chartHexagon
+        :ref="'chart'+chartInfo.id"
+        v-if="isHexagonFigure(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+      ></chartHexagon>
     </template>
   </div>
 </template>
