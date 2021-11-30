@@ -75,8 +75,6 @@
                   style="margin-left: 14px"
                   slot="reference"
                   v-model="scope.row.schedEnable"
-                  active-icon-class="switch-open"
-                  inactive-icon-class="switch-shut"
                   :active-value="1"
                   :inactive-value="0"
                   @change="(val)=>{$emit('statusChange', scope.row)}"

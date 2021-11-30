@@ -165,8 +165,6 @@
                          v-model="editChart.param.time"
                          :active-value="true"
                          :inactive-value="false"
-                         active-icon-class="switch-open"
-                         inactive-icon-class="switch-shut"
                          size="small"></el-switch>
             </el-form-item>
             <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.descending")' prop="param.descending">
@@ -174,8 +172,6 @@
                          v-model="editChart.param.descending"
                          :active-value="true"
                          :inactive-value="false"
-                         active-icon-class="switch-open"
-                         inactive-icon-class="switch-shut"
                          size="small"></el-switch>
             </el-form-item>
             <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.wrapLines")' prop="param.wrapLines">
@@ -183,8 +179,6 @@
                          v-model="editChart.param.wrapLines"
                          :active-value="true"
                          :inactive-value="false"
-                         active-icon-class="switch-open"
-                         inactive-icon-class="switch-shut"
                          size="small"></el-switch>
             </el-form-item>
           </div>
@@ -328,8 +322,6 @@
                   <el-switch
                     :id="'chart-box-legendValue-'+item.label"
                     v-model="editChart.param.legendValue[item.key]"
-                    active-icon-class="switch-open"
-                    inactive-icon-class="switch-shut"
                     active-value="on"
                     inactive-value="off"
                   >

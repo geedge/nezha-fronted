@@ -36,8 +36,6 @@
                 v-model="selection.pen.data.valueMappingShow"
                 :active-value="true"
                 :inactive-value="false"
-                active-icon-class="switch-open"
-                inactive-icon-class="switch-shut"
               />
             </el-form-item>
           </el-row>

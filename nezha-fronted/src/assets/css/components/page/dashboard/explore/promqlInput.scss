@@ -48,7 +48,9 @@
     width: 105px;
     margin-left: 1px;
   }
-
+  .el-cascader-menu {
+    width: 200px;
+  }
   .metric-btn:hover, .metric-btn:focus {
     background-image:  linear-gradient(180deg, rgb(247, 248, 250) 0%, rgb(247, 248, 250) 100%);
     color: $--color-text-regular;
@@ -59,7 +61,6 @@
     position: absolute;
     z-index: 2100;
     background-color: $--background-color-empty;
-    width: 450px;
     .el-cascader-menu__wrap {
       height: 100%;
       .el-scrollbar__view.el-cascader-menu__list {
@@ -82,12 +83,10 @@
     letter-spacing: 0;
     line-height: 22px;
   }
-
-  /deep/ .el-cascader-node {
+  .el-cascader-node {
     padding: 0;
   }
-
-  /deep/ .el-cascader-menu:last-child .el-cascader-node, /deep/ .el-cascader-node__label {
+  .el-cascader-menu:last-child .el-cascader-node, /deep/ .el-cascader-node__label {
     padding: 0;
   }
   .metric-selector-title{

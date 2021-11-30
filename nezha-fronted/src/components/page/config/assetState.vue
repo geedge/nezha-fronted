@@ -61,8 +61,6 @@
                 :active-value="1"
                 :disabled="!hasButton('assetState_toEdit')"
                 :inactive-value="0"
-                active-icon-class="switch-open"
-                inactive-icon-class="switch-shut"
                 @change="(val)=>{statusChange(scope.row)}">
               </el-switch>
               <el-switch
@@ -71,8 +69,6 @@
                 :active-value="1"
                 :disabled="!hasButton('assetState_toEdit')"
                 :inactive-value="0"
-                active-icon-class="switch-open"
-                inactive-icon-class="switch-shut"
                 @change="(val)=>{statusChange(scope.row)}">
               </el-switch>
               <el-switch
@@ -81,8 +77,6 @@
                 :active-value="1"
                 :disabled="!hasButton('assetState_toEdit')"
                 :inactive-value="0"
-                active-icon-class="switch-open"
-                inactive-icon-class="switch-shut"
                 @change="(val)=>{statusChange(scope.row)}">
               </el-switch>
               <span v-else>{{scope.row[item.prop]}}</span>

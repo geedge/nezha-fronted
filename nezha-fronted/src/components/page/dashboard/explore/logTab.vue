@@ -7,8 +7,6 @@
         <span class="operation-label">{{$t('overall.time')}}</span>
         <el-switch
           v-model="time"
-          active-icon-class="switch-open"
-          inactive-icon-class="switch-shut"
         >
         </el-switch>
       </div>
@@ -16,8 +14,6 @@
         <span class="operation-label">{{$t('dashboard.explore.descending')}}</span>
         <el-switch
           v-model="operations.descending"
-          active-icon-class="switch-open"
-          inactive-icon-class="switch-shut"
         >
         </el-switch>
       </div>
@@ -25,8 +21,6 @@
         <span class="operation-label">{{$t('dashboard.explore.wrapLines')}}</span>
         <el-switch
           v-model="wrapLines"
-          active-icon-class="switch-open"
-          inactive-icon-class="switch-shut"
         >
         </el-switch>
       </div>

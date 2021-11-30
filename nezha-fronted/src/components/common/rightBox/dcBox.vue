@@ -44,10 +44,7 @@
                 id="dc-box-input-name"
                 v-model="editDc.state"
                 active-value="ON"
-                inactive-value="OFF"
-                active-icon-class="switch-open"
-                inactive-icon-class="switch-shut"
-              >
+                inactive-value="OFF">
               </el-switch>
             </el-form-item>
           </el-form>

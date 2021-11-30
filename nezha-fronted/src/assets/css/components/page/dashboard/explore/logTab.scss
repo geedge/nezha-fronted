@@ -18,10 +18,13 @@
   .log-table .nz-table2 {
     padding: 10px 0 0 0;
     position: relative;
+    background-color: $--background-color-empty;
     .el-table__body {
       border-collapse: separate;
       border-spacing: 0 6px;
-
+      tr {
+        background-color: $--background-color-empty;
+      }
       td {
         vertical-align: top;
         padding: 1px 0;
@@ -29,7 +32,19 @@
       }
       td.el-table__expanded-cell {
         padding: 0 0 0 60px;
-        background-color: $--background-color-base;
+        background-color: $--popover-background-color !important;
+      }
+      pre {
+        border: none;
+        background: none;
+      }
+      td.el-table__expanded-cell:hover {
+        padding: 0 0 0 60px;
+        background-color: $--background-color-base !important;
+      }
+      pre:hover {
+        background: none;
+        border: none;
       }
       // 左侧边框
       td:first-child {

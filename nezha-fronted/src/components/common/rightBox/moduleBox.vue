@@ -86,7 +86,7 @@
               <i class="nz-icon nz-icon-arrow-down" :class="metricsShow?'':'is-active'" @click="metricsShow = !metricsShow"></i>
               {{$t('project.endpoint.metrics')}}
             </span>
-            <el-switch v-model="editModule.configs[0].enable" active-icon-class="switch-open" inactive-icon-class="switch-shut" size="small" :active-value="1" :inactive-value="0"></el-switch>
+            <el-switch v-model="editModule.configs[0].enable" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
           <transition name="el-zoom-in-top">
             <el-tabs v-model="activeName" v-show="metricsShow" v-if="editModule.configs[0].enable">
@@ -326,7 +326,7 @@
                <i class="nz-icon nz-icon-arrow-down" :class="logsShow?'':'is-active'" @click="logsShow = !logsShow"></i>
               {{$t('project.endpoint.logs')}}
             </span>
-            <el-switch v-model="editModule.configs[1].enable" active-icon-class="switch-open" inactive-icon-class="switch-shut" size="small" :active-value="1" :inactive-value="0"></el-switch>
+            <el-switch v-model="editModule.configs[1].enable" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
           <transition name="el-zoom-in-top">
           <div v-show="logsShow" v-if="editModule.configs[1].enable">

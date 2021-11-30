@@ -317,10 +317,10 @@ td .nz-icon-gear:before{
     border-color: $--color-warning;
   }
 }
-.switch-open {
+.el-switch.is-checked .el-switch__core {
   background-color: $--color-primary;
 }
-.switch-shut {
+.el-switch .el-switch__core {
   background-color: $--switch-background-color;
 }
 //.editor-core {

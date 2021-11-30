@@ -34,10 +34,14 @@
     line-height: 38px;
     flex-direction: row-reverse;
     justify-content: flex-end;
-
+    background-color: $--background-color-empty;
     i {
       margin: 0 8px;
     }
+  }
+  .el-collapse-item__wrap {
+    background-color: $--background-color-empty;
+    border-bottom: 1px solid $--border-color-light;
   }
   .el-collapse-item__content {
     padding: 0 30px 20px;

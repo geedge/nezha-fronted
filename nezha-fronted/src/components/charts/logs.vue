@@ -719,10 +719,10 @@ export default {
   .show-tab-icon .nz-icon.is-active-icon{
     color: #BDE3FD;
   }
-  /deep/ .chart-no-data{
+  .chart-no-data{
     width: calc(100% - 30px);
   }
-  /deep/ .log-detail .log-table .nz-table2 {
+  .log-detail .log-table .nz-table2 {
     padding: 0;
   }
   .logs-box{

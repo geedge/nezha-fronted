@@ -17,8 +17,6 @@
           <el-form-item :label='$t("config.assetType.vm")' prop="vm">
             <el-switch
               v-model="editAssetType.vm"
-              active-icon-class="switch-open"
-              inactive-icon-class="switch-shut"
               :active-value="1"
               :inactive-value="0">
             </el-switch>
@@ -27,8 +25,6 @@
           <el-form-item :label='$t("config.assetType.vmh")' prop="vmh">
             <el-switch
               v-model="editAssetType.vmh"
-              active-icon-class="switch-open"
-              inactive-icon-class="switch-shut"
               :active-value="1"
               :inactive-value="0">
             </el-switch>
@@ -43,8 +39,6 @@
           <el-form-item :label='$t("config.assetType.snmpEnable")' prop="snmpEnable">
             <el-switch
               v-model="editAssetType.snmpEnable"
-              active-icon-class="switch-open"
-              inactive-icon-class="switch-shut"
               :active-value="1"
               :inactive-value="0">
             </el-switch>
@@ -53,8 +47,6 @@
           <el-form-item :label='$t("config.assetType.snmpCollect")' prop="snmpCollect">
             <el-switch
               v-model="editAssetType.snmpCollect"
-              active-icon-class="switch-open"
-              inactive-icon-class="switch-shut"
               :active-value="1"
               :inactive-value="0">
             </el-switch>
@@ -63,8 +55,6 @@
           <el-form-item :label='$t("config.assetType.sshCollect")' prop="sshCollect">
             <el-switch
               v-model="editAssetType.sshCollect"
-              active-icon-class="switch-open"
-              inactive-icon-class="switch-shut"
               :active-value="1"
               :inactive-value="0">
             </el-switch>
