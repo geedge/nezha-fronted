@@ -133,6 +133,7 @@ $--button-icon-active-border-color: $--color-text-primary; // focus边框色
 /* Asset */
 $--asset-label-btn-border-color: $--border-color-light; // border
 $--asset-label-btn-background-color: #222329; // background
+$--asset-bactch-btn-background-color: mix(#FFF, $--background-color-base, 15%);
 
 /* clickSearch */
 $--click-search-items-border-color: $--background-color-copy; // border

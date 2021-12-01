@@ -1,10 +1,11 @@
 .right-box-modify-endpoint {
+  .container__form {
+    min-height: 400px;
+    flex: 1;
+    height: calc(100% - 400px);
+  }
   .error {
     border: 1px solid #F56C6C !important;
-  }
-  .right-box-sub-title {
-    width: calc(100% - 70px);
-    margin-left: 15px;
   }
   .el-table thead .cell {
     font-size: 14px;
@@ -20,6 +21,36 @@
   }
   .el-table th {
     padding: 7px 0;
+  }
+  .el-table tr {
+    background-color: $--background-color-empty;
+  }
+  .el-table td {
+    border-bottom: 1px solid $--border-color-light;
+    border-right: 1px solid $--border-color-light;
+  }
+  .el-table th.is-leaf {
+    border-bottom: 1px solid $--border-color-light;
+  }
+  .el-table--fit {
+    background-color: $--background-color-empty;
+    border: 1px solid $--border-color-light;
+    border-bottom: none;
+    height: 100%;
+    flex: 1;
+    .el-table__header-wrapper {
+      tr th {
+        border-right: 1px solid $--border-color-light;
+      }
+      th.gutter {
+        background-color: $--background-color-empty;
+        border-bottom: 1px solid $--border-color-light;
+        border-right: none;
+      }
+    }
+    .el-table__body-wrapper {
+      overflow-y: auto;
+    }
   }
   .configs-endpoint {
     border-radius: 4px;

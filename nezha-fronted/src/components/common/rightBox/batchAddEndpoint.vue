@@ -10,9 +10,9 @@
     </div>
 
     <!-- begin--表单-->
-    <div class="right-box-form-box right-box__container" style="overflow: hidden;padding-left: 20px;margin-top: 0">
-      <div class="container__form" style="display: flex; flex-direction: column;height: 100%">
-        <el-form class="right-box-form" label-position = "top" ref="addEndpoint" :model="endpoint" :rules="rules">
+    <div class="right-box__container">
+      <div class="container__form">
+        <el-form label-position="top" ref="addEndpoint" :model="endpoint" :rules="rules">
           <el-form-item :label="$t('project.module.module')" prop="ChartTemplate">
             <v-selectpage
               :data="moduleList"
@@ -58,10 +58,8 @@
 
         <el-table
           :data="batchEndpoint.tableData"
-          :class="showError?'error' : ''"
-          :height="'calc(100% - 400px)'"
-          style="width:calc(100% - 70px);margin-left: 15px;min-height:400px;flex: 1"
-          border>
+          :height="'100%'"
+        >
           <el-table-column
             v-for="(item, index) in endpointTableTitle"
             v-if="item.show"
