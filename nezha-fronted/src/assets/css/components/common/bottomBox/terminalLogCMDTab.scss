@@ -4,7 +4,7 @@
   position: relative;
 }
 .record-container--record {
-  background-color: white;
+  background-color: $--background-color-base;
   width: calc(100% - 6px);
   padding: 16px 15px 6px 15px;
   border: 1px solid $--border-color-base;

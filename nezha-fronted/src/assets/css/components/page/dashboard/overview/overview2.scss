@@ -28,6 +28,12 @@
   .nz-table2 {
     height: 100% !important;
   }
+  .chart-body {
+    div:nth-of-type(2),.tooltip {
+      background-color: $--background-color-empty !important;
+      color: $--color-text-regular;
+    }
+  }
 }
 .overview-content-header{
   display: flex;

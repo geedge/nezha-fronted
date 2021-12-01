@@ -63,7 +63,11 @@ export default {
     },
     getRemoteText () {
       return function (record) {
-        return `${record.loginUser}@${record.host}:${record.port}`
+        if (record.host) {
+          return `${record.loginUser}@${record.host}:${record.port}`
+        } else {
+          return `${record.loginUser}@${record.host}`
+        }
       }
     },
     statusClass () {
