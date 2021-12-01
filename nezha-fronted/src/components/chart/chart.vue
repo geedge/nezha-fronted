@@ -7,6 +7,7 @@
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
       ></chart-time-series>
       <chartHexagon
         :ref="'chart'+chartInfo.id"
@@ -66,7 +67,8 @@ export default {
   props: {
     chartInfo: Object,
     chartData: [Object, Array, String], // 数据查询后传入chart组件，chart组件内不查询，只根据接传递的数据来渲染
-    customChartOption: Object // 需要自定义echarts的option时传入，非必须；传入该值时仍需传对应格式的chartData
+    customChartOption: Object, // 需要自定义echarts的option时传入，非必须；传入该值时仍需传对应格式的chartData
+    isFullscreen: Boolean
   },
   data () {
     return {

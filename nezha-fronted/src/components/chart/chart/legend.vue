@@ -44,13 +44,15 @@ export default {
   props: {
     chartInfo: Object,
     chartData: Array,
-    legends: Array
+    legends: Array,
+    isFullscreen: Boolean
   },
   data () {
     return {
       isGrey: [],
       legendDefaultCount: 20, // 初始显示的legend条数
-      showLegends: [] // 要显示的legend；若legend数量过多，初始时这个数据里只有前20条legend
+      showLegends: [], // 要显示的legend；若legend数量过多，初始时这个数据里只有前20条legend
+      chartId: ''
     }
   },
   computed: {
@@ -74,7 +76,7 @@ export default {
       const hasGrey = highlightNum < this.isGrey.length // 是否有置灰的
       const curIsGrey = this.isGrey[index] // 当前legend的状态
       const currentIsTheOnlyOneHighlight = !curIsGrey && highlightNum === 1 // 当前legend是否是目前唯一高亮的
-      const echarts = getChart(this.chartInfo.id)
+      const echarts = getChart(this.chartId)
       if (echarts) {
         if (!hasGrey) { // 1.除当前legend外全置灰
           echarts.dispatchAction({
@@ -105,6 +107,9 @@ export default {
     legends (n) {
       this.isGrey = n.map(() => false)
     }
+  },
+  mounted () {
+    this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
   }
 }
 </script>

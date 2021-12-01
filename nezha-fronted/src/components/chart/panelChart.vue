@@ -1,9 +1,11 @@
 <template>
   <!-- chart外层箱子 -->
-  <div class="panel-chart">
+  <div :class="{'panel-chart--fullscreen': isFullscreen}" class="panel-chart">
     <!-- title和工具栏，支持浮动 -->
     <chart-header
+      v-if="!isFullscreen"
       :chart-info="chartInfo"
+      @showFullscreen="showFullscreen"
     ></chart-header>
     <!-- chart -->
     <!-- 数据查询后传入chart组件，chart组件内不查询，只根据接传递的数据来渲染 -->
@@ -11,6 +13,7 @@
       ref="chart"
       :chart-data="chartData"
       :chart-info="chartInfo"
+      :is-fullscreen="isFullscreen"
     ></chart>
   </div>
 </template>
@@ -32,7 +35,8 @@ export default {
   },
   props: {
     chartInfo: Object, // 其中的param json串已转化为对象
-    timeRange: Array // 时间范围
+    timeRange: Array, // 时间范围
+    isFullscreen: Boolean
   },
   data () {
     return {
@@ -142,8 +146,11 @@ export default {
         })
       })
     },
-    resize() {
+    resize () {
       this.$refs.chart.resize()
+    },
+    showFullscreen (show) {
+      this.$emit('showFullscreen', show, this.chartInfo)
     }
   },
   mounted () {

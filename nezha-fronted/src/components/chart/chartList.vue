@@ -28,6 +28,7 @@
           :ref="'chart' + item.id"
           :chart-info="item"
           :time-range="timeRange"
+          @showFullscreen="showFullscreen"
         ></panel-chart>
       </grid-item>
     </grid-layout>
@@ -38,6 +39,24 @@
       </svg>
       <div class="no-data-div">No data</div>
     </div>
+    <!-- 全屏查看 -->
+    <el-dialog
+      v-if="fullscreen.visible"
+      :title="fullscreen.chartInfo.name"
+      :visible.sync="fullscreen.visible"
+      append-to-body
+      class="nz-dialog chart-fullscreen"
+      destroy-on-close
+      fullscreen
+    >
+      <panel-chart
+        :ref="'chart-fullscreen' + fullscreen.chartInfo.id"
+        :chart-info="fullscreen.chartInfo"
+        :is-fullscreen="true"
+        :time-range="timeRange"
+        @showFullscreen="showFullscreen"
+      ></panel-chart>
+    </el-dialog>
   </div>
 </template>
 
@@ -71,7 +90,12 @@ export default {
       tempDom: { height: '', width: '' },
       eventLog: [],
       stepWidth: null,
-      timestamp: new Date().getTime()
+      timestamp: new Date().getTime(),
+      fullscreen: {
+        visible: false,
+        chartData: [],
+        chartInfo: {}
+      }
     }
   },
   methods: {
@@ -92,6 +116,10 @@ export default {
     containerResizedEvent (i, newH, newW, newHPx, newWPx) {
       // TODO 重新渲染图表
       // this.$refs['chart' + i].resize()
+    },
+    showFullscreen (show, chartInfo) {
+      this.fullscreen.chartInfo = chartInfo
+      this.fullscreen.visible = show
     }
   },
   mounted () {

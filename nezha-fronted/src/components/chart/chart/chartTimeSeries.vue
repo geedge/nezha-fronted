@@ -4,12 +4,13 @@
     class="nz-chart__component nz-chart__component--time-series" @mouseenter="mouseEnterChart"
     @mouseleave="mouseLeaveChart"
   >
-    <div :id="`chart-canvas-${chartInfo.id}`" class="chart__canvas"></div>
+    <div :id="`chart-canvas-${chartId}`" class="chart__canvas"></div>
     <chart-legend
       v-if="hasLegend"
       :chart-data="chartData"
       :chart-info="chartInfo"
       :legends="legends"
+      :is-fullscreen="isFullscreen"
     ></chart-legend>
   </div>
 </template>
@@ -77,9 +78,9 @@ export default {
       }
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
-        const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartInfo.id}`)) : getChart(this.chartInfo.id)
+        const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartId}`)) : getChart(this.chartId)
         myChart.setOption(chartOption)
-        setChart(this.chartInfo.id, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
+        setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
         this.isInit = false
       }, 200)
     },
@@ -230,7 +231,7 @@ export default {
       // 若isStack=true,则将stack取消，并删掉tooltip的total；否则激活stack。
       // stack状态改变后，icon颜色需要改变
       return function () {
-        const myChart = getChart(self.chartInfo.id)
+        const myChart = getChart(self.chartId)
         const option = myChart.getOption()
         // 改变颜色
         option.toolbox[0].feature.myStack.iconStyle.borderColor = self.isStack ? self.toolboxIconColor.inactive : self.toolboxIconColor.active

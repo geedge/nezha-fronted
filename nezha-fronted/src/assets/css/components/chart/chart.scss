@@ -70,8 +70,19 @@
     }
   }
 }
+.panel-chart.panel-chart--fullscreen {
+  border: none;
+  .nz-chart__component {
+    &.nz-chart__component--bottom {
+      .legend-container {
+        max-height: 135px;
+      }
+    }
+  }
+}
+
 .nz-chart {
-  height: calc(100% - 39px);
+  height: 100%;
 
   .nz-chart__component {
     display: flex;
@@ -199,5 +210,10 @@
     .row__value {
       padding-left: 5px;
     }
+  }
+}
+.chart-fullscreen {
+  .el-dialog__body {
+    height: 100%;
   }
 }

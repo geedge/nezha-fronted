@@ -1,6 +1,6 @@
 import lodash from 'lodash'
 import { getMetricTypeValue } from '@/components/common/js/tools'
-import { getChart } from '@/components/common/js/common'
+import {getChart, setChart} from '@/components/common/js/common'
 export default {
   data () {
     return {
@@ -11,13 +11,15 @@ export default {
       toolboxIconColor: {
         active: '#53a3cb',
         inactive: '#7e7e7e'
-      }
+      },
+      chartId: ''
     }
   },
   props: {
     chartInfo: Object,
     chartData: Array,
-    chartOption: Object
+    chartOption: Object,
+    isFullscreen: Boolean
   },
   methods: {
     handleTimeSeries (chartInfo, seriesTemplate, originalDatas) {
@@ -110,7 +112,7 @@ export default {
       }
     },
     mouseEnterChart () {
-      const myChart = getChart(this.chartInfo.id)
+      const myChart = getChart(this.chartId)
       if (myChart) {
         setTimeout(() => {
           myChart.setOption({
@@ -122,7 +124,7 @@ export default {
       }
     },
     mouseLeaveChart () {
-      const myChart = getChart(this.chartInfo.id)
+      const myChart = getChart(this.chartId)
       if (myChart) {
         setTimeout(() => {
           myChart.setOption({
@@ -133,5 +135,11 @@ export default {
         }, 300)
       }
     }
+  },
+  mounted () {
+    this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
+  },
+  beforeDestroy () {
+    setChart(this.chartId, null)
   }
 }

@@ -12,7 +12,7 @@
            <i class="nz-icon nz-icon-replay tool__icon"></i>
         </el-tooltip>
       </span>
-      <span v-if="from !== this.$CONSTANTS.fromRoute.chartTemp" class="chart-header__tool" @click="showFullScreen">
+      <span v-if="from !== this.$CONSTANTS.fromRoute.chartTemp" class="chart-header__tool" @click="showFullscreen">
         <el-tooltip :content="$t('dashboard.screen')" effect="light" placement="top">
            <i class="nz-icon nz-icon-maxview tool__icon"></i>
         </el-tooltip>
@@ -58,8 +58,8 @@ export default {
     }
   },
   methods: {
-    showFullScreen () {
-
+    showFullscreen () {
+      this.$emit('showFullscreen', true)
     },
     refreshChart () {
 
