@@ -213,6 +213,15 @@ export default {
       if (key === 'thresholds') {
         this.chartConfig.param.thresholds[index].color = val
       }
+      if (key === 'bac') {
+        console.log(this.chartConfig.param.valueMapping.mapping,this.chartConfig.param.valueMapping.mapping[0],this.chartConfig.param.valueMapping.mapping[index])
+        this.chartConfig.param.valueMapping.mapping[index].color.bac = val
+        this.$set(this.chartConfig.param.valueMapping.mapping, index, this.chartConfig.param.valueMapping.mapping[index])
+      }
+      if (key === 'text') {
+        this.chartConfig.param.valueMapping.mapping[index].color.text = val
+        this.$set(this.chartConfig.param.valueMapping.mapping, index, this.chartConfig.param.valueMapping.mapping[index])
+      }
       this.change()
     },
     change () {

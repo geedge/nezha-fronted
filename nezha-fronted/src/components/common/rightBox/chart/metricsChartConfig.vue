@@ -195,7 +195,22 @@
               <div class="chart-title chart-title-config">
                 <span class="endpoint-title-content">
                   <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showMapping(index)"></i>
-                  123
+                  <span v-show="!item.show" class="title-content-left">
+                    <span v-if="item.type === 'value'">
+                      {{item.value}}
+                    </span>
+                    <span v-if="item.type === 'range'">
+                      {{item.from}} -> {{item.to}}
+                    </span>
+                    <span v-if="item.type === 'regx'">
+                      {{item.regx}}
+                    </span>
+                     <div :style="{background:item.color.bac}" class="prev-mapping-box">
+                        <span :style="{color:item.color.text}">
+                          {{item.display || "T"}}
+                        </span>
+                      </div>
+                  </span>
                 </span>
                 <span>
                   <span @click="addMapping('')">
@@ -211,18 +226,22 @@
               </div>
               <transition-group appear tag="div" name="el-zoom-in-top">
                 <el-row v-show="item.show" :key="1" class="thresholds-item">
-                  <el-select v-model="item.type" size="small" style="width: 100px" @change="(val)=>{mappingItemChange(index,val)}">
-                    <el-option v-for="item in mappingTypeList" :value="item.value" :label="item.label" :key="item.value"/>
-                  </el-select>
+                  <div>
+                    <el-select v-model="item.type" size="small" style="width: 100px" @change="(val)=>{mappingItemChange(index,val)}">
+                      <el-option v-for="item in mappingTypeList" :value="item.value" :label="item.label" :key="item.value"/>
+                    </el-select>
+                  </div>
                   <el-input-number :controls="false" v-if="item.type === 'value'" size="small" v-model="item.value" placeholder="value"></el-input-number>
                   <el-input-number :controls="false" v-if="item.type === 'range'" size="small" v-model="item.from" placeholder="from"></el-input-number>
                   <el-input-number :controls="false" v-if="item.type === 'range'" size="small" v-model="item.to" placeholder="to" style="margin-left: 10px"></el-input-number>
                   <el-input v-if="item.type === 'regx'" size="small" v-model="item.regx" placeholder="regx"></el-input>
                 </el-row>
                 <el-row v-show="item.show" :key="2" class="thresholds-item" style="position: relative">
-                  <div class='mapping-display'>Display</div>
+                  <div>
+                    <div class='mapping-display'>Display</div>
+                  </div>
                   <el-input v-model="item.display"  style="margin-right: 10px" size="small"/>
-                  <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(index,key,val)}"/>
+                  <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(val, key, index)}"/>
                 </el-row>
               </transition-group>
             </div>
