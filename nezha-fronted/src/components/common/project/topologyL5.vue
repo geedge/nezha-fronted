@@ -6,7 +6,7 @@
   <div class="project-box list-page" v-loading="topologyLoading" v-has="'topo_list'">
     <div class="main-list" :style="{height: fromOverView ?'100%' : 'calc(100% - 30px)'}">
       <div class="main-container" :class="fromOverView?'from-overview':'from-project'">
-        <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);display: inline-block">
+        <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 40px);display: inline-block">
           <!--工具栏-->
           <span v-if="!isPreview" class="project-topology-tool">
           <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'">
