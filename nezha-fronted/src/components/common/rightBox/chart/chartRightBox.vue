@@ -237,9 +237,25 @@ export default {
     },
     datasourceChange (val, e) {
       console.log(val, e, this.editChart.datasource)
+      if (this.editChart.datasource == 1) {
+        this.editChart = {
+          ...this.editChart,
+          span: 4,
+          height: 4,
+          unit: 2,
+          type: 'line',
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
+          param: {
+            stack: 0,
+            nullType: 'null',
+            legend: { placement: 'bottom', values: [], show: true },
+            thresholdShow: true,
+            thresholds: [{ value: '', color: '#eeeeeeff' }]
+          }
+        }
+      }
     },
     editChartChange (newEditChart) {
-      console.log(newEditChart)
       this.editChart = JSON.parse(JSON.stringify(newEditChart))
     }
   },

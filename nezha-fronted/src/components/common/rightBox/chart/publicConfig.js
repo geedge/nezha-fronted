@@ -66,66 +66,6 @@ export default {
   },
   mixins: [rz],
   methods: {
-    isStackShow (type) {
-      switch (type) {
-        case 'line':
-        case 'stackArea':
-        case 'point':
-          return true
-        case 'table':
-        case 'singleStat':
-        case 'bar':
-        case 'treemap':
-        case 'pie':
-          return false
-        default: return false
-      }
-    },
-    isStatisticsShow (type) {
-      switch (type) {
-        case 'line':
-        case 'stackArea':
-        case 'point':
-          return false
-        case 'table':
-        case 'singleStat':
-        case 'bar':
-        case 'treemap':
-        case 'pie':
-          return true
-        default: return false
-      }
-    },
-    isShowLegend (type) {
-      switch (type) {
-        case 'line':
-        case 'stackArea':
-        case 'point':
-          return true
-        case 'table':
-        case 'singleStat':
-        case 'bar':
-        case 'treemap':
-        case 'pie':
-          return false
-        default: return false
-      }
-    },
-    isShowValueMapping (type) {
-      switch (type) {
-        case 'line':
-        case 'stackArea':
-        case 'point':
-        case 'table':
-          return false
-        case 'singleStat':
-        case 'bar':
-        case 'treemap':
-        case 'pie':
-          return true
-        default: return false
-      }
-    },
     expressionChange: function () {
       if (this.expressions.length) {
         this.chartConfig.elements = []
@@ -148,7 +88,6 @@ export default {
       return letter
     },
     addExpression (item) {
-      console.log(item, 213213123)
       if (!item) {
         this.expressions.push('')
         const expressionName = this.getExpressionName()
@@ -216,36 +155,10 @@ export default {
       this.expressionChange()
     },
     showExpression (index) {
-      console.log(index, this.expressionsShow[index - 1])
       this.$set(this.expressionsShow, index - 1, !this.expressionsShow[index - 1])
-    },
-    chartTypeChange () {
-      this.change()
     },
     unitSelected: function (value) {
       // this.chartConfig.unit=value[value.length-1];
-      this.change()
-    },
-    thresholdShowChange () {
-      // if (this.chartConfig.param.thresholdShow) {
-      //
-      // } else {
-      //
-      // }
-      this.change()
-    },
-    addThresholds () {
-      this.chartConfig.param.thresholds.push({
-        value: '',
-        color: '#eeeeeeff'
-      })
-      this.change()
-    },
-    delThresholds (index) {
-      if (this.chartConfig.param.thresholds.length === 1) {
-        return
-      }
-      this.chartConfig.param.thresholds.splice(index, 1)
       this.change()
     },
     addMapping () {
@@ -273,7 +186,6 @@ export default {
       this.chartConfig.param.valueMapping.mapping[index].show = !this.chartConfig.param.valueMapping.mapping[index].show
     },
     mappingItemChange (index, type) {
-      console.log(index, type)
       const mapping = this.chartConfig.param.valueMapping.mapping[index]
       if (mapping.type === 'value') {
         this.chartConfig.param.valueMapping.mapping[index] = {
@@ -298,7 +210,6 @@ export default {
       this.change()
     },
     colorChange (val, key, index) {
-      console.log(val, key, index)
       if (key === 'thresholds') {
         this.chartConfig.param.thresholds[index].color = val
       }

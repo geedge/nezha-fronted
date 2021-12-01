@@ -172,7 +172,7 @@
             <div v-for="(item,index) in chartConfig.param.thresholds" :key="index" class="thresholds-item">
               <nezhaColor :value-arr="[{name:'thresholds',value:item.color}]" :show-text="false" :color-val="item.color"
                           @colorChange="(color,key)=>{colorChange(color,key,index)}"/>
-              <el-input-number size="small" placeholder="" v-model="item.value" :controls="false" @blur="sortThresholds"/>
+              <el-input-number size="small" placeholder="" v-model="item.value" :controls="false" @blur="sortThresholds" @change="change"/>
               <span @click="delThresholds(index)" class="del-thresholds-icon">
               <i class="nz-icon nz-icon-delete" />
             </span>
@@ -183,6 +183,7 @@
           </el-row>
         </transition>
       </div>
+<!--      valueMapping  -->
       <div v-if="isShowValueMapping(chartConfig.type)">
         <div class="form__sub-title">
           <span>{{$t('dashboard.panel.chartForm.valueMapping')}}</span>
@@ -230,6 +231,11 @@
             </div>
           </el-row>
         </transition>
+      </div>
+
+<!--      table column-->
+      <div v-if="isTable(chartConfig.type)">
+
       </div>
     </el-form>
   </div>
@@ -314,8 +320,47 @@ export default {
         })
       }
     },
+    chartTypeChange (type) {
+      switch (type) {
+        case 'line':
+        case 'stackArea':
+        case 'point':
+          this.chartConfig.param = {
+            stack: 0,
+            nullType: this.chartConfig.param.nullType,
+            legend: { placement: 'bottom', values: [], show: true },
+            thresholdShow: true,
+            thresholds: []
+          }
+          this.$nextTick(() => {
+            this.chartConfig.param.thresholds.push({ value: '', color: '#eeeeeeff' })
+          })
+          break
+        case 'singleStat':
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          this.chartConfig.param = {
+            nullType: this.chartConfig.param.nullType,
+            statistics: 'last',
+            valueMapping: {
+              show: true,
+              mapping: []
+            }
+          }
+          break
+        case 'table':
+          this.chartConfig.param = {
+            nullType: this.chartConfig.param.nullType,
+            statistics: 'last',
+            column: []
+          }
+          break
+      }
+      this.change()
+    },
     sortThresholds () {
-      if (this.param.thresholds.length > 1) {
+      if (this.param && this.param.thresholds.length > 1) {
         this.param.thresholds = this.chartConfig.param.thresholds.sort((a, b) => {
           const value1 = a.value
           const value2 = b.value
@@ -323,6 +368,103 @@ export default {
         })
       }
       this.change()
+    },
+    thresholdShowChange () {
+      // if (this.chartConfig.param.thresholdShow) {
+      //
+      // } else {
+      //
+      // }
+      this.change()
+    },
+    addThresholds () {
+      this.chartConfig.param.thresholds.push({
+        value: '',
+        color: '#eeeeeeff'
+      })
+      this.change()
+    },
+    delThresholds (index) {
+      if (this.chartConfig.param.thresholds.length === 1) {
+        return
+      }
+      this.chartConfig.param.thresholds.splice(index, 1)
+      this.change()
+    },
+    isStackShow (type) {
+      switch (type) {
+        case 'line':
+        case 'stackArea':
+        case 'point':
+          return true
+        case 'table':
+        case 'singleStat':
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          return false
+        default: return false
+      }
+    },
+    isStatisticsShow (type) {
+      switch (type) {
+        case 'line':
+        case 'stackArea':
+        case 'point':
+          return false
+        case 'table':
+        case 'singleStat':
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          return true
+        default: return false
+      }
+    },
+    isShowLegend (type) {
+      switch (type) {
+        case 'line':
+        case 'stackArea':
+        case 'point':
+          return true
+        case 'table':
+        case 'singleStat':
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          return false
+        default: return false
+      }
+    },
+    isShowValueMapping (type) {
+      switch (type) {
+        case 'line':
+        case 'stackArea':
+        case 'point':
+        case 'table':
+          return false
+        case 'singleStat':
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          return true
+        default: return false
+      }
+    },
+    isTable (type) {
+      switch (type) {
+        case 'table':
+          return true
+        case 'line':
+        case 'stackArea':
+        case 'point':
+        case 'singleStat':
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          return false
+        default: return false
+      }
     }
   },
   created () {

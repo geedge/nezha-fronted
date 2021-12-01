@@ -191,22 +191,16 @@ export default {
         id: '',
         name: '',
         type: 'line',
-        span: 12,
+        span: 4,
         datasource: '1',
         height: 4,
         unit: 2,
         param: {
-          url: '',
-          threshold: '',
           stack: 0,
           nullType: 'null',
           legend: { placement: 'bottom', values: [], show: true },
           thresholdShow: true,
-          thresholds: [{ value: '', color: '#eeeeeeff' }],
-          valueMapping: {
-            show: true,
-            mapping: []
-          }
+          thresholds: [{ value: '', color: '#eeeeeeff' }]
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
         panel: '',
