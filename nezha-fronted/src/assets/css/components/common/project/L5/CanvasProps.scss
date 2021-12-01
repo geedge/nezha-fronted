@@ -483,11 +483,11 @@
 
 .color-tab {
   position: absolute;
-  top: 43px;
+  top: -28px;
+  width: 100%;
   left: 0;
   height: 28px;
   border-radius: 5px 5px 0 0;
-  width: 312px;
   border: 1px solid #EBEEF5;
   border-bottom: none;
   background-color: $--background-color-empty;

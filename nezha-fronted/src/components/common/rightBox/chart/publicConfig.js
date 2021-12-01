@@ -1,5 +1,12 @@
 import chartDataFormat from '@/components/charts/chartDataFormat'
-
+import { getUUID, resetZIndex } from '@/components/common/js/common'
+const rz = {
+  methods: {
+    rz (e) {
+      resetZIndex(e)
+    }
+  }
+}
 export default {
   data () {
     return {
@@ -9,10 +16,298 @@ export default {
       promqlKeys: [],
       elementIds: [],
       expressions: [],
+      expressionName: [],
       expressionsShow: [],
       spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       legends: [],
-      unitOptions: chartDataFormat.unitOptions()
+      unitOptions: chartDataFormat.unitOptions(),
+      nullTypeList: [{
+        label: 'connected',
+        value: 'connected'
+      }, {
+        label: 'null',
+        value: 'null'
+      }, {
+        label: 'zero',
+        value: 'zero'
+      }],
+      statisticsList: this.$CONSTANTS.statisticsList,
+      legendPositionList: [
+        {
+          label: 'bottom',
+          value: 'bottom'
+        }, {
+          label: 'left',
+          value: 'left'
+        }, {
+          label: 'right',
+          value: 'right'
+        }
+      ],
+      mappingTypeList: [
+        {
+          label: 'Value',
+          value: 'value'
+        }, {
+          label: 'Range',
+          value: 'range'
+        }, {
+          label: 'Regx',
+          value: 'regx'
+        }
+      ],
+      letter: [
+        'A', 'B', 'C', 'D', 'E', 'F', 'G',
+        'H', 'I', 'J', 'K', 'L', 'M', 'N',
+        'O', 'P', 'Q', 'R', 'S', 'T',
+        'U', 'V', 'W', 'X', 'Y', 'Z'
+      ]
+    }
+  },
+  mixins: [rz],
+  methods: {
+    isStackShow (type) {
+      switch (type) {
+        case 'line':
+        case 'stackArea':
+        case 'point':
+          return true
+        case 'table':
+        case 'singleStat':
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          return false
+        default: return false
+      }
+    },
+    isStatisticsShow (type) {
+      switch (type) {
+        case 'line':
+        case 'stackArea':
+        case 'point':
+          return false
+        case 'table':
+        case 'singleStat':
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          return true
+        default: return false
+      }
+    },
+    isShowLegend (type) {
+      switch (type) {
+        case 'line':
+        case 'stackArea':
+        case 'point':
+          return true
+        case 'table':
+        case 'singleStat':
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          return false
+        default: return false
+      }
+    },
+    isShowValueMapping (type) {
+      switch (type) {
+        case 'line':
+        case 'stackArea':
+        case 'point':
+        case 'table':
+          return false
+        case 'singleStat':
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          return true
+        default: return false
+      }
+    },
+    expressionChange: function () {
+      if (this.expressions.length) {
+        this.chartConfig.elements = []
+        this.expressions.forEach((expr, i) => {
+          this.chartConfig.elements.push({ id: this.elementIds[i], expression: expr, type: 'expert', legend: this.legends[i], name: this.expressionName[i] })
+        })
+      } else {
+        this.chartConfig.elements = []
+      }
+      this.change()
+    },
+    transformNumToLetter (num) { // 相当于26进制 获取id
+      const self = this
+      let letter = ''
+      const loopNum = parseInt(num / 26)
+      if (loopNum > 0) {
+        letter += this.transformNumToLetter(loopNum - 1)
+      }
+      letter += self.letter[num % 26]
+      return letter
+    },
+    addExpression (item) {
+      console.log(item, 213213123)
+      if (!item) {
+        this.expressions.push('')
+        const expressionName = this.getExpressionName()
+        this.expressionName.push(expressionName)
+        this.legends.push('')
+        this.promqlKeys.push(getUUID())
+        this.elementIds.push('')
+        this.expressionsShow.push(true)
+        this.promqlCount++
+        this.expressionChange()
+      } else {
+        this.expressions.push(item.expression)
+        this.legends.push(item.legend)
+        this.promqlKeys.push(getUUID())
+        this.expressionName.push(item.name)
+        this.elementIds.push(item.id)
+        this.expressionsShow.push(true)
+        this.promqlCount++
+      }
+    },
+    getExpressionName () {
+      let name = ''
+      for (let i = 0; i <= this.expressionName.length; i++) {
+        name = this.transformNumToLetter(i)
+        if (this.expressionName.indexOf(name) === -1) { // 判断当前id是否存在 必须走了break 返回的id才是对的
+          break
+        }
+      }
+      return name
+    },
+    removeExpression (index) {
+      if (this.promqlCount > 1) {
+        this.expressions.splice(index, 1)
+        this.legends.splice(index, 1)
+        this.promqlKeys.splice(index, 1)
+        this.expressionName.splice(index, 1)
+        this.expressionsShow.splice(index, 1)
+        this.elementIds.splice(index, 1)
+        this.promqlCount--
+        this.$nextTick(() => {
+          this.expressions.forEach((ex, index) => {
+            if (ex) {
+              this.$refs[`promql-${index}`][0].metricChange(ex)
+            }
+          })
+        })
+        this.expressionChange()
+      }
+    },
+    copyExpression (index) {
+      this.expressions.push(this.expressions[index])
+      this.legends.push(this.legends[index])
+      this.promqlKeys.push(getUUID())
+      this.expressionName(this.transformNumToLetter(0))
+      this.elementIds.push('')
+      this.expressionsShow.push(true)
+      this.promqlCount++
+      this.$nextTick(() => {
+        this.expressions.forEach((ex, index) => {
+          if (ex) {
+            this.$refs[`promql-${index}`][0].metricChange(ex)
+          }
+        })
+      })
+      this.expressionChange()
+    },
+    showExpression (index) {
+      console.log(index, this.expressionsShow[index - 1])
+      this.$set(this.expressionsShow, index - 1, !this.expressionsShow[index - 1])
+    },
+    chartTypeChange () {
+      this.change()
+    },
+    unitSelected: function (value) {
+      // this.chartConfig.unit=value[value.length-1];
+      this.change()
+    },
+    thresholdShowChange () {
+      // if (this.chartConfig.param.thresholdShow) {
+      //
+      // } else {
+      //
+      // }
+      this.change()
+    },
+    addThresholds () {
+      this.chartConfig.param.thresholds.push({
+        value: '',
+        color: '#eeeeeeff'
+      })
+      this.change()
+    },
+    delThresholds (index) {
+      if (this.chartConfig.param.thresholds.length === 1) {
+        return
+      }
+      this.chartConfig.param.thresholds.splice(index, 1)
+      this.change()
+    },
+    addMapping () {
+      this.chartConfig.param.valueMapping.mapping.push({
+        type: 'value',
+        show: true,
+        value: '',
+        display: '',
+        color: {
+          bac: '#FFFFFFFF',
+          text: '#000000FF'
+        }
+      })
+      this.change()
+    },
+    copyMapping (index) {
+      this.chartConfig.param.valueMapping.mapping.push({ ...this.chartConfig.param.valueMapping.mapping[index] })
+      this.change()
+    },
+    removeMapping (index) {
+      this.chartConfig.param.valueMapping.mapping.splice(index, 1)
+      this.change()
+    },
+    showMapping (index) {
+      this.chartConfig.param.valueMapping.mapping[index].show = !this.chartConfig.param.valueMapping.mapping[index].show
+    },
+    mappingItemChange (index, type) {
+      console.log(index, type)
+      const mapping = this.chartConfig.param.valueMapping.mapping[index]
+      if (mapping.type === 'value') {
+        this.chartConfig.param.valueMapping.mapping[index] = {
+          ...mapping,
+          value: ''
+        }
+      }
+      if (mapping.type === 'range') {
+        this.chartConfig.param.valueMapping.mapping[index] = {
+          ...mapping,
+          from: '',
+          to: ''
+        }
+      }
+      if (mapping.type === 'regx') {
+        this.chartConfig.param.valueMapping.mapping[index] = {
+          ...mapping,
+          regx: ''
+        }
+      }
+      this.$set(this.chartConfig.param.valueMapping.mapping, index, this.chartConfig.param.valueMapping.mapping[index])
+      this.change()
+    },
+    colorChange (val, key, index) {
+      console.log(val, key, index)
+      if (key === 'thresholds') {
+        this.chartConfig.param.thresholds[index].color = val
+      }
+      this.change()
+    },
+    change () {
+      this.$nextTick(() => {
+        this.$emit('change', this.chartConfig)
+      })
     }
   }
 }

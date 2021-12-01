@@ -8,6 +8,10 @@
           <div class="chart-title chart-title-config">
             <span class="endpoint-title-content">
               <i class="nz-icon nz-icon-arrow-down" :class="expressionsShow[index-1]?'':'is-active'" @click="showExpression(index)"></i>
+              <span>
+                {{expressionName[index-1]}}
+<!--                名称修改 暂未实现-->
+              </span>
             </span>
             <span>
               <span @click="addExpression('')">
@@ -56,7 +60,7 @@
         </el-row>
       </div>
 
-      <!--title-->
+<!--title-->
       <div class="form__sub-title">
         <span>{{$t('dashboard.panel.chartForm.displayConfig')}}</span>
       </div>
@@ -92,7 +96,7 @@
 
         <!--width-->
         <el-form-item :label="$t('dashboard.panel.chartForm.width')" class="form-item--half-width" prop="span">
-          <el-select id="chart-box-span"  v-model="chartConfig.span" :disabled="chartConfig.type === 'group'" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartSpan">
+          <el-select id="chart-box-span"  v-model="chartConfig.span" :disabled="chartConfig.type === 'group'" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartSpan" @change="change">
             <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
               <span class="panel-dropdown-label-txt" > span-{{item}}</span>
             </el-option>
@@ -102,12 +106,130 @@
         <!--height-->
         <el-form-item :label="$t('dashboard.panel.chartForm.high')" class="form-item--half-width"  prop="height">
           <!-- 由px改为span -->
-          <el-select id="chart-box-height"  v-model="chartConfig.height" :disabled="chartConfig.type === 'group'" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartSpan">
+          <el-select id="chart-box-height"  v-model="chartConfig.height" :disabled="chartConfig.type === 'group'" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartSpan" @change="change">
             <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
               <span class="panel-dropdown-label-txt" > span-{{item}}</span>
             </el-option>
           </el-select>
         </el-form-item>
+
+        <!--stack-->
+        <el-form-item :label="$t('dashboard.panel.chartForm.stack')" class="form-item--half-width"  prop="height" v-if="isStackShow(chartConfig.type)">
+          <el-select id="chart-box-height" v-model="chartConfig.param.stack" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartSpan" @change="change">
+            <el-option :value="1" label="true">
+            </el-option>
+            <el-option :value="0" label="false">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <!--statistics-->
+        <el-form-item v-if="isStatisticsShow(chartConfig.type)" :label="$t('dashboard.panel.chartForm.statistics')" class="form-item--half-width" prop="param.statistics">
+          <el-select id="chart-box-statistics" v-model="chartConfig.param.statistics" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="change, $forceUpdate()">
+            <el-option v-for="item in statisticsList" :key="item.value" :label="$t(item.label)" :value="item.value">
+              <span class="panel-dropdown-label-txt" >{{$t(item.label)}}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <!--   nullType     -->
+        <el-form-item  :label='"Null value"' class="form-item--half-width"  prop="nullType">
+          <el-select id="chart-box-nullType" v-model="chartConfig.param.nullType" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="change, $forceUpdate()" >
+            <el-option v-for="item in nullTypeList" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+
+      <div v-if="isShowLegend(chartConfig.type)">
+        <!--legendConfig-->
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.panel.chartForm.legendConfig')}}</span>
+          <el-switch v-model="chartConfig.param.legend.show" size="small" @change="change"></el-switch>
+        </div>
+        <transition name="el-zoom-in-top">
+          <div v-if="chartConfig.param.legend.show" class="form-items--half-width-group">
+            <el-form-item :label="$t('dashboard.panel.chartForm.legendPosition')" class="form-item--half-width"  prop="nullType">
+              <el-select id="chart-box-legend-show" v-model="chartConfig.param.legend.placement" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="change, $forceUpdate()">
+                <el-option v-for="item in legendPositionList" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('dashboard.panel.chartForm.legendValues')" class="form-item--half-width"  prop="nullType">
+              <el-select id="chart-box-legend-value" v-model="chartConfig.param.legend.values" multiple collapse-tags placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="change, $forceUpdate()">
+                <el-option v-for="item in statisticsList" :key="item.value" :label="$t(item.label)" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </transition>
+
+        <!--thresholdConfig-->
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.panel.chartForm.threshold')}}</span>
+          <el-switch v-model="chartConfig.param.thresholdShow" size="small" @change="thresholdShowChange"></el-switch>
+        </div>
+        <transition name="el-zoom-in-top">
+          <el-row v-if="chartConfig.param.thresholdShow">
+            <div v-for="(item,index) in chartConfig.param.thresholds" :key="index" class="thresholds-item">
+              <nezhaColor :value-arr="[{name:'thresholds',value:item.color}]" :show-text="false" :color-val="item.color"
+                          @colorChange="(color,key)=>{colorChange(color,key,index)}"/>
+              <el-input-number size="small" placeholder="" v-model="item.value" :controls="false" @blur="sortThresholds"/>
+              <span @click="delThresholds(index)" class="del-thresholds-icon">
+              <i class="nz-icon nz-icon-delete" />
+            </span>
+            </div>
+            <div @click="addThresholds" class="thresholds-add">
+              Add thresholds
+            </div>
+          </el-row>
+        </transition>
+      </div>
+      <div v-if="isShowValueMapping(chartConfig.type)">
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.panel.chartForm.valueMapping')}}</span>
+          <el-switch v-model="chartConfig.param.valueMapping.show" size="small" @change="change"></el-switch>
+        </div>
+        <transition name="el-zoom-in-top">
+          <el-row v-if="chartConfig.param.valueMapping.show">
+            <div v-for="(item,index) in chartConfig.param.valueMapping.mapping" :key="index">
+              <div class="chart-title chart-title-config">
+                <span class="endpoint-title-content">
+                  <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showMapping(index)"></i>
+                  123
+                </span>
+                <span>
+                  <span @click="addMapping('')">
+                      <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
+                  </span>
+                  <span class="nz-icon-copy">
+                      <i @click="copyMapping(index)" class="nz-icon nz-icon-override"></i>
+                  </span>
+                  <span class="nz-icon-minus-medium">
+                      <i @click="removeMapping(index)" class="nz-icon nz-icon-minus"></i>
+                  </span>
+                </span>
+              </div>
+              <transition-group appear tag="div" name="el-zoom-in-top">
+                <el-row v-show="item.show" :key="1" class="thresholds-item">
+                  <el-select v-model="item.type" size="small" style="width: 100px" @change="(val)=>{mappingItemChange(index,val)}">
+                    <el-option v-for="item in mappingTypeList" :value="item.value" :label="item.label" :key="item.value"/>
+                  </el-select>
+                  <el-input-number :controls="false" v-if="item.type === 'value'" size="small" v-model="item.value" placeholder="value"></el-input-number>
+                  <el-input-number :controls="false" v-if="item.type === 'range'" size="small" v-model="item.from" placeholder="from"></el-input-number>
+                  <el-input-number :controls="false" v-if="item.type === 'range'" size="small" v-model="item.to" placeholder="to" style="margin-left: 10px"></el-input-number>
+                  <el-input v-if="item.type === 'regx'" size="small" v-model="item.regx" placeholder="regx"></el-input>
+                </el-row>
+                <el-row v-show="item.show" :key="2" class="thresholds-item" style="position: relative">
+                  <div class='mapping-display'>Display</div>
+                  <el-input v-model="item.display"  style="margin-right: 10px" size="small"/>
+                  <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(index,key,val)}"/>
+                </el-row>
+              </transition-group>
+            </div>
+            <div @click="addMapping" class="thresholds-add">
+              Add valueMapping
+            </div>
+          </el-row>
+        </transition>
       </div>
     </el-form>
   </div>
@@ -115,25 +237,19 @@
 
 <script>
 import promqlInput from '@/components/page/dashboard/explore/promqlInput'
+import nezhaColor from '@/components/common/nezhaColor'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
-import { getUUID, resetZIndex } from '@/components/common/js/common'
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
-const rz = {
-  methods: {
-    rz (e) {
-      resetZIndex(e)
-    }
-  }
-}
 export default {
   name: 'metricsChartConfig',
   props: {
     params: {}
   },
   components: {
-    promqlInput
+    promqlInput,
+    nezhaColor
   },
-  mixins: [rz, promqlInputMixin, publicConfig],
+  mixins: [promqlInputMixin, publicConfig],
   computed: {},
   data () {
     return {
@@ -149,12 +265,24 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
         },
         {
-          id: 'bar',
-          name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
+          id: 'point',
+          name: this.$t('dashboard.panel.chartForm.typeVal.point.label')
         },
         {
           id: 'singleStat',
           name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
+        },
+        {
+          id: 'bar',
+          name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
+        },
+        {
+          id: 'guage',
+          name: this.$t('dashboard.panel.chartForm.typeVal.guage.label')
+        },
+        {
+          id: 'treemap',
+          name: this.$t('dashboard.panel.chartForm.typeVal.treemap.label')
         },
         {
           id: 'pie',
@@ -163,30 +291,6 @@ export default {
         {
           id: 'table',
           name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
-        },
-        {
-          id: 'alertList',
-          name: this.$t('dashboard.panel.chartForm.typeVal.alertList.label')
-        },
-        {
-          id: 'logs',
-          name: this.$t('dashboard.panel.chartForm.typeVal.logs.label')
-        },
-        {
-          id: 'text',
-          name: this.$t('dashboard.panel.chartForm.typeVal.text.label')
-        },
-        {
-          id: 'url',
-          name: this.$t('dashboard.panel.chartForm.typeVal.url.label')
-        },
-        {
-          id: 'diagram',
-          name: this.$t('dashboard.panel.chartForm.typeVal.diagram.label')
-        },
-        {
-          id: 'group',
-          name: this.$t('dashboard.panel.chartForm.typeVal.group.label')
         }
 
       ]
@@ -210,84 +314,15 @@ export default {
         })
       }
     },
-    expressionChange: function () {
-      if (this.expressions.length) {
-        this.chartConfig.elements = []
-        this.expressions.forEach((expr, i) => {
-          this.chartConfig.elements.push({ id: this.elementIds[i], expression: expr, type: 'expert', legend: this.legends[i] })
+    sortThresholds () {
+      if (this.param.thresholds.length > 1) {
+        this.param.thresholds = this.chartConfig.param.thresholds.sort((a, b) => {
+          const value1 = a.value
+          const value2 = b.value
+          return value1 - value2
         })
-      } else {
-        this.chartConfig.elements = []
       }
       this.change()
-    },
-    addExpression (item) {
-      console.log(item, 213213123)
-      if (!item) {
-        this.expressions.push('')
-        this.legends.push('')
-        this.promqlKeys.push(getUUID())
-        this.elementIds.push('')
-        this.expressionsShow.push(true)
-        this.promqlCount++
-        this.expressionChange()
-      } else {
-        this.expressions.push(item.expression)
-        this.legends.push(item.legend)
-        this.promqlKeys.push(getUUID())
-        this.elementIds.push(item.id)
-        this.expressionsShow.push(true)
-        this.promqlCount++
-      }
-    },
-    removeExpression (index) {
-      if (this.promqlCount > 1) {
-        this.expressions.splice(index, 1)
-        this.legends.splice(index, 1)
-        this.promqlKeys.splice(index, 1)
-        this.expressionsShow.splice(index, 1)
-        this.elementIds.splice(index, 1)
-        this.promqlCount--
-        this.$nextTick(() => {
-          this.expressions.forEach((ex, index) => {
-            if (ex) {
-              this.$refs[`promql-${index}`][0].metricChange(ex)
-            }
-          })
-        })
-        this.expressionChange()
-      }
-    },
-    copyExpression (index) {
-      this.expressions.push(this.expressions[index])
-      this.legends.push(this.legends[index])
-      this.promqlKeys.push(getUUID())
-      this.elementIds.push('')
-      this.expressionsShow.push(true)
-      this.promqlCount++
-      this.$nextTick(() => {
-        this.expressions.forEach((ex, index) => {
-          if (ex) {
-            this.$refs[`promql-${index}`][0].metricChange(ex)
-          }
-        })
-      })
-      this.expressionChange()
-    },
-    showExpression (index) {
-      console.log(index, this.expressionsShow[index - 1])
-      this.$set(this.expressionsShow, index - 1, !this.expressionsShow[index - 1])
-    },
-    chartTypeChange () {
-
-    },
-    unitSelected: function (value) {
-      // this.chartConfig.unit=value[value.length-1];
-    },
-    change () {
-      this.$nextTick(() => {
-        this.$emit('change', this.chartConfig)
-      })
     }
   },
   created () {

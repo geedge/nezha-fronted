@@ -105,38 +105,6 @@
   top: -280px;
   left: 280px;
 }
-.color-tab{
-  position: absolute;
-  top: -268px;
-  left: 144px;
-  height: 28px;
-  border-radius: 5px 5px 0 0;
-  width: 312px;
-  border: 1px solid $--border-color-light;
-  border-bottom: none;
-  background-color: $--background-color-empty;
-  display: flex;
-  justify-content: space-between;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-}
-.color-tab div{
-  text-align: center;
-  flex: 1;
-  color: $--color-text-secondary;
-  transition: all .3s cubic-bezier(.645,.045,.355,1);
-  background: #E4E7ED;
-  cursor: pointer;
-}
-.color-tab div:first-child{
-  border-right-color: $--border-color-base;
-}
-.color-tab div:hover{
-  color: #409EFF;
-}
-.color-tab .color-active{
-  color: #409EFF;
-  background-color: $--background-color-empty;
-}
 .color{
   position: relative;
 }

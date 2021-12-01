@@ -13,7 +13,7 @@
     </div>
 
     <!-- begin--表单-->
-    <div class="right-box-form-box right-box__container" style="overflow: hidden">
+    <div class="right-box-form-box right-box__container chart-right-box">
       <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px">
         <el-form-item :label='$t("dashboard.panel.chartForm.name")' prop="title">
           <el-input maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
@@ -59,7 +59,7 @@
         </div>
         <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange">
           <el-tab-pane label="Metrics" name="1">
-            <metrics-chart-config v-if="editChart.datasource == 1" :params.sync="editChart"/>
+            <metrics-chart-config v-if="editChart.datasource == 1" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane label="Logs" name="2">
             <logs-chart-config  v-if="editChart.datasource == 2" :params.sync="editChart"/>
@@ -237,6 +237,10 @@ export default {
     },
     datasourceChange (val, e) {
       console.log(val, e, this.editChart.datasource)
+    },
+    editChartChange (newEditChart) {
+      console.log(newEditChart)
+      this.editChart = JSON.parse(JSON.stringify(newEditChart))
     }
   },
   created () {

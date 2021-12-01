@@ -2,8 +2,8 @@
   <span v-clickoutside="()=>{exitColor(false)}" class="nz-color">
     <div class="color-show" v-if="single" ref="colorShow" @click.stop="changeColor">
       <div class="color-show-left" :style="{background:colors}"></div>
-      <span class="color-text"> {{colors}}</span>
-      <span class="color-arrows">
+      <span class="color-text" v-show="showText"> {{colors}}</span>
+      <span class="color-arrows" v-show="showText">
         <i class="nz-icon nz-icon-arrow-down" v-if="!showColorPicker"></i>
         <i class="nz-icon nz-icon-arrow-up" v-if="showColorPicker"></i>
       </span>
@@ -71,6 +71,10 @@ export default {
     disableAlpha: {
       type: Boolean,
       default: false
+    },
+    showText: {
+      type: Boolean,
+      default: true
     }
   },
   watch: {},

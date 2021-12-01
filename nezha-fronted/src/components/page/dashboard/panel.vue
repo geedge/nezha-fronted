@@ -195,8 +195,20 @@ export default {
         datasource: '1',
         height: 4,
         unit: 2,
-        param: { url: '', threshold: '' },
-        elements: [{ expression: '', legend: '', type: 'expert', id: '' }],
+        param: {
+          url: '',
+          threshold: '',
+          stack: 0,
+          nullType: 'null',
+          legend: { placement: 'bottom', values: [], show: true },
+          thresholdShow: true,
+          thresholds: [{ value: '', color: '#eeeeeeff' }],
+          valueMapping: {
+            show: true,
+            mapping: []
+          }
+        },
+        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
         panel: '',
         sync: 0,
         remark: '',
