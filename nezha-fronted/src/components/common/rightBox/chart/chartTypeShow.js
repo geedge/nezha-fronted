@@ -90,6 +90,34 @@ export default {
           return false
         default: return false
       }
+    },
+    isUrl (type) {
+      switch (type) {
+        case 'url':
+          return true
+        default: return false
+      }
+    },
+    isDiagram (type) {
+      switch (type) {
+        case 'diagram':
+          return true
+        default: return false
+      }
+    },
+    isText (type) {
+      switch (type) {
+        case 'text':
+          return true
+        default: return false
+      }
+    },
+    isGroup (type) {
+      switch (type) {
+        case 'group':
+          return true
+        default: return false
+      }
     }
   }
 }

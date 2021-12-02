@@ -1,12 +1,196 @@
 <template>
-  <div>
-    other
+  <div class="chart-config">
+    <el-form
+      ref="chartForm"
+      :model="chartConfig"
+      :rules="rules"
+      label-position= "top"
+      label-width="120px"
+    >
+      <!--title-->
+      <div class="form__sub-title">
+        <span>{{$t('dashboard.panel.chartForm.displayConfig')}}</span>
+      </div>
+      <div class="form-items--half-width-group">
+        <!-- type -->
+        <el-form-item
+          :label="$t('dashboard.panel.chartForm.type')"
+          class="form-item--half-width"
+          prop="type"
+        >
+          <el-select
+            id="chart-box-type"
+            v-model="chartConfig.type"
+            :disabled="chartConfig.type==='group'&&chartConfig.children&&chartConfig.children.length"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            value-key="chartType"
+            @change="chartTypeChange">
+            <el-option
+              v-for="item in chartTypeList"
+              :key="item.id"
+              :disabled="item.id==='group' && chartConfig.isGroup"
+              :label="item.name"
+              :value="item.id">
+              <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="form-items--half-width-group">
+        <!--width-->
+        <el-form-item
+          :label="$t('dashboard.panel.chartForm.width')"
+          class="form-item--half-width"
+          prop="span">
+          <el-select
+            id="chart-box-span"
+            v-model="chartConfig.span"
+            :disabled="chartConfig.type === 'group'"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            value-key="chartSpan"
+            @change="change"
+          >
+            <el-option
+              v-for="item in spanList"
+              :key="item"
+              :label="'span-' + item"
+              :value="item">
+              <span class="panel-dropdown-label-txt" > span-{{item}}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <!--height-->
+        <el-form-item
+          :label="$t('dashboard.panel.chartForm.high')"
+          class="form-item--half-width"
+          prop="height">
+          <!-- 由px改为span -->
+          <el-select
+            id="chart-box-height"
+            v-model="chartConfig.height"
+            :disabled="chartConfig.type === 'group'"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            value-key="chartSpan"
+            @change="change"
+          >
+            <el-option
+              v-for="item in spanList"
+              :key="item"
+              :label="'span-' + item"
+              :value="item"
+            >
+              <span class="panel-dropdown-label-txt" > span-{{item}}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <!--content-->
+      <div v-if="!isGroup(chartConfig.type)" class="form__sub-title">
+        <span>{{$t('dashboard.panel.chartForm.content')}}</span>
+        <span style="cursor: pointer" v-if="isDiagram(chartConfig.type)"><i class="nz-icon nz-icon-edit" @click="topologyDialogChange(true)"></i></span>
+      </div>
+      <!--url-->
+      <el-form-item v-if="isUrl(chartConfig.type)" :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url">
+        <el-input id="chart-box-url" v-model="chartConfig.param.url" maxlength="1024" show-word-limit size="small" type="textarea"></el-input>
+      </el-form-item>
+      <!--topoData-->
+      <el-form-item v-if="isDiagram(chartConfig.type)" >
+        <div class="topology-box">
+          <div class="topology-mc"></div>
+          <diagram :topoData="chartConfig.param.topo" :fromChartBox="true" :topologyIndexF="-1"/>
+        </div>
+      </el-form-item>
+      <!--topplogy-->
+      <diagram :topoData="chartConfig.param.topo" class="topology-dialog" v-if="topologyDialog" @change="topologyDialogChange" :topologyIndexF="-2" ref="topologyDialog" :fromTopologyDialog="true"/>
+      <!--text-->
+      <rich-text-editor v-if="isText(chartConfig.type)" ref="richTextEditor" :edit-data="chartConfig.param.text"></rich-text-editor>
+    </el-form>
   </div>
 </template>
 
 <script>
+import publicConfig from '@/components/common/rightBox/chart/publicConfig'
+import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
+import diagram from '@/components/common/ChartDiagram/diagram'
+import richTextEditor from '@/components/charts/richTextEditor'
 export default {
-  name: 'otherChartConfig'
+  name: 'otherChartConfig',
+  mixins: [publicConfig, chartTypeShow],
+  components: {
+    diagram,
+    richTextEditor
+  },
+  data () {
+    return {
+      rules: {
+        height: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }]
+      },
+      topologyDialog: false,
+      chartTypeList: [
+        {
+          id: 'url',
+          name: this.$t('dashboard.panel.chartForm.typeVal.url.label')
+        },
+        {
+          id: 'text',
+          name: this.$t('dashboard.panel.chartForm.typeVal.text.label')
+        },
+        {
+          id: 'diagram',
+          name: this.$t('dashboard.panel.chartForm.typeVal.diagram.label')
+        },
+        {
+          id: 'group',
+          name: this.$t('dashboard.panel.chartForm.typeVal.group.label')
+        }
+      ]
+    }
+  },
+  methods: {
+    init () {
+      this.chartConfig = JSON.parse(JSON.stringify(this.params))
+    },
+    chartTypeChange (type) {
+      switch (type) {
+        case 'group':
+          this.chartConfig.param = {}
+          break
+        case 'text':
+          this.chartConfig.param = {
+            text: ''
+          }
+          break
+        case 'diagram':
+          this.chartConfig.param = {
+            topo: ''
+          }
+          break
+        case 'url':
+          this.chartConfig.param = {
+            url: ''
+          }
+          break
+      }
+      this.change()
+    },
+    topologyDialogChange (flag, data) {
+      this.topologyDialog = flag
+      if (data) {
+        this.chartConfig.param.topo = data
+        this.change()
+      }
+    }
+  },
+  created () {
+    this.init()
+  }
 }
 </script>
 

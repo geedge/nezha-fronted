@@ -362,6 +362,7 @@
               />
               <el-input-number
                 size="small"
+                style="margin-top: 3px"
                 placeholder=""
                 v-model="item.value"
                 :controls="false"
@@ -599,7 +600,6 @@ export default {
     VueTagsInput
   },
   props: {
-    params: {},
     type: {
       type: String,
       default: 'metrics'

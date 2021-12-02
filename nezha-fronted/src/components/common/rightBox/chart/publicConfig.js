@@ -8,6 +8,9 @@ const rz = {
   }
 }
 export default {
+  props: {
+    params: {}
+  },
   data () {
     return {
       language: localStorage.getItem('nz-language'),

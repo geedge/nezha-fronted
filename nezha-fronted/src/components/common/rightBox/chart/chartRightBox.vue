@@ -271,6 +271,18 @@ export default {
           }
         }
       }
+      console.log(this.editChart.datasource)
+      if (this.editChart.datasource == 4) {
+        this.editChart = {
+          ...this.editChart,
+          span: 4,
+          height: 4,
+          type: 'url',
+          param: {
+            url: ''
+          }
+        }
+      }
     },
     editChartChange (newEditChart) {
       this.editChart = JSON.parse(JSON.stringify(newEditChart))

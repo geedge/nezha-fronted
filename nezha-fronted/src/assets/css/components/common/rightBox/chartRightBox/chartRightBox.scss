@@ -14,6 +14,9 @@
       .el-form-item__error {
         padding-top: 0;
       }
+      .el-input-number--small {
+        width: 100%;
+      }
     }
     .chart-title-config {
       border: 1px solid $--border-color-light;
