@@ -62,7 +62,7 @@ export default {
       this.$emit('showFullscreen', true)
     },
     refreshChart () {
-
+      this.$emit('refresh')
     },
     editChart () {
 

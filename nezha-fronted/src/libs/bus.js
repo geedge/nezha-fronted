@@ -290,6 +290,19 @@ export default new Vue({
         new Date(this.computeTimezone(new Date().getTime()))
       ]
     },
+    getRefreshTimeByTimeRange (timeRange) {
+      const interval = timeRange[1] - timeRange[0]
+      const newTime = new Date().getTime()
+      return [
+        new Date(new Date(this.computeTimezone(newTime - interval))),
+        new Date(this.computeTimezone(newTime))
+      ]
+    },
+    getNewTime (time, num) {
+      const date = new Date(time)
+      const newDate = new Date(parseInt(date.getTime(), 10) + num)
+      return this.timeFormate(newDate, 'yyyy-MM-dd hh:mm:ss')
+    },
     getOffsetTimezoneData (offset = 0) {
       return new Date(this.computeTimezone(new Date().getTime())).setHours(new Date(this.computeTimezone(new Date().getTime())).getHours() + offset)
     },

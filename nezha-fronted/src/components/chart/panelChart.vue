@@ -5,6 +5,7 @@
     <chart-header
       v-if="!isFullscreen"
       :chart-info="chartInfo"
+      @refresh="refresh"
       @showFullscreen="showFullscreen"
     ></chart-header>
     <!-- chart -->
@@ -14,6 +15,7 @@
       :chart-data="chartData"
       :chart-info="chartInfo"
       :is-fullscreen="isFullscreen"
+      :loading="loading"
     ></chart>
   </div>
 </template>
@@ -40,12 +42,14 @@ export default {
   },
   data () {
     return {
-      chartData: []
+      chartData: [],
+      loading: true
     }
   },
   methods: {
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh) {
+      this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
       let endTime = ''
@@ -54,7 +58,7 @@ export default {
         const origin = new Date(this.timeRange[1])
         const numInterval = now.getTime() - origin.getTime()
         if (numInterval >= 60000) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
-          startTime = this.getNewTime(this.timeRange[0], numInterval)
+          startTime = bus.getNewTime(this.timeRange[0], numInterval)
           endTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss')
         } else {
           startTime = this.timeRange[0]
@@ -72,51 +76,60 @@ export default {
       this.query(elements, startTime, endTime, step)
     },
     query (elements, startTime, endTime, step) {
-      switch (this.chartInfo.dataSource) {
-        case 1:
-        case 2: {
-          let urlPre = ''
-          if (this.chartInfo.dataSource === 1) {
-            urlPre = '/prom'
-          } else if (this.chartInfo.dataSource === 2) {
-            urlPre = '/logs/loki'
-          }
-          const requests = elements.map((element) => {
-            if (this.from === fromRoute.chartTemp) {
-              return chartTempData
+      try {
+        switch (this.chartInfo.dataSource) {
+          case 1:
+          case 2: {
+            let urlPre = ''
+            if (this.chartInfo.dataSource === 1) {
+              urlPre = '/prom'
+            } else if (this.chartInfo.dataSource === 2) {
+              urlPre = '/logs/loki'
             }
-            let query = `${urlPre}/api/v1/query_range?start=${startTime}&end=${endTime}&step=${step}`
-            if (isTimeSeries(this.chartInfo.type)) {
-              query += `&nullType=${this.chartInfo.param.nullType || 'null'}`
-            }
-            query += `&query=${element.expression}`
-            return this.$get(query)
-          })
-
-          const chartData = []
-          axios.all(requests).then(res => {
-            res.forEach(r => {
-              if (r.status === 'success') {
-                chartData.push(r.data.result)
-              } else {
-                chartData.push({ error: r.msg || r.error || r })
+            const requests = elements.map((element) => {
+              if (this.from === fromRoute.chartTemp) {
+                return chartTempData
               }
+              let query = `${urlPre}/api/v1/query_range?start=${startTime}&end=${endTime}&step=${step}`
+              if (isTimeSeries(this.chartInfo.type)) {
+                query += `&nullType=${this.chartInfo.param.nullType || 'null'}`
+              }
+              query += `&query=${element.expression}`
+              return this.$get(query)
             })
-            this.chartData = chartData
-          })
-          break
-        }
-        case 3: {
-          break
-        }
-        case 4: {
-          if (this.chartInfo.type === 'hexagonFigure') {
-            this.getHexagonFigureData().then(res => {
-              this.chartData = res
+
+            const chartData = []
+            axios.all(requests).then(res => {
+              res.forEach(r => {
+                if (r.status === 'success') {
+                  chartData.push(r.data.result)
+                } else {
+                  chartData.push({ error: r.msg || r.error || r })
+                }
+              })
+              this.chartData = chartData
+            }).finally(() => {
+              this.loading = false
             })
+            break
           }
-          break
+          case 3: {
+            this.loading = false
+            break
+          }
+          case 4: {
+            if (this.chartInfo.type === 'hexagonFigure') {
+              this.getHexagonFigureData().then(res => {
+                this.chartData = res
+              }).finally(() => {
+                this.loading = false
+              })
+            }
+            break
+          }
         }
+      } catch (e) {
+        this.loading = false
       }
     },
     getHexagonFigureData () {
@@ -149,8 +162,19 @@ export default {
     resize () {
       this.$refs.chart.resize()
     },
+    refresh () {
+      this.getChartData(true)
+    },
     showFullscreen (show) {
       this.$emit('showFullscreen', show, this.chartInfo)
+    }
+  },
+  watch: {
+    timeRange: {
+      deep: true,
+      handler (n) {
+        this.refresh()
+      }
     }
   },
   mounted () {

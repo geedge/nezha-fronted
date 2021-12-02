@@ -9,7 +9,7 @@
 export default {
   name: 'loading',
   props: {
-
+    loading: Boolean
   },
   data () {
     return {
@@ -22,6 +22,11 @@ export default {
     },
     endLoading () {
       this.showLoading = false
+    }
+  },
+  watch: {
+    loading (n) {
+      this.showLoading = n
     }
   }
 }

@@ -1,5 +1,6 @@
 <template>
   <div class="nz-chart">
+    <loading :loading="loading"></loading>
     <chart-no-data v-if="isNoData"></chart-no-data>
     <template v-else>
       <chart-time-series
@@ -21,6 +22,7 @@
 </template>
 
 <script>
+import loading from '@/components/common/loading'
 import chartAssetInfo from './chart/chartAssetInfo'
 import chartBar from './chart/chartBar'
 import chartClock from './chart/chartClock'
@@ -45,6 +47,7 @@ import lodash from 'lodash'
 export default {
   name: 'chart',
   components: {
+    loading,
     chartAssetInfo,
     chartBar,
     chartClock,
@@ -68,11 +71,8 @@ export default {
     chartInfo: Object,
     chartData: [Object, Array, String], // 数据查询后传入chart组件，chart组件内不查询，只根据接传递的数据来渲染
     customChartOption: Object, // 需要自定义echarts的option时传入，非必须；传入该值时仍需传对应格式的chartData
-    isFullscreen: Boolean
-  },
-  data () {
-    return {
-    }
+    isFullscreen: Boolean,
+    loading: Boolean
   },
   computed: {
     isNoData () {
@@ -97,7 +97,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>
