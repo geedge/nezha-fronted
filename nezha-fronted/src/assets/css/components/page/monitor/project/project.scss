@@ -77,19 +77,6 @@
     height: 36px;
     color: $--color-text-primary;
   }
-  .vc-sketch {
-    background-color: $--background-color-empty;
-    border: 1px solid $--border-color-light;
-    margin-top: 6px;
-    .vc-input__input {
-      background-color: $--project-input-background-color;
-      color: $--color-text-regular;
-      box-shadow: inset 0 0 0 1px $--border-color-light;
-    }
-    .vc-sketch-presets {
-      border-top: none;
-    }
-  }
 }
 .project-calendar .el-input__inner {
   height: 24px;
@@ -130,4 +117,14 @@
 .el-card {
   background-color: $--background-color-empty;
   border: 1px solid $--border-color-light;
+}
+.el-collapse {
+  border-bottom: 1px solid $--border-color-light;
+  border-top: 1px solid $--border-color-light;
+}
+.el-collapse-item__header:nth-of-type(1) {
+  border-bottom: none;
+}
+.el-collapse-item__header {
+  border-bottom: 1px solid $--border-color-light;
 }
