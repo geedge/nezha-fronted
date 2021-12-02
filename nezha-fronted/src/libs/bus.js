@@ -290,14 +290,6 @@ export default new Vue({
         new Date(this.computeTimezone(new Date().getTime()))
       ]
     },
-    getRefreshTimeByTimeRange (timeRange) {
-      const interval = timeRange[1] - timeRange[0]
-      const newTime = new Date().getTime()
-      return [
-        new Date(new Date(this.computeTimezone(newTime - interval))),
-        new Date(this.computeTimezone(newTime))
-      ]
-    },
     getNewTime (time, num) {
       const date = new Date(time)
       const newDate = new Date(parseInt(date.getTime(), 10) + num)
