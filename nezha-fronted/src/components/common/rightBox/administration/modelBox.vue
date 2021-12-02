@@ -90,9 +90,9 @@ export default {
       chartlList: [], // chart 列表数据
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
-        { title: this.$t('config.model.titleName'), data: 'name' },
-        { title: this.$t('config.model.titleType'), data: 'type' },
-        { title: this.$t('overall.remark'), data: 'remark' }
+        { title: this.$t('config.model.titleName'), data: 'name', key: 'name' },
+        { title: this.$t('config.model.titleType'), data: 'type', key: 'type' },
+        { title: this.$t('overall.remark'), data: 'remark', key: 'remark' }
       ],
       url: 'asset/model',
       brandUrl: 'asset/brand',

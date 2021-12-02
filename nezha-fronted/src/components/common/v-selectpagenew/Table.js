@@ -33,7 +33,7 @@ export default {
             key: idx,
             domProps: {
               innerHTML: this.renderColumn(val, col),
-              title: val[col.title]
+              title: col.deep ? val[col.orjinNME].name : val[col.key]
             }
           })
         }))
