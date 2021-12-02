@@ -59,10 +59,10 @@
         </div>
         <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange">
           <el-tab-pane label="Metrics" name="1">
-            <metrics-chart-config ref="childrenFrom1" v-if="editChart.datasource == 1" :params.sync="editChart" @change="editChartChange"/>
+            <chart-config  ref="childrenFrom1" :type="'metrics'" v-if="editChart.datasource == 1" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane label="Logs" name="2">
-            <logs-chart-config ref="childrenFrom2" v-if="editChart.datasource == 2" :params.sync="editChart"/>
+            <chart-config ref="childrenFrom2" :type="'log'" v-if="editChart.datasource == 2" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane label="System" name="3">
             <system-chart-config ref="childrenFrom3" v-if="editChart.datasource == 3" :params.sync="editChart"/>
@@ -102,8 +102,7 @@ import richTextEditor from '@/components/charts/richTextEditor'
 import selectPanel from '@/components/common/popBox/selectPanel'
 import nezhaColor from '@/components/common/nezhaColor'
 import diagram from '@/components/common/ChartDiagram/diagram'
-import metricsChartConfig from '@/components/common/rightBox/chart/metricsChartConfig'
-import logsChartConfig from '@/components/common/rightBox/chart/logsChartConfig'
+import chartConfig from '@/components/common/rightBox/chart/chartConfig'
 import otherChartConfig from '@/components/common/rightBox/chart/otherChartConfig'
 import systemChartConfig from '@/components/common/rightBox/chart/systemChartConfig'
 const rz = {
@@ -136,8 +135,7 @@ export default {
     selectPanel,
     nezhaColor,
     diagram,
-    metricsChartConfig,
-    logsChartConfig,
+    chartConfig,
     systemChartConfig,
     otherChartConfig
   },
@@ -173,7 +171,6 @@ export default {
     },
     // 保存endpoint
     save () {
-      console.log(123132213)
       const arr = [this.$refs.chartForm.validate()]
       arr.push(this.$refs['childrenFrom' + this.editChart.datasource].$refs.chartForm.validate())
       Promise.all(arr).then(res => {
@@ -243,8 +240,7 @@ export default {
         }
       })
     },
-    datasourceChange (val, e) {
-      console.log(val, e, this.editChart.datasource)
+    datasourceChange () {
       if (this.editChart.datasource == 1) {
         this.editChart = {
           ...this.editChart,
@@ -258,7 +254,20 @@ export default {
             nullType: 'null',
             legend: { placement: 'bottom', values: [], show: true },
             thresholdShow: true,
-            thresholds: [{ value: '', color: '#eeeeeeff' }]
+            thresholds: [{ value: undefined, color: '#eeeeeeff' }]
+          }
+        }
+      }
+      if (this.editChart.datasource == 2) {
+        this.editChart = {
+          ...this.editChart,
+          span: 4,
+          height: 4,
+          unit: 2,
+          type: 'log',
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
+          param: {
+            limit: 100
           }
         }
       }

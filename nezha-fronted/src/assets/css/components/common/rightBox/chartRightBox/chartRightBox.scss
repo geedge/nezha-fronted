@@ -7,6 +7,13 @@
     font-size: 14px;
     .el-form {
       padding-top: 0px;
+      .thresholds-from-item{
+        margin-bottom: 0;
+        flex: 1;
+      }
+      .el-form-item__error {
+        padding-top: 0;
+      }
     }
     .chart-title-config {
       border: 1px solid $--border-color-light;
@@ -46,6 +53,12 @@
       margin-bottom: 10px;
       align-items: center;
       justify-items: center;
+      .el-form-item__content{
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        width: 100%;
+      }
       .el-input-number--small{
         display: inline-block;
         flex: 1;
