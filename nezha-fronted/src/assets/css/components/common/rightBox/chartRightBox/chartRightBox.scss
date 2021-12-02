@@ -7,6 +7,16 @@
     font-size: 14px;
     .el-form {
       padding-top: 0px;
+      .thresholds-from-item{
+        margin-bottom: 0;
+        flex: 1;
+      }
+      .el-form-item__error {
+        padding-top: 0;
+      }
+      .el-input-number--small {
+        width: 100%;
+      }
     }
     .chart-title-config {
       border: 1px solid $--border-color-light;
@@ -46,6 +56,12 @@
       margin-bottom: 10px;
       align-items: center;
       justify-items: center;
+      .el-form-item__content{
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        width: 100%;
+      }
       .el-input-number--small{
         display: inline-block;
         flex: 1;
@@ -89,6 +105,40 @@
       padding: 0;
       border-bottom: none;
       margin-bottom: 10px;
+    }
+    .vue-tags-input{
+      display: inline-block;
+      width: 100%;
+      .ti-input{
+        padding: 1px 3px;
+      }
+    }
+    .system-chart-config {
+      display: flex;
+      height: 150px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .system-chart-config-left{
+      width: 40%;
+      height: 100%;
+      overflow-y: auto;
+      .system-chart-item {
+        font-size: 14px;
+        padding: 3px 5px;
+      }
+      .system-chart-item:hover{
+        color: $--color-primary;
+        background: $--background-color-base !important;
+      }
+      .system-chart-item.is-select{
+        color: $--color-text-secondary;
+      }
+    }
+    .system-chart-config-right{
+      flex: 1;
+      margin-left: 10px;
+      height: 100%;
     }
   }
 }

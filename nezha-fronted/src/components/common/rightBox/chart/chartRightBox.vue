@@ -15,7 +15,7 @@
     <!-- begin--表单-->
     <div class="right-box-form-box right-box__container chart-right-box">
       <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px">
-        <el-form-item :label='$t("dashboard.panel.chartForm.name")' prop="title">
+        <el-form-item :label='$t("dashboard.panel.chartForm.name")' prop="name">
           <el-input maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
         </el-form-item>
 
@@ -59,16 +59,16 @@
         </div>
         <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange">
           <el-tab-pane label="Metrics" name="1">
-            <metrics-chart-config v-if="editChart.datasource == 1" :params.sync="editChart" @change="editChartChange"/>
+            <chart-config  ref="childrenFrom1" :type="'metrics'" v-if="editChart.datasource == 1" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane label="Logs" name="2">
-            <logs-chart-config  v-if="editChart.datasource == 2" :params.sync="editChart"/>
+            <chart-config ref="childrenFrom2" :type="'log'" v-if="editChart.datasource == 2" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane label="System" name="3">
-            <system-chart-config  v-if="editChart.datasource == 3" :params.sync="editChart"/>
+            <system-chart-config ref="childrenFrom3" v-if="editChart.datasource == 3" :params.sync="editChart"/>
           </el-tab-pane>
-          <el-tab-pane label="Other" name="4">
-            <other-chart-config  v-if="editChart.datasource == 4" :params.sync="editChart"/>
+          <el-tab-pane label="Misc" name="4">
+            <other-chart-config ref="childrenFrom4" v-if="editChart.datasource == 4" :params.sync="editChart"/>
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -84,7 +84,7 @@
       <button v-else-if="from!=='chartTemp'" id="chart-box-preview" class="footer__btn">
         <span>{{$t('overall.preview')}}</span>
       </button>
-      <button id="chart-box-save" v-has="'panel_chart_add'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn">
+      <button id="chart-box-save" v-has="'panel_chart_add'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn" @click="save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -102,8 +102,7 @@ import richTextEditor from '@/components/charts/richTextEditor'
 import selectPanel from '@/components/common/popBox/selectPanel'
 import nezhaColor from '@/components/common/nezhaColor'
 import diagram from '@/components/common/ChartDiagram/diagram'
-import metricsChartConfig from '@/components/common/rightBox/chart/metricsChartConfig'
-import logsChartConfig from '@/components/common/rightBox/chart/logsChartConfig'
+import chartConfig from '@/components/common/rightBox/chart/chartConfig'
 import otherChartConfig from '@/components/common/rightBox/chart/otherChartConfig'
 import systemChartConfig from '@/components/common/rightBox/chart/systemChartConfig'
 const rz = {
@@ -136,8 +135,7 @@ export default {
     selectPanel,
     nezhaColor,
     diagram,
-    metricsChartConfig,
-    logsChartConfig,
+    chartConfig,
     systemChartConfig,
     otherChartConfig
   },
@@ -156,6 +154,8 @@ export default {
       groupArr: [],
       panelName: '',
       rules: {
+        name: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
+        panelName: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }]
       }
     }
   },
@@ -171,24 +171,11 @@ export default {
     },
     // 保存endpoint
     save () {
-      if (this.prevent_opt.save) { return } ;
-      this.prevent_opt.save = true
-      // 对endpointList进行处理，避免携带过多无用数据
-      const endpointList = []
-      this.endpointTableData.forEach((item, index) => {
-        const endpoint = {
-          moduleId: item.moduleId,
-          assetId: item.assetId,
-          name: item.name,
-          configs: JSON.stringify(item.configs),
-          id: item.id
-        }
-        endpointList.push(endpoint)
-      })
-      this.$refs.addEndpoint.validate((valid) => {
-        if (valid) {
-          this.$put('monitor/endpoint', endpointList).then(response => {
-            this.prevent_opt.save = false
+      const arr = [this.$refs.chartForm.validate()]
+      arr.push(this.$refs['childrenFrom' + this.editChart.datasource].$refs.chartForm.validate())
+      Promise.all(arr).then(res => {
+        if (this.editChart.id) { // 修改
+          this.$put('visual/panel/chart', this.editChart).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
               this.esc(true)
@@ -196,10 +183,18 @@ export default {
               this.$message.error(response.msg)
             }
           })
-        } else {
-          this.prevent_opt.save = false
-          return false
+        } else { // 新增
+          this.$post('visual/panel/chart', this.editChart).then(response => {
+            if (response.code === 200) {
+              this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+              this.esc(true)
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
         }
+      }).catch(res => {
+        console.log(res)
       })
     },
     selectPanel (panel) {
@@ -235,8 +230,7 @@ export default {
         }
       })
     },
-    datasourceChange (val, e) {
-      console.log(val, e, this.editChart.datasource)
+    datasourceChange () {
       if (this.editChart.datasource == 1) {
         this.editChart = {
           ...this.editChart,
@@ -250,9 +244,52 @@ export default {
             nullType: 'null',
             legend: { placement: 'bottom', values: [], show: true },
             thresholdShow: true,
-            thresholds: [{ value: '', color: '#eeeeeeff' }]
+            thresholds: [{ value: undefined, color: '#eeeeeeff' }]
           }
         }
+      }
+      if (this.editChart.datasource == 2) {
+        this.editChart = {
+          ...this.editChart,
+          span: 4,
+          height: 4,
+          unit: 2,
+          type: 'log',
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
+          param: {
+            limit: 100
+          }
+        }
+      }
+      if (this.editChart.datasource == 3) {
+        this.editChart = {
+          ...this.editChart,
+          span: 4,
+          height: 4,
+          unit: 2,
+          type: 'stat',
+          param: {
+            refer: 1,
+            system: '',
+            systemGroup: '',
+            systemSelect: '',
+            sort: 'desc',
+            limit: 100
+          }
+        }
+        delete this.editChart.elements
+      }
+      if (this.editChart.datasource == 4) {
+        this.editChart = {
+          ...this.editChart,
+          span: 4,
+          height: 4,
+          type: 'url',
+          param: {
+            url: ''
+          }
+        }
+        delete this.editChart.elements
       }
     },
     editChartChange (newEditChart) {

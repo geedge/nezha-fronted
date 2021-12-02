@@ -1,9 +1,11 @@
 <template>
   <div class="chart-config">
-    <el-form ref="metricschartForm" :model="chartConfig" :rules="rules" label-position= "top" label-width="120px">
+    <el-form ref="chartForm" :model="chartConfig" :rules="rules" label-position= "top" label-width="120px">
       <div v-if="chartConfig.elements">
-          <el-row
-          :key="'ele' + index" class="element-item form-row-item" style="" v-for="index of chartConfig.elements.length"
+        <el-form-item
+          :key="index" class="element-item form-row-item thresholds-from-item" style="" v-for="index of chartConfig.elements.length"
+          :prop="'elements.' + (index -1) + '.expression'"
+          :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
         >
           <div class="chart-title chart-title-config">
             <span class="endpoint-title-content">
@@ -57,7 +59,7 @@
               </el-row>
             </el-row>
           </transition>
-        </el-row>
+        </el-form-item>
       </div>
 
 <!--title-->
@@ -83,7 +85,7 @@
         </el-form-item>
 
         <!-- unit -->
-        <el-form-item v-show="chartConfig.type !='text' && chartConfig.type !=='url'&& chartConfig.type !=='group'&& chartConfig.type !=='diagram'" :label="$t('dashboard.panel.chartForm.unit')" class="form-item--half-width" prop="unit">
+        <el-form-item v-show="!isTable(chartConfig.type)" :label="$t('dashboard.panel.chartForm.unit')" class="form-item--half-width" prop="unit">
           <el-cascader id="chart-box-unit" v-model="chartConfig.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
                        placeholder=""
                        popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
@@ -92,6 +94,17 @@
                        @change="unitSelected"
           >
           </el-cascader>
+        </el-form-item>
+
+        <!-- index -->
+        <el-form-item v-show="isTable(chartConfig.type)" :label="$t('dashboard.panel.chartForm.tableIndex')" class="form-item--half-width" prop="unit">
+          <vue-tags-input
+            v-model="chartConfig.param.indexs"
+            :maxlength="32"
+            :placeholder="$t('overall.addParameter')"
+            :tags="chartConfig.param.tags"
+            @tags-changed="(newTags)=>{tagsChange(newTags)}"
+          />
         </el-form-item>
 
         <!--width-->
@@ -148,12 +161,12 @@
         </div>
         <transition name="el-zoom-in-top">
           <div v-if="chartConfig.param.legend.show" class="form-items--half-width-group">
-            <el-form-item :label="$t('dashboard.panel.chartForm.legendPosition')" class="form-item--half-width"  prop="nullType">
+            <el-form-item :label="$t('dashboard.panel.chartForm.legendPosition')" class="form-item--half-width"  prop="param.legend.placement">
               <el-select id="chart-box-legend-show" v-model="chartConfig.param.legend.placement" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="change, $forceUpdate()">
                 <el-option v-for="item in legendPositionList" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('dashboard.panel.chartForm.legendValues')" class="form-item--half-width"  prop="nullType">
+            <el-form-item :label="$t('dashboard.panel.chartForm.legendValues')" class="form-item--half-width"  prop="param.legend.values">
               <el-select id="chart-box-legend-value" v-model="chartConfig.param.legend.values" multiple collapse-tags placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="change, $forceUpdate()">
                 <el-option v-for="item in statisticsList" :key="item.value" :label="$t(item.label)" :value="item.value">
                 </el-option>
@@ -169,14 +182,20 @@
         </div>
         <transition name="el-zoom-in-top">
           <el-row v-if="chartConfig.param.thresholdShow">
-            <div v-for="(item,index) in chartConfig.param.thresholds" :key="index" class="thresholds-item">
+            <el-form-item
+              v-for="(item,index) in chartConfig.param.thresholds"
+              :key="index"
+              class="thresholds-item"
+              :prop="'param.thresholds.' + index + '.value'"
+              :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
+            >
               <nezhaColor :value-arr="[{name:'thresholds',value:item.color}]" :show-text="false" :color-val="item.color"
                           @colorChange="(color,key)=>{colorChange(color,key,index)}"/>
               <el-input-number size="small" placeholder="" v-model="item.value" :controls="false" @blur="sortThresholds" @change="change"/>
               <span @click="delThresholds(index)" class="del-thresholds-icon">
               <i class="nz-icon nz-icon-delete" />
             </span>
-            </div>
+            </el-form-item>
             <div @click="addThresholds" class="thresholds-add">
               Add thresholds
             </div>
@@ -225,22 +244,36 @@
                 </span>
               </div>
               <transition-group appear tag="div" name="el-zoom-in-top">
-                <el-row v-show="item.show" :key="1" class="thresholds-item">
+                <el-row
+                  v-show="item.show"
+                  :key="1"
+                  class="thresholds-item"
+                >
                   <div>
                     <el-select v-model="item.type" size="small" style="width: 100px" @change="(val)=>{mappingItemChange(index,val)}">
                       <el-option v-for="item in mappingTypeList" :value="item.value" :label="item.label" :key="item.value"/>
                     </el-select>
                   </div>
-                  <el-input-number :controls="false" v-if="item.type === 'value'" size="small" v-model="item.value" placeholder="value"></el-input-number>
-                  <el-input-number :controls="false" v-if="item.type === 'range'" size="small" v-model="item.from" placeholder="from"></el-input-number>
-                  <el-input-number :controls="false" v-if="item.type === 'range'" size="small" v-model="item.to" placeholder="to" style="margin-left: 10px"></el-input-number>
-                  <el-input v-if="item.type === 'regx'" size="small" v-model="item.regx" placeholder="regx"></el-input>
+                  <el-form-item v-if="item.type === 'value'" :prop="'param.valueMapping.mapping.' + index + 'value'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"  class="thresholds-from-item">
+                    <el-input-number :controls="false" size="small" v-model="item.value" placeholder="value"></el-input-number>
+                  </el-form-item>
+                  <el-form-item v-if="item.type === 'range'" :prop="'param.valueMapping.mapping.' + index + 'from'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"  class="thresholds-from-item">
+                    <el-input-number :controls="false"  size="small" v-model="item.from" placeholder="from"></el-input-number>
+                  </el-form-item>
+                  <el-form-item v-if="item.type === 'range'" :prop="'param.valueMapping.mapping.' + index + 'to'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item">
+                    <el-input-number :controls="false"  size="small" v-model="item.to" placeholder="to"></el-input-number>
+                  </el-form-item>
+                  <el-form-item v-if="item.type === 'regx'" :prop="'param.valueMapping.mapping.' + index + 'regx'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"  class="thresholds-from-item">
+                    <el-input size="small" v-model="item.regx" placeholder="regx"></el-input>
+                  </el-form-item>
                 </el-row>
-                <el-row v-show="item.show" :key="2" class="thresholds-item" style="position: relative">
+                <el-row v-show="item.show" :key="2" class="thresholds-item">
                   <div>
                     <div class='mapping-display'>Display</div>
                   </div>
-                  <el-input v-model="item.display"  style="margin-right: 10px" size="small"/>
+                  <el-form-item :prop="'param.valueMapping.mapping.' + index + 'display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item">
+                    <el-input v-model="item.display"  style="margin-right: 10px" size="small"/>
+                  </el-form-item>
                   <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(val, key, index)}"/>
                 </el-row>
               </transition-group>
@@ -254,7 +287,63 @@
 
 <!--      table column-->
       <div v-if="isTable(chartConfig.type)">
-
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.panel.chartForm.valueMapping')}}</span>
+        </div>
+        <div v-for="(item,index) in chartConfig.param.columns" :key="index">
+          <div class="chart-title chart-title-config">
+                <span class="endpoint-title-content">
+                  <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showColumns(index)"></i>
+                  <span v-show="!item.show" class="title-content-left">
+                    <span>
+                      {{item.value}}
+                    </span>
+                  </span>
+                </span>
+            <span>
+                  <span @click="addColumns('')">
+                      <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
+                  </span>
+                  <span class="nz-icon-copy">
+                      <i @click="copyColumns(index)" class="nz-icon nz-icon-override"></i>
+                  </span>
+                  <span class="nz-icon-minus-medium">
+                      <i @click="removeColumns(index)" class="nz-icon nz-icon-minus"></i>
+                  </span>
+                </span>
+          </div>
+          <transition-group appear tag="div" name="el-zoom-in-top">
+            <el-row class="thresholds-item" v-show="item.show" :key="1">
+              <div>
+                <div class='mapping-display'>Title</div>
+              </div>
+              <el-form-item :prop="'param.columns.' + index + 'title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item">
+                <el-input size="small" v-model="item.title" placeholder="regx"></el-input>
+              </el-form-item>
+              <div>
+                <div class='mapping-display'>Unit</div>
+              </div>
+              <el-cascader :id="'columns-unit' + index" v-model="item.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
+                           placeholder=""
+                           popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
+                           size="small"
+                           @change="unitSelected"
+              >
+              </el-cascader>
+            </el-row>
+            <el-row class="thresholds-item" v-show="item.show" :key="2">
+              <div>
+                <div class='mapping-display'>Display</div>
+              </div>
+              <el-form-item :prop="'param.columns.' + index + 'display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item">
+                <el-input v-model="item.display"  style="margin-right: 10px" size="small"/>
+              </el-form-item>
+            </el-row>
+          </transition-group>
+        </div>
+        <div @click="addColumns" class="thresholds-add">
+          Add Colums
+        </div>
       </div>
     </el-form>
   </div>
@@ -265,6 +354,8 @@ import promqlInput from '@/components/page/dashboard/explore/promqlInput'
 import nezhaColor from '@/components/common/nezhaColor'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
+import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
+import VueTagsInput from '@johmun/vue-tags-input'
 export default {
   name: 'metricsChartConfig',
   props: {
@@ -272,9 +363,10 @@ export default {
   },
   components: {
     promqlInput,
-    nezhaColor
+    nezhaColor,
+    VueTagsInput
   },
-  mixins: [promqlInputMixin, publicConfig],
+  mixins: [promqlInputMixin, publicConfig, chartTypeShow],
   computed: {},
   data () {
     return {
@@ -352,7 +444,7 @@ export default {
             thresholds: []
           }
           this.$nextTick(() => {
-            this.chartConfig.param.thresholds.push({ value: '', color: '#eeeeeeff' })
+            this.chartConfig.param.thresholds.push({ value: undefined, color: '#eeeeeeff' })
           })
           break
         case 'singleStat':
@@ -372,7 +464,9 @@ export default {
           this.chartConfig.param = {
             nullType: this.chartConfig.param.nullType,
             statistics: 'last',
-            column: []
+            columns: [],
+            tags: [],
+            indexs: ''
           }
           break
       }
@@ -398,7 +492,7 @@ export default {
     },
     addThresholds () {
       this.chartConfig.param.thresholds.push({
-        value: '',
+        value: undefined,
         color: '#eeeeeeff'
       })
       this.change()
@@ -409,81 +503,6 @@ export default {
       }
       this.chartConfig.param.thresholds.splice(index, 1)
       this.change()
-    },
-    isStackShow (type) {
-      switch (type) {
-        case 'line':
-        case 'stackArea':
-        case 'point':
-          return true
-        case 'table':
-        case 'singleStat':
-        case 'bar':
-        case 'treemap':
-        case 'pie':
-          return false
-        default: return false
-      }
-    },
-    isStatisticsShow (type) {
-      switch (type) {
-        case 'line':
-        case 'stackArea':
-        case 'point':
-          return false
-        case 'table':
-        case 'singleStat':
-        case 'bar':
-        case 'treemap':
-        case 'pie':
-          return true
-        default: return false
-      }
-    },
-    isShowLegend (type) {
-      switch (type) {
-        case 'line':
-        case 'stackArea':
-        case 'point':
-          return true
-        case 'table':
-        case 'singleStat':
-        case 'bar':
-        case 'treemap':
-        case 'pie':
-          return false
-        default: return false
-      }
-    },
-    isShowValueMapping (type) {
-      switch (type) {
-        case 'line':
-        case 'stackArea':
-        case 'point':
-        case 'table':
-          return false
-        case 'singleStat':
-        case 'bar':
-        case 'treemap':
-        case 'pie':
-          return true
-        default: return false
-      }
-    },
-    isTable (type) {
-      switch (type) {
-        case 'table':
-          return true
-        case 'line':
-        case 'stackArea':
-        case 'point':
-        case 'singleStat':
-        case 'bar':
-        case 'treemap':
-        case 'pie':
-          return false
-        default: return false
-      }
     }
   },
   created () {

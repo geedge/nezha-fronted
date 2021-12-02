@@ -199,7 +199,7 @@ export default {
           nullType: 'null',
           legend: { placement: 'bottom', values: [], show: true },
           thresholdShow: true,
-          thresholds: [{ value: '', color: '#eeeeeeff' }]
+          thresholds: [{ value: undefined, color: '#eeeeeeff' }]
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
         panel: '',
