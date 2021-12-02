@@ -191,7 +191,8 @@ export default {
               return row.name.substring(0, 12) + '...'
             }
             return row.name
-          }
+          },
+          key: 'name'
         },
         {
           title: this.$t('project.project.projectName'),
@@ -201,7 +202,9 @@ export default {
             } else {
               return row.project.name
             }
-          }
+          },
+          deep: true,
+          orjinNME: 'project'
         },
         {
           title: this.$t('overall.remark'),
@@ -209,39 +212,47 @@ export default {
             if (row.remark && row.remark.length > 15) {
               return row.remark.substring(0, 12) + '...'
             }
-            return row.remark
-          }
+            return row.remark = row.remark ? row.remark : ''
+          },
+          key: 'remark'
         }
       ],
       columns: [
         { title: 'id', data: 'id' },
         {
-          title: 'name',
+          title: this.$t('config.model.titleName'),
           data: function (row) {
             if (row.name.length > 15) {
               return row.name.substring(0, 12) + '...'
             }
             return row.name
-          }
+          },
+          key: 'name'
         },
-        { title: 'Manage Ip', data: 'manageIp' },
+        { title: 'Manage Ip', data: 'manageIp', key: 'manageIp' },
         {
-          title: 'Type',
+          title: this.$t('overall.type'),
           data: (row) => {
             return row.type ? row.type.name : ''
-          }
+          },
+          deep: true,
+          orjinNME: 'type'
         },
         {
-          title: 'Model',
+          title: this.$t('overall.model'),
           data: (row) => {
             return row.model ? row.model.name : ''
-          }
+          },
+          deep: true,
+          orjinNME: 'model'
         },
         {
-          title: 'Datacenter',
+          title: this.$t('overall.dc'),
           data: (row) => {
             return row.dc ? row.dc.name : ''
-          }
+          },
+          deep: true,
+          orjinNME: 'dc'
         }
       ],
       object: {},

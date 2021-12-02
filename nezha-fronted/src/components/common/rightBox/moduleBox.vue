@@ -605,9 +605,10 @@ export default {
               return row.name.substring(0, 12) + '...'
             }
             return row.name
-          }
+          },
+          key: 'name'
         },
-        { title: this.$t('config.model.titleType'), data: 'type' },
+        { title: this.$t('config.model.titleType'), data: 'type', key: 'type' },
         {
           title: this.$t('overall.remark'),
           data: function (row) {
@@ -615,7 +616,8 @@ export default {
               return row.remark.substring(0, 12) + '...'
             }
             return row.remark
-          }
+          },
+          key: 'remark'
         }
       ],
       showAllBasicOption: false,
