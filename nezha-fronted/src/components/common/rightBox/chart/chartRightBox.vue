@@ -15,7 +15,7 @@
     <!-- begin--表单-->
     <div class="right-box-form-box right-box__container chart-right-box">
       <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px">
-        <el-form-item :label='$t("dashboard.panel.chartForm.name")' prop="title">
+        <el-form-item :label='$t("dashboard.panel.chartForm.name")' prop="name">
           <el-input maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
         </el-form-item>
 
@@ -59,16 +59,16 @@
         </div>
         <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange">
           <el-tab-pane label="Metrics" name="1">
-            <metrics-chart-config v-if="editChart.datasource == 1" :params.sync="editChart" @change="editChartChange"/>
+            <metrics-chart-config ref="childrenFrom1" v-if="editChart.datasource == 1" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane label="Logs" name="2">
-            <logs-chart-config  v-if="editChart.datasource == 2" :params.sync="editChart"/>
+            <logs-chart-config ref="childrenFrom2" v-if="editChart.datasource == 2" :params.sync="editChart"/>
           </el-tab-pane>
           <el-tab-pane label="System" name="3">
-            <system-chart-config  v-if="editChart.datasource == 3" :params.sync="editChart"/>
+            <system-chart-config ref="childrenFrom3" v-if="editChart.datasource == 3" :params.sync="editChart"/>
           </el-tab-pane>
           <el-tab-pane label="Other" name="4">
-            <other-chart-config  v-if="editChart.datasource == 4" :params.sync="editChart"/>
+            <other-chart-config ref="childrenFrom4" v-if="editChart.datasource == 4" :params.sync="editChart"/>
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -84,7 +84,7 @@
       <button v-else-if="from!=='chartTemp'" id="chart-box-preview" class="footer__btn">
         <span>{{$t('overall.preview')}}</span>
       </button>
-      <button id="chart-box-save" v-has="'panel_chart_add'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn">
+      <button id="chart-box-save" v-has="'panel_chart_add'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn" @click="save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -156,6 +156,8 @@ export default {
       groupArr: [],
       panelName: '',
       rules: {
+        name: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
+        panelName: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }]
       }
     }
   },
@@ -171,36 +173,42 @@ export default {
     },
     // 保存endpoint
     save () {
-      if (this.prevent_opt.save) { return } ;
-      this.prevent_opt.save = true
-      // 对endpointList进行处理，避免携带过多无用数据
-      const endpointList = []
-      this.endpointTableData.forEach((item, index) => {
-        const endpoint = {
-          moduleId: item.moduleId,
-          assetId: item.assetId,
-          name: item.name,
-          configs: JSON.stringify(item.configs),
-          id: item.id
-        }
-        endpointList.push(endpoint)
+      console.log(123132213)
+      const arr = [this.$refs.chartForm.validate()]
+      arr.push(this.$refs['childrenFrom' + this.editChart.datasource].$refs.chartForm.validate())
+      Promise.all(arr).then(res => {
+        console.log(res)
+      }).catch(res => {
+        console.log(res)
       })
-      this.$refs.addEndpoint.validate((valid) => {
-        if (valid) {
-          this.$put('monitor/endpoint', endpointList).then(response => {
-            this.prevent_opt.save = false
-            if (response.code === 200) {
-              this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-              this.esc(true)
-            } else {
-              this.$message.error(response.msg)
-            }
-          })
-        } else {
-          this.prevent_opt.save = false
-          return false
-        }
-      })
+
+      // this.$refs.chartForm.validate((valid) => {
+      //   if (valid) {
+      //     if (this.editChart.id) { // 修改
+      //       this.editChart.param.collapse = this.chartSwitch
+      //       this.$put('visual/panel/chart', this.editChart).then(response => {
+      //         if (response.code === 200) {
+      //           this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+      //           this.esc(true)
+      //         } else {
+      //           this.$message.error(response.msg)
+      //         }
+      //       })
+      //     } else { // 新增
+      //       this.$post('visual/panel/chart', this.editChart).then(response => {
+      //         if (response.code === 200) {
+      //           this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+      //           this.esc(true)
+      //         } else {
+      //           this.$message.error(response.msg)
+      //         }
+      //       })
+      //     }
+      //   } else {
+      //     console.error('error submit!!')
+      //     return false
+      //   }
+      // })
     },
     selectPanel (panel) {
       this.panelName = panel.name

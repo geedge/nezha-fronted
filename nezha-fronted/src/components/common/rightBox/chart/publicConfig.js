@@ -141,7 +141,8 @@ export default {
       this.expressions.push(this.expressions[index])
       this.legends.push(this.legends[index])
       this.promqlKeys.push(getUUID())
-      this.expressionName(this.transformNumToLetter(0))
+      const expressionName = this.getExpressionName()
+      this.expressionName.push(expressionName)
       this.elementIds.push('')
       this.expressionsShow.push(true)
       this.promqlCount++
@@ -210,6 +211,7 @@ export default {
       this.change()
     },
     colorChange (val, key, index) {
+      console.log(val, key, index)
       if (key === 'thresholds') {
         this.chartConfig.param.thresholds[index].color = val
       }
@@ -228,6 +230,29 @@ export default {
       this.$nextTick(() => {
         this.$emit('change', this.chartConfig)
       })
-    }
+    },
+    addColumns () {
+      this.chartConfig.param.columns.push({
+        title: '',
+        show: true,
+        unit: 2,
+        display: ''
+      })
+      this.change()
+    },
+    copyColumns (index) {
+      this.chartConfig.param.columns.push({ ...this.chartConfig.param.columns[index] })
+      this.change()
+    },
+    removeColumns (index) {
+      this.chartConfig.param.columns.splice(index, 1)
+      this.change()
+    },
+    showColumns (index) {
+      this.chartConfig.param.columns[index].show = !this.chartConfig.param.columns[index].show
+    },
+    tagsChange (newTags) {
+      // this.chartConfig.param.indexs = newTags.map(item => item.text)
+    },
   }
 }

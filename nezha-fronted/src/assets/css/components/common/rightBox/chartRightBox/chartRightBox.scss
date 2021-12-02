@@ -90,5 +90,12 @@
       border-bottom: none;
       margin-bottom: 10px;
     }
+    .vue-tags-input{
+      display: inline-block;
+      width: 100%;
+      .ti-input{
+        padding: 1px 3px;
+      }
+    }
   }
 }
