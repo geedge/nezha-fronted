@@ -113,7 +113,6 @@ import { mapActions } from 'vuex'
 import QRCode from 'qrcodejs2'
 import bus from '@/libs/bus.js'
 import { get } from '@/http'
-import { loadI18n } from '@/components/common/i18n'
 export default {
   name: 'login',
   data () {
@@ -134,6 +133,7 @@ export default {
       loading: false,
       lang: 'en', // en/cn
       verifyShow: false,
+      theme: 1,
       authBindShow: false,
       authToken: '',
       QRCode: '',
@@ -160,6 +160,7 @@ export default {
             this.authToken = res.data.authToken
             this.lang = res.data.user.lang || localStorage.getItem('nz-language')
             this.$i18n.locale = this.lang
+            this.theme = res.data.user.theme
             // 获取可选语言
             get('/sys/dict/all?type=lang').then(response => {
               if (response.code === 200) {
@@ -216,7 +217,8 @@ export default {
           localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
           localStorage.setItem('nz-language', this.lang)
           res.data.user = {
-            lang: this.lang
+            lang: this.lang,
+            theme: this.theme
           }
           this.loginSuccess(res)
         } else {
