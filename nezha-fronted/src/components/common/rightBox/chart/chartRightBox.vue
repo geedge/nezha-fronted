@@ -67,7 +67,7 @@
           <el-tab-pane label="System" name="3">
             <system-chart-config ref="childrenFrom3" v-if="editChart.datasource == 3" :params.sync="editChart"/>
           </el-tab-pane>
-          <el-tab-pane label="Other" name="4">
+          <el-tab-pane label="Misc" name="4">
             <other-chart-config ref="childrenFrom4" v-if="editChart.datasource == 4" :params.sync="editChart"/>
           </el-tab-pane>
         </el-tabs>
@@ -261,6 +261,24 @@ export default {
           }
         }
       }
+      if (this.editChart.datasource == 3) {
+        this.editChart = {
+          ...this.editChart,
+          span: 4,
+          height: 4,
+          unit: 2,
+          type: 'stat',
+          param: {
+            refer: 1,
+            system: '',
+            systemGroup: '',
+            systemSelect: '',
+            sort: 'desc',
+            limit: 100
+          }
+        }
+        delete this.editChart.elements
+      }
       if (this.editChart.datasource == 4) {
         this.editChart = {
           ...this.editChart,
@@ -271,6 +289,7 @@ export default {
             url: ''
           }
         }
+        delete this.editChart.elements
       }
     },
     editChartChange (newEditChart) {

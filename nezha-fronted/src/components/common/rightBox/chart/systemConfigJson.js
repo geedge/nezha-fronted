@@ -1,47 +1,48 @@
 const data = [{
   name: 'asset',
   datasql: 'SELECT t.*,atc.vm,atc.vmh,atc.NAME as type,assc.NAME as state,ab.NAME as brand,am.NAME as model,dc.NAME as datacenterName,cabinet.NAME as cabinet,ap.`status` as ping FROM asset_asset t LEFT JOIN asset_type_conf atc ON t.type_id = atc.id LEFT JOIN asset_state_conf assc ON t.state_id = assc.id LEFT JOIN asset_brand ab ON t.brand_id = ab.id LEFT JOIN asset_model am ON t.model_id = am.id LEFT JOIN dc ON t.dc_id = dc.id LEFT JOIN cabinet ON t.cabinet_id = cabinet.id LEFT JOIN asset_ping ap ON t.id = ap.asset_id',
-  group: [{
-    name: 'datacenter',
-    expr: 'datacenterName',
-    type: 2
-  }, {
-    name: 'name',
-    expr: 'name',
-    type: 2
-  }, {
-    name: 'vm',
-    expr: 'vm',
-    type: 2
-  }, {
-    name: 'vmh',
-    expr: 'vmh',
-    type: 2
-  }, {
-    name: 'type',
-    expr: 'type',
-    type: 2
-  }, {
-    name: 'state',
-    expr: 'state',
-    type: 2
-  }, {
-    name: 'brand',
-    expr: 'brand',
-    type: 2
-  }, {
-    name: 'model',
-    expr: 'model',
-    type: 2
-  }, {
-    name: 'cabinet',
-    expr: 'cabinet',
-    type: 2
-  }, {
-    name: 'status',
-    expr: 'ping',
-    type: 2
-  }
+  group: [
+    {
+      name: 'datacenter',
+      expr: 'datacenterName',
+      type: 2
+    }, {
+      name: 'name',
+      expr: 'name',
+      type: 2
+    }, {
+      name: 'vm',
+      expr: 'vm',
+      type: 2
+    }, {
+      name: 'vmh',
+      expr: 'vmh',
+      type: 2
+    }, {
+      name: 'type',
+      expr: 'type',
+      type: 2
+    }, {
+      name: 'state',
+      expr: 'state',
+      type: 2
+    }, {
+      name: 'brand',
+      expr: 'brand',
+      type: 2
+    }, {
+      name: 'model',
+      expr: 'model',
+      type: 2
+    }, {
+      name: 'cabinet',
+      expr: 'cabinet',
+      type: 2
+    }, {
+      name: 'status',
+      expr: 'ping',
+      type: 2
+    }
   ],
   select: [{
     name: 'count',

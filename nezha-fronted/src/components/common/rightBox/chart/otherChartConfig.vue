@@ -46,7 +46,7 @@
                      size="small"/>
         </el-form-item>
       </div>
-      <div class="form-items--half-width-group">
+      <div class="form-items--half-width-group" v-if="!isGroup(chartConfig.type)">
         <!--width-->
         <el-form-item
           :label="$t('dashboard.panel.chartForm.width')"
@@ -137,9 +137,7 @@ export default {
   },
   data () {
     return {
-      rules: {
-        height: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }]
-      },
+      rules: {},
       topologyDialog: false,
       chartTypeList: [
         {
@@ -168,7 +166,6 @@ export default {
     chartTypeChange (type) {
       switch (type) {
         case 'group':
-          this.chartConfig.height = ''
           this.chartConfig.span = 12
           this.chartConfig.param = {
             collapse: false
