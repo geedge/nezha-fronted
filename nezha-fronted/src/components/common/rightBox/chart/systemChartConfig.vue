@@ -7,10 +7,16 @@
       label-position= "top"
       label-width="120px"
     >
-      <div class="system-chart-config">
+      <div class="system-chart-config" v-loading="loading">
         <div class="system-chart-config-left">
           <ul>
-            <li v-for="(item,index) in mockData" :key="index" class="system-chart-item" :class="''">{{item.name}}</li>
+            <li
+              v-for="(item,index) in systemData"
+              :key="index"
+              class="system-chart-item"
+              :class="item.name === chartConfig.param.system ? 'is-select' : ''"
+              @click="changeSystem(item)"
+            >{{item.name}}</li>
           </ul>
         </div>
         <div class="system-chart-config-right">
@@ -178,13 +184,13 @@
 <script>
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
-import mockData from './systemConfigJson'
 export default {
   name: 'systemChartConfig',
   mixins: [publicConfig, chartTypeShow],
   data () {
     return {
-      mockData,
+      systemData: [],
+      loading: false,
       rules: {},
       chartTypeList: [
         {
@@ -198,13 +204,27 @@ export default {
         {
           id: 'pie',
           name: this.$t('dashboard.panel.chartForm.typeVal.pie.label')
-        },
+        }
       ]
     }
   },
   methods: {
     init () {
       this.chartConfig = JSON.parse(JSON.stringify(this.params))
+    },
+    getSystemData () {
+      this.loading = true
+      this.$get('/mock/getSystemData').then(res => {
+        this.loading = false
+        if (res.code === 200) {
+          this.systemData = res.data.list
+          if (res.data.list.length) {
+            this.chartConfig.param.system = res.data.list[0].name
+          }
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     chartTypeChange (type) {
       switch (type) {
@@ -233,9 +253,15 @@ export default {
       }
       this.change()
     },
+    changeSystem (item) {
+      this.chartConfig.param.system = item.name
+    }
   },
   created () {
     this.init()
+  },
+  mounted () {
+    this.getSystemData()
   }
 }
 </script>
