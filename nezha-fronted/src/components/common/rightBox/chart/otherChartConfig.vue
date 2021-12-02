@@ -37,6 +37,14 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <!--Default collapse-->
+        <el-form-item class="form-item--half-width" v-if="isGroup(chartConfig.type)" :label='$t("dashboard.panel.chartForm.collapse")' prop="param.collapse">
+          <el-switch id="chart-box-collapse"
+                     v-model="chartConfig.param.collapse"
+                     :active-value="true"
+                     :inactive-value="false"
+                     size="small"/>
+        </el-form-item>
       </div>
       <div class="form-items--half-width-group">
         <!--width-->
@@ -160,7 +168,11 @@ export default {
     chartTypeChange (type) {
       switch (type) {
         case 'group':
-          this.chartConfig.param = {}
+          this.chartConfig.height = ''
+          this.chartConfig.span = 12
+          this.chartConfig.param = {
+            collapse: false
+          }
           break
         case 'text':
           this.chartConfig.param = {

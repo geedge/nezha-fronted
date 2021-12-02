@@ -174,38 +174,28 @@ export default {
       const arr = [this.$refs.chartForm.validate()]
       arr.push(this.$refs['childrenFrom' + this.editChart.datasource].$refs.chartForm.validate())
       Promise.all(arr).then(res => {
-        console.log(res)
+        if (this.editChart.id) { // 修改
+          this.$put('visual/panel/chart', this.editChart).then(response => {
+            if (response.code === 200) {
+              this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+              this.esc(true)
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
+        } else { // 新增
+          this.$post('visual/panel/chart', this.editChart).then(response => {
+            if (response.code === 200) {
+              this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+              this.esc(true)
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
+        }
       }).catch(res => {
         console.log(res)
       })
-
-      // this.$refs.chartForm.validate((valid) => {
-      //   if (valid) {
-      //     if (this.editChart.id) { // 修改
-      //       this.editChart.param.collapse = this.chartSwitch
-      //       this.$put('visual/panel/chart', this.editChart).then(response => {
-      //         if (response.code === 200) {
-      //           this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-      //           this.esc(true)
-      //         } else {
-      //           this.$message.error(response.msg)
-      //         }
-      //       })
-      //     } else { // 新增
-      //       this.$post('visual/panel/chart', this.editChart).then(response => {
-      //         if (response.code === 200) {
-      //           this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-      //           this.esc(true)
-      //         } else {
-      //           this.$message.error(response.msg)
-      //         }
-      //       })
-      //     }
-      //   } else {
-      //     console.error('error submit!!')
-      //     return false
-      //   }
-      // })
     },
     selectPanel (panel) {
       this.panelName = panel.name
@@ -271,7 +261,6 @@ export default {
           }
         }
       }
-      console.log(this.editChart.datasource)
       if (this.editChart.datasource == 4) {
         this.editChart = {
           ...this.editChart,
