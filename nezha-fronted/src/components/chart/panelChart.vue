@@ -152,7 +152,6 @@ export default {
                 !severityData.P3 && (severityData.P3 = 0)
                 moduleStateData.push({ ...alertTopModules[i], alert: [severityData] })
               })
-              console.log(moduleStateData)
               resolve(moduleStateData)
             })
           }

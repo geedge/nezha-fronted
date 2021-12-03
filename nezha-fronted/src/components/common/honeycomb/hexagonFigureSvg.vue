@@ -173,7 +173,6 @@ export default {
       deep: true,
       handler (n) {
         this.init()
-        console.log(n)
       }
     },
     col: { // 列数

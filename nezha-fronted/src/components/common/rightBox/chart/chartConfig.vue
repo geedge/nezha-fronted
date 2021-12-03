@@ -41,11 +41,13 @@
             }">
               <i class="nz-icon nz-icon-arrow-down" :class="expressionsShow[index-1].show?'':'is-active'" @click.stop="showExpression(index)"></i>
               <el-input
+                @mousedown.stop
                 v-model="expressionName[index-1]"
                 size="small"
                 @input="(val)=>{expressionNameInput(val,index-1)}"
                 @change="expressionNameChange(index-1)" style="width: 120px"
-                @focus="showInput(index-1)"
+                @focus.stop="showInput(index-1,false)"
+                @blur="showInput(index-1,true)"
               />
               <div v-if="expressionsShow[index-1].error"  class="el-form-item__error" style="top: 10px;left: 164px"> {{expressionsShow[index-1].error}}</div>
             </span>
@@ -796,13 +798,13 @@ export default {
     },
     end (event) {
       this.expressions = []
-      this.expressionsShow = []
       this.expressionName = []
       if (!this.chartConfig.elements.length) {
         this.addExpression()
       } else {
         this.chartConfig.elements.forEach(item => {
-          this.addExpression(item)
+          this.expressions.push(item.expression)
+          this.expressionName.push(item.name)
         })
       }
       this.change()

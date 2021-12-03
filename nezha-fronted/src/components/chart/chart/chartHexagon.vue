@@ -63,7 +63,6 @@ export default {
       immediate: true,
       deep: true,
       handler () {
-        console.log(this.chartData)
       }
     },
     chartInfo: {

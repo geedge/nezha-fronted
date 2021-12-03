@@ -162,10 +162,11 @@ export default {
       if (this.expressionsShow[index].error) {
         this.expressionName[index] = this.expressionsShow[index].oldName
         this.expressionsShow[index].error = ''
+      } else if (!this.expressionName[index]) {
+        this.expressionName[index] = this.expressionsShow[index].oldName
       } else {
         this.expressionsShow[index].oldName = this.expressionName[index]
       }
-      this.expressionsShow[index].hideInput = true
       this.$refs.chartForm.clearValidate('elements.' + (index - 1) + '.expression')
       this.expressionChange()
     },
@@ -173,13 +174,15 @@ export default {
       const findIndex = this.expressionName.indexOf(val)
       const lastIndex = this.expressionName.lastIndexOf(val)
       if (findIndex !== -1 && lastIndex != -1 && lastIndex !== findIndex) {
-        this.expressionsShow[index].error = 'The name duplicate'
+        this.expressionsShow[index].error = this.$t('error.nameDuplicate')
+      } else if (!val) {
+        this.expressionsShow[index].error = this.$t('validate.required')
       } else {
         this.expressionsShow[index].error = ''
       }
     },
-    showInput (index) {
-      this.expressionsShow[index].hideInput = false
+    showInput (index, flag) {
+      this.expressionsShow[index].hideInput = flag
     },
     transformNumToLetter (num) { // 相当于26进制 获取id
       const self = this
@@ -220,6 +223,7 @@ export default {
         )
       }
     },
+
     getExpressionName () {
       let name = ''
       for (let i = 0; i <= this.expressionName.length; i++) {
