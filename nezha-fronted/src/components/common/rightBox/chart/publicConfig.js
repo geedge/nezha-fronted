@@ -251,7 +251,7 @@ export default {
       this.chartConfig.param.valueMapping.mapping.push({
         type: 'value',
         show: true,
-        value: '',
+        value: undefined,
         display: '',
         color: {
           bac: '#FFFFFFFF',
@@ -276,21 +276,25 @@ export default {
       if (mapping.type === 'value') {
         this.chartConfig.param.valueMapping.mapping[index] = {
           ...mapping,
-          value: ''
+          value: undefined
         }
       }
+      this.$refs.chartForm.clearValidate('param.valueMapping.mapping.' + index + 'value')
       if (mapping.type === 'range') {
         this.chartConfig.param.valueMapping.mapping[index] = {
           ...mapping,
-          from: '',
-          to: ''
+          from: undefined,
+          to: undefined
         }
+        this.$refs.chartForm.clearValidate('param.valueMapping.mapping.' + index + 'from')
+        this.$refs.chartForm.clearValidate('param.valueMapping.mapping.' + index + 'to')
       }
       if (mapping.type === 'regx') {
         this.chartConfig.param.valueMapping.mapping[index] = {
           ...mapping,
           regx: ''
         }
+        this.$refs.chartForm.clearValidate('param.valueMapping.mapping.' + index + 'regx')
       }
       this.$set(this.chartConfig.param.valueMapping.mapping, index, this.chartConfig.param.valueMapping.mapping[index])
       this.change()

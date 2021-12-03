@@ -26,7 +26,7 @@
               class="form-item--half-width"
               prop="param.systemGroup"
             >
-              <el-select size="small" v-model="chartConfig.param.systemGroup" multiple collapse-tags>
+              <el-select size="small" v-model="chartConfig.param.systemGroup" multiple collapse-tags :placeholder="$t('el.select.placeholder')">
                   <el-option v-for="item in groupList" :value="item.name" :key="item.name" :label="item.name"/>
               </el-select>
             </el-form-item>
@@ -36,7 +36,7 @@
               class="form-item--half-width"
               prop="param.systemSelect"
             >
-              <el-select size="small" v-model="chartConfig.param.systemSelect">
+              <el-select size="small" v-model="chartConfig.param.systemSelect" :placeholder="$t('el.select.placeholder')">
                 <el-option v-for="item in selectList" :value="item.name" :key="item.name" :label="item.name"/>
               </el-select>
             </el-form-item>
@@ -67,7 +67,7 @@
               class="form-item--half-width"
               prop="param.limit"
             >
-              <el-input-number :controls="false" v-model="chartConfig.param.limit"  size="small"/>
+              <el-input-number :controls="false" v-model="chartConfig.param.limit" :placeholder="$t('placeholder.system.limit')"  size="small"/>
             </el-form-item>
           </div>
         </div>

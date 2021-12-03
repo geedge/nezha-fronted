@@ -22,7 +22,7 @@
             id="chart-box-type"
             v-model="chartConfig.type"
             :disabled="chartConfig.type==='group'&&chartConfig.children&&chartConfig.children.length"
-            placeholder=""
+            :placeholder="$t('el.select.placeholder')"
             popper-class="right-box-select-top prevent-clickoutside"
             size="small"
             value-key="chartType"
