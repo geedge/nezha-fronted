@@ -161,6 +161,7 @@ export default {
       const arr = [this.$refs.chartForm.validate()]
       arr.push(this.$refs['childrenFrom' + this.editChart.datasource].$refs.chartForm.validate())
       Promise.all(arr).then(res => {
+        this.editChart.param = JSON.stringify(this.editChart.param)
         if (this.editChart.id) { // 修改
           this.$put('visual/panel/chart', this.editChart).then(response => {
             if (response.code === 200) {
@@ -286,7 +287,13 @@ export default {
       }
     },
     editChartChange (newEditChart) {
-      this.editChart = JSON.parse(JSON.stringify(newEditChart))
+      this.editChart = {
+        ...JSON.parse(JSON.stringify(newEditChart)),
+        name: this.editChart.name,
+        remark: this.editChart.remark,
+        groupId: this.editChart.groupId,
+        panelName: this.editChart.panelName
+      }
     }
   },
   created () {
