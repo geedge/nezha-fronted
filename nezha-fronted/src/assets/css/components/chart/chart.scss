@@ -80,7 +80,17 @@
     }
   }
 }
-
+.chart__canvas {
+  div:nth-of-type(2) {
+    background-color: $--background-color-empty !important;
+    border-color: $--border-color-light !important;
+  }
+  .nz-chart__tooltip {
+    .row__label,.row__value {
+      color: $--color-text-regular;
+    }
+  }
+}
 .nz-chart {
   position: relative;
   height: 100%;

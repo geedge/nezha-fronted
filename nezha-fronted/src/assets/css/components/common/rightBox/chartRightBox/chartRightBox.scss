@@ -20,7 +20,7 @@
     }
     .metrics-input-box{
       .input-box .el-textarea .el-textarea__inner {
-        width: 508px;
+        width: calc(100% + 42px);
       }
       .metric-selector-input-box{
         line-height: 32px;

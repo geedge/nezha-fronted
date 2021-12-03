@@ -37,6 +37,12 @@
           }
         }
       }
+      .el-table tr.el-table__row {
+        background-color: $--background-color-empty;
+      }
+      .el-table th.is-leaf {
+        border-bottom: 1px solid $--border-color-light;
+      }
     }
 
     .box__footer {

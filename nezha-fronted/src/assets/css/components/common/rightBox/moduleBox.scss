@@ -203,6 +203,9 @@
       text-transform: Capitalize;
     }
   }
+  .el-input-group__append {
+    background-color: $--border-color-light;
+  }
 }
 .sub-label {
   padding-right: 15px;
