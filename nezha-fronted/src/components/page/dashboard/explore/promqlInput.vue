@@ -340,7 +340,6 @@ export default {
       cb(result)
     },
     metricChange: function (value) {
-      if (!value) return
       this.expressionList[this.index] = value
       this.dropDownVisible = false
       this.$emit('change', value)

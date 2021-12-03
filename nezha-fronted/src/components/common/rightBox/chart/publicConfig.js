@@ -15,14 +15,10 @@ export default {
     return {
       language: localStorage.getItem('nz-language'),
       chartConfig: {},
-      promqlCount: 0,
-      promqlKeys: [],
-      elementIds: [],
       expressions: [],
       expressionName: [],
       expressionsShow: [],
       spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      legends: [],
       unitOptions: chartDataFormat.unitOptions(),
       nullTypeList: [{
         label: 'connected',
@@ -155,12 +151,35 @@ export default {
       if (this.expressions.length) {
         this.chartConfig.elements = []
         this.expressions.forEach((expr, i) => {
-          this.chartConfig.elements.push({ id: this.elementIds[i], expression: expr, type: 'expert', legend: this.legends[i], name: this.expressionName[i] })
+          this.chartConfig.elements.push({ id: this.expressionsShow[i].elementId, expression: expr, type: 'expert', legend: this.expressionsShow[i].legend, name: this.expressionName[i] })
         })
       } else {
         this.chartConfig.elements = []
       }
       this.change()
+    },
+    expressionNameChange (index) {
+      if (this.expressionsShow[index].error) {
+        this.expressionName[index] = this.expressionsShow[index].oldName
+        this.expressionsShow[index].error = ''
+      } else {
+        this.expressionsShow[index].oldName = this.expressionName[index]
+      }
+      this.expressionsShow[index].hideInput = true
+      this.$refs.chartForm.clearValidate('elements.' + (index - 1) + '.expression')
+      this.expressionChange()
+    },
+    expressionNameInput (val, index) {
+      const findIndex = this.expressionName.indexOf(val)
+      const lastIndex = this.expressionName.lastIndexOf(val)
+      if (findIndex !== -1 && lastIndex != -1 && lastIndex !== findIndex) {
+        this.expressionsShow[index].error = 'The name duplicate'
+      } else {
+        this.expressionsShow[index].error = ''
+      }
+    },
+    showInput (index) {
+      this.expressionsShow[index].hideInput = false
     },
     transformNumToLetter (num) { // 相当于26进制 获取id
       const self = this
@@ -177,20 +196,28 @@ export default {
         this.expressions.push('')
         const expressionName = this.getExpressionName()
         this.expressionName.push(expressionName)
-        this.legends.push('')
-        this.promqlKeys.push(getUUID())
-        this.elementIds.push('')
-        this.expressionsShow.push(true)
-        this.promqlCount++
+        this.expressionsShow.push({
+          show: true,
+          hideInput: true,
+          oldName: expressionName,
+          error: '',
+          legend: '',
+          elementId: ''
+        })
         this.expressionChange()
       } else {
         this.expressions.push(item.expression)
-        this.legends.push(item.legend)
-        this.promqlKeys.push(getUUID())
         this.expressionName.push(item.name)
-        this.elementIds.push(item.id)
-        this.expressionsShow.push(true)
-        this.promqlCount++
+        this.expressionsShow.push(
+          {
+            show: true,
+            hideInput: true,
+            oldName: item.name,
+            error: '',
+            elementId: item.id,
+            legend: item.legend
+          }
+        )
       }
     },
     getExpressionName () {
@@ -204,14 +231,10 @@ export default {
       return name
     },
     removeExpression (index) {
-      if (this.promqlCount > 1) {
+      if (this.expressionsShow.length > 1) {
         this.expressions.splice(index, 1)
-        this.legends.splice(index, 1)
-        this.promqlKeys.splice(index, 1)
         this.expressionName.splice(index, 1)
         this.expressionsShow.splice(index, 1)
-        this.elementIds.splice(index, 1)
-        this.promqlCount--
         this.$nextTick(() => {
           this.expressions.forEach((ex, index) => {
             if (ex) {
@@ -224,13 +247,17 @@ export default {
     },
     copyExpression (index) {
       this.expressions.push(this.expressions[index])
-      this.legends.push(this.legends[index])
-      this.promqlKeys.push(getUUID())
       const expressionName = this.getExpressionName()
       this.expressionName.push(expressionName)
-      this.elementIds.push('')
-      this.expressionsShow.push(true)
-      this.promqlCount++
+      this.expressionsShow.push(
+        {
+          ...this.expressionsShow[index],
+          show: true,
+          hideInput: true,
+          oldName: this.expressionName[index],
+          error: ''
+        }
+      )
       this.$nextTick(() => {
         this.expressions.forEach((ex, index) => {
           if (ex) {
@@ -241,7 +268,9 @@ export default {
       this.expressionChange()
     },
     showExpression (index) {
-      this.$set(this.expressionsShow, index - 1, !this.expressionsShow[index - 1])
+      this.expressionsShow[index - 1].show = !this.expressionsShow[index - 1].show
+      this.$set(this.expressionsShow, index - 1, this.expressionsShow[index - 1])
+      this.$refs.chartForm.clearValidate('elements.' + (index - 1) + '.expression')
     },
     unitSelected: function (value) {
       // this.chartConfig.unit=value[value.length-1];
@@ -300,12 +329,10 @@ export default {
       this.change()
     },
     colorChange (val, key, index) {
-      console.log(val, key, index)
       if (key === 'thresholds') {
         this.chartConfig.param.thresholds[index].color = val
       }
       if (key === 'bac') {
-        console.log(this.chartConfig.param.valueMapping.mapping, this.chartConfig.param.valueMapping.mapping[0], this.chartConfig.param.valueMapping.mapping[index])
         this.chartConfig.param.valueMapping.mapping[index].color.bac = val
         this.$set(this.chartConfig.param.valueMapping.mapping, index, this.chartConfig.param.valueMapping.mapping[index])
       }

@@ -46,6 +46,24 @@
       margin-bottom: 10px;
       box-sizing: border-box;
       height: 32px;
+      .chart-title-content{
+        flex: 1;
+        display: flex;
+        height: 100%;
+        .el-input--small {
+          padding: 3px;
+          line-height: 24px;
+          input{
+            height: 26px;
+            line-height: 26px;
+          }
+        }
+      }
+      .hide-input {
+        input{
+          border: none !important;
+        }
+      }
       .nz-icon{
         cursor: pointer;
       }

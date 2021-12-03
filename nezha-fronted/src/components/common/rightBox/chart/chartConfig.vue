@@ -6,29 +6,51 @@
       :rules="rules"
       label-position= "top"
       label-width="120px"
+      @submit.native.prevent
     >
       <div
         v-if="chartConfig.elements"
         class="metrics-input-box"
       >
-        <el-form-item
+        <draggable v-model="chartConfig.elements"
+                   :move="move"
+                   @end="end"
+                   @start="start"
+                   :scroll-sensitivity="150"
+                   :options="{
+                 dragClass:'drag-chart-class',
+                 fallbackClass:'fallback-class',
+                 forceFallback:true,
+                 ghostClass:'chart-ghost',
+                 chosenClass:'choose-class',
+                 scroll:true,
+                 filter: '.drag-disabled',
+                 animation: 150,
+                 handle: '.chart-title-content'
+               }"  >
+        <el-row
           :key="index"
           class="element-item form-row-item thresholds-from-item"
           style=""
           v-for="index of chartConfig.elements.length"
-          :prop="'elements.' + (index -1) + '.expression'"
-          :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
         >
           <div class="chart-title chart-title-config">
-            <span class="endpoint-title-content">
-              <i class="nz-icon nz-icon-arrow-down" :class="expressionsShow[index-1]?'':'is-active'" @click="showExpression(index)"></i>
-              <span>
-                {{expressionName[index-1]}}
-                <!--                名称修改 暂未实现-->
-              </span>
+            <span class="chart-title-content el-form-item" :class="{
+              'is-error' : expressionsShow[index-1].error,
+              'hide-input': expressionsShow[index-1].hideInput
+            }">
+              <i class="nz-icon nz-icon-arrow-down" :class="expressionsShow[index-1].show?'':'is-active'" @click.stop="showExpression(index)"></i>
+              <el-input
+                v-model="expressionName[index-1]"
+                size="small"
+                @input="(val)=>{expressionNameInput(val,index-1)}"
+                @change="expressionNameChange(index-1)" style="width: 120px"
+                @focus="showInput(index-1)"
+              />
+              <div v-if="expressionsShow[index-1].error"  class="el-form-item__error" style="top: 10px;left: 164px"> {{expressionsShow[index-1].error}}</div>
             </span>
             <span>
-              <span @click="addExpression('')" style="margin-right: 5px">
+              <span @click="()=>{addExpression()}" style="margin-right: 5px;padding-left: 10px">
                   <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
               </span>
               <span @click="copyExpression(index - 1)" style="margin-right: 5px">
@@ -40,23 +62,26 @@
             </span>
           </div>
           <transition name="el-zoom-in-top">
-            <el-row v-show="expressionsShow[index-1]">
-              <promql-input
-                :from-father-data="true"
-                :metricOptionsParent="metricOptions"
-                :expression-list="expressions"
-                :id="promqlKeys[index-1]"
-                :index="index-1"
-                :required = 'true'
-                :type="promqlType"
-                :key="promqlKeys[index-1]"
-                :plugins="['metric-selector', 'metric-input', 'remove']"
-                :ref="'promql-'+(index-1)"
-                :showRemove="false"
-                :styleType="2"
-                @change="expressionChange"
-                @removeExpression="removeExpression"
-              ></promql-input>
+            <el-row v-show="expressionsShow[index-1].show">
+              <el-form-item :prop="'elements.' + (index -1) + '.expression'"
+                            :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}">
+                <promql-input
+                  :from-father-data="true"
+                  :metricOptionsParent="metricOptions"
+                  :expression-list="expressions"
+                  :id="'promqlKeys' + [index-1]"
+                  :index="index-1"
+                  :required = 'true'
+                  :type="promqlType"
+                  :key="index-1"
+                  :plugins="['metric-selector', 'metric-input', 'remove']"
+                  :ref="'promql-'+(index-1)"
+                  :showRemove="false"
+                  :styleType="2"
+                  @change="expressionChange"
+                  @removeExpression="removeExpression"
+                ></promql-input>
+              </el-form-item>
               <el-row style="margin-top: 18px;display: flex">
                 <el-col class="legend-title">
                   <span class="legend-title__span">{{$t('dashboard.panel.chartForm.legend')}}&nbsp;</span>
@@ -66,12 +91,13 @@
                   </el-popover>
                 </el-col>
                 <el-col style="flex: 1">
-                  <el-input maxlength="512" show-word-limit size="small" type="text" v-model="legends[index-1]" ></el-input>
+                  <el-input maxlength="512" show-word-limit size="small" type="text" v-model="expressionsShow[index-1].legend" ></el-input>
                 </el-col>
               </el-row>
             </el-row>
           </transition>
-        </el-form-item>
+        </el-row>
+        </draggable>
       </div>
 
       <!--title-->
@@ -400,7 +426,7 @@
               :key="index"
             >
               <div class="chart-title chart-title-config">
-                <span class="endpoint-title-content">
+                <span class="chart-title-content">
                   <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showMapping(index)"></i>
                   <span v-show="!item.show" class="title-content-left">
                     <span v-if="item.type === 'value'">
@@ -528,7 +554,7 @@
         </div>
         <div v-for="(item,index) in chartConfig.param.columns" :key="index">
           <div class="chart-title chart-title-config">
-                <span class="endpoint-title-content">
+                <span class="chart-title-content">
                   <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showColumns(index)"></i>
                   <span v-show="!item.show" class="title-content-left">
                     <span>
@@ -593,12 +619,14 @@ import promqlInputMixin from '@/components/common/mixin/promqlInput'
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import VueTagsInput from '@johmun/vue-tags-input'
+import draggable from 'vuedraggable'
 export default {
   name: 'chartConfig',
   components: {
     promqlInput,
     nezhaColor,
-    VueTagsInput
+    VueTagsInput,
+    draggable
   },
   props: {
     type: {
@@ -674,12 +702,9 @@ export default {
     init () {
       this.chartConfig = JSON.parse(JSON.stringify(this.params))
       // 重置相关属性
-      this.promqlCount = 0
-      this.promqlKeys = []
-      this.elementIds = []
       this.expressions = []
       this.expressionsShow = []
-      this.legends = []
+      this.expressionName = []
       if (!this.chartConfig.elements.length) {
         this.addExpression()
       } else {
@@ -765,6 +790,25 @@ export default {
       }
       this.chartConfig.param.thresholds.splice(index, 1)
       this.change()
+    },
+    move () {
+
+    },
+    end (event) {
+      this.expressions = []
+      this.expressionsShow = []
+      this.expressionName = []
+      if (!this.chartConfig.elements.length) {
+        this.addExpression()
+      } else {
+        this.chartConfig.elements.forEach(item => {
+          this.addExpression(item)
+        })
+      }
+      this.change()
+    },
+    start () {
+
     }
   },
   created () {
