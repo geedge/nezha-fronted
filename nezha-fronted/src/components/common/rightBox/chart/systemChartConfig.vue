@@ -22,7 +22,7 @@
         <div class="system-chart-config-right">
           <div class="form-items--half-width-group">
             <el-form-item
-              :label="$t('dashboard.panel.chartForm.group')"
+              :label="$t('dashboard.panel.chartForm.dimension')"
               class="form-item--half-width"
               prop="param.systemGroup"
             >
