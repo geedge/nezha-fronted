@@ -64,7 +64,7 @@
             </span>
           </div>
           <transition name="el-zoom-in-top">
-            <el-row v-show="expressionsShow[index-1].show">
+            <el-row v-show="expressionsShow[index-1].show" style="margin-bottom: 10px">
               <el-form-item :prop="'elements.' + (index -1) + '.expression'"
                             :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}">
                 <promql-input
@@ -391,7 +391,7 @@
               />
               <el-input
                 size="small"
-                style="margin-top: 3px"
+                style="margin-top: 2px"
                 :placeholder="$t('placeholder.chart.threshold')"
                 v-model.number="item.value"
                 :controls="false"

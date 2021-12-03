@@ -1,5 +1,23 @@
 .chart-right-box{
   overflow-y: auto;
+  .el-tabs--border-card {
+    box-shadow: none;
+    border: none;
+  }
+  .el-tabs__nav{
+    width: 100%;
+    > div{
+      width: 25%;
+      box-sizing: border-box;
+      text-align: center;
+      padding: 0!important;
+    }
+  }
+  .el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+    color: $--color-white;
+    background: $--color-primary;
+    border: none;
+  }
 }
 .right-box__container{
   .chart-config{
@@ -8,7 +26,7 @@
     .el-form {
       padding-top: 0px;
       .thresholds-from-item{
-        margin-bottom: 0;
+        margin-bottom: 0 !important;
         flex: 1;
       }
       .el-form-item__error {

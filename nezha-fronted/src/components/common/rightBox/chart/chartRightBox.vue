@@ -57,7 +57,7 @@
         <div class="form__sub-title">
           <span>{{$t('dashboard.panel.chartForm.dataConfig')}}</span>
         </div>
-        <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange">
+        <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange" type="card">
           <el-tab-pane label="Metrics" name="1">
             <chart-config  ref="childrenFrom1" :type="'metrics'" v-if="editChart.datasource == 1" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
@@ -162,6 +162,7 @@ export default {
       arr.push(this.$refs['childrenFrom' + this.editChart.datasource].$refs.chartForm.validate())
       Promise.all(arr).then(res => {
         this.editChart.param = JSON.stringify(this.editChart.param)
+        this.editChart.panelId = this.panelId
         if (this.editChart.id) { // 修改
           this.$put('visual/panel/chart', this.editChart).then(response => {
             if (response.code === 200) {
