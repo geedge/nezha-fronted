@@ -342,3 +342,12 @@ td .nz-icon-gear:before{
     border-top: none;
   }
 }
+
+.el-tooltip__popper.is-dark {
+  background-color: $--background-color-empty !important;
+  color: $--color-text-regular !important;
+  border: 1px solid $--border-color-light;
+}
+.project-calendar.nz-input-group-middle {
+  border: 1px solid $--border-color-light;
+}

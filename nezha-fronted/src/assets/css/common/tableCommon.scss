@@ -113,6 +113,11 @@
     width: auto;
     min-width: 36px;
   }
+  .top-tools--sub.top-tools {
+    background-color: $--background-color-empty;
+    padding: 0 70px 0 15px;
+    height: 44px;
+  }
   .top-tools--sub {
     .top-tool-left {
       height: 100%;

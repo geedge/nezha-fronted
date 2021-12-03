@@ -24,16 +24,9 @@
         :show-overflow-tooltip="true"
         :label="$t('project.endpoint.element')">
         <template v-slot="scope">
-          <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
-            <div>
-              <ul>
-                <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric?scope.row.metricTip.metric:'&#45;&#45;'}}</span></li>
-                <li><span class="metirc-tip-list">type&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.type?scope.row.metricTip.type:'unknown'}}</span></li>
-                <li><span class="metirc-tip-list">help&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.help?scope.row.metricTip.help:'&#45;&#45;'}}</span></li>
-                <li><span class="metirc-tip-list">unit&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.unit?scope.row.metricTip.unit:'&#45;&#45;'}}</span></li>
-              </ul>
-            </div>
-            <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
+          <el-popover trigger="hover" placement="right">
+            <meta-data :metaDataList="metaDataList" :metricTip="scope.row.metricTip.metric" />
+            <span slot="reference"><i @mouseover="metricMetaData(scope.row)" class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
           </el-popover>
           <span style="word-break: break-all;" v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
         </template>
@@ -87,12 +80,14 @@ import axios from 'axios'
 import bus from '../../../../libs/bus'
 import chart from '@/components/page/dashboard/overview/chart'
 import { sameLabels } from '@/components/common/js/constants'
+import metaData from '@/components/common/metaData'
 
 export default {
   name: 'endpointQueryTab',
   components: {
     chartBox,
-    chart
+    chart,
+    metaData
   },
   props: {
     from: {},
@@ -153,7 +148,9 @@ export default {
         pageSize: 20,
         pageNo: 1,
         total: 0
-      }
+      },
+      metaDataList: [],
+      metaName: ''
     }
   },
   methods: {
@@ -552,6 +549,11 @@ export default {
         (this.pageObj.pageNo - 1) * this.pageObj.pageSize,
         this.pageObj.pageNo * this.pageObj.pageSize
       )
+    },
+    metricMetaData (data) {
+      this.$get('/prom/api/v1/metadata?' + 'metric=' + data.metricTip.metric + '&limit=' + 1).then(res => {
+        this.metaDataList = res.data.jvm_gc_live_data_size_bytes
+      })
     }
   },
   computed: {
