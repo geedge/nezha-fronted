@@ -187,6 +187,7 @@ export default {
     },
     selectPanel (panel) {
       this.panelName = panel.name
+      this.editChart.panelName = panel.name
       this.panelId = panel.id
       this.editChart.groupId = ''
       this.$get('visual/panel/chart?panelId=' + this.panelId + '&pageSize=-1').then(response => {

@@ -67,7 +67,7 @@
               class="form-item--half-width"
               prop="param.limit"
             >
-              <el-input-number :controls="false" v-model="chartConfig.param.limit" :placeholder="$t('placeholder.system.limit')"  size="small"/>
+              <el-input :controls="false" v-model.number="chartConfig.param.limit" :placeholder="$t('placeholder.system.limit')"  size="small"/>
             </el-form-item>
           </div>
         </div>
@@ -252,12 +252,12 @@
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
                     class="thresholds-from-item"
                   >
-                    <el-input-number
+                    <el-input
                       :controls="false"
                       size="small"
-                      v-model="item.value"
+                      v-model.number="item.value"
                       placeholder="value"
-                    ></el-input-number>
+                    ></el-input>
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'range'"
@@ -265,12 +265,12 @@
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
                     class="thresholds-from-item"
                   >
-                    <el-input-number
+                    <el-input
                       :controls="false"
                       size="small"
-                      v-model="item.from"
+                      v-model.number="item.from"
                       placeholder="from"
-                    ></el-input-number>
+                    ></el-input>
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'range'"
@@ -278,12 +278,12 @@
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
                     class="thresholds-from-item"
                   >
-                    <el-input-number
+                    <el-input
                       :controls="false"
                       size="small"
-                      v-model="item.to"
+                      v-model.number="item.to"
                       placeholder="to"
-                    ></el-input-number>
+                    ></el-input>
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'regx'"

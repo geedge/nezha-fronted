@@ -292,7 +292,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
       </div>
     </div>
     <transition name="right-box">
-      <chart-box v-if="rightBox.show" ref="addChartModal" :chart="chart" :from="$CONSTANTS.fromRoute.explore" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'explore'}" @close="handleBox(false)" @on-create-success="createSuccess"></chart-box>
+      <chartRightBox v-if="rightBox.show" ref="addChartModal" :chart="chart" :from="$CONSTANTS.fromRoute.explore" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'explore'}" @close="handleBox(false)" @on-create-success="createSuccess"></chartRightBox>
     </transition>
   </div>
 </template>
@@ -307,12 +307,14 @@ import { getUUID } from '../../../common/js/common'
 import chartDataFormat from '../../../charts/chartDataFormat'
 import logTab from './logTab'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
+import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 
 export default {
   name: 'exploreItem',
   components: {
     'promql-input': promqlInput,
     'chart-box': chartBox,
+    chartRightBox,
     chart,
     logTab
   },
@@ -911,23 +913,29 @@ export default {
     },
     saveChart () {
       const chart = {
+        id: '',
         name: '',
+        panelName: '',
         type: 'line',
-        span: 12,
-        height: '400',
-        unit: this.chartUnit,
+        span: 4,
+        datasource: '1',
+        height: 4,
+        unit: 2,
         param: {
-          url: '',
-          threshold: ''
+          stack: 0,
+          nullType: 'null',
+          legend: { placement: 'bottom', values: [], show: true },
+          thresholdShow: true,
+          thresholds: [{ value: undefined, color: '#eeeeeeff' }]
         },
         elements: [],
         panel: '',
         sync: 0,
-        groupId: '',
-        remark: ''
+        remark: '',
+        groupId: -1
       }
-      this.expressions.forEach((exp) => {
-        chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '' })
+      this.expressions.forEach((exp, index) => {
+        chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
       })
       this.chart = chart
       this.rightBox.show = true
