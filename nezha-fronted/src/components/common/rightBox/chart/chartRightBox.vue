@@ -95,13 +95,7 @@
 import { fromRoute } from '@/components/common/js/constants'
 import editRigthBox from '@/components/common/mixin/editRigthBox'
 import { resetZIndex } from '@/components/common/js/common'
-import chartPreview from '@/components/charts/chartPreview'
-import alertChartParam from '@/components/page/dashboard/alertChartParam'
-import promqlInput from '@/components/page/dashboard/explore/promqlInput'
-import richTextEditor from '@/components/charts/richTextEditor'
 import selectPanel from '@/components/common/popBox/selectPanel'
-import nezhaColor from '@/components/common/nezhaColor'
-import diagram from '@/components/common/ChartDiagram/diagram'
 import chartConfig from '@/components/common/rightBox/chart/chartConfig'
 import otherChartConfig from '@/components/common/rightBox/chart/otherChartConfig'
 import systemChartConfig from '@/components/common/rightBox/chart/systemChartConfig'
@@ -127,14 +121,7 @@ export default {
   },
   mixins: [rz, editRigthBox],
   components: {
-    System,
-    'chart-preview': chartPreview,
-    'alert-chart-param': alertChartParam,
-    'promql-input': promqlInput,
-    'rich-text-editor': richTextEditor,
     selectPanel,
-    nezhaColor,
-    diagram,
     chartConfig,
     systemChartConfig,
     otherChartConfig
@@ -267,14 +254,20 @@ export default {
           span: 4,
           height: 4,
           unit: 2,
-          type: 'stat',
+          type: 'singleStat',
           param: {
             refer: 1,
             system: '',
             systemGroup: '',
             systemSelect: '',
             sort: 'desc',
-            limit: 100
+            limit: undefined,
+            nullType: 'null',
+            statistics: 'last',
+            valueMapping: {
+              show: true,
+              mapping: []
+            }
           }
         }
         delete this.editChart.elements

@@ -74,7 +74,7 @@
       </div>
 
       <!--title-->
-      <div class="form__sub-title">
+      <div class="form__sub-title" >
         <span>{{$t('dashboard.panel.chartForm.displayConfig')}}</span>
       </div>
       <div class="form-items--half-width-group">

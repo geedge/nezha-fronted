@@ -10,6 +10,7 @@ export default {
         case 'singleStat':
         case 'bar':
         case 'treemap':
+        case 'guage':
         case 'pie':
           return false
         default: return false
@@ -25,6 +26,7 @@ export default {
         case 'singleStat':
         case 'bar':
         case 'treemap':
+        case 'guage':
         case 'pie':
           return true
         default: return false
@@ -39,6 +41,7 @@ export default {
         case 'table':
         case 'singleStat':
         case 'bar':
+        case 'guage':
         case 'treemap':
         case 'pie':
           return false
@@ -54,6 +57,7 @@ export default {
           return false
         case 'singleStat':
         case 'bar':
+        case 'guage':
         case 'treemap':
         case 'pie':
           return true
@@ -69,6 +73,7 @@ export default {
         case 'point':
         case 'singleStat':
         case 'bar':
+        case 'guage':
         case 'treemap':
         case 'pie':
           return false
