@@ -22,6 +22,7 @@ const chartData = {
         weight: 0,
         param: '{' +
           '   "style":"area",' +
+          '   "showHeader":false,' +
           '   "stack":true,' +
           '   "legend":{' +
           '        "placement":"bottom",' +
@@ -135,6 +136,7 @@ const chartData = {
         weight: 1,
         param: '{' +
           '   "style":"point",' +
+          '   "showHeader":true,' +
           '   "stack":false,' +
           '    "legend":{' +
           '        "placement":"right"' +
@@ -237,6 +239,7 @@ const chartData = {
         dataSource: 1,
         param: '{' +
           '   "style":"line",' +
+          '   "showHeader":true,' +
           '   "stack":true,' +
           '    "legend":{' +
           '        "placement":"left"' +

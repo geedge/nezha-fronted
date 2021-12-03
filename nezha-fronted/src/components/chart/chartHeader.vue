@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-header">
+  <div :class="{'chart-header--float': !chartInfo.param.showHeader}" class="chart-header">
     <div class="chart-header__title">{{chartInfo.name}}</div>
     <div class="chart-header__tools">
       <span v-if="chartInfo.remark" class="chart-header__tool">
