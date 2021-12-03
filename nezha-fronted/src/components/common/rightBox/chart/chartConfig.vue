@@ -9,6 +9,7 @@
     >
       <div
         v-if="chartConfig.elements"
+        class="metrics-input-box"
       >
         <el-form-item
           :key="index"
@@ -27,14 +28,14 @@
               </span>
             </span>
             <span>
-              <span @click="addExpression('')">
+              <span @click="addExpression('')" style="margin-right: 5px">
                   <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
               </span>
-              <span class="nz-icon-copy">
-                  <i @click="copyExpression(index - 1)" class="nz-icon nz-icon-override"></i>
+              <span @click="copyExpression(index - 1)" style="margin-right: 5px">
+                  <i  class="nz-icon nz-icon-override"></i>
               </span>
-              <span class="nz-icon-minus-medium">
-                  <i @click="removeExpression(index - 1)" class="nz-icon nz-icon-minus"></i>
+              <span @click="removeExpression(index - 1)" class="nz-icon-minus-medium" style="margin-right: 5px">
+                  <i  class="nz-icon nz-icon-minus"></i>
               </span>
             </span>
           </div>
@@ -56,7 +57,7 @@
                 @change="expressionChange"
                 @removeExpression="removeExpression"
               ></promql-input>
-              <el-row style="margin-top: 18px">
+              <el-row style="margin-top: 18px;display: flex">
                 <el-col class="legend-title">
                   <span class="legend-title__span">{{$t('dashboard.panel.chartForm.legend')}}&nbsp;</span>
                   <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
@@ -64,7 +65,7 @@
                     <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                   </el-popover>
                 </el-col>
-                <el-col style="width: calc(100% - 160px);">
+                <el-col style="flex: 1">
                   <el-input maxlength="512" show-word-limit size="small" type="text" v-model="legends[index-1]" ></el-input>
                 </el-col>
               </el-row>
@@ -150,7 +151,7 @@
           prop="param.limit">
           <el-input-number
             size="small"
-            placeholder=""
+            :placeholder="$t('placeholder.log.limit')"
             v-model="chartConfig.param.limit"
             :controls="false"
             @change="change"/>
@@ -319,7 +320,7 @@
                 v-model="chartConfig.param.legend.values"
                 multiple
                 collapse-tags
-                placeholder=""
+                :placeholder="$t('el.select.placeholder')"
                 popper-class="right-box-select-top prevent-clickoutside"
                 size="small"
                 @change="change, $forceUpdate()"
@@ -363,7 +364,7 @@
               <el-input-number
                 size="small"
                 style="margin-top: 3px"
-                placeholder=""
+                :placeholder="$t('placeholder.chart.threshold')"
                 v-model="item.value"
                 :controls="false"
                 @blur="sortThresholds"
@@ -419,14 +420,14 @@
                   </span>
                 </span>
                 <span>
-                  <span @click="addMapping('')">
-                      <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
+                  <span @click="addMapping('')" style="margin-right: 5px">
+                      <i class="nz-icon nz-icon-create-square"></i>
                   </span>
-                  <span class="nz-icon-copy">
-                      <i @click="copyMapping(index)" class="nz-icon nz-icon-override"></i>
+                  <span @click="copyMapping(index)" style="margin-right: 5px">
+                      <i  class="nz-icon nz-icon-override"></i>
                   </span>
-                  <span class="nz-icon-minus-medium">
-                      <i @click="removeMapping(index)" class="nz-icon nz-icon-minus"></i>
+                  <span @click="removeMapping(index)" style="margin-right: 5px">
+                      <i  class="nz-icon nz-icon-minus"></i>
                   </span>
                 </span>
               </div>
@@ -507,7 +508,7 @@
                     <div class='mapping-display'>Display</div>
                   </div>
                   <el-form-item :prop="'param.valueMapping.mapping.' + index + 'display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item">
-                    <el-input v-model="item.display"  style="margin-right: 10px" size="small"/>
+                    <el-input v-model="item.display"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small"/>
                   </el-form-item>
                   <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(val, key, index)}"/>
                 </el-row>
@@ -618,9 +619,6 @@ export default {
   data () {
     return {
       rules: {
-        'param.limit': [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
-        ]
       },
       promqlType: 'log',
       chartTypeList: [

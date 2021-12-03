@@ -18,6 +18,23 @@
         width: 100%;
       }
     }
+    .metrics-input-box{
+      .input-box .el-textarea .el-textarea__inner {
+        width: 508px;
+      }
+      .metric-selector-input-box{
+        line-height: 32px;
+        .el-input__count{
+          right: -38px !important;
+        }
+      }
+      .el-col-24{
+        line-height: 32px;
+      }
+      .el-input--small{
+        line-height: 32px;
+      }
+    }
     .chart-title-config {
       border: 1px solid $--border-color-light;
       border-radius: 2px;
@@ -29,6 +46,9 @@
       margin-bottom: 10px;
       box-sizing: border-box;
       height: 32px;
+      .nz-icon{
+        cursor: pointer;
+      }
       .title-content-left{
         display: inline-flex;
         align-items: center;
@@ -58,6 +78,7 @@
       justify-items: center;
       .el-form-item__content{
         display: flex;
+        line-height: 32px;
         align-items: center;
         justify-items: center;
         width: 100%;
