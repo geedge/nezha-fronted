@@ -1,5 +1,5 @@
 <template>
-  <div class="nz-chart">
+  <div :style="chartInfo.param.showHeader ? '' : 'padding-top: 15px;'" class="nz-chart">
     <loading :loading="loading"></loading>
     <chart-no-data v-if="isNoData"></chart-no-data>
     <template v-else>

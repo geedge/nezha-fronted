@@ -2,9 +2,24 @@
   border: 1px solid $--chart-box-border-color;
   height: 100%;
   display: flex;
+  position: relative;
   flex-direction: column;
 
   .chart-header {
+    &.chart-header--float {
+      position: absolute;
+      width: 100%;
+      z-index: 100;
+      box-sizing: border-box;
+      height: 10px;
+      opacity: 0;
+      transition: all linear .2s;
+
+      &:hover {
+        height: 39px;
+        opacity: 1;
+      }
+    }
     display: flex;
     justify-content:space-between;
     align-items:center;
