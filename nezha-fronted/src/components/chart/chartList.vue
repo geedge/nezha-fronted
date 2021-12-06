@@ -121,6 +121,9 @@ export default {
     showFullscreen (show, chartInfo) {
       this.fullscreen.chartInfo = chartInfo
       this.fullscreen.visible = show
+    },
+    cleanData () {
+
     }
   },
   mounted () {

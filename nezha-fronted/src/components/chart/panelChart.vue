@@ -77,14 +77,15 @@ export default {
       this.query(elements, startTime, endTime, step)
     },
     query (elements, startTime, endTime, step) {
+      console.log(this.chartInfo.datasource,elements, startTime, endTime, step)
       try {
-        switch (this.chartInfo.dataSource) {
+        switch (this.chartInfo.datasource) {
           case 'metrics':
           case 'logs': {
             let urlPre = ''
-            if (this.chartInfo.dataSource === 1) {
+            if (this.chartInfo.datasource === 'metrics') {
               urlPre = '/prom'
-            } else if (this.chartInfo.dataSource === 2) {
+            } else if (this.chartInfo.datasource === 'logs') {
               urlPre = '/logs/loki'
             }
             const requests = elements.map((element) => {

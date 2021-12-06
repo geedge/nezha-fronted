@@ -367,7 +367,7 @@ export const fromRoute = {
   chartTemp: 'chartTemp'
 }
 
-export const chartDataSource = [
+export const chartdatasource = [
   {
     label: 'metrics',
     value: 1
