@@ -287,7 +287,7 @@ export default {
       this.terminalSocket.onclose = () => {
         // 报错sorry的，还没来得及看信息就关闭
         // this.$emit("closeConsole",this.terminal.name);//
-        this.term.setOption('disableStdin', true)
+        this.term && this.term.setOption('disableStdin', true)
       }
 
       // 错误
@@ -319,7 +319,7 @@ export default {
       this.conFinish = false
     },
     setFontSize (fontSize) {
-      this.term.setOption('fontSize', fontSize)
+      this.term && this.term.setOption('fontSize', fontSize)
       const consoleBox = document.getElementById('ternimalContainer' + this.idIndex)
       const width = document.body.clientWidth// 可视宽度
       let height = parseInt(consoleBox.style.height)

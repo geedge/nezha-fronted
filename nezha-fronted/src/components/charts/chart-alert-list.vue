@@ -863,7 +863,7 @@ export default {
         this.$refs['localLoadingScreen' + this.chartIndex].endLoading()
       } else {
         // this.showLoading = false;
-        this.$refs['localLoading' + this.chartIndex].endLoading()
+        this.$refs['localLoading' + this.chartIndex] && this.$refs['localLoading' + this.chartIndex].endLoading()
       }
     },
     resize (chartItem) {

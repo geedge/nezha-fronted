@@ -1424,7 +1424,7 @@ export default {
         const limit = geo[0].scaleLimit
         const value = zoom + val
         if (value <= limit.max && value >= limit.min) {
-          this.$refs.dataCenterMap.setOption({ geo: { zoom: value } })
+          this.$refs.dataCenterMap && this.$refs.dataCenterMap.setOption({ geo: { zoom: value } })
         }
       }
     },

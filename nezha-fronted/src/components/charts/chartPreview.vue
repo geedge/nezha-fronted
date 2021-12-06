@@ -1081,9 +1081,9 @@ export default {
         this.echartModalStore.resize()
         this.echartModalStore.clear()
         if (dataArg.length < 1) {
-          this.echartModalStore.setOption(chartConfig.getOption('noData'))
+          this.echartModalStore && this.echartModalStore.setOption(chartConfig.getOption('noData'))
         } else {
-          this.echartModalStore.setOption(option)// 创建图表
+          this.echartModalStore && this.echartModalStore.setOption(option)// 创建图表
         }
 
         this.$refs.loadingPreview.endLoading()
@@ -1295,9 +1295,9 @@ export default {
         this.echartModalStore.resize()
         this.echartModalStore.clear()
         if (dataArg[0].data.length < 1) {
-          this.echartModalStore.setOption(chartConfig.getOption('noData'))
+          this.echartModalStore && this.echartModalStore.setOption(chartConfig.getOption('noData'))
         } else {
-          this.echartModalStore.setOption(option)// 创建图表
+          this.echartModalStore && this.echartModalStore.setOption(option)// 创建图表
         }
 
         this.$refs.loadingPreview.endLoading()
@@ -1360,9 +1360,9 @@ export default {
         this.echartModalStore.resize()
         this.echartModalStore.clear()
         if (dataArg[0].data.length < 1) {
-          this.echartModalStore.setOption(chartConfig.getOption('noData'))
+          this.echartModalStore && this.echartModalStore.setOption(chartConfig.getOption('noData'))
         } else {
-          this.echartModalStore.setOption(option)// 创建图表
+          this.echartModalStore && this.echartModalStore.setOption(option)// 创建图表
         }
 
         this.$refs.loadingPreview.endLoading()

@@ -195,7 +195,7 @@ export default {
       if (area === 'screen') {
         this.$refs['localLoadingScreen' + this.chartIndex].endLoading()
       } else {
-        this.$refs['localLoading' + this.chartIndex].endLoading()
+        this.$refs['localLoading' + this.chartIndex] && this.$refs['localLoading' + this.chartIndex].endLoading()
       }
     },
     clearChart () {

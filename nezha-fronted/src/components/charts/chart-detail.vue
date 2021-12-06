@@ -404,7 +404,7 @@ export default {
       this.$refs['localLoading' + this.chartIndex].startLoading()
     },
     endLoading (area) {
-      this.$refs['localLoading' + this.chartIndex].endLoading()
+      this.$refs['localLoading' + this.chartIndex] && this.$refs['localLoading' + this.chartIndex].endLoading()
     },
     preview () {
       this.$refs.chartsPreview.show(this.data)
@@ -538,7 +538,7 @@ export default {
         series: series
       }
       const chart = echarts.init(document.querySelector('#littleChart'))
-      chart.setOption(option)// 创建图表
+      chart && chart.setOption(option)// 创建图表
     },
     timeFormat (val) {
       return this.utcTimeToTimezoneStr(val)
