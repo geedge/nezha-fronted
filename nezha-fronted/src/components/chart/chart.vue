@@ -17,6 +17,18 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
       ></chartHexagon>
+      <chart-url
+        v-if="isUrl(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+      ></chart-url>
+      <chart-text
+        v-if="isText(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+      ></chart-text>
     </template>
   </div>
 </template>
@@ -41,7 +53,7 @@ import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
-import { getOption, isTimeSeries, isHexagonFigure } from './chart/tools'
+import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -76,7 +88,7 @@ export default {
   },
   computed: {
     isNoData () {
-      return !this.chartData || this.chartData.length === 0
+      return !this.chartData || this.chartData.length === 0 || this.chartData.type == 'url' ? false : true || this.chartData == 'text' ? false : true
     },
     chartOption () {
       if (this.customChartOption) {
@@ -89,6 +101,8 @@ export default {
   methods: {
     isTimeSeries,
     isHexagonFigure,
+    isUrl,
+    isText,
     resize () {
       this.$refs['chart' + this.chartInfo.id].resize()
     }
