@@ -72,7 +72,7 @@
 .nz-chart-dropdown {
   position: absolute;
   top: 30px;
-  left: calc(100% - 210px);
+  left: calc(100% - 160px);
   transform-origin: center top;
   z-index: 1000;
   width: 200px;
@@ -708,7 +708,7 @@
 .chart-title-pit {
   position: absolute;
   top: 40px;
-  min-width: 200px;
+  min-width: 170px;
   min-height: 20px;
   line-height: 20px;
   padding: 10px;

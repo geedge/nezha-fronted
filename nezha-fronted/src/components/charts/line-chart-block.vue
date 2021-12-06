@@ -340,7 +340,7 @@ export default {
       this.caretShow = true
       if (getChart(this.chartIndex)) {
         setTimeout(() => {
-          getChart(this.chartIndex).setOption({
+          getChart(this.chartIndex) && getChart(this.chartIndex).setOption({
             toolbox: {
               show: true
             }
@@ -352,7 +352,7 @@ export default {
       this.caretShow = false
       if (getChart(this.chartIndex)) {
         setTimeout(() => {
-          getChart(this.chartIndex).setOption({
+          getChart(this.chartIndex) && getChart(this.chartIndex).setOption({
             toolbox: {
               show: false
             }
@@ -363,7 +363,7 @@ export default {
     mouseEnterFullChart () {
       if (this.echartModalStore) {
         setTimeout(() => {
-          this.echartModalStore.setOption({
+          this.echartModalStore && this.echartModalStore.setOption({
             toolbox: {
               show: true
             }
@@ -375,7 +375,7 @@ export default {
       if (this.echartModalStore) {
         setTimeout(() => {
           if (this.echartModalStore) {
-            this.echartModalStore.setOption({
+            this.echartModalStore && this.echartModalStore.setOption({
               toolbox: {
                 show: false
               }
@@ -446,7 +446,7 @@ export default {
         if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
           delete option.yAxis.maxInterval
         }
-        getChart(this.chartIndex).setOption({
+        getChart(this.chartIndex) && getChart(this.chartIndex).setOption({
           yAxis: {
             ...option.yAxis
           }
@@ -562,7 +562,7 @@ export default {
         if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
           delete option.yAxis.maxInterval
         }
-        echart.setOption({
+        echart && echart.setOption({
           yAxis: {
             ...option.yAxis
           }
@@ -1251,12 +1251,12 @@ export default {
             }
             option.series = self.seriesItemArrScreen
             if (dataArg && dataArg.length > 0) {
-              self.echartModalStore.setOption(option)// 显示全屏界面
+              self.echartModalStore && self.echartModalStore.setOption(option)// 显示全屏界面
               self.noData = false
             } else {
               self.noData = true
               option = chartConfig.getOptionNoData('noData')
-              self.echartModalStore.setOption(option)// 显示全屏界面
+              self.echartModalStore && self.echartModalStore.setOption(option)// 显示全屏界面
             }
             self.echartModalStore.on('finished', function () {
               const legendDiv = document.getElementById('screenLegendArea' + self.chartIndex)
@@ -1944,7 +1944,7 @@ export default {
       if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
         delete option.yAxis.maxInterval
       }
-      getChart(this.chartIndex).setOption({
+      getChart(this.chartIndex) && getChart(this.chartIndex).setOption({
         series: this.seriesItem,
         yAxis: {
           ...option.yAxis
@@ -1991,7 +1991,7 @@ export default {
       if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
         delete option.yAxis.maxInterval
       }
-      this.echartModalStore.setOption({
+      this.echartModalStore && this.echartModalStore.setOption({
         series: this.seriesItemScreen,
         yAxis: {
           ...option.yAxis
@@ -2127,7 +2127,7 @@ export default {
           } else {
             minInterval = 20 * 60 * 1000
           }
-          getChart(this.chartIndex).setOption({ xAxis: { minInterval: minInterval } })
+          getChart(this.chartIndex) && getChart(this.chartIndex).setOption({ xAxis: { minInterval: minInterval } })
         } else {
           if (this.$refs.resizeBox.offsetWidth < 200) {
             splitNumber = 1
@@ -2136,7 +2136,7 @@ export default {
           } else if (this.$refs.resizeBox.offsetWidth < 500) {
             splitNumber = 5
           }
-          getChart(this.chartIndex).setOption({ xAxis: { splitNumber: splitNumber } })
+          getChart(this.chartIndex) && getChart(this.chartIndex).setOption({ xAxis: { splitNumber: splitNumber } })
         }
       }
     }

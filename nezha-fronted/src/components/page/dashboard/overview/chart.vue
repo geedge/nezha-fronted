@@ -89,7 +89,7 @@ export default {
       return this.chart.getOption()
     },
     setOption: function (option) {
-      this.chart.setOption(option)
+      this.chart && this.chart.setOption(option)
     },
     setSeries: function (series, legend, legendData) {
       if (!this.chart) {
@@ -180,12 +180,12 @@ export default {
         if (this.option.series instanceof Array) {
           this.option.series = this.option.series.filter((item, index) => index < this.dataSize)
         }
-        this.chart.setOption(this.option)
+        this.chart && this.chart.setOption(this.option)
       } else {
         this.noData = true
         const option = chartConfig.getOption('noData')
         this.chart.clear()
-        this.chart.setOption(option)
+        this.chart && this.chart.setOption(option)
       }
 
       // 坐标轴label鼠标悬浮提示
@@ -527,7 +527,7 @@ export default {
       const option = {
         series: this.optionSeriesAll
       }
-      this.chart.setOption(option)
+      this.chart && this.chart.setOption(option)
       this.chart.resize()
     },
     chartInit () {

@@ -223,7 +223,7 @@ export default {
         this.$refs['localLoadingScreen' + this.chartIndex].endLoading()
       } else {
         // this.showLoading = false;
-        this.$refs['localLoading' + this.chartIndex].endLoading()
+        this.$refs['localLoading' + this.chartIndex] && this.$refs['localLoading' + this.chartIndex].endLoading()
       }
     },
     showLoad (chartItem) {
@@ -493,7 +493,7 @@ export default {
       this.$nextTick(() => {
         const vm = this
         setTimeout(function () {
-          const divHeight = self.$refs.legendArea.offsetHeight
+          const divHeight = self.$refs.legendArea ? self.$refs.legendArea.offsetHeight : 20
           if (!self.chartData.height) {
             getChart(self.chartIndex).resize({ height: (400 - divHeight - self.$chartResizeTool.titleHeight - self.$chartResizeTool.chartBlankHeight) })
           } else {
@@ -568,16 +568,16 @@ export default {
           if (self.pieData[0]) {
             if (self.pieData[0].data.length > 0) {
               getChart(self.chartIndex).clear()
-              getChart(self.chartIndex).setOption(self.option)// 创建图表
+              getChart(self.chartIndex) && getChart(self.chartIndex).setOption(self.option)// 创建图表
               self.noData = false
             } else {
               self.noData = true
               self.option = chartConfig.getOption('noData')
               getChart(self.chartIndex).clear()
-              getChart(self.chartIndex).setOption(self.option)// 创建图表
+              getChart(self.chartIndex) && getChart(self.chartIndex).setOption(self.option)// 创建图表
             }
           }
-          self.$refs['localLoading' + self.chartIndex].endLoading()
+          self.$refs['localLoading' + self.chartIndex] && self.$refs['localLoading' + self.chartIndex].endLoading()
           self.firstShow = true // 展示操作按键
         }, 100)
       })
@@ -616,12 +616,12 @@ export default {
         setTimeout(function () {
           self.$set(self.option.tooltip, 'formatter', self.formatterFunc)
           if (self.pieData[0].data.length > 0) {
-            self.echartScreen.setOption(self.option)// 显示全屏界面
+            self.echartScreen && self.echartScreen.setOption(self.option)// 显示全屏界面
             self.noData = false
           } else {
             self.noData = true
             self.option = chartConfig.getOption('noData')
-            self.echartScreen.setOption(self.option)// 显示全屏界面
+            self.echartScreen && self.echartScreen.setOption(self.option)// 显示全屏界面
           }
           self.echartScreen.on('finished', function () {
             const legendDiv = document.getElementById('screenLegendArea' + self.chartIndex)

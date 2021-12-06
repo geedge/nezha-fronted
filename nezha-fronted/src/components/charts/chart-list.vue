@@ -1848,7 +1848,7 @@ export default {
   },
   mounted () {
     this.init()
-    window.addEventListener('resize', () => this.resize(), false)
+    window.addEventListener('resize', this.resize, false)
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.resize, false)

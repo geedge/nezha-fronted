@@ -654,8 +654,8 @@ export default {
         ]
         prometheusOption.title.text = vm.$t('config.agent.agent.agent')
         prometheusOption.legend.data = [vm.$t('config.agent.up'), vm.$t('config.agent.down')]
-        tooltipEndpointChart.setOption(endpointOption, true)
-        tooltipPrometheusChart.setOption(prometheusOption, true)
+        tooltipEndpointChart && tooltipEndpointChart.setOption(endpointOption, true)
+        tooltipPrometheusChart && tooltipPrometheusChart.setOption(prometheusOption, true)
       }, 100)
       /* setTimeout(function() {
           tooltipEndpointChart.setOption(endpointOption);
@@ -1009,7 +1009,7 @@ export default {
         const limit = geo[0].scaleLimit
         const value = zoom + val
         if (value <= limit.max && value >= limit.min) {
-          this.$refs.dataCenterMap.setOption({ geo: { zoom: value } })
+          this.$refs.dataCenterMap && this.$refs.dataCenterMap.setOption({ geo: { zoom: value } })
         }
       }
     },

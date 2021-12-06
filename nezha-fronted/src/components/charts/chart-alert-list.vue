@@ -858,7 +858,8 @@ export default {
         // this.showLoadingScreen = false;
         this.$refs['localLoadingScreen' + this.chartIndex].endLoading()
       } else {
-        this.$refs['localLoading' + this.chartIndex].endLoading()
+        // this.showLoading = false;
+        this.$refs['localLoading' + this.chartIndex] && this.$refs['localLoading' + this.chartIndex].endLoading()
       }
     },
     resize (chartItem) {
