@@ -26,10 +26,6 @@
       :that="assetData"
       :type="fromType"
       :LRTriangle="LRTriangle"
-      :style="{
-        'transform-origin': `0px 300px`,
-        transform:`scale(${assetData.rate})`
-      }"
     ></alertLabel>
   </div>
 </template>
@@ -260,7 +256,8 @@ export default {
         clearTimeout(this.timer)
       }
       this.assetData.id = data
-      const boxWidth = document.getElementsByClassName('list-page')[0].offsetWidth
+      const boxWidth = this.$refs.hexagonBox.$el.offsetWidth
+      console.log(boxWidth)
       this.boxWidth = boxWidth
       // this.assetData.rate=window.screen.height/1297;
       this.$nextTick(() => {
@@ -275,23 +272,26 @@ export default {
       this.calcPosition(e)
     },
     calcPosition (e) {
+      console.log(e)
       const boxWidth = this.boxWidth
       const distance = this.fromType === 'asset' ? 300 : 50
-      const minus = (e.pageY - distance) + this.$refs.alertLabel.$el.offsetHeight - window.innerHeight
+      const minus = (e.offsetY - distance) + this.$refs.alertLabel.$el.offsetHeight - window.innerHeight
       // window.innerHeight
       if (minus <= 0) {
-        this.assetData.position.top = e.pageY - distance
+        this.assetData.position.top = e.offsetY - distance
         this.assetData.position.mt = distance
       } else if (minus > 0) {
         this.assetData.position.top = window.innerHeight - this.$refs.alertLabel.$el.offsetHeight
-        this.assetData.position.mt = e.pageY - (window.innerHeight - this.$refs.alertLabel.$el.offsetHeight)
+        this.assetData.position.mt = e.offsetY - (window.innerHeight - this.$refs.alertLabel.$el.offsetHeight)
       }
-      if (boxWidth / 2 > e.pageX - 200) {
-        this.assetData.position.left = e.pageX + 35
+      if (boxWidth / 2 > e.offsetX) {
+        console.log(123)
+        this.assetData.position.left = e.offsetX + 35
         this.assetData.position.right = 0
         this.LRTriangle = true
       } else {
-        this.assetData.position.right = window.innerWidth - (e.pageX - 35)
+        console.log(456)
+        this.assetData.position.right = boxWidth - (e.offsetX - 35)
         this.assetData.position.left = 0
         this.LRTriangle = false
       }

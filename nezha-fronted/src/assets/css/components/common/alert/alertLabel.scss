@@ -58,19 +58,19 @@
     max-width: 210px;
   }
 }
-.alert-label::after, .alert-labelUp::after {
-  content: '';
-  display: block;
-  width:0;
-  height:0;
-  overflow: hidden;
-  font-size: 0;
-  line-height: 0;
-  border: 5px;
-  border-style: dashed solid dashed dashed;
-  border-color: transparent $--popover-background-color transparent transparent;
-  position: absolute;
-  top: 20px;
-  left: 0;
-  transform: translate(-100%, -50%);
-}
+//.alert-label::after, .alert-labelUp::after {
+//  content: '';
+//  display: block;
+//  width:0;
+//  height:0;
+//  overflow: hidden;
+//  font-size: 0;
+//  line-height: 0;
+//  border: 5px;
+//  border-style: dashed solid dashed dashed;
+//  border-color: transparent $--popover-background-color transparent transparent;
+//  position: absolute;
+//  top: 20px;
+//  left: 0;
+//  transform: translate(-100%, -50%);
+//}

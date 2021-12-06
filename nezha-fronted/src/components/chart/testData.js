@@ -463,6 +463,7 @@ const chartData = {
         dataSource: 4,
         param: '{' +
           '   "from":"module",' +
+          '   "showHeader":true,' +
           '   "length":"48",' +
           '   "showTooltip": true ,' +
           '   "col":"8"' +
