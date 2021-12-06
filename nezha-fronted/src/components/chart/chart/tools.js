@@ -55,6 +55,14 @@ export function isHexagonFigure (type) {
   return type === chartType.hexagonFigure
 }
 
+export function isUrl (type) {
+  return type === chartType.url
+}
+
+export function isText (type) {
+  return type === chartType.text
+}
+
 export function initColor (colorNum = 20) {
   const colorList = [
     '#FF5200', '#3685FF', '#FF8D00', '#00DCA2',

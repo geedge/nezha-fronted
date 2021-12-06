@@ -661,6 +661,236 @@ const chartData = {
         varType: null,
         varId: null,
         varName: null
+      },
+      {
+        id: 690487,
+        name: '123',
+        panelId: 1243,
+        groupId: 0,
+        dataSource: 6,
+        span: 12,
+        height: 6,
+        updateBy: 1,
+        updateAt: '2021-11-10 07:06:09',
+        type: 'url',
+        unit: 2,
+        weight: 0,
+        param: '{' +
+          '   "style":"area",' +
+          '   "showHeader":false,' +
+          '   "stack":true,' +
+          '   "legend":{' +
+          '        "placement":"bottom",' +
+          '        "values":["min","max","avg","first","last","total"]' +
+          '    },' +
+          '    "thresholds":[{' +
+          '        "color":"#eee",' +
+          '        "val":"0.9"' +
+          '    },{' +
+          '        "color":"#aaa",' +
+          '        "val":"1.1"' +
+          '    }],' +
+          '    "nullType":"zero",' +
+          '    "url":"http://192.168.36.91"' +
+          '}',
+        pid: null,
+        buildIn: 0,
+        remark: 'url',
+        seq: null,
+        x: 8,
+        y: 6,
+        w: 6,
+        h: 4,
+        i: 690487,
+        elements: [
+          {
+            id: 68527,
+            chartId: 690487,
+            // expression: 'up{asset="44.37"}',
+            expression: 'label_replace(up{instance=~\'.*10090\',job=\'\'},"asset","$1","instance","(.*)")',
+            type: 'expert',
+            legend: '{{asset}}',
+            buildIn: 0,
+            seq: null
+          },
+          {
+            id: 68528,
+            chartId: 690487,
+            expression: 'Hadoop_HBase_Healthy',
+            type: 'expert',
+            legend: '',
+            buildIn: 0,
+            seq: null
+          }
+        ],
+        sync: null,
+        panel: {
+          id: 1243,
+          name: 'test',
+          createBy: null,
+          type: null,
+          link: null,
+          pid: null,
+          weight: null,
+          buildIn: null,
+          seq: null,
+          children: null,
+          parent: null,
+          chartNum: null
+        },
+        group: {
+          id: 0,
+          name: null,
+          panelId: null,
+          groupId: null,
+          span: null,
+          height: null,
+          updateBy: null,
+          updateAt: null,
+          type: null,
+          unit: null,
+          weight: null,
+          param: null,
+          pid: null,
+          buildIn: null,
+          remark: null,
+          seq: null,
+          x: null,
+          y: null,
+          elements: null,
+          sync: null,
+          panel: null,
+          group: null,
+          children: null,
+          chartNums: null,
+          asset: null,
+          varType: null,
+          varId: null,
+          varName: null
+        },
+        children: [
+
+        ],
+        chartNums: null,
+        asset: null,
+        varType: null,
+        varId: null,
+        varName: null
+      },
+      {
+        id: 690489,
+        name: '123',
+        panelId: 1243,
+        groupId: 0,
+        dataSource: 5,
+        span: 12,
+        height: 6,
+        updateBy: 1,
+        updateAt: '2021-11-10 07:06:09',
+        type: 'text',
+        unit: 2,
+        weight: 0,
+        param: '{' +
+          '   "style":"area",' +
+          '   "showHeader":false,' +
+          '   "stack":true,' +
+          '   "legend":{' +
+          '        "placement":"bottom",' +
+          '        "values":["min","max","avg","first","last","total"]' +
+          '    },' +
+          '    "thresholds":[{' +
+          '        "color":"#eee",' +
+          '        "val":"0.9"' +
+          '    },{' +
+          '        "color":"#aaa",' +
+          '        "val":"1.1"' +
+          '    }],' +
+          '    "nullType":"zero",' +
+          '    "text": "<div class=\\"editor-core ql-container ql-snow\\"><div class=\\"ql-editor\\"><p>ss</p></div></div>"' +
+          '}',
+        pid: null,
+        buildIn: 0,
+        remark: 'text',
+        seq: null,
+        x: 10,
+        y: 8,
+        w: 6,
+        h: 4,
+        i: 690489,
+        elements: [
+          {
+            id: 68531,
+            chartId: 690489,
+            // expression: 'up{asset="44.37"}',
+            expression: 'label_replace(up{instance=~\'.*10090\',job=\'\'},"asset","$1","instance","(.*)")',
+            type: 'expert',
+            legend: '{{asset}}',
+            buildIn: 0,
+            seq: null
+          },
+          {
+            id: 68532,
+            chartId: 690489,
+            expression: 'Hadoop_HBase_Healthy',
+            type: 'expert',
+            legend: '',
+            buildIn: 0,
+            seq: null
+          }
+        ],
+        sync: null,
+        panel: {
+          id: 1243,
+          name: 'test',
+          createBy: null,
+          type: null,
+          link: null,
+          pid: null,
+          weight: null,
+          buildIn: null,
+          seq: null,
+          children: null,
+          parent: null,
+          chartNum: null
+        },
+        group: {
+          id: 0,
+          name: null,
+          panelId: null,
+          groupId: null,
+          span: null,
+          height: null,
+          updateBy: null,
+          updateAt: null,
+          type: null,
+          unit: null,
+          weight: null,
+          param: null,
+          pid: null,
+          buildIn: null,
+          remark: null,
+          seq: null,
+          x: null,
+          y: null,
+          elements: null,
+          sync: null,
+          panel: null,
+          group: null,
+          children: null,
+          chartNums: null,
+          asset: null,
+          varType: null,
+          varId: null,
+          varName: null
+        },
+        children: [
+
+        ],
+        chartNums: null,
+        asset: null,
+        varType: null,
+        varId: null,
+        varName: null
       }
     ]
   },

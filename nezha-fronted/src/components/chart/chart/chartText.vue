@@ -1,13 +1,35 @@
 <template>
-
+ <div class="mt-10 rich-text-container" v-cloak style="height: 100%;width: 100%;">
+   <div :id="'chartContainer' + chartInfo.type"  ref="chartContainer" class="text-content" >
+     <el-scrollbar style="height: 100%;" class="el-scrollbar-normal">
+       <div style="height: 100%;" v-html="text" ></div>
+     </el-scrollbar>
+   </div>
+ </div>
 </template>
 
 <script>
 export default {
-  name: 'chart-text'
+  name: 'chart-text',
+  props: {
+    chartInfo: {},
+    chartData: {}
+  },
+  data () {
+    return {
+      text: ''
+    }
+  },
+  methods: {
+  },
+  watch: {
+    chartInfo: {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        this.text = n.param.text
+      }
+    }
+  }
 }
 </script>
-
-<style scoped>
-
-</style>
