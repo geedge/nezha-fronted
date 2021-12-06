@@ -109,6 +109,9 @@
       }
     }
   }
+  .el-tab-pane.el-tab-pane-height .el-input__inner {
+    height: 30px;
+  }
   .el-input__inner, .el-textarea__inner {
     padding: 0 10px;
     border-radius: $--border-radius-small;

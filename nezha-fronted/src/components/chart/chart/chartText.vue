@@ -1,8 +1,8 @@
 <template>
  <div class="mt-10 rich-text-container" v-cloak style="height: 100%;width: 100%;">
-   <div :id="'chartContainer' + chartInfo.type"  ref="chartContainer" class="text-content" >
+   <div :id="'chartContainer' + chartInfo.id"  ref="chartContainer" class="text-content" >
      <el-scrollbar style="height: 100%;" class="el-scrollbar-normal">
-       <div style="height: 100%;" v-html="text" ></div>
+       <div class="el-scrollbar-normal__color" style="height: 100%;" v-html="text" ></div>
      </el-scrollbar>
    </div>
  </div>

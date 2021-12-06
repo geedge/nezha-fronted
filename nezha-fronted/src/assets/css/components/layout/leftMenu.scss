@@ -101,12 +101,12 @@
     }
   }
 }
-.el-menu--popup {
-  .el-menu-item {
-    height: 49px;
-    line-height: 49px;
+.el-menu--popup.el-menu--popup-right-start {
+  background-color: $--background-color-empty;
+  .el-menu-item:hover {
+    background-color: $--background-color-base;
   }
   .el-menu-item.is-active {
-    background-color: $--left-menu-background-color-active !important;
+    background-color: $--background-color-base;
   }
 }

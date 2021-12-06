@@ -193,7 +193,7 @@
                 </span>
                 </div>
               </el-tab-pane>
-              <el-tab-pane :label="$t('project.endpoint.parameter')" name="Parameter">
+              <el-tab-pane :label="$t('project.endpoint.parameter')" name="Parameter" class="el-tab-pane-height">
                 <div id="module-box-params" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                   <div v-for="(item, index) in editEndpoint.paramObj" :key="index" class="param-box-row">
                     <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key" :rules="[{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('overall.ASCIIKey') ,trigger: 'blur'}]">
@@ -209,7 +209,7 @@
                         @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
                       />
                     </el-form-item>
-                    <span :id="'moduel-remove-param-'+index" class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                    <span :id="'moduel-remove-param-'+index" class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1""></i></span>
                   </div>
                 </div>
                 <div style="text-align: center">
