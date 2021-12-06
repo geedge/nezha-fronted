@@ -1,7 +1,6 @@
 import { register as registerFlow } from '@topology/flow-diagram'
 import { register as registerActivity } from '@topology/activity-diagram'
 import { register as registerSequence } from '@topology/sequence-diagram'
-import { register as registerChart } from '@topology/chart-diagram'
 import { Node, Rect, Point, Direction } from '@topology/core'
 // import { register as registerClass } from './class-diagram/index'
 export let canvas
@@ -10,7 +9,7 @@ export function canvasRegister () {
   registerFlow()
   registerActivity()
   registerSequence()
-  registerChart()
+  // registerChart()
   // registerClass()
 }
 
