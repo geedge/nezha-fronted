@@ -66,6 +66,10 @@
   .el-input-number--small {
     width: 100%;
   }
+  .el-tag--mini.el-tag--light {
+    background-color: $--background-color-base;
+    border-color: $--border-color-light;
+  }
 }
 .severity-item{
   color: $--color-text-secondary;
