@@ -163,15 +163,16 @@ export default {
       Promise.all(arr).then(res => {
         this.editChart.panelId = this.panelId
         const params = JSON.parse(JSON.stringify(this.editChart))
-        delete params.panel
         if (!params.groupId) {
-          params.groupId = -1
+          params.groupId = 0
         }
+        delete params.panel
         if (params.id) { // 修改
           this.$put('visual/panel/chart', params).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
               this.esc(true)
+              this.$emit('on-create-success')
             } else {
               this.$message.error(response.msg)
             }
@@ -181,6 +182,7 @@ export default {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
               this.esc(true)
+              this.$emit('on-create-success')
             } else {
               this.$message.error(response.msg)
             }

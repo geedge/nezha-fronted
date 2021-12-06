@@ -93,7 +93,7 @@
                   </el-popover>
                 </el-col>
                 <el-col style="flex: 1">
-                  <el-input maxlength="512" show-word-limit size="small" type="text" v-model="expressionsShow[index-1].legend" ></el-input>
+                  <el-input maxlength="512" show-word-limit size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
                 </el-col>
               </el-row>
             </el-row>

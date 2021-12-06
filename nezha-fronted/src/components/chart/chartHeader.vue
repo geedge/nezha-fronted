@@ -65,7 +65,7 @@ export default {
       this.$emit('refresh')
     },
     editChart () {
-
+      this.$emit('edit-chart', this.chartInfo)
     },
     removeChart () {
 

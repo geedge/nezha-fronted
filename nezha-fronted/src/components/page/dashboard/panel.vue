@@ -90,7 +90,7 @@
                 :from="fromRoute.panel"
                 :panel-lock="panelLock"
                 :time-range="searchTime"
-                @on-edit-chart="editChart"
+                @edit-chart="editChart"
                 @on-refresh-time="refreshTime"
                 @on-remove-chart="delChart"
                 @on-add-group-item-chart="addGroupItem"
@@ -191,7 +191,7 @@ export default {
         name: '',
         type: 'line',
         span: 4,
-        datasource: '1',
+        datasource: 'metrics',
         height: 4,
         unit: 2,
         param: {
@@ -205,7 +205,7 @@ export default {
         panel: '',
         sync: 0,
         remark: '',
-        groupId: -1
+        groupId: ''
       },
       pageObj: {
         pageNo: 1,
@@ -385,6 +385,7 @@ export default {
     },
     // 编辑图表信息,打开编辑弹窗
     editChart (data, copy) {
+      console.log(456)
       if (copy) {
         this.chart = JSON.parse(JSON.stringify(data))
         this.chart.panelId = this.showPanel.id
@@ -394,19 +395,14 @@ export default {
         this.$get('visual/panel/chart/' + data.id).then(res => {
           if (res.code === 200) {
             const chartData = res.data.data
-            if (typeof chartData.param === 'string') {
-              chartData.param = chartData.param ? JSON.parse(chartData.param) : {}
-            }
-            if (!chartData.param) {
-              chartData.param = { url: '', threshold: '' }
-            } else if (!chartData.param.threshold) {
-              chartData.param.threshold = ''
-            } else if (!chartData.param.url) {
-              chartData.param.url = ''
-            }
             this.chart = JSON.parse(JSON.stringify(chartData))
             this.chart.panelId = this.showPanel.id
             this.chart.panelName = this.showPanel.name
+            this.chart.param = JSON.parse(this.chart.param)
+            this.chart.datasource = 'metrics'
+            if (!this.chart.groupId || this.chart.groupId == -1) {
+              this.chart.groupId = ''
+            }
             this.rightBox.chart.show = true
           } else {
             this.$message.error(res.msg)

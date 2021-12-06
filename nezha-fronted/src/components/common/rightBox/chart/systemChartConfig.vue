@@ -428,7 +428,7 @@ export default {
   },
   watch: {
     selectList (n) {
-      if (n.length === 1) {
+      if (n.length === 1 && !this.chartConfig.param.systemSelect) {
         this.chartConfig.param.systemSelect = this.selectList[0].name
       }
     }
@@ -439,14 +439,21 @@ export default {
     },
     getSystemData () {
       this.loading = true
-      this.$get('/mock/getSystemData').then(res => {
+      this.$get('/sys/config/key/stat_query_json').then(res => {
         this.loading = false
         if (res.code === 200) {
-          this.systemData = res.data.list
-          if (res.data.list.length) {
-            this.chartConfig.param.system = res.data.list[0].name
-            this.groupList = res.data.list[0].group
-            this.selectList = res.data.list[0].select
+          this.systemData = JSON.parse(res.data.paramValue)
+          if (this.systemData.length) {
+            if (!this.chartConfig.param.system) {
+              this.chartConfig.param.system = this.systemData[0].name
+              this.groupList = this.systemData[0].group
+              this.selectList = this.systemData[0].select
+            } else {
+              const system = this.systemData.find(item => item.name === this.chartConfig.param.system)
+              this.chartConfig.param.system = system.name
+              this.groupList = system.group
+              this.selectList = system.select
+            }
             this.$refs.chartForm.clearValidate()
           }
         } else {

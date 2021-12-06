@@ -26,6 +26,7 @@
       >
         <panel-chart
           :ref="'chart' + item.id"
+          @edit-chart="$emit('edit-chart', item)"
           :chart-info="item"
           :time-range="timeRange"
           @showFullscreen="showFullscreen"
