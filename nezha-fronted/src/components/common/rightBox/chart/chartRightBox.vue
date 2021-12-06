@@ -58,17 +58,17 @@
           <span>{{$t('dashboard.panel.chartForm.dataConfig')}}</span>
         </div>
         <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange" type="card">
-          <el-tab-pane label="Metrics" name="1">
-            <chart-config  ref="childrenFrom1" :type="'metrics'" v-if="editChart.datasource == 1" :params.sync="editChart" @change="editChartChange"/>
+          <el-tab-pane label="Metrics" name="metrics">
+            <chart-config  ref="childrenFrommetrics" :type="'metrics'" v-if="editChart.datasource == 'metrics'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
-          <el-tab-pane label="Logs" name="2">
-            <chart-config ref="childrenFrom2" :type="'log'" v-if="editChart.datasource == 2" :params.sync="editChart" @change="editChartChange"/>
+          <el-tab-pane label="Logs" name="logs">
+            <chart-config ref="childrenFromlogs" :type="'log'" v-if="editChart.datasource == 'logs'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
-          <el-tab-pane label="System" name="3">
-            <system-chart-config ref="childrenFrom3" v-if="editChart.datasource == 3" :params.sync="editChart"/>
+          <el-tab-pane label="System" name="system">
+            <system-chart-config ref="childrenFromsystem" v-if="editChart.datasource == 'system'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
-          <el-tab-pane label="Misc" name="4">
-            <other-chart-config ref="childrenFrom4" v-if="editChart.datasource == 4" :params.sync="editChart"/>
+          <el-tab-pane label="Misc" name="misc">
+            <other-chart-config ref="childrenFrommisc" v-if="editChart.datasource == 'misc'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -161,10 +161,14 @@ export default {
       const arr = [this.$refs.chartForm.validate()]
       arr.push(this.$refs['childrenFrom' + this.editChart.datasource].$refs.chartForm.validate())
       Promise.all(arr).then(res => {
-        this.editChart.param = JSON.stringify(this.editChart.param)
         this.editChart.panelId = this.panelId
-        if (this.editChart.id) { // 修改
-          this.$put('visual/panel/chart', this.editChart).then(response => {
+        const params = JSON.parse(JSON.stringify(this.editChart))
+        delete params.panel
+        if (!params.groupId) {
+          params.groupId = -1
+        }
+        if (params.id) { // 修改
+          this.$put('visual/panel/chart', params).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
               this.esc(true)
@@ -173,7 +177,7 @@ export default {
             }
           })
         } else { // 新增
-          this.$post('visual/panel/chart', this.editChart).then(response => {
+          this.$post('visual/panel/chart', params).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
               this.esc(true)
@@ -221,7 +225,7 @@ export default {
       })
     },
     datasourceChange () {
-      if (this.editChart.datasource == 1) {
+      if (this.editChart.datasource == 'metrics') {
         this.editChart = {
           ...this.editChart,
           span: 4,
@@ -238,7 +242,7 @@ export default {
           }
         }
       }
-      if (this.editChart.datasource == 2) {
+      if (this.editChart.datasource == 'logs') {
         this.editChart = {
           ...this.editChart,
           span: 4,
@@ -251,13 +255,13 @@ export default {
           }
         }
       }
-      if (this.editChart.datasource == 3) {
+      if (this.editChart.datasource == 'system') {
         this.editChart = {
           ...this.editChart,
           span: 4,
           height: 4,
           unit: 2,
-          type: 'singleStat',
+          type: 'stat',
           param: {
             refer: 1,
             system: '',
@@ -275,7 +279,7 @@ export default {
         }
         delete this.editChart.elements
       }
-      if (this.editChart.datasource == 4) {
+      if (this.editChart.datasource == 'misc') {
         this.editChart = {
           ...this.editChart,
           span: 4,
@@ -321,6 +325,13 @@ export default {
       handler (n) {
         this.editChart = JSON.parse(JSON.stringify(n))
         if (this.editChart.groupId === -1) {
+          this.editChart.groupId = ''
+        }
+      }
+    },
+    'editChart.type': {
+      handler (n) {
+        if (n === 'group') {
           this.editChart.groupId = ''
         }
       }

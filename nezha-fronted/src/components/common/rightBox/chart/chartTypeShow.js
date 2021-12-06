@@ -7,7 +7,7 @@ export default {
         case 'point':
           return true
         case 'table':
-        case 'singleStat':
+        case 'stat':
         case 'bar':
         case 'treemap':
         case 'guage':
@@ -23,7 +23,7 @@ export default {
         case 'point':
           return false
         case 'table':
-        case 'singleStat':
+        case 'stat':
         case 'bar':
         case 'treemap':
         case 'guage':
@@ -39,7 +39,7 @@ export default {
         case 'point':
           return true
         case 'table':
-        case 'singleStat':
+        case 'stat':
         case 'bar':
         case 'guage':
         case 'treemap':
@@ -55,7 +55,7 @@ export default {
         case 'point':
         case 'table':
           return false
-        case 'singleStat':
+        case 'stat':
         case 'bar':
         case 'guage':
         case 'treemap':
@@ -71,7 +71,7 @@ export default {
         case 'line':
         case 'stackArea':
         case 'point':
-        case 'singleStat':
+        case 'stat':
         case 'bar':
         case 'guage':
         case 'treemap':
@@ -88,7 +88,7 @@ export default {
         case 'line':
         case 'stackArea':
         case 'point':
-        case 'singleStat':
+        case 'stat':
         case 'bar':
         case 'treemap':
         case 'pie':

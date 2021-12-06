@@ -106,7 +106,7 @@
       </div>
       <!--url-->
       <el-form-item v-if="isUrl(chartConfig.type)" :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url">
-        <el-input id="chart-box-url" v-model="chartConfig.param.url" maxlength="1024" show-word-limit size="small" type="textarea"></el-input>
+        <el-input id="chart-box-url" v-model="chartConfig.param.url" maxlength="1024" show-word-limit size="small" type="textarea" @change="change"></el-input>
       </el-form-item>
       <!--topoData-->
       <el-form-item v-if="isDiagram(chartConfig.type)" >
@@ -118,7 +118,9 @@
       <!--topplogy-->
       <diagram :topoData="chartConfig.param.topo" class="topology-dialog" v-if="topologyDialog" @change="topologyDialogChange" :topologyIndexF="-2" ref="topologyDialog" :fromTopologyDialog="true"/>
       <!--text-->
-      <rich-text-editor v-if="isText(chartConfig.type)" ref="richTextEditor" :edit-data="chartConfig.param.text"></rich-text-editor>
+      <el-form-item  v-if="isText(chartConfig.type)"  :rules="{ required: true,  message: $t('validate.required'), trigger: 'change' }" prop="param.text">
+        <rich-text-editor ref="richTextEditor" :edit-data="chartConfig.param.text" @textChange="textChange"></rich-text-editor>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -134,6 +136,13 @@ export default {
   components: {
     diagram,
     richTextEditor
+  },
+  watch: {
+    'chartConfig.param.text': {
+      handler (n) {
+        this.change()
+      }
+    }
   },
   data () {
     return {
@@ -195,6 +204,9 @@ export default {
         this.chartConfig.param.topo = data
         this.change()
       }
+    },
+    textChange () {
+      this.chartConfig.param.text = this.$refs.richTextEditor.getContent()
     }
   },
   created () {

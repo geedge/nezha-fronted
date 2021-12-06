@@ -400,7 +400,7 @@ export default {
       selectList: [],
       chartTypeList: [
         {
-          id: 'singleStat',
+          id: 'stat',
           name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
         },
         {
@@ -456,7 +456,7 @@ export default {
     },
     chartTypeChange (type) {
       switch (type) {
-        case 'singleStat':
+        case 'stat':
         case 'bar':
         case 'pie':
         case 'guage':

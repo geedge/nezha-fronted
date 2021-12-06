@@ -665,8 +665,8 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.point.label')
         },
         {
-          id: 'singleStat',
-          name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
+          id: 'stat',
+          name: this.$t('dashboard.panel.chartForm.typeVal.stat.label')
         },
         {
           id: 'bar',
@@ -731,7 +731,7 @@ export default {
             this.chartConfig.param.thresholds.push({ value: undefined, color: '#eeeeeeff' })
           })
           break
-        case 'singleStat':
+        case 'stat':
         case 'bar':
         case 'treemap':
         case 'pie':

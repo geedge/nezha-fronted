@@ -62,6 +62,7 @@ export default {
         })
         this.$nextTick(() => {
           this.$emit('after-init')
+          this.$emit('textChange')
         })
       }
     },

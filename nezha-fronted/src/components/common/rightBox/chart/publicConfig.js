@@ -67,7 +67,7 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
         },
         {
-          id: 'stackArea',
+          id: 'area',
           name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
         },
         {
@@ -75,7 +75,7 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.point.label')
         },
         {
-          id: 'singleStat',
+          id: 'stat',
           name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
         },
         {
@@ -106,7 +106,7 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
         },
         {
-          id: 'stackArea',
+          id: 'area',
           name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
         },
         {
@@ -114,7 +114,7 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.point.label')
         },
         {
-          id: 'singleStat',
+          id: 'stat',
           name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
         },
         {
