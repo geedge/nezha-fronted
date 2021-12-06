@@ -12,7 +12,7 @@ const chartData = {
         name: '123',
         panelId: 1243,
         groupId: 0,
-        dataSource: 1,
+        dataSource: 'metrics',
         span: 12,
         height: 6,
         updateBy: 1,
@@ -126,7 +126,7 @@ const chartData = {
         name: '233',
         panelId: 1243,
         groupId: 0,
-        dataSource: 1,
+        dataSource: 'metrics',
         span: 6,
         height: 4,
         updateBy: 1,
@@ -236,7 +236,7 @@ const chartData = {
         type: 'line',
         unit: 2,
         weight: 2,
-        dataSource: 1,
+        dataSource: 'metrics',
         param: '{' +
           '   "style":"line",' +
           '   "showHeader":true,' +
@@ -460,7 +460,7 @@ const chartData = {
         type: 'hexagonFigure',
         unit: 2,
         weight: 2,
-        dataSource: 4,
+        dataSource: 'misc',
         param: '{' +
           '   "from":"module",' +
           '   "showHeader":true,' +

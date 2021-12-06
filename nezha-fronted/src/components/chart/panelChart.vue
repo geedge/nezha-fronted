@@ -5,6 +5,7 @@
     <chart-header
       v-if="!isFullscreen"
       :chart-info="chartInfo"
+      @edit-chart="$emit('edit-chart', chartInfo)"
       @refresh="refresh"
       @showFullscreen="showFullscreen"
     ></chart-header>
@@ -78,8 +79,8 @@ export default {
     query (elements, startTime, endTime, step) {
       try {
         switch (this.chartInfo.dataSource) {
-          case 1:
-          case 2: {
+          case 'metrics':
+          case 'logs': {
             let urlPre = ''
             if (this.chartInfo.dataSource === 1) {
               urlPre = '/prom'
@@ -113,11 +114,11 @@ export default {
             })
             break
           }
-          case 3: {
+          case 'system': {
             this.loading = false
             break
           }
-          case 4: {
+          case 'misc': {
             if (this.chartInfo.type === 'hexagonFigure') {
               this.getHexagonFigureData().then(res => {
                 this.chartData = res
