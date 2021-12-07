@@ -37,7 +37,7 @@
           <el-form-item :label="$t('alert.severity')" class="severity-box half-form-item" prop="severityId">
             <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
               <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
-                <div style="display: flex;justify-content: space-between;padding: 5px;">
+                <div style="display: flex;justify-content: space-between;padding: 5px;line-height: 23px">
                   <div><i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}</div>
                   <div class="severity-item text-ellipsis" :title="item.remark">{{item.remark}}</div>
                 </div>

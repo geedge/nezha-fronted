@@ -88,7 +88,7 @@ export default {
   },
   computed: {
     isNoData () {
-      return !this.chartData || this.chartData.length === 0 || this.chartData.type == 'url' ? false : true || this.chartData == 'text' ? false : true
+      return lodash.isEmpty(this.chartData) && ['text', 'url'].indexOf(this.chartInfo.type) === -1
     },
     chartOption () {
       if (this.customChartOption) {
