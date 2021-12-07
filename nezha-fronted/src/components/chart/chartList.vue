@@ -141,7 +141,6 @@ export default {
           } catch (e) {
             console.info(e)
           }
-          console.log(param)
           param.showHeader = true
           return {
             ...item,

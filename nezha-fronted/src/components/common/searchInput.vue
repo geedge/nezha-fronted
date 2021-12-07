@@ -1098,7 +1098,6 @@ export default {
           }
         }
       } else {
-        console.log(this.searchMsg.searchLabelList.find(key => this.select_list[this.sreach_num].label == key.label))
         if (keyCode == 8) {
           if (this.delcriteriaBool || !this.input_sreach) {
             this.searchMsg.searchLabelList.forEach((val, k) => {

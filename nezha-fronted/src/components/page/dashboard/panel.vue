@@ -386,7 +386,6 @@ export default {
     },
     // 编辑图表信息,打开编辑弹窗
     editChart (data, copy) {
-      console.log(456)
       if (copy) {
         this.chart = JSON.parse(JSON.stringify(data))
         this.chart.panelId = this.showPanel.id

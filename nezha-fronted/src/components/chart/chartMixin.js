@@ -23,13 +23,11 @@ export default {
   },
   methods: {
     handleTimeSeries (chartInfo, seriesTemplate, originalDatas) {
-      console.log(chartInfo, seriesTemplate, originalDatas)
       const series = []
       let colorIndex = 0
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
           const s = lodash.cloneDeep(seriesTemplate)
-          console.log(seriesTemplate)
           if (s) {
             s.data = data.values
             s.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
@@ -82,7 +80,6 @@ export default {
       }
       // 处理legend别名
       let alias = this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
-      console.log(alias)
       if (!alias) {
         alias = legend
       }

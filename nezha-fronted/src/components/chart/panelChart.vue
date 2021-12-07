@@ -77,7 +77,6 @@ export default {
       this.query(elements, startTime, endTime, step)
     },
     query (elements, startTime, endTime, step) {
-      console.log(this.chartInfo.datasource, elements, startTime, endTime, step)
       try {
         switch (this.chartInfo.datasource) {
           case 'metrics':
@@ -112,7 +111,6 @@ export default {
                   chartData.push({ error: r.msg || r.error || r })
                 }
               })
-              console.log(chartData)
               this.chartData = chartData
             }).finally(() => {
               this.loading = false

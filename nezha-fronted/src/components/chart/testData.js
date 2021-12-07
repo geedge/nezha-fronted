@@ -915,8 +915,8 @@ const chartData = {
                 show: true,
                 mapping: [
                   { type: 'value', show: true, value: 2, display: 'value', color: { bac: '#8ef9ab', text: '#6a21bc' } },
-                  { type: 'range', show: true, display: 'range', color: { bac: '#ef1cd0', text: '#66d815' }, from: 0, to: 123123 },
-                  { type: 'regx', show: true, display: 'regx', color: { bac: '#d406e2', text: '#f722ec' }, regx: '123' }]
+                  { type: 'range', show: true, display: 'range', color: { bac: '#ef1cd0', text: '#66d815' }, from: 2, to: 123123 },
+                  { type: 'regx', show: true, display: 'regx', color: { bac: '#000000', text: '#ffffff' }, regx: '2' }]
               }
           }),
         pid: null,
@@ -924,7 +924,7 @@ const chartData = {
         remark: '123',
         seq: null,
         x: 0,
-        y: 12,
+        y: 0,
         w: 6,
         h: 4,
         i: 690506,

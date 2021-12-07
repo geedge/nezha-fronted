@@ -1551,7 +1551,6 @@ export default {
       })
     },
     valueMappingChange: function (value) {
-      console.log(this.editChart.param.valueMapping.type)
       if (this.editChart.param.valueMapping.type == 'value') {
         this.editChart.param.valueMapping.mapping = [{ text: '', value: '', color: { bac: '#fff', text: '#000' } }]
         this.showPicker = [{ bac: false, text: false }]

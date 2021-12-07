@@ -84,7 +84,6 @@ export default {
       chartOption.series = this.initPieData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       // chartOption.series.label.formatter = this.pieFormatterLabel
       chartOption.tooltip.formatter = this.formatterFunc
-      console.log(chartOption, 'chartOption')
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
         const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartId}`)) : getChart(this.chartId)
@@ -111,7 +110,6 @@ export default {
       const valueSorted = datas.sort((a, b) => {
         return a[1] - b[1]
       })
-      console.log(timeSorted, valueSorted)
       minTime = timeSorted.length ? timeSorted[0][0] : ''
       maxTime = timeSorted.length ? timeSorted[timeSorted.length - 1][0] : ''
       minValue = valueSorted.length ? valueSorted[0][1] : ''
@@ -127,7 +125,6 @@ export default {
           if (s) {
             const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
             const mapping = this.selectMapping(value, chartInfo.param.valueMapping)
-            console.log(mapping)
             // eslint-disable-next-line vue/no-mutating-props
             mapping && (this.chartOption.color[colorIndex] = mapping.color.bac)
             s.data.push({
@@ -207,7 +204,7 @@ export default {
     try {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
-    // this.initChart(this.chartOption)
+    this.initChart(this.chartOption)
   }
 }
 </script>

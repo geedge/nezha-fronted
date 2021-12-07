@@ -298,7 +298,6 @@ export default {
     },
     addMapping () {
       const bacColor = randomcolor()
-      console.log(bacColor)
       this.chartConfig.param.valueMapping.mapping.push({
         type: 'value',
         show: true,

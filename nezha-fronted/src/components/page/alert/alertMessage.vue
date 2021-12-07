@@ -459,7 +459,6 @@ export default {
       })
     },
     messageDetail (row) {
-      console.log(row)
       if (row.alertRule.type == 3) {
         return
       }
