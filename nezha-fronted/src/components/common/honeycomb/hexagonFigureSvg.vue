@@ -172,6 +172,7 @@ export default {
       immediate: false,
       deep: true,
       handler (n) {
+        console.log('hexData', n)
         this.init()
       }
     },
@@ -179,6 +180,7 @@ export default {
       immediate: false,
       deep: true,
       handler () {
+        console.log('col')
         this.init()
       }
     },
@@ -253,7 +255,7 @@ export default {
               wheelZoom: this.isWheelZoom,
               panning: this.isPanning
             })
-            .attr('id', 'SvgHex')
+            .attr('id', 'SvgHex' + this.hexagonSvgID)
             .attr('class', this.hexagonSvgID)
             .attr('viewBox', `0 0 ${this.$refs.box.offsetWidth} ${this.$refs.box.offsetHeight}`) // svg实例
           hexagonSvg.on('click', this.hexagonSvgClearScale)
@@ -264,6 +266,7 @@ export default {
           Rate = (Rate > 0.2 ? Rate : 0.2)
           this.windowRate = Rate
           this.hexagonEdge = (this.hexagonEdge / this.defaultRate) * Rate
+          this.fontSize = 14
           const fontSize = ((this.fontSize / this.defaultRate) * Rate)
           this.fontSize = fontSize < 8 ? 8 : fontSize
           setHexagon(this.hexagonSvgID, {
@@ -286,10 +289,13 @@ export default {
             this.firstInit = false
           }, 500)
         })
+      }).catch(() => {
+        console.log(123123)
       })
     },
     reload () {
       if (!document.hidden) {
+        console.log('reload')
         this.init()
       }
     },
@@ -810,6 +816,7 @@ export default {
       getHexagon(this.hexagonSvgID).svgPolyline.on('mouseout', PolylineOut)
     },
     clearData () { // 清除数据 以及解绑事件 防止内存崩溃
+      console.log(123123123)
       if (getHexagon(this.hexagonSvgID) && getHexagon(this.hexagonSvgID).hexagonSvg) {
         this.allHexagon.forEach((item) => {
           item.off('mouseover', this.hexagonOver)
@@ -828,13 +835,20 @@ export default {
         getHexagon(this.hexagonSvgID).svgPolyline = null// Svg hexagon的边框
         delHexagon(this.hexagonSvgID)
       }
-      return new Promise(resolve => {
+      const dom = document.getElementById(this.hexagonSvgID)
+      const child = document.getElementById('SvgHex' + this.hexagonSvgID)
+      console.log(dom, child)
+      if (dom) {
+        dom.removeChild(child)
+      }
+      return new Promise((resolve, reject) => {
         resolve()
       })
     }
 
   },
   beforeDestroy () {
+    console.log('beforeDestroy')
     this.clearData()
     if (getHexagon(this.hexagonSvgID)) {
       getHexagon(this.hexagonSvgID).allHexagonRect = null// 文本框

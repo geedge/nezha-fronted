@@ -286,7 +286,7 @@
           :label='"Null value"'
           class="form-item--half-width"
           prop="param.nullType"
-          v-if="!isLog(chartConfig.type)"
+          v-if="isShowNullType(chartConfig.type)"
         >
           <el-select
             id="chart-box-nullType"
@@ -298,6 +298,29 @@
           >
             <el-option
               v-for="item in nullTypeList"
+              :key="item.value"
+              :label="$t(item.label)"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- text -->
+        <el-form-item
+          :label='"Null value"'
+          class="form-item--half-width"
+          prop="param.nullType"
+          v-if="isShowText(chartConfig.type)"
+        >
+          <el-select
+            id="chart-box-text"
+            v-model="chartConfig.param.text"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="change, $forceUpdate()"
+          >
+            <el-option
+              v-for="item in textList"
               :key="item.value"
               :label="$t(item.label)"
               :value="item.value"
@@ -581,7 +604,7 @@
               <div>
                 <div class='mapping-display'>Title</div>
               </div>
-              <el-form-item :prop="'param.columns.' + index + '.title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item">
+              <el-form-item :prop="'param.columns.' + index + '.title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item" style="flex: 1">
                 <el-input size="small" v-model="item.title" placeholder="regx"></el-input>
               </el-form-item>
               <div>
@@ -591,7 +614,7 @@
                            placeholder=""
                            popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
                            size="small"
-                           style="width: 100%"
+                           style="flex: 1"
                            @change="unitSelected"
               >
               </el-cascader>
@@ -622,6 +645,7 @@ import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import VueTagsInput from '@johmun/vue-tags-input'
 import draggable from 'vuedraggable'
+import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 export default {
   name: 'chartConfig',
   components: {
@@ -650,6 +674,7 @@ export default {
     return {
       rules: {
       },
+      oldType: '',
       promqlType: 'log',
       chartTypeList: [
         {
@@ -657,7 +682,7 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
         },
         {
-          id: 'stackArea',
+          id: 'area',
           name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
         },
         {
@@ -666,7 +691,7 @@ export default {
         },
         {
           id: 'stat',
-          name: this.$t('dashboard.panel.chartForm.typeVal.stat.label')
+          name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
         },
         {
           id: 'bar',
@@ -703,6 +728,7 @@ export default {
     },
     init () {
       this.chartConfig = JSON.parse(JSON.stringify(this.params))
+      this.oldType = this.chartConfig.type
       // 重置相关属性
       this.expressions = []
       this.expressionsShow = []
@@ -718,8 +744,11 @@ export default {
     chartTypeChange (type) {
       switch (type) {
         case 'line':
-        case 'stackArea':
+        case 'area':
         case 'point':
+          if (this.oldType === 'line' || this.oldType === 'area' || this.oldType === 'point') {
+            break
+          }
           this.chartConfig.param = {
             stack: 0,
             nullType: this.chartConfig.param.nullType,
@@ -728,16 +757,21 @@ export default {
             thresholds: []
           }
           this.$nextTick(() => {
-            this.chartConfig.param.thresholds.push({ value: undefined, color: '#eeeeeeff' })
+            this.chartConfig.param.thresholds.push({ value: undefined, color: randomcolor() })
           })
           break
         case 'stat':
         case 'bar':
         case 'treemap':
+        case 'guage':
         case 'pie':
+          if (this.oldType === 'stat' || this.oldType === 'bar' || this.oldType === 'treemap' || this.oldType === 'guage' || this.oldType === 'pie') {
+            break
+          }
           this.chartConfig.param = {
             nullType: this.chartConfig.param.nullType,
             statistics: 'last',
+            text: 'all',
             valueMapping: {
               show: true,
               mapping: []
@@ -745,6 +779,9 @@ export default {
           }
           break
         case 'table':
+          if (this.oldType === 'table') {
+            break
+          }
           this.chartConfig.param = {
             nullType: this.chartConfig.param.nullType,
             statistics: 'last',
@@ -754,11 +791,15 @@ export default {
           }
           break
         case 'log':
+          if (this.oldType === 'log') {
+            break
+          }
           this.chartConfig.param = {
             limit: 100
           }
           break
       }
+      this.oldType = type
       this.change()
     },
     sortThresholds () {
@@ -782,7 +823,7 @@ export default {
     addThresholds () {
       this.chartConfig.param.thresholds.push({
         value: undefined,
-        color: '#eeeeeeff'
+        color: randomcolor()
       })
       this.change()
     },

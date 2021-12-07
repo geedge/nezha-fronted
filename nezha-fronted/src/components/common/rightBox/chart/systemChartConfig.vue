@@ -107,6 +107,7 @@
           :label="$t('dashboard.panel.chartForm.refer')"
           class="form-item--half-width"
           prop="param.stack"
+          style="display: none"
         >
           <el-select
             id="chart-box-height"
@@ -348,7 +349,7 @@
               <div>
                 <div class='mapping-display'>Title</div>
               </div>
-              <el-form-item :prop="'param.columns.' + index + 'title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item">
+              <el-form-item :prop="'param.columns.' + index + 'title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item" style="flex: 1">
                 <el-input size="small" v-model="item.title" placeholder="regx"></el-input>
               </el-form-item>
               <div>
@@ -358,7 +359,7 @@
                            placeholder=""
                            popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
                            size="small"
-                           style="width: 100%"
+                           style="flex: 1"
                            @change="unitSelected"
               >
               </el-cascader>
@@ -398,6 +399,7 @@ export default {
       rules: {},
       groupList: [],
       selectList: [],
+      oldType: '',
       chartTypeList: [
         {
           id: 'stat',
@@ -436,6 +438,7 @@ export default {
   methods: {
     init () {
       this.chartConfig = JSON.parse(JSON.stringify(this.params))
+      this.oldType = this.chartConfig.type
     },
     getSystemData () {
       this.loading = true
@@ -468,19 +471,23 @@ export default {
         case 'pie':
         case 'guage':
         case 'treemap':
+          if (this.oldType !== 'table') {
+            break
+          }
           this.chartConfig.param.valueMapping = {
             show: true,
             mapping: []
           }
-          this.chartConfig.param.refer = 1
+          this.chartConfig.param.refer = 0
           delete this.chartConfig.param.columns
           break
         case 'table':
           this.chartConfig.param.columns = []
-          this.chartConfig.param.refer = 1
+          this.chartConfig.param.refer = 0
           delete this.chartConfig.param.valueMapping
           break
       }
+      this.oldType = type
       this.change()
     },
     changeSystem (item) {

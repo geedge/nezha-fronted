@@ -1,5 +1,6 @@
 import chartDataFormat from '@/components/charts/chartDataFormat'
 import { getUUID, resetZIndex } from '@/components/common/js/common'
+import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 const rz = {
   methods: {
     rz (e) {
@@ -142,6 +143,21 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
         }
 
+      ],
+      textList: [
+        {
+          label: 'All',
+          value: 'all'
+        }, {
+          label: 'Value',
+          value: 'value'
+        }, {
+          label: 'Legend',
+          value: 'legend'
+        }, {
+          label: 'None',
+          value: 'none'
+        }
       ]
     }
   },
@@ -281,14 +297,16 @@ export default {
       this.change()
     },
     addMapping () {
+      const bacColor = randomcolor()
+      console.log(bacColor)
       this.chartConfig.param.valueMapping.mapping.push({
         type: 'value',
         show: true,
         value: undefined,
         display: '',
         color: {
-          bac: '#FFFFFFFF',
-          text: '#000000FF'
+          bac: bacColor,
+          text: randomcolor()
         }
       })
       this.change()

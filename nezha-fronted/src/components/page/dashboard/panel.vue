@@ -154,6 +154,7 @@ import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import { fromRoute } from '@/components/common/js/constants'
 import chartData from '@/components/chart/testData'
+import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 
 export default {
   name: 'panel',
@@ -199,7 +200,7 @@ export default {
           nullType: 'null',
           legend: { placement: 'bottom', values: [], show: true },
           thresholdShow: true,
-          thresholds: [{ value: undefined, color: '#eeeeeeff' }]
+          thresholds: [{ value: undefined, color: randomcolor() }]
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
         panel: '',
