@@ -1,6 +1,6 @@
 import lodash from 'lodash'
 import { getMetricTypeValue } from '@/components/common/js/tools'
-import {getChart, setChart} from '@/components/common/js/common'
+import { getChart, setChart } from '@/components/common/js/common'
 export default {
   data () {
     return {
@@ -23,34 +23,38 @@ export default {
   },
   methods: {
     handleTimeSeries (chartInfo, seriesTemplate, originalDatas) {
+      console.log(chartInfo, seriesTemplate, originalDatas)
       const series = []
       let colorIndex = 0
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
           const s = lodash.cloneDeep(seriesTemplate)
-          s.data = data.values
-          s.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
-          if (chartInfo.param.stack) { // 堆叠
-            s.stack = 'Total'
-          }
-          if (!lodash.isEmpty(chartInfo.param.thresholds)) { // 阈值
-            s.markLine = {
-              symbol: 'circle',
-              symbolSize: 5
+          console.log(seriesTemplate)
+          if (s) {
+            s.data = data.values
+            s.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+            if (chartInfo.param.stack) { // 堆叠
+              s.stack = 'Total'
             }
-            s.markLine.data = chartInfo.param.thresholds.map(threshold => {
-              return {
-                yAxis: threshold.val,
-                lineStyle: {
-                  color: threshold.color,
-                  width: 2,
-                  type: 'dotted'
-                }
+            if (!lodash.isEmpty(chartInfo.param.thresholds)) { // 阈值
+              s.markLine = {
+                symbol: 'circle',
+                symbolSize: 5
               }
-            })
+              s.markLine.data = chartInfo.param.thresholds.map(threshold => {
+                return {
+                  yAxis: threshold.val,
+                  lineStyle: {
+                    color: threshold.color,
+                    width: 2,
+                    type: 'dotted'
+                  }
+                }
+              })
+            }
+            series.push(s)
+            colorIndex++
           }
-          series.push(s)
-          colorIndex++
         })
       })
       return series
@@ -78,13 +82,14 @@ export default {
       }
       // 处理legend别名
       let alias = this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
+      console.log(alias)
       if (!alias) {
         alias = legend
       }
-      const name = legend + '-' + chartInfo.elements[expressionIndex].id + '-' + dataIndex
+      const name = alias + '-' + dataIndex
 
       // 若需要统计，处理统计数据
-      const statisticsTypes = chartInfo.param.legend.values
+      const statisticsTypes = chartInfo.param.legend ? chartInfo.param.legend.values : ''
       let statistics = []
       if (!lodash.isEmpty(statisticsTypes)) {
         statistics = statisticsTypes.map(type => {
@@ -110,6 +115,30 @@ export default {
       } else {
         return aliasExpression
       }
+    },
+    selectMapping (value, valueMapping) {
+      let mapping = ''
+      if (valueMapping.show) {
+        valueMapping.mapping.forEach(item => {
+          if (item.type === 'value') {
+            if (value == item.value) {
+              mapping = item
+            }
+          }
+          if (item.type === 'range') {
+            if (value > item.from && value < item.to) {
+              mapping = item
+            }
+          }
+          if (item.type === 'regx') {
+            const reg = new RegExp(item.regx)
+            if (reg.test(value)) {
+              mapping = item
+            }
+          }
+        })
+      }
+      return mapping
     },
     mouseEnterChart () {
       const myChart = getChart(this.chartId)

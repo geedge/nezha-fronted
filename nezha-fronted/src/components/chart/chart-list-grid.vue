@@ -377,8 +377,8 @@ export default {
     resizeEvent: function (i, newH, newW, newHPx, newWPx) {
       const msg = 'RESIZE i=' + i + ', H=' + newH + ', W=' + newW + ', H(px)=' + newHPx + ', W(px)=' + newWPx
       this.eventLog.push(msg)
-      console.log(msg,this.$refs['editChart' + i])
-      setTimeout(()=>{
+      console.log(msg, this.$refs['editChart' + i])
+      setTimeout(() => {
         this.$refs['editChart' + i][0].chartResize()
       })
     },
@@ -386,9 +386,9 @@ export default {
       const msg = 'RESIZED i=' + i + ', X=' + newX + ', Y=' + newY + ', H(px)=' + newHPx + ', W(px)=' + newWPx
       this.eventLog.push(msg)
       console.log(msg)
-      setTimeout(()=>{
+      setTimeout(() => {
         this.$refs['editChart' + i][0].chartResize()
-      },50)
+      }, 50)
     },
     containerResizedEvent: function (i, newH, newW, newHPx, newWPx) {
       const msg = 'CONTAINER RESIZED i=' + i + ', H=' + newH + ', W=' + newW + ', H(px)=' + newHPx + ', W(px)=' + newWPx
@@ -778,7 +778,6 @@ export default {
       }
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         response = chartData
-        console.log(chartData)
         if (response.code === 200) {
           setTimeout(() => {
             this.finshGetData = false
@@ -1802,8 +1801,8 @@ export default {
       this.$nextTick(() => {
         const chartBox = document.getElementById('chart-' + item.id)
         if (chartBox) {
-          chartBox.style.width = `100%`
-          chartBox.style.height = `100%`
+          chartBox.style.width = '100%'
+          chartBox.style.height = '100%'
           if (item.type === 'group') {
             chartBox.style.height = 'auto'
           }

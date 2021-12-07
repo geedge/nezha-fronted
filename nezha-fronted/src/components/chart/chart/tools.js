@@ -54,7 +54,9 @@ export function isTimeSeries (type) {
 export function isHexagonFigure (type) {
   return type === chartType.hexagonFigure
 }
-
+export function isChartPie (type) {
+  return type === chartType.pie
+}
 export function isUrl (type) {
   return type === chartType.url
 }

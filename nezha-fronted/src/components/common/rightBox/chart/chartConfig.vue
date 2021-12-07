@@ -530,7 +530,7 @@
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'range'"
-                    :prop="'param.valueMapping.mapping.' + index + 'to'"
+                    :prop="'param.valueMapping.mapping.' + index + '.to'"
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
                     class="thresholds-from-item"
                   >

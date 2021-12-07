@@ -24,7 +24,7 @@
 <script>
 import chartHeader from '@/components/chart/chartHeader'
 import chart from '@/components/chart/chart'
-import { isTimeSeries } from './chart/tools'
+import { isChartPie, isTimeSeries } from './chart/tools'
 import { chartType, fromRoute } from '@/components/common/js/constants'
 import bus from '@/libs/bus'
 import axios from 'axios'
@@ -77,7 +77,7 @@ export default {
       this.query(elements, startTime, endTime, step)
     },
     query (elements, startTime, endTime, step) {
-      console.log(this.chartInfo.datasource,elements, startTime, endTime, step)
+      console.log(this.chartInfo.datasource, elements, startTime, endTime, step)
       try {
         switch (this.chartInfo.datasource) {
           case 'metrics':
@@ -96,6 +96,9 @@ export default {
               if (isTimeSeries(this.chartInfo.type)) {
                 query += `&nullType=${this.chartInfo.param.nullType || 'null'}`
               }
+              if (isChartPie(this.chartInfo.type)) {
+                query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
+              }
               query += `&query=${element.expression}`
               return this.$get(query)
             })
@@ -109,6 +112,7 @@ export default {
                   chartData.push({ error: r.msg || r.error || r })
                 }
               })
+              console.log(chartData)
               this.chartData = chartData
             }).finally(() => {
               this.loading = false

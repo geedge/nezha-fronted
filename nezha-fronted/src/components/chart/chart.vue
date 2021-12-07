@@ -10,6 +10,13 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
       ></chart-time-series>
+      <chart-pie
+        v-if="isChartPie(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+      ></chart-pie>
       <chartHexagon
         :ref="'chart'+chartInfo.id"
         v-if="isHexagonFigure(chartInfo.type)"
@@ -53,7 +60,7 @@ import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
-import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText } from './chart/tools'
+import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -101,6 +108,7 @@ export default {
   methods: {
     isTimeSeries,
     isHexagonFigure,
+    isChartPie,
     isUrl,
     isText,
     resize () {

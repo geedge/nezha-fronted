@@ -102,10 +102,11 @@ export default {
       const valueSorted = datas.sort((a, b) => {
         return a[1] - b[1]
       })
-      minTime = timeSorted[0][0]
-      maxTime = timeSorted[timeSorted.length - 1][0]
-      minValue = valueSorted[0][1]
-      maxValue = valueSorted[valueSorted.length - 1][1]
+      console.log(timeSorted, valueSorted)
+      minTime = timeSorted.length ? timeSorted[0][0] : ''
+      maxTime = timeSorted.length ? timeSorted[timeSorted.length - 1][0] : ''
+      minValue = valueSorted.length ? valueSorted[0][1] : ''
+      maxValue = valueSorted.length ? valueSorted[valueSorted.length - 1][1] : ''
       return { minTime, maxTime, minValue, maxValue }
     },
     xAxisLabelFormatter (minTime, maxTime) {

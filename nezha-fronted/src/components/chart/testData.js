@@ -891,6 +891,119 @@ const chartData = {
         varType: null,
         varId: null,
         varName: null
+      },
+      {
+        id: 690506,
+        name: '123',
+        panelId: 1243,
+        groupId: 0,
+        datasource: 'metrics',
+        span: 4,
+        height: 4,
+        updateBy: 1,
+        updateAt: '2021-11-10 07:06:09',
+        type: 'pie',
+        unit: 2,
+        weight: 0,
+        param: JSON.stringify(
+          {
+            nullType: 'null',
+            statistics: 'last',
+            text: 'all',
+            valueMapping:
+              {
+                show: true,
+                mapping: [
+                  { type: 'value', show: true, value: 2, display: 'value', color: { bac: '#8ef9ab', text: '#6a21bc' } },
+                  { type: 'range', show: true, display: 'range', color: { bac: '#ef1cd0', text: '#66d815' }, from: 0, to: 123123 },
+                  { type: 'regx', show: true, display: 'regx', color: { bac: '#d406e2', text: '#f722ec' }, regx: '123' }]
+              }
+          }),
+        pid: null,
+        buildIn: 0,
+        remark: '123',
+        seq: null,
+        x: 0,
+        y: 12,
+        w: 6,
+        h: 4,
+        i: 690506,
+        elements: [
+          {
+            id: 68527,
+            chartId: 690483,
+            // expression: 'up{asset="44.37"}',
+            expression: 'label_replace(up{instance=~\'.*10090\',job=\'\'},"asset","$1","instance","(.*)")',
+            type: 'expert',
+            legend: '{{asset}}',
+            buildIn: 0,
+            seq: null,
+            name: 'A'
+          },
+          {
+            id: 68528,
+            chartId: 690483,
+            expression: 'Hadoop_HBase_Healthy',
+            type: 'expert',
+            legend: '{{asset}}',
+            buildIn: 0,
+            seq: null,
+            name: 'B'
+          }
+        ],
+        sync: null,
+        panel: {
+          id: 1243,
+          name: 'test',
+          createBy: null,
+          type: null,
+          link: null,
+          pid: null,
+          weight: null,
+          buildIn: null,
+          seq: null,
+          children: null,
+          parent: null,
+          chartNum: null
+        },
+        group: {
+          id: 0,
+          name: null,
+          panelId: null,
+          groupId: null,
+          span: null,
+          height: null,
+          updateBy: null,
+          updateAt: null,
+          type: null,
+          unit: null,
+          weight: null,
+          param: null,
+          pid: null,
+          buildIn: null,
+          remark: null,
+          seq: null,
+          x: null,
+          y: null,
+          elements: null,
+          sync: null,
+          panel: null,
+          group: null,
+          children: null,
+          chartNums: null,
+          asset: null,
+          varType: null,
+          varId: null,
+          varName: null
+        },
+        children: [
+
+        ],
+        chartNums: null,
+        asset: null,
+        varType: null,
+        varId: null,
+        varName: null
       }
     ]
   },

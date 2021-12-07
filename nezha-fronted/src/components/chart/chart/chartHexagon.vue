@@ -257,7 +257,6 @@ export default {
       }
       this.assetData.id = data
       const boxWidth = this.$refs.hexagonBox.$el.offsetWidth
-      console.log(boxWidth)
       this.boxWidth = boxWidth
       // this.assetData.rate=window.screen.height/1297;
       this.$nextTick(() => {
@@ -284,12 +283,10 @@ export default {
         this.assetData.position.mt = e.offsetY - (window.innerHeight - this.$refs.alertLabel.$el.offsetHeight)
       }
       if (boxWidth / 2 > e.offsetX) {
-        console.log(123)
         this.assetData.position.left = e.offsetX + 35
         this.assetData.position.right = 0
         this.LRTriangle = true
       } else {
-        console.log(456)
         this.assetData.position.right = boxWidth - (e.offsetX - 35)
         this.assetData.position.left = 0
         this.LRTriangle = false

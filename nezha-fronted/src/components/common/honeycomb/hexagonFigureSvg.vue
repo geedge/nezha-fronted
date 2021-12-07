@@ -172,7 +172,6 @@ export default {
       immediate: false,
       deep: true,
       handler (n) {
-        console.log('hexData', n)
         this.init()
       }
     },
@@ -180,7 +179,6 @@ export default {
       immediate: false,
       deep: true,
       handler () {
-        console.log('col')
         this.init()
       }
     },
@@ -295,7 +293,6 @@ export default {
     },
     reload () {
       if (!document.hidden) {
-        console.log('reload')
         this.init()
       }
     },
@@ -816,7 +813,6 @@ export default {
       getHexagon(this.hexagonSvgID).svgPolyline.on('mouseout', PolylineOut)
     },
     clearData () { // 清除数据 以及解绑事件 防止内存崩溃
-      console.log(123123123)
       if (getHexagon(this.hexagonSvgID) && getHexagon(this.hexagonSvgID).hexagonSvg) {
         this.allHexagon.forEach((item) => {
           item.off('mouseover', this.hexagonOver)
@@ -837,7 +833,6 @@ export default {
       }
       const dom = document.getElementById(this.hexagonSvgID)
       const child = document.getElementById('SvgHex' + this.hexagonSvgID)
-      console.log(dom, child)
       if (dom) {
         dom.removeChild(child)
       }
@@ -848,7 +843,6 @@ export default {
 
   },
   beforeDestroy () {
-    console.log('beforeDestroy')
     this.clearData()
     if (getHexagon(this.hexagonSvgID)) {
       getHexagon(this.hexagonSvgID).allHexagonRect = null// 文本框
