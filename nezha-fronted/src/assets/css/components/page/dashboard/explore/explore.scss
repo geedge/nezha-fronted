@@ -20,6 +20,11 @@
   .el-table--border::after, .el-table--group::after, .el-table::before {
     height: 0;
   }
+  .introduce-view .page-header{
+    i {
+      color: $--color-text-regular;
+    }
+  }
 }
 
 .explore-collapse.el-collapse {
