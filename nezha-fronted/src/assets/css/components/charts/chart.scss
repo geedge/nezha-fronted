@@ -136,7 +136,7 @@
 .panel-info-corner--error .panel-info-corner-inner {
    border-left: 28px solid #e02f44;
    border-right: none;
-   border-bottom: 28px solid $--background-color-empty;
+   border-bottom: 28px solid transparent;
  }
 .panel-info-corner-inner {
   width: 0;
@@ -185,7 +185,7 @@
   .panel-info-corner--error .panel-info-corner-inner {
     border-left: 28px solid #e6a23c;
     border-right: none;
-    border-bottom: 28px solid $--background-color-empty;
+    border-bottom: 28px solid transparent;
   }
   .panel-info-corner-inner {
     width: 0;

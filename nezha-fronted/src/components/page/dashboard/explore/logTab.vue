@@ -32,7 +32,7 @@
       </div>
       <div class="log-operation">
         <span class="operation-label">Result:</span>
-        <span>{{tableData.length}}</span>
+        <span class="operation-length">{{tableData.length}}</span>
       </div>
       <div class="log-operation log-operation--right">
         <button class="top-tool-btn" type="button" @click="exportLog"><i class="nz-icon nz-icon-download"></i></button>
