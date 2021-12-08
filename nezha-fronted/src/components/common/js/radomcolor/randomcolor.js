@@ -320,6 +320,12 @@ function randomcolor () {
   return n()
 }
 
+function ColorReverse (OldColorValue) {
+  const newValue = '0x' + OldColorValue.replace(/#/g, '')
+  const str = '000000' + (0xFFFFFF - newValue).toString(16)
+  return '#' + str.substring(str.length - 6, str.length)
+}
 export {
-  randomcolor
+  randomcolor,
+  ColorReverse
 }

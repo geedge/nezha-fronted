@@ -57,6 +57,9 @@ export function isHexagonFigure (type) {
 export function isChartPie (type) {
   return type === chartType.pie
 }
+export function isChartBar (type) {
+  return type === chartType.bar
+}
 export function isUrl (type) {
   return type === chartType.url
 }

@@ -193,7 +193,9 @@ export default {
     chartData: {
       deep: true,
       handler (n) {
-        this.initChart(this.chartOption)
+        if (!this.isInit) {
+          this.initChart(this.chartOption)
+        }
       }
     }
   },

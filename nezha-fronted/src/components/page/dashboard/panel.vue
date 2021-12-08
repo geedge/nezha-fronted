@@ -400,7 +400,6 @@ export default {
             this.chart.panelId = this.showPanel.id
             this.chart.panelName = this.showPanel.name
             this.chart.param = JSON.parse(this.chart.param)
-            this.chart.datasource = 'metrics'
             if (!this.chart.groupId || this.chart.groupId == -1) {
               this.chart.groupId = ''
             }
@@ -503,7 +502,7 @@ export default {
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.chartListLoading = false
-          this.dataList = chartData.data.list.map(item => {
+          this.dataList = response.data.list.map(item => {
             return {
               ...item,
               hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件

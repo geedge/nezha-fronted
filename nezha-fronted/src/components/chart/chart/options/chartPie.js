@@ -15,7 +15,6 @@ const chartPieOption = {
         show: true,
         color: '#333',
         position: 'inside',
-        rotate: true,
         width: 200,
         overflow: 'truncate',
         ellipsis: '...'

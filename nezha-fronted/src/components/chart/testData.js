@@ -902,7 +902,7 @@ const chartData = {
         height: 4,
         updateBy: 1,
         updateAt: '2021-11-10 07:06:09',
-        type: 'pie',
+        type: 'bar',
         unit: 2,
         weight: 0,
         param: JSON.stringify(
