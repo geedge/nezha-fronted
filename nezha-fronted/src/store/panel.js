@@ -2,7 +2,9 @@ const panel = {
   state: {
     showRightBox: false,
     chart: '',
-    delChart: false
+    delChart: false,
+    groupId: '',
+    type: ''
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -12,12 +14,20 @@ const panel = {
       state.chart = chart
     },
     setDelChart (state, flag) {
-      state.chart = flag
+      state.delChart = flag
     },
-    clean (state) {
+    setType (state, type) {
+      state.type = type
+    },
+    setGroupId (state, id) {
+      state.groupId = id
+    },
+    cleanPanel (state) {
       state.showRightBox = false
       state.chart = ''
       state.delChart = false
+      state.groupId = ''
+      state.type = ''
     }
   },
   getters: {
@@ -27,23 +37,35 @@ const panel = {
     getChart (state) {
       return state.chart
     },
+    getType (state) {
+      return state.type
+    },
+    getGroupId (state) {
+      return state.groupId
+    },
     getDelChart (state) {
       return state.delChart
     }
   },
   actions: {
-    dispatchShowRightBox (flag) {
-      this.store.commit('setShowRightBox', flag)
+    dispatchShowRightBox (store,flag) {
+      store.commit('setShowRightBox', flag)
     },
-    dispatchChart (chart) {
-      this.store.commit('setShowRightBox', chart)
+    dispatchChart (store, chart) {
+      store.commit('setShowRightBox', chart)
     },
-    dispatchDelChart (flag) {
-      this.store.commit('setChart', flag)
+    dispatchDelChart (store, playload) {
+      store.commit('setDelChart', true)
+      store.commit('setChart', playload.chart)
+      store.commit('setType', playload.type)
     },
-    dispatchEditChart (chart) {
-      this.store.commit('setShowRightBox', true)
-      this.store.commit('setChart', chart)
+    dispatchEditChart (store, playload) {
+      store.commit('setShowRightBox', true)
+      store.commit('setChart', playload.chart)
+      store.commit('setType', playload.type)
+    },
+    clearPanel (store) {
+      store.commit('cleanPanel')
     }
   }
 }

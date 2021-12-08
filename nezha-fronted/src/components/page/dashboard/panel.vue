@@ -43,7 +43,7 @@
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10"></pick-time>
 
               <button id="panel-add-chart" v-has="'panel_chart_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
-                      type="button" @click="addChart">
+                      type="button" @click="addChartBefore">
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>
 
@@ -120,7 +120,7 @@
 <!--        @on-delete-success="delChartOk"-->
 <!--      ></chart-box>-->
       <chart-right-box
-        v-if="rightBox.chart.show"
+        v-if="chartRightBoxShow"
         ref="addChartModal"
         :chart="chart"
         :from="fromRoute.panel"
@@ -278,6 +278,14 @@ export default {
     chartTempBox,
     chartRightBox
   },
+  computed: {
+    chartRightBoxShow () {
+      return this.$store.getters.getShowRightBox
+    },
+    delChartFlag () {
+      return this.$store.getters.getDelChart
+    }
+  },
   methods: {
     // 刷新
     Refresh () {
@@ -355,7 +363,6 @@ export default {
       this.chart = this.newChart()
       this.chart.panelId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
-      this.rightBox.chart.show = true
     },
     addChartByTemp () {
       this.chart = JSON.parse(JSON.stringify(this.blankChartTemp))
@@ -380,7 +387,6 @@ export default {
       this.chart.panelId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
       this.chart.isGroup = true
-      this.rightBox.chart.show = true
     },
     newChart () {
       return JSON.parse(JSON.stringify(this.blankChart))
@@ -391,7 +397,7 @@ export default {
         this.chart = JSON.parse(JSON.stringify(data))
         this.chart.panelId = this.showPanel.id
         this.chart.panelName = this.showPanel.name
-        this.rightBox.chart.show = true
+        this.chart.id = ''
       } else {
         this.$get('visual/panel/chart/' + data.id).then(res => {
           if (res.code === 200) {
@@ -403,7 +409,6 @@ export default {
             if (!this.chart.groupId || this.chart.groupId == -1) {
               this.chart.groupId = ''
             }
-            this.rightBox.chart.show = true
           } else {
             this.$message.error(res.msg)
           }
@@ -411,7 +416,8 @@ export default {
       }
     },
     closeChartBox (refresh) {
-      this.rightBox.chart.show = false
+      // this.rightBox.chart.show = false
+      this.$store.dispatch('clearPanel')
       /* if (refresh) {
          this.getData(this.filter)
       } */
@@ -442,26 +448,7 @@ export default {
               type: 'success',
               message: this.$t('tip.deleteSuccess')
             })
-            this.rightBox.chart.show = false
-            const chartList = this.$refs.chartList.dataList
-            for (let i = 0; i < chartList.length; i++) {
-              /* if (chartList[i].id === data.id) {
-                chartList.splice(i, 1)
-              }
-              if (chartList[i].type === 'group') {
-                chartList[i].children = chartList[i].children.filter((item) => item.id !== data.id)
-              } */
-              // if(data.next != -1){
-              //   if(chartList[i].id === data.next){
-              //     nextChart = chartList[i]
-              //   }
-              // }
-              // if(data.prev != 0){
-              //   if(chartList[i].id === data.prev){
-              //     prevChart = chartList[i]
-              //   }
-              // }
-            }
+            this.getData(this.filter)
             // this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop)
             // if(nextChart&&prevChart){ //删除图表为中间位置
             //   prevChart.next = nextChart.id;
@@ -736,6 +723,32 @@ export default {
     },
     load () {
 
+    },
+    addChartBefore () {
+      this.$store.dispatch('dispatchEditChart', {
+        chart: '',
+        type: 'add'
+      })
+    },
+    disposeChart () {
+      const chartInfo = this.$store.getters.getChart
+      const groupId = this.$store.getters.getGroupId
+      const type = this.$store.getters.getType
+      if (type === 'add') {
+        this.addChart()
+      }
+      if (type === 'edit') {
+        this.editChart(chartInfo)
+      }
+      if (type === 'addGroupItem') {
+        this.addGroupItem(groupId)
+      }
+      if (type === 'delete') {
+        this.delChart(chartInfo)
+      }
+      if (type === 'duplicate') {
+        this.editChart(chartInfo, true)
+      }
     }
   },
   created () {
@@ -759,6 +772,24 @@ export default {
       deep: true,
       handler (n) {
         localStorage.setItem('panelTime', JSON.stringify(n))
+      }
+    },
+    chartRightBoxShow: {
+      immediate: false,
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.disposeChart()
+        }
+      }
+    },
+    delChartFlag: {
+      immediate: false,
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.disposeChart()
+        }
       }
     },
     $route: {

@@ -171,8 +171,8 @@ export default {
           this.$put('visual/panel/chart', params).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-              this.esc(true)
               this.$emit('on-create-success')
+              this.esc(true)
             } else {
               this.$message.error(response.msg)
             }
@@ -181,8 +181,8 @@ export default {
           this.$post('visual/panel/chart', params).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-              this.esc(true)
               this.$emit('on-create-success')
+              this.esc(true)
             } else {
               this.$message.error(response.msg)
             }

@@ -65,14 +65,23 @@ export default {
       this.$emit('refresh')
     },
     editChart () {
-      this.$emit('edit-chart', this.chartInfo)
-      this.$store.dispatch('dispatchEditChart', this.chartInfo)
+      // this.$emit('edit-chart', this.chartInfo)
+      this.$store.dispatch('dispatchEditChart', {
+        chart: this.chartInfo,
+        type: 'edit'
+      })
     },
     removeChart () {
-      this.$emit('delChart', this.chartInfo)
+      this.$store.dispatch('dispatchDelChart', {
+        chart: this.chartInfo,
+        type: 'delete'
+      })
     },
     duplicate () {
-
+      this.$store.dispatch('dispatchEditChart', {
+        chart: this.chartInfo,
+        type: 'duplicate'
+      })
     },
     clickos () {
       this.dropdownMenuShow = false

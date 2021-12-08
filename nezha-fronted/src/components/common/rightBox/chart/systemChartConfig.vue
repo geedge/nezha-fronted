@@ -461,7 +461,7 @@ export default {
               this.groupList = system.group
               this.selectList = system.select
             }
-            this.$refs.chartForm.clearValidate()
+            this.$refs.chartForm && this.$refs.chartForm.clearValidate()
           }
         } else {
           this.$message.error(res.msg)
