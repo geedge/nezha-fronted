@@ -6,33 +6,7 @@ const chartBarOption = {
     show: false
   },
   xAxis: {
-    type: 'category',
-    show: true,
-    axisLine: {
-      show: false
-    },
-    axisTick: {
-      show: false
-    },
-    showAllSymbol: false,
-    axisPointer: { // y轴上显示指针对应的值
-      show: false
-    },
-    axisLabel: {
-      margin: 8,
-      formatter (params) {
-        console.log(params)
-        const chartWidth = 900
-        const length = Math.ceil((chartWidth) / 16)
-        let val = ''
-        if (params.length > length) {
-          val = params.substr(0, length) + '...'
-          return val
-        } else {
-          return params
-        }
-      }
-    }
+    type: 'category'
   },
   yAxis: {
     type: 'value'

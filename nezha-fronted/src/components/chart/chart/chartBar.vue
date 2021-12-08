@@ -80,9 +80,26 @@ export default {
   },
   methods: {
     initChart (chartOption) {
+      const self = this
       this.legends = []
       chartOption.series = this.initPieData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
-      // chartOption.series.label.formatter = this.pieFormatterLabel
+      chartOption.xAxis.data = chartOption.series.data.map(item => item.name)
+      chartOption.axisLabel = {
+        margin: 8,
+        formatter (params) {
+          console.log(document.getElementById('chart-canvas-' + self.chartInfo.id))
+          const dataLength = chartOption.series.data.length || 1
+          const chartWidth = (document.getElementById('chart-canvas-' + self.chartInfo.id).offsetWidth - 80) / dataLength// 容器宽 - padding - 空余
+          const length = Math.ceil((chartWidth) / 16)
+          let val = ''
+          if (params.length > length) {
+            val = params.substr(0, length) + '...'
+            return val
+          } else {
+            return params
+          }
+        }
+      }
       chartOption.tooltip.formatter = this.formatterFunc
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
@@ -140,9 +157,12 @@ export default {
                 formatter: this.pieFormatterLabel,
                 rich: {
                   color: {
-                    color: mapping ? mapping.color.text : '#333333'
+                    color: mapping ? mapping.color.text : '#000000'
                   }
                 }
+              },
+              itemStyle: {
+                color: mapping ? mapping.color.bac : this.colorList[colorIndex]
               }
             })
             colorIndex++
@@ -184,13 +204,15 @@ export default {
                     </div>
                 </div>
                `
-    },
+    }
   },
   watch: {
     chartData: {
       deep: true,
       handler (n) {
-        this.initChart(this.chartOption)
+        if (!this.isInit) {
+          this.initChart(this.chartOption)
+        }
       }
     }
   },
