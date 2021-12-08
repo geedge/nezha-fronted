@@ -1,6 +1,6 @@
 import chartDataFormat from '@/components/charts/chartDataFormat'
 import { getUUID, resetZIndex } from '@/components/common/js/common'
-import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
+import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
 const rz = {
   methods: {
     rz (e) {
@@ -304,8 +304,8 @@ export default {
         value: undefined,
         display: '',
         color: {
-          bac: bacColor,
-          text: randomcolor()
+          bac: bacColor + 'FF',
+          text: ColorReverse(bacColor) + 'FF'
         }
       })
       this.change()

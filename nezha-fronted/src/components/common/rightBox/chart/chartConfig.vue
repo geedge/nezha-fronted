@@ -649,7 +649,7 @@ import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import VueTagsInput from '@johmun/vue-tags-input'
 import draggable from 'vuedraggable'
-import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
+import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
 export default {
   name: 'chartConfig',
   components: {
