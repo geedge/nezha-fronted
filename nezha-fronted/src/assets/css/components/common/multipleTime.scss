@@ -1,4 +1,8 @@
 .multiple-time-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
   .loading-font {
     color: #232f3e !important;
   }
@@ -51,12 +55,6 @@
     margin-left: 4px;
   }
   .calendar-popover-text {
-  }
-  .multiple-time-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 4px;
   }
   .compare-box .nz-icon-compare {
     border-right: none;

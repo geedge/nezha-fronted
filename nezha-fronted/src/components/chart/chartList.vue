@@ -33,7 +33,7 @@
         ></panel-chart>
       </grid-item>
     </grid-layout>
-
+    <!-- noData -->
     <div v-if="noData" class="no-data">
       <svg aria-hidden="true" class="icon">
         <use xlink:href="#nz-icon-no-data-panel"></use>

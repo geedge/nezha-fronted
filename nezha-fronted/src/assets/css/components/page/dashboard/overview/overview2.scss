@@ -717,4 +717,17 @@
 }
 .leaflet-bottom{
   z-index: 409;
+  .leaflet-control-zoom {
+    a {
+      background-color: $--background-color-base;
+      i {
+        color: $--overview-icon-color;
+      }
+    }
+    a.leaflet-disabled {
+      i {
+        color: $--overview-disabled-icon-color;
+      }
+    }
+  }
 }

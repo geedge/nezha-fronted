@@ -84,6 +84,20 @@
       }
     }
   }
+  .nz-panel-chart {
+    height: 100%;
+    width: 100%;
+    .nz-panel-chart__no-data {
+      width: 100%;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      margin-top: -12px;
+      color: $--color-text-regular;
+      font-family: NotoSans;
+      font-size: 12px;
+    }
+  }
 }
 .panel-chart.panel-chart--fullscreen {
   border: none;
@@ -99,6 +113,9 @@
   div:nth-of-type(2) {
     background-color: $--background-color-empty !important;
     border-color: $--border-color-light !important;
+    div div {
+      color: $--color-text-regular;
+    }
   }
   .nz-chart__tooltip {
     .row__label,.row__value {
