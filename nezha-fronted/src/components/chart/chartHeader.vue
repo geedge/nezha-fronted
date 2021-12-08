@@ -50,11 +50,16 @@ export default {
   name: 'chartHeader',
   props: {
     chartInfo: Object,
-    from: String
+    from: String,
+    error: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {
-      dropdownMenuShow: false
+      dropdownMenuShow: false,
+      errorText: ''
     }
   },
   methods: {

@@ -95,9 +95,9 @@ export default {
               if (isTimeSeries(this.chartInfo.type)) {
                 query += `&nullType=${this.chartInfo.param.nullType || 'null'}`
               }
-              if (isChartPie(this.chartInfo.type)) {
-                query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
-              }
+              // if (isChartPie(this.chartInfo.type)) {
+              //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
+              // }
               query += `&query=${element.expression}`
               return this.$get(query)
             })
