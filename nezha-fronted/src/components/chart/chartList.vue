@@ -136,11 +136,11 @@ export default {
         this.noData = !n || n.length < 1
         this.copyDataList = n.map(item => {
           let param = item.param
-          try {
-            param = JSON.parse(item.param)
-          } catch (e) {
-            console.info(e)
-          }
+          // try {
+          //   param = JSON.parse(item.param)
+          // } catch (e) {
+          //   console.info(e)
+          // }
           param.showHeader = true
           return {
             ...item,

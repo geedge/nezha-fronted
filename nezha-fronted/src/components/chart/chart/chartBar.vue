@@ -87,7 +87,6 @@ export default {
       chartOption.axisLabel = {
         margin: 8,
         formatter (params) {
-          console.log(document.getElementById('chart-canvas-' + self.chartInfo.id))
           const dataLength = chartOption.series.data.length || 1
           const chartWidth = (document.getElementById('chart-canvas-' + self.chartInfo.id).offsetWidth - 80) / dataLength// 容器宽 - padding - 空余
           const length = Math.ceil((chartWidth) / 16)
