@@ -251,7 +251,7 @@ export default {
       this.rightBox.chart.show = true
     },
     addChartByTemp () {
-      this.chart = Object.assign({}, this.blankChartTemp)
+      this.chart = JSON.parse(JSON.stringify(this.blankChartTemp))
       this.chart.panelId = this.showPanel.id
       if (this.from === fromRoute.endpoint) {
         this.chart.varType = 2
