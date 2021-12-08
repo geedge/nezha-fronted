@@ -94,6 +94,7 @@
                 @on-refresh-time="refreshTime"
                 @on-remove-chart="delChart"
                 @on-add-group-item-chart="addGroupItem"
+                :loading="chartListLoading"
               ></chart-list>
             </div>
           </div>

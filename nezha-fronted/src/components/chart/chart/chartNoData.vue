@@ -1,5 +1,7 @@
 <template>
-  <div class="nz-chart__no-data"></div>
+  <div class="nz-panel-chart">
+    <div class="nz-panel-chart__no-data">No data</div>
+  </div>
 </template>
 
 <script>
@@ -7,7 +9,3 @@ export default {
   name: 'chartNoData'
 }
 </script>
-
-<style scoped>
-
-</style>
