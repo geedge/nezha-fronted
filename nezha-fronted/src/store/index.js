@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './user'
+import panel from './panel'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
   modules: {
-    user
+    user,
+    panel
   },
   state: {
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */

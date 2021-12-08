@@ -66,9 +66,10 @@ export default {
     },
     editChart () {
       this.$emit('edit-chart', this.chartInfo)
+      this.$store.dispatch('dispatchEditChart', this.chartInfo)
     },
     removeChart () {
-
+      this.$emit('delChart', this.chartInfo)
     },
     duplicate () {
 

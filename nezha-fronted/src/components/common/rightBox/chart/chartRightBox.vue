@@ -326,6 +326,7 @@ export default {
       immediate: true,
       handler (n) {
         this.editChart = JSON.parse(JSON.stringify(n))
+        console.log(this.editChart)
         if (this.editChart.groupId === -1) {
           this.editChart.groupId = ''
         }
