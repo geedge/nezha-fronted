@@ -80,7 +80,7 @@ export default {
     initChart (chartOption) {
       const self = this
       this.legends = []
-      chartOption.series = this.initPieData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+      chartOption.series = this.initBarData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       chartOption.xAxis.data = chartOption.series.data.map(item => item.name)
       chartOption.axisLabel = {
         margin: 8,

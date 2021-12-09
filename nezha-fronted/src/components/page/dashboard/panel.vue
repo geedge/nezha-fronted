@@ -361,6 +361,7 @@ export default {
     /* 图表相关操作--start */
     addChart () {
       this.chart = this.newChart()
+      this.chart.param.thresholds = [{ value: undefined, color: randomcolor() }]
       this.chart.panelId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
     },
