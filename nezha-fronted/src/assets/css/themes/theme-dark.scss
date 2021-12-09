@@ -205,12 +205,21 @@ $--detail-left-background-color: $--background-color-base;
 
 /* Export */
 $--export-span-background-color: $--background-color-base;
+$--export-hover-background-color: $--background-color-empty;
 
 /* switch */
 $--switch-background-color: $--background-color-base;
 
 /* project */
 $--project-input-background-color: $--background-color-base;
+
+/* alert rule */
+$--alert-rule-background-color: $--background-color-base;
+$--alert-rule-color: $--background-color-base;
+
+/* 图表弹框 */
+$--chart-background-color: $--background-color-empty;
+$--chart-border-color: $--border-color-light;
 
 /* 13.panel */
 $--chart-title-hover-background-color: #323238;

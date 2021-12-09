@@ -110,13 +110,6 @@
   }
 }
 .chart__canvas {
-  div:nth-of-type(2) {
-    background-color: $--background-color-empty !important;
-    border-color: $--border-color-light !important;
-    div div {
-      color: $--color-text-regular;
-    }
-  }
   .nz-chart__tooltip {
     .row__label,.row__value {
       color: $--color-text-regular;

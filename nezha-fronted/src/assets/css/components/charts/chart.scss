@@ -661,6 +661,9 @@
 
   .el-dialog__header{
     padding: 20px 20px 5px;
+    div {
+      color: $--color-text-regular;
+    }
   }
 
 }

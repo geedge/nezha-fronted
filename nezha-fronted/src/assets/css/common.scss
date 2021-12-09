@@ -354,3 +354,12 @@ td .nz-icon-gear:before{
 .el-scrollbar-normal__color {
   color: $--color-text-regular;
 }
+.chart-body,.chart__canvas {
+  div:nth-of-type(2) {
+    background-color: $--chart-background-color !important;
+    border-color: $--chart-border-color !important;
+    div {
+      color: $--color-text-regular;
+    }
+  }
+}

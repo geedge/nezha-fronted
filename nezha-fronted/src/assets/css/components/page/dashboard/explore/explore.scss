@@ -50,6 +50,15 @@
   }
   .el-collapse-item__content {
     padding: 0 30px 20px;
+    //.chart-body {
+    //  div:nth-of-type(2) {
+    //    background-color: $--chart-background-color !important;
+    //    border-color: $--chart-border-color !important;
+    //    div {
+    //      color: $--color-text-regular;
+    //    }
+    //  }
+    //}
   }
 }
 .explore {
@@ -190,6 +199,9 @@
         }
       }
     }
+  }
+  .el-select-dropdown.el-popper {
+    top: -135px !important;
   }
 }
 /*外部引用 样式start*/

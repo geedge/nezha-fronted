@@ -67,8 +67,14 @@
     width: 100%;
   }
   .el-tag--mini.el-tag--light {
-    background-color: $--background-color-base;
+    background-color: $--alert-rule-background-color;
     border-color: $--border-color-light;
+    .el-tag__close {
+      color: $--alert-rule-color;
+    }
+    .el-tag__close:hover {
+      color: #FFFFFF;
+    }
   }
 }
 .severity-item{

@@ -25,7 +25,7 @@
       height: calc(100% - 94px);
       border-bottom: 1px solid $--border-color-light;
 
-      .el-table--border::after, .el-table--group::after, .el-table::before {
+      .el-table--border::after, .el-table--group::after{
         height: 0;
       }
       .el-table__row {

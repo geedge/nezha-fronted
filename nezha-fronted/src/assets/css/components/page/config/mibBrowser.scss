@@ -141,6 +141,11 @@
   .mib-browser-right {
     width: calc(72% - 4px);
     height: 100%;
+    .plTableBox.mib-browser-table {
+      .el-table__body-wrapper {
+        height: calc(100% - 40px) !important;
+      }
+    }
   }
   .left-right-resize {
     width: 2px;
