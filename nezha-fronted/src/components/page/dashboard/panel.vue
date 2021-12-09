@@ -524,6 +524,10 @@ export default {
       this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       this.getTableData()
       this.getData(this.filter)
+      this.$store.dispatch('dispatchPanelTime',{
+        time: this.searchTime,
+        nowTimeType: this.nowTimeType
+      })
     },
     setSearchTime (type, val, nowTimeType) { // 设置searchTime
       if (type === 'minute') {
@@ -763,6 +767,15 @@ export default {
   },
   created () {
     this.getTableData()
+    this.$store.dispatch('dispatchPanelTime',{
+      time: this.searchTime,
+      nowTimeType: {
+        id: 4,
+        text: this.$t('dashboard.panel.lastOneHour'),
+        type: 'hour',
+        value: 1
+      }
+    })
   },
   mounted () {
     this.scrollbarWrap = this.$refs.dashboardScrollbar

@@ -39,7 +39,6 @@
         ref="logTable"
         class="nz-table2"
         size="mini"
-        width="100%"
         v-if="tableData.length"
       >
         <el-table-column

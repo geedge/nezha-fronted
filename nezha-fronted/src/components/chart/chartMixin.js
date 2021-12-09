@@ -21,6 +21,14 @@ export default {
     chartOption: Object,
     isFullscreen: Boolean
   },
+  computed: {
+    filterTime () {
+      return this.$store.getters.getTimeRange
+    },
+    nowTimeType () {
+      return this.$store.getters.getNowTimeType
+    }
+  },
   methods: {
     handleTimeSeries (chartInfo, seriesTemplate, originalDatas) {
       const series = []

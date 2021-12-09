@@ -4,7 +4,9 @@ const panel = {
     chart: '',
     delChart: false,
     groupId: '',
-    type: ''
+    type: '',
+    timeRange: [],
+    nowTimeType: {}
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -21,6 +23,12 @@ const panel = {
     },
     setGroupId (state, id) {
       state.groupId = id
+    },
+    setPanelTime (state, time) {
+      state.timeRange = time
+    },
+    setPanelNowTimeType (state, nowTimeType) {
+      state.nowTimeType = nowTimeType
     },
     cleanPanel (state) {
       state.showRightBox = false
@@ -43,12 +51,18 @@ const panel = {
     getGroupId (state) {
       return state.groupId
     },
+    getTimeRange (state) {
+      return state.timeRange
+    },
+    getNowTimeType (state) {
+      return state.nowTimeType
+    },
     getDelChart (state) {
       return state.delChart
     }
   },
   actions: {
-    dispatchShowRightBox (store,flag) {
+    dispatchShowRightBox (store, flag) {
       store.commit('setShowRightBox', flag)
     },
     dispatchChart (store, chart) {
@@ -58,6 +72,10 @@ const panel = {
       store.commit('setDelChart', true)
       store.commit('setChart', playload.chart)
       store.commit('setType', playload.type)
+    },
+    dispatchPanelTime (store, playload) {
+      store.commit('setPanelTime', playload.time)
+      store.commit('setPanelNowTimeType', playload.nowTimeType)
     },
     dispatchEditChart (store, playload) {
       store.commit('setShowRightBox', true)
