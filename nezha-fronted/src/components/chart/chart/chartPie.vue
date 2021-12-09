@@ -19,14 +19,12 @@
 <script>
 import legend from '@/components/chart/chart/legend'
 import chartMixin from '@/components/chart/chartMixin'
+import chartFormat from '@/components/chart/chartFormat'
 import { chartLegendPlacement } from '@/components/common/js/constants'
 import * as echarts from 'echarts'
 import { getChart, setChart } from '@/components/common/js/common'
-import moment from 'moment-timezone'
-import bus from '@/libs/bus'
 import { formatScientificNotation, getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/charts/chartDataFormat'
-import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { initColor } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
 
@@ -35,7 +33,7 @@ export default {
   components: {
     chartLegend: legend
   },
-  mixins: [chartMixin],
+  mixins: [chartMixin, chartFormat],
   props: {
     chartInfo: Object,
     chartData: Array,
@@ -92,30 +90,6 @@ export default {
         this.isInit = false
       }, 200)
     },
-    getMinMaxFromData (originalDatas) {
-      let minTime = null
-      let maxTime = null
-      let minValue = null
-      let maxValue = null
-      // 将数据提为二维数组
-      let datas = []
-      originalDatas.forEach((originalData, expressionIndex) => {
-        originalData.forEach((data, dataIndex) => {
-          datas = [...datas, ...data.values]
-        })
-      })
-      const timeSorted = datas.sort((a, b) => {
-        return a[0] - b[0]
-      })
-      const valueSorted = datas.sort((a, b) => {
-        return a[1] - b[1]
-      })
-      minTime = timeSorted.length ? timeSorted[0][0] : ''
-      maxTime = timeSorted.length ? timeSorted[timeSorted.length - 1][0] : ''
-      minValue = valueSorted.length ? valueSorted[0][1] : ''
-      maxValue = valueSorted.length ? valueSorted[valueSorted.length - 1][1] : ''
-      return { minTime, maxTime, minValue, maxValue }
-    },
     initPieData (chartInfo, seriesTemplate, originalDatas) {
       let colorIndex = 0
       const s = lodash.cloneDeep(seriesTemplate)
@@ -124,12 +98,14 @@ export default {
         originalData.forEach((data, dataIndex) => {
           if (s) {
             const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
+            const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
             const mapping = this.selectMapping(value, chartInfo.param.valueMapping)
             // eslint-disable-next-line vue/no-mutating-props
             mapping && (this.chartOption.color[colorIndex] = mapping.color.bac)
             s.data.push({
-              value: chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2),
+              value: value,
               realValue: value,
+              showValue: showValue,
               name: this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex),
               labels: data.metric,
               seriesIndex: expressionIndex,
@@ -151,34 +127,15 @@ export default {
       })
       return s
     },
-    pieFormatterLabel (params) {
-      let str = '{color|'
-      if (this.chartInfo.param.text === 'all') {
-        str += params.data.name
-        str += ' : '
-        str += params.data.mapping && params.data.mapping.display ? params.data.mapping.display : params.data.value
-      }
-      if (this.chartInfo.param.text === 'value') {
-        str += params.data.mapping && params.data.mapping.display ? params.data.mapping.display : params.data.value
-      }
-      if (this.chartInfo.param.text === 'legend') {
-        str += params.data.name
-      }
-      if (this.chartInfo.param.text === 'none') {
-        str += ''
-      }
-      str += '}'
-      return str
-    },
     formatterFunc: function (params, ticket, callback) {
-      const chartInfo = this.chartInfo
+      const self = this
       return `<div>
                     <div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;  min-width: 150px; max-width: 600px; line-height: 18px; font-size: 14px;">
                         <div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${params.data.name}</div>
                         <div style="font-size:12px;display:flex;justify-content: space-between;">
                             <div>value</div>
-                            <div style="display: ${params.data.mapping && params.data.mapping.display ? 'none' : 'inline-block'}">${chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value, null, -1, 2)}</div>
-                            <div style="display: ${params.data.mapping && params.data.mapping.display ? 'inline-block' : 'none'}">${params.data.mapping.display}</div>
+                            <div style="display: ${params.data.mapping && params.data.mapping.display ? 'none' : 'inline-block'}">${params.data.showValue}</div>
+                            <div style="display: ${params.data.mapping && params.data.mapping.display ? 'inline-block' : 'none'}">${self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue })}</div>
                         </div>
                         <div style="font-size:12px;display:flex;justify-content: space-between;">
                             <div>percent</div>
@@ -187,16 +144,6 @@ export default {
                     </div>
                 </div>
                `
-    }
-  },
-  watch: {
-    chartData: {
-      deep: true,
-      handler (n) {
-        if (!this.isInit) {
-          this.initChart(this.chartOption)
-        }
-      }
     }
   },
   mounted () {

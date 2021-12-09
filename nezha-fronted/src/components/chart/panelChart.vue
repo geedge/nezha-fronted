@@ -112,6 +112,8 @@ export default {
                 }
               })
               this.chartData = chartData
+            }).catch(res => {
+              console.log(res)
             }).finally(() => {
               this.loading = false
             })

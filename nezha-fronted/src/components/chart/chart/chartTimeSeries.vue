@@ -246,16 +246,6 @@ export default {
       }
     }
   },
-  watch: {
-    chartData: {
-      deep: true,
-      handler (n) {
-        if (!this.isInit) {
-          this.initChart(this.chartOption)
-        }
-      }
-    }
-  },
   mounted () {
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color

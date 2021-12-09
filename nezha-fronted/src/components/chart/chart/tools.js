@@ -67,6 +67,9 @@ export function isUrl (type) {
 export function isText (type) {
   return type === chartType.text
 }
+export function isTreemap (type) {
+  return type === chartType.treemap
+}
 
 export function initColor (colorNum = 20) {
   const colorList = [

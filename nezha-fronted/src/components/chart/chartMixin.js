@@ -113,22 +113,6 @@ export default {
         return aliasExpression
       }
     },
-    handleDisplay (display, params) {
-      if (/\{\{.+\}\}/.test(display)) {
-        const labelValue = display.replace(/(\{\{.+?\}\})/g, function (i) {
-          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          console.log(label)
-          let value = null
-          if (params[label]) {
-            value = params[label]
-          }
-          return value || label
-        })
-        return labelValue
-      } else {
-        return display
-      }
-    },
     selectMapping (value, valueMapping) {
       let mapping = ''
       if (valueMapping.show) {
@@ -175,6 +159,16 @@ export default {
             }
           })
         }, 300)
+      }
+    }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      handler (n) {
+        if (!this.isInit) {
+          this.initChart(this.chartOption)
+        }
       }
     }
   },

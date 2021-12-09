@@ -66,7 +66,7 @@
           <transition name="el-zoom-in-top">
             <el-row v-show="expressionsShow[index-1].show" style="margin-bottom: 10px">
               <el-form-item :prop="'elements.' + (index -1) + '.expression'"
-                            :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}">
+                            :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}">
                 <promql-input
                   :from-father-data="true"
                   :metricOptionsParent="metricOptions"
@@ -177,7 +177,7 @@
           :label="$t('dashboard.panel.chartForm.limit')"
           class="form-item--half-width"
           prop="param.limit">
-          <el-input
+          <el-input-number
             size="small"
             :placeholder="$t('placeholder.log.limit')"
             v-model.number="chartConfig.param.limit"
@@ -404,7 +404,7 @@
               :key="index"
               class="thresholds-item"
               :prop="'param.thresholds.' + index + '.value'"
-              :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
+              :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
             >
               <nezhaColor
                 :value-arr="[{name:'thresholds',value:item.color}]"
@@ -412,7 +412,7 @@
                 :color-val="item.color"
                 @colorChange="(color,key)=>{colorChange(color,key,index)}"
               />
-              <el-input
+              <el-input-number
                 size="small"
                 style="margin-top: 2px"
                 :placeholder="$t('placeholder.chart.threshold')"
@@ -505,49 +505,49 @@
                   <el-form-item
                     v-if="item.type === 'value'"
                     :prop="'param.valueMapping.mapping.' + index + '.value'"
-                    :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
+                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
-                    <el-input
+                    <el-input-number
                       :controls="false"
                       size="small"
                       v-model.number="item.value"
                       placeholder="value"
                       @change="change"
-                    ></el-input>
+                    ></el-input-number>
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'range'"
                     :prop="'param.valueMapping.mapping.' + index + '.from'"
-                    :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
+                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
-                    <el-input
+                    <el-input-number
                       :controls="false"
                       size="small"
                       v-model.number="item.from"
                       placeholder="from"
                       @change="change"
-                    ></el-input>
+                    ></el-input-number>
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'range'"
                     :prop="'param.valueMapping.mapping.' + index + '.to'"
-                    :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
+                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
-                    <el-input
+                    <el-input-number
                       :controls="false"
                       size="small"
                       v-model.number="item.to"
                       @change="change"
                       placeholder="to"
-                    ></el-input>
+                    ></el-input-number>
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'regx'"
                     :prop="'param.valueMapping.mapping.' + index + '.regx'"
-                    :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
+                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
                     <el-input
@@ -562,7 +562,7 @@
                   <div>
                     <div class='mapping-display'>Display</div>
                   </div>
-                  <el-form-item :prop="'param.valueMapping.mapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item">
+                  <el-form-item :prop="'param.valueMapping.mapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.display"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change"/>
                   </el-form-item>
                   <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(val, key, index)}"/>
@@ -608,7 +608,7 @@
               <div>
                 <div class='mapping-display'>Title</div>
               </div>
-              <el-form-item :prop="'param.columns.' + index + '.title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item" style="flex: 1">
+              <el-form-item :prop="'param.columns.' + index + '.title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item" style="flex: 1">
                 <el-input size="small" v-model="item.title" placeholder="regx" @change="change"></el-input>
               </el-form-item>
               <div>
@@ -627,7 +627,7 @@
               <div>
                 <div class='mapping-display'>Display</div>
               </div>
-              <el-form-item :prop="'param.columns.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}" class="thresholds-from-item">
+              <el-form-item :prop="'param.columns.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                 <el-input v-model="item.display"  style="margin-right: 10px" size="small"  @change="change"/>
               </el-form-item>
             </el-row>
