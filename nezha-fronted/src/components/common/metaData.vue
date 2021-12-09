@@ -1,12 +1,10 @@
 <template>
  <div>
    <ul>
-     <li><span class="metric-tip-list">metric&nbsp;:&nbsp;</span><span>{{metricTip ? metricTip : '--'}}</span></li>
-   </ul>
-   <ul v-for="(item,index) in metaDataList" :key="index">
-     <li><span class="metric-tip-list">type&nbsp;:&nbsp;</span><span>{{item.type ? item.type : 'unknown'}}</span></li>
-     <li><span class="metric-tip-list">help&nbsp;:&nbsp;</span><span>{{item.help ? item.help : '--'}}</span></li>
-     <li><span class="metric-tip-list">unit&nbsp;:&nbsp;</span><span>{{item.unit ? item.unit : '--'}}</span></li>
+     <li><span class="metric-tip-list">metric&nbsp;:&nbsp;</span><span>{{metaName ? metaName : '--'}}</span></li>
+     <li><span class="metric-tip-list">help&nbsp;:&nbsp;</span><span>{{metricList.help}}</span></li>
+     <li><span class="metric-tip-list">type&nbsp;:&nbsp;</span><span>{{metricList.type}}</span></li>
+     <li><span class="metric-tip-list">unit&nbsp;:&nbsp;</span><span>{{metricList.unit}}</span></li>
    </ul>
  </div>
 </template>
@@ -16,10 +14,22 @@ export default {
   name: 'metaData',
   props: {
     metaDataList: Array,
-    metricTip: String
+    metaName: String
   },
   data () {
-    return {}
+    return {
+      metricList: {}
+    }
+  },
+  watch: {
+    metaDataList: {
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.metricList = n[0]
+        }
+      }
+    }
   }
 }
 </script>

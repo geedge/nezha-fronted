@@ -25,7 +25,7 @@
         :label="$t('project.endpoint.element')">
         <template v-slot="scope">
           <el-popover trigger="hover" placement="right">
-            <meta-data :metaDataList="metaDataList" :metricTip="scope.row.metricTip.metric" />
+            <meta-data :metaDataList="metaDataList" :metaName="scope.row.metricTip.metric" />
             <span slot="reference"><i @mouseover="metricMetaData(scope.row)" class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
           </el-popover>
           <span style="word-break: break-all;" v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
@@ -149,8 +149,7 @@ export default {
         pageNo: 1,
         total: 0
       },
-      metaDataList: [],
-      metaName: ''
+      metaDataList: []
     }
   },
   methods: {
@@ -552,7 +551,9 @@ export default {
     },
     metricMetaData (data) {
       this.$get('/prom/api/v1/metadata?' + 'metric=' + data.metricTip.metric + '&limit=' + 1).then(res => {
-        this.metaDataList = res.data.jvm_gc_live_data_size_bytes
+        if (res.code === 200) {
+          this.metaDataList = res.data[data.metricTip.metric]
+        }
       })
     }
   },
