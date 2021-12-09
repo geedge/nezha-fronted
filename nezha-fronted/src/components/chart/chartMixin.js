@@ -41,7 +41,7 @@ export default {
               }
               s.markLine.data = chartInfo.param.thresholds.map(threshold => {
                 return {
-                  yAxis: threshold.val,
+                  yAxis: threshold.value,
                   lineStyle: {
                     color: threshold.color,
                     width: 2,
@@ -111,6 +111,22 @@ export default {
         return labelValue
       } else {
         return aliasExpression
+      }
+    },
+    handleDisplay (display, params) {
+      if (/\{\{.+\}\}/.test(display)) {
+        const labelValue = display.replace(/(\{\{.+?\}\})/g, function (i) {
+          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
+          console.log(label)
+          let value = null
+          if (params[label]) {
+            value = params[label]
+          }
+          return value || label
+        })
+        return labelValue
+      } else {
+        return display
       }
     },
     selectMapping (value, valueMapping) {
