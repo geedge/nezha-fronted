@@ -116,9 +116,12 @@
     }
   }
 }
+.no-header.nz-chart{
+  height: 100%;
+}
 .nz-chart {
   position: relative;
-  height: 100%;
+  height: calc(100% - 40px);
   flex: 1;
   .nz-chart__component {
     display: flex;

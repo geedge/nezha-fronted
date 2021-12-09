@@ -29,6 +29,7 @@ import { chartType, fromRoute } from '@/components/common/js/constants'
 import bus from '@/libs/bus'
 import axios from 'axios'
 import chartTempData from '@/components/charts/chartTempData'
+import logsData from '@/components/chart/logsData'
 
 export default {
   name: 'panelChart',
@@ -83,9 +84,9 @@ export default {
           case 'logs': {
             let urlPre = ''
             if (this.chartInfo.datasource === 'metrics') {
-              urlPre = '/prom'
+              urlPre += '/prom'
             } else if (this.chartInfo.datasource === 'logs') {
-              urlPre = '/logs/loki'
+              urlPre += '/logs/loki'
             }
             const requests = elements.map((element) => {
               if (this.from === fromRoute.chartTemp) {
@@ -105,13 +106,20 @@ export default {
             const chartData = []
             axios.all(requests).then(res => {
               res.forEach(r => {
+                if (this.chartInfo.type === 'log') {
+                  r = logsData
+                }
                 if (r.status === 'success') {
                   chartData.push(r.data.result)
                 } else {
                   chartData.push({ error: r.msg || r.error || r })
                 }
               })
+              console.log(chartData)
               this.chartData = chartData
+              if (this.chartInfo.type === 'log') {
+                this.logChartDataFormat()
+              }
             }).catch(res => {
               console.log(res)
             }).finally(() => {
@@ -169,6 +177,14 @@ export default {
     },
     refresh () {
       this.getChartData(true)
+    },
+    logChartDataFormat () {
+      this.chartData.forEach((item, index) => {
+        const elements = this.chartInfo.elements[index]
+        item.forEach(row => {
+          row.elements = elements
+        })
+      })
     },
     showFullscreen (show) {
       this.$emit('showFullscreen', show, this.chartInfo)

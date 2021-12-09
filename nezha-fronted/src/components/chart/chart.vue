@@ -1,5 +1,5 @@
 <template>
-  <div :style="chartInfo.param.showHeader ? '' : 'padding-top: 15px;'" class="nz-chart">
+  <div :style="chartInfo.param.showHeader ? '' : 'padding-top: 15px;'" class="nz-chart" :class="chartInfo.param.showHeader ? '' : 'no-header'" >
     <loading :loading="loading"></loading>
     <chart-no-data v-if="isNoData"></chart-no-data>
     <template v-else>
@@ -49,6 +49,12 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
       ></chart-treemap>
+      <chart-log
+        v-if="isLog(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+      ></chart-log>
     </template>
   </div>
 </template>
@@ -73,7 +79,7 @@ import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
-import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap } from './chart/tools'
+import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -126,6 +132,7 @@ export default {
     isUrl,
     isText,
     isTreemap,
+    isLog,
     resize () {
       this.$refs['chart' + this.chartInfo.id].resize()
     }

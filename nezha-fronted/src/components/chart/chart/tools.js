@@ -70,6 +70,9 @@ export function isText (type) {
 export function isTreemap (type) {
   return type === chartType.treemap
 }
+export function isLog (type) {
+  return type === chartType.log
+}
 
 export function initColor (colorNum = 20) {
   const colorList = [

@@ -129,3 +129,22 @@
     }
   }
 }
+.chart-log.log-detail {
+  height: 100%;
+  .log-table {
+    .nz-table2::before{
+      display: none;
+      height: 0px;
+    }
+    .nz-table2 {
+      padding: 10px;
+      box-sizing: border-box;
+      .el-table__body-wrapper {
+        height: 100% !important;
+        border: none;
+        box-shadow: none;
+        width: 100%;
+      }
+    }
+  }
+}
