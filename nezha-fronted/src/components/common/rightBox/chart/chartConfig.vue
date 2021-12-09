@@ -273,7 +273,7 @@
             placeholder=""
             popper-class="right-box-select-top prevent-clickoutside"
             size="small"
-            @change="change, $forceUpdate()"
+            @change="change"
           >
             <el-option v-for="item in statisticsList" :key="item.value" :label="$t(item.label)" :value="item.value">
               <span class="panel-dropdown-label-txt" >{{$t(item.label)}}</span>
@@ -294,7 +294,7 @@
             placeholder=""
             popper-class="right-box-select-top prevent-clickoutside"
             size="small"
-            @change="change, $forceUpdate()"
+            @change="change"
           >
             <el-option
               v-for="item in nullTypeList"
@@ -317,7 +317,7 @@
             placeholder=""
             popper-class="right-box-select-top prevent-clickoutside"
             size="small"
-            @change="change, $forceUpdate()"
+            @change="change"
           >
             <el-option
               v-for="item in textList"
@@ -351,7 +351,7 @@
                 placeholder=""
                 popper-class="right-box-select-top prevent-clickoutside"
                 size="small"
-                @change="change, $forceUpdate()"
+                @change="change"
               >
                 <el-option
                   v-for="item in legendPositionList"
@@ -374,7 +374,7 @@
                 :placeholder="$t('el.select.placeholder')"
                 popper-class="right-box-select-top prevent-clickoutside"
                 size="small"
-                @change="change, $forceUpdate()"
+                @change="change"
               >
                 <el-option
                   v-for="item in statisticsList"
@@ -775,7 +775,7 @@ export default {
           this.chartConfig.param = {
             nullType: this.chartConfig.param.nullType,
             statistics: 'last',
-            text: 'all',
+            text: 'value',
             valueMapping: {
               show: true,
               mapping: []

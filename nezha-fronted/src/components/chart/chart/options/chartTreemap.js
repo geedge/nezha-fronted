@@ -13,7 +13,6 @@ const chartTreemapOption = {
         '<div class="tooltip-title">' +
         formatUtil.encodeHTML(treePath.join('/')) +
         '</div>',
-        'Disk Usage: ' + formatUtil.addCommas(value) + ' KB'
       ].join('')
     }
   },
@@ -24,10 +23,15 @@ const chartTreemapOption = {
       visibleMin: 10,
       label: {
         show: true,
-        formatter: '{b}'
+        position: 'inside',
+        formatter: '{b}',
+        verticalAlign: 'middle'
       },
       itemStyle: {
         borderColor: '#fff'
+      },
+      breadcrumb: {
+        show: false
       },
       levels: [
         {

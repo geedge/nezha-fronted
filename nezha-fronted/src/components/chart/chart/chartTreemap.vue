@@ -78,25 +78,8 @@ export default {
   },
   methods: {
     initChart (chartOption) {
-      const self = this
       this.legends = []
       chartOption.series = this.initTreeMapData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
-      chartOption.xAxis.data = chartOption.series.data.map(item => item.name)
-      chartOption.axisLabel = {
-        margin: 8,
-        formatter (params) {
-          const dataLength = chartOption.series.data.length || 1
-          const chartWidth = (document.getElementById('chart-canvas-' + self.chartInfo.id).offsetWidth - 80) / dataLength// 容器宽 - padding - 空余
-          const length = Math.ceil((chartWidth) / 16)
-          let val = ''
-          if (params.length > length) {
-            val = params.substr(0, length) + '...'
-            return val
-          } else {
-            return params
-          }
-        }
-      }
       chartOption.tooltip.formatter = this.formatterFunc
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
@@ -131,6 +114,7 @@ export default {
               label: {
                 ...s.label,
                 formatter: this.pieFormatterLabel,
+                verticalAlign: 'middle',
                 rich: {
                   color: {
                     color: mapping ? mapping.color.text : '#000000'
@@ -149,6 +133,9 @@ export default {
     },
     formatterFunc (params, ticket, callback) {
       const self = this
+      if (!params.data) {
+        return ''
+      }
       return `
                 <div>
                     <div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;  min-width: 150px; max-width: 600px; line-height: 18px; font-size: 14px;">

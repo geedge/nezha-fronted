@@ -6,10 +6,10 @@ export default {
       if (this.chartInfo.param.text === 'all') {
         str += params.data.name
         str += ' : '
-        str += params.data.mapping && params.data.mapping.display ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.value }) : params.data.value
+        str += params.data.mapping && params.data.mapping.display ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
       }
       if (this.chartInfo.param.text === 'value') {
-        str += params.data.mapping && params.data.mapping.display ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.value }) : params.data.value
+        str += params.data.mapping && params.data.mapping.display ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
       }
       if (this.chartInfo.param.text === 'legend') {
         str += params.data.name

@@ -121,6 +121,7 @@
 <!--      ></chart-box>-->
       <chart-right-box
         v-if="chartRightBoxShow"
+        v-loading="rightBox.loading"
         ref="addChartModal"
         :chart="chart"
         :from="fromRoute.panel"
@@ -172,7 +173,8 @@ export default {
       rightBox: { // 面板弹出框相关
         chart: { show: false },
         chartTemp: { show: false },
-        panel: { show: false }
+        panel: { show: false },
+        loading: false
       },
       tableHover: false,
       searchTime: bus.getTimezontDateRange(),
@@ -304,7 +306,9 @@ export default {
       this.showPanel = val
       this.showPanel.type = 'dashboard'
       this.filter.panelId = this.showPanel.id
-      this.dateChange()
+      // this.dateChange()
+      this.getTableData()
+      this.getData(this.filter)
       this.$refs.chartList.cleanData()
     },
 
@@ -400,7 +404,9 @@ export default {
         this.chart.panelName = this.showPanel.name
         this.chart.id = ''
       } else {
+        this.rightBox.loading = true
         this.$get('visual/panel/chart/' + data.id).then(res => {
+          this.rightBox.loading = false
           if (res.code === 200) {
             const chartData = res.data.data
             this.chart = JSON.parse(JSON.stringify(chartData))
@@ -418,6 +424,7 @@ export default {
     },
     closeChartBox (refresh) {
       // this.rightBox.chart.show = false
+      this.chart = {}
       this.$store.dispatch('clearPanel')
       /* if (refresh) {
          this.getData(this.filter)
@@ -450,6 +457,8 @@ export default {
               message: this.$t('tip.deleteSuccess')
             })
             this.getData(this.filter)
+            this.chart = {}
+            this.$store.dispatch('clearPanel')
             // this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop)
             // if(nextChart&&prevChart){ //删除图表为中间位置
             //   prevChart.next = nextChart.id;
@@ -801,7 +810,7 @@ export default {
         this.$nextTick(() => {
           if (add) {
             if (add === 'chart') {
-              this.addChart()
+              this.addChartBefore()
             }
             if (add === 'panel') {
               this.toAdd()
