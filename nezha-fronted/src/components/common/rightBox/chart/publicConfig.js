@@ -277,7 +277,8 @@ export default {
           show: true,
           hideInput: true,
           oldName: this.expressionName[index],
-          error: ''
+          error: '',
+          elementId: ''
         }
       )
       this.$nextTick(() => {
