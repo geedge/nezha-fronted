@@ -368,6 +368,9 @@
           </el-form>
         </div>
       </el-tab-pane>
+      <el-tab-pane :label="$t('config.system.license.license')" name="license">
+        <license v-if="activeTab === 'license'"></license>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -381,9 +384,10 @@ import notifyMethod from './system/notifyMethodTab'
 import linkTab from './system/linkTab'
 import apiKeyTab from './system/apiKeyTab'
 import moment from 'moment-timezone'
+import License from './system/license'
 export default {
   name: 'system',
-  components: { draggable, latlngPicker, notifyMethod, linkTab, apiKeyTab },
+  components: { draggable, latlngPicker, notifyMethod, linkTab, apiKeyTab, License },
   data () {
     return {
       imageFormatErr: false,
@@ -608,7 +612,7 @@ export default {
         console.error('type is required')
         return
       }
-      if (type == 'reset' || type == 'link' || type == 'notification' || type == 'apiKey') {
+      if (type == 'reset' || type == 'link' || type == 'notification' || type == 'apiKey' || type == 'license') {
         return
       }
       this.$get('/sys/config/' + type).then(response => {

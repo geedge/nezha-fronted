@@ -257,7 +257,7 @@ export default {
     upload () {
       const form = new FormData()
       form.append('file', this.uploadFile.file.raw)
-      this.$post('/sys/license/upload', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
+      this.$post('/sys/license/upload', form).then(res => {
         if (res.code == 200) {
           this.licenseStat()
         } else {

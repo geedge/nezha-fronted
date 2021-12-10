@@ -184,6 +184,9 @@ $--overview-border-color: #E5EAEF;
 
 /* system */
 $--system-input-background-color: $--background-color-empty;
+$--license-left-title-background-color: $--background-color-base;
+$--license-left-title-color: #666666;
+$--license-left-icon-color: $--overview-icon-color;
 
 /* profile */
 $--profile-span-color: $--color-text-link;
@@ -193,7 +196,7 @@ $--profile-2FA-background-color: $--profile-span-background-color;
 $--profile-2FA-color: $--color-text-link;
 
 /* guide */
-$--guide-border-color: #18171D;
+$--guide-border-color: $--license-left-icon-color;
 $--guide-icon-border-color: #666666;
 $--guide-icon-color: $--guide-icon-border-color;
 
