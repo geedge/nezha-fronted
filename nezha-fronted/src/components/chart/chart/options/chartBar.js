@@ -18,7 +18,7 @@ const chartBarOption = {
       label: {
         show: true,
         color: '#333',
-        width: 100,
+        width: 200,
         align: 'center',
         overflow: 'break',
         ellipsis: '...'

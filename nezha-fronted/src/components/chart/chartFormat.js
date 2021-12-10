@@ -5,7 +5,7 @@ export default {
       let str = '{color|'
       if (this.chartInfo.param.text === 'all') {
         str += params.data.name
-        str += ' : '
+        str += '\n'
         str += params.data.mapping && params.data.mapping.display ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
       }
       if (this.chartInfo.param.text === 'value') {

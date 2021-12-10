@@ -3,13 +3,13 @@
     <div class="chart-stat-item"  :style="{background:item.mapping ? item.mapping.color.bac : false,height:item.height+'px',width:item.width + 'px'}" v-for="(item,index) in statData" :key="index">
       <span v-if="chartInfo.param.text==='all'">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
-          {{item.legend + ': ' + handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}
+          {{item.legend}}<br/><span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
         </span>
-        <span v-else>{{item.legend + ': ' + item.showValue}}</span>
+        <span v-else>{{item.legend}}<br/><span>{{item.showValue}}</span></span>
       </span>
       <span v-if="chartInfo.param.text==='legend'">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
-          {{item.legend + ': ' + handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}
+           {{item.legend}}<br/><span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
         </span>
         <span v-else>{{item.legend}}</span>
       </span>
