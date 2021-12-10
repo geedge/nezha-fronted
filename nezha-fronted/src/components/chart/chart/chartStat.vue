@@ -1,10 +1,27 @@
 <template>
   <div class="chart-stat" ref="chart-stat-box">
     <div class="chart-stat-item"  :style="{background:item.mapping ? item.mapping.color.bac : false,height:item.height+'px',width:item.width + 'px'}" v-for="(item,index) in statData" :key="index">
-    <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
-        {{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}
-    </span>
-      <span v-else>{{item.showValue}}</span>
+      <span v-if="chartInfo.param.text==='all'">
+        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
+          {{item.legend + ': ' + handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}
+        </span>
+        <span v-else>{{item.legend + ': ' + item.showValue}}</span>
+      </span>
+      <span v-if="chartInfo.param.text==='legend'">
+        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
+          {{item.legend + ': ' + handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}
+        </span>
+        <span v-else>{{item.legend}}</span>
+      </span>
+      <span v-if="chartInfo.param.text==='value'">
+        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
+          {{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}
+        </span>
+        <span v-else>{{item.showValue}}</span>
+      </span>
+      <span v-if="chartInfo.param.text==='none'">
+        ' '
+      </span>
     </div>
   </div>
 </template>
@@ -36,6 +53,7 @@ export default {
     },
     initStatData (chartInfo, originalDatas) {
       return new Promise(resolve => {
+        let colorIndex = 0
         originalDatas.forEach((originalData, expressionIndex) => {
           originalData.forEach((data, dataIndex) => {
             const stat = {
@@ -44,15 +62,18 @@ export default {
               label: {},
               width: '',
               height: '',
+              legend: '',
               mapping: {
 
               }
             }
             stat.value = getMetricTypeValue(data.values, chartInfo.param.statistics)
             stat.label = data.metric
+            stat.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             stat.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(stat.value, null, -1, 2)
             stat.mapping = this.selectMapping(stat.value, chartInfo.param.valueMapping)
             this.statData.push(stat)
+            colorIndex++
           })
         })
         resolve()
