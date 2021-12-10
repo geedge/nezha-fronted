@@ -55,6 +55,12 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
       ></chart-log>
+      <chart-stat
+        v-if="isStat(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+      ></chart-stat>
     </template>
   </div>
 </template>
@@ -79,7 +85,7 @@ import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
-import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog } from './chart/tools'
+import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -133,6 +139,7 @@ export default {
     isText,
     isTreemap,
     isLog,
+    isStat,
     resize () {
       this.$refs['chart' + this.chartInfo.id].resize()
     }

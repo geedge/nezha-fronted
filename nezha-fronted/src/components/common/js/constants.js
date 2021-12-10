@@ -392,7 +392,7 @@ export const chartType = {
   point: 'point',
   bar: 'bar',
   table: 'table',
-  singleStat: 'singleStat',
+  stat: 'stat',
   gauge: 'gauge',
   pie: 'pie',
   treemap: 'treemap',

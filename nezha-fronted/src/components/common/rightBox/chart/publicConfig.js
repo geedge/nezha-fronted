@@ -1,6 +1,7 @@
 import chartDataFormat from '@/components/charts/chartDataFormat'
 import { getUUID, resetZIndex } from '@/components/common/js/common'
 import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
+import { isStat } from '@/components/chart/chart/tools'
 const rz = {
   methods: {
     rz (e) {
@@ -163,6 +164,7 @@ export default {
   },
   mixins: [rz],
   methods: {
+    isStat,
     expressionChange: function () {
       if (this.expressions.length) {
         this.chartConfig.elements = []

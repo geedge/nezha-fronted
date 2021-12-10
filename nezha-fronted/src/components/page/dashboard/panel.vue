@@ -155,7 +155,6 @@ import panelBox from '@/components/common/rightBox/panelBox'
 import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import { fromRoute } from '@/components/common/js/constants'
-import chartData from '@/components/chart/testData'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 
 export default {

@@ -52,7 +52,7 @@
               <div v-if="expressionsShow[index-1].error"  class="el-form-item__error" style="top: 10px;left: 164px"> {{expressionsShow[index-1].error}}</div>
             </span>
             <span>
-              <span @click="()=>{addExpression()}" style="margin-right: 5px;padding-left: 10px">
+              <span @click="()=>{addExpression()}" style="margin-right: 5px;padding-left: 10px" v-if="!isStat(chartConfig.type)">
                   <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
               </span>
               <span @click="copyExpression(index - 1)" style="margin-right: 5px">
@@ -650,6 +650,7 @@ import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import VueTagsInput from '@johmun/vue-tags-input'
 import draggable from 'vuedraggable'
 import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
+
 export default {
   name: 'chartConfig',
   components: {
@@ -769,6 +770,12 @@ export default {
         case 'treemap':
         case 'guage':
         case 'pie':
+          if (type === 'stat') {
+            this.expressions = []
+            this.expressionName = []
+            this.chartConfig.elements = [this.chartConfig.elements[0]]
+            this.addExpression(this.chartConfig.elements[0])
+          }
           if (this.oldType === 'stat' || this.oldType === 'bar' || this.oldType === 'treemap' || this.oldType === 'guage' || this.oldType === 'pie') {
             break
           }

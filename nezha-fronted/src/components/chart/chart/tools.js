@@ -73,6 +73,9 @@ export function isTreemap (type) {
 export function isLog (type) {
   return type === chartType.log
 }
+export function isStat (type) {
+  return type === chartType.stat
+}
 
 export function initColor (colorNum = 20) {
   const colorList = [
