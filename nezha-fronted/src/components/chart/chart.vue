@@ -5,12 +5,14 @@
     <template v-else>
       <chart-time-series
         v-if="isTimeSeries(chartInfo.type)"
+        :ref="'chart' + chartInfo.id"
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
       ></chart-time-series>
       <chart-pie
+        :ref="'chart' + chartInfo.id"
         v-if="isChartPie(chartInfo.type)"
         :chart-data="chartData"
         :chart-info="chartInfo"
@@ -18,6 +20,7 @@
         :is-fullscreen="isFullscreen"
       ></chart-pie>
       <chart-bar
+        :ref="'chart' + chartInfo.id"
         v-if="isChartBar(chartInfo.type)"
         :chart-data="chartData"
         :chart-info="chartInfo"
@@ -32,30 +35,35 @@
         :chart-option="chartOption"
       ></chartHexagon>
       <chart-url
+        :ref="'chart' + chartInfo.id"
         v-if="isUrl(chartInfo.type)"
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
       ></chart-url>
       <chart-text
+        :ref="'chart' + chartInfo.id"
         v-if="isText(chartInfo.type)"
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
       ></chart-text>
       <chart-treemap
+        :ref="'chart' + chartInfo.id"
         v-if="isTreemap(chartInfo.type)"
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
       ></chart-treemap>
       <chart-log
+        :ref="'chart' + chartInfo.id"
         v-if="isLog(chartInfo.type)"
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
       ></chart-log>
       <chart-stat
+        :ref="'chart' + chartInfo.id"
         v-if="isStat(chartInfo.type)"
         :chart-data="chartData"
         :chart-info="chartInfo"

@@ -257,12 +257,20 @@
   }
 }
 .chart-stat{
+  width: 100%;
   height: calc(100% - 20px);
-  margin: 10px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 30px;
-  word-break: break-all;
-  border-radius: 2px;
+  flex-wrap: wrap;
+  padding: 5px;
+  box-sizing: border-box;
+  .chart-stat-item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    word-break: break-all;
+    border-radius: 2px;
+    box-sizing: border-box;
+    border: 2px solid #fff;
+  }
 }

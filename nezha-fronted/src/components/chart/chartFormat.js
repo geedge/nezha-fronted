@@ -21,11 +21,9 @@ export default {
       return str
     },
     handleDisplay (display, params) {
-      console.log(params)
       if (/\{\{.+\}\}/.test(display)) {
         const labelValue = display.replace(/(\{\{.+?\}\})/g, function (i) {
           const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          console.log(label)
           let value = null
           if (params[label]) {
             value = params[label]

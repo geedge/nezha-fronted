@@ -110,13 +110,20 @@ export default {
     },
     resizeEvent (i, newH, newW, newHPx, newWPx) {
       // TODO 分段重新渲染图表，或者暂时隐藏图表
+      setTimeout(() => {
+        this.$refs['chart' + i][0].resize()
+      }, 50)
     },
     resizedEvent (i, newH, newW, newHPx, newWPx) {
       // TODO 重新渲染图表，向后端发送put请求
+      setTimeout(() => {
+        this.$refs['chart' + i][0].resize()
+      }, 100)
     },
     containerResizedEvent (i, newH, newW, newHPx, newWPx) {
       // TODO 重新渲染图表
       // this.$refs['chart' + i].resize()
+      // this.$refs['chart' + i][0].resize()
     },
     showFullscreen (show, chartInfo) {
       this.fullscreen.chartInfo = chartInfo
@@ -135,7 +142,7 @@ export default {
       handler (n, o) {
         this.noData = !n || n.length < 1
         this.copyDataList = n.map(item => {
-          let param = item.param
+          const param = item.param
           // try {
           //   param = JSON.parse(item.param)
           // } catch (e) {

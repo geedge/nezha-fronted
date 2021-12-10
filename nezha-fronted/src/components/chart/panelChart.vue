@@ -115,7 +115,6 @@ export default {
                   chartData.push({ error: r.msg || r.error || r })
                 }
               })
-              console.log(chartData)
               this.chartData = chartData
               if (this.chartInfo.type === 'log') {
                 this.logChartDataFormat()
