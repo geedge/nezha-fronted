@@ -43,6 +43,7 @@
                      v-model="chartConfig.param.collapse"
                      :active-value="true"
                      :inactive-value="false"
+                     @change="change"
                      size="small"/>
         </el-form-item>
       </div>
@@ -177,7 +178,7 @@ export default {
         case 'group':
           this.chartConfig.span = 12
           this.chartConfig.param = {
-            collapse: false
+            collapse: true
           }
           break
         case 'text':

@@ -184,6 +184,7 @@ export default {
     this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
   },
   beforeDestroy () {
+    getChart(this.chartId) && getChart(this.chartId).dispose()
     setChart(this.chartId, null)
   }
 }

@@ -22,6 +22,7 @@ const chartTreemapOption = {
       type: 'treemap',
       visibleMin: 40,
       childrenVisibleMin: 40,
+      nodeClick: false,
       label: {
         show: true,
         position: 'inside',

@@ -4,9 +4,11 @@
     <!-- title和工具栏，支持浮动 -->
     <chart-header
       v-if="!isFullscreen"
+      :is-group="isGroup(chartInfo.type)"
       :chart-info="chartInfo"
       @edit-chart="$emit('edit-chart', chartInfo)"
       @refresh="refresh"
+      @groupShow="groupShow"
       @showFullscreen="showFullscreen"
     ></chart-header>
     <!-- chart -->
@@ -18,6 +20,7 @@
       :panelLock="panelLock"
       :is-fullscreen="isFullscreen"
       :loading="loading"
+      v-if="!isGroup(chartInfo.type) || chartInfo.param.collapse"
     ></chart>
   </div>
 </template>
@@ -25,7 +28,7 @@
 <script>
 import chartHeader from '@/components/chart/chartHeader'
 import chart from '@/components/chart/chart'
-import { isChartPie, isTimeSeries } from './chart/tools'
+import { isChartPie, isTimeSeries, getGroupHeight, isGroup } from './chart/tools'
 import { chartType, fromRoute } from '@/components/common/js/constants'
 import bus from '@/libs/bus'
 import axios from 'axios'
@@ -50,7 +53,16 @@ export default {
       loading: true
     }
   },
+  computed: {
+    headerH () {
+      return this.$store.getters.getHeaderH
+    },
+    headerHPadding () {
+      return this.$store.getters.getHeaderHPadding
+    }
+  },
   methods: {
+    isGroup,
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh) {
       this.loading = true
@@ -144,6 +156,7 @@ export default {
               this.chartData = [this.chartInfo.param.topo]
             }
             if (this.chartInfo.type === 'group') {
+              this.groupInit()
               this.chartData = [...this.chartInfo.children]
             }
             break
@@ -193,8 +206,29 @@ export default {
         })
       })
     },
+    groupInit () {
+      const height = getGroupHeight(this.chartInfo.children)
+      if (!this.chartInfo.param.collapse) {
+        this.chartInfo.height = this.headerH
+        this.chartInfo.h = this.headerH
+        return
+      }
+      if (this.chartInfo.children.length) {
+        this.chartInfo.height = height + this.headerHPadding
+        this.chartInfo.h = height + this.headerHPadding
+      } else {
+        console.log(this.headerH)
+        this.chartInfo.height = this.headerH + height
+        this.chartInfo.h = this.headerH + height
+      }
+    },
     showFullscreen (show) {
       this.$emit('showFullscreen', show, this.chartInfo)
+    },
+    groupShow (flag) {
+      this.chartInfo.param.collapse = flag
+      this.groupInit()
+      bus.$emit('groupMove', '', '', true)
     }
   },
   watch: {

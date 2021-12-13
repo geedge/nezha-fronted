@@ -10,6 +10,7 @@
       :panel-lock="panelLock"
       :isGroup="true"
       :time-range="searchTime"
+      :groupInfo="chartInfo"
       @on-refresh-time="refreshTime"
       :loading="chartListLoading"
     ></chartList>
@@ -23,7 +24,7 @@ import chartFormat from '@/components/chart/chartFormat'
 export default {
   name: 'chart-group',
   props: {
-    panelLock: Boolean
+    panelLock: Boolean,
   },
   mixins: [chartMixin, chartFormat],
   computed: {

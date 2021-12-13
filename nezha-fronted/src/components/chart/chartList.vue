@@ -1,7 +1,7 @@
 <template>
   <div :id='`chartList${(isGroup ? "Group" : "") + timestamp}`' class="chart-list" :loading="gridLayoutLoading">
     <grid-layout
-      v-if="gridLayoutShow"
+      ref="layout"
       :col-num="12"
       :is-draggable="!panelLock"
       :is-resizable="!panelLock"
@@ -19,10 +19,13 @@
         :w="item.w"
         :x="item.x"
         :y="item.y"
+        :minH="headerH"
         dragAllowFrom=".chart-header"
         dragIgnoreFrom=".chart-header__tools"
         @resize="resizeEvent"
         @resized="resizedEvent"
+        @moveEvent="moveEvent"
+        @movedEvent="movedEvent"
         @container-resized="containerResizedEvent"
       >
         <panel-chart
@@ -66,7 +69,9 @@
 <script>
 import VueGridLayout from 'vue-grid-layout'
 import { fromRoute } from '@/components/common/js/constants'
+import { getGroupHeight } from './chart/tools'
 import panelChart from '@/components/chart/panelChart'
+import bus from '@/libs/bus'
 
 export default {
   name: 'chartList',
@@ -77,12 +82,21 @@ export default {
     timeRange: Array, // 时间范围
     panelLock: { type: Boolean, default: true },
     isGroup: { type: Boolean, default: false },
+    groupInfo: {},
     dataList: Array // 看板中所有图表信息
   },
   components: {
     GridLayout: VueGridLayout.GridLayout,
     GridItem: VueGridLayout.GridItem,
     panelChart
+  },
+  computed: {
+    headerH () {
+      return this.$store.getters.getHeaderH
+    },
+    headerHPadding () {
+      return this.$store.getters.getHeaderHPadding
+    }
   },
   data () {
     return {
@@ -112,6 +126,11 @@ export default {
       }
       if (dom) {
         this.stepWidth = Math.floor(dom.offsetWidth / 12)
+        if (!this.isGroup) {
+          const headerH = 40 / this.stepWidth
+          const headerHPadding = 50 / this.stepWidth
+          this.$store.commit('setHeaderH', { headerH, headerHPadding })
+        }
         const span = document.querySelector('.temp-dom')
         this.tempDom.width = span.offsetWidth
       }
@@ -128,6 +147,17 @@ export default {
         this.$refs['chart' + i][0].resize()
       }, 100)
     },
+    moveEvent (i, newX, newY) {
+      console.log(i)
+      if (this.isGroup) {
+
+      }
+    },
+    movedEvent (i, newX, newY) {
+      if (this.isGroup) {
+        bus.$emit('groupMove', this.copyDataList)
+      }
+    },
     containerResizedEvent (i, newH, newW, newHPx, newWPx) {
       // TODO 重新渲染图表
       // this.$refs['chart' + i].resize()
@@ -137,12 +167,31 @@ export default {
       this.fullscreen.chartInfo = chartInfo
       this.fullscreen.visible = show
     },
+    changeGroupHeight (copyList, group, flag) {
+      const height = getGroupHeight(copyList)
+      console.log(this.$refs.layout)
+      const groupFind = this.copyDataList.find(item => item.id === group.id)
+      if (group) {
+        groupFind.height = groupFind.h = height + this.headerHPadding
+        this.copyDataList = [...this.copyDataList]
+      }
+      if (flag) {
+        this.copyDataList = [...this.copyDataList]
+        this.$refs.layout.layoutUpdate()
+      }
+    },
     cleanData () {
 
     }
   },
+  created () {
+
+  },
   mounted () {
     this.init()
+    if (!this.isGroup) {
+      bus.$on('groupMove', this.changeGroupHeight)
+    }
   },
   watch: {
     dataList: {
@@ -176,6 +225,15 @@ export default {
           this.gridLayoutLoading = false
         })
       }
+    },
+    copyDataList: {
+      deep: true,
+      handler (n) {
+        console.log(n)
+        if (this.isGroup) {
+          bus.$emit('groupMove', n, this.groupInfo)
+        }
+      }
     }
   }
 }
@@ -184,5 +242,6 @@ export default {
 <style scoped>
 .chart-list {
   height: 100%;
+  width: 100%;
 }
 </style>

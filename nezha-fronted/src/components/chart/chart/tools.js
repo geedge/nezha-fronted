@@ -83,6 +83,30 @@ export function isGroup (type) {
   return type === chartType.group
 }
 
+export function getGroupHeight (arr) {
+  if (arr.length) {
+    let lastItem = []
+    let maxY = 0
+    arr.forEach((children, index) => {
+      if (maxY == children.y) {
+        lastItem.push(children)
+      } else {
+        maxY = children.y
+        lastItem = [children]
+      }
+    })
+    let maxHeight = 0
+    lastItem.forEach(last => {
+      if (maxHeight < last.height) {
+        maxHeight = last.height
+      }
+    })
+    return maxHeight + maxY
+  } else {
+    return 1
+  }
+}
+
 export function initColor (colorNum = 20) {
   const colorList = [
     '#FF5200', '#3685FF', '#FF8D00', '#00DCA2',

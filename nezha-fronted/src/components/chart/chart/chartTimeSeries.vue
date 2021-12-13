@@ -244,6 +244,9 @@ export default {
         option.tooltip[0].formatter = self.tooltipFormatter(self.isStack)
         myChart.setOption(option)
       }
+    },
+    resize () {
+      getChart(this.chartId).resize()
     }
   },
   mounted () {

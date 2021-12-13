@@ -163,6 +163,9 @@ export default {
       Promise.all(arr).then(res => {
         this.editChart.panelId = this.panelId
         const params = JSON.parse(JSON.stringify(this.editChart))
+        if (params.type === 'group') {
+          params.height = 1
+        }
         if (!params.groupId) {
           params.groupId = 0
         }

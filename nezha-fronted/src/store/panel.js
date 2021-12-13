@@ -6,7 +6,9 @@ const panel = {
     groupId: '',
     type: '',
     timeRange: [],
-    nowTimeType: {}
+    nowTimeType: {},
+    headerH: 0.5,
+    headerHPadding: 0.5
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -29,6 +31,11 @@ const panel = {
     },
     setPanelNowTimeType (state, nowTimeType) {
       state.nowTimeType = nowTimeType
+    },
+    setHeaderH (state, h) {
+      console.log(h)
+      state.headerH = h.headerH
+      state.headerHPadding = h.headerHPadding
     },
     cleanPanel (state) {
       state.showRightBox = false
@@ -59,6 +66,12 @@ const panel = {
     },
     getDelChart (state) {
       return state.delChart
+    },
+    getHeaderH (state) {
+      return state.headerH
+    },
+    getHeaderHPadding (state) {
+      return state.headerHPadding
     }
   },
   actions: {
@@ -81,6 +94,9 @@ const panel = {
       store.commit('setShowRightBox', true)
       store.commit('setChart', playload.chart)
       store.commit('setType', playload.type)
+    },
+    dispatchHeaderH (store, playload) {
+      store.commit('setHeaderH', playload.headerH)
     },
     clearPanel (store) {
       store.commit('cleanPanel')
