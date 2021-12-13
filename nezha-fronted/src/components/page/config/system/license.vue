@@ -1,19 +1,17 @@
 <template>
   <div class="license">
     <div class="license-left">
-      <div class="license-left-header">
+      <div class="license-left-header" :class="{'license-left-header-red':active !== 0}">
         <div>
          <div class="license-left-header-icon">
-           <!-- 上传 -->
-           <i v-if="UploadedSuccessfully" class="nz-icon nz-icon-import-success"></i>
-           <i v-else-if="uploadFailed" class="nz-icon nz-icon-import-failed1"></i>
-           <!-- 导入 -->
-           <i v-else-if="downloadSuccessful" class="nz-icon nz-icon-import-success"></i>
-           <i v-else-if="downloadFailed" class="nz-icon nz-icon-import-failed1"></i>
+           <!-- 是否激活 -->
+           <i v-if="active === 0" class="nz-icon nz-icon-import-success"></i>
+           <i v-else class="nz-icon nz-icon-import-failed1"></i>
          </div>
           <div>{{$t('license.nzTitleValue')}}</div>
         </div>
-        <div>{{$t('license.active')}}</div>
+        <div v-if="active === 0">{{$t('license.active')}}</div>
+        <div v-else>{{$t('license.inactive')}}</div>
       </div>
       <div class="license-left-body">
         <div>
@@ -26,14 +24,17 @@
         </div>
         <div>
           <div class="license-left-boyd-title">{{$t('license.expDate')}}</div>
-          <div class="license-left-boyd-value" style="margin: 15px" v-for="(item,index) in expData" :key="index">
-            <template v-if="item.license.license_type === 'expiration' && item.id === '20001'">{{formatDate(item.license.exp_date)}}</template>
+          <div class="license-left-boyd-value" style="margin: 15px">
+            <span v-if="expData.id === '20001' && expData.license.license_type === 'expiration'">{{formatDate(expData.license.exp_date)}}</span>
+            <span v-else-if="expData.id === '20001' && expData.license.license_type === 'perpetual'">{{$t('license.permanent')}}</span>
+<!--            <span v-else-if="expData.id === '20001' && expData.license.license_type === 'trial'">{{$t('license.validPeriod')}}: {{formatDate(time_start)}} ~ {{ formatDate(end_time(time_start + total_time))}}</span>-->
+<!--            <span>{{$t('license.validPeriod')}} : {{formatDate(expData.license.time_start)}} ~ {{formatDate(expData.license.end_time)}}</span>-->
           </div>
         </div>
       </div>
       <div class="license-left-footer">
         <div class="license-left-footer-download">
-          <i @click="downloadMib()" class="nz-icon nz-icon-download"></i><span>{{$t('license.downloadID')}}</span>
+          <i @click="downloadLicense" class="nz-icon nz-icon-download"></i><span>{{$t('license.downloadID')}}</span>
         </div>
         <el-upload
           ref="upload"
@@ -44,13 +45,13 @@
           :auto-upload="false"
           :on-change="handleChange"
         >
-          <i class="nz-icon nz-icon-upload"></i><span>{{$t('license.uploadLicense')}}</span>
+          <i class="nz-icon nz-icon-Upload1"></i><span>{{$t('license.uploadLicense')}}</span>
         </el-upload>
       </div>
     </div>
     <div class="license-right">
       <div class="license-right-header">
-        <div class="license-right-header-title">{{$t('license.devices')}}&nbsp;({{tableData.length}})</div>
+        <div class="license-right-header-title">{{$t('license.devices')}}&nbsp;({{tableData ? tableData.length : 0}})</div>
       </div>
       <div class="license-right-table">
         <el-table :data="tableData">
@@ -60,7 +61,7 @@
             </template>
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop === 'devicesName'">
-                <span>{{scope.row.host}}</span>
+                <span>{{getLicense(scope.row)}}</span>
               </template>
               <template v-if="item.prop === 'status'">
                 <div v-if="scope.row.status === 0">
@@ -79,12 +80,11 @@
 </template>
 
 <script>
-import licenseData from '@/components/page/config/system/licenseData'
 import statusDate from '@/components/page/config/system/statusDate'
 
 export default {
   name: 'license',
-  mixins: [licenseData, statusDate],
+  mixins: [statusDate],
   data () {
     return {
       licenseList: {},
@@ -100,13 +100,10 @@ export default {
           prop: 'status'
         }
       ],
-      expData: [],
+      expData: {},
       uploadFileList: [],
       uploadFile: { file: '' },
-      UploadedSuccessfully: true, // 上传成功
-      uploadFailed: false, // 上传失败
-      downloadSuccessful: false, // 下载成功
-      downloadFailed: false // 下载失败
+      active: ''
     }
   },
   methods: {
@@ -114,7 +111,12 @@ export default {
       this.$get('/sys/license/detail').then(res => {
         if (res.code === 200) {
           this.licenseList = res.data.license.hasp
-          console.log(res)
+          this.licenseList.feature.map(e => {
+            if (e.id === '20001') {
+              this.expData = e
+              // this.expData.license.end_time = this.expData.license.time_start * 1 + this.expData.license.total_time * 1
+            }
+          })
         } else {
           this.$message.error(res.msg)
         }
@@ -131,8 +133,31 @@ export default {
       const second = dateTime.getSeconds() < 10 ? '0' + dateTime.getSeconds() : dateTime.getSeconds()
       return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
     },
+    getTimeString () {
+      const split = '-'
+      const date = new Date()
+      const year = date.getFullYear()
+      const month = this.formatNum(date.getMonth() + 1)
+      const day = this.formatNum(date.getDate())
+      const hours = this.formatNum(date.getHours())
+      const minutes = this.formatNum(date.getMinutes())
+      const seconds = this.formatNum(date.getSeconds())
+      return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds
+    },
+    formatNum (num) {
+      return num > 9 ? num : '0' + num
+    },
     licenseGetStatus () {
+      this.$get('/sys/license/status').then(res => {
+        if (res.code === 200) {
+          this.active = res.data.status
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
       this.$get('/sys/license/status', { scope: 'all' }).then(res => {
+        res = statusDate
+        return this.tableData = res.data.list
         if (res.code === 200) {
           this.tableData = res.data.list
         } else {
@@ -152,25 +177,50 @@ export default {
       form.append('file', this.uploadFile.file.raw)
       this.$post('/sys/license/upload', form).then(res => {
         if (res.code == 200) {
-          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
-          this.UploadedSuccessfully = true
+          return ''
         } else {
           this.$message.error(res.msg)
-          this.uploadFailed = true
         }
       })
     },
-    downloadMib () {
+    downloadLicense () {
       this.$get('/sys/license/token').then(res => {
-        if (res.code === 200) {
-          console.log(res)
-          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
-          this.downloadSuccessful = true
+        const fileName = this.licenseList.id + '-' + this.getTimeString() + '.xml'
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          const blobObject = new Blob([res])
+          window.navigator.msSaveOrOpenBlob(blobObject, fileName)
         } else {
-          this.$message.error(res.msg)
-          this.downloadFailed = true
+          const url = URL.createObjectURL(new Blob([res]))
+          const a = document.createElement('a')
+          document.body.appendChild(a) // 此处增加了将创建的添加到body当中
+          a.href = url
+          a.download = fileName
+          a.target = '_blank'
+          a.click()
+          a.remove() // 将a标签移除
         }
+      }, error => {
+        const $self = this
+        const reader = new FileReader()
+        reader.onload = function (event) {
+          const responseText = reader.result
+          const exception = JSON.parse(responseText)
+          if (exception.message) {
+            $self.$message.error(exception.message)
+          } else {
+            console.error(error)
+          }
+        }
+        reader.readAsText(error.response.data)
       })
+    }
+  },
+  computed: {
+    getLicense () {
+      return function (data) {
+        return `${data.host}:${data.port}`
+      }
     }
   },
   mounted () {

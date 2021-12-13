@@ -28,7 +28,11 @@
         </div>
         <div class="login-license">
           <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>
-          <div v-if="!license.valid" class="license-info">INSTALLATION ID:&nbsp;{{license.token}}</div>
+<!--          <div v-if="!license.valid" class="license-info">INSTALLATION ID:&nbsp;{{license.token}}</div>-->
+          <div v-if="!license.valid" class="license-upload">
+<!--            <button type="button" class="login-btn" @click="downloadMib"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.dowLicense')}}</button>-->
+            <button type="button" class="login-btn download-btn" @click="downloadLogin"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.download')}}</button>
+          </div>
           <div class="license-upload" v-if="!license.valid">
             <el-upload
               ref="upload"
@@ -264,6 +268,52 @@ export default {
           this.$message.error(res.msg)
         }
       })
+    },
+    downloadLogin () {
+      this.$get('/sys/license/token').then(res => {
+        const fileName = 'Login' + '-' + this.getTimeString() + '.xml'
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          const blobObject = new Blob([res])
+          window.navigator.msSaveOrOpenBlob(blobObject, fileName)
+        } else {
+          const url = URL.createObjectURL(new Blob([res]))
+          const a = document.createElement('a')
+          document.body.appendChild(a) // 此处增加了将创建的添加到body当中
+          a.href = url
+          a.download = fileName
+          a.target = '_blank'
+          a.click()
+          a.remove() // 将a标签移除
+        }
+      }, error => {
+        const $self = this
+        const reader = new FileReader()
+        reader.onload = function (event) {
+          const responseText = reader.result
+          const exception = JSON.parse(responseText)
+          if (exception.message) {
+            $self.$message.error(exception.message)
+          } else {
+            console.error(error)
+          }
+        }
+        reader.readAsText(error.response.data)
+      })
+    },
+    getTimeString () {
+      const split = '-'
+      const date = new Date()
+      const year = date.getFullYear()
+      const month = this.formatNum(date.getMonth() + 1)
+      const day = this.formatNum(date.getDate())
+      const hours = this.formatNum(date.getHours())
+      const minutes = this.formatNum(date.getMinutes())
+      const seconds = this.formatNum(date.getSeconds())
+      return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds
+    },
+    formatNum (num) {
+      return num > 9 ? num : '0' + num
     },
     bindQRCode: function (text) {
       text = text || 'https://www.baidu.com'
