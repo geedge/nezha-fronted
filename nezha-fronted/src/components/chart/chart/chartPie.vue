@@ -114,11 +114,7 @@ export default {
               label: {
                 ...s.label,
                 formatter: this.pieFormatterLabel,
-                rich: {
-                  color: {
-                    color: mapping ? mapping.color.text : '#333333'
-                  }
-                }
+                color: mapping ? mapping.color.text : '#000000'
               }
             })
             colorIndex++

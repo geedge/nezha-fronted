@@ -20,12 +20,15 @@ const chartTreemapOption = {
     {
       name: 'Disk Usage',
       type: 'treemap',
-      visibleMin: 10,
+      visibleMin: 40,
+      childrenVisibleMin: 40,
       label: {
         show: true,
         position: 'inside',
-        formatter: '{b}',
-        verticalAlign: 'middle'
+        verticalAlign: 'middle',
+        overflow: 'truncate',
+        lineHeight: 16,
+        height: 40
       },
       itemStyle: {
         borderColor: '#fff'

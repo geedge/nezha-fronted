@@ -2,7 +2,7 @@ export default {
   methods: {
     pieFormatterLabel (params) {
       const self = this
-      let str = '{color|'
+      let str = ''
       if (this.chartInfo.param.text === 'all') {
         str += params.data.name
         str += '\n'
@@ -17,7 +17,7 @@ export default {
       if (this.chartInfo.param.text === 'none') {
         str += ''
       }
-      str += '}'
+      str += ''
       return str
     },
     handleDisplay (display, params) {

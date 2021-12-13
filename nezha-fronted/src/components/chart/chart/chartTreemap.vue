@@ -115,11 +115,8 @@ export default {
                 ...s.label,
                 formatter: this.pieFormatterLabel,
                 verticalAlign: 'middle',
-                rich: {
-                  color: {
-                    color: mapping ? mapping.color.text : '#000000'
-                  }
-                }
+                align: 'center',
+                color: mapping ? mapping.color.text : '#000000'
               },
               itemStyle: {
                 color: mapping ? mapping.color.bac : this.colorList[colorIndex]
