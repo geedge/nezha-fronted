@@ -24,7 +24,6 @@ export default {
   },
   methods: {
     resize () {
-      console.log('diagram',this.$refs.diagram)
       this.$refs.diagram.winResize()
     }
   }

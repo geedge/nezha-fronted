@@ -2101,7 +2101,11 @@ export default {
           }
         })
         getTopology(this.topologyIndex).resize()
-        getTopology(this.topologyIndex).centerView()
+        if (this.isPanel) {
+          getTopology(this.topologyIndex).fitView()
+        } else {
+          getTopology(this.topologyIndex).centerView()
+        }
         clearTimeout(this.timer)
         this.timer = null
         // this.getNodesArr()
