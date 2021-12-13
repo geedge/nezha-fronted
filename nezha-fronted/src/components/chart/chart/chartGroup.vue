@@ -1,29 +1,62 @@
 <template>
-  <chart-list
-    ref="chartList"
-    :class="{'show-top':showTopBtn}"
-    :data-list="dataList"
-    :nowTimeType="nowTimeType"
-    :from="fromRoute.panel"
-    :panel-lock="panelLock"
-    :time-range="searchTime"
-    @edit-chart="editChart"
-    @on-refresh-time="refreshTime"
-    @on-remove-chart="delChart"
-    @on-add-group-item-chart="addGroupItem"
-    :loading="chartListLoading"
-  ></chart-list>
+  <div style="width: 100%;height: 100%">
+    <chartList
+      ref="chartList"
+      name="group"
+      :class="{'show-top':showTopBtn}"
+      :data-list="dataList"
+      :nowTimeType="nowTimeType"
+      :from="fromRoute.panel"
+      :panel-lock="panelLock"
+      :isGroup="true"
+      :time-range="searchTime"
+      @on-refresh-time="refreshTime"
+      :loading="chartListLoading"
+    ></chartList>
+  </div>
 </template>
 
 <script>
-import ChartList from '../../chart/chartList'
+import { fromRoute } from '@/components/common/js/constants'
+import chartMixin from '@/components/chart/chartMixin'
+import chartFormat from '@/components/chart/chartFormat'
 export default {
   name: 'chart-group',
-  components: {
-    'chart-list': ChartList
+  props: {
+    panelLock: Boolean
+  },
+  mixins: [chartMixin, chartFormat],
+  computed: {
+    searchTime () {
+      return this.$store.getters.getTimeRange
+    },
+    nowTimeType () {
+      return this.$store.getters.getNowTimeType
+    }
   },
   data () {
-    showTopBtn: false
+    return {
+      fromRoute,
+      dataList: [],
+      showTopBtn: false,
+      chartListLoading: false
+    }
+  },
+  methods: {
+    refreshTime () {
+
+    }
+  },
+  watch: {
+    chartData: {
+      immediate: true,
+      handler (n) {
+        console.log(n)
+        this.$nextTick(() => {
+          this.dataList = JSON.parse(JSON.stringify(n))
+        })
+      }
+    }
   }
 }
 </script>

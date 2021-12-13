@@ -83,6 +83,15 @@
         :is-fullscreen="isFullscreen"
         :chart-option="chartOption"
       ></chart-diagram>
+      <chart-group
+        :ref="'chart' + chartInfo.id"
+        v-if="isGroup(chartInfo.type)"
+        :panelLock="panelLock"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :is-fullscreen="isFullscreen"
+        :chart-option="chartOption"
+      ></chart-group>
     </template>
   </div>
 </template>
@@ -107,7 +116,7 @@ import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
-import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram } from './chart/tools'
+import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -138,7 +147,8 @@ export default {
     chartData: [Object, Array, String], // 数据查询后传入chart组件，chart组件内不查询，只根据接传递的数据来渲染
     customChartOption: Object, // 需要自定义echarts的option时传入，非必须；传入该值时仍需传对应格式的chartData
     isFullscreen: Boolean,
-    loading: Boolean
+    loading: Boolean,
+    panelLock: Boolean
   },
   computed: {
     isNoData () {
@@ -163,6 +173,7 @@ export default {
     isLog,
     isStat,
     isDiagram,
+    isGroup,
     resize () {
       this.$refs['chart' + this.chartInfo.id].resize()
     }

@@ -1,5 +1,5 @@
 <template>
-  <div :id='`chartList${timestamp}`' class="chart-list" :loading="gridLayoutLoading">
+  <div :id='`chartList${(isGroup ? "Group" : "") + timestamp}`' class="chart-list" :loading="gridLayoutLoading">
     <grid-layout
       v-if="gridLayoutShow"
       :col-num="12"
@@ -55,6 +55,7 @@
         :ref="'chart-fullscreen' + fullscreen.chartInfo.id"
         :chart-info="fullscreen.chartInfo"
         :is-fullscreen="true"
+        :panelLock="panelLock"
         :time-range="timeRange"
         @showFullscreen="showFullscreen"
       ></panel-chart>
@@ -75,6 +76,7 @@ export default {
     obj: Object,
     timeRange: Array, // 时间范围
     panelLock: { type: Boolean, default: true },
+    isGroup: { type: Boolean, default: false },
     dataList: Array // 看板中所有图表信息
   },
   components: {
@@ -104,7 +106,10 @@ export default {
   },
   methods: {
     init () {
-      const dom = document.getElementById(`chartList${this.timestamp}`)
+      let dom = document.getElementById(`chartList${this.timestamp}`)
+      if (this.isGroup) {
+        dom = document.getElementById(`chartListGroup${this.timestamp}`)
+      }
       if (dom) {
         this.stepWidth = Math.floor(dom.offsetWidth / 12)
         const span = document.querySelector('.temp-dom')

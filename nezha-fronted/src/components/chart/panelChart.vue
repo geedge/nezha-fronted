@@ -15,6 +15,7 @@
       ref="chart"
       :chart-data="chartData"
       :chart-info="chartInfo"
+      :panelLock="panelLock"
       :is-fullscreen="isFullscreen"
       :loading="loading"
     ></chart>
@@ -40,7 +41,8 @@ export default {
   props: {
     chartInfo: Object, // 其中的param json串已转化为对象
     timeRange: Array, // 时间范围
-    isFullscreen: Boolean
+    isFullscreen: Boolean,
+    panelLock: Boolean
   },
   data () {
     return {
@@ -140,6 +142,9 @@ export default {
             }
             if (this.chartInfo.type === 'diagram') {
               this.chartData = [this.chartInfo.param.topo]
+            }
+            if (this.chartInfo.type === 'group') {
+              this.chartData = [...this.chartInfo.children]
             }
             break
           }

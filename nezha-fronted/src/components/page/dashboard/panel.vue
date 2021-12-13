@@ -84,6 +84,7 @@
             <div class="box-content" v-loading="chartListLoading">
               <chart-list
                 ref="chartList"
+                name="panel"
                 :class="{'show-top':showTopBtn}"
                 :data-list="dataList"
                 :nowTimeType="nowTimeType"
@@ -147,7 +148,6 @@
 <script>
 import ChartBox from './chartBox'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
-import ChartList from '../../chart/chartList'
 import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
 import selectPanel from '../../common/popBox/selectPanel'
@@ -271,7 +271,6 @@ export default {
   },
   components: {
     'chart-box': ChartBox,
-    'chart-list': ChartList,
     'pick-time': pickTime,
     'panel-box': panelBox,
     topToolMoreOptions,

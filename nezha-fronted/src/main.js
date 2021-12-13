@@ -27,6 +27,7 @@ import Pagination from './components/common/pagination' // 引入全局分页组
 import searchInput from './components/common/searchInput' // 搜索框组件
 import elementSet from './components/common/elementSet' // 自定义表头组件
 import MyElSelect from './components/common/elSelect/MyElSelect'
+import chartList from '@/components/chart/chartList.vue' // 全局引入 chartList 组件 防止 chart-group爆粗
 
 import loading from '@/components/common/loading'
 import pickTime from '@/components/common/pickTime'
@@ -54,6 +55,7 @@ Vue.component('loading', loading)
 Vue.component('pick-time', pickTime)
 Vue.component('myDatePicker', myDatePicker)
 Vue.component('nzDataList', nzDataList)
+Vue.component('chartList', chartList)
 
 Vue.prototype.$axios = axios
 Vue.prototype.$post = post
