@@ -145,6 +145,7 @@ export default {
             break
           }
           case 'misc': {
+            // this.chartInfo.type = 'carousel'
             if (this.chartInfo.type === 'hexagonFigure') {
               this.getHexagonFigureData().then(res => {
                 this.chartData = res

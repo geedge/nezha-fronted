@@ -82,6 +82,9 @@ export function isDiagram (type) {
 export function isGroup (type) {
   return type === chartType.group
 }
+export function isAutoCarousel (type) {
+  return type === chartType.carousel
+}
 
 export function getGroupHeight (arr) {
   if (arr.length) {

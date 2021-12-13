@@ -214,8 +214,8 @@ export default {
             i: item.id,
             w: item.span,
             h: item.height,
-            x: item.x || 0,
-            y: item.y || 0,
+            x: item.x || 1,
+            y: item.y || 1,
             param
           }
         })

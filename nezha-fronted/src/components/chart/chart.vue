@@ -92,6 +92,14 @@
         :is-fullscreen="isFullscreen"
         :chart-option="chartOption"
       ></chart-group>
+      <chartAutoCarousel
+        :ref="'chart' + chartInfo.id"
+        v-if="isAutoCarousel(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+      ></chartAutoCarousel>
     </template>
   </div>
 </template>
@@ -99,6 +107,7 @@
 <script>
 import loading from '@/components/common/loading'
 import chartAssetInfo from './chart/chartAssetInfo'
+import chartAutoCarousel from './chart/chartAutoCarousel'
 import chartBar from './chart/chartBar'
 import chartClock from './chart/chartClock'
 import chartDiagram from './chart/chartDiagram'
@@ -116,7 +125,7 @@ import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
-import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup } from './chart/tools'
+import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutoCarousel } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -124,6 +133,7 @@ export default {
   components: {
     loading,
     chartAssetInfo,
+    chartAutoCarousel,
     chartBar,
     chartClock,
     chartDiagram,
@@ -174,7 +184,9 @@ export default {
     isStat,
     isDiagram,
     isGroup,
+    isAutoCarousel,
     resize () {
+      console.log(this.$refs['chart' + this.chartInfo.id])
       this.$refs['chart' + this.chartInfo.id].resize()
     }
   },
