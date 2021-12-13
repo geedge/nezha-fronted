@@ -138,6 +138,9 @@ export default {
                 this.loading = false
               })
             }
+            if (this.chartInfo.type === 'diagram') {
+              this.chartData = [this.chartInfo.param.topo]
+            }
             break
           }
         }

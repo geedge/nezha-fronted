@@ -2075,7 +2075,11 @@ export default {
     /* tools 方法 */
 
     winResize () {
-      setTimeout(() => {
+      if (this.timer) {
+        clearTimeout(this.timer)
+        this.timer = null
+      }
+      this.timer = setTimeout(() => {
         const dom = document.getElementById('topology-canvas' + this.topologyIndex)
         const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
@@ -2083,7 +2087,6 @@ export default {
           getTopology(this.topologyIndex).open(this.oldTopologyData)
         }
         let flag = false
-
         const position = {
           x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
           y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
@@ -2097,8 +2100,11 @@ export default {
             flag = true
           }
         })
+        getTopology(this.topologyIndex).resize()
         getTopology(this.topologyIndex).centerView()
-        this.getNodesArr()
+        clearTimeout(this.timer)
+        this.timer = null
+        // this.getNodesArr()
       }, 100)
     },
     contextmenuNone () {

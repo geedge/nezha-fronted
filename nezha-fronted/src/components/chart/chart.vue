@@ -33,6 +33,7 @@
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
       ></chartHexagon>
       <chart-url
         :ref="'chart' + chartInfo.id"
@@ -40,6 +41,7 @@
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
       ></chart-url>
       <chart-text
         :ref="'chart' + chartInfo.id"
@@ -47,6 +49,7 @@
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
       ></chart-text>
       <chart-treemap
         :ref="'chart' + chartInfo.id"
@@ -54,6 +57,7 @@
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
       ></chart-treemap>
       <chart-log
         :ref="'chart' + chartInfo.id"
@@ -61,6 +65,7 @@
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
       ></chart-log>
       <chart-stat
         :ref="'chart' + chartInfo.id"
@@ -68,7 +73,16 @@
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
       ></chart-stat>
+      <chart-diagram
+        :ref="'chart' + chartInfo.id"
+        v-if="isDiagram(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :is-fullscreen="isFullscreen"
+        :chart-option="chartOption"
+      ></chart-diagram>
     </template>
   </div>
 </template>
@@ -93,7 +107,7 @@ import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
-import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat } from './chart/tools'
+import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -148,6 +162,7 @@ export default {
     isTreemap,
     isLog,
     isStat,
+    isDiagram,
     resize () {
       this.$refs['chart' + this.chartInfo.id].resize()
     }

@@ -76,6 +76,9 @@ export function isLog (type) {
 export function isStat (type) {
   return type === chartType.stat
 }
+export function isDiagram (type) {
+  return type === chartType.diagram
+}
 
 export function initColor (colorNum = 20) {
   const colorList = [
