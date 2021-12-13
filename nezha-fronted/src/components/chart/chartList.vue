@@ -1,6 +1,7 @@
 <template>
-  <div :id='`chartList${timestamp}`' class="chart-list">
+  <div :id='`chartList${timestamp}`' class="chart-list" :loading="gridLayoutLoading">
     <grid-layout
+      v-if="gridLayoutShow"
       :col-num="12"
       :is-draggable="!panelLock"
       :is-resizable="!panelLock"
@@ -84,6 +85,8 @@ export default {
   data () {
     return {
       fromRoute,
+      gridLayoutLoading: false,
+      gridLayoutShow: true,
       filter: {}, // chart列表查询条件
       copyDataList: [],
       noData: false, // no data
@@ -140,8 +143,11 @@ export default {
     dataList: {
       deep: true,
       handler (n, o) {
+        console.log(n)
+        this.gridLayoutShow = false
+        this.gridLayoutLoading = true
         this.noData = !n || n.length < 1
-        this.copyDataList = n.map(item => {
+        const tempList = n.map(item => {
           const param = item.param
           // try {
           //   param = JSON.parse(item.param)
@@ -158,6 +164,11 @@ export default {
             y: item.y || 0,
             param
           }
+        })
+        this.$nextTick(() => {
+          this.copyDataList = JSON.parse(JSON.stringify(tempList))
+          this.gridLayoutShow = true
+          this.gridLayoutLoading = false
         })
       }
     }
