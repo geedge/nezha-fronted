@@ -3,6 +3,7 @@
     <grid-layout
       ref="layout"
       :col-num="12"
+      :maxRows="12"
       :is-draggable="!panelLock"
       :is-resizable="!panelLock"
       :layout.sync="copyDataList"
@@ -187,13 +188,11 @@ export default {
       // console.log(height,copyList, group, flag)
       // console.log(this.$refs.layout)
       const groupFind = this.copyDataList.find(item => item.id == group.id)
-      const groupFindndex = this.copyDataList.find(item => item.id == group.id)
       console.log(groupFind)
       if (group) {
         groupFind.height = groupFind.h = height + this.headerHPadding
         groupFind.children = copyList
         this.copyDataList = [...this.copyDataList]
-        console.log(this.copyDataList)
       }
       if (flag) {
         this.copyDataList = [...this.copyDataList]
