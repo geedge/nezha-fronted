@@ -19,7 +19,7 @@
         :w="item.w"
         :x="item.x"
         :y="item.y"
-        :minH="headerH"
+        :class="(item.type === 'group' && !item.param.collapse) ? 'group-hide-header': ''"
         dragAllowFrom=".chart-header"
         dragIgnoreFrom=".chart-header__tools"
         @resize="resizeEvent"
@@ -32,6 +32,7 @@
           :ref="'chart' + item.id"
           @edit-chart="$emit('edit-chart', item)"
           :chart-info="item"
+          :isResizable = "item.type === 'group' ? false: null"
           :time-range="timeRange"
           @showFullscreen="showFullscreen"
         ></panel-chart>
@@ -58,6 +59,7 @@
         :ref="'chart-fullscreen' + fullscreen.chartInfo.id"
         :chart-info="fullscreen.chartInfo"
         :is-fullscreen="true"
+        @groupShow="groupShow"
         :panelLock="panelLock"
         :time-range="timeRange"
         @showFullscreen="showFullscreen"
@@ -68,6 +70,8 @@
 
 <script>
 import VueGridLayout from 'vue-grid-layout'
+import gridItem from './GridItem'
+import GridLayout from './GridLayout'
 import { fromRoute } from '@/components/common/js/constants'
 import { getGroupHeight } from './chart/tools'
 import panelChart from '@/components/chart/panelChart'
@@ -86,8 +90,8 @@ export default {
     dataList: Array // 看板中所有图表信息
   },
   components: {
-    GridLayout: VueGridLayout.GridLayout,
-    GridItem: VueGridLayout.GridItem,
+    GridLayout: GridLayout,
+    GridItem: gridItem,
     panelChart
   },
   computed: {
@@ -182,6 +186,10 @@ export default {
     },
     cleanData () {
 
+    },
+    groupShow (chart) {
+      const index = this.copyDataList.findIndex(item => item.id === chart.id)
+      this.$set(this.copyDataList, index, chart)
     }
   },
   created () {
@@ -197,7 +205,6 @@ export default {
     dataList: {
       deep: true,
       handler (n, o) {
-        console.log(n)
         this.gridLayoutShow = false
         this.gridLayoutLoading = true
         this.noData = !n || n.length < 1
@@ -214,8 +221,8 @@ export default {
             i: item.id,
             w: item.span,
             h: item.height,
-            x: item.x || 1,
-            y: item.y || 1,
+            x: item.x || 0,
+            y: item.y || 0,
             param
           }
         })
@@ -229,7 +236,6 @@ export default {
     copyDataList: {
       deep: true,
       handler (n) {
-        console.log(n)
         if (this.isGroup) {
           bus.$emit('groupMove', n, this.groupInfo)
         }
@@ -244,4 +250,6 @@ export default {
   height: 100%;
   width: 100%;
 }
+  .group-hide-header {
+  }
 </style>

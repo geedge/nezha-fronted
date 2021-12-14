@@ -145,7 +145,6 @@ export default {
             break
           }
           case 'misc': {
-            // this.chartInfo.type = 'carousel'
             if (this.chartInfo.type === 'hexagonFigure') {
               this.getHexagonFigureData().then(res => {
                 this.chartData = res
@@ -208,13 +207,15 @@ export default {
       })
     },
     groupInit () {
-      const height = getGroupHeight(this.chartInfo.children)
+      const height = getGroupHeight(this.chartInfo.children || [])
+      console.log(height)
       if (!this.chartInfo.param.collapse) {
         this.chartInfo.height = this.headerH
         this.chartInfo.h = this.headerH
+        console.log(this.headerH, this.chartInfo.h, this.chartInfo.height)
         return
       }
-      if (this.chartInfo.children.length) {
+      if (this.chartInfo.children && this.chartInfo.children.length) {
         this.chartInfo.height = height + this.headerHPadding
         this.chartInfo.h = height + this.headerHPadding
       } else {
@@ -230,6 +231,7 @@ export default {
       this.chartInfo.param.collapse = flag
       this.groupInit()
       bus.$emit('groupMove', '', '', true)
+      this.$emit('groupShow', this.chartInfo)
     }
   },
   watch: {
