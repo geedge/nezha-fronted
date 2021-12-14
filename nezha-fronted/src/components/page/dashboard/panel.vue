@@ -85,6 +85,7 @@
               <chart-list
                 ref="chartList"
                 name="panel"
+                :panelId="showPanel.id"
                 :class="{'show-top':showTopBtn}"
                 :data-list="dataList"
                 :nowTimeType="nowTimeType"

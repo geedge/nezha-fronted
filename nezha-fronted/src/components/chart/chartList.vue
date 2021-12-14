@@ -10,6 +10,9 @@
       :row-height="stepWidth"
       :use-css-transforms="true"
       :vertical-compact="true"
+      :style="{
+        'margin-top':isGroup ? '0' : (-1 * (stepWidth + 12) + 'px')
+      }"
     >
       <grid-item
         v-for="item in copyDataList"
@@ -19,20 +22,25 @@
         :w="item.w"
         :x="item.x"
         :y="item.y"
-        :class="(item.type === 'group' && !item.param.collapse) ? 'group-hide-header': ''"
+        :min-h="headerH"
+        :static="item.static"
+        :class="{
+          'group-hide-header':item.type === 'group' && item.param.collapse,
+          'opacityItem': item.static
+        }"
+        :isResizable = "item.type === 'group' ? false: null"
         dragAllowFrom=".chart-header"
         dragIgnoreFrom=".chart-header__tools"
         @resize="resizeEvent"
         @resized="resizedEvent"
         @moveEvent="moveEvent"
-        @movedEvent="movedEvent"
+        @moved="movedEvent"
         @container-resized="containerResizedEvent"
       >
         <panel-chart
           :ref="'chart' + item.id"
           @edit-chart="$emit('edit-chart', item)"
           :chart-info="item"
-          :isResizable = "item.type === 'group' ? false: null"
           :time-range="timeRange"
           @showFullscreen="showFullscreen"
         ></panel-chart>
@@ -71,17 +79,19 @@
 <script>
 import VueGridLayout from 'vue-grid-layout'
 import gridItem from './GridItem'
-import GridLayout from './GridLayout'
+// import GridLayout from './GridLayout'
 import { fromRoute } from '@/components/common/js/constants'
 import { getGroupHeight } from './chart/tools'
 import panelChart from '@/components/chart/panelChart'
 import bus from '@/libs/bus'
+import groupData from '@/components/chart/tempGroup'
 
 export default {
   name: 'chartList',
   props: {
     // TODO isModel
     from: { type: String },
+    panelId: { },
     obj: Object,
     timeRange: Array, // 时间范围
     panelLock: { type: Boolean, default: true },
@@ -90,7 +100,7 @@ export default {
     dataList: Array // 看板中所有图表信息
   },
   components: {
-    GridLayout: GridLayout,
+    GridLayout: VueGridLayout.GridLayout,
     GridItem: gridItem,
     panelChart
   },
@@ -131,7 +141,7 @@ export default {
       if (dom) {
         this.stepWidth = Math.floor(dom.offsetWidth / 12)
         if (!this.isGroup) {
-          const headerH = 40 / this.stepWidth
+          const headerH = 50 / this.stepWidth
           const headerHPadding = 50 / this.stepWidth
           this.$store.commit('setHeaderH', { headerH, headerHPadding })
         }
@@ -158,8 +168,9 @@ export default {
       }
     },
     movedEvent (i, newX, newY) {
-      if (this.isGroup) {
-        bus.$emit('groupMove', this.copyDataList)
+      console.log(i)
+      if (!this.isGroup) {
+        this.moveChart()
       }
     },
     containerResizedEvent (i, newH, newW, newHPx, newWPx) {
@@ -173,7 +184,8 @@ export default {
     },
     changeGroupHeight (copyList, group, flag) {
       const height = getGroupHeight(copyList)
-      console.log(this.$refs.layout)
+      console.log(copyList, group, flag)
+      // console.log(this.$refs.layout)
       const groupFind = this.copyDataList.find(item => item.id === group.id)
       if (group) {
         groupFind.height = groupFind.h = height + this.headerHPadding
@@ -181,8 +193,9 @@ export default {
       }
       if (flag) {
         this.copyDataList = [...this.copyDataList]
-        this.$refs.layout.layoutUpdate()
+        // this.$refs.layout.layoutUpdate()
       }
+      this.moveChart()
     },
     cleanData () {
 
@@ -190,6 +203,49 @@ export default {
     groupShow (chart) {
       const index = this.copyDataList.findIndex(item => item.id === chart.id)
       this.$set(this.copyDataList, index, chart)
+    },
+    moveChart () {
+      if (this.timer) {
+        clearTimeout(this.timer)
+        this.timer = null
+      }
+      this.timer = setTimeout(() => {
+        const arr = this.copyDataList.filter(item => !item.staic)
+        const charts = []
+        let weight = 0
+        arr.forEach(item => {
+          charts.push({
+            id: item.id,
+            x: item.x,
+            y: item.y,
+            span: item.span,
+            height: item.height,
+            groupId: item.groupId,
+            weight: weight
+          })
+          weight++
+          if (item.type === 'group') {
+            item.children && item.children.forEach(children => {
+              charts.push({
+                id: children.id,
+                x: children.x,
+                y: children.y,
+                span: children.span,
+                height: children.height,
+                groupId: children.groupId,
+                weight: weight
+              })
+              weight++
+            })
+          }
+        })
+        const params = {
+          panelId: this.panelId,
+          charts: charts
+        }
+        console.log(this.copyDataList)
+        this.$put('/visual/panel/chart/weights', params)
+      }, 200)
     }
   },
   created () {
@@ -215,17 +271,29 @@ export default {
           // } catch (e) {
           //   console.info(e)
           // }
+          const height = (item.type === 'group' && item.param.collapse) ? this.headerH : item.height
           param.showHeader = true
           return {
             ...item,
             i: item.id,
             w: item.span,
-            h: item.height,
+            h: height,
             x: item.x || 0,
             y: item.y || 0,
             param
           }
         })
+        if (tempList.length && !this.isGroup) { // 添加一个高1 宽12的元素占位 防止group消失
+          tempList.push({
+            ...groupData,
+            i: -2,
+            w: 12,
+            h: 1,
+            x: 0,
+            y: 0,
+            static: true
+          })
+        }
         this.$nextTick(() => {
           this.copyDataList = JSON.parse(JSON.stringify(tempList))
           this.gridLayoutShow = true
@@ -251,5 +319,6 @@ export default {
   width: 100%;
 }
   .group-hide-header {
+    height: 40px!important;
   }
 </style>

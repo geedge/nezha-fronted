@@ -1,7 +1,10 @@
 <template>
   <div :class="{'chart-header--float': !chartInfo.param.showHeader}" class="chart-header">
     <div class="chart-header__title" v-if="!isGroup">{{chartInfo.name}}</div>
-    <div class="chart-header__title" v-else @click="groupShow"> > {{chartInfo.name}}</div>
+    <div class="chart-header__title" v-else >
+      <span @click="groupShow"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-down': 'nz-icon-arrow-right'"></i></span>
+      {{chartInfo.name}}
+    </div>
     <div class="chart-header__tools">
       <span v-if="chartInfo.remark" class="chart-header__tool">
         <el-tooltip :content="chartInfo.remark" effect="light" placement="top">

@@ -42,7 +42,7 @@ export default {
             if (chartInfo.param.stack) { // 堆叠
               s.stack = 'Total'
             }
-            if (!lodash.isEmpty(chartInfo.param.thresholds)) { // 阈值
+            if (chartInfo.param.thresholdShow && !lodash.isEmpty(chartInfo.param.thresholds)) { // 阈值
               s.markLine = {
                 symbol: 'circle',
                 symbolSize: 5

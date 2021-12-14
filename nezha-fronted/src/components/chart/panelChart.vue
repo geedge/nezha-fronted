@@ -20,7 +20,7 @@
       :panelLock="panelLock"
       :is-fullscreen="isFullscreen"
       :loading="loading"
-      v-if="!isGroup(chartInfo.type) || chartInfo.param.collapse"
+      v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
     ></chart>
   </div>
 </template>
@@ -208,11 +208,10 @@ export default {
     },
     groupInit () {
       const height = getGroupHeight(this.chartInfo.children || [])
-      console.log(height)
-      if (!this.chartInfo.param.collapse) {
+      if (this.chartInfo.param.collapse) {
         this.chartInfo.height = this.headerH
         this.chartInfo.h = this.headerH
-        console.log(this.headerH, this.chartInfo.h, this.chartInfo.height)
+        bus.$emit('groupMove', '', '', true)
         return
       }
       if (this.chartInfo.children && this.chartInfo.children.length) {
