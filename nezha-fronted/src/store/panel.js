@@ -8,7 +8,8 @@ const panel = {
     timeRange: [],
     nowTimeType: {},
     headerH: 0.5,
-    headerHPadding: 0.5
+    headerHPadding: 0.5,
+    rowHeight: 150
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -33,9 +34,9 @@ const panel = {
       state.nowTimeType = nowTimeType
     },
     setHeaderH (state, h) {
-      console.log(h)
       state.headerH = h.headerH
       state.headerHPadding = h.headerHPadding
+      state.rowHeight = h.rowHeight
     },
     cleanPanel (state) {
       state.showRightBox = false
@@ -72,6 +73,9 @@ const panel = {
     },
     getHeaderHPadding (state) {
       return state.headerHPadding
+    },
+    getRowHeight (state) {
+      return state.rowHeight
     }
   },
   actions: {

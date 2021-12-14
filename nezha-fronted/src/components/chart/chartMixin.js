@@ -168,6 +168,9 @@ export default {
           })
         }, 300)
       }
+    },
+    resize () {
+      getChart(this.chartId) && getChart(this.chartId).resize()
     }
   },
   watch: {

@@ -2,6 +2,7 @@
   <div :id='`chartList${(isGroup ? "Group" : "") + timestamp}`' class="chart-list" :loading="gridLayoutLoading">
     <grid-layout
       ref="layout"
+      v-if="gridLayoutShow"
       :col-num="12"
       :maxRows="12"
       :is-draggable="!panelLock"
@@ -111,13 +112,16 @@ export default {
     },
     headerHPadding () {
       return this.$store.getters.getHeaderHPadding
+    },
+    rowHeight () {
+      return this.$store.getters.getRowHeight
     }
   },
   data () {
     return {
       fromRoute,
       gridLayoutLoading: false,
-      gridLayoutShow: true,
+      gridLayoutShow: false,
       filter: {}, // chart列表查询条件
       copyDataList: [],
       noData: false, // no data
@@ -144,7 +148,9 @@ export default {
         if (!this.isGroup) {
           const headerH = 50 / this.stepWidth
           const headerHPadding = 50 / this.stepWidth
-          this.$store.commit('setHeaderH', { headerH, headerHPadding })
+          this.$store.commit('setHeaderH', { headerH, headerHPadding, rowHeight: this.stepWidth })
+        } else {
+          this.stepWidth = this.rowHeight - (10 / 12)
         }
         const span = document.querySelector('.temp-dom')
         this.tempDom.width = span.offsetWidth
@@ -160,16 +166,24 @@ export default {
       // TODO 重新渲染图表，向后端发送put请求
       setTimeout(() => {
         this.$refs['chart' + i][0].resize()
+        // if (!this.isGroup) {
+        //   this.moveChart()
+        // } else {
+        //   bus.$emit('groupMove', this.copyDataList, this.groupInfo)
+        // }
+        this.$put('/visual/panel/chart/modify', {
+          id: i,
+          span: newW,
+          height: newH
+        })
       }, 100)
     },
     moveEvent (i, newX, newY) {
-      console.log(i)
       if (this.isGroup) {
 
       }
     },
     movedEvent (i, newX, newY) {
-      console.log(i)
       if (!this.isGroup) {
         this.moveChart()
       }
@@ -299,7 +313,9 @@ export default {
         }
         this.$nextTick(() => {
           this.copyDataList = JSON.parse(JSON.stringify(tempList))
-          this.gridLayoutShow = true
+          setTimeout(() => {
+            this.gridLayoutShow = true
+          })
           this.gridLayoutLoading = false
         })
       }
