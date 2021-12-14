@@ -471,6 +471,9 @@ export default {
             this.$message.error(response.msg)
           }
         })
+      }).catch(() => {
+        this.chart = {}
+        this.$store.dispatch('clearPanel')
       })
     },
     delChartOk () {
@@ -523,7 +526,7 @@ export default {
       this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       this.getTableData()
       this.getData(this.filter)
-      this.$store.dispatch('dispatchPanelTime',{
+      this.$store.dispatch('dispatchPanelTime', {
         time: this.searchTime,
         nowTimeType: this.nowTimeType
       })
@@ -766,7 +769,7 @@ export default {
   },
   created () {
     this.getTableData()
-    this.$store.dispatch('dispatchPanelTime',{
+    this.$store.dispatch('dispatchPanelTime', {
       time: this.searchTime,
       nowTimeType: {
         id: 4,
