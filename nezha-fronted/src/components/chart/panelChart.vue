@@ -153,11 +153,18 @@ export default {
               })
             }
             if (this.chartInfo.type === 'diagram') {
-              this.chartData = [this.chartInfo.param.topo]
+              if (!this.chartInfo.param.topo || !this.chartInfo.param.topo.pens.length){
+                this.chartData = []
+              } else {
+                this.chartData = [this.chartInfo.param.topo]
+              }
             }
             if (this.chartInfo.type === 'group') {
               this.groupInit()
               this.chartData = [...this.chartInfo.children]
+            }
+            if (this.chartInfo.type === 'carousel') {
+              this.chartData = ['carousel']
             }
             break
           }

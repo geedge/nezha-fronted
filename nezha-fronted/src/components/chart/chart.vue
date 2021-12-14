@@ -83,6 +83,14 @@
         :is-fullscreen="isFullscreen"
         :chart-option="chartOption"
       ></chart-diagram>
+      <chartAutoCarousel
+        :ref="'chart' + chartInfo.id"
+        v-if="isAutoCarousel(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+      ></chartAutoCarousel>
       <chart-group
         :ref="'chart' + chartInfo.id"
         v-if="isGroup(chartInfo.type)"
@@ -92,14 +100,6 @@
         :is-fullscreen="isFullscreen"
         :chart-option="chartOption"
       ></chart-group>
-      <chartAutoCarousel
-        :ref="'chart' + chartInfo.id"
-        v-if="isAutoCarousel(chartInfo.type)"
-        :chart-data="chartData"
-        :chart-info="chartInfo"
-        :chart-option="chartOption"
-        :is-fullscreen="isFullscreen"
-      ></chartAutoCarousel>
     </template>
   </div>
 </template>

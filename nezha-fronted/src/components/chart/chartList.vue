@@ -80,8 +80,6 @@
 
 <script>
 import VueGridLayout from 'vue-grid-layout'
-import gridItem from './GridItem'
-// import GridLayout from './GridLayout'
 import { fromRoute } from '@/components/common/js/constants'
 import { getGroupHeight } from './chart/tools'
 import panelChart from '@/components/chart/panelChart'
@@ -103,7 +101,7 @@ export default {
   },
   components: {
     GridLayout: VueGridLayout.GridLayout,
-    GridItem: gridItem,
+    GridItem: VueGridLayout.GridItem,
     panelChart
   },
   computed: {
@@ -203,7 +201,7 @@ export default {
       // console.log(this.$refs.layout)
       const groupFind = this.copyDataList.find(item => item.id == group.id)
       console.log(groupFind)
-      if (group) {
+      if (group && groupFind) {
         groupFind.height = groupFind.h = height + this.headerHPadding
         groupFind.children = copyList
         this.copyDataList = [...this.copyDataList]
