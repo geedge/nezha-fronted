@@ -704,6 +704,20 @@
   z-index: 99999;
   height: 1px;
   background-color: transparent;
+  .leaflet-tooltip,.tooltip {
+    background-color: $--background-color-base;
+  }
+  .leaflet-tooltip {
+    border: 1px solid $--border-color-light;
+    opacity: 1 !important;
+  }
+  .tooltip-chart {
+    background-color: $--background-color-empty;
+  }
+  .leaflet-tooltip-left:before {
+    border-left-color: $--background-color-base;
+    border: 1px solid $--border-color-light;
+  }
 }
 .maskLayer{
   width: 100%;

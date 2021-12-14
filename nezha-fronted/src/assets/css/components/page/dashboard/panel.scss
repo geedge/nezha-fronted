@@ -20,6 +20,22 @@
       color: $--color-text-regular;
     }
   }
+  .chart-diagram {
+    .main-container {
+      padding: 0 !important;
+    }
+    .nz-table2.h100 {
+      height: 100% !important;
+    }
+    .right-bottom-zoom {
+      .zoom-option {
+        color: $--color-text-regular !important;
+      }
+      .zoom-option:hover {
+        color: $--color-text-regular !important;
+      }
+    }
+  }
 }
 
 .panel .el-table {
