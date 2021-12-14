@@ -16,11 +16,14 @@
       <div class="license-left-body">
         <div>
           <div class="license-left-boyd-title" style="margin-top: 25px">{{$t('license.id')}}</div>
-          <div class="license-left-boyd-value">{{ licenseList.id }}</div>
+          <div class="license-left-boyd-value">{{ licenseList.id ? licenseList.id : '-'}}</div>
         </div>
         <div>
           <div class="license-left-boyd-title">{{$t('license.proDate')}}</div>
-          <div class="license-left-boyd-value">{{formatDate(licenseList.production_date)}}</div>
+          <div class="license-left-boyd-value">
+            <span v-if="licenseList.production_date">{{formatDate(licenseList.production_date)}}</span>
+            <span v-else>-</span>
+          </div>
         </div>
         <div>
           <div class="license-left-boyd-title">{{$t('license.expDate')}}</div>
@@ -29,12 +32,13 @@
             <span v-else-if="expData.id === '20001' && expData.license.license_type === 'perpetual'">{{$t('license.permanent')}}</span>
 <!--            <span v-else-if="expData.id === '20001' && expData.license.license_type === 'trial'">{{$t('license.validPeriod')}}: {{formatDate(time_start)}} ~ {{ formatDate(end_time(time_start + total_time))}}</span>-->
 <!--            <span>{{$t('license.validPeriod')}} : {{formatDate(expData.license.time_start)}} ~ {{formatDate(expData.license.end_time)}}</span>-->
+            <span v-else>-</span>
           </div>
         </div>
       </div>
       <div class="license-left-footer">
-        <div class="license-left-footer-download">
-          <i @click="downloadLicense" class="nz-icon nz-icon-download"></i><span>{{$t('license.downloadID')}}</span>
+        <div class="license-left-footer-download" @click="downloadLicense">
+          <i class="nz-icon nz-icon-download"></i><span>{{$t('license.downloadID')}}</span>
         </div>
         <el-upload
           ref="upload"
@@ -54,7 +58,7 @@
         <div class="license-right-header-title">{{$t('license.devices')}}&nbsp;({{tableData ? tableData.length : 0}})</div>
       </div>
       <div class="license-right-table">
-        <el-table :data="tableData">
+        <el-table :data="tableData" v-loading="loading">
           <el-table-column v-for="(item, index) in tableTitle" :key="index">
             <template slot="header">
               <span class="data-column__span">{{item.label}} <i class="nz-icon nz-icon-label" v-if="item.type==='label'"/></span>
@@ -63,7 +67,7 @@
               <template v-if="item.prop === 'devicesName'">
                 <span>{{getLicense(scope.row)}}</span>
               </template>
-              <template v-if="item.prop === 'status'">
+              <template v-else-if="item.prop === 'status'">
                 <div v-if="scope.row.status === 0">
                   <div class="active-icon green-bg inline-block"></div> {{ $t('license.active') }}
                 </div>
@@ -71,6 +75,7 @@
                   <div class="active-icon red-bg inline-block"></div> {{ $t('license.inactive') }}
                 </div>
               </template>
+              <template v-else>-</template>
             </template>
           </el-table-column>
         </el-table>
@@ -88,7 +93,6 @@ export default {
   data () {
     return {
       licenseList: {},
-      url: '/sys/license/detail',
       tableData: [],
       tableTitle: [
         {
@@ -103,7 +107,8 @@ export default {
       expData: {},
       uploadFileList: [],
       uploadFile: { file: '' },
-      active: ''
+      active: 0,
+      loading: true
     }
   },
   methods: {
@@ -150,16 +155,20 @@ export default {
     licenseGetStatus () {
       this.$get('/sys/license/status').then(res => {
         if (res.code === 200) {
-          this.active = res.data.status
+          if (res.data) {
+            this.active = res.data.status
+          }
         } else {
           this.$message.error(res.msg)
         }
       })
       this.$get('/sys/license/status', { scope: 'all' }).then(res => {
         res = statusDate
+        this.loading = false
         return this.tableData = res.data.list
         if (res.code === 200) {
           this.tableData = res.data.list
+          this.loading = false
         } else {
           this.$message.error(res.msg)
         }
@@ -177,7 +186,7 @@ export default {
       form.append('file', this.uploadFile.file.raw)
       this.$post('/sys/license/upload', form).then(res => {
         if (res.code == 200) {
-          return ''
+          this.licenseGetStatus()
         } else {
           this.$message.error(res.msg)
         }

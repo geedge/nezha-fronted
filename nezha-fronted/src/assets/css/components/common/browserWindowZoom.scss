@@ -1,57 +1,55 @@
+.transition-box {
+  margin-bottom: 10px;
+  width: 200px;
+  height: 100px;
+  border-radius: 4px;
+  background-color: #409EFF;
+  text-align: center;
+  color: $--background-color-empty;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  margin-right: 20px;
+}
 .zoom {
-  .transition-box {
-    margin-bottom: 10px;
-    width: 200px;
-    height: 100px;
-    border-radius: 4px;
-    background-color: #409EFF;
-    text-align: center;
-    color: $--background-color-empty;
-    padding: 40px 20px;
-    box-sizing: border-box;
-    margin-right: 20px;
+  background: $--background-color-base;
+  border: 1px solid $--border-color-base;
+  border-radius: 2px;
+  width: 400px;
+  height: 108px;
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50px;
+  margin-left: -186px;
+
+  span {
+    margin-top: 15px;
+    font-size: 14px;
+    color: $--color-text-regular;
+    line-height: 20px;
+    font-weight: 400;
+    width: 350px;
+    height: 40px;
+    margin-left: 40px;
+    display: inline-block;
   }
-  .zoom {
-    background: $--background-color-base;
-    border: 1px solid $--border-color-base;
-    border-radius: 2px;
-    width: 400px;
-    height: 108px;
+
+  i {
     position: absolute;
-    z-index: 1;
-    left: 50%;
-    top: 50px;
-    margin-left: -186px;
+    color: $--color-primary;
+    top: 15px;
+    left: 12px;
+  }
 
-    span {
-      margin-top: 15px;
-      font-size: 14px;
-      color: $--color-text-regular;
-      line-height: 20px;
-      font-weight: 400;
-      width: 350px;
-      height: 40px;
-      margin-left: 40px;
-      display: inline-block;
-    }
-
-    i {
-      position: absolute;
-      color: $--color-primary;
-      top: 15px;
-      left: 12px;
-    }
-
-    .zoom-button {
-      margin-top: 10px;
-      margin-left: 39px;
-      border: 1px solid $--border-color-base;
-      border-radius: 4px;
-      background-color: $--background-color-base;
-      color: #000;
-      font-style: italic;
-      font-weight: 900;
-      padding: 4px 10px;
-    }
+  .zoom-button {
+    margin-top: 10px;
+    margin-left: 39px;
+    border: 1px solid $--border-color-light;
+    border-radius: 4px;
+    background-color: $--background-color-base;
+    color: $--color-text-primary;
+    font-style: italic;
+    font-weight: 900;
+    padding: 4px 10px;
   }
 }

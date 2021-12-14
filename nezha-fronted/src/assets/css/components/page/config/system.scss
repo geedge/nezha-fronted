@@ -437,6 +437,7 @@
       display: flex;
       justify-content: flex-start;
       .license-left-footer-download,.license-left-footer-upload {
+        cursor: pointer;
         span {
           color: $--color-text-secondary;
           opacity: 0.6;

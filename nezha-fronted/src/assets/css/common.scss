@@ -354,7 +354,7 @@ td .nz-icon-gear:before{
 .el-scrollbar-normal__color {
   color: $--color-text-regular;
 }
-.chart-body,.chart__canvas {
+.chart-body,.chart__canvas,.line-area {
   div:nth-of-type(2) {
     background-color: $--chart-background-color !important;
     border-color: $--chart-border-color !important;
