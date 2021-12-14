@@ -93,7 +93,7 @@ export function getGroupHeight (arr) {
     arr.forEach((children, index) => {
       if (maxY == children.y) {
         lastItem.push(children)
-      } else {
+      } else if (maxY < children.y) {
         maxY = children.y
         lastItem = [children]
       }

@@ -184,12 +184,16 @@ export default {
     },
     changeGroupHeight (copyList, group, flag) {
       const height = getGroupHeight(copyList)
-      console.log(copyList, group, flag)
+      // console.log(height,copyList, group, flag)
       // console.log(this.$refs.layout)
-      const groupFind = this.copyDataList.find(item => item.id === group.id)
+      const groupFind = this.copyDataList.find(item => item.id == group.id)
+      const groupFindndex = this.copyDataList.find(item => item.id == group.id)
+      console.log(groupFind)
       if (group) {
         groupFind.height = groupFind.h = height + this.headerHPadding
+        groupFind.children = copyList
         this.copyDataList = [...this.copyDataList]
+        console.log(this.copyDataList)
       }
       if (flag) {
         this.copyDataList = [...this.copyDataList]
@@ -243,7 +247,7 @@ export default {
           panelId: this.panelId,
           charts: charts
         }
-        console.log(this.copyDataList)
+        // console.log(this.copyDataList)
         this.$put('/visual/panel/chart/weights', params)
       }, 200)
     }
