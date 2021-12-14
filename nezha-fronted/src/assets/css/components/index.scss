@@ -43,7 +43,8 @@
 @import './common/rightBox/locationCascader.scss';
 @import './common/rightBox/menuBox.scss';
 @import './common/rightBox/moduleBox.scss';
-@import './common/rightBox/chartRightBox/chartRightBox';
+@import './common/rightBox/chartRightBox/chartRightBox.scss';
+@import './common/rightBox/mibBox.scss';
 @import './common/rightBox/assetBactchEditBox.scss';
 @import './common/table/alert/alertMessageTable.scss';
 @import './common/table/alert/alertRuleTable.scss';
@@ -92,4 +93,5 @@
 @import './common/v-selectpagenew/selectpage.scss';
 @import './common/paramBpx/paramBox.scss';
 @import './common/picker/picker.scss';
+@import './common/threshold/threshold.scss';
 

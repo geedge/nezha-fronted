@@ -655,7 +655,6 @@ export default {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' },
           { validator: this.optionType === 'batch' ? '' : noSpecialChar, trigger: 'change' }
-
         ],
         assetId: [
           { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'change' }

@@ -1,0 +1,14 @@
+.rich-text-editor {
+  .ql-toolbar {
+    border: 1px solid $--border-color-light;
+  }
+  .editor-core {
+    border: 1px solid $--border-color-light;
+    border-top: none;
+  }
+  .ql-editor {
+    p {
+      color: $--color-text-regular;
+    }
+  }
+}

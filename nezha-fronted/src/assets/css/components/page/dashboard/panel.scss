@@ -48,7 +48,7 @@
   overflow-y: auto;
   height: calc(100% - 60px);
   flex: 1;
-  background-color: $--dashboard-background-color-empty;
+  background-color: $--background-color-empty;
   .legend--table-cell,.legend-item {
     color: $--color-text-regular;
   }

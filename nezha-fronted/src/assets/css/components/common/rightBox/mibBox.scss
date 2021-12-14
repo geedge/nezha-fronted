@@ -1,0 +1,16 @@
+.right-box.right-box-mib {
+  .el-tag--mini.el-tag--light {
+    background-color: $--alert-rule-background-color;
+    border-color: $--border-color-light;
+    .el-tag__close {
+      color: $--alert-rule-color;
+    }
+    .el-tag__close:hover {
+      color: #FFFFFF;
+    }
+  }
+  .el-upload-dragger {
+    background-color: $--background-color-empty;
+    border: 1px solid $--border-color-light;
+  }
+}
