@@ -166,6 +166,9 @@ export default {
             if (this.chartInfo.type === 'carousel') {
               this.chartData = ['carousel']
             }
+            if (this.chartInfo.type === 'carousel') {
+              this.chartData = ['map']
+            }
             break
           }
         }

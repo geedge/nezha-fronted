@@ -12,6 +12,7 @@
       :row-height="stepWidth"
       :use-css-transforms="true"
       :vertical-compact="true"
+      :useCssTransforms="false"
       :style="{
         'margin-top':isGroup ? '0' : (-1 * (stepWidth + 12) + 'px')
       }"
@@ -270,6 +271,7 @@ export default {
     this.init()
     if (!this.isGroup) {
       bus.$on('groupMove', this.changeGroupHeight)
+      this.$store.commit('setChartListId', `chartList${this.timestamp}`)
     }
   },
   watch: {

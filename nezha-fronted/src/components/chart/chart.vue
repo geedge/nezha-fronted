@@ -91,6 +91,14 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
       ></chartAutoCarousel>
+      <chartMap
+        :ref="'chart' + chartInfo.id"
+        v-if="isMap(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+      ></chartMap>
       <chart-group
         :ref="'chart' + chartInfo.id"
         v-if="isGroup(chartInfo.type)"
@@ -125,7 +133,8 @@ import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
-import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutoCarousel } from './chart/tools'
+import chartMap from './chart/chartMap'
+import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutoCarousel, isMap } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -150,7 +159,8 @@ export default {
     chartTreemap,
     chartUrl,
     chartValue,
-    chartHexagon
+    chartHexagon,
+    chartMap
   },
   props: {
     chartInfo: Object,
@@ -185,6 +195,7 @@ export default {
     isDiagram,
     isGroup,
     isAutoCarousel,
+    isMap,
     resize () {
       console.log(this.$refs['chart' + this.chartInfo.id])
       this.$refs['chart' + this.chartInfo.id].resize()

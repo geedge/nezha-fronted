@@ -9,7 +9,8 @@ const panel = {
     nowTimeType: {},
     headerH: 0.5,
     headerHPadding: 0.5,
-    rowHeight: 150
+    rowHeight: 150,
+    chartListId: ''
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -44,6 +45,9 @@ const panel = {
       state.delChart = false
       state.groupId = ''
       state.type = ''
+    },
+    setChartListId (state, id) {
+      state.chartListId = id
     }
   },
   getters: {
@@ -76,6 +80,9 @@ const panel = {
     },
     getRowHeight (state) {
       return state.rowHeight
+    },
+    getChartListId (state, id) {
+      return state.chartListId
     }
   },
   actions: {
