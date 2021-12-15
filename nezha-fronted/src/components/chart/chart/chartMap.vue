@@ -216,6 +216,10 @@ export default {
           tooltipEndpointChart.setOption(endpointOption);
           tooltipPrometheusChart.setOption(prometheusOption);
         }, 100); */
+    },
+    resize () {
+      console.log(this.map);
+      this.initMap()
     }
   }
 }
