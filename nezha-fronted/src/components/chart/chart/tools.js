@@ -9,7 +9,7 @@ import {
   chartTimeSeriesAreaOption
 } from './options/chartTimeSeries'
 import chartTreemapOption from './options/chartTreemap'
-import {randomcolor} from "@/components/common/js/radomcolor/randomcolor";
+import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 
 export function getOption (type) {
   let chartOption = null
@@ -91,6 +91,9 @@ export function isAssetInfo (type) {
 export function isEndpointInfo (type) {
   return type === chartType.endpointInfo
 }
+export function isMap (type) {
+  return type === chartType.map
+}
 
 export function getGroupHeight (arr) {
   if (arr.length) {
@@ -113,6 +116,35 @@ export function getGroupHeight (arr) {
     return maxHeight + maxY
   } else {
     return 1
+  }
+}
+export function getLayoutPosition (arr) {
+  if (arr.length) {
+    let lastItem = []
+    let maxY = 0
+    arr.forEach((children, index) => {
+      if (maxY == children.y) {
+        lastItem.push(children)
+      } else if (maxY < children.y) {
+        maxY = children.y
+        lastItem = [children]
+      }
+    })
+    let maxX = 0
+    lastItem.forEach(last => {
+      if (maxX < last.x) {
+        maxX = last.x
+      }
+    })
+    return {
+      x: maxX,
+      y: maxY
+    }
+  } else {
+    return {
+      x: 0,
+      y: 0
+    }
   }
 }
 

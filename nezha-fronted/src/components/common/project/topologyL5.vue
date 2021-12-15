@@ -518,7 +518,6 @@ export default {
   },
   props: {
     topologyIndexF: {
-      type: Number,
       default: 0
     },
     obj: {},
@@ -2129,6 +2128,7 @@ export default {
             flag = true
           }
         })
+        getTopology(this.topologyIndex).resize()
         getTopology(this.topologyIndex).centerView()
         this.getNodesArr()
       }, 500)

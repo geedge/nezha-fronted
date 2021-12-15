@@ -83,15 +83,6 @@
         :is-fullscreen="isFullscreen"
         :chart-option="chartOption"
       ></chart-diagram>
-      <chart-group
-        :ref="'chart' + chartInfo.id"
-        v-if="isGroup(chartInfo.type)"
-        :panelLock="panelLock"
-        :chart-data="chartData"
-        :chart-info="chartInfo"
-        :is-fullscreen="isFullscreen"
-        :chart-option="chartOption"
-      ></chart-group>
       <chartAutoCarousel
         :ref="'chart' + chartInfo.id"
         v-if="isAutoCarousel(chartInfo.type)"
@@ -100,6 +91,14 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
       ></chartAutoCarousel>
+      <chartMap
+        :ref="'chart' + chartInfo.id"
+        v-if="isMap(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+      ></chartMap>
       <chart-asset-info
         :ref="'chart' + chartInfo.id"
         v-if="isAssetInfo(chartInfo.type)"
@@ -116,6 +115,15 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
       ></chart-endpoint-info>
+      <chart-group
+        :ref="'chart' + chartInfo.id"
+        v-if="isGroup(chartInfo.type)"
+        :panelLock="panelLock"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :is-fullscreen="isFullscreen"
+        :chart-option="chartOption"
+      ></chart-group>
     </template>
   </div>
 </template>
@@ -141,7 +149,8 @@ import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
-import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutoCarousel, isAssetInfo, isEndpointInfo } from './chart/tools'
+import chartMap from './chart/chartMap'
+import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutoCarousel, isMap, isAssetInfo, isEndpointInfo } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -166,7 +175,8 @@ export default {
     chartTreemap,
     chartUrl,
     chartValue,
-    chartHexagon
+    chartHexagon,
+    chartMap
   },
   props: {
     chartInfo: Object,
@@ -203,6 +213,7 @@ export default {
     isAutoCarousel,
     isAssetInfo,
     isEndpointInfo,
+    isMap,
     resize () {
       console.log(this.$refs['chart' + this.chartInfo.id])
       this.$refs['chart' + this.chartInfo.id].resize()

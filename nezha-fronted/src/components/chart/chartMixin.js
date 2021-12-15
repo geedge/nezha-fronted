@@ -27,6 +27,9 @@ export default {
     },
     nowTimeType () {
       return this.$store.getters.getNowTimeType
+    },
+    chartListId () {
+      return this.$store.getters.getChartListId
     }
   },
   methods: {
@@ -168,6 +171,9 @@ export default {
           })
         }, 300)
       }
+    },
+    resize () {
+      getChart(this.chartId) && getChart(this.chartId).resize()
     }
   },
   watch: {

@@ -2,6 +2,7 @@
   <div :id='`chartList${(isGroup ? "Group" : "") + timestamp}`' class="chart-list" :loading="gridLayoutLoading">
     <grid-layout
       ref="layout"
+      v-if="gridLayoutShow"
       :col-num="12"
       :maxRows="12"
       :is-draggable="!panelLock"
@@ -11,6 +12,7 @@
       :row-height="stepWidth"
       :use-css-transforms="true"
       :vertical-compact="true"
+      :useCssTransforms="false"
       :style="{
         'margin-top':isGroup ? '0' : (-1 * (stepWidth + 12) + 'px')
       }"
@@ -79,8 +81,6 @@
 
 <script>
 import VueGridLayout from 'vue-grid-layout'
-import gridItem from './GridItem'
-// import GridLayout from './GridLayout'
 import { fromRoute } from '@/components/common/js/constants'
 import { getGroupHeight } from './chart/tools'
 import panelChart from '@/components/chart/panelChart'
@@ -102,7 +102,7 @@ export default {
   },
   components: {
     GridLayout: VueGridLayout.GridLayout,
-    GridItem: gridItem,
+    GridItem: VueGridLayout.GridItem,
     panelChart
   },
   computed: {
@@ -111,13 +111,16 @@ export default {
     },
     headerHPadding () {
       return this.$store.getters.getHeaderHPadding
+    },
+    rowHeight () {
+      return this.$store.getters.getRowHeight
     }
   },
   data () {
     return {
       fromRoute,
       gridLayoutLoading: false,
-      gridLayoutShow: true,
+      gridLayoutShow: false,
       filter: {}, // chart列表查询条件
       copyDataList: [],
       noData: false, // no data
@@ -144,7 +147,9 @@ export default {
         if (!this.isGroup) {
           const headerH = 50 / this.stepWidth
           const headerHPadding = 50 / this.stepWidth
-          this.$store.commit('setHeaderH', { headerH, headerHPadding })
+          this.$store.commit('setHeaderH', { headerH, headerHPadding, rowHeight: this.stepWidth })
+        } else {
+          this.stepWidth = this.rowHeight - (10 / 12)
         }
         const span = document.querySelector('.temp-dom')
         this.tempDom.width = span.offsetWidth
@@ -160,16 +165,24 @@ export default {
       // TODO 重新渲染图表，向后端发送put请求
       setTimeout(() => {
         this.$refs['chart' + i][0].resize()
+        // if (!this.isGroup) {
+        //   this.moveChart()
+        // } else {
+        //   bus.$emit('groupMove', this.copyDataList, this.groupInfo)
+        // }
+        this.$put('/visual/panel/chart/modify', {
+          id: i,
+          span: newW,
+          height: newH
+        })
       }, 100)
     },
     moveEvent (i, newX, newY) {
-      console.log(i)
       if (this.isGroup) {
 
       }
     },
     movedEvent (i, newX, newY) {
-      console.log(i)
       if (!this.isGroup) {
         this.moveChart()
       }
@@ -189,7 +202,7 @@ export default {
       // console.log(this.$refs.layout)
       const groupFind = this.copyDataList.find(item => item.id == group.id)
       console.log(groupFind)
-      if (group) {
+      if (group && groupFind) {
         groupFind.height = groupFind.h = height + this.headerHPadding
         groupFind.children = copyList
         this.copyDataList = [...this.copyDataList]
@@ -258,6 +271,7 @@ export default {
     this.init()
     if (!this.isGroup) {
       bus.$on('groupMove', this.changeGroupHeight)
+      this.$store.commit('setChartListId', `chartList${this.timestamp}`)
     }
   },
   watch: {
@@ -299,7 +313,9 @@ export default {
         }
         this.$nextTick(() => {
           this.copyDataList = JSON.parse(JSON.stringify(tempList))
-          this.gridLayoutShow = true
+          setTimeout(() => {
+            this.gridLayoutShow = true
+          })
           this.gridLayoutLoading = false
         })
       }

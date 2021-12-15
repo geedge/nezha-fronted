@@ -170,6 +170,9 @@ export default {
           params.groupId = 0
         }
         delete params.panel
+        if (params.type === 'table') {
+          delete params.param.tags
+        }
         if (params.id) { // 修改
           this.$put('visual/panel/chart', params).then(response => {
             if (response.code === 200) {
@@ -329,7 +332,6 @@ export default {
       immediate: true,
       handler (n) {
         this.editChart = JSON.parse(JSON.stringify(n))
-        console.log(this.editChart)
         if (this.editChart.groupId === -1) {
           this.editChart.groupId = ''
         }

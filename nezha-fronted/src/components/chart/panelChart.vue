@@ -155,6 +155,11 @@ export default {
             if (this.chartInfo.type === 'diagram') {
               this.chartInfo.type = 'assetInfo'
               this.chartData = [this.chartInfo.param.topo]
+              if (!this.chartInfo.param.topo || !this.chartInfo.param.topo.pens.length){
+                this.chartData = []
+              } else {
+                this.chartData = [this.chartInfo.param.topo]
+              }
             }
             if (this.chartInfo.type === 'group') {
               this.groupInit()
@@ -166,6 +171,12 @@ export default {
                   this.chartData = res.data
                 }
               })
+            }
+            if (this.chartInfo.type === 'carousel') {
+              this.chartData = ['carousel']
+            }
+            if (this.chartInfo.type === 'map') {
+              this.chartData = ['map']
             }
             break
           }
