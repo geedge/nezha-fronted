@@ -240,7 +240,7 @@ export default {
       }
     },
     licenseStat () {
-      this.$get('/sys/license/state').then(response => {
+      this.$get('/sys/license/status').then(response => {
         if (response.code && response.code === 200) {
           this.license.warnInfo = ''
           this.license.valid = true
