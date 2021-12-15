@@ -415,6 +415,9 @@ export default {
             if (!this.chart.groupId || this.chart.groupId == -1) {
               this.chart.groupId = ''
             }
+            if (this.chart.type == 'table') {
+              this.chart.param.tags = this.chart.param.indexs ? this.chart.param.indexs.split(',') : []
+            }
           } else {
             this.$message.error(res.msg)
           }
