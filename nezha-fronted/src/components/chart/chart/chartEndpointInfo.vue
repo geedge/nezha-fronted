@@ -1,5 +1,5 @@
 <template>
-  <chart-detail v-if="chartInfo === 'endpointInfo'" :chart-detail="chartData"></chart-detail>
+  <chart-detail v-if="chartInfo === 'endpointInfo'" :chart-info="chartInfo" :chart-detail="chartData"></chart-detail>
 </template>
 
 <script>

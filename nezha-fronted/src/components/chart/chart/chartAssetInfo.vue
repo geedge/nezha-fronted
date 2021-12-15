@@ -1,5 +1,5 @@
 <template>
-  <chart-detail v-if="chartInfo.type === 'assetInfo'" :chart-detail="chartData"></chart-detail>
+  <chart-detail v-if="chartInfo.type === 'assetInfo'" :chart-info="chartInfo" :chart-detail="chartData"></chart-detail>
 </template>
 
 <script>

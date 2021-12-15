@@ -165,18 +165,25 @@ export default {
               this.groupInit()
               this.chartData = [...this.chartInfo.children]
             }
-            if (this.chartInfo.type === 'assetInfo') {
-              this.$get('asset/asset/' + 546).then(res => {
-                if (res.code === 200) {
-                  this.chartData = res.data
-                }
-              })
-            }
             if (this.chartInfo.type === 'carousel') {
               this.chartData = ['carousel']
             }
             if (this.chartInfo.type === 'map') {
               this.chartData = ['map']
+            }
+            if (this.chartInfo.type === 'assetInfo') {
+              this.$get('asset/asset/' + 545).then(res => {
+                if (res.code === 200) {
+                  this.chartData = res.data
+                }
+              })
+            }
+            if (this.chartInfo.type === 'endpointInfo') {
+              this.$get('monitor/endpoint/' + 1).then(res => {
+                if (res.code === 200) {
+                  this.chartData = res.data
+                }
+              })
             }
             break
           }
