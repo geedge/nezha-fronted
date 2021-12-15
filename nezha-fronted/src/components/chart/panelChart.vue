@@ -153,11 +153,19 @@ export default {
               })
             }
             if (this.chartInfo.type === 'diagram') {
+              this.chartInfo.type = 'assetInfo'
               this.chartData = [this.chartInfo.param.topo]
             }
             if (this.chartInfo.type === 'group') {
               this.groupInit()
               this.chartData = [...this.chartInfo.children]
+            }
+            if (this.chartInfo.type === 'assetInfo') {
+              this.$get('asset/asset/' + 546).then(res => {
+                if (res.code === 200) {
+                  this.chartData = res.data
+                }
+              })
             }
             break
           }

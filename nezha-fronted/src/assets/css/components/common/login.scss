@@ -154,9 +154,11 @@
     transform: translateY(-50%);
   }
   .login-license{
-    margin-top: 40px;
+    margin-top: 27px;
     text-align: center;
     line-height: 30px;
+    display: flex;
+    justify-content: space-around;
     .license-warn{
       color: #d92926;
       text-shadow: 1px 1px 3px #ddd;

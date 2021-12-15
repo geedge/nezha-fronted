@@ -100,6 +100,22 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
       ></chartAutoCarousel>
+      <chart-asset-info
+        :ref="'chart' + chartInfo.id"
+        v-if="isAssetInfo(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+      ></chart-asset-info>
+      <chart-endpoint-info
+        :ref="'chart' + chartInfo.id"
+        v-if="isEndpointInfo(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+      ></chart-endpoint-info>
     </template>
   </div>
 </template>
@@ -125,7 +141,7 @@ import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
-import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutoCarousel } from './chart/tools'
+import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutoCarousel, isAssetInfo, isEndpointInfo } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -185,6 +201,8 @@ export default {
     isDiagram,
     isGroup,
     isAutoCarousel,
+    isAssetInfo,
+    isEndpointInfo,
     resize () {
       console.log(this.$refs['chart' + this.chartInfo.id])
       this.$refs['chart' + this.chartInfo.id].resize()

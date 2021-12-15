@@ -108,9 +108,9 @@
 
   .info-box {
     background: $--background-color-empty;
-    border: 1px solid $--border-color-light;
     width: 334px;
-    margin-bottom: 15px;
+    padding-bottom: 10px;
+    min-width: 260px;
     box-shadow: 1px 2px 4px 0 rgba(0, 0, 0, 0.12), -1px 1px 9px -1px rgba(205, 205, 205, 0.77);
   }
   .info-box-title {
@@ -131,15 +131,11 @@
     height: 29px;
     line-height: 24px;
   }
-  .info-box-content .content-box:not(:last-child) {
-    border-bottom: 1px solid rgba(205, 205, 205, 0.77);
-  }
   .content-title {
     font-size: 12px;
     color: $--color-text-primary;
     width: 120px;
     display: inline-block;
-    border-right: 1px solid rgba(205, 205, 205, 0.77);
     padding: 3px 0;
   }
   .content-text {
