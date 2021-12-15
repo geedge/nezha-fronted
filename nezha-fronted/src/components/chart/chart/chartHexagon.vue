@@ -59,13 +59,15 @@ export default {
       immediate: true,
       deep: true,
       handler () {
+        setTimeout(() => {
+          this.initHexagon()
+        })
       }
     },
     chartInfo: {
       immediate: true,
       deep: true,
       handler () {
-        this.initHexagon()
       }
     },
     length: {
@@ -107,16 +109,16 @@ export default {
     initHexagon () {
       const param = this.chartInfo.param
       if (param) {
-        this.col = param.col
-        this.length = param.length
-        this.from = param.from
+        this.col = param.col || 9
+        this.length = param.length || 48
+        this.from = param.from || 'module'
         this.hexagonSvgID = 'hexagonSvg' + this.chartInfo.id
-        this.showTooltip = param.showTooltip
-        this.fromType = param.from
+        this.showTooltip = param.showTooltip || true
+        this.fromType = param.from || 'module'
       }
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.hexData = this.chartData
-      })
+      }, 100)
     },
     colorSet (item) { // 设置方块颜色
       const alert = item.alert[0]
@@ -282,12 +284,12 @@ export default {
         this.assetData.position.top = window.innerHeight - this.$refs.alertLabel.$el.offsetHeight
         this.assetData.position.mt = e.offsetY - (window.innerHeight - this.$refs.alertLabel.$el.offsetHeight)
       }
-      if (boxWidth / 2 > e.offsetX) {
-        this.assetData.position.left = e.offsetX + 35
+      if (boxWidth / 2 > e.pageX - 200) {
+        this.assetData.position.left = e.pageX + 35
         this.assetData.position.right = 0
         this.LRTriangle = true
       } else {
-        this.assetData.position.right = boxWidth - (e.offsetX - 35)
+        this.assetData.position.right = window.innerWidth - (e.pageX - 35)
         this.assetData.position.left = 0
         this.LRTriangle = false
       }

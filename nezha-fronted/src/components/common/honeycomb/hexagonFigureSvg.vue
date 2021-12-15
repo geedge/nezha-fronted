@@ -241,9 +241,13 @@ export default {
       this.hexagonEdge = this.hexagonEdgeProp
       this.clearData().then(() => {
         this.boxhexagonShow = true
-        this.$nextTick(() => {
+        setTimeout(() => {
           this.hexagonData = JSON.parse(JSON.stringify(this.hexData))
           const box = `#${this.hexagonSvgID}`
+          console.log(box,document.getElementById(this.hexagonSvgID))
+          if (!document.getElementById(this.hexagonSvgID)) {
+            return
+          }
           const hexagonSvg = SVG().addTo(box).size('100%', '100%')
             .panZoom({
               zoomMin: this.zoomMin,
@@ -833,7 +837,7 @@ export default {
       }
       const dom = document.getElementById(this.hexagonSvgID)
       const child = document.getElementById('SvgHex' + this.hexagonSvgID)
-      if (dom) {
+      if (dom && child) {
         dom.removeChild(child)
       }
       return new Promise((resolve, reject) => {
