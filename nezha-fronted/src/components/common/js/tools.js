@@ -830,6 +830,16 @@ export function getMetricTypeValue (queryItem, type) {
       const total = eval(copy.join('+'))
       return total
     }
+    case 'range': {
+      const min = copy.sort((x, y) => { return parseFloat(x[1]) - parseFloat(y[1]) })[0][1]
+      const max = copy.sort((x, y) => { return parseFloat(y[1]) - parseFloat(x[1]) })[0][1]
+      return max - min
+    }
+    case 'different': {
+      const last = copy.sort((x, y) => { return parseFloat(y[0]) - parseFloat(x[0]) })[0][1]
+      const first = copy.sort((x, y) => { return parseFloat(y[0]) - parseFloat(x[0]) })[copy.length - 1][1]
+      return last - first
+    }
   }
 }
 

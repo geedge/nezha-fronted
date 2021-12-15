@@ -94,7 +94,9 @@ export function isEndpointInfo (type) {
 export function isMap (type) {
   return type === chartType.map
 }
-
+export function isTable (type) {
+  return type === chartType.table
+}
 export function getGroupHeight (arr) {
   if (arr.length) {
     let lastItem = []

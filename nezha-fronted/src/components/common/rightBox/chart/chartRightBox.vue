@@ -171,6 +171,7 @@ export default {
         }
         delete params.panel
         if (params.type === 'table') {
+          console.log(params.param.tags)
           delete params.param.tags
         }
         if (params.id) { // 修改
@@ -271,12 +272,12 @@ export default {
           unit: 2,
           type: 'stat',
           param: {
-            refer: 1,
+            refer: 0,
             system: '',
             systemGroup: '',
             systemSelect: '',
             sort: 'desc',
-            limit: undefined,
+            limit: 100,
             nullType: 'null',
             statistics: 'last',
             valueMapping: {

@@ -416,7 +416,13 @@ export default {
               this.chart.groupId = ''
             }
             if (this.chart.type == 'table') {
-              this.chart.param.tags = this.chart.param.indexs ? this.chart.param.indexs.split(',') : []
+              const arr = this.chart.param.indexs ? this.chart.param.indexs.split(',') : []
+              this.chart.param.tags = arr.map((item) => {
+                return {
+                  text: item,
+                  tiClasses: ['ti-valid']
+                }
+              })
             }
           } else {
             this.$message.error(res.msg)

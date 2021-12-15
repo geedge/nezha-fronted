@@ -115,6 +115,14 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
       ></chart-endpoint-info>
+      <chart-table
+        :ref="'chart' + chartInfo.id"
+        v-if="isTable(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+      ></chart-table>
       <chart-group
         :ref="'chart' + chartInfo.id"
         v-if="isGroup(chartInfo.type)"
@@ -150,7 +158,7 @@ import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
 import chartMap from './chart/chartMap'
-import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutoCarousel, isMap, isAssetInfo, isEndpointInfo } from './chart/tools'
+import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutoCarousel, isMap, isAssetInfo, isEndpointInfo, isTable } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -214,6 +222,7 @@ export default {
     isAssetInfo,
     isEndpointInfo,
     isMap,
+    isTable,
     resize () {
       console.log(this.$refs['chart' + this.chartInfo.id])
       this.$refs['chart' + this.chartInfo.id].resize()

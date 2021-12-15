@@ -124,6 +124,21 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <!-- index -->
+        <el-form-item
+          v-show="isTable(chartConfig.type)"
+          :label="$t('dashboard.panel.chartForm.tableIndex')"
+          class="form-item--half-width"
+          prop="param.index"
+        >
+          <vue-tags-input
+            v-model="tag"
+            :maxlength="32"
+            :placeholder="$t('overall.addParameter')"
+            :tags="chartConfig.param.tags"
+            @tags-changed="(newTags)=>{tagsChange(newTags)}"
+          />
+        </el-form-item>
       </div>
       <div class="form-items--half-width-group">
         <!--width-->
@@ -324,11 +339,11 @@
       <!--      table column-->
       <div v-if="isTable(chartConfig.type)">
         <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.chartForm.valueMapping')}}</span>
+          <span>{{$t('dashboard.panel.chartForm.columns')}}</span>
         </div>
         <div v-for="(item,index) in chartConfig.param.columns" :key="index">
           <div class="chart-title chart-title-config">
-                <span class="endpoint-title-content">
+                <span class="chart-title-content">
                   <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showColumns(index)"></i>
                   <span v-show="!item.show" class="title-content-left">
                     <span>
@@ -353,7 +368,7 @@
               <div>
                 <div class='mapping-display'>Title</div>
               </div>
-              <el-form-item :prop="'param.columns.' + index + 'title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item" style="flex: 1">
+              <el-form-item :prop="'param.columns.' + index + '.title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item" style="flex: 1">
                 <el-input size="small" v-model="item.title" placeholder="regx" @change="change"></el-input>
               </el-form-item>
               <div>
@@ -372,7 +387,7 @@
               <div>
                 <div class='mapping-display'>Display</div>
               </div>
-              <el-form-item :prop="'param.columns.' + index + 'display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+              <el-form-item :prop="'param.columns.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                 <el-input v-model="item.display"  style="margin-right: 10px" size="small"  @change="change"/>
               </el-form-item>
             </el-row>
@@ -404,6 +419,7 @@ export default {
       groupList: [],
       selectList: [],
       oldType: '',
+      tag: '',
       chartTypeList: [
         {
           id: 'stat',
@@ -478,17 +494,34 @@ export default {
           if (this.oldType !== 'table') {
             break
           }
-          this.chartConfig.param.valueMapping = {
-            show: true,
-            mapping: []
+          this.chartConfig.param = {
+            refer: 1,
+            system: '',
+            systemGroup: '',
+            systemSelect: '',
+            sort: 'desc',
+            limit: 100,
+            nullType: 'null',
+            statistics: 'last',
+            valueMapping: {
+              show: true,
+              mapping: []
+            }
           }
-          this.chartConfig.param.refer = 0
-          delete this.chartConfig.param.columns
           break
         case 'table':
-          this.chartConfig.param.columns = []
-          this.chartConfig.param.refer = 0
-          delete this.chartConfig.param.valueMapping
+          this.chartConfig.param = {
+            refer: 1,
+            system: '',
+            systemGroup: '',
+            systemSelect: '',
+            indexs: '',
+            sort: 'desc',
+            limit: 100,
+            nullType: 'null',
+            statistics: 'last',
+            columns: []
+          }
           break
       }
       this.oldType = type

@@ -153,7 +153,6 @@ export default {
               })
             }
             if (this.chartInfo.type === 'diagram') {
-              this.chartInfo.type = 'map'
               this.chartData = [this.chartInfo.param.topo]
               if (!this.chartInfo.param.topo || !this.chartInfo.param.topo.pens.length){
                 this.chartData = []

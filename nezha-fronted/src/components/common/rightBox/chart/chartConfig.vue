@@ -163,7 +163,7 @@
           prop="param.index"
         >
           <vue-tags-input
-            v-model="chartConfig.param.indexs"
+            v-model="tag"
             :maxlength="32"
             :placeholder="$t('overall.addParameter')"
             :tags="chartConfig.param.tags"
@@ -579,7 +579,7 @@
       <!--      table column-->
       <div v-if="isTable(chartConfig.type)">
         <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.chartForm.valueMapping')}}</span>
+          <span>{{$t('dashboard.panel.chartForm.columns')}}</span>
         </div>
         <div v-for="(item,index) in chartConfig.param.columns" :key="index">
           <div class="chart-title chart-title-config">
@@ -680,6 +680,7 @@ export default {
       rules: {
       },
       oldType: '',
+      tag: '',
       promqlType: 'log',
       chartTypeList: [
         {
