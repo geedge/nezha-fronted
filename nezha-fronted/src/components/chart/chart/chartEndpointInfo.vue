@@ -1,12 +1,16 @@
 <template>
-  <chart-detail v-if="chartInfo === 'endpointInfo'" :chart-info="chartInfo" :chart-detail="chartData"></chart-detail>
+  <chart-detail :chart-info="chartInfo" :chart-detail="chartData"></chart-detail>
 </template>
 
 <script>
+import chartDetail from '@/components/chart/chartDetail'
 export default {
   name: 'chartEndpointInfo',
+  components: {
+    chartDetail
+  },
   props: {
-    chartData: Array,
+    chartData: Object,
     chartInfo: Object
   },
   data () {
@@ -16,7 +20,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

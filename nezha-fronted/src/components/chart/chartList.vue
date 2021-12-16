@@ -45,6 +45,7 @@
           @edit-chart="$emit('edit-chart', item)"
           :chart-info="item"
           :time-range="timeRange"
+          :chart-detail-info="chartDetailInfo"
           @showFullscreen="showFullscreen"
         ></panel-chart>
       </grid-item>
@@ -92,8 +93,8 @@ export default {
   props: {
     // TODO isModel
     from: { type: String },
-    panelId: { },
-    obj: Object,
+    panelId: {},
+    chartDetailInfo: Object,
     timeRange: Array, // 时间范围
     panelLock: { type: Boolean, default: true },
     isGroup: { type: Boolean, default: false },
@@ -282,19 +283,23 @@ export default {
         this.gridLayoutLoading = true
         this.noData = !n || n.length < 1
         const tempList = n.map(item => {
-          let param = item.param
-          // try {
-          //   param = JSON.parse(item.param)
-          // } catch (e) {
-          //   console.info(e)
-          // }
-          const height = (item.type === 'group' && item.param.collapse) ? this.headerH : item.height
-          param.showHeader = true
+          let param = ''
+          let height = ''
+          if (item.param) {
+            param = item.param
+            // try {
+            //   param = JSON.parse(item.param)
+            // } catch (e) {
+            //   console.info(e)
+            // }
+            height = (item.type === 'group' && item.param.collapse) ? this.headerH : item.height
+            param.showHeader = true
+          }
           return {
             ...item,
             i: item.id,
             w: item.span,
-            h: height,
+            h: height || 4,
             x: item.x || 0,
             y: item.y || 0,
             param

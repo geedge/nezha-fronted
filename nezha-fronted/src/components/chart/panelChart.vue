@@ -45,7 +45,8 @@ export default {
     chartInfo: Object, // 其中的param json串已转化为对象
     timeRange: Array, // 时间范围
     isFullscreen: Boolean,
-    panelLock: Boolean
+    panelLock: Boolean,
+    chartDetailInfo: Object
   },
   data () {
     return {
@@ -94,7 +95,19 @@ export default {
     query (elements, startTime, endTime, step) {
       try {
         switch (this.chartInfo.datasource) {
-          case 'metrics':
+          case 'metrics': {
+            if (this.chartInfo.type === 'assetInfo') {
+              this.$get('asset/asset/' + this.chartDetailInfo.id).then(res => {
+                this.chartData = res.data
+              })
+            }
+            if (this.chartInfo.type === 'endpointInfo') {
+              this.$get('monitor/endpoint/' + this.chartDetailInfo.id).then(res => {
+                this.chartData = res.data
+              })
+            }
+            break
+          }
           case 'logs': {
             let urlPre = ''
             if (this.chartInfo.datasource === 'metrics') {
@@ -142,6 +155,7 @@ export default {
           }
           case 'system': {
             console.log(this.chartInfo.param.datasource[0])
+
             const q = {
               type: this.chartInfo.param.datasource[0].type,
               group: this.chartInfo.param.datasource[0].group,
@@ -150,6 +164,7 @@ export default {
               sort: this.chartInfo.param.datasource[0].sort
             }
             const chartData = []
+            console.log(this.chartInfo.type)
             const params = {
               q: encodeURIComponent(JSON.stringify(q)),
               stat: startTime,
@@ -193,20 +208,6 @@ export default {
             }
             if (this.chartInfo.type === 'map') {
               this.chartData = ['map']
-            }
-            if (this.chartInfo.type === 'assetInfo') {
-              this.$get('asset/asset/' + 545).then(res => {
-                if (res.code === 200) {
-                  this.chartData = res.data
-                }
-              })
-            }
-            if (this.chartInfo.type === 'endpointInfo') {
-              this.$get('monitor/endpoint/' + 1).then(res => {
-                if (res.code === 200) {
-                  this.chartData = res.data
-                }
-              })
             }
             break
           }
