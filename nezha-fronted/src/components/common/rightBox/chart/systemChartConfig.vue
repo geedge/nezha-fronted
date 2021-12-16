@@ -7,7 +7,9 @@
       label-position= "top"
       label-width="120px"
     >
-
+      <div class="chart-title chart-title-config">
+        System
+      </div>
       <div class="system-chart-config" v-loading="loading" v-for="(item, index) in chartConfig.param.datasource " :key="index">
         <div class="system-chart-config-left">
           <ul>
@@ -15,7 +17,7 @@
               v-for="(system,index1) in systemData"
               :key="index1"
               class="system-chart-item"
-              :class="item.name === system.system ? 'is-select' : ''"
+              :class="item.type === system.system ? 'is-select' : ''"
               @click="changeSystem(system, index)"
             >{{system.name}}</li>
           </ul>
@@ -515,8 +517,8 @@ export default {
               thresholds: true
             },
             datasource: [{
-              name: 'A',
-              type: 'asset',
+              name: 'System',
+              type: '',
               systemGroup: '',
               systemSelect: '',
               group: '',
@@ -543,8 +545,8 @@ export default {
               thresholds: true
             },
             datasource: [{
-              name: 'A',
-              type: 'asset',
+              name: 'System',
+              type: '',
               systemGroup: '',
               systemSelect: '',
               group: '',
@@ -556,6 +558,9 @@ export default {
           }
           break
       }
+      this.chartConfig.param.datasource[0].type = this.systemData[0].name
+      this.groupList = this.systemData[0].group
+      this.selectList = this.systemData[0].select
       this.oldType = type
       this.change()
     },

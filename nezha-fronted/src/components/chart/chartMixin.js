@@ -45,7 +45,6 @@ export default {
             if (chartInfo.param.stack) { // 堆叠
               s.stack = 'Total'
             }
-            console.log(lodash.isEmpty(chartInfo.param.thresholds))
             if (chartInfo.param.enable && chartInfo.param.enable.legend && !lodash.isEmpty(chartInfo.param.thresholds)) { // 阈值
               s.markLine = {
                 symbol: 'circle',

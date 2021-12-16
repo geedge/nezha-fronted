@@ -151,7 +151,6 @@ export default {
               }
               shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), { sticky: false, pane: 'myPane', direction: 'left', data: dcStat })
               shadowMarker.on('mouseover', (param) => {
-                console.log(param)
                 const point = param.containerPoint
                 const event = param.originalEvent
                 const boxWidth = window.innerWidth / 2

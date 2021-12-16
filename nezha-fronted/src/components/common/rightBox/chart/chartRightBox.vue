@@ -171,7 +171,6 @@ export default {
         }
         delete params.panel
         if (params.type === 'table') {
-          console.log(params.param.tags)
           delete params.param.tags
         }
         if (params.id) { // 修改
@@ -290,7 +289,7 @@ export default {
               valueMapping: true
             },
             datasource: [{
-              name: 'A',
+              name: 'System',
               type: 'asset',
               systemGroup: '',
               systemSelect: '',

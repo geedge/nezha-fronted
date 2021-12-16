@@ -226,7 +226,6 @@ export default {
     isMap,
     isTable,
     resize () {
-      console.log(this.$refs['chart' + this.chartInfo.id])
       this.$refs['chart' + this.chartInfo.id].resize()
     }
   },

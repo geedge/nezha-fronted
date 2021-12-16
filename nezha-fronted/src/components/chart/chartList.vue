@@ -204,7 +204,6 @@ export default {
       // console.log(height,copyList, group, flag)
       // console.log(this.$refs.layout)
       const groupFind = this.copyDataList.find(item => item.id == group.id)
-      console.log(groupFind)
       if (group && groupFind) {
         groupFind.height = groupFind.h = height + this.headerHPadding
         groupFind.children = copyList
@@ -272,7 +271,6 @@ export default {
   },
   mounted () {
     this.init()
-    console.log(this.from,'chartList')
     if (!this.isGroup) {
       bus.$on('groupMove', this.changeGroupHeight)
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)

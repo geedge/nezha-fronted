@@ -95,7 +95,6 @@ export default {
       this.query(elements, startTime, endTime, step)
     },
     query (elements, startTime, endTime, step) {
-      console.log(this.from, this.chartInfo.datasource,this.chartInfo.type, elements, startTime, endTime, step)
       try {
         switch (this.chartInfo.datasource) {
           case 'metrics':
@@ -157,8 +156,6 @@ export default {
             break
           }
           case 'system': {
-            console.log(this.chartInfo.param.datasource[0])
-
             const q = {
               type: this.chartInfo.param.datasource[0].type,
               group: this.chartInfo.param.datasource[0].group,
@@ -167,7 +164,6 @@ export default {
               sort: this.chartInfo.param.datasource[0].sort
             }
             const chartData = []
-            console.log(this.chartInfo.type)
             const params = {
               q: encodeURIComponent(JSON.stringify(q)),
               stat: startTime,
@@ -202,7 +198,6 @@ export default {
               }
             }
             if (this.chartInfo.type === 'group') {
-              console.log(this.chartInfo.children)
               this.chartData = [...this.chartInfo.children]
               this.groupInit()
             }
@@ -271,7 +266,6 @@ export default {
         this.chartInfo.height = height + this.headerHPadding
         this.chartInfo.h = height + this.headerHPadding
       } else {
-        console.log(this.headerH)
         this.chartInfo.height = this.headerH + height
         this.chartInfo.h = this.headerH + height
       }
@@ -296,7 +290,6 @@ export default {
   },
   mounted () {
     this.getChartData()
-    console.log(this.from,this.chartInfo.type)
   }
 }
 </script>

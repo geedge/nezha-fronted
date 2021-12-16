@@ -405,7 +405,6 @@ export default {
         params.end_time = endTimeTmp
         params.from = this.from
       }
-      console.log(this.from)
       if (this.from !== 'chartTemp') {
         this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
           if (response.code === 200) {

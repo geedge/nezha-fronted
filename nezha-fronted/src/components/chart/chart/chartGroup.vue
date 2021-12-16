@@ -53,9 +53,7 @@ export default {
     chartData: {
       immediate: true,
       handler (n) {
-        console.log(n)
         this.$nextTick(() => {
-          console.log(this.from)
           this.dataList = JSON.parse(JSON.stringify(n))
         })
       }
