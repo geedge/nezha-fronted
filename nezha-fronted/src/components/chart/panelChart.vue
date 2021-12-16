@@ -18,6 +18,7 @@
       :chart-data="chartData"
       :chart-info="chartInfo"
       :panelLock="panelLock"
+      :from="from"
       :is-fullscreen="isFullscreen"
       :loading="loading"
       v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
@@ -46,7 +47,8 @@ export default {
     timeRange: Array, // 时间范围
     isFullscreen: Boolean,
     panelLock: Boolean,
-    chartDetailInfo: Object
+    chartDetailInfo: Object,
+    from: String
   },
   data () {
     return {
@@ -93,22 +95,23 @@ export default {
       this.query(elements, startTime, endTime, step)
     },
     query (elements, startTime, endTime, step) {
+      console.log(this.from, this.chartInfo.datasource,this.chartInfo.type, elements, startTime, endTime, step)
       try {
         switch (this.chartInfo.datasource) {
-          case 'metrics': {
+          case 'metrics':
+          case 'logs': {
             if (this.chartInfo.type === 'assetInfo') {
               this.$get('asset/asset/' + this.chartDetailInfo.id).then(res => {
                 this.chartData = res.data
               })
+              break
             }
             if (this.chartInfo.type === 'endpointInfo') {
               this.$get('monitor/endpoint/' + this.chartDetailInfo.id).then(res => {
                 this.chartData = res.data
               })
+              break
             }
-            break
-          }
-          case 'logs': {
             let urlPre = ''
             if (this.chartInfo.datasource === 'metrics') {
               urlPre += '/prom'
@@ -293,6 +296,7 @@ export default {
   },
   mounted () {
     this.getChartData()
+    console.log(this.from,this.chartInfo.type)
   }
 }
 </script>

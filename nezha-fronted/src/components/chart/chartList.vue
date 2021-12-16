@@ -14,7 +14,7 @@
       :vertical-compact="true"
       :useCssTransforms="false"
       :style="{
-        'margin-top':isGroup ? '0' : (-1 * (stepWidth + 12) + 'px')
+        'margin-top':isGroup ? '0' : (-1 * (stepWidth +( from !== fromRoute.panel ? 36 : 14 )) + 'px')
       }"
     >
       <grid-item
@@ -44,6 +44,7 @@
           :ref="'chart' + item.id"
           @edit-chart="$emit('edit-chart', item)"
           :chart-info="item"
+          :from="from"
           :time-range="timeRange"
           :chart-detail-info="chartDetailInfo"
           @showFullscreen="showFullscreen"
@@ -70,6 +71,7 @@
       <panel-chart
         :ref="'chart-fullscreen' + fullscreen.chartInfo.id"
         :chart-info="fullscreen.chartInfo"
+        :from="from"
         :is-fullscreen="true"
         @groupShow="groupShow"
         :panelLock="panelLock"
@@ -92,13 +94,13 @@ export default {
   name: 'chartList',
   props: {
     // TODO isModel
-    from: { type: String },
     panelId: {},
     chartDetailInfo: Object,
     timeRange: Array, // 时间范围
     panelLock: { type: Boolean, default: true },
     isGroup: { type: Boolean, default: false },
     groupInfo: {},
+    from: String,
     dataList: Array // 看板中所有图表信息
   },
   components: {
@@ -270,6 +272,7 @@ export default {
   },
   mounted () {
     this.init()
+    console.log(this.from,'chartList')
     if (!this.isGroup) {
       bus.$on('groupMove', this.changeGroupHeight)
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)

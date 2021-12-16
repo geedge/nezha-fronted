@@ -21,7 +21,7 @@
           <el-select
             id="chart-box-type"
             v-model="chartConfig.type"
-            :disabled="chartConfig.type==='group'&&chartConfig.children&&chartConfig.children.length"
+            :disabled="!!(chartConfig.type==='group'&&chartConfig.children&&chartConfig.children.length)"
             :placeholder="$t('el.select.placeholder')"
             popper-class="right-box-select-top prevent-clickoutside"
             size="small"
@@ -30,7 +30,7 @@
             <el-option
               v-for="item in chartTypeList"
               :key="item.id"
-              :disabled="item.id==='group' && chartConfig.isGroup"
+              :disabled="item.id==='group' && !!chartConfig.groupId"
               :label="item.name"
               :value="item.id">
               <span class="panel-dropdown-label-txt" >{{item.name}}</span>

@@ -153,9 +153,9 @@ export default {
   methods: {
     ...mapActions(['loginSuccess']),
     login () {
-      // if (this.loading || !this.license.valid || !this.license.token) {
-      //   return
-      // }
+      if (this.loading || !this.license.valid || !this.license.token) {
+        return
+      }
       if (this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
         this.loading = true
         this.$post('/sys/login', this.loginData).then(res => {
