@@ -125,6 +125,7 @@
       ></chart-table>
       <chart-group
         :ref="'chart' + chartInfo.id"
+        :from="from"
         v-if="isGroup(chartInfo.type)"
         :panelLock="panelLock"
         :chart-data="chartData"
@@ -192,7 +193,8 @@ export default {
     customChartOption: Object, // 需要自定义echarts的option时传入，非必须；传入该值时仍需传对应格式的chartData
     isFullscreen: Boolean,
     loading: Boolean,
-    panelLock: Boolean
+    panelLock: Boolean,
+    from: String
   },
   computed: {
     isNoData () {
