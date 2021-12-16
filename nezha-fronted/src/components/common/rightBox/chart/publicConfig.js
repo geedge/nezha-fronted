@@ -314,46 +314,46 @@ export default {
       if (this.chartConfig.type === 'table') {
         obj.column = ''
       }
-      this.chartConfig.param.valueMapping.mapping.push(obj)
+      this.chartConfig.param.valueMapping.push(obj)
       this.change()
     },
     copyMapping (index) {
-      this.chartConfig.param.valueMapping.mapping.push({ ...this.chartConfig.param.valueMapping.mapping[index] })
+      this.chartConfig.param.valueMapping.push({ ...this.chartConfig.param.valueMapping[index] })
       this.change()
     },
     removeMapping (index) {
-      this.chartConfig.param.valueMapping.mapping.splice(index, 1)
+      this.chartConfig.param.valueMapping.splice(index, 1)
       this.change()
     },
     showMapping (index) {
-      this.chartConfig.param.valueMapping.mapping[index].show = !this.chartConfig.param.valueMapping.mapping[index].show
+      this.chartConfig.param.valueMapping[index].show = !this.chartConfig.param.valueMapping[index].show
     },
     mappingItemChange (index, type) {
-      const mapping = this.chartConfig.param.valueMapping.mapping[index]
+      const mapping = this.chartConfig.param.valueMapping[index]
       if (mapping.type === 'value') {
-        this.chartConfig.param.valueMapping.mapping[index] = {
+        this.chartConfig.param.valueMapping[index] = {
           ...mapping,
           value: undefined
         }
       }
-      this.$refs.chartForm.clearValidate('param.valueMapping.mapping.' + index + 'value')
+      this.$refs.chartForm.clearValidate('param.valueMapping.' + index + 'value')
       if (mapping.type === 'range') {
-        this.chartConfig.param.valueMapping.mapping[index] = {
+        this.chartConfig.param.valueMapping[index] = {
           ...mapping,
           from: undefined,
           to: undefined
         }
-        this.$refs.chartForm.clearValidate('param.valueMapping.mapping.' + index + 'from')
-        this.$refs.chartForm.clearValidate('param.valueMapping.mapping.' + index + 'to')
+        this.$refs.chartForm.clearValidate('param.valueMapping.' + index + 'from')
+        this.$refs.chartForm.clearValidate('param.valueMapping.' + index + 'to')
       }
       if (mapping.type === 'regx') {
-        this.chartConfig.param.valueMapping.mapping[index] = {
+        this.chartConfig.param.valueMapping[index] = {
           ...mapping,
           regx: ''
         }
-        this.$refs.chartForm.clearValidate('param.valueMapping.mapping.' + index + 'regx')
+        this.$refs.chartForm.clearValidate('param.valueMapping.' + index + 'regx')
       }
-      this.$set(this.chartConfig.param.valueMapping.mapping, index, this.chartConfig.param.valueMapping.mapping[index])
+      this.$set(this.chartConfig.param.valueMapping, index, this.chartConfig.param.valueMapping[index])
       this.change()
     },
     colorChange (val, key, index) {
@@ -361,12 +361,12 @@ export default {
         this.chartConfig.param.thresholds[index].color = val
       }
       if (key === 'bac') {
-        this.chartConfig.param.valueMapping.mapping[index].color.bac = val
-        this.$set(this.chartConfig.param.valueMapping.mapping, index, this.chartConfig.param.valueMapping.mapping[index])
+        this.chartConfig.param.valueMapping[index].color.bac = val
+        this.$set(this.chartConfig.param.valueMapping, index, this.chartConfig.param.valueMapping[index])
       }
       if (key === 'text') {
-        this.chartConfig.param.valueMapping.mapping[index].color.text = val
-        this.$set(this.chartConfig.param.valueMapping.mapping, index, this.chartConfig.param.valueMapping.mapping[index])
+        this.chartConfig.param.valueMapping[index].color.text = val
+        this.$set(this.chartConfig.param.valueMapping, index, this.chartConfig.param.valueMapping[index])
       }
       this.change()
     },

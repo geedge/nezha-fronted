@@ -282,7 +282,7 @@ export default {
         this.gridLayoutLoading = true
         this.noData = !n || n.length < 1
         const tempList = n.map(item => {
-          const param = item.param
+          let param = item.param
           // try {
           //   param = JSON.parse(item.param)
           // } catch (e) {

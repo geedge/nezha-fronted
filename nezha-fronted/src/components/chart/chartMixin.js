@@ -45,7 +45,7 @@ export default {
             if (chartInfo.param.stack) { // 堆叠
               s.stack = 'Total'
             }
-            if (chartInfo.param.thresholdShow && !lodash.isEmpty(chartInfo.param.thresholds)) { // 阈值
+            if (chartInfo.param.enable && chartInfo.param.enable.legend && !lodash.isEmpty(chartInfo.param.thresholds)) { // 阈值
               s.markLine = {
                 symbol: 'circle',
                 symbolSize: 5
@@ -90,7 +90,7 @@ export default {
         legend = chartInfo.elements[expressionIndex].expression
       }
       // 处理legend别名
-      let alias = this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
+      let alias = chartInfo.datasource === 'system' ? '' : this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
       if (!alias) {
         alias = legend
       }
@@ -124,10 +124,10 @@ export default {
         return aliasExpression
       }
     },
-    selectMapping (value, valueMapping) {
+    selectMapping (value, valueMapping, show) {
       let mapping = ''
-      if (valueMapping.show) {
-        valueMapping.mapping.forEach(item => {
+      if (show) {
+        valueMapping.forEach(item => {
           if (item.type === 'value') {
             if (value == item.value) {
               mapping = item

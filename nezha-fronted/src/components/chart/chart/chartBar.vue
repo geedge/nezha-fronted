@@ -116,7 +116,7 @@ export default {
           if (s) {
             const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
             const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
-            const mapping = this.selectMapping(value, chartInfo.param.valueMapping)
+            const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             // eslint-disable-next-line vue/no-mutating-props
             mapping && (this.chartOption.color[colorIndex] = mapping.color.bac)
             s.data.push({

@@ -13,7 +13,7 @@
         </span>
         <span v-else>{{item.legend}}</span>
       </span>
-      <span v-if="chartInfo.param.text==='value'">
+      <span v-if="chartInfo.param.text==='value'|| !chartInfo.param.text">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
           {{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}
         </span>
@@ -54,6 +54,7 @@ export default {
     initStatData (chartInfo, originalDatas) {
       return new Promise(resolve => {
         let colorIndex = 0
+        console.log(originalDatas)
         originalDatas.forEach((originalData, expressionIndex) => {
           originalData.forEach((data, dataIndex) => {
             const stat = {
@@ -71,8 +72,9 @@ export default {
             stat.label = data.metric
             stat.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             stat.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(stat.value, null, -1, 2)
-            stat.mapping = this.selectMapping(stat.value, chartInfo.param.valueMapping)
+            stat.mapping = this.selectMapping(stat.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             this.statData.push(stat)
+            console.log(this.statData)
             colorIndex++
           })
         })
@@ -97,8 +99,10 @@ export default {
             row = i
           }
         }
-        while (col * row >= this.statData.length) { // 避免出现空白
-          row--
+        if (this.statData.length) {
+          while (col * row >= this.statData.length) { // 避免出现空白
+            row--
+          }
         }
         row++
         if (col === 1 || row === 1) { // 行 或 列有一个为1时 需要调换位置 显示才会好看

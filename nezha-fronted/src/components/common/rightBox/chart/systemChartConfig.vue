@@ -7,16 +7,17 @@
       label-position= "top"
       label-width="120px"
     >
-      <div class="system-chart-config" v-loading="loading">
+
+      <div class="system-chart-config" v-loading="loading" v-for="(item, index) in chartConfig.param.datasource " :key="index">
         <div class="system-chart-config-left">
           <ul>
             <li
-              v-for="(item,index) in systemData"
-              :key="index"
+              v-for="(system,index1) in systemData"
+              :key="index1"
               class="system-chart-item"
-              :class="item.name === chartConfig.param.system ? 'is-select' : ''"
-              @click="changeSystem(item)"
-            >{{item.name}}</li>
+              :class="item.name === system.system ? 'is-select' : ''"
+              @click="changeSystem(system, index)"
+            >{{system.name}}</li>
           </ul>
         </div>
         <div class="system-chart-config-right">
@@ -26,8 +27,8 @@
               class="form-item--half-width"
               prop="param.systemGroup"
             >
-              <el-select size="small" v-model="chartConfig.param.systemGroup" multiple collapse-tags :placeholder="$t('el.select.placeholder')" @change="systemGroupChange">
-                  <el-option v-for="item in groupList" :value="item.name" :key="item.name" :label="item.name"/>
+              <el-select size="small" v-model="item.systemGroup" multiple collapse-tags :placeholder="$t('el.select.placeholder')" @change="systemGroupChange(index)">
+                  <el-option v-for="group in groupList" :value="group.name" :key="group.name" :label="group.name"/>
               </el-select>
             </el-form-item>
             <el-form-item
@@ -36,8 +37,8 @@
               class="form-item--half-width"
               prop="param.systemSelect"
             >
-              <el-select size="small" v-model="chartConfig.param.systemSelect" :placeholder="$t('el.select.placeholder')" @change="systemSelectChange">
-                <el-option v-for="item in selectList" :value="item.name" :key="item.name" :label="item.name"/>
+              <el-select size="small" v-model="item.systemSelect" :placeholder="$t('el.select.placeholder')" @change="systemSelectChange(index)">
+                <el-option v-for="selectItem in selectList" :value="selectItem.name" :key="selectItem.name" :label="selectItem.name"/>
               </el-select>
             </el-form-item>
           </div>
@@ -49,7 +50,7 @@
             >
               <el-select
                 id="chart-box-height"
-                v-model="chartConfig.param.sort"
+                v-model="item.sort"
                 placeholder=""
                 popper-class="right-box-select-top prevent-clickoutside"
                 size="small"
@@ -67,7 +68,7 @@
               class="form-item--half-width"
               prop="param.limit"
             >
-              <el-input-number :controls="false" v-model.number="chartConfig.param.limit" :placeholder="$t('placeholder.system.limit')"  size="small" @change="change"/>
+              <el-input-number :controls="false" v-model.number="item.limit" :placeholder="$t('placeholder.system.limit')"  size="small" @change="change"/>
             </el-form-item>
           </div>
         </div>
@@ -261,15 +262,15 @@
         <div class="form__sub-title">
           <span>{{$t('dashboard.panel.chartForm.valueMapping')}}</span>
           <el-switch
-            v-model="chartConfig.param.valueMapping.show"
+            v-model="chartConfig.param.enable.valueMapping"
             size="small"
             @change="change"
           ></el-switch>
         </div>
         <transition name="el-zoom-in-top">
-          <el-row v-if="chartConfig.param.valueMapping.show">
+          <el-row v-if="chartConfig.param.enable.valueMapping">
             <div
-              v-for="(item,index) in chartConfig.param.valueMapping.mapping"
+              v-for="(item,index) in chartConfig.param.valueMapping"
               :key="index"
             >
               <div class="chart-title chart-title-config">
@@ -326,7 +327,7 @@
                   </div>
                   <el-form-item
                     v-if="item.type === 'value'"
-                    :prop="'param.valueMapping.mapping.' + index + '.value'"
+                    :prop="'param.valueMapping.' + index + '.value'"
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
@@ -340,7 +341,7 @@
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'range'"
-                    :prop="'param.valueMapping.mapping.' + index + '.from'"
+                    :prop="'param.valueMapping.' + index + '.from'"
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
@@ -354,7 +355,7 @@
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'range'"
-                    :prop="'param.valueMapping.mapping.' + index + '.to'"
+                    :prop="'param.valueMapping.' + index + '.to'"
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
@@ -368,7 +369,7 @@
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'regx'"
-                    :prop="'param.valueMapping.mapping.' + index + '.regx'"
+                    :prop="'param.valueMapping.' + index + '.regx'"
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
@@ -384,13 +385,13 @@
                   <div v-if="isTable(chartConfig.type)">
                     <div class='mapping-display'>Columns</div>
                   </div>
-                  <el-form-item v-if="isTable(chartConfig.type)" :prop="'param.valueMapping.mapping.' + index + '.column'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+                  <el-form-item v-if="isTable(chartConfig.type)" :prop="'param.valueMapping.' + index + '.column'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.column"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.column')" size="small" @change="change"/>
                   </el-form-item>
                   <div>
                     <div class='mapping-display'>Display</div>
                   </div>
-                  <el-form-item :prop="'param.valueMapping.mapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+                  <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.display"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change"/>
                   </el-form-item>
                   <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(val, key, index)}"/>
@@ -458,8 +459,9 @@ export default {
   },
   watch: {
     selectList (n) {
-      if (n.length === 1 && !this.chartConfig.param.systemSelect) {
-        this.chartConfig.param.systemSelect = this.selectList[0].name
+      if (n.length === 1 && !this.chartConfig.param.datasource[0].systemSelect) {
+        this.chartConfig.param.datasource[0].systemSelect = this.selectList[0].name
+        this.systemSelectChange(0)
       }
     }
   },
@@ -476,11 +478,11 @@ export default {
           this.systemData = JSON.parse(res.data.paramValue)
           if (this.systemData.length) {
             if (!this.chartConfig.param.system) {
-              this.chartConfig.param.system = this.systemData[0].name
+              this.chartConfig.param.datasource[0].type = this.systemData[0].name
               this.groupList = this.systemData[0].group
               this.selectList = this.systemData[0].select
             } else {
-              const system = this.systemData.find(item => item.name === this.chartConfig.param.system)
+              const system = this.systemData.find(item => item.name === this.chartConfig.param.datasource[0].type)
               this.chartConfig.param.system = system.name
               this.groupList = system.group
               this.selectList = system.select
@@ -504,36 +506,53 @@ export default {
           }
           this.chartConfig.param = {
             refer: 1,
-            system: '',
-            systemGroup: '',
-            systemSelect: '',
-            sort: 'desc',
-            limit: 100,
             nullType: 'null',
             statistics: 'last',
-            valueMapping: {
-              show: true,
-              mapping: []
+            valueMapping: [],
+            enable: {
+              legend: true,
+              valueMapping: true,
+              thresholds: true
+            },
+            datasource: [{
+              name: 'A',
+              type: 'asset',
+              systemGroup: '',
+              systemSelect: '',
+              group: '',
+              select: '',
+              limit: 100,
+              sort: 'desc'
             }
+            ]
           }
           break
         case 'table':
           this.chartConfig.param = {
             refer: 1,
             system: '',
-            systemGroup: '',
-            systemSelect: '',
             indexs: '',
             tags: [],
-            sort: 'desc',
-            limit: 100,
             nullType: 'null',
             statistics: 'last',
             columns: [],
-            valueMapping: {
-              show: true,
-              mapping: []
+            valueMapping: [],
+            enable: {
+              legend: true,
+              valueMapping: true,
+              thresholds: true
+            },
+            datasource: [{
+              name: 'A',
+              type: 'asset',
+              systemGroup: '',
+              systemSelect: '',
+              group: '',
+              select: '',
+              limit: 100,
+              sort: 'desc'
             }
+            ]
           }
           break
       }
@@ -541,21 +560,23 @@ export default {
       this.change()
     },
     changeSystem (item) {
-      this.chartConfig.param.system = item.name
-      this.chartConfig.param.systemGroup = ''
-      this.chartConfig.param.systemSelect = ''
+      this.chartConfig.param.datasource[0].type = item.name
+      this.chartConfig.param.datasource[0].systemGroup = ''
+      this.chartConfig.param.datasource[0].systemSelect = ''
+      this.chartConfig.param.datasource[0].group = ''
+      this.chartConfig.param.datasource[0].select = ''
       this.groupList = item.group
       this.selectList = JSON.parse(JSON.stringify(item.select))
     },
-    systemGroupChange () {
-      this.chartConfig.param.group = this.chartConfig.param.systemGroup.map(item => {
+    systemGroupChange (index) {
+      this.chartConfig.param.datasource[index].group = this.chartConfig.param.datasource[index].systemGroup.map(item => {
         const obj = this.groupList.find(group => group.name === item)
         return obj
       })
       this.change()
     },
-    systemSelectChange () {
-      this.chartConfig.param.select = this.selectList.find(item => item.name === this.chartConfig.param.systemSelect)
+    systemSelectChange (index) {
+      this.chartConfig.param.datasource[index].select = this.selectList.find(item => item.name === this.chartConfig.param.datasource[index].systemSelect)
       this.change()
     }
   },

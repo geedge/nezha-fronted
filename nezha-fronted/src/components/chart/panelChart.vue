@@ -141,17 +141,30 @@ export default {
             break
           }
           case 'system': {
-            console.log(this.chartInfo)
+            console.log(this.chartInfo.param.datasource[0])
+            const q = {
+              type: this.chartInfo.param.datasource[0].type,
+              group: this.chartInfo.param.datasource[0].group,
+              select: [this.chartInfo.param.datasource[0].select],
+              limit: this.chartInfo.param.datasource[0].limit,
+              sort: this.chartInfo.param.datasource[0].sort
+            }
+            const chartData = []
             const params = {
-              q: '',
+              q: encodeURIComponent(JSON.stringify(q)),
               stat: startTime,
               end: endTime,
               resultType: 'matrix'
             }
             this.$get('/stat', params).then(res => {
-              console.log(res)
+              if (res.code === 200) {
+                chartData.push(res.data.result)
+              } else {
+                chartData.push({ error: res.msg || res.error || res })
+              }
+              this.chartData = chartData
+              this.loading = false
             })
-            this.loading = false
             break
           }
           case 'misc': {
@@ -171,8 +184,9 @@ export default {
               }
             }
             if (this.chartInfo.type === 'group') {
-              this.groupInit()
+              console.log(this.chartInfo.children)
               this.chartData = [...this.chartInfo.children]
+              this.groupInit()
             }
             if (this.chartInfo.type === 'carousel') {
               this.chartData = ['carousel']

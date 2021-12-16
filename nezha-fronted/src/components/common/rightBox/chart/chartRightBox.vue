@@ -245,8 +245,12 @@ export default {
           param: {
             stack: 0,
             nullType: 'null',
-            legend: { placement: 'bottom', values: [], show: true },
-            thresholdShow: true,
+            legend: { placement: 'bottom', values: [] },
+            enable: {
+              thresholds: true,
+              legend: true,
+              valueMapping: true
+            },
             thresholds: [{ value: undefined, color: '#eeeeeeff' }]
           }
         }
@@ -258,6 +262,11 @@ export default {
           height: 4,
           unit: 2,
           type: 'log',
+          enable: {
+            thresholds: true,
+            legend: true,
+            valueMapping: true
+          },
           elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
           param: {
             limit: 100
@@ -273,17 +282,25 @@ export default {
           type: 'stat',
           param: {
             refer: 0,
-            system: '',
-            systemGroup: '',
-            systemSelect: '',
-            sort: 'desc',
-            limit: 100,
             nullType: 'null',
             statistics: 'last',
-            valueMapping: {
-              show: true,
-              mapping: []
+            enable: {
+              thresholds: true,
+              legend: true,
+              valueMapping: true
+            },
+            datasource: [{
+              name: 'A',
+              type: 'asset',
+              systemGroup: '',
+              systemSelect: '',
+              group: '',
+              select: '',
+              limit: 100,
+              sort: 'desc'
             }
+            ],
+            valueMapping: []
           }
         }
         delete this.editChart.elements
@@ -294,6 +311,11 @@ export default {
           span: 4,
           height: 4,
           type: 'url',
+          enable: {
+            thresholds: true,
+            legend: true,
+            valueMapping: true
+          },
           param: {
             url: ''
           }

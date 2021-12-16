@@ -30,7 +30,7 @@
           >
             {{showValueMapping(scope.row,col.title)}}
           </div>
-          <div v-else>
+          <div class="value-mapping-table" v-else>
             {{scope.row.display[col.title + 'display']}}
           </div>
         </template>
@@ -59,7 +59,7 @@ export default {
     initChart () {
       console.log(this.chartInfo, this.chartData)
       this.columns = this.chartInfo.param.columns
-      this.chartInfo.param.valueMapping.mapping.forEach((item) => {
+      this.chartInfo.param.valueMapping.forEach((item) => {
         if (this.valueMapping[item.column]) {
           this.valueMapping[item.column].push(item)
         } else {
@@ -128,7 +128,7 @@ export default {
       this.columns.forEach((column) => {
         if (valueMapping[column.title]) {
           obj[column.title + 'mapping'] = ''
-          if (this.chartInfo.param.valueMapping.show) {
+          if (chartInfo.param.enable && this.chartInfo.param.enable.valueMapping) {
             valueMapping[column.title].forEach(item => {
               const rowValue = row.display[column.title + 'display']
               if (item.type === 'value') {

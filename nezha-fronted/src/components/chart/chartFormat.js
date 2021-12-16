@@ -8,7 +8,7 @@ export default {
         str += '\n'
         str += params.data.mapping && params.data.mapping.display ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
       }
-      if (this.chartInfo.param.text === 'value') {
+      if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
         str += params.data.mapping && params.data.mapping.display ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
       }
       if (this.chartInfo.param.text === 'legend') {

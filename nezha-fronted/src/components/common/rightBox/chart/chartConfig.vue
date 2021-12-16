@@ -333,11 +333,11 @@
         <!--legendConfig-->
         <div class="form__sub-title">
           <span>{{$t('dashboard.panel.chartForm.legendConfig')}}</span>
-          <el-switch v-model="chartConfig.param.legend.show" size="small" @change="change"></el-switch>
+          <el-switch v-model="chartConfig.param.enable.legend" size="small" @change="change"></el-switch>
         </div>
         <transition name="el-zoom-in-top">
           <div
-            v-if="chartConfig.param.legend.show"
+            v-if="chartConfig.param.enable.legend"
             class="form-items--half-width-group"
           >
             <el-form-item
@@ -502,15 +502,15 @@
         <div class="form__sub-title">
           <span>{{$t('dashboard.panel.chartForm.valueMapping')}}</span>
           <el-switch
-            v-model="chartConfig.param.valueMapping.show"
+            v-model="chartConfig.param.enable.valueMapping"
             size="small"
             @change="change"
           ></el-switch>
         </div>
         <transition name="el-zoom-in-top">
-          <el-row v-if="chartConfig.param.valueMapping.show">
+          <el-row v-if="chartConfig.param.enable.valueMapping">
             <div
-              v-for="(item,index) in chartConfig.param.valueMapping.mapping"
+              v-for="(item,index) in chartConfig.param.valueMapping"
               :key="index"
             >
               <div class="chart-title chart-title-config">
@@ -567,7 +567,7 @@
                   </div>
                   <el-form-item
                     v-if="item.type === 'value'"
-                    :prop="'param.valueMapping.mapping.' + index + '.value'"
+                    :prop="'param.valueMapping.' + index + '.value'"
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
@@ -581,7 +581,7 @@
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'range'"
-                    :prop="'param.valueMapping.mapping.' + index + '.from'"
+                    :prop="'param.valueMapping.' + index + '.from'"
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
@@ -595,7 +595,7 @@
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'range'"
-                    :prop="'param.valueMapping.mapping.' + index + '.to'"
+                    :prop="'param.valueMapping.' + index + '.to'"
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
@@ -609,7 +609,7 @@
                   </el-form-item>
                   <el-form-item
                     v-if="item.type === 'regx'"
-                    :prop="'param.valueMapping.mapping.' + index + '.regx'"
+                    :prop="'param.valueMapping.' + index + '.regx'"
                     :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                     class="thresholds-from-item"
                   >
@@ -625,13 +625,13 @@
                   <div v-if="isTable(chartConfig.type)">
                     <div class='mapping-display'>Columns</div>
                   </div>
-                  <el-form-item v-if="isTable(chartConfig.type)" :prop="'param.valueMapping.mapping.' + index + '.column'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+                  <el-form-item v-if="isTable(chartConfig.type)" :prop="'param.valueMapping.' + index + '.column'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.column"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.column')" size="small" @change="change"/>
                   </el-form-item>
                   <div>
                     <div class='mapping-display'>Display</div>
                   </div>
-                  <el-form-item :prop="'param.valueMapping.mapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+                  <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.display"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change"/>
                   </el-form-item>
                   <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(val, key, index)}"/>
@@ -767,7 +767,12 @@ export default {
             nullType: this.chartConfig.param.nullType,
             legend: { placement: 'bottom', values: [], show: true },
             thresholdShow: true,
-            thresholds: []
+            thresholds: [],
+            enable: {
+              legend: true,
+              valueMapping: true,
+              thresholds: true
+            },
           }
           this.$nextTick(() => {
             this.chartConfig.param.thresholds.push({ value: undefined, color: randomcolor() })
@@ -785,9 +790,11 @@ export default {
             nullType: this.chartConfig.param.nullType,
             statistics: 'last',
             text: 'value',
-            valueMapping: {
-              show: true,
-              mapping: []
+            valueMapping: [],
+            enable: {
+              legend: true,
+              valueMapping: true,
+              thresholds: true
             }
           }
           break
@@ -801,9 +808,11 @@ export default {
             columns: [],
             tags: [],
             indexs: '',
-            valueMapping: {
-              show: true,
-              mapping: []
+            valueMapping: [],
+            enable: {
+              legend: true,
+              valueMapping: true,
+              thresholds: true
             }
           }
           break

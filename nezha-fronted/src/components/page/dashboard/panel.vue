@@ -202,6 +202,11 @@ export default {
           stack: 0,
           nullType: 'null',
           legend: { placement: 'bottom', values: [], show: true },
+          enable: {
+            legend: true,
+            valueMapping: true,
+            thresholds: true
+          },
           thresholdShow: true,
           thresholds: [{ value: undefined, color: randomcolor() }]
         },
