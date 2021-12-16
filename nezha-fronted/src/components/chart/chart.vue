@@ -198,7 +198,7 @@ export default {
   },
   computed: {
     isNoData () {
-      return lodash.isEmpty(this.chartData) && ['text', 'url', 'assetInfo', 'endpointInfo'].indexOf(this.chartInfo.type) === -1
+      return lodash.isEmpty(this.chartData) && ['text', 'url'].indexOf(this.chartInfo.type) === -1
     },
     chartOption () {
       if (this.customChartOption) {
