@@ -700,6 +700,20 @@
     padding: 1px 0;
   }
 }
+.chart-table {
+  .costom-value{
+    padding: 0 !important;
+  }
+  .el-table__row .costom-value .cell{
+    padding: 2px 0;
+  }
+  div{
+    padding: 0;
+  }
+  .value-mapping-table {
+    padding: 10px;
+  }
+}
 .line-area-box{
   height: 100%;
   width: 100%;

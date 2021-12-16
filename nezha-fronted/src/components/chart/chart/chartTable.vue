@@ -2,6 +2,7 @@
   <div class="nz-table2" style="height: 100%;padding: 0 10px 10px 10px;box-sizing: border-box">
     <el-table
       ref="dataTable"
+      class="chart-table"
       :data="tableData"
       :height="'100%'"
       border
@@ -13,6 +14,7 @@
         :min-width="100"
         :sort-orders="['ascending', 'descending']"
         class="data-column"
+        class-name="costom-value"
         sortable
       >
         <template slot="header">
@@ -22,11 +24,14 @@
           <div v-if="scope.row.valueMapping && scope.row.valueMapping[col.title + 'mapping']" :style="{
             background: scope.row.valueMapping[col.title + 'mapping'].color.bac,
             color: scope.row.valueMapping[col.title + 'mapping'].color.text,
-          }">
-            {{handleDisplay(col.display,{...scope.row.$labels, value: scope.row.showValue,legend:scope.row.legend})}}
+            clear: 'both',
+          }"
+               class="value-mapping-table"
+          >
+            {{showValueMapping(scope.row,col.title)}}
           </div>
           <div v-else>
-            {{scope.row.showValue}}
+            {{scope.row.display[col.title + 'display']}}
           </div>
         </template>
       </el-table-column>
@@ -39,7 +44,7 @@ import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
 import { getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/charts/chartDataFormat'
-
+import lodash from 'lodash'
 export default {
   name: 'chart-table',
   mixins: [chartMixin, chartFormat],
@@ -61,15 +66,14 @@ export default {
           this.valueMapping[item.column] = [item]
         }
       })
-      console.log(this.valueMapping)
       const data = this.initTableData(this.chartInfo, this.chartData)
       const arr = []
       console.log(data)
       Object.keys(data).forEach(key => {
-        Object.keys(data[key]).forEach(keys => {
-          console.log(data[key][keys])
-          arr.push(data[key][keys])
-        })
+        arr.push(data[key])
+      })
+      arr.forEach(item => {
+        item.display = this.handleDisplayTable(item)
       })
       arr.forEach(item => {
         item.valueMapping = this.selectTableMapping(item, this.valueMapping)
@@ -90,9 +94,10 @@ export default {
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
           const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
           // const mapping = this.selectTableMapping(value, chartInfo.param.valueMapping)
+          data.$value = value
           data.values = value
           data.showValue = showValue
-          data.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+          data.$legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
           // data.mapping = mapping
           data.keys = ''
           // eslint-disable-next-line vue/no-mutating-props
@@ -125,19 +130,20 @@ export default {
           obj[column.title + 'mapping'] = ''
           if (this.chartInfo.param.valueMapping.show) {
             valueMapping[column.title].forEach(item => {
+              const rowValue = row.display[column.title + 'display']
               if (item.type === 'value') {
-                if (row.values == item.value) {
+                if (rowValue == item.value) {
                   obj[column.title + 'mapping'] = item
                 }
               }
               if (item.type === 'range') {
-                if (row.values >= item.from && row.values <= item.to) {
+                if (rowValue >= item.from && rowValue <= item.to) {
                   obj[column.title + 'mapping'] = item
                 }
               }
               if (item.type === 'regx') {
                 const reg = new RegExp(item.regx)
-                if (reg.test(row.values)) {
+                if (reg.test(rowValue)) {
                   obj[column.title + 'mapping'] = item
                 }
               }
@@ -146,6 +152,54 @@ export default {
         }
       })
       return obj
+    },
+    handleDisplayTable (row) {
+      const obj = {}
+      const params = {
+        ...row
+      }
+      this.columns.forEach((column) => {
+        obj[column.title + 'display'] = ''
+        if (/\{\{.+\}\}/.test(column.display)) {
+          const labelValue = column.display.replace(/(\{\{.+?\}\})/g, function (i) {
+            const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
+            let value = null
+            if (lodash.get(params, label)) {
+              value = lodash.get(params, label)
+            }
+            return value || label
+          })
+          obj[column.title + 'display'] = labelValue
+        } else {
+          obj[column.title + 'display'] = column.display
+        }
+      })
+      return obj
+    },
+    showValueMapping (row, column) {
+      const obj = lodash.cloneDeep(row)
+      lodash.keys(obj).forEach(key => {
+        if (obj[key].$value) {
+          obj[key].$value = obj[key].showValue
+        }
+      })
+      const params = {
+        ...obj
+      }
+      const display = row.valueMapping[column + 'mapping'].display
+      if (/\{\{.+\}\}/.test(display)) {
+        const labelValue = display.replace(/(\{\{.+?\}\})/g, function (i) {
+          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
+          let value = null
+          if (lodash.get(params, label)) {
+            value = lodash.get(params, label)
+          }
+          return value || label
+        })
+        return labelValue
+      } else {
+        return display
+      }
     },
     tableDataSort (orderBy) {
 
