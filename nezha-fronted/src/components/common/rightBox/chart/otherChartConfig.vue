@@ -165,6 +165,18 @@ export default {
         {
           id: 'group',
           name: this.$t('dashboard.panel.chartForm.typeVal.group.label')
+        },
+        {
+          id: 'map',
+          name: this.$t('dashboard.panel.chartForm.typeVal.map.label')
+        },
+        {
+          id: 'carousel',
+          name: this.$t('dashboard.panel.chartForm.typeVal.carousel.label')
+        },
+        {
+          id: 'hexagonFigure',
+          name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
         }
       ]
     }
