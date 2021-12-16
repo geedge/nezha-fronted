@@ -19,7 +19,15 @@
           <span class="data-column__span">{{col.title}}</span>
         </template>
         <template slot-scope="scope" :column="col">
-          {{scope.row.values}}
+          <div v-if="scope.row.valueMapping && scope.row.valueMapping[col.title + 'mapping']" :style="{
+            background: scope.row.valueMapping[col.title + 'mapping'].color.bac,
+            color: scope.row.valueMapping[col.title + 'mapping'].color.text,
+          }">
+            {{handleDisplay(col.display,{...scope.row.$labels, value: scope.row.showValue,legend:scope.row.legend})}}
+          </div>
+          <div v-else>
+            {{scope.row.showValue}}
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -38,13 +46,22 @@ export default {
   data () {
     return {
       tableData: [],
-      columns: []
+      columns: [],
+      valueMapping: {}
     }
   },
   methods: {
     initChart () {
       console.log(this.chartInfo, this.chartData)
       this.columns = this.chartInfo.param.columns
+      this.chartInfo.param.valueMapping.mapping.forEach((item) => {
+        if (this.valueMapping[item.column]) {
+          this.valueMapping[item.column].push(item)
+        } else {
+          this.valueMapping[item.column] = [item]
+        }
+      })
+      console.log(this.valueMapping)
       const data = this.initTableData(this.chartInfo, this.chartData)
       const arr = []
       console.log(data)
@@ -53,6 +70,9 @@ export default {
           console.log(data[key][keys])
           arr.push(data[key][keys])
         })
+      })
+      arr.forEach(item => {
+        item.valueMapping = this.selectTableMapping(item, this.valueMapping)
       })
       this.tableData = arr
       this.$refs.dataTable.doLayout()
@@ -69,10 +89,11 @@ export default {
           data.$labels = data.metric
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
           const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
-          const mapping = this.selectTableMapping(value, chartInfo.param.valueMapping)
+          // const mapping = this.selectTableMapping(value, chartInfo.param.valueMapping)
           data.values = value
           data.showValue = showValue
-          data.mapping = mapping
+          data.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+          // data.mapping = mapping
           data.keys = ''
           // eslint-disable-next-line vue/no-mutating-props
           arr.forEach((item) => {
@@ -97,12 +118,38 @@ export default {
       })
       return returnData
     },
-    selectTableMapping () {
-
+    selectTableMapping (row, valueMapping) {
+      const obj = {}
+      this.columns.forEach((column) => {
+        if (valueMapping[column.title]) {
+          obj[column.title + 'mapping'] = ''
+          if (this.chartInfo.param.valueMapping.show) {
+            valueMapping[column.title].forEach(item => {
+              if (item.type === 'value') {
+                if (row.values == item.value) {
+                  obj[column.title + 'mapping'] = item
+                }
+              }
+              if (item.type === 'range') {
+                if (row.values >= item.from && row.values <= item.to) {
+                  obj[column.title + 'mapping'] = item
+                }
+              }
+              if (item.type === 'regx') {
+                const reg = new RegExp(item.regx)
+                if (reg.test(row.values)) {
+                  obj[column.title + 'mapping'] = item
+                }
+              }
+            })
+          }
+        }
+      })
+      return obj
     },
     tableDataSort (orderBy) {
 
-    },
+    }
   },
   mounted () {
     this.initChart()

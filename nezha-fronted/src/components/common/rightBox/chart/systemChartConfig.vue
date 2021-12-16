@@ -26,7 +26,7 @@
               class="form-item--half-width"
               prop="param.systemGroup"
             >
-              <el-select size="small" v-model="chartConfig.param.systemGroup" multiple collapse-tags :placeholder="$t('el.select.placeholder')">
+              <el-select size="small" v-model="chartConfig.param.systemGroup" multiple collapse-tags :placeholder="$t('el.select.placeholder')" @change="systemGroupChange">
                   <el-option v-for="item in groupList" :value="item.name" :key="item.name" :label="item.name"/>
               </el-select>
             </el-form-item>
@@ -36,7 +36,7 @@
               class="form-item--half-width"
               prop="param.systemSelect"
             >
-              <el-select size="small" v-model="chartConfig.param.systemSelect" :placeholder="$t('el.select.placeholder')">
+              <el-select size="small" v-model="chartConfig.param.systemSelect" :placeholder="$t('el.select.placeholder')" @change="systemSelectChange">
                 <el-option v-for="item in selectList" :value="item.name" :key="item.name" :label="item.name"/>
               </el-select>
             </el-form-item>
@@ -194,148 +194,6 @@
         </el-form-item>
       </div>
 
-      <!--      valueMapping  -->
-      <div v-if="isShowValueMapping(chartConfig.type)">
-        <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.chartForm.valueMapping')}}</span>
-          <el-switch
-            v-model="chartConfig.param.valueMapping.show"
-            size="small"
-            @change="change"
-          ></el-switch>
-        </div>
-        <transition name="el-zoom-in-top">
-          <el-row v-if="chartConfig.param.valueMapping.show">
-            <div
-              v-for="(item,index) in chartConfig.param.valueMapping.mapping"
-              :key="index"
-            >
-              <div class="chart-title chart-title-config">
-                <span class="endpoint-title-content">
-                  <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showMapping(index)"></i>
-                  <span v-show="!item.show" class="title-content-left">
-                    <span v-if="item.type === 'value'">
-                      {{item.value}}
-                    </span>
-                    <span v-if="item.type === 'range'">
-                      {{item.from}} -> {{item.to}}
-                    </span>
-                    <span v-if="item.type === 'regx'">
-                      {{item.regx}}
-                    </span>
-                     <div :style="{background:item.color.bac}" class="prev-mapping-box">
-                        <span :style="{color:item.color.text}">
-                          {{item.display || "T"}}
-                        </span>
-                      </div>
-                  </span>
-                </span>
-                <span>
-                  <span @click="addMapping('')">
-                      <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
-                  </span>
-                  <span class="nz-icon-copy">
-                      <i @click="copyMapping(index)" class="nz-icon nz-icon-override"></i>
-                  </span>
-                  <span class="nz-icon-minus-medium">
-                      <i @click="removeMapping(index)" class="nz-icon nz-icon-minus"></i>
-                  </span>
-                </span>
-              </div>
-              <transition-group appear tag="div" name="el-zoom-in-top">
-                <el-row
-                  v-show="item.show"
-                  :key="1"
-                  class="thresholds-item"
-                >
-                  <div>
-                    <el-select
-                      v-model="item.type"
-                      size="small"
-                      style="width: 100px"
-                      @change="(val)=>{mappingItemChange(index,val)}"
-                    >
-                      <el-option
-                        v-for="item in mappingTypeList"
-                        :value="item.value"
-                        :label="item.label"
-                        :key="item.value"/>
-                    </el-select>
-                  </div>
-                  <el-form-item
-                    v-if="item.type === 'value'"
-                    :prop="'param.valueMapping.mapping.' + index + '.value'"
-                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
-                    class="thresholds-from-item"
-                  >
-                    <el-input-number
-                      :controls="false"
-                      size="small"
-                      v-model.number="item.value"
-                      placeholder="value"
-                      @change="change"
-                    ></el-input-number>
-                  </el-form-item>
-                  <el-form-item
-                    v-if="item.type === 'range'"
-                    :prop="'param.valueMapping.mapping.' + index + '.from'"
-                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
-                    class="thresholds-from-item"
-                  >
-                    <el-input-number
-                      :controls="false"
-                      size="small"
-                      v-model.number="item.from"
-                      placeholder="from"
-                      @change="change"
-                    ></el-input-number>
-                  </el-form-item>
-                  <el-form-item
-                    v-if="item.type === 'range'"
-                    :prop="'param.valueMapping.mapping.' + index + '.to'"
-                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
-                    class="thresholds-from-item"
-                  >
-                    <el-input-number
-                      :controls="false"
-                      size="small"
-                      v-model.number="item.to"
-                      placeholder="to"
-                      @change="change"
-                    ></el-input-number>
-                  </el-form-item>
-                  <el-form-item
-                    v-if="item.type === 'regx'"
-                    :prop="'param.valueMapping.mapping.' + index + '.regx'"
-                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
-                    class="thresholds-from-item"
-                  >
-                    <el-input
-                      size="small"
-                      v-model="item.regx"
-                      placeholder="regx"
-                      @change="change"
-                    ></el-input>
-                  </el-form-item>
-                </el-row>
-                <el-row v-show="item.show" :key="2" class="thresholds-item">
-                  <div>
-                    <div class='mapping-display'>Display</div>
-                  </div>
-                  <el-form-item :prop="'param.valueMapping.mapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
-                    <el-input v-model="item.display"  style="margin-right: 10px" size="small"  @change="change"/>
-                  </el-form-item>
-                  <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(val, key, index)}"/>
-                </el-row>
-              </transition-group>
-            </div>
-            <div @click="addMapping" class="thresholds-add">
-              Add valueMapping
-            </div>
-          </el-row>
-        </transition>
-      </div>
-
       <!--      table column-->
       <div v-if="isTable(chartConfig.type)">
         <div class="form__sub-title">
@@ -397,6 +255,154 @@
           Add Colums
         </div>
       </div>
+
+      <!--      valueMapping  -->
+      <div v-if="isShowValueMapping(chartConfig.type) || isTable(chartConfig.type)">
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.panel.chartForm.valueMapping')}}</span>
+          <el-switch
+            v-model="chartConfig.param.valueMapping.show"
+            size="small"
+            @change="change"
+          ></el-switch>
+        </div>
+        <transition name="el-zoom-in-top">
+          <el-row v-if="chartConfig.param.valueMapping.show">
+            <div
+              v-for="(item,index) in chartConfig.param.valueMapping.mapping"
+              :key="index"
+            >
+              <div class="chart-title chart-title-config">
+                <span class="chart-title-content">
+                  <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showMapping(index)"></i>
+                  <span v-show="!item.show" class="title-content-left">
+                    <span v-if="item.type === 'value'">
+                      {{item.value}}
+                    </span>
+                    <span v-if="item.type === 'range'">
+                      {{item.from}} -> {{item.to}}
+                    </span>
+                    <span v-if="item.type === 'regx'">
+                      {{item.regx}}
+                    </span>
+                     <div :style="{background:item.color.bac}" class="prev-mapping-box">
+                        <span :style="{color:item.color.text}">
+                          {{item.display || "T"}}
+                        </span>
+                      </div>
+                  </span>
+                </span>
+                <span>
+                  <span @click="addMapping('')" style="margin-right: 5px">
+                      <i class="nz-icon nz-icon-create-square"></i>
+                  </span>
+                  <span @click="copyMapping(index)" style="margin-right: 5px">
+                      <i  class="nz-icon nz-icon-override"></i>
+                  </span>
+                  <span @click="removeMapping(index)" style="margin-right: 5px">
+                      <i  class="nz-icon nz-icon-minus"></i>
+                  </span>
+                </span>
+              </div>
+              <transition-group appear tag="div" name="el-zoom-in-top">
+                <el-row
+                  v-show="item.show"
+                  :key="1"
+                  class="thresholds-item"
+                >
+                  <div>
+                    <el-select
+                      v-model="item.type"
+                      size="small"
+                      style="width: 100px"
+                      @change="(val)=>{mappingItemChange(index,val)}"
+                    >
+                      <el-option
+                        v-for="item in mappingTypeList"
+                        :value="item.value"
+                        :label="item.label"
+                        :key="item.value"/>
+                    </el-select>
+                  </div>
+                  <el-form-item
+                    v-if="item.type === 'value'"
+                    :prop="'param.valueMapping.mapping.' + index + '.value'"
+                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+                    class="thresholds-from-item"
+                  >
+                    <el-input-number
+                      :controls="false"
+                      size="small"
+                      v-model.number="item.value"
+                      placeholder="value"
+                      @change="change"
+                    ></el-input-number>
+                  </el-form-item>
+                  <el-form-item
+                    v-if="item.type === 'range'"
+                    :prop="'param.valueMapping.mapping.' + index + '.from'"
+                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+                    class="thresholds-from-item"
+                  >
+                    <el-input-number
+                      :controls="false"
+                      size="small"
+                      v-model.number="item.from"
+                      placeholder="from"
+                      @change="change"
+                    ></el-input-number>
+                  </el-form-item>
+                  <el-form-item
+                    v-if="item.type === 'range'"
+                    :prop="'param.valueMapping.mapping.' + index + '.to'"
+                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+                    class="thresholds-from-item"
+                  >
+                    <el-input-number
+                      :controls="false"
+                      size="small"
+                      v-model.number="item.to"
+                      @change="change"
+                      placeholder="to"
+                    ></el-input-number>
+                  </el-form-item>
+                  <el-form-item
+                    v-if="item.type === 'regx'"
+                    :prop="'param.valueMapping.mapping.' + index + '.regx'"
+                    :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+                    class="thresholds-from-item"
+                  >
+                    <el-input
+                      size="small"
+                      v-model="item.regx"
+                      placeholder="regx"
+                      @change="change"
+                    ></el-input>
+                  </el-form-item>
+                </el-row>
+                <el-row v-show="item.show" :key="2" class="thresholds-item">
+                  <div v-if="isTable(chartConfig.type)">
+                    <div class='mapping-display'>Columns</div>
+                  </div>
+                  <el-form-item v-if="isTable(chartConfig.type)" :prop="'param.valueMapping.mapping.' + index + '.column'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+                    <el-input v-model="item.column"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.column')" size="small" @change="change"/>
+                  </el-form-item>
+                  <div>
+                    <div class='mapping-display'>Display</div>
+                  </div>
+                  <el-form-item :prop="'param.valueMapping.mapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+                    <el-input v-model="item.display"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change"/>
+                  </el-form-item>
+                  <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(val, key, index)}"/>
+                </el-row>
+              </transition-group>
+            </div>
+            <div @click="addMapping" class="thresholds-add">
+              Add valueMapping
+            </div>
+          </el-row>
+        </transition>
+      </div>
     </el-form>
   </div>
 </template>
@@ -405,11 +411,13 @@
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import nezhaColor from '@/components/common/nezhaColor'
+import VueTagsInput from '@johmun/vue-tags-input'
 export default {
   name: 'systemChartConfig',
   mixins: [publicConfig, chartTypeShow],
   components: {
-    nezhaColor
+    nezhaColor,
+    VueTagsInput
   },
   data () {
     return {
@@ -516,11 +524,16 @@ export default {
             systemGroup: '',
             systemSelect: '',
             indexs: '',
+            tags: [],
             sort: 'desc',
             limit: 100,
             nullType: 'null',
             statistics: 'last',
-            columns: []
+            columns: [],
+            valueMapping: {
+              show: true,
+              mapping: []
+            }
           }
           break
       }
@@ -533,6 +546,17 @@ export default {
       this.chartConfig.param.systemSelect = ''
       this.groupList = item.group
       this.selectList = JSON.parse(JSON.stringify(item.select))
+    },
+    systemGroupChange () {
+      this.chartConfig.param.group = this.chartConfig.param.systemGroup.map(item => {
+        const obj = this.groupList.find(group => group.name === item)
+        return obj
+      })
+      this.change()
+    },
+    systemSelectChange () {
+      this.chartConfig.param.select = this.selectList.find(item => item.name === this.chartConfig.param.systemSelect)
+      this.change()
     }
   },
   created () {

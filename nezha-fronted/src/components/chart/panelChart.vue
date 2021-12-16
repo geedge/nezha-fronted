@@ -141,6 +141,16 @@ export default {
             break
           }
           case 'system': {
+            console.log(this.chartInfo)
+            const params = {
+              q: '',
+              stat: startTime,
+              end: endTime,
+              resultType: 'matrix'
+            }
+            this.$get('/stat', params).then(res => {
+              console.log(res)
+            })
             this.loading = false
             break
           }
@@ -154,7 +164,7 @@ export default {
             }
             if (this.chartInfo.type === 'diagram') {
               this.chartData = [this.chartInfo.param.topo]
-              if (!this.chartInfo.param.topo || !this.chartInfo.param.topo.pens.length){
+              if (!this.chartInfo.param.topo || !this.chartInfo.param.topo.pens.length) {
                 this.chartData = []
               } else {
                 this.chartData = [this.chartInfo.param.topo]

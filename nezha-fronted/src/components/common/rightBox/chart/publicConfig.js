@@ -301,7 +301,7 @@ export default {
     },
     addMapping () {
       const bacColor = randomcolor()
-      this.chartConfig.param.valueMapping.mapping.push({
+      const obj = {
         type: 'value',
         show: true,
         value: undefined,
@@ -310,7 +310,11 @@ export default {
           bac: bacColor + 'FF',
           text: ColorReverse(bacColor) + 'FF'
         }
-      })
+      }
+      if (this.chartConfig.type === 'table') {
+        obj.column = ''
+      }
+      this.chartConfig.param.valueMapping.mapping.push(obj)
       this.change()
     },
     copyMapping (index) {

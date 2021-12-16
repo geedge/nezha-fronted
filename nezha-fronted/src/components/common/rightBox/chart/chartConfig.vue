@@ -434,8 +434,71 @@
           </el-row>
         </transition>
       </div>
+
+      <!--      table column-->
+      <div v-if="isTable(chartConfig.type)">
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.panel.chartForm.columns')}}</span>
+        </div>
+        <div v-for="(item,index) in chartConfig.param.columns" :key="index">
+          <div class="chart-title chart-title-config">
+                <span class="chart-title-content">
+                  <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showColumns(index)"></i>
+                  <span v-show="!item.show" class="title-content-left">
+                    <span>
+                      {{item.value}}
+                    </span>
+                  </span>
+                </span>
+            <span>
+                  <span @click="addColumns('')">
+                      <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
+                  </span>
+                  <span class="nz-icon-copy">
+                      <i @click="copyColumns(index)" class="nz-icon nz-icon-override"></i>
+                  </span>
+                  <span class="nz-icon-minus-medium">
+                      <i @click="removeColumns(index)" class="nz-icon nz-icon-minus"></i>
+                  </span>
+                </span>
+          </div>
+          <transition-group appear tag="div" name="el-zoom-in-top">
+            <el-row class="thresholds-item" v-show="item.show" :key="1">
+              <div>
+                <div class='mapping-display'>Title</div>
+              </div>
+              <el-form-item :prop="'param.columns.' + index + '.title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item" style="flex: 1">
+                <el-input size="small" v-model="item.title" placeholder="regx" @change="change"></el-input>
+              </el-form-item>
+              <div>
+                <div class='mapping-display'>Unit</div>
+              </div>
+              <el-cascader :id="'columns-unit' + index" v-model="item.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
+                           placeholder=""
+                           popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
+                           size="small"
+                           style="flex: 1"
+                           @change="unitSelected"
+              >
+              </el-cascader>
+            </el-row>
+            <el-row class="thresholds-item" v-show="item.show" :key="2">
+              <div>
+                <div class='mapping-display'>Display</div>
+              </div>
+              <el-form-item :prop="'param.columns.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+                <el-input v-model="item.display"  style="margin-right: 10px" size="small"  @change="change"/>
+              </el-form-item>
+            </el-row>
+          </transition-group>
+        </div>
+        <div @click="addColumns" class="thresholds-add">
+          Add Colums
+        </div>
+      </div>
+
       <!--      valueMapping  -->
-      <div v-if="isShowValueMapping(chartConfig.type)">
+      <div v-if="isShowValueMapping(chartConfig.type) || isTable(chartConfig.type)">
         <div class="form__sub-title">
           <span>{{$t('dashboard.panel.chartForm.valueMapping')}}</span>
           <el-switch
@@ -559,6 +622,12 @@
                   </el-form-item>
                 </el-row>
                 <el-row v-show="item.show" :key="2" class="thresholds-item">
+                  <div v-if="isTable(chartConfig.type)">
+                    <div class='mapping-display'>Columns</div>
+                  </div>
+                  <el-form-item v-if="isTable(chartConfig.type)" :prop="'param.valueMapping.mapping.' + index + '.column'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+                    <el-input v-model="item.column"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.column')" size="small" @change="change"/>
+                  </el-form-item>
                   <div>
                     <div class='mapping-display'>Display</div>
                   </div>
@@ -574,68 +643,6 @@
             </div>
           </el-row>
         </transition>
-      </div>
-
-      <!--      table column-->
-      <div v-if="isTable(chartConfig.type)">
-        <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.chartForm.columns')}}</span>
-        </div>
-        <div v-for="(item,index) in chartConfig.param.columns" :key="index">
-          <div class="chart-title chart-title-config">
-                <span class="chart-title-content">
-                  <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showColumns(index)"></i>
-                  <span v-show="!item.show" class="title-content-left">
-                    <span>
-                      {{item.value}}
-                    </span>
-                  </span>
-                </span>
-            <span>
-                  <span @click="addColumns('')">
-                      <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
-                  </span>
-                  <span class="nz-icon-copy">
-                      <i @click="copyColumns(index)" class="nz-icon nz-icon-override"></i>
-                  </span>
-                  <span class="nz-icon-minus-medium">
-                      <i @click="removeColumns(index)" class="nz-icon nz-icon-minus"></i>
-                  </span>
-                </span>
-          </div>
-          <transition-group appear tag="div" name="el-zoom-in-top">
-            <el-row class="thresholds-item" v-show="item.show" :key="1">
-              <div>
-                <div class='mapping-display'>Title</div>
-              </div>
-              <el-form-item :prop="'param.columns.' + index + '.title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item" style="flex: 1">
-                <el-input size="small" v-model="item.title" placeholder="regx" @change="change"></el-input>
-              </el-form-item>
-              <div>
-                <div class='mapping-display'>Unit</div>
-              </div>
-              <el-cascader :id="'columns-unit' + index" v-model="item.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
-                           placeholder=""
-                           popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
-                           size="small"
-                           style="flex: 1"
-                           @change="unitSelected"
-              >
-              </el-cascader>
-            </el-row>
-            <el-row class="thresholds-item" v-show="item.show" :key="2">
-              <div>
-                <div class='mapping-display'>Display</div>
-              </div>
-              <el-form-item :prop="'param.columns.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
-                <el-input v-model="item.display"  style="margin-right: 10px" size="small"  @change="change"/>
-              </el-form-item>
-            </el-row>
-          </transition-group>
-        </div>
-        <div @click="addColumns" class="thresholds-add">
-          Add Colums
-        </div>
       </div>
     </el-form>
   </div>
@@ -793,7 +800,11 @@ export default {
             statistics: 'last',
             columns: [],
             tags: [],
-            indexs: ''
+            indexs: '',
+            valueMapping: {
+              show: true,
+              mapping: []
+            }
           }
           break
         case 'log':
