@@ -95,7 +95,7 @@
         </div>
       </template>
       <!--图表-->
-      <div id="tableList" class="table-list">
+      <div id="tableList" class="table-list" style="padding-top: 0">
         <div id="dashboardScrollbar" ref="dashboardScrollbar" class="table-list-box">
           <div class="box-content" v-loading="chartListLoading">
             <chart-list

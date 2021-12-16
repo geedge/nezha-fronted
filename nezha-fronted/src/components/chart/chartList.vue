@@ -14,7 +14,7 @@
       :vertical-compact="true"
       :useCssTransforms="false"
       :style="{
-        'margin-top':isGroup ? '0' : (-1 * (stepWidth +( from !== fromRoute.panel ? 36 : 14 )) + 'px')
+        'margin-top':isGroup ? '0' : (-1 * (stepWidth + 14) + 'px')
       }"
     >
       <grid-item
