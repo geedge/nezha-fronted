@@ -97,9 +97,7 @@ export default {
         switch (this.chartInfo.datasource) {
           case 'metrics': {
             if (this.chartInfo.type === 'assetInfo') {
-              console.log(this.chartDetailInfo)
               this.$get('asset/asset/' + this.chartDetailInfo.id).then(res => {
-                console.log(res)
                 this.chartData = res.data
               })
             }
@@ -108,6 +106,7 @@ export default {
                 this.chartData = res.data
               })
             }
+            break
           }
           case 'logs': {
             let urlPre = ''
