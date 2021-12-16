@@ -45,7 +45,8 @@ export default {
     chartInfo: Object, // 其中的param json串已转化为对象
     timeRange: Array, // 时间范围
     isFullscreen: Boolean,
-    panelLock: Boolean
+    panelLock: Boolean,
+    chartDetailInfo: Object
   },
   data () {
     return {
@@ -94,7 +95,20 @@ export default {
     query (elements, startTime, endTime, step) {
       try {
         switch (this.chartInfo.datasource) {
-          case 'metrics':
+          case 'metrics': {
+            if (this.chartInfo.type === 'assetInfo') {
+              console.log(this.chartDetailInfo)
+              this.$get('asset/asset/' + this.chartDetailInfo.id).then(res => {
+                console.log(res)
+                this.chartData = res.data
+              })
+            }
+            if (this.chartInfo.type === 'endpointInfo') {
+              this.$get('monitor/endpoint/' + this.chartDetailInfo.id).then(res => {
+                this.chartData = res.data
+              })
+            }
+          }
           case 'logs': {
             let urlPre = ''
             if (this.chartInfo.datasource === 'metrics') {
@@ -141,7 +155,7 @@ export default {
             break
           }
           case 'system': {
-            console.log(this.chartInfo)
+            console.log(this.chartInfo.type)
             const params = {
               q: '',
               stat: startTime,
@@ -179,20 +193,6 @@ export default {
             }
             if (this.chartInfo.type === 'map') {
               this.chartData = ['map']
-            }
-            if (this.chartInfo.type === 'assetInfo') {
-              this.$get('asset/asset/' + 545).then(res => {
-                if (res.code === 200) {
-                  this.chartData = res.data
-                }
-              })
-            }
-            if (this.chartInfo.type === 'endpointInfo') {
-              this.$get('monitor/endpoint/' + 1).then(res => {
-                if (res.code === 200) {
-                  this.chartData = res.data
-                }
-              })
             }
             break
           }

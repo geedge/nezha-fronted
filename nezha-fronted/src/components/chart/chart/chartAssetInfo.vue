@@ -1,5 +1,5 @@
 <template>
-  <chart-detail v-if="chartInfo.type === 'assetInfo'" :chart-info="chartInfo" :chart-detail="chartData"></chart-detail>
+  <chart-detail :chart-info="chartInfo" :chart-detail="chartData"></chart-detail>
 </template>
 
 <script>
@@ -17,21 +17,6 @@ export default {
     return {
 
     }
-  },
-  methods: {
-
-  },
-  watch: {
-    chartData: {
-      deep: true,
-      handler (n) {
-        console.log(n)
-      }
-    }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

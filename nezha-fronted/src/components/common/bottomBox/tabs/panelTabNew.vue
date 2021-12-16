@@ -94,21 +94,30 @@
           </button>
         </div>
       </template>
-      <template v-slot>
-        <div class="panel">
-          <!--图表-->
-          <div class="table-list" id="tableList">
-            <div ref="dashboardScrollbar" id="dashboardScrollbar" style="height: 100%; overflow: auto;">
-              <div class="box-content">
-                <chart-list :nowTimeType='nowTimeType' :draggable="draggable" :from="from" :is-model="from === fromRoute.model" :obj="obj" @on-edit-chart="editChart"
-                            @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock" :panel-data-list="panelDataList"
-                            @on-add-group-item-chart="addGroupItem"></chart-list>
-              </div>
-            </div>
+      <!--图表-->
+      <div id="tableList" class="table-list">
+        <div id="dashboardScrollbar" ref="dashboardScrollbar" class="table-list-box">
+          <div class="box-content" v-loading="chartListLoading">
+            <chart-list
+              ref="chartList"
+              name="panel"
+              :panelId="showPanel.id"
+              :class="{'show-top':showTopBtn}"
+              :data-list="dataList"
+              :nowTimeType="nowTimeType"
+              :from="fromRoute.panel"
+              :panel-lock="panelLock"
+              :time-range="searchTime"
+              @edit-chart="editChart"
+              @on-refresh-time="refreshTime"
+              @on-remove-chart="delChart"
+              @on-add-group-item-chart="addGroupItem"
+              :loading="chartListLoading"
+              :chart-detail-info="chartDetailInfo"
+            ></chart-list>
           </div>
-          <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
         </div>
-      </template>
+      </div>
     </nz-bottom-data-list>
     <transition name="right-box">
       <chart-box v-if="rightBox.chart.show" ref="addChartModal" :chart="chart" :from="from" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
@@ -121,7 +130,7 @@
 
 <script>
 import chartBox from '../../../page/dashboard/chartBox'
-import chartList from '../../../charts/chart-list'
+import chartList from '@/components/chart/chartList'
 import bus from '../../../../libs/bus'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
@@ -148,6 +157,7 @@ export default {
       panelLock: true,
       showTopBtn: false, // top按钮
       visible: false,
+      chartListLoading: true,
       rightBox: { // 面板弹出框相关
         chart: {
           show: false
@@ -222,7 +232,8 @@ export default {
       scrollbarWrap: null,
       panelDataList: [],
       batchDeleteObjs: [],
-      nowTimeType: {}
+      nowTimeType: {},
+      chartDetailInfo: {}
     }
   },
   components: {
@@ -336,17 +347,29 @@ export default {
     },
     // 获取数据,用在子页面
     getData (params) {
+      if (!this.hasButton('panel_view')) {
+        return
+      }
+      this.chartListLoading = true
       if (params.start_time === '' || params.end_time === '') {
         const now = bus.getTimezontDateRange()
         const endTimeTmp = bus.timeFormate(now[1].getTime(), 'yyyy-MM-dd hh:mm:ss')
         const startTimeTmp = bus.timeFormate(now[0].getTime(), 'yyyy-MM-dd hh:mm:ss')
         params.start_time = startTimeTmp
         params.end_time = endTimeTmp
-        params.from = this.from
       }
-      if (this.$refs.chartList) {
-        this.$refs.chartList.initData(params)
-      }
+      this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
+        if (response.code === 200) {
+          this.chartListLoading = false
+          this.dataList = response.data.list.map(item => {
+            return {
+              ...item,
+              hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
+              loaded: false
+            }
+          })
+        }
+      })
     },
 
     /* 图表相关操作--end */
@@ -596,6 +619,7 @@ export default {
               this.searchLabel.assetIds = n.id
             }
           }
+          this.chartDetailInfo = n
         }, 500)
       }
     }
