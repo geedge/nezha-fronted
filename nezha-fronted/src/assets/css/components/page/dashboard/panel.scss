@@ -40,8 +40,26 @@
 
 .panel .el-table {
   border-radius: 5px;
+  border: 1px solid $--border-color-light;
+  .el-table__body-wrapper {
+    height: calc(100% - 35px) !important;
+  }
+  th {
+    border-right: 1px solid $--border-color-light;
+  }
+  tr {
+    background-color: $--background-color-empty;
+  }
+  td {
+    border-bottom: 1px solid $--border-color-light;
+  }
+  th.is-leaf {
+    border-bottom: 1px solid $--border-color-light;
+  }
 }
-
+.panel .el-table--border::after  {
+  background-color: $--border-color-light;
+}
 /* begin-chart list*/
 .table-list {
   margin-top: 0;
