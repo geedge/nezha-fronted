@@ -113,11 +113,14 @@ export default {
               data.keys += key + ':' + data.$labels[key]
             })
           }
-          if (data.keys && !returnData[data.keys]) {
+          if (!data.keys) {
+            data.keys = ' '
+          }
+          if (!returnData[data.keys]) {
             returnData[data.keys] = {}
             returnData[data.keys][key] = data
           }
-          if (data.keys && !returnData[data.keys][key]) {
+          if (!returnData[data.keys][key]) {
             returnData[data.keys][key] = data
           }
           colorIndex++
@@ -195,6 +198,9 @@ export default {
           let value = null
           if (lodash.get(params, label)) {
             value = lodash.get(params, label)
+            if (label === '$value') {
+              value = lodash.get(params)
+            }
           }
           return value || label
         })
