@@ -18,7 +18,7 @@
       <span @click="groupShow"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-down': 'nz-icon-arrow-right'"></i></span>
       {{chartInfo.name}}
     </div>
-    <div class="chart-header__tools">
+    <div class="chart-header__tools" v-if="chartInfo.type !== 'endpointInfo' && chartInfo.type !== 'assetInfo'">
       <span v-if="chartInfo.remark" class="chart-header__tool">
         <el-tooltip :content="chartInfo.remark" effect="light" placement="top">
            <i class="nz-icon nz-icon-info-normal tool__icon"></i>
