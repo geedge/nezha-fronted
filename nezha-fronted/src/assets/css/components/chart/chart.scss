@@ -344,3 +344,8 @@
   width: 100%;
   box-sizing: border-box;
 }
+.no-animation {
+  .vue-grid-item {
+    transition: none
+  }
+}
