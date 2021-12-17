@@ -8,7 +8,22 @@
       label-width="120px"
     >
       <div class="chart-title chart-title-config">
-        System
+       <span class="chart-title-content el-form-item" :class="{
+              'is-error' : systemNameShow[0].error,
+              'hide-input': systemNameShow[0].hideInput
+            }">
+              <i class="nz-icon nz-icon-arrow-down" :class="systemNameShow[0].show?'':'is-active'" @click.stop="showSystemNameShow(0)"></i>
+              <el-input
+                @mousedown.stop
+                v-model="chartConfig.param.datasource[0].name"
+                size="small"
+                @input="(val)=>{systemNameInput(val,0)}"
+                @change="systemNameChange(0)" style="width: 120px"
+                @focus.stop="showsystemInput(0,false)"
+                @blur="showsystemInput(0,true)"
+              />
+              <div v-if="systemNameShow[0].error"  class="el-form-item__error" style="top: 10px;left: 164px"> {{systemNameShow[0].error}}</div>
+        </span>
       </div>
       <div class="system-chart-config" v-loading="loading" v-for="(item, index) in chartConfig.param.datasource " :key="index">
         <div class="system-chart-config-left">
@@ -427,6 +442,12 @@ export default {
       systemData: [],
       loading: false,
       rules: {},
+      systemNameShow: [{
+        error: false,
+        hideInput: true,
+        show: true,
+        oldName: ''
+      }],
       groupList: [],
       selectList: [],
       oldType: '',
@@ -513,8 +534,8 @@ export default {
             valueMapping: [],
             enable: {
               legend: true,
-              valueMapping: true,
-              thresholds: true
+              valueMapping: false,
+              thresholds: false
             },
             datasource: [{
               name: 'System',
@@ -541,8 +562,8 @@ export default {
             valueMapping: [],
             enable: {
               legend: true,
-              valueMapping: true,
-              thresholds: true
+              valueMapping: false,
+              thresholds: false
             },
             datasource: [{
               name: 'System',
@@ -562,6 +583,12 @@ export default {
       this.groupList = this.systemData[0].group
       this.selectList = this.systemData[0].select
       this.oldType = type
+      this.systemNameShow = [{
+        error: false,
+        hideInput: true,
+        show: true,
+        oldName: this.chartConfig.param.datasource[0].name
+      }]
       this.change()
     },
     changeSystem (item) {
@@ -583,12 +610,47 @@ export default {
     systemSelectChange (index) {
       this.chartConfig.param.datasource[index].select = this.selectList.find(item => item.name === this.chartConfig.param.datasource[index].systemSelect)
       this.change()
+    },
+    showSystemNameShow (index) {
+      this.systemNameShow[index].show = !this.systemNameShow[index].show
+      this.$set(this.systemNameShow, index, this.systemNameShow[index])
+    },
+    systemNameInput (val, index) {
+      const findIndex = this.systemNameShow.indexOf(val)
+      const lastIndex = this.systemNameShow.lastIndexOf(val)
+      if (findIndex !== -1 && lastIndex != -1 && lastIndex !== findIndex) {
+        this.systemNameShow[index].error = this.$t('error.nameDuplicate')
+      } else if (!val) {
+        this.systemNameShow[index].error = this.$t('validate.required')
+      } else {
+        this.systemNameShow[index].error = ''
+      }
+    },
+    systemNameChange (index) {
+      if (this.systemNameShow[index].error) {
+        this.expressionName[index] = this.systemNameShow[index].oldName
+        this.systemNameShow[index].error = ''
+      } else if (!this.expressionName[index]) {
+        this.expressionName[index] = this.systemNameShow[index].oldName
+      } else {
+        this.systemNameShow[index].oldName = this.expressionName[index]
+      }
+      this.change()
+    },
+    showsystemInput (index, flag) {
+      this.systemNameShow[index].hideInput = flag
     }
   },
   created () {
     this.init()
   },
   mounted () {
+    this.systemNameShow = [{
+      error: false,
+      hideInput: true,
+      show: true,
+      oldName: this.chartConfig.param.datasource[0].name
+    }]
     this.getSystemData()
   }
 }

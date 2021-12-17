@@ -246,9 +246,9 @@ export default {
             nullType: 'null',
             legend: { placement: 'bottom', values: [] },
             enable: {
-              thresholds: true,
+              thresholds: false,
               legend: true,
-              valueMapping: true
+              valueMapping: false
             },
             thresholds: [{ value: undefined, color: '#eeeeeeff' }]
           }
@@ -262,9 +262,9 @@ export default {
           unit: 2,
           type: 'log',
           enable: {
-            thresholds: true,
+            thresholds: false,
             legend: true,
-            valueMapping: true
+            valueMapping: false
           },
           elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
           param: {
@@ -284,9 +284,9 @@ export default {
             nullType: 'null',
             statistics: 'last',
             enable: {
-              thresholds: true,
+              thresholds: false,
               legend: true,
-              valueMapping: true
+              valueMapping: false
             },
             datasource: [{
               name: 'System',
@@ -311,9 +311,9 @@ export default {
           height: 4,
           type: 'url',
           enable: {
-            thresholds: true,
+            thresholds: false,
             legend: true,
-            valueMapping: true
+            valueMapping: false
           },
           param: {
             url: ''

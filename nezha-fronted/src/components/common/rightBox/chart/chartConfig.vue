@@ -770,8 +770,8 @@ export default {
             thresholds: [],
             enable: {
               legend: true,
-              valueMapping: true,
-              thresholds: true
+              valueMapping: false,
+              thresholds: false
             },
           }
           this.$nextTick(() => {
@@ -793,8 +793,8 @@ export default {
             valueMapping: [],
             enable: {
               legend: true,
-              valueMapping: true,
-              thresholds: true
+              valueMapping: false,
+              thresholds: false
             }
           }
           break
@@ -811,8 +811,8 @@ export default {
             valueMapping: [],
             enable: {
               legend: true,
-              valueMapping: true,
-              thresholds: true
+              valueMapping: false,
+              thresholds: false
             }
           }
           break

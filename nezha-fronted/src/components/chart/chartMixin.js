@@ -82,10 +82,10 @@ export default {
         if (legend.endsWith(',')) {
           legend = legend.substr(0, legend.length - 1)
         }
-        if (data.metric.__name__) {
-          legend += '}'
-        }
       })
+      if (data.metric.__name__) {
+        legend += '}'
+      }
       if (!legend) {
         legend = chartInfo.elements[expressionIndex].expression
       }

@@ -33,7 +33,8 @@ export default {
         x: 0,
         y: 0
       },
-      theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`)
+      theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`),
+      timer: null
     }
   },
   mounted () {
@@ -41,13 +42,19 @@ export default {
   },
   methods: {
     initMap () {
-      let loadPromise
-      this.loadMapConfig().then((mapConfig) => {
-        if (mapConfig && this.map) {
-          loadPromise = this.loadDataCenterMapData()
-        }
-      })
-      return loadPromise
+      if (this.timer) {
+        clearTimeout(this.timer)
+        this.timer = null
+      }
+      this.timer = setTimeout(() => {
+        let loadPromise
+        this.loadMapConfig().then((mapConfig) => {
+          if (mapConfig && this.map) {
+            loadPromise = this.loadDataCenterMapData()
+          }
+        })
+        return loadPromise
+      }, 500)
     },
     loadMapConfig () {
       const vm = this
@@ -65,7 +72,8 @@ export default {
               this.map.remove()
               this.map = null
             }
-            const mapId = 'map' + this.chartInfo.id
+            console.log(1212)
+            const mapId = document.getElementById('map' + this.chartInfo.id)
             const map = L.map(mapId, {
               minZoom: mapConfig.minZoom,
               maxZoom: mapConfig.maxZoom,
@@ -223,7 +231,11 @@ export default {
     }
   },
   beforeDestroy () {
-    // this.map.remove()
+    if (this.timer) {
+      clearTimeout(this.timer)
+      this.timer = null
+    }
+    this.map && this.map.remove()
     this.map = null
   }
 }

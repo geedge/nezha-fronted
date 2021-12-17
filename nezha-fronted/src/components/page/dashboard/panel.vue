@@ -205,8 +205,8 @@ export default {
           legend: { placement: 'bottom', values: [], show: true },
           enable: {
             legend: true,
-            valueMapping: true,
-            thresholds: true
+            valueMapping: false,
+            thresholds: false
           },
           thresholdShow: true,
           thresholds: [{ value: undefined, color: randomcolor() }]
