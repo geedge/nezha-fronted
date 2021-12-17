@@ -154,11 +154,13 @@ export default {
               this.$get('asset/asset/' + this.chartDetailInfo.id).then(res => {
                 this.chartData = res.data
               })
+              break
             }
             if (this.chartInfo.type === 'endpointInfo') {
               this.$get('monitor/endpoint/' + this.chartDetailInfo.id).then(res => {
                 this.chartData = res.data
               })
+              break
             }
             const q = {
               type: this.chartInfo.param.datasource[0].type,
