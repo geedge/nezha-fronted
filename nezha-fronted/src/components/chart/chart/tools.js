@@ -134,8 +134,8 @@ export function getLayoutPosition (arr) {
     })
     let maxX = 0
     lastItem.forEach(last => {
-      if (maxX < last.x) {
-        maxX = last.x
+      if (maxX < last.x + last.span) {
+        maxX = last.x + last.span
       }
     })
     return {

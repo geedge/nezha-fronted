@@ -10,7 +10,11 @@ const panel = {
     headerH: 0.5,
     headerHPadding: 0.5,
     rowHeight: 150,
-    chartListId: ''
+    chartListId: '',
+    chartLastPosition: {
+      x: 0,
+      y: 0
+    }
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -33,6 +37,9 @@ const panel = {
     },
     setPanelNowTimeType (state, nowTimeType) {
       state.nowTimeType = nowTimeType
+    },
+    setChartLastPosition (state, position) {
+      state.chartLastPosition = position
     },
     setHeaderH (state, h) {
       state.headerH = h.headerH
@@ -80,6 +87,9 @@ const panel = {
     },
     getRowHeight (state) {
       return state.rowHeight
+    },
+    getChartLastPosition (state, position) {
+      return state.chartLastPosition
     },
     getChartListId (state, id) {
       return state.chartListId

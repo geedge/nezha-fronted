@@ -126,6 +126,11 @@ export default {
     systemChartConfig,
     otherChartConfig
   },
+  computed: {
+    chartLastPosition () {
+      return this.$store.getters.getChartLastPosition
+    }
+  },
   data () {
     return {
       fromRoute,
@@ -168,6 +173,10 @@ export default {
         }
         if (!params.groupId) {
           params.groupId = 0
+        }
+        if (!params.x || !params.y) {
+          params.x = this.chartLastPosition.x + params.span > 12 ? 0 : this.chartLastPosition.x
+          params.y = this.chartLastPosition.y + 12
         }
         delete params.panel
         if (params.type === 'table') {

@@ -468,7 +468,7 @@
                 <div class='mapping-display'>Title</div>
               </div>
               <el-form-item :prop="'param.columns.' + index + '.title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item" style="flex: 1">
-                <el-input size="small" v-model="item.title" placeholder="regx" @change="change"></el-input>
+                <el-input size="small" v-model="item.title" @change="change"></el-input>
               </el-form-item>
               <div>
                 <div class='mapping-display'>Unit</div>
