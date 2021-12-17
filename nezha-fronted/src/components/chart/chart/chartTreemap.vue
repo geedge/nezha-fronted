@@ -79,7 +79,7 @@ export default {
   methods: {
     initChart (chartOption) {
       this.legends = []
-      chartOption.series = this.initTreeMapData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+      chartOption.series[0] = this.initTreeMapData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       chartOption.tooltip.formatter = this.formatterFunc
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {

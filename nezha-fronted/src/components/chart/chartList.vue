@@ -13,9 +13,9 @@
       :row-height="stepWidth"
       :use-css-transforms="true"
       :vertical-compact="true"
-      :useCssTransforms="false"
       :style="{
-        'margin-top':isGroup ? '0' : (-1 * (stepWidth + 14) + 'px')
+        'margin-top':isGroup ? '0' : (-1 * (stepWidth + 14) + 'px'),
+        'padding-bottom': isGroup ? '0' : (200 + 'px')
       }"
     >
       <grid-item

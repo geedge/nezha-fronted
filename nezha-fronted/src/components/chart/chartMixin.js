@@ -45,7 +45,7 @@ export default {
             if (chartInfo.param.stack) { // 堆叠
               s.stack = 'Total'
             }
-            if (chartInfo.param.enable && chartInfo.param.enable.legend && !lodash.isEmpty(chartInfo.param.thresholds)) { // 阈值
+            if (chartInfo.param.enable && chartInfo.param.enable.thresholds && !lodash.isEmpty(chartInfo.param.thresholds) && chartInfo.param.thresholds.length) { // 阈值
               s.markLine = {
                 symbol: 'circle',
                 symbolSize: 5
@@ -94,7 +94,8 @@ export default {
       if (!alias) {
         alias = legend
       }
-      const name = alias + '-' + dataIndex
+      // proj_status_
+      const name = alias
 
       // 若需要统计，处理统计数据
       const statisticsTypes = chartInfo.param.legend ? chartInfo.param.legend.values : ''

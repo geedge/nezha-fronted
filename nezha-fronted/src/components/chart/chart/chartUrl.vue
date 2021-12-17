@@ -37,6 +37,9 @@ export default {
         }
         iframe.src = data
       })
+    },
+    resize () {
+
     }
   },
   watch: {
