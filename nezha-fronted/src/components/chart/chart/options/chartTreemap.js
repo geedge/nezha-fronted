@@ -41,18 +41,21 @@ const chartTreemapOption = {
       levels: [
         {
           itemStyle: {
+            borderColor: 'rgba(0,0,0,0)',
             borderWidth: 0,
             gapWidth: 5
           }
         },
         {
           itemStyle: {
+            borderColor: 'rgba(0,0,0,0)',
             gapWidth: 1
           }
         },
         {
           colorSaturation: [0.35, 0.5],
           itemStyle: {
+            borderColor: 'rgba(0,0,0,0)',
             gapWidth: 1,
             borderColorSaturation: 0.6
           }
