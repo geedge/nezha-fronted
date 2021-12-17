@@ -334,7 +334,7 @@ export default {
           })
           setTimeout(() => {
             this.firstInit = false
-          }, 200)
+          }, 500)
           this.gridLayoutLoading = false
         })
       }
