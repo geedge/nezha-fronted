@@ -86,7 +86,7 @@
 <script>
 import VueGridLayout from 'vue-grid-layout'
 import { fromRoute } from '@/components/common/js/constants'
-import { getGroupHeight, getLayoutPosition } from './chart/tools'
+import {getGroupHeight, getLayoutPosition, isGroup} from './chart/tools'
 import panelChart from '@/components/chart/panelChart'
 import bus from '@/libs/bus'
 import groupData from '@/components/chart/tempGroup'
@@ -289,8 +289,10 @@ export default {
         this.firstInit = true
         this.gridLayoutLoading = true
         this.noData = !n || n.length < 1
-        const position = getLayoutPosition(n)
-        this.$store.commit('setChartLastPosition', position)
+        if (!this.isGroup) {
+          const position = getLayoutPosition(n)
+          this.$store.commit('setChartLastPosition', position)
+        }
         const tempList = n.map(item => {
           let param = ''
           let height = ''

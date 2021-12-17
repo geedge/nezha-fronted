@@ -174,9 +174,13 @@ export default {
         if (!params.groupId) {
           params.groupId = 0
         }
-        if (!params.x || !params.y) {
+        if (!params.x && !params.y) {
           params.x = this.chartLastPosition.x + params.span > 12 ? 0 : this.chartLastPosition.x
           params.y = this.chartLastPosition.y + 12
+        }
+        if (!params.x && !params.y && params.groupId) { // group 内的坐标需要单独计算
+          params.x = 0
+          params.y = 999
         }
         delete params.panel
         if (params.type === 'table') {
