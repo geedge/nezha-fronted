@@ -66,7 +66,7 @@
               </el-select>
             </el-form-item>
             <el-form-item
-              :label="$t('dashboard.panel.chartForm.result')"
+              :label="$t('dashboard.panel.chartForm.limit')"
               class="form-item--half-width"
               prop="param.limit"
             >

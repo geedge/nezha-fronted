@@ -5,6 +5,8 @@
     <chart-header
       v-if="!isFullscreen"
       :is-group="isGroup(chartInfo.type)"
+      :isError="isError"
+      :chartData="chartData"
       :chart-info="chartInfo"
       @edit-chart="$emit('edit-chart', chartInfo)"
       @refresh="refresh"
@@ -19,6 +21,7 @@
       :chart-info="chartInfo"
       :panelLock="panelLock"
       :from="from"
+      :isError="isError"
       :is-fullscreen="isFullscreen"
       :loading="loading"
       v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
@@ -53,7 +56,8 @@ export default {
   data () {
     return {
       chartData: [],
-      loading: true
+      loading: true,
+      isError: false
     }
   },
   computed: {
@@ -95,6 +99,7 @@ export default {
       this.query(elements, startTime, endTime, step)
     },
     query (elements, startTime, endTime, step) {
+      this.isError = false
       try {
         switch (this.chartInfo.datasource) {
           case 'metrics':
@@ -142,6 +147,7 @@ export default {
                   chartData.push(r.data.result)
                 } else {
                   chartData.push({ error: r.msg || r.error || r })
+                  this.isError = true
                 }
               })
               this.chartData = chartData

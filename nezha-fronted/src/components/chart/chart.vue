@@ -1,7 +1,7 @@
 <template>
   <div :style="chartInfo.param.showHeader ? '' : 'padding-top: 15px;'" class="nz-chart" :class="chartInfo.param.showHeader ? '' : 'no-header'" >
     <loading :loading="loading"></loading>
-    <chart-no-data v-if="isNoData"></chart-no-data>
+    <chart-no-data v-if="isNoData || isError"></chart-no-data>
     <template v-else>
       <chart-time-series
         v-if="isTimeSeries(chartInfo.type)"
@@ -194,7 +194,8 @@ export default {
     isFullscreen: Boolean,
     loading: Boolean,
     panelLock: Boolean,
-    from: String
+    from: String,
+    isError: Boolean
   },
   computed: {
     isNoData () {
