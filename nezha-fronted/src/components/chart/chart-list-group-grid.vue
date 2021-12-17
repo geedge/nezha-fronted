@@ -408,47 +408,37 @@ export default {
     moveEvent: function (i, newX, newY) {
       const msg = 'MOVE i=' + i + ', X=' + newX + ', Y=' + newY
       this.eventLog.push(msg)
-      console.log(msg)
     },
     movedEvent: function (i, newX, newY) {
       const msg = 'MOVED i=' + i + ', X=' + newX + ', Y=' + newY
       this.eventLog.push(msg)
-      console.log(msg)
     },
     resizeEvent: function (i, newH, newW, newHPx, newWPx) {
       const msg = 'RESIZE i=' + i + ', H=' + newH + ', W=' + newW + ', H(px)=' + newHPx + ', W(px)=' + newWPx
       this.eventLog.push(msg)
-      console.log(msg)
     },
     resizedEvent: function (i, newX, newY, newHPx, newWPx) {
       const msg = 'RESIZED i=' + i + ', X=' + newX + ', Y=' + newY + ', H(px)=' + newHPx + ', W(px)=' + newWPx
       this.eventLog.push(msg)
-      console.log(msg)
     },
     containerResizedEvent: function (i, newH, newW, newHPx, newWPx) {
       const msg = 'CONTAINER RESIZED i=' + i + ', H=' + newH + ', W=' + newW + ', H(px)=' + newHPx + ', W(px)=' + newWPx
       this.eventLog.push(msg)
-      console.log(msg)
     },
     layoutCreatedEvent: function (newLayout) {
       this.eventLog.push('Created layout')
-      console.log('Created layout: ', newLayout)
     },
     layoutBeforeMountEvent: function (newLayout) {
       this.eventLog.push('beforeMount layout')
-      console.log('beforeMount layout: ', newLayout)
     },
     layoutMountedEvent: function (newLayout) {
       this.eventLog.push('Mounted layout')
-      console.log('Mounted layout: ', newLayout)
     },
     layoutReadyEvent: function (newLayout) {
       this.eventLog.push('Ready layout')
-      console.log('Ready layout: ', newLayout)
     },
     layoutUpdatedEvent: function (newLayout) {
       this.eventLog.push('Updated layout')
-      console.log('Updated layout: ', newLayout)
     },
     tempDomInit () {
       const span = document.querySelector('.temp-dom')

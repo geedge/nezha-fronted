@@ -5,6 +5,8 @@
     <chart-header
       v-if="!isFullscreen"
       :is-group="isGroup(chartInfo.type)"
+      :isError="isError"
+      :chartData="chartData"
       :chart-info="chartInfo"
       @edit-chart="$emit('edit-chart', chartInfo)"
       @refresh="refresh"
@@ -18,6 +20,8 @@
       :chart-data="chartData"
       :chart-info="chartInfo"
       :panelLock="panelLock"
+      :from="from"
+      :isError="isError"
       :is-fullscreen="isFullscreen"
       :loading="loading"
       v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
@@ -46,12 +50,14 @@ export default {
     timeRange: Array, // 时间范围
     isFullscreen: Boolean,
     panelLock: Boolean,
-    chartDetailInfo: Object
+    chartDetailInfo: Object,
+    from: String
   },
   data () {
     return {
       chartData: [],
-      loading: true
+      loading: true,
+      isError: false
     }
   },
   computed: {
@@ -93,6 +99,7 @@ export default {
       this.query(elements, startTime, endTime, step)
     },
     query (elements, startTime, endTime, step) {
+      this.isError = false
       try {
         switch (this.chartInfo.datasource) {
           case 'metrics':
@@ -128,6 +135,7 @@ export default {
                   chartData.push(r.data.result)
                 } else {
                   chartData.push({ error: r.msg || r.error || r })
+                  this.isError = true
                 }
               })
               this.chartData = chartData
@@ -194,7 +202,6 @@ export default {
               }
             }
             if (this.chartInfo.type === 'group') {
-              console.log(this.chartInfo.children)
               this.chartData = [...this.chartInfo.children]
               this.groupInit()
             }
@@ -263,7 +270,6 @@ export default {
         this.chartInfo.height = height + this.headerHPadding
         this.chartInfo.h = height + this.headerHPadding
       } else {
-        console.log(this.headerH)
         this.chartInfo.height = this.headerH + height
         this.chartInfo.h = this.headerH + height
       }

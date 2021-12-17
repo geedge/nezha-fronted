@@ -6,7 +6,7 @@
       :class="{'show-top':showTopBtn}"
       :data-list="dataList"
       :nowTimeType="nowTimeType"
-      :from="fromRoute.panel"
+      :from="from"
       :panel-lock="panelLock"
       :isGroup="true"
       :time-range="searchTime"
@@ -25,6 +25,7 @@ export default {
   name: 'chart-group',
   props: {
     panelLock: Boolean,
+    from: String
   },
   mixins: [chartMixin, chartFormat],
   computed: {
@@ -52,7 +53,6 @@ export default {
     chartData: {
       immediate: true,
       handler (n) {
-        console.log(n)
         this.$nextTick(() => {
           this.dataList = JSON.parse(JSON.stringify(n))
         })

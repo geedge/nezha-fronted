@@ -21,7 +21,7 @@
           <el-select
             id="chart-box-type"
             v-model="chartConfig.type"
-            :disabled="chartConfig.type==='group'&&chartConfig.children&&chartConfig.children.length"
+            :disabled="!!(chartConfig.type==='group'&&chartConfig.children&&chartConfig.children.length)"
             :placeholder="$t('el.select.placeholder')"
             popper-class="right-box-select-top prevent-clickoutside"
             size="small"
@@ -30,7 +30,7 @@
             <el-option
               v-for="item in chartTypeList"
               :key="item.id"
-              :disabled="item.id==='group' && chartConfig.isGroup"
+              :disabled="item.id==='group' && !!chartConfig.groupId"
               :label="item.name"
               :value="item.id">
               <span class="panel-dropdown-label-txt" >{{item.name}}</span>
@@ -165,6 +165,18 @@ export default {
         {
           id: 'group',
           name: this.$t('dashboard.panel.chartForm.typeVal.group.label')
+        },
+        {
+          id: 'map',
+          name: this.$t('dashboard.panel.chartForm.typeVal.map.label')
+        },
+        {
+          id: 'carousel',
+          name: this.$t('dashboard.panel.chartForm.typeVal.carousel.label')
+        },
+        {
+          id: 'hexagonFigure',
+          name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
         }
       ]
     }

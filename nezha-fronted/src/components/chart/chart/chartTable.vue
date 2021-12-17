@@ -57,7 +57,6 @@ export default {
   },
   methods: {
     initChart () {
-      console.log(this.chartInfo, this.chartData)
       this.columns = this.chartInfo.param.columns
       this.chartInfo.param.valueMapping.forEach((item) => {
         if (this.valueMapping[item.column]) {
@@ -68,7 +67,6 @@ export default {
       })
       const data = this.initTableData(this.chartInfo, this.chartData)
       const arr = []
-      console.log(data)
       Object.keys(data).forEach(key => {
         arr.push(data[key])
       })
@@ -80,18 +78,22 @@ export default {
       })
       this.tableData = arr
       this.$refs.dataTable.doLayout()
-      console.log(data)
     },
     initTableData (chartInfo, originalDatas) {
       let colorIndex = 0
       const returnData = {}
       const arr = chartInfo.param.indexs.split(',')
-      console.log(returnData)
       originalDatas.forEach((originalData, expressionIndex) => {
-        const key = chartInfo.elements[expressionIndex].name || expressionIndex
+        let key = expressionIndex
+        if (chartInfo.elements && chartInfo.elements[expressionIndex].name) {
+          key = chartInfo.elements[expressionIndex].name
+        }
+        if (chartInfo.datasource == 'system' && chartInfo.param.datasource[0].name) {
+          key = chartInfo.param.datasource[0].name
+        }
         originalData.forEach((data, dataIndex) => {
           data.$labels = data.metric
-          const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
+          const value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
           const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
           // const mapping = this.selectTableMapping(value, chartInfo.param.valueMapping)
           data.$value = value
@@ -128,7 +130,7 @@ export default {
       this.columns.forEach((column) => {
         if (valueMapping[column.title]) {
           obj[column.title + 'mapping'] = ''
-          if (chartInfo.param.enable && this.chartInfo.param.enable.valueMapping) {
+          if (this.chartInfo.param.enable && this.chartInfo.param.enable.valueMapping) {
             valueMapping[column.title].forEach(item => {
               const rowValue = row.display[column.title + 'display']
               if (item.type === 'value') {

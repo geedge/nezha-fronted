@@ -1,7 +1,7 @@
 <template>
   <div class="overview">
     <div class="content-col-content">
-      <div id="map" style="height: 100%; width: 100%"></div>
+      <div :id="'map' + chartInfo.id" style="height: 100%; width: 100%" :style="theme=='light'? '': ' filter: invert(1) hue-rotate(0.5turn);opacity: 0.75;'"></div>
     </div>
     <!--自定义地图鼠标悬浮提示dom，避免被overflow：hidden裁剪-->
     <div :style="{'left': `${tooltip.x}px`, 'top': `${tooltip.y}px`}" class="my-pane"></div>
@@ -32,7 +32,8 @@ export default {
       tooltip: {
         x: 0,
         y: 0
-      }
+      },
+      theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`)
     }
   },
   mounted () {
@@ -64,7 +65,8 @@ export default {
               this.map.remove()
               this.map = null
             }
-            const map = L.map('map', {
+            const mapId = 'map' + this.chartInfo.id
+            const map = L.map(mapId, {
               minZoom: mapConfig.minZoom,
               maxZoom: mapConfig.maxZoom,
               attributionControl: false,
@@ -149,7 +151,6 @@ export default {
               }
               shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), { sticky: false, pane: 'myPane', direction: 'left', data: dcStat })
               shadowMarker.on('mouseover', (param) => {
-                console.log(param)
                 const point = param.containerPoint
                 const event = param.originalEvent
                 const boxWidth = window.innerWidth / 2
@@ -218,9 +219,12 @@ export default {
         }, 100); */
     },
     resize () {
-      console.log(this.map);
       this.initMap()
     }
+  },
+  beforeDestroy () {
+    // this.map.remove()
+    this.map = null
   }
 }
 </script>

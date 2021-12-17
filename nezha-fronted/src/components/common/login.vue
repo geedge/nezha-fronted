@@ -153,9 +153,9 @@ export default {
   methods: {
     ...mapActions(['loginSuccess']),
     login () {
-      // if (this.loading || !this.license.valid || !this.license.token) {
-      //   return
-      // }
+      if (this.loading || !this.license.valid || !this.license.token) {
+        return
+      }
       if (this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
         this.loading = true
         this.$post('/sys/login', this.loginData).then(res => {
@@ -355,7 +355,7 @@ export default {
     },
     downloadTxt () {
       const element = document.createElement('a')
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponentComponent(this.fileContent))
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.fileContent))
       element.setAttribute('download', 'Nezha recovery codes')
       element.style.display = 'none'
       element.click()

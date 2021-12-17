@@ -74,7 +74,6 @@ export default {
             stat.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(stat.value, null, -1, 2)
             stat.mapping = this.selectMapping(stat.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             this.statData.push(stat)
-            console.log(this.statData)
             colorIndex++
           })
         })

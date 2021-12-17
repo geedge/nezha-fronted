@@ -157,6 +157,7 @@ import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import { fromRoute } from '@/components/common/js/constants'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
+// import chartData from './testData'
 
 export default {
   name: 'panel',
@@ -515,6 +516,7 @@ export default {
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.chartListLoading = false
+          // response = chartData
           this.dataList = response.data.list.map(item => {
             return {
               ...item,

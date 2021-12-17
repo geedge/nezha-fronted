@@ -396,7 +396,6 @@ export default {
       this.chartConfig.param.columns[index].show = !this.chartConfig.param.columns[index].show
     },
     tagsChange (newTags) {
-      console.log(newTags, newTags)
       this.chartConfig.param.tags = newTags
       this.chartConfig.param.indexs = newTags.map(item => item.text).join(',')
       this.change()

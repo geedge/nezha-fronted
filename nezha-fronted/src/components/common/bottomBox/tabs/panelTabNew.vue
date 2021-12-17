@@ -95,7 +95,7 @@
         </div>
       </template>
       <!--图表-->
-      <div id="tableList" class="table-list">
+      <div id="tableList" class="table-list" style="padding-top: 0">
         <div id="dashboardScrollbar" ref="dashboardScrollbar" class="table-list-box">
           <div class="box-content" v-loading="chartListLoading">
             <chart-list
@@ -105,7 +105,7 @@
               :class="{'show-top':showTopBtn}"
               :data-list="dataList"
               :nowTimeType="nowTimeType"
-              :from="fromRoute.panel"
+              :from="from"
               :panel-lock="panelLock"
               :time-range="searchTime"
               @edit-chart="editChart"
@@ -120,7 +120,22 @@
       </div>
     </nz-bottom-data-list>
     <transition name="right-box">
-      <chart-box v-if="rightBox.chart.show" ref="addChartModal" :chart="chart" :from="from" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
+<!--      <chart-box v-if="rightBox.chart.show" ref="addChartModal" :chart="chart" :from="from" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>-->
+      <chart-right-box
+        v-if="chartRightBoxShow"
+        v-loading="rightBox.loading"
+        ref="addChartModal"
+        :chart="chart"
+        :from="from"
+        :panel-data="panelData"
+        :show-panel="showPanel"
+        @close="closeRightBox"
+        @reload="panelReload"
+        @reloadOnlyPanel="panelReloadOnlyPanel"
+        @delete-chart="delChart"
+        @on-create-success="createSuccess"
+        @on-delete-success="delChartOk"
+      ></chart-right-box>
     </transition>
     <transition name="right-box">
       <chart-temp-box v-if="rightBox.chartTemp.show" :from="from" :obj="chart" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @on-create-success="createSuccess"></chart-temp-box>
@@ -129,7 +144,8 @@
 </template>
 
 <script>
-import chartBox from '../../../page/dashboard/chartBox'
+// import chartBox from '../../../page/dashboard/chartBox'
+import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import chartList from '@/components/chart/chartList'
 import bus from '../../../../libs/bus'
 import subDataListMixin from '@/components/common/mixin/subDataList'
@@ -148,6 +164,14 @@ export default {
     paramsType: {
       type: String,
       default: 'dashboard'
+    }
+  },
+  computed: {
+    chartRightBoxShow () {
+      return this.$store.getters.getShowRightBox
+    },
+    delChartFlag () {
+      return this.$store.getters.getDelChart
     }
   },
   data () {
@@ -237,7 +261,7 @@ export default {
     }
   },
   components: {
-    chartBox,
+    chartRightBox,
     chartList,
     nzBottomDataList,
     topToolMoreOptions,
@@ -255,6 +279,25 @@ export default {
     },
     panelReloadForDel () {
       this.getTableData(this.obj.id)
+    },
+    panelReload (clearShowPanel) {
+      this.getTableData(clearShowPanel)
+    },
+    panelReloadOnlyPanel () { // 仅刷新panel数据
+      if (!this.hasButton('panel_view')) {
+        return
+      }
+      this.$get('visual/panel?pageSize=-1').then(response => {
+        if (response.code === 200) {
+          this.panelData = response.data.list
+          for (let i = 0; i < this.panelData.length; i++) {
+            if (this.panelData[i].id == this.showPanel.id) {
+              this.showPanel = this.panelData[i]
+              break
+            }
+          }
+        }
+      })
     },
     /* 图表相关操作--start */
     addChart () {
@@ -275,6 +318,7 @@ export default {
     newChart () {
       return JSON.parse(JSON.stringify(this.blankChart))
     },
+
     // 切换tab
     changeTab (tab) {
       this.$emit('changeTab', tab)
@@ -282,6 +326,8 @@ export default {
     closeRightBox (refresh) {
       this.rightBox.chart.show = false
       this.rightBox.chartTemp.show = false
+      this.chart = {}
+      this.$store.dispatch('clearPanel')
       if (refresh) {
         this.refresh()
         if (this.from === fromRoute.chartTemp) {
@@ -357,19 +403,25 @@ export default {
         const startTimeTmp = bus.timeFormate(now[0].getTime(), 'yyyy-MM-dd hh:mm:ss')
         params.start_time = startTimeTmp
         params.end_time = endTimeTmp
+        params.from = this.from
       }
-      this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
-        if (response.code === 200) {
-          this.chartListLoading = false
-          this.dataList = response.data.list.map(item => {
-            return {
-              ...item,
-              hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
-              loaded: false
-            }
-          })
-        }
-      })
+      if (this.from !== 'chartTemp') {
+        this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
+          if (response.code === 200) {
+            this.chartListLoading = false
+            this.dataList = response.data.list.map(item => {
+              return {
+                ...item,
+                hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
+                loaded: false
+              }
+            })
+          }
+        })
+      } else {
+        this.chartListLoading = false
+        this.dataList = this.panelDataList
+      }
     },
 
     /* 图表相关操作--end */
@@ -423,11 +475,6 @@ export default {
         if (this.from === this.fromRoute.chartTemp) {
           if (this.obj.type === 'group') {
             this.$get('/visual/panel/chart', { ids: this.obj.id }).then(res => {
-              res.data.list.forEach(item => {
-                if (!item.children) {
-                  item.children = []
-                }
-              })
               this.panelDataList = res.data.list
               if (this.panelDataList.length > 0) {
                 this.showPanel.id = this.filter.panelId = 0
@@ -594,6 +641,26 @@ export default {
           this.$message.error(res.msg)
         }
       })
+    },
+    disposeChart () {
+      const chartInfo = this.$store.getters.getChart
+      const groupId = this.$store.getters.getGroupId
+      const type = this.$store.getters.getType
+      if (type === 'add') {
+        this.addChart()
+      }
+      if (type === 'edit') {
+        this.editChart(chartInfo)
+      }
+      if (type === 'addGroupItem') {
+        this.addGroupItem(groupId)
+      }
+      if (type === 'delete') {
+        this.delChart(chartInfo)
+      }
+      if (type === 'duplicate') {
+        this.editChart(chartInfo, true)
+      }
     }
   },
   mounted () {
@@ -622,7 +689,25 @@ export default {
           this.chartDetailInfo = n
         }, 500)
       }
-    }
+    },
+    chartRightBoxShow: {
+      immediate: false,
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.disposeChart()
+        }
+      }
+    },
+    delChartFlag: {
+      immediate: false,
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.disposeChart()
+        }
+      }
+    },
   },
   beforeDestroy () {
     document.querySelector('#tableList') && document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)

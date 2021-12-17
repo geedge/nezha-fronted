@@ -1,5 +1,18 @@
 <template>
   <div :class="{'chart-header--float': !chartInfo.param.showHeader}" class="chart-header">
+    <span v-if="isError">
+     <el-popover
+       placement="top-start"
+       :close-delay=10
+       trigger="hover"
+       popper-class="chart-error-popper">
+            <div >{{errorText}}</div>
+            <span slot="reference" class="panel-info-corner panel-info-corner--error">
+              <i class="nz-icon nz-icon-warning fa"></i>
+              <span class="panel-info-corner-inner"></span>
+           </span>
+          </el-popover>
+    </span>
     <div class="chart-header__title" v-if="!isGroup">{{chartInfo.name}}</div>
     <div class="chart-header__title" v-else >
       <span @click="groupShow"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-down': 'nz-icon-arrow-right'"></i></span>
@@ -62,7 +75,12 @@ export default {
     error: {
       type: String,
       default: ''
-    }
+    },
+    isError: {
+      type: Boolean,
+      default: false
+    },
+    chartData: {}
   },
   data () {
     return {
@@ -101,6 +119,17 @@ export default {
     },
     groupShow () {
       this.$emit('groupShow', !this.chartInfo.param.collapse)
+    }
+  },
+  watch: {
+    isError: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+          console.log(this.chartData)
+          this.errorText = this.chartData.filter(item => item.error).map(item => item.error).join('\n')
+        }
+      }
     }
   }
 }

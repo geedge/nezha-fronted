@@ -1062,7 +1062,6 @@ export default {
     },
     // input框监听是按删除还是回车
     enter (val, e) {
-      console.log(val, e)
       const keyCode = window.event ? e.keyCode : e.which
       if (val == 'ID' && keyCode == 13) {
         const id = /^[0-9]*$/

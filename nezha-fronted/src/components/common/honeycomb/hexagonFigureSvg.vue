@@ -244,7 +244,6 @@ export default {
         setTimeout(() => {
           this.hexagonData = JSON.parse(JSON.stringify(this.hexData))
           const box = `#${this.hexagonSvgID}`
-          console.log(box,document.getElementById(this.hexagonSvgID))
           if (!document.getElementById(this.hexagonSvgID)) {
             return
           }
