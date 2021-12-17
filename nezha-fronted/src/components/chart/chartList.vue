@@ -3,6 +3,7 @@
     <grid-layout
       ref="layout"
       v-if="gridLayoutShow"
+      :class="firstInit ? 'no-animation' : ''"
       :col-num="12"
       :maxRows="12"
       :is-draggable="!panelLock"
@@ -124,6 +125,7 @@ export default {
       fromRoute,
       gridLayoutLoading: false,
       gridLayoutShow: false,
+      firstInit: true,
       filter: {}, // chart列表查询条件
       copyDataList: [],
       noData: false, // no data
@@ -267,7 +269,7 @@ export default {
     }
   },
   created () {
-
+    this.firstInit = true
   },
   mounted () {
     this.init()
@@ -281,6 +283,7 @@ export default {
       deep: true,
       handler (n, o) {
         this.gridLayoutShow = false
+        this.firstInit = true
         this.gridLayoutLoading = true
         this.noData = !n || n.length < 1
         const tempList = n.map(item => {
@@ -322,6 +325,9 @@ export default {
           setTimeout(() => {
             this.gridLayoutShow = true
           })
+          setTimeout(() => {
+            this.firstInit = false
+          },200)
           this.gridLayoutLoading = false
         })
       }

@@ -25,14 +25,15 @@
               <div v-if="systemNameShow[0].error"  class="el-form-item__error" style="top: 10px;left: 164px"> {{systemNameShow[0].error}}</div>
         </span>
       </div>
-      <div class="system-chart-config" v-loading="loading" v-for="(item, index) in chartConfig.param.datasource " :key="index">
+      <transition name="el-zoom-in-top">
+        <div class="system-chart-config" v-loading="loading" v-for="(item, index) in chartConfig.param.datasource " :key="index" v-show="systemNameShow[0].show">
         <div class="system-chart-config-left">
           <ul>
             <li
               v-for="(system,index1) in systemData"
               :key="index1"
               class="system-chart-item"
-              :class="item.type === system.system ? 'is-select' : ''"
+              :class="system.name == chartConfig.param.datasource[index].type  ? 'is-select' : ''"
               @click="changeSystem(system, index)"
             >{{system.name}}</li>
           </ul>
@@ -44,7 +45,7 @@
               class="form-item--half-width"
               prop="param.systemGroup"
             >
-              <el-select size="small" v-model="item.systemGroup" multiple collapse-tags :placeholder="$t('el.select.placeholder')" @change="systemGroupChange(index)">
+              <el-select size="small" v-model="item.systemGroup" multiple collapse-tags :placeholder="$t('el.select.placeholder')" @change="systemGroupChange(index)"   popper-class="right-box-select-top prevent-clickoutside">
                   <el-option v-for="group in groupList" :value="group.name" :key="group.name" :label="group.name"/>
               </el-select>
             </el-form-item>
@@ -54,7 +55,7 @@
               class="form-item--half-width"
               prop="param.systemSelect"
             >
-              <el-select size="small" v-model="item.systemSelect" :placeholder="$t('el.select.placeholder')" @change="systemSelectChange(index)">
+              <el-select size="small" v-model="item.systemSelect" :placeholder="$t('el.select.placeholder')" @change="systemSelectChange(index)" popper-class="right-box-select-top prevent-clickoutside">
                 <el-option v-for="selectItem in selectList" :value="selectItem.name" :key="selectItem.name" :label="selectItem.name"/>
               </el-select>
             </el-form-item>
@@ -90,6 +91,7 @@
           </div>
         </div>
       </div>
+      </transition>
       <!--title-->
       <div class="form__sub-title">
         <span>{{$t('dashboard.panel.chartForm.displayConfig')}}</span>
