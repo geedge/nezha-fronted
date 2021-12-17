@@ -26,7 +26,7 @@ import topology from '@/components/common/project/topologyL5'
 import chartMixin from '@/components/chart/chartMixin'
 import bus from '@/libs/bus'
 export default {
-  name: 'chartAutoCarousel',
+  name: 'chartAutotopology',
   data () {
     return {
       topologyLoading: false,

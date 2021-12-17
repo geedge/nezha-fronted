@@ -51,8 +51,8 @@ export function isTimeSeries (type) {
   return type === chartType.line || type === chartType.area || type === chartType.point
 }
 
-export function isHexagonFigure (type) {
-  return type === chartType.hexagonFigure
+export function isHexagon (type) {
+  return type === chartType.hexagon
 }
 export function isChartPie (type) {
   return type === chartType.pie
@@ -82,8 +82,8 @@ export function isDiagram (type) {
 export function isGroup (type) {
   return type === chartType.group
 }
-export function isAutoCarousel (type) {
-  return type === chartType.carousel
+export function isAutotopology (type) {
+  return type === chartType.topology
 }
 export function isAssetInfo (type) {
   return type === chartType.assetInfo

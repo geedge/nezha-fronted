@@ -101,7 +101,7 @@
         </el-form-item>
       </div>
       <!--content-->
-      <div v-if="!isGroup(chartConfig.type)" class="form__sub-title">
+      <div v-if="contentShow(chartConfig.type)" class="form__sub-title">
         <span>{{$t('dashboard.panel.chartForm.content')}}</span>
         <span style="cursor: pointer" v-if="isDiagram(chartConfig.type)"><i class="nz-icon nz-icon-edit" @click="topologyDialogChange(true)"></i></span>
       </div>
@@ -171,11 +171,11 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.map.label')
         },
         {
-          id: 'carousel',
-          name: this.$t('dashboard.panel.chartForm.typeVal.carousel.label')
+          id: 'topology',
+          name: this.$t('dashboard.panel.chartForm.typeVal.topology.label')
         },
         {
-          id: 'hexagonFigure',
+          id: 'hexagon',
           name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
         }
       ]

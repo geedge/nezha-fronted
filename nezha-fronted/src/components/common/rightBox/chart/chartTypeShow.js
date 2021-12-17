@@ -138,6 +138,16 @@ export default {
           return false
         default: return false
       }
+    },
+    contentShow (type) {
+      switch (type) {
+        case 'group' :
+        case 'map' :
+        case 'topology' :
+        case 'hexagon' :
+          return false
+        default: return true
+      }
     }
   }
 }

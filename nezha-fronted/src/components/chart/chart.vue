@@ -29,7 +29,7 @@
       ></chart-bar>
       <chartHexagon
         :ref="'chart'+chartInfo.id"
-        v-if="isHexagonFigure(chartInfo.type)"
+        v-if="isHexagon(chartInfo.type)"
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
@@ -83,14 +83,14 @@
         :is-fullscreen="isFullscreen"
         :chart-option="chartOption"
       ></chart-diagram>
-      <chartAutoCarousel
+      <chartAutotopology
         :ref="'chart' + chartInfo.id"
-        v-if="isAutoCarousel(chartInfo.type)"
+        v-if="isAutotopology(chartInfo.type)"
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
-      ></chartAutoCarousel>
+      ></chartAutotopology>
       <chartMap
         :ref="'chart' + chartInfo.id"
         v-if="isMap(chartInfo.type)"
@@ -140,7 +140,7 @@
 <script>
 import loading from '@/components/common/loading'
 import chartAssetInfo from './chart/chartAssetInfo'
-import chartAutoCarousel from './chart/chartAutoCarousel'
+import chartAutotopology from './chart/chartAutotopology'
 import chartBar from './chart/chartBar'
 import chartClock from './chart/chartClock'
 import chartDiagram from './chart/chartDiagram'
@@ -159,7 +159,7 @@ import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
 import chartMap from './chart/chartMap'
-import { getOption, isTimeSeries, isHexagonFigure, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutoCarousel, isMap, isAssetInfo, isEndpointInfo, isTable } from './chart/tools'
+import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -167,7 +167,7 @@ export default {
   components: {
     loading,
     chartAssetInfo,
-    chartAutoCarousel,
+    chartAutotopology,
     chartBar,
     chartClock,
     chartDiagram,
@@ -211,7 +211,7 @@ export default {
   },
   methods: {
     isTimeSeries,
-    isHexagonFigure,
+    isHexagon,
     isChartPie,
     isChartBar,
     isUrl,
@@ -221,7 +221,7 @@ export default {
     isStat,
     isDiagram,
     isGroup,
-    isAutoCarousel,
+    isAutotopology,
     isAssetInfo,
     isEndpointInfo,
     isMap,

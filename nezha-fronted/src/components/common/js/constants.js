@@ -405,8 +405,7 @@ export const chartType = {
   endpointInfo: 'endpointInfo',
   topology: 'topology',
   map: 'map',
-  hexagonFigure: 'hexagonFigure',
-  carousel: 'carousel'
+  hexagon: 'hexagon'
 }
 
 export const chartLegendPlacement = {

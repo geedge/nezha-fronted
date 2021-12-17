@@ -188,7 +188,7 @@ export default {
             break
           }
           case 'misc': {
-            if (this.chartInfo.type === 'hexagonFigure') {
+            if (this.chartInfo.type === 'hexagon') {
               this.getHexagonFigureData().then(res => {
                 this.chartData = res
               }).finally(() => {
@@ -207,8 +207,8 @@ export default {
               this.chartData = [...this.chartInfo.children]
               this.groupInit()
             }
-            if (this.chartInfo.type === 'carousel') {
-              this.chartData = ['carousel']
+            if (this.chartInfo.type === 'topology') {
+              this.chartData = ['topology']
             }
             if (this.chartInfo.type === 'map') {
               this.chartData = ['map']
