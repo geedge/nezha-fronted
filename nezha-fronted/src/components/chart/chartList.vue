@@ -14,7 +14,7 @@
       :use-css-transforms="true"
       :vertical-compact="true"
       :style="{
-        'margin-top':isGroup ? '0' : (-1 * (stepWidth + 14) + 'px'),
+        'margin-top': layoutMargintop,
         'padding-bottom': isGroup ? '0' : (200 + 'px')
       }"
     >
@@ -86,7 +86,7 @@
 <script>
 import VueGridLayout from 'vue-grid-layout'
 import { fromRoute } from '@/components/common/js/constants'
-import {getGroupHeight, getLayoutPosition, isGroup} from './chart/tools'
+import { getGroupHeight, getLayoutPosition, isGroup } from './chart/tools'
 import panelChart from '@/components/chart/panelChart'
 import bus from '@/libs/bus'
 import groupData from '@/components/chart/tempGroup'
@@ -118,6 +118,9 @@ export default {
     },
     rowHeight () {
       return this.$store.getters.getRowHeight
+    },
+    layoutMargintop () {
+      return this.isGroup ? '0' : (this.dataList.length ? (-1 * (this.stepWidth + 14) + 'px') : '0')
     }
   },
   data () {
@@ -334,7 +337,7 @@ export default {
           })
           setTimeout(() => {
             this.firstInit = false
-          }, 500)
+          }, 700)
           this.gridLayoutLoading = false
         })
       }
