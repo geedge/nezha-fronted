@@ -95,19 +95,7 @@ export default {
     query (elements, startTime, endTime, step) {
       try {
         switch (this.chartInfo.datasource) {
-          case 'metrics': {
-            if (this.chartInfo.type === 'assetInfo') {
-              this.$get('asset/asset/' + this.chartDetailInfo.id).then(res => {
-                this.chartData = res.data
-              })
-            }
-            if (this.chartInfo.type === 'endpointInfo') {
-              this.$get('monitor/endpoint/' + this.chartDetailInfo.id).then(res => {
-                this.chartData = res.data
-              })
-            }
-            break
-          }
+          case 'metrics':
           case 'logs': {
             let urlPre = ''
             if (this.chartInfo.datasource === 'metrics') {
@@ -154,8 +142,16 @@ export default {
             break
           }
           case 'system': {
-            console.log(this.chartInfo.param.datasource[0])
-
+            if (this.chartInfo.type === 'assetInfo') {
+              this.$get('asset/asset/' + this.chartDetailInfo.id).then(res => {
+                this.chartData = res.data
+              })
+            }
+            if (this.chartInfo.type === 'endpointInfo') {
+              this.$get('monitor/endpoint/' + this.chartDetailInfo.id).then(res => {
+                this.chartData = res.data
+              })
+            }
             const q = {
               type: this.chartInfo.param.datasource[0].type,
               group: this.chartInfo.param.datasource[0].group,
@@ -164,7 +160,6 @@ export default {
               sort: this.chartInfo.param.datasource[0].sort
             }
             const chartData = []
-            console.log(this.chartInfo.type)
             const params = {
               q: encodeURIComponent(JSON.stringify(q)),
               stat: startTime,
