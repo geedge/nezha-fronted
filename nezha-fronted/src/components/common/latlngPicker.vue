@@ -116,8 +116,13 @@ export default {
     },
     setLatlng () {
       const lnglat = this.lnglat.split(',')
-      this.mapParam.longitude = lnglat[0]
-      this.mapParam.latitude = lnglat[1]
+      if (lnglat[0] && lnglat[1]) {
+        this.mapParam.longitude = lnglat[0]
+        this.mapParam.latitude = lnglat[1]
+      } else {
+        this.mapParam.longitude = '-33.9257813'
+        this.mapParam.latitude = '55.5761251'
+      }
       this.$emit('lnglatChange', this.lnglat, this.zoom)
     },
     getAttribute () {
