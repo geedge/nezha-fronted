@@ -268,13 +268,15 @@ export default {
     },
     closeDialog () {
       this.importBox.show = false
-      this.$nextTick(() => {
-        this.importResult = null
-        this.importFileList = []
-        this.importFile = null
-        this.importBox.value = 1
-        this.importBox.record = 'all'
-      })
+      setTimeout(() => {
+        this.$nextTick(() => {
+          this.importResult = null
+          this.importFileList = []
+          this.importFile = null
+          this.importBox.value = 1
+          this.importBox.record = 'all'
+        })
+      }, 100)
     },
     downloadTemplate () {
       const language = localStorage.getItem('nz-language') || 'en' // 初始未选择默认 en 英文
