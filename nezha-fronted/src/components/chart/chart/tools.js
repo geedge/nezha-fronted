@@ -1,6 +1,5 @@
 import { chartType } from '@/components/common/js/constants'
 import chartBarOption from './options/chartBar'
-import chartGaugeOption from './options/chartGauge'
 import chartPieOption from './options/chartPie'
 import lodash from 'lodash'
 import {
@@ -9,6 +8,7 @@ import {
   chartTimeSeriesAreaOption
 } from './options/chartTimeSeries'
 import chartTreemapOption from './options/chartTreemap'
+import chartGaugeOption from './options/chartGauge'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 
 export function getOption (type) {
@@ -40,6 +40,10 @@ export function getOption (type) {
     }
     case chartType.treemap: {
       chartOption = lodash.cloneDeep(chartTreemapOption)
+      break
+    }
+    case chartType.guage: {
+      chartOption = lodash.cloneDeep(chartGaugeOption)
       break
     }
     default: break
@@ -96,6 +100,9 @@ export function isMap (type) {
 }
 export function isTable (type) {
   return type === chartType.table
+}
+export function isGauge (type) {
+  return type === chartType.guage
 }
 export function getGroupHeight (arr) {
   if (arr.length) {

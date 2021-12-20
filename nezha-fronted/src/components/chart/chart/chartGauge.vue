@@ -1,10 +1,216 @@
 <template>
+  <div class="chart-gauge" ref="chart-gauge-box">
+    <div
+      v-for="(item,index) in gaugeData" :key="index"
+      class="chart-gauge-item"
+      :id="'chart-gauge-' + chartInfo.id + '-' + index"
+      :style="{height:item.height+'px',width:item.width + 'px'}"
+    >
+<!--      :style="{background:item.mapping ? item.mapping.color.bac : false,height:item.height+'px',width:item.width + 'px'}"-->
+<!--      <span v-if="chartInfo.param.text==='all'">-->
+<!--        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">-->
+<!--          {{item.legend}}<br/><span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>-->
+<!--        </span>-->
+<!--        <span v-else>{{item.legend}}<br/><span>{{item.showValue}}</span></span>-->
+<!--      </span>-->
+<!--      <span v-if="chartInfo.param.text==='legend'">-->
+<!--        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">-->
+<!--           {{item.legend}}<br/><span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>-->
+<!--        </span>-->
+<!--        <span v-else>{{item.legend}}</span>-->
+<!--      </span>-->
+<!--      <span v-if="chartInfo.param.text==='value'|| !chartInfo.param.text">-->
+<!--        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">-->
+<!--          {{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}-->
+<!--        </span>-->
+<!--        <span v-else>{{item.showValue}}</span>-->
+<!--      </span>-->
+<!--      <span v-if="chartInfo.param.text==='none'">-->
+<!--        ' '-->
+<!--      </span>-->
 
+    </div>
+  </div>
 </template>
 
 <script>
+import chartMixin from '@/components/chart/chartMixin'
+import chartFormat from '@/components/chart/chartFormat'
+import { getMetricTypeValue } from '@/components/common/js/tools'
+import chartDataFormat from '@/components/charts/chartDataFormat'
+import * as echarts from 'echarts'
+import lodash from 'lodash'
+import { getChart } from '@/components/common/js/common'
+import { initColor } from '@/components/chart/chart/tools'
+import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
+
 export default {
-  name: 'chart-gauge' // 仪表盘
+  name: 'chart-guage',
+  mixins: [chartMixin, chartFormat],
+  data () {
+    return {
+      gaugeData: [],
+      boxWidth: 0,
+      boxHeight: 0,
+      boxPadding: 5,
+      chartInstances: []
+    }
+  },
+  methods: {
+    initChart () {
+      this.initGaugeData(this.chartInfo, this.chartData).then(() => {
+        this.getLayout().then(layout => {
+          this.renderGauge(layout).then(() => {
+            this.gaugeChartInit()
+          })
+        })
+      })
+    },
+    initGaugeData (chartInfo, originalDatas) {
+      return new Promise(resolve => {
+        let colorIndex = 0
+        console.log(originalDatas)
+        originalDatas.forEach((originalData, expressionIndex) => {
+          originalData.forEach((data, dataIndex) => {
+            const gauge = {
+              value: '',
+              showValue: '',
+              label: {},
+              width: '',
+              height: '',
+              legend: '',
+              oldValue: '',
+              mapping: {
+
+              }
+            }
+            gauge.value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
+            gauge.max = getMetricTypeValue(data.values, 'max')
+            gauge.min = getMetricTypeValue(data.values, 'min')
+            console.log(gauge.value)
+            gauge.label = data.metric
+            gauge.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+            gauge.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(gauge.value, null, -1, 2)
+            // gauge.value = gauge.showValue
+            gauge.mapping = this.selectMapping(gauge.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
+            this.gaugeData.push(gauge)
+            colorIndex++
+          })
+        })
+        resolve()
+      })
+    },
+    getLayout () {
+      this.boxWidth = this.$refs['chart-gauge-box'].offsetWidth - 2 * this.boxPadding
+      this.boxHeight = this.$refs['chart-gauge-box'].offsetHeight - 2 * this.boxPadding
+      return new Promise(resolve => {
+        let rateMax = 0
+        let col = 0
+        let row = 0
+        for (let i = 1; i <= this.gaugeData.length; i++) {
+          const cols = Math.ceil(this.gaugeData.length / i)
+          const w = this.boxWidth / i
+          const h = this.boxHeight / cols
+          const rate = w > h ? h / w : w / h
+          if (rate > rateMax) {
+            rateMax = rate
+            col = cols
+            row = i
+          }
+        }
+        if (this.gaugeData.length) {
+          while (col * row >= this.gaugeData.length) { // 避免出现空白
+            row--
+          }
+        }
+        row++
+        if (col === 1 || row === 1) { // 行 或 列有一个为1时 需要调换位置 显示才会好看
+          const temp = col
+          col = row
+          row = temp
+        }
+        resolve({ col, row })
+      })
+    },
+    renderGauge (layout) {
+      this.chartInstances.forEach(item => {
+        if (item && item.dispose) {
+          item.dispose()
+        }
+      })
+      this.chartInstances = []
+      return new Promise(resolve => {
+        const width = this.boxWidth / layout.col
+        const height = this.boxHeight / layout.row
+        const integer = Math.floor(this.gaugeData.length / layout.col)
+        const remainder = this.gaugeData.length % layout.col
+        const specialIndex = integer * layout.col
+        const specialWidth = this.boxWidth / remainder
+        this.gaugeData.forEach((item, index) => {
+          item.height = height
+          if (remainder && index >= specialIndex) {
+            item.width = specialWidth
+          } else {
+            item.width = width
+          }
+        })
+        resolve()
+      })
+    },
+    gaugeChartInit () {
+      this.chartInstances = []
+      const self = this
+      this.gaugeData.forEach((item, index) => {
+        const myChart = echarts.init(document.getElementById('chart-gauge-' + this.chartInfo.id + '-' + index))
+        const option = lodash.cloneDeep(this.chartOption)
+
+        option.series[0].data.push(item)
+        option.series[0].max = item.max
+        option.series[0].detail = {
+          fontSize: 24,
+          offsetCenter: [0, '40%'],
+          fontWeight: 'bolder',
+          formatter: (params) => {
+            const showValue = chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(params, null, -1, 2)
+            console.log(showValue)
+            return showValue
+          },
+          color: lodash.get(item, 'mapping.color.text', 'auto')
+        }
+        if (index < 20) {
+          option.series[0].itemStyle = {
+            color: lodash.get(item, 'mapping.color.bac', this.colorList[index])
+          }
+        } else {
+          option.series[0].itemStyle = {
+            color: lodash.get(item, 'mapping.color.bac', randomcolor())
+          }
+        }
+        option.series[0].min = item.max == item.min ? 0 : item.min
+        myChart.setOption(option)
+        this.chartInstances.push(myChart)
+        console.log(item, index, this.chartOption)
+      })
+    },
+    resize () {
+      this.getLayout().then(layout => {
+        this.renderGauge(layout)
+      })
+    }
+  },
+  mounted () {
+    this.chartOption.color || (this.chartOption.color = initColor(20))
+    this.colorList = this.chartOption.color
+    this.initChart()
+    console.log(12313123)
+  },
+  beforeDestroy () {
+    this.chartInstances.forEach(item => {
+      if (item && item.dispose) {
+        item.dispose()
+      }
+    })
+  }
 }
 </script>
 

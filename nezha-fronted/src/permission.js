@@ -24,7 +24,7 @@ router.beforeEach((to, from, next) => {
             localStorage.setItem('nz-sys-favicon', res.data.system_favicon)
             localStorage.setItem('nz-language', res.data.lang)
             localStorage.setItem('nz-sys-timezone', res.data.timezone)
-            localStorage.setItem('nz-sys-bgImg', res.data.system_bgImg)
+            localStorage.setItem('nz-sys-bgImg', res.data.system_bgImg || '')
             localStorage.setItem('nz-default-theme', res.data.theme)
             localStorage.setItem('nz-default-dateFormat', res.data.dateFormat)
             changeFavicon(res.data.system_favicon)

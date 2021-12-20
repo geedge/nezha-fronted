@@ -75,6 +75,14 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
       ></chart-stat>
+      <chart-gauge
+        :ref="'chart' + chartInfo.id"
+        v-if="isGauge(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+      ></chart-gauge>
       <chart-diagram
         :ref="'chart' + chartInfo.id"
         v-if="isDiagram(chartInfo.type)"
@@ -159,7 +167,7 @@ import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
 import chartMap from './chart/chartMap'
-import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable } from './chart/tools'
+import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable, isGauge } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -226,11 +234,13 @@ export default {
     isEndpointInfo,
     isMap,
     isTable,
+    isGauge,
     resize () {
       this.$refs['chart' + this.chartInfo.id].resize()
     }
   },
   mounted () {
+    console.log(this.chartInfo.type)
   }
 }
 </script>

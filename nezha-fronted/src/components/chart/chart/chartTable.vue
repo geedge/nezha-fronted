@@ -171,7 +171,7 @@ export default {
             let value = null
             if (lodash.get(params, label)) {
               value = lodash.get(params, label)
-              if (label.indexOf('$value')) {
+              if (label.indexOf('$value') !== -1) {
                 value = chartDataFormat.getUnit(column.unit ? column.unit : 2).compute(value, null, -1, 2)
               }
             }
