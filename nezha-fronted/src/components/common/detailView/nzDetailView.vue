@@ -9,7 +9,7 @@
           <div class="top-tool-left" style="min-width: 300px">
             <slot name="top-tool-left"></slot>
             <div v-if="showLayout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20" :class="{'project-search alert-table asset-table endpoint-table': searchRight}">
-              <search-input ref="searchInput" :from="from" :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
+              <search-input ref="searchInput" :from="from" :position="from" :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
             </div>
           </div>
           <div :class="{'top-tool-main-right-to-left': bottomBox.showSubList}" class="top-tool-right">
