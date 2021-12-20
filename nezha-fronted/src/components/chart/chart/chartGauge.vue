@@ -69,7 +69,6 @@ export default {
     initGaugeData (chartInfo, originalDatas) {
       return new Promise(resolve => {
         let colorIndex = 0
-        console.log(originalDatas)
         originalDatas.forEach((originalData, expressionIndex) => {
           originalData.forEach((data, dataIndex) => {
             const gauge = {
@@ -87,7 +86,6 @@ export default {
             gauge.value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
             gauge.max = getMetricTypeValue(data.values, 'max')
             gauge.min = getMetricTypeValue(data.values, 'min')
-            console.log(gauge.value)
             gauge.label = data.metric
             gauge.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             gauge.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(gauge.value, null, -1, 2)
@@ -133,12 +131,6 @@ export default {
       })
     },
     renderGauge (layout) {
-      this.chartInstances.forEach(item => {
-        if (item && item.dispose) {
-          item.dispose()
-        }
-      })
-      this.chartInstances = []
       return new Promise(resolve => {
         const width = this.boxWidth / layout.col
         const height = this.boxHeight / layout.row
@@ -163,16 +155,17 @@ export default {
       this.gaugeData.forEach((item, index) => {
         const myChart = echarts.init(document.getElementById('chart-gauge-' + this.chartInfo.id + '-' + index))
         const option = lodash.cloneDeep(this.chartOption)
-
         option.series[0].data.push(item)
         option.series[0].max = item.max
         option.series[0].detail = {
           fontSize: 24,
-          offsetCenter: [0, '40%'],
           fontWeight: 'bolder',
           formatter: (params) => {
-            const showValue = chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(params, null, -1, 2)
+            let showValue = chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(params, null, -1, 2).trim()
             console.log(showValue)
+            if (item.mapping) {
+              showValue = self.handleDisplay(item.mapping.display, { ...item.label, value: showValue })
+            }
             return showValue
           },
           color: lodash.get(item, 'mapping.color.text', 'auto')
@@ -189,12 +182,21 @@ export default {
         option.series[0].min = item.max == item.min ? 0 : item.min
         myChart.setOption(option)
         this.chartInstances.push(myChart)
-        console.log(item, index, this.chartOption)
+      })
+    },
+    gaugeChartResize () {
+      this.chartInstances.forEach(item => {
+        console.log(123123123, item)
+        if (item && item.resize) {
+          item.resize()
+        }
       })
     },
     resize () {
       this.getLayout().then(layout => {
-        this.renderGauge(layout)
+        this.renderGauge(layout).then(() => {
+          this.gaugeChartResize()
+        })
       })
     }
   },
@@ -202,7 +204,6 @@ export default {
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
     this.initChart()
-    console.log(12313123)
   },
   beforeDestroy () {
     this.chartInstances.forEach(item => {
