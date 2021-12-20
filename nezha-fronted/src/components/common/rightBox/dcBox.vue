@@ -1,5 +1,5 @@
 <template>
-  <div v-clickoutside="{obj:editDc, func:clickOutside}" class="right-box right-box-dc">
+  <div v-clickoutside="{obj:editDc, func: esc}" class="right-box right-box-dc">
       <!-- begin--标题-->
       <div class="right-box__header">
         <div class="header__title">{{editDc.id ? ($t("config.dc.editDc")) : $t("config.dc.createDc")}}</div>
