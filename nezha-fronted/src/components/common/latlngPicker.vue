@@ -116,7 +116,7 @@ export default {
     },
     setLatlng () {
       const lnglat = this.lnglat.split(',')
-      if (lnglat[0] && lnglat[1]) {
+      if (!lnglat[0] && !lnglat[1]) {
         this.mapParam.longitude = lnglat[0]
         this.mapParam.latitude = lnglat[1]
       } else {
