@@ -19,14 +19,14 @@ router.beforeEach((to, from, next) => {
         get(config.body.baseUrl + '/sys/appearance').then(res => {
           // console.log(res)
           if (res.code === 200) {
-            localStorage.setItem('nz-sys-name', res.data.system_name)
-            localStorage.setItem('nz-sys-logo', res.data.system_logo)
-            localStorage.setItem('nz-sys-favicon', res.data.system_favicon)
-            localStorage.setItem('nz-language', res.data.lang)
-            localStorage.setItem('nz-sys-timezone', res.data.timezone)
+            localStorage.setItem('nz-sys-name', res.data.system_name || '')
+            localStorage.setItem('nz-sys-logo', res.data.system_logo || '')
+            localStorage.setItem('nz-sys-favicon', res.data.system_favicon || '')
+            localStorage.setItem('nz-language', res.data.lang || '')
+            localStorage.setItem('nz-sys-timezone', res.data.timezone || '')
             localStorage.setItem('nz-sys-bgImg', res.data.system_bgImg || '')
-            localStorage.setItem('nz-default-theme', res.data.theme)
-            localStorage.setItem('nz-default-dateFormat', res.data.dateFormat)
+            localStorage.setItem('nz-default-theme', res.data.theme || '')
+            localStorage.setItem('nz-default-dateFormat', res.data.dateFormat || '')
             changeFavicon(res.data.system_favicon)
           }
           resolve()

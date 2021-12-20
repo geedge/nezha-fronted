@@ -153,9 +153,9 @@ export default {
   methods: {
     ...mapActions(['loginSuccess']),
     login () {
-      if (this.loading || !this.license.valid || !this.license.token) {
-        return
-      }
+      // if (this.loading || !this.license.valid) {
+      //   return
+      // }
       if (this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
         this.loading = true
         this.$post('/sys/login', this.loginData).then(res => {
@@ -248,7 +248,6 @@ export default {
           this.license.valid = false
           this.license.warnInfo = response.msg
         }
-        this.license.token = response.token
       })
     },
     handleChange (file, fileList) {
