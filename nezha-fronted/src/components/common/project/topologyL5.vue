@@ -896,7 +896,7 @@ export default {
               Promise.all(promiseArr).then(res => {
                 res.forEach((response, index) => {
                   const item = data.pens[index]
-                  if (item.type === 0 && item.data.state) {
+                  if (item.type === 0 && item.data.state && res[index].data.list.length) {
                     item.data.state.error = item.data.error = !res[index].data.list[0].state
                     item.data.state.asset = !!res[index].data.list[0].asset
                     item.data.state.alert = !!res[index].data.list[0].alert
