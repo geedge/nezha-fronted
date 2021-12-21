@@ -19,6 +19,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-pie>
       <chart-bar
         :ref="'chart' + chartInfo.id"
@@ -27,6 +28,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-bar>
       <chartHexagon
         :ref="'chart'+chartInfo.id"
@@ -35,6 +37,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chartHexagon>
       <chart-url
         :ref="'chart' + chartInfo.id"
@@ -43,6 +46,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-url>
       <chart-text
         :ref="'chart' + chartInfo.id"
@@ -51,6 +55,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-text>
       <chart-treemap
         :ref="'chart' + chartInfo.id"
@@ -59,6 +64,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-treemap>
       <chart-log
         :ref="'chart' + chartInfo.id"
@@ -67,6 +73,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-log>
       <chart-stat
         :ref="'chart' + chartInfo.id"
@@ -75,6 +82,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-stat>
       <chart-gauge
         :ref="'chart' + chartInfo.id"
@@ -83,6 +91,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-gauge>
       <chart-diagram
         :ref="'chart' + chartInfo.id"
@@ -90,6 +99,7 @@
         :chart-data="chartData"
         :chart-info="chartInfo"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
         :chart-option="chartOption"
       ></chart-diagram>
       <chartAutotopology
@@ -99,6 +109,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chartAutotopology>
       <chartMap
         :ref="'chart' + chartInfo.id"
@@ -107,6 +118,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chartMap>
       <chart-asset-info
         :ref="'chart' + chartInfo.id"
@@ -115,6 +127,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-asset-info>
       <chart-endpoint-info
         :ref="'chart' + chartInfo.id"
@@ -123,6 +136,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-endpoint-info>
       <chart-table
         :ref="'chart' + chartInfo.id"
@@ -131,6 +145,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-table>
       <chart-group
         :ref="'chart' + chartInfo.id"
@@ -140,6 +155,7 @@
         :chart-data="chartData"
         :chart-info="chartInfo"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
         :chart-option="chartOption"
       ></chart-group>
     </template>

@@ -1,6 +1,7 @@
 const chartPieOption = {
   tooltip: {
-    trigger: 'item'
+    trigger: 'item',
+    confine: false
   },
   legend: {
     show: false

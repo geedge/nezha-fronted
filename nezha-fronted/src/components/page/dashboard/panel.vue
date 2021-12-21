@@ -157,6 +157,7 @@ import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import { fromRoute } from '@/components/common/js/constants'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
+import { lineChartMove } from '@/components/common/js/common'
 // import chartData from './testData'
 
 export default {
@@ -800,6 +801,9 @@ export default {
     this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
     document.querySelector('#tableList').addEventListener('mouseleave', this.tableListLeave)
+    if (!document.onmousemove) { // 添加鼠标移动事件监听
+      document.onmousemove = lineChartMove
+    }
   },
   watch: {
     'filter.searchName': function (n, o) {
@@ -860,6 +864,9 @@ export default {
       this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
     }
     localStorage.removeItem('panelTime')
+    if (!document.onmousemove) { // 添加鼠标移动事件监听
+      document.onmousemove = null
+    }
   }
 }
 </script>

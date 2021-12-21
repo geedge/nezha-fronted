@@ -71,6 +71,7 @@ export default {
         let colorIndex = 0
         originalDatas.forEach((originalData, expressionIndex) => {
           originalData.forEach((data, dataIndex) => {
+            this.isNoData = false
             const gauge = {
               value: '',
               showValue: '',
@@ -96,6 +97,7 @@ export default {
             colorIndex++
           })
         })
+        this.$emit('chartIsNoData', this.isNoData)
         resolve()
       })
     },

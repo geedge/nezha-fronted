@@ -92,6 +92,7 @@ export default {
           key = chartInfo.param.datasource[0].name
         }
         originalData.forEach((data, dataIndex) => {
+          this.isNoData = false
           data.$labels = data.metric
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
           const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
@@ -126,6 +127,7 @@ export default {
           colorIndex++
         })
       })
+      this.$emit('chartIsNoData', this.isNoData)
       return returnData
     },
     selectTableMapping (row, valueMapping) {

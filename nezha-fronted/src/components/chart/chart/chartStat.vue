@@ -57,6 +57,7 @@ export default {
         console.log(originalDatas)
         originalDatas.forEach((originalData, expressionIndex) => {
           originalData.forEach((data, dataIndex) => {
+            this.isNoData = false
             const stat = {
               value: '',
               showValue: '',
@@ -77,6 +78,7 @@ export default {
             colorIndex++
           })
         })
+        this.$emit('chartIsNoData', this.isNoData)
         resolve()
       })
     },
