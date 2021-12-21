@@ -508,9 +508,9 @@
           ></el-switch>
         </div>
         <transition name="el-zoom-in-top">
-          <el-row v-if="chartConfig.param.enable.valueMapping">
+          <el-row v-if="chartConfig.param.enable.thresholds">
             <div
-              v-for="(item,index) in chartConfig.param.valueMapping"
+              v-for="(item,index) in chartConfig.param.thresholds"
               :key="index"
             >
               <div class="chart-title chart-title-config">

@@ -37,7 +37,14 @@ module.exports = {
       {
         test: /\.(js)$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client'), resolve('node_modules/element-ui/packages/scrollbar')],
+        include: [
+          resolve('src'),
+          resolve('test'),
+          resolve('node_modules/webpack-dev-server/client'),
+          resolve('node_modules/element-ui/packages/scrollbar'),
+          resolve('node_modules/@interactjs'),
+          resolve('node_modules/vue-grid-layout')
+        ],
         exclude: '/node_modules/',
         options: {
           presets: [

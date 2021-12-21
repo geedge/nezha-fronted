@@ -88,6 +88,7 @@ export default {
             gauge.min = getMetricTypeValue(data.values, 'min')
             gauge.label = data.metric
             gauge.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+            gauge.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             gauge.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(gauge.value, null, -1, 2)
             // gauge.value = gauge.showValue
             gauge.mapping = this.selectMapping(gauge.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
@@ -155,6 +156,7 @@ export default {
       this.gaugeData.forEach((item, index) => {
         const myChart = echarts.init(document.getElementById('chart-gauge-' + this.chartInfo.id + '-' + index))
         const option = lodash.cloneDeep(this.chartOption)
+        option.tooltip = {}
         option.series[0].data.push(item)
         option.series[0].max = item.max
         option.series[0].detail = {
@@ -179,6 +181,8 @@ export default {
             color: lodash.get(item, 'mapping.color.bac', randomcolor())
           }
         }
+        option.tooltip.formatter = this.formatterFunc
+        // option.tooltip.position = this.formatterFunc
         option.series[0].min = item.max == item.min ? 0 : item.min
         myChart.setOption(option)
         this.chartInstances.push(myChart)
@@ -186,7 +190,6 @@ export default {
     },
     gaugeChartResize () {
       this.chartInstances.forEach(item => {
-        console.log(123123123, item)
         if (item && item.resize) {
           item.resize()
         }
@@ -198,12 +201,27 @@ export default {
           this.gaugeChartResize()
         })
       })
+    },
+    formatterFunc: function (params, ticket, callback) {
+      const self = this
+      return `<div>
+                    <div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;  min-width: 150px; max-width: 600px; line-height: 18px; font-size: 14px;">
+                        <div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${params.data.name}</div>
+                        <div style="font-size:12px;display:flex;justify-content: space-between;">
+                            <div>value</div>
+                            <div style="display: ${params.data.mapping && params.data.mapping.display ? 'none' : 'inline-block'}">${params.data.showValue}</div>
+                            <div style="display: ${params.data.mapping && params.data.mapping.display ? 'inline-block' : 'none'}">${self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue })}</div>
+                        </div>
+                    </div>
+                </div>
+               `
     }
   },
   mounted () {
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
     this.initChart()
+    console.log(this.isFullscreen , 'isFullscreen')
   },
   beforeDestroy () {
     this.chartInstances.forEach(item => {

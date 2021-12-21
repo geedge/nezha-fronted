@@ -1,7 +1,7 @@
 <template>
   <div :style="chartInfo.param.showHeader ? '' : 'padding-top: 15px;'" class="nz-chart" :class="chartInfo.param.showHeader ? '' : 'no-header'" >
     <loading :loading="loading"></loading>
-    <chart-no-data v-if="isNoData || isError"></chart-no-data>
+    <chart-no-data v-if="isNoData || isError || chartChildrenData"></chart-no-data>
     <template v-else>
       <chart-time-series
         v-if="isTimeSeries(chartInfo.type)"
@@ -10,6 +10,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
       ></chart-time-series>
       <chart-pie
         :ref="'chart' + chartInfo.id"
@@ -205,6 +206,11 @@ export default {
     from: String,
     isError: Boolean
   },
+  data () {
+    return {
+      chartChildrenData: false
+    }
+  },
   computed: {
     isNoData () {
       return lodash.isEmpty(this.chartData) && ['text', 'url'].indexOf(this.chartInfo.type) === -1
@@ -215,7 +221,7 @@ export default {
       } else {
         return getOption(this.chartInfo.type)
       }
-    }
+    },
   },
   methods: {
     isTimeSeries,
@@ -235,6 +241,9 @@ export default {
     isMap,
     isTable,
     isGauge,
+    chartIsNoData (flag) {
+      this.chartChildrenData = flag
+    },
     resize () {
       this.$refs['chart' + this.chartInfo.id].resize()
     }

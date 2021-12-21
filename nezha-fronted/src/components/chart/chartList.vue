@@ -5,14 +5,13 @@
       v-if="gridLayoutShow"
       :class="firstInit ? 'no-animation' : ''"
       :col-num="12"
-      :maxRows="12"
       :is-draggable="!panelLock"
       :is-resizable="!panelLock"
       :layout.sync="copyDataList"
       :margin="[10, 10]"
       :row-height="stepWidth"
-      :use-css-transforms="true"
       :vertical-compact="true"
+      :use-css-transforms="true"
       :style="{
         'margin-top': layoutMargintop,
         'padding-bottom': isGroup ? '0' : (200 + 'px')
@@ -27,6 +26,7 @@
         :x="item.x"
         :y="item.y"
         :min-h="headerH"
+        :max-h="12"
         :static="item.static"
         :class="{
           'group-hide-header':item.type === 'group' && item.param.collapse,
@@ -84,7 +84,8 @@
 </template>
 
 <script>
-import VueGridLayout from 'vue-grid-layout'
+import GridLayout from './chart/grid/GridLayout'
+import GridItem from './chart/grid/GridItem'
 import { fromRoute } from '@/components/common/js/constants'
 import { getGroupHeight, getLayoutPosition, isGroup } from './chart/tools'
 import panelChart from '@/components/chart/panelChart'
@@ -105,8 +106,8 @@ export default {
     dataList: Array // 看板中所有图表信息
   },
   components: {
-    GridLayout: VueGridLayout.GridLayout,
-    GridItem: VueGridLayout.GridItem,
+    GridLayout: GridLayout,
+    GridItem: GridItem,
     panelChart
   },
   computed: {
@@ -267,10 +268,10 @@ export default {
           charts: charts
         }
         // console.log(this.copyDataList)
-        this.$put('/visual/panel/chart/weights', params).then(() => {
-          const position = getLayoutPosition(this.copyDataList)
-          this.$store.commit('setChartLastPosition', position)
-        })
+        // this.$put('/visual/panel/chart/weights', params).then(() => {
+        //   const position = getLayoutPosition(this.copyDataList)
+        //   this.$store.commit('setChartLastPosition', position)
+        // })
       }, 300)
     }
   },

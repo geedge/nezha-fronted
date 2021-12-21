@@ -12,7 +12,8 @@ export default {
         active: '#53a3cb',
         inactive: '#7e7e7e'
       },
-      chartId: ''
+      chartId: '',
+      isNoData: true
     }
   },
   props: {
@@ -36,8 +37,10 @@ export default {
     handleTimeSeries (chartInfo, seriesTemplate, originalDatas) {
       const series = []
       let colorIndex = 0
+      console.log(this.chartData)
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
+          this.isNoData = false
           const s = lodash.cloneDeep(seriesTemplate)
           if (s) {
             s.data = data.values
@@ -45,6 +48,7 @@ export default {
             if (chartInfo.param.stack) { // 堆叠
               s.stack = 'Total'
             }
+            console.log(chartInfo.param.enable && chartInfo.param.enable.thresholds && !lodash.isEmpty(chartInfo.param.thresholds) && chartInfo.param.thresholds.length)
             if (chartInfo.param.enable && chartInfo.param.enable.thresholds && !lodash.isEmpty(chartInfo.param.thresholds) && chartInfo.param.thresholds.length) { // 阈值
               s.markLine = {
                 symbol: 'circle',
@@ -52,7 +56,7 @@ export default {
               }
               s.markLine.data = chartInfo.param.thresholds.map(threshold => {
                 return {
-                  yAxis: threshold.value,
+                  yAxis: threshold.value || 0,
                   lineStyle: {
                     color: threshold.color,
                     width: 2,
@@ -66,6 +70,8 @@ export default {
           }
         })
       })
+      console.log(this.isNoData)
+      this.$emit('chartIsNoData', this.isNoData)
       return series
     },
     // 单个legend
