@@ -19,8 +19,9 @@
             </el-input>
           </div>
           <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
-          <button id="asset-create-asset" v-has="'panel_chart_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
-            <i class="nz-icon nz-icon-create-square"></i>
+          <button id="panel-add-chart" v-has="'panel_chart_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
+                  type="button" @click="addChart">
+            <i class="nz-icon-create-square nz-icon"></i>
           </button>
          <top-tool-more-options
           :delete-objs="batchDeleteObjs"
@@ -302,7 +303,10 @@ export default {
     /* 图表相关操作--start */
     addChart () {
       this.chart = this.newChart()
-      this.rightBox.chart.show = true
+      this.$store.dispatch('dispatchEditChart', {
+        chart: '',
+        type: 'add'
+      })
     },
     addChartByTemp () {
       this.chart = JSON.parse(JSON.stringify(this.blankChartTemp))
