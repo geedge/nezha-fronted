@@ -1,6 +1,6 @@
 <template>
   <!-- chart外层箱子 -->
-  <div :class="{'panel-chart--fullscreen': isFullscreen}" class="panel-chart">
+  <div :class="{'panel-chart--fullscreen': isFullscreen}" class="panel-chart" :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)"  v-loading="loading">
     <!-- title和工具栏，支持浮动 -->
     <chart-header
       v-if="!isFullscreen"
@@ -22,8 +22,8 @@
       :panelLock="panelLock"
       :from="from"
       :isError="isError"
-      :is-fullscreen="isFullscreen"
       :loading="loading"
+      :is-fullscreen="isFullscreen"
       v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
     ></chart>
   </div>
@@ -96,7 +96,7 @@ export default {
       endTime = this.$stringTimeParseToUnix(endTime)
 
       const elements = this.chartInfo.elements || []
-      this.query(elements, startTime, endTime, step)
+      this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
     },
     query (elements, startTime, endTime, step) {
       this.isError = false

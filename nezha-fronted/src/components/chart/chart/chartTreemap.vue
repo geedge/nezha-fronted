@@ -81,6 +81,7 @@ export default {
       this.legends = []
       chartOption.series[0] = this.initTreeMapData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       chartOption.tooltip.formatter = this.formatterFunc
+      chartOption.tooltip.position = this.tooltipPosition
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
         const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartId}`)) : getChart(this.chartId)
@@ -96,6 +97,7 @@ export default {
       s.data = []
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
+          this.isNoData = false
           if (s) {
             const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
             const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
@@ -126,6 +128,7 @@ export default {
           }
         })
       })
+      this.$emit('chartIsNoData', this.isNoData)
       return s
     },
     formatterFunc (params, ticket, callback) {
@@ -156,7 +159,7 @@ export default {
     try {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
-    this.initChart(this.chartOption)
+    this.chartInfo.loaded && this.initChart(this.chartOption)
   }
 }
 </script>

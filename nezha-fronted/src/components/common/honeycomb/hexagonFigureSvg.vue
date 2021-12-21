@@ -290,8 +290,8 @@ export default {
             this.firstInit = false
           }, 500)
         })
-      }).catch(() => {
-        console.log(123123)
+      }).catch((res) => {
+        console.info(res)
       })
     },
     reload () {

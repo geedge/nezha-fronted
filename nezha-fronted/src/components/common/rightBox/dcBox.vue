@@ -197,14 +197,9 @@ export default {
       handler (n, o) {
         this.isEdit = true
         if (!n.id) {
-          this.$get('/sysConfig?paramKey=map_center_config').then(response => {
-            if (response.code === 200) {
-              const mapParam = JSON.parse(response.data.paramKey.map_center_config)
-              this.editDc = { ...JSON.parse(JSON.stringify(n)), lnglat: `${mapParam.longitude},${mapParam.latitude}` }
-              this.$nextTick(() => {
-                this.$refs.latlngPicker.setLnglat(this.editDc.latitude, this.editDc.longitude)
-              })
-            }
+          this.editDc = { ...JSON.parse(JSON.stringify(n)), lnglat: `${n.longitude},${n.latitude}` }
+          this.$nextTick(() => {
+            this.$refs.latlngPicker.setLnglat(this.editDc.latitude, this.editDc.longitude)
           })
         } else {
           this.editDc = { ...JSON.parse(JSON.stringify(n)), lnglat: `${n.longitude},${n.latitude}` }

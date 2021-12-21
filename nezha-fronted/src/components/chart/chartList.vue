@@ -1,5 +1,5 @@
 <template>
-  <div :id='`chartList${(isGroup ? "Group" : "") + timestamp}`' class="chart-list" :loading="gridLayoutLoading">
+  <div :id='`chartList${(isGroup ? "Group" : "") + timestamp}`' class="chart-list" :loading="gridLayoutLoading" ref="layoutBox">
     <grid-layout
       ref="layout"
       v-if="gridLayoutShow"
@@ -32,6 +32,7 @@
           'group-hide-header':item.type === 'group' && item.param.collapse,
           'opacityItem': item.static
         }"
+        :ref="'grid-item' + item.id"
         :isResizable = "item.type === 'group' ? false: null"
         dragAllowFrom=".chart-header"
         dragIgnoreFrom=".chart-header__tools"
@@ -268,11 +269,42 @@ export default {
           charts: charts
         }
         // console.log(this.copyDataList)
-        // this.$put('/visual/panel/chart/weights', params).then(() => {
-        //   const position = getLayoutPosition(this.copyDataList)
-        //   this.$store.commit('setChartLastPosition', position)
-        // })
+        this.$put('/visual/panel/chart/weights', params).then(() => {
+          const position = getLayoutPosition(this.copyDataList)
+          this.$store.commit('setChartLastPosition', position)
+        })
       }, 300)
+    },
+    onScroll (scrollTop = 0) {
+      this.$nextTick(() => {
+        this.copyDataList.forEach(item => {
+          if (item.loaded) {
+            return
+          }
+          const dom = this.$refs['grid-item' + item.id][0].$el
+          if (dom) {
+            const itemHeight = dom.offsetHeight
+            // 1.元素距离页面顶部的距离
+            // console.log(dom.style.transform)
+
+            let top = dom.style.transform.split(',')[1]
+            top = top.substring(0, top.length - 2)
+            const mainOffsetTop = top - this.stepWidth + 14// transform: grid组件 通过 tranfrom 控制位置 中间的为y的值 通过截取获得 - 父元素 marginTop的 值。
+            // console.log(mainOffsetTop)
+            // 2.元素的高度
+            const mainHeight = itemHeight // ele.offsetHeight;//itemHeight;
+            // 3.页面滚动的距离
+            const windowScrollTop = scrollTop// document.documentElement.scrollTop || document.body.scrollTop;
+            // 4.浏览器可见区域的高度
+            const windowHeight = (window.innerHeight || document.documentElement.clientHeight) - 50 - 70
+            // console.log(this.$refs['chart' + item.id][0].$el.offsetHeight, scrollTop,'scrollTop',windowHeight,mainOffsetTop + mainHeight / 4,(windowScrollTop + windowHeight))
+            if ((mainOffsetTop + mainHeight / 4) < (windowScrollTop + windowHeight)) {
+              item.loaded = true
+              this.$refs['chart' + item.id][0].getChartData()
+            }
+          }
+        })
+      })
     }
   },
   created () {
@@ -335,6 +367,7 @@ export default {
           this.copyDataList = JSON.parse(JSON.stringify(tempList))
           setTimeout(() => {
             this.gridLayoutShow = true
+            this.onScroll()
           })
           setTimeout(() => {
             this.firstInit = false

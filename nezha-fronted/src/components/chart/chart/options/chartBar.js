@@ -1,6 +1,7 @@
 const chartBarOption = {
   tooltip: {
-    trigger: 'item'
+    trigger: 'item',
+    confine: false
   },
   legend: {
     show: false

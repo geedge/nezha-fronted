@@ -96,6 +96,7 @@ export default {
       s.data = []
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
+          this.isNoData = false
           if (s) {
             const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
             const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
@@ -121,6 +122,7 @@ export default {
           }
         })
       })
+      this.$emit('chartIsNoData', this.isNoData)
       return s
     },
     formatterFunc: function (params, ticket, callback) {
@@ -149,7 +151,7 @@ export default {
     try {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
-    this.initChart(this.chartOption)
+    this.chartInfo.loaded &&  this.initChart(this.chartOption)
   }
 }
 </script>

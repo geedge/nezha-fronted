@@ -8,6 +8,9 @@ const chartGaugeOption = {
         show: true,
         width: 30
       },
+      tooltip: {
+        confine: false
+      },
       pointer: {
         show: false
       },

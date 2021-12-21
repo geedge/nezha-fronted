@@ -71,6 +71,7 @@ export default {
       const { minTime, maxTime, minValue, maxValue } = this.getMinMaxFromData(this.chartData) // 此处时间是秒
       chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime * 1000, maxTime * 1000) // 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
+      chartOption.tooltip.position = this.tooltipPosition
       chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue)
       if (chartOption.toolbox.feature) {
         chartOption.toolbox.feature.myStack.iconStyle.borderColor = this.isStack ? this.toolboxIconColor.active : this.toolboxIconColor.inactive
@@ -255,7 +256,7 @@ export default {
     try {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
-    this.initChart(this.chartOption)
+    this.chartInfo.loaded && this.initChart(this.chartOption)
   }
 }
 </script>

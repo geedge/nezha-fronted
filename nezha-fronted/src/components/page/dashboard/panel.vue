@@ -79,9 +79,9 @@
             </div>
           </template>
         </div>
-        <div id="tableList" class="table-list">
-          <div id="dashboardScrollbar" ref="dashboardScrollbar" class="table-list-box">
-            <div class="box-content" v-loading="chartListLoading">
+        <div id="tableList" class="table-list" style='overflow-y: unset'>
+          <div id="dashboardScrollbar" class="table-list-box">
+            <div class="box-content" v-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
               <chart-list
                 ref="chartList"
                 name="panel"
@@ -157,6 +157,7 @@ import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import { fromRoute } from '@/components/common/js/constants'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
+import { lineChartMove } from '@/components/common/js/common'
 // import chartData from './testData'
 
 export default {
@@ -714,7 +715,7 @@ export default {
       this.scrollbarWrap.addEventListener('scroll', bus.debounce(function () {
         _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50
         _self.overScroll10 = _self.scrollbarWrap.scrollTop > 50
-        // _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop)
+        _self.$refs.chartList.onScroll(_self.scrollbarWrap.scrollTop)
       }, 300))
     },
     focusInput () {
@@ -800,6 +801,9 @@ export default {
     this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
     document.querySelector('#tableList').addEventListener('mouseleave', this.tableListLeave)
+    if (!document.onmousemove) { // 添加鼠标移动事件监听
+      document.onmousemove = lineChartMove
+    }
   },
   watch: {
     'filter.searchName': function (n, o) {
@@ -860,6 +864,9 @@ export default {
       this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
     }
     localStorage.removeItem('panelTime')
+    if (!document.onmousemove) { // 添加鼠标移动事件监听
+      document.onmousemove = null
+    }
   }
 }
 </script>

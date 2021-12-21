@@ -2,6 +2,7 @@ import * as echarts from 'echarts'
 const formatUtil = echarts.format
 const chartTreemapOption = {
   tooltip: {
+    confine: false,
     formatter: function (info) {
       const value = info.value
       const treePathInfo = info.treePathInfo

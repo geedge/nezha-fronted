@@ -208,7 +208,7 @@ export default {
           })
         }
       }).catch(res => {
-        console.log(res)
+        console.info(res)
       })
     },
     selectPanel (panel) {

@@ -1,6 +1,6 @@
 import lodash from 'lodash'
 import { getMetricTypeValue } from '@/components/common/js/tools'
-import { getChart, setChart } from '@/components/common/js/common'
+import { getChart, getMousePoint, setChart } from '@/components/common/js/common'
 export default {
   data () {
     return {
@@ -13,7 +13,8 @@ export default {
         inactive: '#7e7e7e'
       },
       chartId: '',
-      isNoData: true
+      isNoData: true,
+      showAllData: false
     }
   },
   props: {
@@ -37,9 +38,12 @@ export default {
     handleTimeSeries (chartInfo, seriesTemplate, originalDatas) {
       const series = []
       let colorIndex = 0
-      console.log(this.chartData)
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
+          if (colorIndex >= 20 && !this.showAllData) {
+            colorIndex++
+            return
+          }
           this.isNoData = false
           const s = lodash.cloneDeep(seriesTemplate)
           if (s) {
@@ -48,7 +52,6 @@ export default {
             if (chartInfo.param.stack) { // 堆叠
               s.stack = 'Total'
             }
-            console.log(chartInfo.param.enable && chartInfo.param.enable.thresholds && !lodash.isEmpty(chartInfo.param.thresholds) && chartInfo.param.thresholds.length)
             if (chartInfo.param.enable && chartInfo.param.enable.thresholds && !lodash.isEmpty(chartInfo.param.thresholds) && chartInfo.param.thresholds.length) { // 阈值
               s.markLine = {
                 symbol: 'circle',
@@ -70,7 +73,6 @@ export default {
           }
         })
       })
-      console.log(this.isNoData)
       this.$emit('chartIsNoData', this.isNoData)
       return series
     },
@@ -167,6 +169,52 @@ export default {
         }, 300)
       }
     },
+    tooltipPosition (point, params, dom, rect, size) {
+      dom.style.transform = 'translateZ(0)'
+      const windowWidth = window.innerWidth// 窗口宽度
+      const windowHeight = window.innerHeight// 窗口高度
+      const windowMouse = getMousePoint()
+      // 提示框位置
+      let x = 0
+      let y = 0
+      // 当前鼠标位置
+      const pointX = point[0]
+      const pointY = point[1]
+      // 外层div大小
+      const viewWidth = size.viewSize[0]
+      // const viewHeight = size.viewSize[1]
+      // 提示框大小
+      const boxWidth = size.contentSize[0]
+      const boxHeight = size.contentSize[1]
+      if (!this.isFullscreen) { // 本地显示
+        const chartDom = document.getElementById('chart-local-' + this.chartInfo.id)
+        if (chartDom) {
+          if (windowMouse.x < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            x = pointX + 15
+          } else {
+            x = pointX - boxWidth - 15
+          }
+          if (windowMouse.y + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            y = pointY + 15
+          } else {
+            y = pointY - boxHeight - 10
+          }
+          return [x, y]
+        }
+      } else {
+        if (pointX < (viewWidth / 2)) { // 说明鼠标在左边放不下提示框
+          x = pointX + 10
+        } else {
+          x = pointX - boxWidth
+        }
+        if (windowMouse.y + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+          y = pointY + 15
+        } else {
+          y = pointY - boxHeight - 10
+        }
+        return [x, y]
+      }
+    },
     mouseLeaveChart () {
       const myChart = getChart(this.chartId)
       if (myChart) {
@@ -188,6 +236,15 @@ export default {
       deep: true,
       handler (n) {
         if (!this.isInit) {
+          this.initChart(this.chartOption)
+        }
+      }
+    },
+    'chartInfo.loaded': {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        if (n) {
           this.initChart(this.chartOption)
         }
       }

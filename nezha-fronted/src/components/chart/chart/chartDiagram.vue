@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-diagram">
+  <div class="chart-diagram" v-if="chartInfo.loaded">
     <diagram
       style="height: 100%;width: 100%"
       :topoData="chartInfo.param.topo"

@@ -47,6 +47,15 @@ export default {
   methods: {
     refreshTime () {
 
+    },
+    initChart () {
+      this.dataList = this.dataList.map(item => {
+        return {
+          ...item,
+          hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
+          loaded: true
+        }
+      })
     }
   },
   watch: {
@@ -54,7 +63,14 @@ export default {
       immediate: true,
       handler (n) {
         this.$nextTick(() => {
-          this.dataList = JSON.parse(JSON.stringify(n))
+          const arr = JSON.parse(JSON.stringify(n))
+          this.dataList = arr.map(item => {
+            return {
+              ...item,
+              hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
+              loaded: false
+            }
+          })
         })
       }
     }
