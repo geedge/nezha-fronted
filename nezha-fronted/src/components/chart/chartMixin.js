@@ -38,7 +38,6 @@ export default {
     handleTimeSeries (chartInfo, seriesTemplate, originalDatas) {
       const series = []
       let colorIndex = 0
-      console.log(this.chartData)
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
           if (colorIndex >= 20 && !this.showAllData) {
@@ -53,7 +52,6 @@ export default {
             if (chartInfo.param.stack) { // 堆叠
               s.stack = 'Total'
             }
-            console.log(chartInfo.param.enable && chartInfo.param.enable.thresholds && !lodash.isEmpty(chartInfo.param.thresholds) && chartInfo.param.thresholds.length)
             if (chartInfo.param.enable && chartInfo.param.enable.thresholds && !lodash.isEmpty(chartInfo.param.thresholds) && chartInfo.param.thresholds.length) { // 阈值
               s.markLine = {
                 symbol: 'circle',
@@ -75,7 +73,6 @@ export default {
           }
         })
       })
-      console.log(this.isNoData)
       this.$emit('chartIsNoData', this.isNoData)
       return series
     },
@@ -191,7 +188,6 @@ export default {
       const boxHeight = size.contentSize[1]
       if (!this.isFullscreen) { // 本地显示
         const chartDom = document.getElementById('chart-local-' + this.chartInfo.id)
-        console.log(point, params, dom, rect, size)
         if (chartDom) {
           if (windowMouse.x < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
             x = pointX + 15
@@ -240,6 +236,15 @@ export default {
       deep: true,
       handler (n) {
         if (!this.isInit) {
+          this.initChart(this.chartOption)
+        }
+      }
+    },
+    'chartInfo.loaded': {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        if (n) {
           this.initChart(this.chartOption)
         }
       }

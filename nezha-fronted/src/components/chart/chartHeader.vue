@@ -126,7 +126,6 @@ export default {
       immediate: true,
       handler (n) {
         if (n) {
-          console.log(this.chartData)
           this.errorText = this.chartData.filter(item => item.error).map(item => item.error).join('\n')
         }
       }

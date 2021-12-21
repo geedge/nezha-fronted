@@ -38,9 +38,12 @@ export default {
     }
   },
   mounted () {
-    this.initMap()
+    this.chartInfo.loaded && this.initChart()
   },
   methods: {
+    initChart () {
+      this.initMap()
+    },
     initMap () {
       if (this.timer) {
         clearTimeout(this.timer)
@@ -72,7 +75,6 @@ export default {
               this.map.remove()
               this.map = null
             }
-            console.log(1212)
             const mapId = document.getElementById('map' + this.chartInfo.id)
             const map = L.map(mapId, {
               minZoom: mapConfig.minZoom,

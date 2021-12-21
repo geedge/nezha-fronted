@@ -159,7 +159,7 @@ export default {
     try {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
-    this.initChart(this.chartOption)
+    this.chartInfo.loaded && this.initChart(this.chartOption)
   }
 }
 </script>

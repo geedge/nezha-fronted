@@ -46,6 +46,9 @@ export default {
   methods: {
     initChart () {
       this.initStatData(this.chartInfo, this.chartData).then(() => {
+        if (this.isNoData) {
+          return
+        }
         this.getLayout().then(layout => {
           this.renderStat(layout)
         })
@@ -54,7 +57,6 @@ export default {
     initStatData (chartInfo, originalDatas) {
       return new Promise(resolve => {
         let colorIndex = 0
-        console.log(originalDatas)
         originalDatas.forEach((originalData, expressionIndex) => {
           originalData.forEach((data, dataIndex) => {
             this.isNoData = false
@@ -137,7 +139,7 @@ export default {
     }
   },
   mounted () {
-    this.initChart()
+    this.chartInfo.loaded && this.initChart()
   }
 }
 </script>

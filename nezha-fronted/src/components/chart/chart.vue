@@ -265,7 +265,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.chartInfo.type)
   }
 }
 </script>

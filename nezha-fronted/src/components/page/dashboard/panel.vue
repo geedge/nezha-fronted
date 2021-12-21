@@ -79,9 +79,9 @@
             </div>
           </template>
         </div>
-        <div id="tableList" class="table-list">
-          <div id="dashboardScrollbar" ref="dashboardScrollbar" class="table-list-box">
-            <div class="box-content" v-loading="chartListLoading">
+        <div id="tableList" class="table-list" style='overflow-y: unset'>
+          <div id="dashboardScrollbar" class="table-list-box">
+            <div class="box-content" v-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
               <chart-list
                 ref="chartList"
                 name="panel"
@@ -715,7 +715,7 @@ export default {
       this.scrollbarWrap.addEventListener('scroll', bus.debounce(function () {
         _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50
         _self.overScroll10 = _self.scrollbarWrap.scrollTop > 50
-        // _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop)
+        _self.$refs.chartList.onScroll(_self.scrollbarWrap.scrollTop)
       }, 300))
     },
     focusInput () {

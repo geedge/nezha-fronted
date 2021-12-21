@@ -216,7 +216,7 @@ export default {
     }
   },
   mounted () {
-    this.initChart()
+    this.chartInfo.loaded &&  this.initChart()
   }
 }
 </script>

@@ -3,7 +3,7 @@
     <div
       v-for="(item,index) in gaugeData" :key="index"
       class="chart-gauge-item"
-      :id="'chart-gauge-' + chartInfo.id + '-' + index"
+      :id="this.isFullscreen?('chart-gauge-screen-' + chartInfo.id + '-' + index):('chart-gauge-' + chartInfo.id + '-' + index)"
       :style="{height:item.height+'px',width:item.width + 'px'}"
     >
 <!--      :style="{background:item.mapping ? item.mapping.color.bac : false,height:item.height+'px',width:item.width + 'px'}"-->
@@ -156,7 +156,8 @@ export default {
       this.chartInstances = []
       const self = this
       this.gaugeData.forEach((item, index) => {
-        const myChart = echarts.init(document.getElementById('chart-gauge-' + this.chartInfo.id + '-' + index))
+        const chartId = this.isFullScreen ? 'chart-gauge-screen-' : 'chart-gauge-'
+        const myChart = echarts.init(document.getElementById(chartId + this.chartInfo.id + '-' + index))
         const option = lodash.cloneDeep(this.chartOption)
         option.tooltip = {}
         option.series[0].data.push(item)
@@ -166,7 +167,6 @@ export default {
           fontWeight: 'bolder',
           formatter: (params) => {
             let showValue = chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(params, null, -1, 2).trim()
-            console.log(showValue)
             if (item.mapping) {
               showValue = self.handleDisplay(item.mapping.display, { ...item.label, value: showValue })
             }
@@ -222,7 +222,7 @@ export default {
   mounted () {
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
-    this.initChart()
+    this.chartInfo.loaded && this.initChart()
     console.log(this.isFullscreen , 'isFullscreen')
   },
   beforeDestroy () {
