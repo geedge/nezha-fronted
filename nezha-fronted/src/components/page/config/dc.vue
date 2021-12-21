@@ -245,6 +245,17 @@ export default {
     addCabinet () {
       this.cabinetBoxShow = true
     },
+    add () {
+      this.$get('/sysConfig?paramKey=map_center_config').then(response => {
+        if (response.code === 200) {
+          const mapParam = JSON.parse(response.data.paramKey.map_center_config)
+          this.object = this.newObject()
+          this.object.longitude = mapParam.longitude
+          this.object.latitude = mapParam.latitude
+          this.rightBox.show = true
+        }
+      })
+    },
     closeRightBox (refresh) {
       this.rightBox.show = false
       this.cabinetBoxShow = false
