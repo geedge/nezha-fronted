@@ -48,6 +48,9 @@
       display: flex;
     }
   }
+  .panel-top-tools{
+    border-bottom: 1px solid $--border-color-light;
+  }
   .top-tool-btn-group {
     display: flex;
     .top-tool-btn:not(:last-of-type):not(:first-of-type) {

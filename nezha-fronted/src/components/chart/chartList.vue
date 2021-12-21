@@ -372,7 +372,7 @@ export default {
           })
           setTimeout(() => {
             this.firstInit = false
-          }, 700)
+          }, 2000)
           this.gridLayoutLoading = false
         })
       }

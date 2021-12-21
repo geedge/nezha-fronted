@@ -1,6 +1,6 @@
 <template>
   <!-- chart外层箱子 -->
-  <div :class="{'panel-chart--fullscreen': isFullscreen}" class="panel-chart" :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)">
+  <div :class="{'panel-chart--fullscreen': isFullscreen}" class="panel-chart" :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)"  v-loading="loading">
     <!-- title和工具栏，支持浮动 -->
     <chart-header
       v-if="!isFullscreen"
@@ -155,12 +155,14 @@ export default {
             if (this.chartInfo.type === 'assetInfo') {
               this.$get('asset/asset/' + this.chartDetailInfo.id).then(res => {
                 this.chartData = res.data
+                this.loading = false
               })
               break
             }
             if (this.chartInfo.type === 'endpointInfo') {
               this.$get('monitor/endpoint/' + this.chartDetailInfo.id).then(res => {
                 this.chartData = res.data
+                this.loading = false
               })
               break
             }
@@ -190,6 +192,7 @@ export default {
             break
           }
           case 'misc': {
+            this.loading = false
             if (this.chartInfo.type === 'hexagon') {
               this.getHexagonFigureData().then(res => {
                 this.chartData = res
