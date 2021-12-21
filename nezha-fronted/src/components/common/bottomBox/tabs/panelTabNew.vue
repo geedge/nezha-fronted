@@ -155,6 +155,7 @@ import { fromRoute } from '@/components/common/js/constants'
 import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
+import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 export default {
   name: 'panelTabNew',
   mixins: [subDataListMixin, detailViewRightMixin],
@@ -202,20 +203,29 @@ export default {
       chart: {},
       blankChart: {
         id: '',
-        title: '',
+        name: '',
         type: 'line',
-        span: 12,
-        height: '400',
+        span: 4,
+        datasource: 'metrics',
+        height: 4,
         unit: 2,
         param: {
-          url: '',
-          threshold: ''
+          stack: 0,
+          nullType: 'null',
+          legend: { placement: 'bottom', values: [], show: true },
+          enable: {
+            legend: true,
+            valueMapping: false,
+            thresholds: false
+          },
+          thresholdShow: true,
+          thresholds: [{ value: undefined, color: randomcolor() }]
         },
-        elements: [{ expression: '', legend: '', type: 'expert', id: '' }],
+        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
         panel: '',
         sync: 0,
-        name: '',
-        remark: ''
+        remark: '',
+        groupId: ''
       },
       pageObj: {
         pageNo: 1,
