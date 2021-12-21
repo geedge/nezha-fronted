@@ -150,6 +150,7 @@
       <chart-group
         :ref="'chart' + chartInfo.id"
         :from="from"
+        :filter="filter"
         v-if="isGroup(chartInfo.type)"
         :panelLock="panelLock"
         :chart-data="chartData"
@@ -220,7 +221,8 @@ export default {
     loading: Boolean,
     panelLock: Boolean,
     from: String,
-    isError: Boolean
+    isError: Boolean,
+    filter: {}
   },
   data () {
     return {

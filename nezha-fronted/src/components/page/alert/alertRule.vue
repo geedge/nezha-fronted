@@ -21,7 +21,7 @@
         <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
-       <top-tool-more-options
+        <top-tool-more-options
           :delete-objs="batchDeleteObjs"
           ref="export"
           id="model"
@@ -85,7 +85,7 @@
                 @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-       <top-tool-more-options
+        <top-tool-more-options
           :delete-objs="batchDeleteObjs"
           ref="export"
           id="alert-rule"
@@ -135,7 +135,7 @@
       <alert-rule-box v-if="rightBox.show" ref="alertConfigBox" :alert-rule="object" @close="closeRightBox"></alert-rule-box>
     </transition>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
-</transition>
+    </transition>
   </div>
 </template>
 <script>
@@ -152,6 +152,7 @@ import nzDetailView from '@/components/common/detailView/nzDetailView'
 import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import alertRuleDetail from '@/components/common/detailView/list/alertRule/alertRuleDetail'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export default {
   name: 'alertRule',
@@ -167,11 +168,13 @@ export default {
     alertRuleDetail,
     detailViewTopSearch
   },
-  mixins: [dataListMixin, detailViewMixin],
+  mixins: [dataListMixin, detailViewMixin, routerPathParams],
   data () {
     return {
       url: 'alert/rule',
       tableId: 'alertRuleTable', // 需要分页的table的id，用于记录每页数量
+      orderBy: 'id',
+      searchLabel: {},
       blankObject: {
         id: '',
         alertName: '',
@@ -262,6 +265,7 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
+      this.updatePath(this.searchLabel)
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -326,6 +330,9 @@ export default {
     copy (u) {
       this.edit(u, true)
     }
+  },
+  created () {
+    this.initQueryFromPath()
   },
   mounted () {
   },

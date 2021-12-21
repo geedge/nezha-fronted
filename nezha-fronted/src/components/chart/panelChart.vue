@@ -1,6 +1,6 @@
 <template>
   <!-- chart外层箱子 -->
-  <div :class="{'panel-chart--fullscreen': isFullscreen}" class="panel-chart" :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)"  v-loading="loading">
+  <div :class="{'panel-chart--fullscreen': isFullscreen}" class="panel-chart" :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)">
     <!-- title和工具栏，支持浮动 -->
     <chart-header
       v-if="!isFullscreen"
@@ -20,6 +20,7 @@
       :chart-data="chartData"
       :chart-info="chartInfo"
       :panelLock="panelLock"
+      :filter="filter"
       :from="from"
       :isError="isError"
       :loading="loading"
@@ -51,7 +52,8 @@ export default {
     isFullscreen: Boolean,
     panelLock: Boolean,
     chartDetailInfo: Object,
-    from: String
+    from: String,
+    filter: {}
   },
   data () {
     return {

@@ -77,15 +77,18 @@ export default {
     }
   },
   methods: {
-    initChart (chartOption) {
+    initChart (chartOption = this.chartOption) {
       const self = this
       this.legends = []
       chartOption.series = this.initBarData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
-      chartOption.xAxis.data = chartOption.series.data.map(item => item.name)
+      if (this.isNoData) {
+        return
+      }
+      chartOption.xAxis.data = chartOption.series[0].data.map(item => item.name)
       chartOption.axisLabel = {
         margin: 8,
         formatter (params) {
-          const dataLength = chartOption.series.data.length || 1
+          const dataLength = chartOption.series[0].data.length || 1
           const chartWidth = (document.getElementById('chart-canvas-' + self.chartInfo.id).offsetWidth - 80) / dataLength// 容器宽 - padding - 空余
           const length = Math.ceil((chartWidth) / 16)
           let val = ''
@@ -143,7 +146,7 @@ export default {
         })
       })
       this.$emit('chartIsNoData', this.isNoData)
-      return s
+      return [s]
     },
     formatterFunc (params, ticket, callback) {
       const self = this

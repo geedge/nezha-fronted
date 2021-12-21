@@ -25,7 +25,8 @@ export default {
   name: 'chart-group',
   props: {
     panelLock: Boolean,
-    from: String
+    from: String,
+    filter: {}
   },
   mixins: [chartMixin, chartFormat],
   computed: {
@@ -52,7 +53,7 @@ export default {
       this.dataList = this.dataList.map(item => {
         return {
           ...item,
-          hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
+          // hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
           loaded: true
         }
       })
@@ -67,7 +68,7 @@ export default {
           this.dataList = arr.map(item => {
             return {
               ...item,
-              hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
+              // hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
               loaded: false
             }
           })

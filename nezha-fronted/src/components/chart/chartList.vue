@@ -74,6 +74,7 @@
         :ref="'chart-fullscreen' + fullscreen.chartInfo.id"
         :chart-info="fullscreen.chartInfo"
         :from="from"
+        :filter="filter"
         :is-fullscreen="true"
         @groupShow="groupShow"
         :panelLock="panelLock"

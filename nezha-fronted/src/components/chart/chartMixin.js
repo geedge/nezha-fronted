@@ -245,7 +245,7 @@ export default {
       deep: true,
       handler (n) {
         if (n) {
-          this.initChart(this.chartOption)
+          this.initChart && this.initChart(this.chartOption)
         }
       }
     }

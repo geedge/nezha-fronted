@@ -64,7 +64,7 @@ export default {
     }
   },
   methods: {
-    initChart (chartOption) {
+    initChart (chartOption = this.chartOption) {
       this.legends = []
       chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
 

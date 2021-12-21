@@ -77,7 +77,7 @@ export default {
     }
   },
   methods: {
-    initChart (chartOption) {
+    initChart (chartOption = this.chartOption) {
       this.legends = []
       chartOption.series[0] = this.initTreeMapData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       chartOption.tooltip.formatter = this.formatterFunc

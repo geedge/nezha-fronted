@@ -77,9 +77,13 @@ export default {
     }
   },
   methods: {
-    initChart (chartOption) {
+    initChart (chartOption = this.chartOption) {
+      console.log(123123,chartOption,this.chartOption)
       this.legends = []
       chartOption.series = this.initPieData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+      if (this.isNoData) {
+        return
+      }
       // chartOption.series.label.formatter = this.pieFormatterLabel
       chartOption.tooltip.formatter = this.formatterFunc
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
@@ -93,6 +97,7 @@ export default {
     initPieData (chartInfo, seriesTemplate, originalDatas) {
       let colorIndex = 0
       const s = lodash.cloneDeep(seriesTemplate)
+      console.log(s)
       s.data = []
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
@@ -123,7 +128,7 @@ export default {
         })
       })
       this.$emit('chartIsNoData', this.isNoData)
-      return s
+      return [s]
     },
     formatterFunc: function (params, ticket, callback) {
       const self = this
