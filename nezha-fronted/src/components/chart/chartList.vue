@@ -172,8 +172,9 @@ export default {
       setTimeout(() => {
         this.$refs['chart' + i][0].resize()
         if (this.isGroup) {
-          this.copyDataList.find(item => item.i == i).h = newH
-          console.log(this.copyDataList.find(item => item.i == i),this.copyDataList)
+          const findItem = this.copyDataList.find(item => item.i == i)
+          findItem.height = newH
+          findItem.h = newH
           // bus.$emit('groupMove', this.copyDataList, this.groupInfo)
         }
       }, 50)
@@ -183,7 +184,9 @@ export default {
       setTimeout(() => {
         this.$refs['chart' + i][0].resize()
         if (this.isGroup) {
-          this.copyDataList.find(item => item.i == i).h = newH
+          const findItem = this.copyDataList.find(item => item.i == i)
+          findItem.height = newH
+          findItem.h = newH
           // bus.$emit('groupMove', this.copyDataList, this.groupInfo)
         }
         this.$put('/visual/panel/chart/modify', {
@@ -214,7 +217,7 @@ export default {
     },
     changeGroupHeight (copyList, group, flag) {
       const height = getGroupHeight(copyList)
-      // console.log(height,copyList, group, flag)
+      console.log(height,copyList[0].h, group, flag)
       // console.log(this.$refs.layout)
       const groupFind = this.copyDataList.find(item => item.id == group.id)
       if (group && groupFind) {
@@ -387,6 +390,7 @@ export default {
       handler (n) {
         if (this.isGroup) {
           console.log(123123)
+          console.log(n)
           bus.$emit('groupMove', n, this.groupInfo)
         }
       }
