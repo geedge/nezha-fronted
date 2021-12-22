@@ -1,7 +1,11 @@
 const chartBarOption = {
   tooltip: {
-    trigger: 'item',
-    confine: false
+    trigger: 'axis',
+    confine: false,
+    extraCssText: 'z-index:1000;',
+    z: 9,
+    animation: false,
+    appendToBody: true
   },
   legend: {
     show: false

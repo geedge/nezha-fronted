@@ -170,7 +170,7 @@ export default {
       }
     },
     tooltipPosition (point, params, dom, rect, size) {
-      dom.style.transform = 'translateZ(0)'
+      dom.style.transform = 'translateZ(999999)'
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
       const windowMouse = getMousePoint()

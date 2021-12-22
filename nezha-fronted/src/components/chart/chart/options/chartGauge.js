@@ -9,7 +9,12 @@ const chartGaugeOption = {
         width: 30
       },
       tooltip: {
-        confine: false
+        trigger: 'axis',
+        confine: false,
+        extraCssText: 'z-index:1000;',
+        z: 9,
+        animation: false,
+        appendToBody: true
       },
       pointer: {
         show: false
