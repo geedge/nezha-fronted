@@ -102,14 +102,14 @@ export default {
         originalData.forEach((data, dataIndex) => {
           this.isNoData = false
           data.$labels = data.metric
-          console.log(data.values)
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
           const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
           // const mapping = this.selectTableMapping(value, chartInfo.param.valueMapping)
           data.$value = value
           data.values = value
           data.showValue = showValue
-          data.$legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+          data.$legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
+          data.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
           // data.mapping = mapping
           data.keys = ''
           // eslint-disable-next-line vue/no-mutating-props

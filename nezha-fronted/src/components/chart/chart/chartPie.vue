@@ -78,7 +78,6 @@ export default {
   },
   methods: {
     initChart (chartOption = this.chartOption) {
-      console.log(123123,chartOption,this.chartOption)
       this.legends = []
       chartOption.series = this.initPieData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       if (this.isNoData) {
@@ -97,7 +96,6 @@ export default {
     initPieData (chartInfo, seriesTemplate, originalDatas) {
       let colorIndex = 0
       const s = lodash.cloneDeep(seriesTemplate)
-      console.log(s)
       s.data = []
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
@@ -112,7 +110,8 @@ export default {
               value: value,
               realValue: value,
               showValue: showValue,
-              name: this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex),
+              name: this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name,
+              alias: this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias,
               labels: data.metric,
               seriesIndex: expressionIndex,
               dataIndex: dataIndex,
@@ -134,7 +133,7 @@ export default {
       const self = this
       return `<div>
                     <div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;  min-width: 150px; max-width: 600px; line-height: 18px; font-size: 14px;">
-                        <div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${params.data.name}</div>
+                        <div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${params.data.alias}</div>
                         <div style="font-size:12px;display:flex;justify-content: space-between;">
                             <div>value</div>
                             <div style="display: ${params.data.mapping && params.data.mapping.display ? 'none' : 'inline-block'}">${params.data.showValue}</div>

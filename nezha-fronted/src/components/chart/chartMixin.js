@@ -48,7 +48,7 @@ export default {
           const s = lodash.cloneDeep(seriesTemplate)
           if (s) {
             s.data = data.values
-            s.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+            s.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
             if (chartInfo.param.stack) { // 堆叠
               s.stack = 'Total'
             }
@@ -114,7 +114,10 @@ export default {
         })
       }
       this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
-      return alias
+      return {
+        name,
+        alias
+      }
     },
     handleLegendAlias (legend, aliasExpression) {
       if (/\{\{.+\}\}/.test(aliasExpression)) {

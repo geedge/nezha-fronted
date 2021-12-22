@@ -13,6 +13,17 @@
       @groupShow="groupShow"
       @showFullscreen="showFullscreen"
     ></chart-header>
+<!--    全屏的header-->
+    <chart-screen-header
+      v-if="isFullscreen"
+      :is-group="isGroup(chartInfo.type)"
+      :isError="isError"
+      :chartData="chartData"
+      :chart-info="chartInfo"
+      @refresh="refresh"
+      @dateChange="dateChange"
+      @close="showFullscreen"
+    ></chart-screen-header>
     <!-- chart -->
     <!-- 数据查询后传入chart组件，chart组件内不查询，只根据接传递的数据来渲染 -->
     <chart
@@ -32,6 +43,7 @@
 
 <script>
 import chartHeader from '@/components/chart/chartHeader'
+import ChartScreenHeader from '@/components/chart/ChartScreenHeader'
 import chart from '@/components/chart/chart'
 import { isChartPie, isTimeSeries, getGroupHeight, isGroup } from './chart/tools'
 import { chartType, fromRoute } from '@/components/common/js/constants'
@@ -45,7 +57,8 @@ export default {
   name: 'panelChart',
   components: {
     chartHeader,
-    chart
+    chart,
+    ChartScreenHeader
   },
   props: {
     chartInfo: Object, // 其中的param json串已转化为对象
@@ -60,7 +73,8 @@ export default {
     return {
       chartData: [],
       loading: true,
-      isError: false
+      isError: false,
+      MultipleTime: false
     }
   },
   computed: {
@@ -73,9 +87,20 @@ export default {
   },
   methods: {
     isGroup,
+    dateChange (filter, MultipleTime) {
+      console.log(filter, MultipleTime)
+      this.loading = true
+      // TODO assetInfo、endpointInfo、echarts等进行不同的处理
+      let startTime = filter.start_time
+      let endTime = filter.end_time
+      const step = bus.getStep(startTime, endTime)
+      startTime = this.$stringTimeParseToUnix(startTime)
+      endTime = this.$stringTimeParseToUnix(endTime)
+      const elements = this.chartInfo.elements || []
+      this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
+    },
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh) {
-      console.log(123)
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
@@ -98,7 +123,6 @@ export default {
       const step = bus.getStep(startTime, endTime)
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
-
       const elements = this.chartInfo.elements || []
       this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
     },
@@ -195,7 +219,6 @@ export default {
             setTimeout(() => {
               this.loading = false
             })
-            console.log(123123)
             if (this.chartInfo.type === 'hexagon') {
               this.getHexagonFigureData().then(res => {
                 this.chartData = res
@@ -306,8 +329,6 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        console.log(n)
-        console.log(this.chartInfo.type)
       }
     }
   },

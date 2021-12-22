@@ -63,12 +63,12 @@
     <!-- 全屏查看 -->
     <el-dialog
       v-if="fullscreen.visible"
-      :title="fullscreen.chartInfo.name"
       :visible.sync="fullscreen.visible"
-      append-to-body
+      :show-close="false"
       class="nz-dialog chart-fullscreen"
       destroy-on-close
       fullscreen
+      :modal-append-to-body="false"
     >
       <panel-chart
         :ref="'chart-fullscreen' + fullscreen.chartInfo.id"
@@ -390,8 +390,6 @@ export default {
       deep: true,
       handler (n) {
         if (this.isGroup) {
-          console.log(123123)
-          console.log(n)
           bus.$emit('groupMove', n, this.groupInfo)
         }
       }

@@ -71,7 +71,7 @@ export default {
         return
       }
       const { minTime, maxTime, minValue, maxValue } = this.getMinMaxFromData(this.chartData) // 此处时间是秒
-      chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime * 1000, maxTime * 1000) // 需转为毫秒
+      chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime, maxTime)// 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
       chartOption.tooltip.position = this.tooltipPosition
       chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue)
@@ -112,7 +112,8 @@ export default {
       return { minTime, maxTime, minValue, maxValue }
     },
     xAxisLabelFormatter (minTime, maxTime) {
-      return function (value, index) {
+      return function (val, index) {
+        const value = val * 1000
         let offset = localStorage.getItem('nz-sys-timezone')
         offset = moment.tz(offset).format('Z')
         offset = Number.parseInt(offset)
@@ -146,7 +147,6 @@ export default {
         let sum = 0
         params.forEach((item, i) => {
           if (i === 0) {
-            console.log(item.data[0])
             const value = bus.computeTimezone(item.data[0] * 1000)
             const tData = new Date(value)
             str += '<div style="margin-bottom: 5px">'

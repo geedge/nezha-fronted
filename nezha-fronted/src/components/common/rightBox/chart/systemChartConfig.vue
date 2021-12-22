@@ -161,6 +161,51 @@
         </el-form-item>
       </div>
       <div class="form-items--half-width-group">
+        <!-- unit -->
+        <el-form-item
+          v-show="!isTable(chartConfig.type)&&!isLog(chartConfig.type)"
+          :label="$t('dashboard.panel.chartForm.unit')"
+          class="form-item--half-width"
+          prop="unit"
+        >
+          <el-cascader id="chart-box-unit"
+                       v-model="chartConfig.unit"
+                       :options="unitOptions"
+                       :props="{ expandTrigger: 'hover',emitPath:false }"
+                       :show-all-levels="false" filterable
+                       placeholder=""
+                       popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
+                       size="small"
+                       style="width: 100%"
+                       @change="unitSelected"
+          >
+          </el-cascader>
+        </el-form-item>
+        <!-- text -->
+        <el-form-item
+          :label="$t('dashboard.panel.chartForm.display')"
+          class="form-item--half-width"
+          prop="param.nullType"
+          v-if="isShowText(chartConfig.type)"
+        >
+          <el-select
+            id="chart-box-text"
+            v-model="chartConfig.param.text"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="change"
+          >
+            <el-option
+              v-for="item in textList"
+              :key="item.value"
+              :label="$t(item.label)"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="form-items--half-width-group">
         <!--width-->
         <el-form-item
           :label="$t('dashboard.panel.chartForm.width')"
@@ -534,6 +579,7 @@ export default {
             nullType: 'null',
             statistics: 'last',
             valueMapping: [],
+            text: 'value',
             enable: {
               legend: true,
               valueMapping: false,

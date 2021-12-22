@@ -88,8 +88,9 @@ export default {
             gauge.max = getMetricTypeValue(data.values, 'max')
             gauge.min = getMetricTypeValue(data.values, 'min')
             gauge.label = data.metric
-            gauge.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
-            gauge.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+            gauge.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
+            gauge.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
+            gauge.alias = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
             gauge.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(gauge.value, null, -1, 2)
             // gauge.value = gauge.showValue
             gauge.mapping = this.selectMapping(gauge.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
@@ -223,7 +224,6 @@ export default {
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
     this.chartInfo.loaded && this.initChart()
-    console.log(this.isFullscreen , 'isFullscreen')
   },
   beforeDestroy () {
     this.chartInstances.forEach(item => {

@@ -83,6 +83,93 @@
         }
       }
     }
+    .chart-header-error{
+      position: absolute;
+      left: 0;
+      top: -1px;
+    }
+  }
+  .chart-screen-header.list-page{
+    background: $--background-color-empty;
+  }
+  .chart-screen-header {
+    display: flex;
+    justify-content:space-between;
+    align-items:center;
+    padding: 0 20px 0 20px;
+    height: 39px;
+    font-size: 14px;
+    line-height: 40px;
+    color: $--color-text-primary;
+    transition: all 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 15px;
+    &.chart-header--float {
+      position: absolute;
+      width: 100%;
+      z-index: 100;
+      box-sizing: border-box;
+      height: 10px;
+      opacity: 0;
+      transition: all linear .2s;
+
+      &:hover {
+        height: 39px;
+        opacity: 1;
+      }
+    }
+    .chart-header__title {
+      max-width: calc(100% - 100px);
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: 18px;
+      color: #333;
+      font-weight: 700;
+    }
+    .chart-header__tools {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .chart-header__tool {
+        margin-left: 20px;
+        cursor: pointer;
+
+        .tool__icon {
+          visibility: hidden;
+          font-size: 14px;
+          color: $--color-text-primary;
+        }
+        .nz-chart-dropdown {
+          position: absolute;
+          top: 44px;
+          right: 0;
+          left: unset;
+          transform-origin: center top;
+          z-index: 1000;
+          width: 180px;
+          li {
+            padding-left: 15px !important;
+            padding-right: 0 !important;
+            width: calc(100% - 15px);
+            text-align: left;
+            i {
+              margin-right: 10px;
+            }
+            &:hover i {
+              color: $--color-primary;
+            }
+          }
+        }
+      }
+    }
+    .chart-header-error{
+      position: absolute;
+      left: 0;
+      top: -1px;
+    }
   }
   .nz-panel-chart {
     height: 100%;
@@ -314,9 +401,19 @@
     }
   }
 }
-.chart-fullscreen {
+.chart-fullscreen.nz-dialog {
+  .el-dialog__header{
+    display: none;
+  }
   .el-dialog__body {
     height: 100%;
+    padding: 0;
+  }
+  .panel-chart--fullscreen {
+    display: flex;
+    .nz-chart{
+      padding: 0 20px 30px 20px;
+    }
   }
 }
 .chart-stat{
