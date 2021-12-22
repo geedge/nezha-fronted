@@ -263,7 +263,7 @@ export default {
       this.chartChildrenData = flag
     },
     resize () {
-      this.$refs['chart' + this.chartInfo.id].resize()
+      this.$refs['chart' + this.chartInfo.id] && this.$refs['chart' + this.chartInfo.id].resize()
     }
   },
   mounted () {
