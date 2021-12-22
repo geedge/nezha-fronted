@@ -103,7 +103,7 @@ export default {
         alias = legend
       }
       // proj_status_
-      const name = alias
+      const name = alias + '-' + dataIndex
 
       // 若需要统计，处理统计数据
       const statisticsTypes = chartInfo.param.legend ? chartInfo.param.legend.values : ''
@@ -114,7 +114,7 @@ export default {
         })
       }
       this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
-      return name
+      return alias
     },
     handleLegendAlias (legend, aliasExpression) {
       if (/\{\{.+\}\}/.test(aliasExpression)) {

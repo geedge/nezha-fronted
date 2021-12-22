@@ -145,6 +145,14 @@ export default {
         let str = '<div class="nz-chart__tooltip">'
         let sum = 0
         params.forEach((item, i) => {
+          if (i === 0) {
+            console.log(item.data[0])
+            const value = bus.computeTimezone(item.data[0] * 1000)
+            const tData = new Date(value)
+            str += '<div style="margin-bottom: 5px">'
+            str += bus.timeFormate(tData)
+            str += '</div>'
+          }
           const color = self.colorList[item.seriesIndex]
           const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
           let paramsDot = bus.countDecimals(item.data[1])
