@@ -296,6 +296,7 @@ export default {
             refer: 0,
             nullType: 'null',
             statistics: 'last',
+            text: 'value',
             enable: {
               thresholds: false,
               legend: true,
