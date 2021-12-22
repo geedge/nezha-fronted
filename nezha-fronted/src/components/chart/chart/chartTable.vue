@@ -52,38 +52,46 @@ export default {
     return {
       tableData: [],
       columns: [],
-      valueMapping: {}
+      valueMapping: {},
+      tableTimer: null
     }
   },
   methods: {
     initChart () {
-      this.columns = this.chartInfo.param.columns
-      this.chartInfo.param.valueMapping.forEach((item) => {
-        if (this.valueMapping[item.column]) {
-          this.valueMapping[item.column].push(item)
-        } else {
-          this.valueMapping[item.column] = [item]
-        }
-      })
-      const data = this.initTableData(this.chartInfo, this.chartData)
-      const arr = []
-      Object.keys(data).forEach(key => {
-        arr.push(data[key])
-      })
-      arr.forEach(item => {
-        item.display = this.handleDisplayTable(item)
-      })
-      arr.forEach(item => {
-        item.valueMapping = this.selectTableMapping(item, this.valueMapping)
-      })
-      this.tableData = arr
-      this.$refs.dataTable.doLayout()
+      if (this.tableTimer) {
+        clearTimeout(this.tableTimer)
+        this.tableTimer = null
+      }
+      this.tableTimer = setTimeout(() => {
+        this.columns = this.chartInfo.param.columns
+        this.chartInfo.param.valueMapping.forEach((item) => {
+          if (this.valueMapping[item.column]) {
+            this.valueMapping[item.column].push(item)
+          } else {
+            this.valueMapping[item.column] = [item]
+          }
+        })
+        const data = this.initTableData(this.chartInfo, this.chartData)
+        const arr = []
+        Object.keys(data).forEach(key => {
+          arr.push(data[key])
+        })
+        arr.forEach(item => {
+          item.display = this.handleDisplayTable(item)
+        })
+        arr.forEach(item => {
+          item.valueMapping = this.selectTableMapping(item, this.valueMapping)
+        })
+        this.tableData = arr
+        this.$refs.dataTable && this.$refs.dataTable.doLayout()
+      }, 200)
     },
     initTableData (chartInfo, originalDatas) {
       let colorIndex = 0
       const returnData = {}
       const arr = chartInfo.param.indexs.split(',')
-      originalDatas.forEach((originalData, expressionIndex) => {
+      const tableInitialData = lodash.cloneDeep(originalDatas)
+      tableInitialData.forEach((originalData, expressionIndex) => {
         let key = expressionIndex
         if (chartInfo.elements && chartInfo.elements[expressionIndex].name) {
           key = chartInfo.elements[expressionIndex].name
@@ -94,6 +102,7 @@ export default {
         originalData.forEach((data, dataIndex) => {
           this.isNoData = false
           data.$labels = data.metric
+          console.log(data.values)
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
           const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
           // const mapping = this.selectTableMapping(value, chartInfo.param.valueMapping)
@@ -216,7 +225,11 @@ export default {
     }
   },
   mounted () {
-    this.chartInfo.loaded &&  this.initChart()
+    this.chartInfo.loaded && this.initChart()
+  },
+  beforeDestroy () {
+    clearTimeout(this.tableTimer)
+    this.tableTimer = null
   }
 }
 </script>

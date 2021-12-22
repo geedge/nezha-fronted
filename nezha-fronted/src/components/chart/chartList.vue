@@ -285,6 +285,7 @@ export default {
       }, 300)
     },
     onScroll (scrollTop = 0) {
+      let self = this
       setTimeout(() => {
         this.copyDataList.forEach(item => {
           if (item.loaded) {
@@ -307,13 +308,13 @@ export default {
             // 4.浏览器可见区域的高度
             const windowHeight = (window.innerHeight || document.documentElement.clientHeight) - 50 - 70
             // console.log(this.$refs['chart' + item.id][0].$el.offsetHeight, scrollTop,'scrollTop',windowHeight,mainOffsetTop + mainHeight / 4,(windowScrollTop + windowHeight))
-            if ((mainOffsetTop + mainHeight / 4) < (windowScrollTop + windowHeight)) {
+            if ((mainOffsetTop + mainHeight / 4) < (windowScrollTop + windowHeight) || self.isGroup) {
               item.loaded = true
               this.$refs['chart' + item.id][0].getChartData()
             }
           }
         })
-      },100)
+      },200)
     }
   },
   created () {

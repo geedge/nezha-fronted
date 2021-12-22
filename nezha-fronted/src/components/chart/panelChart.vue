@@ -212,7 +212,7 @@ export default {
               }
             }
             if (this.chartInfo.type === 'group') {
-              this.chartData = lodash.get(this,'chartInfo.children', [])
+              this.chartData = lodash.get(this, 'chartInfo.children', [])
               this.groupInit()
             }
             if (this.chartInfo.type === 'topology') {
@@ -312,7 +312,7 @@ export default {
     }
   },
   mounted () {
-    // this.getChartData()
+    this.chartInfo.loaded && this.getChartData()
   }
 }
 </script>

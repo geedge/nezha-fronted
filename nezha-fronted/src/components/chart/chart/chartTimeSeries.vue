@@ -67,7 +67,9 @@ export default {
     initChart (chartOption = this.chartOption) {
       this.legends = []
       chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
-
+      if (this.isNoData) {
+        return
+      }
       const { minTime, maxTime, minValue, maxValue } = this.getMinMaxFromData(this.chartData) // 此处时间是秒
       chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime * 1000, maxTime * 1000) // 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
