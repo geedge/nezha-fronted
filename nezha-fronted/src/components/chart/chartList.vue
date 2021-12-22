@@ -64,11 +64,11 @@
     <el-dialog
       v-if="fullscreen.visible"
       :visible.sync="fullscreen.visible"
-      append-to-body
       :show-close="false"
       class="nz-dialog chart-fullscreen"
       destroy-on-close
       fullscreen
+      :modal-append-to-body="false"
     >
       <panel-chart
         :ref="'chart-fullscreen' + fullscreen.chartInfo.id"

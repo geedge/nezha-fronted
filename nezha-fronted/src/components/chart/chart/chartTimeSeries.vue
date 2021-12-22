@@ -114,7 +114,6 @@ export default {
     xAxisLabelFormatter (minTime, maxTime) {
       return function (val, index) {
         const value = val * 1000
-        console.log(value, minTime, maxTime)
         let offset = localStorage.getItem('nz-sys-timezone')
         offset = moment.tz(offset).format('Z')
         offset = Number.parseInt(offset)
@@ -139,33 +138,6 @@ export default {
           return [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('/') + '\n' +
             [hour, minute].join(':')
         }
-      }
-    },
-    xAxisLabelFormatter2 (value, minTime, maxTime) {
-      console.log(value, minTime, maxTime)
-      let offset = localStorage.getItem('nz-sys-timezone')
-      offset = moment.tz(offset).format('Z')
-      offset = Number.parseInt(offset)
-      const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
-      const tData = new Date(value - localOffset + offset * 60 * 60 * 1000)
-      let hour = tData.getHours()
-      hour = hour > 9 ? hour : '0' + hour // 加0补充为两位数字
-      let minute = tData.getMinutes()
-      minute = minute > 9 ? minute : '0' + minute // 如果分钟小于10,则在前面加0补充为两位数字
-      if (minTime !== null && maxTime !== null) {
-        const diffSec = (maxTime - minTime) / 1000
-        const secOneDay = 24 * 60 * 60// 1天的秒数
-        const secOneMonth = secOneDay * 30// 30天的秒数
-        if (diffSec <= secOneDay) { // 同一天
-          return [hour, minute].join(':')
-        } else if (diffSec < secOneMonth) { // 大于1天，小于30天
-          return [tData.getMonth() + 1, tData.getDate()].join('/') + ' ' + [hour, minute].join(':')
-        } else { // 大于等于30天
-          return [tData.getMonth() + 1, tData.getDate()].join('/')
-        }
-      } else {
-        return [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('/') + '\n' +
-          [hour, minute].join(':')
       }
     },
     tooltipFormatter (hasTotal) { // 堆叠图需要total数据

@@ -21,6 +21,7 @@
       :chartData="chartData"
       :chart-info="chartInfo"
       @refresh="refresh"
+      @dateChange="dateChange"
       @close="showFullscreen"
     ></chart-screen-header>
     <!-- chart -->
@@ -85,6 +86,18 @@ export default {
   },
   methods: {
     isGroup,
+    dateChange (filter, isMultipleTime) {
+      console.log(filter, isMultipleTime)
+      this.loading = true
+      // TODO assetInfo、endpointInfo、echarts等进行不同的处理
+      let startTime = filter.start_time
+      let endTime = filter.end_time
+      const step = bus.getStep(startTime, endTime)
+      startTime = this.$stringTimeParseToUnix(startTime)
+      endTime = this.$stringTimeParseToUnix(endTime)
+      const elements = this.chartInfo.elements || []
+      this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
+    },
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh) {
       this.loading = true
@@ -109,7 +122,6 @@ export default {
       const step = bus.getStep(startTime, endTime)
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
-
       const elements = this.chartInfo.elements || []
       this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
     },
@@ -303,7 +315,7 @@ export default {
       this.groupInit()
       bus.$emit('groupMove', '', '', true)
       this.$emit('groupShow', this.chartInfo)
-    },
+    }
   },
   watch: {
     timeRange: {
