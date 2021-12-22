@@ -73,7 +73,8 @@ export default {
     return {
       chartData: [],
       loading: true,
-      isError: false
+      isError: false,
+      MultipleTime: false
     }
   },
   computed: {
@@ -86,8 +87,8 @@ export default {
   },
   methods: {
     isGroup,
-    dateChange (filter, isMultipleTime) {
-      console.log(filter, isMultipleTime)
+    dateChange (filter, MultipleTime) {
+      console.log(filter, MultipleTime)
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = filter.start_time

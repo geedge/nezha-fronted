@@ -108,7 +108,8 @@ export default {
           data.$value = value
           data.values = value
           data.showValue = showValue
-          data.$legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+          data.$legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
+          data.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
           // data.mapping = mapping
           data.keys = ''
           // eslint-disable-next-line vue/no-mutating-props

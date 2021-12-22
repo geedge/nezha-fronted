@@ -4,7 +4,7 @@ export default {
       const self = this
       let str = ''
       if (this.chartInfo.param.text === 'all') {
-        str += params.data.name
+        str += params.data.alias
         str += '\n'
         str += params.data.mapping && params.data.mapping.display ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
       }
@@ -12,7 +12,7 @@ export default {
         str += params.data.mapping && params.data.mapping.display ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
       }
       if (this.chartInfo.param.text === 'legend') {
-        str += params.data.name
+        str += params.data.alias
       }
       if (this.chartInfo.param.text === 'none') {
         str += ''
