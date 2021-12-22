@@ -98,6 +98,7 @@ import nzDetailView from '@/components/common/detailView/nzDetailView'
 import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import terminalLogDetail from '@/components/common/detailView/list/terminalLogDetail/terminalLogDetail'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export default {
   name: 'terminalLog',
@@ -108,7 +109,7 @@ export default {
     terminalLogDetail,
     detailViewTopSearch
   },
-  mixins: [dataListMixin, detailViewMixin],
+  mixins: [dataListMixin, detailViewMixin, routerPathParams],
   data () {
     return {
       url: 'terminal/session',
@@ -176,6 +177,8 @@ export default {
         pageSize: this.pageObj.pageSize
       }
       this.tools.loading = true
+      const path = this.fromRoute.terminalLog
+      this.updatePath(params, path)
       this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -210,6 +213,23 @@ export default {
         })
       })
     }
+  },
+  created () {
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      host: { target: this.searchLabel, propertyName: 'host', type: 'string' },
+      username: { target: this.searchLabel, propertyName: 'username', type: 'string' },
+      loginUser: { target: this.searchLabel, propertyName: 'loginUser', type: 'string' },
+      remoteAddr: { target: this.searchLabel, propertyName: 'remoteAddr', type: 'string' },
+      uuid: { target: this.searchLabel, propertyName: 'uuid', type: 'string' },
+      protocol: { target: this.searchLabel, propertyName: 'protocol', type: 'string' },
+      state: { target: this.searchLabel, propertyName: 'state', type: 'number' }
+    }
+    this.initQueryFromPath(searchKeys)
   }
 }
 </script>

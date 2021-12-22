@@ -189,6 +189,7 @@ import clickSearch from '@/components/common/labelFilter/clickSearch'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export default {
   name: 'asset',
@@ -205,7 +206,7 @@ export default {
     assetDetail,
     detailViewTopSearch
   },
-  mixins: [dataListMixin, detailViewMixin],
+  mixins: [dataListMixin, detailViewMixin, routerPathParams],
   data () {
     return {
       url: 'asset/asset',
@@ -692,6 +693,12 @@ export default {
         delete this.searchLabel.statistics
       } */
       this.tools.loading = true
+      const assetParam = {
+        ...this.searchLabel,
+        ...this.searchCheckBox
+      }
+      const path = this.fromRoute.asset
+      this.updatePath(assetParam, path)
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -749,6 +756,21 @@ export default {
         this.detailSearchList[key].show = true
       })
     }
+  },
+  created () {
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
+      sn: { target: this.searchLabel, propertyName: 'sn', type: 'number' },
+      name: { target: this.searchLabel, propertyName: 'name', type: 'string' },
+      manageIp: { target: this.searchLabel, propertyName: 'manageIp', type: 'number' },
+      statistics: { target: this.searchLabel, propertyName: 'statistics', type: 'number' }
+    }
+    this.initQueryFromPath(searchKeys)
   },
   mounted () {
     // 初始化数据

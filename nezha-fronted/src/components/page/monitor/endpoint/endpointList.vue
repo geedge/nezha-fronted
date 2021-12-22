@@ -232,6 +232,7 @@ import nzDetailView from '@/components/common/detailView/nzDetailView'
 import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import endpointDetail from '@/components/common/detailView/list/endpoint/endpointDetail'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export default {
   name: 'endpointList',
@@ -250,7 +251,7 @@ export default {
     endpointDetail,
     detailViewTopSearch
   },
-  mixins: [dataListMixin, detailViewMixin],
+  mixins: [dataListMixin, detailViewMixin, routerPathParams],
   data () {
     return {
       url: 'monitor/endpoint',
@@ -599,6 +600,12 @@ export default {
       }
       localStorage.removeItem('endpointProjectId')
       this.tools.loading = true
+      const param = {
+        ...this.searchLabel,
+        ...this.searchCheckBox
+      }
+      const path = this.fromRoute.endpoint
+      this.updatePath(param, path)
       this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -772,6 +779,42 @@ export default {
       this.selectValue.projectIds = [Number(localStorage.getItem('endpointProjectId'))]
       this.searchCheckBox.projectIds = this.selectValue.projectIds.join(',')
     }
+    // if (localStorage.getItem('endpointProjectId')) {
+    //   const project = JSON.parse(localStorage.getItem('endpointProjectId'))
+    //   let dataList = ''
+    //   if (this.detailType !== 'view') {
+    //     dataList = 'dataList'
+    //   } else {
+    //     dataList = 'detailList'
+    //   }
+    //   setTimeout(() => {
+    //     this.$refs[dataList].$refs.searchInput.select_list.push({
+    //       id: 11,
+    //       name: this.$t('overall.name'),
+    //       type: 'project',
+    //       label: 'projectIds',
+    //       disabled: false,
+    //       val: project[1],
+    //       valnum: project[0]
+    //     })
+    //     this.$refs[dataList].$refs.searchInput.sreach_num = 1
+    //     this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs[dataList].$refs.searchInput.searchLabelList.filter(item => item.label !== 'projectIds')
+    //   })
+    // }
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
+      name: { target: this.searchLabel, propertyName: 'name', type: 'string' },
+      assetName: { target: this.searchLabel, propertyName: 'assetName', type: 'string' },
+      projectIds: { target: this.searchCheckBox, propertyName: 'projectIds', type: 'string' },
+      logsStates: { target: this.searchCheckBox, propertyName: 'logsStates', type: 'string' },
+      moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'string' }
+    }
+    this.initQueryFromPath(searchKeys)
   },
   mounted () {
     if (localStorage.getItem('endpointProjectId')) {
