@@ -55,6 +55,7 @@ export default {
       })
     },
     initStatData (chartInfo, originalDatas) {
+      this.statData = []
       return new Promise(resolve => {
         let colorIndex = 0
         originalDatas.forEach((originalData, expressionIndex) => {

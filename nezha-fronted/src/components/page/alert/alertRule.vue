@@ -344,9 +344,38 @@ export default {
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
       ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
       severityIds: { target: this.searchLabel, propertyName: 'severityIds', type: 'string' },
-      type: { target: this.searchLabel, propertyName: 'type', type: 'number' },
-      name: { target: this.searchLabel, propertyName: 'name', type: 'string' }
+      type: {
+        target: this.searchLabel,
+        propertyName: 'type',
+        type: 'number',
+        isSearchInput: true,
+        defaultJson:
+          {
+            name: 'Type',
+            id: 5,
+            type: 'alertTypes',
+            label: 'type',
+            disabled: false,
+            readonly: true,
+            val: 'Metrics',
+            valnum: 1,
+            valString: ''
+          },
+        jsonKey: 'valnum'
+      },
+      name: {
+        target: this.searchLabel,
+        propertyName: 'name',
+        type: 'string',
+        isSearchInput: true,
+        defaultJson: {
+
+        }
+      }
     }
+    Object.keys(this.$route.query).forEach(key => {
+      this.$set(searchKeys[key].target, key, this.$route.query[key])
+    })
     this.initQueryFromPath(searchKeys)
   },
   mounted () {
