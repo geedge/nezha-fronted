@@ -265,7 +265,11 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
-      this.updatePath(this.searchLabel)
+      const param = {
+        ...this.searchLabel
+      }
+      const path = this.fromRoute.alertRule
+      this.updatePath(param, path)
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -332,7 +336,18 @@ export default {
     }
   },
   created () {
-    this.initQueryFromPath()
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
+      severityIds: { target: this.searchLabel, propertyName: 'severityIds', type: 'string' },
+      type: { target: this.searchLabel, propertyName: 'type', type: 'number' },
+      name: { target: this.searchLabel, propertyName: 'name', type: 'string' }
+    }
+    this.initQueryFromPath(searchKeys)
   },
   mounted () {
   },

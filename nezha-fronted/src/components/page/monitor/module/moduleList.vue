@@ -154,6 +154,7 @@ import nzDetailView from '@/components/common/detailView/nzDetailView'
 import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import moduleDetail from '@/components/common/detailView/list/module/moduleDetail'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export default {
   name: 'moduleList',
@@ -169,7 +170,7 @@ export default {
     moduleDetail,
     detailViewTopSearch
   },
-  mixins: [dataListMixin, detailViewMixin],
+  mixins: [dataListMixin, detailViewMixin, routerPathParams],
   data () {
     return {
       url: 'monitor/module',
@@ -391,6 +392,12 @@ export default {
         localStorage.removeItem('moduleProjectId')
       }
       this.tools.loading = true
+      const param = {
+        ...this.searchLabel,
+        ...this.searchCheckBox
+      }
+      const path = this.fromRoute.module
+      this.updatePath(param, path)
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -449,6 +456,17 @@ export default {
         this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs[dataList].$refs.searchInput.searchLabelList.filter(item => item.label !== 'projectIds')
       })
     }
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
+      projectIds: { target: this.searchLabel, propertyName: 'projectIds', type: 'number' },
+      name: { target: this.searchLabel, propertyName: 'name', type: 'string' }
+    }
+    this.initQueryFromPath(searchKeys)
   },
   mounted () {
   },

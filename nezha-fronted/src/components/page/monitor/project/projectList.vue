@@ -58,6 +58,7 @@ import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import projectTable from '@/components/common/table/settings/projectTable'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export default {
   name: 'projectList',
@@ -68,7 +69,7 @@ export default {
     projectTable,
     alertSilenceBox
   },
-  mixins: [dataListMixin],
+  mixins: [dataListMixin, routerPathParams],
   data () {
     return {
       url: 'monitor/project',
@@ -129,6 +130,12 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
+      const param = {
+        ...this.searchLabel,
+        ...this.searchCheckBox
+      }
+      const path = this.fromRoute.project
+      this.updatePath(param, path)
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -153,6 +160,16 @@ export default {
   computed: {
   },
   created () {
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
+      name: { target: this.searchLabel, propertyName: 'name', type: 'string' }
+    }
+    this.initQueryFromPath(searchKeys)
   },
   mounted () {
   },

@@ -81,6 +81,7 @@ import selectGroup from '@/components/common/popBox/selectAssetMetaGroup'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import assetMetaTable from '@/components/common/table/asset/assetMetaTable'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export default {
   name: 'assetMeta',
@@ -92,7 +93,7 @@ export default {
     assetMetaBox,
     assetMetaTable
   },
-  mixins: [dataListMixin],
+  mixins: [dataListMixin, routerPathParams],
   data () {
     return {
       url: 'asset/field/meta',
@@ -187,6 +188,12 @@ export default {
       if (!this.searchLabel.groupIds) {
         delete this.searchLabel.groupIds
       }
+      const param = {
+        ...this.searchLabel,
+        ...this.searchCheckBox
+      }
+      const path = this.fromRoute.assetLabel
+      this.updatePath(param, path)
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
@@ -279,6 +286,19 @@ export default {
         this.getGroup()
       }
     }
+  },
+  created () {
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
+      name: { target: this.searchLabel, propertyName: 'name', type: 'string' },
+      brandIds: { target: this.searchLabel, propertyName: 'brandIds', type: 'number' }
+    }
+    this.initQueryFromPath(searchKeys)
   }
 }
 </script>

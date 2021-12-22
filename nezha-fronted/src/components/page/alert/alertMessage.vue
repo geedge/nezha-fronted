@@ -165,6 +165,7 @@ import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant, fromRoute } from '@/components/common/js/constants'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export default {
   name: 'alertMessage',
@@ -177,7 +178,7 @@ export default {
     alertSilenceBox,
     clickSearch
   },
-  mixins: [dataListMixin],
+  mixins: [dataListMixin, routerPathParams],
   data () {
     return {
       chartLoading: false,
@@ -394,6 +395,25 @@ export default {
       this.selectValue.projectIds = [Number(localStorage.getItem('alertMessageProjectId'))]
       this.searchCheckBox.projectIds = this.selectValue.projectIds.join(',')
     }
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
+      endpointName: { target: this.searchLabel, propertyName: 'endpointName', type: 'string' },
+      summary: { target: this.searchLabel, propertyName: 'summary', type: 'number' },
+      ruleName: { target: this.searchLabel, propertyName: 'ruleName', type: 'string' },
+      assetName: { target: this.searchLabel, propertyName: 'assetName', type: 'string' },
+      labels: { target: this.searchLabel, propertyName: 'labels', type: 'string' },
+      dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'number' },
+      modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'number' },
+      moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'number' },
+      projectIds: { target: this.searchCheckBox, propertyName: 'projectIds', type: 'number' },
+      severityIds: { target: this.searchCheckBox, propertyName: 'severityIds', type: 'string' }
+    }
+    this.initQueryFromPath(searchKeys)
   },
   mounted () {
     if (localStorage.getItem('alertMessageProjectId')) {
@@ -782,6 +802,12 @@ export default {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
       }
+      const param = {
+        ...this.searchLabel,
+        ...this.searchCheckBox
+      }
+      const path = this.fromRoute.alertMessage
+      this.updatePath(param, path)
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {

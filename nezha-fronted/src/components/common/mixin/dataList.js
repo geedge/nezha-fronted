@@ -1,7 +1,9 @@
 import bus from '@/libs/bus'
 import { tableSet } from '@/components/common/js/tools'
 import { fromRoute } from '@/components/common/js/constants'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 export default {
+  mixins: [routerPathParams],
   data () {
     return {
       fromRoute: fromRoute,
@@ -79,6 +81,12 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
+      const dataListParam = {
+        ...this.searchLabel,
+        ...this.searchCheckBox
+      }
+      const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
+      this.updatePath(dataListParam, path)
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -286,6 +294,24 @@ export default {
         this.dragend()
       }
     }
+  },
+  created () {
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      id: { target: this.searchLabel, propertyName: 'id', type: 'number' },
+      severityIds: { target: this.searchLabel, propertyName: 'severityIds', type: 'string' },
+      type: { target: this.searchLabel, propertyName: 'type', type: 'number' },
+      name: { target: this.searchLabel, propertyName: 'name', type: 'string' },
+      typeIds: { target: this.searchCheckBox, propertyName: 'typeIds', type: 'number' },
+      ping: { target: this.searchCheckBox, propertyName: 'ping', type: 'string' },
+      modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'number' },
+      fields: { target: this.searchCheckBox, propertyName: 'fields', type: 'json' }
+    }
+    this.initQueryFromPath(searchKeys)
   },
   mounted () {
     const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)

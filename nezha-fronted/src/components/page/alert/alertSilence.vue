@@ -66,6 +66,7 @@ import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import alertSilenceTable from '@/components/common/table/alert/alertSilenceTable'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export default {
   name: 'alertSilence',
@@ -75,7 +76,7 @@ export default {
     nzDataList,
     alertSilenceBox
   },
-  mixins: [dataListMixin],
+  mixins: [dataListMixin, routerPathParams],
   data () {
     return {
       url: 'alert/silence',
@@ -162,6 +163,12 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
+      const assetParam = {
+        ...this.searchLabel,
+        ...this.searchCheckBox
+      }
+      const path = this.fromRoute.alertSilence
+      this.updatePath(assetParam, path)
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         this.nowTime = this.utcTimeToTimezoneStr(response.time)
@@ -229,6 +236,18 @@ export default {
         })
       })
     }
+  },
+  created () {
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
+      matchers: { target: this.searchLabel, propertyName: 'matchers', type: 'string' }
+    }
+    this.initQueryFromPath(searchKeys)
   }
 }
 </script>

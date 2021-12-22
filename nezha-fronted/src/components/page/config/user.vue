@@ -109,6 +109,7 @@ import nzDetailView from '@/components/common/detailView/nzDetailView'
 import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import userDetail from '@/components/common/detailView/list/userDetail/userDetail'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 export default {
   name: 'user',
   components: {
@@ -120,7 +121,7 @@ export default {
     userDetail,
     detailViewTopSearch
   },
-  mixins: [dataListMixin, detailViewMixin],
+  mixins: [dataListMixin, detailViewMixin, routerPathParams],
   data () {
     return {
       url: 'sys/user',
@@ -199,6 +200,17 @@ export default {
         })
       })
     }
+  },
+  created () {
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      name: { target: this.searchLabel, propertyName: 'name', type: 'string' }
+    }
+    this.initQueryFromPath(searchKeys)
   }
 }
 </script>
