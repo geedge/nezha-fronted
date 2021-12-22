@@ -102,7 +102,6 @@ export default {
         originalData.forEach((data, dataIndex) => {
           this.isNoData = false
           data.$labels = data.metric
-          console.log(data.values)
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
           const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
           // const mapping = this.selectTableMapping(value, chartInfo.param.valueMapping)

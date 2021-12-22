@@ -78,7 +78,6 @@ export default {
   },
   methods: {
     initChart (chartOption = this.chartOption) {
-      console.log(123123,chartOption,this.chartOption)
       this.legends = []
       chartOption.series = this.initPieData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       if (this.isNoData) {
@@ -97,7 +96,6 @@ export default {
     initPieData (chartInfo, seriesTemplate, originalDatas) {
       let colorIndex = 0
       const s = lodash.cloneDeep(seriesTemplate)
-      console.log(s)
       s.data = []
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {

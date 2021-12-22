@@ -6,7 +6,6 @@ export default {
       const q = this.$route.query
       lodash.forIn(searchKeys, (val, key) => {
         let qv = lodash.get(q, key)
-        console.log(qv, q, key, val)
         if (qv && val.type == 'number') {
           qv = lodash.toNumber(qv)
         }

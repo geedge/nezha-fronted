@@ -71,7 +71,7 @@ export default {
         return
       }
       const { minTime, maxTime, minValue, maxValue } = this.getMinMaxFromData(this.chartData) // 此处时间是秒
-      chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime * 1000, maxTime * 1000) // 需转为毫秒
+      chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime, maxTime)// 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
       chartOption.tooltip.position = this.tooltipPosition
       chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue)
@@ -112,7 +112,9 @@ export default {
       return { minTime, maxTime, minValue, maxValue }
     },
     xAxisLabelFormatter (minTime, maxTime) {
-      return function (value, index) {
+      return function (val, index) {
+        const value = val * 1000
+        console.log(value, minTime, maxTime)
         let offset = localStorage.getItem('nz-sys-timezone')
         offset = moment.tz(offset).format('Z')
         offset = Number.parseInt(offset)
@@ -139,6 +141,33 @@ export default {
         }
       }
     },
+    xAxisLabelFormatter2 (value, minTime, maxTime) {
+      console.log(value, minTime, maxTime)
+      let offset = localStorage.getItem('nz-sys-timezone')
+      offset = moment.tz(offset).format('Z')
+      offset = Number.parseInt(offset)
+      const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
+      const tData = new Date(value - localOffset + offset * 60 * 60 * 1000)
+      let hour = tData.getHours()
+      hour = hour > 9 ? hour : '0' + hour // 加0补充为两位数字
+      let minute = tData.getMinutes()
+      minute = minute > 9 ? minute : '0' + minute // 如果分钟小于10,则在前面加0补充为两位数字
+      if (minTime !== null && maxTime !== null) {
+        const diffSec = (maxTime - minTime) / 1000
+        const secOneDay = 24 * 60 * 60// 1天的秒数
+        const secOneMonth = secOneDay * 30// 30天的秒数
+        if (diffSec <= secOneDay) { // 同一天
+          return [hour, minute].join(':')
+        } else if (diffSec < secOneMonth) { // 大于1天，小于30天
+          return [tData.getMonth() + 1, tData.getDate()].join('/') + ' ' + [hour, minute].join(':')
+        } else { // 大于等于30天
+          return [tData.getMonth() + 1, tData.getDate()].join('/')
+        }
+      } else {
+        return [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('/') + '\n' +
+          [hour, minute].join(':')
+      }
+    },
     tooltipFormatter (hasTotal) { // 堆叠图需要total数据
       const self = this
       return function (params) {
@@ -146,7 +175,6 @@ export default {
         let sum = 0
         params.forEach((item, i) => {
           if (i === 0) {
-            console.log(item.data[0])
             const value = bus.computeTimezone(item.data[0] * 1000)
             const tData = new Date(value)
             str += '<div style="margin-bottom: 5px">'

@@ -223,7 +223,6 @@ export default {
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
     this.chartInfo.loaded && this.initChart()
-    console.log(this.isFullscreen , 'isFullscreen')
   },
   beforeDestroy () {
     this.chartInstances.forEach(item => {
