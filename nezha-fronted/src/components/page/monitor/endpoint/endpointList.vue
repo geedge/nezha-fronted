@@ -807,9 +807,47 @@ export default {
       pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
       pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
-      name: { target: this.searchLabel, propertyName: 'name', type: 'string' },
-      assetName: { target: this.searchLabel, propertyName: 'assetName', type: 'string' },
+      ids: {
+        target: this.searchLabel,
+        propertyName: 'ids',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 'ids',
+          label: 'ids',
+          name: 'ID',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      name: {
+        target: this.searchLabel,
+        propertyName: 'name',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 'name',
+          label: 'name',
+          name: 'Name',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      assetName: {
+        target: this.searchLabel,
+        propertyName: 'assetName',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          label: 'assetName',
+          name: 'Asset',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
       projectIds: { target: this.searchCheckBox, propertyName: 'projectIds', type: 'string' },
       logsStates: { target: this.searchCheckBox, propertyName: 'logsStates', type: 'string' },
       moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'string' }

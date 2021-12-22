@@ -221,13 +221,107 @@ export default {
       pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
       pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-      host: { target: this.searchLabel, propertyName: 'host', type: 'string' },
-      username: { target: this.searchLabel, propertyName: 'username', type: 'string' },
-      loginUser: { target: this.searchLabel, propertyName: 'loginUser', type: 'string' },
-      remoteAddr: { target: this.searchLabel, propertyName: 'remoteAddr', type: 'string' },
-      uuid: { target: this.searchLabel, propertyName: 'uuid', type: 'string' },
-      protocol: { target: this.searchLabel, propertyName: 'protocol', type: 'string' },
-      state: { target: this.searchLabel, propertyName: 'state', type: 'number' }
+      host: {
+        target: this.searchLabel,
+        propertyName: 'host',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 11,
+          label: 'host',
+          name: 'Login host',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      username: {
+        target: this.searchLabel,
+        propertyName: 'username',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 14,
+          label: 'username',
+          name: 'Source user',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      loginUser: {
+        target: this.searchLabel,
+        propertyName: 'loginUser',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 12,
+          label: 'loginUser',
+          name: 'Login user',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      remoteAddr: {
+        target: this.searchLabel,
+        propertyName: 'remoteAddr',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 13,
+          label: 'remoteAddr',
+          name: 'Source IP',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      uuid: {
+        target: this.searchLabel,
+        propertyName: 'uuid',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 15,
+          label: 'uuid',
+          name: 'UUID',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      protocol: {
+        target: this.searchLabel,
+        propertyName: 'protocol',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 16,
+          label: 'protocol',
+          name: 'Protocol',
+          readonly: true,
+          type: 'selectString',
+
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      state: {
+        target: this.searchLabel,
+        propertyName: 'state',
+        type: 'number',
+        defaultJson: {
+          disabled: false,
+          id: 17,
+          label: 'state',
+          name: 'State',
+          readonly: true,
+          type: 'terminalStatus',
+          val: ''
+        },
+        jsonKey: 'val'
+      }
     }
     this.initQueryFromPath(searchKeys)
   }

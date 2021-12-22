@@ -163,9 +163,6 @@ export default {
         }
       })
       this.$get('/sys/license/status', { scope: 'all' }).then(res => {
-        res = statusDate
-        this.loading = false
-        return this.tableData = res.data.list
         if (res.code === 200) {
           this.tableData = res.data.list
           this.loading = false

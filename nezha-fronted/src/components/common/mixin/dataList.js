@@ -296,20 +296,432 @@ export default {
     }
   },
   created () {
-    const searchKeys = {
-      // key: path 键
-      // value: vue set 参数
-      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
-      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
-      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-      id: { target: this.searchLabel, propertyName: 'id', type: 'number' },
-      severityIds: { target: this.searchLabel, propertyName: 'severityIds', type: 'string' },
-      type: { target: this.searchLabel, propertyName: 'type', type: 'number' },
-      name: { target: this.searchLabel, propertyName: 'name', type: 'string' },
-      typeIds: { target: this.searchCheckBox, propertyName: 'typeIds', type: 'number' },
-      ping: { target: this.searchCheckBox, propertyName: 'ping', type: 'string' },
-      modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'number' },
-      fields: { target: this.searchCheckBox, propertyName: 'fields', type: 'json' }
+    // {
+    //   // key: path 键
+    //   // value: vue set 参数
+    //   pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+    //   pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+    //   orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+    //   ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
+    //   severityIds: { target: this.searchLabel, propertyName: 'severityIds', type: 'string' },
+    //   type: { target: this.searchLabel, propertyName: 'type', type: 'number' },
+    //   name: { target: this.searchLabel, propertyName: 'name', type: 'string' },
+    //   typeIds: { target: this.searchCheckBox, propertyName: 'typeIds', type: 'number' },
+    //   ping: { target: this.searchCheckBox, propertyName: 'ping', type: 'string' },
+    //   modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'number' },
+    //   fields: { target: this.searchCheckBox, propertyName: 'fields', type: 'json' }
+    // }
+    const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
+    let searchKeys = {}
+    if (path === 'dc') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'ids',
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        name: {
+          target: this.searchLabel,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        location: {
+          target: this.searchLabel,
+          propertyName: 'location',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'location',
+            name: 'Location',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        state: {
+          target: this.searchLabel,
+          propertyName: 'state',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'dcState',
+            name: 'State',
+            readonly: true,
+            type: 'selectString',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
+    } else if (path === 'template') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'ids',
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        name: {
+          target: this.searchLabel,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        gname: {
+          target: this.searchLabel,
+          propertyName: 'gname',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'gname',
+            name: 'Group',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
+    } else if (path === 'i18n') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'ids',
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        code: {
+          target: this.searchLabel,
+          propertyName: 'code',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'code',
+            name: 'Code',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        value: {
+          target: this.searchLabel,
+          propertyName: 'value',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'value',
+            name: 'Value',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        lang: {
+          target: this.searchLabel,
+          propertyName: 'lang',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'lang',
+            name: 'Lang',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
+    } else if (path === 'model') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'ids',
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        name: {
+          target: this.searchLabel,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        brandIds: {
+          target: this.searchLabel,
+          propertyName: 'brandIds',
+          type: 'number',
+          defaultJson: {
+            disabled: false,
+            label: 'brandIds',
+            name: 'Brand',
+            readonly: true,
+            type: 'brand',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
+    } else if (path === 'operationLog' || path === 'profile') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        type: {
+          target: this.searchLabel,
+          propertyName: 'type',
+          type: 'number',
+          defaultJson: {
+            disabled: false,
+            id: 11,
+            label: 'type',
+            name: 'Type',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        username: {
+          target: this.searchLabel,
+          propertyName: 'username',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 12,
+            label: 'username',
+            name: 'User',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        operation: {
+          target: this.searchLabel,
+          propertyName: 'operation',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 13,
+            label: 'operation',
+            name: 'Operation',
+            type: 'selectString',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        state: {
+          target: this.searchLabel,
+          propertyName: 'state',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 16,
+            label: 'state',
+            name: 'State',
+            readonly: true,
+            type: 'selectString',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        operaId: {
+          target: this.searchLabel,
+          propertyName: 'operaId',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 14,
+            label: 'operaId',
+            name: 'Resources',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        params: {
+          target: this.searchLabel,
+          propertyName: 'params',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 17,
+            label: 'params',
+            name: 'Params',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
+    } else if (path === 'agent') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'ids',
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        state: {
+          target: this.searchLabel,
+          propertyName: 'state',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'promState',
+            name: 'State',
+            readonly: true,
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        dc: {
+          target: this.searchLabel,
+          propertyName: 'dc',
+          type: 'number',
+          defaultJson: {
+            name: 'Date center',
+            type: 'dc',
+            label: 'dcIds',
+            disabled: false,
+            val: '',
+            valnum: '',
+            valString: ''
+          },
+          jsonKey: 'valnum',
+          strKey: 'val',
+          listStr: 'dcSelect'
+        },
+        type: {
+          target: this.searchLabel,
+          propertyName: 'type',
+          type: 'number',
+          defaultJson: {
+            disabled: false,
+            label: 'promType',
+            name: 'Type',
+            readonly: true,
+            type: 'select',
+            val: '',
+            valnum: '',
+            valString: ''
+          },
+          jsonKey: 'valnum',
+          strKey: 'val',
+          listStr: 'history_once'
+        }
+      }
+    } else if (path === 'roles') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        name: {
+          target: this.searchLabel,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
     }
     this.initQueryFromPath(searchKeys)
   },

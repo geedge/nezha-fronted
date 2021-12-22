@@ -342,35 +342,75 @@ export default {
       pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
       pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
-      severityIds: { target: this.searchLabel, propertyName: 'severityIds', type: 'string' },
+      ids: {
+        target: this.searchLabel,
+        propertyName: 'ids',
+
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 1,
+          label: 'ids',
+          name: 'ID',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      severityIds: {
+        target: this.searchLabel,
+        propertyName: 'severityIds',
+        type: 'string',
+        isSearchInput: true,
+        defaultJson: {
+          disabled: false,
+          id: 4,
+          label: 'severityIds',
+          name: 'Priority',
+          readonly: true,
+          type: 'severity',
+          val: '',
+          valnum: '',
+          valString: ''
+        },
+        jsonKey: 'valnum',
+        strKey: 'val',
+        listStr: 'severitySelect'
+      },
       type: {
         target: this.searchLabel,
         propertyName: 'type',
         type: 'number',
         isSearchInput: true,
-        defaultJson:
-          {
-            name: 'Type',
-            id: 5,
-            type: 'alertTypes',
-            label: 'type',
-            disabled: false,
-            readonly: true,
-            val: 'Metrics',
-            valnum: 1,
-            valString: ''
-          },
-        jsonKey: 'valnum'
+        defaultJson: {
+          name: 'Type',
+          id: 5,
+          type: 'alertTypes',
+          label: 'type',
+          disabled: false,
+          readonly: true,
+          val: '',
+          valnum: '',
+          valString: ''
+        },
+        jsonKey: 'valnum',
+        strKey: 'val',
+        listStr: 'alertTypesSelect'
       },
       name: {
         target: this.searchLabel,
         propertyName: 'name',
         type: 'string',
-        isSearchInput: true,
-        defaultJson: {
 
-        }
+        defaultJson: {
+          disabled: false,
+          id: 2,
+          label: 'name',
+          name: 'Name',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
       }
     }
     Object.keys(this.$route.query).forEach(key => {

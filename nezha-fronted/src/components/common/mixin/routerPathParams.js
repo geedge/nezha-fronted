@@ -6,19 +6,19 @@ export default {
       const q = this.$route.query
       lodash.forIn(searchKeys, (val, key) => {
         let qv = lodash.get(q, key)
-        console.log(qv, q, key, val)
         if (qv && val.type == 'number') {
           qv = lodash.toNumber(qv)
         }
         setTimeout(() => {
           this.setSearchInput(val, qv)
         }, 200)
+        console.log()
         qv && this.$set(val.target, val.propertyName, qv)
       })
     },
     // 更新path，包含请求参数
     updatePath (param, path) {
-      // console.log(param)
+      console.log(param)
       this.$router.replace({ path: path, query: param }).catch(err => {})
     },
     setSearchInput (val, qv) {
@@ -32,10 +32,17 @@ export default {
         setTimeout(() => {
           const obj = lodash.cloneDeep(val.defaultJson)
           obj[val.jsonKey] = qv
+          console.log(obj[val.jsonKey])
+          if (val.strKey) {
+            this.$refs[dataList].$refs.searchInput[val.listStr].map((e) => {
+              console.log(e)
+              obj[val.strKey] = e.name
+            })
+          }
           this.$refs[dataList].$refs.searchInput.select_list.push(obj)
           this.$refs[dataList].$refs.searchInput.sreach_num++
           // this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs[dataList].$refs.searchInput.searchLabelList.filter(item => item.label !== 'projectIds')
-        })
+        }, 500)
       }
     }
   }

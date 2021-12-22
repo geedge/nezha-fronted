@@ -401,12 +401,90 @@ export default {
       pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
       pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
-      endpointName: { target: this.searchLabel, propertyName: 'endpointName', type: 'string' },
-      summary: { target: this.searchLabel, propertyName: 'summary', type: 'number' },
-      ruleName: { target: this.searchLabel, propertyName: 'ruleName', type: 'string' },
-      assetName: { target: this.searchLabel, propertyName: 'assetName', type: 'string' },
-      labels: { target: this.searchLabel, propertyName: 'labels', type: 'string' },
+      ids: {
+        target: this.searchLabel,
+        propertyName: 'ids',
+        type: 'number',
+
+        defaultJson: {
+          disabled: false,
+          id: 26,
+          label: 'ids',
+          name: 'ID',
+          type: 'id',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      endpointName: {
+        target: this.searchLabel,
+        propertyName: 'endpointName',
+        type: 'string',
+
+        defaultJson: {
+          disabled: false,
+          label: 'endpointName',
+          name: 'Endpoint',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      summary: {
+        target: this.searchLabel,
+        propertyName: 'summary',
+        type: 'number',
+
+        defaultJson: {
+          disabled: false,
+          label: 'summary',
+          name: 'Summary',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      ruleName: {
+        target: this.searchLabel,
+        propertyName: 'ruleName',
+        type: 'string',
+
+        defaultJson: {
+          disabled: false,
+          label: 'ruleName',
+          name: 'Alert rule',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      assetName: {
+        target: this.searchLabel,
+        propertyName: 'assetName',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          label: 'assetName',
+          name: 'Asset ',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      labels: {
+        target: this.searchLabel,
+        propertyName: 'labels',
+        type: 'string',
+
+        defaultJson: {
+          disabled: false,
+          label: 'labels',
+          name: 'Label',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
       dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'number' },
       modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'number' },
       moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'number' },

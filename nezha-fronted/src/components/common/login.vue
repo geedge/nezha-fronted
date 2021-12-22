@@ -26,8 +26,8 @@
           <button  v-if="!verifyShow" id="login" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">Login</button>
           <button  v-if="verifyShow" id="verify" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="verify">{{$t("login.verify")}}</button>
         </div>
+        <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>
         <div class="login-license">
-          <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>
 <!--          <div v-if="!license.valid" class="license-info">INSTALLATION ID:&nbsp;{{license.token}}</div>-->
           <div v-if="!license.valid" class="license-upload">
 <!--            <button type="button" class="login-btn" @click="downloadMib"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.dowLicense')}}</button>-->

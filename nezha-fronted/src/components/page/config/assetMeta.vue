@@ -294,9 +294,66 @@ export default {
       pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
       pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
-      name: { target: this.searchLabel, propertyName: 'name', type: 'string' },
-      brandIds: { target: this.searchLabel, propertyName: 'brandIds', type: 'number' }
+      ids: {
+        target: this.searchLabel,
+        propertyName: 'ids',
+
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 'ids',
+          label: 'ids',
+          name: 'ID',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      name: {
+        target: this.searchLabel,
+        propertyName: 'name',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 'name',
+          label: 'name',
+          name: 'Name',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      key: {
+        target: this.searchLabel,
+        propertyName: 'key',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          label: 'key',
+          name: 'Key',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      groupIds: {
+        target: this.searchLabel,
+        propertyName: 'groupIds',
+        type: 'number',
+        isSearchInput: true,
+        defaultJson: {
+          disabled: false,
+          label: 'group',
+          name: 'Group',
+          readonly: true,
+          type: 'group',
+          val: '',
+          searchType: ''
+        },
+        jsonKey: 'searchType',
+        strKey: 'val',
+        listStr: 'groupSelect'
+      }
     }
     this.initQueryFromPath(searchKeys)
   }

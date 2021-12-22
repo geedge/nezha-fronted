@@ -218,12 +218,6 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
-      const chartTempParam = {
-        ...this.searchLabel,
-        ...this.searchCheckBox
-      }
-      const path = this.fromRoute.chartTemp
-      this.updatePath(chartTempParam, path)
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox, panelId: 0, returnChildren: 0, groupId: 0 }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -262,20 +256,6 @@ export default {
     },
     panelReload () {},
     panelReloadOnlyPanel () {}
-  },
-  created () {
-    const searchKeys = {
-      // key: path 键
-      // value: vue set 参数
-      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
-      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
-      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
-      type: { target: this.searchLabel, propertyName: 'type', type: 'string' },
-      name: { target: this.searchLabel, propertyName: 'name', type: 'string' },
-      varType: { target: this.searchLabel, propertyName: 'varType', type: 'number' }
-    }
-    this.initQueryFromPath(searchKeys)
   }
 }
 </script>

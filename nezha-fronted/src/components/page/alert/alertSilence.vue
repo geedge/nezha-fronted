@@ -244,8 +244,33 @@ export default {
       pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
       pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
-      matchers: { target: this.searchLabel, propertyName: 'matchers', type: 'string' }
+      ids: {
+        target: this.searchLabel,
+        propertyName: 'ids',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 'ids',
+          label: 'ids',
+          name: 'ID',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      matchers: {
+        target: this.searchLabel,
+        propertyName: 'matchers',
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          label: 'matchers',
+          name: 'Matcher',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      }
     }
     this.initQueryFromPath(searchKeys)
   }

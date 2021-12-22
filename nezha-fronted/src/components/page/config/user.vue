@@ -208,7 +208,21 @@ export default {
       pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
       pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-      name: { target: this.searchLabel, propertyName: 'name', type: 'string' }
+      name: {
+        target: this.searchLabel,
+        propertyName: 'name',
+        type: 'string',
+
+        defaultJson: {
+          disabled: false,
+          id: 'name',
+          label: 'name',
+          name: 'Name',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      }
     }
     this.initQueryFromPath(searchKeys)
   }

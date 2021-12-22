@@ -764,11 +764,82 @@ export default {
       pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
       pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-      ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
-      sn: { target: this.searchLabel, propertyName: 'sn', type: 'number' },
-      name: { target: this.searchLabel, propertyName: 'name', type: 'string' },
-      manageIp: { target: this.searchLabel, propertyName: 'manageIp', type: 'number' },
-      statistics: { target: this.searchLabel, propertyName: 'statistics', type: 'number' }
+      ids: {
+        target: this.searchLabel,
+        propertyName: 'ids',
+
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 'ids',
+          label: 'ids',
+          name: 'ID',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      name: {
+        target: this.searchLabel,
+        propertyName: 'name',
+        type: 'string',
+
+        defaultJson: {
+          disabled: false,
+          id: 'name',
+          label: 'name',
+          name: 'Name',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      sn: {
+        target: this.searchLabel,
+        propertyName: 'sn',
+        type: 'number',
+
+        defaultJson: {
+          disabled: false,
+          id: 'sn',
+          label: 'sn',
+          name: 'SN',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      manageIp: {
+        target: this.searchLabel,
+        propertyName: 'manageIp',
+        type: 'number',
+
+        defaultJson: {
+          disabled: false,
+          id: 'manageIp',
+          label: 'manageIp',
+          name: 'IP',
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
+      statistics: {
+        target: this.searchLabel,
+        propertyName: 'statistics',
+        type: 'number',
+
+        defaultJson: {
+          disabled: false,
+          id: 'stateIds',
+          label: 'stateIds',
+          name: 'State',
+          readonly: true,
+          type: 'assetState',
+          val: ''
+        },
+        jsonKey: 'val'
+      }
     }
     this.initQueryFromPath(searchKeys)
   },

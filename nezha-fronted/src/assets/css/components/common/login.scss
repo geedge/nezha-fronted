@@ -153,16 +153,18 @@
     right: 8px;
     transform: translateY(-50%);
   }
+  .license-warn{
+    color: #d92926;
+    margin-top: 22px;
+    text-align: center;
+    text-shadow: 1px 1px 3px #ddd;
+  }
   .login-license{
     margin-top: 27px;
     text-align: center;
     line-height: 30px;
     display: flex;
     justify-content: space-around;
-    .license-warn{
-      color: #d92926;
-      text-shadow: 1px 1px 3px #ddd;
-    }
     .license-info {
       margin-bottom: 10px;
       color: white;
