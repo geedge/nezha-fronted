@@ -35,6 +35,8 @@
       :from="from"
       :isError="isError"
       :loading="loading"
+      :minusTime="minusTime"
+      :multipleTime="multipleTime"
       :is-fullscreen="isFullscreen"
       v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
     ></chart>
@@ -74,7 +76,8 @@ export default {
       chartData: [],
       loading: true,
       isError: false,
-      MultipleTime: false
+      multipleTime: false,
+      minusTime: ''
     }
   },
   computed: {
@@ -87,8 +90,8 @@ export default {
   },
   methods: {
     isGroup,
-    dateChange (filter, MultipleTime) {
-      console.log(filter, MultipleTime)
+    dateChange (filter, multipleTime) {
+      console.log(filter, multipleTime)
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = filter.start_time
@@ -97,6 +100,14 @@ export default {
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
       const elements = this.chartInfo.elements || []
+      if (multipleTime.length) {
+        const minusTime = (new Date(filter.start_time).getTime() - new Date(multipleTime[0]).getTime())
+        this.minusTime = minusTime
+        this.multipleTime = true
+      } else {
+        this.minusTime = ''
+        this.multipleTime = false
+      }
       this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
     },
     // 参数 isRefresh 标识是否是刷新操作
@@ -138,7 +149,7 @@ export default {
             } else if (this.chartInfo.datasource === 'logs') {
               urlPre += '/logs/loki'
             }
-            const requests = elements.map((element) => {
+            let requests = elements.map((element) => {
               if (this.from === fromRoute.chartTemp) {
                 return chartTempData
               }
@@ -152,15 +163,48 @@ export default {
               query += `&query=${element.expression}`
               return this.$get(query)
             })
-
+            if (this.multipleTime) {
+              console.log(123)
+              const multipleRequests = elements.map((element) => {
+                if (this.from === fromRoute.chartTemp) {
+                  return chartTempData
+                }
+                let query = `${urlPre}/api/v1/query_range?start=${startTime - this.minusTime / 1000}&end=${endTime - this.minusTime / 1000}&step=${step}`
+                if (isTimeSeries(this.chartInfo.type)) {
+                  query += `&nullType=${this.chartInfo.param.nullType || 'null'}`
+                }
+                // if (isChartPie(this.chartInfo.type)) {
+                //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
+                // }
+                query += `&query=${element.expression}`
+                return this.$get(query)
+              })
+              requests = requests.concat(multipleRequests)
+              console.log(requests)
+            }
             const chartData = []
-            axios.all(requests).then(res => {
-              res.forEach(r => {
-                if (r.status === 'success') {
-                  chartData.push(r.data.result)
+            axios.all(requests).then((res) => {
+              res.forEach((r, rIndex) => {
+                if (rIndex < elements.length) {
+                  if (r.status === 'success') {
+                    chartData.push(r.data.result)
+                  } else {
+                    chartData.push({ error: r.msg || r.error || r })
+                    this.isError = true
+                  }
                 } else {
-                  chartData.push({ error: r.msg || r.error || r })
-                  this.isError = true
+                  if (r.status === 'success') {
+                    console.log(r.data.result)
+                    r.data.result.forEach(item => {
+                      item.values.forEach(values => {
+                        values[0] = values[0] + this.minusTime / 1000
+                      })
+                    })
+                    chartData.push(r.data.result)
+                  } else {
+                    chartData.push({ error: r.msg || r.error || r })
+                    this.isError = true
+                  }
                 }
               })
               this.chartData = chartData

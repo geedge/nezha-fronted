@@ -33,6 +33,10 @@ export default {
   components: {
     chartLegend: legend
   },
+  props: {
+    multipleTime: {},
+    minusTime: {}
+  },
   mixins: [chartMixin],
   data () {
     return {
@@ -145,11 +149,23 @@ export default {
       return function (params) {
         let str = '<div class="nz-chart__tooltip">'
         let sum = 0
+        let flag = true
         params.forEach((item, i) => {
+          console.log(item)
+          const seriesName = item.seriesName.split('-')[0]
           if (i === 0) {
             const value = bus.computeTimezone(item.data[0] * 1000)
             const tData = new Date(value)
             str += '<div style="margin-bottom: 5px">'
+            str += bus.timeFormate(tData)
+            str += '</div>'
+          }
+          if (flag && item.seriesName.indexOf('Previous') !== -1) {
+            flag = false
+            const value = bus.computeTimezone(item.data[0] * 1000 - self.minusTime)
+            const tData = new Date(value)
+            str += '<div style="border: 1px solid #EEEEEE"></div>'
+            str += '<div style="margin-top: 5px;margin-bottom: 5px">'
             str += bus.timeFormate(tData)
             str += '</div>'
           }
@@ -184,7 +200,7 @@ export default {
             <div class="tooltip__row">
               <div class="row__label">
                 <span class="row__color-block" style="background-color: ${color}"></span>
-                <span>${item.seriesName}</span>
+                <span>${seriesName}</span>
               </div>
               <div class="row__value">
                 <span>${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(val, null, -1, paramsDot)}</span>
