@@ -94,7 +94,7 @@ export default {
       if (data.metric.__name__) {
         legend += '}'
       }
-      if (!legend) {
+      if (!legend && chartInfo.elements) {
         legend = chartInfo.elements[expressionIndex].expression
       }
       // 处理legend别名
