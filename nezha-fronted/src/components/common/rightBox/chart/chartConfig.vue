@@ -283,7 +283,7 @@
 
         <!--   nullType     -->
         <el-form-item
-          :label='"Null value"'
+          :label="$t('dashboard.panel.chartForm.nullType')"
           class="form-item--half-width"
           prop="param.nullType"
           v-if="isShowNullType(chartConfig.type)"
@@ -306,7 +306,7 @@
         </el-form-item>
         <!-- text -->
         <el-form-item
-          :label='"Null value"'
+          :label="$t('dashboard.panel.chartForm.display')"
           class="form-item--half-width"
           prop="param.nullType"
           v-if="isShowText(chartConfig.type)"
