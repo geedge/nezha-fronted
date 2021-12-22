@@ -155,6 +155,7 @@ export default {
       }
       if (dom) {
         this.stepWidth = Math.floor(dom.offsetWidth / 12)
+        console.log(this.stepWidth)
         if (!this.isGroup) {
           const headerH = 50 / this.stepWidth
           const headerHPadding = 50 / this.stepWidth
@@ -170,17 +171,21 @@ export default {
       // TODO 分段重新渲染图表，或者暂时隐藏图表
       setTimeout(() => {
         this.$refs['chart' + i][0].resize()
+        if (this.isGroup) {
+          this.copyDataList.find(item => item.i == i).h = newH
+          console.log(this.copyDataList.find(item => item.i == i),this.copyDataList)
+          // bus.$emit('groupMove', this.copyDataList, this.groupInfo)
+        }
       }, 50)
     },
     resizedEvent (i, newH, newW, newHPx, newWPx) {
       // TODO 重新渲染图表，向后端发送put请求
       setTimeout(() => {
         this.$refs['chart' + i][0].resize()
-        // if (!this.isGroup) {
-        //   this.moveChart()
-        // } else {
-        //   bus.$emit('groupMove', this.copyDataList, this.groupInfo)
-        // }
+        if (this.isGroup) {
+          this.copyDataList.find(item => item.i == i).h = newH
+          // bus.$emit('groupMove', this.copyDataList, this.groupInfo)
+        }
         this.$put('/visual/panel/chart/modify', {
           id: i,
           span: newW,
@@ -277,7 +282,7 @@ export default {
       }, 300)
     },
     onScroll (scrollTop = 0) {
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.copyDataList.forEach(item => {
           if (item.loaded) {
             return
@@ -291,7 +296,7 @@ export default {
             let top = dom.style.transform.split(',')[1]
             top = top.substring(0, top.length - 2)
             const mainOffsetTop = top - this.stepWidth + 14// transform: grid组件 通过 tranfrom 控制位置 中间的为y的值 通过截取获得 - 父元素 marginTop的 值。
-            // console.log(mainOffsetTop)
+            console.log(mainOffsetTop)
             // 2.元素的高度
             const mainHeight = itemHeight // ele.offsetHeight;//itemHeight;
             // 3.页面滚动的距离
@@ -305,7 +310,7 @@ export default {
             }
           }
         })
-      })
+      },100)
     }
   },
   created () {
@@ -381,6 +386,7 @@ export default {
       deep: true,
       handler (n) {
         if (this.isGroup) {
+          console.log(123123)
           bus.$emit('groupMove', n, this.groupInfo)
         }
       }

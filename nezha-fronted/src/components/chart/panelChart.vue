@@ -39,6 +39,7 @@ import bus from '@/libs/bus'
 import axios from 'axios'
 import chartTempData from '@/components/charts/chartTempData'
 import logsData from '@/components/chart/logsData'
+import lodash from 'lodash'
 
 export default {
   name: 'panelChart',
@@ -74,6 +75,7 @@ export default {
     isGroup,
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh) {
+      console.log(123)
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
@@ -130,9 +132,6 @@ export default {
             const chartData = []
             axios.all(requests).then(res => {
               res.forEach(r => {
-                if (this.chartInfo.type === 'log') {
-                  r = logsData
-                }
                 if (r.status === 'success') {
                   chartData.push(r.data.result)
                 } else {
@@ -193,6 +192,10 @@ export default {
           }
           case 'misc': {
             this.loading = false
+            setTimeout(() => {
+              this.loading = false
+            })
+            console.log(123123)
             if (this.chartInfo.type === 'hexagon') {
               this.getHexagonFigureData().then(res => {
                 this.chartData = res
@@ -209,7 +212,7 @@ export default {
               }
             }
             if (this.chartInfo.type === 'group') {
-              this.chartData = [...this.chartInfo.children]
+              this.chartData = lodash.get(this,'chartInfo.children', [])
               this.groupInit()
             }
             if (this.chartInfo.type === 'topology') {
@@ -222,6 +225,7 @@ export default {
           }
         }
       } catch (e) {
+        console.log(e)
         this.loading = false
       }
     },
@@ -297,10 +301,18 @@ export default {
       handler (n) {
         this.refresh()
       }
+    },
+    loading: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        console.log(n)
+        console.log(this.chartInfo.type)
+      }
     }
   },
   mounted () {
-    this.getChartData()
+    // this.getChartData()
   }
 }
 </script>

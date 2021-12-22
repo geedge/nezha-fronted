@@ -7,7 +7,7 @@ const group = {
   height: 1,
   updateBy: 1,
   updateAt: '2021-12-13 08:20:04',
-  type: 'group',
+  type: 'misc',
   unit: 2,
   weight: 4,
   param: {
