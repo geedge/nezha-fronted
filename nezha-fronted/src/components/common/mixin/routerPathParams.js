@@ -12,6 +12,9 @@ export default {
         if (qv && val.type == 'array') {
           qv = qv.split(',')
         }
+        if (qv && val.type == 'jsonParse') {
+          qv = JSON.parse(qv)
+        }
         setTimeout(() => {
           this.setSearchInput(val, qv)
           if (qv && val.type2 == 'array') {

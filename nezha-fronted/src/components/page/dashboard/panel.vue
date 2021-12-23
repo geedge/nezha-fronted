@@ -316,7 +316,9 @@ export default {
       this.filter.panelId = this.showPanel.id
       this.panelId = this.showPanel.id
       const param = {
-        panelId: this.panelId
+        panelId: this.panelId,
+        nowTimeType: JSON.stringify(this.nowTimeType),
+        searchTime: JSON.stringify(this.searchTime)
       }
       // this.dateChange()
       // this.getTableData()
@@ -554,8 +556,15 @@ export default {
       this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
       this.filter.value = this.searchTime[2]
       this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
-      this.getTableData()
+      // this.getTableData()
       this.getData(this.filter)
+      const param = {
+        panelId: this.panelId,
+        nowTimeType: JSON.stringify(this.nowTimeType),
+        searchTime: JSON.stringify(this.searchTime)
+      }
+      const path = this.fromRoute.panel
+      this.updatePath(param, path)
       this.$store.dispatch('dispatchPanelTime', {
         time: this.searchTime,
         nowTimeType: this.nowTimeType
@@ -581,7 +590,7 @@ export default {
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'd')
       }
-      this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime
+      this.$refs.pickTime && (this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime)
     },
     /* 时间条件查询--end */
     // 公用操作
@@ -800,22 +809,26 @@ export default {
     const searchKeys = {
       // key: path 键
       // value: vue set 参数
-      panelId: { target: this, propertyName: 'panelId', type: 'number' }
+      panelId: { target: this, propertyName: 'panelId', type: 'number' },
+      searchTime: { target: this, propertyName: 'searchTime', type: 'jsonParse' },
+      nowTimeType: { target: this, propertyName: 'nowTimeType', type: 'jsonParse' }
     }
     setTimeout(() => {
       this.showPanel.id = this.panelId
       this.filter.panelId = this.panelId
     })
     this.initQueryFromPath(searchKeys)
+    if (this.nowTimeType.type) {
+      this.setSearchTime(this.nowTimeType.type, this.nowTimeType.value, this.nowTimeType)
+      this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.value = this.searchTime[2]
+    }
     this.getTableData()
     this.$store.dispatch('dispatchPanelTime', {
       time: this.searchTime,
-      nowTimeType: {
-        id: 4,
-        text: this.$t('dashboard.panel.lastOneHour'),
-        type: 'hour',
-        value: 1
-      }
+      nowTimeType: this.nowTimeType
     })
   },
   mounted () {
@@ -825,6 +838,13 @@ export default {
     document.querySelector('#tableList').addEventListener('mouseleave', this.tableListLeave)
     if (!document.onmousemove) { // 添加鼠标移动事件监听
       document.onmousemove = lineChartMove
+    }
+    if (this.nowTimeType) {
+      this.nowTimeType.start_time = this.searchTime[0]
+      this.nowTimeType.end_time = this.searchTime[1]
+      setTimeout(() => {
+        this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowTimeType)
+      }, 100)
     }
   },
   watch: {

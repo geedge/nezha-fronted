@@ -177,11 +177,13 @@ export default {
     if (this.$refs.pickTime) {
       if (this.$refs.pickTime.$refs.multipleTime) {
         this.$refs.pickTime.$refs.multipleTime.showDropdown = false
-        this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
       }
-      this.setSearchTime(this.nowType.type, this.nowType.value, this.nowType)
       this.searchTime[0] = bus.timeFormate(this.timeRange[0], 'yyyy-MM-dd hh:mm:ss')
       this.searchTime[1] = bus.timeFormate(this.timeRange[1], 'yyyy-MM-dd hh:mm:ss')
+      this.nowType.start_time = this.searchTime[0]
+      this.nowType.end_time = this.searchTime[1]
+      this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
+      this.setSearchTime(this.nowType.type, this.nowType.value, this.nowType)
     }
   }
 }
