@@ -159,8 +159,6 @@
             @tags-changed="(newTags)=>{tagsChange(newTags)}"
           />
         </el-form-item>
-      </div>
-      <div class="form-items--half-width-group">
         <!-- unit -->
         <el-form-item
           v-show="!isTable(chartConfig.type)&&!isLog(chartConfig.type)"
@@ -180,29 +178,6 @@
                        @change="unitSelected"
           >
           </el-cascader>
-        </el-form-item>
-        <!-- text -->
-        <el-form-item
-          :label="$t('dashboard.panel.chartForm.display')"
-          class="form-item--half-width"
-          prop="param.nullType"
-          v-if="isShowText(chartConfig.type)"
-        >
-          <el-select
-            id="chart-box-text"
-            v-model="chartConfig.param.text"
-            placeholder=""
-            popper-class="right-box-select-top prevent-clickoutside"
-            size="small"
-            @change="change"
-          >
-            <el-option
-              v-for="item in textList"
-              :key="item.value"
-              :label="$t(item.label)"
-              :value="item.value"
-            ></el-option>
-          </el-select>
         </el-form-item>
       </div>
       <div class="form-items--half-width-group">
@@ -255,6 +230,31 @@
             >
               <span class="panel-dropdown-label-txt" > span-{{item}}</span>
             </el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="form-items--half-width-group">
+        <!-- text -->
+        <el-form-item
+          :label="$t('dashboard.panel.chartForm.display')"
+          class="form-item--half-width"
+          prop="param.nullType"
+          v-if="isShowText(chartConfig.type)"
+        >
+          <el-select
+            id="chart-box-text"
+            v-model="chartConfig.param.text"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="change"
+          >
+            <el-option
+              v-for="item in textList"
+              :key="item.value"
+              :label="$t(item.label)"
+              :value="item.value"
+            ></el-option>
           </el-select>
         </el-form-item>
       </div>
