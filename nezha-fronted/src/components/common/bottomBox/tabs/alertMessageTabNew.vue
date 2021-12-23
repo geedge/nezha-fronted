@@ -269,126 +269,6 @@ export default {
         this.queryDate()
       })
     },
-    queryChartDate () {
-      const $temp = this
-      const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
-      const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
-      // const start = this.currentMsg.startAt
-      // const end = this.currentMsg.endAt
-      this.searchTime = [start, end]
-      const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)
-      let step = '15s'
-      if (timeDiff < 1) {
-        step = '15s'
-      } else if (timeDiff < 7) {
-        step = '5m'
-      } else if (timeDiff < 30) {
-        step = '10m'
-      } else {
-        step = '30m'
-      }
-      if (this.$refs.messageChart) {
-        this.$refs.messageChart.startLoading()
-        const axiosArr = []
-        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\r|\n+/g, '')) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step + '&filter=' + encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))))
-        this.legend = []
-        this.chartDatas = []
-        axios.all(axiosArr).then(res => {
-          this.chartLoading = false
-          try {
-            res.forEach((response, promIndex) => {
-              if (response.status === 200) {
-                if (response.data.status === 'success') {
-                  const queryData = response.data.data.result[0]
-                  if (queryData) {
-                    const chartData = {
-                      type: 'line',
-                      symbol: 'none', // 去掉点
-                      smooth: 0.2, // 曲线变平滑
-                      name: '',
-                      lineStyle: {
-                        width: 1,
-                        opacity: 0.9
-                      },
-                      markLine: {
-                        silent: true,
-                        symbol: ['circle', 'circle'],
-                        label: {
-                          distance: this.computeDistance(chartDataFormat.getUnit(this.currentMsg.alertRule.unit ? this.currentMsg.alertRule.unit : 2).compute(this.currentMsg.alertRule.threshold)),
-                          formatter (params) {
-                            return chartDataFormat.getUnit($temp.currentMsg.alertRule.unit ? $temp.currentMsg.alertRule.unit : 2).compute(params.value)
-                          }
-                        },
-                        lineStyle: {
-                          color: '#d64f40',
-                          width: 2,
-                          type: 'dotted'
-                        },
-                        data: [{
-                          yAxis: Number(this.currentMsg.alertRule.threshold)
-                        }]
-                      },
-                      markArea: {
-                        itemStyle: {
-                          color: '#d64f40',
-                          opacity: 0.1
-                        },
-                        data: [this.returnMarkArea()]
-                      }
-                    }
-                    if (this.currentMsg.alertRule.operator == '==' || this.currentMsg.alertRule.operator == '!=') {
-                      delete chartData.markArea
-                    }
-                    let alias = chartData.name
-                    chartData.name += '{'
-                    alias += '{'
-                    Object.keys(queryData.metric).forEach((item, index) => {
-                      const label = item
-                      const value = queryData.metric[label]
-                      chartData.name += label + "='" + value + "',"
-                    })
-                    chartData.name = chartData.name.charAt(chartData.name.length - 1) == ',' ? chartData.name.substr(0, chartData.name.length - 1) : chartData.name
-                    chartData.name += '}'
-                    const legend = {
-                      name: chartData.name,
-                      alias: chartData.name,
-                      isGray: false
-                    }
-                    this.legend.push(legend)
-                    chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
-                      return [dpsItem[0] * 1000, parseFloat(dpsItem[1]).toFixed(2)]
-                    })
-                    this.chartDatas.push(chartData)
-                  }
-                } else {
-                  this.$message.error(response.data.error)
-                }
-              } else {
-                this.$refs.messageChart.endLoading()
-                this.chartLoading = false
-                this.isError = true
-                if (response.msg) {
-                  this.errorContent = response.msg
-                } else if (response.error) {
-                  this.errorContent = response.error
-                } else {
-                  this.errorContent = response
-                }
-              }
-            })
-            this.$nextTick(() => {
-              this.$refs.messageChart.setRandomColors(this.chartDatas.length)
-              this.$refs.messageChart.setLegend(this.legend)
-              this.$refs.messageChart.setSeries(this.chartDatas)
-              this.$refs.messageChart.endLoading()
-            })
-          } catch (err) {
-            // this.$message.error(err)
-            this.$refs.messageChart.endLoading()
-          }
-        })
-      }
-    },
     del (row) {
       const self = this
       this.$confirm(this.$t('tip.confirmDelete'), {
@@ -711,11 +591,13 @@ export default {
         const chartInfo = lodash.cloneDeep(lineData)
         chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
         chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
+        chartInfo.unit = this.currentMsg.unit
         this.showFullscreen(true, chartInfo)
       } else if (this.currentMsg.alertRule.type === 2) {
         const chartInfo = lodash.cloneDeep(logData)
         chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
         chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
+        chartInfo.unit = this.currentMsg.unit
         this.showFullscreen(true, chartInfo)
       }
     },

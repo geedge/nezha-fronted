@@ -1,7 +1,7 @@
 <template>
   <div v-clickoutside="{obj:editChart, func:clickOutside}" :class="boxClass" class="right-box right-box-chart">
     <transition v-if="from !== 'chartTemp'" name="right-box">
-      <panel-box v-if="!showPanel.type" ref="panelBox2" :panel="panel" @reload="panelReload"></panel-box>
+<!--      <panel-box v-if="!showPanel.type" ref="panelBox2" :panel="panel" @reload="panelReload"></panel-box>-->
     </transition>
 
     <div class="right-box__header">
@@ -182,6 +182,10 @@ export default {
           params.x = 0
           params.y = 999
         }
+        if (this.from === 'endpointQuery') { // endpointQuery 新增 放在最后
+          params.x = 0
+          params.y = 999
+        }
         delete params.panel
         if (params.type === 'table') {
           delete params.param.tags
@@ -212,6 +216,7 @@ export default {
       })
     },
     selectPanel (panel) {
+      console.log(panel)
       this.panelName = panel.name
       this.editChart.panelName = panel.name
       this.panelId = panel.id
@@ -356,7 +361,7 @@ export default {
       immediate: true,
       deep: true,
       handler () {
-        if (this.showPanel.id || this.from === 'chartTemp') {
+        if (this.showPanel && (this.showPanel.id || this.from === 'chartTemp')) {
           this.panelId = this.showPanel.id
           this.panelName = this.showPanel.name
           this.editChart.panelName = this.showPanel.name

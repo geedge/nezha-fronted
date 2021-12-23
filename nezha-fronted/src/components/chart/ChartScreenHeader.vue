@@ -34,7 +34,19 @@
         </el-tooltip>
       </span>
       <span class="chart-header__tool" v-if="showTime(chartInfo.type)">
-        <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" :showMultiple="showMultiple(chartInfo.type)" ref="pickTime" style="height: 28px;" id="line-chart"></pick-time>
+        <pick-time
+          :refresh-data-func="dateChange"
+          v-model="searchTime"
+          :use-chart-unit="showUnit(from)"
+          :showMultiple="showMultiple(chartInfo.type)"
+          ref="pickTime"
+          style="height: 28px;"
+          id="line-chart"
+          @unitChange="unitChange"
+        ></pick-time>
+      </span>
+      <span class="chart-header__tool" v-if="showSaveBtn(from)">
+            <button id="endpoint-query-full-chart-save" v-has="'panel_chart_add'" class="nz-btn nz-btn-size-large nz-btn-style-normal" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
       </span>
       <span class="chart-header__tool" @click="closeDialog">
         <i class="nz-icon nz-icon-close" style="font-size: 16px;"></i>
@@ -128,6 +140,23 @@ export default {
           return true
         default: return false
       }
+    },
+    showUnit (type) {
+      switch (type) {
+        case 'endpointQuery' :
+          return true
+        default: return false
+      }
+    },
+    showSaveBtn (type) {
+      switch (type) {
+        case 'endpointQuery' :
+          return true
+        default: return false
+      }
+    },
+    saveChart () {
+      this.$emit('saveChart')
     }
   },
   watch: {

@@ -10,6 +10,7 @@
       :chart-info="chartInfo"
       :showAllData.sync="showAllData"
       :allDataLength="allDataLength"
+      @unitChange="unitChange"
       @loadMore="loadMore"
       @edit-chart="$emit('edit-chart', chartInfo)"
       @refresh="refresh"
@@ -21,10 +22,13 @@
       v-if="isFullscreen"
       :is-group="isGroup(chartInfo.type)"
       :isError="isError"
+      :from="from"
       :chartData="chartData"
       :chart-info="chartInfo"
       :showAllData.sync="showAllData"
       :allDataLength="allDataLength"
+      @unitChange="unitChange"
+      @saveChart="saveChart"
       @loadMore="loadMore"
       @refresh="refresh"
       @dateChange="dateChange"
@@ -391,6 +395,17 @@ export default {
       this.$nextTick(() => {
         this.$refs.chart && this.$refs.chart.$refs['chart' + this.chartInfo.id].initChart()
       })
+    },
+    unitChange (val) {
+      this.$emit('update:chartInfo', 'unit', val)
+      this.chartInfo.unit = val
+      console.log(this.chartInfo.unit)
+      this.$nextTick(() => {
+        this.$refs.chart && this.$refs.chart.$refs['chart' + this.chartInfo.id].initChart()
+      })
+    },
+    saveChart () {
+      this.$emit('saveChart', this.chartInfo)
     }
   },
   watch: {

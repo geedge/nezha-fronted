@@ -43,13 +43,12 @@ const data = {
   y: 12,
   elements: [
     {
-      id: 85583,
-      chartId: 697389,
+      id: '',
+      chartId: '',
       expression: '',
       type: 'expert',
       legend: '',
-      buildIn: 0,
-      seq: null,
+      buildIn: '',
       name: 'A',
       state: 1
     }

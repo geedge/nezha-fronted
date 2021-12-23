@@ -42,13 +42,11 @@ const data = {
   y: 12,
   elements: [
     {
-      id: 85584,
-      chartId: 697389,
+      id: '',
+      chartId: '',
       expression: '',
       type: 'expert',
       legend: '',
-      buildIn: 0,
-      seq: null,
       name: 'A',
       state: 1
     }

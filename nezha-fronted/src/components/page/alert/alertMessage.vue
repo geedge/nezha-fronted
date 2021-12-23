@@ -556,7 +556,6 @@ export default {
       }
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
-        console.log(this.currentMsg )
         this.$nextTick(() => {
           this.searchTimeDialog = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
           this.queryDate()
@@ -575,11 +574,13 @@ export default {
         const chartInfo = lodash.cloneDeep(lineData)
         chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
         chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
+        chartInfo.unit = this.currentMsg.unit
         this.showFullscreen(true, chartInfo)
       } else if (this.currentMsg.alertRule.type === 2) {
         const chartInfo = lodash.cloneDeep(logData)
         chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
         chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
+        chartInfo.unit = this.currentMsg.unit
         this.showFullscreen(true, chartInfo)
       }
     },

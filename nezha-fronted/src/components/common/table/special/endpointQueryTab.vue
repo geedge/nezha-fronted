@@ -51,43 +51,96 @@
     <div class="query-page-option">
       <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
     </div>
-    <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
-               :title="$t('project.endpoint.dialogTitle')"
-               :visible.sync="graphShow"
-               width="90%"
-               height="80%"
-               :modal-append-to-body="false"
-               id="viewGraphDialog"
-               @close="dialogClose">
-      <div slot="title">
-        {{$t("project.endpoint.dialogTitle")}}
-        <div class="float-right panel-calendar dialog-tool" style="display: flex;margin-right: 30px">
-          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange" id="endpoint-query-full-chart" :show-multiple="true" ref="pickTime"></pick-time>
-          <button id="endpoint-query-full-chart-save" v-has="'panel_chart_add'" class="nz-btn nz-btn-size-large nz-btn-style-normal" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
-        </div>
-      </div>
-      <chart ref="endpointChart" :unit="chartUnit" :minusTime="minusTime" v-if="graphShow"></chart>
+    <el-dialog
+      id="viewGraphDialog"
+      v-if="graphShow"
+      :visible.sync="graphShow"
+      :show-close="false"
+      class="nz-dialog chart-fullscreen"
+      destroy-on-close
+      fullscreen
+      :modal-append-to-body="false"
+    >
+      <panel-chart
+        :ref="'chart-fullscreen' + chartInfo.id"
+        :chart-info="chartInfo"
+        :from="fromRoute.endpointQuery"
+        :filter="{}"
+        :is-fullscreen="true"
+        @saveChart="saveChart"
+        :time-range="searchTime"
+        @showFullscreen="showFullscreen"
+      ></panel-chart>
     </el-dialog>
+<!--    <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"-->
+<!--               :title="$t('project.endpoint.dialogTitle')"-->
+<!--               :visible.sync="graphShow"-->
+<!--               width="90%"-->
+<!--               height="80%"-->
+<!--               :modal-append-to-body="false"-->
+<!--               id="viewGraphDialog"-->
+<!--               @close="dialogClose">-->
+<!--      <div slot="title">-->
+<!--        {{$t("project.endpoint.dialogTitle")}}-->
+<!--        <div class="float-right panel-calendar dialog-tool" style="display: flex;margin-right: 30px">-->
+<!--          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange" id="endpoint-query-full-chart" :show-multiple="true" ref="pickTime"></pick-time>-->
+<!--          <button id="endpoint-query-full-chart-save" v-has="'panel_chart_add'" class="nz-btn nz-btn-size-large nz-btn-style-normal" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <chart ref="endpointChart" :unit="chartUnit" :minusTime="minusTime" v-if="graphShow"></chart>-->
+<!--    </el-dialog>-->
     <transition name="right-box">
       <chart-box :chart="chart" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'endpointQuery'}" @close="rightBox.show = false" @on-create-success="createSuccess" @reload="getPanelData" @reloadOnlyPanel="getPanelData" box-class="save-chart-box" from="project_endpoint_query" ref="addChartModal" v-if="rightBox.show" style="z-index: 2900" :fromEndpoint="true"></chart-box>
+    </transition>
+    <transition name="right-box">
+      <!--      <chart-box-->
+      <!--        v-if="rightBox.chart.show"-->
+      <!--        ref="addChartModal"-->
+      <!--        :chart="chart"-->
+      <!--        :from="fromRoute.panel"-->
+      <!--        :panel-data="panelData"-->
+      <!--        :show-panel="showPanel"-->
+      <!--        @close="closeChartBox"-->
+      <!--        @reload="panelReload"-->
+      <!--        @reloadOnlyPanel="panelReloadOnlyPanel"-->
+      <!--        @delete-chart="delChart"-->
+      <!--        @on-create-success="createSuccess"-->
+      <!--        @on-delete-success="delChartOk"-->
+      <!--      ></chart-box>-->
+      <chart-right-box
+        v-if="chartRightBoxShow"
+        v-loading="rightBox.loading"
+        ref="addChartModal"
+        :chart="chart"
+        :showPanel="{}"
+        :from="fromRoute.panel"
+        :panel-data="panelData"
+        @close="closeChartBox"
+        @on-create-success="createSuccess"
+      ></chart-right-box>
     </transition>
   </div>
 </template>
 
 <script>
 import chartBox from '@/components/page/dashboard/chartBox'
+import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import axios from 'axios'
 import bus from '../../../../libs/bus'
 import chart from '@/components/page/dashboard/overview/chart'
-import { sameLabels } from '@/components/common/js/constants'
+import { sameLabels, fromRoute } from '@/components/common/js/constants'
 import metaData from '@/components/common/metaData'
-
+import panelChart from '@/components/chart/panelChart'
+import lodash from 'lodash'
+import lineData from '@/components/chart/defaultLineData'
 export default {
   name: 'endpointQueryTab',
   components: {
     chartBox,
     chart,
-    metaData
+    metaData,
+    panelChart,
+    chartRightBox
   },
   props: {
     from: {},
@@ -131,6 +184,7 @@ export default {
   },
   data () {
     return {
+      fromRoute,
       tableData: [],
       currentTableData: [],
       batchDeleteObjs: [],
@@ -333,187 +387,30 @@ export default {
       if (this.batchDeleteObjs.length < 1) {
         return
       }
-      this.chartDatas = []
-      this.legend = []
-      this.$refs.pickTime.$refs.multipleTime.searchTime = []
-      this.$refs.pickTime.$refs.multipleTime.showTime = {
-        id: 12,
-        text: this.$t('dashboard.panel.noDate')
-      }
-      this.$refs.pickTime.$refs.multipleTime.showDropdown = false
-      this.graphShow = true
       this.$nextTick(() => {
-        this.$refs.endpointChart.startLoading()
-        this.queryChartDate()
-      })
-    },
-    chartUnitChange (unit) {
-      this.chartUnit = unit
-      this.$nextTick(() => {
-        this.queryChartDate()
-      })
-    },
-    queryChartDate () {
-      const start = this.searchTime[0] ? this.searchTime[0] : this.getTime(-1, 'h')
-      const end = this.searchTime[1] ? this.searchTime[1] : this.getTime(0, 'h')
-      this.searchTime = [start, end]
-      const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)
-      // end - start < 1 day : 15s
-      // end - start < 7 day : 5m
-      // end - start < 30 day : 10m
-      // end - start > 30 day : 30m
-      let step = '15s'
-      if (timeDiff < 1) {
-        step = '15s'
-      } else if (timeDiff < 7) {
-        step = '5m'
-      } else if (timeDiff < 30) {
-        step = '10m'
-      } else {
-        step = '30m'
-      }
-      const axiosArr = []
-      for (const endpoint of this.batchDeleteObjs) {
-        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(endpoint.element) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
-      }
-      if (this.$refs.pickTime && this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length) { // 判断是否需要添加比较
-        const startTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+        const chartInfo = lodash.cloneDeep(lineData)
+        const elements = lodash.cloneDeep(chartInfo.elements[0])
+        chartInfo.elements = []
+        chartInfo.name = this.$t('project.endpoint.dialogTitle')
         for (const endpoint of this.batchDeleteObjs) {
-          axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(endpoint.element) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step))
+          const element = lodash.cloneDeep(elements)
+          element.expression = endpoint.element
+          chartInfo.elements.push(element)
         }
-      }
-      this.legend = []
-      this.chartDatas = []
-      axios.all(axiosArr).then(res => {
-        res.forEach((response, promIndex) => {
-          if (response.status == 200) {
-            if (response.data.status == 'success') {
-              const queryData = response.data.data.result[0]
-              if (queryData) {
-                const chartData = {
-                  type: 'line',
-                  symbol: 'none', // 去掉点
-                  smooth: 0.2,
-                  lineStyle: {
-                    width: 1,
-                    opacity: 0.9
-                  }
-                }
-                chartData.name = queryData.metric.__name__
-                let alias = queryData.metric.__name__
-                delete queryData.metric.__name__
-                chartData.name += '{'
-                alias += '{'
-                Object.keys(queryData.metric).forEach((item, index) => {
-                  const label = item
-                  const value = queryData.metric[label]
-                  chartData.name += label + "='" + value + "',"
-                  if (!this.sameLabels.some((i) => { return i == label })) {
-                    alias += label + "='" + value + "',"
-                  }
-                })
-                chartData.name = chartData.name.charAt(chartData.name.length - 1) === ',' ? chartData.name.substr(0, chartData.name.length - 1) : chartData.name
-                alias = alias.charAt(alias.length - 1) === ',' ? alias.substr(0, alias.length - 1) : alias
-                chartData.name += '}'
-                alias += '}'
-                if (!/.+\{.+\}/.test(alias)) {
-                  alias = alias.substr(0, alias.length - 2)
-                }
-                const legend = {
-                  name: chartData.name,
-                  alias: alias,
-                  // showText:this.formatLegend(chartData.name),
-                  isGray: false
-                }
-                if (promIndex >= this.batchDeleteObjs.length) {
-                  legend.name = 'Previous ' + legend.name
-                  chartData.name = legend.name
-                  legend.alias = 'Previous ' + legend.alias
-                }
-                this.legend.push(legend)
-                chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
-                  return [dpsItem[0] * 1000, Number(dpsItem[1])]
-                })
-                this.chartDatas.push(chartData)
-              }
-            } else {
-              this.$message.error(response.data.error)
-              console.error(response.data)
-            }
-          }
-        })
-
-        if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length && res.length > this.batchDeleteObjs.length) {
-          const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
-          this.minusTime = minusTime
-          let cutPoint = 0
-          res.forEach((item, index) => {
-            if (index < res.length / 2) {
-              cutPoint += res[index].data.data.result.length
-            }
-          })
-          this.chartDatas.forEach((item, index) => {
-            if (index >= cutPoint) {
-              this.chartDatas[index].data.forEach((item1, index1) => {
-                item1[0] = item1[0] + minusTime
-              })
-            }
-          })
-        }
-        this.$nextTick(() => {
-          if (this.$refs.endpointChart) {
-            this.$refs.endpointChart.setRandomColors(this.chartDatas.length)
-            this.$refs.endpointChart.setLegend(this.legend)
-            this.$refs.endpointChart.modifyOption('tooltip', 'backgroundColor', 'rgba(221,228,237,1)')
-            this.$refs.endpointChart.modifyOption('tooltip', 'textStyle', { color: '#000' })
-            this.$refs.endpointChart.modifyOption('grid', 'top', 30)
-            this.$refs.endpointChart.modifyOption('grid', 'left', 0)
-            this.$refs.endpointChart.modifyOption('grid', 'right', 30)
-            this.$refs.endpointChart.modifyOption('grid', 'bottom', 8)
-            this.$refs.endpointChart.modifyOption('grid', 'containLabel', true)
-            this.$refs.endpointChart.setSeries(this.chartDatas)
-            this.$refs.endpointChart.endLoading()
-          }
-          setTimeout(() => {
-            // this.$refs.endpointChart.resize()
-          }, 100)
-        })
+        this.showFullscreen(true, chartInfo)
       })
     },
-    dialogClose () {
-      this.$refs.pickTime.$refs.multipleTime.searchTime = []
-      this.$refs.pickTime.$refs.multipleTime.showTime = {
-        id: 12,
-        text: this.$t('dashboard.panel.noDate')
-      }
-      this.$refs.pickTime.$refs.multipleTime.showDropdown = false
-      this.chartUnit = 5
-      this.graphShow = false
-    },
-    saveChart () { // 新增chart
+    saveChart (chart) { // 新增chart
       this.getPanelData().then(() => {
-        const chart = {
-          title: '',
-          type: 'line',
-          span: 12,
-          height: '400',
-          unit: this.chartUnit,
-          param: {
-            url: '',
-            threshold: ''
-          },
-          elements: [],
-          panel: '',
-          sync: 0
-        }
-        for (let i = 0; i < this.batchDeleteObjs.length; i++) {
-          if (this.batchDeleteObjs[i] && this.batchDeleteObjs[i].element !== '') {
-            chart.elements.push({ chartId: '', expression: this.batchDeleteObjs[i].element, type: 'expert' })
-          }
-        }
+        chart.id = ''
+        chart.name = ''
+        chart.panelName = ''
         this.chart = chart
-        this.rightBox.show = true
+        this.graphShow = false
+        this.$store.dispatch('dispatchEditChart', {
+          chart: this.chart,
+          type: 'add'
+        })
       })
     },
     createSuccess (type, response, param, panel) {
@@ -555,9 +452,24 @@ export default {
           this.metaDataList = res.data[data.metricTip.metric]
         }
       })
-    }
+    },
+    showFullscreen (show, chartInfo) {
+      this.chartInfo = chartInfo
+      this.graphShow = show
+    },
+    closeChartBox (refresh) {
+      // this.rightBox.chart.show = false
+      this.chart = {}
+      this.$store.dispatch('clearPanel')
+      /* if (refresh) {
+         this.getData(this.filter)
+      } */
+    },
   },
   computed: {
+    chartRightBoxShow () {
+      return this.$store.getters.getShowRightBox
+    },
   },
   created () {
     // this.getPanelData()

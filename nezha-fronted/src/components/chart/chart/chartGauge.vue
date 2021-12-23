@@ -3,7 +3,7 @@
     <div
       v-for="(item,index) in gaugeData" :key="index"
       class="chart-gauge-item"
-      :id="this.isFullscreen?('chart-gauge-screen-' + chartInfo.id + '-' + index):('chart-gauge-' + chartInfo.id + '-' + index)"
+      :id="isFullscreen?('chart-gauge-screen-' + chartInfo.id + '-' + index):('chart-gauge-' + chartInfo.id + '-' + index)"
       :style="{height:item.height+'px',width:item.width + 'px'}"
     >
 <!--      :style="{background:item.mapping ? item.mapping.color.bac : false,height:item.height+'px',width:item.width + 'px'}"-->

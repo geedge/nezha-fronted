@@ -64,6 +64,9 @@ export default {
     },
     loadMore () {
       this.$emit('loadMore')
+    },
+    unitChange (val) {
+      this.$emit('unitChange', val)
     }
   },
   watch: {
