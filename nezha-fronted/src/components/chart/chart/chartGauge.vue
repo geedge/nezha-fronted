@@ -88,6 +88,9 @@ export default {
             gauge.value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
             gauge.max = getMetricTypeValue(data.values, 'max')
             gauge.min = getMetricTypeValue(data.values, 'min')
+            if (gauge.min === gauge.max) {
+              gauge.min = gauge.max / 2
+            }
             gauge.label = data.metric
             gauge.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
             gauge.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name

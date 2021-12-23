@@ -399,6 +399,17 @@ export default {
       this.chartConfig.param.tags = newTags
       this.chartConfig.param.indexs = newTags.map(item => item.text).join(',')
       this.change()
-    }
+    },
+    enableChange (type) {
+      switch (type) {
+        case 'valueMapping':
+          break;
+        case 'legend':
+          break;
+        case '':
+          break;
+      }
+      this.change()
+    },
   }
 }
