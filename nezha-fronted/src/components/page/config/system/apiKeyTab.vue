@@ -48,6 +48,9 @@ export default {
   name: 'apiKeyTab',
   components: { nzDataList, apiKeyTable },
   mixins: [dataListMixin, parentTableCommon],
+  props: {
+    activeTab: String
+  },
   data () {
     return {
       url: '/sys/apiKey',

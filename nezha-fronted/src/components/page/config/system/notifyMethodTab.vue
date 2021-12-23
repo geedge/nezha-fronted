@@ -85,6 +85,9 @@ export default {
   name: 'notifyMethodTab',
   components: { nzDataList, notifyMethodTable },
   mixins: [dataListMixin, parentTableCommon],
+  props: {
+    activeTab: String
+  },
   data () {
     return {
       url: 'alert/notify/method',

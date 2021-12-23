@@ -8,15 +8,17 @@
 <script>
 import exprTemp from './exprTemp'
 import chartTemp from './chartTemp'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 export default {
   name: 'v-template',
   components: {
     exprTemp,
     chartTemp
   },
+  mixins: [routerPathParams],
   data () {
     return {
-      showTab: ''
+      showTab: 'exprTemp'
     }
   },
   methods: {
@@ -43,12 +45,13 @@ export default {
     },
     changeShowTab (showTab) {
       this.showTab = showTab
+      this.updatePath({ showTab })
     }
   },
+  created () {
+    this.showTab = this.$route.query.showTab || 'exprTemp'
+  },
   mounted () {
-    this.$nextTick(() => {
-      this.showTab = 'exprTemp'
-    })
   }
 }
 </script>

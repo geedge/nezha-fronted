@@ -1,4 +1,5 @@
 import { file } from '@topology/core/src/middles/nodes/file'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export const tableCommon = {
   data () {
@@ -93,10 +94,25 @@ export const tableCommon = {
   }
 }
 export const parentTableCommon = {
+  mixins: [routerPathParams],
+  props: {
+    activeTab: {
+      type: String,
+      default: ''
+    }
+  },
   methods: {
     getTableData: function () {
       this.searchLabel.pageSize = -1
       this.tools.loading = true
+      const systemParam = {
+        ...this.searchLabel
+      }
+      if (this.activeTab) {
+        systemParam.activeTab = this.activeTab
+      }
+      const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
+      this.updatePath(systemParam, path)
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -111,5 +127,128 @@ export const parentTableCommon = {
         }
       })
     }
+  },
+  created () {
+    const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
+    let searchKeys = {}
+    if (path === 'system' && this.$route.query.activeTab == 'link') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        name: {
+          target: this.searchLabel,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
+    } else if (path === 'system' && this.$route.query.activeTab == 'apiKey') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        name: {
+          target: this.searchLabel,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
+    } else if (path === 'system' && this.$route.query.activeTab == 'notification') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: {
+          target: this.pageObj,
+          propertyName: 'pageNo',
+          type: 'number'
+        },
+        pageSize: {
+          target: this.pageObj,
+          propertyName: 'pageSize',
+          type: 'number'
+        },
+        orderBy: {
+          target: this.$data,
+          propertyName: 'orderBy',
+          type: 'string'
+        },
+        ids: {
+          target: this.searchLabel,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        name: {
+          target: this.searchLabel,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
+    }
+    this.initQueryFromPath(searchKeys)
   }
 }

@@ -340,13 +340,13 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.notification.notification')" name="notification" style="height: 100%;"><!--$t('config.system.reset.reset')-->
-        <notify-method v-if="activeTab === 'notification'"></notify-method>
+        <notify-method v-if="activeTab === 'notification'" :active-tab="activeTab"></notify-method>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.link.link')" name="link" style="height: 100%;"><!--$t('config.system.reset.reset')-->
-        <link-tab v-if="activeTab === 'link'"></link-tab>
+        <link-tab v-if="activeTab === 'link'" :active-tab="activeTab"></link-tab>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.apiKey.apiKey')" name="apiKey" style="height: 100%;"><!--$t('config.system.reset.reset')-->
-        <api-key-tab v-if="activeTab === 'apiKey'"></api-key-tab>
+        <api-key-tab v-if="activeTab === 'apiKey'" :active-tab="activeTab"></api-key-tab>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
         <div class="system-config-form" v-if="activeTab === 'reset'">
@@ -385,9 +385,11 @@ import linkTab from './system/linkTab'
 import apiKeyTab from './system/apiKeyTab'
 import moment from 'moment-timezone'
 import License from './system/license'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 export default {
   name: 'system',
   components: { draggable, latlngPicker, notifyMethod, linkTab, apiKeyTab, License },
+  mixins: [routerPathParams],
   data () {
     return {
       imageFormatErr: false,
@@ -611,6 +613,10 @@ export default {
       if (!type) {
         console.error('type is required')
         return
+      }
+      if (type !== 'link' && type !== 'notification' && type !== 'apiKey') {
+        const t = +new Date()
+        this.updatePath({ t })
       }
       if (type == 'reset' || type == 'link' || type == 'notification' || type == 'apiKey' || type == 'license') {
         return
@@ -1041,6 +1047,9 @@ export default {
   mounted () {
     this.querySetInfo(this.activeTab)
     this.queryTimezone()
+  },
+  created () {
+    this.activeTab = this.$route.query.activeTab || 'basic'
   }
 }
 </script>

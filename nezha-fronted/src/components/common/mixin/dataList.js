@@ -4,6 +4,12 @@ import { fromRoute } from '@/components/common/js/constants'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 export default {
   mixins: [routerPathParams],
+  props: {
+    showTab: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       fromRoute: fromRoute,
@@ -81,10 +87,13 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
-      if (this.$route.fullPath.match(/\/(\S*)\?/)[1] !== 'snmp' || this.$route.fullPath.match(/\/(\S*)\?/)[1] !== 'template') {
+      if (this.$route.fullPath.match(/\/(\S*)\?/)[1] !== 'snmp') {
         const dataListParam = {
           ...this.searchLabel,
           ...this.searchCheckBox
+        }
+        if (this.showTab) {
+          dataListParam.showTab = this.showTab
         }
         const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
         this.updatePath(dataListParam, path)
@@ -298,21 +307,6 @@ export default {
     }
   },
   created () {
-    // {
-    //   // key: path 键
-    //   // value: vue set 参数
-    //   pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
-    //   pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
-    //   orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-    //   ids: { target: this.searchLabel, propertyName: 'ids', type: 'number' },
-    //   severityIds: { target: this.searchLabel, propertyName: 'severityIds', type: 'string' },
-    //   type: { target: this.searchLabel, propertyName: 'type', type: 'number' },
-    //   name: { target: this.searchLabel, propertyName: 'name', type: 'string' },
-    //   typeIds: { target: this.searchCheckBox, propertyName: 'typeIds', type: 'number' },
-    //   ping: { target: this.searchCheckBox, propertyName: 'ping', type: 'string' },
-    //   modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'number' },
-    //   fields: { target: this.searchCheckBox, propertyName: 'fields', type: 'json' }
-    // }
     const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
     let searchKeys = {}
     if (path === 'dc') {
@@ -669,6 +663,54 @@ export default {
             id: 'name',
             label: 'name',
             name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
+    } else if (path === 'template' && this.$route.query.showTab) {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        name: {
+          target: this.searchLabel,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        gname: {
+          target: this.searchLabel,
+          propertyName: 'gname',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'gname',
+            name: 'Group',
             type: 'input',
             val: ''
           },
