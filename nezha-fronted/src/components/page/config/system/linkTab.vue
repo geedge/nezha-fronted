@@ -48,6 +48,9 @@ export default {
   name: 'linkTab',
   components: { nzDataList, linkTable },
   mixins: [dataListMixin, parentTableCommon],
+  props: {
+    activeTab: String
+  },
   data () {
     return {
       url: '/link',
