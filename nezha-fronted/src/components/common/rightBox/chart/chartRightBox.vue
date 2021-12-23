@@ -81,13 +81,33 @@
       <button v-if="showPanel.type && showPanel.type == 'model'" id="chart-box-Sync" v-has="'panel_chart_edit'" class="footer__btn">
         <span>{{$t('overall.SyncSave')}}</span>
       </button>
-      <button v-else-if="from!=='chartTemp'" id="chart-box-preview" class="footer__btn">
+      <button v-else-if="from!=='chartTemp'" id="chart-box-preview" class="footer__btn" @click="preview(true)">
         <span>{{$t('overall.preview')}}</span>
       </button>
       <button id="chart-box-save" v-has="'panel_chart_add'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn" @click="save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
+<!--    预览-->
+    <el-dialog
+      v-if="previewShow"
+      :visible.sync="previewShow"
+      :show-close="false"
+      class="nz-dialog chart-fullscreen"
+      destroy-on-close
+      fullscreen
+      :modal-append-to-body="false"
+    >
+      <panel-chart
+        :ref="'chart-fullscreen-previewShow'"
+        :chart-info="prevChart"
+        :from="from"
+        :filter="{}"
+        :is-fullscreen="true"
+        :time-range="timeRange"
+        @showFullscreen="preview"
+      ></panel-chart>
+    </el-dialog>
   </div>
 </template>
 
@@ -99,6 +119,9 @@ import selectPanel from '@/components/common/popBox/selectPanel'
 import chartConfig from '@/components/common/rightBox/chart/chartConfig'
 import otherChartConfig from '@/components/common/rightBox/chart/otherChartConfig'
 import systemChartConfig from '@/components/common/rightBox/chart/systemChartConfig'
+import panelChart from '@/components/chart/panelChart'
+import lodash from 'lodash'
+
 const rz = {
   methods: {
     rz (e) {
@@ -124,7 +147,8 @@ export default {
     selectPanel,
     chartConfig,
     systemChartConfig,
-    otherChartConfig
+    otherChartConfig,
+    panelChart
   },
   computed: {
     chartLastPosition () {
@@ -134,6 +158,7 @@ export default {
   data () {
     return {
       fromRoute,
+      previewShow: false,
       editChart: {
         name: '',
         remark: ''
@@ -142,6 +167,8 @@ export default {
         id: '',
         name: ''
       },
+      timeRange: [],
+      prevChart: {},
       filterPanel: '',
       groupArr: [],
       panelName: '',
@@ -349,6 +376,17 @@ export default {
         groupId: this.editChart.groupId,
         panelName: this.editChart.panelName
       }
+    },
+    preview (show) {
+      if (show) {
+        this.timeRange = [new Date().setHours(new Date().getHours() - 1), new Date()]
+        this.prevChart = lodash.cloneDeep(this.editChart)
+        this.prevChart.loaded = true
+        this.prevChart.param.showHeader = true
+      }
+      this.$nextTick(() => {
+        this.previewShow = show
+      })
     }
   },
   created () {

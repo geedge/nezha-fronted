@@ -175,8 +175,10 @@ export default {
   },
   mounted () {
     if (this.$refs.pickTime) {
-      this.$refs.pickTime.$refs.multipleTime.showDropdown = false
-      this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
+      if (this.$refs.pickTime.$refs.multipleTime) {
+        this.$refs.pickTime.$refs.multipleTime.showDropdown = false
+        this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
+      }
       this.setSearchTime(this.nowType.type, this.nowType.value, this.nowType)
       this.searchTime[0] = bus.timeFormate(this.timeRange[0], 'yyyy-MM-dd hh:mm:ss')
       this.searchTime[1] = bus.timeFormate(this.timeRange[1], 'yyyy-MM-dd hh:mm:ss')
