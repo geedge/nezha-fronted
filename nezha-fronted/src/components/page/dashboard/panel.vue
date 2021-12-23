@@ -417,6 +417,11 @@ export default {
         this.chart.panelId = this.showPanel.id
         this.chart.panelName = this.showPanel.name
         this.chart.id = ''
+        this.chart.elements.forEach((item) => {
+          item.id = ''
+          item.chartId = ''
+          delete item.seq
+        })
       } else {
         this.rightBox.loading = true
         this.$get('visual/panel/chart/' + data.id).then(res => {
