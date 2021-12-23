@@ -1480,8 +1480,15 @@ export default {
       if (this.$route.path === '/exprTemp') {
         this.getGnameList()
       }
-      console.log(this.select_list, this.searchLabelList)
-    }, 100)
+      this.searchLabelList = this.searchLabelList.filter(item => !this.select_list.find(select => select.label === item.label))
+      setTimeout(() => {
+        this.select_list.forEach(item => {
+          if (item.listStr) {
+            item.val = this[item.listStr].find(r => r.id == item.valnum).name
+          }
+        })
+      }, 300)
+    }, 1000)
     JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
       if (val.prop == 'common_action') {
         this.actionSelect = val.doc.data

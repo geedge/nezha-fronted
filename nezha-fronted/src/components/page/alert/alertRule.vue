@@ -345,7 +345,7 @@ export default {
       ids: {
         target: this.searchLabel,
         propertyName: 'ids',
-
+        isSearchInput: true,
         type: 'string',
         defaultJson: {
           disabled: false,
@@ -371,11 +371,10 @@ export default {
           type: 'severity',
           val: '',
           valnum: '',
-          valString: ''
+          valString: '',
+          listStr: 'severitySelect'
         },
         jsonKey: 'valnum',
-        strKey: 'val',
-        listStr: 'severitySelect'
       },
       type: {
         target: this.searchLabel,
@@ -394,11 +393,10 @@ export default {
           valString: ''
         },
         jsonKey: 'valnum',
-        strKey: 'val',
-        listStr: 'alertTypesSelect'
       },
       name: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'name',
         type: 'string',
         defaultJson: {
