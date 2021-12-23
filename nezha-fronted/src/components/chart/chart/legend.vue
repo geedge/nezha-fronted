@@ -39,13 +39,15 @@
 <script>
 import lodash from 'lodash'
 import { getChart } from '@/components/common/js/common'
+import chartDataFormat from '@/components/charts/chartDataFormat'
 export default {
   name: 'chartLegend',
   props: {
     chartInfo: Object,
     chartData: Array,
     legends: Array,
-    isFullscreen: Boolean
+    isFullscreen: Boolean,
+    series: Array
   },
   data () {
     return {
@@ -100,8 +102,86 @@ export default {
           })
           this.$set(this.isGrey, index, !this.isGrey[index])
         }
+        // 处理点击后的 Y轴
+        const chartInfo = this.chartInfo
+        const dataArg = this.series.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
+        const maxValueCopies = this.getMaxValue(dataArg, chartInfo)
+        const maxValue = maxValueCopies.maxValue
+        const copies = maxValueCopies.copies
+        const unit = maxValueCopies.unit
+        const option = {
+          yAxis: {
+            minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
+            maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+          }
+        }
+        if (!maxValueCopies.copies) {
+          option.yAxis.min = 0
+          option.yAxis.max = 1
+        } else {
+          option.yAxis.max = undefined
+        }
+        if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+          delete option.yAxis.maxInterval
+        }
+        getChart(this.chartId) && getChart(this.chartId).setOption({
+          yAxis: {
+            ...option.yAxis
+          }
+        })
       }
-    }
+    },
+    getMaxValue (dataArg, chartInfo) {
+      let maxValue = 0
+      let minValue = 0
+      if (chartInfo.unit && dataArg.length > 0) {
+        maxValue = 0
+        minValue = 0
+        for (let j = 0; j < dataArg.length; j++) {
+          for (let i = 0; i < dataArg[j].data.length; i++) {
+            if (!isNaN(dataArg[j].data[i][1])) {
+              maxValue = (maxValue < Number(dataArg[j].data[i][1]) ? Number(dataArg[j].data[i][1]) : maxValue)
+              minValue = (minValue > Number(dataArg[j].data[i][1]) ? Number(dataArg[j].data[i][1]) : minValue)
+            }
+          }
+        }
+      }
+      const chartUnit = chartInfo.unit ? chartInfo.unit : 2
+      const unit = chartDataFormat.getUnit(chartUnit)
+      minValue = minValue > 0 ? 0 : minValue
+      maxValue = maxValue - minValue
+      maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii)
+      let oldValue = maxValue
+      let dot = 0
+      if (maxValue == 1) {
+        dot++
+      }
+      if (oldValue > 10) {
+        while (oldValue > 10) {
+          oldValue = oldValue / 10
+        }
+      } else if (oldValue < 1 && maxValue !== 0) {
+        while (oldValue < 1 && oldValue > 0) {
+          oldValue = oldValue * 10
+          dot++
+        }
+        maxValue = Math.floor(oldValue) / Math.pow(10, dot)
+        dot++
+      }
+      const copies = chartDataFormat.copies(oldValue, unit.type)
+      let oldDot = 2
+      if (maxValue <= 1) {
+        oldDot = dot > 6 ? 6 : dot
+      }
+      return {
+        maxValue,
+        dot,
+        copies,
+        minValue,
+        unit,
+        oldDot
+      }
+    },
   },
   watch: {
     legends (n) {

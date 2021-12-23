@@ -10,6 +10,7 @@
       :chart-data="chartData"
       :chart-info="chartInfo"
       :legends="legends"
+      :series="series"
       :is-fullscreen="isFullscreen"
     ></chart-legend>
   </div>
@@ -41,7 +42,8 @@ export default {
   data () {
     return {
       stackTotalColor: null,
-      isStack: false
+      isStack: false,
+      series: []
     }
   },
   computed: {
@@ -70,15 +72,17 @@ export default {
   methods: {
     initChart (chartOption = this.chartOption) {
       this.legends = []
-      chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+      this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       if (this.isNoData) {
         return
       }
-      const { minTime, maxTime, minValue, maxValue } = this.getMinMaxFromData(this.chartData) // 此处时间是秒
+      const { minTime, maxTime, minValue, maxValue, copies, unit, dot } = this.getMinMaxFromData(this.chartData, this.chartInfo.unit) // 此处时间是秒
       chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime, maxTime)// 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
       chartOption.tooltip.position = this.tooltipPosition
-      chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue)
+      chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, dot)
+      chartOption.yAxis.minInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'min')
+      chartOption.yAxis.maxInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
       if (chartOption.toolbox.feature) {
         chartOption.toolbox.feature.myStack.iconStyle.borderColor = this.isStack ? this.toolboxIconColor.active : this.toolboxIconColor.inactive
         chartOption.toolbox.feature.myStack.onclick = this.stackEvent() // 自定义stack事件
@@ -91,7 +95,7 @@ export default {
         this.isInit = false
       }, 200)
     },
-    getMinMaxFromData (originalDatas) {
+    getMinMaxFromData (originalDatas, chartUnit = 2) {
       let minTime = null
       let maxTime = null
       let minValue = null
@@ -113,7 +117,27 @@ export default {
       maxTime = timeSorted.length ? timeSorted[timeSorted.length - 1][0] : ''
       minValue = valueSorted.length ? valueSorted[0][1] : ''
       maxValue = valueSorted.length ? valueSorted[valueSorted.length - 1][1] : ''
-      return { minTime, maxTime, minValue, maxValue }
+      const unit = chartDataFormat.getUnit(chartUnit)
+      maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii) // 取最大值后 需要对其进行取整
+      let oldValue = maxValue
+      let dot = 0
+      if (oldValue == 1) {
+        dot++
+      }
+      if (oldValue > 10) {
+        while (oldValue > 10) {
+          oldValue = oldValue / 10
+        }
+      } else if (oldValue < 1 && maxValue !== 0) {
+        while (oldValue < 1 && oldValue > 0) {
+          oldValue = oldValue * 10
+          dot++
+        }
+        maxValue = Math.floor(oldValue) / Math.pow(10, dot)
+        dot++
+      }
+      const copies = chartDataFormat.copies(oldValue, unit.type)
+      return { minTime, maxTime, minValue, maxValue, copies, unit, dot }
     },
     xAxisLabelFormatter (minTime, maxTime) {
       return function (val, index) {
@@ -232,25 +256,25 @@ export default {
         return str
       }
     },
-    yAxisLabelFormatter (minValue, maxValue) {
+    yAxisLabelFormatter (minValue, maxValue, copies, unit, dot) {
       const self = this
       return function (val, index) {
         const value = formatScientificNotation(val, 2)
         let chartUnit = self.chartInfo.unit
         chartUnit = chartUnit || 2
         const unit = chartDataFormat.getUnit(chartUnit)
-        // TODO 弄清楚dot逻辑
-        /* if (chartDataFormat.Interval(maxValue, copies, unit.type, 'min') < 1 && dot < 2) {
+        // dot是判断最大值是否 小于1 大于1 默认是2 小于1 需要判断最大值是小数点后面几位
+        if (chartDataFormat.Interval(maxValue, copies, unit.type, 'min') < 1 && dot < 2) { // 当其小于1 且 dot < 2 默认給2 如 0.9 dot为1
           dot = 2
         }
-        if (dot == 0) {
-          dot = 1
+        if (!dot) { //  默认是2
+          dot = 2
         }
         dot = bus.countDecimals(value)
-        if (dot < self.chartDot) {
+        if (dot < self.chartDot) { // 根据具体值计算
           dot = self.chartDot
-        } */
-        return unit.compute(value, index, -1, 2)
+        }
+        return unit.compute(value, index, -1, dot)
       }
     },
     stackEvent () {

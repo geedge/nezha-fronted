@@ -159,11 +159,11 @@ export function getLayoutPosition (arr) {
 
 export function initColor (colorNum = 20) {
   const colorList = [
-    '#FF5200', '#3685FF', '#FF8D00', '#00DCA2',
-    '#954Eff', '#FFCB01', '#f65A96', '#00BFD0',
+    '#3685FF', '#00DCA2', '#00BFD0', '#954Eff',
+    '#FFCB01', '#f65A96', '#FF9094', '#00CCF5',
     '#FF8BEA', '#4D7693', '#72577C', '#99D750',
     '#DD8270', '#C475EE', '#7E83FB', '#7EB090',
-    '#FF9094', '#00CCF5', '#CF6684', '#4E55FF'
+    '#CF6684', '#4E55FF', '#FF8D00', '#FF5200'
   ]
   for (let i = 0; i < colorNum - 20; i++) {
     colorList.push(randomcolor())

@@ -227,7 +227,7 @@
                     </li>
 <!-- 最开始的input框-->
                     <li class="select_input" v-if="change_sreach_show">
-                        <input type="text" @click="read_input" v-model="no_condition" @keyup="enter_one" :id="'one-input' + position" @keydown="clear_search_list" :placeholder="placeholder">
+                        <input type="text" autocomplete="off" @click="read_input" v-model="no_condition" @keyup="enter_one" :id="'one-input' + position" @keydown="clear_search_list" :placeholder="placeholder">
                     </li>
                 </ul>
               </el-scrollbar>
