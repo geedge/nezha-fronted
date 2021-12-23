@@ -101,37 +101,56 @@
         </div>
       </el-dialog>
     </div>
-    <el-dialog id="viewGraphDialog"
-               :modal-append-to-body='false'
-               destroy-on-close
-               :title="$t('overall.detail')"
-               :visible.sync="graphShow"
-               class="line-chart-block-modal nz-dialog endpoint-dialog"
-               width="90%"
-               @close="dialogClose">
-      <el-popover
-        v-if="isError"
-        placement="top-start"
-        :close-delay=10
-        trigger="hover"
-        popper-class="chart-error-popper">
-        <div >{{errorContent}}</div>
-        <span slot="reference"  class="panel-info-corner panel-info-corner--error">
-                <i class="nz-icon nz-icon-warning fa-model" ></i>
-                <span class="panel-info-corner-inner"></span>
-            </span>
-      </el-popover>
-      <div slot="title">
-        {{$t("project.endpoint.dialogTitle")}}
-        <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time v-model="searchTimeDialog" :refresh-data-func="queryDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;"></pick-time>
-        </div>
-      </div>
-      <div style="width: 100%;height: 100%" v-loading="chartLoading">
-        <chart v-if="resultType === 'matrix'" ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
-        <log-tab v-if="resultType === 'streamsFormat'" ref="logDetailScreen" :log-data="logData" :showSwitch="false" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
-      </div>
+    <el-dialog
+      v-if="graphShow"
+      :visible.sync="graphShow"
+      :show-close="false"
+      class="nz-dialog chart-fullscreen"
+      destroy-on-close
+      fullscreen
+      :modal-append-to-body="false"
+    >
+      <panel-chart
+        :ref="'chart-fullscreen' + chartInfo.id"
+        :chart-info="chartInfo"
+        :from="fromRoute.alertMessage"
+        :filter="{}"
+        :is-fullscreen="true"
+        :time-range="searchTimeDialog"
+        @showFullscreen="showFullscreen"
+      ></panel-chart>
     </el-dialog>
+<!--    <el-dialog id="viewGraphDialog"-->
+<!--               :modal-append-to-body='false'-->
+<!--               destroy-on-close-->
+<!--               :title="$t('overall.detail')"-->
+<!--               :visible.sync="graphShow"-->
+<!--               class="line-chart-block-modal nz-dialog endpoint-dialog"-->
+<!--               width="90%"-->
+<!--               @close="dialogClose">-->
+<!--      <el-popover-->
+<!--        v-if="isError"-->
+<!--        placement="top-start"-->
+<!--        :close-delay=10-->
+<!--        trigger="hover"-->
+<!--        popper-class="chart-error-popper">-->
+<!--        <div >{{errorContent}}</div>-->
+<!--        <span slot="reference"  class="panel-info-corner panel-info-corner&#45;&#45;error">-->
+<!--                <i class="nz-icon nz-icon-warning fa-model" ></i>-->
+<!--                <span class="panel-info-corner-inner"></span>-->
+<!--            </span>-->
+<!--      </el-popover>-->
+<!--      <div slot="title">-->
+<!--        {{$t("project.endpoint.dialogTitle")}}-->
+<!--        <div class="float-right panel-calendar dialog-tool" style="display: flex">-->
+<!--          <pick-time v-model="searchTimeDialog" :refresh-data-func="queryDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;"></pick-time>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div style="width: 100%;height: 100%" v-loading="chartLoading">-->
+<!--        <chart v-if="resultType === 'matrix'" ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>-->
+<!--        <log-tab v-if="resultType === 'streamsFormat'" ref="logDetailScreen" :log-data="logData" :showSwitch="false" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>-->
+<!--      </div>-->
+<!--    </el-dialog>-->
     <!--全屏-->
     <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
                :visible.sync="dialogShowText"
@@ -166,6 +185,10 @@ import { alertMessage as alertMessageConstant, fromRoute } from '@/components/co
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
+import panelChart from '@/components/chart/panelChart'
+import lineData from '@/components/chart/defaultLineData'
+import logData from '@/components/chart/defaultLogData'
+import lodash from 'lodash'
 
 export default {
   name: 'alertMessage',
@@ -176,12 +199,14 @@ export default {
     nzDataList,
     deleteButton,
     alertSilenceBox,
-    clickSearch
+    clickSearch,
+    panelChart
   },
   mixins: [dataListMixin, routerPathParams],
   data () {
     return {
       chartLoading: false,
+      chartInfo: {},
       stateOptions: alertMessageConstant.states,
       dataListLayout: localStorage.getItem('dataList-layout' + 'alertMessageTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'alertMessageTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
       state: '1',
@@ -562,7 +587,7 @@ export default {
       }
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
-        this.graphShow = true
+        console.log(this.currentMsg )
         this.$nextTick(() => {
           this.searchTimeDialog = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
           this.queryDate()
@@ -578,12 +603,15 @@ export default {
     queryDate () {
       this.chartLoading = true
       if (this.currentMsg.alertRule.type === 1) {
-        this.resultType = 'matrix'
-        this.$nextTick(() => {
-          this.queryChartDate()
-        })
+        const chartInfo = lodash.cloneDeep(lineData)
+        chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
+        chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
+        this.showFullscreen(true, chartInfo)
       } else if (this.currentMsg.alertRule.type === 2) {
-        this.queryLogData(100)
+        const chartInfo = lodash.cloneDeep(logData)
+        chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
+        chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
+        this.showFullscreen(true, chartInfo)
       }
     },
     queryChartDate () {
@@ -1251,6 +1279,10 @@ export default {
       params.ids = this.batchDeleteObjs.map(item => item.id).join(',')
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
+    },
+    showFullscreen (show, chartInfo) {
+      this.chartInfo = chartInfo
+      this.graphShow = show
     }
   },
   destroyed () {

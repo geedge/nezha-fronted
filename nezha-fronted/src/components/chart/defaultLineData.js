@@ -1,0 +1,111 @@
+const data = {
+  id: 'metrics',
+  loaded: true,
+  showHeader: true,
+  name: '',
+  panelId: 1244,
+  groupId: 0,
+  span: 4,
+  height: 4,
+  updateBy: 381,
+  updateAt: '2021-12-23 03:49:51',
+  type: 'line',
+  unit: 2,
+  weight: 0,
+  param: {
+    stack: 0,
+    showHeader: true,
+    thresholds: [
+      {
+        color: '#751bd6'
+      }
+    ],
+    thresholdShow: false,
+    legend: {
+      values: [
+
+      ],
+      show: true,
+      placement: 'bottom'
+    },
+    enable: {
+      thresholds: false,
+      legend: true,
+      valueMapping: false
+    },
+    nullType: 'null'
+  },
+  pid: null,
+  buildIn: 0,
+  remark: '',
+  seq: null,
+  x: 0,
+  y: 12,
+  elements: [
+    {
+      id: 85583,
+      chartId: 697389,
+      expression: '',
+      type: 'expert',
+      legend: '',
+      buildIn: 0,
+      seq: null,
+      name: 'A',
+      state: 1
+    }
+  ],
+  sync: null,
+  panel: {
+    id: 1244,
+    name: 'testnodata',
+    createBy: null,
+    type: null,
+    link: null,
+    pid: null,
+    weight: null,
+    buildIn: null,
+    seq: null,
+    children: null,
+    parent: null,
+    chartNum: null
+  },
+  group: {
+    id: 0,
+    name: null,
+    panelId: null,
+    groupId: null,
+    span: null,
+    height: null,
+    updateBy: null,
+    updateAt: null,
+    type: null,
+    unit: null,
+    weight: null,
+    param: null,
+    pid: null,
+    buildIn: null,
+    remark: null,
+    seq: null,
+    x: null,
+    y: null,
+    elements: null,
+    sync: null,
+    panel: null,
+    group: null,
+    children: null,
+    chartNums: null,
+    asset: null,
+    varType: null,
+    varId: null,
+    varName: null,
+    datasource: null
+  },
+  children: null,
+  chartNums: null,
+  asset: null,
+  varType: null,
+  varId: null,
+  varName: null,
+  datasource: 'metrics'
+}
+export default data

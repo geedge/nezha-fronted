@@ -166,6 +166,9 @@ export default {
               if (isTimeSeries(this.chartInfo.type)) {
                 query += `&nullType=${this.chartInfo.param.nullType || 'null'}`
               }
+              if (element.filter) {
+                query += `&filter=${element.filter}`
+              }
               // if (isChartPie(this.chartInfo.type)) {
               //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
               // }
