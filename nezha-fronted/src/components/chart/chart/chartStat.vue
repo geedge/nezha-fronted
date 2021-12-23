@@ -1,6 +1,6 @@
 <template>
   <div class="chart-stat" ref="chart-stat-box">
-    <div class="chart-stat-item"  :style="{background:item.mapping ? item.mapping.color.bac : false,height:item.height+'px',width:item.width + 'px'}" v-for="(item,index) in statData" :key="index">
+    <div class="chart-stat-item" v-for="(item,index) in statData" :key="index" :style="{background:item.mapping ? item.mapping.color.bac : (index >= 20 ? randomcolor() : colorList[index]),height:item.height+'px',width:item.width + 'px'}">
       <span v-if="chartInfo.param.text==='all'">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
           {{item.legend}}<br/><span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
@@ -31,6 +31,8 @@ import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
 import { getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/charts/chartDataFormat'
+import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
+import {initColor} from "@/components/chart/chart/tools";
 
 export default {
   name: 'chart-stat',
@@ -44,6 +46,7 @@ export default {
     }
   },
   methods: {
+    randomcolor,
     initChart () {
       this.initStatData(this.chartInfo, this.chartData).then(() => {
         if (this.isNoData) {
@@ -142,6 +145,7 @@ export default {
     }
   },
   mounted () {
+    this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart()
   }
 }

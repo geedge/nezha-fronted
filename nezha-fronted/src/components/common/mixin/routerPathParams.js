@@ -38,11 +38,6 @@ export default {
           const obj = lodash.cloneDeep(val.defaultJson)
           obj[val.jsonKey] = qv
           console.log(obj[val.jsonKey])
-          if (val.strKey) {
-            this.$refs[dataList].$refs.searchInput[val.listStr].map((e) => {
-              obj[val.strKey] = e.name
-            })
-          }
           this.$refs[dataList].$refs.searchInput.select_list.push(obj)
           this.$refs[dataList].$refs.searchInput.sreach_num++
           // this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs[dataList].$refs.searchInput.searchLabelList.filter(item => item.label !== 'projectIds')

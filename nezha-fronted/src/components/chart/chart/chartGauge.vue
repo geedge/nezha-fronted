@@ -175,7 +175,23 @@ export default {
             if (item.mapping) {
               showValue = self.handleDisplay(item.mapping.display, { ...item.label, value: showValue })
             }
-            return showValue
+            let str = ''
+            if (this.chartInfo.param.text === 'all') {
+              str += item.alias
+              str += '\n'
+              str += showValue
+            }
+            if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
+              str += showValue
+            }
+            if (this.chartInfo.param.text === 'legend') {
+              str += item.alias
+            }
+            if (this.chartInfo.param.text === 'none') {
+              str += ''
+            }
+            str += ''
+            return str
           },
           color: lodash.get(item, 'mapping.color.text', 'auto')
         }

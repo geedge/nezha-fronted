@@ -1480,7 +1480,8 @@ export default {
       if (this.$route.path === '/exprTemp') {
         this.getGnameList()
       }
-    }, 1000)
+      console.log(this.select_list, this.searchLabelList)
+    }, 100)
     JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
       if (val.prop == 'common_action') {
         this.actionSelect = val.doc.data
