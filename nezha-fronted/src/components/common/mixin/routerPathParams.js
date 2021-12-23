@@ -9,8 +9,18 @@ export default {
         if (qv && val.type == 'number') {
           qv = lodash.toNumber(qv)
         }
+        if (qv && val.type == 'array') {
+          qv = qv.split(',')
+        }
         setTimeout(() => {
           this.setSearchInput(val, qv)
+          if (qv && val.type2 == 'array') {
+            const arr = qv.split(',').map(item => Number(item))
+            qv && this.$set(val.target2, val.propertyName, arr)
+          }
+          if (qv && val.type2 == 'json') {
+            qv && this.$set(val.target2, val.propertyName, qv)
+          }
         }, 200)
         qv && this.$set(val.target, val.propertyName, qv)
       })

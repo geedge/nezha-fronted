@@ -840,8 +840,8 @@ export default {
         },
         jsonKey: 'val'
       },
-      dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'string' },
-      fields: { target: this.searchCheckBox, propertyName: 'fields', type: 'json' },
+      dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'string', target2: this.selectValue, type2: 'array' },
+      fields: { target: this.searchCheckBox, propertyName: 'fields', type: 'json', target2: this.selectValue, type2: 'json' },
       ping: { target: this.searchCheckBox, propertyName: 'ping', type: 'string' },
       modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'string' },
       typeIds: { target: this.searchCheckBox, propertyName: 'typeIds', type: 'string' }
