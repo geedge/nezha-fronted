@@ -8,6 +8,9 @@
       :isError="isError"
       :chartData="chartData"
       :chart-info="chartInfo"
+      :showAllData.sync="showAllData"
+      :allDataLength="allDataLength"
+      @loadMore="loadMore"
       @edit-chart="$emit('edit-chart', chartInfo)"
       @refresh="refresh"
       @groupShow="groupShow"
@@ -20,6 +23,9 @@
       :isError="isError"
       :chartData="chartData"
       :chart-info="chartInfo"
+      :showAllData.sync="showAllData"
+      :allDataLength="allDataLength"
+      @loadMore="loadMore"
       @refresh="refresh"
       @dateChange="dateChange"
       @close="showFullscreen"
@@ -35,7 +41,10 @@
       :from="from"
       :isError="isError"
       :loading="loading"
+      :minusTime="minusTime"
+      :multipleTime="multipleTime"
       :is-fullscreen="isFullscreen"
+      :showAllData="showAllData"
       v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
     ></chart>
   </div>
@@ -74,7 +83,10 @@ export default {
       chartData: [],
       loading: true,
       isError: false,
-      MultipleTime: false
+      multipleTime: false,
+      minusTime: '',
+      showAllData: false,
+      allDataLength: 0
     }
   },
   computed: {
@@ -87,8 +99,7 @@ export default {
   },
   methods: {
     isGroup,
-    dateChange (filter, MultipleTime) {
-      console.log(filter, MultipleTime)
+    dateChange (filter, multipleTime) {
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = filter.start_time
@@ -97,6 +108,14 @@ export default {
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
       const elements = this.chartInfo.elements || []
+      if (multipleTime.length) {
+        const minusTime = (new Date(filter.start_time).getTime() - new Date(multipleTime[0]).getTime())
+        this.minusTime = minusTime
+        this.multipleTime = true
+      } else {
+        this.minusTime = ''
+        this.multipleTime = false
+      }
       this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
     },
     // 参数 isRefresh 标识是否是刷新操作
@@ -128,6 +147,7 @@ export default {
     },
     query (elements, startTime, endTime, step) {
       this.isError = false
+      this.allDataLength = 0
       try {
         switch (this.chartInfo.datasource) {
           case 'metrics':
@@ -138,7 +158,7 @@ export default {
             } else if (this.chartInfo.datasource === 'logs') {
               urlPre += '/logs/loki'
             }
-            const requests = elements.map((element) => {
+            let requests = elements.map((element) => {
               if (this.from === fromRoute.chartTemp) {
                 return chartTempData
               }
@@ -146,21 +166,61 @@ export default {
               if (isTimeSeries(this.chartInfo.type)) {
                 query += `&nullType=${this.chartInfo.param.nullType || 'null'}`
               }
+              if (element.filter) {
+                query += `&filter=${element.filter}`
+              }
               // if (isChartPie(this.chartInfo.type)) {
               //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
               // }
               query += `&query=${element.expression}`
               return this.$get(query)
             })
-
+            if (this.multipleTime) {
+              const multipleRequests = elements.map((element) => {
+                if (this.from === fromRoute.chartTemp) {
+                  return chartTempData
+                }
+                let query = `${urlPre}/api/v1/query_range?start=${startTime - this.minusTime / 1000}&end=${endTime - this.minusTime / 1000}&step=${step}`
+                if (isTimeSeries(this.chartInfo.type)) {
+                  query += `&nullType=${this.chartInfo.param.nullType || 'null'}`
+                }
+                if (element.filter) {
+                  query += `&filter=${element.filter}`
+                }
+                // if (isChartPie(this.chartInfo.type)) {
+                //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
+                // }
+                query += `&query=${element.expression}`
+                return this.$get(query)
+              })
+              requests = requests.concat(multipleRequests)
+            }
             const chartData = []
-            axios.all(requests).then(res => {
-              res.forEach(r => {
-                if (r.status === 'success') {
-                  chartData.push(r.data.result)
+            axios.all(requests).then((res) => {
+              res.forEach((r, rIndex) => {
+                if (rIndex < elements.length) {
+                  if (r.status === 'success') {
+                    r.data.result.forEach(item => {
+                      this.allDataLength++
+                    })
+                    chartData.push(r.data.result)
+                  } else {
+                    chartData.push({ error: r.msg || r.error || r })
+                    this.isError = true
+                  }
                 } else {
-                  chartData.push({ error: r.msg || r.error || r })
-                  this.isError = true
+                  if (r.status === 'success') {
+                    r.data.result.forEach(item => {
+                      this.allDataLength++
+                      item.values.forEach(values => {
+                        values[0] = values[0] + this.minusTime / 1000
+                      })
+                    })
+                    chartData.push(r.data.result)
+                  } else {
+                    chartData.push({ error: r.msg || r.error || r })
+                    this.isError = true
+                  }
                 }
               })
               this.chartData = chartData
@@ -316,6 +376,21 @@ export default {
       this.groupInit()
       bus.$emit('groupMove', '', '', true)
       this.$emit('groupShow', this.chartInfo)
+    },
+    showMultiple (type) {
+      switch (type) {
+        case 'line' :
+        case 'area' :
+        case 'point' :
+          return true
+        default: return false
+      }
+    },
+    loadMore () {
+      this.showAllData = true
+      this.$nextTick(() => {
+        this.$refs.chart && this.$refs.chart.$refs['chart' + this.chartInfo.id].initChart()
+      })
     }
   },
   watch: {
@@ -334,6 +409,7 @@ export default {
   },
   mounted () {
     this.chartInfo.loaded && this.getChartData()
+    this.showAllData = !this.showMultiple(this.chartInfo.type)
   }
 }
 </script>

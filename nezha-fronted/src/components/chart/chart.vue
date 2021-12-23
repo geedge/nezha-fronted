@@ -10,6 +10,9 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        :minusTime="minusTime"
+        :multipleTime="multipleTime"
+        :showAllData="showAllData"
         @chartIsNoData="chartIsNoData"
       ></chart-time-series>
       <chart-pie
@@ -222,7 +225,13 @@ export default {
     panelLock: Boolean,
     from: String,
     isError: Boolean,
-    filter: {}
+    filter: {},
+    multipleTime: {},
+    minusTime: {},
+    showAllData: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {

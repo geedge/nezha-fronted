@@ -1,6 +1,7 @@
 import lodash from 'lodash'
 import { getMetricTypeValue } from '@/components/common/js/tools'
 import { getChart, getMousePoint, setChart } from '@/components/common/js/common'
+import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 export default {
   data () {
     return {
@@ -14,14 +15,17 @@ export default {
       },
       chartId: '',
       isNoData: true,
-      showAllData: false
     }
   },
   props: {
     chartInfo: Object,
     chartData: Array,
     chartOption: Object,
-    isFullscreen: Boolean
+    isFullscreen: Boolean,
+    showAllData: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     filterTime () {
@@ -77,8 +81,15 @@ export default {
       return series
     },
     // 单个legend
-    handleLegend (chartInfo, data, expressionIndex, dataIndex, colorIndex) {
+    handleLegend (chartInfo, data, expressionIndexs, dataIndex, colorIndex) {
+      let expressionIndex = expressionIndexs
       let legend = '' // up
+      let alias = ''
+      if (expressionIndex >= chartInfo.elements.length) {
+        expressionIndex -= chartInfo.elements.length
+        legend += 'Previous '
+        alias += 'Previous '
+      }
       if (data.metric.__name__) {
         legend += `${data.metric.__name__}{`
       }
@@ -98,9 +109,12 @@ export default {
         legend = chartInfo.elements[expressionIndex].expression
       }
       // 处理legend别名
-      let alias = chartInfo.datasource === 'system' ? '' : this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
+      alias = chartInfo.datasource === 'system' ? '' : (alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend))
       if (!alias) {
         alias = legend
+      }
+      if (alias == 'Previous ') {
+        alias += legend
       }
       // proj_status_
       const name = alias + '-' + dataIndex
@@ -113,6 +127,12 @@ export default {
           return { type, value: getMetricTypeValue(data.values, type) }
         })
       }
+      if (colorIndex > 20) {
+        const colorRandom = randomcolor()
+        this.colorList.push(colorRandom)
+        this.chartOption.color.push(colorRandom)
+      }
+      // console.log(name, alias, statistics)
       this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
       return {
         name,
@@ -133,6 +153,9 @@ export default {
         })
         return labelValue
       } else {
+        if (!aliasExpression) {
+          return ''
+        }
         return aliasExpression
       }
     },
