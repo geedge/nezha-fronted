@@ -13,6 +13,19 @@
            </span>
           </el-popover>
     </span>
+    <span v-if="!isError&&!showAllData&&allDataLength>20" class="chart-header-error moreTitle">
+     <el-popover
+       placement="top-start"
+       :close-delay=10
+       trigger="hover"
+       popper-class="chart-warring-popper">
+          <div class="moreTitle">{{$t('dashboard.panel.moreTitle')}}{{$t('dashboard.panel.showAll')}}{{allDataLength}}</div>
+          <span slot="reference" class="panel-info-corner panel-info-corner--error"  @click="loadMore">
+            <i class="nz-icon nz-icon-warning fa"></i>
+            <span class="panel-info-corner-inner"></span>
+          </span>
+     </el-popover>
+    </span>
     <div class="chart-header__title">{{chartInfo.name}}</div>
     <div class="chart-header__tools">
       <span v-if="chartInfo.remark" class="chart-header__tool top-tool-btn-group">
@@ -33,25 +46,10 @@
 <script>
 import bus from '@/libs/bus'
 import lodash from 'lodash'
+import chartHeaderMixin from "@/components/chart/chartHeaderMixin";
 export default {
   name: 'ChartScreenHeader',
-  props: {
-    chartInfo: Object,
-    from: String,
-    isGroup: {
-      type: Boolean,
-      default: false
-    },
-    error: {
-      type: String,
-      default: ''
-    },
-    isError: {
-      type: Boolean,
-      default: false
-    },
-    chartData: {}
-  },
+  mixins: [chartHeaderMixin],
   computed: {
     timeRange () {
       return this.$store.getters.getTimeRange
@@ -134,14 +132,6 @@ export default {
     }
   },
   watch: {
-    isError: {
-      immediate: true,
-      handler (n) {
-        if (n) {
-          this.errorText = this.chartData.filter(item => item.error).map(item => item.error).join('\n')
-        }
-      }
-    },
     timeRange: {
       immediate: true,
       handler (n) {

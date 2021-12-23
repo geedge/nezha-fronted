@@ -69,6 +69,7 @@ export default {
   },
   methods: {
     initChart (chartOption = this.chartOption) {
+      console.log(123)
       this.legends = []
       chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       if (this.isNoData) {
@@ -151,7 +152,6 @@ export default {
         let sum = 0
         let flag = true
         params.forEach((item, i) => {
-          console.log(item)
           const seriesName = item.seriesName.split('-')[0]
           if (i === 0) {
             const value = bus.computeTimezone(item.data[0] * 1000)

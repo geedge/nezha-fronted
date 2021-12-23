@@ -12,6 +12,7 @@
         :is-fullscreen="isFullscreen"
         :minusTime="minusTime"
         :multipleTime="multipleTime"
+        :showAllData="showAllData"
         @chartIsNoData="chartIsNoData"
       ></chart-time-series>
       <chart-pie
@@ -226,7 +227,11 @@ export default {
     isError: Boolean,
     filter: {},
     multipleTime: {},
-    minusTime: {}
+    minusTime: {},
+    showAllData: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {

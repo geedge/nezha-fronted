@@ -13,6 +13,19 @@
            </span>
           </el-popover>
     </span>
+    <span v-if="!isError&&!showAllData&&allDataLength>10" class="chart-header-error moreTitle">
+     <el-popover
+       placement="top-start"
+       :close-delay=10
+       trigger="hover"
+       popper-class="chart-warring-popper">
+          <div class="moreTitle">{{$t('dashboard.panel.moreTitle')}}{{$t('dashboard.panel.showAll')}}{{allDataLength}}</div>
+          <span slot="reference" class="panel-info-corner panel-info-corner--error"  @click="loadMore">
+            <i class="nz-icon nz-icon-warning fa"></i>
+            <span class="panel-info-corner-inner"></span>
+          </span>
+     </el-popover>
+    </span>
     <div class="chart-header__title" v-if="!isGroup">{{chartInfo.name}}</div>
     <div class="chart-header__title" v-else >
       <span @click="groupShow"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-down': 'nz-icon-arrow-right'"></i></span>
@@ -63,73 +76,9 @@
 </template>
 
 <script>
+import chartHeaderMixin from '@/components/chart/chartHeaderMixin'
 export default {
   name: 'chartHeader',
-  props: {
-    chartInfo: Object,
-    from: String,
-    isGroup: {
-      type: Boolean,
-      default: false
-    },
-    error: {
-      type: String,
-      default: ''
-    },
-    isError: {
-      type: Boolean,
-      default: false
-    },
-    chartData: {}
-  },
-  data () {
-    return {
-      dropdownMenuShow: false,
-      errorText: ''
-    }
-  },
-  methods: {
-    showFullscreen () {
-      this.$emit('showFullscreen', true)
-    },
-    refreshChart () {
-      this.$emit('refresh')
-    },
-    editChart () {
-      // this.$emit('edit-chart', this.chartInfo)
-      this.$store.dispatch('dispatchEditChart', {
-        chart: this.chartInfo,
-        type: 'edit'
-      })
-    },
-    removeChart () {
-      this.$store.dispatch('dispatchDelChart', {
-        chart: this.chartInfo,
-        type: 'delete'
-      })
-    },
-    duplicate () {
-      this.$store.dispatch('dispatchEditChart', {
-        chart: this.chartInfo,
-        type: 'duplicate'
-      })
-    },
-    clickos () {
-      this.dropdownMenuShow = false
-    },
-    groupShow () {
-      this.$emit('groupShow', !this.chartInfo.param.collapse)
-    }
-  },
-  watch: {
-    isError: {
-      immediate: true,
-      handler (n) {
-        if (n) {
-          this.errorText = this.chartData.filter(item => item.error).map(item => item.error).join('\n')
-        }
-      }
-    }
-  }
+  mixins: [chartHeaderMixin],
 }
 </script>

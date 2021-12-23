@@ -15,14 +15,17 @@ export default {
       },
       chartId: '',
       isNoData: true,
-      showAllData: false
     }
   },
   props: {
     chartInfo: Object,
     chartData: Array,
     chartOption: Object,
-    isFullscreen: Boolean
+    isFullscreen: Boolean,
+    showAllData: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     filterTime () {
@@ -41,10 +44,11 @@ export default {
       let colorIndex = 0
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
-          // if (colorIndex >= 20 && !this.showAllData) {
-          //   colorIndex++
-          //   return
-          // }
+          console.log(this.showAllData)
+          if (colorIndex >= 20 && !this.showAllData) {
+            colorIndex++
+            return
+          }
           this.isNoData = false
           const s = lodash.cloneDeep(seriesTemplate)
           if (s) {

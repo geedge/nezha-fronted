@@ -8,6 +8,9 @@
       :isError="isError"
       :chartData="chartData"
       :chart-info="chartInfo"
+      :showAllData.sync="showAllData"
+      :allDataLength="allDataLength"
+      @loadMore="loadMore"
       @edit-chart="$emit('edit-chart', chartInfo)"
       @refresh="refresh"
       @groupShow="groupShow"
@@ -20,6 +23,9 @@
       :isError="isError"
       :chartData="chartData"
       :chart-info="chartInfo"
+      :showAllData.sync="showAllData"
+      :allDataLength="allDataLength"
+      @loadMore="loadMore"
       @refresh="refresh"
       @dateChange="dateChange"
       @close="showFullscreen"
@@ -38,6 +44,7 @@
       :minusTime="minusTime"
       :multipleTime="multipleTime"
       :is-fullscreen="isFullscreen"
+      :showAllData="showAllData"
       v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
     ></chart>
   </div>
@@ -77,7 +84,9 @@ export default {
       loading: true,
       isError: false,
       multipleTime: false,
-      minusTime: ''
+      minusTime: '',
+      showAllData: false,
+      allDataLength: 0
     }
   },
   computed: {
@@ -139,6 +148,7 @@ export default {
     },
     query (elements, startTime, endTime, step) {
       this.isError = false
+      this.allDataLength = 0
       try {
         switch (this.chartInfo.datasource) {
           case 'metrics':
@@ -187,6 +197,9 @@ export default {
               res.forEach((r, rIndex) => {
                 if (rIndex < elements.length) {
                   if (r.status === 'success') {
+                    r.data.result.forEach(item => {
+                      this.allDataLength++
+                    })
                     chartData.push(r.data.result)
                   } else {
                     chartData.push({ error: r.msg || r.error || r })
@@ -196,6 +209,7 @@ export default {
                   if (r.status === 'success') {
                     console.log(r.data.result)
                     r.data.result.forEach(item => {
+                      this.allDataLength++
                       item.values.forEach(values => {
                         values[0] = values[0] + this.minusTime / 1000
                       })
@@ -360,6 +374,21 @@ export default {
       this.groupInit()
       bus.$emit('groupMove', '', '', true)
       this.$emit('groupShow', this.chartInfo)
+    },
+    showMultiple (type) {
+      switch (type) {
+        case 'line' :
+        case 'area' :
+        case 'point' :
+          return true
+        default: return false
+      }
+    },
+    loadMore () {
+      this.showAllData = true
+      this.$nextTick(() => {
+        this.$refs.chart && this.$refs.chart.$refs['chart' + this.chartInfo.id].initChart()
+      })
     }
   },
   watch: {
@@ -378,6 +407,7 @@ export default {
   },
   mounted () {
     this.chartInfo.loaded && this.getChartData()
+    this.showAllData = !this.showMultiple(this.chartInfo.type)
   }
 }
 </script>
