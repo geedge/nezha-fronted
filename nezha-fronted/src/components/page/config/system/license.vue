@@ -15,8 +15,16 @@
       </div>
       <div class="license-left-body">
         <div>
-          <div class="license-left-boyd-title" style="margin-top: 25px">{{$t('license.id')}}</div>
-          <div class="license-left-boyd-value">{{ licenseList.id ? licenseList.id : '-'}}</div>
+          <div class="license-left-boyd-title" style="margin-top: 25px">{{$t('license.type')}}</div>
+          <div class="license-left-boyd-value">{{ licenseMark.type ? licenseMark.type : '-'}}</div>
+        </div>
+        <div>
+          <div class="license-left-boyd-title">{{$t('license.organization')}}</div>
+          <div class="license-left-boyd-value">{{ licenseMark.organization ? licenseMark.organization : '-'}}</div>
+        </div>
+        <div>
+          <div class="license-left-boyd-title">{{$t('license.id')}}</div>
+          <div class="license-left-boyd-value">{{ licenseMark.supportID ? licenseMark.supportID : '-'}}</div>
         </div>
         <div>
           <div class="license-left-boyd-title">{{$t('license.proDate')}}</div>
@@ -27,11 +35,10 @@
         </div>
         <div>
           <div class="license-left-boyd-title">{{$t('license.expDate')}}</div>
-          <div class="license-left-boyd-value" style="margin: 15px">
+          <div class="license-left-boyd-value">
             <span v-if="expData.id === '20001' && expData.license.license_type === 'expiration'">{{formatDate(expData.license.exp_date)}}</span>
             <span v-else-if="expData.id === '20001' && expData.license.license_type === 'perpetual'">{{$t('license.permanent')}}</span>
-<!--            <span v-else-if="expData.id === '20001' && expData.license.license_type === 'trial'">{{$t('license.validPeriod')}}: {{formatDate(time_start)}} ~ {{ formatDate(end_time(time_start + total_time))}}</span>-->
-<!--            <span>{{$t('license.validPeriod')}} : {{formatDate(expData.license.time_start)}} ~ {{formatDate(expData.license.end_time)}}</span>-->
+            <span v-else-if="expData.id === '20001' && expData.license.license_type === 'trial'">{{formatDate(this.stateItem)}} ~ {{ formatDate(this.endItem)}}</span>
             <span v-else>-</span>
           </div>
         </div>
@@ -93,6 +100,7 @@ export default {
   data () {
     return {
       licenseList: {},
+      licenseMark: {},
       tableData: [],
       tableTitle: [
         {
@@ -108,17 +116,22 @@ export default {
       uploadFileList: [],
       uploadFile: { file: '' },
       active: 0,
-      loading: true
+      loading: true,
+      stateItem: '',
+      endItem: ''
     }
   },
   methods: {
     licenseGetData () {
       this.$get('/sys/license/detail').then(res => {
         if (res.code === 200) {
+          this.licenseMark = res.data.license
           this.licenseList = res.data.license.hasp
           this.licenseList.feature.map(e => {
             if (e.id === '20001') {
               this.expData = e
+              this.stateItem = e.time_start
+              this.endItem = e.end_time * 1 + e.time_start * 1
               // this.expData.license.end_time = this.expData.license.time_start * 1 + this.expData.license.total_time * 1
             }
           })

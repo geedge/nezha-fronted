@@ -163,12 +163,12 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
-      const assetParam = {
+      const alertRuleParam = {
         ...this.searchLabel,
         ...this.searchCheckBox
       }
       const path = this.fromRoute.alertSilence
-      this.updatePath(assetParam, path)
+      this.updatePath(alertRuleParam, path)
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         this.nowTime = this.utcTimeToTimezoneStr(response.time)

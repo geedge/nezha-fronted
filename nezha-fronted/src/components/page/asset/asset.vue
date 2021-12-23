@@ -839,7 +839,12 @@ export default {
           val: ''
         },
         jsonKey: 'val'
-      }
+      },
+      dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'string' },
+      fields: { target: this.searchCheckBox, propertyName: 'fields', type: 'json' },
+      ping: { target: this.searchCheckBox, propertyName: 'ping', type: 'string' },
+      modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'string' },
+      typeIds: { target: this.searchCheckBox, propertyName: 'typeIds', type: 'string' }
     }
     this.initQueryFromPath(searchKeys)
   },

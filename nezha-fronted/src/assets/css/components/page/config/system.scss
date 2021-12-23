@@ -322,7 +322,6 @@
       border: 1px solid $--border-color-light;
       border-radius: 2px;
       width: 700px;
-      height: 370px;
       margin: 10px;
     }
     .license-left {
@@ -412,7 +411,6 @@
     }
     .license-left-body {
       margin-left: 40px;
-      min-height: 280px;
       .license-left-boyd-title {
         font-family: Roboto-Medium;
         font-size: 14px;
@@ -429,7 +427,7 @@
         letter-spacing: 0;
         line-height: 22px;
         font-weight: 400;
-        margin: 15px 0 25px 10px;
+        margin: 15px;
       }
     }
     .license-left-footer {

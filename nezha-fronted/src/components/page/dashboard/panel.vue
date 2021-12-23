@@ -158,10 +158,12 @@ import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import { fromRoute } from '@/components/common/js/constants'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { lineChartMove } from '@/components/common/js/common'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 // import chartData from './testData'
 
 export default {
   name: 'panel',
+  mixins: [routerPathParams],
   data () {
     return {
       fromRoute,
@@ -312,8 +314,14 @@ export default {
       this.showPanel = val
       this.showPanel.type = 'dashboard'
       this.filter.panelId = this.showPanel.id
+      this.panelId = this.showPanel.id
+      const param = {
+        panelId: this.panelId
+      }
       // this.dateChange()
       // this.getTableData()
+      const path = this.fromRoute.panel
+      this.updatePath(param, path)
       this.getData(this.filter)
       this.$refs.chartList.cleanData()
     },
@@ -600,7 +608,6 @@ export default {
 
     getTableData (clearShowPanel) {
       const vm = this
-
       this.$get('visual/panel?type=dashboard&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
@@ -785,6 +792,16 @@ export default {
     }
   },
   created () {
+    const searchKeys = {
+      // key: path 键
+      // value: vue set 参数
+      panelId: { target: this, propertyName: 'panelId', type: 'number' }
+    }
+    setTimeout(() => {
+      this.showPanel.id = this.panelId
+      this.filter.panelId = this.panelId
+    })
+    this.initQueryFromPath(searchKeys)
     this.getTableData()
     this.$store.dispatch('dispatchPanelTime', {
       time: this.searchTime,

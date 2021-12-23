@@ -12,14 +12,19 @@ export default {
         setTimeout(() => {
           this.setSearchInput(val, qv)
         }, 200)
-        console.log()
         qv && this.$set(val.target, val.propertyName, qv)
       })
     },
     // 更新path，包含请求参数
     updatePath (param, path) {
       console.log(param)
-      this.$router.replace({ path: path, query: param }).catch(err => {})
+      const params = lodash.cloneDeep(param)
+      Object.keys(params).forEach(key => {
+        if (!params[key]) {
+          delete params[key]
+        }
+      })
+      this.$router.replace({ path: path, query: params }).catch(err => {})
     },
     setSearchInput (val, qv) {
       let dataList = ''
@@ -35,7 +40,6 @@ export default {
           console.log(obj[val.jsonKey])
           if (val.strKey) {
             this.$refs[dataList].$refs.searchInput[val.listStr].map((e) => {
-              console.log(e)
               obj[val.strKey] = e.name
             })
           }

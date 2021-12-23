@@ -81,12 +81,14 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
-      const dataListParam = {
-        ...this.searchLabel,
-        ...this.searchCheckBox
+      if (this.$route.fullPath.match(/\/(\S*)\?/)[1] !== 'snmp' || this.$route.fullPath.match(/\/(\S*)\?/)[1] !== 'template') {
+        const dataListParam = {
+          ...this.searchLabel,
+          ...this.searchCheckBox
+        }
+        const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
+        this.updatePath(dataListParam, path)
       }
-      const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
-      this.updatePath(dataListParam, path)
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -376,55 +378,6 @@ export default {
           jsonKey: 'val'
         }
       }
-    } else if (path === 'template') {
-      searchKeys = {
-        // key: path 键
-        // value: vue set 参数
-        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
-        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
-        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-        ids: {
-          target: this.searchLabel,
-          propertyName: 'ids',
-          type: 'string',
-          defaultJson: {
-            disabled: false,
-            id: 'ids',
-            label: 'ids',
-            name: 'ID',
-            type: 'input',
-            val: ''
-          },
-          jsonKey: 'val'
-        },
-        name: {
-          target: this.searchLabel,
-          propertyName: 'name',
-          type: 'string',
-          defaultJson: {
-            disabled: false,
-            id: 'name',
-            label: 'name',
-            name: 'Name',
-            type: 'input',
-            val: ''
-          },
-          jsonKey: 'val'
-        },
-        gname: {
-          target: this.searchLabel,
-          propertyName: 'gname',
-          type: 'string',
-          defaultJson: {
-            disabled: false,
-            label: 'gname',
-            name: 'Group',
-            type: 'input',
-            val: ''
-          },
-          jsonKey: 'val'
-        }
-      }
     } else if (path === 'i18n') {
       searchKeys = {
         // key: path 键
@@ -536,7 +489,7 @@ export default {
           jsonKey: 'val'
         }
       }
-    } else if (path === 'operationLog' || path === 'profile') {
+    } else if (path === 'operationLog') {
       searchKeys = {
         // key: path 键
         // value: vue set 参数

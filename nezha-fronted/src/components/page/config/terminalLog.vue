@@ -302,7 +302,6 @@ export default {
           name: 'Protocol',
           readonly: true,
           type: 'selectString',
-
           val: ''
         },
         jsonKey: 'val'

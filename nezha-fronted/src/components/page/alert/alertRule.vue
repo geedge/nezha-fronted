@@ -401,7 +401,6 @@ export default {
         target: this.searchLabel,
         propertyName: 'name',
         type: 'string',
-
         defaultJson: {
           disabled: false,
           id: 2,
@@ -413,9 +412,6 @@ export default {
         jsonKey: 'val'
       }
     }
-    Object.keys(this.$route.query).forEach(key => {
-      this.$set(searchKeys[key].target, key, this.$route.query[key])
-    })
     this.initQueryFromPath(searchKeys)
   },
   mounted () {
