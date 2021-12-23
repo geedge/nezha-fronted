@@ -163,7 +163,6 @@ export default {
   },
   watch: {
     unit: {
-      immediate: true,
       handler (n, o) {
         this.$emit('unitChange', n)
       }

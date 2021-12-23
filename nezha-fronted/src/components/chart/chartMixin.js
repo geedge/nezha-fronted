@@ -85,7 +85,7 @@ export default {
       let expressionIndex = expressionIndexs
       let legend = '' // up
       let alias = ''
-      if (expressionIndex >= chartInfo.elements.length) {
+      if (chartInfo.elements && (expressionIndex >= chartInfo.elements.length)) {
         expressionIndex -= chartInfo.elements.length
         legend += 'Previous '
         alias += 'Previous '

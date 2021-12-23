@@ -399,7 +399,6 @@ export default {
     unitChange (val) {
       this.$emit('update:chartInfo', 'unit', val)
       this.chartInfo.unit = val
-      console.log(this.chartInfo.unit)
       this.$nextTick(() => {
         this.$refs.chart && this.$refs.chart.$refs['chart' + this.chartInfo.id].initChart()
       })

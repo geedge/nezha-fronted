@@ -413,7 +413,7 @@ export default {
         })
       })
     },
-    createSuccess (type, response, param, panel) {
+    createSuccess (panel) {
       this.$confirm(this.$t('dashboard.metric.goPanelTip'), this.$t('tip.saveSuccess'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),

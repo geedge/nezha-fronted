@@ -529,7 +529,7 @@ export default {
   },
   watch: {
     selectList (n) {
-      if (n.length === 1 && !this.chartConfig.param.datasource[0].systemSelect) {
+      if (!this.chartConfig.param.datasource[0].systemSelect) {
         this.chartConfig.param.datasource[0].systemSelect = this.selectList[0].name
         this.systemSelectChange(0)
       }
@@ -547,11 +547,11 @@ export default {
         if (res.code === 200) {
           this.systemData = JSON.parse(res.data.paramValue)
           if (this.systemData.length) {
-            if (!this.chartConfig.param.system) {
+            if (!this.chartConfig.param.datasource[0].type) {
               this.chartConfig.param.datasource[0].type = this.systemData[0].name
               this.groupList = this.systemData[0].group
               this.selectList = this.systemData[0].select
-            } else {
+            }  else {
               const system = this.systemData.find(item => item.name === this.chartConfig.param.datasource[0].type)
               this.chartConfig.param.system = system.name
               this.groupList = system.group
