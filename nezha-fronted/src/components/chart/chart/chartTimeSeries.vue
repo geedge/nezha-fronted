@@ -182,7 +182,8 @@ export default {
 
           let previousDom = ''
           if (previousItem) {
-            const previousVal = formatScientificNotation(item.data[1], paramsDot)
+            const previousVal = formatScientificNotation(previousItem.data[1], paramsDot)
+            // console.log(previousVal, item.data[1])
             let minusVal = 0
             let operator
             if (previousVal <= val) {
