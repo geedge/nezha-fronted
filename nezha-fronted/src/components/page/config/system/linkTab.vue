@@ -49,7 +49,7 @@ export default {
   components: { nzDataList, linkTable },
   mixins: [dataListMixin, parentTableCommon],
   props: {
-    activeTab: String
+    switchTab: String
   },
   data () {
     return {

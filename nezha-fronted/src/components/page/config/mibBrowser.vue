@@ -1,7 +1,7 @@
 <template>
   <div class="mib-browser" style="height: 100%">
     <nz-data-list
-      v-if="showTab === 'browser'"
+      v-if="switchTab === 'browser'"
       ref="dataList"
     >
       <template v-slot:top-tool-left>
@@ -171,7 +171,7 @@ import xlsx from 'xlsx'
 export default {
   name: 'mibBrowser',
   props: {
-    showTab: String
+    switchTab: String
   },
   components: {
     nzDataList

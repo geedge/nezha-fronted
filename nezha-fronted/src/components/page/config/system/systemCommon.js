@@ -96,7 +96,7 @@ export const tableCommon = {
 export const parentTableCommon = {
   mixins: [routerPathParams],
   props: {
-    activeTab: {
+    switchTab: {
       type: String,
       default: ''
     }
@@ -108,8 +108,8 @@ export const parentTableCommon = {
       const systemParam = {
         ...this.searchLabel
       }
-      if (this.activeTab) {
-        systemParam.activeTab = this.activeTab
+      if (this.switchTab) {
+        systemParam.switchTab = this.switchTab
       }
       const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
       this.updatePath(systemParam, path)

@@ -1,8 +1,8 @@
 <template>
   <div class="system">
-    <el-tabs v-model="activeTab" :class="{'full-table':activeTab == 'notification'||activeTab == 'link'||activeTab === 'apiKey'}" class="system-tabs" style="overflow: auto" type="border-card" @tab-click="selectTab">
+    <el-tabs v-model="switchTab" :class="{'full-table':switchTab == 'notification'||switchTab == 'link'||switchTab === 'apiKey'}" class="system-tabs" style="overflow: auto" type="border-card" @tab-click="selectTab">
       <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
-        <div class="system-config-form basicForm" v-if="activeTab === 'basic'">
+        <div class="system-config-form basicForm" v-if="switchTab === 'basic'">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
             <div class="system-title">{{$t('config.system.basic.title')}}</div>
             <el-form-item :label="$t('config.system.basic.language')" prop="language">
@@ -112,7 +112,7 @@
         </div >
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.monitor.monitor')" name="monitor">
-        <div class="system-config-form basicForm" v-if="activeTab === 'monitor'">
+        <div class="system-config-form basicForm" v-if="switchTab === 'monitor'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="monitor"  label-width="180px" size="small" ref="monitorForm" :rules="monitorRules" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.monitor.prometheusFederation')" prop="prometheus_federation_enabled">
@@ -224,7 +224,7 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.email.email')" name="email" >
-        <div class="system-config-form" v-if="activeTab === 'email'">
+        <div class="system-config-form" v-if="switchTab === 'email'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="email"  label-width="180px" size="small" ref="emailForm" :rules="email.email_enable=='on'?emailRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.email.enable')" prop="email_enable">
@@ -272,7 +272,7 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.terminal.terminal')" name="terminal">
-        <div class="system-config-form terminal" v-if="activeTab === 'terminal'">
+        <div class="system-config-form terminal" v-if="switchTab === 'terminal'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
 <!--            <el-form-item :label="$t('config.system.terminal.timeout')" prop="terminal_timeout">-->
@@ -298,7 +298,7 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.ldap.ldap')" name="ldap">
-        <div class="system-config-form" v-if="activeTab === 'ldap'">
+        <div class="system-config-form" v-if="switchTab === 'ldap'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="ldap"  label-width="180px" size="small" ref="ldapForm" :rules="ldap.ldap_enable == 'on'?ldapRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.ldap.active')" prop="ldap_enable">
@@ -340,16 +340,16 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.notification.notification')" name="notification" style="height: 100%;"><!--$t('config.system.reset.reset')-->
-        <notify-method v-if="activeTab === 'notification'" :active-tab="activeTab"></notify-method>
+        <notify-method v-if="switchTab === 'notification'" :switch-tab="switchTab"></notify-method>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.link.link')" name="link" style="height: 100%;"><!--$t('config.system.reset.reset')-->
-        <link-tab v-if="activeTab === 'link'" :active-tab="activeTab"></link-tab>
+        <link-tab v-if="switchTab === 'link'" :switch-tab="switchTab"></link-tab>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.apiKey.apiKey')" name="apiKey" style="height: 100%;"><!--$t('config.system.reset.reset')-->
-        <api-key-tab v-if="activeTab === 'apiKey'" :active-tab="activeTab"></api-key-tab>
+        <api-key-tab v-if="switchTab === 'apiKey'" :switch-tab="switchTab"></api-key-tab>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
-        <div class="system-config-form" v-if="activeTab === 'reset'">
+        <div class="system-config-form" v-if="switchTab === 'reset'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
             <el-form-item  prop="type" :label="$t('config.system.reset.type')">
@@ -369,7 +369,7 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.license.license')" name="license">
-        <license v-if="activeTab === 'license'"></license>
+        <license v-if="switchTab === 'license'"></license>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -575,7 +575,7 @@ export default {
           value: 'sysconfig'
         }
       ],
-      activeTab: 'basic',
+      switchTab: 'basic',
       languageList: [
         { value: 'en', label: 'English' },
         { value: 'zh', label: '简体中文' }
@@ -1045,11 +1045,11 @@ export default {
     }
   },
   mounted () {
-    this.querySetInfo(this.activeTab)
+    this.querySetInfo(this.switchTab)
     this.queryTimezone()
   },
   created () {
-    this.activeTab = this.$route.query.activeTab || 'basic'
+    this.switchTab = this.$route.query.switchTab || 'basic'
   }
 }
 </script>

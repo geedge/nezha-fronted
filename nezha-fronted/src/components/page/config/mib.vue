@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%">
     <nz-data-list
-      v-if="showTab === 'file'"
+      v-if="switchTab === 'file'"
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
@@ -70,7 +70,7 @@ export default {
   },
   mixins: [dataListMixin],
   props: {
-    showTab: String
+    switchTab: String
   },
   data () {
     return {

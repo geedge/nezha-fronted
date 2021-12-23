@@ -217,7 +217,7 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
-      this.updatePath({ ...this.searchLabel, ...this.searchCheckBox, showTab: this.showTab })
+      this.updatePath({ ...this.searchLabel, ...this.searchCheckBox, switchTab: this.switchTab })
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox, panelId: 0, returnChildren: 0, groupId: 0 }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {

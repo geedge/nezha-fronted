@@ -374,7 +374,7 @@ export default {
           valString: '',
           listStr: 'severitySelect'
         },
-        jsonKey: 'valnum',
+        jsonKey: 'valnum'
       },
       type: {
         target: this.searchLabel,
@@ -392,7 +392,7 @@ export default {
           valnum: '',
           valString: ''
         },
-        jsonKey: 'valnum',
+        jsonKey: 'valnum'
       },
       name: {
         target: this.searchLabel,

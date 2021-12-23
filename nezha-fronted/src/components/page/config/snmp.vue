@@ -1,8 +1,8 @@
 <template>
   <div>
-    <mib-file v-if="showTab === 'file'" :show-tab="showTab" @changeShowTab="changeShowTab" @toBrowserTab="changeTab(['mib','browser'],'browser')" @toCredentialTab="changeTab(['mib','credentials'],'credentials')"></mib-file>
-    <mib-browser v-if="showTab === 'browser'" :show-tab="showTab" @changeShowTab="changeShowTab" @toCredentialTab="changeTab(['mib','credentials'],'credentials')" @toFileTab="changeTab(['mib','file'],'file')"></mib-browser>
-    <credentials v-if="showTab === 'credentials'" :show-tab="showTab" @changeShowTab="changeShowTab" @toBrowserTab="changeTab(['mib','browser'],'browser')" @toFileTab="changeTab(['mib','file'],'file')"></credentials>
+    <mib-file v-if="switchTab === 'file'" :switch-tab="switchTab" @changeShowTab="changeShowTab" @toBrowserTab="changeTab(['mib','browser'],'browser')" @toCredentialTab="changeTab(['mib','credentials'],'credentials')"></mib-file>
+    <mib-browser v-if="switchTab === 'browser'" :switch-tab="switchTab" @changeShowTab="changeShowTab" @toCredentialTab="changeTab(['mib','credentials'],'credentials')" @toFileTab="changeTab(['mib','file'],'file')"></mib-browser>
+    <credentials v-if="switchTab === 'credentials'" :switch-tab="switchTab" @changeShowTab="changeShowTab" @toBrowserTab="changeTab(['mib','browser'],'browser')" @toFileTab="changeTab(['mib','file'],'file')"></credentials>
   </div>
 </template>
 
@@ -10,6 +10,7 @@
 import mibBrowser from './mibBrowser'
 import credentials from './credentials'
 import mibFile from './mib'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 export default {
   name: 'snmp',
   components: {
@@ -17,9 +18,10 @@ export default {
     mibBrowser,
     mibFile
   },
+  mixins: [routerPathParams],
   data () {
     return {
-      showTab: 'browser'
+      switchTab: 'browser'
     }
   },
   methods: {
@@ -33,7 +35,7 @@ export default {
       } else {
         path = paths
       } */
-      this.showTab = tab // 此处需要组建中有showTab 属性
+      this.switchTab = tab // 此处需要组建中有showTab 属性
       // this.toPath(path)
     },
     toPath: function (path) {
@@ -44,8 +46,14 @@ export default {
         }
       })
     },
-    changeShowTab (showTab) {
-      this.showTab = showTab
+    changeShowTab (switchTab) {
+      this.switchTab = switchTab
+      if (switchTab !== 'browser') {
+        this.updatePath({ switchTab })
+      } else {
+        const t = +new Date()
+        this.updatePath({ t })
+      }
     }
   },
   watch: {
@@ -53,10 +61,13 @@ export default {
       immediate: true,
       handler (n, o) {
         if (n.indexOf('mib') != -1 && this.$route.params.tab) {
-          this.$set(this, 'showTab', this.$route.params.tab)
+          this.$set(this, 'switchTab', this.$route.params.tab)
         }
       }
     }
+  },
+  created () {
+    this.switchTab = this.$route.query.switchTab || 'browser'
   }
 }
 </script>

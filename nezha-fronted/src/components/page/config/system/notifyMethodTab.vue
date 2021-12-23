@@ -86,7 +86,7 @@ export default {
   components: { nzDataList, notifyMethodTable },
   mixins: [dataListMixin, parentTableCommon],
   props: {
-    activeTab: String
+    switchTab: String
   },
   data () {
     return {

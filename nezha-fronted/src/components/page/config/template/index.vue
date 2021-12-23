@@ -1,7 +1,7 @@
 <template>
   <div class="temp">
-    <exprTemp class="template-tab" :show-tab="showTab" v-if="showTab == 'exprTemp'" @changeShowTab="changeShowTab"></exprTemp>
-    <chartTemp class="template-tab" :show-tab="showTab" v-if="showTab == 'chartTemp'" @changeShowTab="changeShowTab"></chartTemp>
+    <exprTemp class="template-tab" :switch-tab="switchTab" v-if="switchTab == 'exprTemp'" @changeShowTab="changeShowTab"></exprTemp>
+    <chartTemp class="template-tab" :switch-tab="switchTab" v-if="switchTab == 'chartTemp'" @changeShowTab="changeShowTab"></chartTemp>
   </div>
 </template>
 
@@ -18,7 +18,7 @@ export default {
   mixins: [routerPathParams],
   data () {
     return {
-      showTab: 'exprTemp'
+      switchTab: 'exprTemp'
     }
   },
   methods: {
@@ -32,7 +32,7 @@ export default {
       } else {
         path = paths
       }
-      this.showTab = tab // 此处需要组建中有showTab 属性
+      this.switchTab = tab // 此处需要组建中有showTab 属性
       this.toPath(path)
     },
     toPath: function (path) {
@@ -43,13 +43,14 @@ export default {
         }
       })
     },
-    changeShowTab (showTab) {
-      this.showTab = showTab
-      this.updatePath({ showTab })
+    changeShowTab (switchTab) {
+      this.switchTab = switchTab
+      this.updatePath({ switchTab })
     }
   },
   created () {
-    this.showTab = this.$route.query.showTab || 'exprTemp'
+    console.log(this.$route.query)
+    this.switchTab = this.$route.query.switchTab || 'exprTemp'
   },
   mounted () {
   }

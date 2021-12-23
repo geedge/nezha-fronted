@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%">
     <nz-data-list
-      v-show="showTab === 'credentials'"
+      v-show="switchTab === 'credentials'"
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
@@ -11,13 +11,13 @@
       @search="search"
     >
       <template v-slot:top-tool-left>
-        <div id="module-type-7"  class="nz-tab-item-box" @click="toBrowserTab"><!--v-has="'snmp_browser_view'"-->
+        <div id="module-type-7"  class="nz-tab-item-box" @click="clickTab(['mib','browser'],'browser')"><!--v-has="'snmp_browser_view'"-->
           <div class="nz-tab-item">{{$t("config.mib.mibBrowser")}}</div>
         </div>
-        <div id="module-type-8"  class="nz-tab-item-box" >
+        <div id="module-type-8"  class="nz-tab-item-box">
           <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.credentials")}}</div>
         </div>
-        <div id="module-type-6" class="nz-tab-item-box" @click="toFileTab">
+        <div id="module-type-6" class="nz-tab-item-box" @click="clickTab(['mib','file'],'file')">
           <div class="nz-tab-item ">{{$t("config.mib.mibFiles")}}</div>
         </div>
       </template>
@@ -64,7 +64,7 @@ import snmpCredentialBox from '../../common/rightBox/snmpCredentialBox'
 export default {
   name: 'credentials',
   props: {
-    showTab: String
+    switchTab: String
   },
   components: {
     deleteButton,
@@ -114,6 +114,9 @@ export default {
     },
     toBrowserTab () {
       this.$emit('toBrowserTab')
+    },
+    toCredentialTab () {
+      this.$emit('toCredentialTab')
     },
     closeSnmpBox (refresh) {
       this.rightBox.show = false
