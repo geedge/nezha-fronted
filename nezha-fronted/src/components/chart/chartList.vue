@@ -155,7 +155,6 @@ export default {
       }
       if (dom) {
         this.stepWidth = Math.floor(dom.offsetWidth / 12)
-        console.log(this.stepWidth)
         if (!this.isGroup) {
           const headerH = 50 / this.stepWidth
           const headerHPadding = 50 / this.stepWidth
@@ -217,7 +216,6 @@ export default {
     },
     changeGroupHeight (copyList, group, flag) {
       const height = getGroupHeight(copyList)
-      console.log(height,copyList[0].h, group, flag)
       // console.log(this.$refs.layout)
       const groupFind = this.copyDataList.find(item => item.id == group.id)
       if (group && groupFind) {
@@ -300,7 +298,6 @@ export default {
             let top = dom.style.transform.split(',')[1]
             top = top.substring(0, top.length - 2)
             const mainOffsetTop = top - this.stepWidth + 14// transform: grid组件 通过 tranfrom 控制位置 中间的为y的值 通过截取获得 - 父元素 marginTop的 值。
-            console.log(mainOffsetTop)
             // 2.元素的高度
             const mainHeight = itemHeight // ele.offsetHeight;//itemHeight;
             // 3.页面滚动的距离

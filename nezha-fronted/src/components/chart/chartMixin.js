@@ -44,7 +44,6 @@ export default {
       let colorIndex = 0
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
-          console.log(this.showAllData)
           if (colorIndex >= 20 && !this.showAllData) {
             colorIndex++
             return
@@ -114,6 +113,9 @@ export default {
       if (!alias) {
         alias = legend
       }
+      if (alias == 'Previous ') {
+        alias += legend
+      }
       // proj_status_
       const name = alias + '-' + dataIndex
 
@@ -130,6 +132,7 @@ export default {
         this.colorList.push(colorRandom)
         this.chartOption.color.push(colorRandom)
       }
+      // console.log(name, alias, statistics)
       this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
       return {
         name,
@@ -150,6 +153,9 @@ export default {
         })
         return labelValue
       } else {
+        if (!aliasExpression) {
+          return ''
+        }
         return aliasExpression
       }
     },

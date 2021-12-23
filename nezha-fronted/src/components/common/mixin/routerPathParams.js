@@ -12,7 +12,6 @@ export default {
         setTimeout(() => {
           this.setSearchInput(val, qv)
         }, 200)
-        console.log()
         qv && this.$set(val.target, val.propertyName, qv)
       })
     },

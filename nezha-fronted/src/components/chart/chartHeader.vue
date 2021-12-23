@@ -13,7 +13,7 @@
            </span>
           </el-popover>
     </span>
-    <span v-if="!isError&&!showAllData&&allDataLength>10" class="chart-header-error moreTitle">
+    <span v-if="!isError&&!showAllData&&allDataLength>20" class="chart-header-error moreTitle">
      <el-popover
        placement="top-start"
        :close-delay=10

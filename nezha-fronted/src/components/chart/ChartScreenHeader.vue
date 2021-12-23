@@ -73,7 +73,6 @@ export default {
       this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
       this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
       this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
-      console.log(this.filter)
       this.filter.value = this.searchTime[2]
       this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       setTimeout(() => {

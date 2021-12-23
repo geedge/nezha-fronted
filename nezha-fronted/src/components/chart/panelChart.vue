@@ -100,7 +100,6 @@ export default {
   methods: {
     isGroup,
     dateChange (filter, multipleTime) {
-      console.log(filter, multipleTime)
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = filter.start_time
@@ -174,7 +173,6 @@ export default {
               return this.$get(query)
             })
             if (this.multipleTime) {
-              console.log(123)
               const multipleRequests = elements.map((element) => {
                 if (this.from === fromRoute.chartTemp) {
                   return chartTempData
@@ -190,7 +188,6 @@ export default {
                 return this.$get(query)
               })
               requests = requests.concat(multipleRequests)
-              console.log(requests)
             }
             const chartData = []
             axios.all(requests).then((res) => {
@@ -207,7 +204,6 @@ export default {
                   }
                 } else {
                   if (r.status === 'success') {
-                    console.log(r.data.result)
                     r.data.result.forEach(item => {
                       this.allDataLength++
                       item.values.forEach(values => {

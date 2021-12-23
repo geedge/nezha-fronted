@@ -34,11 +34,11 @@
               </select-panel>
             </div>
             <div class="top-tool-right">
-              <div class="top-tool-search margin-r-20">
-                <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
-                  <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>
-                </el-input>
-              </div>
+<!--              <div class="top-tool-search margin-r-20">-->
+<!--                <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">-->
+<!--                  <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>-->
+<!--                </el-input>-->
+<!--              </div>-->
 
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10"></pick-time>
 
