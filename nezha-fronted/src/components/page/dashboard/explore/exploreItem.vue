@@ -121,7 +121,7 @@
                     </template>
                   </el-table>
                 </div>
-                <pagination ref="Pagination" :append-to-body="false" :page-obj="pageObj" @pageNo='pageNo'
+                <pagination ref="Pagination" :page-obj="pageObj" @pageNo='pageNo'
                             @pageSize='pageSize'></pagination>
               </el-collapse-item>
             </template>
