@@ -102,8 +102,13 @@ export default {
       let maxValue = null
       // 将数据提为二维数组
       let datas = []
+      let seriesIndex = 0
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
+          if (seriesIndex >= this.series.length) {// 只取跟series 一样长度作比较
+            return
+          }
+          seriesIndex++
           datas = [...datas, ...data.values]
         })
       })
