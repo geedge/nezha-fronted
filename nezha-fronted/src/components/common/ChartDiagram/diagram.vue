@@ -1763,8 +1763,8 @@ export default {
                     imageId: item.id,
                     unit: item.unit,
                     rect: {
-                      width: res2[index].width,
-                      height: res2[index].height
+                      width: res2[index].width === -1 ? 100 : res2[index].width,
+                      height: res2[index].height === -1 ? 100 : res2[index].height
                     }
                   }
                 })
@@ -1780,8 +1780,8 @@ export default {
                       imageId: item.id,
                       unit: item.unit,
                       rect: {
-                        width: res2[index].width,
-                        height: res2[index].height
+                        width: res2[index].width === -1 ? 100 : res2[index].width,
+                        height: res2[index].height === -1 ? 100 : res2[index].height
                       }
                     }
                   }]
@@ -1835,8 +1835,8 @@ export default {
                 data: ('data:image/jpeg;base64,' + res.data),
                 // width: res.headers.width === -1 ? 100 : (res.headers.width > 900 ? 900 : res.headers.width),
                 // height: res.headers.height === -1 ? 100 : (res.headers.height > 900 ? 900 : res.headers.height)
-                width: res.headers.width === -1 ? 100 : Number(res.headers.width),
-                height: res.headers.height === -1 ? 100 : Number(res.headers.height)
+                width: (res.headers.width === -1 || res.headers.width === 0) ? 100 : Number(res.headers.width),
+                height: (res.headers.height === -1 || res.headers.height === 0) ? 100 : Number(res.headers.height)
               }
               if (imageInfo.width > 900 || imageInfo.height > 900) {
                 if (imageInfo.height > imageInfo.width) {

@@ -30,7 +30,6 @@ export default {
     },
     // 更新path，包含请求参数
     updatePath (param, path) {
-      console.log(param)
       const params = lodash.cloneDeep(param)
       Object.keys(params).forEach(key => {
         if (!params[key]) {

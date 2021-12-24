@@ -49,7 +49,6 @@ export default {
     }
   },
   created () {
-    console.log(this.$route.query)
     this.switchTab = this.$route.query.switchTab || 'exprTemp'
   },
   mounted () {

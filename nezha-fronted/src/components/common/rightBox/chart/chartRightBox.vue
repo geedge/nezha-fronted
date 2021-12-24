@@ -243,7 +243,6 @@ export default {
       })
     },
     selectPanel (panel) {
-      console.log(panel)
       this.panelName = panel.name
       this.editChart.panelName = panel.name
       this.panelId = panel.id

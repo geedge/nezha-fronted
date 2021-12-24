@@ -47,14 +47,6 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 export default {
   name: 'chart-guage',
   mixins: [chartMixin, chartFormat],
-  watch: {
-    isFullscreen: {
-      immediate: true,
-      handler (n) {
-        console.log(n)
-      }
-    }
-  },
   data () {
     return {
       gaugeData: [],

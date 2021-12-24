@@ -312,7 +312,7 @@ export default {
           }
         }
       } catch (e) {
-        console.log(e)
+        console.info(e)
         this.loading = false
       }
     },

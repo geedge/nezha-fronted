@@ -1739,8 +1739,8 @@ export default {
                     imageId: item.id,
                     unit: item.unit,
                     rect: {
-                      width: res2[index].width,
-                      height: res2[index].height
+                      width: res2[index].width === -1 ? 100 : res2[index].width,
+                      height: res2[index].height === -1 ? 100 : res2[index].height
                     }
                   }
                 })
@@ -1756,8 +1756,8 @@ export default {
                       imageId: item.id,
                       unit: item.unit,
                       rect: {
-                        width: res2[index].width,
-                        height: res2[index].height
+                        width: res2[index].width === -1 ? 100 : res2[index].width,
+                        height: res2[index].height === -1 ? 100 : res2[index].height
                       }
                     }
                   }]

@@ -1,12 +1,14 @@
 <template>
-  <div style="width: 100%;height: 100%" :id="'chartUrl' + chartInfo.id" class="mt-10 url-container" v-show="firstShow">
-    <iframe :id="'urlContainer' + chartInfo.id" frameborder="0" width="100%" height="100%" name="showHere" scrolling=auto style="z-index:5000;padding-bottom:6px;"></iframe>
+  <div style="width: 100%;height: 100%" :id="'chartUrl' + chartId" class="mt-10 url-container" v-show="firstShow">
+    <iframe :id="'urlContainer' + chartId" frameborder="0" width="100%" height="100%" name="showHere" scrolling=auto style="z-index:5000;padding-bottom:6px;"></iframe>
   </div>
 </template>
 
 <script>
+import chartMixin from '@/components/chart/chartMixin'
 export default {
   name: 'chart-url',
+  mixins: [chartMixin],
   props: {
     chartInfo: {},
     chartData: {}
@@ -20,7 +22,7 @@ export default {
     setLoadFrame (data) {
       const that = this
       this.$nextTick(() => {
-        const iframe = document.querySelector('#urlContainer' + this.chartInfo.id)
+        const iframe = document.querySelector('#urlContainer' + this.chartId)
         // 处理兼容行问题
         if (iframe.attachEvent) {
           iframe.attachEvent('onload', function () {

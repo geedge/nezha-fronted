@@ -175,7 +175,6 @@ export default {
     setCustomTime (timeGroup, timeRange) {
       if (timeGroup) {
         this.showTime = this.nowTimeType = this.timeData.find(item => item.id == timeGroup.id)
-        console.log(this.showTime)
         if (this.showTime) {
           this.showTime = Object.assign({}, this.showTime)
           this.$set(this.searchTime, 0, timeGroup.start_time)
