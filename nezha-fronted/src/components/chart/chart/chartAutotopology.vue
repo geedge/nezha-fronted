@@ -10,7 +10,7 @@
               :fromOverView="true"
               :obj="item"
               :ref="'topology' + index"
-              :topologyIndexF="index"
+              :topologyIndexF="isFullscreen?('screen'+chartInfo.id+'-'+index):(chartInfo.id+'-'+index)"
             />
           </el-carousel-item>
         </el-carousel>
