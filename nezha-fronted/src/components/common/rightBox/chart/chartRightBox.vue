@@ -52,6 +52,10 @@
         <el-form-item :label="$t('overall.remark')">
           <el-input  maxlength="256" show-word-limit v-model="editChart.remark" :autosize="{ minRows: 1, maxRows: 6}" type="textarea"/>
         </el-form-item>
+        <!--remark-->
+        <el-form-item :label="$t('overall.link')">
+          <el-input  maxlength="256" show-word-limit v-model="editChart.param.link" :autosize="{ minRows: 1, maxRows: 6}" type="textarea"/>
+        </el-form-item>
 
         <!--title-->
         <div class="form__sub-title">
@@ -161,7 +165,8 @@ export default {
       previewShow: false,
       editChart: {
         name: '',
-        remark: ''
+        remark: '',
+        link: ''
       },
       panel: {
         id: '',
@@ -421,11 +426,16 @@ export default {
         if (this.editChart.groupId === -1) {
           this.editChart.groupId = ''
         }
-        if (!this.editChart.param.min) {
-          this.editChart.param.min = 0
-        }
-        if (!this.editChart.param.max) {
-          this.editChart.param.max = 100
+        if (this.editChart.param) {
+          if (!this.editChart.param.min) {
+            this.editChart.param.min = 0
+          }
+          if (!this.editChart.param.max) {
+            this.editChart.param.max = 100
+          }
+          if (!this.editChart.param.link) {
+            this.$set(this.editChart.param, 'link', '')
+          }
         }
       }
     },

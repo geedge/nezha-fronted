@@ -598,6 +598,7 @@ export default {
             break
           }
           this.chartConfig.param = {
+            link: this.chartConfig.param.link,
             refer: 1,
             nullType: 'null',
             statistics: 'last',
@@ -625,6 +626,7 @@ export default {
           break
         case 'table':
           this.chartConfig.param = {
+            link: this.chartConfig.param.link,
             refer: 1,
             system: '',
             indexs: '',

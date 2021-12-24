@@ -32,6 +32,9 @@
       {{chartInfo.name}}
     </div>
     <div class="chart-header__tools" v-if="chartInfo.type !== 'endpointInfo' && chartInfo.type !== 'assetInfo'">
+      <span v-if="chartInfo.param.link" class="chart-header__tool" @click="openUrl">
+       <i class="nz-icon nz-icon-more-app tool__icon"></i>
+      </span>
       <span v-if="chartInfo.remark" class="chart-header__tool">
         <el-tooltip :content="chartInfo.remark" effect="light" placement="top">
            <i class="nz-icon nz-icon-info-normal tool__icon"></i>
@@ -80,5 +83,10 @@ import chartHeaderMixin from '@/components/chart/chartHeaderMixin'
 export default {
   name: 'chartHeader',
   mixins: [chartHeaderMixin],
+  methods: {
+    openUrl () {
+      window.open(this.chartInfo.param.link)
+    }
+  }
 }
 </script>

@@ -191,21 +191,25 @@ export default {
         case 'group':
           this.chartConfig.span = 12
           this.chartConfig.param = {
+            link: this.chartConfig.param.link,
             collapse: true
           }
           break
         case 'text':
           this.chartConfig.param = {
+            link: this.chartConfig.param.link,
             text: ''
           }
           break
         case 'diagram':
           this.chartConfig.param = {
+            link: this.chartConfig.param.link,
             topo: ''
           }
           break
         case 'url':
           this.chartConfig.param = {
+            link: this.chartConfig.param.link,
             url: ''
           }
           break

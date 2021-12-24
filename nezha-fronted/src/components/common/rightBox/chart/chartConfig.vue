@@ -786,6 +786,7 @@ export default {
           }
           this.chartConfig.param = {
             stack: 0,
+            link: this.chartConfig.param.link,
             nullType: this.chartConfig.param.nullType,
             legend: { placement: 'bottom', values: [], show: true },
             thresholdShow: true,
@@ -810,6 +811,7 @@ export default {
           }
           this.chartConfig.param = {
             nullType: this.chartConfig.param.nullType,
+            link: this.chartConfig.param.link,
             statistics: 'last',
             text: 'value',
             valueMapping: [],
@@ -828,6 +830,7 @@ export default {
           }
           this.chartConfig.param = {
             nullType: this.chartConfig.param.nullType,
+            link: this.chartConfig.param.link,
             statistics: 'last',
             columns: [],
             tags: [],
@@ -845,6 +848,7 @@ export default {
             break
           }
           this.chartConfig.param = {
+            link: this.chartConfig.param.link,
             limit: 100
           }
           break
