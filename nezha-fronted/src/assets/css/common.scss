@@ -184,3 +184,10 @@
   fill: currentColor;
   overflow: hidden;
 }
+.explore.list-page {
+  .pagination-size-select {
+    .el-select-dropdown.el-popper {
+      top: -137px !important;
+    }
+  }
+}
