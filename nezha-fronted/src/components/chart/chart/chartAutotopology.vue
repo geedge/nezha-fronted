@@ -5,7 +5,7 @@
         <el-carousel :interval="5000" :trigger="'click'" arrow="hover">
           <el-carousel-item v-for="(item,index) in allProject" :key="index">
             <div class="maskLayer" @click="toProject(item)"></div>
-            <span class="project-name">{{item.name}}</span>
+<!--            <span class="project-name">{{item.name}}</span>-->
             <topology
               :fromOverView="true"
               :obj="item"

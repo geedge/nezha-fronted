@@ -125,7 +125,6 @@ export const chartTimeSeriesAreaOption = {
 }
 export const chartTimeSeriesScatterOption = {
   ...chartTimeSeriesLineOption,
-  toolbox: {},
   series: [{
     name: '',
     type: 'scatter',

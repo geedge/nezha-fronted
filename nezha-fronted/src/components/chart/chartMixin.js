@@ -39,7 +39,7 @@ export default {
     }
   },
   methods: {
-    handleTimeSeries (chartInfo, seriesTemplate, originalDatas) {
+   handleTimeSeries (chartInfo, seriesTemplate, originalDatas) {
       const series = []
       let colorIndex = 0
       originalDatas.forEach((originalData, expressionIndex) => {

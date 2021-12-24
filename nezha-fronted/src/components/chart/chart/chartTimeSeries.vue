@@ -201,8 +201,7 @@ export default {
             paramsDot = 6
           }
           const val = formatScientificNotation(item.data[1], paramsDot)
-          sum += self.numberWithEConvent(val)
-
+          sum += isNaN(self.numberWithEConvent(val)) ? 0 : parseFloat(self.numberWithEConvent(val))
           let previousDom = ''
           if (previousItem) {
             const previousVal = formatScientificNotation(previousItem.data[1], paramsDot)
