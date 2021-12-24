@@ -28,7 +28,7 @@
     </span>
     <div class="chart-header__title" v-if="!isGroup">{{chartInfo.name}}</div>
     <div class="chart-header__title" v-else >
-      <span @click="groupShow"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-down': 'nz-icon-arrow-right'"></i></span>
+      <span @click="groupShow"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-right': 'nz-icon-arrow-down'"></i></span>
       {{chartInfo.name}}
     </div>
     <div class="chart-header__tools" v-if="chartInfo.type !== 'endpointInfo' && chartInfo.type !== 'assetInfo'">

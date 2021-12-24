@@ -139,11 +139,12 @@ export default {
     richTextEditor
   },
   watch: {
-    'chartConfig.param.text': {
-      handler (n) {
-        this.change()
-      }
-    }
+    // 'chartConfig.param.text': {
+    //   handler (n) {
+    //     console.log(n)
+    //     this.change()
+    //   }
+    // }
   },
   data () {
     return {
@@ -218,8 +219,10 @@ export default {
         this.change()
       }
     },
-    textChange () {
-      this.chartConfig.param.text = this.$refs.richTextEditor.getContent()
+    textChange (val) {
+      const html = `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${val}</div></div>`
+      this.chartConfig.param.text = html
+      this.change()
     }
   },
   created () {

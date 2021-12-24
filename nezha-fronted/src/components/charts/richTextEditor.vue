@@ -59,10 +59,11 @@ export default {
             $self.maxLength = $self.quill.getText().length
             $self.tooLong = false
           }
+          $self.$emit('textChange', $self.quill.root.innerHTML)
         })
         this.$nextTick(() => {
           this.$emit('after-init')
-          this.$emit('textChange')
+          // this.$emit('textChange')
         })
       }
     },
@@ -84,19 +85,11 @@ export default {
       return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4())
     }
   },
-  watch: {
-    editData: {
-      immediate: true,
-      handler (n, o) {
-        this.$nextTick(() => {
-          this.initEditor()
-          this.quill.clipboard.dangerouslyPasteHTML(null, this.editData, 'api')
-        })
-      }
-    }
-  },
   mounted () {
     this.initEditor()
+    if (this.editData) {
+      this.quill.clipboard.dangerouslyPasteHTML(null, this.editData, 'api')
+    }
   },
   beforeDestroy () {
     this.quill.off('selection-change')
