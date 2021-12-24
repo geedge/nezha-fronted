@@ -93,8 +93,8 @@ export default {
               }
             }
             gauge.value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
-            gauge.max = getMetricTypeValue(data.values, 'max')
-            gauge.min = getMetricTypeValue(data.values, 'min')
+            gauge.max = chartInfo.param.max || 100
+            gauge.min = chartInfo.param.min || 0
             if (gauge.min === gauge.max) {
               gauge.min = gauge.max / 2
             }

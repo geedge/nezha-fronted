@@ -328,6 +328,26 @@
           </el-select>
         </el-form-item>
       </div>
+      <div class="form-items--half-width-group" v-if="isGauge(chartConfig.type)">
+        <!--min-->
+        <el-form-item :label="$t('dashboard.panel.chartForm.min')" class="form-item--half-width">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            show-word-limit v-model="chartConfig.param.min"/>
+        </el-form-item>
+        <!--max-->
+        <el-form-item :label="$t('dashboard.panel.chartForm.max')" class="form-item--half-width">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            show-word-limit v-model="chartConfig.param.max"/>
+        </el-form-item>
+      </div>
 
       <div v-if="isShowLegend(chartConfig.type)">
         <!--legendConfig-->
@@ -657,6 +677,7 @@ import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import VueTagsInput from '@johmun/vue-tags-input'
 import draggable from 'vuedraggable'
 import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
+import { isGauge } from '@/components/chart/chart/tools'
 
 export default {
   name: 'chartConfig',
@@ -735,6 +756,7 @@ export default {
     }
   },
   methods: {
+    isGauge,
     beforeInit () {
       this.promqlType = this.type
       this.chartTypeList = this[this.type + 'ChartTypeList']
@@ -772,7 +794,7 @@ export default {
               legend: true,
               valueMapping: false,
               thresholds: false
-            },
+            }
           }
           this.$nextTick(() => {
             this.chartConfig.param.thresholds.push({ value: undefined, color: randomcolor() })
@@ -791,6 +813,8 @@ export default {
             statistics: 'last',
             text: 'value',
             valueMapping: [],
+            min: 0,
+            max: 100,
             enable: {
               legend: true,
               valueMapping: false,

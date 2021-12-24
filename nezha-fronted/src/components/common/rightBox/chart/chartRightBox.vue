@@ -201,6 +201,10 @@ export default {
         if (!params.groupId) {
           params.groupId = 0
         }
+        if (params.type !== 'guage') {
+          delete params.param.min
+          delete params.param.max
+        }
         if (!params.x && !params.y) {
           params.x = this.chartLastPosition.x + params.span > 12 ? 0 : this.chartLastPosition.x
           params.y = this.chartLastPosition.y + 12
@@ -284,6 +288,8 @@ export default {
           height: 4,
           unit: 2,
           type: 'line',
+          min: 0,
+          max: 100,
           elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
           param: {
             stack: 0,
@@ -328,6 +334,8 @@ export default {
             nullType: 'null',
             statistics: 'last',
             text: 'value',
+            min: 0,
+            max: 100,
             enable: {
               thresholds: false,
               legend: true,
@@ -412,6 +420,12 @@ export default {
         this.editChart = JSON.parse(JSON.stringify(n))
         if (this.editChart.groupId === -1) {
           this.editChart.groupId = ''
+        }
+        if (!this.editChart.param.min) {
+          this.editChart.param.min = 0
+        }
+        if (!this.editChart.param.max) {
+          this.editChart.param.max = 100
         }
       }
     },

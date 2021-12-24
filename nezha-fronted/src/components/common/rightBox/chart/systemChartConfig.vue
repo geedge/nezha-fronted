@@ -233,6 +233,26 @@
           </el-select>
         </el-form-item>
       </div>
+      <div class="form-items--half-width-group" v-if="isGauge(chartConfig.type)">
+        <!--min-->
+        <el-form-item :label="$t('dashboard.panel.chartForm.min')" class="form-item--half-width">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            show-word-limit v-model="chartConfig.param.min"/>
+        </el-form-item>
+        <!--max-->
+        <el-form-item :label="$t('dashboard.panel.chartForm.max')" class="form-item--half-width">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            show-word-limit v-model="chartConfig.param.max"/>
+        </el-form-item>
+      </div>
       <div class="form-items--half-width-group">
         <!-- text -->
         <el-form-item
@@ -477,6 +497,8 @@ import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import nezhaColor from '@/components/common/nezhaColor'
 import VueTagsInput from '@johmun/vue-tags-input'
+import { isGauge } from '@/components/chart/chart/tools'
+
 export default {
   name: 'systemChartConfig',
   mixins: [publicConfig, chartTypeShow],
@@ -536,6 +558,7 @@ export default {
     }
   },
   methods: {
+    isGauge,
     init () {
       this.chartConfig = JSON.parse(JSON.stringify(this.params))
       this.oldType = this.chartConfig.type
@@ -580,6 +603,8 @@ export default {
             statistics: 'last',
             valueMapping: [],
             text: 'value',
+            min: 0,
+            max: 100,
             enable: {
               legend: true,
               valueMapping: false,
