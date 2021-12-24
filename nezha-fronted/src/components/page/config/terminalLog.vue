@@ -295,6 +295,7 @@ export default {
         target: this.searchLabel,
         propertyName: 'protocol',
         type: 'string',
+        isSearchInput: true,
         defaultJson: {
           disabled: false,
           id: 16,
@@ -310,6 +311,7 @@ export default {
         target: this.searchLabel,
         propertyName: 'state',
         type: 'number',
+        isSearchInput: true,
         defaultJson: {
           disabled: false,
           id: 17,

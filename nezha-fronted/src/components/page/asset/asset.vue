@@ -767,7 +767,6 @@ export default {
       ids: {
         target: this.searchLabel,
         propertyName: 'ids',
-
         type: 'string',
         defaultJson: {
           disabled: false,
@@ -783,7 +782,6 @@ export default {
         target: this.searchLabel,
         propertyName: 'name',
         type: 'string',
-
         defaultJson: {
           disabled: false,
           id: 'name',
@@ -798,7 +796,6 @@ export default {
         target: this.searchLabel,
         propertyName: 'sn',
         type: 'number',
-
         defaultJson: {
           disabled: false,
           id: 'sn',
@@ -813,7 +810,6 @@ export default {
         target: this.searchLabel,
         propertyName: 'manageIp',
         type: 'number',
-
         defaultJson: {
           disabled: false,
           id: 'manageIp',
@@ -828,7 +824,7 @@ export default {
         target: this.searchLabel,
         propertyName: 'statistics',
         type: 'number',
-
+        isSearchInput: true,
         defaultJson: {
           disabled: false,
           id: 'stateIds',
@@ -836,15 +832,17 @@ export default {
           name: 'State',
           readonly: true,
           type: 'assetState',
-          val: ''
+          val: '',
+          valnum: '',
+          listStr: 'assetStateSelect'
         },
-        jsonKey: 'val'
+        jsonKey: 'valnum'
       },
       dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'string', target2: this.selectValue, type2: 'array' },
       fields: { target: this.searchCheckBox, propertyName: 'fields', type: 'json', target2: this.selectValue, type2: 'json' },
-      ping: { target: this.searchCheckBox, propertyName: 'ping', type: 'string' },
-      modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'string' },
-      typeIds: { target: this.searchCheckBox, propertyName: 'typeIds', type: 'string' }
+      ping: { target: this.searchCheckBox, propertyName: 'ping', type: 'string', target2: this.selectValue, type2: 'array' },
+      modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'string', target2: this.selectValue, type2: 'array' },
+      typeIds: { target: this.searchCheckBox, propertyName: 'typeIds', type: 'string', target2: this.selectValue, type2: 'array' }
     }
     this.initQueryFromPath(searchKeys)
   },

@@ -348,11 +348,10 @@ export default {
           readonly: true,
           type: 'group',
           val: '',
-          searchType: ''
+          valnum: '',
+          listStr: 'groupSelect'
         },
-        jsonKey: 'searchType',
-        strKey: 'val',
-        listStr: 'groupSelect'
+        jsonKey: 'valnum'
       }
     }
     this.initQueryFromPath(searchKeys)

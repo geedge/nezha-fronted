@@ -479,11 +479,10 @@ export default {
         },
         jsonKey: 'val'
       },
-      dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'number' },
-      modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'number' },
-      moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'number' },
-      projectIds: { target: this.searchCheckBox, propertyName: 'projectIds', type: 'number' },
-      severityIds: { target: this.searchCheckBox, propertyName: 'severityIds', type: 'string' }
+      dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'string', target2: this.selectValue, type2: 'array' },
+      moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'string', target2: this.selectValue, type2: 'array' },
+      projectIds: { target: this.searchCheckBox, propertyName: 'projectIds', type: 'string', target2: this.selectValue, type2: 'array' },
+      severityIds: { target: this.searchCheckBox, propertyName: 'severityIds', type: 'string', target2: this.selectValue, type2: 'array' }
     }
     this.initQueryFromPath(searchKeys)
   },
