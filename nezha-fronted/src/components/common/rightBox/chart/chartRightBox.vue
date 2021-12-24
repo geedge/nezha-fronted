@@ -53,7 +53,7 @@
           <el-input  maxlength="256" show-word-limit v-model="editChart.remark" :autosize="{ minRows: 1, maxRows: 6}" type="textarea"/>
         </el-form-item>
         <!--remark-->
-        <el-form-item :label="$t('overall.link')">
+        <el-form-item :label="$t('overall.link')" v-if="editChart.param">
           <el-input  maxlength="256" show-word-limit v-model="editChart.param.link" :autosize="{ minRows: 1, maxRows: 6}" type="textarea"/>
         </el-form-item>
 
