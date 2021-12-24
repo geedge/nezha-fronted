@@ -233,6 +233,7 @@ import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import endpointDetail from '@/components/common/detailView/list/endpoint/endpointDetail'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
+import lodash from 'lodash'
 
 export default {
   name: 'endpointList',
@@ -605,7 +606,11 @@ export default {
         ...this.searchCheckBox
       }
       const path = this.fromRoute.endpoint
-      this.updatePath(param, path)
+      const pathParam = lodash.cloneDeep(param)
+      pathParam.state = this.selectValue.state
+      delete pathParam.metricsStates
+      delete pathParam.logsStates
+      this.updatePath({ ...pathParam }, path)
       this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -828,8 +833,7 @@ export default {
       },
       projectIds: { target: this.searchCheckBox, propertyName: 'projectIds', type: 'string', target2: this.selectValue, type2: 'array' },
       moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'string', target2: this.selectValue, type2: 'array' },
-      logsStates: { target: this.searchCheckBox, propertyName: 'logsStates', type: 'string', target2: this.selectValue, type2: 'array' },
-      metricsStates: { target: this.searchCheckBox, propertyName: 'metricsStates', type: 'string', target2: this.selectValue, type2: 'array' }
+      state: { target: this.searchCheckBox, propertyName: 'state', type: 'string', target2: this.selectValue, type2: 'json' }
     }
     this.initQueryFromPath(searchKeys)
   },
