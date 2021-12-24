@@ -296,6 +296,7 @@ export default {
         target: this.searchLabel,
         propertyName: 'type',
         type: 'string',
+        isSearchInput: true,
         defaultJson: {
           disabled: false,
           label: 'chartType',
@@ -310,6 +311,7 @@ export default {
         target: this.searchLabel,
         propertyName: 'state',
         type: 'string',
+        isSearchInput: true,
         defaultJson: {
           disabled: false,
           label: 'varType',

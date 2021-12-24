@@ -9,14 +9,30 @@
       background-color: $--background-color-base;
     }
   }
-  .half-form-item.el-form-item {
+  .el-form-item.half-form-left {
     display: inline-block;
-    width: 230px;
+    width: 347px;
+    .el-form-item__label {
+      text-align: left;
+      width: 98px !important;
+    }
     .el-form-item__content {
       width: 230px;
-      .el-input.el-input--small,.el-input.el-input-group--append {
-        width: calc(100% - 18px);
+      margin-left: 99px !important;
+      .el-input.el-input-group--append {
+        width: calc(100% - 12px);
       }
+    }
+  }
+  .el-form-item.half-form-witch {
+    display: inline-block;
+    width: 372px;
+    .el-form-item__content {
+      width: 230px;
+      .el-input.el-input--small {
+        width: calc(100% - 49px);
+      }
+
     }
   }
 }

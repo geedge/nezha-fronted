@@ -71,7 +71,7 @@
               <el-switch v-model="basic.unsaved_change" active-value='on' inactive-value='off' id="system-baisc-unsaved_change">
               </el-switch>
             </el-form-item>
-            <div class="system-title">{{$t('config.system.basic.pinPolicy')}}&nbsp;<span class="el-form-item__tip">({{$t('config.system.basic.pinPolicyValue')}})</span></div>
+            <div class="system-title">{{$t('config.system.basic.pinPolicy')}}</div>
             <el-form-item :label="$t('config.system.basic.gloEnable')" prop="mfa_auth_enable">
               <el-switch v-model="basic.mfa_auth_enable" :active-value='"1"' :inactive-value='"0"' id="system-basic-mfs_change">
               </el-switch>
@@ -80,6 +80,7 @@
             <el-form-item :label="$t('config.system.basic.enable')" prop="enable">
               <el-switch v-model="basic.pin_policy.enable" active-value='1' inactive-value='0' id="system-basic-enable">
               </el-switch>
+              <div class="el-form-item__tip" style="margin: 0">{{$t('config.system.basic.pinPolicyValue')}}</div>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.length')" prop="length">
               <el-input v-model="basic.pin_policy.length" id="system-basic-length"></el-input>
@@ -96,11 +97,11 @@
               </el-input>
               <div class="el-form-item__tip">{{$t('config.system.basic.passPeriodValue')}}</div>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.retry')" class="half-form-item" prop="retry" style="padding-bottom: 15px">
+            <el-form-item :label="$t('config.system.basic.retry')" class="half-form-witch" prop="retry" style="padding-bottom: 15px">
               <el-input v-model="basic.pin_policy.retry" id="system-basic-retry"></el-input>
-              <div class="el-form-item__tip" style="width: 512px;">({{$t('config.system.basic.retryValue')}})</div>
+              <div class="el-form-item__tip" style="width: 512px;">{{$t('config.system.basic.retryValue')}}</div>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.lockTime')" class="half-form-item" prop="lockTime" style="margin-left: 66px">
+            <el-form-item :label="$t('config.system.basic.lockTime')" class="half-form-left" prop="lockTime">
               <el-input v-model="basic.pin_policy.lockTime" id="system-basic-lock-time">
                 <template slot="append"><span >{{$t('config.system.basic.minute')}}</span></template>
               </el-input>

@@ -390,7 +390,7 @@ export default {
           readonly: true,
           val: '',
           valnum: '',
-          valString: ''
+          listStr: 'alertTypesSelect'
         },
         jsonKey: 'valnum'
       },

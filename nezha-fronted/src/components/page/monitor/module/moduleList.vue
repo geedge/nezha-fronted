@@ -494,6 +494,7 @@ export default {
         target: this.searchLabel,
         propertyName: 'projectIds',
         type: 'number',
+        isSearchInput: true,
         defaultJson: {
           disabled: false,
           id: 11,
@@ -501,9 +502,11 @@ export default {
           name: 'Project name',
           readonly: true,
           type: 'project',
-          val: ''
+          val: '',
+          valnum: '',
+          listStr: 'projectSelect'
         },
-        jsonKey: 'val'
+        jsonKey: 'valnum'
       }
     }
     this.initQueryFromPath(searchKeys)

@@ -359,6 +359,7 @@ export default {
           target: this.searchLabel,
           propertyName: 'state',
           type: 'string',
+          isSearchInput: true,
           defaultJson: {
             disabled: false,
             label: 'dcState',
@@ -470,15 +471,18 @@ export default {
           target: this.searchLabel,
           propertyName: 'brandIds',
           type: 'number',
+          isSearchInput: true,
           defaultJson: {
             disabled: false,
             label: 'brandIds',
             name: 'Brand',
             readonly: true,
             type: 'brand',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'brandSelect'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         }
       }
     } else if (path === 'operationLog') {
@@ -520,6 +524,7 @@ export default {
           target: this.searchLabel,
           propertyName: 'operation',
           type: 'string',
+          isSearchInput: true,
           defaultJson: {
             disabled: false,
             id: 13,
@@ -534,6 +539,7 @@ export default {
           target: this.searchLabel,
           propertyName: 'state',
           type: 'string',
+          isSearchInput: true,
           defaultJson: {
             disabled: false,
             id: 16,
@@ -599,6 +605,7 @@ export default {
           target: this.searchLabel,
           propertyName: 'state',
           type: 'string',
+          isSearchInput: true,
           defaultJson: {
             disabled: false,
             label: 'promState',
@@ -613,6 +620,7 @@ export default {
           target: this.searchLabel,
           propertyName: 'dc',
           type: 'number',
+          isSearchInput: true,
           defaultJson: {
             name: 'Date center',
             type: 'dc',
@@ -620,29 +628,24 @@ export default {
             disabled: false,
             val: '',
             valnum: '',
-            valString: ''
+            listStr: 'dcSelect'
           },
-          jsonKey: 'valnum',
-          strKey: 'val',
-          listStr: 'dcSelect'
+          jsonKey: 'valnum'
         },
         type: {
           target: this.searchLabel,
           propertyName: 'type',
           type: 'number',
+          isSearchInput: true,
           defaultJson: {
             disabled: false,
             label: 'promType',
             name: 'Type',
             readonly: true,
             type: 'select',
-            val: '',
-            valnum: '',
-            valString: ''
+            val: ''
           },
-          jsonKey: 'valnum',
-          strKey: 'val',
-          listStr: 'history_once'
+          jsonKey: 'val'
         }
       }
     } else if (path === 'roles') {
@@ -753,6 +756,7 @@ export default {
           target: this.searchLabel,
           propertyName: 'type',
           type: 'string',
+          isSearchInput: true,
           defaultJson: {
             disabled: false,
             label: 'credentialType',

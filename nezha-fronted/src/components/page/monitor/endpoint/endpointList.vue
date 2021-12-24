@@ -779,28 +779,6 @@ export default {
       this.selectValue.projectIds = [Number(localStorage.getItem('endpointProjectId'))]
       this.searchCheckBox.projectIds = this.selectValue.projectIds.join(',')
     }
-    // if (localStorage.getItem('endpointProjectId')) {
-    //   const project = JSON.parse(localStorage.getItem('endpointProjectId'))
-    //   let dataList = ''
-    //   if (this.detailType !== 'view') {
-    //     dataList = 'dataList'
-    //   } else {
-    //     dataList = 'detailList'
-    //   }
-    //   setTimeout(() => {
-    //     this.$refs[dataList].$refs.searchInput.select_list.push({
-    //       id: 11,
-    //       name: this.$t('overall.name'),
-    //       type: 'project',
-    //       label: 'projectIds',
-    //       disabled: false,
-    //       val: project[1],
-    //       valnum: project[0]
-    //     })
-    //     this.$refs[dataList].$refs.searchInput.sreach_num = 1
-    //     this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs[dataList].$refs.searchInput.searchLabelList.filter(item => item.label !== 'projectIds')
-    //   })
-    // }
     const searchKeys = {
       // key: path 键
       // value: vue set 参数
@@ -848,9 +826,10 @@ export default {
         },
         jsonKey: 'val'
       },
-      projectIds: { target: this.searchCheckBox, propertyName: 'projectIds', type: 'string' },
-      logsStates: { target: this.searchCheckBox, propertyName: 'logsStates', type: 'string' },
-      moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'string' }
+      projectIds: { target: this.searchCheckBox, propertyName: 'projectIds', type: 'string', target2: this.selectValue, type2: 'array' },
+      moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'string', target2: this.selectValue, type2: 'array' },
+      logsStates: { target: this.searchCheckBox, propertyName: 'logsStates', type: 'string', target2: this.selectValue, type2: 'array' },
+      metricsStates: { target: this.searchCheckBox, propertyName: 'metricsStates', type: 'string', target2: this.selectValue, type2: 'array' }
     }
     this.initQueryFromPath(searchKeys)
   },
