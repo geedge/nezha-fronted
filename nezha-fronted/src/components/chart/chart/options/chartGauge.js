@@ -37,7 +37,8 @@ const chartGaugeOption = {
         show: false
       },
       title: {
-        show: false
+        show: false,
+        offsetCenter: [0, '-50%']
       },
       data: []
     }

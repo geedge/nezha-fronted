@@ -172,7 +172,7 @@ export default {
       this.$set(this.showTime, 'text', this.searchTime[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + this.searchTime[1])
       this.$emit('change', this.searchTime)
     },
-    setCustomTime (timeGroup,timeRange) {
+    setCustomTime (timeGroup, timeRange) {
       if (timeGroup) {
         this.showTime = this.nowTimeType = this.timeData.find(item => item.id == timeGroup.id)
         console.log(this.showTime)
@@ -188,8 +188,13 @@ export default {
             value: 1
           }
           const time = bus.getTimezontDateRange()
-          this.$set(this.searchTime, 0, time[0])
-          this.$set(this.searchTime, 1, time[1])
+          if (timeGroup.start_time) {
+            this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time, 'yyyy-MM-dd hh:mm:ss'))
+            this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time, 'yyyy-MM-dd hh:mm:ss'))
+          } else {
+            this.$set(this.searchTime, 0, bus.timeFormate(time[0], 'yyyy-MM-dd hh:mm:ss'))
+            this.$set(this.searchTime, 1, bus.timeFormate(time[1], 'yyyy-MM-dd hh:mm:ss'))
+          }
         }
       } else {
         this.showTime = this.nowTimeType = {

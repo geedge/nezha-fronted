@@ -170,6 +170,7 @@ export default {
         option.series[0].detail = {
           fontSize: 24,
           fontWeight: 'bolder',
+          offsetCenter: [0, '20%'],
           formatter: (params) => {
             let showValue = chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(params, null, -1, 2).trim()
             if (item.mapping) {
@@ -177,9 +178,9 @@ export default {
             }
             let str = ''
             if (this.chartInfo.param.text === 'all') {
-              str += item.alias
-              str += '\n'
               str += showValue
+              str += '\n'
+              str += item.alias
             }
             if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
               str += showValue
