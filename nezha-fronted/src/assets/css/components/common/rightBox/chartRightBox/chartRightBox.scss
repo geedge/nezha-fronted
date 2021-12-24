@@ -190,6 +190,7 @@
       .system-chart-item {
         font-size: 14px;
         padding: 3px 5px;
+        text-transform:capitalize
       }
       .system-chart-item:hover{
         color: $--color-primary;
