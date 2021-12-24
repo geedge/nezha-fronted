@@ -169,7 +169,7 @@ export default {
             }
           }
           if (item.type === 'range') {
-            if (value > item.from && value < item.to) {
+            if (value >= item.from && value < item.to) {
               mapping = item
             }
           }

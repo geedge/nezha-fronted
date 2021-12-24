@@ -541,7 +541,7 @@
                       {{item.value}}
                     </span>
                     <span v-if="item.type === 'range'">
-                      {{item.from}} -> {{item.to}}
+                      [{{item.from}}，{{item.to}})
                     </span>
                     <span v-if="item.type === 'regx'">
                       {{item.regx}}

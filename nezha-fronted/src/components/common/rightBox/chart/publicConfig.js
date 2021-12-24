@@ -2,6 +2,7 @@ import chartDataFormat from '@/components/charts/chartDataFormat'
 import { getUUID, resetZIndex } from '@/components/common/js/common'
 import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
 import { isStat } from '@/components/chart/chart/tools'
+import lodash from 'lodash'
 const rz = {
   methods: {
     rz (e) {
@@ -318,7 +319,7 @@ export default {
       this.change()
     },
     copyMapping (index) {
-      this.chartConfig.param.valueMapping.push({ ...this.chartConfig.param.valueMapping[index] })
+      this.chartConfig.param.valueMapping.push(lodash.cloneDeep(this.chartConfig.param.valueMapping[index]))
       this.change()
     },
     removeMapping (index) {

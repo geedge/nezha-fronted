@@ -13,8 +13,7 @@
       :vertical-compact="true"
       :use-css-transforms="true"
       :style="{
-        'margin-top': layoutMargintop,
-        'padding-bottom': isGroup ? '0' : (200 + 'px')
+        'margin-top': layoutMargintop
       }"
     >
       <grid-item
