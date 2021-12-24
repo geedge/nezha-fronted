@@ -84,7 +84,13 @@ export default {
       if (this.isNoData) {
         return
       }
-      chartOption.xAxis.data = chartOption.series[0].data.map(item => item.name)
+      chartOption.xAxis.data = chartOption.series[0].data.map(item => {
+        if (this.chartInfo.param.text == 'all' || this.chartInfo.param.text == 'legend') {
+          return item.name
+        } else {
+          return ''
+        }
+      })
       chartOption.axisLabel = {
         margin: 8,
         formatter (params) {

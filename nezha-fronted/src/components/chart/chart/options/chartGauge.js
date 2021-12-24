@@ -1,4 +1,13 @@
 const chartGaugeOption = {
+  tooltip: {
+    show: true,
+    trigger: 'item',
+    confine: false,
+    extraCssText: 'z-index:1000;',
+    z: 9,
+    animation: false,
+    appendToBody: true
+  },
   series: [
     {
       type: 'gauge',

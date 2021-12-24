@@ -1,6 +1,7 @@
 const chartPieOption = {
   tooltip: {
-    trigger: 'axis',
+    show: true,
+    trigger: 'item',
     confine: false,
     extraCssText: 'z-index:1000;',
     z: 9,

@@ -1,6 +1,7 @@
 const chartBarOption = {
   tooltip: {
-    trigger: 'axis',
+    show: true,
+    trigger: 'item',
     confine: false,
     extraCssText: 'z-index:1000;',
     z: 9,
@@ -11,7 +12,10 @@ const chartBarOption = {
     show: false
   },
   xAxis: {
-    type: 'category'
+    type: 'category',
+    axisTick: {
+      show: false
+    }
   },
   yAxis: {
     type: 'value'

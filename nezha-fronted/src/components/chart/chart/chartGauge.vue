@@ -47,24 +47,39 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 export default {
   name: 'chart-guage',
   mixins: [chartMixin, chartFormat],
+  watch: {
+    isFullscreen: {
+      immediate: true,
+      handler (n) {
+        console.log(n)
+      }
+    }
+  },
   data () {
     return {
       gaugeData: [],
       boxWidth: 0,
       boxHeight: 0,
       boxPadding: 5,
-      chartInstances: []
+      chartInstances: [],
+      timer: null
     }
   },
   methods: {
     initChart () {
-      this.initGaugeData(this.chartInfo, this.chartData).then(() => {
-        this.getLayout().then(layout => {
-          this.renderGauge(layout).then(() => {
-            this.gaugeChartInit()
+      if (this.timer) {
+        clearTimeout(this.timer)
+        this.timer = null
+      }
+      this.timer = setTimeout(() => {
+        this.initGaugeData(this.chartInfo, this.chartData).then(() => {
+          this.getLayout().then(layout => {
+            this.renderGauge(layout).then(() => {
+              this.gaugeChartInit()
+            })
           })
         })
-      })
+      }, 200)
     },
     initGaugeData (chartInfo, originalDatas) {
       this.gaugeData = []
@@ -161,7 +176,7 @@ export default {
       this.chartInstances = []
       const self = this
       this.gaugeData.forEach((item, index) => {
-        const chartId = this.isFullScreen ? 'chart-gauge-screen-' : 'chart-gauge-'
+        const chartId = this.isFullscreen ? 'chart-gauge-screen-' : 'chart-gauge-'
         const myChart = echarts.init(document.getElementById(chartId + this.chartInfo.id + '-' + index))
         const option = lodash.cloneDeep(this.chartOption)
         option.tooltip = {}
@@ -252,6 +267,10 @@ export default {
         item.dispose()
       }
     })
+    if (this.timer) {
+      clearTimeout(this.timer)
+      this.timer = null
+    }
   }
 }
 </script>

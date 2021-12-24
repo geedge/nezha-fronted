@@ -47,7 +47,7 @@
       :loading="loading"
       :minusTime="minusTime"
       :multipleTime="multipleTime"
-      :is-fullscreen="isFullscreen"
+      :isFullscreen="isFullscreen"
       :showAllData="showAllData"
       v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
     ></chart>

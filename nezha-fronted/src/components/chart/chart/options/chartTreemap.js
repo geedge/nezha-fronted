@@ -2,7 +2,7 @@ import * as echarts from 'echarts'
 const formatUtil = echarts.format
 const chartTreemapOption = {
   tooltip: {
-    trigger: 'axis',
+    trigger: 'item',
     confine: false,
     extraCssText: 'z-index:1000;',
     z: 9,
