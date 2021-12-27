@@ -29,10 +29,12 @@
 
 .explore-collapse.el-collapse {
   border: none;
+  .is-active .el-collapse-item {
+   border-bottom: none;
+  }
   .el-collapse-item {
     margin-bottom: 10px;
     border: 1px solid $--border-color-light;
-    border-bottom: none;
   }
   .el-collapse-item__header {
     height: 38px;

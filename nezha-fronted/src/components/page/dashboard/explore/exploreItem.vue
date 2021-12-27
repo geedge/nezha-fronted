@@ -93,13 +93,12 @@
               <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
                 <div slot="title" class="explore-table-title">
                   Table
-                  <button class="top-tool-btn table-column-setting"
-                          style="position: absolute;right: 10px;top: 8px"
-                          type="button"
-                          @click.stop="tools.showCustomTableTitle = true"
-                  >
-                    <i class="nz-icon-gear nz-icon"></i>
-                  </button> <!-- 自定义table列 -->
+                  <i
+                    class="nz-icon-gear nz-icon"
+                    style="position: absolute;right: 10px;top: 8px"
+                    @click.stop="tools.showCustomTableTitle = true"
+                  ></i>
+                  <!-- 自定义table列 -->
                   <transition name="el-zoom-in-top">
                     <element-set
                       @click.stop
@@ -738,6 +737,7 @@ export default {
               res.forEach((response, index) => {
                 if (response.data && response.status === 'success') {
                   const data = response.data.result
+                  console.log(data)
                   if (data) {
                     data.forEach((result, i) => {
                       const metrics = Object.assign({}, result.metric)
@@ -748,9 +748,11 @@ export default {
                         }
                       }
                       this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.value[1], null, 2))
+
+                      this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000), 'yyyy-MM-dd hh:mm:ss'))
                       for (const key in metrics) {
                         const label = {
-                          label: key === '__name__' ? 'metric' : key,
+                          label: key,
                           prop: key,
                           show: true
                         }
@@ -767,6 +769,17 @@ export default {
                 }
                 tLabels.sort((a, b) => {
                   return a.prop.charCodeAt(0) - b.prop.charCodeAt(0)
+                })
+                tLabels.unshift({
+                  label: this.$t('dashboard.panel.chartTableColumn.time'),
+                  prop: 'time',
+                  show: true
+                })
+                const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type', 'asset_id', 'endpoint_id', 'project_id', 'datacenter_id', 'module_id', 'nz_agent_id', 'parent_asset_id']
+                tLabels.forEach(tLabel => {
+                  if (filterArr.indexOf(tLabel.prop) !== -1) {
+                    tLabel.show = false
+                  }
                 })
               })
               if (tData.length > 0) {
