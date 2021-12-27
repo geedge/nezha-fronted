@@ -40,17 +40,7 @@ const data = {
   seq: null,
   x: 0,
   y: 12,
-  elements: [
-    {
-      id: '',
-      chartId: '',
-      expression: '',
-      type: 'expert',
-      legend: '',
-      name: 'A',
-      state: 1
-    }
-  ],
+  elements: [],
   sync: null,
   panel: {
     id: 1244,

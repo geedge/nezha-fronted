@@ -723,7 +723,7 @@ export default {
                           value: ['', val]
                         }
                       }
-                      this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit).compute(result.value[1], null, 2))
+                      this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.value[1], null, 2))
                       for (const key in metrics) {
                         const label = {
                           label: key === '__name__' ? 'metric' : key,

@@ -434,7 +434,7 @@ export default {
           } else if (dot > 6) {
             dot = 6
           }
-          str += chartDataFormat.getUnit(this.unit).compute(val, null, -1, dot)
+          str += chartDataFormat.getUnit(this.unit || 2).compute(val, null, -1, dot)
           const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
           if (previousItem) {
             str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'

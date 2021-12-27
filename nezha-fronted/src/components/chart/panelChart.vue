@@ -3,7 +3,7 @@
   <div :class="{'panel-chart--fullscreen': isFullscreen}" class="panel-chart" :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)"  v-loading="loading">
     <!-- title和工具栏，支持浮动 -->
     <chart-header
-      v-if="!isFullscreen"
+      v-if="!isFullscreen&&showHeader"
       :is-group="isGroup(chartInfo.type)"
       :isError="isError"
       :chartData="chartData"
@@ -43,6 +43,7 @@
       :panelLock="panelLock"
       :filter="filter"
       :from="from"
+      :show-header="showHeader"
       :isError="isError"
       :loading="loading"
       :minusTime="minusTime"
@@ -80,7 +81,11 @@ export default {
     panelLock: Boolean,
     chartDetailInfo: Object,
     from: String,
-    filter: {}
+    filter: {},
+    showHeader: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
@@ -418,6 +423,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        console.log(n)
       }
     }
   },
