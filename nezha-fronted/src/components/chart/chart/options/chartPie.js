@@ -6,7 +6,8 @@ const chartPieOption = {
     extraCssText: 'z-index:1000;',
     z: 9,
     animation: false,
-    appendToBody: true
+    appendToBody: true,
+    className: 'chart-pie'
   },
   legend: {
     show: false

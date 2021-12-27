@@ -6,7 +6,8 @@ const chartGaugeOption = {
     extraCssText: 'z-index:1000;',
     z: 9,
     animation: false,
-    appendToBody: true
+    appendToBody: true,
+    className: 'chart-gauge'
   },
   series: [
     {

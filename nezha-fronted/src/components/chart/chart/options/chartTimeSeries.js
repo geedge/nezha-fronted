@@ -37,7 +37,8 @@ export const chartTimeSeriesLineOption = {
     extraCssText: 'z-index:99999999;',
     z: 9,
     animation: false,
-    appendToBody: true
+    appendToBody: true,
+    className: 'chart-time-series'
     // formatter: 动态生成
   },
   color: initColor(),

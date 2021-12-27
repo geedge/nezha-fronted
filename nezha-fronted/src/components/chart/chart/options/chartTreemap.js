@@ -8,6 +8,7 @@ const chartTreemapOption = {
     z: 9,
     animation: false,
     appendToBody: true,
+    className: 'chart-treemap',
     formatter: function (info) {
       const value = info.value
       const treePathInfo = info.treePathInfo
