@@ -46,7 +46,9 @@ export function getOption (type) {
       chartOption = lodash.cloneDeep(chartGaugeOption)
       break
     }
-    default: break
+    default:
+      chartOption = {}
+      break
   }
   return chartOption
 }

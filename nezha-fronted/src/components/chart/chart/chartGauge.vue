@@ -3,32 +3,18 @@
     <div
       v-for="(item,index) in gaugeData" :key="index"
       class="chart-gauge-item"
-      :id="isFullscreen?('chart-gauge-screen-' + chartInfo.id + '-' + index):('chart-gauge-' + chartInfo.id + '-' + index)"
       :style="{height:item.height+'px',width:item.width + 'px'}"
     >
-<!--      :style="{background:item.mapping ? item.mapping.color.bac : false,height:item.height+'px',width:item.width + 'px'}"-->
-<!--      <span v-if="chartInfo.param.text==='all'">-->
-<!--        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">-->
-<!--          {{item.legend}}<br/><span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>-->
-<!--        </span>-->
-<!--        <span v-else>{{item.legend}}<br/><span>{{item.showValue}}</span></span>-->
-<!--      </span>-->
-<!--      <span v-if="chartInfo.param.text==='legend'">-->
-<!--        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">-->
-<!--           {{item.legend}}<br/><span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>-->
-<!--        </span>-->
-<!--        <span v-else>{{item.legend}}</span>-->
-<!--      </span>-->
-<!--      <span v-if="chartInfo.param.text==='value'|| !chartInfo.param.text">-->
-<!--        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">-->
-<!--          {{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}-->
-<!--        </span>-->
-<!--        <span v-else>{{item.showValue}}</span>-->
-<!--      </span>-->
-<!--      <span v-if="chartInfo.param.text==='none'">-->
-<!--        ' '-->
-<!--      </span>-->
-
+      <div
+        :id="isFullscreen?('chart-gauge-screen-' + chartInfo.id + '-' + index):('chart-gauge-' + chartInfo.id + '-' + index)"
+        class="chart-gauge-content"
+      ></div>
+      <div
+        v-if="item.height > 48 && chartInfo.param &&( chartInfo.param.text === 'legend' || chartInfo.param.text === 'all' )"
+        class="chart-gauge-legend"
+      >
+        {{item.alias}}
+      </div>
     </div>
   </div>
 </template>
@@ -184,18 +170,10 @@ export default {
               showValue = self.handleDisplay(item.mapping.display, { ...item.label, value: showValue })
             }
             let str = ''
-            if (this.chartInfo.param.text === 'all') {
-              str += showValue
-              str += '\n'
-              str += item.alias
-            }
-            if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
+            if (this.chartInfo.param.text === 'all' || this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
               str += showValue
             }
-            if (this.chartInfo.param.text === 'legend') {
-              str += item.alias
-            }
-            if (this.chartInfo.param.text === 'none') {
+            if (this.chartInfo.param.text === 'none' || this.chartInfo.param.text === 'legend') {
               str += ''
             }
             str += ''

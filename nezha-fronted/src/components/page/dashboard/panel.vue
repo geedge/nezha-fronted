@@ -80,8 +80,8 @@
           </template>
         </div>
         <div id="tableList" class="table-list" style='overflow-y: unset'>
-          <div id="dashboardScrollbar" class="table-list-box">
-            <div class="box-content" v-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
+          <div class="table-list-box">
+            <div  id="dashboardScrollbar" class="box-content" v-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
               <chart-list
                 ref="chartList"
                 name="panel"
