@@ -6,10 +6,11 @@
       :data="tableData"
       :height="'100%'"
       border
-      @sort-change="tableDataSort"
     >
+<!--      @sort-change="tableDataSort"-->
       <el-table-column
         v-for="(col, index) in columns"
+        :prop="col.title"
         :key="`col-${index}`"
         :min-width="100"
         :sort-orders="['ascending', 'descending']"
@@ -51,6 +52,7 @@ export default {
   data () {
     return {
       tableData: [],
+      oldTableData: [],
       columns: [],
       valueMapping: {},
       tableTimer: null
@@ -83,6 +85,7 @@ export default {
           item.valueMapping = this.selectTableMapping(item, this.valueMapping)
         })
         this.tableData = arr
+        this.oldTableData = lodash.cloneDeep(arr)
         this.$refs.dataTable && this.$refs.dataTable.doLayout()
       }, 200)
     },
@@ -138,6 +141,23 @@ export default {
       })
       this.$emit('chartIsNoData', this.isNoData)
       return returnData
+    },
+    filterShowData (source) {
+      let orderBy = null
+      let sourceData = null
+      sourceData = this.oldTableData
+      orderBy = this.orderBy
+      if (!orderBy || !orderBy.order) { // 没有排序 恢复默认值
+        source = Object.assign([], sourceData)
+      } else { // 排序之后的顺序
+        if (orderBy.order === 'ascending') {
+          source = source.sort(this.asce(orderBy.prop))
+        }
+        if (orderBy.order === 'descending') {
+          source = source.sort(this.desc(orderBy.prop))
+        }
+      }
+      return source
     },
     selectTableMapping (row, valueMapping) {
       const obj = {}
@@ -221,8 +241,82 @@ export default {
       }
     },
     tableDataSort (orderBy) {
-
-    }
+      console.log(orderBy)
+      this.orderBy = { order: orderBy.order, prop: orderBy.prop }
+      this.seriesItem = this.filterShowData(this.tableData)
+    },
+    // 本地正序
+    asce (prop) {
+      return function (obj1, obj2) {
+        let val1 = obj1[prop]
+        let val2 = obj2[prop]
+        if (prop === 'value') {
+          val1 = obj1.oldValue
+          val2 = obj2.oldValue
+          if (!isNaN(Number(val1)) && !isNaN(Number(val2)) && prop === 'value') {
+            val1 = Number(val1)
+            val2 = Number(val2)
+          }
+        } else if (prop === 'time') {
+          val1 = this.$tableSet.strTodate(val1)
+          val2 = this.$tableSet.strTodate(val2)
+        } else {
+          if (val1.alias) {
+            val1 = JSON.stringify(obj1[prop].alias).replace(/\s*/g, '')
+          } else {
+            val1 = JSON.stringify(obj1[prop].element).replace(/\s*/g, '')
+          }
+          if (val2.alias) {
+            val2 = JSON.stringify(obj2[prop].alias).replace(/\s*/g, '')
+          } else {
+            val2 = JSON.stringify(obj2[prop].element).replace(/\s*/g, '')
+          }
+        }
+        if (val1 < val2) {
+          return -1
+        } else if (val1 > val2) {
+          return 1
+        } else {
+          return 0
+        }
+      }
+    },
+    // 本地倒序
+    desc (prop) {
+      return function (obj1, obj2) {
+        let val1 = obj1[prop]
+        let val2 = obj2[prop]
+        if (prop === 'value') {
+          val1 = obj1.oldValue
+          val2 = obj2.oldValue
+          if (!isNaN(Number(val1)) && !isNaN(Number(val2)) && prop === 'value') {
+            val1 = Number(val1)
+            val2 = Number(val2)
+          }
+        } else if (prop === 'time') {
+          val1 = this.$tableSet.strTodate(val1)
+          val2 = this.$tableSet.strTodate(val2)
+        } else {
+          if (val1.alias) {
+            val1 = JSON.stringify(obj1[prop].alias).replace(/\s*/g, '')
+          } else {
+            val1 = JSON.stringify(obj1[prop].element).replace(/\s*/g, '')
+          }
+          if (val2.alias) {
+            val2 = JSON.stringify(obj2[prop].alias).replace(/\s*/g, '')
+          } else {
+            val2 = JSON.stringify(obj2[prop].element).replace(/\s*/g, '')
+          }
+        }
+        if (val1 < val2) {
+          return 1
+        } else if (val1 > val2) {
+          return -1
+        } else {
+          return 0
+        }
+      }
+    },
   },
   mounted () {
     this.chartInfo.loaded && this.initChart()
