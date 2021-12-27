@@ -178,6 +178,7 @@ export default {
       })
     },
     mapTooltipFormatter (dcStat) {
+      const self = this
       return `<div class="tooltip" style="z-index: 11111">
           <div class="tooltip--title">${dcStat.name}</div>
           <div class="tooltip--row">
@@ -189,8 +190,8 @@ export default {
               <div>${dcStat.agent.up}</div>
               <div>${dcStat.agent.down}</div>
             </div>
-            <div class="tooltip-chart" id="tooltip-chart--endpoint"></div>
-            <div class="tooltip-chart" id="tooltip-chart--prometheus"></div>
+            <div class="tooltip-chart" id="tooltip-chart--endpoint-${self.chartInfo.id}"></div>
+            <div class="tooltip-chart" id="tooltip-chart--prometheus-${self.chartInfo.id}"></div>
           </div>
         </div>`
 
@@ -201,8 +202,8 @@ export default {
       setTimeout(() => {
         const data = param.tooltip.options.data
         // console.info(tooltipEndpointChart);
-        tooltipEndpointChart = echarts.init(document.querySelector('#tooltip-chart--endpoint'))
-        tooltipPrometheusChart = echarts.init(document.querySelector('#tooltip-chart--prometheus'))
+        tooltipEndpointChart = echarts.init(document.querySelector('#tooltip-chart--endpoint-' + this.chartInfo.id))
+        tooltipPrometheusChart = echarts.init(document.querySelector('#tooltip-chart--prometheus-' + this.chartInfo.id))
         const endpointOption = chartConfig.getOption('tooltipPie')
         const prometheusOption = chartConfig.getOption('tooltipPie')
         endpointOption.series[0].label.formatter = data.asset.total + ''

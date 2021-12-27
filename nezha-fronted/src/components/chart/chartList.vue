@@ -11,7 +11,7 @@
       :margin="[10, 10]"
       :row-height="stepWidth"
       :vertical-compact="true"
-      :use-css-transforms="true"
+      :use-css-transforms="false"
       :style="{
         'margin-top': layoutMargintop
       }"
@@ -294,7 +294,9 @@ export default {
             // 1.元素距离页面顶部的距离
             // console.log(dom.style.transform)
 
-            let top = dom.style.transform.split(',')[1]
+            // let top = dom.style.transform.split(',')[1]
+            // top = top.substring(0, top.length - 2)
+            let top = dom.style.top
             top = top.substring(0, top.length - 2)
             const mainOffsetTop = top - this.stepWidth + 14// transform: grid组件 通过 tranfrom 控制位置 中间的为y的值 通过截取获得 - 父元素 marginTop的 值。
             // 2.元素的高度
