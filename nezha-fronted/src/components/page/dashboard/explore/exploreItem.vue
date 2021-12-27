@@ -91,6 +91,29 @@
                 </div>
               </el-collapse-item>
               <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
+                <div slot="title" class="explore-table-title">
+                  Table
+                  <button class="top-tool-btn table-column-setting"
+                          style="position: absolute;right: 10px;top: 8px"
+                          type="button"
+                          @click.stop="tools.showCustomTableTitle = true"
+                  >
+                    <i class="nz-icon-gear nz-icon"></i>
+                  </button> <!-- 自定义table列 -->
+                  <transition name="el-zoom-in-top">
+                    <element-set
+                      @click.stop
+                      v-if="tools.showCustomTableTitle"
+                      :tableId="tableId"
+                      ref="customTableTitle"
+                      :custom-table-title="tools.customTableTitle"
+                      :original-table-title="tableTitle"
+                      :operation-true="true"
+                      @close="tools.showCustomTableTitle = false"
+                      @update="updateCustomTableTitle"
+                    ></element-set>
+                  </transition>
+                </div>
                 <!-- 自定义table列 -->
                 <div class="nz-table2 explore-table">
                   <el-table ref="exploreTable"
@@ -332,6 +355,7 @@ export default {
       },
       value: true,
       tabPosition: 'none',
+      tableId: 'explore',
       searchMetrics: [
         {
           value: 'Metrics',
@@ -984,6 +1008,10 @@ export default {
           this.$refs.logDetail.myChart.resize()
         }
       })
+    },
+    updateCustomTableTitle (custom) {
+      this.tools.customTableTitle = custom
+      this.$refs.exploreTable.doLayout()
     }
   },
   watch: {
