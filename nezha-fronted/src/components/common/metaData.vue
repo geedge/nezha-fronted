@@ -2,9 +2,9 @@
  <div>
    <ul>
      <li><span class="metric-tip-list">metric&nbsp;:&nbsp;</span><span>{{metaName ? metaName : '--'}}</span></li>
-     <li><span class="metric-tip-list">help&nbsp;:&nbsp;</span><span>{{metricList.help}}</span></li>
-     <li><span class="metric-tip-list">type&nbsp;:&nbsp;</span><span>{{metricList.type}}</span></li>
-     <li><span class="metric-tip-list">unit&nbsp;:&nbsp;</span><span>{{metricList.unit}}</span></li>
+     <li><span class="metric-tip-list">help&nbsp;:&nbsp;</span><span>{{metricList.help ? metricList.help : '--'}}</span></li>
+     <li><span class="metric-tip-list">type&nbsp;:&nbsp;</span><span>{{metricList.type ? metricList.type : '--'}}</span></li>
+     <li><span class="metric-tip-list">unit&nbsp;:&nbsp;</span><span>{{metricList.unit ? metricList.unit : '--'}}</span></li>
    </ul>
  </div>
 </template>
