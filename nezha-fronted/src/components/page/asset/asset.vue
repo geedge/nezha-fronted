@@ -190,6 +190,7 @@ import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
+import lodash from 'lodash'
 
 export default {
   name: 'asset',
@@ -698,7 +699,9 @@ export default {
         ...this.searchCheckBox
       }
       const path = this.fromRoute.asset
-      this.updatePath(assetParam, path)
+      const routePathParams = lodash.cloneDeep(assetParam)
+      delete routePathParams.statistics
+      this.updatePath(routePathParams, path)
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
@@ -820,9 +823,9 @@ export default {
         },
         jsonKey: 'val'
       },
-      statistics: {
+      stateIds: {
         target: this.searchLabel,
-        propertyName: 'statistics',
+        propertyName: 'stateIds',
         type: 'number',
         isSearchInput: true,
         defaultJson: {

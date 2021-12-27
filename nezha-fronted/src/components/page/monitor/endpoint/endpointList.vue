@@ -610,6 +610,7 @@ export default {
       pathParam.state = this.selectValue.state
       delete pathParam.metricsStates
       delete pathParam.logsStates
+      delete pathParam.statistics
       this.updatePath({ ...pathParam }, path)
       this.$get(this.url, params).then(response => {
         this.tools.loading = false

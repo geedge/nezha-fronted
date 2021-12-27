@@ -735,7 +735,9 @@ export default {
         ...this.searchCheckBox
       }
       const path = this.fromRoute.alertMessage
-      this.updatePath(param, path)
+      const routePathParams = lodash.cloneDeep(param)
+      delete routePathParams.statistics
+      this.updatePath(routePathParams, path)
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
