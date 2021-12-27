@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-gauge" ref="chart-gauge-box">
+  <div class="chart-gauge-box" ref="chart-gauge-box">
     <div
       v-for="(item,index) in gaugeData" :key="index"
       class="chart-gauge-item"
