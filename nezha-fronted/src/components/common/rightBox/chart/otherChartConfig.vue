@@ -99,6 +99,32 @@
             </el-option>
           </el-select>
         </el-form-item>
+
+        <!-- timeType -->
+        <el-form-item
+          :label="$t('dashboard.panel.chartForm.timeType')"
+          class="form-item--half-width"
+          v-if="chartConfig.type === 'clock'"
+          prop="type"
+        >
+          <el-select
+            id="chart-box-type"
+            v-model="chartConfig.param.timeType"
+            :disabled="chartConfig.type === 'group'"
+            :placeholder="$t('el.select.placeholder')"
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            value-key="chartType"
+            @change="change">
+            <el-option
+              v-for="item in timeType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+              <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
       </div>
       <!--content-->
       <div v-if="contentShow(chartConfig.type)" class="form__sub-title">
@@ -178,6 +204,10 @@ export default {
         {
           id: 'hexagon',
           name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
+        },
+        {
+          id: 'clock',
+          name: this.$t('dashboard.panel.chartForm.typeVal.clock.label')
         }
       ]
     }
@@ -187,6 +217,7 @@ export default {
       this.chartConfig = JSON.parse(JSON.stringify(this.params))
     },
     chartTypeChange (type) {
+      console.log(type)
       switch (type) {
         case 'group':
           this.chartConfig.span = 12
@@ -211,6 +242,11 @@ export default {
           this.chartConfig.param = {
             link: this.chartConfig.param.link,
             url: ''
+          }
+          break
+        case 'clock':
+          this.chartConfig.param = {
+            timeType: this.chartConfig.param.timeType
           }
           break
       }

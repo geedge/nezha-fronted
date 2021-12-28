@@ -160,6 +160,16 @@ export default {
           label: 'None',
           value: 'none'
         }
+      ],
+      timeType: [
+        {
+          value: 'local',
+          label: this.$t('dashboard.panel.chartForm.typeVal.local')
+        },
+        {
+          value: 'server',
+          label: this.$t('dashboard.panel.chartForm.typeVal.server')
+        }
       ]
     }
   },

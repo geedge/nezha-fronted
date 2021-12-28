@@ -399,6 +399,7 @@ export const chartType = {
   log: 'log',
   text: 'text',
   url: 'url',
+  clock: 'clock',
   group: 'group',
   diagram: 'diagram',
   assetInfo: 'assetInfo',
