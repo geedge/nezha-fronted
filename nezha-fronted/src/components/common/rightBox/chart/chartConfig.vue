@@ -385,6 +385,7 @@
               :label="$t('dashboard.panel.chartForm.legendValues')"
               class="form-item--half-width"
               prop="param.legend.values"
+              v-if="isShowLegendVlaues(chartConfig.type)"
             >
               <el-select
                 id="chart-box-legend-value"
@@ -802,11 +803,8 @@ export default {
           })
           break
         case 'stat':
-        case 'bar':
-        case 'treemap':
         case 'guage':
-        case 'pie':
-          if (this.oldType === 'stat' || this.oldType === 'bar' || this.oldType === 'treemap' || this.oldType === 'guage' || this.oldType === 'pie') {
+          if (this.oldType === 'stat' || this.oldType === 'guage') {
             break
           }
           this.chartConfig.param = {
@@ -815,6 +813,28 @@ export default {
             statistics: 'last',
             text: 'value',
             valueMapping: [],
+            min: 0,
+            max: 100,
+            enable: {
+              legend: true,
+              valueMapping: false,
+              thresholds: false
+            }
+          }
+          break
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          if (this.oldType === 'bar' || this.oldType === 'treemap' || this.oldType === 'pie') {
+            break
+          }
+          this.chartConfig.param = {
+            nullType: this.chartConfig.param.nullType,
+            link: this.chartConfig.param.link,
+            statistics: 'last',
+            text: 'value',
+            valueMapping: [],
+            legend: { placement: 'bottom', values: [], show: true },
             min: 0,
             max: 100,
             enable: {

@@ -15,6 +15,7 @@ export default {
       },
       chartId: '',
       isNoData: true,
+      series: []
     }
   },
   props: {

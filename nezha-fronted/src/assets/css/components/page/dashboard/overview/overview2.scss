@@ -729,9 +729,15 @@
   z-index: 10;
   cursor: pointer;
 }
+.leaflet-container:hover{
+  .leaflet-control-zoom{
+    display: block;
+  }
+}
 .leaflet-bottom{
   z-index: 409;
   .leaflet-control-zoom {
+    display: none;
     a {
       background-color: $--background-color-base;
       i {

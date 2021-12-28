@@ -137,6 +137,7 @@ export default {
           item.width = width
         }
       })
+      this.isInit = false
     },
     resize () {
       this.getLayout().then(layout => {
