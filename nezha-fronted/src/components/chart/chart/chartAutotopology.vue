@@ -38,7 +38,11 @@ export default {
     topology
   },
   methods: {
+    initChart () {
+      this.queryAllProjectData()
+    },
     queryAllProjectData () {
+      this.isInit = false
       this.$get('monitor/project', { pageSize: -1 }).then(res => {
         this.topologyLoading = true
         const axiosAll = []

@@ -43,7 +43,6 @@ export default {
     return {
       stackTotalColor: null,
       isStack: false,
-      series: []
     }
   },
   computed: {

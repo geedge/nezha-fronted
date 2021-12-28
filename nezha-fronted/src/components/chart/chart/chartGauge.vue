@@ -61,6 +61,7 @@ export default {
     },
     initGaugeData (chartInfo, originalDatas) {
       this.gaugeData = []
+      this.isInit = false
       return new Promise(resolve => {
         let colorIndex = 0
         originalDatas.forEach((originalData, expressionIndex) => {

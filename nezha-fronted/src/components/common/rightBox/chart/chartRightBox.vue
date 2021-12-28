@@ -436,6 +436,9 @@ export default {
           if (!this.editChart.param.link) {
             this.$set(this.editChart.param, 'link', '')
           }
+          if (this.editChart.param.enable.legend && !this.editChart.param.legend) {
+            this.editChart.param.legend = { placement: 'bottom', values: [], show: true }
+          }
         }
       }
     },

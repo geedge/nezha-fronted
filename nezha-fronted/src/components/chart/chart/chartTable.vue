@@ -87,6 +87,7 @@ export default {
         this.tableData = arr
         this.oldTableData = lodash.cloneDeep(arr)
         this.$refs.dataTable && this.$refs.dataTable.doLayout()
+        this.isInit = false
       }, 200)
     },
     initTableData (chartInfo, originalDatas) {
@@ -249,10 +250,8 @@ export default {
     // 本地正序
     asce (prop) {
       return function (obj1, obj2) {
-        console.log(obj1, obj2)
         const val1 = obj1.display[prop + 'display'].replace(/\s*/g, '')
         const val2 = obj2.display[prop + 'display'].replace(/\s*/g, '')
-        console.log(val1, val2, val1 < val2)
         if (val1 < val2) {
           return -1
         } else if (val1 > val2) {

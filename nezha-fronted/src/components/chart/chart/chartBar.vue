@@ -11,6 +11,7 @@
       :chart-data="chartData"
       :chart-info="chartInfo"
       :legends="legends"
+      :series="series"
       :is-fullscreen="isFullscreen"
     ></chart-legend>
   </div>
@@ -80,7 +81,7 @@ export default {
     initChart (chartOption = this.chartOption) {
       const self = this
       this.legends = []
-      chartOption.series = this.initBarData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+      this.series = chartOption.series = this.initBarData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       if (this.isNoData) {
         return
       }
@@ -129,12 +130,13 @@ export default {
             const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             // eslint-disable-next-line vue/no-mutating-props
             mapping && (this.chartOption.color[colorIndex] = mapping.color.bac)
+            const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             s.data.push({
               value: value,
               realValue: value,
               showValue: showValue,
-              name: this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name,
-              alias: this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias,
+              name: legend.name,
+              alias: legend.alias,
               labels: data.metric,
               seriesIndex: expressionIndex,
               dataIndex: dataIndex,

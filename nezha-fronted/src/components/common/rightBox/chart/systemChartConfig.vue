@@ -278,7 +278,67 @@
           </el-select>
         </el-form-item>
       </div>
-
+      <!--legend-->
+      <div v-if="isShowLegend(chartConfig.type)">
+        <!--legendConfig-->
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.panel.chartForm.legendConfig')}}</span>
+          <el-switch v-model="chartConfig.param.enable.legend" size="small" @change="change"></el-switch>
+        </div>
+        <transition name="el-zoom-in-top">
+          <div
+            v-if="chartConfig.param.enable.legend"
+            class="form-items--half-width-group"
+          >
+            <el-form-item
+              :label="$t('dashboard.panel.chartForm.legendPosition')"
+              class="form-item--half-width"
+              prop="param.legend.placement"
+            >
+              <el-select
+                id="chart-box-legend-show"
+                v-model="chartConfig.param.legend.placement"
+                placeholder=""
+                popper-class="right-box-select-top prevent-clickoutside"
+                size="small"
+                @change="change"
+              >
+                <el-option
+                  v-for="item in legendPositionList"
+                  :key="item.value"
+                  :label="$t(item.label)"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              :label="$t('dashboard.panel.chartForm.legendValues')"
+              class="form-item--half-width"
+              prop="param.legend.values"
+              v-if="isShowLegendVlaues(chartConfig.type)"
+            >
+              <el-select
+                id="chart-box-legend-value"
+                v-model="chartConfig.param.legend.values"
+                multiple
+                collapse-tags
+                :placeholder="$t('el.select.placeholder')"
+                popper-class="right-box-select-top prevent-clickoutside"
+                size="small"
+                @change="change"
+              >
+                <el-option
+                  v-for="item in statisticsList"
+                  :key="item.value"
+                  :label="$t(item.label)"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </transition>
+      </div>
       <!--      table column-->
       <div v-if="isTable(chartConfig.type)">
         <div class="form__sub-title">
@@ -590,38 +650,45 @@ export default {
     chartTypeChange (type) {
       switch (type) {
         case 'stat':
-        case 'bar':
-        case 'pie':
         case 'guage':
-        case 'treemap':
-          if (this.oldType !== 'table') {
+          if (this.oldType === 'stat' || this.oldType === 'guage') {
             break
           }
           this.chartConfig.param = {
+            nullType: this.chartConfig.param.nullType,
             link: this.chartConfig.param.link,
-            refer: 1,
-            nullType: 'null',
             statistics: 'last',
-            valueMapping: [],
             text: 'value',
+            valueMapping: [],
             min: 0,
             max: 100,
             enable: {
               legend: true,
               valueMapping: false,
               thresholds: false
-            },
-            datasource: [{
-              name: 'System',
-              type: '',
-              systemGroup: '',
-              systemSelect: '',
-              group: '',
-              select: '',
-              limit: 100,
-              sort: 'desc'
             }
-            ]
+          }
+          break
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+          if (this.oldType === 'bar' || this.oldType === 'treemap' || this.oldType === 'pie') {
+            break
+          }
+          this.chartConfig.param = {
+            nullType: this.chartConfig.param.nullType,
+            link: this.chartConfig.param.link,
+            statistics: 'last',
+            text: 'value',
+            valueMapping: [],
+            legend: { placement: 'bottom', values: [], show: true },
+            min: 0,
+            max: 100,
+            enable: {
+              legend: true,
+              valueMapping: false,
+              thresholds: false
+            }
           }
           break
         case 'table':

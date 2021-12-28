@@ -11,6 +11,7 @@
       :chart-data="chartData"
       :chart-info="chartInfo"
       :legends="legends"
+      :series="series"
       :is-fullscreen="isFullscreen"
     ></chart-legend>
   </div>
@@ -79,7 +80,7 @@ export default {
   methods: {
     initChart (chartOption = this.chartOption) {
       this.legends = []
-      chartOption.series[0] = this.initTreeMapData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+      this.series = chartOption.series = this.initTreeMapData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       chartOption.tooltip.formatter = this.formatterFunc
       chartOption.tooltip.position = this.tooltipPosition
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
@@ -104,12 +105,13 @@ export default {
             const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             // eslint-disable-next-line vue/no-mutating-props
             this.chartOption.color && mapping && (this.chartOption.color[colorIndex] = mapping.color.bac)
+            const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             s.data.push({
               value: value,
               realValue: value,
               showValue: showValue,
-              name: this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name,
-              alias: this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias,
+              name: legend.name,
+              alias: legend.alias,
               labels: data.metric,
               seriesIndex: expressionIndex,
               dataIndex: dataIndex,
@@ -130,7 +132,7 @@ export default {
         })
       })
       this.$emit('chartIsNoData', this.isNoData)
-      return s
+      return [s]
     },
     formatterFunc (params, ticket, callback) {
       const self = this

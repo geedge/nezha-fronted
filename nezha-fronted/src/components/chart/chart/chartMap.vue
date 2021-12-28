@@ -56,6 +56,7 @@ export default {
             loadPromise = this.loadDataCenterMapData()
           }
         })
+        this.isInit = false
         return loadPromise
       }, 500)
     },

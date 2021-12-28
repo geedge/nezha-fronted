@@ -79,6 +79,15 @@ export default {
       const curIsGrey = this.isGrey[index] // 当前legend的状态
       const currentIsTheOnlyOneHighlight = !curIsGrey && highlightNum === 1 // 当前legend是否是目前唯一高亮的
       const echarts = getChart(this.chartId)
+      if (this.chartInfo.type === 'bar') {
+        this.clickLegendBar(legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight)
+        return
+      }
+      if (this.chartInfo.type === 'treemap') {
+        this.clickLegendTreemap(legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight)
+        return
+      }
+
       if (echarts) {
         if (!hasGrey) { // 1.除当前legend外全置灰
           echarts.dispatchAction({
@@ -102,32 +111,86 @@ export default {
           })
           this.$set(this.isGrey, index, !this.isGrey[index])
         }
-        // 处理点击后的 Y轴
-        const chartInfo = this.chartInfo
-        const dataArg = this.series.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
-        const maxValueCopies = this.getMaxValue(dataArg, chartInfo)
-        const maxValue = maxValueCopies.maxValue
-        const copies = maxValueCopies.copies
-        const unit = maxValueCopies.unit
-        const option = {
-          yAxis: {
-            minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
-            maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+        if (this.chartInfo.type !== 'pie' && this.chartInfo.type !== 'bar' && this.chartInfo.type !== 'treemap') {
+          // 处理点击后的 Y轴
+          const chartInfo = this.chartInfo
+          const dataArg = this.series.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
+          const maxValueCopies = this.getMaxValue(dataArg, chartInfo)
+          const maxValue = maxValueCopies.maxValue
+          const copies = maxValueCopies.copies
+          const unit = maxValueCopies.unit
+          const option = {
+            yAxis: {
+              minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
+              maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+            }
           }
-        }
-        if (!maxValueCopies.copies) {
-          option.yAxis.min = 0
-          option.yAxis.max = 1
-        } else {
-          option.yAxis.max = undefined
-        }
-        if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
-          delete option.yAxis.maxInterval
-        }
-        getChart(this.chartId) && getChart(this.chartId).setOption({
-          yAxis: {
-            ...option.yAxis
+          if (!maxValueCopies.copies) {
+            option.yAxis.min = 0
+            option.yAxis.max = 1
+          } else {
+            option.yAxis.max = undefined
           }
+          if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+            delete option.yAxis.maxInterval
+          }
+          getChart(this.chartId) && getChart(this.chartId).setOption({
+            yAxis: {
+              ...option.yAxis
+            }
+          })
+        }
+      }
+    },
+    clickLegendBar (legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight) {
+      const echarts = getChart(this.chartId)
+      if (echarts) {
+        let data = []
+        const xAxis = {
+          data: []
+        }
+        data = lodash.cloneDeep(this.series)
+        if (!hasGrey) { // 1.除当前legend外全置灰
+          this.isGrey = this.isGrey.map((g, i) => i !== index)
+        } else if (currentIsTheOnlyOneHighlight) { // 2.全高亮
+          this.isGrey = this.isGrey.map(() => false)
+        } else { // 对应高亮
+          this.$set(this.isGrey, index, !this.isGrey[index])
+        }
+        data[0].data = data[0].data.filter((item, i) => !this.isGrey[i])
+        xAxis.data = data[0].data.map(item => {
+          if (this.chartInfo.param.text == 'all' || this.chartInfo.param.text == 'legend') {
+            return item.name
+          } else {
+            return ''
+          }
+        })
+        echarts.setOption({
+          series: data,
+          xAxis: {
+            data: xAxis.data
+          }
+        })
+      }
+    },
+    clickLegendTreemap (legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight) {
+      const echarts = getChart(this.chartId)
+      if (echarts) {
+        let data = []
+        const xAxis = {
+          data: []
+        }
+        data = lodash.cloneDeep(this.series)
+        if (!hasGrey) { // 1.除当前legend外全置灰
+          this.isGrey = this.isGrey.map((g, i) => i !== index)
+        } else if (currentIsTheOnlyOneHighlight) { // 2.全高亮
+          this.isGrey = this.isGrey.map(() => false)
+        } else { // 对应高亮
+          this.$set(this.isGrey, index, !this.isGrey[index])
+        }
+        data[0].data = data[0].data.filter((item, i) => !this.isGrey[i])
+        echarts.setOption({
+          series: data
         })
       }
     },
@@ -181,7 +244,7 @@ export default {
         unit,
         oldDot
       }
-    },
+    }
   },
   watch: {
     legends (n) {

@@ -9,6 +9,9 @@ const chartGaugeOption = {
     appendToBody: true,
     className: 'chart-gauge'
   },
+  legend: {
+    show: false
+  },
   series: [
     {
       type: 'gauge',
