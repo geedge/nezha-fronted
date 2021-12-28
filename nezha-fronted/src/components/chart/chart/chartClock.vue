@@ -69,11 +69,13 @@ export default {
         active: '#53a3cb',
         inactive: '#7e7e7e'
       },
-      chartId: ''
+      chartId: '',
+      chartTime: ''
     }
   },
   methods: {
     initChart (chartOption = this.chartOption) {
+      let _seft = this
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
         const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartId}`)) : getChart(this.chartId)
@@ -103,7 +105,31 @@ export default {
             myChart.setOption(chartOption)
           }, 1000)
         } else {
-
+          setInterval(function () {
+            _seft.$get('/healthy').then((res) => {
+              this.chartTime = res.time
+              console.log(res)
+            })
+            const date = new Date(this.chartTime)
+            const second = date.getSeconds()
+            const minute = date.getMinutes() + second / 60
+            const hour = (date.getHours() % 12) + minute / 60
+            chartOption.animationDurationUpdate = 300
+            chartOption.series = [{
+              name: 'hour',
+              animation: hour !== 0,
+              data: [{ value: hour }]
+            }, {
+              name: 'minute',
+              animation: minute !== 0,
+              data: [{ value: minute }]
+            }, {
+              name: 'minute',
+              animation: second !== 0,
+              data: [{ value: second }]
+            }]
+            myChart.setOption(chartOption)
+          }, 1000)
         }
       }, 200)
     }
