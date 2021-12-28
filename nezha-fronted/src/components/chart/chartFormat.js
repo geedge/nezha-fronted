@@ -4,7 +4,7 @@ export default {
       const self = this
       let str = ''
       if (this.chartInfo.type == 'bar') { // 柱状图 单独处理
-        if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text || this.chartInfo.param.text === 'all' ) {
+        if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text || this.chartInfo.param.text === 'all') {
           str += params.data.mapping && params.data.mapping.display ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
           return str
         }

@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-gauge-box" ref="chart-gauge-box">
+  <div class="chart-gauge-box" :ref="'chart-gauge-box' + chartInfo.id">
     <div
       v-for="(item,index) in gaugeData" :key="index"
       class="chart-gauge-item"
@@ -79,6 +79,7 @@ export default {
 
               }
             }
+            const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             gauge.value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
             gauge.max = chartInfo.param.max || 100
             gauge.min = chartInfo.param.min || 0
@@ -86,9 +87,9 @@ export default {
               gauge.min = gauge.max / 2
             }
             gauge.label = data.metric
-            gauge.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
-            gauge.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
-            gauge.alias = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
+            gauge.legend = legend.alias
+            gauge.name = legend.name
+            gauge.alias = legend.alias
             gauge.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(gauge.value, null, -1, 2)
             // gauge.value = gauge.showValue
             gauge.mapping = this.selectMapping(gauge.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
@@ -101,8 +102,8 @@ export default {
       })
     },
     getLayout () {
-      this.boxWidth = this.$refs['chart-gauge-box'].offsetWidth - 2 * this.boxPadding
-      this.boxHeight = this.$refs['chart-gauge-box'].offsetHeight - 2 * this.boxPadding
+      this.boxWidth = this.$refs['chart-gauge-box' + this.chartInfo.id].offsetWidth - 2 * this.boxPadding
+      this.boxHeight = this.$refs['chart-gauge-box' + this.chartInfo.id].offsetHeight - 2 * this.boxPadding
       return new Promise(resolve => {
         let rateMax = 0
         let col = 0

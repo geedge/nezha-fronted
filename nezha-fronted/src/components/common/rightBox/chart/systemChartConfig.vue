@@ -587,6 +587,10 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
         },
         {
+          id: 'hexagon',
+          name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
+        },
+        {
           id: 'bar',
           name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
         },
@@ -650,8 +654,9 @@ export default {
     chartTypeChange (type) {
       switch (type) {
         case 'stat':
+        case 'hexagon':
         case 'guage':
-          if (this.oldType === 'stat' || this.oldType === 'guage') {
+          if (this.oldType === 'stat' || this.oldType === 'guage' || this.oldType === 'hexagon') {
             break
           }
           this.chartConfig.param = {
@@ -666,7 +671,8 @@ export default {
               legend: true,
               valueMapping: false,
               thresholds: false
-            }
+            },
+            datasource: [...this.chartConfig.param.datasource]
           }
           break
         case 'bar':
@@ -688,7 +694,8 @@ export default {
               legend: true,
               valueMapping: false,
               thresholds: false
-            }
+            },
+            datasource: [...this.chartConfig.param.datasource]
           }
           break
         case 'table':
@@ -707,30 +714,11 @@ export default {
               valueMapping: false,
               thresholds: false
             },
-            datasource: [{
-              name: 'System',
-              type: '',
-              systemGroup: '',
-              systemSelect: '',
-              group: '',
-              select: '',
-              limit: 100,
-              sort: 'desc'
-            }
-            ]
+            datasource: [...this.chartConfig.param.datasource]
           }
           break
       }
-      this.chartConfig.param.datasource[0].type = this.systemData[0].name
-      this.groupList = this.systemData[0].group
-      this.selectList = this.systemData[0].select
       this.oldType = type
-      this.systemNameShow = [{
-        error: false,
-        hideInput: true,
-        show: true,
-        oldName: this.chartConfig.param.datasource[0].name
-      }]
       this.change()
     },
     changeSystem (item) {

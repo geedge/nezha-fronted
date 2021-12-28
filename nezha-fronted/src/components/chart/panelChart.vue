@@ -277,6 +277,7 @@ export default {
                 chartData.push(res.data.result)
               } else {
                 chartData.push({ error: res.msg || res.error || res })
+                this.isError = true
               }
               this.chartData = chartData
               this.loading = false

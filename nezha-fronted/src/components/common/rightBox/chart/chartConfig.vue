@@ -729,6 +729,10 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
         },
         {
+          id: 'hexagon',
+          name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
+        },
+        {
           id: 'bar',
           name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
         },
@@ -803,8 +807,9 @@ export default {
           })
           break
         case 'stat':
+        case 'hexagon':
         case 'guage':
-          if (this.oldType === 'stat' || this.oldType === 'guage') {
+          if (this.oldType === 'stat' || this.oldType === 'guage' || this.oldType === 'hexagon') {
             break
           }
           this.chartConfig.param = {

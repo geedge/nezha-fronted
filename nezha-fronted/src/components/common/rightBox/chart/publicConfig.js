@@ -82,6 +82,10 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
         },
         {
+          id: 'hexagon',
+          name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
+        },
+        {
           id: 'bar',
           name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
         },
@@ -119,6 +123,10 @@ export default {
         {
           id: 'stat',
           name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
+        },
+        {
+          id: 'hexagon',
+          name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
         },
         {
           id: 'bar',
