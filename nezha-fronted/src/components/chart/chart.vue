@@ -33,7 +33,7 @@
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
       ></chart-bar>
-      <chartHexagon
+      <chartHexagonD3
         :ref="'chart'+chartInfo.id"
         v-if="isHexagon(chartInfo.type)"
         :chart-data="chartData"
@@ -41,7 +41,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
-      ></chartHexagon>
+      ></chartHexagonD3>
       <chart-url
         :ref="'chart' + chartInfo.id"
         v-if="isUrl(chartInfo.type)"
@@ -186,7 +186,7 @@ import chartTimeSeries from './chart/chartTimeSeries'
 import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
-import chartHexagon from './chart/chartHexagon'
+import chartHexagonD3 from './chart/chartHexagonD3'
 import chartMap from './chart/chartMap'
 import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable, isGauge } from './chart/tools'
 import lodash from 'lodash'
@@ -213,7 +213,7 @@ export default {
     chartTreemap,
     chartUrl,
     chartValue,
-    chartHexagon,
+    chartHexagonD3,
     chartMap
   },
   props: {
