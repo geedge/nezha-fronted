@@ -152,6 +152,11 @@ export default {
       })
     },
     gaugeChartInit () {
+      this.chartInstances.forEach(item => {
+        if (item) {
+          item.dispose()
+        }
+      })
       this.chartInstances = []
       const self = this
       this.gaugeData.forEach((item, index) => {
