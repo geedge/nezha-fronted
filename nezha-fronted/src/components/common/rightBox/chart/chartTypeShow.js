@@ -145,6 +145,7 @@ export default {
         case 'map' :
         case 'topology' :
         case 'hexagon' :
+        case 'clock' :
           return false
         default: return true
       }

@@ -162,6 +162,15 @@
         @chartIsNoData="chartIsNoData"
         :chart-option="chartOption"
       ></chart-group>
+      <chart-clock
+        :ref="'chart' + chartInfo.id"
+        v-if="isClock(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
+      ></chart-clock>
     </template>
   </div>
 </template>
@@ -188,7 +197,7 @@ import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagon from './chart/chartHexagon'
 import chartMap from './chart/chartMap'
-import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable, isGauge } from './chart/tools'
+import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable, isGauge, isClock } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -244,7 +253,7 @@ export default {
   },
   computed: {
     isNoData () {
-      return lodash.isEmpty(this.chartData) && ['text', 'url'].indexOf(this.chartInfo.type) === -1
+      return lodash.isEmpty(this.chartData) && ['text', 'url', 'clock'].indexOf(this.chartInfo.type) === -1
     },
     chartOption () {
       if (this.customChartOption) {
@@ -272,6 +281,7 @@ export default {
     isMap,
     isTable,
     isGauge,
+    isClock,
     chartIsNoData (flag) {
       this.chartChildrenData = flag
     },

@@ -9,6 +9,7 @@ import {
 } from './options/chartTimeSeries'
 import chartTreemapOption from './options/chartTreemap'
 import chartGaugeOption from './options/chartGauge'
+import chartClockOption from '@/components/chart/chart/options/chartClock'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 
 export function getOption (type) {
@@ -44,6 +45,10 @@ export function getOption (type) {
     }
     case chartType.guage: {
       chartOption = lodash.cloneDeep(chartGaugeOption)
+      break
+    }
+    case chartType.clock: {
+      chartOption = lodash.cloneDeep(chartClockOption)
       break
     }
     default:
@@ -105,6 +110,9 @@ export function isTable (type) {
 }
 export function isGauge (type) {
   return type === chartType.guage
+}
+export function isClock (type) {
+  return type === chartType.clock
 }
 export function getGroupHeight (arr) {
   if (arr.length) {
