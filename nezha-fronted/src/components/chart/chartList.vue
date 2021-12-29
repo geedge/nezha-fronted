@@ -143,7 +143,9 @@ export default {
         visible: false,
         chartData: [],
         chartInfo: {}
-      }
+      },
+      scrollTop: 0,
+      scrollTopTimer: null
     }
   },
   methods: {
@@ -192,6 +194,7 @@ export default {
           span: newW,
           height: newH
         })
+        this.onScroll(this.scrollTop)
       }, 100)
     },
     moveEvent (i, newX, newY) {
@@ -202,6 +205,7 @@ export default {
     movedEvent (i, newX, newY) {
       if (!this.isGroup) {
         this.moveChart()
+        this.onScroll(this.scrollTop)
       }
     },
     containerResizedEvent (i, newH, newW, newHPx, newWPx) {
@@ -282,8 +286,12 @@ export default {
       }, 300)
     },
     onScroll (scrollTop = 0) {
-      let self = this
-      setTimeout(() => {
+      const self = this
+      if (this.scrollTopTimer) {
+        clearTimeout(this.scrollTopTimer)
+        this.scrollTopTimer = null
+      }
+      this.scrollTopTimer = setTimeout(() => {
         this.copyDataList.forEach(item => {
           if (item.loaded) {
             return
@@ -303,6 +311,7 @@ export default {
             const mainHeight = itemHeight // ele.offsetHeight;//itemHeight;
             // 3.页面滚动的距离
             const windowScrollTop = scrollTop// document.documentElement.scrollTop || document.body.scrollTop;
+            self.scrollTop = scrollTop
             // 4.浏览器可见区域的高度
             const windowHeight = (window.innerHeight || document.documentElement.clientHeight) - 50 - 70
             // console.log(this.$refs['chart' + item.id][0].$el.offsetHeight, scrollTop,'scrollTop',windowHeight,mainOffsetTop + mainHeight / 4,(windowScrollTop + windowHeight))
@@ -312,7 +321,7 @@ export default {
             }
           }
         })
-      },200)
+      }, 200)
     }
   },
   created () {
