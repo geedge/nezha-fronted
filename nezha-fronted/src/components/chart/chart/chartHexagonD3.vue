@@ -1,6 +1,15 @@
 <template>
   <div :ref="`chart-canvas-${chartId}`" style="height: 100%;width: 100%">
     <div :id="`chart-canvas-${chartId}`" class="chart__canvas chart-svg"></div>
+    <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
+      <div class="chart-canvas-tooltip-title">
+        {{tooltip.title}}
+      </div>
+      <div class="chart-canvas-tooltip-content">
+        <div>value</div>
+        <div>{{tooltip.value}}</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -23,31 +32,39 @@ export default {
       HexagonData: [],
       boxWidth: 0,
       boxHeight: 0,
-      boxPadding: 5
+      boxPadding: 5,
+      tooltip: {
+        x: 0,
+        y: 0,
+        title: 0,
+        value: 0,
+        show: false
+      },
+      svgDom: null
     }
   },
   methods: {
     hexbin,
     initChart () {
-      if (this.timer) {
-        clearTimeout(this.timer)
-        this.timer = null
-      }
-      this.timer = setTimeout(() => {
-        this.initHexagonData(this.chartInfo, this.chartData).then(() => {
-          this.getLayout().then(layout => {
-            console.log(layout, this.boxWidth, this.boxHeight)
-            this.initHexagon(layout)
+      this.clearCache().then(() => {
+        if (this.timer) {
+          clearTimeout(this.timer)
+          this.timer = null
+        }
+        this.timer = setTimeout(() => {
+          this.initHexagonData(this.chartInfo, this.chartData).then(() => {
+            this.getLayout().then(layout => {
+              this.initHexagon(layout)
+            })
           })
-        })
-      }, 200)
+        }, 200)
+      })
     },
     initHexagonData (chartInfo, originalDatas) {
       this.HexagonData = []
       this.isInit = false
       return new Promise(resolve => {
         let colorIndex = 0
-        console.log('init', 1)
         originalDatas.forEach((originalData, expressionIndex) => {
           originalData.forEach((data, dataIndex) => {
             this.isNoData = false
@@ -87,7 +104,6 @@ export default {
     },
     initHexagon (layout) {
       this.isInit = false
-      console.log(layout, this.HexagonData)
       let rowIndex = 0
       let colIndex = -1
       const data = this.HexagonData.map(item => {
@@ -121,6 +137,7 @@ export default {
       }
     },
     showHexagons (data, hexaRadiu = 60, row, col) {
+      // 清除资源 释放缓存
       // Initial Geometrical Calculations
       const self = this
       const hexaRadius = hexaRadiu
@@ -139,34 +156,63 @@ export default {
         .attr('id', 'svgHex' + this.chartId)
         .attr('width', width)
         .attr('height', height)
-
+        .on('mousemove', this.hexagonMove)
+      this.svgDom = 'svgHex' + this.chartId
       for (let i = 0; i < data.length; i++) {
         const point = data[i]
         const col = point.x
         const row = point.y
         const color = point.mapping ? point.mapping.color.bac : this.colorList[i]
-        console.log(color)
         const vals = self.getCenter(hexaRadius, row, col) // Gets the Center coordinates with given row and column
         const x = vals[0]
         const y = vals[1]
-        const hexa = self.drawHexagon(svg, hexaRadius, spaceBetweenHexa, x, y, hexbin) // Draws hexagon
+        const g = svg.append('g')
+        const hexa = self.drawHexagon(g, hexaRadius, spaceBetweenHexa, x, y, hexbin) // Draws hexagon
         hexa.attr('fill', color) // Paints hexagon
-        hexa.on('mouseenter', self.hexagonOver.bind(self, hexa))
-        hexa.on('mouseleave', self.hexagonOut.bind(self, hexa))
-        self.drawText(svg, vals, point, color, hexaRadius) // 文本
+        g.on('mouseenter', self.hexagonOver.bind(self, point))
+        g.on('mouseleave', self.hexagonOut.bind(self, point))
+        self.drawText(svg, vals, point, color, hexaRadius, g) // 文本
         data[i].fcolor = color
       }
       return svg.node()
     },
     hexagonOver (that, e) { // 移入六边形
       // console.log(that, e)
+      this.tooltip.title = that.alias
+      this.tooltip.value = that.showValue
+      this.tooltip.show = true
+      this.setPosition(e)
     },
-    hexagonMove (that, e) { // 六边形内移动
-      // console.log(that, e)
-      // this.$emit('assetMove',e)
+    hexagonMove (e) { // 六边形内移动
+      // console.log(e)
+      if (this.tooltip.show) {
+        this.setPosition(e)
+      }
     },
     hexagonOut (that) {
-
+      this.tooltip.show = false
+    },
+    setPosition (e) {
+      const windowWidth = window.innerWidth// 窗口宽度
+      const windowHeight = window.innerHeight// 窗口高度
+      const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+      if (box) {
+        const boxWidth = box.offsetWidth
+        const boxHeight = box.offsetHeight
+        if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+          this.tooltip.x = e.pageX + 15
+        } else {
+          this.tooltip.x = e.pageX - boxWidth - 15
+        }
+        if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+          this.tooltip.y = e.pageY + 15
+        } else {
+          this.tooltip.y = e.pageY - boxHeight - 10
+        }
+      } else {
+        this.tooltip.y = e.pageY + 15
+        this.tooltip.x = e.pageX + 15
+      }
     },
     formatStr (d) {
       const self = this
@@ -182,7 +228,7 @@ export default {
         .attr('transform', 'translate(' + x + ',' + y + ')')
       return hexagon
     },
-    drawText (svg, vals, point, color, hexbinRadius) {
+    drawText (svg, vals, point, color, hexbinRadius, group) {
       let str = ''
       let valueStr = ''
       const self = this
@@ -202,12 +248,12 @@ export default {
         str += ''
       }
       if (str && valueStr) {
-        const fObj = svg.append('foreignObject')
+        const fObj = group.append('foreignObject')
           .attr('width', hexWidth || 60)
-          .attr('height', 20)
+          .attr('height', 24)
         fObj
           .attr('x', vals[0] - hexWidth / 2)
-          .attr('y', vals[1] - 16)
+          .attr('y', vals[1] - 24)
           // .text(str)
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'central')
@@ -216,7 +262,7 @@ export default {
         const scrollDiv = fObj.append('xhtml:div')
         scrollDiv
           .html(`<div style="color:${textColor};width:${hexWidth}px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px;box-sizing: border-box;padding: 0 10px;text-align: center">${str}</div>`)
-        svg.append('text')
+        group.append('text')
           .attr('x', vals[0])
           .attr('y', vals[1] + 16)
           .text(valueStr)
@@ -227,9 +273,9 @@ export default {
         return
       }
       if (str) {
-        const fObj = svg.append('foreignObject')
+        const fObj = group.append('foreignObject')
           .attr('width', hexWidth || 60)
-          .attr('height', 20)
+          .attr('height', 24)
         fObj
           .attr('x', vals[0] - hexWidth / 2)
           .attr('y', vals[1] - 10)
@@ -244,7 +290,7 @@ export default {
         return
       }
       if (valueStr) {
-        svg.append('text')
+        group.append('text')
           .attr('x', vals[0])
           .attr('y', vals[1])
           .text(valueStr)
@@ -315,6 +361,15 @@ export default {
         }
         resolve({ col, row, radius: radius - 2 })
       })
+    },
+    clearCache () {
+      return new Promise(resolve => {
+        // if (this.svgDom) {
+        //   const dom = document.getElementById(this.svgDom)
+        //   dom.off('mousemove', this.hexagonMove)
+        // }
+        resolve()
+      })
     }
   },
   created () {
@@ -327,6 +382,9 @@ export default {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
     this.chartInfo.loaded && this.initChart(this.chartOption)
+  },
+  beforeDestroy () {
+    this.clearCache()
   }
 }
 </script>
