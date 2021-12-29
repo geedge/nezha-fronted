@@ -32,7 +32,7 @@ import chartFormat from '@/components/chart/chartFormat'
 import { getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/charts/chartDataFormat'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
-import {initColor} from "@/components/chart/chart/tools";
+import { initColor } from '@/components/chart/chart/tools'
 
 export default {
   name: 'chart-stat',
@@ -42,7 +42,8 @@ export default {
       statData: [],
       boxWidth: 0,
       boxHeight: 0,
-      boxPadding: 5
+      boxPadding: 5,
+      statTimer: null
     }
   },
   methods: {
@@ -140,9 +141,15 @@ export default {
       this.isInit = false
     },
     resize () {
-      this.getLayout().then(layout => {
-        this.renderStat(layout)
-      })
+      if (this.statTimer) {
+        clearTimeout(this.statTimer)
+        this.statTimer = null
+      }
+      this.statTimer = setTimeout(() => {
+        this.getLayout().then(layout => {
+          this.renderStat(layout)
+        })
+      }, 50)
     }
   },
   mounted () {

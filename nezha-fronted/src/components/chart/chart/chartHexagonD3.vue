@@ -41,7 +41,8 @@ export default {
         show: false
       },
       svgDom: null,
-      spaceBetweenHexa: 3
+      spaceBetweenHexa: 3,
+      hexagonTimer: null
     }
   },
   methods: {
@@ -376,9 +377,15 @@ export default {
       })
     },
     resize () {
-      this.getLayout().then(layout => {
-        this.initHexagon(layout)
-      })
+      if (this.hexagonTimer) {
+        clearTimeout(this.hexagonTimer)
+        this.hexagonTimer = null
+      }
+      this.hexagonTimer = setTimeout(() => {
+        this.getLayout().then(layout => {
+          this.initHexagon(layout)
+        })
+      }, 50)
     }
   },
   created () {
