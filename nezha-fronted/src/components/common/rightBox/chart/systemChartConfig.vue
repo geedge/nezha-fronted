@@ -7,8 +7,10 @@
       label-position= "top"
       label-width="120px"
     >
-      <div class="chart-title chart-title-config">
-       <span class="chart-title-content el-form-item" :class="{
+
+      <div  v-loading="loading" v-for="(item, index) in chartConfig.param.datasource " :key="index" class="chart-system-top-box">
+        <div class="chart-title chart-title-config">
+            <span class="chart-title-content el-form-item" :class="{
               'is-error' : systemNameShow[0].error,
               'hide-input': systemNameShow[0].hideInput
             }">
@@ -24,74 +26,91 @@
               />
               <div v-if="systemNameShow[0].error"  class="el-form-item__error" style="top: 10px;left: 164px"> {{systemNameShow[0].error}}</div>
         </span>
-      </div>
-      <transition name="el-zoom-in-top">
-        <div class="system-chart-config" v-loading="loading" v-for="(item, index) in chartConfig.param.datasource " :key="index" v-show="systemNameShow[0].show">
-        <div class="system-chart-config-left">
-          <ul>
-            <li
-              v-for="(system,index1) in systemData"
-              :key="index1"
-              class="system-chart-item"
-              :class="system.name == chartConfig.param.datasource[index].type  ? 'is-select' : ''"
-              @click="changeSystem(system, index)"
-            >{{system.name}}</li>
-          </ul>
-        </div>
-        <div class="system-chart-config-right">
-          <div class="form-items--half-width-group">
-            <el-form-item
-              :label="$t('dashboard.panel.chartForm.dimension')"
-              class="form-item--half-width"
-              prop="param.systemGroup"
-            >
-              <el-select size="small" v-model="item.systemGroup" multiple collapse-tags :placeholder="$t('el.select.placeholder')" @change="systemGroupChange(index)"   popper-class="right-box-select-top prevent-clickoutside">
-                  <el-option v-for="group in groupList" :value="group.name" :key="group.name" :label="group.name"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item
-              v-if="selectList.length"
-              :label="$t('dashboard.panel.chartForm.select')"
-              class="form-item--half-width"
-              prop="param.systemSelect"
-            >
-              <el-select size="small" v-model="item.systemSelect" :placeholder="$t('el.select.placeholder')" @change="systemSelectChange(index)" popper-class="right-box-select-top prevent-clickoutside">
-                <el-option v-for="selectItem in selectList" :value="selectItem.name" :key="selectItem.name" :label="selectItem.name"/>
-              </el-select>
-            </el-form-item>
           </div>
-          <div class="form-items--half-width-group">
-            <el-form-item
-              :label="$t('dashboard.panel.chartForm.sort')"
-              class="form-item--half-width"
-              prop="param.sort"
-            >
-              <el-select
-                id="chart-box-height"
-                v-model="item.sort"
-                placeholder=""
-                popper-class="right-box-select-top prevent-clickoutside"
-                size="small"
-                value-key="chartSpan"
-                @change="change"
-              >
-                <el-option :value="'desc'" :label="$t('dashboard.explore.descending')">
-                </el-option>
-                <el-option :value="'asc'" :label="$t('dashboard.explore.ascending')">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item
-              :label="$t('dashboard.panel.chartForm.limit')"
-              class="form-item--half-width"
-              prop="param.limit"
-            >
-              <el-input-number :controls="false" v-model.number="item.limit" :placeholder="$t('placeholder.system.limit')"  size="small" @change="change"/>
-            </el-form-item>
+        <transition name="el-zoom-in-top">
+          <div  v-show="systemNameShow[0].show">
+            <div class="system-chart-config">
+              <div class="system-chart-config-left">
+                <ul>
+                  <li
+                    v-for="(system,index1) in systemData"
+                    :key="index1"
+                    class="system-chart-item"
+                    :class="system.name == chartConfig.param.datasource[index].type  ? 'is-select' : ''"
+                    @click="changeSystem(system, index)"
+                  >{{system.name}}</li>
+                </ul>
+              </div>
+              <div class="system-chart-config-right">
+                <div class="form-items--half-width-group">
+                  <el-form-item
+                    :label="$t('dashboard.panel.chartForm.dimension')"
+                    class="form-item--half-width"
+                    prop="param.systemGroup"
+                  >
+                    <el-select size="small" v-model="item.systemGroup" multiple collapse-tags :placeholder="$t('el.select.placeholder')" @change="systemGroupChange(index)"   popper-class="right-box-select-top prevent-clickoutside">
+                      <el-option v-for="group in groupList" :value="group.name" :key="group.name" :label="group.name"/>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item
+                    v-if="selectList.length"
+                    :label="$t('dashboard.panel.chartForm.select')"
+                    class="form-item--half-width"
+                    prop="param.systemSelect"
+                  >
+                    <el-select size="small" v-model="item.systemSelect" :placeholder="$t('el.select.placeholder')" @change="systemSelectChange(index)" popper-class="right-box-select-top prevent-clickoutside">
+                      <el-option v-for="selectItem in selectList" :value="selectItem.name" :key="selectItem.name" :label="selectItem.name"/>
+                    </el-select>
+                  </el-form-item>
+                </div>
+                <div class="form-items--half-width-group">
+                  <el-form-item
+                    :label="$t('dashboard.panel.chartForm.sort')"
+                    class="form-item--half-width"
+                    prop="param.sort"
+                  >
+                    <el-select
+                      id="chart-box-height"
+                      v-model="item.sort"
+                      placeholder=""
+                      popper-class="right-box-select-top prevent-clickoutside"
+                      size="small"
+                      value-key="chartSpan"
+                      @change="change"
+                    >
+                      <el-option :value="'desc'" :label="$t('dashboard.explore.descending')">
+                      </el-option>
+                      <el-option :value="'asc'" :label="$t('dashboard.explore.ascending')">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item
+                    :label="$t('dashboard.panel.chartForm.limit')"
+                    class="form-item--half-width"
+                    prop="param.limit"
+                  >
+                    <el-input-number :controls="false" v-model.number="item.limit" :placeholder="$t('placeholder.system.limit')"  size="small" @change="change"/>
+                  </el-form-item>
+                </div>
+              </div>
+            </div>
+            <el-row style="display: flex">
+              <el-col class="legend-title">
+                <span class="legend-title__span">{{$t('dashboard.panel.chartForm.legend')}}&nbsp;</span>
+                <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
+                  <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
+                  <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                </el-popover>
+              </el-col>
+              <el-col style="flex: 1">
+                <el-form-item style="margin: 0 0 10px 0">
+                  <el-input size="small" v-model="item.legend" @change="change" style="line-height: 32px"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
           </div>
+        </transition>
         </div>
-      </div>
-      </transition>
       <!--title-->
       <div class="form__sub-title">
         <span>{{$t('dashboard.panel.chartForm.displayConfig')}}</span>
@@ -638,7 +657,7 @@ export default {
               this.chartConfig.param.datasource[0].type = this.systemData[0].name
               this.groupList = this.systemData[0].group
               this.selectList = this.systemData[0].select
-            }  else {
+            } else {
               const system = this.systemData.find(item => item.name === this.chartConfig.param.datasource[0].type)
               this.chartConfig.param.system = system.name
               this.groupList = system.group

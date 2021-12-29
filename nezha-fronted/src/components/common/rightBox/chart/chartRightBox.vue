@@ -354,7 +354,8 @@ export default {
               group: '',
               select: '',
               limit: 100,
-              sort: 'desc'
+              sort: 'desc',
+              legend: ''
             }
             ],
             valueMapping: []
@@ -438,6 +439,9 @@ export default {
           }
           if (this.editChart.param.enable.legend && !this.editChart.param.legend) {
             this.editChart.param.legend = { placement: 'bottom', values: [], show: true }
+          }
+          if (this.editChart.param.datasource && !this.editChart.param.datasource[0].legend) {
+            this.editChart.param.datasource[0].legend = ''
           }
         }
       }

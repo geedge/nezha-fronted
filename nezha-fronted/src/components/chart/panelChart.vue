@@ -244,6 +244,7 @@ export default {
             break
           }
           case 'system': {
+            this.chartInfo.elements = this.chartInfo.param.datasource
             if (this.chartInfo.type === 'assetInfo') {
               this.$get('asset/asset/' + this.chartDetailInfo.id).then(res => {
                 this.chartData = res.data

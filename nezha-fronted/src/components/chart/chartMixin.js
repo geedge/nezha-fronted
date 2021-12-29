@@ -110,7 +110,7 @@ export default {
         legend = chartInfo.elements[expressionIndex].expression
       }
       // 处理legend别名
-      alias = chartInfo.datasource === 'system' ? '' : (alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend))
+      alias = alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
       if (!alias) {
         alias = legend
       }
