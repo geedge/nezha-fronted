@@ -108,6 +108,7 @@ export default {
         }
       }
       chartOption.tooltip.formatter = this.formatterFunc
+      chartOption.tooltip.position = this.tooltipPosition
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
         const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartId}`)) : getChart(this.chartId)

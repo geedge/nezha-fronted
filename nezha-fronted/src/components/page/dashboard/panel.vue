@@ -170,7 +170,7 @@ export default {
       panelTabLoading: false,
       overScroll10: false,
       isLoading: true,
-      panelLock: false,
+      panelLock: true,
       showTopBtn: false, // top按钮
       visible: false,
       chartListLoading: true,
