@@ -26,7 +26,7 @@ const chartClockOption = {
         }
       },
       axisLabel: {
-        fontSize: 50,
+        fontSize: 14,
         distance: 25,
         formatter: function (value) {
           if (value === 0) {

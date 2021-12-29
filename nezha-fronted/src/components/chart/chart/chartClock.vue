@@ -24,6 +24,7 @@ import { chartLegendPlacement } from '@/components/common/js/constants'
 import * as echarts from 'echarts'
 import { getChart, setChart } from '@/components/common/js/common'
 import { initColor } from '@/components/chart/chart/tools'
+import bus from '@/libs/bus'
 
 export default {
   name: 'chart-clock',
@@ -70,20 +71,34 @@ export default {
         inactive: '#7e7e7e'
       },
       chartId: '',
-      chartTime: ''
+      chartTime: null,
+      localTimer: null,
+      serverTimer: null,
+      setTimer: null,
+      sysTime: ''
     }
   },
   methods: {
+    querySystemState () {
+      this.$get('/healthy').then(response => {
+        if (response.code == 200) {
+          if (response.time) {
+            this.chartTime = this.utcTimeToTimezone(response.time)
+            this.sysTime = this.getTime()
+          }
+        }
+      })
+    },
     initChart (chartOption = this.chartOption) {
-      let _seft = this
+      const _soft = this
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
-      setTimeout(() => {
+      this.setTimer = setTimeout(() => {
         const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartId}`)) : getChart(this.chartId)
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
         this.isInit = false
         if (this.chartInfo.param && this.chartInfo.param.timeType === 'local') {
-          setInterval(function () {
+          _soft.localTimer = setInterval(function () {
             const date = new Date()
             const second = date.getSeconds()
             const minute = date.getMinutes() + second / 60
@@ -98,40 +113,40 @@ export default {
               animation: minute !== 0,
               data: [{ value: minute }]
             }, {
-              name: 'minute',
+              name: 'second',
               animation: second !== 0,
               data: [{ value: second }]
             }]
             myChart.setOption(chartOption)
           }, 1000)
         } else {
-          setInterval(function () {
-            _seft.$get('/healthy').then((res) => {
-              this.chartTime = res.time
-              console.log(res)
-            })
-            const date = new Date(this.chartTime)
-            const second = date.getSeconds()
-            const minute = date.getMinutes() + second / 60
-            const hour = (date.getHours() % 12) + minute / 60
+          _soft.serverTimer = setInterval(function () {
+            _soft.querySystemState()
             chartOption.animationDurationUpdate = 300
             chartOption.series = [{
               name: 'hour',
-              animation: hour !== 0,
-              data: [{ value: hour }]
+              animation: _soft.sysTime.hour !== 0,
+              data: [{ value: _soft.sysTime.hour }]
             }, {
               name: 'minute',
-              animation: minute !== 0,
-              data: [{ value: minute }]
+              animation: _soft.sysTime.minute !== 0,
+              data: [{ value: _soft.sysTime.minute }]
             }, {
-              name: 'minute',
-              animation: second !== 0,
-              data: [{ value: second }]
+              name: 'second',
+              animation: _soft.sysTime.second !== 0,
+              data: [{ value: _soft.sysTime.second }]
             }]
             myChart.setOption(chartOption)
           }, 1000)
         }
       }, 200)
+    },
+    getTime () {
+      const date = new Date(this.chartTime)
+      const second = date.getSeconds()
+      const minute = date.getMinutes() + second / 60
+      const hour = (date.getHours() % 12) + minute / 60
+      return { hour, minute, second }
     }
   },
   mounted () {
@@ -142,6 +157,11 @@ export default {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
     this.chartInfo.loaded && this.initChart(this.chartOption)
+  },
+  destroyed () {
+    clearInterval(this.localTimer)
+    clearInterval(this.serverTimer)
+    clearInterval(this.setTimer)
   }
 }
 </script>
