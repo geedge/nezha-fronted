@@ -370,6 +370,11 @@ export default {
         // }
         resolve()
       })
+    },
+    resize () {
+      this.getLayout().then(layout => {
+        this.initHexagon(layout)
+      })
     }
   },
   created () {
