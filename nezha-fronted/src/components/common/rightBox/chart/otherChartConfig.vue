@@ -217,7 +217,6 @@ export default {
       this.chartConfig = JSON.parse(JSON.stringify(this.params))
     },
     chartTypeChange (type) {
-      console.log(type)
       switch (type) {
         case 'group':
           this.chartConfig.span = 12
@@ -246,7 +245,8 @@ export default {
           break
         case 'clock':
           this.chartConfig.param = {
-            timeType: this.chartConfig.param.timeType
+            link: this.chartConfig.param.link,
+            timeType: 'local'
           }
           break
       }

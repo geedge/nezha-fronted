@@ -429,6 +429,6 @@ export default {
           break;
       }
       this.change()
-    },
+    }
   }
 }
