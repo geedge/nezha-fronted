@@ -6,6 +6,7 @@
 
 <script>
 import * as d3 from 'd3'
+import { SVG } from '@svgdotjs/svg.js'
 import hexbin from '@/components/chart/chart/options/chartHexagonD3'
 import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
@@ -123,7 +124,7 @@ export default {
       // Initial Geometrical Calculations
       const self = this
       const hexaRadius = hexaRadiu
-      const spaceBetweenHexa = 0.5 // Number of pixels of space between consecutive hexagons
+      const spaceBetweenHexa = 2 // Number of pixels of space between consecutive hexagons
       const hexaWidth = hexaRadius * 2 // Calculates Width of the Hexagons with specified radius
       const hexaHeight = hexaRadius * Math.sqrt(3) // Calculates Width of the Hexagons ...
       const rows = row // Number of desired Rows
@@ -152,7 +153,7 @@ export default {
         hexa.attr('fill', color) // Paints hexagon
         hexa.on('mouseenter', self.hexagonOver.bind(self, hexa))
         hexa.on('mouseleave', self.hexagonOut.bind(self, hexa))
-        self.drawText(svg, vals, point, color) // 文本
+        self.drawText(svg, vals, point, color, hexaRadius) // 文本
         data[i].fcolor = color
       }
       return svg.node()
@@ -177,21 +178,18 @@ export default {
     drawHexagon (svg, radius, space, x, y, hexbin) {
       const hexagon = svg.append('path')
         .attr('d', hexbin.hexagon(radius - space))
+        .attr('stroke', '#000')
         .attr('transform', 'translate(' + x + ',' + y + ')')
       return hexagon
     },
-    drawText (svg, vals, point, color) {
+    drawText (svg, vals, point, color, hexbinRadius) {
       let str = ''
       let valueStr = ''
       const self = this
+      const hexWidth = hexbinRadius * Math.sqrt(3)
+      const textColor = point.mapping ? point.mapping.color.text : this.invertColor(color)
       if (this.chartInfo.param.text === 'all') {
         str += point.alias
-        let strLength = str
-        // eslint-disable-next-line no-unused-expressions
-        strLength = strLength.replace(/[\u0391-\uFFE5]/g, 'aa').length
-        if (strLength >= 15) {
-          str = str.slice(0, 12) + '...'
-        }
         valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.labels, value: point.showValue }) : point.showValue
       }
       if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
@@ -199,25 +197,25 @@ export default {
       }
       if (this.chartInfo.param.text === 'legend') {
         str += point.alias
-        let strLength = str
-        // eslint-disable-next-line no-unused-expressions
-        strLength = strLength.replace(/[\u0391-\uFFE5]/g, 'aa').length
-        if (strLength >= 15) {
-          str = str.slice(0, 12) + '...'
-        }
       }
       if (this.chartInfo.param.text === 'none') {
         str += ''
       }
       if (str && valueStr) {
-        svg.append('text')
-          .attr('x', vals[0])
+        const fObj = svg.append('foreignObject')
+          .attr('width', hexWidth || 60)
+          .attr('height', 20)
+        fObj
+          .attr('x', vals[0] - hexWidth / 2)
           .attr('y', vals[1] - 16)
-          .text(str)
+          // .text(str)
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'central')
           .style('font-size', 16)
-          .style('fill', this.invertColor(color))
+          .style('fill', textColor)
+        const scrollDiv = fObj.append('xhtml:div')
+        scrollDiv
+          .html(`<div style="color:${textColor};width:${hexWidth}px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px;box-sizing: border-box;padding: 0 10px;text-align: center">${str}</div>`)
         svg.append('text')
           .attr('x', vals[0])
           .attr('y', vals[1] + 16)
@@ -225,18 +223,24 @@ export default {
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'central')
           .style('font-size', 16)
-          .style('fill', this.invertColor(color))
+          .style('fill', textColor)
         return
       }
       if (str) {
-        svg.append('text')
-          .attr('x', vals[0])
-          .attr('y', vals[1])
-          .text(str)
+        const fObj = svg.append('foreignObject')
+          .attr('width', hexWidth || 60)
+          .attr('height', 20)
+        fObj
+          .attr('x', vals[0] - hexWidth / 2)
+          .attr('y', vals[1] - 10)
+          // .text(str)
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'central')
           .style('font-size', 16)
-          .style('fill', this.invertColor(color))
+          .style('fill', textColor)
+        const scrollDiv = fObj.append('xhtml:div')
+        scrollDiv
+          .html(`<div style="color:${textColor};width:${hexWidth}px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px;box-sizing: border-box;padding: 0 10px;text-align: center">${str}</div>`)
         return
       }
       if (valueStr) {
@@ -247,7 +251,7 @@ export default {
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'central')
           .style('font-size', 16)
-          .style('fill', this.invertColor(color))
+          .style('fill', textColor)
       }
     },
     getCenter (hexaRadius, row, col) {
@@ -309,7 +313,7 @@ export default {
           col = row
           row = temp
         }
-        resolve({ col, row, radius })
+        resolve({ col, row, radius: radius - 2 })
       })
     }
   },
