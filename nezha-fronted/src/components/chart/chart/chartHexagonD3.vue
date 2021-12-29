@@ -40,7 +40,8 @@ export default {
         value: 0,
         show: false
       },
-      svgDom: null
+      svgDom: null,
+      spaceBetweenHexa: 3
     }
   },
   methods: {
@@ -141,7 +142,7 @@ export default {
       // Initial Geometrical Calculations
       const self = this
       const hexaRadius = hexaRadiu
-      const spaceBetweenHexa = 2 // Number of pixels of space between consecutive hexagons
+      const spaceBetweenHexa = this.spaceBetweenHexa // Number of pixels of space between consecutive hexagons
       const hexaWidth = hexaRadius * 2 // Calculates Width of the Hexagons with specified radius
       const hexaHeight = hexaRadius * Math.sqrt(3) // Calculates Width of the Hexagons ...
       const rows = row // Number of desired Rows
@@ -225,6 +226,9 @@ export default {
       const hexagon = svg.append('path')
         .attr('d', hexbin.hexagon(radius - space))
         .attr('stroke', '#000')
+        .attr('stroke-linecap', 'round')
+        .attr('stroke-linejoin', 'round')
+        .attr('stroke-width', 1)
         .attr('transform', 'translate(' + x + ',' + y + ')')
       return hexagon
     },
@@ -359,7 +363,7 @@ export default {
           col = row
           row = temp
         }
-        resolve({ col, row, radius: radius - 2 })
+        resolve({ col, row, radius: radius - this.spaceBetweenHexa })
       })
     },
     clearCache () {
