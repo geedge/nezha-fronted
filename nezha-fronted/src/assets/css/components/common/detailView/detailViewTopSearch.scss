@@ -41,6 +41,12 @@
     max-width: 100px;
   }
 }
+.detail-top-search-dropdown.right-box-max-width {
+  .el-dropdown-menu__item {
+    max-width: unset;
+    min-width: 200px;
+  }
+}
 .detail-top-search-dropdown{
   max-height: 300px;
   overflow-y: auto;
@@ -52,10 +58,10 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     display: flex;
+    justify-content: space-between;
     .el-checkbox{
       width: calc(100% - 20px);
       height: 36px;
-      padding: 0 0 0 20px;
       display: flex;
       align-items: center;
       .el-checkbox__label{
@@ -72,11 +78,14 @@
     .children-title-name{
       width: calc(100% - 20px);
       height: 36px;
-      padding-left: 20px;
+      padding-right: 20px;
       font-size: 12px;
       color: $--color-text-secondary;
       line-height: 30px;
     }
+  }
+  .el-checkbox-group {
+    padding: 0 20px;
   }
   .el-dropdown-menu__item:not(.is-disabled):hover{
     color: $--color-text-secondary;

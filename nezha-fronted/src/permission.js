@@ -5,6 +5,7 @@ import ElementUI from 'element-ui'
 import Vue from 'vue'
 import i18n, { loadI18n } from './components/common/i18n'
 import VueResource from 'vue-resource'
+import bus from "@/libs/bus";
 
 Vue.use(VueResource)
 
@@ -39,11 +40,18 @@ router.beforeEach((to, from, next) => {
               next({ path: '/setup' })
             } else {
               if (localStorage.getItem('nz-token')) {
-                next({
-                  path: 'overview',
-                  query: {
-                    t: +new Date()
-                  }
+                post('/sys/user/permissions', { token: localStorage.getItem('nz-token') }).then(res => {
+                  const menuList = sortByOrderNum(res.data.menus)
+                  store.commit('setMenuList', menuList)
+                  store.commit('setButtonList', res.data.buttons)
+                  store.commit('setRoleList', res.data.roles)
+                  bus.$emit('login')
+                  router.push({
+                    path: menuList[0].children[0].route,
+                    query: {
+                      t: +new Date()
+                    }
+                  })
                 })
               } else {
                 next()

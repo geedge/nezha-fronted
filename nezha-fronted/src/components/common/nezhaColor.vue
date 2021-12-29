@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div v-if="showColorPicker" class="vue-color" :style="{top:position.y+'px',left:position.x+'px'}" ref="colorBox">
+    <div v-if="showColorPicker" class="vue-color right-box-select-top" :style="{top:position.y+'px',left:position.x+'px'}" ref="colorBox">
       <el-row v-if="!single" class="color-tab">
         <div v-for="item in valueArr" :key="item.key" :class="[keyName==item.name?'color-active':'']" @click="colorTabChange(item)">{{item.name}}</div>
       </el-row>

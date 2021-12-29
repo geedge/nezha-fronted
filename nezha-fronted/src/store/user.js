@@ -83,7 +83,7 @@ const user = {
         store.commit('setRoleList', res.data.roles)
         bus.$emit('login')
         router.push({
-          path: menuList[0].children[0].name,
+          path: menuList[0].children[0].route,
           query: {
             t: +new Date()
           }
