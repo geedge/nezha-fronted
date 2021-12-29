@@ -362,12 +362,49 @@ export default {
       }
     },
     // 编辑图表信息,打开编辑弹窗
-    editChart (data) {
-      if (!data.param) {
-        data.param = { url: '', threshold: '' }
+    editChart (data, copy) {
+      if (copy) {
+        this.chart = JSON.parse(JSON.stringify(data))
+        this.chart.x = 0
+        this.chart.y = 0
+        this.chart.panelId = this.showPanel.id
+        this.chart.panelName = this.showPanel.name
+        this.chart.id = ''
+        this.chart.elements.forEach((item) => {
+          item.id = ''
+          item.chartId = ''
+          delete item.seq
+        })
+        if (this.chart.datasource !== 'metrics' && this.chart.datasource !== 'log') {
+          delete this.chart.elements
+        }
+      } else {
+        this.rightBox.loading = true
+        this.$get('visual/panel/chart/' + data.id).then(res => {
+          this.rightBox.loading = false
+          if (res.code === 200) {
+            const chartData = res.data.data
+            this.chart = JSON.parse(JSON.stringify(chartData))
+            this.chart.panelId = this.showPanel.id
+            this.chart.panelName = this.showPanel.name
+            this.chart.param = JSON.parse(this.chart.param)
+            if (!this.chart.groupId || this.chart.groupId == -1) {
+              this.chart.groupId = ''
+            }
+            if (this.chart.type == 'table') {
+              const arr = this.chart.param.indexs ? this.chart.param.indexs.split(',') : []
+              this.chart.param.tags = arr.map((item) => {
+                return {
+                  text: item,
+                  tiClasses: ['ti-valid']
+                }
+              })
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
       }
-      this.chart = JSON.parse(JSON.stringify(data))
-      this.rightBox.chart.show = true
     },
     // 移除图表:弹出确认框询问
     delChart (data, from) {

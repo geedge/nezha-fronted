@@ -416,6 +416,8 @@ export default {
     editChart (data, copy) {
       if (copy) {
         this.chart = JSON.parse(JSON.stringify(data))
+        this.chart.x = 0
+        this.chart.y = 0
         this.chart.panelId = this.showPanel.id
         this.chart.panelName = this.showPanel.name
         this.chart.id = ''
@@ -424,6 +426,9 @@ export default {
           item.chartId = ''
           delete item.seq
         })
+        if (this.chart.datasource !== 'metrics' && this.chart.datasource !== 'log') {
+          delete this.chart.elements
+        }
       } else {
         this.rightBox.loading = true
         this.$get('visual/panel/chart/' + data.id).then(res => {
