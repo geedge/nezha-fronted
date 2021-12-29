@@ -429,6 +429,9 @@ export default {
         if (this.chart.datasource !== 'metrics' && this.chart.datasource !== 'log') {
           delete this.chart.elements
         }
+        if (!this.chart.groupId || this.chart.groupId == -1) {
+          this.chart.groupId = ''
+        }
       } else {
         this.rightBox.loading = true
         this.$get('visual/panel/chart/' + data.id).then(res => {

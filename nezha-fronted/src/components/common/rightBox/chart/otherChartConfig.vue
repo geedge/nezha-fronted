@@ -202,10 +202,6 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.topology.label')
         },
         {
-          id: 'hexagon',
-          name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
-        },
-        {
           id: 'clock',
           name: this.$t('dashboard.panel.chartForm.typeVal.clock.label')
         }
