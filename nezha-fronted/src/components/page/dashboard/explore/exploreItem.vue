@@ -131,7 +131,13 @@
                       :resizable="false"
                       min-width="110px"
                       show-overflow-tooltip
-                    ></el-table-column>
+                    >
+                      <template slot-scope="scope" :column="item">
+                        <template v-if="item.prop === 'time'">{{utcTimeToTimezoneStr(scope.row.time)}}</template>
+                        <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+                        <template v-else>-</template>
+                      </template>
+                    </el-table-column>
                     <template slot="empty">
                       <div v-if="!tools.loading" class="table-no-data">
                         <svg class="icon" aria-hidden="true">

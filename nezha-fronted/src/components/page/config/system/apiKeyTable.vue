@@ -55,8 +55,8 @@
                   style="width: 100%;"
                   v-model="scope.row[item.prop]"
                   prefix-icon=" " size="small" ref="calendar"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  value-format="yyyy-MM-dd HH:mm:ss"
+                  :format="apiKeyTableTime"
+                  :value-format="apiKeyTableTime"
                   type="datetime"
                   popper-class="item-system-table right-public-box-dropdown-top right-box-select-top"
                   :picker-options="pickerOptions"
@@ -165,7 +165,8 @@ export default {
         disabledDate (time) {
           return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
         }
-      }
+      },
+      apiKeyTableTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'
     }
   },
   methods: {

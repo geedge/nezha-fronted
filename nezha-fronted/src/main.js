@@ -102,9 +102,9 @@ Vue.mixin({
         return bus.UTCTimeToConfigTimezone(time)
       }
     },
-    utcTimeToTimezoneStr: function (time, format = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss') {
+    utcTimeToTimezoneStr: function (time) {
       if (time) {
-        return bus.timeFormate(bus.UTCTimeToConfigTimezone(time), format)
+        return bus.timeFormate(bus.UTCTimeToConfigTimezone(time), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
       } else {
         return '-'
       }
@@ -114,18 +114,17 @@ Vue.mixin({
         return bus.configTimezoneToUTCTime(time)
       }
     },
-    timezoneToUtcTimeStr: function (time, format = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss') {
+    timezoneToUtcTimeStr: function (time) {
       if (time) {
-        return bus.timeFormate(this.timezoneToUtcTime(time), format)
+        return bus.timeFormate(this.timezoneToUtcTime(time), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
       }
     },
-    timestampStr: function (time, format = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss') {
+    timestampStr: function (time) {
       const date = new Date(time)
       const localOffset = date.getTimezoneOffset() * 60 * 1000 // 默认 一分钟显示时区偏移的结果
-      let dateStr = new Date(time).getTime() + localOffset
-      dateStr = bus.timeFormate(dateStr, format)
+      const dateStr = new Date(time).getTime() + localOffset
       if (time) {
-        return bus.timeFormate(bus.UTCTimeToConfigTimezone(dateStr), format)
+        return bus.timeFormate(bus.UTCTimeToConfigTimezone(dateStr), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
       } else {
         return '-'
       }

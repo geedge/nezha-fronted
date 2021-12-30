@@ -38,7 +38,7 @@
               <div class="datepicker-box">
                 <span class="datepicker-title">{{ $t("overall.startTime") }}</span>
                 <my-date-picker ref="calendar" v-model="editAlertSilence.startAt" :clearable="false" :placeholder="$t('dashboard.panel.startTime')"
-                                align="right" class=" " format="yyyy/MM/dd HH:mm:ss"
+                                align="right" class=" " :format="alertSilenceTime"
                                 popper-class="panel-time-picker-popper right-box-select-top"
                                 prefix-icon=" "
                                 size="mini"
@@ -50,7 +50,7 @@
               <div class="datepicker-box">
                 <span class="datepicker-title">{{ $t("overall.endTime") }}</span>
                 <my-date-picker ref="calendar" v-model="editAlertSilence.endAt" :clearable="false" :placeholder="$t('dashboard.panel.startTime')"
-                                align="right" class=" " format="yyyy/MM/dd HH:mm:ss"
+                                align="right" class=" " :format="alertSilenceTime"
                                 popper-class="panel-time-picker-popper right-box-select-top"
                                 prefix-icon=" "
                                 size="mini"
@@ -209,7 +209,8 @@ export default {
       moduleData: null,
       endpointData: null,
       startAtTamp: '',
-      endAtTamp: ''
+      endAtTamp: '',
+      alertSilenceTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'
     }
   },
   mounted () {
@@ -294,10 +295,10 @@ export default {
     },
     dateChange (val, type) {
       if (type === 'startAt') {
-        this.editAlertSilence.startAt = bus.timeFormate(new Date(val), 'yyyy-MM-dd hh:mm:ss')
+        this.editAlertSilence.startAt = bus.timeFormate(new Date(val), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
         this.startAtTamp = new Date(val).getTime()
       } else if (type === 'endAt') {
-        this.editAlertSilence.endAt = bus.timeFormate(new Date(val), 'yyyy-MM-dd hh:mm:ss')
+        this.editAlertSilence.endAt = bus.timeFormate(new Date(val), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
         this.endAtTamp = new Date(val).getTime()
       }
       this.$forceUpdate()
@@ -312,7 +313,7 @@ export default {
       }
     },
     rangeTimeChange (val) {
-      const arr = [bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss'), bus.timeFormate(bus.getOffsetTimezoneData(val * 1), 'yyyy-MM-dd hh:mm:ss')]
+      const arr = [bus.timeFormate(bus.getOffsetTimezoneData(), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'), bus.timeFormate(bus.getOffsetTimezoneData(val * 1), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')]
       this.$set(this.editAlertSilence, 'startAt', arr[0])
       this.$set(this.editAlertSilence, 'endAt', arr[1])
       this.startAtTamp = new Date(this.editAlertSilence.startAt).getTime()

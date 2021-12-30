@@ -40,7 +40,8 @@
           clearable
           :time-arrow-control="true"
           placeholder="Moment"
-          value-format="yyyy-MM-dd HH:mm:ss"
+          :value-format="endpointQueryTabTime"
+          :format="endpointQueryTabTime"
           @change="pickTime"
         >
           </my-date-picker><button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>
@@ -173,7 +174,8 @@ export default {
       plTableSHow: true,
       scrollTop: 0,
       scrollbarWrap: null,
-      minusTime: 0
+      minusTime: 0,
+      endpointQueryTabTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'
     }
   },
   methods: {

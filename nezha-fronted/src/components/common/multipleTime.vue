@@ -4,7 +4,7 @@
     <transition>
       <div v-show="showDropdown" id="panel-calender" class="calendar">
         <my-date-picker prefix-icon=" " size="mini" ref="calendar"
-                        format="yyyy/MM/dd HH:mm:ss" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
+                        :format="multipleTime" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
                         popper-class="panel-time-picker-popper"
                         align="right">
         </my-date-picker>
@@ -159,7 +159,8 @@ export default {
       },
       isPopoverDisabled: false,
       isCustom: false,
-      valueArr: []
+      valueArr: [],
+      multipleTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'
     }
   },
   watch: {
@@ -170,8 +171,8 @@ export default {
           if (this.showTime.value) {
             this.setSearchTime(this.showTime.type, this.showTime.value)
           } else {
-            const startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-            const endTime = bus.timeFormate(new Date(this.searchTime[0]).getTime() + new Date(this.stepSearchTime[1]).getTime() - new Date(this.stepSearchTime[0]).getTime(), 'yyyy-MM-dd hh:mm:ss')
+            const startTime = bus.timeFormate(this.searchTime[0], this.multipleTime)
+            const endTime = bus.timeFormate(new Date(this.searchTime[0]).getTime() + new Date(this.stepSearchTime[1]).getTime() - new Date(this.stepSearchTime[0]).getTime(), this.multipleTime)
             this.$set(this.searchTime, 0, startTime)
             this.$set(this.searchTime, 1, endTime)
           }
@@ -197,8 +198,8 @@ export default {
   },
   methods: {
     dateChange (val) {
-      const startTime = bus.timeFormate(val, 'yyyy-MM-dd hh:mm:ss')
-      const endTime = bus.timeFormate(new Date(val).getTime() + new Date(this.stepSearchTime[1]).getTime() - new Date(this.stepSearchTime[0]).getTime(), 'yyyy-MM-dd hh:mm:ss')
+      const startTime = bus.timeFormate(val, this.multipleTime)
+      const endTime = bus.timeFormate(new Date(val).getTime() + new Date(this.stepSearchTime[1]).getTime() - new Date(this.stepSearchTime[0]).getTime(), this.multipleTime)
       this.$set(this.searchTime, 0, startTime)
       this.$set(this.searchTime, 1, endTime)
 
@@ -268,20 +269,20 @@ export default {
     },
     setSearchTime (type, val) {
       if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(this.stepSearchTime[0]).getTime() - val * 60 * 1000, 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(this.stepSearchTime[1]).getTime() - val * 60 * 1000, 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(this.stepSearchTime[0]).getTime() - val * 60 * 1000, this.multipleTime)
+        const endTime = bus.timeFormate(new Date(this.stepSearchTime[1]).getTime() - val * 60 * 1000, this.multipleTime)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'm')
       } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(this.stepSearchTime[0]).getTime() - val * 60 * 60 * 1000, 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(this.stepSearchTime[1]).getTime() - val * 60 * 60 * 1000, 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(this.stepSearchTime[0]).getTime() - val * 60 * 60 * 1000, this.multipleTime)
+        const endTime = bus.timeFormate(new Date(this.stepSearchTime[1]).getTime() - val * 60 * 60 * 1000, this.multipleTime)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'h')
       } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(this.stepSearchTime[0]).getTime() - val * 24 * 60 * 60 * 1000, 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(this.stepSearchTime[1]).getTime() - val * 24 * 60 * 60 * 1000, 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(this.stepSearchTime[0]).getTime() - val * 24 * 60 * 60 * 1000, this.multipleTime)
+        const endTime = bus.timeFormate(new Date(this.stepSearchTime[1]).getTime() - val * 24 * 60 * 60 * 1000, this.multipleTime)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'd')

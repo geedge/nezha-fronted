@@ -276,7 +276,8 @@ export default {
       // ---图表相关参数--end
       scrollbarWrap: null,
       batchDeleteObjs: [],
-      nowTimeType: {}
+      nowTimeType: {},
+      panelDateFormatTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'
     }
   },
   components: {
@@ -300,8 +301,8 @@ export default {
     // 刷新
     Refresh () {
       const curTime = this.$refs.calendarPanel.getCurrentTime()
-      this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss')
-      this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.start_time = bus.timeFormate(curTime[0], this.panelDateFormatTime)
+      this.filter.end_time = bus.timeFormate(curTime[1], this.panelDateFormatTime)
       this.getTableData()
     },
     // 面板相关操作
@@ -532,8 +533,8 @@ export default {
       this.chartListLoading = true
       if (params.start_time === '' || params.end_time === '') {
         const now = bus.getTimezontDateRange()
-        const endTimeTmp = bus.timeFormate(now[1].getTime(), 'yyyy-MM-dd hh:mm:ss')
-        const startTimeTmp = bus.timeFormate(now[0].getTime(), 'yyyy-MM-dd hh:mm:ss')
+        const endTimeTmp = bus.timeFormate(now[1].getTime(), this.panelDateFormatTime)
+        const startTimeTmp = bus.timeFormate(now[0].getTime(), this.panelDateFormatTime)
         params.start_time = startTimeTmp
         params.end_time = endTimeTmp
       }
@@ -559,9 +560,9 @@ export default {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
-      this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
-      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.start_time = bus.timeFormate(this.searchTime[0], this.panelDateFormatTime)
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], this.panelDateFormatTime)
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], this.panelDateFormatTime)
       this.filter.value = this.searchTime[2]
       this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       // this.getTableData()
@@ -580,20 +581,20 @@ export default {
     },
     setSearchTime (type, val, nowTimeType) { // 设置searchTime
       if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), this.panelDateFormatTime)
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.panelDateFormatTime)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'm')
       } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), this.panelDateFormatTime)
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.panelDateFormatTime)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'h')
       } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), this.panelDateFormatTime)
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.panelDateFormatTime)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'd')
@@ -828,9 +829,9 @@ export default {
     })
     if (this.nowTimeType.type) {
       this.setSearchTime(this.nowTimeType.type, this.nowTimeType.value, this.nowTimeType)
-      this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
-      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.start_time = bus.timeFormate(this.searchTime[0], this.panelDateFormatTime)
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], this.panelDateFormatTime)
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], this.panelDateFormatTime)
       this.filter.value = this.searchTime[2]
     }
     this.getTableData()

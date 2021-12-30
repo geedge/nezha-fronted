@@ -39,8 +39,8 @@ export default new Vue({
       end.setEnd()
       // let start = this.getHoursTime(-1);
       // let end = this.getHoursTime(0);
-      start = this.timeFormate(start, 'yyyy-MM-dd hh:mm:ss')
-      end = this.timeFormate(end, 'yyyy-MM-dd hh:mm:ss')
+      start = this.timeFormate(start, localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
+      end = this.timeFormate(end, localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
       this.selectDate = [start, end]
     },
     getHoursTime (hours) {

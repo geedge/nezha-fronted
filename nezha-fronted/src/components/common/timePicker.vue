@@ -1,7 +1,7 @@
 <template>
   <div id="panel-calender" :class="{'calendar--small': size === 'small'}" class="calendar">
     <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
-                    format="yyyy/MM/dd HH:mm:ss" @change="dateChange" v-model="searchTime" type="datetimerange"
+                    :format="timePicker" @change="dateChange" v-model="searchTime" type="datetimerange"
                     popper-class="panel-time-picker-popper time-picker-popover__select-top"
                     :default-time="['00:00:00', '23:59:59']"
                     :range-separator="$t('dashboard.panel.to')"
@@ -67,10 +67,8 @@ export default {
     return {
       isPopoverDisabled: false,
       isCustom: false,
-      searchTime: [
-        bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss'),
-        bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
-      ],
+      timePicker: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss',
+      searchTime: [],
       showTime: {
         id: 4,
         text: this.$t('dashboard.panel.lastOneHour')
@@ -163,8 +161,8 @@ export default {
   },
   methods: {
     dateChange (val) {
-      const startTime = bus.timeFormate(val[0], 'yyyy-MM-dd hh:mm:ss')
-      const endTime = bus.timeFormate(val[1], 'yyyy-MM-dd hh:mm:ss')
+      const startTime = bus.timeFormate(val[0], this.timePicker)
+      const endTime = bus.timeFormate(val[1], this.timePicker)
       this.$set(this.searchTime, 0, startTime)
       this.$set(this.searchTime, 1, endTime)
 
@@ -188,11 +186,11 @@ export default {
           }
           const time = bus.getTimezontDateRange()
           if (timeGroup.start_time) {
-            this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time, 'yyyy-MM-dd hh:mm:ss'))
-            this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time, 'yyyy-MM-dd hh:mm:ss'))
+            this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time, this.timePicker))
+            this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time, this.timePicker))
           } else {
-            this.$set(this.searchTime, 0, bus.timeFormate(time[0], 'yyyy-MM-dd hh:mm:ss'))
-            this.$set(this.searchTime, 1, bus.timeFormate(time[1], 'yyyy-MM-dd hh:mm:ss'))
+            this.$set(this.searchTime, 0, bus.timeFormate(time[0], this.timePicker))
+            this.$set(this.searchTime, 1, bus.timeFormate(time[1], this.timePicker))
           }
         }
       } else {
@@ -261,20 +259,20 @@ export default {
     },
     setSearchTime (type, val) {
       if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), this.timePicker)
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.timePicker)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'm')
       } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), this.timePicker)
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.timePicker)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'h')
       } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), this.timePicker)
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.timePicker)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'd')
@@ -310,7 +308,22 @@ export default {
           }
         }
       }
-    }
+    },
+    stepSearchTime: {
+      immediate: true,
+      handler (n, o) {
+        if (n && this.searchTime[0]) {
+          if (this.showTime.value) {
+            this.setSearchTime(this.showTime.type, this.showTime.value)
+          } else {
+            const startTime = bus.timeFormate(this.searchTime[0], this.timePicker)
+            const endTime = bus.timeFormate(new Date(this.searchTime[0]).getTime() + new Date(this.stepSearchTime[1]).getTime() - new Date(this.stepSearchTime[0]).getTime(), this.timePicker)
+            this.$set(this.searchTime, 0, startTime)
+            this.$set(this.searchTime, 1, endTime)
+          }
+        }
+      }
+    },
   }
 }
 </script>
