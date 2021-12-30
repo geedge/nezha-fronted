@@ -572,6 +572,13 @@ export default {
       if (this.currentMsg.alertRule.type === 1) {
         const chartInfo = lodash.cloneDeep(lineData)
         chartInfo.elements = [{}]
+        if (!isNaN(this.currentMsg.alertRule.threshold)) {
+          chartInfo.param.enable.thresholds = true
+          chartInfo.param.thresholds = [{
+            value: this.currentMsg.alertRule.threshold,
+            color: '#d64f40'
+          }]
+        }
         chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
         chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
         chartInfo.unit = this.currentMsg.unit
@@ -579,6 +586,13 @@ export default {
       } else if (this.currentMsg.alertRule.type === 2) {
         const chartInfo = lodash.cloneDeep(logData)
         chartInfo.elements = [{}]
+        if (!isNaN(this.currentMsg.alertRule.threshold)) {
+          chartInfo.param.enable.thresholds = true
+          chartInfo.param.thresholds = [{
+            value: this.currentMsg.alertRule.threshold,
+            color: '#d64f40'
+          }]
+        }
         chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
         chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
         chartInfo.unit = this.currentMsg.unit
