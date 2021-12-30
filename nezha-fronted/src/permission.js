@@ -41,17 +41,22 @@ router.beforeEach((to, from, next) => {
             } else {
               if (localStorage.getItem('nz-token')) {
                 post('/sys/user/permissions', { token: localStorage.getItem('nz-token') }).then(res => {
-                  const menuList = sortByOrderNum(res.data.menus)
-                  store.commit('setMenuList', menuList)
-                  store.commit('setButtonList', res.data.buttons)
-                  store.commit('setRoleList', res.data.roles)
-                  bus.$emit('login')
-                  router.push({
-                    path: menuList[0].children[0].route,
-                    query: {
-                      t: +new Date()
-                    }
-                  })
+                  if (res.code === 200) {
+                    const menuList = sortByOrderNum(res.data.menus)
+                    store.commit('setMenuList', menuList)
+                    store.commit('setButtonList', res.data.buttons)
+                    store.commit('setRoleList', res.data.roles)
+                    bus.$emit('login')
+                    router.push({
+                      path: menuList[0].children[0].route,
+                      query: {
+                        t: +new Date()
+                      }
+                    })
+                  } else {
+                    localStorage.setItem('nz-token', '')
+                    next({})
+                  }
                 })
               } else {
                 next()
