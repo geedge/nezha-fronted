@@ -238,6 +238,7 @@ export default {
     groupShow (chart) {
       const index = this.copyDataList.findIndex(item => item.id === chart.id)
       this.$set(this.copyDataList, index, chart)
+      this.onScroll(this.scrollTop)
     },
     moveChart () {
       if (this.timer) {
