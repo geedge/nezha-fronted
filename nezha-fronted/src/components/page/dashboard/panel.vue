@@ -64,7 +64,7 @@
               >
                 <template v-slot:before>
                   <el-dropdown-item>
-                    <div id="panel-lock" @click="panelLock=!panelLock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>{{panelLock ? $t('overall.locked') : $t('overall.unlocked')}}</div>
+                    <div id="panel-lock" @click="panelLock=!panelLock"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t('overall.locked') : $t('overall.unlocked')}}</div>
                   </el-dropdown-item>
                 </template>
                 <template v-slot:after>
