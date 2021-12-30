@@ -256,8 +256,9 @@ td .nz-icon-gear:before{
 }
 .el-input-group.el-input-group--prepend,.query-input-inactive.el-input {
   .el-input-group__prepend {
-    background-color: $--background-color-empty;
+    background-color: $--right-box-sub-title-background-color;
     border: 1px solid $--border-color-light;
+    border-right: none;
     .el-input__inner:focus {
       border-color: $--border-color-light-hover;
     }

@@ -24,7 +24,6 @@ import { chartLegendPlacement } from '@/components/common/js/constants'
 import * as echarts from 'echarts'
 import { getChart, setChart } from '@/components/common/js/common'
 import { initColor } from '@/components/chart/chart/tools'
-import bus from '@/libs/bus'
 
 export default {
   name: 'chart-clock',

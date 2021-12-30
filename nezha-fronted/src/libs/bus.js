@@ -65,7 +65,7 @@ export default new Vue({
       }
       return `${yy}${mm}${dd}`
     },
-    timeFormate (date, fmt = 'yyyy-MM-dd hh:mm:ss') {
+    timeFormate (date, fmt = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss') {
       const time = new Date(date)
       let fm = fmt
       // fmt 自定义格式,如：yy-MM-dd
@@ -100,6 +100,7 @@ export default new Vue({
         'M+': time.getMonth() + 1, // 月份
         'd+': time.getDate(), // 日
         hh: time.getHours(), // 小时
+        HH: time.getHours(), // 小时
         'm+': time.getMinutes(), // 分
         's+': time.getSeconds(), // 秒
         'q+': Math.floor((time.getMonth() + 3) / 3), // 季度

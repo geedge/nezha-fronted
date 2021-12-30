@@ -102,7 +102,7 @@ Vue.mixin({
         return bus.UTCTimeToConfigTimezone(time)
       }
     },
-    utcTimeToTimezoneStr: function (time, format = 'yyyy-MM-dd hh:mm:ss') {
+    utcTimeToTimezoneStr: function (time, format = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss') {
       if (time) {
         return bus.timeFormate(bus.UTCTimeToConfigTimezone(time), format)
       } else {
@@ -114,12 +114,12 @@ Vue.mixin({
         return bus.configTimezoneToUTCTime(time)
       }
     },
-    timezoneToUtcTimeStr: function (time, format = 'yyyy-MM-dd hh:mm:ss') {
+    timezoneToUtcTimeStr: function (time, format = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss') {
       if (time) {
         return bus.timeFormate(this.timezoneToUtcTime(time), format)
       }
     },
-    timestampStr: function (time, format = 'yyyy-MM-dd hh:mm:ss') {
+    timestampStr: function (time, format = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss') {
       const date = new Date(time)
       const localOffset = date.getTimezoneOffset() * 60 * 1000 // 默认 一分钟显示时区偏移的结果
       let dateStr = new Date(time).getTime() + localOffset

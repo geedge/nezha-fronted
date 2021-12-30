@@ -378,6 +378,11 @@
 
 .special-select .el-select.el-select--small {
   width: 100%;
+  cursor: pointer;
+}
+
+.special-select .el-input.el-input--prefix.el-input--suffix:hover {
+  border: 1px solid $--border-color-light-hover;
 }
 
 .special-select .el-input.el-input--prefix.el-input--suffix, .line-width .el-input.el-input--prefix.el-input--suffix {
@@ -555,6 +560,13 @@
   color: $--color-text-primary;
   letter-spacing: 0;
   font-weight: 400;
+}
+
+.color-show:hover {
+  border-color: $--border-color-light-hover !important;
+}
+.color-show:focus {
+  border-color: $--color-primary !important;
 }
 
 .color-show-left {
