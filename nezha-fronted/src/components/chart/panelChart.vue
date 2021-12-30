@@ -375,8 +375,8 @@ export default {
         this.chartInfo.height = height + this.headerHPadding
         this.chartInfo.h = height + this.headerHPadding
       } else {
-        this.chartInfo.height = this.headerH + height
-        this.chartInfo.h = this.headerH + height
+        this.chartInfo.height = height
+        this.chartInfo.h = height
       }
     },
     showFullscreen (show) {

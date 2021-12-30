@@ -821,11 +821,11 @@ export default {
       searchTime: { target: this, propertyName: 'searchTime', type: 'jsonParse' },
       nowTimeType: { target: this, propertyName: 'nowTimeType', type: 'jsonParse' }
     }
+    this.initQueryFromPath(searchKeys)
     setTimeout(() => {
       this.showPanel.id = this.panelId
       this.filter.panelId = this.panelId
     })
-    this.initQueryFromPath(searchKeys)
     if (this.nowTimeType.type) {
       this.setSearchTime(this.nowTimeType.type, this.nowTimeType.value, this.nowTimeType)
       this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')

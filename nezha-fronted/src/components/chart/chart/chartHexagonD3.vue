@@ -179,14 +179,12 @@ export default {
       return svg.node()
     },
     hexagonOver (that, e) { // 移入六边形
-      // console.log(that, e)
       this.tooltip.title = that.alias
       this.tooltip.value = that.showValue
       this.tooltip.show = true
       this.setPosition(e)
     },
     hexagonMove (e) { // 六边形内移动
-      // console.log(e)
       if (this.tooltip.show) {
         this.setPosition(e)
       }

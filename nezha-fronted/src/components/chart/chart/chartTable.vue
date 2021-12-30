@@ -148,7 +148,6 @@ export default {
       let sourceData = null
       sourceData = this.oldTableData
       orderBy = this.orderBy
-      console.log(orderBy)
       if (!orderBy || !orderBy.order) { // 没有排序 恢复默认值
         source = Object.assign([], sourceData)
       } else { // 排序之后的顺序
@@ -244,7 +243,6 @@ export default {
     },
     tableDataSort (orderBy) {
       this.orderBy = { order: orderBy.order, prop: orderBy.prop }
-      console.log(orderBy, this.orderBy)
       this.tableData = this.filterShowData(this.tableData)
     },
     // 本地正序
@@ -266,7 +264,6 @@ export default {
       return function (obj1, obj2) {
         const val1 = obj1.display[prop + 'display'].replace(/\s*/g, '')
         const val2 = obj2.display[prop + 'display'].replace(/\s*/g, '')
-        console.log(val1, val2, val1 < val2, val2 > val1)
         if (val1 < val2) {
           return -1
         } else if (val1 > val2) {

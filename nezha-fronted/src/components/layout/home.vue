@@ -36,7 +36,12 @@ export default {
   methods: {
     refresh () {
       this.containerShow = false
-      this.$nextTick(() => { this.containerShow = true })
+      new Promise(resolve => {
+        this.$router.replace({ path: this.$route.path, query: {} })
+        resolve()
+      }).then(() => {
+        this.$nextTick(() => { this.containerShow = true })
+      })
     }
   },
   destroyed () {

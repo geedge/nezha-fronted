@@ -1,6 +1,7 @@
 <template>
   <div style="width: 100%;height: 100%">
     <chartList
+      v-if="chartInfo.loaded"
       ref="chartList"
       name="group"
       :class="{'show-top':showTopBtn}"
@@ -50,13 +51,15 @@ export default {
 
     },
     initChart () {
-      this.dataList = this.dataList.map(item => {
-        return {
-          ...item,
-          // hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
-          loaded: true
-        }
-      })
+      setTimeout(() => {
+        this.dataList = this.dataList.map(item => {
+          return {
+            ...item,
+            // hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
+            loaded: true
+          }
+        })
+      }, 100)
     }
   },
   watch: {

@@ -210,17 +210,17 @@ export default {
           delete params.param.min
           delete params.param.max
         }
-        if (!params.x && !params.y) {
-          params.x = this.chartLastPosition.x + params.span > 12 ? 0 : this.chartLastPosition.x
-          params.y = this.chartLastPosition.y + 12
-        }
         if (!params.x && !params.y && params.groupId) { // group 内的坐标需要单独计算
           params.x = 0
           params.y = 999
         }
-        if (this.from === 'endpointQuery') { // endpointQuery 新增 放在最后
+        if (!params.x && !params.y && this.from === 'endpointQuery') { // endpointQuery 新增 放在最后
           params.x = 0
           params.y = 999
+        }
+        if (!params.x && !params.y) {
+          params.x = this.chartLastPosition.x + params.span > 12 ? 0 : this.chartLastPosition.x
+          params.y = this.chartLastPosition.y + 12
         }
         delete params.panel
         if (params.type === 'table') {

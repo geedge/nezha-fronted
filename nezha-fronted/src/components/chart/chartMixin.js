@@ -131,11 +131,7 @@ export default {
       if (colorIndex >= 20) {
         const colorRandom = randomcolor()
         this.colorList.push(colorRandom)
-        // console.log(this.colorList.length, this.chartOption.color.length)
-        // this.chartOption.color.push(colorRandom)
-        // console.log(this.colorList.length, this.chartOption.color.length)
       }
-      // console.log(name, alias, statistics)
       this.legends.push({ name, alias, statistics, color: this.colorList[colorIndex] })
       return {
         name,
@@ -264,7 +260,6 @@ export default {
     chartData: {
       deep: true,
       handler (n) {
-        console.log(this.isInit)
         if (!this.isInit) {
           this.colorList = this.colorList.slice(0, 20)
           this.chartOption.color = this.chartOption.color.slice(0, 20)

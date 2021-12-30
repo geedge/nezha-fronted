@@ -117,7 +117,7 @@ export function isClock (type) {
 export function getGroupHeight (arr) {
   if (arr.length) {
     let lastItem = []
-    let maxY = 0
+    let maxY = arr[0].y
     arr.forEach((children, index) => {
       if (maxY == children.y) {
         lastItem.push(children)
@@ -132,6 +132,9 @@ export function getGroupHeight (arr) {
         maxHeight = last.height
       }
     })
+    if (maxY < 0) {
+      maxY = 0
+    }
     return maxHeight + maxY
   } else {
     return 1
