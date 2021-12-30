@@ -88,7 +88,7 @@ export default {
       let alias = ''
       if (chartInfo.elements && (expressionIndex >= chartInfo.elements.length)) {
         expressionIndex -= chartInfo.elements.length
-        legend += 'Previous '
+        // legend += 'Previous '
         alias += 'Previous '
       }
       if (data.metric.__name__) {
