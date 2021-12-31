@@ -405,20 +405,14 @@ export default {
         const alias = this.queryAlias(item.seriesIndex)
         if (i === 0 && alias.indexOf('Previous ') === -1) {
           const value = item.data[0]
-          const tData = new Date(value)
-          str += [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('-') + ' ' +
-              [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
-          str += '<br/>'
+          str += bus.timeFormate(bus.computeTimezone(value))
         }
         if (alias.indexOf('Previous ') !== -1 && minusFlag) {
           if (i !== 0) {
             str += '<div style="border:1px dashed #333;width:100%;margin-top: 5px"></div>'
           }
           const value = item.data[0] - this.minusTime
-          const tData = new Date(value)
-          str += [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('-') + ' ' +
-              [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
-          str += '<br/>'
+          str += bus.timeFormate(bus.computeTimezone(value))
           minusFlag = false
         }
         showFlag = showFlag || item.data[1]
