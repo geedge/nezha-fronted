@@ -380,8 +380,8 @@ export default {
       promqlKeys: [],
       expressions: [''],
       filterTime: [
-        bus.timeFormate(bus.getOffsetTimezoneData(-1), 'YYYY-MM-DD HH:mm:ss'),
-        bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
+        bus.timeFormate(bus.getOffsetTimezoneData(-1)),
+        bus.timeFormate(bus.getOffsetTimezoneData())
       ],
 
       /* 工具参数 */
@@ -455,8 +455,8 @@ export default {
     exportLog ({ limit, descending }) {
       const params = {
         logql: this.expressions,
-        start: this.$stringTimeParseToUnix(this.filterTime[0]),
-        end: this.$stringTimeParseToUnix(this.filterTime[1]),
+        start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])),
+        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])),
         direction: descending ? 'backward' : 'forward',
         limit
       }
@@ -500,7 +500,7 @@ export default {
         const requestArr = []
         this.expressions.forEach((item, index) => {
           if (item != '') {
-            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&limit=' + limit))
+            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&limit=' + limit))
           }
         })
         if (requestArr.length > 0) {
@@ -640,10 +640,10 @@ export default {
           const queryExpression = []
           this.expressions.forEach((item, index) => {
             if (item != '') {
-              const step = bus.getStep(this.filterTime[0], this.filterTime[1])
+              const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
               promqlInputIndexs.push(index)
               queryExpression.push(item)
-              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step=' + step + '&nullType=null'))
+              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&step=' + step + '&nullType=null'))
             }
           })
           if (requestArr.length > 0) {
@@ -754,7 +754,7 @@ export default {
                       }
                       this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.value[1], null, 2))
 
-                      this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000), 'YYYY-MM-DD HH:mm:ss'))
+                      this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000)))
                       for (const key in metrics) {
                         const label = {
                           label: key,
@@ -824,20 +824,20 @@ export default {
     },
     setSearchTime (type, val) { // 设置searchTime
       if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'YYYY-MM-DD HH:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.filterTime, 0, startTime)
         this.$set(this.filterTime, 1, endTime)
         this.$set(this.filterTime, 2, val + 'm')
       } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'YYYY-MM-DD HH:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.filterTime, 0, startTime)
         this.$set(this.filterTime, 1, endTime)
         this.$set(this.filterTime, 2, val + 'h')
       } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'YYYY-MM-DD HH:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.filterTime, 0, startTime)
         this.$set(this.filterTime, 1, endTime)
         this.$set(this.filterTime, 2, val + 'd')

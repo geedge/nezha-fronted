@@ -111,14 +111,14 @@ export default {
     dateChange (filter, multipleTime) {
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
-      let startTime = filter.start_time
-      let endTime = filter.end_time
+      let startTime = bus.formateTimeToTime(filter.start_time)
+      let endTime = bus.formateTimeToTime(filter.end_time)
       const step = bus.getStep(startTime, endTime)
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
       const elements = this.chartInfo.elements || []
       if (multipleTime.length) {
-        const minusTime = (new Date(filter.start_time).getTime() - new Date(multipleTime[0]).getTime())
+        const minusTime = (new Date(bus.formateTimeToTime(filter.start_time)).getTime() - new Date(bus.formateTimeToTime(multipleTime[0])).getTime())
         this.minusTime = minusTime
         this.multipleTime = true
       } else {

@@ -269,20 +269,20 @@ export default {
     },
     setSearchTime (type, val) {
       if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(this.stepSearchTime[0]).getTime() - val * 60 * 1000, this.multipleTime)
-        const endTime = bus.timeFormate(new Date(this.stepSearchTime[1]).getTime() - val * 60 * 1000, this.multipleTime)
+        const startTime = bus.timeFormate(new Date(bus.formateTimeToTime(this.stepSearchTime[0])).getTime() - val * 60 * 1000)
+        const endTime = bus.timeFormate(new Date(bus.formateTimeToTime(this.stepSearchTime[1])).getTime() - val * 60 * 1000)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'm')
       } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(this.stepSearchTime[0]).getTime() - val * 60 * 60 * 1000, this.multipleTime)
-        const endTime = bus.timeFormate(new Date(this.stepSearchTime[1]).getTime() - val * 60 * 60 * 1000, this.multipleTime)
+        const startTime = bus.timeFormate(new Date(bus.formateTimeToTime(this.stepSearchTime[0])).getTime() - val * 60 * 60 * 1000)
+        const endTime = bus.timeFormate(new Date(bus.formateTimeToTime(this.stepSearchTime[1])).getTime() - val * 60 * 60 * 1000)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'h')
       } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(this.stepSearchTime[0]).getTime() - val * 24 * 60 * 60 * 1000, this.multipleTime)
-        const endTime = bus.timeFormate(new Date(this.stepSearchTime[1]).getTime() - val * 24 * 60 * 60 * 1000, this.multipleTime)
+        const startTime = bus.timeFormate(new Date(bus.formateTimeToTime(this.stepSearchTime[0])).getTime() - val * 24 * 60 * 60 * 1000)
+        const endTime = bus.timeFormate(new Date(bus.formateTimeToTime(this.stepSearchTime[1])).getTime() - val * 24 * 60 * 60 * 1000)
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'd')
