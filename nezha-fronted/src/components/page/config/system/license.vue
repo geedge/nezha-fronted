@@ -127,9 +127,8 @@ export default {
           this.licenseList.feature.map(e => {
             if (e.id === '20001') {
               this.expData = e
-              this.stateItem = e.time_start
-              this.endItem = e.end_time * 1 + e.time_start * 1
-              // this.expData.license.end_time = this.expData.license.time_start * 1 + this.expData.license.total_time * 1
+              this.stateItem = e.license.time_start
+              this.endItem = e.license.end_time * 1 + e.license.time_start * 1
             }
           })
         } else {
