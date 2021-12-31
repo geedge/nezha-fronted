@@ -743,7 +743,6 @@ export default {
               res.forEach((response, index) => {
                 if (response.data && response.status === 'success') {
                   const data = response.data.result
-                  console.log(data)
                   if (data) {
                     data.forEach((result, i) => {
                       const metrics = Object.assign({}, result.metric)

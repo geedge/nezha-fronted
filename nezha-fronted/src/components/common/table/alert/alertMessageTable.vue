@@ -34,16 +34,11 @@
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'alertRule'">
           <div v-if="scope.row.alertRule&&scope.row.alertRule.name" >
-            <el-popover
-              placement="right-start"
-              popper-class="alert-message-tooltip"
-              style="position: relative"
-              @show="alertMessageHover(scope.row.alertRule, true)"
-              @hide="alertMessageHover(scope.row.alertRule, false)"
-              trigger="hover">
-              <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :severity-data="severityData" :that="scope.row.alertRule" @showText="$emit('showText',scope.row)"></alertRuleInfo>
-              <span slot="reference">{{scope.row.alertRule?scope.row.alertRule.name : '--'}}</span>
-            </el-popover>
+            <span
+              @mouseenter="alertMessageHover(scope.row.alertRule, true, $event)"
+              @mouseleave="alertMessageHover(scope.row.alertRule, false)"
+            >{{scope.row.alertRule?scope.row.alertRule.name : '--'}}</span>
+            <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :severity-data="severityData" :that="scope.row.alertRule" @showText="$emit('showText',scope.row)"></alertRuleInfo>
           </div>
           <template v-else>-</template>
         </template>

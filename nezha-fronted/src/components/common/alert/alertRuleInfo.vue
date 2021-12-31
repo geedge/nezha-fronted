@@ -1,5 +1,5 @@
 <template>
-  <div :class="calcHeight(that.position,that)" :style="calcPosition(that.position,that)" class="alert-label__border" v-loading="loading">
+  <div :style="calcPosition(that.position,that)" class="alert-label__border alert-label" v-loading="loading" ref="alertLabels">
     <div class="alert-rule-info" >
       <div class="alert-rule-box">
         <div class="alert-rule-title">ID</div>
@@ -88,35 +88,19 @@ export default {
           }
         }
         const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
-        const elHeight = 50
-        if (position.top + elHeight > clientHeight) {
+        // const windowWidth = window.innerWidth
+        const boxHeight = this.$refs.alertLabels ? this.$refs.alertLabels.offsetHeight : 231
+        const windowHeight = window.innerHeight
+        if (position.top > windowHeight / 2) {
           return {
-            left: `${position.left + position.width + 200}px`,
-            top: `${position.top - elHeight - 80}px`
+            left: `${position.left + position.width + 10}px`,
+            top: `${position.top - boxHeight}px`
           }
         } else {
           return {
-            left: `${position.left + position.width + 200}px`,
-            top: `${position.top - 80}px`
+            left: `${position.left + position.width + 10}px`,
+            top: `${position.top}px`
           }
-        }
-      }
-    },
-    calcHeight () {
-      return function (position) {
-        const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
-        const elHeight = 50
-        if (!position) {
-          if (elHeight > clientHeight) {
-            return 'alert-rule-abs-Up'
-          } else {
-            return 'alert-rule-abs'
-          }
-        }
-        if (position.top + elHeight > clientHeight) {
-          return 'alert-rule-tip-Up'
-        } else {
-          return 'alert-rule-tip'
         }
       }
     }

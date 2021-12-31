@@ -299,7 +299,7 @@ export default {
         const leftOffSetView = this.detailList ? -80 : 10
         const leftOffSet = this.detailList ? -80 : 10
         const topOffSet = this.detailList ? 60 : 22
-        if (position.top + this.heightList > clientHeight) {
+        if (position.top > clientHeight / 2) {
           return {
             left: `${position.left + position.width + leftOffSet}px`,
             top: `${position.top - this.heightList + topOffSet}px`
