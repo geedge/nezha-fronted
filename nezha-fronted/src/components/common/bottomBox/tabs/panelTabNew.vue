@@ -96,9 +96,9 @@
         </div>
       </template>
       <!--图表-->
-      <div id="tableList" class="table-list" style="padding-top: 0">
-        <div id="dashboardScrollbar" ref="dashboardScrollbar" class="table-list-box">
-          <div class="box-content" v-loading="chartListLoading">
+      <div id="tableList" class="table-list" style="padding-top: 0;overflow: hidden">
+        <div id="dashboardScrollbar" class="table-list-box">
+          <div class="box-content"  ref="dashboardScrollbar" v-loading="chartListLoading" style="overflow-y: auto">
             <chart-list
               ref="chartList"
               name="panel"
@@ -617,7 +617,9 @@ export default {
       const _self = this
       this.scrollbarWrap.addEventListener('scroll', bus.debounce(function () {
         _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50
-        _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop)
+        console.log(_self.scrollbarWrap.scrollTop)
+        // _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop)
+        _self.$refs.chartList.onScroll(_self.scrollbarWrap.scrollTop)
       }, 300))
     },
     focusInput () {
