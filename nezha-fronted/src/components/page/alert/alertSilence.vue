@@ -190,8 +190,8 @@ export default {
       })
     },
     add () {
-      this.blankObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
-      this.blankObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'yyyy-MM-dd hh:mm:ss')
+      this.blankObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
+      this.blankObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'YYYY-MM-DD HH:mm:ss')
       this.object = JSON.parse(JSON.stringify(this.blankObject))
       this.rightBox.show = true
     },

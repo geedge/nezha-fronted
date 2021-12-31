@@ -210,7 +210,7 @@ export default {
       endpointData: null,
       startAtTamp: '',
       endAtTamp: '',
-      alertSilenceTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'
+      alertSilenceTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
     }
   },
   mounted () {
@@ -295,10 +295,10 @@ export default {
     },
     dateChange (val, type) {
       if (type === 'startAt') {
-        this.editAlertSilence.startAt = bus.timeFormate(new Date(val), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
+        this.editAlertSilence.startAt = bus.timeFormate(new Date(val), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
         this.startAtTamp = new Date(val).getTime()
       } else if (type === 'endAt') {
-        this.editAlertSilence.endAt = bus.timeFormate(new Date(val), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
+        this.editAlertSilence.endAt = bus.timeFormate(new Date(val), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
         this.endAtTamp = new Date(val).getTime()
       }
       this.$forceUpdate()
@@ -313,7 +313,7 @@ export default {
       }
     },
     rangeTimeChange (val) {
-      const arr = [bus.timeFormate(bus.getOffsetTimezoneData(), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'), bus.timeFormate(bus.getOffsetTimezoneData(val * 1), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')]
+      const arr = [bus.timeFormate(bus.getOffsetTimezoneData(), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'), bus.timeFormate(bus.getOffsetTimezoneData(val * 1), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')]
       this.$set(this.editAlertSilence, 'startAt', arr[0])
       this.$set(this.editAlertSilence, 'endAt', arr[1])
       this.startAtTamp = new Date(this.editAlertSilence.startAt).getTime()

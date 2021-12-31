@@ -104,7 +104,7 @@ Vue.mixin({
     },
     utcTimeToTimezoneStr: function (time) {
       if (time) {
-        return bus.timeFormate(bus.UTCTimeToConfigTimezone(time), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
+        return bus.timeFormate(bus.UTCTimeToConfigTimezone(time), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
       } else {
         return '-'
       }
@@ -116,7 +116,7 @@ Vue.mixin({
     },
     timezoneToUtcTimeStr: function (time) {
       if (time) {
-        return bus.timeFormate(this.timezoneToUtcTime(time), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
+        return bus.timeFormate(this.timezoneToUtcTime(time), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
       }
     },
     timestampStr: function (time) {
@@ -124,7 +124,7 @@ Vue.mixin({
       const localOffset = date.getTimezoneOffset() * 60 * 1000 // 默认 一分钟显示时区偏移的结果
       const dateStr = new Date(time).getTime() + localOffset
       if (time) {
-        return bus.timeFormate(bus.UTCTimeToConfigTimezone(dateStr), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
+        return bus.timeFormate(bus.UTCTimeToConfigTimezone(dateStr), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
       } else {
         return '-'
       }

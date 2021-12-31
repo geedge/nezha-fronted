@@ -404,7 +404,7 @@ export default {
         system_logo: '',
         current_site_url: '',
         timezone: '',
-        date_format: 'yyyy-MM-dd HH:mm:ss',
+        date_format: 'YYYY-MM-DD HH:mm:ss',
         theme: 'Light',
         default_cabinet_usize: '',
         query_max_series: '',
@@ -586,9 +586,9 @@ export default {
         { value: 'dark', label: 'Dark' }
       ],
       dateFormatList: [
-        { value: 'dd/MM/yyyy HH:mm:ss', label: 'dd/MM/yyyy HH:mm:ss' },
-        { value: 'MM/dd/yyyy HH:mm:ss', label: 'MM/dd/yyyy HH:mm:ss' },
-        { value: 'yyyy-MM-dd HH:mm:ss', label: 'yyyy-MM-dd HH:mm:ss' }
+        { value: 'DD/MM/YYYY HH:mm:ss', label: 'DD/MM/YYYY HH:mm:ss' },
+        { value: 'MM/DD/YYYY HH:mm:ss', label: 'MM/DD/YYYY HH:mm:ss' },
+        { value: 'YYYY-MM-DD HH:mm:ss', label: 'YYYY-MM-DD HH:mm:ss' }
       ]
     }
   },

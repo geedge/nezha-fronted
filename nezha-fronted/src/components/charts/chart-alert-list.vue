@@ -892,8 +892,8 @@ export default {
     },
     // 全屏时间条件查询
     dateChange (time) {
-      // this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
-      // this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
+      // this.filter.start_time = bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss');
+      // this.filter.end_time = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss');
       // this.showTable = false;
       this.seriesItemScreen = []
       for (let i = 0; i < 8; i++) {
@@ -1113,8 +1113,8 @@ export default {
       this.dialogText = row.alertRule.trbShot
     },
     addSilence (row, type) {
-      this.blankSilenceObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
-      this.blankSilenceObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'yyyy-MM-dd hh:mm:ss')
+      this.blankSilenceObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
+      this.blankSilenceObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'YYYY-MM-DD HH:mm:ss')
       this.objectSilence = JSON.parse(JSON.stringify(this.blankSilenceObject))
       this.objectSilence.name = 'Quick silence'
       if (type !== 'alertMessage' && type !== 'alertRule') {

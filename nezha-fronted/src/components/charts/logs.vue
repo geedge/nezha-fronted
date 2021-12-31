@@ -674,8 +674,8 @@ export default {
       })
     },
     dateChange (time) {
-      this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.start_time = bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
       // this.echartModalStore.clear()
       this.showLegend = false
       this.$refs['localLoadingScreen' + this.chartIndex].startLoading()

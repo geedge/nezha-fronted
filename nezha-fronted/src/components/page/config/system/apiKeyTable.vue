@@ -166,7 +166,7 @@ export default {
           return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
         }
       },
-      apiKeyTableTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'
+      apiKeyTableTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
     }
   },
   methods: {

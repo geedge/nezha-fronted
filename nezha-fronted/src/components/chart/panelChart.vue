@@ -130,6 +130,7 @@ export default {
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh) {
       this.loading = true
+      console.log(this.timeRange)
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
       let endTime = ''
@@ -138,15 +139,15 @@ export default {
         const origin = new Date(this.timeRange[1])
         const numInterval = now.getTime() - origin.getTime()
         if (numInterval >= 60000) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
-          startTime = bus.getNewTime(this.timeRange[0], numInterval)
-          endTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss')
+          startTime = bus.getNewTime(bus.formateTimeToTime(this.timeRange[0]), numInterval)
+          endTime = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
         } else {
-          startTime = this.timeRange[0]
-          endTime = this.timeRange[1]
+          startTime = bus.formateTimeToTime(this.timeRange[0])
+          endTime = bus.formateTimeToTime(this.timeRange[1])
         }
       } else {
-        startTime = this.timeRange[0]
-        endTime = this.timeRange[1]
+        startTime = bus.formateTimeToTime(this.timeRange[0])
+        endTime = bus.formateTimeToTime(this.timeRange[1])
       }
       const step = bus.getStep(startTime, endTime)
       startTime = this.$stringTimeParseToUnix(startTime)

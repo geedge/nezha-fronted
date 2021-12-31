@@ -160,7 +160,7 @@ export default {
       isPopoverDisabled: false,
       isCustom: false,
       valueArr: [],
-      multipleTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'
+      multipleTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
     }
   },
   watch: {

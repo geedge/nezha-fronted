@@ -127,7 +127,7 @@ export default {
       timeout: null,
       formatTime: '',
       hideSameLabels: true,
-      endpointQueryTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'
+      endpointQueryTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
     }
   },
   methods: {

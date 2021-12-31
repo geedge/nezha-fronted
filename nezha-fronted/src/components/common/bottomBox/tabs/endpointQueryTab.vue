@@ -175,7 +175,7 @@ export default {
       scrollTop: 0,
       scrollbarWrap: null,
       minusTime: 0,
-      endpointQueryTabTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'
+      endpointQueryTabTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
     }
   },
   methods: {
@@ -453,8 +453,8 @@ export default {
         axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(endpoint.element) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
       }
       if (this.$refs.pickTime && this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length) { // 判断是否需要添加比较
-        const startTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
+        const endTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
         for (const endpoint of this.selectedEndpoints) {
           axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + encodeURIComponent(endpoint.element) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step))
         }

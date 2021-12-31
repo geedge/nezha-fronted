@@ -758,13 +758,13 @@ export default {
       } else {
         before = new Date()
         before.setHours(new Date().getHours() - 1)
-        before = this.dateFormat('yyyy-mm-dd HH:MM:SS', before)
+        before = this.dateFormat('YYYY-MM-DD HH:mm:ss', before)
       }
       if (this.trendSearchParam.end) {
         end = this.trendSearchParam.end
       } else {
         end = new Date()
-        end = this.dateFormat('yyyy-mm-dd HH:MM:SS', end)
+        end = this.dateFormat('YYYY-MM-DD HH:mm:ss', end)
       }
       let metric
       let rule

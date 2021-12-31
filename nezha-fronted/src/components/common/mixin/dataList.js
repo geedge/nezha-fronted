@@ -245,8 +245,8 @@ export default {
       localStorage.setItem('dataList-layout' + this.tableId, JSON.stringify(this.dataListLayout))
     },
     addSilence (row, type) {
-      this.blankSilenceObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
-      this.blankSilenceObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'yyyy-MM-dd hh:mm:ss')
+      this.blankSilenceObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
+      this.blankSilenceObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'YYYY-MM-DD HH:mm:ss')
       this.objectSilence = JSON.parse(JSON.stringify(this.blankSilenceObject))
       this.objectSilence.name = 'Quick silence'
       if (type !== 'alertMessage' && type !== 'alertRule') {

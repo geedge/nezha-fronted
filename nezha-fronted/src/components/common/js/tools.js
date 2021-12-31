@@ -392,7 +392,7 @@ export function calcDurationByStringTimeMs (startTime, endTime) {
 
   return result
 }
-export function unixTimeParseToString (unixTime, fmt = 'yyyy-MM-dd hh:mm:ss') {
+export function unixTimeParseToString (unixTime, fmt = 'YYYY-MM-DD HH:mm:ss') {
   const date = new Date(unixTime * 1000)
   const o = {
     'M+': date.getMonth() + 1, // 月份

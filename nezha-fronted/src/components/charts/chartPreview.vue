@@ -351,12 +351,12 @@ export default {
           }
         })
       } else {
-        let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-        let endTime = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+        let startTime = bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
+        let endTime = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
         if (!startTime || !endTime) { // 如果时间为空，则默认取最近1小时
           const now = new Date(bus.computeTimezone(new Date().getTime()))
-          startTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss')
-          endTime = bus.timeFormate(now.setHours(now.getHours() - 1), 'yyyy-MM-dd hh:mm:ss')
+          startTime = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
+          endTime = bus.timeFormate(now.setHours(now.getHours() - 1), 'YYYY-MM-DD HH:mm:ss')
           this.searchTime[0] = startTime
           this.searchTime[1] = endTime
         }
@@ -530,7 +530,7 @@ export default {
                           // alert('table=='+JSON.stringify(queryItem))
                           seriesItem.theData.data = queryItem.values.map((dpsItem, dpsIndex) => {
                             // const tData = new Date(dpsItem[0] * 1000)
-                            // const timeTmp = bus.timeFormate(tData, 'yyyy-MM-dd hh:mm:ss')
+                            // const timeTmp = bus.timeFormate(tData, 'YYYY-MM-DD HH:mm:ss')
                             tableData.push({ // 表格数据
                               // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
                               // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
@@ -1415,7 +1415,7 @@ export default {
           result = copy.map(item => {
             return {
               element: item.element,
-              time: bus.timeFormate(new Date(item.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(item.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: item.data[1]
             }
           })
@@ -1429,7 +1429,7 @@ export default {
 
             return {
               element: groupMin.element,
-              time: bus.timeFormate(new Date(groupMin.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(groupMin.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: groupMin.data[1]
             }
           })
@@ -1443,7 +1443,7 @@ export default {
 
             return {
               element: groupMax.element,
-              time: bus.timeFormate(new Date(groupMax.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(groupMax.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: groupMax.data[1]
             }
           })
@@ -1459,7 +1459,7 @@ export default {
             })[0]
             return {
               element: last.element,
-              time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(last.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: avg
             }
           })
@@ -1474,7 +1474,7 @@ export default {
             })[0]
             return {
               element: last.element,
-              time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(last.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: total
             }
           })
@@ -1488,7 +1488,7 @@ export default {
 
             return {
               element: first.element,
-              time: bus.timeFormate(new Date(first.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(first.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: first.data[1]
             }
           })
@@ -1501,7 +1501,7 @@ export default {
             })[0]
             return {
               element: last.element,
-              time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(last.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: last.data[1]
             }
           })
@@ -1520,7 +1520,7 @@ export default {
             const range = max.data[1] - min.data[1]
             return {
               element: last.element,
-              time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(last.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: range
             }
           })
@@ -1535,7 +1535,7 @@ export default {
             const first = sort[copy.length - 1]
             return {
               element: last.element,
-              time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(last.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: last.data[1] - first.data[1]
             }
           })
@@ -1606,12 +1606,12 @@ export default {
       let axiosArr = []
       const chartItem = this.chart
       this.$nextTick(() => {
-        let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-        let endTime = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+        let startTime = bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
+        let endTime = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
         if (!startTime || !endTime) { // 如果时间为空，则默认取最近1小时
           const now = new Date()
-          startTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss')
-          endTime = bus.timeFormate(now.setHours(now.getHours() - 1), 'yyyy-MM-dd hh:mm:ss')
+          startTime = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
+          endTime = bus.timeFormate(now.setHours(now.getHours() - 1), 'YYYY-MM-DD HH:mm:ss')
           this.searchTime[0] = startTime
           this.searchTime[1] = endTime
         }

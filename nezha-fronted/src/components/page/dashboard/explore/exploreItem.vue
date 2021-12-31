@@ -380,8 +380,8 @@ export default {
       promqlKeys: [],
       expressions: [''],
       filterTime: [
-        bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss'),
-        bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
+        bus.timeFormate(bus.getOffsetTimezoneData(-1), 'YYYY-MM-DD HH:mm:ss'),
+        bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
       ],
 
       /* 工具参数 */
@@ -754,7 +754,7 @@ export default {
                       }
                       this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.value[1], null, 2))
 
-                      this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000), 'yyyy-MM-dd hh:mm:ss'))
+                      this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000), 'YYYY-MM-DD HH:mm:ss'))
                       for (const key in metrics) {
                         const label = {
                           label: key,
@@ -824,20 +824,20 @@ export default {
     },
     setSearchTime (type, val) { // 设置searchTime
       if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'YYYY-MM-DD HH:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
         this.$set(this.filterTime, 0, startTime)
         this.$set(this.filterTime, 1, endTime)
         this.$set(this.filterTime, 2, val + 'm')
       } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'YYYY-MM-DD HH:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
         this.$set(this.filterTime, 0, startTime)
         this.$set(this.filterTime, 1, endTime)
         this.$set(this.filterTime, 2, val + 'h')
       } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'YYYY-MM-DD HH:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
         this.$set(this.filterTime, 0, startTime)
         this.$set(this.filterTime, 1, endTime)
         this.$set(this.filterTime, 2, val + 'd')

@@ -39,8 +39,8 @@ export default new Vue({
       end.setEnd()
       // let start = this.getHoursTime(-1);
       // let end = this.getHoursTime(0);
-      start = this.timeFormate(start, localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
-      end = this.timeFormate(end, localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
+      start = this.timeFormate(start, localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
+      end = this.timeFormate(end, localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
       this.selectDate = [start, end]
     },
     getHoursTime (hours) {
@@ -65,59 +65,65 @@ export default new Vue({
       }
       return `${yy}${mm}${dd}`
     },
-    timeFormate (date, fmt = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss') {
+    timeFormate (date, fmt = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss') {
       const time = new Date(date)
       let fm = fmt
-      // fmt 自定义格式,如：yy-MM-dd
-      let week = ''
-      switch (time.getDay()) {
-        case 0:
-          week = '周日'
-          break
-        case 1:
-          week = '周一'
-          break
-        case 2:
-          week = '周二'
-          break
-        case 3:
-          week = '周三'
-          break
-        case 4:
-          week = '周四'
-          break
-        case 5:
-          week = '周五'
-          break
-        case 6:
-          week = '周六'
-          break
-        default:
-          week = ''
-          break
-      }
-      const o = {
-        'M+': time.getMonth() + 1, // 月份
-        'd+': time.getDate(), // 日
-        hh: time.getHours(), // 小时
-        HH: time.getHours(), // 小时
-        'm+': time.getMinutes(), // 分
-        's+': time.getSeconds(), // 秒
-        'q+': Math.floor((time.getMonth() + 3) / 3), // 季度
-        S: time.getMilliseconds(), // 毫秒
-        w: week
-      }
-      if (/(y+)/.test(fm)) {
-        fm = fm.replace(RegExp.$1, (time.getFullYear().toString()).substr(4 - RegExp.$1.length))
-      }
-      Object.keys(o).forEach((k) => {
-        if (new RegExp(`(${k})`).test(fm)) {
-          fm = fm.replace(RegExp.$1, (RegExp.$1.length === 1)
-            ? (o[k])
-            : ((`00${o[k]}`).substr((`${o[k]}`).length)))
-        }
-      })
+      console.log(time, fm)
+      return moment(time).format(fm)
+      // // fmt 自定义格式,如：yy-MM-dd
+      // let week = ''
+      // switch (time.getDay()) {
+      //   case 0:
+      //     week = '周日'
+      //     break
+      //   case 1:
+      //     week = '周一'
+      //     break
+      //   case 2:
+      //     week = '周二'
+      //     break
+      //   case 3:
+      //     week = '周三'
+      //     break
+      //   case 4:
+      //     week = '周四'
+      //     break
+      //   case 5:
+      //     week = '周五'
+      //     break
+      //   case 6:
+      //     week = '周六'
+      //     break
+      //   default:
+      //     week = ''
+      //     break
+      // }
+      // const o = {
+      //   'M+': time.getMonth() + 1, // 月份
+      //   'd+': time.getDate(), // 日
+      //   hh: time.getHours(), // 小时
+      //   HH: time.getHours(), // 小时
+      //   'm+': time.getMinutes(), // 分
+      //   's+': time.getSeconds(), // 秒
+      //   'q+': Math.floor((time.getMonth() + 3) / 3), // 季度
+      //   S: time.getMilliseconds(), // 毫秒
+      //   w: week
+      // }
+      // if (/(y+)/.test(fm)) {
+      //   fm = fm.replace(RegExp.$1, (time.getFullYear().toString()).substr(4 - RegExp.$1.length))
+      // }
+      // Object.keys(o).forEach((k) => {
+      //   if (new RegExp(`(${k})`).test(fm)) {
+      //     fm = fm.replace(RegExp.$1, (RegExp.$1.length === 1)
+      //       ? (o[k])
+      //       : ((`00${o[k]}`).substr((`${o[k]}`).length)))
+      //   }
+      // })
       return fm
+    },
+    formateTimeToTime (date, fmt = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss') {
+      const newDate = moment(date, fmt)
+      return newDate
     },
     // 格式化tag为字符串表达式
     tagsToString (metric, arr) {
@@ -294,7 +300,7 @@ export default new Vue({
     getNewTime (time, num) {
       const date = new Date(time)
       const newDate = new Date(parseInt(date.getTime(), 10) + num)
-      return this.timeFormate(newDate, localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
+      return this.timeFormate(newDate, localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
     },
     getOffsetTimezoneData (offset = 0) {
       return new Date(this.computeTimezone(new Date().getTime())).setHours(new Date(this.computeTimezone(new Date().getTime())).getHours() + offset)

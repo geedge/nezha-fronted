@@ -688,7 +688,7 @@ export default {
             const numInterval = now.getTime() - origin.getTime()
             if (numInterval >= 60000) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
               startTime = this.getNewTime(this.filter.start_time, numInterval)
-              endTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss')
+              endTime = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
             } else {
               startTime = this.filter.start_time
               endTime = this.filter.end_time
@@ -895,7 +895,7 @@ export default {
                                 }
                                 */
                               // let t_date = new Date(dpsItem[0] * 1000);
-                              // let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
+                              // let timeTmp = bus.timeFormate(t_date, 'YYYY-MM-DD HH:mm:ss');
                               tableData.push({ // 表格数据
                                 // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
                                 // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
@@ -1122,7 +1122,7 @@ export default {
           // alert('table=='+JSON.stringify(queryItem))
           seriesItem.theData.data = tempArr.map((dpsItem, dpsIndex) => {
             const tData = new Date(dpsItem[0] * 1000)
-            const timeTmp = bus.timeFormate(tData, 'yyyy-MM-dd hh:mm:ss')
+            const timeTmp = bus.timeFormate(tData, 'YYYY-MM-DD HH:mm:ss')
             tableData.push({ // 表格数据
               // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
               // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
@@ -1195,8 +1195,8 @@ export default {
       const basicInfo = JSON.parse(JSON.stringify(this.detail))
       const basicInfoReq = new Promise((resolve, reject) => {
         const now = new Date()
-        const startTime = bus.timeFormate(new Date(now).setHours(now.getHours() - 1), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(now).setHours(now.getHours() - 1), 'YYYY-MM-DD HH:mm:ss')
+        const endTime = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
         // const step = bus.getStep(startTime, endTime)
         this.$nextTick(() => {
           let query = encodeURIComponent(chartInfo.elements[0].expression)
@@ -1466,7 +1466,7 @@ export default {
     getNewTime (time, num) {
       const date = new Date(time)
       const newDate = new Date(parseInt(date.getTime(), 10) + num)
-      return bus.timeFormate(newDate, 'yyyy-MM-dd hh:mm:ss')
+      return bus.timeFormate(newDate, 'YYYY-MM-DD HH:mm:ss')
     },
     // 删除图表
     removeChart (chartId) { // from 区分从哪里点击的删除 1.从图表面板 2.从编辑框
@@ -1523,8 +1523,8 @@ export default {
     },
     searchData (chartId, searchTime) {
       if (searchTime) { // 全屏时间查询
-        this.filter.start_time = bus.timeFormate(searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-        this.filter.end_time = bus.timeFormate(searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+        this.filter.start_time = bus.timeFormate(searchTime[0], 'YYYY-MM-DD HH:mm:ss')
+        this.filter.end_time = bus.timeFormate(searchTime[1], 'YYYY-MM-DD HH:mm:ss')
       }
       this.dataList.forEach((item, index) => {
         if (item.id === chartId) {

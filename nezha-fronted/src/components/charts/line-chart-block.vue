@@ -1613,8 +1613,8 @@ export default {
     dateChange (time) {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
-      this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.start_time = bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
       this.filter.value = this.searchTime[2]
       this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       // this.echartModalStore.clear()
@@ -1628,20 +1628,20 @@ export default {
     },
     setSearchTime (type, val, nowTimeType) { // 设置searchTime
       if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'YYYY-MM-DD HH:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'm')
       } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'YYYY-MM-DD HH:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'h')
       } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'YYYY-MM-DD HH:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'd')
@@ -1658,12 +1658,12 @@ export default {
       const self = this
       let axiosArr = []
       this.$nextTick(() => {
-        let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-        let endTime = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+        let startTime = bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
+        let endTime = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
         if (!startTime || !endTime) { // 如果时间为空，则默认取最近1小时
           const now = new Date()
-          startTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss')
-          endTime = bus.timeFormate(now.setHours(now.getHours() - 1), 'yyyy-MM-dd hh:mm:ss')
+          startTime = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
+          endTime = bus.timeFormate(now.setHours(now.getHours() - 1), 'YYYY-MM-DD HH:mm:ss')
           this.searchTime[0] = startTime
           this.searchTime[1] = endTime
         }
@@ -1680,8 +1680,8 @@ export default {
             return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
           })
           if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length) { // 判断是否需要添加比较
-            startTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-            endTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+            startTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
+            endTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
             this.data.elements.forEach((ele) => {
               const filterItem = ele
               let query = encodeURIComponent(filterItem.expression)

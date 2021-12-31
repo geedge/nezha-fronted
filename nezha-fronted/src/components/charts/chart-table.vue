@@ -204,7 +204,7 @@ export default {
           title: '采集时间',
           key: 'time',
           width: 160,
-          render: (h, params) => h('span', bus.timeFormate(params.row.time, 'yyyy-MM-dd hh:mm:ss'))
+          render: (h, params) => h('span', bus.timeFormate(params.row.time, 'YYYY-MM-DD HH:mm:ss'))
         }, {
           title: '数值',
           key: 'value',
@@ -461,7 +461,7 @@ export default {
           result = copy.map(item => {
             return {
               element: item.element,
-              time: bus.timeFormate(new Date(item.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(item.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: item.data[1]
             }
           })
@@ -475,7 +475,7 @@ export default {
 
             return {
               element: groupMin.element,
-              time: bus.timeFormate(new Date(groupMin.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(groupMin.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: groupMin.data[1]
             }
           })
@@ -489,7 +489,7 @@ export default {
 
             return {
               element: groupMax.element,
-              time: bus.timeFormate(new Date(groupMax.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(groupMax.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: groupMax.data[1]
             }
           })
@@ -505,7 +505,7 @@ export default {
             })[0]
             return {
               element: last.element,
-              time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(last.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: avg
             }
           })
@@ -520,7 +520,7 @@ export default {
             })[0]
             return {
               element: last.element,
-              time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(last.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: total
             }
           })
@@ -534,7 +534,7 @@ export default {
 
             return {
               element: first.element,
-              time: bus.timeFormate(new Date(first.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(first.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: first.data[1]
             }
           })
@@ -547,7 +547,7 @@ export default {
             })[0]
             return {
               element: last.element,
-              time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(last.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: last.data[1]
             }
           })
@@ -566,7 +566,7 @@ export default {
             const range = max.data[1] - min.data[1]
             return {
               element: last.element,
-              time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(last.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: range
             }
           })
@@ -581,7 +581,7 @@ export default {
             const first = sort[copy.length - 1]
             return {
               element: last.element,
-              time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(last.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: last.data[1] - first.data[1]
             }
           })
@@ -593,7 +593,7 @@ export default {
           result = copy.map(item => {
             return {
               element: item.element,
-              time: bus.timeFormate(new Date(item.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              time: bus.timeFormate(new Date(item.data[0]), 'YYYY-MM-DD HH:mm:ss'),
               value: item.data[1]
             }
           })

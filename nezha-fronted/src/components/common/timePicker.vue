@@ -67,7 +67,7 @@ export default {
     return {
       isPopoverDisabled: false,
       isCustom: false,
-      timePicker: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss',
+      timePicker: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss',
       searchTime: [
         bus.timeFormate(bus.getOffsetTimezoneData(-1), this.timePicker),
         bus.timeFormate(bus.getOffsetTimezoneData(), this.timePicker)

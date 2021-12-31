@@ -77,10 +77,10 @@ export default {
       chartDataTemp: { id: 8832, prev: null, next: null, panelId: 0, title: '123', span: 12, height: 0, createAt: '2021-01-27 07:36:19', unit: 2, weight: 0, pid: null, buildIn: null, seq: null, param: { last: 0, legendValue: { total: 'off', min: 'off', avg: 'off', last: 'off', max: 'off' }, threshold: '', url: '', nullType: 'null' }, sync: null, asset: null, isLoaded: true, from: '__vue_devtool_undefined__', draggable: true, resizable: true, editable: true },
       chartData: {},
       filter: {
-        end_time: bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss'),
+        end_time: bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss'),
         panelId: 0,
         searchName: '',
-        start_time: bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss')
+        start_time: bus.timeFormate(bus.getOffsetTimezoneData(-1), 'YYYY-MM-DD HH:mm:ss')
       }
     }
   },
@@ -131,8 +131,8 @@ export default {
         })
       } else {
         const panelTime = localStorage.getItem('panelTime') ? JSON.parse(localStorage.getItem('panelTime')) : ['', '']
-        const endTime = panelTime[1] || bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
-        const startTime = panelTime[0] || bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = panelTime[1] || bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = panelTime[0] || bus.timeFormate(bus.getOffsetTimezoneData(-1), 'YYYY-MM-DD HH:mm:ss')
         const step = bus.getStep(startTime, endTime)
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {
@@ -322,7 +322,7 @@ export default {
                               }
                               */
                             // let t_date = new Date(dpsItem[0] * 1000);
-                            // let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
+                            // let timeTmp = bus.timeFormate(t_date, 'YYYY-MM-DD HH:mm:ss');
                             tableData.push({ // 表格数据
                               // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
                               // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列

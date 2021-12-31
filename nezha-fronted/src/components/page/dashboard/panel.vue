@@ -277,7 +277,7 @@ export default {
       scrollbarWrap: null,
       batchDeleteObjs: [],
       nowTimeType: {},
-      panelDateFormatTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss'
+      panelDateFormatTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
     }
   },
   components: {

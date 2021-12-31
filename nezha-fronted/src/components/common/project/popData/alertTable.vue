@@ -194,8 +194,8 @@ export default {
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.$set(this.searchLabel, 'moduleIds', this.moduleId)
       if (this.searchTime && this.searchTime.length > 1) {
-        this.$set(this.searchLabel, 'startAt', bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss'))
-        this.$set(this.searchLabel, 'endAt', bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss'))
+        this.$set(this.searchLabel, 'startAt', bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss'))
+        this.$set(this.searchLabel, 'endAt', bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss'))
       } else {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt

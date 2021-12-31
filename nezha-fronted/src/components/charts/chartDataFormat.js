@@ -392,7 +392,7 @@ function timeCompute (value, unit, dot = 0) {
 }
 
 function timeFormat34 (value) {
-  return bus.timeFormate(parseInt(value), 'yyyy-MM-dd hh:mm:ss')
+  return bus.timeFormate(parseInt(value), 'YYYY-MM-DD HH:mm:ss')
 }
 function timeFormat35 (value) {
   return bus.timeFormate(parseInt(value), 'MM/dd/yyyy h:mm:ss a')
