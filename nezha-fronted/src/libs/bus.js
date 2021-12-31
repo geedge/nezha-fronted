@@ -294,7 +294,7 @@ export default new Vue({
     getNewTime (time, num) {
       const date = new Date(time)
       const newDate = new Date(parseInt(date.getTime(), 10) + num)
-      return this.timeFormate(newDate, 'yyyy-MM-dd hh:mm:ss')
+      return this.timeFormate(newDate, localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss')
     },
     getOffsetTimezoneData (offset = 0) {
       return new Date(this.computeTimezone(new Date().getTime())).setHours(new Date(this.computeTimezone(new Date().getTime())).getHours() + offset)

@@ -68,7 +68,10 @@ export default {
       isPopoverDisabled: false,
       isCustom: false,
       timePicker: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss',
-      searchTime: [],
+      searchTime: [
+        bus.timeFormate(bus.getOffsetTimezoneData(-1), this.timePicker),
+        bus.timeFormate(bus.getOffsetTimezoneData(), this.timePicker)
+      ],
       showTime: {
         id: 4,
         text: this.$t('dashboard.panel.lastOneHour')
@@ -308,22 +311,7 @@ export default {
           }
         }
       }
-    },
-    stepSearchTime: {
-      immediate: true,
-      handler (n, o) {
-        if (n && this.searchTime[0]) {
-          if (this.showTime.value) {
-            this.setSearchTime(this.showTime.type, this.showTime.value)
-          } else {
-            const startTime = bus.timeFormate(this.searchTime[0], this.timePicker)
-            const endTime = bus.timeFormate(new Date(this.searchTime[0]).getTime() + new Date(this.stepSearchTime[1]).getTime() - new Date(this.stepSearchTime[0]).getTime(), this.timePicker)
-            this.$set(this.searchTime, 0, startTime)
-            this.$set(this.searchTime, 1, endTime)
-          }
-        }
-      }
-    },
+    }
   }
 }
 </script>

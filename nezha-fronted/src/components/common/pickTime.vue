@@ -80,7 +80,8 @@ export default {
       theme: {
         themeColor: ''
       },
-      timer: ''
+      timer: '',
+      pickTimer: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'yyyy-MM-dd hh:mm:ss',
     }
   },
   created () {
@@ -135,8 +136,8 @@ export default {
       if (timeRange && timeRange.length < 2) {
         return []
       }
-      const startTime = bus.timeFormate(timeRange[0], 'yyyy-MM-dd hh:mm:ss')
-      const endTime = bus.timeFormate(timeRange[1], 'yyyy-MM-dd hh:mm:ss')
+      const startTime = bus.timeFormate(timeRange[0], this.pickTimer)
+      const endTime = bus.timeFormate(timeRange[1], this.pickTimer)
       return [startTime, endTime]
     },
     dateChange (time) {
