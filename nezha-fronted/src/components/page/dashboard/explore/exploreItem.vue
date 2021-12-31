@@ -1,7 +1,7 @@
 <template>
   <div class="explore list-page">
     <div class="main-list">
-      <div class="main-container">
+      <div class="main-container explore-split-box">
         <!-- 关闭按钮 -->
         <div v-if="closable" class="explore-close">
           <span @click="split"><i class="nz-icon nz-icon-close"></i></span>

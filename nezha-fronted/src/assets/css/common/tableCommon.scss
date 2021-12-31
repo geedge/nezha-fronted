@@ -366,6 +366,9 @@
     width: calc(100% - 20px);
   }
 }
+.explore-split-box{
+  overflow-x: hidden !important;
+}
 .profile {
   .top-tools {
     padding: 0 20px 14px 20px;
