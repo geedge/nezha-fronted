@@ -617,7 +617,6 @@ export default {
       const _self = this
       this.scrollbarWrap.addEventListener('scroll', bus.debounce(function () {
         _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50
-        console.log(_self.scrollbarWrap.scrollTop)
         // _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop)
         _self.$refs.chartList.onScroll(_self.scrollbarWrap.scrollTop)
       }, 300))

@@ -130,7 +130,6 @@ export default {
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh) {
       this.loading = true
-      console.log(this.timeRange)
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
       let endTime = ''
@@ -238,7 +237,7 @@ export default {
                 this.logChartDataFormat()
               }
             }).catch(res => {
-              console.log(res)
+              console.info(res)
             }).finally(() => {
               this.loading = false
             })

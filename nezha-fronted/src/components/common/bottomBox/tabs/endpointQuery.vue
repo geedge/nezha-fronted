@@ -90,7 +90,7 @@ export default {
     obj: {
       immediate: true,
       handler (n) {
-        this.formatTime = new Date(bus.computeTimezoneTime(new Date()))
+        this.formatTime = bus.timeFormate(new Date(bus.computeTimezoneTime(new Date())))
       }
     }
   },
@@ -153,7 +153,7 @@ export default {
       this.formatTime = this.getTime(size, unit)
     },
     getTime (size, unit) { // 计算时间
-      const now = !this.formatTime ? new Date(bus.computeTimezone(new Date().getTime())) : new Date(this.formatTime)
+      const now = !this.formatTime ? new Date(bus.computeTimezone(new Date().getTime())) : new Date(bus.formateTimeToTime(this.formatTime))
       if (unit) {
         switch (unit) {
           case 'y':
@@ -191,7 +191,8 @@ export default {
       minute = minute < 10 ? '0' + minute : minute
       let second = now.getSeconds()
       second = second < 10 ? '0' + second : second
-      return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+      const str = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+      return bus.timeFormate(new Date(str))
     },
     viewGraph () {
       this.$refs.endpointQueryTab.viewGraph()
