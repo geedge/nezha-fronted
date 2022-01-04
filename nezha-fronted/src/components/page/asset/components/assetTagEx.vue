@@ -53,6 +53,8 @@
           :placeholder="$t('alert.silence.selectTime')"
           :start-placeholder="$t('dashboard.panel.startTime')"
           :end-placeholder="$t('dashboard.panel.endTime')"
+          :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+          :format="timeFormatStrToDatePickFormat(timeFormatMain)"
         >
         </my-date-picker>
       </div>
@@ -74,7 +76,9 @@
           :range-separator="$t('dashboard.panel.to')"
           :placeholder="$t('alert.silence.selectTime')"
           :start-placeholder="$t('dashboard.panel.startTime')"
-          :end-placeholder="$t('dashboard.panel.endTime')">
+          :end-placeholder="$t('dashboard.panel.endTime')"
+          :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+          :format="timeFormatStrToDatePickFormat(timeFormatMain)">
         </my-date-picker>
       </div>
     </div>

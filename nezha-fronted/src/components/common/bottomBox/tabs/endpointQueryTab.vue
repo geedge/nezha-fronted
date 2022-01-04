@@ -32,19 +32,21 @@
           </el-input>
         </div>
         <div class="margin-r-20 nz-btn-group nz-btn-group-size-small nz-btn-group-light">
-          <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend" id="endpoint-query-changetime"><i class="el-icon-d-arrow-left"></i></button><my-date-picker
-          v-model="formatTime"
-          type="datetime"
-          size="mini"
-          class="project-calendar nz-input-group-middle"
-          clearable
-          :time-arrow-control="true"
-          placeholder="Moment"
-          :value-format="timeFormatStrToDatePickFormat(endpointQueryTabTime)"
-          :format="timeFormatStrToDatePickFormat(endpointQueryTabTime)"
-          @change="pickTime"
+          <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend" id="endpoint-query-changetime"><i class="el-icon-d-arrow-left"></i></button>
+          <my-date-picker
+            v-model="formatTime"
+            type="datetime"
+            size="mini"
+            class="project-calendar nz-input-group-middle"
+            clearable
+            :time-arrow-control="true"
+            placeholder="Moment"
+            :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+            :format="timeFormatStrToDatePickFormat(timeFormatMain)"
+            @change="pickTime"
         >
-          </my-date-picker><button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>
+          </my-date-picker>
+          <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>
         </div>
         <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light" style="height: 24px;">
           <button class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="viewGraph">
@@ -175,7 +177,6 @@ export default {
       scrollTop: 0,
       scrollbarWrap: null,
       minusTime: 0,
-      endpointQueryTabTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
     }
   },
   methods: {

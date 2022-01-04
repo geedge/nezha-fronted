@@ -200,6 +200,9 @@ Vue.mixin({
     }
   },
   computed: {
+    timeFormatMain () {
+      return this.$store.getters.getTimeFormatMain
+    },
     getMenuList () {
       return this.$store.state.user.menuList
     },

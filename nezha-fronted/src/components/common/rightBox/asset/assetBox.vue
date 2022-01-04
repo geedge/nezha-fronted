@@ -74,6 +74,8 @@
               popper-class="right-box-select-top"
               style="width: 100%"
               type="date"
+              :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+              :format="timeFormatStrToDatePickFormat(timeFormatMain)"
               value-format="yyyy-MM-dd">
             </my-date-picker>
           </el-form-item>
@@ -143,6 +145,8 @@
                         placeholder=""
                         popper-class="right-box-select-top"
                         size="small"
+                        :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+                        :format="timeFormatStrToDatePickFormat(timeFormatMain)"
                         style="width: 100%">
                       </my-date-picker>
                     </template>
@@ -155,7 +159,8 @@
                         popper-class="right-box-select-top"
                         size="small"
                         style="width: 100%"
-                        value-format="yyyy-MM-dd">
+                        :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+                        :format="timeFormatStrToDatePickFormat(timeFormatMain)">
                       </my-date-picker>
                     </template>
                   </template>

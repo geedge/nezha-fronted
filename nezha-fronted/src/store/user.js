@@ -76,6 +76,7 @@ const user = {
       localStorage.setItem('nz-unnsaved-change', res.data.unsavedChange)
       localStorage.setItem('nz-mfa-enable', Number(res.data.mfaAuthEnable) ? 1 : 0)
       store.commit('setLanguage', res.data.user.lang || defaultAppearance.language)
+      store.commit('setTimeFormatMain', localStorage.getItem('nz-default-dateFormat'))
       post('/sys/user/permissions', { token: res.data.token }).then(res => {
         const menuList = sortByOrderNum(res.data.menus)
         store.commit('setMenuList', menuList)

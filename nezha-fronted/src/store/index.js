@@ -39,9 +39,13 @@ const store = new Vuex.Store({
     isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true',
     metricsList: [],
     langList: [],
-    i18nReady: false
+    i18nReady: false,
+    timeFormatMain: localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss'
   },
   getters: {
+    getTimeFormatMain (state) {
+      return state.timeFormatMain
+    },
     getLinkData (state) {
       return state.linkData
     },
@@ -166,6 +170,10 @@ const store = new Vuex.Store({
     },
     setLangList (state, langList) {
       state.langList = langList
+    },
+    setTimeFormatMain (state, timeFormat) {
+      console.log(timeFormat)
+      state.timeFormatMain = timeFormat
     },
     i18nReady (state, ready) {
       state.i18nReady = ready

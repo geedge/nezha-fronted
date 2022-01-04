@@ -132,6 +132,8 @@
                           :placeholder="$t('overall.select')"
                           popper-class="right-box-select-top right-public-box-dropdown-top"
                           size="small"
+                          :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+                          :format="timeFormatStrToDatePickFormat(timeFormatMain)"
                           style="width: 100%">
                         </my-date-picker>
                       </template>
@@ -143,6 +145,8 @@
                           :placeholder="$t('overall.select')"
                           popper-class="right-box-select-top right-public-box-dropdown-top"
                           size="small"
+                          :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+                          :format="timeFormatStrToDatePickFormat(timeFormatMain)"
                           style="width: 100%"
                           value-format="yyyy-MM-dd">
                         </my-date-picker>

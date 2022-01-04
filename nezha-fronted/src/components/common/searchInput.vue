@@ -222,6 +222,8 @@
                                 @change="changeDate"
                                 :class="dataBackG?'':'dataBackG'"
                                 v-if="ind==sreach_num&&val.id==7"
+                                :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+                                :format="timeFormatStrToDatePickFormat(timeFormatMain)"
                         >
                         </my-date-picker>
                     </li>
