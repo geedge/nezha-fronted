@@ -89,7 +89,32 @@
       </template>
     </nzDataList>
     <transition name="right-box">
-      <chart-box :chart="object" :show-panel="showPanel" :from="'chartTemp'"  @close="closeChartBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" ref="addChartModal" v-if="rightBox.show"></chart-box>
+<!--      <chart-box-->
+<!--        :chart="object"-->
+<!--        :show-panel="showPanel"-->
+<!--        :from="'chartTemp'"-->
+<!--        @close="closeChartBox"-->
+<!--        @delete-chart="delChart"-->
+<!--        @on-create-success="createSuccess"-->
+<!--        @on-delete-success="delChartOk"-->
+<!--        @reload="panelReload"-->
+<!--        @reloadOnlyPanel="panelReloadOnlyPanel"-->
+<!--        ref="addChartModal"-->
+<!--        v-if="rightBox.show"></chart-box>-->
+      <chart-right-box
+        v-if="rightBox.show"
+        v-loading="rightBox.loading"
+        ref="addChartModal"
+        :chart="object"
+        :from="'chartTemp'"
+        :show-panel="showPanel"
+        @close="closeChartBox"
+        @reload="panelReload"
+        @reloadOnlyPanel="panelReloadOnlyPanel"
+        @delete-chart="delChart"
+        @on-create-success="createSuccess"
+        @on-delete-success="delChartOk"
+      ></chart-right-box>
     </transition>
   </div>
 </template>
@@ -102,6 +127,8 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import chartTmplTable from '@/components/common/table/settings/chartTmplTable'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
+import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
+import {randomcolor} from "@/components/common/js/radomcolor/randomcolor";
 
 export default {
   name: 'chartTemp',
@@ -110,7 +137,8 @@ export default {
     deleteButton,
     chartTmplTable,
     'export-excel': exportXLSX,
-    topToolMoreOptions
+    topToolMoreOptions,
+    chartRightBox
   },
   mixins: [dataListMixin, routerPathParams],
   data () {
@@ -157,17 +185,28 @@ export default {
         id: '',
         name: '',
         type: 'line',
-        span: 12,
-        height: '400',
+        span: 4,
+        datasource: 'metrics',
+        varType: 1,
+        height: 4,
         unit: 2,
-        param: { url: '', threshold: '' },
-        elements: [{ expression: '', legend: '', type: 'expert', id: '' }],
+        param: {
+          stack: 0,
+          nullType: 'null',
+          legend: { placement: 'bottom', values: [], show: true },
+          enable: {
+            legend: true,
+            valueMapping: false,
+            thresholds: false
+          },
+          thresholdShow: true,
+          thresholds: [{ value: undefined, color: randomcolor() }]
+        },
+        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
         panel: '',
-        sync: '',
+        sync: 0,
         remark: '',
-        groupId: -1,
-        panelId: 0,
-        varType: 1
+        groupId: ''
       },
       showPanel: {
         name: 'template',
@@ -184,16 +223,57 @@ export default {
       this.object = this.newObject()
       this.object.panelId = 0
       this.object.panelName = 'template'
+      this.object.param.thresholds = [{ value: undefined, color: randomcolor() }]
       this.rightBox.show = true
     },
-    edit (u) {
-      if (!u.param) {
-        u.param = { url: '', threshold: '' }
+    edit (data, copy) {
+      if (copy) {
+        this.object = JSON.parse(JSON.stringify(data))
+        this.object.x = 0
+        this.object.y = 0
+        this.object.panelId = this.showPanel.id
+        this.object.panelName = this.showPanel.name
+        this.object.id = ''
+        this.object.elements.forEach((item) => {
+          item.id = ''
+          item.chartId = ''
+          delete item.seq
+        })
+        if (this.object.datasource !== 'metrics' && this.object.datasource !== 'log') {
+          delete this.object.elements
+        }
+        if (!this.object.groupId || this.object.groupId == -1) {
+          this.object.groupId = ''
+        }
+        this.rightBox.show = true
+      } else {
+        this.rightBox.show = true
+        this.rightBox.loading = true
+        this.$get('visual/panel/chart/' + data.id).then(res => {
+          this.rightBox.loading = false
+          if (res.code === 200) {
+            const chartData = res.data.data
+            this.object = JSON.parse(JSON.stringify(chartData))
+            this.object.panelId = this.showPanel.id
+            this.object.panelName = this.showPanel.name
+            this.object.param = JSON.parse(this.object.param)
+            if (!this.object.groupId || this.object.groupId == -1) {
+              this.object.groupId = ''
+            }
+            if (this.object.type == 'table') {
+              const arr = this.object.param.indexs ? this.object.param.indexs.split(',') : []
+              this.object.param.tags = arr.map((item) => {
+                return {
+                  text: item,
+                  tiClasses: ['ti-valid']
+                }
+              })
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
       }
-      this.object = JSON.parse(JSON.stringify(u))
-      this.object.panelId = this.showPanel.id
-      this.object.panelName = this.showPanel.name
-      this.rightBox.show = true
     },
     chartBySync (row) {
       this.$post('visual/panel/chart/syncTmpl', { pid: row.id }).then(res => {
@@ -240,6 +320,7 @@ export default {
     },
     closeChartBox (refresh) {
       this.rightBox.show = false
+      this.chart = {}
       if (refresh) {
         this.getTableData()
       }

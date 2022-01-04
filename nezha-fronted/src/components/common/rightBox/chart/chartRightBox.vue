@@ -38,7 +38,14 @@
             </template>
           </select-panel>
         </el-form-item>
-
+          <!--   varType   -->
+          <el-form-item :label="$t('dashboard.panel.chartForm.varType')" class="form-item--half-width" v-if="from === 'chartTemp'">
+            <el-select id="chart-box-varType" v-model="editChart.varType" :disabled="!!editChart.id" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" clearable placeholder="" size="small" value-key="chartType">
+              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
+                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
         <!--group-->
         <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="form-item--half-width" prop="group">
           <el-select id="chart-box-group" v-model="editChart.groupId" :disabled="editChart.type==='group'" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
@@ -176,6 +183,10 @@ export default {
       prevChart: {},
       filterPanel: '',
       groupArr: [],
+      varTypeArr: [
+        { name: 'Asset', id: 1 },
+        { name: 'Endpoint', id: 2 }
+      ],
       panelName: '',
       rules: {
         name: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
@@ -191,6 +202,7 @@ export default {
     /* 关闭弹框 */
     esc (refresh) {
       this.prevent_opt.save = false
+      console.log(12313)
       this.$emit('close', refresh)
     },
     // 保存endpoint
@@ -436,6 +448,13 @@ export default {
           }
           if (!this.editChart.param.link) {
             this.$set(this.editChart.param, 'link', '')
+          }
+          if (!this.editChart.param.enable) {
+            this.editChart.param.enable = {
+              thresholds: false,
+              legend: false,
+              valueMapping: false
+            }
           }
           if (this.editChart.param.enable.legend && !this.editChart.param.legend) {
             this.editChart.param.legend = { placement: 'bottom', values: [], show: true }

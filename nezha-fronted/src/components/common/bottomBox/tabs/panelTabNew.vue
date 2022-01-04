@@ -338,10 +338,11 @@ export default {
       this.$emit('changeTab', tab)
     },
     closeRightBox (refresh) {
+      console.log('close')
       this.rightBox.chart.show = false
       this.rightBox.chartTemp.show = false
-      this.chart = {}
       this.$store.dispatch('clearPanel')
+      this.chart = {}
       if (refresh) {
         this.refresh()
         if (this.from === fromRoute.chartTemp) {
