@@ -1,8 +1,8 @@
 <template>
   <div id="panel-calender" :class="{'calendar--small': size === 'small'}" class="calendar">
     <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
-                    :value-format="timeFormatStrToDatePickFormat(timePicker)"
-                    :format="timeFormatStrToDatePickFormat(timePicker)" @change="dateChange" v-model="searchTime" type="datetimerange"
+                    :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+                    :format="timeFormatStrToDatePickFormat(timeFormatMain)" @change="dateChange" v-model="searchTime" type="datetimerange"
                     popper-class="panel-time-picker-popper time-picker-popover__select-top"
                     :default-time="['00:00:00', '23:59:59']"
                     :range-separator="$t('dashboard.panel.to')"
