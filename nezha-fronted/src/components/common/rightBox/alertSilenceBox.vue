@@ -213,8 +213,7 @@ export default {
       moduleData: null,
       endpointData: null,
       startAtTamp: '',
-      endAtTamp: '',
-      alertSilenceTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
+      endAtTamp: ''
     }
   },
   mounted () {

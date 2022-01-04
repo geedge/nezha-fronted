@@ -80,8 +80,7 @@ export default {
       theme: {
         themeColor: ''
       },
-      timer: '',
-      pickTimer: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss',
+      timer: ''
     }
   },
   created () {

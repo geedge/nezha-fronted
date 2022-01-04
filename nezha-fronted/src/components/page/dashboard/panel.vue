@@ -276,8 +276,7 @@ export default {
       // ---图表相关参数--end
       scrollbarWrap: null,
       batchDeleteObjs: [],
-      nowTimeType: {},
-      panelDateFormatTime: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
+      nowTimeType: {}
     }
   },
   components: {
