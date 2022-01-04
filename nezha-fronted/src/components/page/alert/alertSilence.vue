@@ -123,6 +123,15 @@ export default {
     this.initEvent()
   },
   methods: {
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      this.copyFlag = false
+      this.object = {}
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+      }
+    },
     initEvent () {
       bus.$on('alert-rule-list-change', () => {
         this.getTableData()
