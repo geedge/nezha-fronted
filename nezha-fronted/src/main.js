@@ -161,6 +161,14 @@ Vue.mixin({
     translation (key) {
       return i18n.t(key)
     },
+    timeFormatStrToDatePickFormat (str) {
+      // str.replace(//)
+      const reg = /Y/g
+      str = str.replace(reg, 'y')
+      const reg1 = /D/g
+      str = str.replace(reg1, 'd')
+      return str
+    },
     copyRow (row, rightBoxValKey, idKey = 'id', show = false, format, callback) {
       /*
       row 表格当前行

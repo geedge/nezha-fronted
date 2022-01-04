@@ -40,8 +40,8 @@
           clearable
           :time-arrow-control="true"
           placeholder="Moment"
-          :value-format="endpointQueryTabTime"
-          :format="endpointQueryTabTime"
+          :value-format="timeFormatStrToDatePickFormat(endpointQueryTabTime)"
+          :format="timeFormatStrToDatePickFormat(endpointQueryTabTime)"
           @change="pickTime"
         >
           </my-date-picker><button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>

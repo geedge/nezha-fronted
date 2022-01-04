@@ -4,7 +4,7 @@
     <transition>
       <div v-show="showDropdown" id="panel-calender" class="calendar">
         <my-date-picker prefix-icon=" " size="mini" ref="calendar"
-                        :format="multipleTime" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
+                        :format="timeFormatStrToDatePickFormat(multipleTime)" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
                         popper-class="panel-time-picker-popper"
                         align="right">
         </my-date-picker>

@@ -109,13 +109,13 @@ const NewPopper = {
 const DEFAULT_FORMATS = {
   date: 'yyyy-MM-dd',
   month: 'yyyy-MM',
-  datetime: 'YYYY-MM-DD HH:mm:ss',
+  datetime: 'yyyy-MM-dd HH:mm:ss',
   time: 'HH:mm:ss',
   week: 'yyyywWW',
   timerange: 'HH:mm:ss',
   daterange: 'yyyy-MM-dd',
   monthrange: 'yyyy-MM',
-  datetimerange: 'YYYY-MM-DD HH:mm:ss',
+  datetimerange: 'yyyy-MM-dd HH:mm:ss',
   year: 'yyyy'
 }
 const HAVE_TRIGGER_TYPES = [
