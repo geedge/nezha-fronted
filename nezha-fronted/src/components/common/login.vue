@@ -31,7 +31,7 @@
 <!--          <div v-if="!license.valid" class="license-info">INSTALLATION ID:&nbsp;{{license.token}}</div>-->
           <div v-if="!license.valid" class="license-upload">
 <!--            <button type="button" class="login-btn" @click="downloadMib"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.dowLicense')}}</button>-->
-            <button type="button" class="login-btn download-btn" @click="downloadLogin"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.download')}}</button>
+            <button type="button" class="login-btn download-btn" @click="downloadLogin"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('login.download')}}</button>
           </div>
           <div class="license-upload" v-if="!license.valid">
             <el-upload
