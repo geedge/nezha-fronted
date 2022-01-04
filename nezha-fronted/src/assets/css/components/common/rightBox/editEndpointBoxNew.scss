@@ -36,6 +36,10 @@
   .el-cascader__tags {
     height: calc(100% - 10px);
     width: 100%;
+    span {
+      background-color: $--background-color-base !important;
+      color: $--color-text-regular;
+    }
   }
   .right-box-module .el-cascader .el-input__inner {
     height: 150px;

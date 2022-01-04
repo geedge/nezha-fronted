@@ -74,9 +74,8 @@
               popper-class="right-box-select-top"
               style="width: 100%"
               type="date"
-              :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
-              :format="timeFormatStrToDatePickFormat(timeFormatMain)"
-              value-format="yyyy-MM-dd">
+              :value-format="timeFormatStrToDatePickFormat(timeFormatMain, 1)"
+              :format="timeFormatStrToDatePickFormat(timeFormatMain, 1)">
             </my-date-picker>
           </el-form-item>
           <!-- labels -->
