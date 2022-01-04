@@ -68,10 +68,9 @@ export default {
     return {
       isPopoverDisabled: false,
       isCustom: false,
-      timePicker: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss',
       searchTime: [
-        bus.timeFormate(bus.getOffsetTimezoneData(-1), this.timePicker),
-        bus.timeFormate(bus.getOffsetTimezoneData(), this.timePicker)
+        bus.timeFormate(bus.getOffsetTimezoneData(-1)),
+        bus.timeFormate(bus.getOffsetTimezoneData())
       ],
       showTime: {
         id: 4,
@@ -165,8 +164,8 @@ export default {
   },
   methods: {
     dateChange (val) {
-      const startTime = bus.timeFormate(val[0], this.timePicker)
-      const endTime = bus.timeFormate(val[1], this.timePicker)
+      const startTime = bus.timeFormate(val[0])
+      const endTime = bus.timeFormate(val[1])
       this.$set(this.searchTime, 0, startTime)
       this.$set(this.searchTime, 1, endTime)
 
@@ -190,11 +189,11 @@ export default {
           }
           const time = bus.getTimezontDateRange()
           if (timeGroup.start_time) {
-            this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time, this.timePicker))
-            this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time, this.timePicker))
+            this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time))
+            this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time))
           } else {
-            this.$set(this.searchTime, 0, bus.timeFormate(time[0], this.timePicker))
-            this.$set(this.searchTime, 1, bus.timeFormate(time[1], this.timePicker))
+            this.$set(this.searchTime, 0, bus.timeFormate(time[0]))
+            this.$set(this.searchTime, 1, bus.timeFormate(time[1]))
           }
         }
       } else {
@@ -263,20 +262,20 @@ export default {
     },
     setSearchTime (type, val) {
       if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), this.timePicker)
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.timePicker)
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'm')
       } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), this.timePicker)
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.timePicker)
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'h')
       } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), this.timePicker)
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), this.timePicker)
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'd')

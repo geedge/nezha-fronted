@@ -147,8 +147,7 @@
                           size="small"
                           :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
                           :format="timeFormatStrToDatePickFormat(timeFormatMain)"
-                          style="width: 100%"
-                          value-format="yyyy-MM-dd">
+                          style="width: 100%">
                         </my-date-picker>
                       </template>
                     </template>
