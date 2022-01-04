@@ -22,7 +22,7 @@
         </el-option>
       </el-option-group>
     </el-select>
-    <i class="nz-icon nz-icon-plus" @click="addPipelineShow"></i>
+    <i style="padding-right: 3px;" class="nz-icon nz-icon-plus" @click="addPipelineShow"></i>
   </span>
 </template>
 
