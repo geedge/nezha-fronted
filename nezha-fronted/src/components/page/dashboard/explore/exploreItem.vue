@@ -736,7 +736,7 @@ export default {
           }
           axios.all(requestArr).then(res => {
             const tData = []
-            const tLabels = []
+            let tLabels = []
             if (res.length > 0) {
               this.tableData = []
               this.tableTitle = []
@@ -775,6 +775,7 @@ export default {
                 tLabels.sort((a, b) => {
                   return a.prop.charCodeAt(0) - b.prop.charCodeAt(0)
                 })
+                tLabels = tLabels.filter(label => label.prop !== 'time')
                 tLabels.unshift({
                   label: this.$t('dashboard.panel.chartTableColumn.time'),
                   prop: 'time',
