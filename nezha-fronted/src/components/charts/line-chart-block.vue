@@ -739,7 +739,7 @@ export default {
           z: 9,
           animation: false,
           appendToBody: true,
-          className: 'line-chart-block',
+          className: 'line-chart-block-Zindex',
           extraCssText: 'z-index:1000;',
           /* enterable:true, 导致tooltip不消失，显示多个tooltip */
           position: function (point, params, dom, rect, size) {
