@@ -29,16 +29,16 @@
         <div>
           <div class="license-left-boyd-title">{{$t('license.proDate')}}</div>
           <div class="license-left-boyd-value">
-            <span v-if="licenseList.production_date">{{utcTimeToTimezoneStr(licenseList.production_date * 1000)}}</span>
+            <span v-if="licenseList.production_date">{{licenseList.production_date}}</span>
             <span v-else>-</span>
           </div>
         </div>
         <div>
           <div class="license-left-boyd-title">{{$t('license.expDate')}}</div>
           <div class="license-left-boyd-value">
-            <span v-if="expData.id === '20001' && expData.license.license_type === 'expiration'">{{utcTimeToTimezoneStr(expData.license.exp_date * 1000)}}</span>
-            <span v-else-if="expData.id === '20001' && expData.license.license_type === 'perpetual'">{{$t('license.permanent')}}</span>
-            <span v-else-if="expData.id === '20001' && expData.license.license_type === 'trial'">{{utcTimeToTimezoneStr(this.stateItem * 1000)}} ~ {{ utcTimeToTimezoneStr(this.endItem * 1000)}}</span>
+            <span v-if="expData.id === '20001' && expData.license.license_type === 'expiration'">{{expData.license.exp_date}}</span>
+            <span v-else-if="expData.id === '20001' && expData.license.license_type === 'perpetual'">{{licenseList.production_date}}</span>
+            <span v-else-if="expData.id === '20001' && expData.license.license_type === 'trial'">{{stateItem}} ~ {{endItem}}</span>
             <span v-else>-</span>
           </div>
         </div>
@@ -92,6 +92,8 @@
 </template>
 
 <script>
+import bus from '@/libs/bus'
+
 export default {
   name: 'license',
   data () {
@@ -124,11 +126,13 @@ export default {
         if (res.code === 200) {
           this.licenseMark = res.data.license
           this.licenseList = res.data.license.hasp
+          this.licenseList.production_date = bus.timeFormate(bus.computeTimezone(this.licenseList.production_date * 1000))
           this.licenseList.feature.map(e => {
             if (e.id === '20001') {
               this.expData = e
-              this.stateItem = e.license.time_start
-              this.endItem = e.license.end_time * 1 + e.license.time_start * 1
+              this.expData.license.exp_date = bus.timeFormate(bus.computeTimezone(this.expData.license.exp_date * 1000))
+              this.stateItem = bus.timeFormate(bus.computeTimezone(e.license.time_start * 1000))
+              this.endItem = bus.timeFormate(bus.computeTimezone(e.license.time_start * 1000)) + bus.timeFormate(bus.computeTimezone(e.license.end_time * 1000))
             }
           })
         } else {

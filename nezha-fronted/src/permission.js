@@ -18,7 +18,6 @@ router.beforeEach((to, from, next) => {
     Vue.http.get(configUrl).then(config => {
       const appearance = new Promise(resolve => {
         get(config.body.baseUrl + '/sys/appearance').then(res => {
-          // console.log(res)
           if (res.code === 200) {
             localStorage.setItem('nz-sys-name', res.data.system_name || '')
             localStorage.setItem('nz-sys-logo', res.data.system_logo || '')

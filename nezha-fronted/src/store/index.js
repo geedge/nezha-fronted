@@ -172,7 +172,6 @@ const store = new Vuex.Store({
       state.langList = langList
     },
     setTimeFormatMain (state, timeFormat) {
-      console.log(timeFormat)
       state.timeFormatMain = timeFormat
     },
     i18nReady (state, ready) {

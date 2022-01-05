@@ -338,7 +338,6 @@ export default {
       this.$emit('changeTab', tab)
     },
     closeRightBox (refresh) {
-      console.log('close')
       this.rightBox.chart.show = false
       this.rightBox.chartTemp.show = false
       this.$store.dispatch('clearPanel')

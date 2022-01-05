@@ -202,7 +202,6 @@ export default {
     /* 关闭弹框 */
     esc (refresh) {
       this.prevent_opt.save = false
-      console.log(12313)
       this.$emit('close', refresh)
     },
     // 保存endpoint
