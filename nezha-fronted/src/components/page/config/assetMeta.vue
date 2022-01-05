@@ -297,7 +297,7 @@ export default {
       ids: {
         target: this.searchLabel,
         propertyName: 'ids',
-
+        isSearchInput: true,
         type: 'string',
         defaultJson: {
           disabled: false,
@@ -311,6 +311,7 @@ export default {
       },
       name: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'name',
         type: 'string',
         defaultJson: {
@@ -325,6 +326,7 @@ export default {
       },
       key: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'key',
         type: 'string',
         defaultJson: {

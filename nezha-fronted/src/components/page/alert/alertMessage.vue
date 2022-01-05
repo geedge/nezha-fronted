@@ -397,9 +397,9 @@ export default {
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
       ids: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'ids',
         type: 'number',
-
         defaultJson: {
           disabled: false,
           id: 26,
@@ -412,9 +412,9 @@ export default {
       },
       endpointName: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'endpointName',
         type: 'string',
-
         defaultJson: {
           disabled: false,
           label: 'endpointName',
@@ -426,9 +426,9 @@ export default {
       },
       summary: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'summary',
         type: 'number',
-
         defaultJson: {
           disabled: false,
           label: 'summary',
@@ -440,9 +440,9 @@ export default {
       },
       ruleName: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'ruleName',
         type: 'string',
-
         defaultJson: {
           disabled: false,
           label: 'ruleName',
@@ -454,6 +454,7 @@ export default {
       },
       assetName: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'assetName',
         type: 'string',
         defaultJson: {
@@ -467,9 +468,9 @@ export default {
       },
       labels: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'labels',
         type: 'string',
-
         defaultJson: {
           disabled: false,
           label: 'labels',

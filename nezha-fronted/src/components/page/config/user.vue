@@ -210,9 +210,9 @@ export default {
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
       name: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'name',
         type: 'string',
-
         defaultJson: {
           disabled: false,
           id: 'name',

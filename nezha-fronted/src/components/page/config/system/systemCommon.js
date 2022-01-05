@@ -140,6 +140,7 @@ export const parentTableCommon = {
         orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
         ids: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'ids',
           type: 'string',
           defaultJson: {
@@ -153,6 +154,7 @@ export const parentTableCommon = {
         },
         name: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'name',
           type: 'string',
           defaultJson: {
@@ -175,6 +177,7 @@ export const parentTableCommon = {
         orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
         ids: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'ids',
           type: 'string',
           defaultJson: {
@@ -188,6 +191,7 @@ export const parentTableCommon = {
         },
         name: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'name',
           type: 'string',
           defaultJson: {
@@ -222,6 +226,7 @@ export const parentTableCommon = {
         },
         ids: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'ids',
           type: 'string',
           defaultJson: {
@@ -235,6 +240,7 @@ export const parentTableCommon = {
         },
         name: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'name',
           type: 'string',
           defaultJson: {

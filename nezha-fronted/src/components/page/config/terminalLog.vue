@@ -223,6 +223,7 @@ export default {
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
       host: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'host',
         type: 'string',
         defaultJson: {
@@ -237,6 +238,7 @@ export default {
       },
       username: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'username',
         type: 'string',
         defaultJson: {
@@ -251,6 +253,7 @@ export default {
       },
       loginUser: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'loginUser',
         type: 'string',
         defaultJson: {
@@ -265,6 +268,7 @@ export default {
       },
       remoteAddr: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'remoteAddr',
         type: 'string',
         defaultJson: {
@@ -279,6 +283,7 @@ export default {
       },
       uuid: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'uuid',
         type: 'string',
         defaultJson: {
@@ -293,9 +298,9 @@ export default {
       },
       protocol: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'protocol',
         type: 'string',
-        isSearchInput: true,
         defaultJson: {
           disabled: false,
           id: 16,
@@ -309,9 +314,9 @@ export default {
       },
       state: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'state',
         type: 'number',
-        isSearchInput: true,
         defaultJson: {
           disabled: false,
           id: 17,

@@ -255,6 +255,7 @@ export default {
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
       ids: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'ids',
         type: 'string',
         defaultJson: {
@@ -269,6 +270,7 @@ export default {
       },
       matchers: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'matchers',
         type: 'string',
         defaultJson: {

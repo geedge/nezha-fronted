@@ -464,6 +464,7 @@ export default {
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
       ids: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'ids',
         type: 'string',
         defaultJson: {
@@ -478,6 +479,7 @@ export default {
       },
       name: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'name',
         type: 'string',
         defaultJson: {
@@ -492,9 +494,9 @@ export default {
       },
       projectIds: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'projectIds',
         type: 'number',
-        isSearchInput: true,
         defaultJson: {
           disabled: false,
           id: 11,

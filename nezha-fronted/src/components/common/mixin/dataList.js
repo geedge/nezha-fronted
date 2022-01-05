@@ -316,6 +316,7 @@ export default {
         orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
         ids: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'ids',
           type: 'string',
           defaultJson: {
@@ -330,6 +331,7 @@ export default {
         },
         name: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'name',
           type: 'string',
           defaultJson: {
@@ -344,6 +346,7 @@ export default {
         },
         location: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'location',
           type: 'string',
           defaultJson: {
@@ -357,9 +360,9 @@ export default {
         },
         state: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'state',
           type: 'string',
-          isSearchInput: true,
           defaultJson: {
             disabled: false,
             label: 'dcState',
@@ -380,6 +383,7 @@ export default {
         orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
         ids: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'ids',
           type: 'string',
           defaultJson: {
@@ -394,6 +398,7 @@ export default {
         },
         code: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'code',
           type: 'string',
           defaultJson: {
@@ -407,6 +412,7 @@ export default {
         },
         value: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'value',
           type: 'string',
           defaultJson: {
@@ -420,6 +426,7 @@ export default {
         },
         lang: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'lang',
           type: 'string',
           defaultJson: {
@@ -441,6 +448,7 @@ export default {
         orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
         ids: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'ids',
           type: 'string',
           defaultJson: {
@@ -455,6 +463,7 @@ export default {
         },
         name: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'name',
           type: 'string',
           defaultJson: {
@@ -469,9 +478,9 @@ export default {
         },
         brandIds: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'brandIds',
           type: 'number',
-          isSearchInput: true,
           defaultJson: {
             disabled: false,
             label: 'brandIds',
@@ -494,6 +503,7 @@ export default {
         orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
         type: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'type',
           type: 'number',
           defaultJson: {
@@ -508,6 +518,7 @@ export default {
         },
         username: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'username',
           type: 'string',
           defaultJson: {
@@ -522,9 +533,9 @@ export default {
         },
         operation: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'operation',
           type: 'string',
-          isSearchInput: true,
           defaultJson: {
             disabled: false,
             id: 13,
@@ -537,9 +548,9 @@ export default {
         },
         state: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'state',
           type: 'string',
-          isSearchInput: true,
           defaultJson: {
             disabled: false,
             id: 16,
@@ -553,6 +564,7 @@ export default {
         },
         operaId: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'operaId',
           type: 'string',
           defaultJson: {
@@ -567,6 +579,7 @@ export default {
         },
         params: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'params',
           type: 'string',
           defaultJson: {
@@ -589,6 +602,7 @@ export default {
         orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
         ids: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'ids',
           type: 'string',
           defaultJson: {
@@ -603,9 +617,9 @@ export default {
         },
         state: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'state',
           type: 'string',
-          isSearchInput: true,
           defaultJson: {
             disabled: false,
             label: 'promState',
@@ -618,9 +632,9 @@ export default {
         },
         dc: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'dc',
           type: 'number',
-          isSearchInput: true,
           defaultJson: {
             name: 'Date center',
             type: 'dc',
@@ -634,9 +648,9 @@ export default {
         },
         type: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'type',
           type: 'number',
-          isSearchInput: true,
           defaultJson: {
             disabled: false,
             label: 'promType',
@@ -657,6 +671,7 @@ export default {
         orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
         name: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'name',
           type: 'string',
           defaultJson: {
@@ -679,6 +694,7 @@ export default {
         orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
         ids: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'ids',
           type: 'string',
           defaultJson: {
@@ -692,6 +708,7 @@ export default {
         },
         name: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'name',
           type: 'string',
           defaultJson: {
@@ -706,6 +723,7 @@ export default {
         },
         gname: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'gname',
           type: 'string',
           defaultJson: {
@@ -727,6 +745,7 @@ export default {
         orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
         ids: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'ids',
           type: 'string',
           defaultJson: {
@@ -740,6 +759,7 @@ export default {
         },
         name: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'name',
           type: 'string',
           defaultJson: {
@@ -754,9 +774,9 @@ export default {
         },
         type: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'type',
           type: 'string',
-          isSearchInput: true,
           defaultJson: {
             disabled: false,
             label: 'credentialType',
@@ -777,6 +797,7 @@ export default {
         orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
         ids: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'ids',
           type: 'string',
           defaultJson: {
@@ -790,6 +811,7 @@ export default {
         },
         name: {
           target: this.searchLabel,
+          isSearchInput: true,
           propertyName: 'name',
           type: 'string',
           defaultJson: {

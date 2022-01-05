@@ -347,6 +347,7 @@ export default {
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
       ids: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'ids',
         type: 'string',
         defaultJson: {
@@ -361,6 +362,7 @@ export default {
       },
       name: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'name',
         type: 'string',
         defaultJson: {
@@ -375,9 +377,9 @@ export default {
       },
       type: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'type',
         type: 'string',
-        isSearchInput: true,
         defaultJson: {
           disabled: false,
           label: 'chartType',
@@ -390,9 +392,9 @@ export default {
       },
       state: {
         target: this.searchLabel,
+        isSearchInput: true,
         propertyName: 'state',
         type: 'string',
-        isSearchInput: true,
         defaultJson: {
           disabled: false,
           label: 'varType',
