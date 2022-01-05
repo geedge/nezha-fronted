@@ -132,6 +132,7 @@ import otherChartConfig from '@/components/common/rightBox/chart/otherChartConfi
 import systemChartConfig from '@/components/common/rightBox/chart/systemChartConfig'
 import panelChart from '@/components/chart/panelChart'
 import lodash from 'lodash'
+import bus from '@/libs/bus'
 
 const rz = {
   methods: {
@@ -403,7 +404,9 @@ export default {
     },
     preview (show) {
       if (show) {
-        this.timeRange = [new Date().setHours(new Date().getHours() - 1), new Date()]
+        const start = new Date().setHours(new Date().getHours() - 1)
+        const end = new Date()
+        this.timeRange = [bus.computeTimezoneTime(start), bus.computeTimezoneTime(end)]
         this.prevChart = lodash.cloneDeep(this.editChart)
         this.prevChart.loaded = true
         this.prevChart.param.showHeader = true
