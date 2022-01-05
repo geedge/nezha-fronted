@@ -19,9 +19,7 @@
         </span>
         <span v-else>{{item.showValue}}</span>
       </span>
-      <span v-if="chartInfo.param.text==='none'">
-        ' '
-      </span>
+      <span v-if="chartInfo.param.text==='none'"></span>
     </div>
   </div>
 </template>
