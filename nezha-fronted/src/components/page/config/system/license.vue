@@ -37,7 +37,7 @@
           <div class="license-left-boyd-title">{{$t('license.expDate')}}</div>
           <div class="license-left-boyd-value">
             <span v-if="expData.id === '20001' && expData.license.license_type === 'expiration'">{{expData.license.exp_date}}</span>
-            <span v-else-if="expData.id === '20001' && expData.license.license_type === 'perpetual'">{{licenseList.production_date}}</span>
+            <span v-else-if="expData.id === '20001' && expData.license.license_type === 'perpetual'">{{$t('license.permanent')}}</span>
             <span v-else-if="expData.id === '20001' && expData.license.license_type === 'trial'">{{stateItem}} ~ {{endItem}}</span>
             <span v-else>-</span>
           </div>

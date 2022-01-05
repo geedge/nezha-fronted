@@ -19,14 +19,14 @@
             <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
               <el-select v-model="basic.timezone" id="system-basic-timezone" filterable popper-class="right-box-select-top right-public-box-dropdown-top">
                 <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.name" :value="item.name" >
-                  <div style="display: flex;justify-content: space-between;padding: 5px;">
+                  <div style="display: flex;justify-content: space-between;">
                     <div >{{item.name}}</div>
                     <div class="utc-item">{{timezoneOptionHandler(item.offset)}}</div>
                   </div>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.defTheme')" prop="timezone">
+            <el-form-item :label="$t('config.system.basic.defTheme')" prop="defTheme">
               <el-select id="account-input-language"
                          class="right-box__select"
                          v-model="basic.theme"
@@ -37,14 +37,19 @@
                 </template>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.dataFormat')" prop="timezone">
+            <el-form-item :label="$t('config.system.basic.dataFormat')" prop="dataFormat">
               <el-select id="account-input-language"
                          class="right-box__select"
                          v-model="basic.date_format"
                          popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
                          size="small">
                 <template v-for="item in dateFormatList">
-                  <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  <el-option :key="item.value" :label="item.label" :value="item.value">
+                    <div style="display: flex;justify-content: space-between;">
+                      <div >{{item.value}}</div>
+                      <div class="utc-item">{{timezoneOptionHandler(basicTimer)}}</div>
+                    </div>
+                  </el-option>
                 </template>
               </el-select>
             </el-form-item>
@@ -589,7 +594,8 @@ export default {
         { value: 'DD/MM/YYYY HH:mm:ss', label: 'DD/MM/YYYY HH:mm:ss' },
         { value: 'MM/DD/YYYY HH:mm:ss', label: 'MM/DD/YYYY HH:mm:ss' },
         { value: 'YYYY-MM-DD HH:mm:ss', label: 'YYYY-MM-DD HH:mm:ss' }
-      ]
+      ],
+      basicTimer: 0
     }
   },
   methods: {
@@ -607,6 +613,11 @@ export default {
       this.$get('/sys/timezone').then(response => {
         if (response.code == 200) {
           this.timezoneOption = response.data.list
+          this.timezoneOption.map(e => {
+            if (e.name === this.basic.timezone) {
+              this.basicTimer = e.offset
+            }
+          })
         }
       })
     },
@@ -677,6 +688,7 @@ export default {
                 localStorage.setItem('nz-sys-timezone', param.timezone)
                 localStorage.setItem('timezoneOffset', moment.tz(param.timezone).format('Z'))
               }
+              this.queryTimezone()
               setTimeout(() => {
                 this.querySetInfo(type)
               }, 200)
@@ -1012,7 +1024,6 @@ export default {
       const hour = offsetHour > 0 ? (offsetHour < 9 ? '+0' + offsetHour : '+' + offsetHour) : (offsetHour == 0 ? (offsetMinute == 0 ? '' : '+00') : (offsetHour > -10 ? '-0' + Math.abs(offsetHour) : offsetHour))
 
       const minute = offsetHour == 0 && offsetMinute == 0 ? '' : (offsetMinute == 0 ? ':00' : (Math.abs(offsetMinute) > 9 ? ':' + Math.abs(offsetMinute) : ':0' + Math.abs(offsetMinute)))
-
       return 'UTC' + hour + minute
     },
     resetSys () {
