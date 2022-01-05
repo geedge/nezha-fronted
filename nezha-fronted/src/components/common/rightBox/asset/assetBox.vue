@@ -74,7 +74,6 @@
               popper-class="right-box-select-top"
               style="width: 100%"
               type="date"
-              :value-format="timeFormatStrToDatePickFormat(timeFormatMain, 1)"
               :format="timeFormatStrToDatePickFormat(timeFormatMain, 1)">
             </my-date-picker>
           </el-form-item>
@@ -139,13 +138,12 @@
                     <template v-if="JSON.parse(label.param).interval">
                       <my-date-picker
                         id="asset-box-input-purchase-date"
-                        v-model="label.value[0]"
-                        :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'dateRange' : 'datetimerange'"
+                        v-model="label.value"
+                        :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'daterange' : 'datetimerange'"
                         placeholder=""
                         popper-class="right-box-select-top"
                         size="small"
-                        :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
-                        :format="timeFormatStrToDatePickFormat(timeFormatMain)"
+                        :format="timeFormatStrToDatePickFormat(timeFormatMain,JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date)"
                         style="width: 100%">
                       </my-date-picker>
                     </template>
@@ -158,8 +156,7 @@
                         popper-class="right-box-select-top"
                         size="small"
                         style="width: 100%"
-                        :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
-                        :format="timeFormatStrToDatePickFormat(timeFormatMain)">
+                        :format="timeFormatStrToDatePickFormat(timeFormatMain, JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date)">
                       </my-date-picker>
                     </template>
                   </template>
@@ -306,6 +303,7 @@ import { asset as assetConstants } from '@/components/common/js/constants'
 import selectAssetType from '@/components/common/popBox/selectAssetType'
 import locationCascader from '@/components/common/rightBox/locationCascader'
 import editRigthBox from '../../mixin/editRigthBox'
+import bus from '@/libs/bus'
 
 export default {
   name: 'assetBox',
@@ -667,6 +665,23 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           const params = JSON.parse(JSON.stringify(this.editAsset))
+          console.log(params)
+          params.fields.forEach(field => {
+            if (field.type === 'DATETIME') {
+              const param = JSON.parse(field.param)
+              if (param.subType === 'date') {
+                field.value = field.value.map(time => bus.timeFormate(new Date(time), 'YYYY-MM-DD'))
+              } else if (param.subType === 'datetime') {
+                field.value = field.value.map(time => bus.timeFormate(new Date(time), 'YYYY-MM-DD HH:mm:ss'))
+              }
+            }
+          })
+          console.log(params)
+          if (params.purchaseDate) {
+            console.log(params.purchaseDate)
+            params.purchaseDate = bus.timeFormate(new Date(params.purchaseDate), 'YYYY-MM-DD')
+            console.log(params.purchaseDate)
+          }
           if (params.type.vm !== 1) {
             params.parent = {}
             params.pid = '-1'

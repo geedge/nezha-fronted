@@ -758,6 +758,19 @@ export default {
         this.titleSearchList[key].show = true
         this.detailSearchList[key].show = true
       })
+    },
+    edit (u) {
+      this.$get(`${this.url}/${u.id}`).then(response => {
+        if (response.code === 200) {
+          if (response.data.purchaseDate) {
+            response.data.purchaseDate += ' 00:00:00'
+            response.data.purchaseDate = new Date(response.data.purchaseDate)
+            console.log(response.data.purchaseDate)
+          }
+          this.object = response.data
+          this.rightBox.show = true
+        }
+      })
     }
   },
   created () {

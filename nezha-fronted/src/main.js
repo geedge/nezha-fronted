@@ -161,8 +161,8 @@ Vue.mixin({
     translation (key) {
       return i18n.t(key)
     },
-    timeFormatStrToDatePickFormat (str, index) {
-      if (index === 1) {
+    timeFormatStrToDatePickFormat (str, flag) {
+      if (flag) {
         const reg = /Y/g
         str = str.replace(reg, 'y')
         const reg1 = /D/g
