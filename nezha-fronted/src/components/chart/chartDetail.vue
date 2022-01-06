@@ -1,7 +1,5 @@
 <template>
   <div ref="chartDetail" class="chart-detail">
-<!--    <div class="chart-detail-title" v-if="chartInfo.type === 'assetInfo'">{{$t('project.chart.assetInfo')}}</div>-->
-<!--    <div class="chart-detail-title" v-else-if="chartInfo.type === 'endpointInfo'">{{$t('project.chart.endpointInfo')}}</div>-->
     <div class="basic-info">
       <div class="basic-info-title">
         <span style="cursor: pointer"><i @click="hideElement" :class="{'nz-icon nz-icon-caret-right': showBasicInfo,'nz-icon nz-icon-caret-bottom': !showBasicInfo}"></i></span>

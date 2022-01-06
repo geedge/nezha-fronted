@@ -32,18 +32,19 @@
             <el-select id="account-input-language"
                        class="right-box__select"
                        v-model="editProfile.lang"
-                       clearable
-                       collapse-tags
-                       placeholder=""
                        popper-class="right-box-select-top prevent-clickoutside"
                        size="small">
-              <template v-for="item in langList">
-                <el-option :key="item.value" :label="item.name" :value="item.value"></el-option>
-              </template>
+              <el-option v-for="item in langList" :key="item.value" :label="item.name" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="Theme" prop="theme">
-            <el-radio v-for="t in theme" :key="t.value" v-model="editProfile.theme" :label="t.value">{{t.label}}</el-radio>
+            <el-select id="account-input-language"
+                       class="right-box__select"
+                       v-model="editProfile.theme"
+                       popper-class="right-box-select-top prevent-clickoutside"
+                       size="small">
+                <el-option v-for="item in theme" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item :label="$t('profile.source')" prop="source">
             <el-input maxlength="64" show-word-limit v-model="editProfile.source" disabled size="small" type="text"></el-input>
