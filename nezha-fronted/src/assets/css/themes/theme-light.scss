@@ -20,9 +20,11 @@ $--background-color-disabled: #DEDEDE;
 // 左侧菜单背景色
 $--left-menu-background-color-base: #202F3F;
 // 左侧菜单激活背景色
-$--left-menu-background-color-active: #101B27;
+$--left-menu-background-color-active: #182534;
+// 左侧菜单背景色
+$--left-menu-background-color: $--left-menu-background-color-active;
 // 左侧菜单展开背景色
-$--left-menu-background-color-open: #182534;
+$--left-menu-background-color-open: $--left-menu-background-color-active;
 // 左侧菜单hover背景色
 $--menu-item-hover-fill: #101B27;
 

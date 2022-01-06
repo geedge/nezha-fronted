@@ -102,11 +102,11 @@
   }
 }
 .el-menu--popup.el-menu--popup-right-start {
-  background-color: $--background-color-empty;
-  .el-menu-item:hover {
-    background-color: $--background-color-base;
+  background-color: $--left-menu-background-color;
+  .el-submenu.is-active.is-opened .el-submenu__title {
+    color: white !important;
   }
-  .el-menu-item.is-active {
-    background-color: $--background-color-base;
+  .el-menu-item:hover,.el-submenu__title:hover {
+    background-color: $--left-menu-background-color-open !important;
   }
 }
