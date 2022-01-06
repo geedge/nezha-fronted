@@ -56,7 +56,6 @@
                   v-model="scope.row[item.prop]"
                   prefix-icon=" " size="small" ref="calendar"
                   :format="timeFormatStrToDatePickFormat(timeFormatMain)"
-                  :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
                   type="datetime"
                   popper-class="item-system-table right-public-box-dropdown-top right-box-select-top"
                   :picker-options="pickerOptions"
@@ -194,7 +193,9 @@ export default {
     },
     save: function (obj) {
       const copy = JSON.parse(JSON.stringify(obj))
-      copy.expireAt = this.timezoneToUtcTimeStr(copy.expireAt)
+      console.log(copy.expireAt)
+      copy.expireAt = new Date(copy.expireAt).getTime()
+      copy.expireAt = this.timezoneToUtcTimeStr(copy.expireAt, 'YYYY-MM-DD HH:mm:ss')
       if (copy.role) {
         copy.roleId = copy.role.id
       }

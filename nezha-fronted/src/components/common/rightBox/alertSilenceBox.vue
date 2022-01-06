@@ -153,6 +153,8 @@ export default {
           obj.linkId = null
         }
         this.editAlertSilence = Object.assign(this.editAlertSilence, obj)
+        this.editAlertSilence.startAt = new Date(this.editAlertSilence.startAt)
+        this.editAlertSilence.endAt = new Date(this.editAlertSilence.endAt)
         this.startAtTamp = new Date(this.editAlertSilence.startAt).getTime()
         this.endAtTamp = new Date(this.editAlertSilence.endAt).getTime()
         this.editAlertSilence.time = this.startAtTamp
@@ -230,7 +232,6 @@ export default {
       if (this.prevent_opt.save) {
         return
       }
-      ;
       this.prevent_opt.save = true
       this.$refs.alertSilenceForm.validate((valid) => {
         if (this.endAtTamp < this.startAtTamp) {
@@ -243,8 +244,8 @@ export default {
         }
         const params = { ...this.editAlertSilence, matchers: JSON.stringify(this.editAlertSilence.matchers) }
         if (valid) {
-          params.startAt = bus.timeFormate(new Date(this.timezoneToUtcTime(params.startAt)))
-          params.endAt = bus.timeFormate(new Date(this.timezoneToUtcTime(params.endAt)))
+          params.startAt = bus.timeFormate(new Date(this.timezoneToUtcTime(params.startAt)), 'YYYY-MM-DD HH:mm:ss')
+          params.endAt = bus.timeFormate(new Date(this.timezoneToUtcTime(params.endAt)), 'YYYY-MM-DD HH:mm:ss')
           if (this.editAlertSilence.id) {
             this.$put('/alert/silence', params).then(response => {
               this.prevent_opt.save = false

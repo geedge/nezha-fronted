@@ -114,9 +114,12 @@ Vue.mixin({
         return bus.configTimezoneToUTCTime(time)
       }
     },
-    timezoneToUtcTimeStr: function (time) {
+    timezoneToUtcTimeStr: function (time, fmt) {
+      if (!fmt) {
+        fmt = localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss'
+      }
       if (time) {
-        return bus.timeFormate(this.timezoneToUtcTime(time), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
+        return bus.timeFormate(this.timezoneToUtcTime(time), fmt)
       }
     },
     timestampStr: function (time) {
