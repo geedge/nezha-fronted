@@ -47,7 +47,7 @@
                   <el-option :key="item.value" :label="item.label" :value="item.value">
                     <div style="display: flex;justify-content: space-between;">
                       <div >{{item.value}}</div>
-                      <div class="utc-item">{{timezoneOptionHandler(basicTimer)}}</div>
+                      <div class="utc-item">{{item.time}}</div>
                     </div>
                   </el-option>
                 </template>
@@ -591,9 +591,9 @@ export default {
         { value: 'dark', label: 'Dark' }
       ],
       dateFormatList: [
-        { value: 'DD/MM/YYYY HH:mm:ss', label: 'DD/MM/YYYY HH:mm:ss' },
-        { value: 'MM/DD/YYYY HH:mm:ss', label: 'MM/DD/YYYY HH:mm:ss' },
-        { value: 'YYYY-MM-DD HH:mm:ss', label: 'YYYY-MM-DD HH:mm:ss' }
+        { value: 'DD/MM/YYYY HH:mm:ss', label: 'DD/MM/YYYY HH:mm:ss', time: '' },
+        { value: 'MM/DD/YYYY HH:mm:ss', label: 'MM/DD/YYYY HH:mm:ss', time: '' },
+        { value: 'YYYY-MM-DD HH:mm:ss', label: 'YYYY-MM-DD HH:mm:ss', time: '' }
       ],
       basicTimer: 0
     }
@@ -613,11 +613,6 @@ export default {
       this.$get('/sys/timezone').then(response => {
         if (response.code == 200) {
           this.timezoneOption = response.data.list
-          this.timezoneOption.map(e => {
-            if (e.name === this.basic.timezone) {
-              this.basicTimer = e.offset
-            }
-          })
         }
       })
     },
@@ -688,7 +683,7 @@ export default {
                 localStorage.setItem('nz-sys-timezone', param.timezone)
                 localStorage.setItem('timezoneOffset', moment.tz(param.timezone).format('Z'))
               }
-              this.queryTimezone()
+              this.dateFormatTimer()
               setTimeout(() => {
                 this.querySetInfo(type)
               }, 200)
@@ -1054,11 +1049,25 @@ export default {
         this.prevent_opt.save = false
         return false
       }
+    },
+    dateFormatTimer () {
+      const date = new Date()
+      const milli = date.getTime()
+      this.dateFormatList.map(e => {
+        if (e.label === 'DD/MM/YYYY HH:mm:ss') {
+          e.time = bus.timeFormate(bus.computeTimezone(milli), e.label)
+        } else if (e.label === 'MM/DD/YYYY HH:mm:ss') {
+          e.time = bus.timeFormate(bus.computeTimezone(milli), e.label)
+        } else {
+          e.time = bus.timeFormate(bus.computeTimezone(milli), e.label)
+        }
+      })
     }
   },
   mounted () {
     this.querySetInfo(this.switchTab)
     this.queryTimezone()
+    this.dateFormatTimer()
   },
   created () {
     this.switchTab = this.$route.query.switchTab || 'basic'
