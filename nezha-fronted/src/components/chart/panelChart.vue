@@ -161,6 +161,18 @@ export default {
         switch (this.chartInfo.datasource) {
           case 'metrics':
           case 'logs': {
+            if (this.from === fromRoute.chartTemp) {
+              setTimeout(() => {
+                this.chartData = [chartTempData.data.result]
+                this.chartData.forEach(item => {
+                  item.forEach(children => {
+                    children.elements = elements[0]
+                  })
+                })
+                this.loading = false
+              }, 100)
+              return
+            }
             let urlPre = ''
             if (this.chartInfo.datasource === 'metrics') {
               urlPre += '/prom'
@@ -210,6 +222,7 @@ export default {
                 if (rIndex < elements.length) {
                   if (r.status === 'success') {
                     r.data.result.forEach(item => {
+                      item.elements = elements[rIndex]
                       this.allDataLength++
                     })
                     chartData.push(r.data.result)
@@ -245,6 +258,13 @@ export default {
           }
           case 'system': {
             this.chartInfo.elements = this.chartInfo.param.datasource
+            if (this.from === fromRoute.chartTemp) {
+              setTimeout(() => {
+                this.chartData = [chartTempData.data.result]
+                this.loading = false
+              }, 100)
+              return
+            }
             if (this.chartInfo.type === 'assetInfo') {
               this.$get('asset/asset/' + this.chartDetailInfo.id).then(res => {
                 this.chartData = res.data

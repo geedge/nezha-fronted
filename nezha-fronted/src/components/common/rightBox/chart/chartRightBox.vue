@@ -458,11 +458,19 @@ export default {
               valueMapping: false
             }
           }
+          // this.editChart.varType = 1
           if (this.editChart.param.enable.legend && !this.editChart.param.legend) {
             this.editChart.param.legend = { placement: 'bottom', values: [], show: true }
           }
           if (this.editChart.param.datasource && !this.editChart.param.datasource[0].legend) {
             this.editChart.param.datasource[0].legend = ''
+          }
+          if (this.editChart.param.valueMapping) {
+            this.editChart.param.valueMapping.forEach(item => {
+              if (!item.show) {
+                item.show = false
+              }
+            })
           }
         }
       }
