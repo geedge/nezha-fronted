@@ -247,7 +247,6 @@
     height: 100%;
     color: $--color-text-primary;
     .chart-detail-title {
-      text-align: center;
       background-color: transparent;
       line-height: 30px;
     }
@@ -256,8 +255,9 @@
     }
     .basic-info {
       font-size: 13px;
-      height: calc(100% - 51px);
+      height: calc(100% - 22px);
       margin: 10px;
+      overflow: auto;
       .basic-info-title {
         background-color: $--background-color-base;
         height: 25px;
@@ -268,7 +268,6 @@
         width: calc(100% - 5px);
         height: calc(100% - 25px);
         margin-left: 3px;
-        overflow-y: auto;
         .basic-info-table-list {
           display: flex;
           .basic-info-table-title,.basic-info-table-value {
