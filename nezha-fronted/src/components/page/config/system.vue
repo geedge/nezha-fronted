@@ -682,6 +682,7 @@ export default {
               if (type == 'basic') {
                 localStorage.setItem('nz-sys-timezone', param.timezone)
                 localStorage.setItem('timezoneOffset', moment.tz(param.timezone).format('Z'))
+                localStorage.setItem('nz-default-dateFormat', param.date_format)
               }
               this.dateFormatTimer()
               setTimeout(() => {
