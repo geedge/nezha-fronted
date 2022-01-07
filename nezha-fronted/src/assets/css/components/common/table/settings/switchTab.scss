@@ -1,0 +1,10 @@
+.snmp,.temp {
+  position: relative;
+  .snmp-tab,.temp-tab {
+    position: absolute;
+    top: 24px;
+    left: 23px;
+    min-width: 300px;
+    z-index: 100;
+  }
+}

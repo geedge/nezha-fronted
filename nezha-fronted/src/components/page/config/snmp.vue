@@ -1,8 +1,19 @@
 <template>
-  <div>
-    <mib-file v-if="switchTab === 'file'" :switch-tab="switchTab" @changeShowTab="changeShowTab" @toBrowserTab="changeTab(['mib','browser'],'browser')" @toCredentialTab="changeTab(['mib','credentials'],'credentials')"></mib-file>
-    <mib-browser v-if="switchTab === 'browser'" :switch-tab="switchTab" @changeShowTab="changeShowTab" @toCredentialTab="changeTab(['mib','credentials'],'credentials')" @toFileTab="changeTab(['mib','file'],'file')"></mib-browser>
-    <credentials v-if="switchTab === 'credentials'" :switch-tab="switchTab" @changeShowTab="changeShowTab" @toBrowserTab="changeTab(['mib','browser'],'browser')" @toFileTab="changeTab(['mib','file'],'file')"></credentials>
+  <div class="snmp">
+    <div class="snmp-tab">
+      <div id="module-type-7" v-has="'mibBrowser'"  class="nz-tab-item-box" @click="snmpSwitchTab('browser')">
+        <div class="nz-tab-item" :class="{'nz-tab-item-active': switchTab === 'browser'}">{{$t("config.mib.mibBrowser")}}</div>
+      </div>
+      <div id="module-type-8" v-has="'snmp_credential_view'" class="nz-tab-item-box" @click="snmpSwitchTab('credentials')">
+        <div class="nz-tab-item" :class="{'nz-tab-item-active': switchTab === 'credentials'}">{{$t("config.mib.credentials")}}</div>
+      </div>
+      <div id="module-type-6" v-has="'snmp_mibFile_view'" class="nz-tab-item-box" @click="snmpSwitchTab('file')">
+        <div class="nz-tab-item" :class="{'nz-tab-item-active': switchTab === 'file'}">{{$t("config.mib.mibFiles")}}</div>
+      </div>
+    </div>
+    <mib-file v-if="switchTab === 'file'" :switch-tab="switchTab" ></mib-file>
+    <mib-browser  v-if="switchTab === 'browser'" :switch-tab="switchTab"></mib-browser>
+    <credentials v-if="switchTab === 'credentials'" :switch-tab="switchTab"></credentials>
   </div>
 </template>
 
@@ -21,38 +32,41 @@ export default {
   mixins: [routerPathParams],
   data () {
     return {
-      switchTab: 'browser'
+      switchTab: 'browser',
+      snmpHasTab: '',
+      snmpHasTabBrowser: '',
+      snmpHasTabFile: '',
+      snmpHasTabCredentials: ''
     }
   },
   methods: {
-    changeTab: function (paths, tab) {
-      /* let path = '/'
-      if (paths && paths instanceof Array) {
-        paths.forEach(p => {
-          path += p + '/'
-        })
-        path = path.substring(0, path.length - 1)
-      } else {
-        path = paths
-      } */
-      this.switchTab = tab // 此处需要组建中有showTab 属性
-      // this.toPath(path)
-    },
-    toPath: function (path) {
-      this.$router.push({
-        path: path,
-        query: {
-          t: +new Date()
-        }
-      })
-    },
-    changeShowTab (switchTab) {
-      this.switchTab = switchTab
-      if (switchTab !== 'browser') {
-        this.updatePath({ switchTab })
+    snmpSwitchTab (tab) {
+      this.switchTab = tab
+      if (tab !== 'browser') {
+        this.updatePath({ tab })
       } else {
         const t = +new Date()
         this.updatePath({ t })
+      }
+    },
+    snmpHas () {
+      const date = JSON.parse(localStorage.getItem('nz-user-permissions'))
+      date.map(e => {
+        if (e === 'mibBrowser') {
+          this.snmpHasTabBrowser = 'browser'
+          this.snmpHasTab = this.snmpHasTabBrowser
+        } else if (e === 'snmp_credential_view') {
+          this.snmpHasTabCredentials = 'credentials'
+          this.snmpHasTab = this.snmpHasTabCredentials
+        } else if (e === 'snmp_mibFile_view') {
+          this.snmpHasTabFile = 'file'
+          this.snmpHasTab = this.snmpHasTabFile
+        }
+      })
+      if (this.snmpHasTabCredentials && this.snmpHasTabFile && this.snmpHasTabBrowser) {
+        this.snmpHasTab = this.snmpHasTabBrowser
+      } else if (this.snmpHasTabCredentials && this.snmpHasTabBrowser) {
+        this.snmpHasTab = this.snmpHasTabBrowser
       }
     }
   },
@@ -67,7 +81,8 @@ export default {
     }
   },
   created () {
-    this.switchTab = this.$route.query.switchTab || 'browser'
+    this.snmpHas()
+    this.switchTab = this.$route.query.switchTab || this.snmpHasTab
   }
 }
 </script>

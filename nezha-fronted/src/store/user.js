@@ -79,6 +79,7 @@ const user = {
       store.commit('setTimeFormatMain', localStorage.getItem('nz-default-dateFormat'))
       post('/sys/user/permissions', { token: res.data.token }).then(res => {
         const menuList = sortByOrderNum(res.data.menus)
+        localStorage.setItem('nz-user-permissions', JSON.stringify(res.data.buttons))
         store.commit('setMenuList', menuList)
         store.commit('setButtonList', res.data.buttons)
         store.commit('setRoleList', res.data.roles)

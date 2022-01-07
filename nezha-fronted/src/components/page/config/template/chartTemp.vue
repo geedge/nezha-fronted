@@ -3,6 +3,7 @@
     <nzDataList
       ref="dataList"
       :api="url"
+      v-if="switchTab === 'chartTemp'"
       :layout="['searchInput', 'elementSet', 'pagination']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.chartTemp"
@@ -10,14 +11,14 @@
       @search="search"
       @getTableData="getTableData"
     >
-      <template v-slot:top-tool-left>
-        <div id="module-type-1"  class="nz-tab-item-box" @click="clickTab([],'exprTemp')"><!--v-has="'snmp_browser_view'"-->
-          <div class="nz-tab-item">{{$t("config.exprTemp.exprTemp")}}</div>
-        </div>
-        <div id="module-type-2"  class="nz-tab-item-box" @click="clickTab([],'chartTemp')"><!--v-has="'snmp_browser_view'"-->
-          <div class="nz-tab-item nz-tab-item-active">{{$t("config.chartTemp.chartTemp")}}</div>
-        </div>
-      </template>
+<!--      <template v-slot:top-tool-left>-->
+<!--        <div id="module-type-1"  class="nz-tab-item-box" @click="clickTab([],'exprTemp')">&lt;!&ndash;v-has="'snmp_browser_view'"&ndash;&gt;-->
+<!--          <div class="nz-tab-item">{{$t("config.exprTemp.exprTemp")}}</div>-->
+<!--        </div>-->
+<!--        <div id="module-type-2"  class="nz-tab-item-box" @click="clickTab([],'chartTemp')">&lt;!&ndash;v-has="'snmp_browser_view'"&ndash;&gt;-->
+<!--          <div class="nz-tab-item nz-tab-item-active">{{$t("config.chartTemp.chartTemp")}}</div>-->
+<!--        </div>-->
+<!--      </template>-->
       <template v-slot:top-tool-right>
 <!--        <export-excel-->
 <!--          id="expression-template-list"-->
@@ -141,6 +142,9 @@ export default {
     chartRightBox
   },
   mixins: [dataListMixin, routerPathParams],
+  props: {
+    switchTab: String
+  },
   data () {
     return {
       url: 'visual/panel/chart',

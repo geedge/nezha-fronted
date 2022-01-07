@@ -4,17 +4,17 @@
       v-if="switchTab === 'browser'"
       ref="dataList"
     >
-      <template v-slot:top-tool-left>
-        <div id="module-type-2"  class="nz-tab-item-box">
-          <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibBrowser")}}</div>
-        </div>
-        <div id="module-type-3"  class="nz-tab-item-box" @click="clickTab(['mib','credentials'],'credentials')">
-          <div class="nz-tab-item">{{$t("config.mib.credentials")}}</div>
-        </div>
-        <div id="module-type-1" class="nz-tab-item-box" @click="clickTab(['mib','file'],'file')">
-          <div class="nz-tab-item">{{$t("config.mib.mibFiles")}}</div>
-        </div>
-      </template>
+<!--      <template v-slot:top-tool-left>-->
+<!--        <div id="module-type-2"  class="nz-tab-item-box">-->
+<!--          <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibBrowser")}}</div>-->
+<!--        </div>-->
+<!--        <div id="module-type-3"  class="nz-tab-item-box" @click="clickTab(['mib','credentials'],'credentials')">-->
+<!--          <div class="nz-tab-item">{{$t("config.mib.credentials")}}</div>-->
+<!--        </div>-->
+<!--        <div id="module-type-1" class="nz-tab-item-box" @click="clickTab(['mib','file'],'file')">-->
+<!--          <div class="nz-tab-item">{{$t("config.mib.mibFiles")}}</div>-->
+<!--        </div>-->
+<!--      </template>-->
       <template v-slot:top-tool-right>
         <el-autocomplete
           id="mib-browser-host"
