@@ -13,7 +13,7 @@
         v-for="(col, index) in columns"
         :prop="col.title"
         :key="`col-${index}`"
-        :min-width="100"
+        :min-width="160"
         :sort-orders="['ascending', 'descending']"
         class="data-column"
         class-name="costom-value"

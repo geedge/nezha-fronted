@@ -105,6 +105,7 @@
 import * as echarts from 'echarts'
 import chartConfig from '@/components/page/dashboard/overview/chartConfig'
 import { dealLegendAlias } from '@/components/common/js/tools'
+import bus from '@/libs/bus'
 export default {
   name: 'logTab',
   props: {
@@ -237,7 +238,7 @@ export default {
           barWidth: 6,
           clip: false,
           barMinHeight: 1,
-          data: d.data.map(item => [item[0], item[1]]),
+          data: d.data.map(item => [new Date(bus.formateTimeToTime(item[0])).getTime(), item[1]]),
           itemStyle: { color: this.levelOptions.find(l => l.type === d.name) ? this.levelOptions.find(l => l.type === d.name).color : '#dde4ed' }
         }))
         series = series.sort((a, b) => {
@@ -273,7 +274,7 @@ export default {
               rotate: 0,
               fontSize: 13 * window.devicePixelRatio,
               formatter (value) {
-                return vm.utcTimeToTimezoneStr(vm.$unixTimeParseToString(vm.toMillisecondTime(value) / 1000), 'hh:mm')
+                return vm.utcTimeToTimezoneStr(vm.$unixTimeParseToString(vm.toMillisecondTime(parseInt(value)) / 1000, 'yyyy-MM-dd hh:mm:ss'), 'hh:mm')
               }
             },
             boundaryGap: [0, '1%']
@@ -499,7 +500,7 @@ export default {
       let str = `
            <div style="margin: 0px 0 0;line-height:1;">
             <div style="margin: 0px 0 0;line-height:1;">
-                <div style="font-size:14px;color:#666;font-weight:400;line-height:1;">${vm.utcTimeToTimezoneStr(vm.$unixTimeParseToString(vm.toMillisecondTime(params[0].axisValue) / 1000))}</div>
+                <div style="font-size:14px;color:#666;font-weight:400;line-height:1;">${vm.utcTimeToTimezoneStr(vm.$unixTimeParseToString(vm.toMillisecondTime(parseInt(params[0].axisValue)) / 1000, 'yyyy-MM-dd hh:mm:ss'), 'hh:mm')}</div>
                 <div style="margin: 10px 0 0;line-height:1;">
                     <div style="margin: 0px 0 0;line-height:1;">`
       params.forEach(item => {
