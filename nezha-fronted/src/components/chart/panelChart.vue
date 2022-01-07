@@ -190,6 +190,9 @@ export default {
               if (element.filter) {
                 query += `&filter=${element.filter}`
               }
+              if (this.chartInfo.datasource === 'logs') {
+                query += '&format=1'
+              }
               // if (isChartPie(this.chartInfo.type)) {
               //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
               // }
@@ -207,6 +210,9 @@ export default {
                 }
                 if (element.filter) {
                   query += `&filter=${element.filter}`
+                }
+                if (this.chartInfo.datasource === 'logs') {
+                  query += '&format=1'
                 }
                 // if (isChartPie(this.chartInfo.type)) {
                 //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
