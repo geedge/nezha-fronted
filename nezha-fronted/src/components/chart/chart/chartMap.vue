@@ -4,7 +4,7 @@
       <div :id="'map' + (isFullscreen ? '-screen-' : '' ) + chartInfo.id " style="height: 100%; width: 100%" :style="theme=='light'? '': ' filter: invert(1) hue-rotate(0.5turn);opacity: 0.75;'"></div>
     </div>
     <!--自定义地图鼠标悬浮提示dom，避免被overflow：hidden裁剪-->
-    <div :style="{'left': `${tooltip.x}px`, 'top': `${tooltip.y}px`}" class="my-pane"></div>
+    <div :style="{'left': `${tooltip.x}px`, 'top': `${tooltip.y}px`}" class="my-pane" :class="'my-pane-' + chartId"></div>
   </div>
 </template>
 
@@ -84,15 +84,13 @@ export default {
               zoomControl: false,
               maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180))
             }).setView([mapConfig.latitude, mapConfig.longitude], mapConfig.zoom)
-            map.createPane('myPane', document.querySelector('.my-pane'))
+            map.createPane('myPane', document.querySelector('.my-pane-' + this.chartId))
             map.on('tooltipopen', function (param) {
-              setTimeout(() => {
-                vm.initTooltipChart(param)
-              }, 100)
+              // setTimeout(() => {
+              //   vm.initTooltipChart(param)
+              // }, 100)
             })
             map.on('tooltipclose', function (param) {
-              tooltipEndpointChart && tooltipEndpointChart.clear()
-              tooltipPrometheusChart && tooltipPrometheusChart.clear()
             })
             this.map = map
 
@@ -168,7 +166,7 @@ export default {
                 this.tooltip.x = event.clientX + point.x - event.layerX - 5
                 this.tooltip.y = event.clientY + point.y - event.layerY
                 if (boxWidth > this.tooltip.x) {
-                  this.tooltip.x = this.tooltip.x + 434 + 10
+                  this.tooltip.x = this.tooltip.x + 175 + 10
                 }
               })
               shadowMarker.addTo(this.map)
@@ -180,55 +178,50 @@ export default {
     },
     mapTooltipFormatter (dcStat) {
       const self = this
-      return `<div class="tooltip" style="z-index: 11111">
+      return `<div class="nz-tooltip-bac tooltip-map" style="z-index: 11111;width: 175px">
           <div class="tooltip--title">${dcStat.name}</div>
           <div class="tooltip--row">
             <div class="legend-value legend-value-asset">
-              <div>${dcStat.asset.ok}</div>
-              <div>${dcStat.asset.alarm}</div>
+             <div class="map-asset">
+                <div class="progress-title">Asset ok</div>
+                <div class="success-progress progress-box">
+                    <div class="top-progress" style="width: ${(dcStat.asset.ok / dcStat.asset.total) * 100}%"></div>
+                    <div style="width: 100%" class="bottom-progress"></div>
+                </div>
+                <div class="success-progress progress-content">${dcStat.asset.ok}</div>
+              </div>
+             <div class="map-asset">
+                <div class="progress-title">Asset alarm</div>
+                <div class="error-progress progress-box">
+                    <div class="top-progress" style="width: ${(dcStat.asset.alarm / dcStat.asset.total) * 100}%"></div>
+                    <div style="width: 100%" class="bottom-progress"></div>
+                </div>
+                <div class="error-progress progress-content">${dcStat.asset.alarm}</div>
+              </div>
             </div>
+            <div class="partition"></div>
             <div class="legend-value legend-value-agent">
-              <div>${dcStat.agent.up}</div>
-              <div>${dcStat.agent.down}</div>
+            <div class="map-asset">
+                <div class="progress-title">agent up</div>
+                <div class="success-progress progress-box">
+                    <div class="top-progress" style="width: ${(dcStat.agent.up / (dcStat.agent.up + dcStat.agent.down)) * 100}%"></div>
+                    <div style="width: 100%" class="bottom-progress"></div>
+                </div>
+                <div class="success-progress progress-content">${dcStat.agent.up}</div>
+             </div>
+             <div class="map-asset">
+                <div class="progress-title">agent down</div>
+                <div class="error-progress progress-box">
+                    <div class="top-progress" style="width: ${(dcStat.agent.down / (dcStat.agent.up + dcStat.agent.down)) * 100}%"></div>
+                    <div style="width: 100%" class="bottom-progress"></div>
+                </div>
+                <div class="error-progress progress-content">${dcStat.agent.down}</div>
+             </div>
             </div>
-            <div class="tooltip-chart" id="tooltip-chart--endpoint-${self.chartInfo.id}"></div>
-            <div class="tooltip-chart" id="tooltip-chart--prometheus-${self.chartInfo.id}"></div>
           </div>
         </div>`
 
       // return tooltip;
-    },
-    initTooltipChart (param) {
-      const vm = this
-      setTimeout(() => {
-        const data = param.tooltip.options.data
-        // console.info(tooltipEndpointChart);
-        tooltipEndpointChart = echarts.init(document.querySelector('#tooltip-chart--endpoint-' + this.chartInfo.id))
-        tooltipPrometheusChart = echarts.init(document.querySelector('#tooltip-chart--prometheus-' + this.chartInfo.id))
-        const endpointOption = chartConfig.getOption('tooltipPie')
-        const prometheusOption = chartConfig.getOption('tooltipPie')
-        endpointOption.series[0].label.formatter = data.asset.total + ''
-        endpointOption.series[0].data = [
-          { name: vm.$t('dashboard.overview.asset.ok'), value: data.asset.ok ? data.asset.ok : 0 },
-          { name: vm.$t('dashboard.overview.asset.alarm'), value: data.asset.alarm ? data.asset.alarm : 0 }
-          // { name: vm.$t('dashboard.overview.asset.total'), value: data.asset.total ? data.asset.total : 0 }
-        ]
-        endpointOption.title.text = vm.$t('asset.asset')
-        endpointOption.legend.data = [vm.$t('dashboard.overview.asset.ok'), vm.$t('dashboard.overview.asset.alarm')]
-        prometheusOption.series[0].label.formatter = data.agent.up + ''
-        prometheusOption.series[0].data = [
-          { name: vm.$t('config.agent.up'), value: data.agent.up ? data.agent.up : 0 },
-          { name: vm.$t('config.agent.down'), value: data.agent.down ? data.agent.down : 0 }
-        ]
-        prometheusOption.title.text = vm.$t('config.agent.agent.agent')
-        prometheusOption.legend.data = [vm.$t('config.agent.up'), vm.$t('config.agent.down')]
-        tooltipEndpointChart && tooltipEndpointChart.setOption(endpointOption, true)
-        tooltipPrometheusChart && tooltipPrometheusChart.setOption(prometheusOption, true)
-      }, 100)
-      /* setTimeout(function() {
-          tooltipEndpointChart.setOption(endpointOption);
-          tooltipPrometheusChart.setOption(prometheusOption);
-        }, 100); */
     },
     resize () {
       this.initMap()
