@@ -2,7 +2,7 @@
   <div :ref="`chart-canvas-${chartId}`" style="height: 100%;width: 100%">
     <div :id="`chart-canvas-${chartId}`" class="chart__canvas chart-svg"></div>
     <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
-      <div class="chart-canvas-tooltip-title">
+      <div class="chart-canvas-tooltip-title tooltip-title">
         {{tooltip.title}}
       </div>
       <div class="chart-canvas-tooltip-content">

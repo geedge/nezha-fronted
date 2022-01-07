@@ -183,7 +183,7 @@ export default {
           if (i === 0) {
             const value = bus.computeTimezone(item.data[0] * 1000)
             const tData = new Date(value)
-            str += '<div style="margin-bottom: 5px">'
+            str += '<div class="tooltip-title" style="margin-bottom: 5px">'
             str += bus.timeFormate(tData)
             str += '</div>'
           }
@@ -192,7 +192,7 @@ export default {
             const value = bus.computeTimezone(item.data[0] * 1000 - self.minusTime)
             const tData = new Date(value)
             str += '<div style="border: 1px solid #EEEEEE"></div>'
-            str += '<div style="margin-top: 5px;margin-bottom: 5px">'
+            str += '<div class="tooltip-title" style="margin-top: 5px;margin-bottom: 5px">'
             str += bus.timeFormate(tData)
             str += '</div>'
           }

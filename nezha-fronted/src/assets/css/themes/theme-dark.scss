@@ -241,6 +241,9 @@ $--right-box-shadow: -3px 0 8px -3px rgba(17,17,17,0.77);
 $--right-box-sub-title-background-color: #323238;
 $--right-box-sub-title-border-color: $--border-color-light;
 
+/* 16.tooltip */
+$--tooltip-background-color: #222329;
+$--tooltip-border-color: #454545;
 
 /*** themes/common.scss是与主题切换无关的变量 ***/
 @import './src/common/var.scss';

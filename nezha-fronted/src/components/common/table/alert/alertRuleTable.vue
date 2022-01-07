@@ -66,7 +66,7 @@
             trigger="hover"
             :open-delay="300"
             :width="215"
-            popper-class="schedEnableTitle"
+            popper-class="schedEnableTitle nz-tooltip-bac"
           >
             <div>
               <div class="margin-b-10">

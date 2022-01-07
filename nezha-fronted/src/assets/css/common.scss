@@ -364,8 +364,10 @@ td .nz-icon-gear:before{
     }
   }
 }
-.chart-bar,.chart-gauge,.chart-time-series,.chart-treemap,.chart-pie,.chart-canvas-tooltip,.line-chart-block-Zindex {
-  background-color: $--chart-background-color !important;
-  border-color: $--chart-border-color !important;
+.chart-bar,.chart-gauge,.chart-time-series,.chart-treemap,.chart-pie,.chart-canvas-tooltip,.line-chart-block-Zindex,.alert-label,.alert-labelUp,.nz-tooltip-bac{
+  background-color: $--tooltip-background-color !important;
+  border: 3px solid $--tooltip-border-color !important;
+  border-color: $--tooltip-border-color !important;
   color: $--color-text-regular !important;
+  box-shadow: none !important;
 }

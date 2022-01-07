@@ -236,6 +236,10 @@ $--right-box-shadow: -3px 0 8px -3px #ccc;
 $--right-box-sub-title-background-color: $--background-color-base;
 $--right-box-sub-title-border-color: $--right-box-sub-title-background-color;
 
+/* 16.tooltip */
+$--tooltip-background-color: #ffffff;
+$--tooltip-border-color: #e7eaed;
+
 
 /*** themes/common.scss是与主题切换无关的变量 ***/
 @import './src/common/var.scss';
