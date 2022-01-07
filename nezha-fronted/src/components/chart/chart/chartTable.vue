@@ -4,7 +4,8 @@
       ref="dataTable"
       class="chart-table"
       :data="tableData"
-      :height="'100%'"
+      :height="'calc(100% - 5px)'"
+      :width="'100%'"
       border
       @sort-change="tableDataSort"
     >
@@ -24,7 +25,7 @@
         <template slot-scope="scope" :column="col">
           <div v-if="scope.row.valueMapping && scope.row.valueMapping[col.title + 'mapping']" :style="{
             background: scope.row.valueMapping[col.title + 'mapping'].color.bac,
-            color: scope.row.valueMapping[col.title + 'mapping'].color.text,
+            color: scope.row.valueMapping[col.title + 'mapping'].color.text + ' !important',
             clear: 'both',
           }"
                class="value-mapping-table"
