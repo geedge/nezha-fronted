@@ -93,7 +93,34 @@ export default {
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       this.setTimer = setTimeout(() => {
         const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartId}`)) : getChart(this.chartId)
-        myChart.setOption(chartOption)
+        if (this.chartInfo.param && this.chartInfo.param.timeType === 'local') {
+          const date = new Date()
+          const second = date.getSeconds()
+          const minute = date.getMinutes() + second / 60
+          const hour = (date.getHours() % 12) + minute / 60
+          chartOption.series.map(e => {
+            if (e.name === 'hour') {
+              e.data[0].value = hour
+            } else if (e.name === 'minute') {
+              e.data[0].value = minute
+            } else {
+              e.data[0].value = second
+            }
+          })
+          myChart.setOption(chartOption)
+        } else {
+          _soft.querySystemState()
+          chartOption.series.map(e => {
+            if (e.name === 'hour') {
+              e.data[0].value = this.sysTime.hour
+            } else if (e.name === 'minute') {
+              e.data[0].value = this.sysTime.minute
+            } else {
+              e.data[0].value = this.sysTime.second
+            }
+          })
+          myChart.setOption(chartOption)
+        }
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
         this.isInit = false
         if (this.chartInfo.param && this.chartInfo.param.timeType === 'local') {
@@ -149,6 +176,7 @@ export default {
     }
   },
   mounted () {
+    this.querySystemState()
     // eslint-disable-next-line vue/no-mutating-props
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
