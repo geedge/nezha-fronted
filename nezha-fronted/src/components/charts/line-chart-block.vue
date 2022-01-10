@@ -4,7 +4,7 @@
     <div class="resize-box resize-box-echarts" ref="resizeBox">
       <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div  v-if="from!=='project'&&from!=='topology'" :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.alertRule}" :id="'chartTitle'+chartIndex" class="clearfix chartTitle">
+        <div  v-if="from!=='project'&&from!=='topology'" :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.alertRule}" :id="'chartTitle'+chartIndex" class="clearfix chartTitle topology-chart-title">
           <el-popover
             v-if="isError"
             placement="top-start"
