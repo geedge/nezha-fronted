@@ -138,7 +138,7 @@
                     <template v-if="JSON.parse(label.param).interval">
                       <my-date-picker
                         id="asset-box-input-purchase-date"
-                        v-model="label.value"
+                        v-model="label.value[0]"
                         :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'daterange' : 'datetimerange'"
                         placeholder=""
                         popper-class="right-box-select-top"
@@ -665,14 +665,19 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           const params = JSON.parse(JSON.stringify(this.editAsset))
-          console.log(params)
           params.fields.forEach(field => {
             if (field.type === 'DATETIME') {
               const param = JSON.parse(field.param)
-              if (param.subType === 'date') {
-                field.value = field.value.map(time => bus.timeFormate(new Date(time), 'YYYY-MM-DD'))
-              } else if (param.subType === 'datetime') {
-                field.value = field.value.map(time => bus.timeFormate(new Date(time), 'YYYY-MM-DD HH:mm:ss'))
+              const fmt = param.subType === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss'
+              if (!param.interval) {
+                field.value = field.value.map(time => bus.timeFormate(new Date(time), fmt))
+              } else {
+                field.value = field.value.map(item => {
+                  item.forEach(time => {
+                    time = bus.timeFormate(new Date(time), fmt)
+                  })
+                  return item
+                })
               }
             }
           })
