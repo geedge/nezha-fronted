@@ -138,7 +138,7 @@
                     <template v-if="JSON.parse(label.param).interval">
                       <my-date-picker
                         id="asset-box-input-purchase-date"
-                        v-model="label.value[0]"
+                        v-model="label.value"
                         :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'dateRange' : 'datetimerange'"
                         placeholder=""
                         popper-class="right-box-select-top"
