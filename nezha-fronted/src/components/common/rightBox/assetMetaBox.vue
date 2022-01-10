@@ -307,7 +307,7 @@ export default {
             for (let i = 0; i < param.param.items.length; i++) {
               if (!param.param.items[i].name) {
                 this.$refs['metaNameOption' + i][0].focus()
-                this.$message.error(this.$t('config.assetLabel.metaOptionNull'))
+                this.$message.error(this.$t('config.assetLabel.labelOptionNull'))
                 this.prevent_opt.save = false
                 return
               }
