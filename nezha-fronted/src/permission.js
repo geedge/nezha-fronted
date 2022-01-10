@@ -17,7 +17,7 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/login') { // 拦截登录页面，现货区外观设置 再系统初始化检查
     Vue.http.get(configUrl).then(config => {
       const appearance = new Promise(resolve => {
-        get(config.body.baseUrl + '/sys/appearance').then(res => {
+        get(config.body.baseUrl + 'sys/appearance').then(res => {
           if (res.code === 200) {
             localStorage.setItem('nz-sys-name', res.data.system_name || '')
             localStorage.setItem('nz-sys-logo', res.data.system_logo || '')
