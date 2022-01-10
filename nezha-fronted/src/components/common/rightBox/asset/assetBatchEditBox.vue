@@ -264,7 +264,7 @@ export default {
         label: 'name',
         lazyLoad (node, resolve) {
           const { level } = node
-          vm.$get('asset/field/meta', { groupIds: node.data.id }).then(response => {
+          vm.$get('asset/field/meta', { groupIds: node.data.id, pageSize: -1 }).then(response => {
             if (response.code === 200) {
               const meta = response.data.list.map(item => ({
                 ...item,
