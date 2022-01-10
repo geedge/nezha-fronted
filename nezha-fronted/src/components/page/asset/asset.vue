@@ -237,6 +237,7 @@ export default {
         type: { name: '', id: '' },
         brandAndModel: [],
         typeId: '',
+        snmpCredentialId: '',
         clientPort: '10092',
         clientToken: '',
         authProtocolPort: '',
