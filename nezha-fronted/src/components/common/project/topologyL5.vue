@@ -222,12 +222,11 @@
             <!--节点连线相关的 tooltip-->
             <div v-if="tooltipPosition.show&&!editTopologyFlag"
                  ref="topoTooltip"
-                 class="nz-tooltip-bac"
                  :style="{position:'absolute',top:tooltipPosition.top+'px',left:tooltipPosition.left+'px','z-index':10,height:tooltipPosition.height+'px'}"
                  @mouseout="tooltipOut"
                  @mouseover="tooltipOver"
             >
-              <topoTooltip :chartDataParent="chartData" :filterTime="filterTime"/>
+              <topoTooltip  class="nz-tooltip-bac" :chartDataParent="chartData" :filterTime="filterTime"/>
             </div>
             <div v-show="showNoData" class="topo-noData">
               <svg class="icon" aria-hidden="true">

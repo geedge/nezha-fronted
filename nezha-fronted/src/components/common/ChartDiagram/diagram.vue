@@ -206,7 +206,7 @@
                  @mouseout="tooltipOut"
                  @mouseover="tooltipOver"
             >
-              <topoTooltip :chartDataParent="chartData" :filterTime="filterTime" :isPanel="isPanel"/>
+              <topoTooltip class="nz-tooltip-bac" :chartDataParent="chartData" :filterTime="filterTime" :isPanel="isPanel"/>
             </div>
           </div>
           <!--endpoint-->
