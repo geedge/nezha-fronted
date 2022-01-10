@@ -3,7 +3,6 @@
     <nzDataList
       ref="dataList"
       :api="url"
-      v-if="switchTab === 'chartTemp'"
       :layout="['searchInput', 'elementSet', 'pagination']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.chartTemp"

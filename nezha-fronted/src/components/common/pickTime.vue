@@ -1,5 +1,5 @@
 <template>
-  <div class="interval-refresh">
+  <div class="interval-refresh margin-r-10">
     <time-picker v-if="showTimePicker" ref="timePicker" v-model="searchTime" :default-pick="defaultPick" :show-empty="showEmpty" class="time-picker margin-r-10" size="small" @change="dateChange"></time-picker>
     <multipleTime v-if="showMultiple" ref="multipleTime" :stepSearchTime="searchTime" class="multiple-time margin-r-10" @change="dateChange(searchTime)"/>
     <chart-unit v-if="useChartUnit" v-model="unit" class="margin-r-10"></chart-unit>

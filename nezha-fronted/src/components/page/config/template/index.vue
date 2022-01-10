@@ -4,7 +4,7 @@
       <div id="module-type-1" v-has="'expressionTemplate_view'" class="nz-tab-item-box" @click="templateSwitchTab('exprTemp')">
         <div class="nz-tab-item" :class="{'nz-tab-item-active': switchTab === 'exprTemp'}">{{$t("config.exprTemp.exprTemp")}}</div>
       </div>
-      <div id="module-type-2" v-has="''"  class="nz-tab-item-box" @click="templateSwitchTab('chartTemp')">
+      <div id="module-type-2" class="nz-tab-item-box" @click="templateSwitchTab('chartTemp')">
         <div class="nz-tab-item" :class="{'nz-tab-item-active': switchTab === 'chartTemp'}">{{$t("config.chartTemp.chartTemp")}}</div>
       </div>
     </div>
@@ -47,8 +47,11 @@ export default {
         if (e === 'expressionTemplate_view') {
           this.templateHasTabExprTemp = 'exprTemp'
           this.templateHasTab = this.templateHasTabExprTemp
-        } else {
+        } else if (e === 'chartTemplate_view') {
           this.templateHasTabExprTemp = 'chartTemp'
+          this.templateHasTab = this.templateHasTabExprTemp
+        } else {
+          this.templateHasTabExprTemp = 'exprTemp'
         }
       })
       if (this.templateHasTabExprTemp) {
