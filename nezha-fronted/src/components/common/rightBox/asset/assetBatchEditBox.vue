@@ -372,6 +372,9 @@ export default {
       this.transfer.pageObj = JSON.parse(JSON.stringify(page))
       this.getTableData()
     },
+    assetBatch () {
+      this.getTableData()
+    },
     esc (refresh) {
       this.$emit('close', refresh)
     },
