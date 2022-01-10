@@ -11,7 +11,7 @@
         <!-- Edit type -->
         <el-form ref="assetEditForm" :model="editData" :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label="$t('overall.editType')" prop="editType">
-            <el-select v-model="editData.editType" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
+            <el-select v-model="editData.editType" @change="assetBatch" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
               <el-option v-for="type in assetConstants.editTypeOptions" :key="type.value" :label="$t(type.label)" :value="type.value"/>
             </el-select>
           </el-form-item>
@@ -261,7 +261,7 @@ export default {
         label: 'name',
         lazyLoad (node, resolve) {
           const { level } = node
-          vm.$get('asset/field/meta', { groupIds: node.data.id }).then(response => {
+          vm.$get('asset/field/meta', { groupIds: node.data.id, pageSize: -1  }).then(response => {
             if (response.code === 200) {
               const meta = response.data.list.map(item => ({
                 ...item,
@@ -369,6 +369,10 @@ export default {
       this.transfer.pageObj = JSON.parse(JSON.stringify(page))
       this.getTableData()
     },
+    assetBatch () {
+      this.getTableData()
+    },
+
     esc (refresh) {
       this.$emit('close', refresh)
     },
