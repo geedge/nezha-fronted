@@ -78,6 +78,9 @@ export function nzNumber (rule, value, callback) {
 export function noSpecialChar (rule, value, callback) {
   const charReg = /^[\u4e00-\u9fa5a-z0-9A-Z-_.]+$/
   setTimeout(() => {
+    if (!value) {
+      callback(new Error(vm.$t('validate.required')))
+    }
     if (charReg.test(value)) {
       callback()
     } else {
