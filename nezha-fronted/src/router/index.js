@@ -106,9 +106,21 @@ export default new Router({
           path: '/mib/:tab',
           component: resolve => require(['../components/page/config/snmp.vue'], resolve)
         },
+        // {
+        //   path: '/snmp',
+        //   component: resolve => require(['../components/page/config/snmp.vue'], resolve)
+        // },
         {
-          path: '/snmp',
-          component: resolve => require(['../components/page/config/snmp.vue'], resolve)
+          path: '/mib',
+          component: resolve => require(['../components/page/config/mib.vue'], resolve)
+        },
+        {
+          path: '/mibBrowser',
+          component: resolve => require(['../components/page/config/mibBrowser.vue'], resolve)
+        },
+        {
+          path: '/credentials',
+          component: resolve => require(['../components/page/config/credentials.vue'], resolve)
         },
         {
           path: '/system',
@@ -131,8 +143,12 @@ export default new Router({
           component: resolve => require(['../components/page/alert/alertSilence.vue'], resolve)
         },
         {
-          path: '/template',
-          component: resolve => require(['../components/page/config/template/index.vue'], resolve)
+          path: '/exprTemp',
+          component: resolve => require(['../components/page/config/template/exprTemp.vue'], resolve)
+        },
+        {
+          path: '/chartTemp',
+          component: resolve => require(['../components/page/config/template/chartTemp.vue'], resolve)
         }
       ]
     }

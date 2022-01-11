@@ -1,7 +1,6 @@
 <template>
   <div style="height: 100%">
     <nz-data-list
-      v-if="switchTab === 'credentials'"
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"

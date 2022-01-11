@@ -145,18 +145,19 @@ router.beforeEach((to, from, next) => {
 
 // menuList中是否包含route权限
 export function hasMenu (menuList, route) {
-  return menuList.some(menu => {
+  let flag = false
+  console.log(menuList, route)
+  menuList.forEach(menu => {
     if (menu.route == route) {
-      return true
+      flag = true
     } else {
-      if (menu.children) {
-        if (hasMenu(menu.children, route)) {
-          return true
-        }
+      if (menu.children && !flag) {
+        flag = hasMenu(menu.children, route)
       }
     }
-    return false
   })
+  console.log(flag, route)
+  return flag
 }
 
 export function hasButton (buttonList, code) {
