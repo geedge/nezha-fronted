@@ -1,7 +1,7 @@
 <template>
   <div class="main-list main-list--project">
     <projectList ref="dataList" :class="showList?'projectList':'hide'"/>
-    <projectTopo :class="showList?'projectTopo':'projectTopo ml10'" />
+    <projectTopo :class="showList?'projectTopo':'projectTopo ml10'" v-has="'topo_list'"/>
   </div>
 </template>
 

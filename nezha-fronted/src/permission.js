@@ -5,7 +5,7 @@ import ElementUI from 'element-ui'
 import Vue from 'vue'
 import i18n, { loadI18n } from './components/common/i18n'
 import VueResource from 'vue-resource'
-import bus from "@/libs/bus";
+import bus from '@/libs/bus'
 
 Vue.use(VueResource)
 
