@@ -63,7 +63,7 @@
       <div slot-scope="scope" class="table-operation-items">
         <button class="table-operation-item" v-has="'model_edit'" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
 <!--        <button class="table-operation-item" @click="showBottomBox('operationLogTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>-->
-        <el-dropdown size="medium" v-has="['model_delete','panel_chart_edit','model_edit']" trigger="click" @command="tableOperation">
+        <el-dropdown size="medium" v-has="['model_delete','main_edit','model_edit']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
@@ -71,7 +71,7 @@
 <!--            <el-dropdown-item :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>-->
             <el-dropdown-item v-has="'model_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'model_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'panel_chart_edit'" :command="['sync', scope.row]"><i class="nz-icon nz-icon-sync"></i><span class="operation-dropdown-text">{{$t('overall.syncChart')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'main_edit'" :command="['sync', scope.row]"><i class="nz-icon nz-icon-sync"></i><span class="operation-dropdown-text">{{$t('overall.syncChart')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>

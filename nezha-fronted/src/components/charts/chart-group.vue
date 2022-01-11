@@ -21,7 +21,7 @@
                      <i class="nz-icon nz-icon-info-normal"></i>
                   </el-tooltip>
                 </span>
-                <span  v-has="'panel_chart_edit'" :title="$t('dashboard.panel.createChartTitle')" class="" @click="addGroupItemChart">
+                <span  v-has="'main_edit'" :title="$t('dashboard.panel.createChartTitle')" class="" @click="addGroupItemChart">
                   <i class="nz-icon nz-icon-plus"></i>
                 </span>
 <!--                 <span  @click="showAllScreen" class="" :title="$t('dashboard.screen')">-->
@@ -31,7 +31,7 @@
 
               </span>
 <!--              <span class="chart-title-icon"  :class="{'visible':caretShow,'hidden':!caretShow}">-->
-<!--                <span  v-has="'panel_chart_edit'" :title="$t('dashboard.panel.createChartTitle')" class="" @click="addGroupItemChart">-->
+<!--                <span  v-has="'main_edit'" :title="$t('dashboard.panel.createChartTitle')" class="" @click="addGroupItemChart">-->
 <!--                  <i class="nz-icon nz-icon-plus"></i>-->
 <!--                </span>-->
 <!--              </span>-->
@@ -39,9 +39,9 @@
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="" >
               <li  @click="editChart" class="el-dropdown-menu__item">
                 <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i><span>{{$t('dashboard.edit')}}</span></li>
-              <li  v-has="'panel_chart_delete'" v-if="from !== 'chartTemp'" class="el-dropdown-menu__item" @click="removeChart">
+              <li  v-has="'main_delete'" v-if="from !== 'chartTemp'" class="el-dropdown-menu__item" @click="removeChart">
                 <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
-              <li  v-has="'panel_chart_edit'"  v-if="from !== 'chartTemp'&&chartData.pid" class="el-dropdown-menu__item" @click="$emit('sync')">
+              <li  v-has="'main_edit'"  v-if="from !== 'chartTemp'&&chartData.pid" class="el-dropdown-menu__item" @click="$emit('sync')">
                 <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>{{$t('overall.syncChart')}}</li>
 <!--              <li  @click="duplicate" class="el-dropdown-menu__item" v-has="`${from}_chart_duplicate`">-->
 <!--                <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>-->

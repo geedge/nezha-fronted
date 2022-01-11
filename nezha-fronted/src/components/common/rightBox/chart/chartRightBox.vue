@@ -89,13 +89,13 @@
       <button id="chart-box-esc" v-cancel="{obj:editChart,func:esc}" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button v-if="showPanel.type && showPanel.type == 'model'" id="chart-box-Sync" v-has="'panel_chart_edit'" class="footer__btn">
+      <button v-if="showPanel.type && showPanel.type == 'model'" id="chart-box-Sync" v-has="'main_edit'" class="footer__btn">
         <span>{{$t('overall.SyncSave')}}</span>
       </button>
       <button v-else-if="from!=='chartTemp'" id="chart-box-preview" class="footer__btn" @click="preview(true)">
         <span>{{$t('overall.preview')}}</span>
       </button>
-      <button id="chart-box-save" v-has="'panel_chart_add'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn" @click="save">
+      <button id="chart-box-save" v-has="'main_add'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn" @click="save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

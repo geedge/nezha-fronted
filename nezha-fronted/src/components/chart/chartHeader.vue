@@ -60,15 +60,15 @@
               <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i>
               <span>{{$t('dashboard.edit')}}</span>
             </li>
-            <li v-has="'panel_chart_delete'" class="el-dropdown-menu__item" @click="removeChart">
+            <li v-has="'main_delete'" class="el-dropdown-menu__item" @click="removeChart">
               <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>
               <span>{{$t('dashboard.delete')}}</span>
             </li>
-            <li v-has="'panel_chart_add'" class="el-dropdown-menu__item" @click="duplicate">
+            <li v-has="'main_add'" class="el-dropdown-menu__item" @click="duplicate">
               <i class="el-icon-copy-document" style="font-size: 16px;"></i>
               <span>{{$t('dashboard.duplicate')}}</span>
             </li>
-            <li v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.pid" v-has="'panel_chart_edit'" class="el-dropdown-menu__item" @click="$emit('sync')">
+            <li v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.pid" v-has="'main_edit'" class="el-dropdown-menu__item" @click="$emit('sync')">
               <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>
               <span>{{$t('overall.syncChart')}}</span>
             </li>

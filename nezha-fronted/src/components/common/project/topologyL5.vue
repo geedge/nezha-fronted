@@ -3,13 +3,13 @@
   @import "./L5/css/props.css";
 </style>
 <template>
-  <div class="project-box list-page" v-loading="topologyLoading" v-has="'topo_list'">
+  <div class="project-box list-page" v-loading="topologyLoading">
     <div class="main-list" :style="{height: fromOverView ?'100%' : 'calc(100% - 30px)'}">
       <div class="main-container" :class="fromOverView?'from-overview':'from-project'">
         <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 40px);display: inline-block">
           <!--工具栏-->
           <span v-if="!isPreview" class="project-topology-tool">
-          <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'">
+          <el-dropdown trigger="click" size="small" placement="bottom-start">
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown" @click="dropdownClick" class="right-box-select-top right-public-box-dropdown-top">
@@ -42,7 +42,7 @@
                   </el-collapse-item>
                 </el-collapse>
               </el-card>
-                <div class="upload-pic-box" @click="uploadPicChange" v-has="'topo_icon_save'">
+                <div class="upload-pic-box" @click="uploadPicChange">
                   <i class="el-icon-plus"></i>
                   <span>
                      {{ $t('overall.uploadCustomPicture') }}
@@ -133,7 +133,7 @@
               :use-chart-unit="false"
               class="pickTime margin-r-10">
             </pick-time>
-            <button v-has="'project_topo_update'" class="top-tool-btn margin-r-10" type="button" @click="editTopology">
+            <button v-has="'project_edit'" class="top-tool-btn margin-r-10" type="button" @click="editTopology">
               <i :title="$t('project.topology.edit')" class="nz-icon nz-icon-edit"></i>
             </button>
             <button class="top-tool-btn" type="button" @click="changeScreen">
@@ -323,8 +323,7 @@
              {{$t('project.topology.exit')}}
            </button>
 
-              <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="imgUpload"
-                      v-has="'topo_icon_save'" :disabled="prevent_opt.save"
+              <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="imgUpload" :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
                       style="margin-right: 20px">
              {{$t('project.topology.save')}}

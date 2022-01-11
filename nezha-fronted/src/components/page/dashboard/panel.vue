@@ -18,7 +18,7 @@
                 <template v-slot:header>
                   <div class="panel-select-header">
                     <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="mini" style="width: 286px;"></el-input>
-<!--                    <span id="panel-list-toadd" v-has="'panel_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span>-->
+<!--                    <span id="panel-list-toadd" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span>-->
                   </div>
                 </template>
                 <template v-slot:trigger>
@@ -28,7 +28,7 @@
                 </template>
                 <template v-slot:tail>
                   <div class="panel-select-tail">
-                    <span id="panel-list-toadd" v-has="'panel_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{ $t('overall.addProject') }}</span>
+                    <span id="panel-list-toadd" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{ $t('overall.addProject') }}</span>
                   </div>
                 </template>
               </select-panel>
@@ -42,7 +42,7 @@
 
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10"></pick-time>
 
-              <button id="panel-add-chart" v-has="'panel_chart_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
+              <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
                       type="button" @click="addChartBefore">
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>
@@ -52,7 +52,7 @@
                 id="panel"
                 :params="filter"
                 :permissions="{
-                  import: 'panel_chart_add',
+                  import: 'main_add',
                   export: 'panel_view'
                 }"
                 :paramsType="'dashboard'"
@@ -68,10 +68,10 @@
                   </el-dropdown-item>
                 </template>
                 <template v-slot:after>
-                  <el-dropdown-item v-has="'panel_chart_add'">
+                  <el-dropdown-item v-has="'main_add'">
                     <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{$t('overall.AddByTemplate')}}</div>
                   </el-dropdown-item>
-                  <el-dropdown-item v-has="'panel_chart_edit'">
+                  <el-dropdown-item v-has="'main_edit'">
                     <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
                   </el-dropdown-item>
                 </template>

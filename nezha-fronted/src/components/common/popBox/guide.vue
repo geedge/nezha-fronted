@@ -50,8 +50,8 @@
       <template v-if="activeIndex === 4">
         <div class="desc-text">{{$t('guide.visualizationTip')}}</div>
         <div class="guide__btn-group">
-          <button :class="{'guide__btn--disabled': !hasButton('panel_add')}" class="guide__btn" type="button" @click="jumpAndOpen('panel')">{{$t('guide.addPanel')}}</button>
-          <button :class="{'guide__btn--disabled': !hasButton('panel_chart_add')}" class="guide__btn" type="button" @click="jumpAndOpen('chart')">{{$t('guide.addChart')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('panel')">{{$t('guide.addPanel')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('chart')">{{$t('guide.addChart')}}</button>
         </div>
       </template>
       <template v-if="activeIndex === 5">
@@ -289,7 +289,7 @@ export default {
           break
         }
         case 'panel': {
-          if (!this.hasButton('panel_add')) {
+          if (!this.hasButton('main_add')) {
             return
           }
           this.$emit('close')
@@ -303,7 +303,7 @@ export default {
           break
         }
         case 'chart': {
-          if (!this.hasButton('panel_chart_add')) {
+          if (!this.hasButton('main_add')) {
             return
           }
           this.$emit('close')

@@ -31,7 +31,7 @@
                      <i class="nz-icon nz-icon-info-normal"></i>
                   </el-tooltip>
                 </span>
-                <span  v-has="'panel_chart_edit'" :title="$t('dashboard.refresh')" class="" @click="refreshChart">
+                <span  v-has="'main_edit'" :title="$t('dashboard.refresh')" class="" @click="refreshChart">
                   <i class="nz-icon nz-icon-replay"></i>
                 </span>
                  <span  @click="showAllScreen"  v-if="from !== 'chartTemp'" class="" :title="$t('dashboard.screen')">
@@ -43,11 +43,11 @@
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="" >
               <li  @click="editChart" class="el-dropdown-menu__item">
                 <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i><span>{{$t('dashboard.edit')}}</span></li>
-              <li  v-has="'panel_chart_delete'" class="el-dropdown-menu__item" @click="removeChart">
+              <li  v-has="'main_delete'" class="el-dropdown-menu__item" @click="removeChart">
                 <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
-              <li  v-has="'panel_chart_add'" class="el-dropdown-menu__item" @click="duplicate">
+              <li  v-has="'main_add'" class="el-dropdown-menu__item" @click="duplicate">
                 <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
-              <li  v-has="'panel_chart_edit'"  v-if="from !== 'chartTemp'&&chartData.pid" class="el-dropdown-menu__item" @click="$emit('sync')">
+              <li  v-has="'main_edit'"  v-if="from !== 'chartTemp'&&chartData.pid" class="el-dropdown-menu__item" @click="$emit('sync')">
                 <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>{{$t('overall.syncChart')}}</li>
             </ul>
           </el-dropdown>

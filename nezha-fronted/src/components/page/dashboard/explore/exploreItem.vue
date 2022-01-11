@@ -33,7 +33,7 @@
             </pick-time>
             <button v-if="showMetrics"
                     id="explore-save-chart"
-                    v-has="'panel_chart_add'"
+                    v-has="'main_add'"
                     :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}"
                     :disabled="saveDisabled"
                     class="top-tool-btn top-tool-btn--text"

@@ -19,7 +19,7 @@
             </el-input>
           </div>
           <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
-          <button id="panel-add-chart" v-has="'panel_chart_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
+          <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
                   type="button" @click="addChart">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
@@ -28,7 +28,7 @@
             id="asset-list"
             :params="filter"
             :params-type="paramsType"
-            :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
+            :permissions="{import: 'main_add', export: 'panel_view'}"
             class="top-tool-export margin-r-10"
             export-file-name="asset-charts"
             export-url="visual/panel/export"
@@ -40,10 +40,10 @@
             @panelLockChange="panelLockChange"
           >
             <template v-slot:after>
-              <el-dropdown-item v-has="'panel_chart_add'">
+              <el-dropdown-item v-has="'main_add'">
                 <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
               </el-dropdown-item>
-              <el-dropdown-item v-has="'panel_chart_edit'">
+              <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
               </el-dropdown-item>
             </template>
@@ -56,7 +56,7 @@
             </el-input>
           </div>
           <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
-          <button id="endpoint-create-chart" v-has="'panel_chart_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
+          <button id="endpoint-create-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
          <top-tool-more-options
@@ -64,7 +64,7 @@
             id="asset-list"
             :link="obj"
             :params="filter"
-            :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
+            :permissions="{import: 'main_add', export: 'panel_view'}"
             :showCur="false"
             :params-type="paramsType"
             :showLock="from === fromRoute.endpoint"
@@ -76,10 +76,10 @@
             @panelLockChange="panelLockChange"
           >
             <template v-slot:after>
-              <el-dropdown-item v-has="'panel_chart_add'">
+              <el-dropdown-item v-has="'main_add'">
                 <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
               </el-dropdown-item>
-              <el-dropdown-item v-has="'panel_chart_edit'">
+              <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
               </el-dropdown-item>
             </template>
