@@ -17,6 +17,7 @@
 import exprTemp from './exprTemp'
 import chartTemp from './chartTemp'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
+import store from '@/store'
 export default {
   name: 'v-template',
   components: {
@@ -26,9 +27,14 @@ export default {
   mixins: [routerPathParams],
   data () {
     return {
-      switchTab: 'exprTemp',
+      switchTab: '',
       templateHasTab: '',
       templateHasTabExprTemp: ''
+    }
+  },
+  computed: {
+    buttonList () {
+      return this.$store.getters.buttonList
     }
   },
   methods: {
@@ -42,8 +48,7 @@ export default {
       }
     },
     templateHas () {
-      const date = JSON.parse(localStorage.getItem('nz-user-permissions'))
-      date.map(e => {
+      this.buttonList.forEach(e => {
         if (e === 'expressionTemplate_view') {
           this.templateHasTabExprTemp = 'exprTemp'
           this.templateHasTab = this.templateHasTabExprTemp
@@ -60,6 +65,8 @@ export default {
     }
   },
   created () {
+  },
+  mounted() {
     this.templateHas()
     this.switchTab = this.$route.query.switchTab || this.templateHasTab
   }

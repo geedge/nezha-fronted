@@ -42,8 +42,11 @@ router.beforeEach((to, from, next) => {
                 post('/sys/user/permissions', { token: localStorage.getItem('nz-token') }).then(res => {
                   if (res.code === 200) {
                     const menuList = sortByOrderNum(res.data.menus)
+                    console.log(menuList)
                     store.commit('setMenuList', menuList)
-                    store.commit('setButtonList', res.data.buttons)
+                    const arr = []
+                    returnMenuCode(menuList, arr)
+                    store.commit('setButtonList', arr)
                     store.commit('setRoleList', res.data.roles)
                     bus.$emit('login')
                     router.push({
@@ -100,7 +103,10 @@ router.beforeEach((to, from, next) => {
           post(config.body.baseUrl + 'sys/user/permissions', { token: localStorage.getItem('nz-token') }).then(res => {
             if (res.code === 200) {
               store.commit('setMenuList', sortByOrderNum(res.data.menus))
-              store.commit('setButtonList', res.data.buttons)
+              const arr = []
+              returnMenuCode(res.data.menus, arr)
+              console.log(arr)
+              store.commit('setButtonList', arr)
               store.commit('setRoleList', res.data.roles)
               document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`))
               resolve()
@@ -207,7 +213,14 @@ export function sortByOrderNum (menuList) {
   })
   return r
 }
-
+export function returnMenuCode (menuList, arr) {
+  menuList.forEach(item => {
+    arr.push(item.code)
+    if (item.children) {
+      returnMenuCode(item.children, arr)
+    }
+  })
+}
 function getChildMenu (menu) {
   return menu.children.filter(m => m.type == 1)
 }

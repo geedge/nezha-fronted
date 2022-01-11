@@ -1,7 +1,7 @@
 import { post, get } from '@/http'
 import router from '../router'
 import bus from '../libs/bus'
-import { sortByOrderNum } from '@/permission'
+import { returnMenuCode, sortByOrderNum } from '@/permission'
 import moment from 'moment-timezone'
 import { theme } from '@/components/common/js/constants'
 
@@ -79,9 +79,11 @@ const user = {
       store.commit('setTimeFormatMain', localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
       post('/sys/user/permissions', { token: res.data.token }).then(res => {
         const menuList = sortByOrderNum(res.data.menus)
-        localStorage.setItem('nz-user-permissions', JSON.stringify(res.data.buttons))
+        // localStorage.setItem('nz-user-permissions', JSON.stringify(res.data.buttons))
         store.commit('setMenuList', menuList)
-        store.commit('setButtonList', res.data.buttons)
+        const arr = []
+        returnMenuCode(menuList, arr)
+        store.commit('setButtonList', arr)
         store.commit('setRoleList', res.data.roles)
         bus.$emit('login')
         router.push({
