@@ -66,7 +66,7 @@ export default {
   },
   created () {
   },
-  mounted() {
+  mounted () {
     this.templateHas()
     this.switchTab = this.$route.query.switchTab || this.templateHasTab
   }

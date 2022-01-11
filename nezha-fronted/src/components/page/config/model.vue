@@ -21,7 +21,7 @@
           :params="searchLabel"
           :permissions="{
                   import: 'model_add',
-                  export: 'model_view'
+                  export: 'model_edit'
                 }"
           class="top-tool-export margin-r-10"
           export-file-name="asset-model"

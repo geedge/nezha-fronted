@@ -122,6 +122,7 @@ export default {
               self.menus = response.data.menus
               self.selectedIds = response.data.selectedIds
               self.menus[0].children[0].disabled = true
+              console.log(self.menus[0].children[0])
             } else {
               self.$message.error('load menu faild')
             }

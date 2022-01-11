@@ -22,7 +22,7 @@
           export-url="/endpoint/export"
           import-url="/endpoint/import"
           :params="endpointSearchLabel"
-          :permissions="{import: 'asset_endpoint_import', export: 'asset_endpoint_export'}"
+          :permissions="{import: 'monitor_endpoint_add', export: 'monitor_endpoint_edit'}"
           @afterImport="getTableData"
           class="margin-l-20"
         >

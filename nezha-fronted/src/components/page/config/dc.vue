@@ -29,7 +29,7 @@
           :params2="searchCheckBox"
           :permissions="{
                   import: 'dc_add',
-                  export: 'dc_view'
+                  export: 'dc_edit'
                 }"
           class="top-tool-export margin-r-10"
           export-file-name="datacenter"
@@ -95,7 +95,7 @@
           :params="searchLabel"
           :permissions="{
                   import: 'dc_add',
-                  export: 'dc_view'
+                  export: 'dc_edit'
                 }"
           class="top-tool-export margin-r-10"
           export-file-name="datacenter"

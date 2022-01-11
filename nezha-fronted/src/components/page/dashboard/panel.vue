@@ -53,7 +53,7 @@
                 :params="filter"
                 :permissions="{
                   import: 'main_add',
-                  export: 'panel_view'
+                  export: 'main_edit'
                 }"
                 :paramsType="'dashboard'"
                 class="top-tool-export"
@@ -71,7 +71,7 @@
                   <el-dropdown-item v-has="'main_add'">
                     <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{$t('overall.AddByTemplate')}}</div>
                   </el-dropdown-item>
-                  <el-dropdown-item v-has="'main_edit'">
+                  <el-dropdown-item v-has="'panel_view'">
                     <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
                   </el-dropdown-item>
                 </template>

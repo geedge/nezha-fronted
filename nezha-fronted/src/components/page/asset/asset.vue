@@ -29,7 +29,7 @@
           :params2="searchCheckBox"
           :permissions="{
                   import: 'asset_add',
-                  export: 'asset_view'
+                  export: 'asset_edit'
                 }"
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="asset"
@@ -101,7 +101,7 @@
           :params2="searchCheckBox"
           :permissions="{
                   import: 'asset_add',
-                  export: 'asset_view'
+                  export: 'asset_edit'
                 }"
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="asset"

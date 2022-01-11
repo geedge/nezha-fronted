@@ -42,8 +42,8 @@
           id="model"
           :params="searchLabel"
           :permissions="{
-                  import: 'dc_edit',
-                  export: 'dc_view'
+                  import: 'dc_add',
+                  export: 'dc_edit'
                 }"
           class="top-tool-export margin-r-10"
           export-file-name="cabinet"

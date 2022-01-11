@@ -9,10 +9,10 @@
       </el-dropdown-item>
       <!-- import、export之前的内容 -->
       <slot name="before"></slot>
-      <el-dropdown-item v-if="importUrl">
+      <el-dropdown-item v-has="permissions.import" v-if="importUrl">
         <div id="chart-import" @click="showImportBox(1)"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</div>
       </el-dropdown-item>
-      <el-dropdown-item v-if="exportUrl">
+      <el-dropdown-item v-has="permissions.export" v-if="exportUrl">
         <div id="chart-export"@click="showImportBox(2)"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</div>
       </el-dropdown-item>
       <!-- import、export之后的内容 -->

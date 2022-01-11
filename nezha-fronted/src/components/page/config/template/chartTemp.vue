@@ -51,7 +51,7 @@
             groupId: 0
           }"
           :paramsType="'template'"
-          :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_view'}"
+          :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_edit'}"
           class="top-tool-export margin-r-10"
           @afterImport="getTableData"
         >

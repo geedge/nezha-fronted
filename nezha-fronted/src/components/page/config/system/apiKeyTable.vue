@@ -87,7 +87,7 @@
         :width="operationWidth"
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
-        <div slot-scope="scope" class="table-operation-items">
+        <div slot-scope="scope" v-has="['system_apiKey_edit','system_apiKey_delete']" class="table-operation-items">
           <template v-if="scope.row.edit">
             <button v-has="'system_apiKey_edit'" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-mini nz-btn-style-normal" style="margin-right: 10px" type="button"  @click="save(scope.row)"><span>{{$t('overall.save')}}</span></button>
             <button :disabled="prevent_opt.save" class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancel(scope.row)"><span>{{$t('overall.cancel')}}</span></button>

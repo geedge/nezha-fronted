@@ -51,6 +51,7 @@
           ref="upload"
           accept=".xml"
           action=""
+          v-has="'system_license_edit'"
           class="license-left-footer-upload"
           :file-list="uploadFileList"
           :auto-upload="false"

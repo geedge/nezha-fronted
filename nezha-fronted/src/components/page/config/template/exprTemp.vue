@@ -30,7 +30,7 @@
           import-url="expression/tmpl/import"
           export-file-name="expression-template"
           :params="searchLabel"
-          :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_view'}"
+          :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_edit'}"
           class="top-tool-export margin-l-10 margin-r-10"
           @afterImport="getTableData"
         >
