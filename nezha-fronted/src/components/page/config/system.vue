@@ -1,7 +1,7 @@
 <template>
   <div class="system">
     <el-tabs v-model="switchTab" :class="{'full-table':switchTab == 'notification'||switchTab == 'link'||switchTab === 'apiKey'}" class="system-tabs" style="overflow: auto" type="border-card" @tab-click="selectTab">
-      <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
+      <el-tab-pane v-if="systemHasTab('system_basic_view')" :label="$t('config.system.basic.basic')" name="basic">
         <div class="system-config-form basicForm" v-if="switchTab === 'basic'">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
             <div class="system-title">{{$t('config.system.basic.title')}}</div>
@@ -11,7 +11,7 @@
                          v-model="basic.language"
                          popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
                          size="small">
-                <template v-for="item in languageList">
+                <template v-for="item in languageList">f
                   <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </template>
               </el-select>
@@ -112,12 +112,12 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-              <button id="system-basic-save" v-has="'system_basic_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-top: 8px;"  type="button" @click="saveSetInfo('basic','basicForm')">{{$t('overall.submit')}}</button>
+              <button id="system-basic-save" v-has="'system_basic_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-top: 8px;"  type="button" @click="saveSetInfo('basic','basicForm')">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div >
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.monitor.monitor')" name="monitor">
+      <el-tab-pane v-if="systemHasTab('system_monitor_view')" :label="$t('config.system.monitor.monitor')" name="monitor">
         <div class="system-config-form basicForm" v-if="switchTab === 'monitor'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="monitor"  label-width="180px" size="small" ref="monitorForm" :rules="monitorRules" :validate-on-rule-change="false">
@@ -224,12 +224,12 @@
               <!--                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light" type="button" id="system-basic-reset"-->
               <!--                :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"-->
               <!--              >{{$t('overall.reset')}}</button>-->
-              <button id="system-monitor-save" v-has="'system_basic_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="saveSetInfo('monitor','monitorForm')">{{$t('overall.submit')}}</button>
+              <button id="system-monitor-save" v-has="'system_basic_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="saveSetInfo('monitor','monitorForm')">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.email.email')" name="email" >
+      <el-tab-pane v-if="systemHasTab('system_email_view')" :label="$t('config.system.email.email')" name="email" >
         <div class="system-config-form" v-if="switchTab === 'email'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="email"  label-width="180px" size="small" ref="emailForm" :rules="email.email_enable=='on'?emailRules:{}" :validate-on-rule-change="false">
@@ -272,12 +272,12 @@
             <el-form-item style="padding-top: 20px;">
 <!--              <button id="system-email-reset" @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light" type="button">{{$t('overall.reset')}}</button>-->
               <button id="system-email-test" :class="{'nz-btn-disabled':email.email_enable == 'off','nz-btn-disabled':prevent_opt.save}" :disabled="email.email_enable == 'off' || prevent_opt.save" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button">{{$t('config.system.email.testConnection')}}</button>
-              <button id="system-email-save" v-has="'system_email_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('email','emailForm')">{{$t('overall.submit')}}</button>
+              <button id="system-email-save" v-has="'system_email_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('email','emailForm')">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.terminal.terminal')" name="terminal">
+      <el-tab-pane v-if="systemHasTab('system_terminal_view')" :label="$t('config.system.terminal.terminal')" name="terminal">
         <div class="system-config-form terminal" v-if="switchTab === 'terminal'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
@@ -298,12 +298,12 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-              <button v-has="'system_terminal_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('terminal','terminalForm')">{{$t('overall.submit')}}</button>
+              <button v-has="'system_terminal_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('terminal','terminalForm')">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.ldap.ldap')" name="ldap">
+      <el-tab-pane v-if="systemHasTab('system_ldap_view')" :label="$t('config.system.ldap.ldap')" name="ldap">
         <div class="system-config-form" v-if="switchTab === 'ldap'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="ldap"  label-width="180px" size="small" ref="ldapForm" :rules="ldap.ldap_enable == 'on'?ldapRules:{}" :validate-on-rule-change="false">
@@ -340,21 +340,21 @@
             <el-form-item>
 <!--              <button id='system-ldap-reset' @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light" type="button">{{$t('overall.reset')}}</button>-->
               <button id='system-ldap-test' :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button" @click="testSetInfo('ldap','ldapForm')">{{$t('config.system.email.testConnection')}}</button>
-              <button id='system-ldap-save' v-has="'system_ldap_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('ldap','ldapForm')">{{$t('overall.submit')}}</button>
+              <button id='system-ldap-save' v-has="'system_ldap_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('ldap','ldapForm')">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.notification.notification')" name="notification" style="height: 100%;"><!--$t('config.system.reset.reset')-->
+      <el-tab-pane v-if="systemHasTab('system_notification_view')" :label="$t('config.system.notification.notification')" name="notification" style="height: 100%;"><!--$t('config.system.reset.reset')-->
         <notify-method v-if="switchTab === 'notification'" :switch-tab="switchTab"></notify-method>
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.link.link')" name="link" style="height: 100%;"><!--$t('config.system.reset.reset')-->
+      <el-tab-pane v-if="systemHasTab('system_link_view')" :label="$t('config.system.link.link')" name="link" style="height: 100%;"><!--$t('config.system.reset.reset')-->
         <link-tab v-if="switchTab === 'link'" :switch-tab="switchTab"></link-tab>
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.apiKey.apiKey')" name="apiKey" style="height: 100%;"><!--$t('config.system.reset.reset')-->
+      <el-tab-pane v-if="systemHasTab('system_apiKey_view')" :label="$t('config.system.apiKey.apiKey')" name="apiKey" style="height: 100%;"><!--$t('config.system.reset.reset')-->
         <api-key-tab v-if="switchTab === 'apiKey'" :switch-tab="switchTab"></api-key-tab>
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
+      <el-tab-pane v-if="systemHasTab('system_reset_view')" :label="$t('config.system.reset.reset')" name="reset">
         <div class="system-config-form" v-if="switchTab === 'reset'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
@@ -369,12 +369,12 @@
               <el-input id="system-reset-pin" v-model="reset.pin" type="password"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button v-has="'system_reset_reset'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="resetSys()">{{$t('overall.reset')}}</el-button>
+              <el-button v-has="'system_reset_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="resetSys()">{{$t('overall.reset')}}</el-button>
             </el-form-item>
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.license.license')" name="license">
+      <el-tab-pane v-if="systemHasTab('system_license_view')" :label="$t('config.system.license.license')" name="license">
         <license v-if="switchTab === 'license'"></license>
       </el-tab-pane>
     </el-tabs>
@@ -596,6 +596,18 @@ export default {
         { value: 'YYYY-MM-DD HH:mm:ss', label: 'YYYY-MM-DD HH:mm:ss', time: '' }
       ],
       basicTimer: 0
+    }
+  },
+  computed: {
+    buttonList () {
+      return this.$store.getters.buttonList
+    },
+    systemHasTab () {
+      return function (has) {
+        return this.$store.getters.buttonList.some(e => {
+          return e === has
+        })
+      }
     }
   },
   methods: {
@@ -1071,7 +1083,27 @@ export default {
     this.dateFormatTimer()
   },
   created () {
-    this.switchTab = this.$route.query.switchTab || 'basic'
+    let has = ''
+    if (this.systemHasTab('system_basic_view')) {
+      has = 'basic'
+    } else if (this.systemHasTab('system_monitor_view')) {
+      has = 'monitor'
+    } else if (this.systemHasTab('system_email_view')) {
+      has = 'email'
+    } else if (this.systemHasTab('system_terminal_view')) {
+      has = 'terminal'
+    } else if (this.systemHasTab('system_ldap_view')) {
+      has = 'ldap'
+    } else if (this.systemHasTab('system_notification_view')) {
+      has = 'notification'
+    } else if (this.systemHasTab('system_link_view')) {
+      has = 'link'
+    } else if (this.systemHasTab('system_apiKey_view')) {
+      has = 'apiKey'
+    } else if (this.systemHasTab('system_license_view')) {
+      has = 'license'
+    }
+    this.switchTab = this.$route.query.switchTab || has
   }
 }
 </script>
