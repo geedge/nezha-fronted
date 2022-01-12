@@ -68,7 +68,7 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
 <!--        <button class="table-operation-item" @click.stop><i class="nz-icon nz-icon-view1"></i></button>-->
-        <button class="table-operation-item" @click.stop="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
+        <button class="table-operation-item" v-has="'asset_label_edit'" @click.stop="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
         <el-dropdown size="medium" v-has="['asset_label_edit','asset_label_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>

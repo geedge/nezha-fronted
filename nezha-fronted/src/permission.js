@@ -42,7 +42,6 @@ router.beforeEach((to, from, next) => {
                 post('/sys/user/permissions', { token: localStorage.getItem('nz-token') }).then(res => {
                   if (res.code === 200) {
                     const menuList = sortByOrderNum(res.data.menus)
-                    console.log(menuList)
                     store.commit('setMenuList', menuList)
                     const arr = []
                     returnMenuCode(menuList, arr)
@@ -105,7 +104,6 @@ router.beforeEach((to, from, next) => {
               store.commit('setMenuList', sortByOrderNum(res.data.menus))
               const arr = []
               returnMenuCode(res.data.menus, arr)
-              console.log(arr)
               store.commit('setButtonList', arr)
               store.commit('setRoleList', res.data.roles)
               document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`))
@@ -146,7 +144,6 @@ router.beforeEach((to, from, next) => {
 // menuList中是否包含route权限
 export function hasMenu (menuList, route) {
   let flag = false
-  console.log(menuList, route)
   menuList.forEach(menu => {
     if (menu.route == route) {
       flag = true
@@ -156,7 +153,6 @@ export function hasMenu (menuList, route) {
       }
     }
   })
-  console.log(flag, route)
   return flag
 }
 

@@ -49,7 +49,7 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
         <button class="table-operation-item" v-has="'i18n_edit'" @click="tableOperation(['edit', scope.row])"><i class="nz-icon nz-icon-edit"></i></button>
-        <el-dropdown size="medium" v-has="['i18n_delete', 'i18n_edit']" trigger="click" @command="tableOperation">
+        <el-dropdown size="medium" v-has="['i18n_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
