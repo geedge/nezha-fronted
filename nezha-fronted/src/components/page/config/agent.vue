@@ -14,7 +14,7 @@
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <button id="load-agent" class="top-tool-btn margin-r-10" type="button" @click="toDownloadAgent" v-has="'agent_add'">
+        <button id="load-agent" class="top-tool-btn margin-r-10" type="button" @click="toDownloadAgent" v-has="'agent_edit'">
           <i class="nz-icon-download nz-icon"></i>
         </button>
         <delete-button id="promserver-list-batch-delete" v-has="'agent_delete'" :delete-objs="batchDeleteObjs" api="agent" @after="getTableData" @before="delFlag=true"></delete-button>
