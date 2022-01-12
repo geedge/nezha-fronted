@@ -40,11 +40,15 @@ const store = new Vuex.Store({
     metricsList: [],
     langList: [],
     i18nReady: false,
-    timeFormatMain: localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss'
+    timeFormatMain: localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss',
+    globalShow: false
   },
   getters: {
     getTimeFormatMain (state) {
       return state.timeFormatMain
+    },
+    getGlobalShow (state) {
+      return state.globalShow
     },
     getLinkData (state) {
       return state.linkData
@@ -173,6 +177,9 @@ const store = new Vuex.Store({
     },
     setTimeFormatMain (state, timeFormat) {
       state.timeFormatMain = timeFormat
+    },
+    setGlobalShow (state, globalShow) {
+      state.globalShow = globalShow
     },
     i18nReady (state, ready) {
       state.i18nReady = ready

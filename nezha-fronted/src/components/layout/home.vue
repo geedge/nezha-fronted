@@ -7,6 +7,8 @@
     </div>
     <!--web-ssh-->
     <web-ssh ref="webSsh"></web-ssh>
+    <!--global-search-->
+    <global-search ref="globalSearch"></global-search>
     <!--table悬浮提示容器-->
     <span class="el-popover table-tooltip"></span>
     <!-- 临时文本dom，用来计算文本长度 -->
@@ -20,13 +22,16 @@ import Header from './header'
 import webSSH from '../cli/webSSH'
 import leftMenu from './leftMenu'
 import container from './container'
+import globalSearch from '@/components/common/globalSearch/globalSearch'
+
 export default {
   name: 'home',
   components: {
     Header,
     leftMenu,
     container,
-    'web-ssh': webSSH
+    'web-ssh': webSSH,
+    globalSearch
   },
   data () {
     return {

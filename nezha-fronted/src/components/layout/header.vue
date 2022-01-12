@@ -6,12 +6,19 @@
     </el-breadcrumb>
     <div class="header-menu">
       <el-dropdown trigger="click">
+        <el-dropdown-menu></el-dropdown-menu>
+        <div id="header-open-global-search" @click="openGlobalSearch">
+          <div class="header-menu__item"><i class="nz-icon nz-icon-search"></i></div>
+          <span v-show="$store.state.consoleCount>0" class="right-tip">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</span>
+        </div>
+      </el-dropdown>
+      <el-dropdown trigger="click">
         <div class="header-menu__item"><i class="nz-icon nz-icon-more-app"></i></div>
         <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
           <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index" v-if="linkData.length">
             <span class="link-title">
               <i class="nz-icon nz-icon-link"></i>
-              <a :href='item.url' rel="noopener noreferrer" :title="item.name"  class="nz-a" target="_blank">{{item.name}}</a>
+              <a :href='item.url' rel="noopener noreferrer" :title="item.name"  class="nz-  a" target="_blank">{{item.name}}</a>
             </span>
           </el-dropdown-item>
           <div v-if="!linkData.length" class="header-link-nodata">
@@ -118,7 +125,10 @@ export default {
     cli () {
       this.$store.commit('openConsole')
     },
-
+    // 打开全局搜索
+    openGlobalSearch () {
+      this.$store.commit('setGlobalShow', true)
+    },
     /**
        * @param route 路由地址
        * @param parentMenu 菜单大类
