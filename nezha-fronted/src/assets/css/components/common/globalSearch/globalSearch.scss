@@ -59,13 +59,118 @@
     border-radius: 6px 6px 0 0;
   }
   .global-search-content{
-    flex: 1;
+    height: calc(100% - 72px);
+    display: flex;
+    flex-direction: column;
     background: $--background-color-empty;
     border-top: 1px solid $--border-color-light;
+    .table-no-data{
+      text-align: center;
+    }
+    .global-search-content-content{
+      flex: 1;
+      height: calc(100% - 72px);
+      display: flex;
+      > div{
+        width: 50%;
+        box-sizing: border-box;
+        height: 100%;
+      }
+      .list{
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-y: auto;
+      }
+      .list-item{
+        height: 64px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        outline: none;
+        border-bottom: 1px solid $--border-color-light;
+        > div {
+          width: 100%;
+          box-sizing: border-box;
+          padding-left: 20px;
+          padding-right: 20px;
+          font-size: 16px;
+          color: $--color-text-primary;
+          .nz-icon{
+            color: $--color-monitor !important;
+            font-size: 16px;
+            vertical-align: middle
+          }
+        }
+        .list-item-content{
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+        .list-item-sub{
+          ont-size: 14px;
+          color: $--color-info;
+          font-weight: 400;
+          margin-top: 2px;
+          padding-left: 40px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+      .lise-item-active {
+        background: $--table-row-hover-background-color;
+      }
+    }
     .global-search-footer {
       height: 72px;
       border-radius: 0 0 6px 6px;
       background: $--background-color-empty;
+      display: flex;
+      >div{
+        width: 50%;
+        box-sizing: border-box;
+        padding-left: 30px;
+      }
+      .global-search-footer-left{
+        display: flex;
+        align-items: center;
+        .keyboard{
+          background: $--background-color-2;
+          border: 1px solid $--border-color-light;
+          border-radius: 5px;
+          width: 32px;
+          height: 32px;
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 8px 0 0;
+          .nz-icon{
+            color: $--color-text-regular;
+            font-size: 16px;
+          }
+        }
+      }
+      .global-search-footer-right {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        .scope-box {
+          color: $--background-color-disabled;
+          .nz-icon {
+            margin-right: 5px;
+            color: $--background-color-disabled ;
+          }
+        }
+        .scope-box.is-select{
+          color: $--color-monitor;
+          .nz-icon {
+            color: $--color-monitor;
+          }
+        }
+      }
     }
   }
 }
