@@ -9,17 +9,6 @@
       :search-msg="searchMsg"
       @search="search"
     >
-<!--      <template v-slot:top-tool-left>-->
-<!--        <div id="module-type-7"  class="nz-tab-item-box" @click="clickTab(['mib','browser'],'browser')">&lt;!&ndash;v-has="'snmp_browser_view'"&ndash;&gt;-->
-<!--          <div class="nz-tab-item">{{$t("config.mib.mibBrowser")}}</div>-->
-<!--        </div>-->
-<!--        <div id="module-type-8"  class="nz-tab-item-box">-->
-<!--          <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.credentials")}}</div>-->
-<!--        </div>-->
-<!--        <div id="module-type-6" class="nz-tab-item-box" @click="clickTab(['mib','file'],'file')">-->
-<!--          <div class="nz-tab-item ">{{$t("config.mib.mibFiles")}}</div>-->
-<!--        </div>-->
-<!--      </template>-->
       <template v-slot:top-tool-right>
         <button id="mib-add" v-has="'credential_add'" :title="$t('overall.createdCredentials')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>

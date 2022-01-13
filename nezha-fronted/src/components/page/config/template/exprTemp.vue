@@ -9,14 +9,6 @@
       :search-msg="searchMsg"
       @search="search"
     >
-<!--      <template v-slot:top-tool-left>-->
-<!--        <div id="module-type-1" class="nz-tab-item-box">-->
-<!--          <div class="nz-tab-item nz-tab-item-active ">{{$t("config.exprTemp.exprTemp")}}</div>-->
-<!--        </div>-->
-<!--        <div id="module-type-2"  class="nz-tab-item-box" @click="clickTab([],'chartTemp')">&lt;!&ndash;v-has="'snmp_browser_view'"&ndash;&gt;-->
-<!--          <div class="nz-tab-item">{{$t("config.chartTemp.chartTemp")}}</div>-->
-<!--        </div>-->
-<!--      </template>-->
       <template v-slot:top-tool-right>
         <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn"
                 type="button" @click="add">
