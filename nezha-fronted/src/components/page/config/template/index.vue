@@ -1,13 +1,5 @@
 <template>
   <div class="temp">
-    <div class="temp-tab">
-      <div id="module-type-1" v-has="'expressionTemplate_view'" class="nz-tab-item-box" @click="templateSwitchTab('exprTemp')">
-        <div class="nz-tab-item" :class="{'nz-tab-item-active': switchTab === 'exprTemp'}">{{$t("config.exprTemp.exprTemp")}}</div>
-      </div>
-      <div id="module-type-2" class="nz-tab-item-box" @click="templateSwitchTab('chartTemp')">
-        <div class="nz-tab-item" :class="{'nz-tab-item-active': switchTab === 'chartTemp'}">{{$t("config.chartTemp.chartTemp")}}</div>
-      </div>
-    </div>
     <exprTemp class="template-tab" :switch-tab="switchTab" v-if="switchTab == 'exprTemp'"></exprTemp>
     <chartTemp class="template-tab" :switch-tab="switchTab" v-if="switchTab == 'chartTemp'"></chartTemp>
   </div>

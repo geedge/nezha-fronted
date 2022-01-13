@@ -1,16 +1,5 @@
 <template>
   <div class="snmp">
-    <div class="snmp-tab">
-      <div id="module-type-7" v-has="'snmp_mib_browser'"  class="nz-tab-item-box" @click="snmpSwitchTab('browser')">
-        <div class="nz-tab-item" :class="{'nz-tab-item-active': switchTab === 'browser'}">{{$t("config.mib.mibBrowser")}}</div>
-      </div>
-      <div id="module-type-8" v-has="'snmp_credential_view'" class="nz-tab-item-box" @click="snmpSwitchTab('credentials')">
-        <div class="nz-tab-item" :class="{'nz-tab-item-active': switchTab === 'credentials'}">{{$t("config.mib.credentials")}}</div>
-      </div>
-      <div id="module-type-6" v-has="'snmp_mibFile_view'" class="nz-tab-item-box" @click="snmpSwitchTab('file')">
-        <div class="nz-tab-item" :class="{'nz-tab-item-active': switchTab === 'file'}">{{$t("config.mib.mibFiles")}}</div>
-      </div>
-    </div>
     <mib-file v-if="switchTab === 'file'" :switch-tab="switchTab" ></mib-file>
     <mib-browser  v-if="switchTab === 'browser'" :switch-tab="switchTab"></mib-browser>
     <credentials v-if="switchTab === 'credentials'" :switch-tab="switchTab"></credentials>

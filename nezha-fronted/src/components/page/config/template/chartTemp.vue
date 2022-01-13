@@ -10,29 +10,7 @@
       @search="search"
       @getTableData="getTableData"
     >
-<!--      <template v-slot:top-tool-left>-->
-<!--        <div id="module-type-1"  class="nz-tab-item-box" @click="clickTab([],'exprTemp')">&lt;!&ndash;v-has="'snmp_browser_view'"&ndash;&gt;-->
-<!--          <div class="nz-tab-item">{{$t("config.exprTemp.exprTemp")}}</div>-->
-<!--        </div>-->
-<!--        <div id="module-type-2"  class="nz-tab-item-box" @click="clickTab([],'chartTemp')">&lt;!&ndash;v-has="'snmp_browser_view'"&ndash;&gt;-->
-<!--          <div class="nz-tab-item nz-tab-item-active">{{$t("config.chartTemp.chartTemp")}}</div>-->
-<!--        </div>-->
-<!--      </template>-->
       <template v-slot:top-tool-right>
-<!--        <export-excel-->
-<!--          id="expression-template-list"-->
-<!--          export-url="expression/tmpl/export"-->
-<!--          import-url="expression/tmpl/import"-->
-<!--          export-file-name="expression-template"-->
-<!--          :params="searchLabel"-->
-<!--          :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_view'}"-->
-<!--          @afterImport="getTableData"-->
-<!--          class="top-tool-export margin-r-10"-->
-<!--        >-->
-<!--          <template slot="optionZone">-->
-<!--          -->
-<!--          </template>-->
-<!--        </export-excel>-->
         <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">
           <i class="nz-icon nz-icon-create-square"></i>
