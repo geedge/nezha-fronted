@@ -28,7 +28,7 @@
               >
                 <div class="list-item-content">
                   <i class="nz-icon" :class="selectIcon(item)" />
-                  <TextHighlight :queries="searchStr"  :highlightClass='"list-item-highlight"' :overWriteStyle="{color: '#FA901C'}" style="vertical-align: middle" :title="item.name">{{item.name}}</TextHighlight>
+                  <HighlightText :keyword="searchStr" :overWriteStyle="{color: '#FA901C'}" style="vertical-align: middle" :title="item.name">{{item.name}}</HighlightText>
                 </div>
                 <div class="list-item-sub" v-if="item.sub">
                   {{ item.sub }}
@@ -81,13 +81,12 @@
 </template>
 
 <script>
-// import HighlightText from 'vue-highlight-text'
-import TextHighlight from 'vue-text-highlight';
+import HighlightText from 'vue-highlight-text'
 
 export default {
   name: 'globalSearch',
   components: {
-    TextHighlight
+    HighlightText
   },
   computed: {
     globalShow () {
@@ -139,6 +138,7 @@ export default {
       ],
       timer: null,
       searchTimer: null,
+      scopeChangeTimer: null,
       isKeyDown: false,
       stat: {
 
@@ -268,9 +268,19 @@ export default {
       this.nextLoading = true
       this.getData()
     },
-    scopeChange () {
-      this.pageObj.pageNo = 1
+    scopeChange (item) {
+      if (this.scopeChangeTimer) {
+        clearInterval(this.scopeChangeTimer)
+        this.scopeChangeTimer = null
+      }
       this.loading = true
+      item.isSelect = !item.isSelect
+      this.scopeChangeTimer = setTimeout(() => {
+        this.pageObj.pageNo = 1
+        this.tableData = []
+        this.selectIndex = 0
+        this.getData()
+      }, 100)
     },
     getData () {
       const param = {
