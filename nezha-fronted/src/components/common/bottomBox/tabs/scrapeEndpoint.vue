@@ -141,7 +141,17 @@ export default {
       this.$set(this.searchLabel, 'type', this.obj.type)
       this.$get(this.url, { ...this.searchLabel }).then(response => {
         this.tools.loading = false
-        this.tableData = response.data.activeTargets
+        this.tableData = response.data.activeTargets.map(item => {
+          const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'datacenter', 'project', 'parent_asset', 'user']
+          buildIn.forEach(label => {
+            item[label] = {
+              id: item.labels[label + '_id'],
+              position: {},
+              loading: false
+            }
+          })
+          return item
+        })
         // this.tableData = scrapeEndpoints[0].data.activeTargets
         this.detailViewRightObj = this.tableData[0]
         this.inputDateQuery = this.handlerTableData(this.tableData)
@@ -173,6 +183,7 @@ export default {
         lastError = e.lastError || ''
         tableDateAll = endpoint + labelsType + lastScrape + lastScrapeDuration + health + lastError + tableDateAll
         const tableData = { endpoint, labelsType, lastScrape, lastScrapeDuration, health, lastError, tableDateAll }
+        console.log(tableData)
         tableDates.push(tableData)
       })
       return tableDates

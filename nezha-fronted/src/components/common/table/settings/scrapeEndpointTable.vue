@@ -39,8 +39,8 @@
           <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
             <div> {{scope.row[item.prop]}}</div>
             <span
-              @mouseenter="labelHover(scope.row, item, true, $event)"
-              @mouseleave="labelHover(scope.row, item, false)">
+              @mouseenter="labelHover(scope.row, item.label, true, $event)"
+              @mouseleave="labelHover(scope.row, item.label, false)">
               <nz-alert-tag
                 v-if="item.label !== 'alertname' && item.label !== 'severity'" :key="item.label" :cursor-point="tagType(item.label) !== 'info'"
                 :label="item.label"
@@ -170,7 +170,6 @@ export default {
         result.push({ label: key, value: labels[key] })
         delete labels[key]
       })
-      console.log(result)
       return result
     },
     // label tooltip是否显示
@@ -190,13 +189,14 @@ export default {
       if (this.labelToolTipDis(type)) {
         return
       }
+      console.log(item, type, loading, e,type + '_id')
       if (e) {
         const dom = e.currentTarget
         const position = dom.getBoundingClientRect()
         console.log(type)
-        this.$set(item, 'position', position)
+        this.$set(item[type], 'position', position)
       }
-      this.$set(item, 'loading', loading)
+      this.$set(item[type], 'loading', loading)
     }
   },
   mounted () {
