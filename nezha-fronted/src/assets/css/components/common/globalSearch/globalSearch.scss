@@ -107,9 +107,13 @@
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
+          .list-item-highlight{
+            background: none;
+            color: $--color-primary;
+          }
         }
         .list-item-sub{
-          ont-size: 14px;
+          font-size: 14px;
           color: $--color-info;
           font-weight: 400;
           margin-top: 2px;
@@ -158,6 +162,7 @@
         align-items: center;
         justify-content: space-around;
         .scope-box {
+          cursor: pointer;
           color: $--background-color-disabled;
           .nz-icon {
             margin-right: 5px;

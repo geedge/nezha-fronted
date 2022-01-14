@@ -28,7 +28,7 @@
               >
                 <div class="list-item-content">
                   <i class="nz-icon" :class="selectIcon(item)" />
-                  <HighlightText :keyword="searchStr" :overWriteStyle="{color: '#FA901C'}" style="vertical-align: middle" :title="item.name">{{item.name}}</HighlightText>
+                  <TextHighlight :queries="searchStr"  :highlightClass='"list-item-highlight"' :overWriteStyle="{color: '#FA901C'}" style="vertical-align: middle" :title="item.name">{{item.name}}</TextHighlight>
                 </div>
                 <div class="list-item-sub" v-if="item.sub">
                   {{ item.sub }}
@@ -69,7 +69,7 @@
             {{$t('globalSearch.toEsc')}}
           </div>
           <div class="global-search-footer-right">
-            <div class="scope-box" v-for="item in scope" :class="item.isSelect ? 'is-select' : ''" :key="item.type">
+            <div class="scope-box" v-for="item in scope" :class="item.isSelect ? 'is-select' : ''" :key="item.type" @click="scopeChange(item)">
               <i class="nz-icon" :class="selectIcon(item)" />
               {{stat[item.type] || 0}}
             </div>
@@ -81,12 +81,13 @@
 </template>
 
 <script>
-import HighlightText from 'vue-highlight-text'
+// import HighlightText from 'vue-highlight-text'
+import TextHighlight from 'vue-text-highlight';
 
 export default {
   name: 'globalSearch',
   components: {
-    HighlightText
+    TextHighlight
   },
   computed: {
     globalShow () {
@@ -266,6 +267,10 @@ export default {
       this.pageObj.pageNo++
       this.nextLoading = true
       this.getData()
+    },
+    scopeChange () {
+      this.pageObj.pageNo = 1
+      this.loading = true
     },
     getData () {
       const param = {
