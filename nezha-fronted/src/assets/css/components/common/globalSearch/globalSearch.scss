@@ -21,6 +21,7 @@
   background: rgba(0,0,0,0);
   width: 80%;
   max-width: 1040px;
+  min-width: 894px;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -75,6 +76,9 @@
         width: 50%;
         box-sizing: border-box;
         height: 100%;
+      }
+      .global-search-content-left {
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.14);
       }
       .list{
         height: 100%;

@@ -28,7 +28,7 @@
               >
                 <div class="list-item-content">
                   <i class="nz-icon" :class="selectIcon(item)" />
-                  <HighlightText :keyword="searchStr" :overWriteStyle="{color: '#FA901C'}" style="vertical-align: middle" :title="item.name">{{item.name}}</HighlightText>
+                  <HighlightText ref="searchStr" :queries="searchStr" :highlightClass="'list-item-highlight'" style="vertical-align: middle" :title="item.name">{{item.name}}</HighlightText>
                 </div>
                 <div class="list-item-sub" v-if="item.sub">
                   {{ item.sub }}
@@ -39,7 +39,7 @@
             </ul>
           </div>
           <div class="global-search-content-right">
-
+            <searchItemInfo v-if="tableData[selectIndex]" :obj="tableData[selectIndex]" :severityData="severityData"></searchItemInfo>
           </div>
         </div>
         <div v-else class="global-search-content" style="justify-content: center">
@@ -81,12 +81,14 @@
 </template>
 
 <script>
-import HighlightText from 'vue-highlight-text'
+import HighlightText from 'vue-text-highlight'
+import searchItemInfo from './searchItemInfo'
 
 export default {
   name: 'globalSearch',
   components: {
-    HighlightText
+    HighlightText,
+    searchItemInfo
   },
   computed: {
     globalShow () {
@@ -114,6 +116,7 @@ export default {
         total: 50
       },
       obj: {},
+      severityData: {},
       // scope: ['asset', 'datacenter', 'project', 'module', 'endpoint', 'alertrule'],
       scope: [
         {
@@ -164,6 +167,9 @@ export default {
       this.pageObj.pageNo = 1
       this.tableData = []
       this.$store.commit('setGlobalShow', false)
+      this.scope.forEach((item) => {
+        item.isSelect = true
+      })
       this.unbindEvent()
     },
     selectIcon (item) {
@@ -180,10 +186,12 @@ export default {
     },
     bindEvent () {
       window.addEventListener('keydown', this.keyDown)
+      window.addEventListener('keyup', this.keyup)
     },
     unbindEvent () {
       this.selectIndex = ''
       window.removeEventListener('keydown', this.keyDown)
+      window.removeEventListener('keyup', this.keyup)
     },
     scroll () {
       // const ulBox = this.$refs.list
@@ -236,13 +244,15 @@ export default {
       if (e.keyCode === 27) {
         this.close()
       }
+    },
+    keyup () {
       if (this.timer) {
         clearInterval(this.timer)
         this.timer = null
       }
       this.timer = setTimeout(() => {
         this.isKeyDown = false
-      }, 200)
+      }, 300)
     },
     jumpTo () {
 
@@ -268,13 +278,25 @@ export default {
       this.nextLoading = true
       this.getData()
     },
-    scopeChange (item) {
+    scopeChange (scope) {
       if (this.scopeChangeTimer) {
         clearInterval(this.scopeChangeTimer)
         this.scopeChangeTimer = null
       }
       this.loading = true
-      item.isSelect = !item.isSelect
+      const isSelectArr = this.scope.filter(item => item.isSelect)
+      if (isSelectArr.length === this.scope.length) {
+        this.scope.forEach(item => {
+          item.isSelect = false
+        })
+        scope.isSelect = !scope.isSelect
+      } else if (isSelectArr.length === 1 && isSelectArr[0].type === scope.type) {
+        this.scope.forEach(item => {
+          item.isSelect = true
+        })
+      } else {
+        scope.isSelect = !scope.isSelect
+      }
       this.scopeChangeTimer = setTimeout(() => {
         this.pageObj.pageNo = 1
         this.tableData = []
@@ -306,6 +328,13 @@ export default {
           this.$message.error(res.msg)
         }
         this.loading = false
+      })
+    },
+    getSeverityData () {
+      this.$get('alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          this.severityData = response.data.list
+        }
       })
     }
   },

@@ -111,7 +111,8 @@
         <div class="alert-label-title">{{$t('overall.module')}}</div>
         <div class="alert-label-value">
           <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>&nbsp;
-          <span>{{alertLabelData && alertLabelData.module && alertLabelData.module.name ? alertLabelData.module.name : '--'}}</span></div>
+          <span>{{alertLabelData && alertLabelData.moduleNum  ? alertLabelData.moduleNum : '--'}}</span>
+        </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Endpoint</div>
