@@ -58,6 +58,8 @@
         <alertRuleEvalLog v-if="from === fromRoute.alertRule && targetTab === 'evalLog'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertRuleEvalLog>
         <!--model 下滑-->
         <asset-tab v-if="(from === fromRoute.model) && targetTab === 'asset'" :tabs="tabs.model" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></asset-tab>
+        <!-- agent 下滑-->
+        <scrape-endpoint v-if="from === fromRoute.agent && targetTab === 'agent'" :from="from" :obj="obj" :tabs="tabs.agent" @changeTab="changeTab" :targetTab.sync="targetTab"></scrape-endpoint>
       </div>
     </div>
   </div>
@@ -81,10 +83,12 @@ import terminalLogTab from './tabs/terminalLogTab'
 import assetTab from '@/components/common/bottomBox/tabs/assetTab'
 import { fromRoute } from '@/components/common/js/constants'
 import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
+import scrapeEndpoint from '@/components/common/bottomBox/tabs/scrapeEndpoint'
 
 export default {
   name: 'bottomBox',
   components: {
+    scrapeEndpoint,
     LogBottomTab,
     cabinetTab,
     alertMessageTab,
@@ -239,8 +243,10 @@ export default {
             { prop: 'asset', name: this.$t('asset.assets'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
           ]
-        }
-
+        },
+        agent: [
+          { prop: 'agent', name: this.$t('config.agent.scrapeEndpoint'), active: true }
+        ]
       }
     }
   },
