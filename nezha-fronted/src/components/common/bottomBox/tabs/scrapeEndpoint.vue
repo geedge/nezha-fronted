@@ -54,14 +54,13 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import scrapeEndpointTable from '@/components/common/table/settings/scrapeEndpointTable'
 import subDataList from '@/components/common/mixin/subDataList'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
-import scrapeEndpoints from '@/components/common/bottomBox/tabs/scrapeEndpoints'
 export default {
   name: 'scrapeEndpoint',
   components: {
     nzBottomDataList,
     scrapeEndpointTable
   },
-  mixins: [dataListMixin, subDataList, detailViewRightMixin, scrapeEndpoints],
+  mixins: [dataListMixin, subDataList, detailViewRightMixin],
   data () {
     return {
       url: '/prom/api/v1/targets',
