@@ -114,6 +114,17 @@
         height: 100%;
       }
     }
+    .scrape-endpoint {
+      .el-input-group__append {
+        background-color: $--background-color-empty;
+        padding: 0 10px;
+        border-color: $--border-color-light;
+        color: $--color-text-regular;
+      }
+      .el-input__inner {
+        border-color: $--border-color-light;
+      }
+    }
   }
 }
 .main-and-sub-transition {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scrape-endpoint">
     <nz-bottom-data-list
       :showTitle='showTitle'
       :obj='obj'
@@ -8,17 +8,15 @@
       style="height: 100%"
       :custom-table-title.sync="tools.customTableTitle"
       :layout="['elementSet']"
-      :search-msg="searchMsg"
       :tabs="tabs"
-      @search="search"
       @changeTab="changeTab"
     >
-      <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+      <template v-slot:title><span :title="obj.name">{{obj.dc.name}}</span></template>
       <template v-slot:top-tool-right>
         <div class="top-tool-right">
           <div style="margin-right: 15px;">
-            <el-input size="small" ref="inputDate" v-model="inputDate" id="inputDate" class="input-with" @focus="focus" @blur="blur">
-              <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-input size="small" ref="inputDate" v-model="inputDateSearch" @clear="clearInput" id="inputDate" class="input-with" @focus="focus" @blur="blur">
+              <el-button slot="append" icon="el-icon-search" @click="focus"></el-button>
             </el-input>
           </div>
         </div>
@@ -33,10 +31,7 @@
           :height="mainTableHeight"
           :table-data="tableData"
           :currentTableData="currentTableData"
-          :inputDate="inputDate"
-          @del="del"
-          @edit="edit"
-          @copy="copy"
+          :inputDateSearch="inputDateSearch"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
@@ -54,6 +49,8 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import scrapeEndpointTable from '@/components/common/table/settings/scrapeEndpointTable'
 import subDataList from '@/components/common/mixin/subDataList'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
+import bus from '@/libs/bus'
+import { sameLabels } from '@/components/common/js/constants'
 export default {
   name: 'scrapeEndpoint',
   components: {
@@ -65,69 +62,48 @@ export default {
     return {
       url: '/prom/api/v1/targets',
       tableId: 'promTargetsTable', // 需要分页的table的id，用于记录每页数量
-      searchMsg: { // 给搜索框子组件传递的信息
-        zheze_none: true,
-        searchLabelList: [{
-          name: this.$t('config.scrapeEndpoint.endpoint'),
-          type: 'input',
-          label: 'endpointId',
-          disabled: false
-        }, {
-          name: this.$t('config.scrapeEndpoint.labels'),
-          type: 'input',
-          label: 'labels',
-          disabled: false
-        }, {
-          name: this.$t('config.scrapeEndpoint.lastScrape'),
-          type: 'input',
-          label: 'lastScrape',
-          disabled: false
-        }, {
-          name: this.$t('config.scrapeEndpoint.scrapeDuration'),
-          type: 'input',
-          label: 'lastScrapeDuration',
-          disabled: false
-        }, {
-          name: this.$t('config.scrapeEndpoint.state'),
-          type: 'select',
-          label: 'health',
-          disabled: false
-        }, {
-          name: this.$t('config.scrapeEndpoint.error'),
-          type: 'input',
-          label: 'lastError',
-          disabled: false
-        }]
-      },
       currentTableData: [],
       hideSameLabels: true,
-      inputDate: '',
+      inputDateSearch: '',
       tableDataCopy: '',
       pageObj: {
         pageSize: 20,
         pageNo: 1,
         total: 0
-      }
+      },
+      timer: null,
+      sameLabels: ['endpointLabels', 'labelsType', 'lastScrape', 'lastScrapeDuration', 'health', 'lastError']
     }
   },
   watch: {
-    inputDate (n, o) {
-      this.handleCurrentChange()
+    inputDateSearch (n, o) {
       const temp = this
       setTimeout(function () {
         temp.tableFilter()
       }, 500)
+    },
+    obj: {
+      immediate: true,
+      deep: true,
+      handler (n, o) {
+        if (n) {
+          this.inputDateSearch = ''
+          this.getTableData()
+        }
+      }
     }
   },
   methods: {
+    // input 获取焦点时触发
     focus () {
       let classVal = document.getElementById('inputDate').parentElement.getAttribute('class')
       classVal = classVal.replace('input-with', 'input-with')
       document.getElementById('inputDate').parentElement.setAttribute('class', classVal)
       this.$refs.inputDate.focus()
     },
+    // input 失去焦点时触发
     blur () {
-      if (!this.inputDate || this.inputDate == '') {
+      if (!this.inputDateSearch || this.inputDateSearch == '') {
         setTimeout(function () {
           let classVal = document.getElementById('inputDate').parentElement.getAttribute('class')
           classVal = classVal.replace('input-with', 'input-with')
@@ -135,66 +111,112 @@ export default {
         }, 100)
       }
     },
-    getTableData () {
-      this.$set(this.searchLabel, 'dcId', this.obj.dcId)
-      this.$set(this.searchLabel, 'agentId', this.obj.id)
-      this.$set(this.searchLabel, 'type', this.obj.type)
-      this.$get(this.url, { ...this.searchLabel }).then(response => {
-        this.tools.loading = false
-        this.tableData = response.data.activeTargets.map(item => {
-          const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'datacenter', 'project', 'parent_asset', 'user']
-          buildIn.forEach(label => {
-            item[label] = {
-              id: item.labels[label + '_id'],
-              position: {},
-              loading: false
-            }
-          })
-          return item
-        })
-        // this.tableData = scrapeEndpoints[0].data.activeTargets
-        this.detailViewRightObj = this.tableData[0]
-        this.inputDateQuery = this.handlerTableData(this.tableData)
-        this.pageObj.total = this.tableData.length
-        if (!this.scrollbarWrap) {
-          this.$nextTick(() => {
-            this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
-            this.toTopBtnHandler(this.scrollbarWrap)
-            this.handleCurrentChange()
-          })
-        }
-      })
+    clearInput () {
+      this.$refs.inputDate.focus()
     },
-    handlerTableData (date) {
+    // 数据请求
+    getTableData () {
+      this.timer = setTimeout(() => {
+        this.$set(this.searchLabel, 'dcId', this.obj.dcId)
+        this.$set(this.searchLabel, 'agentId', this.obj.id)
+        this.$set(this.searchLabel, 'type', this.obj.type)
+        this.$get(this.url, { ...this.searchLabel }).then(response => {
+          this.tools.loading = false
+          this.tableData = response.data.activeTargets.map(item => {
+            const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'dc', 'project', 'parent_asset', 'user']
+            buildIn.forEach(label => {
+              if (label === 'dc') {
+                item[label] = {
+                  id: item.labels['datacenter' + '_id'],
+                  position: {},
+                  loading: false
+                }
+              } else {
+                item[label] = {
+                  id: item.labels[label + '_id'],
+                  position: {},
+                  loading: false
+                }
+              }
+            })
+            return item
+          })
+          this.detailViewRightObj = this.tableData[0]
+          this.inputDateQuery = this.handlerTableData(this.tableData)
+          this.pageObj.total = this.tableData.length
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.handleCurrentChange()
+            })
+          }
+        })
+      }, 500)
+    },
+    // 搜索字段的处理
+    handlerTableData (dates) {
       const tableDates = []
-      let endpoint = ''
-      let labelsType = ''
-      let lastScrape = ''
-      let lastScrapeDuration = ''
-      let health = ''
-      let lastError = ''
-      let tableDateAll = ''
-      date.map(e => {
-        endpoint = e.discoveredLabels.endpoint || ''
-        labelsType = e.labels.type || ''
-        lastScrape = e.lastScrape || ''
-        lastScrapeDuration = e.lastScrapeDuration || ''
-        health = e.health || ''
-        lastError = e.lastError || ''
-        tableDateAll = endpoint + labelsType + lastScrape + lastScrapeDuration + health + lastError + tableDateAll
-        const tableData = { endpoint, labelsType, lastScrape, lastScrapeDuration, health, lastError, tableDateAll }
-        console.log(tableData)
+      for (const date of dates) {
+        const endpointLabels = date.discoveredLabels.endpoint || ''
+        const labelsType = date.labels.type || ''
+        const lastScrape = bus.timeFormate(date.lastScrape, this.timeFormatMain) || ''
+        const lastScrapeDuration = date.lastScrapeDuration || ''
+        const health = date.health || ''
+        const lastError = date.lastError || ''
+        const asset = date.asset
+        const cpu = date.cpu
+        const dc = date.dc
+        const endpoint = date.endpoint
+        const module = date.module
+        const parent_asset = date.parent_asset
+        const project = date.project
+        const user = date.user
+        const labels = date.labels
+        const discoveredLabels = date.discoveredLabels
+        const tableData = {
+          endpointLabels,
+          endpoint,
+          labelsType,
+          lastScrape,
+          lastScrapeDuration,
+          health,
+          lastError,
+          asset,
+          dc,
+          cpu,
+          module,
+          project,
+          parent_asset,
+          user,
+          labels,
+          discoveredLabels
+        }
+        let simpleTemp = ''
+        const keys = Object.keys(tableData)
+        for (const index in keys) {
+          const key = keys[index]
+          if (this.sameLabels.some((i) => { return i === key })) {
+            if (tableData[key]) {
+              simpleTemp += key + tableData[key]
+            }
+          }
+        }
+        if (simpleTemp.indexOf(',') !== -1) {
+          simpleTemp = simpleTemp.substr(0, simpleTemp.length - 1)
+        }
+        tableData.tableDateAll = simpleTemp
         tableDates.push(tableData)
-      })
+      }
       return tableDates
     },
+    // 对字段进行匹配
     tableFilter () {
       const temp = this
       const tableDatas = this.inputDateQuery
-      console.log(tableDatas)
       this.tableData = tableDatas.filter((item) => {
-        const element = temp.hideSameLabels ? item.tableDateAll : item.endpoint
-        return element.indexOf(this.inputDate) !== -1
+        if (item.endpoint) {
+          const element = temp.hideSameLabels ? item.tableDateAll : item.endpoint
+          return element.indexOf(this.inputDateSearch) !== -1
+        }
       })
       this.pageObj.pageNo = 1
       this.handleCurrentChange()
@@ -208,6 +230,7 @@ export default {
       localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
       this.handleCurrentChange()
     },
+    // 计算当前分页需要返回数据的条数
     handleCurrentChange () {
       this.pageObj.total = this.tableData.length
       this.currentTableData = this.tableData.slice(
@@ -217,6 +240,14 @@ export default {
     }
   },
   mounted () {
+  },
+  beforeDestroy () {
+    // 移除定时器
+    clearInterval(this.timer)
+  },
+  created () {
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    this.pageObj.pageSize = pageSize || 20
   }
 }
 </script>

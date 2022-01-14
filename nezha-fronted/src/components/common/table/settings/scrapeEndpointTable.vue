@@ -34,10 +34,10 @@
       <div class="col-resize-area"></div>
     </template>
     <template slot-scope="scope" :column="item">
-      <template v-if="item.prop === 'endpoint'">{{scope.row.discoveredLabels.endpoint}}</template>
+      <template v-if="item.prop === 'endpoint'">{{scope.row.discoveredLabels.endpoint ? scope.row.discoveredLabels.endpoint : '-'}}</template>
+      <template v-else-if="item.prop === 'lastScrape'">{{scope.row.lastScrape}}</template>
       <template v-else-if="item.prop === 'labels'" class="labels">
           <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
-            <div> {{scope.row[item.prop]}}</div>
             <span
               @mouseenter="labelHover(scope.row, item.label, true, $event)"
               @mouseleave="labelHover(scope.row, item.label, false)">
@@ -63,8 +63,17 @@
               <div class="active-icon green-bg inline-block"></div>UP
           </div>
           <div slot="reference" v-else-if="scope.row[item.prop] === 'down'">
-            <div class="active-icon gray-bg inline-block"></div>DOWN
+            <div class="active-icon red-bg inline-block"></div>DOWN
           </div>
+      </template>
+      <template v-else-if="item.prop === 'lastScrapeDuration'">
+        <el-tooltip effect="light" placement="right">
+          <div slot="content">
+            <div><span>Interval:&nbsp;</span>{{ scope.row.discoveredLabels._scrape_interval_ ? scope.row.discoveredLabels._scrape_interval_ + 's' : '0s' }}</div>
+            <div><span>Timeout:&nbsp;</span>{{ scope.row.discoveredLabels._scrape_timeout_ ? scope.row.discoveredLabels._scrape_timeout_ + 's' : '0s'}}</div>
+          </div>
+          <span>{{ lastScrapeDurationTimer(scope.row.lastScrapeDuration) }}</span>
+        </el-tooltip>
       </template>
       <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
       <template v-else>-</template>
@@ -84,9 +93,9 @@
 
 <script>
 import table from '@/components/common/mixin/table'
-import { calcDurationByStringTimeB } from '@/components/common/js/tools'
 import nzAlertTag from '@/components/page/alert/nzAlertTag'
 import alertLabel from '@/components/common/alert/alertLabel'
+import bus from '@/libs/bus'
 export default {
   name: 'scrapeEndpointTab',
   props: {
@@ -142,7 +151,19 @@ export default {
       }
     }
   },
+  watch: {
+    currentTableData: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        n.map(e => {
+          e.lastScrape = bus.timeFormate(e.lastScrape, this.timeFormatMain)
+        })
+      }
+    }
+  },
   methods: {
+    // 对于 labels 传入数据做处理
     labelsSort (obj) {
       const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'datacenter', 'project', 'parent_asset', 'user']
       if (typeof obj === 'string') obj = JSON.parse(obj)
@@ -189,14 +210,17 @@ export default {
       if (this.labelToolTipDis(type)) {
         return
       }
-      console.log(item, type, loading, e,type + '_id')
       if (e) {
         const dom = e.currentTarget
         const position = dom.getBoundingClientRect()
-        console.log(type)
         this.$set(item[type], 'position', position)
       }
       this.$set(item[type], 'loading', loading)
+    },
+    // scrape duration
+    lastScrapeDurationTimer (time) {
+      const date = (time * 1000).toFixed(3)
+      return date + 'ms'
     }
   },
   mounted () {
