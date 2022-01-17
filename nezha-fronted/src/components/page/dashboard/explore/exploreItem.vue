@@ -809,7 +809,6 @@ export default {
     expressionChange () {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.pageObj.pageNo = 1
-      // console.log(this.filterTime,nowTimeType);
       this.setSearchTime(nowTimeType.type, nowTimeType.value)
       if (this.showMetrics) {
         if (this.expressions && this.expressions.length >= 1) {

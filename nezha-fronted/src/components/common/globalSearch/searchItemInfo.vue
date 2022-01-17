@@ -59,7 +59,7 @@
             <span v-if="alertLabelData && alertLabelData.state === 'OFF'">{{ $t('overall.disabled') }}</span>
           </div>
           <div class="search-item-value-box" v-else>
-            <i v-if="item.icon" class="nz-icon" :class="searchItemClass(item)"/>
+            <i v-if="item.icon" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
             <span class="search-item-value">
           {{getPathContent(item.key)}}
         </span>
@@ -72,6 +72,7 @@
 
 <script>
 import lodash from 'lodash'
+import chartDataFormat from '@/components/charts/chartDataFormat'
 export default {
   name: 'searchItemInfo',
   props: {
@@ -259,6 +260,26 @@ export default {
           }, {
             key: 'type',
             label: this.$t('alert.type')
+          }, {
+            key: 'severityId',
+            label: this.$t('alert.severity'),
+            color: this.severityColor,
+            icon: 'nz-icon nz-icon-circle'
+          }, {
+            key: 'expr',
+            label: this.$t('alert.config.expr')
+          }, {
+            key: 'alertNum',
+            icon: 'nz-icon-overview-alert',
+            label: this.$t('overall.alert')
+          }, {
+            key: 'trbShot',
+            icon: 'nz-icon-guzhangshuju',
+            label: this.$t('alert.config.trbShot')
+          }, {
+            key: 'state',
+            label: this.$t('overall.state'),
+            icon: 'nz-icon nz-icon-circle'
           }
         ]
       },
@@ -324,9 +345,7 @@ export default {
         this.$get('/alert/rule/' + this.obj.id).then((res) => {
           if (res.msg === 'success') {
             this.loading = false
-            this.severityData.forEach(item => {
-              this.severityColor = item.color
-            })
+            this.severityColor = this.severityData.find(item => res.data.severityId == item.id).color
             this.alertLabelData = res.data
           } else {
             this.$message.error(res.msg)
@@ -348,13 +367,42 @@ export default {
       if (item.key === 'pingInfo.rtt') {
         str += this.alertLabelData.pingInfo.status ? 'red-bg' : 'green-bg'
       }
+      if (item.key === 'state' && this.obj.type === 'alertrule') {
+        str += !this.alertLabelData.state ? 'red' : 'green'
+      }
       return str
+    },
+    searchItemStyle (item) {
+      const style = {}
+      if (item.key === 'severityId' && this.obj.type === 'alertrule') {
+        style.color = this.severityColor
+        style['font-size'] = '12px'
+        style['margin-right'] = '5px'
+      }
+      return style
+    },
+    alertruleStr () {
+      const arr = [this.$t('project.metrics.metrics'), this.$t('overall.logs'), 'SNMP trap']
+      if (this.alertLabelData.type) {
+        return arr[this.alertLabelData.type - 1]
+      } else {
+        return '--'
+      }
     },
     getPathContent (key) {
       let str = lodash.get(this.alertLabelData, key, '--')
       str += ''
       if (key === 'pingInfo.rtt' && str) {
         str += ' ms'
+      }
+      if (key === 'type' && this.obj.type === 'alertrule') {
+        str = this.alertruleStr()
+      }
+      if (key === 'expr' && this.obj.type === 'alertrule' && this.alertRuleData && this.alertRuleData.expr) {
+        str = this.alertRuleData.expr + this.alertRuleData.operator + this.formatThreshold(this.alertRuleData.threshold, this.alertRuleData.unit)
+      }
+      if (key === 'state' && this.obj.type === 'alertrule') {
+        str = this.alertLabelData.state ? this.$t('overall.enabled') : this.$t('overall.disabled')
       }
       return str || '--'
     },
@@ -380,6 +428,14 @@ export default {
         case 'alertrule' : str += '<span>Alert</span> <span>/</span> <span>Alert rule</span>'; break
       }
       return str
+    },
+    formatThreshold (value, unit) {
+      const unitMethod = chartDataFormat.getUnit(unit)
+      if (unitMethod && value) {
+        return unitMethod.compute(value, null, 2)
+      } else {
+        return value
+      }
     }
   }
 }

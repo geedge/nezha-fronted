@@ -57,6 +57,9 @@
                     <div class="list-item-sub" v-if="item.sub">
                       {{ item.sub }}
                     </div>
+                    <div class="is-jump" v-loading="jumpLoading">
+                      <i class="nz-icon nz-icon-huiche"></i>
+                    </div>
                   </li>
                   <li class="list-item" v-if="nextLoading" v-loading="nextLoading"></li>
                   <!--              <li  class="list-item" v-if="noMore&&!nextLoading">没有更多了</li>-->
@@ -133,6 +136,7 @@ export default {
       searchStr: '',
       loading: false,
       nextLoading: false,
+      jumpLoading: false,
       selectIndex: '',
       tableData: [],
       isNoData: false,
@@ -192,6 +196,7 @@ export default {
       this.firstShow = true
       this.selectIndex = 0
       this.pageObj.pageNo = 1
+      this.jumpLoading = false
       this.tableData = []
       this.$store.commit('setGlobalShow', false)
       this.scope.forEach((item) => {
@@ -200,7 +205,6 @@ export default {
       this.unbindEvent()
     },
     selectIcon (item) {
-      // console.log(item)
       switch (item.type) {
         case 'asset' : return 'nz-icon-overview-project'
         case 'datacenter' : return 'nz-icon-model'
@@ -228,7 +232,6 @@ export default {
       const offsetTop = liBox.offsetTop - ulBox.offsetTop
       const scrollTop = ulBox.scrollTop
       // liBox.focus()
-      // console.log(height, liHeight, offsetTop, scrollTop)
       if (offsetTop - scrollTop < 0) {
         ulBox.scrollTop = offsetTop
       } else if (offsetTop - scrollTop >= height - liHeight) {
@@ -236,6 +239,9 @@ export default {
       }
     },
     changeSelectIndex (index) {
+      if (this.jumpLoading) {
+        return
+      }
       if (this.isKeyDown) {
         this.getItemInfo()
         return
@@ -244,7 +250,9 @@ export default {
       this.getItemInfo()
     },
     keyDown (e) {
-      // console.log(e, e.target, e.keyCode)
+      if (this.jumpLoading) {
+        return
+      }
       if (e.keyCode === 13) {
         this.jumpTo()
       }
@@ -281,12 +289,61 @@ export default {
       }, 300)
     },
     jumpTo () {
-
+      this.jumpLoading = true
+      const routerPath = this.getRouterPath()
+      const params = {
+        table: this.tableData[this.selectIndex].type,
+        id: this.tableData[this.selectIndex].id,
+        pageSize: routerPath.pageSize
+      }
+      this.$get('/stat/rownum', params).then(res => {
+        if (res.code === 200) {
+          this.close()
+          this.$router.push({
+            path: routerPath.route,
+            query: {
+              pageNo: res.data.pageNo,
+              pageSize: res.data.pageSize,
+              rownum: res.data.rownum
+            }
+          })
+        } else {
+          this.$message.error(res.msg)
+          this.jumpLoading = false
+        }
+      })
+    },
+    getRouterPath () {
+      const type = this.tableData[this.selectIndex].type
+      let tableId = ''
+      let route = '/'
+      if (type === 'datacenter') {
+        tableId = 'dcTable'
+        route += 'dc'
+      } else if (type === 'alertRule') {
+        tableId = 'alertRuleTable'
+        route += 'alertRule'
+      } else if (type === 'asset') {
+        tableId = type + 'Table'
+        route += 'asset'
+      } else {
+        tableId = type + 'Table'
+        route += 'monitor/' + type
+      }
+      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + tableId)
+      if (!(pageSize && pageSize !== 'undefined')) {
+        pageSize = 20
+      }
+      return {
+        pageSize,
+        route
+      }
     },
     getItemInfo () {
       this.obj = {}
     },
     searchAll () {
+      // this.getSeverityData()
       if (this.searchTimer) {
         clearInterval(this.searchTimer)
         this.searchTimer = null
@@ -370,6 +427,9 @@ export default {
         }
       })
     }
+  },
+  mounted () {
+    this.getSeverityData()
   },
   destroyed () {
     window.removeEventListener('keydown', this.keyDown)

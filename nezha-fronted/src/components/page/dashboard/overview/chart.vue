@@ -422,7 +422,6 @@ export default {
           str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${alias || item.seriesName}:  </div>`
           str += '<div style="padding-left: 10px;">'
           let dot = bus.countDecimals(val)
-          // console.log(dot,val)
           if (dot < this.chartDot) {
             dot = this.chartDot
           } else if (dot > 6) {

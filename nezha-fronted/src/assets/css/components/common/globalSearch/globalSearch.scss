@@ -96,6 +96,7 @@
       }
       .list-item{
         height: 64px;
+        position: relative;
         display: flex;
         align-items: center;
         flex-direction: column;
@@ -113,6 +114,18 @@
             color: $--color-monitor !important;
             font-size: 16px;
             vertical-align: middle
+          }
+        }
+        .is-jump{
+          position: absolute;
+          right: 20px;
+          top: 20px;
+          padding: 0;
+          width: 24px;
+          height: 24px;
+          display: none;
+          .el-loading-mask{
+            transform: scale(0.5);
           }
         }
         .list-item-content{
@@ -137,6 +150,9 @@
       }
       .lise-item-active {
         background: $--table-row-hover-background-color;
+        .is-jump{
+          display: inline-block;
+        }
       }
     }
     .global-search-footer {

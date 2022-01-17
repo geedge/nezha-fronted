@@ -219,7 +219,6 @@ export default {
     },
     changeGroupHeight (copyList, group, flag) {
       const height = getGroupHeight(copyList)
-      // console.log(this.$refs.layout)
       const groupFind = this.copyDataList.find(item => item.id == group.id)
       if (group && groupFind) {
         groupFind.height = groupFind.h = height + this.headerHPadding
@@ -279,7 +278,6 @@ export default {
           panelId: this.panelId,
           charts: charts
         }
-        // console.log(this.copyDataList)
         this.$put('/visual/panel/chart/weights', params).then(() => {
           const position = getLayoutPosition(this.copyDataList)
           this.$store.commit('setChartLastPosition', position)

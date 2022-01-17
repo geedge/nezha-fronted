@@ -260,11 +260,8 @@ export default {
     layoutUpdate () {
       if (this.layout !== undefined && this.originalLayout !== null) {
         if (this.layout.length !== this.originalLayout.length) {
-          // console.log("### LAYOUT UPDATE!", this.layout.length, this.originalLayout.length);
-
           const diff = this.findDifference(this.layout, this.originalLayout)
           if (diff.length > 0) {
-            // console.log(diff);
             if (this.layout.length > this.originalLayout.length) {
               this.originalLayout = this.originalLayout.concat(diff)
             } else {

@@ -766,7 +766,6 @@ export default {
           if (response.data.purchaseDate) {
             response.data.purchaseDate += ' 00:00:00'
             response.data.purchaseDate = new Date(response.data.purchaseDate)
-            console.log(response.data.purchaseDate)
           }
           this.object = response.data
           this.rightBox.show = true

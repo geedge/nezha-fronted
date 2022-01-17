@@ -193,7 +193,6 @@ export default {
     },
     save: function (obj) {
       const copy = JSON.parse(JSON.stringify(obj))
-      console.log(copy.expireAt)
       copy.expireAt = new Date(copy.expireAt).getTime()
       copy.expireAt = this.timezoneToUtcTimeStr(copy.expireAt, 'YYYY-MM-DD HH:mm:ss')
       if (copy.role) {
