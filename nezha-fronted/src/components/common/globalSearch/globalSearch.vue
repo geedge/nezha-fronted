@@ -214,7 +214,7 @@ export default {
     selectIcon (item) {
       switch (item.type) {
         case 'asset' : return 'nz-icon-overview-project'
-        case 'datacenter' : return 'nz-icon-datacenter2'
+        case 'datacenter' : return 'nz-icon-Datacenter2'
         case 'project' : return 'nz-icon-project'
         case 'module' : return 'nz-icon-overview-module'
         case 'endpoint' : return 'nz-icon-overview-endpoint'
