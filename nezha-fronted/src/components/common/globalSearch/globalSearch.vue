@@ -3,7 +3,7 @@
     <div class="global-search-box" :class="firstShow? '' : 'search-after'" @click.self="close">
       <div class="global-search-input" :class="firstShow? '' : 'search-after'">
         <i class="nz-icon nz-icon-search" v-loading="loading"></i>
-        <el-input v-model="searchStr" @input="searchAll" ref="searchStr" :placeholder="$t('globalSearch.placeholder')" @keydown="inputKeydown" @keyup="inputKeydown" @keypress="inputKeydown"  clearable></el-input>
+        <el-input v-model="searchStr" @input="searchAll" ref="searchStr" :placeholder="$t('globalSearch.placeholder')" @keydown.native="inputKeydown" clearable></el-input>
         <div @click="close" class="global-search-cancel">
           Cancel
         </div>
