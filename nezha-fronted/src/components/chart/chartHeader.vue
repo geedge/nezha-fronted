@@ -30,7 +30,7 @@
     <div class="chart-header__title" v-else >
       <span @click="groupShow"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-right': 'nz-icon-arrow-down'"></i></span>
       {{chartInfo.name}}
-      <span v-show="chartInfo.param.collapse" class="collapse-content">({{chartData.length}} charts)</span>
+      <span v-show="chartInfo.param.collapse" class="collapse-content">({{chartData ? chartData.length : 0}} charts)</span>
     </div>
     <div class="chart-header__tools" v-if="chartInfo.type !== 'endpointInfo' && chartInfo.type !== 'assetInfo'">
       <span v-if="chartInfo.param.link" class="chart-header__tool" @click="openUrl">
