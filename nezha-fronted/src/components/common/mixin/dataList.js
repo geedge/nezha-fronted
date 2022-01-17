@@ -736,7 +736,7 @@ export default {
           jsonKey: 'val'
         }
       }
-    } else if (path === 'snmp' && this.switchTab == 'credentials') {
+    } else if (path === 'credentials') {
       searchKeys = {
         // key: path 键
         // value: vue set 参数
@@ -788,7 +788,7 @@ export default {
           jsonKey: 'val'
         }
       }
-    } else if (path === 'snmp' && this.switchTab == 'file') {
+    } else if (path === 'mib') {
       searchKeys = {
         // key: path 键
         // value: vue set 参数
