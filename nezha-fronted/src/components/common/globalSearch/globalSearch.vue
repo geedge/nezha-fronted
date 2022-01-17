@@ -8,38 +8,64 @@
           Cancel
         </div>
       </div>
-      <div v-loading="loading" class="global-search-content" v-if="!firstShow">
-        <div class="global-search-content-content" v-if="tableData.length">
+      <div class="global-search-content" v-if="!firstShow">
+        <div class="global-search-content-content" v-if="!isNoData">
           <div class="global-search-content-left">
-            <ul
-              class="list"
-              ref="list"
-              v-infinite-scroll="load"
-              infinite-scroll-disabled="disabled">
-              <!-- 添加 tabindex 实现focus的效果 -1 - -4 已被使用 所以从-5 开始 -->
-              <li
-                v-for="(item,index) in tableData"
-                class="list-item"
-                :class="index === selectIndex ? 'lise-item-active' : ''"
-                :key="index"
-                :ref="'item'+ index"
-                @mouseenter="changeSelectIndex(index)"
-                :tabindex="(selectIndex+5) * -1"
-              >
-                <div class="list-item-content">
-                  <i class="nz-icon" :class="selectIcon(item)" />
-                  <HighlightText ref="searchStr" :queries="searchStr" :highlightClass="'list-item-highlight'" style="vertical-align: middle" :title="item.name">{{item.name}}</HighlightText>
-                </div>
-                <div class="list-item-sub" v-if="item.sub">
-                  {{ item.sub }}
-                </div>
-              </li>
-              <li class="list-item" v-if="nextLoading" v-loading="nextLoading"></li>
-<!--              <li  class="list-item" v-if="noMore&&!nextLoading">没有更多了</li>-->
-            </ul>
+            <el-skeleton :loading="loading" animated  class="list">
+              <template slot="template">
+                  <li
+                    v-for="(item,index) in skeletonArr"
+                    class="list-item"
+                    :key="index"
+                    :ref="'item'+ index"
+                  >
+                    <div class="list-item-content">
+<!--                      <i class="nz-icon" :class="selectIcon(item)" />-->
+                      <el-skeleton-item
+                        variant="image"
+                        style="width: 16px; height: 16px;display: inline-block"
+                      />
+                      <el-skeleton-item variant="h3" style="width: 50%;display: inline-block" />
+<!--                      <HighlightText ref="searchStr" :queries="searchStr" :highlightClass="'list-item-highlight'" style="vertical-align: middle" :title="item.name">{{item.name}}</HighlightText>-->
+                    </div>
+                    <div class="list-item-sub">
+<!--                      {{ item.sub }}-->
+                      <el-skeleton-item variant="text" style="margin-right: 16px;" />
+                    </div>
+                  </li>
+                  <li class="list-item" v-if="nextLoading" v-loading="nextLoading"></li>
+                  <!--              <li  class="list-item" v-if="noMore&&!nextLoading">没有更多了</li>-->
+              </template>
+              <template>
+                <ul
+                  class="list"
+                  ref="list"
+                  v-infinite-scroll="load"
+                  infinite-scroll-disabled="disabled">
+                  <li
+                    v-for="(item,index) in tableData"
+                    class="list-item"
+                    :class="index === selectIndex ? 'lise-item-active' : ''"
+                    :key="index"
+                    :ref="'item'+ index"
+                    @mouseenter="changeSelectIndex(index)"
+                  >
+                    <div class="list-item-content">
+                      <i class="nz-icon" :class="selectIcon(item)" />
+                      <HighlightText ref="searchStr" :queries="searchStr" :highlightClass="'list-item-highlight'" style="vertical-align: middle" :title="item.name">{{item.name}}</HighlightText>
+                    </div>
+                    <div class="list-item-sub" v-if="item.sub">
+                      {{ item.sub }}
+                    </div>
+                  </li>
+                  <li class="list-item" v-if="nextLoading" v-loading="nextLoading"></li>
+                  <!--              <li  class="list-item" v-if="noMore&&!nextLoading">没有更多了</li>-->
+                </ul>
+              </template>
+            </el-skeleton>
           </div>
           <div class="global-search-content-right">
-            <searchItemInfo v-if="tableData[selectIndex]" :obj="tableData[selectIndex]" :severityData="severityData"></searchItemInfo>
+            <searchItemInfo v-if="tableData[selectIndex] || loading" :obj="tableData[selectIndex]" :severityData="severityData" :faLoading="loading"></searchItemInfo>
           </div>
         </div>
         <div v-else class="global-search-content" style="justify-content: center">
@@ -95,7 +121,6 @@ export default {
       return this.$store.getters.getGlobalShow
     },
     noMore () {
-      console.log((this.pageObj.pageNo * this.pageObj.pageSize) >= this.pageObj.total)
       return (this.pageObj.pageNo * this.pageObj.pageSize) >= this.pageObj.total
     },
     disabled () {
@@ -110,6 +135,7 @@ export default {
       nextLoading: false,
       selectIndex: '',
       tableData: [],
+      isNoData: false,
       pageObj: {
         pageNo: 1,
         pageSize: 50,
@@ -139,6 +165,7 @@ export default {
           isSelect: true
         }
       ],
+      skeletonArr: 20,
       timer: null,
       searchTimer: null,
       scopeChangeTimer: null,
@@ -194,21 +221,21 @@ export default {
       window.removeEventListener('keyup', this.keyup)
     },
     scroll () {
-      // const ulBox = this.$refs.list
+      const ulBox = this.$refs.list
       const liBox = this.$refs['item' + this.selectIndex][0]
-      // const liHeight = liBox.clientHeight
-      // const height = ulBox.clientHeight - liHeight
-      // const offsetTop = liBox.offsetTop
-      liBox.focus()
-      // if ((this.selectIndex + 1) * liHeight > height) {
-      //   ulBox.scrollTop = (this.selectIndex + 1) * liHeight - height
-      // } else {
-      //   ulBox.scrollTop = 0
-      // }
-      // console.log(height, liHeight, offsetTop, ulBox.scrollTop)
+      const liHeight = liBox.clientHeight
+      const height = ulBox.clientHeight
+      const offsetTop = liBox.offsetTop - ulBox.offsetTop
+      const scrollTop = ulBox.scrollTop
+      // liBox.focus()
+      // console.log(height, liHeight, offsetTop, scrollTop)
+      if (offsetTop - scrollTop < 0) {
+        ulBox.scrollTop = offsetTop
+      } else if (offsetTop - scrollTop >= height - liHeight) {
+        ulBox.scrollTop = offsetTop - height + liHeight
+      }
     },
     changeSelectIndex (index) {
-      console.log('changeSelectIndex', this.isKeyDown)
       if (this.isKeyDown) {
         this.getItemInfo()
         return
@@ -217,7 +244,6 @@ export default {
       this.getItemInfo()
     },
     keyDown (e) {
-      console.log('keyDown')
       // console.log(e, e.target, e.keyCode)
       if (e.keyCode === 13) {
         this.jumpTo()
@@ -266,6 +292,7 @@ export default {
         this.searchTimer = null
       }
       this.loading = true
+      this.firstShow = false
       this.searchTimer = setTimeout(() => {
         this.selectIndex = 0
         this.pageObj.pageNo = 1
@@ -305,6 +332,7 @@ export default {
       }, 100)
     },
     getData () {
+      this.isNoData = false
       const param = {
         pageNo: this.pageObj.pageNo,
         pageSize: this.pageObj.pageSize,
@@ -316,12 +344,17 @@ export default {
         this.loading = false
         this.nextLoading = false
         return
+      } else {
+        this.firstShow = false
       }
       this.$get('/stat/search', param).then(res => {
         this.firstShow = false
         this.nextLoading = false
         if (res.code === 200) {
           this.tableData = this.tableData.concat(res.data.list)
+          if (!this.tableData.length) {
+            this.isNoData = true
+          }
           this.pageObj.total = res.data.total
           this.stat = res.stat
         } else {

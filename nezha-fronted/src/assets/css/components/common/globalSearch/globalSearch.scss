@@ -33,10 +33,13 @@
     border-radius: 6px;
     line-height: 72px;
     .nz-icon-search {
-      margin-left: 22px;
-      margin-right: 20px;
+      padding-left: 22px;
+      padding-right: 20px;
       font-size: 26px;
       color: $--color-text-primary;
+      .el-loading-mask{
+        transform: scale(0.7);
+      }
     }
     .el-input__inner {
       border: none !important;
@@ -79,6 +82,11 @@
       }
       .global-search-content-left {
         box-shadow: 0 2px 4px 0 rgba(0,0,0,0.14);
+      }
+      .global-search-content-right{
+        .el-skeleton{
+          height: 100%;
+        }
       }
       .list{
         height: 100%;

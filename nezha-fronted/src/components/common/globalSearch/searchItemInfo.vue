@@ -1,16 +1,34 @@
 <template>
-  <div v-loading="loading" class="search-item-box">
-    <div class="search-item-title-icon">
-      <i class="nz-icon monitorColor" :class="selectIcon(obj)"/>
-    </div>
-    <div class="search-item-path" v-html="searchItemPath(obj)"></div>
-    <div class="search-item-name">{{obj.name}}</div>
-    <div v-for="item in dataKey[obj.type]" :key="item.key" class="search-item-info">
-      <div class="search-item-key">
-        {{item.label}}
+  <el-skeleton style="height: 100%;width: 100%" :loading="loading || faLoading" animated>
+    <template slot="template">
+      <div class="search-item-box">
+        <div class="search-item-title-icon">
+          <el-skeleton-item
+            variant="image"
+            style="width: 60px; height: 60px;"
+          />
+        </div>
+        <el-skeleton-item  class="search-item-path" search-item-path variant="h3" style="width: 50%;" />
+        <el-skeleton-item class="search-item-name" search-item-path variant="h3" style="width: 30%" />
+        <div v-for="item in skeletonArr" :key="item" class="search-item-info">
+          <el-skeleton-item class="search-item-key"/>
+          <el-skeleton-item class="search-item-value-box" style="margin-left: 20px"/>
+        </div>
       </div>
-      <div class="search-item-value-box" v-if="obj.type === 'endpoint'&&item.key==='state'">
-        <span style="width: auto">
+    </template>
+    <template>
+      <div class="search-item-box" v-if="alertLabelData.id&&obj&&obj.id">
+        <div class="search-item-title-icon">
+          <i class="nz-icon monitorColor" :class="selectIcon(obj)"/>
+        </div>
+        <div class="search-item-path" v-html="searchItemPath(obj)"></div>
+        <div class="search-item-name">{{obj.name}}</div>
+        <div v-for="item in dataKey[obj.type]" :key="item.key" class="search-item-info">
+          <div class="search-item-key">
+            {{item.label}}
+          </div>
+          <div class="search-item-value-box" v-if="obj.type === 'endpoint'&&item.key==='state'&&alertLabelData && alertLabelData.configs">
+            <span style="width: auto">
             <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('project.endpoint.metrics')}} </span>
             <span v-if="alertLabelData && alertLabelData.configs[0].state === 0">
               <span class="active-icon red-bg inline-block"></span>
@@ -22,7 +40,7 @@
               <span class="active-icon gray-bg inline-block"></span>
             </span>
           </span>
-        <span style="width: auto">
+            <span style="width: auto">
             <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs active" /> {{$t('project.endpoint.logs')}} </span>
             <span v-if="alertLabelData && alertLabelData.configs[1].state === 0">
               <span class="active-icon red-bg inline-block"></span>
@@ -34,20 +52,22 @@
               <span class="active-icon gray-bg inline-block"></span>
             </span>
           </span>
-      </div>
-      <div class="search-item-value-box" v-else-if="obj.type === 'datacenter'&&item.key==='state'">
-        <div v-if="alertLabelData" :class="{'green-bg': alertLabelData && alertLabelData.state === 'ON','red-bg': alertLabelData && alertLabelData.state === 'OFF'}" class="active-icon" style="margin-top: 20px;"></div>
-        <span v-if="alertLabelData && alertLabelData.state === 'ON'">{{ $t('overall.enabled') }}</span>
-        <span v-if="alertLabelData && alertLabelData.state === 'OFF'">{{ $t('overall.disabled') }}</span>
-      </div>
-      <div class="search-item-value-box" v-else>
-        <i v-if="item.icon" class="nz-icon" :class="searchItemClass(item)"/>
-        <span class="search-item-value">
+          </div>
+          <div class="search-item-value-box" v-else-if="obj.type === 'datacenter'&&item.key==='state'">
+            <div v-if="alertLabelData" :class="{'green-bg': alertLabelData && alertLabelData.state === 'ON','red-bg': alertLabelData && alertLabelData.state === 'OFF'}" class="active-icon" style="margin-top: 20px;"></div>
+            <span v-if="alertLabelData && alertLabelData.state === 'ON'">{{ $t('overall.enabled') }}</span>
+            <span v-if="alertLabelData && alertLabelData.state === 'OFF'">{{ $t('overall.disabled') }}</span>
+          </div>
+          <div class="search-item-value-box" v-else>
+            <i v-if="item.icon" class="nz-icon" :class="searchItemClass(item)"/>
+            <span class="search-item-value">
           {{getPathContent(item.key)}}
         </span>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </template>
+  </el-skeleton>
 </template>
 
 <script>
@@ -56,20 +76,22 @@ export default {
   name: 'searchItemInfo',
   props: {
     obj: {},
-    severityData: {}
+    severityData: {},
+    faLoading: {}
   },
   watch: {
     obj: {
       immediate: true,
       deep: true,
       handler (n) {
-        if (n.id) {
+        if (n && n.id) {
           this.loading = true
           if (this.timer) {
             clearTimeout(this.timer)
             this.timer = null
           }
           this.timer = setTimeout(() => {
+            this.alertLabelData = { }
             this.getInfo(n)
           }, 500)
         }
@@ -79,6 +101,7 @@ export default {
   data () {
     return {
       timer: null,
+      skeletonArr: 6,
       dataKey: {
         asset: [
           {
@@ -336,7 +359,6 @@ export default {
       return str || '--'
     },
     selectIcon (item) {
-      // console.log(item)
       switch (item.type) {
         case 'asset' : return 'nz-icon-overview-project'
         case 'datacenter' : return 'nz-icon-model'
