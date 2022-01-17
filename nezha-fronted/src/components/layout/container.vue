@@ -1,14 +1,15 @@
 <template>
   <div class="container">
-    <router-view/>
+    <router-view v-if="isRouteLive"/>
   </div>
 </template>
 
 <script>
 export default {
   name: 'container',
-  data () {
-    return {
+  computed: {
+    isRouteLive () {
+      return this.$store.getters.getIsRouteLive
     }
   }
 }

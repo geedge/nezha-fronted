@@ -103,6 +103,7 @@
         </template>
         <template v-else-if="item.prop === 'brand'">{{scope.row.brand ? scope.row.brand.name : '-'}}</template>
         <template v-else-if="item.prop === 'purchaseDate'">{{scope.row.purchaseDate ? scope.row.purchaseDate : '-'}}</template>
+        <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
         <template v-else>
           <span v-if="scope.row.fields&&scope.row.fields.find(field => field.name === item.prop)">
             {{scope.row.fields.find(field => field.name === item.prop).value.join(',')}}

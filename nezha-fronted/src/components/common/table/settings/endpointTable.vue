@@ -155,6 +155,7 @@
           <span v-if="scope.row[item.prop] === 1">{{$t('project.endpoint.enable')}}</span>
           <span v-else>{{$t('project.endpoint.disable')}}</span>
         </template>
+        <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
         <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
       </template>
     </el-table-column>

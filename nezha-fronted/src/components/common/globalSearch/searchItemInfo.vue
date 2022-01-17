@@ -59,7 +59,7 @@
             <span v-if="alertLabelData && alertLabelData.state === 'OFF'">{{ $t('overall.disabled') }}</span>
           </div>
           <div class="search-item-value-box" v-else>
-            <i v-if="item.icon" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
+            <i v-if="item.icon&&getPathContent(item.key)!=='--'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
             <span class="search-item-value">
           {{getPathContent(item.key)}}
         </span>
@@ -122,7 +122,7 @@ export default {
             label: this.$t('overall.state')
           }, {
             key: 'pingInfo.rtt',
-            icon: 'active-icon',
+            icon: 'nz-icon nz-icon-circle fz12',
             label: 'Ping'
           }, {
             key: 'dc.name',
@@ -264,7 +264,7 @@ export default {
             key: 'severityId',
             label: this.$t('alert.severity'),
             color: this.severityColor,
-            icon: 'nz-icon nz-icon-circle'
+            icon: 'nz-icon nz-icon-circle fz12'
           }, {
             key: 'expr',
             label: this.$t('alert.config.expr')
@@ -279,7 +279,7 @@ export default {
           }, {
             key: 'state',
             label: this.$t('overall.state'),
-            icon: 'nz-icon nz-icon-circle'
+            icon: 'nz-icon nz-icon-circle fz12'
           }
         ]
       },
@@ -365,7 +365,7 @@ export default {
         str += this.alertLabelData[item.key] ? 'red' : 'green'
       }
       if (item.key === 'pingInfo.rtt') {
-        str += this.alertLabelData.pingInfo.status ? 'red-bg' : 'green-bg'
+        str += this.alertLabelData.pingInfo && this.alertLabelData.pingInfo.status ? 'red' : 'green'
       }
       if (item.key === 'state' && this.obj.type === 'alertrule') {
         str += !this.alertLabelData.state ? 'red' : 'green'
@@ -391,8 +391,7 @@ export default {
     },
     getPathContent (key) {
       let str = lodash.get(this.alertLabelData, key, '--')
-      str += ''
-      if (key === 'pingInfo.rtt' && str) {
+      if (key === 'pingInfo.rtt' && str && str !== '--') {
         str += ' ms'
       }
       if (key === 'type' && this.obj.type === 'alertrule') {

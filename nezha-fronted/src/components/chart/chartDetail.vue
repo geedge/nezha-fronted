@@ -162,7 +162,6 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        console.log(n.fields)
         n.fields.map(e => {
           if (e.name === 'time') {
             e.value[0] = bus.timeFormate(e.value[0], this.timeFormatMain)

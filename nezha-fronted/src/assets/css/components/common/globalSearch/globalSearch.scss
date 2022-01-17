@@ -14,14 +14,14 @@
 }
 .global-search-box.search-after{
   height: 82%;
-  min-height: 894px;
+  min-height: 600px;
 }
 .global-search-box {
   //background: $--background-color-empty;
   background: rgba(0,0,0,0);
   width: 80%;
   max-width: 1040px;
-  min-width: 894px;
+  min-width: 600px;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -48,6 +48,7 @@
       height: 40px;
       line-height: 72px;
       color: $--color-text-regular;
+      padding-left: 0;
       vertical-align: middle;
     }
     .global-search-cancel{
@@ -118,7 +119,7 @@
         }
         .is-jump{
           position: absolute;
-          right: 20px;
+          right: 5px;
           top: 20px;
           padding: 0;
           width: 24px;
@@ -132,6 +133,10 @@
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
+          padding-right: 30px;
+          .nz-icon {
+            margin-right: 15px;
+          }
           .list-item-highlight{
             background: none;
             color: $--color-primary;
@@ -142,7 +147,7 @@
           color: $--color-info;
           font-weight: 400;
           margin-top: 2px;
-          padding-left: 40px;
+          padding-left: 55px;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
@@ -206,4 +211,7 @@
       }
     }
   }
+}
+.fz12{
+  font-size: 12px;
 }

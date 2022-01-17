@@ -8,6 +8,10 @@
   align-items: center;
   box-sizing: border-box;
   padding: 60px 75px 0 75px;
+  .el-skeleton{
+    height: 100%;
+    overflow-y: auto;
+  }
   .search-item-title-icon{
     .nz-icon{
       font-size: 32px;

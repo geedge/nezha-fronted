@@ -41,9 +41,14 @@ const store = new Vuex.Store({
     langList: [],
     i18nReady: false,
     timeFormatMain: localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss',
-    globalShow: false
+    globalShow: false,
+    globalSearchId: '',
+    isRouteLive: true
   },
   getters: {
+    getGlobalSearchId (state) {
+      return state.globalSearchId
+    },
     getTimeFormatMain (state) {
       return state.timeFormatMain
     },
@@ -86,6 +91,9 @@ const store = new Vuex.Store({
     getLangList (state) {
       return state.langList
     },
+    getIsRouteLive (state) {
+      return state.isRouteLive
+    },
     i18nIsReady (state) {
       return state.i18nReady
     }
@@ -98,7 +106,9 @@ const store = new Vuex.Store({
     currentProjectChange (state, project) {
       state.currentProject = project
     },
-
+    setGlobalSearchId (state, id) {
+      state.globalSearchId = id
+    },
     panelShowPanelChange (state, panel) { // 用来panel页控制初始panel的
       state.showPanel.id = panel.id
       state.showPanel.name = panel.name
@@ -180,6 +190,12 @@ const store = new Vuex.Store({
     },
     setGlobalShow (state, globalShow) {
       state.globalShow = globalShow
+    },
+    setIsRouteLive (state) {
+      state.isRouteLive = false
+      setTimeout(() => {
+        state.isRouteLive = true
+      })
     },
     i18nReady (state, ready) {
       state.i18nReady = ready

@@ -3,7 +3,7 @@
     <div class="global-search-box" :class="firstShow? '' : 'search-after'" @click.self="close">
       <div class="global-search-input" :class="firstShow? '' : 'search-after'">
         <i class="nz-icon nz-icon-search" v-loading="loading"></i>
-        <el-input v-model="searchStr" @input="searchAll" ref="searchStr" :placeholder="$t('globalSearch.placeholder')"  clearable></el-input>
+        <el-input v-model="searchStr" @input="searchAll" ref="searchStr" :placeholder="$t('globalSearch.placeholder')" @keydown="inputKeydown" @keyup="inputKeydown" @keypress="inputKeydown"  clearable></el-input>
         <div @click="close" class="global-search-cancel">
           Cancel
         </div>
@@ -49,6 +49,7 @@
                     :key="index"
                     :ref="'item'+ index"
                     @mouseenter="changeSelectIndex(index)"
+                    @click="jumpTo"
                   >
                     <div class="list-item-content">
                       <i class="nz-icon" :class="selectIcon(item)" />
@@ -150,7 +151,7 @@ export default {
       // scope: ['asset', 'datacenter', 'project', 'module', 'endpoint', 'alertrule'],
       scope: [
         {
-          type: 'asseet',
+          type: 'asset',
           isSelect: true
         }, {
           type: 'datacenter',
@@ -207,7 +208,7 @@ export default {
     selectIcon (item) {
       switch (item.type) {
         case 'asset' : return 'nz-icon-overview-project'
-        case 'datacenter' : return 'nz-icon-model'
+        case 'datacenter' : return 'nz-icon-datacenter1'
         case 'project' : return 'nz-icon-project'
         case 'module' : return 'nz-icon-overview-module'
         case 'endpoint' : return 'nz-icon-overview-endpoint'
@@ -248,6 +249,11 @@ export default {
       }
       this.selectIndex = index
       this.getItemInfo()
+    },
+    inputKeydown (e) {
+      if (e.keyCode === 40 || e.keyCode === 38) {
+        event.preventDefault()
+      }
     },
     keyDown (e) {
       if (this.jumpLoading) {
@@ -299,6 +305,7 @@ export default {
       this.$get('/stat/rownum', params).then(res => {
         if (res.code === 200) {
           this.close()
+          this.$store.commit('setGlobalSearchId', params.id)
           this.$router.push({
             path: routerPath.route,
             query: {
@@ -307,6 +314,10 @@ export default {
               rownum: res.data.rownum
             }
           })
+          if (routerPath.route === this.$route.path) {
+            this.$store.commit('setIsRouteLive')
+            // this.routeReload()
+          }
         } else {
           this.$message.error(res.msg)
           this.jumpLoading = false
@@ -342,7 +353,7 @@ export default {
     getItemInfo () {
       this.obj = {}
     },
-    searchAll () {
+    searchAll (e) {
       // this.getSeverityData()
       if (this.searchTimer) {
         clearInterval(this.searchTimer)

@@ -77,6 +77,7 @@
             {{scope.row[item.prop]}}
           </span>
         </template>
+        <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
         <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
         <template v-else>-</template>
       </template>
