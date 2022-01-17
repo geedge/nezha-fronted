@@ -99,7 +99,7 @@
             {{$t('globalSearch.toEsc')}}
           </div>
           <div class="global-search-footer-right">
-            <div class="scope-box" v-for="item in scope" :class="item.isSelect ? 'is-select' : ''" :key="item.type" @click="scopeChange(item)">
+            <div class="scope-box" v-for="item in scope" :class="item.isSelect ? 'is-select' : ''" :key="item.type" @click="scopeChange(item)" :title="item.type">
               <i class="nz-icon" :class="selectIcon(item)" />
               {{stat[item.type] || 0}}
             </div>
@@ -151,23 +151,29 @@ export default {
       // scope: ['asset', 'datacenter', 'project', 'module', 'endpoint', 'alertrule'],
       scope: [
         {
-          type: 'asset',
-          isSelect: true
-        }, {
           type: 'datacenter',
-          isSelect: true
+          isSelect: true,
+          title: this.$t('overall.dc')
+        }, {
+          type: 'asset',
+          isSelect: true,
+          title: this.$t('overall.asset')
         }, {
           type: 'project',
-          isSelect: true
+          isSelect: true,
+          title: this.$t('overall.project')
         }, {
           type: 'module',
-          isSelect: true
+          isSelect: true,
+          title: this.$t('overall.module')
         }, {
           type: 'endpoint',
-          isSelect: true
+          isSelect: true,
+          title: this.$t('overall.endpoint')
         }, {
           type: 'alertrule',
-          isSelect: true
+          isSelect: true,
+          title: this.$t('alert.alertRule')
         }
       ],
       skeletonArr: 20,
@@ -208,7 +214,7 @@ export default {
     selectIcon (item) {
       switch (item.type) {
         case 'asset' : return 'nz-icon-overview-project'
-        case 'datacenter' : return 'nz-icon-datacenter1'
+        case 'datacenter' : return 'nz-icon-datacenter2'
         case 'project' : return 'nz-icon-project'
         case 'module' : return 'nz-icon-overview-module'
         case 'endpoint' : return 'nz-icon-overview-endpoint'
@@ -256,6 +262,7 @@ export default {
       }
     },
     keyDown (e) {
+      window.event ? window.event.cancelBubble = true : e.stopPropagation()
       if (this.jumpLoading) {
         return
       }

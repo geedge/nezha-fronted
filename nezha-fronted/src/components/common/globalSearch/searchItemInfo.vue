@@ -58,11 +58,16 @@
             <span v-if="alertLabelData && alertLabelData.state === 'ON'">{{ $t('overall.enabled') }}</span>
             <span v-if="alertLabelData && alertLabelData.state === 'OFF'">{{ $t('overall.disabled') }}</span>
           </div>
+          <div class="search-item-value-box" v-else-if="obj.type === 'alertrule'&&item.key==='trbShot'">
+            <i v-if="item.icon&&getPathContent(item.key)!=='--'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
+            <span class="search-item-value" v-html="getPathContent(item.key)">
+            </span>
+          </div>
           <div class="search-item-value-box" v-else>
             <i v-if="item.icon&&getPathContent(item.key)!=='--'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
             <span class="search-item-value">
-          {{getPathContent(item.key)}}
-        </span>
+              {{getPathContent(item.key)}}
+            </span>
           </div>
         </div>
       </div>
@@ -402,6 +407,12 @@ export default {
       }
       if (key === 'state' && this.obj.type === 'alertrule') {
         str = this.alertLabelData.state ? this.$t('overall.enabled') : this.$t('overall.disabled')
+      }
+      if (key === 'trbShot' && this.obj.type === 'alertrule') {
+        // str = ''
+      }
+      if (key === 'severityId' && this.obj.type === 'alertrule' && this.alertLabelData.severityId) {
+        str = this.severityData.find(item => this.alertLabelData.severityId == item.id).name
       }
       return str || '--'
     },

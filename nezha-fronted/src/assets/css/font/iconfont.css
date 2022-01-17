@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('iconfont.woff2?t=1639385153414') format('woff2'),
-  url('iconfont.woff?t=1639385153414') format('woff'),
-  url('iconfont.ttf?t=1639385153414') format('truetype');
+  src: url('iconfont.woff2?t=1642413628496') format('woff2'),
+       url('iconfont.woff?t=1642413628496') format('woff'),
+       url('iconfont.ttf?t=1642413628496') format('truetype');
 }
 
 .nz-icon {
@@ -11,6 +11,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nz-icon-Cabinet1:before {
+  content: "\e75f";
+}
+
+.nz-icon-user1:before {
+  content: "\e75d";
+}
+
+.nz-icon-Datacenter2:before {
+  content: "\e75e";
 }
 
 .nz-icon-Upload1:before {
