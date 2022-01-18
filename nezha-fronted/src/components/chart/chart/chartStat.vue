@@ -1,6 +1,13 @@
 <template>
-  <div class="chart-stat" ref="chart-stat-box">
-    <div class="chart-stat-item" v-for="(item,index) in statData" :key="index" :style="{background:item.mapping ? item.mapping.color.bac : (index >= 20 ? randomcolor() : colorList[index]),height:item.height+'px',width:item.width + 'px'}">
+  <div class="chart-stat" ref="chart-stat-box" @mousemove="statMouseMove">
+    <div
+      class="chart-stat-item"
+      v-for="(item,index) in statData"
+      :key="index"
+      @mouseenter="statMouseEnter(item)"
+      @mouseleave="statMouseleave(item)"
+      :style="{background:item.mapping ? item.mapping.color.bac : colorList[index],height:item.height+'px',width:item.width + 'px'}"
+    >
       <span v-if="chartInfo.param.text==='all'">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
           {{item.legend}}<br/><span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
@@ -20,6 +27,15 @@
         <span v-else>{{item.showValue}}</span>
       </span>
       <span v-if="chartInfo.param.text==='none'"></span>
+    </div>
+    <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
+      <div class="chart-canvas-tooltip-title tooltip-title">
+        {{tooltip.title}}
+      </div>
+      <div class="chart-canvas-tooltip-content">
+        <div>value</div>
+        <div>{{tooltip.value}}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -41,7 +57,14 @@ export default {
       boxWidth: 0,
       boxHeight: 0,
       boxPadding: 5,
-      statTimer: null
+      statTimer: null,
+      tooltip: {
+        x: 0,
+        y: 0,
+        title: 0,
+        value: 0,
+        show: false
+      }
     }
   },
   methods: {
@@ -88,6 +111,37 @@ export default {
         this.$emit('chartIsNoData', this.isNoData)
         resolve()
       })
+    },
+    statMouseMove (e) {
+      console.log(e)
+      const windowWidth = window.innerWidth// 窗口宽度
+      const windowHeight = window.innerHeight// 窗口高度
+      const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+      if (box) {
+        const boxWidth = box.offsetWidth
+        const boxHeight = box.offsetHeight
+        if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+          this.tooltip.x = e.pageX + 15
+        } else {
+          this.tooltip.x = e.pageX - boxWidth - 15
+        }
+        if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+          this.tooltip.y = e.pageY + 15
+        } else {
+          this.tooltip.y = e.pageY - boxHeight - 10
+        }
+      } else {
+        this.tooltip.y = e.pageY + 15
+        this.tooltip.x = e.pageX + 15
+      }
+    },
+    statMouseEnter (that) {
+      this.tooltip.title = that.legend
+      this.tooltip.value = that.showValue
+      this.tooltip.show = true
+    },
+    statMouseleave (taht) {
+      this.tooltip.show = false
     },
     getLayout () {
       this.boxWidth = this.$refs['chart-stat-box'].offsetWidth - 2 * this.boxPadding
