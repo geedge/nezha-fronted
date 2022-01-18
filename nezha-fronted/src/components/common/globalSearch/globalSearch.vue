@@ -20,21 +20,15 @@
                     :ref="'item'+ index"
                   >
                     <div class="list-item-content">
-<!--                      <i class="nz-icon" :class="selectIcon(item)" />-->
                       <el-skeleton-item
-                        variant="image"
                         style="width: 16px; height: 16px;display: inline-block"
                       />
-                      <el-skeleton-item variant="h3" style="width: 50%;display: inline-block" />
-<!--                      <HighlightText ref="searchStr" :queries="searchStr" :highlightClass="'list-item-highlight'" style="vertical-align: middle" :title="item.name">{{item.name}}</HighlightText>-->
+                      <el-skeleton-item variant="h3" style="width: 50%;display: inline-block;margin-left: 15px" />
                     </div>
                     <div class="list-item-sub">
-<!--                      {{ item.sub }}-->
-                      <el-skeleton-item variant="text" style="margin-right: 16px;" />
+                      <el-skeleton-item variant="text" style="" />
                     </div>
                   </li>
-                  <li class="list-item" v-if="nextLoading" v-loading="nextLoading"></li>
-                  <!--              <li  class="list-item" v-if="noMore&&!nextLoading">没有更多了</li>-->
               </template>
               <template>
                 <ul
