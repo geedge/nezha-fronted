@@ -58,8 +58,11 @@
   padding: 0 !important;
   height: 100%;
   .sub-list__tabs {
-    height: calc(100% - 12px);
+    height: calc(100% - 12px) !important;
     border: 1px solid $--border-color-light;
+    & > div {
+      height: 100%;
+    }
   }
 }
 .sub-box.bottom-box {
