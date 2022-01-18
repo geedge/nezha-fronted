@@ -283,7 +283,14 @@ export default {
             item.receiverShow = temp
           })
           this.tableData = response.data.list
-          this.detailViewRightObj = this.tableData[0]
+          const globalSearchId = this.$store.getters.getGlobalSearchId
+          let detailViewRightObj = ''
+          if (globalSearchId) {
+            detailViewRightObj = this.tableData.find(item => item.id === globalSearchId)
+          } else {
+            detailViewRightObj = this.tableData[0]
+          }
+          this.detailViewRightObj = detailViewRightObj
           this.pageObj.total = response.data.total
           this.pageObj.pages = response.data.pages
           if (!this.scrollbarWrap) {

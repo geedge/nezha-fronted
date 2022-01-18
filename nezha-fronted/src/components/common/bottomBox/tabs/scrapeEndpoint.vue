@@ -141,7 +141,14 @@ export default {
             })
             return item
           })
-          this.detailViewRightObj = this.tableData[0]
+          const globalSearchId = this.$store.getters.getGlobalSearchId
+          let detailViewRightObj = ''
+          if (globalSearchId) {
+            detailViewRightObj = this.tableData.find(item => item.id === globalSearchId)
+          } else {
+            detailViewRightObj = this.tableData[0]
+          }
+          this.detailViewRightObj = detailViewRightObj
           this.inputDateQuery = this.handlerTableData(this.tableData)
           this.pageObj.total = this.tableData.length
           if (!this.scrollbarWrap) {

@@ -20,7 +20,8 @@
       <li
         v-for="(item,index) in tableData"
         :key="index"
-        class="detail-row"
+       class="detail-row"
+        :id="'globalSearch' + item.id"
         :class="item.id === detailViewRightObj.id ? 'selected' : ''"
         @click="detailViewRightShow(item)">
         <el-popover

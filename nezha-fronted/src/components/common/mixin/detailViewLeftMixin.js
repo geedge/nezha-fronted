@@ -66,6 +66,22 @@ export default {
           this.$emit('orderDetail', this.orderBy, n)
         }
       }
+    },
+    tableData: {
+      immediate: true,
+      handler (n) {
+        if (n && n.length) {
+          const id = this.$store.getters.getGlobalSearchId
+          if (id) {
+            setTimeout(() => {
+              if (document.getElementById('globalSearch' + id)) {
+                document.getElementById('globalSearch' + id).scrollIntoView(true)
+                this.$store.commit('setGlobalSearchId', '')
+              }
+            }, 500)
+          }
+        }
+      }
     }
   }
 }
