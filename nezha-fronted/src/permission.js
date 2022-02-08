@@ -48,8 +48,32 @@ router.beforeEach((to, from, next) => {
                     store.commit('setButtonList', arr)
                     store.commit('setRoleList', res.data.roles)
                     bus.$emit('login')
+                    const path = []
+                    if (menuList) {
+                      menuList.forEach(e => {
+                        if (e.route) {
+                          path.push(e.route)
+                        } else {
+                          if (e.children) {
+                            e.children.forEach(e => {
+                              if (e.route) {
+                                path.push(e.route)
+                              } else {
+                                if (e.children) {
+                                  e.children.forEach(e => {
+                                    if (e.route) {
+                                      path.push(e.route)
+                                    }
+                                  })
+                                }
+                              }
+                            })
+                          }
+                        }
+                      })
+                    }
                     router.push({
-                      path: menuList[0].children[0].route,
+                      path: path[0],
                       query: {
                         t: +new Date()
                       }
