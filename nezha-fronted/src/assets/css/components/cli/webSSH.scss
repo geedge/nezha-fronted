@@ -45,11 +45,11 @@
     height: 29px;
     border-bottom: 1px solid $--web-ssh-border-bottom-color;
     .console-title-icon{
-      font-size:17px;
+      font-size: 17px;
       color: $--color-text-secondary;
       position: absolute;
-      top:8px;
-      line-height:1 !important;
+      top: 8px;
+      line-height: 1 !important;
     }
   }
   .console-title-icon:hover:before,
