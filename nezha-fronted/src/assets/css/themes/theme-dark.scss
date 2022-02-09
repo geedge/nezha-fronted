@@ -224,6 +224,10 @@ $--project-input-background-color: $--background-color-base;
 $--alert-rule-background-color: $--background-color-base;
 $--alert-rule-color: $--background-color-base;
 
+/* webSSH */
+$--web-ssh-background-color: $--background-color-disabled;
+$--web-ssh-border-bottom-color: $--background-color-copy;
+
 /* 图表弹框 */
 $--chart-background-color: $--background-color-empty;
 $--chart-border-color: $--border-color-light;

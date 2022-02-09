@@ -5,14 +5,14 @@
     </div>
     <div @mousedown="dragEagle" class="sub-list-resize" id="shell-split" v-show="!isFullScreen">一</div>
     <div class="sub-list-resize" v-show="isFullScreen"></div>
-    <div class="sub-list" style='position: relative;'>
+    <div class="sub-list" style="position: relative">
       <!--el-drawer 打开后会对第一个未隐藏的元素聚焦 所以添加一隐藏的input 防止聚焦-->
       <input style='width: 0;height: 0;opacity: 0;display: inherit;' />
 
       <el-tabs :before-leave="beforeLeave"
                @tab-click="handleClick"
                @tab-remove="removeTab"
-               style='width:100%; margin-left:0px;border-left:solid 1px black;border-bottom: 1px solid black;margin-top: -4px'
+               style='width:100%; margin-left:0px;border-left:solid 1px black;border-bottom: 1px solid black;margin-top: -4px;border-top:none;'
                type="border-card"
                v-model="editableTabsValue" >
         <el-tab-pane :key="item.name"
@@ -58,10 +58,12 @@
           </el-popover>
         </el-tab-pane>
       </el-tabs>
-      <i @click="minScreen" class="nz-icon nz-icon-minus console-title-icon" style='right:70px;'></i>
-      <i @click="fullScreen" class="el-icon-full-screen console-title-icon" style='right:38px;' v-if="!isFullScreen"></i>
-      <i @click="exitFullScreen" class="nz-icon nz-icon-exit-full-screen console-title-icon" style='right:38px;' v-else></i>
-      <i @click="closeConsole" class="nz-icon nz-icon-close console-title-icon" style='right:8px;'></i>
+      <div class="console-icon">
+        <i @click="minScreen" class="nz-icon nz-icon-minus console-title-icon" style='right: 76px;'></i>
+        <i @click="fullScreen" class="el-icon-full-screen console-title-icon" style='right: 46px;' v-if="!isFullScreen"></i>
+        <i @click="exitFullScreen" class="nz-icon nz-icon-exit-full-screen console-title-icon" style='right: 46px;' v-else></i>
+        <i @click="closeConsole" class="nz-icon nz-icon-close console-title-icon" style='right: 16px;'></i>
+      </div>
     </div>
 
     <div >
@@ -140,7 +142,7 @@
           <div class="footer" slot="footer">
             <div class="el-message-box__btns" style="text-align: unset; padding-left: 50px;">
               <el-checkbox v-model="closeRemember">{{$t('webshell.remember')}}</el-checkbox>
-              <button @click="closeShellWindow" class="el-button el-button--default el-button--small el-button--primary float-right" type="button">
+              <button @click="closeShellWindow" class="el-button el-button--default el-button--small float-right" type="button">
                 <span>{{$t('tip.yes')}}</span>
               </button>
               <button @click="cancleConfirm" class="el-button el-button--default el-button--small float-right" type="button">
