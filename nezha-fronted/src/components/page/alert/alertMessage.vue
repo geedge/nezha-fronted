@@ -5,6 +5,7 @@
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.alertMessage"
+      :nz-table-height-offset="alertMessageNzTableHeightOffset"
       :layout="dataListLayout"
       :search-msg="searchMsg"
       @search="search"
@@ -176,6 +177,7 @@ export default {
     return {
       chartLoading: false,
       chartInfo: {},
+      alertMessageNzTableHeightOffset: 242,
       stateOptions: alertMessageConstant.states,
       dataListLayout: localStorage.getItem('dataList-layout' + 'alertMessageTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'alertMessageTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
       state: '1',
