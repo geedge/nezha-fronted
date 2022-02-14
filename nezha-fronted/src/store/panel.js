@@ -1,6 +1,7 @@
 const panel = {
   state: {
     showRightBox: false,
+    panelLock: true,
     chart: '',
     delChart: false,
     groupId: '',
@@ -19,6 +20,9 @@ const panel = {
   mutations: {
     setShowRightBox (state, flag) {
       state.showRightBox = flag
+    },
+    setPanelLock (state, flag) {
+      state.panelLock = flag
     },
     setChart (state, chart) {
       state.chart = chart
@@ -60,6 +64,9 @@ const panel = {
   getters: {
     getShowRightBox (state) {
       return state.showRightBox
+    },
+    getPanelLock (state) {
+      return state.panelLock
     },
     getChart (state) {
       return state.chart
@@ -118,6 +125,9 @@ const panel = {
     },
     dispatchHeaderH (store, playload) {
       store.commit('setHeaderH', playload.headerH)
+    },
+    dispatchPanelLock (store, playload) {
+      store.commit('setPanelLock', playload.flag)
     },
     clearPanel (store) {
       store.commit('cleanPanel')

@@ -64,7 +64,7 @@
               >
                 <template v-slot:before>
                   <el-dropdown-item>
-                    <div id="panel-lock" @click="panelLock=!panelLock"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t('overall.locked') : $t('overall.unlocked')}}</div>
+                    <div id="panel-lock" @click="$store.dispatch('dispatchPanelLock',{flag:!panelLock})"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t('overall.locked') : $t('overall.unlocked')}}</div>
                   </el-dropdown-item>
                 </template>
                 <template v-slot:after>
@@ -90,7 +90,6 @@
                 :data-list="dataList"
                 :nowTimeType="nowTimeType"
                 :from="fromRoute.panel"
-                :panel-lock="panelLock"
                 :time-range="searchTime"
                 @edit-chart="editChart"
                 @on-refresh-time="refreshTime"
@@ -170,7 +169,6 @@ export default {
       panelTabLoading: false,
       overScroll10: false,
       isLoading: true,
-      panelLock: true,
       showTopBtn: false, // top按钮
       visible: false,
       chartListLoading: true,
@@ -294,6 +292,9 @@ export default {
     },
     delChartFlag () {
       return this.$store.getters.getDelChart
+    },
+    panelLock () {
+      return this.$store.getters.getPanelLock
     }
   },
   methods: {

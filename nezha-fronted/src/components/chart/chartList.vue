@@ -100,8 +100,7 @@ export default {
     panelId: {},
     chartDetailInfo: Object,
     timeRange: Array, // 时间范围
-    panelLock: { type: Boolean, default: true },
-    isGroup: { type: Boolean, default: false },
+    isGroup: Boolean,
     groupInfo: {},
     from: String,
     dataList: Array // 看板中所有图表信息
@@ -123,6 +122,9 @@ export default {
     },
     layoutMargintop () {
       return this.isGroup ? '0' : (this.dataList.length ? (-1 * (this.stepWidth + 14) + 'px') : '0')
+    },
+    panelLock () {
+      return this.$store.getters.getPanelLock
     }
   },
   data () {
@@ -332,6 +334,9 @@ export default {
       bus.$on('groupMove', this.changeGroupHeight)
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)
     }
+  },
+  beforeDestroy () {
+    this.$store.dispatch('dispatchPanelLock', { flag: true })
   },
   watch: {
     dataList: {
