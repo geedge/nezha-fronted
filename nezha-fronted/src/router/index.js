@@ -143,7 +143,7 @@ export default new Router({
           component: resolve => require(['../components/page/config/system/linkTab.vue'], resolve)
         },
         {
-          path: '/basic',
+          path: '/appearance',
           component: resolve => require(['../components/page/config/basic.vue'], resolve)
         },
         {
