@@ -113,7 +113,6 @@ export default {
       })
     },
     statMouseMove (e) {
-      console.log(e)
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
       const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)

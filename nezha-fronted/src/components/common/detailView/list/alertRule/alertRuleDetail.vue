@@ -20,19 +20,15 @@
       <li
         v-for="(item,index) in tableData"
         :key="index"
-       class="detail-row"
+        class="detail-row"
         :id="'globalSearch' + item.id"
         :class="item.id === detailViewRightObj.id ? 'selected' : ''"
-        @click="detailViewRightShow(item)">
-        <el-popover
-          placement="right-start"
-          popper-class="alert-message-tooltip alert-rule-detail"
-          style="position: relative"
-          @show="alertMessageHover(item, true)"
-          @hide="alertMessageHover(item, false)"
-          trigger="hover">
-          <alertRuleInfo v-if="item.loading" :id="item.id" :severity-data="severityData" :that="item" @showText="showText(item)"></alertRuleInfo>
-          <div class="detail-row-info" slot="reference">
+        @click="detailViewRightShow(item)"
+        @mouseenter="alertMessageHover(item, true, $event)"
+        @mouseleave="alertMessageHover(item, false)"
+      >
+        <alertRuleInfo v-if="item.loading" :id="item.id" :severity-data="severityData" :that="item" @showText="showText(item)" :detail-list="true"></alertRuleInfo>
+        <div class="detail-row-info" slot="reference">
           <div class="asset-manageIp">
             <i class="nz-icon nz-icon-overview-alert" :class="item.alertNum>0?'colorEF7458':'color23BF9A'"/>
             {{item.name}}
@@ -46,7 +42,6 @@
             </span>
           </div>
         </div>
-        </el-popover>
       </li>
     </ul>
     <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"

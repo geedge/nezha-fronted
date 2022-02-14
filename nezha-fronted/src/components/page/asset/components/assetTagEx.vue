@@ -144,7 +144,6 @@ export default {
       deep: true,
       handler (n) {
         if (this.type === 'datetime') {
-          // console.log(12312312)
         }
       }
     }

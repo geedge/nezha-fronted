@@ -58,6 +58,11 @@
     max-width: 210px;
   }
 }
+.alert-rule-detail{
+  .alert-label, .alert-labelUp{
+    position: absolute;
+  }
+}
 //.alert-label::after, .alert-labelUp::after {
 //  content: '';
 //  display: block;

@@ -297,8 +297,6 @@ export default {
     },
     containerHeight: function () {
       if (!this.autoSize) return
-      // console.log("bottom: " + bottom(this.layout))
-      // console.log("rowHeight + margins: " + (this.rowHeight + this.margin[1]) + this.margin[1])
       const containerHeight = bottom(this.layout) * (this.rowHeight + this.margin[1]) + this.margin[1] + 'px'
       return containerHeight
     },

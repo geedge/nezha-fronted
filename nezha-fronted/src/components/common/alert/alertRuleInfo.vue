@@ -65,6 +65,7 @@ export default {
   props: {
     id: {},
     messageLoad: {},
+    detailList: Boolean,
     that: {},
     severityData: Array
   },
@@ -91,14 +92,15 @@ export default {
         // const windowWidth = window.innerWidth
         const boxHeight = this.$refs.alertLabels ? this.$refs.alertLabels.offsetHeight : 231
         const windowHeight = window.innerHeight
+        const leftOffSetView = this.detailList ? -80 : 10
         if (position.top > windowHeight / 2) {
           return {
-            left: `${position.left + position.width + 10}px`,
+            left: `${position.left + position.width + leftOffSetView}px`,
             top: `${position.top - boxHeight}px`
           }
         } else {
           return {
-            left: `${position.left + position.width + 10}px`,
+            left: `${position.left + position.width + leftOffSetView}px`,
             top: `${position.top}px`
           }
         }
