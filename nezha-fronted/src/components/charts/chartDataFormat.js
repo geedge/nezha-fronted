@@ -18,11 +18,11 @@ function short (value, index, type = 1, dot) {
   }
 }
 function percent01 (value, index) {
-  value = parseFloat((Number(value)).toFixed(2))
+  value = parseFloat(keepDoubleNumber(Number(value)))
   return `${value} %`
 }
 function percent02 (value, index) {
-  value = parseFloat((Number(value) * 100).toFixed(2))
+  value = parseFloat(keepDoubleNumber(Number(value) * 100))
   return `${value} %`
 }
 function localFormat (value, index) {
@@ -308,7 +308,7 @@ function asciiCompute (num, ascii, units, dot = 2) {
   if (Number.isInteger(num)) {
     return num + ' ' + units[carry]
   } else {
-    return num.toFixed(dot) + ' ' + units[carry]
+    return keepDoubleNumber(num) + ' ' + units[carry]
   }
 }
 // eslint-disable-next-line no-unused-vars
@@ -319,9 +319,9 @@ function asciiCompute2 (num, ascii, units, dot = 2, unitIndex = 0) {
     if (quotient < 1) { // 不足以进位
       const toFixed = parseFloat(num.toFixed(dot))
       if (toFixed == 0) {
-        return `${num} ${units[unitIndex]}`
+        return `${keepDoubleNumber(num)} ${units[unitIndex]}`
       } else {
-        return `${num.toFixed(dot)} ${units[unitIndex]}`
+        return `${keepDoubleNumber(num)} ${units[unitIndex]}`
       }
     } else if (quotient >= 1 && quotient < 10) { // 可以进位，但是又不足以更进一位
       if (unitIndex >= units.length - 1) {
@@ -390,7 +390,33 @@ function timeCompute (value, unit, dot = 0) {
     }
   }
 }
-
+// 保留两位有效数字
+function keepDoubleNumber (num) {
+  const decimal = num.toString()
+  let returnNum = ''
+  const arr = decimal.split('.')
+  if (arr.length > 1) {
+    returnNum = arr[0] + '.'
+    let validNum = 0
+    arr[1].split('').forEach(item => {
+      if (validNum < 1 && item > 0) {
+        validNum++
+        returnNum += item
+      } else if (validNum === 0) {
+        returnNum += item
+      } else if (validNum === 1) {
+        validNum++
+        returnNum += item
+      }
+    })
+    if (validNum === 1) {
+      returnNum += '0'
+    }
+    return returnNum
+  } else {
+    return decimal
+  }
+}
 function timeFormat34 (value) {
   return bus.timeFormate(parseInt(value), 'YYYY-MM-DD HH:mm:ss')
 }
