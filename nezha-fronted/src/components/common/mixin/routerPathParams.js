@@ -56,6 +56,13 @@ export default {
           // this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs[dataList].$refs.searchInput.searchLabelList.filter(item => item.label !== 'projectIds')
         }, 500)
       }
+    },
+    switchChange (formName) {
+      const $temp = this
+      $temp.$refs[formName].clearValidate()
+      setTimeout(() => {
+        $temp.$refs[formName].validate()
+      }, 100)
     }
   }
 }

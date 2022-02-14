@@ -120,10 +120,6 @@
 <script>
 import draggable from 'vuedraggable'
 import latlngPicker from '@/components/common/latlngPicker'
-import notifyMethod from '@/components/page/config/system/notifyMethodTab'
-import linkTab from '@/components/page/config/system/linkTab'
-import apiKeyTab from '@/components/page/config/system/apiKeyTab'
-import License from '@/components/page/config/system/license'
 import { latlng, port, positiveInteger, uSize } from '@/components/common/js/validate'
 import systemMixin from '@/components/common/mixin/system/systemMixin'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
@@ -131,7 +127,7 @@ import routerPathParams from '@/components/common/mixin/routerPathParams'
 export default {
   name: 'basic',
   mixins: [systemMixin, routerPathParams],
-  components: { draggable, latlngPicker, notifyMethod, linkTab, apiKeyTab, License },
+  components: { draggable, latlngPicker },
   data () {
     return {
       switchTab: 'basic',
