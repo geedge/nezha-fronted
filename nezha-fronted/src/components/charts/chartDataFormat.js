@@ -6,7 +6,7 @@
 import bus from '../../libs/bus'
 
 function none (value, index) {
-  return value
+  return keepDoubleNumber(value)
 }
 function short (value, index, type = 1, dot) {
   if (type == 1) {
