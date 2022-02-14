@@ -107,7 +107,6 @@
               :data-list="dataList"
               :nowTimeType="nowTimeType"
               :from="from"
-              :panel-lock="panelLock"
               :time-range="searchTime"
               @edit-chart="editChart"
               @on-refresh-time="refreshTime"
@@ -174,13 +173,15 @@ export default {
     },
     delChartFlag () {
       return this.$store.getters.getDelChart
+    },
+    panelLock () {
+      return this.$store.getters.getPanelLock
     }
   },
   data () {
     return {
       fromRoute,
       panelTabLoading: false,
-      panelLock: true,
       showTopBtn: false, // top按钮
       visible: false,
       chartListLoading: true,
@@ -683,7 +684,7 @@ export default {
       this.tableHover = false
     },
     panelLockChange (boolean) {
-      this.panelLock = boolean
+      this.$store.dispatch('dispatchPanelLock', { flag: boolean })
     },
     chartBySync () {
       this.panelTabLoading = true
@@ -762,7 +763,7 @@ export default {
           this.disposeChart()
         }
       }
-    },
+    }
   },
   beforeDestroy () {
     document.querySelector('#tableList') && document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)
