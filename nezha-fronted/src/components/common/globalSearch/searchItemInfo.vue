@@ -64,8 +64,8 @@
             </span>
           </div>
           <div class="search-item-value-box" v-else>
-            <i v-if="item.icon&&getPathContent(item.key)!=='--'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
-            <span class="search-item-value">
+            <i v-if="(item.icon&&getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
+            <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status === 'green')">
               {{getPathContent(item.key)}}
             </span>
           </div>
@@ -370,7 +370,7 @@ export default {
         str += this.alertLabelData[item.key] ? 'red' : 'green'
       }
       if (item.key === 'pingInfo.rtt') {
-        str += this.alertLabelData.pingInfo && this.alertLabelData.pingInfo.status ? 'red' : 'green'
+        str += this.alertLabelData.pingInfo && this.alertLabelData.pingInfo.status ? 'green' : 'red'
       }
       if (item.key === 'state' && this.obj.type === 'alertrule') {
         str += !this.alertLabelData.state ? 'red' : 'green'
