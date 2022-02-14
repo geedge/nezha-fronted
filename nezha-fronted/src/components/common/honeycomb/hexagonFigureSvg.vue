@@ -266,8 +266,9 @@ export default {
           hexagonSvg.on('panStart', this.hexagonSvgPanStart)
           hexagonSvg.on('mousemove', this.hexagonMove)
           hexagonSvg.on('panEnd', this.hexagonSvgPanEnd)
-          let Rate = (this.$refs.box.offsetWidth / this.defaultBoxWidth)
-          Rate = (Rate > 0.2 ? Rate : 0.2)
+          this.getLayout()
+          const Rate = (this.$refs.box.offsetWidth / this.defaultBoxWidth)
+          // Rate = (Rate > 0.2 ? Rate : 0.2)
           this.windowRate = Rate
           this.hexagonEdge = (this.hexagonEdge / this.defaultRate) * Rate
           const fontSize = ((this.fontSize / this.defaultRate) * Rate)
@@ -292,6 +293,43 @@ export default {
             this.firstInit = false
           }, 500)
         })
+      })
+    },
+    getLayout () {
+      this.boxWidth = this.$refs.box.offsetWidth
+      this.boxHeight = this.$refs.box.offsetHeight
+      return new Promise(resolve => {
+        let radius = 0
+        let col = 0
+        let row = 0
+        for (let i = 1; i <= this.hexagonData.length; i++) {
+          const cols = Math.ceil(this.hexagonData.length / i)
+          const hexaRadiusY = Math.ceil((this.boxHeight * 2) / (3 * i + 1))
+          let hexaRadiusX = ''
+          if (i === 1) {
+            hexaRadiusX = Math.ceil(this.boxWidth / (Math.sqrt(3) * cols))
+          } else {
+            hexaRadiusX = Math.ceil(this.boxWidth / (Math.sqrt(3) * cols + Math.sqrt(3) / 2))
+          }
+          const rateMax = hexaRadiusX > hexaRadiusY ? hexaRadiusY : hexaRadiusX
+          if (rateMax > radius) {
+            radius = rateMax
+            col = cols
+            row = i
+          }
+        }
+        if (this.hexagonData.length) {
+          while (col * row >= this.hexagonData.length) { // 避免出现空白
+            row--
+          }
+        }
+        row++
+        if (col === 1 || row === 1) { // 行 或 列有一个为1时 需要调换位置 显示才会好看
+          const temp = col
+          col = row
+          row = temp
+        }
+        resolve({ col, row, radius: radius })
       })
     },
     reload () {
