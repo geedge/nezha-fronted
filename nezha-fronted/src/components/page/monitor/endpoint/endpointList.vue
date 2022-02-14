@@ -606,7 +606,7 @@ export default {
             this.setSearchData(response.statistics)
           }
           for (let i = 0; i < response.data.list.length; i++) {
-            response.data.list[i].configs.forEach(item => {
+            response.data.list[i].configs && response.data.list[i].configs.forEach(item => {
               item.config = JSON.parse(item.config)
             })
           }
