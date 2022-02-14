@@ -76,7 +76,9 @@ export function nzNumber (rule, value, callback) {
 }
 
 export function noSpecialChar (rule, value, callback) {
-  const charReg = /^[\u4e00-\u9fa5a-z0-9A-Z-_.]+$/
+  // eslint-disable-next-line no-control-regex
+  const charReg = /^\w[\u0000-\uFFFF]*$/
+  /// ^\S[\u0000-\uFFFF]*$/
   setTimeout(() => {
     if (!value) {
       callback(new Error(vm.$t('validate.required')))
