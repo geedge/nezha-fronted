@@ -108,9 +108,9 @@ export const parentTableCommon = {
       const systemParam = {
         ...this.searchLabel
       }
-      if (this.switchTab) {
-        systemParam.switchTab = this.switchTab
-      }
+      // if (this.switchTab) {
+      //   systemParam.switchTab = this.switchTab
+      // }
       const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
       this.updatePath(systemParam, path)
       this.$get(this.url, this.searchLabel).then(response => {
@@ -131,7 +131,7 @@ export const parentTableCommon = {
   created () {
     const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
     let searchKeys = {}
-    if (path === 'system' && this.$route.query.activeTab == 'link') {
+    if (path === 'link') {
       searchKeys = {
         // key: path 键
         // value: vue set 参数
@@ -168,7 +168,7 @@ export const parentTableCommon = {
           jsonKey: 'val'
         }
       }
-    } else if (path === 'system' && this.$route.query.activeTab == 'apiKey') {
+    } else if (path === 'apiKey') {
       searchKeys = {
         // key: path 键
         // value: vue set 参数
@@ -205,7 +205,7 @@ export const parentTableCommon = {
           jsonKey: 'val'
         }
       }
-    } else if (path === 'system' && this.$route.query.activeTab == 'notification') {
+    } else if (path === 'notification') {
       searchKeys = {
         // key: path 键
         // value: vue set 参数

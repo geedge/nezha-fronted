@@ -127,6 +127,42 @@ export default new Router({
           component: resolve => require(['../components/page/config/system.vue'], resolve)
         },
         {
+          path: '/notification',
+          component: resolve => require(['../components/page/config/system/notifyMethodTab.vue'], resolve)
+        },
+        {
+          path: '/apiKey',
+          component: resolve => require(['../components/page/config/system/apiKeyTab.vue'], resolve)
+        },
+        {
+          path: '/license',
+          component: resolve => require(['../components/page/config/system/license.vue'], resolve)
+        },
+        {
+          path: '/link',
+          component: resolve => require(['../components/page/config/system/linkTab.vue'], resolve)
+        },
+        {
+          path: '/basic',
+          component: resolve => require(['../components/page/config/basic.vue'], resolve)
+        },
+        {
+          path: '/email',
+          component: resolve => require(['../components/page/config/email.vue'], resolve)
+        },
+        {
+          path: '/ldap',
+          component: resolve => require(['../components/page/config/ldap.vue'], resolve)
+        },
+        {
+          path: '/monitor',
+          component: resolve => require(['../components/page/config/monitor.vue'], resolve)
+        },
+        {
+          path: '/terminal',
+          component: resolve => require(['../components/page/config/terminal.vue'], resolve)
+        },
+        {
           path: '/i18n',
           component: resolve => require(['@/components/page/config/globalization.vue'], resolve)
         },
