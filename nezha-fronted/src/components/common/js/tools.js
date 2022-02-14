@@ -811,7 +811,7 @@ export function getMetricTypeValue (queryItem, type) {
       const max = copy.sort((x, y) => { return parseFloat(y[1]) - parseFloat(x[1]) })[0][1]
       return max
     }
-    case 'avg': {
+    case 'average': {
       copy = copy.map(t => parseFloat(t[1]))
       const sum = eval(copy.join('+'))
       const avg = sum / copy.length

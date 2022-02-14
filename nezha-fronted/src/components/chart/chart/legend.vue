@@ -16,7 +16,7 @@
           <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
             <span :style="{background: item.color}" class="legend-shape"></span>{{item.alias ? item.alias : item.name}}
           </div>
-          <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{statistics.value}}</div>
+          <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value))}}</div>
         </div>
       </div>
     </template>
@@ -193,6 +193,25 @@ export default {
           series: data
         })
       }
+    },
+    // 四舍五入保留2位小数（不够位数，则用0替补）
+    keepTwoDecimalFull (num) {
+      let result = parseFloat(num)
+      if (isNaN(result)) {
+        return '--'
+      }
+      // result = Math.round(num * 100) / 100
+      // let decimal = result.toString()
+      // let posDecimal = decimal.indexOf('.')
+      // if (posDecimal < 0) {
+      //   posDecimal = decimal.length
+      //   decimal += '.'
+      // }
+      // while (decimal.length <= posDecimal + 2) {
+      //   decimal += '0'
+      // }
+      result = chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(result, null, -1, 2)
+      return result
     },
     getMaxValue (dataArg, chartInfo) {
       let maxValue = 0
