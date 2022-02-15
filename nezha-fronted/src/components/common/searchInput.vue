@@ -39,7 +39,7 @@
                             <i class="nz-icon nz-icon-close" style="cursor: pointer" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
-                            <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" :readonly="val.readonly"  @keydown="enter(val, $event)" @click="stop_click">
+                            <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" :readonly="val.readonly" @keydown="enter(val, $event)" @click="stop_click">
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'select'">
                               <el-scrollbar v-if="selectInfoList[val.label].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
@@ -774,7 +774,7 @@ export default {
       this.change_sreach_show = true
       this.name = ''
       this.id = ''
-      if (this.input_sreach != '') {
+      if (this.select_list[this.sreach_num]) {
         this.select_list[this.sreach_num].val = this.input_sreach
         this.input_sreach = ''
         this.sreach_num = this.select_list.length
@@ -832,7 +832,7 @@ export default {
           }
           this.sreach_num++
         } else {
-          const no_condition_bool = false; let no_condition_str = ''; const route = this.$route.path; let bool = true
+          const no_condition_bool = false; let no_condition_str = ''; const route = this.$route.path; const bool = true
           if (route == '/Log_SesssionRecords' || route == '/Log_EventLogs') {
             no_condition_str = 'id'
           } else if (route == '/Device_DeviceList') {
@@ -842,12 +842,12 @@ export default {
           } else {
             no_condition_str = 'name'
           }
-          this.select_list.forEach(val => {
-            if (val.label == no_condition_str) {
-              bool = false
-              val.val += ',' + this.no_condition
-            }
-          })
+          // this.select_list.forEach(val => {
+          //   if (val.label == no_condition_str) {
+          //     bool = false
+          //     val.val += ',' + this.no_condition
+          //   }
+          // })
           if (bool) {
             this.searchLabelList.forEach((val, ind) => {
               if (val.label == no_condition_str) {
@@ -1037,8 +1037,10 @@ export default {
                   this.change_sreach_show = false
                   this.sreach_num = i
                   this.input_sreach = arr[i].val
-                  setTimeout('document.getElementById("sreach_input").focus()', 500)
-                  this.delBool = true
+                  setTimeout(() => {
+                    document.getElementById('sreach_input').focus()
+                  }, 500)
+                  // this.delBool = true
                   break
                 }
               }
