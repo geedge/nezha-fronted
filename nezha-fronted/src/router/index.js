@@ -124,7 +124,7 @@ export default new Router({
         },
         {
           path: '/system',
-          component: resolve => require(['../components/page/config/system.vue'], resolve)
+          component: resolve => require(['../components/page/config/basic.vue'], resolve)
         },
         {
           path: '/notification',
