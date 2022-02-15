@@ -22,7 +22,7 @@ router.beforeEach((to, from, next) => {
             localStorage.setItem('nz-sys-name', res.data.system_name || '')
             localStorage.setItem('nz-sys-logo', res.data.system_logo || '')
             localStorage.setItem('nz-sys-favicon', res.data.system_favicon || '')
-            localStorage.setItem('nz-language', res.data.lang || '')
+            localStorage.setItem('nz-language', res.data.language || '')
             localStorage.setItem('nz-sys-timezone', res.data.timezone || '')
             localStorage.setItem('nz-sys-bgImg', res.data.system_bgImg || '')
             localStorage.setItem('nz-default-theme', res.data.theme || '')
