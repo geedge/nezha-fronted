@@ -1053,10 +1053,10 @@ export default {
           if (!temp) {
             this.showIntroduce = true
           } else {
-            this.showIntroduce = false
+            // this.showIntroduce = false
           }
         } else {
-          this.showIntroduce = false
+          // this.showIntroduce = false
         }
       }
     }
