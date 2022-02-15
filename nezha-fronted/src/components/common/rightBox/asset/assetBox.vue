@@ -544,6 +544,9 @@ export default {
     setLocationData ({ cabinet, dc, u }) {
       this.editAsset.cabinetId = cabinet ? cabinet.id : ''
       this.editAsset.dcId = dc ? dc.id : ''
+      if (this.editAsset.dcId) {
+        this.$refs.form.validateField('location')
+      }
       if (u) {
         this.editAsset.cabinetStart = u[0]
         this.editAsset.cabinetEnd = u[1]

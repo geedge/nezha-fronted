@@ -64,7 +64,7 @@
             </span>
           </div>
           <div class="search-item-value-box" v-else>
-            <i v-if="(item.icon&&getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
+            <i v-if="(item.icon && getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
             <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
               {{getPathContent(item.key)}}
             </span>
@@ -396,6 +396,9 @@ export default {
     },
     getPathContent (key) {
       let str = lodash.get(this.alertLabelData, key, '--')
+      if (key === 'alertNum') {
+        str += ''
+      }
       if (key === 'pingInfo.rtt' && str && str !== '--') {
         str += ' ms'
       }

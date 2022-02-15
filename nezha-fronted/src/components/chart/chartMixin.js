@@ -102,10 +102,10 @@ export default {
         if (tagKey !== '__name__') {
           legend += `${tagKey}="${data.metric[tagKey]}",`
         }
-        if (legend.endsWith(',')) {
-          legend = legend.substr(0, legend.length - 1)
-        }
       })
+      if (legend.endsWith(',')) {
+        legend = legend.substr(0, legend.length - 1)
+      }
       if (data.metric.__name__) {
         legend += '}'
       }
