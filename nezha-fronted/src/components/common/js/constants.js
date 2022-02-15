@@ -341,6 +341,7 @@ export const fromRoute = {
   alertSilence: 'alertSilence',
   model: 'model',
   mib: 'mib',
+  credential: 'credential',
   asset: 'asset',
   assetType: 'assetType',
   assetState: 'assetState',

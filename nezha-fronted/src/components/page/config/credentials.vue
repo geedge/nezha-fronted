@@ -5,7 +5,7 @@
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
-      :from="fromRoute.mib"
+      :from="fromRoute.credential"
       :layout="['searchInput', 'elementSet', 'pagination']"
       :search-msg="searchMsg"
       @search="search"

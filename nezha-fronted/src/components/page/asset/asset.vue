@@ -233,6 +233,7 @@ export default {
         modelId: '',
         model: { id: '', name: '' },
         type: { name: '', id: '' },
+        number: '',
         brandAndModel: [],
         typeId: '',
         snmpCredentialId: '',
