@@ -65,7 +65,7 @@
           </div>
           <div class="search-item-value-box" v-else>
             <i v-if="(item.icon&&getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
-            <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status === 'green')">
+            <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
               {{getPathContent(item.key)}}
             </span>
           </div>

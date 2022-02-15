@@ -492,6 +492,10 @@ export default {
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
         this.filter.panelId = this.showPanel.id
         this.getData(this.filter)
+        this.$store.dispatch('dispatchPanelTime', {
+          time: this.searchTime,
+          nowTimeType: this.nowTimeType
+        })
       }
     },
     /* 时间条件查询--end */
@@ -724,6 +728,10 @@ export default {
     this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
     document.querySelector('#tableList').addEventListener('mouseleave', this.tableListLeave)
+    this.$store.dispatch('dispatchPanelTime', {
+      time: this.searchTime,
+      nowTimeType: this.nowTimeType
+    })
   },
   watch: {
     'filter.searchName' (n, o) {

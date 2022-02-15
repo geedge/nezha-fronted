@@ -7,7 +7,7 @@
 .dropdown{
   position: absolute;
   width: 616px;
-  padding:5px;
+  padding: 0px;
   background-color: $--background-color-empty;
   display: none;
   z-index: 2020;
@@ -28,12 +28,13 @@
   flex: 1;
   width: 0;
   border-right: 1px solid $--border-color-light;
-  padding-left: 5px;
+  //padding-left: 5px;
 }
 .container-item-content{
   display: flex;
   justify-content: space-between;
   padding:5px;
+  padding-left: 15px;
 }
 .container-item-content .container-item-content_label{
   overflow: hidden;
