@@ -1,5 +1,5 @@
 * {
-  font-family: NotoSans-Regular, NunitoSans-Regular, Inter-Regular;
+  font-family: Inter-Regular, NotoSans-Regular, NunitoSans-Regular;
 }
 /* 覆盖element的loading样式 */
 .el-loading-spinner .circular{
@@ -370,4 +370,7 @@ td .nz-icon-gear:before{
   border-color: $--tooltip-border-color !important;
   color: $--color-text-regular !important;
   box-shadow: none !important;
+}
+input, textarea {
+  font-family: Inter-Regular !important;
 }
