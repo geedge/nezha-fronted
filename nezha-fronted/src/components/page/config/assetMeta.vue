@@ -131,13 +131,14 @@ export default {
             type: 'input',
             label: 'key',
             disabled: false
-          }, {
-            name: this.$t('config.assetLabel.group'),
-            type: 'group',
-            label: 'group',
-            readonly: true,
-            disabled: false
           }
+          // , {
+          //   name: this.$t('config.assetLabel.group'),
+          //   type: 'group',
+          //   label: 'group',
+          //   readonly: true,
+          //   disabled: false
+          // }
         ]
       },
       // 创建修改相关
@@ -174,6 +175,9 @@ export default {
         if (response.code == 200) {
           this.groupData = [this.groupData[0]]
           this.groupData = this.groupData.concat(response.data.list)
+          if (this.$route.query && this.$route.query.groupIds) {
+            this.showGroup = this.groupData.find(item => item.id == this.$route.query.groupIds)
+          }
           this.$forceUpdate()
         }
       })
@@ -187,6 +191,9 @@ export default {
       this.tools.loading = true
       if (!this.searchLabel.groupIds) {
         delete this.searchLabel.groupIds
+      }
+      if (this.showGroup.id && this.showGroup.id !== -1) {
+        this.searchLabel.groupIds = this.showGroup.id
       }
       const param = {
         ...this.searchLabel,
@@ -339,21 +346,10 @@ export default {
         jsonKey: 'val'
       },
       groupIds: {
-        target: this.searchLabel,
-        propertyName: 'groupIds',
+        target: this.showGroup,
+        propertyName: 'id',
         type: 'number',
-        isSearchInput: true,
-        defaultJson: {
-          disabled: false,
-          label: 'group',
-          name: 'Group',
-          readonly: true,
-          type: 'group',
-          val: '',
-          valnum: '',
-          listStr: 'groupSelect'
-        },
-        jsonKey: 'valnum'
+        isSearchInput: false
       }
     }
     this.initQueryFromPath(searchKeys)
