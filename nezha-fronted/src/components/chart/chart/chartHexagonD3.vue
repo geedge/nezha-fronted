@@ -236,6 +236,7 @@ export default {
       let valueStr = ''
       const self = this
       const hexWidth = hexbinRadius * Math.sqrt(3)
+      let fontSize = 24
       const textColor = point.mapping ? point.mapping.color.text : this.invertColor(color)
       if (this.chartInfo.param.text === 'all') {
         str += point.alias
@@ -250,6 +251,7 @@ export default {
       if (this.chartInfo.param.text === 'none') {
         str += ''
       }
+      fontSize = Math.floor(16 * (hexWidth / 60))
       if (str && valueStr) {
         const fObj = group.append('foreignObject')
           .attr('width', hexWidth || 60)
@@ -260,7 +262,7 @@ export default {
           // .text(str)
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'central')
-          .style('font-size', 16)
+          .style('font-size', fontSize)
           .style('fill', textColor)
         const scrollDiv = fObj.append('xhtml:div')
         scrollDiv
@@ -271,7 +273,7 @@ export default {
           .text(valueStr)
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'central')
-          .style('font-size', 16)
+          .style('font-size', fontSize)
           .style('fill', textColor)
         return
       }
@@ -285,7 +287,7 @@ export default {
           // .text(str)
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'central')
-          .style('font-size', 16)
+          .style('font-size', fontSize)
           .style('fill', textColor)
         const scrollDiv = fObj.append('xhtml:div')
         scrollDiv
@@ -299,7 +301,7 @@ export default {
           .text(valueStr)
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'central')
-          .style('font-size', 16)
+          .style('font-size', fontSize)
           .style('fill', textColor)
       }
     },
