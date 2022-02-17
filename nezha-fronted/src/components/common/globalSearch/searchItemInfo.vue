@@ -396,7 +396,7 @@ export default {
     },
     getPathContent (key) {
       let str = lodash.get(this.alertLabelData, key, '--')
-      if (key === 'alertNum') {
+      if (key === 'alertNum' || key === 'endpointNum' || key === 'assetNum' || key === 'cabinetNum' || key === 'moduleNum') {
         str += ''
       }
       if (key === 'pingInfo.rtt' && str && str !== '--') {

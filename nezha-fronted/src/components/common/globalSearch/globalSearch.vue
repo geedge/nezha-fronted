@@ -332,7 +332,7 @@ export default {
       if (type === 'datacenter') {
         tableId = 'dcTable'
         route += 'dc'
-      } else if (type === 'alertRule') {
+      } else if (type === 'alertRule' || type === 'alertrule') {
         tableId = 'alertRuleTable'
         route += 'alertRule'
       } else if (type === 'asset') {
