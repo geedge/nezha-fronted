@@ -173,7 +173,7 @@
           <!-- 第一级：Edit type = state -->
           <template v-if="editData.editType === assetConstants.editTypeData.state">
             <el-form-item :label="$t('asset.state')" prop="stateId">
-              <el-select v-model="editData.stateId" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
+              <el-select v-model="editData.stateId" class="right-box__select" :placeholder="$t('overall.select')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="state in stateData" :key="state.id" :label="state.name" :value="state.id"></el-option>
               </el-select>
             </el-form-item>
@@ -182,7 +182,7 @@
           <!-- 第一级：Edit type = snmp credential -->
           <template v-if="editData.editType === assetConstants.editTypeData.snmpCredential">
             <el-form-item :label="$t('asset.snmpCredential')" prop="snmpCredentialId">
-              <el-select v-model="editData.snmpCredentialId" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
+              <el-select v-model="editData.snmpCredentialId" class="right-box__select" :placeholder="$t('overall.select')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="snmp in snmpCredentialData" :key="snmp.id" :label="snmp.name" :value="snmp.id"></el-option>
               </el-select>
             </el-form-item>
