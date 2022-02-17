@@ -6,7 +6,13 @@
       :key="index"
       @mouseenter="statMouseEnter(item)"
       @mouseleave="statMouseleave(item)"
-      :style="{background:item.mapping ? item.mapping.color.bac : colorList[index],height:item.height+'px',width:item.width + 'px'}"
+      :class="statData.length===1 ?'only-stat' : ''"
+      :style="{
+        background:item.mapping ? item.mapping.color.bac : (statData.length===1 ? '' : colorList[index]),
+        height:item.height+'px',
+        width:item.width + 'px',
+        fontSize: item.height > item.width ? (14 * (item.width/60)+ 'px') : (14 * (item.height/60)+ 'px')
+      }"
     >
       <span v-if="chartInfo.param.text==='all'">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
@@ -64,7 +70,9 @@ export default {
         title: 0,
         value: 0,
         show: false
-      }
+      },
+      fontSize: 12,
+      defaultUnit: 60 // 根据stat的长宽取 需要的字体 = (取最短的边 / defaultUnit) * fontSize 因为 需要的字体/fontSize = 实际宽 / defaultUnit
     }
   },
   methods: {
