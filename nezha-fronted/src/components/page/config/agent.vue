@@ -126,6 +126,7 @@ export default {
       tableId: 'promTable', // 需要分页的table的id，用于记录每页数量
       blankObject: {
         id: '',
+        name: '',
         host: '',
         port: 10090,
         dc: { id: '', name: '', location: '' },
@@ -140,6 +141,12 @@ export default {
           name: 'ID',
           type: 'input',
           label: 'ids',
+          disabled: false
+        },
+        {
+          name: this.$t('overall.name'),
+          type: 'input',
+          label: 'name',
           disabled: false
         }, {
           name: this.$t('dashboard.overview.dataCenter.dataCenter'),

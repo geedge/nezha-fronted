@@ -11,7 +11,7 @@
       :tabs="tabs"
       @changeTab="changeTab"
     >
-      <template v-slot:title><span :title="obj.name">{{obj.dc.name}}</span></template>
+      <template v-slot:title><span :title="obj.name || obj.dc.name">{{obj.name || obj.dc.name}}</span></template>
       <template v-slot:top-tool-right>
         <div class="top-tool-right">
           <div style="margin-right: 15px;">

@@ -22,7 +22,10 @@
               </el-select>
             </div>
           </el-form-item>
-
+<!--          name-->
+          <el-form-item :label='$t("overall.name")' prop="name">
+            <el-input placeholder="" maxlength="64" show-word-limit v-model="editPromServer.name" size="small" id="agent-box-input-name"></el-input>
+          </el-form-item>
           <!--host-->
           <el-form-item :label="$t('config.agent.host')" prop="host">
             <el-input id="prom-box-input-host" maxlength="64" show-word-limit v-model="editPromServer.host" placeholder="" size="small" type="text"></el-input>
@@ -85,7 +88,7 @@
   </div>
 </template>
 <script>
-import { host, port } from '../../common/js/validate'
+import { host, noSpecialChar, port } from '../../common/js/validate'
 import { agent2 } from '@/components/common/js/constants'
 import editRigthBox from '../mixin/editRigthBox'
 export default {
@@ -101,6 +104,10 @@ export default {
       rules: {
         'dc.name': [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: noSpecialChar, trigger: 'blur' }
         ],
         host: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
@@ -204,7 +211,11 @@ export default {
       deep: true,
       handler (n) {
         this.isEdit = true
-        this.editPromServer = JSON.parse(JSON.stringify(n))
+        const editPromServer = JSON.parse(JSON.stringify(n))
+        if (!editPromServer.name) {
+          editPromServer.name = ''
+        }
+        this.editPromServer = editPromServer
       }
     },
     'editPromServer.dc': function (n, o) {

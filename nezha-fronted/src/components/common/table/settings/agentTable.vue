@@ -42,8 +42,9 @@
         <span v-else-if="item.prop === 'checkTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <span v-else-if="item.prop === 'status'">
           <el-popover :content="$t('asset.assetStatPre')+(scope.row.checkTime?utcTimeToTimezoneStr(scope.row.checkTime):$t('asset.assetStatDown'))" placement="right" trigger="hover" width="200">
-            <div slot="reference" style="width: 20px">
-              <div :class="{'active-icon green-bg':scope.row[item.prop] == '1','active-icon red-bg':scope.row[item.prop] == '0' || scope.row[item.prop] == '-1' || scope.row[item.prop] == '-2'}"></div>
+            <div slot="reference" style="width: 60px">
+              <span :class="{'active-icon green-bg':scope.row[item.prop] == '1','active-icon red-bg':scope.row[item.prop] == '0' || scope.row[item.prop] == '-1' || scope.row[item.prop] == '-2'}"></span>
+              <span>{{scope.row[item.prop] == '1' ? 'UP' : 'Down'}}</span>
             </div>
           </el-popover>
         </span>
@@ -101,6 +102,12 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
+          sortable: 'custom'
+        }, {
+          label: this.$t('overall.name'),
+          prop: 'name',
+          show: true,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('config.agent.dataCenter'),
