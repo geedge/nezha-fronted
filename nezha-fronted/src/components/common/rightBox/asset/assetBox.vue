@@ -184,7 +184,7 @@
           <template v-if="editAsset.type && editAsset.type.authProtocol === assetConstants.authProtocolData.ssh">
             <div class="form__sub-title">SSH</div>
             <el-form-item :label="$t('asset.authType')" prop="authType">
-              <el-select v-model="editAsset.authType" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
+              <el-select v-model="editAsset.authType" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value" clearable>
                 <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
               </el-select>
             </el-form-item>

@@ -147,8 +147,8 @@ export const asset = {
     telnet: 2
   },
   authTypeOptions: [
-    { value: 1, label: 'Username' },
-    { value: 2, label: 'Key' }
+    { value: 1, label: i18n.t('asset.password') },
+    { value: 2, label: i18n.t('asset.publicKey') }
   ],
   authTypeData: {
     username: 1,

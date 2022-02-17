@@ -31,7 +31,7 @@
                 </el-select>
               </el-form-item>
               <!--     第三级：Auth type = username | key -->
-              <el-form-item :label="$t('asset.username')" prop="authUsername">
+              <el-form-item :label="$t('asset.userName')" prop="authUsername">
                 <el-input v-model="editData.authUsername" size="small"/>
               </el-form-item>
               <template v-if="editData.authType === assetConstants.authTypeData.key">
@@ -51,7 +51,7 @@
             <!--   第二级：Protocol type = TELNET -->
             <template v-if="editData.authProtocol === assetConstants.authProtocolData.telnet">
               <div class="form__sub-title">TELNET</div>
-              <el-form-item :label="$t('asset.username')" prop="authUsername">
+              <el-form-item :label="$t('asset.userName')" prop="authUsername">
                 <el-input v-model="editData.authUsername" size="small"/>
               </el-form-item>
               <el-form-item :label="$t('asset.pin')" prop="authPin">
