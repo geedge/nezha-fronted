@@ -12,6 +12,10 @@
     <div class="right-box__container">
       <div class="container__form">
         <el-form ref="agentForm" :model="editPromServer" :rules="rules" label-position = "top" label-width="120px">
+          <!--          name-->
+          <el-form-item :label='$t("overall.name")' prop="name">
+            <el-input placeholder="" maxlength="64" show-word-limit v-model="editPromServer.name" size="small" id="agent-box-input-name"></el-input>
+          </el-form-item>
           <!--DC-->
           <el-form-item :label="$t('config.dc.dc')" prop="dc.name">
             <div class="right-box-form-content">
@@ -21,10 +25,6 @@
                 </el-option>
               </el-select>
             </div>
-          </el-form-item>
-<!--          name-->
-          <el-form-item :label='$t("overall.name")' prop="name">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="editPromServer.name" size="small" id="agent-box-input-name"></el-input>
           </el-form-item>
           <!--host-->
           <el-form-item :label="$t('config.agent.host')" prop="host">

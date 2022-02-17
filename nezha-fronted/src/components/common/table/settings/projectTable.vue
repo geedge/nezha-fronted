@@ -121,7 +121,7 @@ export default {
           label: this.$t('project.module.module'),
           prop: 'moduleNum',
           show: true,
-          width: 100,
+          width: 120,
           sortable: 'custom'
         }, {
           label: this.$t('project.endpoint.endpoint'),

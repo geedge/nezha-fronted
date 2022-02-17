@@ -38,24 +38,24 @@
       <template v-else-if="item.prop === 'lastScrape'">{{scope.row.lastScrape}}</template>
       <template v-else-if="item.prop === 'labels'" class="labels">
           <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
-            <span
-              @mouseenter="labelHover(scope.row, item.label, true, $event)"
-              @mouseleave="labelHover(scope.row, item.label, false)">
+            <span>
+<!--              @mouseenter="labelHover(scope.row, item.label, true, $event)"-->
+<!--              @mouseleave="labelHover(scope.row, item.label, false)"-->
               <nz-alert-tag
                 v-if="item.label !== 'alertname' && item.label !== 'severity'" :key="item.label" :cursor-point="tagType(item.label) !== 'info'"
                 :label="item.label"
-                :type="tagType(item.label)"
+                :type="'info'"
                 style="margin: 5px 0 5px 5px;"
               >
                {{item.value}}
               </nz-alert-tag>
             </span>
-            <alertLabel
-              v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project' || item.label === 'dc' ||item.label === 'endpoint' ||item.label === 'cpu' ||item.label === 'user' ||item.label === 'parent_asset') && scope.row[item.label] && scope.row[item.label].loading"
-              :id="scope.row[item.label].id"
-              :that="scope.row[item.label]"
-              :type="item.label"
-            ></alertLabel>
+<!--            <alertLabel-->
+<!--              v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project' || item.label === 'dc' ||item.label === 'endpoint' ||item.label === 'cpu' ||item.label === 'user' ||item.label === 'parent_asset') && scope.row[item.label] && scope.row[item.label].loading"-->
+<!--              :id="scope.row[item.label].id"-->
+<!--              :that="scope.row[item.label]"-->
+<!--              :type="item.label"-->
+<!--            ></alertLabel>-->
           </span>
       </template>
       <template v-else-if="item.prop === 'health'">
