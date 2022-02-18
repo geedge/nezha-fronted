@@ -182,27 +182,33 @@
           </div>
           <!-- SSH -->
           <template v-if="editAsset.type && editAsset.type.authProtocol === assetConstants.authProtocolData.ssh">
-            <div class="form__sub-title">SSH</div>
-            <el-form-item :label="$t('asset.authType')" prop="authType">
-              <el-select v-model="editAsset.authType" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value" clearable>
-                <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('asset.userName')" prop="authUsername">
-              <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
-            </el-form-item>
-            <!-- Key支持私钥 -->
-            <template v-if="editAsset.authType === assetConstants.authTypeData.key">
-              <el-form-item :label="$t('asset.privateKey')" prop="authPriKey">
-                <el-input v-model="editAsset.authPriKey" size="small"/>
+            <div class="form__sub-title">SSH
+              <div>
+                <el-switch v-model="editAsset.showSSH" :active-value="true" :inactive-value="false" size="small"></el-switch>
+              </div>
+            </div>
+            <div v-if="editAsset.showSSH">
+              <el-form-item :label="$t('asset.authType')" prop="authType">
+                <el-select v-model="editAsset.authType" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value" clearable>
+                  <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
+                </el-select>
               </el-form-item>
-            </template>
-            <el-form-item :label="$t('asset.pin')" prop="authPin">
-              <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small" type="password"/>
-            </el-form-item>
-            <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
-              <el-input v-model="editAsset.authProtocolPort" size="small"/>
-            </el-form-item>
+              <el-form-item :label="$t('asset.userName')" prop="authUsername">
+                <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
+              </el-form-item>
+              <!-- Key支持私钥 -->
+              <template v-if="editAsset.authType === assetConstants.authTypeData.key">
+                <el-form-item :label="$t('asset.privateKey')" prop="authPriKey">
+                  <el-input v-model="editAsset.authPriKey" size="small"/>
+                </el-form-item>
+              </template>
+              <el-form-item :label="$t('asset.pin')" prop="authPin">
+                <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small" type="password"/>
+              </el-form-item>
+              <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
+                <el-input v-model="editAsset.authProtocolPort" size="small"/>
+              </el-form-item>
+            </div>
           </template>
           <!-- TELNET -->
           <template v-if="editAsset.type && editAsset.type.authProtocol === assetConstants.authProtocolData.telnet">
@@ -430,7 +436,13 @@ export default {
       immediate: true,
       handler (n) {
         this.isEdit = true
-        this.editAsset = JSON.parse(JSON.stringify(n))
+        const editAsset = JSON.parse(JSON.stringify(n))
+        if (editAsset.authType) {
+          editAsset.showSSH = true
+        } else {
+          editAsset.showSSH = false
+        }
+        this.editAsset = editAsset
         this.editAsset.brandAndModel = [this.editAsset.brand.id, this.editAsset.model.id]
         this.editAsset.stateId = n.state ? n.state.id : 2
         this.editAsset.typeId = n.type ? n.type.id : ''
@@ -679,6 +691,12 @@ export default {
           })
           if (params.purchaseDate) {
             params.purchaseDate = bus.timeFormate(new Date(params.purchaseDate), 'YYYY-MM-DD')
+          }
+          if (!params.showSSH) {
+            params.authType = ''
+            params.authUsername = ''
+            params.authPriKey = ''
+            params.authPin = ''
           }
           if (params.type.vm !== 1) {
             params.parent = {}
