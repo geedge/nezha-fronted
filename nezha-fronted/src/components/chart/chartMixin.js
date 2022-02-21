@@ -151,7 +151,7 @@ export default {
             const find = legend.match(reg)[0]
             value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
           }
-          return value || label
+          return value || ''
         })
         return labelValue
       } else {
