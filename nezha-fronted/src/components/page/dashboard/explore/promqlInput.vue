@@ -7,7 +7,7 @@
           <el-dropdown class="metric-selector">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <button class="top-tool-btn top-tool-btn--text" type="button" @click="toggleDropdown">{{type === 'log' ? $t("overall.logLabels") : $t("overall.metric") }}
-              &nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 12px"></i></button>
+              <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px"></i></button>
             <el-cascader-panel v-show="dropDownVisible" ref="metricSelector" slot="dropdown" v-model="cascaderValue"
                                v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading" :loading="loading" :options="metricOptions"
                                v-if="type !== 'log'" :props="cascaderProps" @change="metricChangeNew" style="margin-top: 5px">
@@ -55,7 +55,7 @@
               :class="[plugins.indexOf('metric-selector') > -1 ?'metric-selector-title':'metric-null-title']">
               <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
                 <el-dropdown-menu style="display: none"></el-dropdown-menu>
-                <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">{{type === 'log' ? $t("overall.logLabels") : $t("overall.metric") }}&nbsp;<i
+                <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">{{type === 'log' ? $t("overall.logLabels") : $t("overall.metric") }}<i
                   class="nz-icon nz-icon-arrow-down"
                   style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
                 <el-cascader-panel v-loading="tempBoxShowLoading" v-show="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue"

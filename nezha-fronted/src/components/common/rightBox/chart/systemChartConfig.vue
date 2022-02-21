@@ -92,6 +92,20 @@
                     <el-input-number :controls="false" v-model.number="item.limit" :placeholder="$t('placeholder.system.limit')"  size="small" @change="change"/>
                   </el-form-item>
                 </div>
+                <div class="form-items--half-width-group">
+                  <el-form-item
+                    :label="$t('dashboard.panel.chartForm.filter')"
+                    class="form-item"
+                    style="width: 100%"
+                    prop="param.filter"
+                  >
+                  <filterSearch
+                    v-model="item.filter"
+                    :keyList="keyList"
+                    :compareList="compareList"
+                  />
+                  </el-form-item>
+                </div>
               </div>
             </div>
             <el-row style="display: flex">
@@ -575,6 +589,7 @@
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import nezhaColor from '@/components/common/nezhaColor'
+import filterSearch from '@/components/common/filterSearch/filterSearch'
 import VueTagsInput from '@johmun/vue-tags-input'
 import { isGauge } from '@/components/chart/chart/tools'
 
@@ -583,6 +598,7 @@ export default {
   mixins: [publicConfig, chartTypeShow],
   components: {
     nezhaColor,
+    filterSearch,
     VueTagsInput
   },
   data () {
@@ -629,7 +645,9 @@ export default {
           id: 'table',
           name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
         }
-      ]
+      ],
+      keyList: [],
+      compareList: []
     }
   },
   watch: {
