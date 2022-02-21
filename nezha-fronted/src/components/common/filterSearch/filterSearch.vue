@@ -87,10 +87,8 @@ export default {
   },
   mounted () {
     this.metaList = this.valueList.map(item => {
-      return {
-        ...new Meta(),
-        ...item
-      }
+      const obj = Object.assign(new Meta(condition), item)
+      return obj
     })
   },
   methods: {
@@ -118,7 +116,6 @@ export default {
         this.$emit('update:valueList', this.metaList)
         this.$emit('change')
         this.$nextTick(() => {
-          console.log(this.$refs.columnSelect)
           this.$refs.columnSelect[0].focus()
         })
       }
@@ -131,9 +128,9 @@ export default {
     columnBlur (meta, index, type) {
       setTimeout(() => {
         meta.name = meta.name.replace(/"/g, '')
-        // meta.nameIsEditing = false
+        meta.nameIsEditing = false
         if (!meta.name) {
-          // this.metaList.splice(index, 1)
+          this.metaList.splice(index, 1)
           this.$emit('update:valueList', this.metaList)
           this.$emit('change')
         }
@@ -185,6 +182,15 @@ export default {
     },
     valueBlur (meta, index, type) {
       meta.valueIsEditing = false
+      for (let i = 0; i < this.rule.length; i++) {
+        const item = this.rule[i]
+        const reg = new RegExp(item.regex)
+        if (!reg.test(meta.value)) {
+          meta.value = ''
+          this.$message.error(this.$t(item.tip))
+          break
+        }
+      }
       this.$emit('update:valueList', this.metaList)
       this.$emit('change')
     },

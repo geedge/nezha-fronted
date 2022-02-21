@@ -238,6 +238,9 @@ export default {
         if (params.type === 'table') {
           delete params.param.tags
         }
+        if (params.datasource === 'system' && params.param.datasource[0].filter) {
+          params.param.datasource[0].filter = params.param.datasource[0].filter.filter(item => item.value)
+        }
         if (params.id) { // 修改
           this.$put('visual/panel/chart', params).then(response => {
             if (response.code === 200) {

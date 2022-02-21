@@ -290,7 +290,8 @@ export default {
               group: this.chartInfo.param.datasource[0].group,
               select: [this.chartInfo.param.datasource[0].select],
               limit: this.chartInfo.param.datasource[0].limit,
-              sort: this.chartInfo.param.datasource[0].sort
+              sort: this.chartInfo.param.datasource[0].sort,
+              filter: this.chartInfo.param.datasource[0].filter ? this.chartInfo.param.datasource[0].filter.filter(item => item.value) : []
             }
             const chartData = []
             const params = {
