@@ -100,9 +100,9 @@
                     prop="param.filter"
                   >
                   <filterSearch
-                    v-model="item.filter"
+                    :valueList.sync="item.filter"
+                    @change="change"
                     :keyList="keyList"
-                    :compareList="compareList"
                   />
                   </el-form-item>
                 </div>
@@ -662,6 +662,9 @@ export default {
     isGauge,
     init () {
       this.chartConfig = JSON.parse(JSON.stringify(this.params))
+      if (!this.chartConfig.param.datasource[0].filter) {
+        this.chartConfig.param.datasource[0].filter = []
+      }
       this.oldType = this.chartConfig.type
     },
     getSystemData () {
@@ -675,11 +678,13 @@ export default {
               this.chartConfig.param.datasource[0].type = this.systemData[0].name
               this.groupList = this.systemData[0].group
               this.selectList = this.systemData[0].select
+              this.keyList = this.systemData[0].filter
             } else {
               const system = this.systemData.find(item => item.name === this.chartConfig.param.datasource[0].type)
               this.chartConfig.param.system = system.name
               this.groupList = system.group
               this.selectList = system.select
+              this.keyList = system.filter
             }
             this.$refs.chartForm && this.$refs.chartForm.clearValidate()
           }
@@ -764,8 +769,10 @@ export default {
       this.chartConfig.param.datasource[0].systemSelect = ''
       this.chartConfig.param.datasource[0].group = ''
       this.chartConfig.param.datasource[0].select = ''
+      this.chartConfig.param.datasource[0].filter = []
       this.groupList = item.group
       this.selectList = JSON.parse(JSON.stringify(item.select))
+      this.keyList = JSON.parse(JSON.stringify(item.filter))
     },
     systemGroupChange (index) {
       this.chartConfig.param.datasource[index].group = this.chartConfig.param.datasource[index].systemGroup.map(item => {
