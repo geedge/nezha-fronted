@@ -100,6 +100,7 @@
                     prop="param.filter"
                   >
                   <filterSearch
+                    ref="filterSearch"
                     :valueList.sync="item.filter"
                     @change="change"
                     :keyList="keyList"
@@ -589,7 +590,7 @@
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import nezhaColor from '@/components/common/nezhaColor'
-import filterSearch from '@/components/common/filterSearch/filterSearch'
+import filterSearch, { condition } from '@/components/common/filterSearch/filterSearch'
 import VueTagsInput from '@johmun/vue-tags-input'
 import { isGauge } from '@/components/chart/chart/tools'
 
@@ -770,6 +771,7 @@ export default {
       this.chartConfig.param.datasource[0].group = ''
       this.chartConfig.param.datasource[0].select = ''
       this.chartConfig.param.datasource[0].filter = []
+      this.$refs.filterSearch[0].metaList = []
       this.groupList = item.group
       this.selectList = JSON.parse(JSON.stringify(item.select))
       this.keyList = JSON.parse(JSON.stringify(item.filter))

@@ -63,13 +63,12 @@
         </div>
       </template>
     </div>
-    <div class="tag-search__add cursor-pointer" @click="addCondition">{{$t('project.topology.add')}}</div>
+    <div class="tag-search__add cursor-pointer" @click="addCondition()">{{$t('project.topology.add')}}</div>
   </div>
 </template>
 
 <script>
-import _ from 'lodash'
-import Meta, { connection, condition } from './filterSearch.js'
+import { connection, condition } from './filterSearch.js'
 export default {
   name: 'filterSearch',
   props: {
@@ -82,34 +81,47 @@ export default {
       connection,
       compareList: [],
       metaList: [],
-      rule: []
+      rule: [],
+      meta: {
+        meta: condition,
+        name: '',
+        nameIsEditing: false,
+        oper: '',
+        operIsEditing: false,
+        value: '',
+        valueIsEditing: false
+      }
     }
   },
   mounted () {
     this.metaList = this.valueList.map(item => {
-      const obj = Object.assign(new Meta(condition), item)
-      return obj
+      return item
     })
   },
   methods: {
     // 新增条件
     addCondition (meta) {
       this.metaList.forEach(m => {
-        m.cancelEditing()
+        this.nameIsEditing = false
+        this.operIsEditing = false
+        this.valueIsEditing = false
       })
       // 先判断上一个condition是否已填写完整，没有则删除；之后将当前所有meta的内容的isEditing置为false
       if (this.metaList.length > 0) {
         const prevMeta = this.metaList[this.metaList.length - 1]
-        if (!prevMeta.isCompleteCondition()) {
+        if (!(prevMeta.name && prevMeta.oper && prevMeta.value)) {
           this.metaList.splice(this.metaList.length - 1, 1)
         }
       }
       // 不是首个condition时，先增加一个connection，再增加一个新condition
-      if (meta instanceof Meta) {
+      console.log(meta)
+      if (meta) {
         this.metaList.push(meta)
         this.$emit('metaList')
       } else {
-        const newCondition = new Meta(condition)
+        let self = this
+        const newCondition = Object.assign({}, self.meta)
+        console.log(newCondition)
         newCondition.nameIsEditing = true
         this.metaList.push(newCondition)
         this.$forceUpdate()
