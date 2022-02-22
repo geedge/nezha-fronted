@@ -7,7 +7,7 @@
   border-radius: 2px;
   padding-left: 10px;
   padding-right: 80px;
-  background-color: white;
+  background-color: $--background-color-empty;
   .cursor-pointer{
     cursor: pointer !important;
   }
@@ -32,16 +32,16 @@
     height: 22px;
     padding: 0 4px;
     font-size: 12px;
-    color: #333;
-    background-color: #F5F6F7;
-    border: 1px solid #D7D7D7;
+    color: $--color-text-primary;
+    background-color: $--background-color-base;
+    border: 1px solid $--border-color-base-focus;
     border-radius: 1px;
     cursor: pointer;
     transition: all linear .1s;
 
     &:hover {
-      background-color: white;
-      color: #111;
+      background-color: $--background-color-empty;
+      color: $--color-text-primary;
     }
   }
 
@@ -50,7 +50,7 @@
     height: 22px;
     padding: 0 6px;
     font-size: 12px;
-    background-color: #F5F6F7;
+    background-color:  $--background-color-base;
 
     &>div:not(:last-of-type) {
       margin-right: 6px;
@@ -60,20 +60,20 @@
       .condition__delete {
         display: flex;
         align-items: center;
-        color: #bcbdbd;
+        color: $--color-text-regular;
         font-size: 16px;
         margin-right: 6px;
         cursor: pointer;
         transition: all linear .1s;
 
         &:hover {
-          color: #999;
+          color: $--color-info;
         }
       }
       .condition__column, .condition__operator, .condition__value {
         display: flex;
         align-items: center;
-        color: #333;
+        color: $--color-text-primary;
         font-weight: bold;
         cursor: text;
       }
