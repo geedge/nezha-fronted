@@ -190,7 +190,7 @@ export default {
         cancelButtonText: i18n.t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('/sys/user/resetMfa', { ids: row.id }).then(res => {
+        this.$delete('/sys/user/resetMfa?ids=' + row.id).then(res => {
           if (res.code == 200) {
             this.$message.success(this.$t('tip.resetSuccess'))
             this.getTableData()
