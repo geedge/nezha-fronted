@@ -31,7 +31,7 @@
                         <div @click="editPanel(data)"><i v-has="'panel_edit'" class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</div>
                       </el-dropdown-item>
                       <el-dropdown-item>
-                        <div @click="deletePanel(data)" v-has="'panel_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</div>
+                        <div @click="deletePanel(data)" v-has="'main_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</div>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
