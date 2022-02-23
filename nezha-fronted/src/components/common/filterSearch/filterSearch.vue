@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { connection, condition } from './filterSearch.js'
+import { connection, condition } from './filterSearchData.js'
 export default {
   name: 'filterSearch',
   props: {

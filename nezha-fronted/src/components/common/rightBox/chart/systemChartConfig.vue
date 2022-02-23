@@ -590,7 +590,7 @@
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import nezhaColor from '@/components/common/nezhaColor'
-import filterSearch, { condition } from '@/components/common/filterSearch/filterSearch'
+import filterSearch from '@/components/common/filterSearch/filterSearch.vue'
 import VueTagsInput from '@johmun/vue-tags-input'
 import { isGauge } from '@/components/chart/chart/tools'
 
