@@ -15,6 +15,9 @@ export default {
     browserWindowZoom
   },
   async created () {
+    if (window.outerWidth <= 1024) { // outerWidth 获取设备宽度
+      document.querySelector('meta[name=viewport]').setAttribute('content', 'width=device-width, initial-scale=' + (1 / window.devicePixelRatio) + ', maximum-scale=1.0, user-scalable=0')
+    }
     const herfSpiltArr = window.location.href.split('/')
     if (herfSpiltArr[3] !== '#') {
       herfSpiltArr[3] = '#'

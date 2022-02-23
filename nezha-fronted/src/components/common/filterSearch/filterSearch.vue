@@ -150,13 +150,15 @@ export default {
     },
     columnChange (meta, index) {
       meta.nameIsEditing = false
-      meta.operIsEditing = true
       const findTime = this.keyList.find(item => item.name === meta.name)
       this.compareList = findTime.opers
       this.rule = findTime.rule
-      this.$nextTick(() => {
-        this.$refs.operSelect[0].focus()
-      })
+      if (!meta.oper) {
+        meta.operIsEditing = true
+        this.$nextTick(() => {
+          this.$refs.operSelect[0].focus()
+        })
+      }
       this.$emit('update:valueList', this.metaList)
       this.$emit('change')
     },
@@ -178,10 +180,12 @@ export default {
     },
     operChange (meta, index) {
       meta.operIsEditing = false
-      meta.valueIsEditing = true
-      this.$nextTick(() => {
-        this.$refs.valueInput[0].focus()
-      })
+      if (!meta.value) {
+        meta.valueIsEditing = true
+        this.$nextTick(() => {
+          this.$refs.valueInput[0].focus()
+        })
+      }
       this.$emit('update:valueList', this.metaList)
       this.$emit('change')
     },
