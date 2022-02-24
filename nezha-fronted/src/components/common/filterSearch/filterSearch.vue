@@ -114,14 +114,12 @@ export default {
         }
       }
       // 不是首个condition时，先增加一个connection，再增加一个新condition
-      console.log(meta)
       if (meta) {
         this.metaList.push(meta)
         this.$emit('metaList')
       } else {
         let self = this
         const newCondition = Object.assign({}, self.meta)
-        console.log(newCondition)
         newCondition.nameIsEditing = true
         this.metaList.push(newCondition)
         this.$forceUpdate()

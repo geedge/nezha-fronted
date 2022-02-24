@@ -43,10 +43,11 @@
           <span style="cursor: pointer" @click="$emit('showBottomBox', 'endpointTab', scope.row)"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span></span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-          <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)" v-myLoading:ldsFacebook="scope.row.trendLoading">
+<!--          v-my-loading:ldsFacebook="scope.row.trendLoading"-->
+          <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)">
 <!--            <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i> <span>{{scope.row.alertNum ? scope.row.alertNum : 0}}</span>-->
             <alertDaysInfo
-                v-if="scope.row.alertDaysData"
+                v-show="!scope.row.trendLoading"
                 :alertDaysData="scope.row.alertDaysData"
             />
           </span>
@@ -178,6 +179,8 @@ export default {
   },
   data () {
     return {
+      needAlertDaysData: true,
+      trendKey: 'assetId',
       tableTitle: [
         {
           label: 'ID',

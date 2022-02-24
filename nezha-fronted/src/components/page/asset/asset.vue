@@ -716,24 +716,22 @@ export default {
             response.data.list[i].status = response.data.list[i].status + ''
           }
           if (this.needAlertDaysData) {
-            console.log(123123123123)
-            const arr = []
             response.data.list.forEach(item => {
               item.trendLoading = true
-              const params = {
-                type: 'total',
-                dimension: 'priority',
-                step: 'd'
-              }
-              params[this.trendKey] = item.id
-              arr.push(this.$get('/stat/alertMessage/trend', params))
-            })
-            Promise.all(arr).then(res => {
-              response.data.list.forEach((item, index) => {
-                item.trendLoading = false
-                item.alertDaysData = res[index].data.result ? res[index].data.result[0].values : []
-              })
-              this.tableData = response.data.list
+              item.alertDaysData = [
+                {
+                  metric: { priority: 'P1' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P2' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P3' },
+                  values: [[0, 0]]
+                }
+              ]
             })
           }
           this.tableData = response.data.list

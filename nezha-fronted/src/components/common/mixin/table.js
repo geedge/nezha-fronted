@@ -21,7 +21,8 @@ export default {
   data () {
     return {
       operationWidth: '165', // 操作列宽
-      orderBy: {}
+      orderBy: {},
+      severityDataWeight: this.$store.getters.severityDataWeight
     }
   },
   methods: {
@@ -81,6 +82,27 @@ export default {
         orderBy = '-' + str
       }
       this.$emit('orderBy', orderBy)
+    },
+    getWeeksTime () {
+      const localOffset = new Date().getTimezoneOffset() // 默认 显示时区偏移的结果 单位分钟
+      const now = new Date(new Date().toLocaleDateString()).getTime() - localOffset * 60 * 1000
+      const arr = []
+      for (let i = 0; i < 7; i++) {
+        const obj = {
+          time: now - i * 24 * 60 * 60 * 1000,
+          tooltipShow: false,
+          position: {
+            left: 0,
+            top: 0
+          }
+        }
+        this.severityDataWeight.forEach(item => {
+          obj[item.name] = 0
+          obj[item.name + 'Color'] = item.color
+        })
+        arr.unshift(obj)
+      }
+      return arr
     }
   },
   watch: {
@@ -109,6 +131,61 @@ export default {
                 this.$store.commit('setGlobalSearchId', '')
               }
             }, 500)
+          }
+          if (this.needAlertDaysData) {
+            const weekDays = this.getWeeksTime()
+            n.forEach(item => {
+              const params = {
+                type: 'total',
+                dimension: 'priority',
+                step: 'd'
+              }
+              params[this.trendKey] = item.id
+              setTimeout(() => {
+                this.$get('/stat/alertMessage/trend', params).then((res) => {
+                  // res = {
+                  //   msg: 'success',
+                  //   code: 200,
+                  //   data: {
+                  //     result: [
+                  //       {
+                  //         values: [
+                  //           {
+                  //             metric: { priority: 'P1' },
+                  //             values: []
+                  //           }, {
+                  //             metric: { priority: 'P2' },
+                  //             values: [
+                  //               [1645142400000, 0], [1645228800000, 3], [1645315200000, 20], [1645401600000, 0], [1645488000000, 0], [1645574400000, 3], [1645660800000, 20]
+                  //             ]
+                  //           }, {
+                  //             metric: { priority: 'P3' },
+                  //             values: [
+                  //               [1645142400000, 1], [1645228800000, 3], [1645315200000, 20], [1645401600000, 0], [1645488000000, 0], [1645574400000, 3], [1645660800000, 20]
+                  //             ]
+                  //           }]
+                  //       }],
+                  //     resultType: 'matrix'
+                  //   },
+                  //   time: '2022-02-24 08:41:35'
+                  // }
+                  const alertDaysData = res.data.result ? res.data.result[0].values : []
+                  const newWeekDays = JSON.parse(JSON.stringify(weekDays))
+                  alertDaysData.forEach(item => {
+                    item.values.forEach(time => {
+                      const findItem = newWeekDays.find(days => days.time == time[0])
+                      if (findItem) {
+                        findItem[item.metric.priority] = time[1]
+                      }
+                    })
+                  })
+                  setTimeout(() => {
+                    item.alertDaysData = newWeekDays
+                    item.trendLoading = false
+                  })
+                })
+              })
+            })
           }
         }
       }

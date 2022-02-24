@@ -29,7 +29,6 @@ const user = {
     },
     setSeverityData (state, severityData) {
       state.severityData = [...severityData]
-      console.log(severityData)
       const arr = JSON.parse(JSON.stringify(severityData.reverse()))
       for (let i = 0; i < arr.length; i++) {
         for (let j = 0; j < arr.length; j++) {
@@ -41,7 +40,6 @@ const user = {
         }
       }
       state.severityDataWeight = arr
-      console.log(arr)
     },
     clean (state) {
       state.menuList = []
