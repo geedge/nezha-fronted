@@ -10,7 +10,9 @@ const user = {
     menuList: [],
     buttonList: [],
     roleList: [],
-    language: localStorage.getItem('nz-language')
+    language: localStorage.getItem('nz-language'),
+    severityData: [],
+    severityDataWeight: []
   },
   mutations: {
     setLanguage (state, language) {
@@ -24,6 +26,22 @@ const user = {
     },
     setRoleList (state, roleList) {
       state.roleList = [...roleList]
+    },
+    setSeverityData (state, severityData) {
+      state.severityData = [...severityData]
+      console.log(severityData)
+      const arr = JSON.parse(JSON.stringify(severityData.reverse()))
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr.length; j++) {
+          if (arr[i].weight < arr[j].weight) {
+            const temp = arr[i]
+            arr[i] = arr[j]
+            arr[j] = temp
+          }
+        }
+      }
+      state.severityDataWeight = arr
+      console.log(arr)
     },
     clean (state) {
       state.menuList = []
@@ -43,6 +61,12 @@ const user = {
     },
     roleList (state) {
       return state.roleList
+    },
+    severityData (state) {
+      return state.severityData
+    },
+    severityDataWeight (state) {
+      return state.severityDataWeight
     }
   },
   actions: {
@@ -124,6 +148,11 @@ const user = {
           localStorage.setItem('nz-user-id', user.id)
           // 保存当前用户 name
           localStorage.setItem('nz-user-name', user.name)
+        }
+      })
+      get('alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          store.commit('setSeverityData', response.data.list)
         }
       })
     },

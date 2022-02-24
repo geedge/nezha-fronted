@@ -1,0 +1,78 @@
+// https://github.com/loadingio/css-spinner/tree/master/dist 从当前链接现在在 在tools.js 的myLoading 进行判断处理
+// 高度 宽度 等细节 记得处理
+// 1
+.lds-dual-ring,
+.lds-dual-ring:after {
+  box-sizing: border-box;
+}
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6.4px solid currentColor;
+  border-color: currentColor transparent currentColor transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+// 2
+.ldsFacebook,
+.ldsFacebook div {
+  box-sizing: border-box;
+}
+.ldsFacebook {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 32px;
+}
+.ldsFacebook div {
+  display: inline-block;
+  position: absolute;
+  left: 8px;
+  width: 8px;
+  background: $--background-color-empty;
+  animation: ldsFacebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.ldsFacebook div:nth-child(1) {
+  left: 8px;
+  background: $--background-color-empty;
+  filter: invert(50%);
+  animation-delay: -0.24s;
+}
+.ldsFacebook div:nth-child(2) {
+  left: 20px;
+  background: $--background-color-empty;
+  filter: invert(50%);
+  animation-delay: -0.12s;
+}
+.ldsFacebook div:nth-child(3) {
+  left: 32px;
+  background: $--background-color-empty;
+  filter: invert(50%);
+  animation-delay: 0s;
+}
+@keyframes ldsFacebook {
+  0% {
+    top: 8px;
+    height: 32px;
+  }
+  50%, 100% {
+    top: 12px;
+    height: 16px;
+  }
+}

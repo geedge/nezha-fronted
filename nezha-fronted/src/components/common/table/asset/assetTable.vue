@@ -43,7 +43,13 @@
           <span style="cursor: pointer" @click="$emit('showBottomBox', 'endpointTab', scope.row)"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span></span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-          <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)"><i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i> <span>{{scope.row.alertNum ? scope.row.alertNum : 0}}</span></span>
+          <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)" v-myLoading:ldsFacebook="scope.row.trendLoading">
+<!--            <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i> <span>{{scope.row.alertNum ? scope.row.alertNum : 0}}</span>-->
+            <alertDaysInfo
+                v-if="scope.row.alertDaysData"
+                :alertDaysData="scope.row.alertDaysData"
+            />
+          </span>
         </template>
         <template v-else-if="item.prop === 'dc'">{{scope.row.dc ? scope.row.dc.name : '-'}}</template>
         <template v-else-if="item.prop === 'cabinet'">
@@ -154,11 +160,13 @@ import table from '@/components/common/mixin/table'
 import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
 // import bus from '@/libs/bus'
 import alertLabel from '@/components/common/alert/alertLabel'
+import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
 export default {
   name: 'assetTable',
   mixins: [table],
   components: {
-    alertLabel: alertLabel
+    alertLabel: alertLabel,
+    alertDaysInfo
   },
   props: {
     showOption: {

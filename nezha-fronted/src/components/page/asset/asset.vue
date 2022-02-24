@@ -432,7 +432,9 @@ export default {
           index: -1
         }
       },
-      timer: ''
+      timer: '',
+      needAlertDaysData: true,
+      trendKey: 'assetId'
     }
   },
   methods: {
@@ -712,6 +714,27 @@ export default {
           }
           for (let i = 0; i < response.data.list.length; i++) {
             response.data.list[i].status = response.data.list[i].status + ''
+          }
+          if (this.needAlertDaysData) {
+            console.log(123123123123)
+            const arr = []
+            response.data.list.forEach(item => {
+              item.trendLoading = true
+              const params = {
+                type: 'total',
+                dimension: 'priority',
+                step: 'd'
+              }
+              params[this.trendKey] = item.id
+              arr.push(this.$get('/stat/alertMessage/trend', params))
+            })
+            Promise.all(arr).then(res => {
+              response.data.list.forEach((item, index) => {
+                item.trendLoading = false
+                item.alertDaysData = res[index].data.result ? res[index].data.result[0].values : []
+              })
+              this.tableData = response.data.list
+            })
           }
           this.tableData = response.data.list
           const globalSearchId = this.$store.getters.getGlobalSearchId

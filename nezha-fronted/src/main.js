@@ -19,7 +19,7 @@ import plTable from 'pl-table'
 import 'pl-table/themes/index.css'
 
 import { post, get, put, del } from './http.js'
-import { clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet, cancelWithChange } from './components/common/js/tools.js'
+import { clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet, cancelWithChange, myLoading } from './components/common/js/tools.js'
 import * as tools from './components/common/js/tools.js'
 import * as constants from './components/common/js/constants.js'
 
@@ -122,12 +122,15 @@ Vue.mixin({
         return bus.timeFormate(this.timezoneToUtcTime(time), fmt)
       }
     },
-    timestampStr: function (time) {
+    timestampStr: function (time, fmt) {
       const date = new Date(time)
       const localOffset = date.getTimezoneOffset() * 60 * 1000 // 默认 一分钟显示时区偏移的结果
       const dateStr = new Date(time).getTime() + localOffset
+      if (!fmt) {
+        fmt = localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss'
+      }
       if (time) {
-        return bus.timeFormate(bus.UTCTimeToConfigTimezone(dateStr), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
+        return bus.timeFormate(bus.UTCTimeToConfigTimezone(dateStr), fmt)
       } else {
         return '-'
       }
@@ -238,6 +241,7 @@ Vue.use(hasPermission)
 /* 指令 */
 Vue.directive('cancel', cancelWithChange)
 Vue.directive('clickoutside', clickoutside)
+Vue.directive('myLoading', myLoading)
 window.resizing = false
 window.vm = new Vue({
   el: '#app',

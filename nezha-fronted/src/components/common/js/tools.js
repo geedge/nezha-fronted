@@ -98,6 +98,61 @@ function isEqual (o1, o2) {
   }
   return isEqualForInner(o1, o2)
 }
+export const myLoading = {
+  bind: myLoadingFunction,
+  update: myLoadingFunction,
+  unbind: function (el, binding) {
+    const className = binding.arg || 'el-loading-mask'
+    const ds = el.getElementsByClassName(className)[0]
+    if (ds) {
+      el.removeChild(ds)
+    }
+  }
+}
+function myLoadingFunction (el, binding, vnode) {
+  const className = binding.arg || 'el-loading-mask'
+  const ds = el.getElementsByClassName(className)[0]
+  if (binding.value) {
+    if (ds) {
+      return
+    }
+    //  若果是true创建一个div
+    const div = document.createElement('div')
+    div.style.textAlign = 'center'
+    if (binding.modifiers.scaleMin) {
+      div.style.transform = 'scale(0.5)'
+    }
+    if (binding.modifiers.scaleMax) {
+      div.style.transform = 'scale(2)'
+    }
+    if (className === 'ldsFacebook') {
+      const newDiv1 = document.createElement('div')
+      const newDiv2 = document.createElement('div')
+      const newDiv3 = document.createElement('div')
+      div.appendChild(newDiv1)
+      div.appendChild(newDiv2)
+      div.appendChild(newDiv3)
+    }
+    if (className === 'el-loading-mask') {
+      const newDiv1 = document.createElement('div')
+      newDiv1.setAttribute('class', 'el-loading-spinner')
+      div.appendChild(newDiv1)
+    }
+    //  插入到被绑定的元素内部
+    el.appendChild(div)
+    //  div内部加入内容
+    // div.innerHTML = '加载中...'
+    //  el 元素设置相对定位   div设置绝对定位
+    el.setAttribute('class', 'elrelative')
+    //  设置绝对定位
+    div.setAttribute('class', className)
+  } else {
+    //  去掉div  去掉样式  去掉定位
+    if (ds) {
+      el.removeChild(ds)
+    }
+  }
+}
 export const cancelWithChange = {
   bind: function (el, binding) {
     if (!binding.value || !binding.value.obj) return

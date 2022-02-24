@@ -1,0 +1,13 @@
+.alert-days-info{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  > div{
+    width: 14px;
+    height: 24px;
+    margin-right: 5px;
+    border-radius: 2px;
+    background-color:$--color-success;
+    cursor: pointer;
+  }
+}

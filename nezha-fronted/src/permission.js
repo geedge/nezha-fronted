@@ -144,6 +144,13 @@ router.beforeEach((to, from, next) => {
         resolve()
       }
     })
+    Vue.http.get(configUrl).then(config => {
+      get(config.body.baseUrl + 'alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          store.commit('setSeverityData', response.data.list)
+        }
+      })
+    })
     Promise.all([i18nRequest, permissionRequest]).then(response => {
       if (to.path) {
         if (permissionWhiteList.indexOf(to.path) !== -1) {
