@@ -2,7 +2,16 @@
   .panel {
     height: 100%;
   }
-
+  .no-data {
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    margin-top: -54px;
+    .no-data-div {
+      color: $--color-text-regular;
+    }
+  }
   .panel .el-table {
     border-radius: 5px;
   }
