@@ -347,20 +347,6 @@ export default {
       this.$set(item, 'loading', loading)
       // this.$set(this.tableData,index,item);// 调用父组件
     },
-    tooltipHover (item, flag, e) {
-      if (e) {
-        const dom = e.currentTarget
-        const position = dom.getBoundingClientRect()
-        item.left = position.left
-        this.$set(item, 'left', position.left)
-        if (position.top > window.innerHeight / 2) {
-          this.$set(item, 'top', position.top - 100)
-        } else {
-          this.$set(item, 'top', position.top + 30)
-        }
-        this.$set(item, 'alertNumtooltipShow', flag)
-      }
-    },
     returnCabinet (start, end) { // 返回机柜u位信息
       if (!start || !end) {
         return ''

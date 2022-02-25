@@ -225,7 +225,9 @@ export default {
       },
       regNum: /^[0-9]+.?[0-9]*/,
       userData: [],
-      cabinetBoxShow: false
+      cabinetBoxShow: false,
+      needAlertDaysData: true,
+      trendKey: 'dcId'
     }
   },
   methods: {
