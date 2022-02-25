@@ -534,7 +534,7 @@
                       </div>
                     </div>
                     <div style="text-align: center">
-                      <div class="value-mapping-add" style="text-align: center;width: 25px;display: inline-block;">
+                      <div class="value-mapping-add endpoint-box-add" style="text-align: center;width: 30px;display: inline-block;">
                         <pipelineSelect :index="item.pipeline.length - 1" :father-pipeline="item.pipeline" @addPipeline="(pipelineIndex,obj)=>{addPipeline(obj,index,pipelineIndex,'push')}" :type="'push'"/>
                       </div>
                     </div>

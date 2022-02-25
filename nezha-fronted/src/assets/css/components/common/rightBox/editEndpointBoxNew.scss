@@ -208,6 +208,15 @@
       text-transform: Capitalize;
     }
   }
+  .endpoint-box-add.value-mapping-add {
+    height: 28px;
+    width: 30px;
+    .nz-icon.nz-icon-plus {
+      position: absolute;
+      right: -8px;
+      top: -3px;
+    }
+  }
 }
 .sub-label {
    padding-right: 15px;

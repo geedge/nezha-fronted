@@ -178,10 +178,12 @@
     }
   }
   .module-box-add.value-mapping-add {
-    height: 30px;
+    height: 28px;
     width: 30px;
     .nz-icon.nz-icon-plus {
-      padding-right: 3px;
+      position: absolute;
+      right: -8px;
+      top: -3px;
     }
   }
   .value-mapping-add {
