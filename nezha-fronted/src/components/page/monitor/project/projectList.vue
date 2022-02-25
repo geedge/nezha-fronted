@@ -164,7 +164,7 @@ export default {
             })
           }
           if (!this.$store.state.currentProject.id) {
-            this.$store.commit('currentProjectChange', response.data.list[0])
+            this.$store.commit('currentProjectChange', JSON.parse(JSON.stringify(response.data.list[0])))
           }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total

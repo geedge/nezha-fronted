@@ -108,7 +108,6 @@
 
 <script>
 import table from '@/components/common/mixin/table'
-import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
 export default {
   name: 'projectTable',
   mixins: [table],
@@ -156,7 +155,7 @@ export default {
   },
   methods: {
     changeProjectTopo (project) {
-      this.$store.commit('currentProjectChange', project)
+      this.$store.commit('currentProjectChange', JSON.parse(JSON.stringify(project)))
     },
     jumpModule (row) {
       localStorage.setItem('moduleProjectId', JSON.stringify([row.id, row.name]))
