@@ -162,15 +162,17 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        n.fields.map(e => {
-          if (e.name === 'time') {
-            e.value[0] = bus.timeFormate(e.value[0], this.timeFormatMain)
-          } else if (e.name === 'tetsDATETIme') {
-            e.value[0] = bus.timeFormate(e.value[0], this.timeFormatMain)
-          } else if (e.name == 'Production date') {
-            e.value[0] = bus.timeFormate(e.value[0], this.timeFormatMain)
-          }
-        })
+        if (n.fields) {
+          n.fields.forEach(e => {
+            if (e.name === 'time') {
+              e.value[0] = bus.timeFormate(e.value[0], this.timeFormatMain)
+            } else if (e.name === 'tetsDATETIme') {
+              e.value[0] = bus.timeFormate(e.value[0], this.timeFormatMain)
+            } else if (e.name == 'Production date') {
+              e.value[0] = bus.timeFormate(e.value[0], this.timeFormatMain)
+            }
+          })
+        }
       }
     }
   },
