@@ -45,7 +45,14 @@
         <template v-else-if="item.prop === 'alertNum'">
 <!--          v-my-loading:ldsFacebook="scope.row.trendLoading"-->
           <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)">
-<!--            <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i> <span>{{scope.row.alertNum ? scope.row.alertNum : 0}}</span>-->
+            <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
+            <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
+              <div class="tooltip-title">Alert message (active)</div>
+              <div class="severity-info" style='justify-content: space-between'>
+                <div class="severity-name">{{$t('overall.result.total')}}</div>
+                <div class="severity-value">{{scope.row.alertNum}}</div>
+              </div>
+            </div>
             <alertDaysInfo
                 v-show="!scope.row.trendLoading"
                 :alertDaysData="scope.row.alertDaysData"
@@ -339,6 +346,20 @@ export default {
       }
       this.$set(item, 'loading', loading)
       // this.$set(this.tableData,index,item);// 调用父组件
+    },
+    tooltipHover (item, flag, e) {
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        item.left = position.left
+        this.$set(item, 'left', position.left)
+        if (position.top > window.innerHeight / 2) {
+          this.$set(item, 'top', position.top - 100)
+        } else {
+          this.$set(item, 'top', position.top + 30)
+        }
+        this.$set(item, 'alertNumtooltipShow', flag)
+      }
     },
     returnCabinet (start, end) { // 返回机柜u位信息
       if (!start || !end) {

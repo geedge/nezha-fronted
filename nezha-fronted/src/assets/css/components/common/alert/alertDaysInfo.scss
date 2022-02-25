@@ -1,7 +1,7 @@
 .alert-days-info{
-  display: block;
   height: 100%;
-  width: 100%;
+  width: auto;
+  display: inline-block;
   > div{
     display: inline-block;
     width: 8px;
@@ -12,35 +12,38 @@
     cursor: pointer;
     position: relative;
   }
-  .alert-days-info-tooltip{
-    position: fixed;
-    z-index: 1;
-    padding: 5px 10px 5px 10px;
-    line-height: 20px;
-    min-width: 120px;
-    width: auto;
-    .severity-time {
-      margin-bottom: 5px;
-    }
-    .severity-info {
-      display: flex;
-      align-items: center
-    }
-    .severity-block{
-      display: inline-block;
-      width: 18px;
-      height: 10px;
-      border: 1px solid $--border-color-base;
-      margin-right: 5px;
-    }
-    .severity-name {
-      margin-right: 30px;
-      color: $--color-text-primary;
-      font-size: 12px;
-    }
-    .severity-value {
-      color: $--color-text-regular;
-      font-size: 12px;
-    }
+}
+.alert-days-info-tooltip{
+  position: fixed;
+  z-index: 1;
+  padding: 5px 10px 5px 10px;
+  line-height: 20px;
+  min-width: 120px;
+  width: auto;
+  .severity-time {
+    margin-bottom: 5px;
   }
+  .severity-info {
+    display: flex;
+    align-items: center
+  }
+  .severity-block{
+    display: inline-block;
+    width: 18px;
+    height: 10px;
+    border: 1px solid $--border-color-base;
+    margin-right: 5px;
+  }
+  .severity-name {
+    margin-right: 30px;
+    color: $--color-text-primary;
+    font-size: 12px;
+  }
+  .severity-value {
+    color: $--color-text-regular;
+    font-size: 12px;
+  }
+}
+.vertical-align-top{
+  vertical-align: top;
 }

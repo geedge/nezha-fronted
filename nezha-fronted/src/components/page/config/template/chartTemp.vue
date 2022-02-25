@@ -228,6 +228,7 @@ export default {
         }
         this.rightBox.show = true
       } else {
+        this.object = {}
         this.rightBox.show = true
         this.rightBox.loading = true
         this.$get('visual/panel/chart/' + data.id).then(res => {
