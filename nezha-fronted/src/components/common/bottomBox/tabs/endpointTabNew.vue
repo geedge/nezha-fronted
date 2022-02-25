@@ -110,7 +110,9 @@ export default {
         editShow: false,
         show: false
       },
-      fromBottom: true
+      fromBottom: true,
+      needAlertDaysData: true,
+      trendKey: 'endpointId'
     }
   },
   methods: {
@@ -134,6 +136,25 @@ export default {
           for (let i = 0; i < response.data.list.length; i++) {
             response.data.list[i].configs.forEach(item => {
               item.config = JSON.parse(item.config)
+            })
+          }
+          if (this.needAlertDaysData) {
+            response.data.list.forEach(item => {
+              item.trendLoading = true
+              item.alertDaysData = [
+                {
+                  metric: { priority: 'P1' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P2' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P3' },
+                  values: [[0, 0]]
+                }
+              ]
             })
           }
           this.tableData = response.data.list

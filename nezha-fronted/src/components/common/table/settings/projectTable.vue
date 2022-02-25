@@ -54,9 +54,21 @@
           </span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-         <span class="alert-num" @click="jumpAlertMessage(scope.row)">
-            <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
-            {{scope.row[item.prop]}}
+         <span class="alert-num">
+           <span style="cursor: pointer" @click="jumpAlertMessage(scope.row)">
+            <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
+            <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
+              <div class="tooltip-title">Alert message (active)</div>
+              <div class="severity-info" style='justify-content: space-between'>
+                <div class="severity-name">{{$t('overall.result.total')}}</div>
+                <div class="severity-value">{{scope.row.alertNum}}</div>
+              </div>
+            </div>
+            <alertDaysInfo
+              v-show="!scope.row.trendLoading"
+              :alertDaysData="scope.row.alertDaysData"
+            />
+          </span>
           </span>
         </template>
         <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
@@ -96,6 +108,7 @@
 
 <script>
 import table from '@/components/common/mixin/table'
+import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
 export default {
   name: 'projectTable',
   mixins: [table],
@@ -104,6 +117,8 @@ export default {
   },
   data () {
     return {
+      needAlertDaysData: true,
+      trendKey: 'projectId',
       tableTitle: [ // 原始table列
         {
           label: 'ID',
@@ -133,7 +148,7 @@ export default {
           label: this.$t('project.endpoint.alerts'),
           prop: 'alertNum',
           show: true,
-          width: 100,
+          width: 120,
           sortable: 'custom'
         }
       ]

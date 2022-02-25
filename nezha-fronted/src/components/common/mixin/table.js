@@ -1,4 +1,9 @@
+import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
+
 export default {
+  components: {
+    alertDaysInfo
+  },
   props: {
     tableData: {
       type: Array

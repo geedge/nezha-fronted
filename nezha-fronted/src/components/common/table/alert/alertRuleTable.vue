@@ -41,9 +41,19 @@
             <i class="nz-icon nz-icon-circle" :style="{color:scope.row[item.prop].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row[item.prop].name}}
         </span>
         <template v-else-if="item.prop === 'alertNum'">
-          <span class="link" @click="queryMessage(scope.row)">
-            <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
-            {{scope.row.alertNum}}
+          <span style="cursor: pointer" @click="queryMessage(scope.row)">
+            <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
+            <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
+              <div class="tooltip-title">Alert message (active)</div>
+              <div class="severity-info" style='justify-content: space-between'>
+                <div class="severity-name">{{$t('overall.result.total')}}</div>
+                <div class="severity-value">{{scope.row.alertNum}}</div>
+              </div>
+            </div>
+            <alertDaysInfo
+              v-show="!scope.row.trendLoading"
+              :alertDaysData="scope.row.alertDaysData"
+            />
           </span>
         </template>
         <template v-else-if="item.prop === 'type'">
@@ -156,6 +166,8 @@ export default {
   },
   data () {
     return {
+      needAlertDaysData: true,
+      trendKey: 'ruleId',
       tableTitle: [
         {
           label: 'ID',

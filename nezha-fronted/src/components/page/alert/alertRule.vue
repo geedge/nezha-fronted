@@ -248,7 +248,9 @@ export default {
           disabled: false
         }]
       },
-      searchTime: bus.getTimezontDateRange()
+      searchTime: bus.getTimezontDateRange(),
+      needAlertDaysData: true,
+      trendKey: 'ruleId',
     }
   },
   methods: {
@@ -282,6 +284,25 @@ export default {
             }
             item.receiverShow = temp
           })
+          if (this.needAlertDaysData) {
+            response.data.list.forEach(item => {
+              item.trendLoading = true
+              item.alertDaysData = [
+                {
+                  metric: { priority: 'P1' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P2' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P3' },
+                  values: [[0, 0]]
+                }
+              ]
+            })
+          }
           this.tableData = response.data.list
           const globalSearchId = this.$store.getters.getGlobalSearchId
           let detailViewRightObj = ''
