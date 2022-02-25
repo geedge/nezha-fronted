@@ -402,7 +402,8 @@ export default {
         name: this.editChart.name,
         remark: this.editChart.remark,
         groupId: this.editChart.groupId,
-        panelName: this.editChart.panelName
+        panelName: this.editChart.panelName,
+        varType: this.editChart.varType
       }
     },
     preview (show) {

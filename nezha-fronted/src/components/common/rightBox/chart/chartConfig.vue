@@ -779,6 +779,7 @@ export default {
         this.chartConfig.elements.forEach(item => {
           this.addExpression(item)
         })
+        this.expressionChange()
       }
     },
     chartTypeChange (type) {
