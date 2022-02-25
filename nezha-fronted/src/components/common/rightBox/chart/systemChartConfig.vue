@@ -38,7 +38,7 @@
                     class="system-chart-item"
                     :class="system.name == chartConfig.param.datasource[index].type  ? 'is-select' : ''"
                     @click="changeSystem(system, index)"
-                  >{{system.name}}</li>
+                  >{{system.name}}<i class="nz-icon nz-icon-check"/></li>
                 </ul>
               </div>
               <div class="system-chart-config-right">

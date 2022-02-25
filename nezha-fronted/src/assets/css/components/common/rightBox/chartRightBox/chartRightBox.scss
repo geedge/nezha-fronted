@@ -195,14 +195,24 @@
       .system-chart-item {
         font-size: 14px;
         padding: 3px 5px;
-        text-transform:capitalize
+        text-transform:capitalize;
+        .nz-icon{
+          display: none;
+          float: right;
+          margin-right: 10px;
+        }
       }
       .system-chart-item:hover{
         color: $--color-primary;
         background: $--background-color-base !important;
       }
       .system-chart-item.is-select{
-        color: $--color-text-secondary;
+        color: $--color-primary;
+        background: $--background-color-base !important;
+        .nz-icon{
+          color: $--color-primary;
+          display: inline-block;
+        }
       }
     }
     .system-chart-config-right{
