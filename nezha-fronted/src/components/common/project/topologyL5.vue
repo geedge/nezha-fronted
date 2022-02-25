@@ -550,8 +550,8 @@ export default {
     obj: {
       deep: true,
       immediate: true,
-      handler (n) {
-        if (n && n.id) {
+      handler (n, o) {
+        if (n && n.id && n.id !== o.id) {
           // if (getTopology(this.topologyIndex)) {
           //   getTopology(this.topologyIndex).destroy()
           //   setTopology(this.topologyIndex, null)

@@ -134,7 +134,9 @@ export default {
       searchLabel: {
 
       },
-      deleteBox: {}
+      deleteBox: {},
+      needAlertDaysData: true,
+      trendKey: 'endpointId'
     }
   },
   created () {
@@ -171,6 +173,25 @@ export default {
             d.port = JSON.parse(d.configs[0].config).port
             d.path = JSON.parse(d.configs[0].config).protocol
           })
+          if (this.needAlertDaysData) {
+            response.data.list.forEach(item => {
+              item.trendLoading = true
+              item.alertDaysData = [
+                {
+                  metric: { priority: 'P1' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P2' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P3' },
+                  values: [[0, 0]]
+                }
+              ]
+            })
+          }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
         }

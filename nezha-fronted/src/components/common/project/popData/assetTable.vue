@@ -142,7 +142,9 @@ export default {
       loading: false,
       tableHeight: '100%',
       searchLabel: {},
-      deleteBox: {}
+      deleteBox: {},
+      needAlertDaysData: true,
+      trendKey: 'assetId'
     }
   },
   created () {
@@ -165,6 +167,25 @@ export default {
       this.$get(this.url, { ...this.searchLabel }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
+          if (this.needAlertDaysData) {
+            response.data.list.forEach(item => {
+              item.trendLoading = true
+              item.alertDaysData = [
+                {
+                  metric: { priority: 'P1' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P2' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P3' },
+                  values: [[0, 0]]
+                }
+              ]
+            })
+          }
           this.tableData = response.data.list
           this.deleteBox.ids = ''
           this.pageObj.total = response.data.total
