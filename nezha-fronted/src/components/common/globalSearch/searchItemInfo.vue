@@ -63,6 +63,20 @@
             <span class="search-item-value" v-html="getPathContent(item.key)">
             </span>
           </div>
+          <div style="cursor: pointer" v-else-if="item.key === 'alertNum'">
+            <i :class="Number(getPathContent(item.key)) ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
+            <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
+              <div class="tooltip-title">Alert message (active)</div>
+              <div class="severity-info" style='justify-content: space-between'>
+                <div class="severity-name">{{$t('overall.result.total')}}</div>
+                <div class="severity-value">{{getPathContent(item.key)}}</div>
+              </div>
+            </div>
+            <alertDaysInfo
+              v-show="!trendLoading"
+              :alertDaysData="alertDaysData"
+            />
+          </div>
           <div class="search-item-value-box" v-else>
             <i v-if="(item.icon && getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
             <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
@@ -78,8 +92,12 @@
 <script>
 import lodash from 'lodash'
 import chartDataFormat from '@/components/charts/chartDataFormat'
+import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
 export default {
   name: 'searchItemInfo',
+  components: {
+    alertDaysInfo
+  },
   props: {
     obj: {},
     severityData: {},
@@ -289,14 +307,26 @@ export default {
         ]
       },
       alertLabelData: {},
-      loading: true
+      loading: true,
+      severityDataWeight: this.$store.getters.severityDataWeight,
+      alertNumtooltipShow: false,
+      position: {
+        left: 0,
+        top: 0
+      },
+      alertDaysData: [],
+      trendLoading: false,
+      trendTimer: null
     }
   },
   methods: {
     // lodash,
     init (type) {
       this.loading = true
+      this.trendLoading = true
+      let trendKey = ''
       if (type === 'asset') {
+        trendKey = 'assetId'
         this.$get('asset/asset/' + this.obj.id).then((res) => {
           if (res.msg === 'success') {
             this.loading = false
@@ -307,6 +337,7 @@ export default {
         })
       }
       if (type === 'project') {
+        trendKey = 'projectId'
         this.$get('monitor/project/' + this.obj.id).then((res) => {
           if (res.msg === 'success') {
             this.loading = false
@@ -317,6 +348,7 @@ export default {
         })
       }
       if (type === 'module') {
+        trendKey = 'moduleId'
         this.$get('monitor/module/' + this.obj.id).then((res) => {
           if (res.msg === 'success') {
             this.loading = false
@@ -327,6 +359,7 @@ export default {
         })
       }
       if (type === 'endpoint') {
+        trendKey = 'endpointId'
         this.$get('monitor/endpoint/' + this.obj.id).then((res) => {
           if (res.msg === 'success') {
             this.loading = false
@@ -337,6 +370,7 @@ export default {
         })
       }
       if (type === 'datacenter') {
+        trendKey = 'dcId'
         this.$get('dc/' + this.obj.id).then((res) => {
           if (res.msg === 'success') {
             this.loading = false
@@ -347,6 +381,7 @@ export default {
         })
       }
       if (type === 'alertrule') {
+        trendKey = 'ruleId'
         this.$get('/alert/rule/' + this.obj.id).then((res) => {
           if (res.msg === 'success') {
             this.loading = false
@@ -357,9 +392,41 @@ export default {
           }
         })
       }
+      const weekDays = this.getWeeksTime()
+      if (this.trendTimer) {
+        clearTimeout(this.trendTimer)
+        this.trendTimer = null
+      }
+      this.trendTimer = setTimeout(() => {
+        this.trendLoading = true
+        const params = {
+          type: 'total',
+          dimension: 'priority',
+          step: 'd'
+        }
+        params[trendKey] = this.obj.id
+        this.$get('/stat/alertMessage/trend', params).then((res) => {
+          const alertDaysData = res.data.result ? res.data.result[0].values : []
+          const newWeekDays = JSON.parse(JSON.stringify(weekDays))
+          alertDaysData.forEach(item => {
+            item.values.forEach(time => {
+              const findItem = newWeekDays.find(days => days.time == time[0])
+              if (findItem) {
+                findItem[item.metric.priority] = time[1]
+              }
+            })
+          })
+          setTimeout(() => {
+            this.alertDaysData = newWeekDays
+            this.trendLoading = false
+          })
+        })
+      })
     },
     getInfo () {
-      this.init(this.obj.type)
+      if (this.obj && this.obj.type) {
+        this.init(this.obj.type)
+      }
     },
     searchItemClass (item) {
       let str = ''
@@ -449,7 +516,43 @@ export default {
       } else {
         return value
       }
-    }
+    },
+    tooltipHover (item, flag, e) {
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.position.left = position.left
+        this.$set(this.position, 'left', position.left)
+        if (position.top > window.innerHeight / 2) {
+          this.$set(this.position, 'top', position.top - 55)
+        } else {
+          this.$set(this.position, 'top', position.top + 30)
+        }
+        // this.$set(item, 'alertNumtooltipShow', flag)
+        this.alertNumtooltipShow = flag
+      }
+    },
+    getWeeksTime () {
+      const localOffset = new Date().getTimezoneOffset() // 默认 显示时区偏移的结果 单位分钟
+      const now = new Date(new Date().toLocaleDateString()).getTime() - localOffset * 60 * 1000
+      const arr = []
+      for (let i = 0; i < 7; i++) {
+        const obj = {
+          time: now - i * 24 * 60 * 60 * 1000,
+          tooltipShow: false,
+          position: {
+            left: 0,
+            top: 0
+          }
+        }
+        this.severityDataWeight.forEach(item => {
+          obj[item.name] = 0
+          obj[item.name + 'Color'] = item.color
+        })
+        arr.unshift(obj)
+      }
+      return arr
+    },
   }
 }
 </script>
