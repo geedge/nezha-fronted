@@ -69,8 +69,6 @@ export default {
   },
   data () {
     return {
-      needAlertDaysData: true,
-      trendKey: 'cabinetId',
       tableTitle: [
         {
           label: 'ID',

@@ -117,9 +117,7 @@ export default {
             disabled: false
           }
         ]
-      },
-      needAlertDaysData: true,
-      trendKey: 'cabinetId'
+      }
     }
   },
   created () {

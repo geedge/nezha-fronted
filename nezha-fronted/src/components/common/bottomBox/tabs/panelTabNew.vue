@@ -45,11 +45,6 @@
           </top-tool-more-options>
         </div>
         <div v-else-if="from === fromRoute.endpoint" style="display: flex">
-          <div class="top-tool-search margin-r-20">
-            <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
-              <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>
-            </el-input>
-          </div>
           <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
           <button id="endpoint-create-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
             <i class="nz-icon nz-icon-create-square"></i>
