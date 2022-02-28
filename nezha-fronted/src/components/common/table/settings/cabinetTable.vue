@@ -22,27 +22,8 @@
       :key="`col-${index}`"
       :label="item.label">
       <template slot-scope="scope" :column="item">
-        <template v-if="item.prop === 'assetNum'">
-          <span style="cursor: pointer"><i class="nz-icon nz-icon-overview-project monitorColor"></i> <span>{{scope.row.assetNum ? scope.row.assetNum : 0}}</span></span>
-        </template>
-        <template v-else-if="item.prop === 'alertNum'">
-             <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)">
-            <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
-            <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
-              <div class="tooltip-title">Alert message (active)</div>
-              <div class="severity-info" style='justify-content: space-between'>
-                <div class="severity-name">{{$t('overall.result.total')}}</div>
-                <div class="severity-value">{{scope.row.alertNum}}</div>
-              </div>
-            </div>
-            <alertDaysInfo
-              v-show="!scope.row.trendLoading"
-              :alertDaysData="scope.row.alertDaysData"
-            />
-          </span>
-        </template>
-        <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-        <template v-else="scope.row[item.prop]">-</template>
+        <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+        <template v-else>-</template>
       </template>
     </el-table-column>
     <el-table-column
@@ -113,11 +94,6 @@ export default {
           show: true
         },
         {
-          label: this.$t('alert.alert'),
-          prop: 'alertNum',
-          show: true
-        },
-        {
           label: this.$t('overall.remark'),
           prop: 'remark',
           show: true
@@ -129,12 +105,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.colorEF7458{
-  color: #EF7458;
-}
-.color23BF9A{
-  color: #23BF9A;
-}
-</style>
