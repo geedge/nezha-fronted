@@ -761,41 +761,21 @@ export default {
         this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
+          response.data.list.forEach((item) => {
+            const labels = JSON.parse(item.labels)
+            if (labels) {
+              Object.keys(labels).forEach((key) => {
+                if (item[key] && item[key].id) {
+                  item.position = {}
+                  item.loading = false
+                }
+              })
+            }
+          })
           this.tableData = response.data.list
           if (response.statistics && this.$route.path === '/alertMessage') {
             this.setSearchData(response.statistics)
           }
-          /* const axiosAll = []
-            this.$nextTick(() => {
-              this.tableData.forEach((item) => {
-                item.labels = JSON.parse(item.labels)
-                if (!this.isBuildIn(item.alertRule)) {
-                  const paramStr = JSON.stringify(this.promQueryParamConvert(item))
-                  axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '')))
-                } else {
-                  axiosAll.push('')
-                }
-              })
-              axios.all(axiosAll).then(res => {
-                res.forEach((item, index) => {
-                  let current = []
-                  const response2 = item.data
-                  if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                    current = response2.data.result[0].value.map((item, i) => {
-                      if (i == 0) {
-                        return bus.computeTimezone(item)
-                      } else {
-                        return parseFloat(item).toFixed(2)
-                      }
-                    })
-                  } else {
-                    current = [null, null]
-                  }
-                  this.tableData[index].current = current
-                })
-                this.$set(this.tableData, [...this.tableData])
-              })
-            }) */
           this.deleteBox.ids = ''
           this.pageObj.total = response.data.total
         }
