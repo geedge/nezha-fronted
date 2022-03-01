@@ -222,11 +222,15 @@ export default {
           delete params.param.min
           delete params.param.max
         }
-        if (!params.x && !params.y && params.groupId) { // group 内的坐标需要单独计算
+        if (!params.x && !params.y && this.from === 'endpointQuery') { // endpointQuery 新增 放在最后
           params.x = 0
           params.y = 999
         }
-        if (!params.x && !params.y && this.from === 'endpointQuery') { // endpointQuery 新增 放在最后
+        if (!params.x && !params.y && this.from === 'chartTemp') { // chartTemp 新增 在第一位
+          params.x = 0
+          params.y = 0
+        }
+        if (!params.x && !params.y && params.groupId) { // group 内的坐标需要单独计算
           params.x = 0
           params.y = 999
         }
