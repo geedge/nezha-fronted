@@ -64,7 +64,7 @@
             <div v-else class="basic-info-table-value">--</div>
           </div>
           <div class="basic-info-table-list">
-            <div class="basic-info-table-title">{{ $t('asset') }}</div>
+            <div class="basic-info-table-title">{{ $t('overall.alert') }}</div>
             <div class="basic-info-table-value">
               <i :class="chartDetail && chartDetail.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
               <span>{{chartDetail ? chartDetail.alertNum : 0}}</span>
@@ -96,7 +96,7 @@
             <div class="basic-info-table-title">{{$t('overall.module')}}</div>
             <div class="basic-info-table-value">
               <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>&nbsp;
-              <span>{{chartDetail.module && chartDetail.module ? chartDetail.module.name : '--'}}</span>
+              <span>{{chartDetail && chartDetail.module ? chartDetail.module.name : '--'}}</span>
             </div>
           </div>
           <div class="basic-info-table-list">

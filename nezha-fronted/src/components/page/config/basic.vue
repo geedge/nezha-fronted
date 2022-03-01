@@ -3,10 +3,14 @@
     <div class="system-config-form basicForm">
       <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
         <div class="system-title">{{$t('config.system.basic.title')}}</div>
+        <el-form-item :label="$t('config.system.basic.systemName')" prop="system_name">
+          <el-input v-model="basic.system_name"></el-input>
+        </el-form-item>
         <el-form-item :label="$t('config.system.basic.language')" prop="language">
           <el-select id="account-input-language"
                      class="right-box__select"
                      v-model="basic.language"
+                     :placeholder="$t('overall.select')"
                      popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
                      size="small">
             <template v-for="item in languageList">
@@ -15,7 +19,7 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
-          <el-select v-model="basic.timezone" id="system-basic-timezone" filterable popper-class="right-box-select-top right-public-box-dropdown-top">
+          <el-select v-model="basic.timezone" id="system-basic-timezone" :placeholder="$t('overall.select')" filterable popper-class="right-box-select-top right-public-box-dropdown-top">
             <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.name" :value="item.name" >
               <div style="display: flex;justify-content: space-between;">
                 <div >{{item.name}}</div>
@@ -28,6 +32,7 @@
           <el-select id="account-input-language"
                      class="right-box__select"
                      v-model="basic.theme"
+                     :placeholder="$t('overall.select')"
                      popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
                      size="small">
             <template v-for="item in themeList">
@@ -39,6 +44,7 @@
           <el-select id="account-input-language"
                      class="right-box__select"
                      v-model="basic.date_format"
+                     :placeholder="$t('overall.select')"
                      popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
                      size="small">
             <template v-for="item in dateFormatList">
