@@ -2,7 +2,7 @@ export default {
   props: {},
   data () {
     return {
-      detailType: 'list',
+      detailType: localStorage.getItem('detail-view-' + this.tableId) || 'list',
       detailViewRightObj: '',
       detailViewLoading: false,
       detailTimer: ''
@@ -16,7 +16,7 @@ export default {
       if (this.detailType === flag) {
         return
       }
-      this.$refs.dataList.bottomBox.showSubList = false
+      // this.$refs.dataList.bottomBox.showSubList = false
       if (this.orderBy) {
         this.detailViewRightObj = ''
       }

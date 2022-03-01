@@ -53,7 +53,7 @@
     <nz-data-list
       ref="dataList"
       :api="url"
-      v-show="detailType === 'list'"
+      v-if="detailType === 'list'"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.user"
       :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"

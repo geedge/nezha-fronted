@@ -105,6 +105,9 @@ export default {
           if (this.needAlertDaysData) {
             response.data.list.forEach(item => {
               item.trendLoading = true
+              item.left= 0
+              item.top= 0
+              item.alertNumtooltipShow= false
               item.alertDaysData = [
                 {
                   metric: { priority: 'P1' },
@@ -132,7 +135,7 @@ export default {
           this.detailViewRightObj = detailViewRightObj
           this.pageObj.total = response.data.total
           this.pageObj.pages = response.data.pages
-          if (!this.scrollbarWrap && this.$refs.dataTable.$refs.dataTable) {
+          if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
@@ -214,7 +217,9 @@ export default {
     },
     dragend () {
       this.$nextTick(() => {
-        this.$refs.dataTable.$refs.dataTable && this.$refs.dataTable.$refs.dataTable.doLayout()
+        if (this.$refs.dataTable) {
+          this.$refs.dataTable.$refs.dataTable && this.$refs.dataTable.$refs.dataTable.doLayout()
+        }
       })
     },
     search (searchObj) {
@@ -859,14 +864,16 @@ export default {
     if (pageSize && pageSize !== 'undefined') {
       this.pageObj.pageSize = pageSize
     }
+    console.log(this.$refs.dataTable, this.$refs.dataDetail)
+    const tableTitle = this.$refs.dataTable ? this.$refs.dataTable.tableTitle : this.$refs.dataDetail.tableTitle
     let localStorageTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    localStorageTableTitle = localStorageTableTitle ? JSON.parse(localStorageTableTitle) : this.$refs.dataTable.tableTitle
-    this.tools.customTableTitle = this.$refs.dataTable.tableTitle.map((item, index) => { // 修复切换中英文的问题
+    localStorageTableTitle = localStorageTableTitle ? JSON.parse(localStorageTableTitle) : tableTitle
+    this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
       item.show = localStorageTableTitle[index].show
       return item
     })
-    if (localStorageTableTitle && (localStorageTableTitle.length > this.$refs.dataTable.tableTitle.length)) {
-      const arr = localStorageTableTitle.splice(this.$refs.dataTable.tableTitle.length, localStorageTableTitle.length)
+    if (localStorageTableTitle && (localStorageTableTitle.length > tableTitle.length)) {
+      const arr = localStorageTableTitle.splice(tableTitle.length, localStorageTableTitle.length)
       arr.forEach(item => {
         item.minWidth = item.label.length * 16 + 20
       })
@@ -875,7 +882,9 @@ export default {
     if (!this.fromBottom) {
       this.getTableData()
       this.$nextTick(() => {
-        this.$refs.dataTable.$refs.dataTable && this.$refs.dataTable.$refs.dataTable.doLayout()
+        if (this.$refs.dataTable) {
+          this.$refs.dataTable.$refs.dataTable && this.$refs.dataTable.$refs.dataTable.doLayout()
+        }
       })
     }
   },

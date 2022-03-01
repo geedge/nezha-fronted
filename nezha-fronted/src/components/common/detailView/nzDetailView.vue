@@ -33,13 +33,13 @@
           <!-- <div v-if="showLayout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>-->
         </div>
         <div :style="{ height: nzTableHeight }" class="nz-detail-view" :class="dataLength?'':'nz-detail-view-no-data'">
-          <div class="nz-detail-view-left" v-if="dataLength">
+          <div class="nz-detail-view-left" v-show="dataLength">
             <slot name="nz-detail-view-list"></slot>
             <div v-if="showLayout.indexOf('pagination') > -1" class="nz-detail-view-pagination">
               <slot name="pagination"></slot>
             </div>
           </div>
-          <div v-else class="no-data">
+          <div v-if="!dataLength" class="no-data">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#nz-icon-no-data-list"></use>
             </svg>

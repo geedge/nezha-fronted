@@ -71,7 +71,7 @@
       ref="dataList"
       :api="url"
       :tableId="tableId"
-      v-show="detailType === 'list'"
+      v-if="detailType === 'list'"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.module"
       :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
@@ -409,6 +409,9 @@ export default {
           if (this.needAlertDaysData) {
             response.data.list.forEach(item => {
               item.trendLoading = true
+              item.left= 0
+              item.top= 0
+              item.alertNumtooltipShow= false
               item.alertDaysData = [
                 {
                   metric: { priority: 'P1' },

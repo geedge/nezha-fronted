@@ -70,7 +70,7 @@
     <nz-data-list
       v-loading="detailViewLoading"
       ref="dataList"
-      v-show="detailType === 'list'"
+      v-if="detailType === 'list'"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.endpoint"
@@ -628,6 +628,9 @@ export default {
           if (this.needAlertDaysData) {
             response.data.list.forEach(item => {
               item.trendLoading = true
+              item.left= 0
+              item.top= 0
+              item.alertNumtooltipShow= false
               item.alertDaysData = [
                 {
                   metric: { priority: 'P1' },
