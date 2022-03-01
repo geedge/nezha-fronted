@@ -32,9 +32,19 @@
       </div>
       <div class="alert-rule-box">
         <div class="alert-rule-title">{{$t('alert.alertNum')}}</div>
-        <div class="alert-rule-value">
-          <i :class="alertRuleData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>
-          <span>{{alertRuleData.alertNum ? alertRuleData.alertNum : 0}}</span>
+        <div class="alert-rule-value" v-if="alertRuleData">
+          <i :class="alertRuleData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
+          <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
+            <div class="tooltip-title">Alert message (active)</div>
+            <div class="severity-info" style='justify-content: space-between'>
+              <div class="severity-name">{{$t('overall.result.total')}}</div>
+              <div class="severity-value">{{alertRuleData.alertNum}}</div>
+            </div>
+          </div>
+          <alertDaysInfo
+            v-show="!trendLoading"
+            :alertDaysData="alertDaysData"
+          />
         </div>
       </div>
       <div class="alert-rule-box">
@@ -60,8 +70,10 @@
 
 <script>
 import chartDataFormat from '../../charts/chartDataFormat'
+import trendMixins from '@/components/common/alert/trendMixins'
 export default {
   name: 'alert-rule-info',
+  mixins: [trendMixins],
   props: {
     id: {},
     messageLoad: {},
@@ -131,6 +143,36 @@ export default {
         this.loading = false
         this.severityDataColor()
         this.alertRuleData = res.data
+        const weekDays = this.getWeeksTime()
+        if (this.trendTimer) {
+          clearTimeout(this.trendTimer)
+          this.trendTimer = null
+        }
+        this.trendTimer = setTimeout(() => {
+          this.trendLoading = true
+          const params = {
+            type: 'total',
+            dimension: 'priority',
+            step: 'd'
+          }
+          params['rule' + 'Id'] = this.id
+          this.$get('/stat/alertMessage/trend', params).then((res) => {
+            const alertDaysData = res.data.result ? res.data.result[0].values : []
+            const newWeekDays = JSON.parse(JSON.stringify(weekDays))
+            alertDaysData.forEach(item => {
+              item.values.forEach(time => {
+                const findItem = newWeekDays.find(days => days.time == time[0])
+                if (findItem) {
+                  findItem[item.metric.priority] = time[1]
+                }
+              })
+            })
+            setTimeout(() => {
+              this.alertDaysData = newWeekDays
+              this.trendLoading = false
+            })
+          })
+        })
       } else {
         this.$message.error(res.msg)
       }

@@ -46,9 +46,19 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.alert')}}</div>
-        <div class="alert-label-value">
-          <i v-if="alertLabelData" :class="alertLabelData && alertLabelData.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
-          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0}}</span>
+        <div class="alert-label-value" v-if="alertLabelData">
+          <i :class="alertLabelData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
+          <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
+            <div class="tooltip-title">Alert message (active)</div>
+            <div class="severity-info" style='justify-content: space-between'>
+              <div class="severity-name">{{$t('overall.result.total')}}</div>
+              <div class="severity-value">{{alertLabelData.alertNum}}</div>
+            </div>
+          </div>
+          <alertDaysInfo
+            v-show="!trendLoading"
+            :alertDaysData="alertDaysData"
+          />
         </div>
       </div>
       <div class="alert-label-box">
@@ -87,9 +97,19 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.alert')}}</div>
-        <div class="alert-label-value">
-          <i v-if="alertLabelData" :class="alertLabelData && alertLabelData.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
-          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0}}</span>
+        <div class="alert-label-value" v-if="alertLabelData">
+          <i :class="alertLabelData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
+          <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
+            <div class="tooltip-title">Alert message (active)</div>
+            <div class="severity-info" style='justify-content: space-between'>
+              <div class="severity-name">{{$t('overall.result.total')}}</div>
+              <div class="severity-value">{{alertLabelData.alertNum}}</div>
+            </div>
+          </div>
+          <alertDaysInfo
+            v-show="!trendLoading"
+            :alertDaysData="alertDaysData"
+          />
         </div>
       </div>
       <div class="alert-label-box">
@@ -129,9 +149,19 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.alert')}}</div>
-        <div class="alert-label-value">
-          <i v-if="alertLabelData" :class="alertLabelData && alertLabelData.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
-          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0}}</span>
+        <div class="alert-label-value" v-if="alertLabelData">
+          <i :class="alertLabelData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
+          <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
+            <div class="tooltip-title">Alert message (active)</div>
+            <div class="severity-info" style='justify-content: space-between'>
+              <div class="severity-name">{{$t('overall.result.total')}}</div>
+              <div class="severity-value">{{alertLabelData.alertNum}}</div>
+            </div>
+          </div>
+          <alertDaysInfo
+            v-show="!trendLoading"
+            :alertDaysData="alertDaysData"
+          />
         </div>
       </div>
       <div class="alert-label-box">
@@ -169,9 +199,19 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.alert')}}</div>
-        <div class="alert-label-value">
-          <i v-if="alertLabelData" :class="alertLabelData && alertLabelData.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
-          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0}}</span>
+        <div class="alert-label-value" v-if="alertLabelData">
+          <i :class="alertLabelData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
+          <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
+            <div class="tooltip-title">Alert message (active)</div>
+            <div class="severity-info" style='justify-content: space-between'>
+              <div class="severity-name">{{$t('overall.result.total')}}</div>
+              <div class="severity-value">{{alertLabelData.alertNum}}</div>
+            </div>
+          </div>
+          <alertDaysInfo
+            v-show="!trendLoading"
+            :alertDaysData="alertDaysData"
+          />
         </div>
       </div>
       <div class="alert-label-box">
@@ -233,9 +273,20 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.alert')}}</div>
-        <div class="alert-label-value">
-          <i v-if="alertLabelData" :class="alertLabelData && alertLabelData.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
-          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0}}</span></div>
+        <div class="alert-label-value" v-if="alertLabelData">
+          <i :class="alertLabelData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
+          <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
+            <div class="tooltip-title">Alert message (active)</div>
+            <div class="severity-info" style='justify-content: space-between'>
+              <div class="severity-name">{{$t('overall.result.total')}}</div>
+              <div class="severity-value">{{alertLabelData.alertNum}}</div>
+            </div>
+          </div>
+          <alertDaysInfo
+            v-show="!trendLoading"
+            :alertDaysData="alertDaysData"
+          />
+        </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.state')}}</div>
@@ -251,8 +302,10 @@
 </template>
 
 <script>
+import trendMixin from './trendMixins'
 export default {
   name: 'alertLabel',
+  mixins: [trendMixin],
   props: {
     id: {},
     type: {},
@@ -265,11 +318,8 @@ export default {
     return {
       alertLabelData: null,
       loading: true,
-      heightList: 0
+      heightList: 0,
     }
-  },
-  components: {
-
   },
   watch: {
     id: {
@@ -388,6 +438,36 @@ export default {
           }
         })
       }
+      const weekDays = this.getWeeksTime()
+      if (this.trendTimer) {
+        clearTimeout(this.trendTimer)
+        this.trendTimer = null
+      }
+      this.trendTimer = setTimeout(() => {
+        this.trendLoading = true
+        const params = {
+          type: 'total',
+          dimension: 'priority',
+          step: 'd'
+        }
+        params[this.type + 'Id'] = this.id
+        this.$get('/stat/alertMessage/trend', params).then((res) => {
+          const alertDaysData = res.data.result ? res.data.result[0].values : []
+          const newWeekDays = JSON.parse(JSON.stringify(weekDays))
+          alertDaysData.forEach(item => {
+            item.values.forEach(time => {
+              const findItem = newWeekDays.find(days => days.time == time[0])
+              if (findItem) {
+                findItem[item.metric.priority] = time[1]
+              }
+            })
+          })
+          setTimeout(() => {
+            this.alertDaysData = newWeekDays
+            this.trendLoading = false
+          })
+        })
+      })
     },
     alertActiveStr () {
       return this.$t('overall.active')
@@ -401,7 +481,11 @@ export default {
     }
   },
   mounted () {
-    this.heightList = this.$refs.alertLabels.getBoundingClientRect().height
+    if (this.$refs.alertLabels) {
+      this.heightList = this.$refs.alertLabels.getBoundingClientRect().height
+    } else {
+      this.heightList = ''
+    }
   },
   beforeDestroy () {
 
