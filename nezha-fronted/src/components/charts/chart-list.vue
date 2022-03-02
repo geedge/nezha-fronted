@@ -849,7 +849,7 @@ export default {
         if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
           if (filterType === 'refresh') {
             this.$get('visual/panel/chart/' + chartItem.id).then(res => {
-              const data = res.data.data
+              const data = res.data
               data.param = JSON.parse(data.param)
               this.$refs['editChart' + chartItem.id][0].setData(data, null,
                 this.filter.panelId, null, '')

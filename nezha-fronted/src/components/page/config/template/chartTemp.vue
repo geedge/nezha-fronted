@@ -234,7 +234,7 @@ export default {
         this.$get('visual/panel/chart/' + data.id).then(res => {
           this.rightBox.loading = false
           if (res.code === 200) {
-            const chartData = res.data.data
+            const chartData = res.data
             this.object = JSON.parse(JSON.stringify(chartData))
             this.object.panelId = this.showPanel.id
             this.object.panelName = this.showPanel.name
