@@ -296,11 +296,7 @@ export default {
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      if (this.state) {
-        this.$set(this.searchLabel, 'state', this.state)
-      } else {
-        delete this.searchLabel.state
-      }
+      this.$set(this.searchLabel, 'state', this.state)
       if (this.searchTimeHeader && this.searchTimeHeader.length > 1) {
         this.$set(this.searchLabel, 'startAt', this.timezoneToUtcTimeStr(this.searchTimeHeader[0]))
         this.$set(this.searchLabel, 'endAt', this.timezoneToUtcTimeStr(this.searchTimeHeader[1]))
