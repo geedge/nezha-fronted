@@ -222,13 +222,13 @@ export default {
           prop: 'state',
           show: true,
           width: 100,
-          sortable: 'custom'
+          // sortable: 'custom'
         }, {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
           show: false,
           width: 150,
-          // sortable: 'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('alert.lastAt'),
           prop: 'lastAt',
