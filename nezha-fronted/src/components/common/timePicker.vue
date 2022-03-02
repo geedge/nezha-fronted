@@ -305,6 +305,7 @@ export default {
           const showTime = this.timeData.find(item => item.id == n)
           if (showTime) {
             this.showTime = Object.assign({}, showTime)
+            this.searchTime = this.$parent.searchTime
           }
           if (this.showEmpty && this.defaultPick === 12) {
             this.searchTime = []

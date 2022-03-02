@@ -83,10 +83,11 @@
             </span>
           </span>
           </template>
-          <span v-else-if="item.prop === 'state'" :class="{'green': scope.row['state'] == 2, 'red': scope.row['state'] == 1}">
-            {{scope.row['state'] == 1 ? "Pending" : ""}}
-            {{scope.row['state'] == 2 ? "Expired" : ""}}
-        </span>
+          <span v-else-if="item.prop === 'state'">
+            <span class="alert-message-state" :class="{'green-bg': scope.row['state'] == 3, 'red-bg': scope.row['state'] == 1,'yellow-bg': scope.row['state'] == 2}">
+              {{$t(stateOptions.find(state=>state.value == scope.row['state']).label)}}
+            </span>
+          </span>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
           <template v-else>-</template>
         </template>
@@ -141,6 +142,7 @@ import chartDataFormat from '../../../charts/chartDataFormat'
 import alertRuleInfo from '../../alert/alertRuleInfo'
 import alertLabel from '../../alert/alertLabel'
 import { calcDurationByStringTimeB } from '../../js/tools'
+import {alertMessage as alertMessageConstant} from "@/components/common/js/constants";
 export default {
   name: 'alertMessageTable',
   components: {
@@ -166,7 +168,7 @@ export default {
       /* 二级列表相关 */
       tabList: [], // 二级列表的标签
       tabDetailList: [], // 多个详情
-
+      stateOptions: alertMessageConstant.states,
       // 详情相关
       graphShow: false,
       chartDatas: [],
@@ -178,6 +180,7 @@ export default {
       chartUnit: 5,
       severityData: [],
       tableTitle: [
+
         {
           label: 'ID',
           prop: 'id',
@@ -213,6 +216,12 @@ export default {
           prop: 'description',
           show: true,
           minWidth: 200
+        }, {
+          label: this.$t('alert.list.state'),
+          prop: 'state',
+          show: true,
+          width: 100,
+          sortable: 'custom'
         }, {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
