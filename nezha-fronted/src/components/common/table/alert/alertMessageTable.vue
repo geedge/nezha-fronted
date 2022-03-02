@@ -228,7 +228,7 @@ export default {
           prop: 'startAt',
           show: false,
           width: 150,
-          sortable: 'custom'
+          // sortable: 'custom'
         }, {
           label: this.$t('alert.lastAt'),
           prop: 'lastAt',
