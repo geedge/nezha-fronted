@@ -180,7 +180,7 @@ export default {
       alertMessageNzTableHeightOffset: 242,
       stateOptions: alertMessageConstant.states,
       dataListLayout: localStorage.getItem('dataList-layout' + 'alertMessageTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'alertMessageTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
-      state: '1',
+      state: '',
       dialogShowText: false,
       dialogText: '',
       url: 'alert/message',
@@ -791,6 +791,8 @@ export default {
           }
           this.deleteBox.ids = ''
           this.pageObj.total = response.data.total
+        } else {
+          this.$message.error(response.msg)
         }
       })
     },

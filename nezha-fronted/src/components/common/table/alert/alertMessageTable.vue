@@ -58,6 +58,7 @@
           <i :style="{color:scope.row['severity'].color,'font-size':'12px','margin-right':'5px'}" class="nz-icon nz-icon-circle"></i> {{scope.row['severity'].name}}
         </span>
           <span v-else-if="item.prop === 'startAt'">{{utcTimeToTimezoneStr(scope.row.startAt)}}</span>
+          <span v-else-if="item.prop === 'lastAt'">{{utcTimeToTimezoneStr(scope.row.lastAt)}}</span>
           <template v-else-if="item.prop === 'duration'">
             <el-tooltip :disabled="!scope.row.endAt" effect="light" placement="right">
               <div slot="content">
@@ -225,6 +226,12 @@ export default {
         }, {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
+          show: false,
+          width: 150,
+          sortable: 'custom'
+        }, {
+          label: this.$t('alert.lastAt'),
+          prop: 'lastAt',
           show: true,
           width: 150,
           sortable: 'custom'

@@ -162,7 +162,7 @@ export default {
       stateOptions: alertMessageConstant.states,
       url: 'alert/message',
       tableId: 'alertMessageModule', // 需要分页的table的id，用于记录每页数量
-      state: '1',
+      state: '',
       blankSilenceObject: {
         id: '',
         startAt: '',
@@ -331,6 +331,8 @@ export default {
           this.tableData = response.data.list
           this.deleteBox.ids = ''
           this.pageObj.total = response.data.total
+        } else {
+          this.$message.error(response.msg)
         }
       })
     },
