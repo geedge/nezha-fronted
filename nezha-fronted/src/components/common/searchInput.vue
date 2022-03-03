@@ -865,7 +865,7 @@ export default {
       this.select_list.forEach(val => {
         if (typeof (val.val) !== 'undefined' && val.val != null) {
           if (val.type === 'select') {
-            if (val.label === 'alertType' || val.label === 'promType') {
+            if (val.label === 'alertType' || val.label === 'promType' || val.label === 'ipamType') {
               objectInfo.type = val.valnum
             } else if (val.label === 'assetState') {
               objectInfo.state = val.valnum

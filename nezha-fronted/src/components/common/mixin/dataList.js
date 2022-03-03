@@ -851,6 +851,114 @@ export default {
           jsonKey: 'val'
         }
       }
+    } else if (path === 'ipam') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        name: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        type: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'type',
+          type: 'number',
+          defaultJson: {
+            disabled: false,
+            label: 'ipamType',
+            name: 'Type',
+            readonly: true,
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        addr: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'addr',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'addr',
+            name: 'Addr',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        mask: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'mask',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'mask',
+            name: 'Mask',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        vlan: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'vlan',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'vlan',
+            name: 'Vlan',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        dc: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'dc',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'dcId',
+            name: 'Data center',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
     }
     this.initQueryFromPath(searchKeys)
   },

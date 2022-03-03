@@ -364,6 +364,7 @@ export const fromRoute = {
   menus: 'menus',
   notify: 'notify',
   link: 'link',
+  ipam: 'ipam',
   apiKey: 'apiKey',
   chartTemp: 'chartTemp'
 }

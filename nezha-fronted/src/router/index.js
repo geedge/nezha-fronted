@@ -99,6 +99,10 @@ export default new Router({
           component: resolve => require(['../components/page/config/about.vue'], resolve)
         },
         {
+          path: '/ipam',
+          component: resolve => require(['../components/page/config/ipam.vue'], resolve)
+        },
+        {
           path: '/profile',
           component: resolve => require(['../components/page/config/profile.vue'], resolve)
         },

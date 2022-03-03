@@ -253,6 +253,10 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       name: 'SNMP trap',
       searchType: 'alertTypes'
     }
+  ],
+  ipamType: [
+    { label: 'IPV4', value: 4 },
+    { label: 'IPV6', value: 6 }
   ]
 }
 export default searchSelectInfo

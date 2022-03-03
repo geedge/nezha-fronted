@@ -1,0 +1,171 @@
+<template>
+  <div class="right-box right-box-mib" v-clickoutside="{obj:editipam,func:clickOutside}" >
+    <!-- begin--标题-->
+    <div class="right-box__header">
+      <div class="header__title">{{editipam.id ? ($t("overall.ipam.edit")) : $t("overall.ipam.create")}}</div>
+      <div class="header__operation">
+        <span v-cancel="{obj: editipam, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+      </div>
+    </div>
+    <!-- begin--表单-->
+    <div class="right-box__container">
+      <div class="container__form">
+        <el-form :model="editipam" label-position = "top" label-width="120px" :rules="rules" ref="ipamForm">
+          <el-form-item :label="$t('overall.name')" prop="name">
+            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipam.name" size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('overall.type')" prop="type">
+            <el-select id="account-input-language"
+                       class="right-box__select"
+                       v-model="editipam.type"
+                       clearable
+                       collapse-tags
+                       placeholder=""
+                       popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                       size="small">
+              <template v-for="item in typeList">
+                <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </template>
+            </el-select>
+          </el-form-item>
+          <div class="form__sub-title">CIDR</div>
+          <el-form-item :label="$t('overall.addr')" prop="addr">
+            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipam.addr" size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('overall.mask')" prop="mask">
+            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipam.mask" size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('overall.vlan')" prop="vlan">
+            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipam.vlan" size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('overall.dc')" prop="dc">
+            <div class="right-box-form-content">
+              <el-select id="prom-box-input-dc" v-model="editipam.dc" placeholder="" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
+                <el-option v-for="item in dcData" :id="'prom-edit-dc-op-'+item.id" :key="item.id" :label="item.name" :value="item">
+                  <span class="config-dropdown-label-txt">{{item.name}}</span>
+                </el-option>
+              </el-select>
+            </div>
+          </el-form-item>
+          <el-form-item :label="$t('overall.remark')" prop="remark">
+            <el-input maxlength="256" rows="4" show-word-limit type="textarea" placeholder="" v-model="editipam.remark" size="small" id="mib-box-input-remark"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
+
+    <!--底部按钮-->
+    <div class="right-box__footer">
+      <button v-cancel="{obj:editipam,func:esc}" id="model-box-esc" class="footer__btn footer__btn--light">
+        <span>{{$t('overall.cancel')}}</span>
+      </button>
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="footer__btn" id="model-box-save">
+        <span>{{$t('overall.save')}}</span>
+      </button>
+    </div>
+
+  </div>
+</template>
+
+<script>
+import editRigthBox from '../mixin/editRigthBox'
+
+export default {
+  name: 'ipamBox',
+  props: {
+    obj: Object
+  },
+  mixins: [editRigthBox],
+  data () {
+    return {
+      editipam: {},
+      typeList: [
+        { label: 'IPV4', value: 4 },
+        { label: 'IPV6', value: 6 }
+      ],
+      rules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        addr: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        mask: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        dc: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
+      },
+      dcData: []
+    }
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
+    },
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
+    /* 保存 */
+    save () {
+      this.$refs.ipamForm.validate((valid) => {
+        if (valid) {
+          this.prevent_opt.save = true
+          if (!this.editipam.id) {
+            this.$post('/ipam/subnet', this.editipam).then(response => {
+              if (response.code == 200 && response.msg == 'success') {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          } else {
+            this.$put('/ipam/subnet', this.editipam).then(response => {
+              if (response.code == 200 && response.msg == 'success') {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          }
+        } else {
+          this.prevent_opt.save = false
+        }
+      })
+    },
+    // 获取dc下拉列表数据
+    getDcData () {
+      this.$get('dc', { pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.dcData = response.data.list
+        }
+      })
+    }
+  },
+  mounted () {
+    this.getDcData()
+  },
+  watch: {
+    obj: {
+      immediate: true,
+      deep: true,
+      handler (n, o) {
+        this.isEdit = true
+        this.editipam = JSON.parse(JSON.stringify(n))
+      }
+    },
+    'editipam.dc': function (n, o) {
+      this.editipam.dcId = n.id
+    }
+  }
+}
+</script>
