@@ -77,7 +77,7 @@ export function nzNumber (rule, value, callback) {
 
 export function noSpecialChar (rule, value, callback) {
   // eslint-disable-next-line no-control-regex
-  const charReg = /^\w[\u0000-\uFFFF]*$/
+  const charReg = /^\S[\u0000-\uFFFF]*$/
   /// ^\S[\u0000-\uFFFF]*$/
   setTimeout(() => {
     if (!value) {
