@@ -10,7 +10,7 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
-        <button id="account-add" :title="$t('overall.createipam')" class="top-tool-btn margin-r-10"
+        <button id="account-add" v-has="'ipam_add'" :title="$t('overall.createipam')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
@@ -20,8 +20,8 @@
           id="ipam"
           :params="searchLabel"
           :permissions="{
-                  import: 'asset_add',
-                  export: 'asset_edit'
+                  import: 'ipam_add',
+                  export: 'ipam_edit'
                 }"
           class="top-tool-export margin-r-10"
           export-file-name="ipam"
@@ -32,7 +32,7 @@
           <template v-slot:before>
             <div>
               <el-dropdown-item>
-                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="account-list-batch-delete" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+                <delete-button :type="'link'" :title="$t('overall.batchDel')" v-has="'ipam_delete'" id="account-list-batch-delete" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
               </el-dropdown-item>
             </div>
           </template>
@@ -90,7 +90,7 @@ export default {
         name: '',
         type: 4,
         addr: '',
-        mask: '',
+        mask: '24',
         vlan: '',
         remark: '',
         dc: { id: '', name: '' }
@@ -120,19 +120,14 @@ export default {
             label: 'addr',
             disabled: false
           }, {
-            name: this.$t('overall.mask'),
-            type: 'input',
-            label: 'mask',
-            disabled: false
-          }, {
             name: this.$t('overall.vlan'),
             type: 'input',
             label: 'vlan',
             disabled: false
           }, {
             name: this.$t('overall.dc'),
-            type: 'input',
-            label: 'dcId',
+            type: 'dc',
+            label: 'dcIds',
             disabled: false
           }
         ]

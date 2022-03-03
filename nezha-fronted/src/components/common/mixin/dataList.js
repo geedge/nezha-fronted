@@ -948,15 +948,17 @@ export default {
           target: this.searchLabel,
           isSearchInput: true,
           propertyName: 'dc',
-          type: 'string',
+          type: 'number',
           defaultJson: {
+            name: 'Date center',
+            type: 'dc',
+            label: 'dcIds',
             disabled: false,
-            label: 'dcId',
-            name: 'Data center',
-            type: 'input',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'dcSelect'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         }
       }
     }

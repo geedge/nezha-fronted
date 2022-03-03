@@ -1466,7 +1466,7 @@ export default {
       if (this.$route.path === '/asset' || this.targetTab === 'asset') {
         this.getAssetStateData()
       }
-      if (this.$route.path === '/agent') {
+      if (this.$route.path === '/agent' || this.$route.path === '/ipam') {
         this.getDcData()
       }
       if (this.$route.path === '/model') {

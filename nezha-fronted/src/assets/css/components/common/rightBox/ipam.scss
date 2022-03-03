@@ -1,0 +1,26 @@
+.right-box-ipam {
+  .cidr {
+    display: flex;
+  }
+  .cidr-title {
+    float: none;
+    text-align: left;
+    color: $--color-text-regular;
+    padding: 0 0 6px 0;
+    font-size: 14px;
+  }
+  .cidr-title::before {
+    content: '*';
+    color: #EC7F66;
+    margin-right: 4px;
+  }
+  .cidr-addr.el-form-item.is-required {
+    flex: 3;
+    margin-right: 5px;
+  }
+}
+.el-select-dropdown.right-box__select-width .el-select-dropdown__item {
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  width: 199px;
+}

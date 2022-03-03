@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-mib" v-clickoutside="{obj:editipam,func:clickOutside}" >
+  <div class="right-box right-box-ipam" v-clickoutside="{obj:editipam,func:clickOutside}" >
     <!-- begin--标题-->
     <div class="right-box__header">
       <div class="header__title">{{editipam.id ? ($t("overall.ipam.edit")) : $t("overall.ipam.create")}}</div>
@@ -21,24 +21,41 @@
                        clearable
                        collapse-tags
                        placeholder=""
-                       popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                       @change="validValueType"
+                       :disabled="!!editipam.id"
+                       popper-class="right-box-select-top prevent-clickoutside"
                        size="small">
               <template v-for="item in typeList">
                 <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
               </template>
             </el-select>
           </el-form-item>
-          <div class="form__sub-title">CIDR</div>
-          <el-form-item :label="$t('overall.addr')" prop="addr">
-            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipam.addr" size="small"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('overall.mask')" prop="mask">
-            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipam.mask" size="small"></el-input>
-          </el-form-item>
+          <div class="cidr-title">CIDR</div>
+          <div class="cidr">
+            <el-form-item class="cidr-addr" prop="addr">
+              <el-input maxlength="256" rows="4" show-word-limit placeholder="address" v-model="editipam.addr" size="small"></el-input>
+            </el-form-item>
+            <el-form-item prop="mask">
+              <el-select id="account-input-language"
+                         class="right-box__select"
+                         v-model="editipam.mask"
+                         clearable
+                         collapse-tags
+                         placeholder="mask"
+                         popper-class="right-box-select-top right-box__select-width prevent-clickoutside"
+                         size="small">
+                <template v-for="(item, index) in maskList">
+                  <el-option :key="item" :label="item" :value="item" :title="'/'+item+'\('+2 ** index+'\)'">
+                    <span>/{{item}}({{2 ** index}})</span>
+                  </el-option>
+                </template>
+              </el-select>
+            </el-form-item>
+          </div>
           <el-form-item :label="$t('overall.vlan')" prop="vlan">
             <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipam.vlan" size="small"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('overall.dc')" prop="dc">
+          <el-form-item :label="$t('overall.dc')" prop="dc.name">
             <div class="right-box-form-content">
               <el-select id="prom-box-input-dc" v-model="editipam.dc" placeholder="" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="item in dcData" :id="'prom-edit-dc-op-'+item.id" :key="item.id" :label="item.name" :value="item">
@@ -83,6 +100,7 @@ export default {
         { label: 'IPV4', value: 4 },
         { label: 'IPV6', value: 6 }
       ],
+      maskList: [],
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
@@ -96,7 +114,7 @@ export default {
         mask: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
-        dc: [
+        'dc.name': [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ]
       },
@@ -149,6 +167,24 @@ export default {
           this.dcData = response.data.list
         }
       })
+    },
+    validValueType (e) {
+      const mask = []
+      let maskArray = []
+      if (e === 4) {
+        for (let i = 1; i <= 32; i++) {
+          mask.push(i)
+        }
+        maskArray = Array.from(new Set(mask))
+        maskArray.sort(function (a, b) { return b - a })
+      } else if (e === 6) {
+        for (let i = 1; i <= 128; i++) {
+          mask.push(i)
+        }
+        maskArray = Array.from(new Set(mask))
+        maskArray.sort(function (a, b) { return b - a })
+      }
+      this.maskList = maskArray
     }
   },
   mounted () {
@@ -161,6 +197,23 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editipam = JSON.parse(JSON.stringify(n))
+        const mask = []
+        let maskArray = []
+        if (this.editipam.type === 4) {
+          for (let i = 1; i <= 32; i++) {
+            mask.push(i)
+          }
+          maskArray = Array.from(new Set(mask))
+          maskArray.sort(function (a, b) { return b - a })
+          this.maskList = maskArray
+        } else if (this.editipam.type === 6) {
+          for (let i = 1; i <= 128; i++) {
+            mask.push(i)
+          }
+          maskArray = Array.from(new Set(mask))
+          maskArray.sort(function (a, b) { return b - a })
+        }
+        this.maskList = maskArray
       }
     },
     'editipam.dc': function (n, o) {
