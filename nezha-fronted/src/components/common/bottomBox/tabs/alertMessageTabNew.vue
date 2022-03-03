@@ -16,7 +16,7 @@
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
-        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 100px">
+        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 110px">
           <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
         <pick-time v-model="searchTimeHeader" :default-pick="8" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
@@ -162,7 +162,7 @@ export default {
       stateOptions: alertMessageConstant.states,
       url: 'alert/message',
       tableId: 'alertMessageModule', // 需要分页的table的id，用于记录每页数量
-      state: '',
+      state: '1',
       blankSilenceObject: {
         id: '',
         startAt: '',

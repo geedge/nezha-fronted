@@ -234,7 +234,7 @@ export default {
           prop: 'lastAt',
           show: true,
           width: 150,
-          // sortable: 'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.terminallog.duration'),
           prop: 'duration',
