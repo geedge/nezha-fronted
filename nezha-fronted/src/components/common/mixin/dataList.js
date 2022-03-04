@@ -23,7 +23,7 @@ export default {
         pages: 1,
         total: 0
       },
-      orderBy: '',
+      orderBy: 'id',
       /* 工具参数 */
       tools: {
         loading: true, // 是否显示table加载动画
