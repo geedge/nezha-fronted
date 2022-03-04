@@ -31,6 +31,7 @@
       <template v-slot:default="slotProps">
         <alert-message-table
           ref="dataTable"
+          :orderByFa="orderBy"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"

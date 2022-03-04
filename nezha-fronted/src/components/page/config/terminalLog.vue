@@ -67,6 +67,7 @@
       <template v-slot:default="slotProps">
         <terminal-log-table
           ref="dataTable"
+          :orderByFa="orderBy"
           v-loading="tools.loading"
           :loading="tools.loading"
           :api="url"

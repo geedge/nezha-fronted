@@ -112,6 +112,7 @@
         <module-table
           ref="dataTable"
           v-loading="tools.loading"
+          :orderByFa="orderBy"
           :loading="tools.loading"
           :api="url"
           :tableId="tableId"

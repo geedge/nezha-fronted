@@ -26,7 +26,7 @@ export default {
   data () {
     return {
       operationWidth: '165', // 操作列宽
-      orderBy: {},
+      orderBy: null,
       severityDataWeight: this.$store.getters.severityDataWeight
     }
   },
@@ -131,10 +131,12 @@ export default {
         if (n) {
           const index = n.indexOf('-')
           if (index !== -1) {
-            this.orderBy[n.slice(index + 1)] = 'descending'
+            this.orderBy = { prop: n.slice(index + 1), order: 'descending' }
           } else {
-            this.orderBy[n] = 'descending'
+            this.orderBy = { prop: n, order: 'ascending' }
           }
+          // this.orderBy = JSON.parse(JSON.stringify(this.orderBy))
+          console.log(n, this.orderBy)
         }
       }
     },

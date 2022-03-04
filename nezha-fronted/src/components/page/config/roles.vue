@@ -19,6 +19,7 @@
       <template v-slot:default="slotProps">
         <role-table
           ref="dataTable"
+          :orderByFa="orderBy"
           v-loading="tools.loading"
           :loading="tools.loading"
           :api="url"

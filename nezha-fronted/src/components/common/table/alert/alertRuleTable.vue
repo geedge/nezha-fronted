@@ -6,6 +6,7 @@
     :height="height"
     tooltip-effect="light"
     border
+    :default-sort="orderBy"
     @header-dragend="dragend"
     @sort-change="tableDataSort"
     @selection-change="selectionChange"

@@ -127,6 +127,7 @@
         <endpoint-table
           ref="dataTable"
            v-loading="tools.loading"
+          :orderByFa="orderBy"
           :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"

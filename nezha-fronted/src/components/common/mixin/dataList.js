@@ -105,9 +105,9 @@ export default {
           if (this.needAlertDaysData) {
             response.data.list.forEach(item => {
               item.trendLoading = true
-              item.left= 0
-              item.top= 0
-              item.alertNumtooltipShow= false
+              item.left = 0
+              item.top = 0
+              item.alertNumtooltipShow = false
               item.alertDaysData = [
                 {
                   metric: { priority: 'P1' },
@@ -337,6 +337,10 @@ export default {
   },
   created () {
     const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
+    if (this.$route.query.orderBy) {
+      this.orderBy = this.$route.query.orderBy
+      console.log('asdasdadsadsa')
+    }
     let searchKeys = {}
     if (path === 'dc') {
       searchKeys = {
