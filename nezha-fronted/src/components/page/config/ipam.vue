@@ -120,14 +120,14 @@ export default {
             label: 'addr',
             disabled: false
           }, {
-            name: this.$t('overall.vlan'),
-            type: 'input',
-            label: 'vlan',
-            disabled: false
-          }, {
             name: this.$t('overall.dc'),
             type: 'dc',
             label: 'dcIds',
+            disabled: false
+          }, {
+            name: this.$t('overall.vlan'),
+            type: 'input',
+            label: 'vlan',
             disabled: false
           }
         ]

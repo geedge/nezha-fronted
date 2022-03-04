@@ -112,16 +112,16 @@ export default {
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('overall.vlan'),
-          prop: 'vlan',
-          show: true,
-          width: 200
-        }, {
           label: this.$t('overall.dc'),
           prop: 'dc',
           show: true,
           width: 200,
           sortable: 'custom'
+        }, {
+          label: this.$t('overall.vlan'),
+          prop: 'vlan',
+          show: true,
+          width: 200
         }, {
           label: this.$t('overall.remark'),
           prop: 'remark',

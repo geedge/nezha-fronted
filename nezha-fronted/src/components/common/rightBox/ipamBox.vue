@@ -52,9 +52,6 @@
               </el-select>
             </el-form-item>
           </div>
-          <el-form-item :label="$t('overall.vlan')" prop="vlan">
-            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipam.vlan" size="small"></el-input>
-          </el-form-item>
           <el-form-item :label="$t('overall.dc')" prop="dc.name">
             <div class="right-box-form-content">
               <el-select id="prom-box-input-dc" v-model="editipam.dc" placeholder="" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
@@ -63,6 +60,9 @@
                 </el-option>
               </el-select>
             </div>
+          </el-form-item>
+          <el-form-item :label="$t('overall.vlan')" prop="vlan">
+            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipam.vlan" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')" prop="remark">
             <el-input maxlength="256" rows="4" show-word-limit type="textarea" placeholder="" v-model="editipam.remark" size="small" id="mib-box-input-remark"></el-input>
