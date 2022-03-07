@@ -406,7 +406,7 @@ export default {
         this.$nextTick(() => {
           this.searchTime = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
           this.$store.dispatch('dispatchPanelTime', {
-            time: this.searchTime ,
+            time: this.searchTime,
             nowTimeType: {
               id: 4,
               text: this.$t('dashboard.panel.lastOneHour'),

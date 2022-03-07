@@ -42,7 +42,7 @@ export default {
   data () {
     return {
       stackTotalColor: null,
-      isStack: false,
+      isStack: false
     }
   },
   computed: {
@@ -108,7 +108,7 @@ export default {
       let seriesIndex = 0
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
-          if (seriesIndex >= this.series.length) {// 只取跟series 一样长度作比较
+          if (seriesIndex >= this.series.length) { // 只取跟series 一样长度作比较
             return
           }
           seriesIndex++

@@ -58,7 +58,7 @@
 <script>
 import bus from '@/libs/bus'
 import lodash from 'lodash'
-import chartHeaderMixin from "@/components/chart/chartHeaderMixin";
+import chartHeaderMixin from '@/components/chart/chartHeaderMixin'
 export default {
   name: 'ChartScreenHeader',
   mixins: [chartHeaderMixin],

@@ -552,7 +552,7 @@ export default {
         arr.unshift(obj)
       }
       return arr
-    },
+    }
   }
 }
 </script>

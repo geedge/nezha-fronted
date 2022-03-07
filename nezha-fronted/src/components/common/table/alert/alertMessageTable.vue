@@ -144,7 +144,7 @@ import chartDataFormat from '../../../charts/chartDataFormat'
 import alertRuleInfo from '../../alert/alertRuleInfo'
 import alertLabel from '../../alert/alertLabel'
 import { calcDurationByStringTimeB } from '../../js/tools'
-import {alertMessage as alertMessageConstant} from "@/components/common/js/constants";
+import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
 export default {
   name: 'alertMessageTable',
   components: {
@@ -222,7 +222,7 @@ export default {
           label: this.$t('alert.list.state'),
           prop: 'state',
           show: true,
-          width: 100,
+          width: 100
           // sortable: 'custom'
         }, {
           label: this.$t('alert.startAt'),

@@ -318,7 +318,7 @@ export default {
     return {
       alertLabelData: null,
       loading: true,
-      heightList: 0,
+      heightList: 0
     }
   },
   watch: {

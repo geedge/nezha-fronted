@@ -464,12 +464,12 @@ export default {
       /* if (refresh) {
          this.getData(this.filter)
       } */
-    },
+    }
   },
   computed: {
     chartRightBoxShow () {
       return this.$store.getters.getShowRightBox
-    },
+    }
   },
   created () {
     // this.getPanelData()

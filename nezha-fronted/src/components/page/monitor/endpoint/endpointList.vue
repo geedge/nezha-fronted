@@ -629,9 +629,9 @@ export default {
           if (this.needAlertDaysData) {
             response.data.list.forEach(item => {
               item.trendLoading = true
-              item.left= 0
-              item.top= 0
-              item.alertNumtooltipShow= false
+              item.left = 0
+              item.top = 0
+              item.alertNumtooltipShow = false
               item.alertDaysData = [
                 {
                   metric: { priority: 'P1' },
@@ -659,7 +659,7 @@ export default {
           this.detailViewRightObj = detailViewRightObj
           this.pageObj.total = response.data.total
           this.pageObj.pages = response.data.pages
-          if (!this.scrollbarWrap) {
+          if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)

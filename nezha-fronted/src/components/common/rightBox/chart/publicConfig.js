@@ -422,11 +422,11 @@ export default {
     enableChange (type) {
       switch (type) {
         case 'valueMapping':
-          break;
+          break
         case 'legend':
-          break;
+          break
         case '':
-          break;
+          break
       }
       this.change()
     }

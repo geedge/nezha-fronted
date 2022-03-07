@@ -261,7 +261,7 @@ export default {
       } else {
         return getOption(this.chartInfo.type)
       }
-    },
+    }
   },
   methods: {
     isTimeSeries,

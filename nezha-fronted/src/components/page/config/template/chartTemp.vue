@@ -107,7 +107,7 @@ import chartTmplTable from '@/components/common/table/settings/chartTmplTable'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
-import {randomcolor} from "@/components/common/js/radomcolor/randomcolor";
+import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 
 export default {
   name: 'chartTemp',
@@ -294,7 +294,7 @@ export default {
           }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
-          if (!this.scrollbarWrap) {
+          if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)

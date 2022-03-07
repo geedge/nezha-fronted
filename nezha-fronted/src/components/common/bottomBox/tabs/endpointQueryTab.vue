@@ -176,7 +176,7 @@ export default {
       plTableSHow: true,
       scrollTop: 0,
       scrollbarWrap: null,
-      minusTime: 0,
+      minusTime: 0
     }
   },
   methods: {

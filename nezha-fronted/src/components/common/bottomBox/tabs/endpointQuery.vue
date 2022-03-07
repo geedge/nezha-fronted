@@ -128,7 +128,7 @@ export default {
       dropdownShow: false,
       timeout: null,
       formatTime: '',
-      hideSameLabels: true,
+      hideSameLabels: true
     }
   },
   methods: {

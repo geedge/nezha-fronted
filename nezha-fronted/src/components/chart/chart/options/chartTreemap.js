@@ -19,7 +19,7 @@ const chartTreemapOption = {
       return [
         '<div class="tooltip-title">' +
         formatUtil.encodeHTML(treePath.join('/')) +
-        '</div>',
+        '</div>'
       ].join('')
     }
   },
