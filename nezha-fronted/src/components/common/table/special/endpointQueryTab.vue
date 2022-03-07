@@ -56,7 +56,7 @@
       v-if="graphShow"
       :visible.sync="graphShow"
       :show-close="false"
-      class="nz-dialog chart-fullscreen"
+      class="nz-dialog chart-fullscreen endpoint-query-metrics"
       destroy-on-close
       fullscreen
       :modal-append-to-body="false"
