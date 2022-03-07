@@ -196,7 +196,7 @@ export default {
               // if (isChartPie(this.chartInfo.type)) {
               //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
               // }
-              query += `&query=${element.expression}`
+              query += `&query=${encodeURIComponent(element.expression)}`
               return this.$get(query)
             })
             if (this.multipleTime) {
@@ -217,7 +217,7 @@ export default {
                 // if (isChartPie(this.chartInfo.type)) {
                 //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
                 // }
-                query += `&query=${element.expression}`
+                query += `&query=${encodeURIComponent(element.expression)}`
                 return this.$get(query)
               })
               requests = requests.concat(multipleRequests)
