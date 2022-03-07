@@ -90,8 +90,8 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
         },
         {
-          id: 'guage',
-          name: this.$t('dashboard.panel.chartForm.typeVal.guage.label')
+          id: 'gauge',
+          name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
         },
         {
           id: 'treemap',
@@ -133,8 +133,8 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
         },
         {
-          id: 'guage',
-          name: this.$t('dashboard.panel.chartForm.typeVal.guage.label')
+          id: 'gauge',
+          name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
         },
         {
           id: 'treemap',

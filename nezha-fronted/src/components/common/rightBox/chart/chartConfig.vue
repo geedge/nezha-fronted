@@ -737,8 +737,8 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
         },
         {
-          id: 'guage',
-          name: this.$t('dashboard.panel.chartForm.typeVal.guage.label')
+          id: 'gauge',
+          name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
         },
         {
           id: 'treemap',
@@ -809,8 +809,8 @@ export default {
           break
         case 'stat':
         case 'hexagon':
-        case 'guage':
-          if (this.oldType === 'stat' || this.oldType === 'guage' || this.oldType === 'hexagon') {
+        case 'gauge':
+          if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'hexagon') {
             break
           }
           this.chartConfig.param = {

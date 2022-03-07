@@ -124,7 +124,7 @@ export default {
         case 'bar' :
         case 'table' :
         case 'stat' :
-        case 'guage' :
+        case 'gauge' :
         case 'pie' :
         case 'treemap' :
         case 'log' :

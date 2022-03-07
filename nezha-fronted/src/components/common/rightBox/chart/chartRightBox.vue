@@ -218,7 +218,7 @@ export default {
         if (!params.groupId) {
           params.groupId = 0
         }
-        if (params.type !== 'guage') {
+        if (params.type !== 'gauge') {
           delete params.param.min
           delete params.param.max
         }
