@@ -18,8 +18,6 @@
             <el-select id="account-input-language"
                        class="right-box__select"
                        v-model="editipam.type"
-                       clearable
-                       collapse-tags
                        placeholder=""
                        @change="validValueType"
                        :disabled="!!editipam.id"
@@ -39,8 +37,6 @@
               <el-select id="account-input-language"
                          class="right-box__select"
                          v-model="editipam.mask"
-                         clearable
-                         collapse-tags
                          placeholder="mask"
                          popper-class="right-box-select-top right-box__select-width prevent-clickoutside"
                          size="small">
@@ -103,13 +99,13 @@ export default {
           if (Ipv4.test(value)) {
             callback()
           } else {
-            callback(new Error(vm.$t('validate.domain')))
+            callback(new Error(vm.$t('validate.address')))
           }
         } else if (this.editipam.type === 6) {
           if (Ipv6.test(value)) {
             callback()
           } else {
-            callback(new Error(vm.$t('validate.domain')))
+            callback(new Error(vm.$t('validate.address')))
           }
         }
       }, 100)
@@ -198,12 +194,14 @@ export default {
         }
         maskArray = Array.from(new Set(mask))
         maskArray.sort(function (a, b) { return b - a })
+        this.editipam.mask = 24
       } else if (e === 6) {
         for (let i = 1; i <= 128; i++) {
           mask.push(i)
         }
         maskArray = Array.from(new Set(mask))
         maskArray.sort(function (a, b) { return b - a })
+        this.editipam.mask = 24
       }
       this.maskList = maskArray
     }

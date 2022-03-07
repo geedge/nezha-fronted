@@ -21,8 +21,6 @@
             <el-select id="account-input-language"
                        class="right-box__select"
                        v-model="editGlobalization.lang"
-                       clearable
-                       collapse-tags
                        placeholder=""
                        popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
                        size="small">
