@@ -17,9 +17,9 @@ export default {
         return
       }
       // this.$refs.dataList.bottomBox.showSubList = false
-      if (this.orderBy) {
-        this.detailViewRightObj = ''
-      }
+      // if (this.orderBy) {
+      //   this.detailViewRightObj = ''
+      // }
       this.detailType = flag
       let dataList = ''
       localStorage.setItem('detail-view-' + this.tableId, this.detailType)
@@ -66,7 +66,7 @@ export default {
             this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs.dataList.$refs.searchInput.searchLabelList.filter(item => searchLabel.label !== item.label)
           }
         })
-        if (this.orderBy && this.$refs.dataTable.$refs.dataTable) {
+        if (this.orderBy) {
           const index = this.orderBy.indexOf('-')
           let orderBy = ''
           let orderType = ''
@@ -78,7 +78,9 @@ export default {
             orderBy = this.orderBy
             orderType = 'ascending'
           }
-          this.$refs.dataTable.$refs.dataTable.sort(orderBy, orderType)
+          if (this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
+            this.$refs.dataTable.$refs.dataTable.sort(orderBy, orderType)
+          }
         }
       }, 100)
     },

@@ -739,7 +739,6 @@ export default {
             })
           }
           this.tableData = response.data.list
-          console.log(this.$refs.dataTable.$refs.dataTable)
           const globalSearchId = this.$store.getters.getGlobalSearchId
           let detailViewRightObj = ''
           if (globalSearchId) {
