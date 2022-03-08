@@ -334,6 +334,7 @@ export default {
             }
             if (this.chartInfo.type === 'group') {
               this.chartData = lodash.get(this, 'chartInfo.children', [])
+              this.loading = false
               this.groupInit()
             }
             if (this.chartInfo.type === 'topology') {

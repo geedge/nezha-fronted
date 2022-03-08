@@ -303,7 +303,7 @@ export default {
             let top = dom.style.top
             top = Number(top.substring(0, top.length - 2)) + groupTop
             if (item.type === 'group') {
-              this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.onScroll(scrollTop, top)
+              this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.onScroll(scrollTop, top)
             }
             if (item.loaded) {
               return
