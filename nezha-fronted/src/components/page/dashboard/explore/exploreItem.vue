@@ -320,7 +320,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
       </div>
     </div>
     <transition name="right-box">
-      <chartRightBox v-if="rightBox.show" ref="addChartModal" :chart="chart" :from="$CONSTANTS.fromRoute.explore" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'explore'}" @close="handleBox(false)" @on-create-success="createSuccess"></chartRightBox>
+      <chartRightBox v-if="rightBox.show" ref="addChartModal" :chart="chartData" :from="$CONSTANTS.fromRoute.explore" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'explore'}" @close="handleBox(false)" @on-create-success="createSuccess"></chartRightBox>
     </transition>
   </div>
 </template>
@@ -406,7 +406,7 @@ export default {
       panelData: [],
       chartUnit: 0,
       historyParam: { useHistory: true, key: 'expore-history' },
-      chart: {},
+      chartData: {},
       collapseValue: ['1', '2'],
       showTab: ['1', '2'],
       logData: []
@@ -960,7 +960,7 @@ export default {
         panelName: '',
         type: 'line',
         span: 4,
-        datasource: '1',
+        datasource: 'metrics',
         height: 4,
         unit: 2,
         param: {
@@ -979,7 +979,7 @@ export default {
       this.expressions.forEach((exp, index) => {
         chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
       })
-      this.chart = chart
+      this.chartData = chart
       this.rightBox.show = true
     },
     createSuccess (type, response, param, panel) { // 添加chart成功
