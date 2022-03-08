@@ -79,14 +79,14 @@
           </el-form-item>
           <el-form-item label="cURL"  v-if="loadFinish" class="download-url">
             <el-input id="download-url-curl" :disabled="true" v-model="curlUrl">
-              <el-popover :content="$t('tip.copySuccess')" placement="top" trigger="manual" v-model="curlVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('curl')">
+              <el-popover :content="$t('tip.copySuccess')" placement="top" trigger="manual" v-model="curlVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('curl')"  style="cursor: pointer">
                 <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-curl')"></i>
               </el-popover>
             </el-input>
           </el-form-item>
           <el-form-item label="Wget"  v-if="loadFinish" class="download-url">
-            <el-input id="download-url-wget" :disabled="true" v-model="wgetUrl">
-              <el-popover :content="$t('tip.copySuccess')" placement="top" trigger="manual" v-model="wgetVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('wget')">
+            <el-input id="download-url-wget" :disabled="true" v-model="wgetUrl" >
+              <el-popover :content="$t('tip.copySuccess')" placement="top" trigger="manual" v-model="wgetVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('wget')" style="cursor: pointer">
                 <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-wget')"></i>
               </el-popover>
             </el-input>
