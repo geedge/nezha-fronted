@@ -56,7 +56,7 @@ export default {
           return {
             ...item,
             // hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
-            loaded: true
+            loaded: false
           }
         })
       }, 100)

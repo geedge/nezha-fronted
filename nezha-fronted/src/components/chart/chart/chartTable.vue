@@ -94,7 +94,7 @@ export default {
     initTableData (chartInfo, originalDatas) {
       let colorIndex = 0
       const returnData = {}
-      const arr = chartInfo.param.indexs.split(',')
+      const arr = chartInfo.param.indexs?chartInfo.param.indexs.split(',') : []
       const tableInitialData = lodash.cloneDeep(originalDatas)
       tableInitialData.forEach((originalData, expressionIndex) => {
         let key = expressionIndex
