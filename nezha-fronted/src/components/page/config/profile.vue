@@ -72,7 +72,7 @@
       </div>
     </div>
     <operation-record class="profile-right"/>
-    <el-dialog :visible.sync="authBindShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
+    <el-dialog id="viewGraphDialog" :visible.sync="authBindShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
                :show-close="true" width="620px" class="nz-dialog" @closed="closeDialog">
 
       <div v-loading="dialogLoading">
@@ -106,7 +106,7 @@
         </button>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="fileShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
+    <el-dialog id="viewGraphDialog" :visible.sync="fileShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
                :show-close="true" width="620px" class="nz-dialog" @closed="fileClosed">
 
       <div>

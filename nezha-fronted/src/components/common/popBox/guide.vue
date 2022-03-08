@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    id="viewGraphDialog"
     :title="$t('guide.title')"
     :visible.sync="visible"
     custom-class="guild-pop"

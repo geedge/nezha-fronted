@@ -50,7 +50,7 @@
           <div  :id="'staticContainer'+chartIndex" class="center-content"></div>
         </div>
         <!--全屏-->
-        <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%" @opened="initDialog"  @close="screenModal = false" >
+        <el-dialog  id="viewGraphDialog"class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%" @opened="initDialog"  @close="screenModal = false" >
           <div slot="title">
             <span class="nz-dialog-title">{{chartData.name}}</span>
           </div>

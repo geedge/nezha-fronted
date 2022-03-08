@@ -45,7 +45,7 @@
     </transition>
     <!--导出-->
     <div class="export-xlsx">
-      <el-dialog :modal-append-to-body='false' :show-close="true" :title="importBox.title"
+      <el-dialog id="viewGraphDialog" :modal-append-to-body='false' :show-close="true" :title="importBox.title"
                  :visible.sync="importBox.show" class="nz-dialog" width="300px" @close="closeDialog">
         <div class="upload-body">
           <button id="alert-msg-exportcur" class="el-button el-button--default el-button--small" @click="exportCur">

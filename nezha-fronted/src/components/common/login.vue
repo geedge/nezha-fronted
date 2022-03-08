@@ -51,7 +51,7 @@
     <div class="login-foot-buildOn">
       <span><a target="_blank" rel="noopener noreferrer" href='https://prometheus.io'>Build on Prometheus</a></span>
     </div>
-    <el-dialog :visible.sync="authBindShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
+    <el-dialog id="viewGraphDialog" :visible.sync="authBindShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
                :show-close="true" width="620px" class="nz-dialog" >
 
       <div v-loading="dialogLoading">
@@ -85,7 +85,7 @@
         </button>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="fileShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
+    <el-dialog id="viewGraphDialog" :visible.sync="fileShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
                :show-close="true" width="620px" class="nz-dialog" >
 
       <div>

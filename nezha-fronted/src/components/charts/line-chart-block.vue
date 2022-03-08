@@ -109,7 +109,7 @@
         </template>
         <!--
         <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->
-        <el-dialog class="line-chart-block-modal nz-dialog"
+        <el-dialog id="viewGraphDialog" class="line-chart-block-modal nz-dialog"
                    :title="$t('dashboard.panel.view')"
                    :visible.sync="screenModal"
                    width="90%"

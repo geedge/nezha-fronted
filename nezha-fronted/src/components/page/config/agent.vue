@@ -45,7 +45,7 @@
     <transition name="right-box">
       <agent-box v-if="rightBox.show" :agent="object" @close="closeRightBox"></agent-box>
     </transition>
-    <el-dialog :title="$t('config.agent.agent.title')" :visible.sync="showAgentDownload" append-to-body class="nz-dialog agent-dialog" width="800px" @close="closeDialog">
+    <el-dialog id="viewGraphDialog" :title="$t('config.agent.agent.title')" :visible.sync="showAgentDownload" append-to-body class="nz-dialog agent-dialog" width="800px" @close="closeDialog">
       <div v-if="showAgentDownload" class="agent-box">
         <el-form v-model="agentParam" class="right-box-form right-box-form-left" label-position = "top" label-width="120px" size="small" style="width: 100%">
           <div class="right-box-sub-title">{{$t('config.agent.agent.download')}}</div>
