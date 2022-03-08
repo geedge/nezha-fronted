@@ -60,7 +60,7 @@
                 export-file-name="chart"
                 export-url="/visual/panel/export"
                 import-url="/visual/panel/import"
-                @afterImport="dateChange"
+                @afterImport="afterImport"
               >
                 <template v-slot:before>
                   <el-dropdown-item>
@@ -812,6 +812,10 @@ export default {
       if (type === 'duplicate') {
         this.editChart(chartInfo, true)
       }
+    },
+    afterImport () {
+      this.dateChange()
+      this.panelReloadOnlyPanel()
     }
   },
   created () {

@@ -163,7 +163,7 @@ export default {
     },
     selectMapping (value, valueMapping, show) {
       let mapping = ''
-      if (show) {
+      if (show && valueMapping) {
         valueMapping.forEach(item => {
           if (item.type === 'value') {
             if (value == item.value) {

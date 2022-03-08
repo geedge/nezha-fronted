@@ -67,7 +67,7 @@ export default {
       }
       this.tableTimer = setTimeout(() => {
         this.columns = this.chartInfo.param.columns
-        this.chartInfo.param.valueMapping.forEach((item) => {
+        this.chartInfo.param.valueMapping && this.chartInfo.param.valueMapping.forEach((item) => {
           if (this.valueMapping[item.column]) {
             this.valueMapping[item.column].push(item)
           } else {
