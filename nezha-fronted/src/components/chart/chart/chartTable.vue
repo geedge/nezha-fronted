@@ -94,7 +94,7 @@ export default {
     initTableData (chartInfo, originalDatas) {
       let colorIndex = 0
       const returnData = {}
-      const arr = chartInfo.param.indexs?chartInfo.param.indexs.split(',') : []
+      const arr = chartInfo.param.indexs ? chartInfo.param.indexs.split(',') : []
       const tableInitialData = lodash.cloneDeep(originalDatas)
       tableInitialData.forEach((originalData, expressionIndex) => {
         let key = expressionIndex
@@ -107,7 +107,7 @@ export default {
         originalData.forEach((data, dataIndex) => {
           this.isNoData = false
           data.$labels = data.metric
-          const value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
+          const value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last') + ''
           const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
           // const mapping = this.selectTableMapping(value, chartInfo.param.valueMapping)
           data.$value = value
