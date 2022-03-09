@@ -593,7 +593,7 @@ export default {
             color: '#d64f40'
           }]
         }
-        chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
+        chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '')
         chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
         chartInfo.unit = this.currentMsg.unit
         this.showFullscreen(true, chartInfo)
