@@ -1,18 +1,17 @@
 import router from './router'
 import store from './store'
-import { get, post } from './http'
+import { get, post, requestsArr } from './http'
 import ElementUI from 'element-ui'
 import Vue from 'vue'
 import i18n, { loadI18n } from './components/common/i18n'
 import VueResource from 'vue-resource'
 import bus from '@/libs/bus'
-
 Vue.use(VueResource)
 
 const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state', '/sys/appearance'] // 免登陆白名单
 const permissionWhiteList = ['/profile', '/menu', ...loginWhiteList] // 权限白名单
-
 router.beforeEach((to, from, next) => {
+  requestsArr.forEach(xhr => xhr.cancel())
   const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
   if (to.path === '/login') { // 拦截登录页面，现货区外观设置 再系统初始化检查
     Vue.http.get(configUrl).then(config => {
