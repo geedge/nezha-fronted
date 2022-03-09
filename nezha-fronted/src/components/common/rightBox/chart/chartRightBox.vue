@@ -101,7 +101,6 @@
     </div>
 <!--    预览-->
     <el-dialog
-      id="viewGraphDialog"
       v-if="previewShow"
       :visible.sync="previewShow"
       :show-close="false"

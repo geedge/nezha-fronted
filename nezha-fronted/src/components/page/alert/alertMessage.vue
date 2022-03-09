@@ -56,7 +56,7 @@
     </nz-data-list>
     <!--导出-->
     <div class="export-xlsx">
-      <el-dialog id="viewGraphDialog" :modal-append-to-body='false' :show-close="true" :title="importBox.title" :visible.sync="importBox.show" class="nz-dialog" width="600px" @close="closeDialog">
+      <el-dialog :modal-append-to-body='false' :show-close="true" :title="importBox.title" :visible.sync="importBox.show" class="nz-dialog" width="600px" @close="closeDialog">
         <div class="upload-body" style="height: 170px">
           <div class="export-box">
             <span class="export-title">Records</span>
@@ -85,7 +85,7 @@
     </div>
     <!--删除弹窗-->
     <div class="export-xlsx">
-      <el-dialog id="viewGraphDialog" :modal-append-to-body='false' :show-close="true" :title="$t('overall.remark')" :visible.sync="deleteBox.show" class="nz-message"  width="450px" @close="closeDialog" @opened="openedDialog">
+      <el-dialog :modal-append-to-body='false' :show-close="true" :title="$t('overall.remark')" :visible.sync="deleteBox.show" class="nz-message"  width="450px" @close="closeDialog" @opened="openedDialog">
         <div class="upload-body">
           <el-form ref="remarkForm" :model="deleteBox">
             <el-form-item :rules="[{required:true,message: $t('validate.required'), trigger: 'change'}]" prop="remark">
@@ -124,7 +124,7 @@
       ></panel-chart>
     </el-dialog>
     <!--全屏-->
-    <el-dialog id="viewGraphDialog" class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
+    <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
                :visible.sync="dialogShowText"
                width="96%"  @close="dialogShowText = false" :modal-append-to-body="false">
       <div slot="title">

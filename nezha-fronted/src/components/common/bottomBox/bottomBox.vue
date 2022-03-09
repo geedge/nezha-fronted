@@ -1,5 +1,5 @@
 <template>
-  <div class="sub-box bottom-box">
+  <div class="sub-box bottom-box" :style="{height: isFullScreen ? '100%' : ''}">
     <div class="resize-modal">
       <div class="sub-list-resize-copy">一</div>
     </div>

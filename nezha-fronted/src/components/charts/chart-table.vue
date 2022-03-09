@@ -79,7 +79,7 @@
                       ref="Pagination" :append-to-body="false" pop-class="out-popper-fix"></Pagination>
         </div>
         <!--全屏-->
-        <el-dialog id="viewGraphDialog" class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')" :visible.sync="screenModal"
+        <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')" :visible.sync="screenModal"
                    width="96%" @close="screenModal = false" :modal-append-to-body="false">
           <div slot="title">
             <span class="nz-dialog-title">{{data.name}}</span>

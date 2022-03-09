@@ -12,7 +12,7 @@
   }
 </style>
 <template>
-    <el-dialog class="chart-preview-dialog nz-dialog" id="chartPreviewDailog viewGraphDialog"
+    <el-dialog class="chart-preview-dialog nz-dialog" id="chartPreviewDailog"
                :visible.sync="screenModal"
                :width="dailogWidth"
                :modal-append-to-body='false'

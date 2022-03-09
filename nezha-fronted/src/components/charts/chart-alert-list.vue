@@ -126,7 +126,6 @@
                    :visible.sync="graphShow"
                    width="90%"
                    :append-to-body="true"
-                   id="viewGraphDialog"
                    @close="dialogClose" :modal-append-to-body="false">
           <div slot="title">
             {{$t("project.endpoint.dialogTitle")}}
@@ -140,7 +139,7 @@
           </div>
         </el-dialog>
         <!--全屏-->
-        <el-dialog id="viewGraphDialog" class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
+        <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
                    :visible.sync="dialogShowText"
                    width="96%"  @close="dialogShowText = false" :modal-append-to-body="false">
           <div slot="title">

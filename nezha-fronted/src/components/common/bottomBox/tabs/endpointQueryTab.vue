@@ -106,7 +106,7 @@
     </pl-table>
     <button :class="{'to-top-is-hover': tools.tableHover}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn" id="endpoint-list-totop"><i class="nz-icon nz-icon-top"></i></button>
 
-    <el-dialog id="viewGraphDialog" class="line-chart-block-modal nz-dialog endpoint-dialog"
+    <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
                :title="$t('project.endpoint.dialogTitle')"
                :visible.sync="graphShow"
                width="90%"

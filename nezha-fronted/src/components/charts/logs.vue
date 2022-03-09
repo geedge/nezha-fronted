@@ -66,7 +66,7 @@
           </div>
         </div>
         <!--全屏-->
-        <el-dialog id="viewGraphDialog" class="nz-dialog table-chart-dialog"
+        <el-dialog class="nz-dialog table-chart-dialog"
                    :title="$t('dashboard.panel.view')"
                    :visible.sync="screenModal"
                    width="90%"

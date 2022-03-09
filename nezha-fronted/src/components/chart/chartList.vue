@@ -61,7 +61,6 @@
     </div>
     <!-- 全屏查看 -->
     <el-dialog
-      id="viewGraphDialog"
       v-if="fullscreen.visible"
       :visible.sync="fullscreen.visible"
       :show-close="false"

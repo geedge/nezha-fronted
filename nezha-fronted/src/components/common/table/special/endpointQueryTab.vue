@@ -52,7 +52,6 @@
       <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
     </div>
     <el-dialog
-      id="viewGraphDialog"
       v-if="graphShow"
       :visible.sync="graphShow"
       :show-close="false"

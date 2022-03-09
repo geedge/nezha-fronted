@@ -245,7 +245,6 @@
     </transition>
     <!--Custom picture-->
     <el-dialog
-      id="viewGraphDialog"
       :title="title"
       :visible.sync="uploadPicShow"
       width="auto"

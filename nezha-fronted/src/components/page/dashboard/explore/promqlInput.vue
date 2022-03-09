@@ -103,7 +103,6 @@
     </div>
 
     <el-dialog
-      id="viewGraphDialog"
       :visible.sync="tempBoxShow"
       :append-to-body="true"
       :width="'auto'"
