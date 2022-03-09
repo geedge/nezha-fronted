@@ -26,7 +26,7 @@
           </span>
      </el-popover>
     </span>
-    <div class="chart-header__title" v-if="!isGroup">{{chartInfo.name}}</div>
+    <div class="chart-header__title" v-if="!isGroup" :title="chartInfo.name">{{chartInfo.name}}</div>
     <div class="chart-header__title" v-else >
       <span @click="groupShow"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-right': 'nz-icon-arrow-down'"></i></span>
       {{chartInfo.name}}
