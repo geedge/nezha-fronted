@@ -227,16 +227,18 @@ export default {
         }, {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
-          show: false,
-          width: 150,
-          sortable: 'custom'
-        }, {
-          label: this.$t('alert.lastAt'),
-          prop: 'lastAt',
           show: true,
           width: 150,
           sortable: 'custom'
-        }, {
+        },
+        // {
+        //   label: this.$t('alert.lastAt'),
+        //   prop: 'lastAt',
+        //   show: true,
+        //   width: 150,
+        //   sortable: 'custom'
+        // },
+        {
           label: this.$t('config.terminallog.duration'),
           prop: 'duration',
           show: true,
