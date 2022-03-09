@@ -72,8 +72,8 @@
           <template v-else-if="item.prop === 'labels'" class="labels">
           <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
             <span
-              @mouseenter="labelHover(scope.row, item.label, true, $event)"
-              @mouseleave="labelHover(scope.row, item.label, false)">
+              @mouseenter="labelHover(scope.row, item.label, true, true, $event)"
+              @mouseleave="labelHover(scope.row, item.label, false, true,)">
               <nz-alert-tag
                 v-if="item.label !== 'alertname' && item.label !== 'severity'" :key="item.label" :cursor-point="tagType(item.label) !== 'info'"
                 :label="item.label"
@@ -145,6 +145,7 @@ import alertRuleInfo from '../../alert/alertRuleInfo'
 import alertLabel from '../../alert/alertLabel'
 import { calcDurationByStringTimeB } from '../../js/tools'
 import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
+import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'alertMessageTable',
   components: {
@@ -164,7 +165,7 @@ export default {
     loading: Boolean,
     chartAlertList: Boolean
   },
-  mixins: [table, bus],
+  mixins: [table, bus, alertLabelMixin],
   data () {
     return {
       /* 二级列表相关 */
@@ -247,10 +248,6 @@ export default {
       ],
       viewAssetState: false,
       tableDataInitNum: 0,
-      alertLabelShow: false,
-      alertLabelId: '',
-      alertLabelObj: {},
-      alertLabelType: '',
       alertRuleShow: false,
       alertRuleId: '',
       alertRuleObj: ''
@@ -572,18 +569,6 @@ export default {
       this.$refs.moduleBox.show(false, false)
       this.viewAssetState = false
     },
-    // label tooltip是否显示
-    labelToolTipDis (labelType) {
-      switch (labelType) {
-        case 'asset':
-        case 'module':
-        case 'endpoint':
-        case 'project':
-        case 'dc':
-          return false
-        default: return true
-      }
-    },
     // alertName鼠标划入
     alertMessageHover (item, loading, e) {
       if (e) {
@@ -595,22 +580,6 @@ export default {
       }
       this.$set(item.alertRule, 'loading', loading)
       this.alertRuleShow = loading
-    },
-    // label 鼠标划入
-    labelHover (item, type, loading, e) {
-      if (this.labelToolTipDis(type)) {
-        return
-      }
-      if (e) {
-        const dom = e.currentTarget
-        const position = dom.getBoundingClientRect()
-        this.$set(item[type], 'position', position)
-        this.alertLabelId = item[type].id
-        this.alertLabelObj = item[type]
-        this.alertLabelType = type
-      }
-      this.$set(item[type], 'loading', loading)
-      this.alertLabelShow = loading
     },
     // Severity Label
     returnSeverityLabel (key) {
