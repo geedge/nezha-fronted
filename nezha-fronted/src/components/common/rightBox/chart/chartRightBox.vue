@@ -446,7 +446,6 @@ export default {
       immediate: true,
       handler (n) {
         const obj = JSON.parse(JSON.stringify(n))
-        console.log(obj)
         if (obj.param && !obj.param.valueMapping) {
           obj.param.valueMapping = []
         }

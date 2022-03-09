@@ -56,6 +56,7 @@
       <template v-slot>
         <endpointQueryTab
           ref="endpointQueryTab"
+          :orderByFa="'id'"
           :from="from"
           :obj="obj"
           :formatTime="formatTime"

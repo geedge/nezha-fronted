@@ -25,6 +25,7 @@
         <alertMessageTable
           ref="dataTable"
           :api="url"
+          :orderByFa="'id'"
           :loading="tools.loading"
           :custom-table-title="tools.customTableTitle"
           :height="subTableHeight"
@@ -300,8 +301,8 @@ export default {
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.$set(this.searchLabel, 'state', this.state)
       if (this.searchTimeHeader && this.searchTimeHeader.length > 1) {
-        this.$set(this.searchLabel, 'startAt', this.timezoneToUtcTimeStr(this.searchTimeHeader[0]))
-        this.$set(this.searchLabel, 'endAt', this.timezoneToUtcTimeStr(this.searchTimeHeader[1]))
+        this.$set(this.searchLabel, 'startAt', bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTimeHeader[0])), 'YYYY-MM-DD HH:mm:ss'))
+        this.$set(this.searchLabel, 'endAt', bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTimeHeader[1])), 'YYYY-MM-DD HH:mm:ss'))
       } else {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt

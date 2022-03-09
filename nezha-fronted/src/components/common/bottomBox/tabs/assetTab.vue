@@ -18,6 +18,7 @@
         <asset-table
           ref="dataTable"
           :api="url"
+          :orderByFa="'id'"
           v-loading="tools.loading"
           :loading="tools.loading"
           :custom-table-title="tools.customTableTitle"

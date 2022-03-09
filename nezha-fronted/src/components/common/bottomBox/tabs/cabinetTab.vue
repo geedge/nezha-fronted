@@ -18,6 +18,7 @@
       <template v-slot>
         <cabinet-table
           ref="dataTable"
+          :orderByFa="'id'"
           v-loading="tools.loading"
           :loading="tools.loading"
           :api="url"

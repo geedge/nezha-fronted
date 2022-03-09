@@ -24,6 +24,7 @@
       <template v-slot>
         <scrape-endpoint-table
           ref="dataTable"
+          :orderByFa="'id'"
           v-loading="tools.loading"
           :loading="tools.loading"
           :api="url"

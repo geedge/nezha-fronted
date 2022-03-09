@@ -136,7 +136,6 @@ export default {
             this.orderBy = { prop: n, order: 'ascending' }
           }
           // this.orderBy = JSON.parse(JSON.stringify(this.orderBy))
-          console.log(n, this.orderBy)
         }
       }
     },

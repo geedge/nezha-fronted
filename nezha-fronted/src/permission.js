@@ -16,6 +16,7 @@ router.beforeEach((to, from, next) => {
   const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
   if (to.path === '/login') { // 拦截登录页面，现货区外观设置 再系统初始化检查
     Vue.http.get(configUrl).then(config => {
+      console.log(1)
       const appearance = new Promise(resolve => {
         get(config.body.baseUrl + 'sys/appearance').then(res => {
           if (res.code === 200) {
@@ -110,6 +111,7 @@ router.beforeEach((to, from, next) => {
           store.commit('setLangList', JSON.parse(langList))
         }
         Vue.http.get(configUrl).then(config => {
+          console.log(2)
           get(config.body.baseUrl + 'sys/i18n/lang').then(response => {
             if (response.code === 200) {
               loadI18n(response.data)
@@ -125,6 +127,7 @@ router.beforeEach((to, from, next) => {
     const permissionRequest = new Promise(resolve => {
       if (store.getters.menuList.length === 0) {
         Vue.http.get(configUrl).then(config => {
+          console.log(3)
           post(config.body.baseUrl + 'sys/user/permissions', { token: localStorage.getItem('nz-token') }).then(res => {
             if (res.code === 200) {
               store.commit('setMenuList', sortByOrderNum(res.data.menus))
@@ -143,13 +146,6 @@ router.beforeEach((to, from, next) => {
       } else {
         resolve()
       }
-    })
-    Vue.http.get(configUrl).then(config => {
-      get(config.body.baseUrl + 'alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
-        if (response.code == 200) {
-          store.commit('setSeverityData', response.data.list)
-        }
-      })
     })
     Promise.all([i18nRequest, permissionRequest]).then(response => {
       if (to.path) {

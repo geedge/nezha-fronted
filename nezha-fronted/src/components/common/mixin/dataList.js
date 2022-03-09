@@ -339,7 +339,6 @@ export default {
     const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
     if (this.$route.query.orderBy) {
       this.orderBy = this.$route.query.orderBy
-      console.log('asdasdadsadsa')
     }
     let searchKeys = {}
     if (path === 'dc') {
