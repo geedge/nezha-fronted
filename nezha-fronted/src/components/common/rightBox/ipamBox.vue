@@ -31,7 +31,7 @@
           <div class="cidr-title">CIDR</div>
           <div class="cidr">
             <el-form-item class="cidr-addr" prop="addr">
-              <el-input maxlength="256" rows="4" show-word-limit placeholder="address" v-model="editipam.addr" size="small"></el-input>
+              <el-input maxlength="256" rows="4" show-word-limit :placeholder="$t('overall.address')" v-model="editipam.addr" size="small"></el-input>
             </el-form-item>
             <el-form-item prop="mask">
               <el-select id="account-input-language"
