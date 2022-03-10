@@ -724,6 +724,7 @@ export default {
     }
   },
   mounted () {
+    bus.$on('refreshPanel', this.refreshPanel)
     this.scrollbarWrap = this.$refs.dashboardScrollbar
     this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)

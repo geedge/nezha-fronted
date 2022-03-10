@@ -48,7 +48,7 @@
           :from="from"
           :time-range="timeRange"
           :chart-detail-info="chartDetailInfo"
-          @refreshPanel="$emit('refreshPanel')"
+          @refreshPanel="refreshPanel"
           @showFullscreen="showFullscreen"
         ></panel-chart>
       </grid-item>
@@ -332,6 +332,9 @@ export default {
           }
         })
       }, 200)
+    },
+    refreshPanel () {
+      bus.$emit('refreshPanel')
     }
   },
   created () {
