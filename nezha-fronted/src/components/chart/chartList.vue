@@ -297,7 +297,7 @@ export default {
       }
       this.scrollTopTimer = setTimeout(() => {
         this.copyDataList.forEach(item => {
-          if (!this.$refs['grid-item' + item.id][0]) {
+          if (!this.$refs['grid-item' + item.id] || !this.$refs['grid-item' + item.id][0]) {
             return;
           }
           const dom = this.$refs['grid-item' + item.id][0].$el

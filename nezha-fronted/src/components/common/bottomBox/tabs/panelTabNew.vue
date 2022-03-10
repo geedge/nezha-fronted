@@ -686,7 +686,13 @@ export default {
     },
     chartBySync () {
       this.panelTabLoading = true
-      this.$post('visual/panel/chart/syncTmpl', { panelId: this.showPanel.id }).then(res => {
+      const params = {}
+      if (this.from === 'chartTemp') {
+        params.pid = this.obj.id
+      } else {
+        params.panelId = this.showPanel.id
+      }
+      this.$post('visual/panel/chart/syncTmpl', params).then(res => {
         this.panelTabLoading = false
         if (res.code === 200) {
           this.getTableData(this.obj.id)
