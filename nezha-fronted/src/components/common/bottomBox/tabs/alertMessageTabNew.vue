@@ -25,7 +25,7 @@
         <alertMessageTable
           ref="dataTable"
           :api="url"
-          :orderByFa="'id'"
+          :orderByFa="orderBy"
           :loading="tools.loading"
           :custom-table-title="tools.customTableTitle"
           :height="subTableHeight"
@@ -154,6 +154,14 @@ export default {
       handler (n) {
         if (n) {
           this.getTableData()
+        }
+      }
+    },
+    orderBy: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+         console.log(n)
         }
       }
     }
