@@ -442,7 +442,12 @@ export default {
             this.chart = JSON.parse(JSON.stringify(chartData))
             this.chart.panelId = this.showPanel.id
             this.chart.panelName = this.showPanel.name
-            this.chart.param = JSON.parse(this.chart.param)
+            if (this.chart.param) {
+              this.chart.param = JSON.parse(this.chart.param)
+            } else {
+              this.chart.param = {}
+            }
+
             if (!this.chart.groupId || this.chart.groupId == -1) {
               this.chart.groupId = ''
             }
@@ -856,7 +861,9 @@ export default {
       this.nowTimeType.start_time = this.searchTime[0]
       this.nowTimeType.end_time = this.searchTime[1]
       setTimeout(() => {
-        this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowTimeType)
+        if (this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker) {
+          this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowTimeType)
+        }
       }, 100)
     }
   },

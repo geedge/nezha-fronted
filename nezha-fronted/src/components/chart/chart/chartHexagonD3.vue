@@ -57,6 +57,8 @@ export default {
           this.initHexagonData(this.chartInfo, this.chartData).then(() => {
             this.getLayout().then(layout => {
               this.initHexagon(layout)
+            }).catch(() => {
+
             })
           })
         }, 200)
@@ -331,9 +333,12 @@ export default {
         : '#FFFFFF'
     },
     getLayout () {
-      this.boxWidth = this.$refs[`chart-canvas-${this.chartId}`].offsetWidth - 2 * this.boxPadding
-      this.boxHeight = this.$refs[`chart-canvas-${this.chartId}`].offsetHeight - 2 * this.boxPadding
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
+        if (!this.$refs[`chart-canvas-${this.chartId}`]) {
+          reject()
+        }
+        this.boxWidth = this.$refs[`chart-canvas-${this.chartId}`].offsetWidth - 2 * this.boxPadding
+        this.boxHeight = this.$refs[`chart-canvas-${this.chartId}`].offsetHeight - 2 * this.boxPadding
         let radius = 0
         let col = 0
         let row = 0
@@ -384,6 +389,8 @@ export default {
       this.hexagonTimer = setTimeout(() => {
         this.getLayout().then(layout => {
           this.initHexagon(layout)
+        }).catch(() => {
+
         })
       }, 50)
     }

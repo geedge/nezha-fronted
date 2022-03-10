@@ -40,13 +40,7 @@ export default {
   },
   methods: {
     refresh () {
-      this.containerShow = false
-      new Promise(resolve => {
-        this.$router.replace({ path: this.$route.path, query: {} })
-        resolve()
-      }).then(() => {
-        this.$nextTick(() => { this.containerShow = true })
-      })
+      this.$store.commit('setIsRouteLive')
     }
   },
   destroyed () {
