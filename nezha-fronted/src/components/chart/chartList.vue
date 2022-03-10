@@ -48,6 +48,7 @@
           :from="from"
           :time-range="timeRange"
           :chart-detail-info="chartDetailInfo"
+          @refreshPanel="$emit('refreshPanel')"
           @showFullscreen="showFullscreen"
         ></panel-chart>
       </grid-item>
@@ -280,10 +281,12 @@ export default {
           panelId: this.panelId,
           charts: charts
         }
-        this.$put('/visual/panel/chart/weights', params).then(() => {
-          const position = getLayoutPosition(this.copyDataList)
-          this.$store.commit('setChartLastPosition', position)
-        })
+        if (charts && charts.length) {
+          this.$put('/visual/panel/chart/weights', params).then(() => {
+            const position = getLayoutPosition(this.copyDataList)
+            this.$store.commit('setChartLastPosition', position)
+          })
+        }
       }, 1000)
     },
     onScroll (scrollTop = 0, groupTop = 0) {

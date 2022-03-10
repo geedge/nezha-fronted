@@ -95,6 +95,7 @@
                 @on-refresh-time="refreshTime"
                 @on-remove-chart="delChart"
                 @on-add-group-item-chart="addGroupItem"
+                @refreshPanel="refreshPanel"
                 :loading="chartListLoading"
               ></chart-list>
             </div>
@@ -299,11 +300,8 @@ export default {
   },
   methods: {
     // 刷新
-    Refresh () {
-      const curTime = this.$refs.calendarPanel.getCurrentTime()
-      this.filter.start_time = bus.timeFormate(curTime[0], this.panelDateFormatTime)
-      this.filter.end_time = bus.timeFormate(curTime[1], this.panelDateFormatTime)
-      this.getTableData()
+    refreshPanel () {
+      this.getData(this.filter)
     },
     // 面板相关操作
     panelChange (val) {

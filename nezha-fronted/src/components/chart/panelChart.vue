@@ -14,6 +14,7 @@
       @loadMore="loadMore"
       @edit-chart="$emit('edit-chart', chartInfo)"
       @refresh="refresh"
+      @sync="chartSync"
       @groupShow="groupShow"
       @showFullscreen="showFullscreen"
     ></chart-header>
@@ -440,6 +441,17 @@ export default {
     },
     saveChart () {
       this.$emit('saveChart', this.chartInfo)
+    },
+    chartSync () {
+      this.loading = true
+      this.$post('visual/panel/chart/syncTmpl', { ids: [this.chartInfo.id] }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(this.$t('tip.syncSuccess'))
+          this.$emit('refreshPanel')
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     }
   },
   watch: {

@@ -102,6 +102,7 @@
               @on-refresh-time="refreshTime"
               @on-remove-chart="delChart"
               @on-add-group-item-chart="addGroupItem"
+              @refreshPanel="refreshPanel"
               :loading="chartListLoading"
               :chart-detail-info="chartDetailInfo"
             ></chart-list>
@@ -273,6 +274,9 @@ export default {
     // 刷新
     refresh () {
       this.getTableData(this.obj.id)
+    },
+    refreshPanel () {
+      this.getData(this.filter)
     },
     refreshTime (st, et) {
       const startTime = bus.timeFormate(st, 'yyyy-MM-dd hh:mm')
