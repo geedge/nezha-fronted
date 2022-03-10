@@ -5,11 +5,12 @@ export default {
       type: Array
     },
     targetTab: String,
-    from: String
+    from: String,
   },
   data () {
     return {
-      subTableHeight: this.$tableHeight.openSubList.subList
+      subTableHeight: this.$tableHeight.openSubList.subList,
+      isSubList: true
     }
   },
   methods: {
