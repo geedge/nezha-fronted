@@ -41,6 +41,11 @@
            <i class="nz-icon nz-icon-info-normal tool__icon"></i>
         </el-tooltip>
       </span>
+      <span  v-if="chartInfo.type=='group'" class="chart-header__tool" @click="addChartGroup">
+        <el-tooltip :content="$t('overall.add')" effect="light" placement="top">
+           <i class="nz-icon nz-icon-plus tool__icon"></i>
+        </el-tooltip>
+      </span>
       <span class="chart-header__tool" @click="refreshChart">
         <el-tooltip :content="$t('dashboard.refresh')" effect="light" placement="top">
            <i class="nz-icon nz-icon-replay tool__icon"></i>
@@ -87,6 +92,13 @@ export default {
   methods: {
     openUrl () {
       window.open(this.chartInfo.param.link)
+    },
+    addChartGroup () {
+      this.$store.commit('setGroupId', this.chartInfo.id)
+      this.$store.dispatch('dispatchEditChart', {
+        chart: '',
+        type: 'addGroupItem'
+      })
     }
   }
 }
