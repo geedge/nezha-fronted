@@ -122,7 +122,9 @@ export default {
       typeData: [],
       dcData: [],
       snmpCredentialData: [],
-      fieldGroupData: []
+      fieldGroupData: [],
+      needAlertDaysData: true,
+      trendKey: 'assetId'
     }
   },
   methods: {
@@ -236,6 +238,28 @@ export default {
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
             response.data.list[i].status = response.data.list[i].status + ''
+          }
+          if (this.needAlertDaysData) {
+            response.data.list.forEach(item => {
+              item.trendLoading = true
+              item.left = 0
+              item.top = 0
+              item.alertNumtooltipShow = false
+              item.alertDaysData = [
+                {
+                  metric: { priority: 'P1' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P2' },
+                  values: [[0, 0]]
+                },
+                {
+                  metric: { priority: 'P3' },
+                  values: [[0, 0]]
+                }
+              ]
+            })
           }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total

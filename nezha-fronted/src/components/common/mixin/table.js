@@ -163,32 +163,6 @@ export default {
               params[this.trendKey] = item.id
               setTimeout(() => {
                 this.$get('/stat/alertMessage/trend', params).then((res) => {
-                  // res = {
-                  //   msg: 'success',
-                  //   code: 200,
-                  //   data: {
-                  //     result: [
-                  //       {
-                  //         values: [
-                  //           {
-                  //             metric: { priority: 'P1' },
-                  //             values: []
-                  //           }, {
-                  //             metric: { priority: 'P2' },
-                  //             values: [
-                  //               [1645142400000, 0], [1645228800000, 3], [1645315200000, 20], [1645401600000, 0], [1645488000000, 0], [1645574400000, 3], [1645660800000, 20]
-                  //             ]
-                  //           }, {
-                  //             metric: { priority: 'P3' },
-                  //             values: [
-                  //               [1645142400000, 1], [1645228800000, 3], [1645315200000, 20], [1645401600000, 0], [1645488000000, 0], [1645574400000, 3], [1645660800000, 20]
-                  //             ]
-                  //           }]
-                  //       }],
-                  //     resultType: 'matrix'
-                  //   },
-                  //   time: '2022-02-24 08:41:35'
-                  // }
                   const alertDaysData = res.data.result ? res.data.result[0].values : []
                   const newWeekDays = JSON.parse(JSON.stringify(weekDays))
                   alertDaysData.forEach(item => {
