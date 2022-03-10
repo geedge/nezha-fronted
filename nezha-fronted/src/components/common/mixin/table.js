@@ -163,6 +163,9 @@ export default {
               params[this.trendKey] = item.id
               setTimeout(() => {
                 this.$get('/stat/alertMessage/trend', params).then((res) => {
+                  if (!res.data) {
+                    return
+                  }
                   const alertDaysData = res.data.result ? res.data.result[0].values : []
                   const newWeekDays = JSON.parse(JSON.stringify(weekDays))
                   alertDaysData.forEach(item => {
