@@ -58,8 +58,8 @@ export default {
     return {
       logData: null,
       filterTime: [
-        bus.timeFormate(bus.getOffsetTimezoneData(-1), 'YYYY-MM-DD HH:mm:ss'),
-        bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
+        bus.timeFormate(bus.getOffsetTimezoneData(-1), this.timeFormatMain),
+        bus.timeFormate(bus.getOffsetTimezoneData(), this.timeFormatMain)
       ],
       expressions: [''],
       matchSymbol: '|=',
@@ -115,6 +115,7 @@ export default {
           if (item != '') {
             let expr = item
             this.matchContent && (expr = `${item} ${this.matchSymbol} "${this.matchContent}"`)
+            console.log(this.filterTime)
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(expr) + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&limit=' + limit))
           }
         })
