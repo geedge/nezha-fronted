@@ -264,7 +264,6 @@ export default {
       deep: true,
       handler (n) {
         if (!this.isInit && this.chartOption.color) {
-          console.log(this.chartOption)
           this.colorList = this.colorList.slice(0, 20)
           this.chartOption.color = this.chartOption.color.slice(0, 20)
           this.initChart(this.chartOption)

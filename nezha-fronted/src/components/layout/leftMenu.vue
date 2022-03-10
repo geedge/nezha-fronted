@@ -82,7 +82,6 @@ export default {
   },
   methods: {
     jump (route) {
-      console.log(route, this.route)
       if (route === this.route) {
         this.refresh()
       }

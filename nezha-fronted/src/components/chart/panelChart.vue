@@ -348,7 +348,6 @@ export default {
           }
         }
       } catch (e) {
-        console.info(e)
         this.loading = false
       }
     },
