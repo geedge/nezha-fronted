@@ -612,6 +612,9 @@ export default {
             resolve(data)
             setTimeout(() => {
               const title = this.tools.customTableTitle
+              if (!this.$refs.dataTable && !this.$refs.dataDetail) {
+                return
+              }
               const tableTitle = this.$refs.dataTable ? this.$refs.dataTable.tableTitle : this.$refs.dataDetail.tableTitle
               const originalTitle = title.slice(0, tableTitle.length) // 原title
               const oldLabelTitle = title.slice(tableTitle.length, title.length) // 旧labelTitle

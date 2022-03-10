@@ -867,6 +867,9 @@ export default {
     if (pageSize && pageSize !== 'undefined') {
       this.pageObj.pageSize = pageSize
     }
+    if (!this.$refs.dataTable && !this.$refs.dataDetail) {
+      return
+    }
     const tableTitle = this.$refs.dataTable ? this.$refs.dataTable.tableTitle : this.$refs.dataDetail.tableTitle
     let localStorageTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
     localStorageTableTitle = localStorageTableTitle ? JSON.parse(localStorageTableTitle) : tableTitle
