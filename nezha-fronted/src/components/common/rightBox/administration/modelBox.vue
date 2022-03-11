@@ -21,8 +21,8 @@
           </el-form-item>
           <!-- type -->
           <el-form-item :label='$t("overall.type")' prop="typeId">
-            <el-select value-key="id" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" v-model="editModel.typeId" placeholder="" size="small">
-              <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-select value-key="id" allow-create class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.typeId" placeholder="" size="small" id="module-box-input-project">
+              <el-option :id="'module-project-'+item.type.id" v-for="(item, index) in typeDataList" :key="index" :label="item.type.name" :value="item.type.id"></el-option>
             </el-select>
           </el-form-item>
           <!-- ChartTemplate -->
@@ -98,7 +98,7 @@ export default {
       editModel: {},
       brandList: [], // brand 列表数据
       editModule: {},
-      typeList: [],
+      typeDataList: [],
       chartlList: [], // chart 列表数据
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
@@ -131,6 +131,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        if (n.id) {
+          this.editModel.typeId = n.type.name
+        }
         this.isEdit = true
         this.editModel = JSON.parse(JSON.stringify(n))
       }
@@ -138,6 +141,7 @@ export default {
   },
   created () {
     this.getBrandList()
+    this.modelTypeList()
     this.ChartTemplateList()
   },
   methods: {
@@ -226,6 +230,11 @@ export default {
     ChartTemplateList () {
       this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0, groupId: 0 }).then(res => {
         this.chartlList = res.data.list
+      })
+    },
+    modelTypeList () {
+      this.$get('asset/model', { pageSize: -1, pageNo: 1 }).then(res => {
+        this.typeDataList = res.data.list
       })
     }
   }

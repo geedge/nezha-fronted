@@ -42,7 +42,10 @@
           </template>
         </template>
          <template v-else-if="item.prop === 'brand'">
-             {{scope.row.brand.name}}
+           {{scope.row.brand.name}}
+         </template>
+        <template v-else-if="item.prop === 'type'">
+          {{scope.row.type.name}}
          </template>
         <span v-else-if="item.prop === 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <template v-else-if="item.prop === 'assetNum'">

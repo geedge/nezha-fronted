@@ -199,8 +199,9 @@ export function arrLength (rule, value, callback) { // 校验数组
 }
 
 export function sysObjectIdInput (rule, value, callback) {
-  const sysId = /^(\d+\.)+\d${color}/
+  const sysId = /^(\d{1,9}\.){0,}[\d]+$/
   setTimeout(() => {
+    if (value == '') return callback()
     if (sysId.test(value)) {
       callback()
     } else {
