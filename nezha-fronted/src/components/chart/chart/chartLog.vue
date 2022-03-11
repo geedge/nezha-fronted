@@ -164,6 +164,7 @@ export default {
     initChart () {
       this.tableData = []
       this.isInit = false
+      this.operations.descending = this.chartInfo.descending
       this.chartData.forEach(item => {
         item.forEach(row => {
           this.tableData.push({
@@ -285,6 +286,13 @@ export default {
       deep: true,
       handler (n) {
         this.initChart(this.chartOption)
+      }
+    },
+    operations: {
+      deep: true,
+      handler (n) {
+        // this.tableData = this.tableData.reverse()
+        this.$emit('refreshLogs', this.operations)
       }
     }
   }

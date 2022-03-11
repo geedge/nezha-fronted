@@ -76,6 +76,7 @@
         :chart-info="chartInfo"
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
+        @refreshLogs="refreshLogs"
         @chartIsNoData="chartIsNoData"
       ></chart-log>
       <chart-stat
@@ -287,6 +288,9 @@ export default {
     },
     resize () {
       this.$refs['chart' + this.chartInfo.id] && this.$refs['chart' + this.chartInfo.id].resize()
+    },
+    refreshLogs (params) {
+      this.$emit('refreshLogs', params)
     }
   },
   mounted () {
