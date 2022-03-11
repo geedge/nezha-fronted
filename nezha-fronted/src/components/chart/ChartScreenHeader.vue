@@ -88,7 +88,8 @@ export default {
       this.filter.value = this.searchTime[2]
       this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       setTimeout(() => {
-        this.$emit('dateChange', this.filter, this.$refs.pickTime.$refs.multipleTime.searchTime)
+        const multipleTime = this.$refs.pickTime.$refs.multipleTime ? this.$refs.pickTime.$refs.multipleTime.searchTime : ''
+        this.$emit('dateChange', this.filter, multipleTime)
       }, 100)
     },
     closeDialog () {
@@ -128,6 +129,10 @@ export default {
         case 'pie' :
         case 'treemap' :
         case 'log' :
+        case 'hexagon' :
+        case 'diagram' :
+        case 'url':
+        case 'clock':
           return true
         default: return false
       }
