@@ -196,10 +196,10 @@ export default {
                 query += '&format=1'
                 if (!params || params.descending) {
                   this.chartInfo.descending = true
-                  query += '&direction=forward'
+                  query += '&direction=backward'
                 } else {
                   this.chartInfo.descending = false
-                  query += '&direction=backward'
+                  query += '&direction=forward'
                 }
               }
               // if (isChartPie(this.chartInfo.type)) {
