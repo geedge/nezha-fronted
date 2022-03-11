@@ -187,7 +187,7 @@ export default {
       }
     },
     exportLog () {
-      this.$emit('exportLog', this.operations)
+      this.$emit('exportLog', { limit: this.limit, ...this.operations })
     },
     cellClassName ({ row, column, rowIndex, columnIndex }) {
       const className = []
