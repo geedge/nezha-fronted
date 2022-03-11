@@ -347,9 +347,6 @@ export default {
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)
     }
   },
-  beforeDestroy () {
-    this.$store.dispatch('dispatchPanelLock', { flag: true })
-  },
   watch: {
     dataList: {
       deep: true,

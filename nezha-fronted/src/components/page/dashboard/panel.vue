@@ -527,6 +527,7 @@ export default {
     createSuccess (msg, data, params, panel) {
       this.filter.panelId = this.showPanel.id
       this.getData(this.filter)
+      this.$store.dispatch('clearPanel')
     },
     // 获取数据,用在子页面
     getData (params) {
@@ -865,6 +866,9 @@ export default {
         }
       }, 100)
     }
+  },
+  beforeDestroy () {
+    this.$store.dispatch('dispatchPanelLock', { flag: true })
   },
   watch: {
     'filter.searchName': function (n, o) {
