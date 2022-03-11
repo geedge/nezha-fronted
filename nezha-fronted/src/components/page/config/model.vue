@@ -90,6 +90,8 @@ export default {
         id: '',
         name: '',
         chartIds: '',
+        sysObjectId: '',
+        type: { id: '', name: '' },
         remark: ''
       },
       tableId: 'modelTable',

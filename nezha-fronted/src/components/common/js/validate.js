@@ -198,6 +198,16 @@ export function arrLength (rule, value, callback) { // 校验数组
   }
 }
 
+export function sysObjectIdInput (rule, value, callback) {
+  const sysId = /^(\d+\.)+\d${color}/
+  setTimeout(() => {
+    if (sysId.test(value)) {
+      callback()
+    } else {
+      callback(new Error(vm.$t('validate.sysId')))
+    }
+  }, 100)
+}
 export function longAndLat (rule, value, callback) { // 校验经纬度
 
 }

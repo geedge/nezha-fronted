@@ -124,6 +124,16 @@ export default {
           width: 120,
           sortable: 'custom'
         }, {
+          label: this.$t('overall.type'),
+          prop: 'type',
+          minWidth: 200,
+          show: true
+        }, {
+          label: this.$t('config.model.sysObjectId'),
+          prop: 'sysObjectId',
+          minWidth: 200,
+          show: false
+        }, {
           label: this.$t('overall.remark'),
           prop: 'remark',
           minWidth: 200,

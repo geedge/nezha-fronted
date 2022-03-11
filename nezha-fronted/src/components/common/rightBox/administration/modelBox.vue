@@ -15,8 +15,14 @@
           </el-form-item>
           <!--brand-->
           <el-form-item :label='$t("config.model.brand")' prop="brandId">
-            <el-select value-key="id" allow-create  class="right-box__select" popper-class="right-box-select-top  prevent-clickoutside" :filterable="true" v-model="editModel.brandId" placeholder="" size="small" id="module-box-input-project">
+            <el-select value-key="id" allow-create class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.brandId" placeholder="" size="small" id="module-box-input-project">
               <el-option :id="'module-project-'+item.id" v-for="item in brandList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- type -->
+          <el-form-item :label='$t("overall.type")' prop="typeId">
+            <el-select value-key="id" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" v-model="editModel.typeId" placeholder="" size="small">
+              <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <!-- ChartTemplate -->
@@ -38,7 +44,11 @@
             class="form-control"
             @values="(data) => {editModel.chartIds = data.map(d => d.id).join(',')}"
             :result-format="resultFormat"
-          ></v-selectpage>
+            ></v-selectpage>
+          </el-form-item>
+          <!-- sys object id -->
+          <el-form-item :label="$t('config.model.sysObjectId')" prop="sysObjectId">
+            <el-input maxlength="64" show-word-limit v-model="editModel.sysObjectId" size="small" type="text"></el-input>
           </el-form-item>
           <!--remark-->
           <el-form-item :label="$t('overall.remark')" prop="remark">
@@ -62,6 +72,7 @@
 // import { host, port } from '@/components/common/js/validate'
 import selectWalk from '../../popBox/selectWalk'
 import editRigthBox from '../../mixin/editRigthBox'
+import { sysObjectIdInput } from '@/components/common/js/validate'
 
 export default {
   name: 'modelBox',
@@ -87,6 +98,7 @@ export default {
       editModel: {},
       brandList: [], // brand 列表数据
       editModule: {},
+      typeList: [],
       chartlList: [], // chart 列表数据
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
@@ -104,6 +116,12 @@ export default {
         ],
         brandId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        typeId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        sysObjectId: [
+          { validator: sysObjectIdInput, trigger: 'blur' }
         ]
       }
     }
