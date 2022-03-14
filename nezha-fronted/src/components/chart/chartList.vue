@@ -48,6 +48,7 @@
           :from="from"
           :time-range="timeRange"
           :chart-detail-info="chartDetailInfo"
+          @refreshPanel="refreshPanel"
           @showFullscreen="showFullscreen"
         ></panel-chart>
       </grid-item>
@@ -280,13 +281,15 @@ export default {
           panelId: this.panelId,
           charts: charts
         }
-        this.$put('/visual/panel/chart/weights', params).then(() => {
-          const position = getLayoutPosition(this.copyDataList)
-          this.$store.commit('setChartLastPosition', position)
-        })
-      }, 300)
+        if (charts && charts.length) {
+          this.$put('/visual/panel/chart/weights', params).then(() => {
+            const position = getLayoutPosition(this.copyDataList)
+            this.$store.commit('setChartLastPosition', position)
+          })
+        }
+      }, 1000)
     },
-    onScroll (scrollTop = 0) {
+    onScroll (scrollTop = 0, groupTop = 0) {
       const self = this
       if (this.scrollTopTimer) {
         clearTimeout(this.scrollTopTimer)
@@ -294,19 +297,25 @@ export default {
       }
       this.scrollTopTimer = setTimeout(() => {
         this.copyDataList.forEach(item => {
-          if (item.loaded) {
-            return
+          if (!this.$refs['grid-item' + item.id] || !this.$refs['grid-item' + item.id][0]) {
+            return;
           }
           const dom = this.$refs['grid-item' + item.id][0].$el
           if (dom) {
+            let top = dom.style.top
+            top = Number(top.substring(0, top.length - 2)) + groupTop
+            if (item.type === 'group') {
+              this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.onScroll(scrollTop, top)
+            }
+            if (item.loaded) {
+              return
+            }
             const itemHeight = dom.offsetHeight
             // 1.元素距离页面顶部的距离
             // console.log(dom.style.transform)
 
             // let top = dom.style.transform.split(',')[1]
             // top = top.substring(0, top.length - 2)
-            let top = dom.style.top
-            top = top.substring(0, top.length - 2)
             const mainOffsetTop = top - this.stepWidth + 14// transform: grid组件 通过 tranfrom 控制位置 中间的为y的值 通过截取获得 - 父元素 marginTop的 值。
             // 2.元素的高度
             const mainHeight = itemHeight // ele.offsetHeight;//itemHeight;
@@ -316,13 +325,16 @@ export default {
             // 4.浏览器可见区域的高度
             const windowHeight = (window.innerHeight || document.documentElement.clientHeight) - 50 - 70
             // console.log(this.$refs['chart' + item.id][0].$el.offsetHeight, scrollTop,'scrollTop',windowHeight,mainOffsetTop + mainHeight / 4,(windowScrollTop + windowHeight))
-            if ((mainOffsetTop + mainHeight / 4) < (windowScrollTop + windowHeight) || self.isGroup) {
+            if ((mainOffsetTop + mainHeight / 4) < (windowScrollTop + windowHeight)) {
               item.loaded = true
               this.$refs['chart' + item.id][0].getChartData()
             }
           }
         })
       }, 200)
+    },
+    refreshPanel () {
+      bus.$emit('refreshPanel')
     }
   },
   created () {
@@ -334,9 +346,6 @@ export default {
       bus.$on('groupMove', this.changeGroupHeight)
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)
     }
-  },
-  beforeDestroy () {
-    this.$store.dispatch('dispatchPanelLock', { flag: true })
   },
   watch: {
     dataList: {

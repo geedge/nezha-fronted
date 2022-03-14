@@ -46,6 +46,7 @@
       <template  v-slot="slotProps">
         <chartTmplTable
           ref="dataTable"
+          :orderByFa="orderBy"
           v-loading="tools.loading"
           :loading="tools.loading"
           :api="url"
@@ -106,7 +107,7 @@ import chartTmplTable from '@/components/common/table/settings/chartTmplTable'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
-import {randomcolor} from "@/components/common/js/radomcolor/randomcolor";
+import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 
 export default {
   name: 'chartTemp',
@@ -234,7 +235,7 @@ export default {
         this.$get('visual/panel/chart/' + data.id).then(res => {
           this.rightBox.loading = false
           if (res.code === 200) {
-            const chartData = res.data.data
+            const chartData = res.data
             this.object = JSON.parse(JSON.stringify(chartData))
             this.object.panelId = this.showPanel.id
             this.object.panelName = this.showPanel.name
@@ -275,6 +276,8 @@ export default {
       }
       if (this.orderBy) {
         this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      } else {
+        delete this.searchLabel.orderBy
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
@@ -291,7 +294,7 @@ export default {
           }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
-          if (!this.scrollbarWrap) {
+          if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)

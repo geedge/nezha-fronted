@@ -12,13 +12,13 @@
       v-loading="tools.loading"
     >
       <template v-slot:top-tool-right>
-        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top">
+        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 100px">
           <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
         <button id="asset-filter" :class="[dataListLayout.indexOf('clickSearch') > -1?'is-focus':'' ]" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
-        <pick-time v-model="searchTime" :default-pick="12" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
+        <pick-time v-model="searchTime" :default-pick="10" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
         <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcelLower')" class="top-tool-btn margin-r-10"
                 type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
@@ -31,6 +31,7 @@
       <template v-slot:default="slotProps">
         <alert-message-table
           ref="dataTable"
+          :orderByFa="orderBy"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
@@ -103,6 +104,7 @@
       </el-dialog>
     </div>
     <el-dialog
+      id="viewGraphDialog"
       v-if="graphShow"
       :visible.sync="graphShow"
       :show-close="false"
@@ -192,7 +194,7 @@ export default {
       chartDatas: [],
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
       legend: [],
-      searchTime: [],
+      searchTime: [bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 24 * 7)), bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))],
       searchTimeDialog: [],
       searchTimeSelect: bus.getTimezontDateRange(),
       currentMsg: {},
@@ -560,6 +562,15 @@ export default {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.$nextTick(() => {
           this.searchTimeDialog = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
+          this.$store.dispatch('dispatchPanelTime', {
+            time: this.searchTimeDialog,
+            nowTimeType: {
+              id: 4,
+              text: this.$t('dashboard.panel.lastOneHour'),
+              type: 'hour',
+              value: 1
+            }
+          })
           this.queryDate()
         })
       })
@@ -582,7 +593,7 @@ export default {
             color: '#d64f40'
           }]
         }
-        chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
+        chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '')
         chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
         chartInfo.unit = this.currentMsg.unit
         this.showFullscreen(true, chartInfo)
@@ -728,6 +739,8 @@ export default {
       }
       if (this.orderBy) {
         this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      } else {
+        delete this.searchLabel.orderBy
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
@@ -745,10 +758,10 @@ export default {
         delete this.searchLabel.statistics
       } */
       this.tools.loading = true
-      if (state) {
-        delete this.searchLabel.startAt
-        delete this.searchLabel.endAt
-      }
+      // if (state) {
+      //   delete this.searchLabel.startAt
+      //   delete this.searchLabel.endAt
+      // }
       const param = {
         ...this.searchLabel,
         ...this.searchCheckBox
@@ -761,43 +774,25 @@ export default {
         this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
+          response.data.list.forEach((item) => {
+            const labels = JSON.parse(item.labels)
+            if (labels) {
+              Object.keys(labels).forEach((key) => {
+                if (item[key] && item[key].id) {
+                  item.position = {}
+                  item.loading = false
+                }
+              })
+            }
+          })
           this.tableData = response.data.list
           if (response.statistics && this.$route.path === '/alertMessage') {
             this.setSearchData(response.statistics)
           }
-          /* const axiosAll = []
-            this.$nextTick(() => {
-              this.tableData.forEach((item) => {
-                item.labels = JSON.parse(item.labels)
-                if (!this.isBuildIn(item.alertRule)) {
-                  const paramStr = JSON.stringify(this.promQueryParamConvert(item))
-                  axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '')))
-                } else {
-                  axiosAll.push('')
-                }
-              })
-              axios.all(axiosAll).then(res => {
-                res.forEach((item, index) => {
-                  let current = []
-                  const response2 = item.data
-                  if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                    current = response2.data.result[0].value.map((item, i) => {
-                      if (i == 0) {
-                        return bus.computeTimezone(item)
-                      } else {
-                        return parseFloat(item).toFixed(2)
-                      }
-                    })
-                  } else {
-                    current = [null, null]
-                  }
-                  this.tableData[index].current = current
-                })
-                this.$set(this.tableData, [...this.tableData])
-              })
-            }) */
           this.deleteBox.ids = ''
           this.pageObj.total = response.data.total
+        } else {
+          this.$message.error(response.msg)
         }
       })
     },

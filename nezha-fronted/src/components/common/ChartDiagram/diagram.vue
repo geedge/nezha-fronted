@@ -1796,6 +1796,9 @@ export default {
         this.imgageLoading = true
         this.$get('monitor/project/topo/icon').then((imageAllId) => {
           const promiseArr = []
+          if (!imageAllId || !imageAllId.data) {
+            return
+          }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
               promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))

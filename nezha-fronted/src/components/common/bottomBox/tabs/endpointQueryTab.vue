@@ -111,7 +111,6 @@
                :visible.sync="graphShow"
                width="90%"
                :modal-append-to-body="false"
-               id="viewGraphDialog"
                @close="dialogClose">
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
@@ -176,7 +175,7 @@ export default {
       plTableSHow: true,
       scrollTop: 0,
       scrollbarWrap: null,
-      minusTime: 0,
+      minusTime: 0
     }
   },
   methods: {

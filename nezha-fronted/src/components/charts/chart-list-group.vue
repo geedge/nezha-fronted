@@ -512,7 +512,7 @@ export default {
         // this.getChartData(item, index, this.filter)
         this.setChartSize(item, index)
         const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];
-        this.handleElementInViewport(chartBox,  this.childrenScrollTop, item, index, true)
+        this.handleElementInViewport(chartBox, this.childrenScrollTop, item, index, true)
       })
     },
     loadChartData (scrollTop) {

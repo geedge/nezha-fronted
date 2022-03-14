@@ -11,8 +11,8 @@ const user = {
     buttonList: [],
     roleList: [],
     language: localStorage.getItem('nz-language'),
-    severityData: [],
-    severityDataWeight: []
+    severityData: localStorage.getItem('nz-severityData') ? JSON.parse(localStorage.getItem('nz-severityData')) : [],
+    severityDataWeight:  localStorage.getItem('nz-severityDataWeight') ? JSON.parse(localStorage.getItem('nz-severityDataWeight')) : []
   },
   mutations: {
     setLanguage (state, language) {
@@ -28,6 +28,7 @@ const user = {
       state.roleList = [...roleList]
     },
     setSeverityData (state, severityData) {
+      localStorage.setItem('nz-severityData', JSON.stringify(severityData))
       state.severityData = [...severityData]
       const arr = JSON.parse(JSON.stringify(severityData.reverse()))
       for (let i = 0; i < arr.length; i++) {
@@ -39,6 +40,7 @@ const user = {
           }
         }
       }
+      localStorage.setItem('nz-severityDataWeight', JSON.stringify(arr))
       state.severityDataWeight = arr
     },
     clean (state) {

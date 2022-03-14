@@ -23,7 +23,7 @@
               <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light option-btn" style="margin-left: 0px;" @click="expandAllOrNone" :class="{'btn-active':expandAllFlag}">展开/收缩</button>
               <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light option-btn" @click="selectAllOrNone" :class="{'btn-active':selectAllFlag}"><span ><i class="nz-icon nz-icon-delete"></i></span></button>
             </div>-->
-            <el-tree :data="menus" :default-expand-all="expandAllFlag" :props="{label:labelFormatter}" :default-checked-keys="[2]" class="tree-border" node-key="id" ref="menuTree" show-checkbox id="role-box-input-menus">
+            <el-tree :data="menus" :default-expand-all="expandAllFlag" :props="{label:labelFormatter}" :default-checked-keys="[312]" class="tree-border" node-key="id" ref="menuTree" show-checkbox id="role-box-input-menus">
               <div slot-scope="{ node, data }">
               <span>
                 <i v-if="data.type == '1'" class="el-icon-menu"></i>

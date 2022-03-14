@@ -635,8 +635,8 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.pie.label')
         },
         {
-          id: 'guage',
-          name: this.$t('dashboard.panel.chartForm.typeVal.guage.label')
+          id: 'gauge',
+          name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
         },
         {
           id: 'treemap',
@@ -698,8 +698,8 @@ export default {
       switch (type) {
         case 'stat':
         case 'hexagon':
-        case 'guage':
-          if (this.oldType === 'stat' || this.oldType === 'guage' || this.oldType === 'hexagon') {
+        case 'gauge':
+          if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'hexagon') {
             break
           }
           this.chartConfig.param = {
@@ -804,12 +804,12 @@ export default {
     },
     systemNameChange (index) {
       if (this.systemNameShow[index].error) {
-        this.expressionName[index] = this.systemNameShow[index].oldName
+        this.chartConfig.param.datasource[index].name = this.systemNameShow[index].oldName
         this.systemNameShow[index].error = ''
-      } else if (!this.expressionName[index]) {
-        this.expressionName[index] = this.systemNameShow[index].oldName
+      } else if (!this.chartConfig.param.datasource[index].name) {
+        this.chartConfig.param.datasource[index].name = this.systemNameShow[index].oldName
       } else {
-        this.systemNameShow[index].oldName = this.expressionName[index]
+        this.systemNameShow[index].oldName = this.chartConfig.param.datasource[index].name
       }
       this.change()
     },

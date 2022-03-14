@@ -194,13 +194,17 @@ export default {
     },
     downloadLicense () {
       this.$get('/sys/license/token').then(res => {
-        const fileName = this.licenseList.id + '-' + this.getTimeString() + '.xml'
+        let fileName = this.licenseList.id + '-' + this.getTimeString() + '.xml'
+        const resFileName = res.headers['content-disposition'].split('=')[1]
+        if (resFileName) {
+          fileName = resFileName
+        }
         if (window.navigator.msSaveOrOpenBlob) {
           // 兼容ie11
-          const blobObject = new Blob([res])
+          const blobObject = new Blob([res.data])
           window.navigator.msSaveOrOpenBlob(blobObject, fileName)
         } else {
-          const url = URL.createObjectURL(new Blob([res]))
+          const url = URL.createObjectURL(new Blob([res.data]))
           const a = document.createElement('a')
           document.body.appendChild(a) // 此处增加了将创建的添加到body当中
           a.href = url

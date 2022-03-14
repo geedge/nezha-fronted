@@ -1,94 +1,78 @@
 <template>
-  <el-table
-    id="endpointTable"
-    ref="dataTable"
-    :data="tableData"
-    :height="height"
-    border
-    @header-dragend="dragend"
-    @sort-change="tableDataSort"
-    @selection-change="selectionChange"
-    @row-dblclick="(row)=>{$emit('showBottomBox', 'panelTab', row)}"
-  >
-    <el-table-column
-      :resizable="false"
-      align="center"
-      type="selection"
-      width="55">
-    </el-table-column>
-    <el-table-column
-      v-for="(item, index) in customTableTitle"
-      v-if="item.show"
-      :key="`col-${index}`"
-      :fixed="item.fixed"
-      :label="item.label"
-      :min-width="`${item.minWidth}`"
-      :prop="item.prop"
-      :resizable="true"
-      :sort-orders="['ascending', 'descending']"
-      :sortable="item.sortable"
-      :width="`${item.width}`"
-      class="data-column"
+  <div style="height: 100%">
+    <el-table
+      id="endpointTable"
+      ref="dataTable"
+      :data="tableData"
+      :height="height"
+      border
+      :default-sort="orderBy"
+      @header-dragend="dragend"
+      @sort-change="tableDataSort"
+      @selection-change="selectionChange"
+      @row-dblclick="(row)=>{$emit('showBottomBox', 'panelTab', row)}"
     >
-      <template slot="header">
-        <span class="data-column__span">{{item.label}}</span>
-        <div class="col-resize-area"></div>
-      </template>
-      <template slot-scope="scope" :column="item">
-        <template v-if="item.prop === 'name'">
-          {{scope.row[item.prop]}}
+      <el-table-column
+        :resizable="false"
+        align="center"
+        type="selection"
+        width="55">
+      </el-table-column>
+      <el-table-column
+        v-for="(item, index) in customTableTitle"
+        v-if="item.show"
+        :key="`col-${index}`"
+        :fixed="item.fixed"
+        :label="item.label"
+        :min-width="`${item.minWidth}`"
+        :prop="item.prop"
+        :resizable="true"
+        :sort-orders="['ascending', 'descending']"
+        :sortable="item.sortable"
+        :width="`${item.width}`"
+        class="data-column"
+      >
+        <template slot="header">
+          <span class="data-column__span">{{item.label}}</span>
+          <div class="col-resize-area"></div>
         </template>
-        <template v-else-if="item.prop === 'type'">
-          {{scope.row.module.type}}
-        </template>
-        <template v-else-if="item.prop === 'project'">
+        <template slot-scope="scope" :column="item">
+          <template v-if="item.prop === 'name'">
+            {{scope.row[item.prop]}}
+          </template>
+          <template v-else-if="item.prop === 'type'">
+            {{scope.row.module.type}}
+          </template>
+          <template v-else-if="item.prop === 'project'">
           <span
             class="pointer"
-            @mouseenter="labelHover(scope.row, item.prop, true, $event)"
-            @mouseleave="labelHover(scope.row, item.prop, false)"
+            @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
+            @mouseleave="labelHover(scope.row, item.prop, false,true)"
           >
             {{scope.row[item.prop].name}}
           </span>
-          <alertLabel
-            v-if="scope.row[item.prop] && scope.row[item.prop].loading"
-            :id="scope.row[item.prop].id"
-            :that="scope.row[item.prop]"
-            :type="'project'"
-          ></alertLabel>
-        </template>
-        <template v-else-if="item.prop === 'module'">
+          </template>
+          <template v-else-if="item.prop === 'module'">
           <span
             class="pointer"
-            @mouseenter="labelHover(scope.row, item.prop, true, $event)"
-            @mouseleave="labelHover(scope.row, item.prop, false)"
+            @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
+            @mouseleave="labelHover(scope.row, item.prop, false,true)"
           >
             <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>
           {{scope.row[item.prop].name}}
           </span>
-          <alertLabel
-            v-if="scope.row[item.prop] && scope.row[item.prop].loading"
-            :id="scope.row[item.prop].id"
-            :that="scope.row[item.prop]"
-            :type="'module'"
-          ></alertLabel>
-        </template>
-        <template v-else-if="item.prop === 'asset'">
+          </template>
+          <template v-else-if="item.prop === 'asset'">
           <span
             class="pointer"
-            @mouseenter="labelHover(scope.row, item.prop, true, $event)"
-            @mouseleave="labelHover(scope.row, item.prop, false)"
+            @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
+            @mouseleave="labelHover(scope.row, item.prop, false,true)"
           >
             <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
             {{scope.row.asset.name}}
           </span>
-          <alertLabel
-            v-if="scope.row[item.prop] && scope.row[item.prop].loading"
-            :id="scope.row[item.prop].id"
-            :that="scope.row[item.prop]"
-            :type="'asset'"
-          ></alertLabel>
-        </template>
-        <template v-else-if="item.prop === 'alerts'">
+          </template>
+          <template v-else-if="item.prop === 'alerts'">
           <span style="cursor: pointer"  @click="showBottomBox('endpointAlertMessage', scope.row)">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
@@ -103,27 +87,27 @@
               :alertDaysData="scope.row.alertDaysData"
             />
           </span>
-        </template>
-        <template v-else-if="item.prop === 'configs'">
+          </template>
+          <template v-else-if="item.prop === 'configs'">
           <span class="configs-endpoint metrics"
-                @mouseenter="labelHover(scope.row, item.prop, true, $event)"
-                @mouseleave="labelHover(scope.row, item.prop, false, $event, true)">
+                @mouseenter="labelHover1(scope.row, item.prop, true, $event)"
+                @mouseleave="labelHover1(scope.row, item.prop, false, $event, true)">
             [{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'logs' : ''}}]
           </span>
-          <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop">
-            <div name="default">
-              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row))"></i></span>
-              <pre class="copy-value-content__pre">{{JSON.stringify(clConfigs(scope.row),null,2)}}</pre>
-            </div>
-          </nz-tooltip>
-        </template>
+            <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop">
+              <div name="default">
+                <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row))"></i></span>
+                <pre class="copy-value-content__pre">{{JSON.stringify(clConfigs(scope.row),null,2)}}</pre>
+              </div>
+            </nz-tooltip>
+          </template>
 
-        <template v-else-if="item.prop === 'state'">
-          <!--          metrics-->
-          <span style="width: auto;display: inline-block;cursor: pointer"
-                @mouseenter="labelHoverConfigs(scope.row, 0, true, $event)"
-                @mouseleave="labelHoverConfigs(scope.row, 0, false, $event)"
-          >
+          <template v-else-if="item.prop === 'state'">
+            <!--          metrics-->
+            <span style="width: auto;display: inline-block;cursor: pointer"
+                  @mouseenter="labelHoverConfigs(scope.row, 0, true, $event)"
+                  @mouseleave="labelHoverConfigs(scope.row, 0, false, $event)"
+            >
             <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
             <span v-if="scope.row.configs[0].state===0 || !scope.row.configs[0].state">
               <span class="active-icon red-bg inline-block"></span>
@@ -135,15 +119,15 @@
               <span class="active-icon gray-bg inline-block"></span>
             </span>
           </span>
-          <nz-tooltip :that="scope.row.configs[0]"  v-if="scope.row.configs[0] && scope.row.configs[0].loading && scope.row.configs[0].state  > 1" :type="'configs[0]'">
-            <div name="default">
-              <div v-html="suspendedStr(scope.row.configs[0].state)"></div>
-            </div>
-          </nz-tooltip>
-          <!--          logs-->
-         <span style="width: auto;display: inline-block;cursor: pointer"
-               @mouseenter="labelHoverConfigs(scope.row, 1, true, $event)"
-               @mouseleave="labelHoverConfigs(scope.row, 1, false, $event)">
+            <nz-tooltip :that="scope.row.configs[0]"  v-if="scope.row.configs[0] && scope.row.configs[0].loading && scope.row.configs[0].state  > 1" :type="'configs[0]'">
+              <div name="default">
+                <div v-html="suspendedStr(scope.row.configs[0].state)"></div>
+              </div>
+            </nz-tooltip>
+            <!--          logs-->
+            <span style="width: auto;display: inline-block;cursor: pointer"
+                  @mouseenter="labelHoverConfigs(scope.row, 1, true, $event)"
+                  @mouseleave="labelHoverConfigs(scope.row, 1, false, $event)">
            <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
            <span v-if="scope.row.configs[1].state===0 || !scope.row.configs[1].state">
              <span class="active-icon red-bg inline-block"></span>
@@ -155,66 +139,74 @@
              <span class="active-icon gray-bg inline-block"></span>
            </span>
          </span>
-          <nz-tooltip :that="scope.row.configs[1]"  v-if="scope.row.configs[1] && scope.row.configs[1].loading && scope.row.configs[1].state > 1" :type="'configs[1]'">
-            <div name="default">
-              <div v-html="suspendedStr(scope.row.configs[1].state)"></div>
+            <nz-tooltip :that="scope.row.configs[1]"  v-if="scope.row.configs[1] && scope.row.configs[1].loading && scope.row.configs[1].state > 1" :type="'configs[1]'">
+              <div name="default">
+                <div v-html="suspendedStr(scope.row.configs[1].state)"></div>
+              </div>
+            </nz-tooltip>
+          </template>
+          <template v-else-if="item.prop === 'enabled'">
+            <span v-if="scope.row[item.prop] === 1">{{$t('project.endpoint.enable')}}</span>
+            <span v-else>{{$t('project.endpoint.disable')}}</span>
+          </template>
+          <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
+          <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :resizable="false"
+        :width="operationWidth"
+        v-if="showOption"
+        fixed="right">
+        <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
+        <div slot-scope="scope" class="table-operation-items">
+          <button v-if="endpointTab"  class="table-operation-item" v-has="'monitor_endpoint_edit'" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
+          <button v-else class="table-operation-item"  @click="$emit('showBottomBox', 'panelTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+          <el-dropdown size="medium" v-has="['monitor_endpoint_edit','monitor_endpoint_delete','alertSilence_add']" trigger="click" @command="tableOperation">
+            <div class="table-operation-item table-operation-item--more">
+              <i class="nz-icon nz-icon-more3"></i>
             </div>
-          </nz-tooltip>
-        </template>
-        <template v-else-if="item.prop === 'enabled'">
-          <span v-if="scope.row[item.prop] === 1">{{$t('project.endpoint.enable')}}</span>
-          <span v-else>{{$t('project.endpoint.disable')}}</span>
-        </template>
-        <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
-        <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
+            <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
+              <!--            <el-dropdown-item v-if="!endpointTab" :command="['endpointQuery', scope.row]"><i class="nz-icon nz-icon-search"></i><span class="operation-dropdown-text">{{$t('overall.query')}}</span></el-dropdown-item>-->
+              <el-dropdown-item v-if="!endpointTab" v-has="'monitor_endpoint_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'monitor_endpoint_delete'" :command="['delete', scope.row, `sys/endpoint?ids=${scope.row.id}`]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'monitor_endpoint_edit'" :command="['copy', scope.row, 'project']"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'endpoint']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </el-table-column>
+      <template slot="empty">
+        <div v-if="!loading" class="table-no-data">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#nz-icon-no-data-list"></use>
+          </svg>
+          <div class="table-no-data__title">No results found</div>
+        </div>
+        <div v-else>&nbsp;</div>
       </template>
-    </el-table-column>
-    <el-table-column
-      :resizable="false"
-      :width="operationWidth"
-      v-if="showOption"
-      fixed="right">
-      <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
-      <div slot-scope="scope" class="table-operation-items">
-        <button v-if="endpointTab"  class="table-operation-item" v-has="'monitor_endpoint_edit'" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
-        <button v-else class="table-operation-item"  @click="$emit('showBottomBox', 'panelTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-        <el-dropdown size="medium" v-has="['monitor_endpoint_edit','monitor_endpoint_delete','alertSilence_add']" trigger="click" @command="tableOperation">
-          <div class="table-operation-item table-operation-item--more">
-            <i class="nz-icon nz-icon-more3"></i>
-          </div>
-          <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
-<!--            <el-dropdown-item v-if="!endpointTab" :command="['endpointQuery', scope.row]"><i class="nz-icon nz-icon-search"></i><span class="operation-dropdown-text">{{$t('overall.query')}}</span></el-dropdown-item>-->
-            <el-dropdown-item v-if="!endpointTab" v-has="'monitor_endpoint_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'monitor_endpoint_delete'" :command="['delete', scope.row, `sys/endpoint?ids=${scope.row.id}`]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'monitor_endpoint_edit'" :command="['copy', scope.row, 'project']"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'endpoint']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </div>
-    </el-table-column>
-    <template slot="empty">
-      <div v-if="!loading" class="table-no-data">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#nz-icon-no-data-list"></use>
-        </svg>
-        <div class="table-no-data__title">No results found</div>
-      </div>
-      <div v-else>&nbsp;</div>
-    </template>
-  </el-table>
+    </el-table>
+    <alertLabel
+      v-if="alertLabelShow"
+      :id="alertLabelId"
+      :that="alertLabelObj"
+      :type="alertLabelType"
+    ></alertLabel>
+  </div>
 </template>
 
 <script>
 import table from '@/components/common/mixin/table'
 import alertLabel from '../../alert/alertLabel'
 import nzTooltip from '../../alert/nzTooltip'
+import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'endpointTable',
   components: {
     alertLabel,
     nzTooltip
   },
-  mixins: [table],
+  mixins: [table, alertLabelMixin],
   props: {
     showOption: {
       type: Boolean,
@@ -324,7 +316,7 @@ export default {
       return str
     },
     // label 鼠标划入
-    labelHover (item, type, loading, e, slow) {
+    labelHover1 (item, type, loading, e, slow) {
       if (e) {
         const dom = e.currentTarget
         const position = dom.getBoundingClientRect()

@@ -43,7 +43,7 @@ export function getOption (type) {
       chartOption = lodash.cloneDeep(chartTreemapOption)
       break
     }
-    case chartType.guage: {
+    case chartType.gauge: {
       chartOption = lodash.cloneDeep(chartGaugeOption)
       break
     }
@@ -109,7 +109,7 @@ export function isTable (type) {
   return type === chartType.table
 }
 export function isGauge (type) {
-  return type === chartType.guage
+  return type === chartType.gauge
 }
 export function isClock (type) {
   return type === chartType.clock

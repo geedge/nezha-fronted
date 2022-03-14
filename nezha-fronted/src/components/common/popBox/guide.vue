@@ -101,7 +101,7 @@ export default {
         },
         {
           route: '/monitor/project',
-          title: this.$t('guide.monitor'),
+          title: this.$t('overall.monitor'),
           icon: 'nz-icon nz-icon-menu-project',
           tip: this.$t('guide.monitorTip'),
           permissionCode: 'project_view'

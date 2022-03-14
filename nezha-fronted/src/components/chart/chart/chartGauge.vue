@@ -31,7 +31,7 @@ import { initColor } from '@/components/chart/chart/tools'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 
 export default {
-  name: 'chart-guage',
+  name: 'chart-gauge',
   mixins: [chartMixin, chartFormat],
   data () {
     return {

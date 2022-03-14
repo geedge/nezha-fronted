@@ -52,11 +52,10 @@
       <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
     </div>
     <el-dialog
-      id="viewGraphDialog"
       v-if="graphShow"
       :visible.sync="graphShow"
       :show-close="false"
-      class="nz-dialog chart-fullscreen"
+      class="nz-dialog chart-fullscreen endpoint-query-metrics"
       destroy-on-close
       fullscreen
       :modal-append-to-body="false"
@@ -464,12 +463,12 @@ export default {
       /* if (refresh) {
          this.getData(this.filter)
       } */
-    },
+    }
   },
   computed: {
     chartRightBoxShow () {
       return this.$store.getters.getShowRightBox
-    },
+    }
   },
   created () {
     // this.getPanelData()

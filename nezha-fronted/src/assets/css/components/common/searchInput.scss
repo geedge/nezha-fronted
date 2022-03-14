@@ -46,6 +46,12 @@
   display: flex;
   position: relative;
 }
+@media screen and (max-width:2000px){
+ .bottom-data-list .new-search .search-input-all{
+    width: 176px !important;
+    min-width: 176px;
+  }
+}
 .search-input-all .btn-retract{
   padding: 0 4px;
   text-align: center;

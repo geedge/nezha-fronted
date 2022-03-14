@@ -218,7 +218,7 @@ export default {
         if (!params.groupId) {
           params.groupId = 0
         }
-        if (params.type !== 'guage') {
+        if (params.type !== 'gauge') {
           delete params.param.min
           delete params.param.max
         }
@@ -445,7 +445,14 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        this.editChart = JSON.parse(JSON.stringify(n))
+        const obj = JSON.parse(JSON.stringify(n))
+        if (obj.param && !obj.param.valueMapping) {
+          obj.param.valueMapping = []
+        }
+        if (obj.param && !obj.param.thresholds) {
+          obj.param.thresholds = []
+        }
+        this.editChart = obj
         if (this.editChart.groupId === -1) {
           this.editChart.groupId = ''
         }

@@ -39,31 +39,40 @@
 }
 
 .panel  {
-  .el-table {
-    border-radius: 5px;
-    border-left: 1px solid $--border-color-light;
-    border-top: 1px solid $--border-color-light;
-    .el-table__body-wrapper {
-      height: calc(100% - 65px) !important;
+  .right-box.right-box-chart-temp {
+    .el-table {
+      border-radius: 5px;
+      .el-table__body-wrapper {
+        height: calc(100% - 40px) !important;
+      }
+      th.is-center {
+        border-right: none;
+      }
+      th {
+        border-right: 1px solid $--border-color-light;
+      }
+      th:nth-of-type(2) {
+        border-left: 1px solid $--border-color-light;
+      }
+      tr {
+        background-color: $--background-color-empty;
+      }
+      td {
+        border-bottom: 1px solid $--border-color-light;
+      }
+      th.is-leaf {
+        border-bottom: 1px solid $--border-color-light;
+      }
     }
-    th {
-      border-right: 1px solid $--border-color-light;
-    }
-    tr {
-      background-color: $--background-color-empty;
-    }
-    td {
+    .el-table--border th.gutter:last-of-type {
       border-bottom: 1px solid $--border-color-light;
     }
-    th.is-leaf {
-      border-bottom: 1px solid $--border-color-light;
+    .el-table--border::after  {
+      background-color: $--border-color-light;
     }
-  }
-  .el-table--border th.gutter:last-of-type {
-    border-bottom: 1px solid $--border-color-light;
-  }
-  .el-table--border::after  {
-    background-color: $--border-color-light;
+    .el-table::before  {
+      display: none;
+    }
   }
 }
 /* begin-chart list*/

@@ -35,7 +35,7 @@
     </template>
     <template slot-scope="scope" :column="item">
       <template v-if="item.prop === 'endpoint'">{{scope.row.discoveredLabels.endpoint ? scope.row.discoveredLabels.endpoint : '-'}}</template>
-      <template v-else-if="item.prop === 'lastScrape'">{{scope.row.lastScrape}}</template>
+      <template v-else-if="item.prop === 'lastScrape'">{{time}}</template>
       <template v-else-if="item.prop === 'labels'" class="labels">
           <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
             <span>
@@ -137,7 +137,8 @@ export default {
           show: true
         }
       ],
-      exclusiveLabels: ['_id', 'severity', '__name__']
+      exclusiveLabels: ['_id', 'severity', '__name__'],
+      time: ''
     }
   },
   computed: {
@@ -156,8 +157,9 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        n.map(e => {
-          e.lastScrape = bus.timeFormate(e.lastScrape, this.timeFormatMain)
+        n.forEach(e => {
+          const lastScrape = new Date(e.lastScrape).getTime()
+          this.time = bus.timeFormate(lastScrape, this.timeFormatMain)
         })
       }
     }

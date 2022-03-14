@@ -71,7 +71,7 @@
       ref="dataList"
       :api="url"
       :tableId="tableId"
-      v-show="detailType === 'list'"
+      v-if="detailType === 'list'"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.module"
       :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
@@ -112,6 +112,7 @@
         <module-table
           ref="dataTable"
           v-loading="tools.loading"
+          :orderByFa="orderBy"
           :loading="tools.loading"
           :api="url"
           :tableId="tableId"
@@ -385,6 +386,8 @@ export default {
     getTableData () {
       if (this.orderBy) {
         this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      } else {
+        delete this.searchLabel.orderBy
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
@@ -409,6 +412,9 @@ export default {
           if (this.needAlertDaysData) {
             response.data.list.forEach(item => {
               item.trendLoading = true
+              item.left = 0
+              item.top = 0
+              item.alertNumtooltipShow = false
               item.alertDaysData = [
                 {
                   metric: { priority: 'P1' },
@@ -436,7 +442,7 @@ export default {
           this.detailViewRightObj = detailViewRightObj
           this.pageObj.total = response.data.total
           this.pageObj.pages = response.data.pages
-          if (!this.scrollbarWrap) {
+          if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)

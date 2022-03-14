@@ -14,6 +14,7 @@
       @loadMore="loadMore"
       @edit-chart="$emit('edit-chart', chartInfo)"
       @refresh="refresh"
+      @sync="chartSync"
       @groupShow="groupShow"
       @showFullscreen="showFullscreen"
     ></chart-header>
@@ -43,6 +44,7 @@
       :panelLock="panelLock"
       :filter="filter"
       :from="from"
+      @refreshLogs="refreshLogs"
       :show-header="showHeader"
       :isError="isError"
       :loading="loading"
@@ -128,7 +130,7 @@ export default {
       this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
     },
     // 参数 isRefresh 标识是否是刷新操作
-    getChartData (isRefresh) {
+    getChartData (isRefresh, params) {
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
@@ -152,9 +154,9 @@ export default {
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
       const elements = this.chartInfo.elements || []
-      this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
+      this.chartInfo.loaded && this.query(elements, startTime, endTime, step, params)
     },
-    query (elements, startTime, endTime, step) {
+    query (elements, startTime, endTime, step, params) {
       this.isError = false
       this.allDataLength = 0
       try {
@@ -192,11 +194,18 @@ export default {
               }
               if (this.chartInfo.datasource === 'logs') {
                 query += '&format=1'
+                if (!params || params.descending) {
+                  this.chartInfo.descending = true
+                  query += '&direction=backward'
+                } else {
+                  this.chartInfo.descending = false
+                  query += '&direction=forward'
+                }
               }
               // if (isChartPie(this.chartInfo.type)) {
               //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
               // }
-              query += `&query=${element.expression}`
+              query += `&query=${encodeURIComponent(element.expression)}`
               return this.$get(query)
             })
             if (this.multipleTime) {
@@ -217,7 +226,7 @@ export default {
                 // if (isChartPie(this.chartInfo.type)) {
                 //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
                 // }
-                query += `&query=${element.expression}`
+                query += `&query=${encodeURIComponent(element.expression)}`
                 return this.$get(query)
               })
               requests = requests.concat(multipleRequests)
@@ -334,6 +343,7 @@ export default {
             }
             if (this.chartInfo.type === 'group') {
               this.chartData = lodash.get(this, 'chartInfo.children', [])
+              this.loading = false
               this.groupInit()
             }
             if (this.chartInfo.type === 'topology') {
@@ -346,7 +356,6 @@ export default {
           }
         }
       } catch (e) {
-        console.info(e)
         this.loading = false
       }
     },
@@ -381,6 +390,9 @@ export default {
     },
     refresh () {
       this.getChartData(true)
+    },
+    refreshLogs (params) {
+      this.getChartData(true, params)
     },
     logChartDataFormat () {
       this.chartData.forEach((item, index) => {
@@ -439,6 +451,17 @@ export default {
     },
     saveChart () {
       this.$emit('saveChart', this.chartInfo)
+    },
+    chartSync () {
+      this.loading = true
+      this.$post('visual/panel/chart/syncTmpl', { ids: [this.chartInfo.id] }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(this.$t('tip.syncSuccess'))
+          this.$emit('refreshPanel')
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     }
   },
   watch: {

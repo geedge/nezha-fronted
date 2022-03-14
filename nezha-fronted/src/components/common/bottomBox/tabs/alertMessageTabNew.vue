@@ -16,15 +16,16 @@
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
-        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 100px">
+        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 110px">
           <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
-        <pick-time v-model="searchTimeHeader" :default-pick="12" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
+        <pick-time v-model="searchTimeHeader" :default-pick="10" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
       </template>
       <template v-slot>
         <alertMessageTable
           ref="dataTable"
           :api="url"
+          :orderByFa="orderBy"
           :loading="tools.loading"
           :custom-table-title="tools.customTableTitle"
           :height="subTableHeight"
@@ -155,6 +156,14 @@ export default {
           this.getTableData()
         }
       }
+    },
+    orderBy: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+         // console.log(n)
+        }
+      }
     }
   },
   data () {
@@ -230,7 +239,7 @@ export default {
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
       legend: [],
       searchTime: [],
-      searchTimeHeader: [],
+      searchTimeHeader: [bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 24 * 7)), bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))],
       searchTimeSelect: bus.getTimezontDateRange(),
       currentMsg: {},
       chartUnit: 5,
@@ -293,22 +302,24 @@ export default {
       }
       if (this.orderBy) {
         this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      } else {
+        delete this.searchLabel.orderBy
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.$set(this.searchLabel, 'state', this.state)
       if (this.searchTimeHeader && this.searchTimeHeader.length > 1) {
-        this.$set(this.searchLabel, 'startAt', this.timezoneToUtcTimeStr(this.searchTimeHeader[0]))
-        this.$set(this.searchLabel, 'endAt', this.timezoneToUtcTimeStr(this.searchTimeHeader[1]))
+        this.$set(this.searchLabel, 'startAt', bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTimeHeader[0])), 'YYYY-MM-DD HH:mm:ss'))
+        this.$set(this.searchLabel, 'endAt', bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTimeHeader[1])), 'YYYY-MM-DD HH:mm:ss'))
       } else {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
-      if (state) {
-        delete this.searchLabel.startAt
-        delete this.searchLabel.endAt
-      }
+      // if (state) {
+      //   delete this.searchLabel.startAt
+      //   delete this.searchLabel.endAt
+      // }
       if (this.from === fromRoute.module) {
         this.searchLabel.moduleIds = this.obj.id
       } else if (this.from === fromRoute.endpoint) {
@@ -327,6 +338,8 @@ export default {
           this.tableData = response.data.list
           this.deleteBox.ids = ''
           this.pageObj.total = response.data.total
+        } else {
+          this.$message.error(response.msg)
         }
       })
     },
@@ -401,6 +414,15 @@ export default {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.$nextTick(() => {
           this.searchTime = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
+          this.$store.dispatch('dispatchPanelTime', {
+            time: this.searchTime,
+            nowTimeType: {
+              id: 4,
+              text: this.$t('dashboard.panel.lastOneHour'),
+              type: 'hour',
+              value: 1
+            }
+          })
           this.queryDate()
         })
       })
@@ -597,7 +619,7 @@ export default {
             color: '#d64f40'
           }]
         }
-        chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
+        chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '')
         chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
         chartInfo.unit = this.currentMsg.unit
         this.showFullscreen(true, chartInfo)

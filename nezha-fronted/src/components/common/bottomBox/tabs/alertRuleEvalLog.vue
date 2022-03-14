@@ -16,6 +16,7 @@
     <template v-slot>
       <alertRuleEvalLogTable
         ref="dataTable"
+        :orderByFa="'id'"
         v-loading="tools.loading"
         :loading="tools.loading"
         :api="url"
@@ -92,6 +93,8 @@ export default {
       }
       if (this.orderBy) {
         this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      } else {
+        delete this.searchLabel.orderBy
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', -1)
@@ -104,7 +107,7 @@ export default {
         this.nowTime = this.utcTimeToTimezoneStr(response.time)
         if (response.code === 200) {
           this.tableData = response.data
-          if (!this.scrollbarWrap) {
+          if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)

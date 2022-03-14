@@ -40,8 +40,8 @@
         </template>
         <template v-else-if="item.prop === 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >
           <div style="height: 100%">
-            <div style="height: 100%; overflow: auto;">
-              <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" class="detail-item-content">
+            <div style="height: 100%; overflow: auto;" v-if="scope.row['modelsDetail']">
+              <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" class="detail-item-content" v-if="n">
                 <el-popover placement="top" trigger="hover" >
                   <div>
                     <div>

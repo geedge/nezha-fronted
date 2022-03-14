@@ -56,6 +56,7 @@
       <template v-slot>
         <endpointQueryTab
           ref="endpointQueryTab"
+          :orderByFa="'id'"
           :from="from"
           :obj="obj"
           :formatTime="formatTime"
@@ -128,7 +129,7 @@ export default {
       dropdownShow: false,
       timeout: null,
       formatTime: '',
-      hideSameLabels: true,
+      hideSameLabels: true
     }
   },
   methods: {

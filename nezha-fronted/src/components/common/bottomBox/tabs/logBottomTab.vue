@@ -58,8 +58,8 @@ export default {
     return {
       logData: null,
       filterTime: [
-        bus.timeFormate(bus.getOffsetTimezoneData(-1), 'YYYY-MM-DD HH:mm:ss'),
-        bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
+        bus.timeFormate(bus.getOffsetTimezoneData(-1), this.timeFormatMain),
+        bus.timeFormate(bus.getOffsetTimezoneData(), this.timeFormatMain)
       ],
       expressions: [''],
       matchSymbol: '|=',

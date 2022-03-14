@@ -118,7 +118,7 @@ export default {
         this.metaList.push(meta)
         this.$emit('metaList')
       } else {
-        let self = this
+        const self = this
         const newCondition = Object.assign({}, self.meta)
         newCondition.nameIsEditing = true
         this.metaList.push(newCondition)

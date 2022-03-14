@@ -42,7 +42,7 @@ export default {
   data () {
     return {
       stackTotalColor: null,
-      isStack: false,
+      isStack: false
     }
   },
   computed: {
@@ -93,6 +93,9 @@ export default {
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
         const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartId}`)) : getChart(this.chartId)
+        if (!myChart) {
+          return
+        }
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
         this.isInit = false
@@ -108,7 +111,7 @@ export default {
       let seriesIndex = 0
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
-          if (seriesIndex >= this.series.length) {// 只取跟series 一样长度作比较
+          if (seriesIndex >= this.series.length) { // 只取跟series 一样长度作比较
             return
           }
           seriesIndex++

@@ -5,6 +5,7 @@
     :data="tableData"
     :height="height"
     border
+    :default-sort="orderBy"
     @header-dragend="dragend"
     @sort-change="tableDataSort"
     @selection-change="selectionChange"

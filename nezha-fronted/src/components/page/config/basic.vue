@@ -28,7 +28,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('config.system.basic.defTheme')" prop="defTheme">
+        <el-form-item :label="$t('config.system.basic.defTheme')" prop="defTheme" style="display: none">
           <el-select id="account-input-language"
                      class="right-box__select"
                      v-model="basic.theme"
@@ -80,7 +80,7 @@
           <el-switch v-model="basic.unsaved_change" active-value='on' inactive-value='off' id="system-baisc-unsaved_change">
           </el-switch>
         </el-form-item>
-        <div class="system-title">{{$t('config.system.basic.pinPolicy')}}</div>
+        <div class="system-title system-title-border">{{$t('config.system.basic.pinPolicy')}}</div>
         <el-form-item :label="$t('config.system.basic.gloEnable')" prop="mfa_auth_enable">
           <el-switch v-model="basic.mfa_auth_enable" :active-value='"1"' :inactive-value='"0"' id="system-basic-mfs_change">
           </el-switch>

@@ -163,7 +163,7 @@ export default {
     },
     selectMapping (value, valueMapping, show) {
       let mapping = ''
-      if (show) {
+      if (show && valueMapping) {
         valueMapping.forEach(item => {
           if (item.type === 'value') {
             if (value == item.value) {
@@ -263,7 +263,7 @@ export default {
     chartData: {
       deep: true,
       handler (n) {
-        if (!this.isInit) {
+        if (!this.isInit && this.chartOption.color) {
           this.colorList = this.colorList.slice(0, 20)
           this.chartOption.color = this.chartOption.color.slice(0, 20)
           this.initChart(this.chartOption)

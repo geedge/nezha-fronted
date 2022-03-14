@@ -89,6 +89,9 @@ export default {
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
         const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartId}`)) : getChart(this.chartId)
+        if (!myChart) {
+          return
+        }
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
         this.isInit = false
@@ -157,7 +160,7 @@ export default {
     try {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
-    this.chartInfo.loaded &&  this.initChart(this.chartOption)
+    this.chartInfo.loaded && this.initChart(this.chartOption)
   }
 }
 </script>

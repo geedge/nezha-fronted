@@ -26,7 +26,7 @@
           </span>
      </el-popover>
     </span>
-    <div class="chart-header__title" v-if="!isGroup">{{chartInfo.name}}</div>
+    <div class="chart-header__title" v-if="!isGroup" :title="chartInfo.name">{{chartInfo.name}}</div>
     <div class="chart-header__title" v-else >
       <span @click="groupShow"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-right': 'nz-icon-arrow-down'"></i></span>
       {{chartInfo.name}}
@@ -39,6 +39,11 @@
       <span v-if="chartInfo.remark" class="chart-header__tool">
         <el-tooltip :content="chartInfo.remark" effect="light" placement="top">
            <i class="nz-icon nz-icon-info-normal tool__icon"></i>
+        </el-tooltip>
+      </span>
+      <span  v-if="chartInfo.type=='group'" class="chart-header__tool" @click="addChartGroup">
+        <el-tooltip :content="$t('overall.add')" effect="light" placement="top">
+           <i class="nz-icon nz-icon-plus tool__icon"></i>
         </el-tooltip>
       </span>
       <span class="chart-header__tool" @click="refreshChart">
@@ -87,6 +92,13 @@ export default {
   methods: {
     openUrl () {
       window.open(this.chartInfo.param.link)
+    },
+    addChartGroup () {
+      this.$store.commit('setGroupId', this.chartInfo.id)
+      this.$store.dispatch('dispatchEditChart', {
+        chart: '',
+        type: 'addGroupItem'
+      })
     }
   }
 }

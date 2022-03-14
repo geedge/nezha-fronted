@@ -60,7 +60,7 @@
                 export-file-name="chart"
                 export-url="/visual/panel/export"
                 import-url="/visual/panel/import"
-                @afterImport="dateChange"
+                @afterImport="afterImport"
               >
                 <template v-slot:before>
                   <el-dropdown-item>
@@ -95,6 +95,7 @@
                 @on-refresh-time="refreshTime"
                 @on-remove-chart="delChart"
                 @on-add-group-item-chart="addGroupItem"
+                @refreshPanel="refreshPanel"
                 :loading="chartListLoading"
               ></chart-list>
             </div>
@@ -299,11 +300,8 @@ export default {
   },
   methods: {
     // 刷新
-    Refresh () {
-      const curTime = this.$refs.calendarPanel.getCurrentTime()
-      this.filter.start_time = bus.timeFormate(curTime[0], this.panelDateFormatTime)
-      this.filter.end_time = bus.timeFormate(curTime[1], this.panelDateFormatTime)
-      this.getTableData()
+    refreshPanel () {
+      this.getData(this.filter)
     },
     // 面板相关操作
     panelChange (val) {
@@ -438,11 +436,16 @@ export default {
         this.$get('visual/panel/chart/' + data.id).then(res => {
           this.rightBox.loading = false
           if (res.code === 200) {
-            const chartData = res.data.data
+            const chartData = res.data
             this.chart = JSON.parse(JSON.stringify(chartData))
             this.chart.panelId = this.showPanel.id
             this.chart.panelName = this.showPanel.name
-            this.chart.param = JSON.parse(this.chart.param)
+            if (this.chart.param) {
+              this.chart.param = JSON.parse(this.chart.param)
+            } else {
+              this.chart.param = {}
+            }
+
             if (!this.chart.groupId || this.chart.groupId == -1) {
               this.chart.groupId = ''
             }
@@ -524,6 +527,7 @@ export default {
     createSuccess (msg, data, params, panel) {
       this.filter.panelId = this.showPanel.id
       this.getData(this.filter)
+      this.$store.dispatch('clearPanel')
     },
     // 获取数据,用在子页面
     getData (params) {
@@ -812,6 +816,10 @@ export default {
       if (type === 'duplicate') {
         this.editChart(chartInfo, true)
       }
+    },
+    afterImport () {
+      this.dateChange()
+      this.panelReloadOnlyPanel()
     }
   },
   created () {
@@ -841,6 +849,7 @@ export default {
     })
   },
   mounted () {
+    bus.$on('refreshPanel', this.refreshPanel)
     this.scrollbarWrap = this.$refs.dashboardScrollbar
     this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
@@ -852,9 +861,14 @@ export default {
       this.nowTimeType.start_time = this.searchTime[0]
       this.nowTimeType.end_time = this.searchTime[1]
       setTimeout(() => {
-        this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowTimeType)
+        if (this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker) {
+          this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowTimeType)
+        }
       }, 100)
     }
+  },
+  beforeDestroy () {
+    this.$store.dispatch('dispatchPanelLock', { flag: true })
   },
   watch: {
     'filter.searchName': function (n, o) {

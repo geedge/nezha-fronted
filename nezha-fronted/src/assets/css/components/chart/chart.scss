@@ -401,6 +401,11 @@
     }
   }
 }
+.endpoint-query-metrics.chart-fullscreen.nz-dialog {
+  .chart-screen-header .chart-header__tools #browser-go {
+    margin-left: 5px;
+  }
+}
 .chart-fullscreen.nz-dialog {
   .el-dialog__header{
     display: none;

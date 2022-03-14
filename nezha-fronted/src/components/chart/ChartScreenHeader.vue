@@ -26,7 +26,7 @@
           </span>
      </el-popover>
     </span>
-    <div class="chart-header__title">{{chartInfo.name}}</div>
+    <div class="chart-header__title" :title="chartInfo.name">{{chartInfo.name}}</div>
     <div class="chart-header__tools">
       <span v-if="chartInfo.remark" class="chart-header__tool top-tool-btn-group">
         <el-tooltip :content="chartInfo.remark" effect="light" placement="top">
@@ -58,7 +58,7 @@
 <script>
 import bus from '@/libs/bus'
 import lodash from 'lodash'
-import chartHeaderMixin from "@/components/chart/chartHeaderMixin";
+import chartHeaderMixin from '@/components/chart/chartHeaderMixin'
 export default {
   name: 'ChartScreenHeader',
   mixins: [chartHeaderMixin],
@@ -88,7 +88,8 @@ export default {
       this.filter.value = this.searchTime[2]
       this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       setTimeout(() => {
-        this.$emit('dateChange', this.filter, this.$refs.pickTime.$refs.multipleTime.searchTime)
+        const multipleTime = this.$refs.pickTime.$refs.multipleTime ? this.$refs.pickTime.$refs.multipleTime.searchTime : ''
+        this.$emit('dateChange', this.filter, multipleTime)
       }, 100)
     },
     closeDialog () {
@@ -124,10 +125,14 @@ export default {
         case 'bar' :
         case 'table' :
         case 'stat' :
-        case 'guage' :
+        case 'gauge' :
         case 'pie' :
         case 'treemap' :
         case 'log' :
+        case 'hexagon' :
+        case 'diagram' :
+        case 'url':
+        case 'clock':
           return true
         default: return false
       }

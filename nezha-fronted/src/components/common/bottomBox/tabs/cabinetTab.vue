@@ -18,6 +18,7 @@
       <template v-slot>
         <cabinet-table
           ref="dataTable"
+          :orderByFa="'id'"
           v-loading="tools.loading"
           :loading="tools.loading"
           :api="url"
@@ -135,6 +136,8 @@ export default {
       }
       if (this.orderBy) {
         this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      } else {
+        delete this.searchLabel.orderBy
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
@@ -151,6 +154,9 @@ export default {
           if (this.needAlertDaysData) {
             response.data.list.forEach(item => {
               item.trendLoading = true
+              item.left = 0
+              item.top = 0
+              item.alertNumtooltipShow = false
               item.alertDaysData = [
                 {
                   metric: { priority: 'P1' },
@@ -169,7 +175,7 @@ export default {
           }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
-          if (!this.scrollbarWrap) {
+          if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)

@@ -102,6 +102,7 @@
               @on-refresh-time="refreshTime"
               @on-remove-chart="delChart"
               @on-add-group-item-chart="addGroupItem"
+              @refreshPanel="refreshPanel"
               :loading="chartListLoading"
               :chart-detail-info="chartDetailInfo"
             ></chart-list>
@@ -274,6 +275,9 @@ export default {
     refresh () {
       this.getTableData(this.obj.id)
     },
+    refreshPanel () {
+      this.getData(this.filter)
+    },
     refreshTime (st, et) {
       const startTime = bus.timeFormate(st, 'yyyy-MM-dd hh:mm')
       const endTime = bus.timeFormate(et, 'yyyy-MM-dd hh:mm')
@@ -377,7 +381,7 @@ export default {
         this.$get('visual/panel/chart/' + data.id).then(res => {
           this.rightBox.loading = false
           if (res.code === 200) {
-            const chartData = res.data.data
+            const chartData = res.data
             this.chart = JSON.parse(JSON.stringify(chartData))
             this.chart.panelId = this.showPanel.id
             this.chart.panelName = this.showPanel.name
@@ -682,7 +686,13 @@ export default {
     },
     chartBySync () {
       this.panelTabLoading = true
-      this.$post('visual/panel/chart/syncTmpl', { panelId: this.showPanel.id }).then(res => {
+      const params = {}
+      if (this.from === 'chartTemp') {
+        params.pid = this.obj.id
+      } else {
+        params.panelId = this.showPanel.id
+      }
+      this.$post('visual/panel/chart/syncTmpl', params).then(res => {
         this.panelTabLoading = false
         if (res.code === 200) {
           this.getTableData(this.obj.id)
@@ -714,6 +724,7 @@ export default {
     }
   },
   mounted () {
+    bus.$on('refreshPanel', this.refreshPanel)
     this.scrollbarWrap = this.$refs.dashboardScrollbar
     this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
@@ -767,6 +778,7 @@ export default {
     document.querySelector('#tableList') && document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)
     document.querySelector('#tableList') && document.querySelector('#tableList').removeEventListener('mouseleave', this.tableListLeave)
     this.scrollbarWrap && this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
+    this.$store.dispatch('dispatchPanelLock', { flag: true })
   }
 }
 </script>

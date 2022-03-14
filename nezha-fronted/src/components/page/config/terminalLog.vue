@@ -54,7 +54,7 @@
     <nz-data-list
       ref="dataList"
       :api="url"
-      v-show="detailType === 'list'"
+      v-if="detailType === 'list'"
       :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.terminalLog"
@@ -67,6 +67,7 @@
       <template v-slot:default="slotProps">
         <terminal-log-table
           ref="dataTable"
+          :orderByFa="orderBy"
           v-loading="tools.loading"
           :loading="tools.loading"
           :api="url"
@@ -170,6 +171,8 @@ export default {
     getTableData () {
       if (this.orderBy) {
         this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      } else {
+        delete this.searchLabel.orderBy
       }
       const params = {
         ...this.searchLabel,
@@ -194,7 +197,7 @@ export default {
           this.detailViewRightObj = detailViewRightObj
           this.pageObj.total = response.data.total
           this.pageObj.pages = response.data.pages
-          if (!this.scrollbarWrap) {
+          if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)

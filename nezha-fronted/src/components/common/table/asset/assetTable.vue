@@ -1,50 +1,51 @@
 <template>
-  <el-table
-    id="roleTable"
-    ref="dataTable"
-    class="asset-table2"
-    :data="tableData"
-    :height="height"
-    :default-sort="orderBy"
-    border
-    @header-dragend="dragend"
-    @sort-change="tableDataSort"
-    @selection-change="selectionChange"
-    @row-dblclick="(row)=>{$emit('showBottomBox', 'panelTab', row)}"
-  >
-    <el-table-column
-      :resizable="false"
-      align="center"
-      type="selection"
-      width="55">
-    </el-table-column>
-    <el-table-column
-      v-for="(item, index) in customTableTitle"
-      v-if="item.show"
-      :key="`col-${index}`"
-      :fixed="item.fixed"
-      :label="item.label"
-      :min-width="`${item.minWidth}`"
-      :prop="item.prop"
-      :resizable="true"
-      :sort-orders="['ascending', 'descending']"
-      :sortable="item.sortable"
-      :width="`${item.width}`"
-      class="data-column"
+  <div style="height: 100%">
+    <el-table
+      id="roleTable"
+      ref="dataTable"
+      class="asset-table2"
+      :data="tableData"
+      :height="height"
+      :default-sort="orderBy"
+      border
+      @header-dragend="dragend"
+      @sort-change="tableDataSort"
+      @selection-change="selectionChange"
+      @row-dblclick="(row)=>{$emit('showBottomBox', 'panelTab', row)}"
     >
-      <template slot="header">
-        <span class="data-column__span">{{item.label}} <i class="nz-icon nz-icon-label" v-if="item.type==='label'" style="color: #fa901c"/></span>
-        <div class="col-resize-area"></div>
-      </template>
-      <template slot-scope="scope" :column="item">
-        <template v-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
-        <template v-else-if="item.prop === 'state'">{{scope.row.state ? scope.row.state.name : '-'}}</template>
-        <template v-else-if="item.prop === 'endpointNum'">
-          <span style="cursor: pointer" @click="$emit('showBottomBox', 'endpointTab', scope.row)"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span></span>
+      <el-table-column
+        :resizable="false"
+        align="center"
+        type="selection"
+        width="55">
+      </el-table-column>
+      <el-table-column
+        v-for="(item, index) in customTableTitle"
+        v-if="item.show"
+        :key="`col-${index}`"
+        :fixed="item.fixed"
+        :label="item.label"
+        :min-width="`${item.minWidth}`"
+        :prop="item.prop"
+        :resizable="true"
+        :sort-orders="['ascending', 'descending']"
+        :sortable="item.sortable"
+        :width="`${item.width}`"
+        class="data-column"
+      >
+        <template slot="header">
+          <span class="data-column__span">{{item.label}} <i class="nz-icon nz-icon-label" v-if="item.type==='label'" style="color: #fa901c"/></span>
+          <div class="col-resize-area"></div>
         </template>
-        <template v-else-if="item.prop === 'alertNum'">
-<!--          v-my-loading:ldsFacebook="scope.row.trendLoading"-->
-          <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)">
+        <template slot-scope="scope" :column="item">
+          <template v-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
+          <template v-else-if="item.prop === 'state'">{{scope.row.state ? scope.row.state.name : '-'}}</template>
+          <template v-else-if="item.prop === 'endpointNum'">
+            <span style="cursor: pointer" @click="$emit('showBottomBox', 'endpointTab', scope.row)"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span></span>
+          </template>
+          <template v-else-if="item.prop === 'alertNum'">
+            <!--          v-my-loading:ldsFacebook="scope.row.trendLoading"-->
+            <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
               <div class="tooltip-title">Alert message (active)</div>
@@ -54,113 +55,114 @@
               </div>
             </div>
             <alertDaysInfo
-                v-show="!scope.row.trendLoading"
-                :alertDaysData="scope.row.alertDaysData"
+              v-show="!scope.row.trendLoading"
+              :alertDaysData="scope.row.alertDaysData"
             />
           </span>
-        </template>
-        <template v-else-if="item.prop === 'dc'">{{scope.row.dc ? scope.row.dc.name : '-'}}</template>
-        <template v-else-if="item.prop === 'cabinet'">
-          <span v-if="scope.row.cabinet && scope.row.cabinet !== '--'">{{scope.row.cabinet.name}}&nbsp;{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
-          <span v-else >-</span>
-        </template>
-        <template v-else-if="item.prop === 'pingInfo'">
-          <div class="ping-info" v-if="scope.row.pingInfo">
-            <div :class="{'active-icon green-bg':scope.row.pingInfo.status == 1,'active-icon red-bg':scope.row.pingInfo.status == 0}" style="position: relative">
+          </template>
+          <template v-else-if="item.prop === 'dc'">{{scope.row.dc ? scope.row.dc.name : '-'}}</template>
+          <template v-else-if="item.prop === 'cabinet'">
+            <span v-if="scope.row.cabinet && scope.row.cabinet !== '--'">{{scope.row.cabinet.name}}&nbsp;{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
+            <span v-else >-</span>
+          </template>
+          <template v-else-if="item.prop === 'pingInfo'">
+            <div class="ping-info" v-if="scope.row.pingInfo">
+              <div :class="{'active-icon green-bg':scope.row.pingInfo.status == 1,'active-icon red-bg':scope.row.pingInfo.status == 0}" style="position: relative">
+              </div>
+              <div class="active-icon-content">{{$t('asset.assetStatPre')+(scope.row.pingInfo.lastUpdate?utcTimeToTimezoneStr(scope.row.pingInfo.lastUpdate):$t('asset.assetStatDown'))}}</div>
+              {{scope.row.pingInfo.rtt?scope.row.pingInfo.rtt+'ms':''}}
             </div>
-            <div class="active-icon-content">{{$t('asset.assetStatPre')+(scope.row.pingInfo.lastUpdate?utcTimeToTimezoneStr(scope.row.pingInfo.lastUpdate):$t('asset.assetStatDown'))}}</div>
-            {{scope.row.pingInfo.rtt?scope.row.pingInfo.rtt+'ms':''}}
-          </div>
-        </template>
-        <template v-else-if="item.prop === 'model'">{{scope.row.model ? scope.row.model.name : '-'}}</template>
-        <template v-else-if="item.prop === 'parent'">
+          </template>
+          <template v-else-if="item.prop === 'model'">{{scope.row.model ? scope.row.model.name : '-'}}</template>
+          <template v-else-if="item.prop === 'parent'">
           <span
             v-if="scope.row.parent"
             style="cursor: pointer"
-            @mouseenter="labelHover(scope.row, 'asset', true, $event)"
-            @mouseleave="labelHover(scope.row, 'asset', false)">
+            @mouseenter="labelHover(scope.row, 'asset', true, false, $event)"
+            @mouseleave="labelHover(scope.row, 'asset', false, false)">
             {{scope.row.parent.name}}
-                <alertLabel
-                  v-if="scope.row.loading"
-                  :id="scope.row.pid"
-                  :that="scope.row"
-                  :type="'asset'"
-                ></alertLabel>
               </span>
-          <span v-else> - </span>
-        </template>
-        <template v-else-if="item.prop === 'children'">
-          <div  @click="$emit('showBottomBox', 'assetSubTab', scope.row)" v-if="scope.row.childrenNum" style="cursor: pointer">
-            <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
-            {{scope.row.childrenNum}}</div>
-<!--          <span v-else-if="scope.row.pid == -1">  <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i> 0 </span>-->
-          <span v-else> - </span>
-        </template>
-        <template v-else-if="item.prop === 'clientState'">
-          <div v-if="scope.row[item.prop]===1">
-            <div class="active-icon green-bg inline-block"></div>
-            OK
-          </div>
-          <div v-else-if="scope.row[item.prop]===0">
-            <div class="active-icon gray-bg inline-block"></div> {{ $t('config.user.disable') }}
-          </div>
-          <div v-else-if="scope.row[item.prop]===2">
-            <div class="active-icon red-bg inline-block"></div> {{ $t('asset.connectionTimedOut') }}
-          </div>
-          <div v-else-if="scope.row[item.prop]===3">
-            <div class="active-icon red-bg inline-block"></div> {{ $t('overall.AuthenticationFailed') }}
-          </div>
-          <div v-else-if="scope.row[item.prop]===4">
-            <div class="active-icon red-bg inline-block"></div> {{ $t('config.terminallog.statusItem.unknownError') }}
-          </div>
-          <template v-else>-</template>
-        </template>
-        <template v-else-if="item.prop === 'brand'">{{scope.row.brand ? scope.row.brand.name : '-'}}</template>
-        <template v-else-if="item.prop === 'purchaseDate'">{{scope.row.purchaseDate ? scope.row.purchaseDate : '-'}}</template>
-        <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
-        <template v-else>
+            <span v-else> - </span>
+          </template>
+          <template v-else-if="item.prop === 'children'">
+            <div  @click="$emit('showBottomBox', 'assetSubTab', scope.row)" v-if="scope.row.childrenNum" style="cursor: pointer">
+              <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
+              {{scope.row.childrenNum}}</div>
+            <!--          <span v-else-if="scope.row.pid == -1">  <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i> 0 </span>-->
+            <span v-else> - </span>
+          </template>
+          <template v-else-if="item.prop === 'clientState'">
+            <div v-if="scope.row[item.prop]===1">
+              <div class="active-icon green-bg inline-block"></div>
+              OK
+            </div>
+            <div v-else-if="scope.row[item.prop]===0">
+              <div class="active-icon gray-bg inline-block"></div> {{ $t('config.user.disable') }}
+            </div>
+            <div v-else-if="scope.row[item.prop]===2">
+              <div class="active-icon red-bg inline-block"></div> {{ $t('asset.connectionTimedOut') }}
+            </div>
+            <div v-else-if="scope.row[item.prop]===3">
+              <div class="active-icon red-bg inline-block"></div> {{ $t('overall.AuthenticationFailed') }}
+            </div>
+            <div v-else-if="scope.row[item.prop]===4">
+              <div class="active-icon red-bg inline-block"></div> {{ $t('config.terminallog.statusItem.unknownError') }}
+            </div>
+            <template v-else>-</template>
+          </template>
+          <template v-else-if="item.prop === 'brand'">{{scope.row.brand ? scope.row.brand.name : '-'}}</template>
+          <template v-else-if="item.prop === 'purchaseDate'">{{scope.row.purchaseDate ? scope.row.purchaseDate : '-'}}</template>
+          <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
+          <template v-else>
           <span v-if="scope.row.fields&&scope.row.fields.find(field => field.name === item.prop)">
             {{scope.row.fields.find(field => field.name === item.prop).value.join(',')}}
           </span>
-          <span v-else>
+            <span v-else>
              {{scope.row[item.prop]}}
           </span>
+          </template>
         </template>
+      </el-table-column>
+      <el-table-column
+        :resizable="false"
+        v-if="showOption"
+        :width="operationWidth"
+        fixed="right">
+        <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
+        <div slot-scope="scope" class="table-operation-items">
+          <button v-if="assetTab"  class="table-operation-item" v-has="'model_edit'" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
+          <button v-else class="table-operation-item" @click="$emit('showBottomBox', 'panelTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+          <el-dropdown size="medium" v-has="['asset_edit','asset_connect','asset_add','asset_delete', 'alertSilence_add']" trigger="click" @command="tableOperation">
+            <div class="table-operation-item table-operation-item--more">
+              <i class="nz-icon nz-icon-more3"></i>
+            </div>
+            <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
+              <el-dropdown-item v-if="!assetTab" v-has="'asset_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'asset_connect'" :command="['cli', scope.row]" :disabled="!scope.row.authUsername"><i class="nz-icon nz-icon-cli"></i><span class="operation-dropdown-text">{{$t('dashboard.connect')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'asset_add'" :command="['duplicate', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('dashboard.duplicate')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'asset_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'asset']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </el-table-column>
+      <template slot="empty">
+        <div  v-if="!loading" class="table-no-data">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#nz-icon-no-data-list"></use>
+          </svg>
+          <div class="table-no-data__title">No results found</div>
+        </div>
+        <div v-else>&nbsp;</div>
       </template>
-    </el-table-column>
-    <el-table-column
-      :resizable="false"
-      v-if="showOption"
-      :width="operationWidth"
-      fixed="right">
-      <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
-      <div slot-scope="scope" class="table-operation-items">
-        <button v-if="assetTab"  class="table-operation-item" v-has="'model_edit'" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
-        <button v-else class="table-operation-item" @click="$emit('showBottomBox', 'panelTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-        <el-dropdown size="medium" v-has="['asset_edit','asset_connect','asset_add','asset_delete', 'alertSilence_add']" trigger="click" @command="tableOperation">
-          <div class="table-operation-item table-operation-item--more">
-            <i class="nz-icon nz-icon-more3"></i>
-          </div>
-          <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
-            <el-dropdown-item v-if="!assetTab" v-has="'asset_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'asset_connect'" :command="['cli', scope.row]" :disabled="!scope.row.authUsername"><i class="nz-icon nz-icon-cli"></i><span class="operation-dropdown-text">{{$t('dashboard.connect')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'asset_add'" :command="['duplicate', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('dashboard.duplicate')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'asset_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'asset']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </div>
-    </el-table-column>
-    <template slot="empty">
-      <div  v-if="!loading" class="table-no-data">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#nz-icon-no-data-list"></use>
-        </svg>
-        <div class="table-no-data__title">No results found</div>
-      </div>
-      <div v-else>&nbsp;</div>
-    </template>
-  </el-table>
+    </el-table>
+    <alertLabel
+      v-if="alertLabelShow"
+      :id="alertLabelId"
+      :that="alertLabelObj"
+      :type="alertLabelType"
+    ></alertLabel>
+  </div>
 </template>
 
 <script>
@@ -169,9 +171,10 @@ import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools
 // import bus from '@/libs/bus'
 import alertLabel from '@/components/common/alert/alertLabel'
 import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
+import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'assetTable',
-  mixins: [table],
+  mixins: [table, alertLabelMixin],
   components: {
     alertLabel: alertLabel,
     alertDaysInfo
@@ -336,16 +339,6 @@ export default {
       this.bottomBox.asset = Object.assign({}, asset)
       this.bottomBox.targetTab = 'endpoint'
       this.bottomBox.showSubList = true
-    },
-    // label 鼠标划入
-    labelHover (item, type, loading, e) {
-      if (e) {
-        const dom = e.currentTarget
-        const position = dom.getBoundingClientRect()
-        this.$set(item, 'position', position)
-      }
-      this.$set(item, 'loading', loading)
-      // this.$set(this.tableData,index,item);// 调用父组件
     },
     returnCabinet (start, end) { // 返回机柜u位信息
       if (!start || !end) {

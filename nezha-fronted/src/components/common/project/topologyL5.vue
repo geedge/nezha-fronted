@@ -798,6 +798,9 @@ export default {
           resolve(this.topoPrevDataS)
         }
         this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
+          if (!res.data) {
+            return
+          }
           let data = res.data.topo
           if (!res.data.topo || !res.data.topo.pens.length) {
             this.showNoData = true
@@ -1772,6 +1775,9 @@ export default {
         this.imgageLoading = true
         this.$get('monitor/project/topo/icon').then((imageAllId) => {
           const promiseArr = []
+          if (!imageAllId || !imageAllId.data) {
+            return
+          }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
               promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))

@@ -202,6 +202,7 @@ export const alertMessage = {
     { value: 'P3', label: i18n.t('alert.config.P3') }
   ],
   states: [
+    { value: '', label: i18n.t('overall.all') },
     { value: '1', label: i18n.t('overall.active') },
     { value: '2', label: i18n.t('overall.silence') },
     { value: '3', label: i18n.t('alert.list.expired') }
@@ -395,7 +396,7 @@ export const chartType = {
   bar: 'bar',
   table: 'table',
   stat: 'stat',
-  guage: 'guage',
+  gauge: 'gauge',
   pie: 'pie',
   treemap: 'treemap',
   log: 'log',

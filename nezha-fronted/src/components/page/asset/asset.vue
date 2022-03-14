@@ -73,7 +73,7 @@
     </nzDetailView>
     <nz-data-list
       v-loading="detailViewLoading"
-      v-show="detailType === 'list'"
+      v-if="detailType === 'list'"
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
@@ -612,8 +612,12 @@ export default {
             resolve(data)
             setTimeout(() => {
               const title = this.tools.customTableTitle
-              const originalTitle = title.slice(0, this.$refs.dataTable.tableTitle.length) // 原title
-              const oldLabelTitle = title.slice(this.$refs.dataTable.tableTitle.length, title.length) // 旧labelTitle
+              if (!this.$refs.dataTable && !this.$refs.dataDetail) {
+                return
+              }
+              const tableTitle = this.$refs.dataTable ? this.$refs.dataTable.tableTitle : this.$refs.dataDetail.tableTitle
+              const originalTitle = title.slice(0, tableTitle.length) // 原title
+              const oldLabelTitle = title.slice(tableTitle.length, title.length) // 旧labelTitle
 
               const newLabel = showData.filter(item => { return !oldLabelTitle.find(t => { return item.label === t.label }) })
               const keepLabel = oldLabelTitle.filter(item => showData.find(t => item.label === t.label))
@@ -718,6 +722,9 @@ export default {
           if (this.needAlertDaysData) {
             response.data.list.forEach(item => {
               item.trendLoading = true
+              item.left = 0
+              item.top = 0
+              item.alertNumtooltipShow = false
               item.alertDaysData = [
                 {
                   metric: { priority: 'P1' },
@@ -745,7 +752,7 @@ export default {
           this.detailViewRightObj = detailViewRightObj
           this.pageObj.total = response.data.total
           this.pageObj.pages = response.data.pages
-          if (!this.scrollbarWrap && this.$refs.dataTable.$refs.dataTable) {
+          if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)

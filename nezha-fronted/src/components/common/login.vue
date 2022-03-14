@@ -31,7 +31,7 @@
 <!--          <div v-if="!license.valid" class="license-info">INSTALLATION ID:&nbsp;{{license.token}}</div>-->
           <div v-if="!license.valid" class="license-upload">
 <!--            <button type="button" class="login-btn" @click="downloadMib"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.dowLicense')}}</button>-->
-            <button type="button" class="login-btn download-btn" @click="downloadLogin"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('login.download')}}</button>
+            <button type="button" class="login-btn download-btn" @click="downloadLogin"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.downloadID')}}</button>
           </div>
           <div class="license-upload" v-if="!license.valid">
             <el-upload
@@ -270,13 +270,17 @@ export default {
     },
     downloadLogin () {
       this.$get('/sys/license/token').then(res => {
-        const fileName = 'Login' + '-' + this.getTimeString() + '.xml'
+        let fileName = this.licenseList.id + '-' + this.getTimeString() + '.xml'
+        const resFileName = res.headers['content-disposition'].split('=')[1]
+        if (resFileName) {
+          fileName = resFileName
+        }
         if (window.navigator.msSaveOrOpenBlob) {
           // 兼容ie11
-          const blobObject = new Blob([res])
+          const blobObject = new Blob([res.data])
           window.navigator.msSaveOrOpenBlob(blobObject, fileName)
         } else {
-          const url = URL.createObjectURL(new Blob([res]))
+          const url = URL.createObjectURL(new Blob([res.data]))
           const a = document.createElement('a')
           document.body.appendChild(a) // 此处增加了将创建的添加到body当中
           a.href = url
