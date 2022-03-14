@@ -193,8 +193,8 @@ export default {
       this.selectedSelection = val
     },
     leftToRight () {
-      this.$emit('leftToRight', this.selectableSelection)
       this.selectedData.splice(0, 0, ...this.selectableSelection)
+      this.$emit('leftToRight', this.selectedData)
     },
     rightToLeft () {
       this.$emit('rightToLeft', this.selectedSelection)
