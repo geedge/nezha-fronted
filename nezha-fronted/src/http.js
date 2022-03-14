@@ -77,6 +77,12 @@ export function get (url, params) {
     axios.get(url, {
       params: params
     }).then(response => {
+      if (url.indexOf('/sys/license/token') !== -1) {
+        resolve({
+          data: response.data,
+          headers: response.headers
+        })
+      }
       resolve(response.data)
     }).catch(err => {
       if (err.response) {
