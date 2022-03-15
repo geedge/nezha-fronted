@@ -49,7 +49,12 @@ export default {
   name: 'licenseGen',
   data () {
     return {
-      licenseGen: {},
+      licenseGen: {
+        supportID: '',
+        organization: '',
+        type: '',
+        comment: ''
+      },
       uploadFile: { file: '' },
       uploadList: [],
       uploadFileList: [],
