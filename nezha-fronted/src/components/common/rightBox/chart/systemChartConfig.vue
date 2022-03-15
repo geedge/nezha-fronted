@@ -311,6 +311,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <!--decimals-->
+        <el-form-item v-if="isShowDecimals(chartConfig.type)" :label="$t('dashboard.panel.chartForm.decimals')" class="form-item--half-width">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            :placeholder="'Default 2'"
+            show-word-limit v-model="chartConfig.param.decimals"/>
+        </el-form-item>
       </div>
       <!--legend-->
       <div v-if="isShowLegend(chartConfig.type)">

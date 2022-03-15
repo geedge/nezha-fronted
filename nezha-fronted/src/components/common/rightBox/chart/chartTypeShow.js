@@ -164,6 +164,21 @@ export default {
           return false
         default: return true
       }
+    },
+    isShowDecimals (type) {
+      switch (type) {
+        case 'line':
+        case 'area':
+        case 'point':
+        case 'bar':
+        case 'treemap':
+        case 'pie':
+        case 'stat':
+        case 'hexagon':
+        case 'gauge':
+          return true
+        default: return false
+      }
     }
   }
 }

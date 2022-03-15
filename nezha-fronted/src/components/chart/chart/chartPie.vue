@@ -99,6 +99,7 @@ export default {
     },
     initPieData (chartInfo, seriesTemplate, originalDatas) {
       let colorIndex = 0
+      const decimals = this.chartInfo.param.decimals || 2
       const s = lodash.cloneDeep(seriesTemplate)
       s.data = []
       originalDatas.forEach((originalData, expressionIndex) => {
@@ -106,7 +107,7 @@ export default {
           this.isNoData = false
           if (s) {
             const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
-            const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
+            const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, decimals)
             const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             // eslint-disable-next-line vue/no-mutating-props
             mapping && this.chartOption.color && (this.chartOption.color[colorIndex] = mapping.color.bac)

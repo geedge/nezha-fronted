@@ -89,6 +89,7 @@ export default {
     },
     initStatData (chartInfo, originalDatas) {
       this.statData = []
+      const decimals = this.chartInfo.param.decimals || 2
       return new Promise(resolve => {
         let colorIndex = 0
         originalDatas.forEach((originalData, expressionIndex) => {
@@ -110,7 +111,7 @@ export default {
             stat.label = data.metric
             stat.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
             stat.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
-            stat.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(stat.value, null, -1, 2)
+            stat.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(stat.value, null, -1, decimals)
             stat.mapping = this.selectMapping(stat.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             this.statData.push(stat)
             colorIndex++

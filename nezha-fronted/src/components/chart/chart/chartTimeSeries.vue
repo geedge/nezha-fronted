@@ -75,11 +75,12 @@ export default {
       if (this.isNoData) {
         return
       }
+      const decimals = this.chartInfo.param.decimals || 2
       const { minTime, maxTime, minValue, maxValue, copies, unit, dot } = this.getMinMaxFromData(this.chartData, this.chartInfo.unit) // 此处时间是秒
       chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime, maxTime)// 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
       chartOption.tooltip.position = this.tooltipPosition
-      chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, dot)
+      chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, decimals)
       chartOption.yAxis.minInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'min')
       chartOption.yAxis.maxInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
       if (unit.type = 'Time') {
@@ -183,6 +184,7 @@ export default {
     tooltipFormatter (hasTotal) { // 堆叠图需要total数据
       const self = this
       return function (params) {
+        const decimals = self.chartInfo.param.decimals || 2
         let str = '<div class="nz-chart__tooltip">'
         let sum = 0
         let flag = true
@@ -217,7 +219,6 @@ export default {
           let previousDom = ''
           if (previousItem) {
             const previousVal = formatScientificNotation(previousItem.data[1], paramsDot)
-            // console.log(previousVal, item.data[1])
             let minusVal = 0
             let operator
             if (previousVal <= val) {
@@ -228,7 +229,7 @@ export default {
               operator = '-'
             }
             previousDom = `
-              <span>${operator}${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(minusVal, null, -1, paramsDot)}</span>
+              <span>${operator}${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(minusVal, null, -1, decimals)}</span>
             `
           }
           str += `
@@ -238,7 +239,7 @@ export default {
                 <span>${seriesName}</span>
               </div>
               <div class="row__value">
-                <span>${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(val, null, -1, paramsDot)}</span>
+                <span>${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(val, null, -1, decimals)}</span>
                 ${previousDom}
               </div>
             </div>
@@ -257,7 +258,7 @@ export default {
                 <span>${self.$t('dashboard.panel.chartTotal')}</span>
               </div>
               <div class="row__value">
-                <span>${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(sum, null, self.chartDot)}</span>
+                <span>${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(sum, null, decimals)}</span>
               </div>
             </div>
           `
@@ -271,20 +272,20 @@ export default {
       const self = this
       return function (val, index) {
         const value = formatScientificNotation(val, 2)
-        let chartUnit = self.chartInfo.unit
-        chartUnit = chartUnit || 2
-        const unit = chartDataFormat.getUnit(chartUnit)
-        // dot是判断最大值是否 小于1 大于1 默认是2 小于1 需要判断最大值是小数点后面几位
-        if (chartDataFormat.Interval(maxValue, copies, unit.type, 'min') < 1 && dot < 2) { // 当其小于1 且 dot < 2 默认給2 如 0.9 dot为1
-          dot = 2
-        }
-        if (!dot) { //  默认是2
-          dot = 2
-        }
-        dot = bus.countDecimals(value)
-        if (dot < self.chartDot) { // 根据具体值计算
-          dot = self.chartDot
-        }
+        // let chartUnit = self.chartInfo.unit
+        // chartUnit = chartUnit || 2
+        // const unit = chartDataFormat.getUnit(chartUnit)
+        // // dot是判断最大值是否 小于1 大于1 默认是2 小于1 需要判断最大值是小数点后面几位
+        // if (chartDataFormat.Interval(maxValue, copies, unit.type, 'min') < 1 && dot < 2) { // 当其小于1 且 dot < 2 默认給2 如 0.9 dot为1
+        //   dot = 2
+        // }
+        // if (!dot) { //  默认是2
+        //   dot = 2
+        // }
+        // dot = bus.countDecimals(value)
+        // if (dot < self.chartDot) { // 根据具体值计算
+        //   dot = self.chartDot
+        // }
         return unit.compute(value, index, -1, dot)
       }
     },

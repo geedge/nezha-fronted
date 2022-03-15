@@ -348,6 +348,18 @@
             show-word-limit v-model="chartConfig.param.max"/>
         </el-form-item>
       </div>
+      <div class="form-items--half-width-group" v-if="isShowDecimals(chartConfig.type)">
+        <!--decimals-->
+        <el-form-item :label="$t('dashboard.panel.chartForm.decimals')" class="form-item--half-width">
+          <el-input-number
+            size="small"
+            style="margin-top: 2px"
+            :controls="false"
+            @change="change"
+            :placeholder="'Default 2'"
+            show-word-limit v-model="chartConfig.param.decimals"/>
+        </el-form-item>
+      </div>
 
       <div v-if="isShowLegend(chartConfig.type)">
         <!--legendConfig-->

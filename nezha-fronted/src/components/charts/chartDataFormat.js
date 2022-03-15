@@ -18,11 +18,11 @@ function short (value, index, type = 1, dot) {
   }
 }
 function percent01 (value, index) {
-  value = parseFloat(keepDoubleNumber(Number(value)))
+  value = parseFloat((Number(value)).toFixed(2))
   return `${value} %`
 }
 function percent02 (value, index) {
-  value = parseFloat(keepDoubleNumber(Number(value) * 100))
+  value = parseFloat((Number(value) * 100).toFixed(2))
   return `${value} %`
 }
 function localFormat (value, index) {
@@ -308,7 +308,7 @@ function asciiCompute (num, ascii, units, dot = 2) {
   if (Number.isInteger(num)) {
     return num + ' ' + units[carry]
   } else {
-    return keepDoubleNumber(num) + ' ' + units[carry]
+    return num.toFixed(dot) + ' ' + units[carry]
   }
 }
 // eslint-disable-next-line no-unused-vars
@@ -319,9 +319,9 @@ function asciiCompute2 (num, ascii, units, dot = 2, unitIndex = 0) {
     if (quotient < 1) { // 不足以进位
       const toFixed = parseFloat(num.toFixed(dot))
       if (toFixed == 0) {
-        return `${keepDoubleNumber(num)} ${units[unitIndex]}`
+        return `${num} ${units[unitIndex]}`
       } else {
-        return `${keepDoubleNumber(num)} ${units[unitIndex]}`
+        return `${num.toFixed(dot)} ${units[unitIndex]}`
       }
     } else if (quotient >= 1 && quotient < 10) { // 可以进位，但是又不足以更进一位
       if (unitIndex >= units.length - 1) {

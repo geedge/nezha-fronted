@@ -67,6 +67,7 @@ export default {
     initHexagonData (chartInfo, originalDatas) {
       this.HexagonData = []
       this.isInit = false
+      const decimals = this.chartInfo.param.decimals || 2
       return new Promise(resolve => {
         let colorIndex = 0
         originalDatas.forEach((originalData, expressionIndex) => {
@@ -95,7 +96,7 @@ export default {
             Hexagon.legend = legend.alias
             Hexagon.name = legend.name
             Hexagon.alias = legend.alias
-            Hexagon.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(Hexagon.value, null, -1, 2)
+            Hexagon.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(Hexagon.value, null, -1, decimals)
             // Hexagon.value = Hexagon.showValue
             Hexagon.mapping = this.selectMapping(Hexagon.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             this.HexagonData.push(Hexagon)
