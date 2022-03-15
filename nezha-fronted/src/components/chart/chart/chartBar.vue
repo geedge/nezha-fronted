@@ -133,7 +133,7 @@ export default {
             const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, 2)
             const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             // eslint-disable-next-line vue/no-mutating-props
-            mapping && (this.chartOption.color[colorIndex] = mapping.color.bac)
+            mapping && this.chartOption.color && (this.chartOption.color[colorIndex] = mapping.color.bac)
             const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             s.data.push({
               value: value,
