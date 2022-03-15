@@ -103,6 +103,10 @@ export default new Router({
           component: resolve => require(['../components/page/config/ipam.vue'], resolve)
         },
         {
+          path: '/license/gen',
+          component: resolve => require(['../components/page/config/licenseGen.vue'], resolve)
+        },
+        {
           path: '/profile',
           component: resolve => require(['../components/page/config/profile.vue'], resolve)
         },

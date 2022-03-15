@@ -1,0 +1,29 @@
+.license-gen {
+  background-color: $--background-color-empty;
+  margin: 10px;
+  height: calc(100% - 20px) !important;
+  overflow: auto;
+  .license-gen-form {
+    padding: 30px 0 0 30px;
+    .license-gen-btn {
+      text-align: center;
+    }
+    .el-textarea__inner {
+      min-height: 89px;
+    }
+    .license-gen-form__upload {
+      height: 150px;
+      border: 1px solid $--border-color-light;
+      box-shadow: 0 6px 16px 0 rgba(0,0,0,0.08);
+      border-radius: 3px;
+      .upload-demo {
+        margin: 20px;
+        height: calc(100% - 40px);
+        .el-upload-list.el-upload-list--text {
+          overflow: auto;
+          height: 75px;
+        }
+      }
+    }
+  }
+}

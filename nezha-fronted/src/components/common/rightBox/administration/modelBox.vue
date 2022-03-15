@@ -22,7 +22,7 @@
           <!-- type -->
           <el-form-item :label='$t("overall.type")' prop="typeId">
             <el-select value-key="id" allow-create class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.typeId" placeholder="" size="small" id="module-box-input-project">
-              <el-option :id="'module-project-'+item.type.id" v-for="(item, index) in typeDataList" :key="index" :label="item.type.name" :value="item.type.id"></el-option>
+              <el-option v-for="(item, index) in typeDataList" :key="index" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <!-- ChartTemplate -->
@@ -231,7 +231,12 @@ export default {
     },
     modelTypeList () {
       this.$get('asset/model', { pageSize: -1, pageNo: 1 }).then(res => {
-        this.typeDataList = res.data.list
+        this.typeDataList = res.data.list.map((e, i) => {
+          return {
+            name: e.type.name,
+            id: e.type.id
+          }
+        })
       })
     }
   }
