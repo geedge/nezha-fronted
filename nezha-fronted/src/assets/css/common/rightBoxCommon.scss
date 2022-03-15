@@ -132,7 +132,14 @@
         border-color: $--border-color-light-focus;
       }
     }
-    .el-form-item.is-error .el-input__inner, .el-form-item.is-error .el-input__inner:focus, .el-form-item.is-error .el-textarea__inner, .el-form-item.is-error .el-textarea__inner:focus, .el-message-box__input input.invalid, .el-message-box__input input.invalid:focus {
+    .el-form-item.is-error .el-input__inner,
+    .el-form-item.is-error .el-input__inner:focus,
+    .el-form-item.is-error .el-textarea__inner,
+    .el-form-item.is-error .el-textarea__inner:focus,
+    .el-message-box__input input.invalid,
+    .el-message-box__input input.invalid:focus,
+
+    {
       border-color: #F56C6C
     }
 
