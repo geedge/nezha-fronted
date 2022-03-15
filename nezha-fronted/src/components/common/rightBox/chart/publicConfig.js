@@ -389,8 +389,11 @@ export default {
       }
       this.change()
     },
-    change () {
+    change (key, index) {
       this.$nextTick(() => {
+        if (key) {
+          this.hideError(key, index)
+        }
         this.$emit('change', this.chartConfig)
       })
     },
@@ -429,6 +432,27 @@ export default {
           break
       }
       this.change()
+    },
+    showError () {
+      this.$refs.chartForm.validate((blooen, object) => {
+        console.log(blooen, object)
+        Object.keys(object).forEach(item => {
+          const keyArr = item.split('.')
+          if (keyArr.length >= 4) {
+            this.chartConfig[keyArr[0]][keyArr[1]][keyArr[2]].error = true
+          }
+        })
+        if (!blooen) {
+          this.$forceUpdate()
+        }
+      })
+    },
+    hideError (key, index) {
+      if (!this.chartConfig.param[key] || !this.chartConfig.param[key].length) {
+        return
+      }
+      this.chartConfig.param[key][index].error = false
+      this.$forceUpdate()
     }
   }
 }

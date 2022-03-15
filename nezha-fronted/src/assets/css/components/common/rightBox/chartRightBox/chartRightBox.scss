@@ -103,6 +103,9 @@
         cursor: pointer;
       }
     }
+    .is-item-box-error .chart-title-config {
+      border-color: #F56C6C
+    }
     .chart-title .nz-icon-arrow-down{
       display: inline-block;
       transition: transform .3s;

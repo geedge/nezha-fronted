@@ -88,7 +88,10 @@ export default {
       this.filter.value = this.searchTime[2]
       this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       setTimeout(() => {
-        const multipleTime = this.$refs.pickTime.$refs.multipleTime ? this.$refs.pickTime.$refs.multipleTime.searchTime : ''
+        let multipleTime = this.$refs.pickTime.$refs.multipleTime ? this.$refs.pickTime.$refs.multipleTime.searchTime : ''
+        if (this.$refs.pickTime.$refs.multipleTime && !this.$refs.pickTime.$refs.multipleTime.showDropdown) {
+          multipleTime = ''
+        }
         this.$emit('dateChange', this.filter, multipleTime)
       }, 100)
     },

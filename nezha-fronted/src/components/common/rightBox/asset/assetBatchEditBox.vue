@@ -434,7 +434,7 @@ export default {
       this.getTableData()
     },
     getTableData () {
-      this.$refs.transfer.startLoading()
+      this.$refs.transfer && this.$refs.transfer.startLoading()
       const searchLabel = { ...this.transfer.searchLabel }
       if (this.editData.editType === assetConstants.editTypeData.account) {
         searchLabel.authProtocol = this.editData.authProtocol

@@ -267,6 +267,7 @@ export default {
           })
         }
       }).catch(res => {
+        this.$refs['childrenFrom' + this.editChart.datasource].showError()
         console.info(res)
       })
     },
