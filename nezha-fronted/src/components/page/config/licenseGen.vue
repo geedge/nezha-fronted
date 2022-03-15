@@ -30,6 +30,7 @@
               accept=".xml"
               class="upload-demo"
               action=""
+              multiple
               :auto-upload="false"
               :on-change="handleChange"
               :file-list="uploadFileList">
@@ -49,7 +50,7 @@ export default {
   data () {
     return {
       licenseGen: {},
-      uploadFile: { fies: '' },
+      uploadFile: { file: '' },
       uploadList: [],
       uploadFileList: [],
       typeList: [
@@ -62,22 +63,20 @@ export default {
   methods: {
     handleChange (file, fileList) {
       if (fileList.length > 0) {
-        this.uploadFileList = [fileList[fileList.length - 1]]
+        this.uploadFileList = fileList
       }
-      this.uploadFile.fies = this.uploadFileList[0]
-      this.upload()
+      this.uploadFile.file = this.uploadFileList
     },
     upload () {
       const form = new FormData()
-      form.append('fies', this.uploadFile.fies.raw)
-      console.log(form)
-      // const params = {
-      //   ...this.licenseGen,
-      //
-      // }
+      form.append('fies', this.uploadFile.file)
+      form.append('supportID', this.licenseGen.supportID)
+      form.append('organization', this.licenseGen.organization)
+      form.append('type', this.licenseGen.type)
+      form.append('comment', this.licenseGen.comment)
       this.$post('/sys/license/gen', form).then(res => {
         if (res.code == 200) {
-          this.licenseGetStatus()
+          return ''
         } else {
           this.$message.error(res.msg)
         }
