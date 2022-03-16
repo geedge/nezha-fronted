@@ -25,5 +25,13 @@
         }
       }
     }
+    .license-gen-error {
+      position: relative;
+      .el-form-item__error {
+        position: absolute;
+        top: 55px;
+        left: 21px;
+      }
+    }
   }
 }

@@ -99,6 +99,12 @@ export function get (url, params) {
 export function post (url, params, headers) {
   return new Promise(resolve => {
     axios.post(url, params, { headers: headers }).then(response => {
+      if (url.indexOf('/sys/license/gen') !== -1) {
+        resolve({
+          data: response.data,
+          headers: response.headers
+        })
+      }
       resolve(response.data, response)
     }).catch(err => {
       if (err.response) {
