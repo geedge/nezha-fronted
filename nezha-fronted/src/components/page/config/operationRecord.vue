@@ -19,6 +19,7 @@
         <operation-log-table
           v-if="profileShow"
           ref="dataTable"
+          :orderByFa="orderBy"
           v-loading="tools.loading"
           :loading="tools.loading"
           :api="url"
