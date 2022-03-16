@@ -60,6 +60,8 @@
         <asset-tab v-if="(from === fromRoute.model) && targetTab === 'asset'" :tabs="tabs.model" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></asset-tab>
         <!-- agent 下滑-->
         <scrape-endpoint v-if="from === fromRoute.agent && targetTab === 'agent'" :from="from" :obj="obj" :tabs="tabs.agent" @changeTab="changeTab" :targetTab.sync="targetTab"></scrape-endpoint>
+        <!-- ipam -->
+        <ip-details v-if="from === fromRoute.ipam && targetTab === 'ipam'" :from="from" :obj="obj" :tabs="tabs.ipam" @changeTab="changeTab" :targetTab.sync="targetTab"></ip-details>
       </div>
     </div>
   </div>
@@ -84,6 +86,7 @@ import assetTab from '@/components/common/bottomBox/tabs/assetTab'
 import { fromRoute } from '@/components/common/js/constants'
 import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
 import scrapeEndpoint from '@/components/common/bottomBox/tabs/scrapeEndpoint'
+import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
 
 export default {
   name: 'bottomBox',
@@ -104,7 +107,8 @@ export default {
     panelTabNew,
     assetTab,
     assetSubTab,
-    alertRuleEvalLog
+    alertRuleEvalLog,
+    IpDetails
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -246,6 +250,9 @@ export default {
         },
         agent: [
           { prop: 'agent', name: this.$t('config.agent.scrapeEndpoint'), active: true }
+        ],
+        ipam: [
+          { prop: 'ipam', name: this.$t('config.ipam.ipDetails'), active: true }
         ]
       }
     }
