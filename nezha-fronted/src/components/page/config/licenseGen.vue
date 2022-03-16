@@ -67,6 +67,7 @@ export default {
   },
   methods: {
     handleChange (file, fileList) {
+      console.log(fileList)
       if (fileList.length > 0) {
         this.uploadFileList = fileList
       }
@@ -74,12 +75,16 @@ export default {
     },
     upload () {
       const form = new FormData()
-      form.append('fies', this.uploadFile.file)
+      if (this.uploadFile.file.length > 0) {
+        this.uploadFile.file.forEach(item => {
+          form.append('files', item.raw)
+        })
+      }
       form.append('supportID', this.licenseGen.supportID)
       form.append('organization', this.licenseGen.organization)
       form.append('type', this.licenseGen.type)
       form.append('comment', this.licenseGen.comment)
-      this.$post('/sys/license/gen', form).then(res => {
+      this.$post('/sys/license/gen', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
         if (res.code == 200) {
           return ''
         } else {
