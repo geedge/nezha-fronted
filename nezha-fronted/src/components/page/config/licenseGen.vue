@@ -117,7 +117,6 @@ export default {
         if (valid) {
           const form = new FormData()
           if (this.uploadFile.file.length > 0) {
-            console.log(this.uploadFile.file)
             this.uploadFile.file.forEach(item => {
               form.append('files', item.raw)
             })
