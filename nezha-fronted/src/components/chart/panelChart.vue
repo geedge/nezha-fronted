@@ -354,6 +354,111 @@ export default {
             }
             break
           }
+          case 'topology': {
+            this.loading = true
+            console.log(this.chartInfo)
+            const params = {
+              type: this.chartInfo.linkType,
+              id: this.chartInfo.id
+            }
+            this.$get('/stat/rel', params).then(res => {
+              this.loading = false
+              console.log(res)
+              res = {
+                msg: 'success',
+                code: 200,
+                data: {
+                  nodes: [{
+                    id: 'asset-1',
+                    type: 'asset',
+                    category: 'asset',
+                    name: 'ddd',
+                    hasChildren: false,
+                    alert: [{
+                      priority: 'P1',
+                      num: 11
+                    }]
+                  }, {
+                    id: 'endpoint-1',
+                    type: 'endpoint',
+                    category: 'endpoint',
+                    name: 'ddd',
+                    hasChildren: true,
+                    alert: [{
+                      priority: 'P1',
+                      num: 11
+                    }]
+                  },
+                  {
+                    id: 'asset-2',
+                    type: 'asset',
+                    category: 'asset',
+                    name: 'ddd',
+                    hasChildren: false,
+                    alert: [{
+                      priority: 'P1',
+                      num: 11
+                    }]
+                  }, {
+                    id: 'endpoint-2',
+                    type: 'endpoint',
+                    category: 'endpoint',
+                    name: 'ddd',
+                    hasChildren: true,
+                    alert: [{
+                      priority: 'P1',
+                      num: 11
+                    }]
+                  },
+                  {
+                    id: 'asset-3',
+                    type: 'asset',
+                    category: 'asset',
+                    name: 'ddd',
+                    hasChildren: false,
+                    alert: [{
+                      priority: 'P1',
+                      num: 11
+                    }]
+                  }, {
+                    id: 'endpoint-3',
+                    type: 'endpoint',
+                    category: 'endpoint',
+                    name: 'ddd',
+                    hasChildren: true,
+                    alert: [{
+                      priority: 'P1',
+                      num: 11
+                    }]
+                  }
+                  ],
+                  links: [{
+                    source: 'asset-1',
+                    target: 'endpoint-1'
+                  },
+                  {
+                    source: 'asset-1',
+                    target: 'endpoint-2'
+                  },
+                  {
+                    source: 'asset-1',
+                    target: 'endpoint-3'
+                  },
+                  {
+                    source: 'asset-1',
+                    target: 'asset-2'
+                  },
+                  {
+                    source: 'asset-1',
+                    target: 'asset-3'
+                  }
+                  ]
+                }
+              }
+              this.chartData = [res.data]
+            })
+            break
+          }
         }
       } catch (e) {
         this.loading = false

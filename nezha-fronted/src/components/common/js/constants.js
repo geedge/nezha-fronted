@@ -409,7 +409,8 @@ export const chartType = {
   endpointInfo: 'endpointInfo',
   topology: 'topology',
   map: 'map',
-  hexagon: 'hexagon'
+  hexagon: 'hexagon',
+  topologyLink: 'topologyLink'
 }
 
 export const chartLegendPlacement = {

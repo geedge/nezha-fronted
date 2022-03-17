@@ -15,7 +15,9 @@ const panel = {
     chartLastPosition: {
       x: 0,
       y: 0
-    }
+    },
+    topologyShow: false,
+    topologyChartInfo: {}
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -59,6 +61,12 @@ const panel = {
     },
     setChartListId (state, id) {
       state.chartListId = id
+    },
+    setTopologyShow (state, topologyShow) {
+      state.topologyShow = topologyShow
+    },
+    setTopologyChartInfo (state, topologyChartInfo) {
+      state.topologyChartInfo = topologyChartInfo
     }
   },
   getters: {
@@ -100,6 +108,12 @@ const panel = {
     },
     getChartListId (state, id) {
       return state.chartListId
+    },
+    getTopologyShow (state) {
+      return state.topologyShow
+    },
+    getTopologyChartInfo (state) {
+      return state.topologyChartInfo
     }
   },
   actions: {
@@ -131,6 +145,10 @@ const panel = {
     },
     clearPanel (store) {
       store.commit('cleanPanel')
+    },
+    showTopology (store, chartInfo) {
+      store.commit('setTopologyChartInfo', chartInfo)
+      store.commit('setTopologyShow', true)
     }
   }
 }

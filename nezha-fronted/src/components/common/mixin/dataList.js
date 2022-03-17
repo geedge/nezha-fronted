@@ -2,6 +2,8 @@ import bus from '@/libs/bus'
 import { tableSet } from '@/components/common/js/tools'
 import { fromRoute } from '@/components/common/js/constants'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
+import defaultData from '@/components/chart/defaultLineData'
+import lodash from 'lodash'
 export default {
   mixins: [routerPathParams],
   props: {
@@ -304,6 +306,15 @@ export default {
         ]
       }
       this.silenceBoxShow = true
+    },
+    topology (row, type) {
+      const chartInfo = lodash.cloneDeep(defaultData)
+      chartInfo.id = row.id
+      chartInfo.type = 'topologyLink'
+      chartInfo.linkType = type
+      chartInfo.datasource = 'topology'
+      chartInfo.name = '关系图'
+      this.$store.dispatch('showTopology', chartInfo)
     },
     closeDialog () {
       this.silenceBoxShow = false

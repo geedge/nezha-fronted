@@ -142,6 +142,7 @@
               <el-dropdown-item v-has="'asset_add'" :command="['duplicate', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('dashboard.duplicate')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'asset']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'asset_add'" :command="['topology', scope.row, 'asset']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>

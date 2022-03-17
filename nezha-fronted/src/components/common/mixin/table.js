@@ -55,8 +55,13 @@ export default {
           this.$emit('addSilence', row, param)
           break
         }
+        case 'topology': {
+          // this.$emit('copy', row)
+          this.$emit('topology', row, param)
+          break
+        }
         default:
-          this.$emit(command, row)
+          this.$emit(command, row, param)
           break
       }
     },

@@ -51,6 +51,10 @@ export function getOption (type) {
       chartOption = lodash.cloneDeep(chartClockOption)
       break
     }
+    case chartType.topologyLink: {
+      chartOption = lodash.cloneDeep({})
+      break
+    }
     default:
       chartOption = {}
       break
@@ -113,6 +117,9 @@ export function isGauge (type) {
 }
 export function isClock (type) {
   return type === chartType.clock
+}
+export function isTopology (type) {
+  return type === chartType.topologyLink
 }
 export function getGroupHeight (arr) {
   if (arr.length) {

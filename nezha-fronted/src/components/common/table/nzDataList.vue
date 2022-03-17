@@ -76,6 +76,25 @@
                   @fullScreen="fullScreen"
                   @listResize="listResize" ></bottom-box>
     </transition>
+    <!-- 全屏查看 -->
+    <el-dialog
+      v-if="topologyShow"
+      :visible.sync="topologyShow"
+      :show-close="false"
+      class="nz-dialog chart-fullscreen"
+      destroy-on-close
+      fullscreen
+      :modal-append-to-body="false"
+    >
+      <panel-chart
+        :ref="'chart-fullscreen' + topologyChartInfo.id"
+        :chart-info="topologyChartInfo"
+        :from="from"
+        :time-range="timeRange"
+        :is-fullscreen="true"
+        @showFullscreen="showFullscreen"
+      ></panel-chart>
+    </el-dialog>
   </div>
 </template>
 
@@ -83,11 +102,12 @@
 import { fromRoute } from '@/components/common/js/constants'
 import bottomBox from '@/components/common/bottomBox/bottomBox'
 import { bottomBoxWindow } from '@/components/common/js/tools'
-
+import panelChart from '@/components/chart/panelChart'
 export default {
   name: 'nzDataList',
   components: {
-    bottomBox
+    bottomBox,
+    panelChart
   },
   props: {
     from: {
@@ -123,6 +143,12 @@ export default {
         }
       }
       return ''
+    },
+    topologyShow () {
+      return this.$store.getters.getTopologyShow
+    },
+    topologyChartInfo () {
+      return this.$store.getters.getTopologyChartInfo
     }
   },
   data () {
@@ -143,7 +169,8 @@ export default {
         tableHover: false, // 控制滚动条和top按钮同时出现
         showCustomTableTitle: false // 自定义列弹框是否显示
       },
-      showLayout: []
+      showLayout: [],
+      timeRange: [new Date(), new Date()]
     }
   },
   methods: {
@@ -178,6 +205,9 @@ export default {
     },
     changeDetailType (item) {
       this.$emit('changeDetailType', item)
+    },
+    showFullscreen (flag) {
+      this.$store.commit('setTopologyShow', flag)
     }
   },
   watch: {

@@ -142,6 +142,7 @@
           @reload="getTableData"
           @selectionChange="selectionChange"
           @addSilence="addSilence"
+          @topology="topology"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></asset-table>
       </template>
       <!-- 分页组件 -->
