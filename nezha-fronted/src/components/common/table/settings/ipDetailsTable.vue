@@ -33,16 +33,9 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-<!--        <span v-if="item.prop === 'dc'">{{scope.row[item.prop]?scope.row[item.prop].name:'-'}}</span>-->
-<!--        <span v-else-if="item.prop === 'CIDR'">-->
-<!--          <template>{{ scope.row.addr }} / {{scope.row.mask}}</template>-->
-<!--        </span>-->
-<!--        <span v-else-if="item.prop === 'type'">-->
-<!--          <template v-if="scope.row.type === 4">IPV4</template>-->
-<!--          <template v-else-if="scope.row.type === 6">IPV6</template>-->
-<!--        </span>-->
-        <span v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-        <span v-else>-</span>
+        <template v-if="item.prop === 'asset'">{{scope.row.asset.name}}</template>
+        <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+        <template v-else>-</template>
       </template>
     </el-table-column>
     <el-table-column
@@ -93,7 +86,7 @@ export default {
           sortable: 'custom'
         }, {
           label: 'IP',
-          prop: 'ip',
+          prop: 'addr',
           show: true,
           minWidth: 200,
           sortable: 'custom'
@@ -105,12 +98,12 @@ export default {
           sortable: 'custom'
         }, {
           label: 'MAC',
-          prop: 'MAC',
+          prop: 'mac',
           show: true,
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('overall.asset'),
+          label: this.$t('config.ipamip.asset'),
           prop: 'asset',
           show: true,
           width: 200,

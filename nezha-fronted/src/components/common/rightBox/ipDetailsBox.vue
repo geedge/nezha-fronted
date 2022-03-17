@@ -1,0 +1,124 @@
+<template>
+  <div class="right-box right-box-ipam" v-clickoutside="{obj:editipDetails,func:clickOutside}" >
+    <!-- begin--标题-->
+    <div class="right-box__header">
+      <div class="header__title">{{editipDetails.id ? ($t("overall.ipam.edit")) : $t("overall.ipam.create")}}</div>
+      <div class="header__operation">
+        <span v-cancel="{obj: editipDetails, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+      </div>
+    </div>
+    <!-- begin--表单-->
+    <div class="right-box__container">
+      <div class="container__form">
+        <el-form :model="editipDetails" label-position="top" label-width="120px" :rules="rules" ref="ipDetailsForm">
+          <el-form-item :label="$t('overall.name')" prop="name">
+            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.name" size="small"></el-input>
+          </el-form-item>
+          <el-form-item label="IP" prop="addr">
+            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.addr" size="small"></el-input>
+          </el-form-item>
+          <el-form-item label="MAC" prop="mac">
+            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.mac" size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('config.ipamip.asset')" prop="asset">
+            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.asset.name" size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('overall.state')" prop="state">
+            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.state" size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('overall.remark')" prop="remark">
+            <el-input maxlength="256" rows="4" show-word-limit type="textarea" placeholder="" v-model="editipDetails.remark" size="small" id="mib-box-input-remark"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
+    <!--底部按钮-->
+    <div class="right-box__footer">
+      <button v-cancel="{obj:editipDetails,func:esc}" id="model-box-esc" class="footer__btn footer__btn--light">
+        <span>{{$t('overall.cancel')}}</span>
+      </button>
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="footer__btn" id="model-box-save">
+        <span>{{$t('overall.save')}}</span>
+      </button>
+    </div>
+
+  </div>
+</template>
+
+<script>
+import editRigthBox from '../mixin/editRigthBox'
+
+export default {
+  name: 'ipDetailsBox',
+  props: {
+    obj: Object
+  },
+  mixins: [editRigthBox],
+  data () {
+    return {
+      editipDetails: {},
+      rules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        addr: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        mac: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
+      }
+    }
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
+    },
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
+    /* 保存 */
+    save () {
+      this.$refs.ipDetailsForm.validate((valid) => {
+        if (valid) {
+          this.prevent_opt.save = true
+          if (!this.editipDetails.id) {
+            this.$post('/ipam/ip', this.editipDetails).then(response => {
+              if (response.code == 200 && response.msg == 'success') {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          } else {
+            this.$put('/ipam/ip', this.editipDetails).then(response => {
+              if (response.code == 200 && response.msg == 'success') {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          }
+        } else {
+          this.prevent_opt.save = false
+        }
+      })
+    }
+  },
+  watch: {
+    obj: {
+      immediate: true,
+      deep: true,
+      handler (n, o) {
+        this.isEdit = true
+        this.editipDetails = JSON.parse(JSON.stringify(n))
+      }
+    }
+  }
+}
+</script>
