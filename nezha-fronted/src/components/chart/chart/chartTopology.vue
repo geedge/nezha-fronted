@@ -132,42 +132,24 @@ export default {
         .attr('stroke-width', typeof linkStrokeWidth !== 'function' ? linkStrokeWidth : null)
         .attr('stroke-linecap', linkStrokeLinecap)
         .selectAll('line')
+      let linkCopy = link
         .data(links)
         .join('line')
 
-      const node = svg.append('g')
+      const nodeAll = svg.append('g')
         .attr('fill', nodeFill)
         .attr('stroke', nodeStroke)
         .attr('stroke-opacity', nodeStrokeOpacity)
         .attr('stroke-width', nodeStrokeWidth)
         .selectAll('.node')
-        .data(nodes)
+      let node = nodeAll.data(nodes)
         .enter().append('g')
         .attr('class', 'node')
         .attr('id', function (d) { return 'node' + d.id })
         .call(drag(simulation))
-      node.append('circle')
-        .attr('r', nodeRadius)
-      node.append('svg') // no i18n
-        .attr('width', '5px')// No i18n
-        .attr('height', '5px')// No i18n
-        .attr('x', 5)// No i18n
-        .attr('y', 5)// No i18n
-        .attr('style', 'cursor:pointer')// No i18n
-        .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes' : 'hide' })// No i18n
-        .attr('viewBox', '0 0 512 512') // No i18n
-        .append('polygon').attr('points', '508.3,204.302 508.3,94.372 232.104,94.372 232.104,119.163 2.128,119.163 2.128,148.02 103.282,148.02   103.282,395.751 104.073,395.751 104.073,395.879 231.416,395.879 231.416,433.091 507.612,433.091 507.612,323.161   231.416,323.161 231.416,365.65 135.572,365.65 135.572,148.02 232.104,148.02 232.104,204.302 ') // no i18n
-        .on('click', showChildren) // no i18n
-      node.attr('class', function (d) {
-        let cl = 'node'
-        if (d.hasChildren && (d.expanded == undefined || (d.expanded != undefined && d.expanded == false))) {
-          cl += ' closed'
-        }
-        return cl
-      })
-      node.attr('fixed', false)
-      if (W) link.attr('stroke-width', ({ index: i }) => W[i])
-      if (L) link.attr('stroke', ({ index: i }) => L[i])
+      render()
+      if (W) linkCopy.attr('stroke-width', ({ index: i }) => W[i])
+      if (L) linkCopy.attr('stroke', ({ index: i }) => L[i])
       if (G) node.attr('fill', ({ index: i }) => color(G[i]))
       if (T) node.append('title').text(({ index: i }) => T[i])
       function intern (value) {
@@ -175,7 +157,7 @@ export default {
       }
 
       function ticked () {
-        link
+        linkCopy
           .attr('x1', d => d.source.x)
           .attr('y1', d => d.source.y)
           .attr('x2', d => d.target.x)
@@ -221,7 +203,108 @@ export default {
         console.log(d, 'nodeMouseout')
       }
       function showChildren (event, d) {
-        console.log(event,d)
+        console.log(event, d)
+        if (d.hasChildren) {
+          hideChildren()
+        }
+        d.hasChildren = true
+        const params = {
+          type: d.type,
+          id: d.id
+        }
+        self.$get('/stat/rel', params).then(res => {
+          res = {
+            nodes: [
+              {
+                id: 'asset-4',
+                type: 'asset',
+                category: 'asset',
+                name: 'ddd',
+                hasChildren: false,
+                alert: [{
+                  priority: 'P1',
+                  num: 11
+                }]
+              },
+              {
+                id: 'asset-5',
+                type: 'asset',
+                category: 'asset',
+                name: 'ddd',
+                hasChildren: false,
+                alert: [{
+                  priority: 'P1',
+                  num: 11
+                }]
+              }
+            ],
+            links: [
+              {
+                source: 'asset-2',
+                target: 'asset-4'
+              }, {
+                source: 'asset-2',
+                target: 'asset-5'
+              }
+            ]
+          }
+          nodes.push(...res.nodes)
+          console.log(nodes)
+          simulation.stop()
+          node = node
+            .data(nodes)
+            .join(
+              enter => enter.append('g').attr('class', 'node')
+                .attr('id', function (d) { return 'node' + d.id })
+                .call(drag(simulation)),
+              update => update,
+              exit => exit.remove()
+            )
+          render()
+          const reslinks = res.links.map((item, index) => {
+            return {
+              index: links.length + index,
+              source: nodes.find(child => child.id === item.source),
+              target: nodes.find(child => child.id === item.target)
+            }
+          })
+          links.push(...reslinks)
+          links = links.map(d => Object.assign({}, d))
+          console.log(
+            links
+          )
+          linkCopy = linkCopy
+            .data(links)
+            .join('line')
+          simulation.nodes(nodes)
+          simulation.force('link').links(links)
+          simulation.alpha(1).restart().tick()
+        })
+      }
+      function hideChildren () {
+
+      }
+      function render () {
+        node.append('circle')
+          .attr('r', nodeRadius)
+        node.append('svg') // no i18n
+          .attr('width', '5px')// No i18n
+          .attr('height', '5px')// No i18n
+          .attr('x', 5)// No i18n
+          .attr('y', 5)// No i18n
+          .attr('style', 'cursor:pointer')// No i18n
+          .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes' : 'hide' })// No i18n
+          .attr('viewBox', '0 0 512 512') // No i18n
+          .append('polygon').attr('points', '508.3,204.302 508.3,94.372 232.104,94.372 232.104,119.163 2.128,119.163 2.128,148.02 103.282,148.02   103.282,395.751 104.073,395.751 104.073,395.879 231.416,395.879 231.416,433.091 507.612,433.091 507.612,323.161   231.416,323.161 231.416,365.65 135.572,365.65 135.572,148.02 232.104,148.02 232.104,204.302 ') // no i18n
+          .on('click', showChildren) // no i18n
+        node.attr('class', function (d) {
+          let cl = 'node'
+          if (d.hasChildren && (d.expanded == undefined || (d.expanded != undefined && d.expanded == false))) {
+            cl += ' closed'
+          }
+          return cl
+        })
+        node.attr('fixed', false)
       }
       return Object.assign(svg.node(), { scales: { color } })
     },
