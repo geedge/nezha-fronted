@@ -54,7 +54,10 @@ export default {
       setTimeout(() => {
         const dom = document.getElementById(`chart-canvas-${this.chartId}`)
         console.log(dom, `chart-canvas-${this.chartId}`)
-        dom.append(this.ForceGraph({ nodes: this.data.nodes, links: this.data.links }))
+        dom.append(this.ForceGraph({ nodes: this.data.nodes, links: this.data.links }, {
+          width: dom.offsetWidth,
+          height: dom.offsetHeight
+        }))
         const svg = document.getElementById('svgHex' + this.chartId)
         svg.setAttribute('width', '100%')
         svg.setAttribute('height', '100%')
@@ -74,7 +77,7 @@ export default {
       nodeStroke = '#fff', // node stroke color
       nodeStrokeWidth = 1.5, // node stroke width, in pixels
       nodeStrokeOpacity = 1, // node stroke opacity
-      nodeRadius = 5, // node radius, in pixels
+      nodeRadius = 20, // node radius, in pixels
       nodeStrength,
       linkSource = ({ source }) => source, // given d in links, returns a node identifier string
       linkTarget = ({ target }) => target, // given d in links, returns a node identifier string
@@ -123,8 +126,8 @@ export default {
         .attr('id', 'svgHex' + this.chartId)
         .attr('width', width)
         .attr('height', height)
-        .attr('viewBox', [-width / 2, -height / 2, width, height])
-        .attr('style', 'max-width: 100%; height: auto; height: intrinsic;')
+        .attr('viewBox', [-width/2, -height/2, width, height])
+        .attr('style', 'max-width: 100%; height: 100%;')
 
       const link = svg.append('g')
         .attr('stroke', typeof linkStroke !== 'function' ? linkStroke : null)
@@ -147,6 +150,7 @@ export default {
         .attr('class', 'node')
         .attr('id', function (d) { return 'node' + d.id })
         .call(drag(simulation))
+        .on('click', showChildren)
       render()
       if (W) linkCopy.attr('stroke-width', ({ index: i }) => W[i])
       if (L) linkCopy.attr('stroke', ({ index: i }) => L[i])
@@ -270,7 +274,8 @@ export default {
             .join(
               enter => enter.append('g').attr('class', 'node')
                 .attr('id', function (d) { return 'node' + d.id })
-                .call(drag(simulation)),
+                .call(drag(simulation))
+                .on('click', showChildren),
               update => update,
               exit => exit.remove()
             )
@@ -306,7 +311,8 @@ export default {
             .join(
               enter => enter.append('g').attr('class', 'node')
                 .attr('id', function (d) { return 'node' + d.id })
-                .call(drag(simulation)),
+                .call(drag(simulation))
+                .on('click', showChildren),
               update => update,
               exit => exit.remove()
             )
@@ -323,36 +329,37 @@ export default {
         }
       }
       function render () {
-        node.on('click', showChildren)
         node.append('circle')
           .attr('r', nodeRadius)
-        const bottomBox = node.append('svg')
+        const bottomBox = node.append('rect')
           .attr('width', nodeRadius * 2 + 20 + 'px')
-          .attr('height', '5px')
+          .attr('height', '6px')
           .attr('x', nodeRadius * -2 - 5)
           .attr('y', 5)
           .attr('style', 'cursor:pointer')
           .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes' : 'hide' })
-          .attr('viewBox', '0 0 512 512')
-        const rect = bottomBox
-          .append('g')
-          .attr('width', nodeRadius * 2 + 20 + 'px')
-          .attr('height', '5px')
-          .attr('fill', '#999')
-
-        rect.append('text')
+          .style('fill', '#000')
+        node.append('text')
+          .attr('x', nodeRadius * -2 - 5)
+          .attr('y', 5)
           .text(function (d) {
             console.log(d, 'asdasd')
             return d.name
           })
-          .attr('dx', 0)// so that it comes 20 pixel from center.
-          .attr('dy', 5)// so that it comes 20 pixel from center.
-          .attr('color', '#333')
-          .attr('fontSize', '14px')
-          .attr('width', nodeRadius * 2 + 10 + 'px')
-          .attr('height', '5px')
-        rect.append('polygon').attr('points', '508.3,204.302 508.3,94.372 232.104,94.372 232.104,119.163 2.128,119.163 2.128,148.02 103.282,148.02   103.282,395.751 104.073,395.751 104.073,395.879 231.416,395.879 231.416,433.091 507.612,433.091 507.612,323.161   231.416,323.161 231.416,365.65 135.572,365.65 135.572,148.02 232.104,148.02 232.104,204.302 ')
-
+          .attr('font-size', 5)
+          .attr('fill', '#fa9812')
+          // .attr('stroke', '#fa9812')
+        // .attr('width', nodeRadius * 2 + 10 + 'px')
+          // .attr('height', '5px')
+        node.append('svg') // no i18n
+          .attr('width', '6px')// No i18n
+          .attr('height', '6px')// No i18n
+          .attr('x', 7)// No i18n
+          .attr('y', 5)// No i18n
+          .attr('style', 'cursor:pointer')// No i18n
+          .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes' : 'hide' })// No i18n
+          .attr('viewBox', '0 0 512 512').append('polygon')
+          .attr('points', '508.3,204.302 508.3,94.372 232.104,94.372 232.104,119.163 2.128,119.163 2.128,148.02 103.282,148.02   103.282,395.751 104.073,395.751 104.073,395.879 231.416,395.879 231.416,433.091 507.612,433.091 507.612,323.161   231.416,323.161 231.416,365.65 135.572,365.65 135.572,148.02 232.104,148.02 232.104,204.302 ')
         node.attr('class', function (d) {
           let cl = 'node'
           if (d.hasChildren && (d.expanded == undefined || (d.expanded != undefined && d.expanded == false))) {
