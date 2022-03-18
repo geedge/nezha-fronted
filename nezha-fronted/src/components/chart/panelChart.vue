@@ -459,10 +459,14 @@ export default {
               res.data.nodes.forEach(item => {
                 if (item.id === parentId) {
                   item.hasChildren = true
+                  item.fx = 0
+                  item.fy = 0
                 } else {
                   item.hasChildren = false
                 }
                 item.parentId = parentId
+                item.radius = 20 // 需要计算 分三级
+                item.color = '#fa9' // 需要计算 分三级
               })
               this.chartData = [res.data]
             })

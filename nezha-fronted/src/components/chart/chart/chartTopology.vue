@@ -21,6 +21,12 @@ import '@svgdotjs/svg.panzoom.js'
 export default {
   name: 'chartHexagonD3',
   mixins: [chartMixin, chartFormat],
+  props: {
+    parentId: {
+      type: String,
+      default: 'asset-1'
+    }
+  },
   data () {
     return {
       timer: null,
@@ -41,7 +47,8 @@ export default {
       data: {
         nodes: [],
         links: []
-      }
+      },
+      firstInit: true
     }
   },
   methods: {
@@ -53,10 +60,11 @@ export default {
       this.data.nodes.push(...this.chartData[0].nodes)
       setTimeout(() => {
         const dom = document.getElementById(`chart-canvas-${this.chartId}`)
-        console.log(dom, `chart-canvas-${this.chartId}`)
         dom.append(this.ForceGraph({ nodes: this.data.nodes, links: this.data.links }, {
           width: dom.offsetWidth,
-          height: dom.offsetHeight
+          height: dom.offsetHeight,
+          nodeStrength: -500,
+          distanceNum: 200
         }))
         const svg = document.getElementById('svgHex' + this.chartId)
         svg.setAttribute('width', '100%')
@@ -86,12 +94,12 @@ export default {
       linkStrokeWidth = 1.5, // given d in links, returns a stroke width in pixels
       linkStrokeLinecap = 'round', // link stroke linecap
       linkStrength,
+      distanceNum,
       colors = d3.schemeTableau10, // an array of color strings, for the node groups
       width = 640, // outer width, in pixels
       height = 400, // outer height, in pixels
       invalidation // when this promise resolves, stop the simulation
     } = {}) {
-      console.log(nodes, nodeId)
       const self = this
       // Compute values.
       const N = d3.map(nodes, nodeId).map(intern)
@@ -116,7 +124,8 @@ export default {
       // Construct the forces.
       const forceNode = d3.forceManyBody()
       const forceLink = d3.forceLink(links).id(({ index: i }) => N[i])
-      // if (nodeStrength !== undefined) forceNode.strength(nodeStrength)
+      if (nodeStrength !== undefined) forceNode.strength(nodeStrength)
+      if (distanceNum !== undefined) forceLink.distance(distanceNum)
       const simulation = d3.forceSimulation(nodes)
         .force('link', forceLink)
         .force('charge', forceNode)
@@ -126,7 +135,7 @@ export default {
         .attr('id', 'svgHex' + this.chartId)
         .attr('width', width)
         .attr('height', height)
-        .attr('viewBox', [-width/2, -height/2, width, height])
+        .attr('viewBox', [-width / 2, -height / 2, width, height])
         .attr('style', 'max-width: 100%; height: 100%;')
 
       const link = svg.append('g')
@@ -169,6 +178,12 @@ export default {
 
         node
           .attr('transform', function (d) {
+            if (d.id === self.parentId && self.firstInit) {
+              d.fx = 0
+              d.fy = 0
+              d.x = 0
+              d.y = 0
+            }
             return 'translate(' + d.x + ',' + d.y + ')'
           })
       }
@@ -207,7 +222,6 @@ export default {
         console.log(d, 'nodeMouseout')
       }
       function showChildren (event, d) {
-        console.log(d)
         if (d.hasChildren) {
           hideChildren(d)
           return
@@ -265,9 +279,10 @@ export default {
             if (!item.parentId) {
               item.parentId = parentId
             }
+            item.radius = 20 // 需要计算 分三级
+            item.color = '#fa9' // 需要计算 分三级
           })
           nodes.push(...res.data.nodes)
-          console.log(nodes)
           simulation.stop()
           node = node
             .data(nodes)
@@ -289,9 +304,6 @@ export default {
           })
           links.push(...reslinks)
           links = links.map(d => Object.assign({}, d))
-          console.log(
-            links
-          )
           linkCopy = linkCopy
             .data(links)
             .join('line')
@@ -301,7 +313,6 @@ export default {
         })
       }
       function hideChildren (d) {
-        console.log(d)
         if (d.id) {
           d.hasChildren = false
           simulation.stop()
@@ -330,32 +341,36 @@ export default {
       }
       function render () {
         node.append('circle')
-          .attr('r', nodeRadius)
+          .attr('r', function (d) { return d.radius })
+          .attr('fill', function (d) { return d.color })
         const bottomBox = node.append('rect')
-          .attr('width', nodeRadius * 2 + 20 + 'px')
-          .attr('height', '6px')
-          .attr('x', nodeRadius * -2 - 5)
-          .attr('y', 5)
+          .attr('width', nodeRadius * 2 + 40 + 'px')
+          .attr('height', '22px')
+          .attr('x', nodeRadius * -1 - 20)
+          .attr('y', nodeRadius * 1 + 5)
           .attr('style', 'cursor:pointer')
           .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes' : 'hide' })
-          .style('fill', '#000')
+          .style('fill', '#fff')
+          .attr('stroke', '#999')
+          .attr('stroke-width', 1)
         node.append('text')
-          .attr('x', nodeRadius * -2 - 5)
-          .attr('y', 5)
+          .attr('width', nodeRadius * 2 + 20 + 'px')
+          .attr('height', '16px')
+          .attr('x', nodeRadius * -1 - 16)
+          .attr('y', nodeRadius * 1 + 5 + 16)
           .text(function (d) {
-            console.log(d, 'asdasd')
             return d.name
           })
-          .attr('font-size', 5)
-          .attr('fill', '#fa9812')
-          // .attr('stroke', '#fa9812')
+          .attr('font-size', 16)
+          .attr('stroke', '#fa9812')
+          .attr('stroke-width', 1)
         // .attr('width', nodeRadius * 2 + 10 + 'px')
           // .attr('height', '5px')
         node.append('svg') // no i18n
-          .attr('width', '6px')// No i18n
-          .attr('height', '6px')// No i18n
-          .attr('x', 7)// No i18n
-          .attr('y', 5)// No i18n
+          .attr('width', '16px')// No i18n
+          .attr('height', '16px')// No i18n
+          .attr('x', nodeRadius * 1)// No i18n
+          .attr('y', nodeRadius * 1 + 8)// No i18n
           .attr('style', 'cursor:pointer')// No i18n
           .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes' : 'hide' })// No i18n
           .attr('viewBox', '0 0 512 512').append('polygon')
@@ -369,6 +384,9 @@ export default {
         })
         node.attr('fixed', false)
       }
+      setTimeout(()=>{
+        self.firstInit = false
+      }, 1000)
       return Object.assign(svg.node(), { scales: { color } })
     },
     update (nodes, links) {
