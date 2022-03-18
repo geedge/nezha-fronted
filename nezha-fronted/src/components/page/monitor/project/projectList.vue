@@ -35,6 +35,7 @@
           @orderBy="tableDataSort"
           @reload="getTableData"
           @addSilence="addSilence"
+          @topology="topology"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></project-table>
       </template>

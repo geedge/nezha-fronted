@@ -140,6 +140,7 @@
           @orderBy="tableDataSort"
           @reload="getTableData"
           @addSilence="addSilence"
+          @topology="topology"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, item) => { $refs.dataList.showBottomBox(targetTab, item) }"></endpoint-table>
       </template>

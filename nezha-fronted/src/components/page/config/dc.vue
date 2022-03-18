@@ -127,6 +127,7 @@
           @copy="copy"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @topology="topology"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></dc-table>
       </template>

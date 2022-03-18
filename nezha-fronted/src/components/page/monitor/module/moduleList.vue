@@ -126,6 +126,7 @@
           @reload="getTableData"
           @sync="chartBySync"
           @addSilence="addSilence"
+          @topology="topology"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></module-table>
       </template>
