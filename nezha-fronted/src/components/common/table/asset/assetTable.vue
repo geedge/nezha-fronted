@@ -91,21 +91,21 @@
             <!--          <span v-else-if="scope.row.pid == -1">  <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i> 0 </span>-->
             <span v-else> - </span>
           </template>
-          <template v-else-if="item.prop === 'clientState'">
-            <div v-if="scope.row[item.prop]===1">
+          <template v-else-if="item.prop === 'talon'">
+            <div v-if="scope.row['clientState']===1">
               <div class="active-icon green-bg inline-block"></div>
               OK
             </div>
-            <div v-else-if="scope.row[item.prop]===0">
+            <div v-else-if="scope.row['clientState']===0">
               <div class="active-icon gray-bg inline-block"></div> {{ $t('config.user.disable') }}
             </div>
-            <div v-else-if="scope.row[item.prop]===2">
+            <div v-else-if="scope.row['clientState']===2">
               <div class="active-icon red-bg inline-block"></div> {{ $t('asset.connectionTimedOut') }}
             </div>
-            <div v-else-if="scope.row[item.prop]===3">
+            <div v-else-if="scope.row['clientState']===3">
               <div class="active-icon red-bg inline-block"></div> {{ $t('overall.AuthenticationFailed') }}
             </div>
-            <div v-else-if="scope.row[item.prop]===4">
+            <div v-else-if="scope.row['clientState']===4">
               <div class="active-icon red-bg inline-block"></div> {{ $t('config.terminallog.statusItem.unknownError') }}
             </div>
             <template v-else>-</template>
@@ -280,7 +280,8 @@ export default {
           minWidth: 110
         }, {
           label: 'Talon',
-          prop: 'clientState',
+          // prop: 'clientState',
+          prop: 'talon',
           show: true,
           sortable: 'custom',
           minWidth: 150
@@ -302,10 +303,10 @@ export default {
       if (str === 'dc') {
         orderBy = str
       }
-      if (str === 'clientState') {
-        str = 'talon_status'
-        orderBy = str
-      }
+      // if (str === 'clientState') {
+      //   str = 'talon_status'
+      //   orderBy = str
+      // }
       if (item.order === 'ascending') {
         orderBy = str
       }
