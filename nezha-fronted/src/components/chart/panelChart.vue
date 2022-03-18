@@ -97,7 +97,9 @@ export default {
       multipleTime: false,
       minusTime: '',
       showAllData: false,
-      allDataLength: 0
+      allDataLength: 0,
+      severityData: this.$store.getters.severityData,
+      severityDataWeight: this.$store.getters.severityDataWeight
     }
   },
   computed: {
@@ -364,7 +366,7 @@ export default {
             this.$get('/stat/rel', params).then(res => {
               this.loading = false
               console.log(res)
-              const parentId = 'undefind' || this.chartInfo.id
+              const parentId = 'asset-1' || this.chartInfo.id
               res = {
                 msg: 'success',
                 code: 200,
@@ -373,11 +375,14 @@ export default {
                     id: 'asset-1',
                     type: 'asset',
                     category: 'asset',
-                    name: 'ddd',
+                    name: 'dddeee',
                     hasChildren: false,
                     alert: [{
-                      priority: 'P1',
-                      num: 11
+                      priority: 'P2',
+                      num: 7
+                    }, {
+                      priority: 'P3',
+                      num: 5
                     }]
                   }, {
                     id: 'endpoint-1',
@@ -386,40 +391,40 @@ export default {
                     name: 'ddd',
                     hasChildren: true,
                     alert: [{
-                      priority: 'P1',
-                      num: 11
+                      priority: 'P3',
+                      num: 1
                     }]
                   },
                   {
                     id: 'asset-2',
-                    type: 'asset',
+                    type: 'dc',
                     category: 'asset',
                     name: 'ddd',
                     hasChildren: false,
                     alert: [{
                       priority: 'P1',
-                      num: 11
+                      num: 10
                     }]
                   }, {
                     id: 'endpoint-2',
-                    type: 'endpoint',
+                    type: 'project',
                     category: 'endpoint',
                     name: 'ddd',
                     hasChildren: true,
                     alert: [{
                       priority: 'P1',
-                      num: 11
+                      num: 30
                     }]
                   },
                   {
                     id: 'asset-3',
-                    type: 'asset',
+                    type: 'module',
                     category: 'asset',
                     name: 'ddd',
                     hasChildren: false,
                     alert: [{
                       priority: 'P1',
-                      num: 11
+                      num: 10
                     }]
                   }, {
                     id: 'endpoint-3',
@@ -428,8 +433,8 @@ export default {
                     name: 'ddd',
                     hasChildren: true,
                     alert: [{
-                      priority: 'P1',
-                      num: 11
+                      priority: 'P3',
+                      num: 10
                     }]
                   }
                   ],
@@ -457,16 +462,17 @@ export default {
                 }
               }
               res.data.nodes.forEach(item => {
+                item.parentId = parentId
                 if (item.id === parentId) {
                   item.hasChildren = true
+                  item.parentId = 'undefind'
                   item.fx = 0
                   item.fy = 0
                 } else {
                   item.hasChildren = false
                 }
-                item.parentId = parentId
-                item.radius = 20 // 需要计算 分三级
-                item.color = '#fa9' // 需要计算 分三级
+                item.radius = this.getRadius(item) // 需要计算 分三级
+                item.color = this.getColor(item) // 需要计算 分三级
               })
               this.chartData = [res.data]
             })
@@ -580,6 +586,35 @@ export default {
           this.$message.error(res.msg)
         }
       })
+    },
+    getRadius (item) {
+      let sum = 0
+      item.alert && item.alert.forEach(alert => {
+        sum += alert.num
+      })
+      if (sum === 0) {
+        return 15
+      } else if (sum <= 10) {
+        return 25
+      } else {
+        return 35
+      }
+    },
+    getColor (item) {
+      const arr = []
+      let color = ''
+      item.alert && item.alert.forEach(alert => {
+        arr.push(alert.priority)
+      })
+      this.severityDataWeight.forEach(severity => {
+        if (arr.indexOf(severity.name) !== -1 && !color) {
+          color = severity.color
+        }
+      })
+      if (!arr.length || !color) {
+        color = '#23bf9a'
+      }
+      return color
     }
   },
   watch: {
