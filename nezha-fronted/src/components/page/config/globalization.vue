@@ -19,6 +19,7 @@
       <template v-slot:default="slotProps">
         <globalization-table
           ref="dataTable"
+          :orderByFa="orderBy"
           v-loading="tools.loading"
           :loading="tools.loading"
           :api="url"
@@ -27,7 +28,6 @@
           :table-data="tableData"
           @del="del"
           @edit="edit"
-          @copy="copy"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
@@ -62,7 +62,7 @@ export default {
       url: 'sys/i18n',
       tableId: 'i18nTable', // 需要分页的table的id，用于记录每页数量
       blankObject: {
-        ids: '',
+        id: '',
         name: '',
         code: '',
         lang: 'en',
@@ -129,23 +129,6 @@ export default {
   mounted () {
     this.getUserData()
   }
-  // watch: {
-  //   $route: {
-  //     immediate: true,
-  //     handler () {
-  //       // 是否弹出侧滑
-  //       const add = this.$route.query.add
-  //       if (add) {
-  //         if (add === 'dc') {
-  //           this.add()
-  //         }
-  //         if (add === 'cabinet') {
-  //           this.addCabinet()
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
 }
 </script>
 <style scoped>

@@ -146,7 +146,7 @@ export default {
           minWidth: 110
         }, {
           label: 'Talon',
-          prop: 'clientState',
+          prop: 'talon',
           show: true,
           sortable: 'custom',
           minWidth: 150
