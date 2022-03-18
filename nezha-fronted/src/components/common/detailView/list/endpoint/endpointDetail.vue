@@ -109,7 +109,6 @@ export default {
           prop: 'state',
           show: true,
           minWidth: 200,
-          sortable: 'custom'
         }
         // {
         //   label: this.$t('project.endpoint.status'),
