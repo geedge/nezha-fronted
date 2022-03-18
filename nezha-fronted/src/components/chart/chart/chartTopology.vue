@@ -101,7 +101,7 @@ export default {
       const L = typeof linkStroke !== 'function' ? null : d3.map(links, linkStroke)
 
       // Replace the input nodes and links with mutable objects for the simulation.
-      nodes = d3.map(nodes, (_, i) => ({ id: N[i] }))
+      nodes = d3.map(nodes, (_, i) => ({ id: N[i], ...nodes[i] }))
       links = d3.map(links, (_, i) => ({ source: LS[i], target: LT[i] }))
 
       // Compute default domains.
@@ -203,9 +203,10 @@ export default {
         console.log(d, 'nodeMouseout')
       }
       function showChildren (event, d) {
-        console.log(event, d)
+        console.log(d)
         if (d.hasChildren) {
-          hideChildren()
+          hideChildren(d)
+          return
         }
         d.hasChildren = true
         const params = {
@@ -214,41 +215,54 @@ export default {
         }
         self.$get('/stat/rel', params).then(res => {
           res = {
-            nodes: [
-              {
-                id: 'asset-4',
-                type: 'asset',
-                category: 'asset',
-                name: 'ddd',
-                hasChildren: false,
-                alert: [{
-                  priority: 'P1',
-                  num: 11
-                }]
-              },
-              {
-                id: 'asset-5',
-                type: 'asset',
-                category: 'asset',
-                name: 'ddd',
-                hasChildren: false,
-                alert: [{
-                  priority: 'P1',
-                  num: 11
-                }]
-              }
-            ],
-            links: [
-              {
-                source: 'asset-2',
-                target: 'asset-4'
-              }, {
-                source: 'asset-2',
-                target: 'asset-5'
-              }
-            ]
+            data: {
+              nodes: [
+                {
+                  id: 'asset-4',
+                  type: 'asset',
+                  category: 'asset',
+                  name: 'ddd',
+                  hasChildren: false,
+                  alert: [{
+                    priority: 'P1',
+                    num: 11
+                  }]
+                },
+                {
+                  id: 'asset-5',
+                  type: 'asset',
+                  category: 'asset',
+                  name: 'ddd',
+                  hasChildren: false,
+                  alert: [{
+                    priority: 'P1',
+                    num: 11
+                  }]
+                }
+              ],
+              links: [
+                {
+                  source: 'asset-2',
+                  target: 'asset-4'
+                }, {
+                  source: 'asset-2',
+                  target: 'asset-5'
+                }
+              ]
+            }
           }
-          nodes.push(...res.nodes)
+          const parentId = 'asset-2' || d.id
+          res.data.nodes.forEach(item => {
+            if (item.id === parentId) {
+              item.hasChildren = true
+            } else {
+              item.hasChildren = false
+            }
+            if (!item.parentId) {
+              item.parentId = parentId
+            }
+          })
+          nodes.push(...res.data.nodes)
           console.log(nodes)
           simulation.stop()
           node = node
@@ -261,7 +275,7 @@ export default {
               exit => exit.remove()
             )
           render()
-          const reslinks = res.links.map((item, index) => {
+          const reslinks = res.data.links.map((item, index) => {
             return {
               index: links.length + index,
               source: nodes.find(child => child.id === item.source),
@@ -278,13 +292,38 @@ export default {
             .join('line')
           simulation.nodes(nodes)
           simulation.force('link').links(links)
-          simulation.alpha(1).restart().tick()
+          simulation.alphaTarget(0.3).restart().tick()
         })
       }
-      function hideChildren () {
-
+      function hideChildren (d) {
+        console.log(d)
+        if (d.id) {
+          d.hasChildren = false
+          simulation.stop()
+          nodes = nodes.filter(child => child.parentId !== d.id)
+          node = node
+            .data(nodes)
+            .join(
+              enter => enter.append('g').attr('class', 'node')
+                .attr('id', function (d) { return 'node' + d.id })
+                .call(drag(simulation)),
+              update => update,
+              exit => exit.remove()
+            )
+          render()
+          links = links.filter(child => (child.source.parentId !== d.id))
+          links = links.filter(child => (child.target.parentId !== d.id))
+          links = links.map(d => Object.assign({}, d))
+          linkCopy = linkCopy
+            .data(links)
+            .join('line')
+          simulation.nodes(nodes)
+          simulation.force('link').links(links)
+          simulation.alphaTarget(0.3).restart().tick()
+        }
       }
       function render () {
+        node.on('click', showChildren)
         node.append('circle')
           .attr('r', nodeRadius)
         node.append('svg') // no i18n
@@ -296,7 +335,7 @@ export default {
           .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes' : 'hide' })// No i18n
           .attr('viewBox', '0 0 512 512') // No i18n
           .append('polygon').attr('points', '508.3,204.302 508.3,94.372 232.104,94.372 232.104,119.163 2.128,119.163 2.128,148.02 103.282,148.02   103.282,395.751 104.073,395.751 104.073,395.879 231.416,395.879 231.416,433.091 507.612,433.091 507.612,323.161   231.416,323.161 231.416,365.65 135.572,365.65 135.572,148.02 232.104,148.02 232.104,204.302 ') // no i18n
-          .on('click', showChildren) // no i18n
+          // no i18n
         node.attr('class', function (d) {
           let cl = 'node'
           if (d.hasChildren && (d.expanded == undefined || (d.expanded != undefined && d.expanded == false))) {

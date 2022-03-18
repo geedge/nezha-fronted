@@ -364,6 +364,7 @@ export default {
             this.$get('/stat/rel', params).then(res => {
               this.loading = false
               console.log(res)
+              const parentId = 'undefind' || this.chartInfo.id
               res = {
                 msg: 'success',
                 code: 200,
@@ -455,6 +456,14 @@ export default {
                   ]
                 }
               }
+              res.data.nodes.forEach(item => {
+                if (item.id === parentId) {
+                  item.hasChildren = true
+                } else {
+                  item.hasChildren = false
+                }
+                item.parentId = parentId
+              })
               this.chartData = [res.data]
             })
             break
