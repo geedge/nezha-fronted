@@ -194,7 +194,7 @@ export default {
     },
     downloadLicense () {
       this.$get('/sys/license/token').then(res => {
-        let fileName = this.licenseList.id + '-' + this.getTimeString() + '.xml'
+        let fileName = ''
         const resFileName = res.headers['content-disposition'].split('=')[1]
         if (resFileName) {
           fileName = resFileName
