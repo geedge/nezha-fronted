@@ -982,7 +982,7 @@ export default {
       this.chartData = chart
       this.rightBox.show = true
     },
-    createSuccess (type, response, param, panel) { // 添加chart成功
+    createSuccess (panel) { // 添加chart成功
       this.$confirm(this.$t('dashboard.metric.goPanelTip'), this.$t('tip.saveSuccess'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),

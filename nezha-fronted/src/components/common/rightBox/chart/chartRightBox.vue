@@ -226,6 +226,10 @@ export default {
           params.x = 0
           params.y = 999
         }
+        if (this.from === 'explore') { // explore 新增 放在最后
+          params.x = 0
+          params.y = 999
+        }
         if (!params.x && !params.y && this.from === 'chartTemp') { // chartTemp 新增 在第一位
           params.x = 0
           params.y = 0
