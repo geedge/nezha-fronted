@@ -62,6 +62,8 @@
         <scrape-endpoint v-if="from === fromRoute.agent && targetTab === 'agent'" :from="from" :obj="obj" :tabs="tabs.agent" @changeTab="changeTab" :targetTab.sync="targetTab"></scrape-endpoint>
         <!-- ipam -->
         <ip-details v-if="from === fromRoute.ipam && targetTab === 'ipam'" :from="from" :obj="obj" :tabs="tabs.ipam" @changeTab="changeTab" :targetTab.sync="targetTab"></ip-details>
+        <!--alertRule Tab-->
+        <alertMessageTabNew v-if="from === fromRoute.alertSilence && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
       </div>
     </div>
   </div>
@@ -253,6 +255,9 @@ export default {
         ],
         ipam: [
           { prop: 'ipam', name: this.$t('config.ipam.ipDetails'), active: true }
+        ],
+        alertSilence: [
+          { prop: 'alertMessageTab', name: this.$t('config.ipam.alertSilence'), active: true }
         ]
       }
     }
