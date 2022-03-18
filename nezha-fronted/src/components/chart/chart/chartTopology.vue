@@ -326,16 +326,33 @@ export default {
         node.on('click', showChildren)
         node.append('circle')
           .attr('r', nodeRadius)
-        node.append('svg') // no i18n
-          .attr('width', '5px')// No i18n
-          .attr('height', '5px')// No i18n
-          .attr('x', 5)// No i18n
-          .attr('y', 5)// No i18n
-          .attr('style', 'cursor:pointer')// No i18n
-          .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes' : 'hide' })// No i18n
-          .attr('viewBox', '0 0 512 512') // No i18n
-          .append('polygon').attr('points', '508.3,204.302 508.3,94.372 232.104,94.372 232.104,119.163 2.128,119.163 2.128,148.02 103.282,148.02   103.282,395.751 104.073,395.751 104.073,395.879 231.416,395.879 231.416,433.091 507.612,433.091 507.612,323.161   231.416,323.161 231.416,365.65 135.572,365.65 135.572,148.02 232.104,148.02 232.104,204.302 ') // no i18n
-          // no i18n
+        const bottomBox = node.append('svg')
+          .attr('width', nodeRadius * 2 + 20 + 'px')
+          .attr('height', '5px')
+          .attr('x', nodeRadius * -2 - 5)
+          .attr('y', 5)
+          .attr('style', 'cursor:pointer')
+          .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes' : 'hide' })
+          .attr('viewBox', '0 0 512 512')
+        const rect = bottomBox
+          .append('g')
+          .attr('width', nodeRadius * 2 + 20 + 'px')
+          .attr('height', '5px')
+          .attr('fill', '#999')
+
+        rect.append('text')
+          .text(function (d) {
+            console.log(d, 'asdasd')
+            return d.name
+          })
+          .attr('dx', 0)// so that it comes 20 pixel from center.
+          .attr('dy', 5)// so that it comes 20 pixel from center.
+          .attr('color', '#333')
+          .attr('fontSize', '14px')
+          .attr('width', nodeRadius * 2 + 10 + 'px')
+          .attr('height', '5px')
+        rect.append('polygon').attr('points', '508.3,204.302 508.3,94.372 232.104,94.372 232.104,119.163 2.128,119.163 2.128,148.02 103.282,148.02   103.282,395.751 104.073,395.751 104.073,395.879 231.416,395.879 231.416,433.091 507.612,433.091 507.612,323.161   231.416,323.161 231.416,365.65 135.572,365.65 135.572,148.02 232.104,148.02 232.104,204.302 ')
+
         node.attr('class', function (d) {
           let cl = 'node'
           if (d.hasChildren && (d.expanded == undefined || (d.expanded != undefined && d.expanded == false))) {
