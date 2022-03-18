@@ -170,6 +170,7 @@ export default {
     return {
       stateOptions: alertMessageConstant.states,
       url: 'alert/message',
+      alertSilenceUrl: '',
       tableId: 'alertMessageModule', // 需要分页的table的id，用于记录每页数量
       state: '1',
       blankSilenceObject: {
@@ -285,7 +286,14 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete(this.url + '?ids=' + row.id + '&state=' + this.state).then(response => {
+        let url = ''
+        if (this.from === fromRoute.alertSilence) {
+          this.alertSilenceUrl = `/alert/silence/${this.obj.id}/rel`
+          url = this.alertSilenceUrl
+        } else {
+          url = this.url
+        }
+        this.$delete(url + '?ids=' + row.id + '&state=' + this.state).then(response => {
           if (response.code === 200) {
             self.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
@@ -331,7 +339,14 @@ export default {
       } else if (this.from === fromRoute.dc) {
         this.searchLabel.dcIds = this.obj.id
       }
-      this.$get(this.url, this.searchLabel).then(response => {
+      let url = ''
+      if (this.from === fromRoute.alertSilence) {
+        this.alertSilenceUrl = `/alert/silence/${this.obj.id}/rel`
+        url = this.alertSilenceUrl
+      } else {
+        url = this.url
+      }
+      this.$get(url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
@@ -430,7 +445,14 @@ export default {
     deleteMessage () {
       this.$refs.remarkForm.validate(valid => {
         if (valid) {
-          this.$put(this.url, this.deleteBox).then(res => {
+          let url = ''
+          if (this.from === fromRoute.alertSilence) {
+            this.alertSilenceUrl = `/alert/silence/${this.obj.id}/rel`
+            url = this.alertSilenceUrl
+          } else {
+            url = this.url
+          }
+          this.$put(url, this.deleteBox).then(res => {
             if (res.code === 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
               this.deleteBox.ids = []
