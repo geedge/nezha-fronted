@@ -20,9 +20,6 @@
           <el-form-item label="MAC" prop="mac">
             <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.mac" size="small"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('config.ipamip.asset')" prop="asset">
-            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.asset.name" size="small"></el-input>
-          </el-form-item>
           <el-form-item :label="$t('overall.state')" prop="state">
             <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.state" size="small"></el-input>
           </el-form-item>

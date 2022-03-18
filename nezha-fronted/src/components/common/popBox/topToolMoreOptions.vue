@@ -215,6 +215,8 @@ export default {
         url = '/dc/cancelImport'
       } else if (this.importUrl.indexOf('/ipam/subnet') > -1) {
         url = '/ipam/subnet/cancelImport'
+      } else if (this.importUrl.indexOf('/ipam/ip') > -1) {
+        url = '/ipam/ip/cancelImport'
       }
       this.$delete(url + '?seq=' + this.importResult.seq).then(response => {
         if (response.code == 200) {
@@ -310,6 +312,8 @@ export default {
         url = '/dc/template'
       } else if (this.importUrl.indexOf('/ipam/subnet') > -1) {
         url = '/ipam/subnet/template'
+      } else if (this.importUrl.indexOf('/ipam/ip') > -1) {
+        url = ' /ipam/ip/template'
       }
       if (!url) {
         console.error('no interface support')

@@ -14,6 +14,35 @@
       @changeTab="changeTab"
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+      <template v-slot:top-tool-right>
+        <button id="account-add" v-has="'ipam_add'" :title="$t('overall.createipam')" class="top-tool-btn margin-r-10"
+                type="button" @click="add">
+          <i class="nz-icon-create-square nz-icon"></i>
+        </button>
+        <top-tool-more-options
+          :delete-objs="batchDeleteObjs"
+          ref="export"
+          id="ipam-ip"
+          :params="searchLabel"
+          :permissions="{
+                  import: 'ipam_add',
+                  export: 'ipam_edit'
+                }"
+          class="top-tool-export margin-r-10"
+          export-file-name="ipam"
+          export-url="/ipam/ip/export"
+          import-url="/ipam/ip/import"
+          @afterImport="getTableData"
+        >
+          <template v-slot:before>
+            <div>
+              <el-dropdown-item>
+                <delete-button :type="'link'" :title="$t('overall.batchDel')" v-has="'ipam_delete'" id="account-list-batch-delete" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+              </el-dropdown-item>
+            </div>
+          </template>
+        </top-tool-more-options>
+      </template>
       <template v-slot>
         <ip-details-table
           ref="dataTable"
@@ -33,11 +62,6 @@
           @selectionChange="selectionChange"
         ></ip-details-table>
       </template>
-      <template v-slot:top-tool-right>
-        <button id="ipam-ip" class="top-tool-btn margin-r-10 margin-l-10" @click.stop="add">
-          <i class="nz-icon nz-icon-create-square"></i>
-        </button>
-      </template>
       <template v-slot:pagination>
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
@@ -55,13 +79,17 @@ import subDataListMixin from '@/components/common/mixin/subDataList'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 import ipDetailsTable from '@/components/common/table/settings/ipDetailsTable'
 import ipDetailsBox from '@/components/common/rightBox/ipDetailsBox'
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
+import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'IpDetails',
   mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,
     ipDetailsTable,
-    ipDetailsBox
+    ipDetailsBox,
+    topToolMoreOptions,
+    deleteButton
   },
   data () {
     return {
