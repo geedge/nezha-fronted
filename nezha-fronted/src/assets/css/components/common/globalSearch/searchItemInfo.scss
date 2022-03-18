@@ -46,7 +46,8 @@
     width: 100%;
     border-bottom: 1px solid $--border-color-light;
     display: flex;
-    height: 47px;
+    min-height: 47px;
+    max-height: 200px;
     align-items: center;
     .search-item-key{
       width: 120px;
@@ -58,9 +59,12 @@
     }
     .search-item-value-box{
       line-height: 47px;
+      height: 100%;
       width: calc(100% - 120px);
       display: flex;
+      align-items: center;
       .nz-icon{
+        display: inline-block;
         line-height: 47px;
         margin-right: 10px;
       }
@@ -70,8 +74,9 @@
       .search-item-value{
         width: calc(100% - 30px);
         font-size: 14px;
+        height: 100%;
+        overflow-y: auto;
         color: $--color-text-primary;
-        overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         line-height: 47px;

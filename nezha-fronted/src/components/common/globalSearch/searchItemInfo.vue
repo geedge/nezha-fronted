@@ -60,8 +60,8 @@
           </div>
           <div class="search-item-value-box" v-else-if="obj.type === 'alertrule'&&item.key==='trbShot'">
             <i v-if="item.icon&&getPathContent(item.key)!=='--'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
-            <span class="search-item-value" v-html="getPathContent(item.key)">
-            </span>
+            <div class="search-item-value" v-html="getPathContent(item.key)">
+            </div>
           </div>
           <div style="cursor: pointer" v-else-if="item.key === 'alertNum'">
             <i :class="Number(getPathContent(item.key)) ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
