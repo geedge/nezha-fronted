@@ -76,15 +76,9 @@ export default {
     return {
       editipDetails: {},
       rules: {
-        name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
         addr: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: detailsIpv, trigger: 'blur' }
-        ],
-        mac: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ]
       }
     }
