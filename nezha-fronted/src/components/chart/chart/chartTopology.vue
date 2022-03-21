@@ -1,5 +1,5 @@
 <template>
-  <div :ref="`chart-canvas-${chartId}`" style="height: 100%;width: 100%">
+  <div :ref="`chart-canvas-${chartId}`" style="height: 100%;width: 100%;overflow: hidden">
     <div :id="`chart-canvas-${chartId}`" class="chart__canvas chart-svg"></div>
     <alertLabel
       v-if="alertLabelShow"
@@ -67,7 +67,7 @@ export default {
         dom.append(this.ForceGraph({ nodes: this.data.nodes, links: this.data.links }, {
           width: dom.offsetWidth,
           height: dom.offsetHeight,
-          nodeStrength: -50,
+          nodeStrength: -80,
           distanceNum: 150
         }))
         const svg = document.getElementById('svgHex' + this.chartId)
@@ -238,8 +238,9 @@ export default {
         console.log(event, d, 'nodeMouseover')
         self.alertLabelObj = {
           position: {
-            x: event.x,
-            y: event.y
+            left: event.x,
+            top: event.y,
+            width: 50
           },
           loading: true,
           id: ''
@@ -265,8 +266,9 @@ export default {
         self.alertLabelId = ''
         self.alertLabelObj = {
           position: {
-            x: event.x,
-            y: event.y
+            left: event.x,
+            top: event.y,
+            width: 50
           },
           loading: false,
           id: ''
