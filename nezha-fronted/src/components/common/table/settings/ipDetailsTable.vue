@@ -34,7 +34,21 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-        <template v-if="item.prop === 'asset'">{{scope.row.asset.name}}</template>
+        <template v-if="item.prop === 'asset'">{{scope.row.asset ? scope.row.asset.name : '-'}}</template>
+        <template v-else-if="item.prop === 'state'">
+          <div v-if="scope.row[item.prop] === 1">
+            <span class="nz-icon nz-icon-circle ip-detail-available"></span>
+            {{ 'Available' }}
+          </div>
+          <div v-else-if="scope.row[item.prop] === 2">
+            <span class="nz-icon nz-icon-circle ip-detail-transient"></span>
+            {{ 'Transient' }}
+          </div>
+          <div v-else-if="scope.row[item.prop] === 3">
+            <span class="nz-icon nz-icon-circle ip-detail-used"></span>
+            {{ 'Used' }}
+          </div>
+        </template>
         <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
         <template v-else>-</template>
       </template>

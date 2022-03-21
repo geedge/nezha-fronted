@@ -254,10 +254,10 @@ export default {
           { prop: 'agent', name: this.$t('config.agent.scrapeEndpoint'), active: true }
         ],
         ipam: [
-          { prop: 'ipam', name: this.$t('config.ipam.ipDetails'), active: true }
+          { prop: 'ipam', name: this.$t('ipam.subnet.ipDetails'), active: true }
         ],
         alertSilence: [
-          { prop: 'alertMessageTab', name: this.$t('config.ipam.alertSilence'), active: true }
+          { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
         ]
       }
     }

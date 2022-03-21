@@ -24,3 +24,17 @@
   white-space:nowrap;
   width: 199px;
 }
+.ip-detail-available,.ip-detail-transient,.ip-detail-used {
+  font-size: 12px;
+  margin-right: 3px;
+  display: inline-block;
+}
+.ip-detail-used {
+  color: $--color-danger !important;
+}
+.ip-detail-transient {
+  color:$--color-silence !important;
+}
+.ip-detail-available {
+  color:$--color-success !important;
+}

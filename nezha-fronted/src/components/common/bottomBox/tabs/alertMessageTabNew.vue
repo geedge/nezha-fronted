@@ -16,7 +16,7 @@
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
-        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 110px">
+        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" :disabled="from === fromRoute.alertSilence" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 110px">
           <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
         <pick-time v-model="searchTimeHeader" :default-pick="10" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
@@ -153,6 +153,9 @@ export default {
       immediate: true,
       handler (n) {
         if (n) {
+          if (this.from === fromRoute.alertSilence) {
+            this.state = '2'
+          }
           this.getTableData()
         }
       }
