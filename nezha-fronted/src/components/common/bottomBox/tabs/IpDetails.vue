@@ -144,7 +144,7 @@ export default {
         delete this.searchLabel.orderBy
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
-      this.$set(this.searchLabel, 'id', this.obj.id)
+      this.$set(this.searchLabel, 'ids', this.obj.id)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
       this.$get(this.url, { ...this.searchLabel }).then(response => {
