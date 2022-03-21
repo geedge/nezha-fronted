@@ -142,19 +142,23 @@ export default {
       if (distanceMin !== undefined) forceNode.strength(distanceMin)
       if (distanceMax !== undefined) forceNode.strength(distanceMax)
       if (distanceNum !== undefined) forceLink.distance(distanceNum)
+      const zoom = d3.zoom()
+        .scaleExtent([0.3, 4])
+        .on('zoom', zoomed)
       const simulation = d3.forceSimulation(nodes)
         .force('link', forceLink)
         .force('charge', forceNode)
         .alpha(1)
         .on('tick', ticked)
 
-      const svg = d3.create('svg')
+      const svgBox = d3.create('svg')
         .attr('id', 'svgHex' + this.chartId)
         .attr('width', width)
         .attr('height', height)
         .attr('viewBox', [-width / 2, -height / 2, width, height])
         .attr('style', 'max-width: 100%; height: 100%;')
-
+        .on('click', reset)
+      const svg = svgBox.append('g')
       const link = svg.append('g')
         .attr('stroke', typeof linkStroke !== 'function' ? linkStroke : null)
         .attr('stroke-opacity', linkStrokeOpacity)
@@ -444,10 +448,23 @@ export default {
         })
         node.attr('fixed', false)
       }
+      function reset () {
+        // svg.transition().duration(750).call(
+        //   zoom.transform,
+        //   d3.zoomIdentity,
+        //   d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+        // )
+      }
+      function zoomed (event) {
+        const { transform } = event
+        svg.attr('transform', transform)
+        svg.attr('stroke-width', 1 / transform.k)
+      }
       setTimeout(() => {
         self.firstInit = false
       }, 1000)
-      return Object.assign(svg.node(), { scales: { color } })
+      svgBox.call(zoom)
+      return Object.assign(svgBox.node(), { scales: { color } })
     },
     setPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
