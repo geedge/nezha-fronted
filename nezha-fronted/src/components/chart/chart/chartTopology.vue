@@ -68,7 +68,8 @@ export default {
           width: dom.offsetWidth,
           height: dom.offsetHeight,
           nodeStrength: -80,
-          distanceNum: 150
+          distanceNum: 150,
+          distanceMin: -200
         }))
         const svg = document.getElementById('svgHex' + this.chartId)
         svg.setAttribute('width', '100%')
@@ -98,6 +99,8 @@ export default {
       linkStrokeWidth = 1.5, // given d in links, returns a stroke width in pixels
       linkStrokeLinecap = 'round', // link stroke linecap
       linkStrength,
+      distanceMin,
+      distanceMax,
       distanceNum,
       colors = d3.schemeTableau10, // an array of color strings, for the node groups
       width = 640, // outer width, in pixels
@@ -136,6 +139,8 @@ export default {
       const forceNode = d3.forceManyBody()
       const forceLink = d3.forceLink(links).id(({ index: i }) => N[i])
       if (nodeStrength !== undefined) forceNode.strength(nodeStrength)
+      if (distanceMin !== undefined) forceNode.strength(distanceMin)
+      if (distanceMax !== undefined) forceNode.strength(distanceMax)
       if (distanceNum !== undefined) forceLink.distance(distanceNum)
       const simulation = d3.forceSimulation(nodes)
         .force('link', forceLink)
@@ -172,8 +177,8 @@ export default {
         .attr('id', function (d) { return 'node' + d.id })
         .attr('style', 'cursor:pointer')
         .call(drag(simulation))
-        .on('mouseenter', nodeMouseover)// no i18n
-        .on('mouseleave', nodeMouseout)// no i18n
+        .on('mouseenter', nodeMouseover)
+        .on('mouseleave', nodeMouseout)
         .on('click', showChildren)
       render()
       if (W) linkCopy.attr('stroke-width', ({ index: i }) => W[i])
@@ -252,7 +257,7 @@ export default {
         self.timer = setTimeout(() => {
           self.alertLabelId = paramsId
           self.alertLabelObj.id = paramsId
-          self.alertLabelType = d.type
+          self.alertLabelType = d.type === 'datacenter' ? 'dc' : d.type
           self.alertLabelShow = true
         }, 200)
       }
@@ -273,7 +278,7 @@ export default {
           loading: false,
           id: ''
         }
-        self.alertLabelType = d.type
+        self.alertLabelType = d.type === 'datacenter' ? 'dc' : d.type
       }
       function showChildren (event, d, a) {
         console.log(event, d, a, 'showChildren')
@@ -313,7 +318,9 @@ export default {
               enter => enter.append('g').attr('class', 'node')
                 .attr('id', function (d) { return 'node' + d.id })
                 .call(drag(simulation))
-                .on('click', showChildren),
+                .on('click', showChildren)
+                .on('mouseenter', nodeMouseover)
+                .on('mouseleave', nodeMouseout),
               update => update,
               exit => exit.remove()
             )
@@ -347,6 +354,8 @@ export default {
               enter => enter.append('g').attr('class', 'node')
                 .attr('id', function (d) { return 'node' + d.id })
                 .call(drag(simulation))
+                .on('mouseenter', nodeMouseover)
+                .on('mouseleave', nodeMouseout)
                 .on('click', showChildren),
               update => update,
               exit => exit.remove()
@@ -368,8 +377,8 @@ export default {
         node.append('circle')
           .attr('r', function (d) { return d.radius })
           .attr('fill', function (d) { return d.color })
-        node.append('image')// no i18n
-          .attr('xlink:href', function (d) { return icon[d.type] }) // No i18n
+        node.append('image')
+          .attr('xlink:href', function (d) { return icon[d.type] })
           .attr('width', function (d) { return d.radius + 'px' })
           .attr('height', function (d) { return d.radius + 'px' })
           .attr('x', function (d) { return d.radius * 1 / 2 * -1 })
