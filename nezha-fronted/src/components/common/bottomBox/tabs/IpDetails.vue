@@ -67,7 +67,7 @@
       </template>
     </nz-bottom-data-list>
     <transition name="right-box">
-      <ip-details-box v-if="rightBox.show" :obj="object" @close="closeRightBox"></ip-details-box>
+      <ip-details-box v-if="rightBox.show" :obj="object" :details-type="obj.type" @close="closeRightBox"></ip-details-box>
     </transition>
   </div>
 </template>
@@ -101,8 +101,7 @@ export default {
         addr: '',
         mac: '',
         state: '',
-        remark: '',
-        asset: { id: '', name: '' }
+        remark: ''
       },
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
@@ -133,7 +132,6 @@ export default {
     }
   },
   methods: {
-    // 数据请求
     getTableData (params) {
       if (params && Object.keys(params).length > 0) {
         for (const key in params) {
@@ -149,39 +147,6 @@ export default {
       this.$set(this.searchLabel, 'id', this.obj.id)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
-      this.tableData = [{
-        id: 1,
-        name: 'node-1',
-        subnet: {
-          id: 1,
-          name: 'bj'
-        },
-        asset: {
-          id: 1,
-          name: 'bj'
-        },
-        addr: '192.168.40.0',
-        mac: '1a:1b:6b:1d:65:1d',
-        remark: '',
-        state: 1,
-        uts: 1646982371692
-      }, {
-        id: 2,
-        name: 'node-1',
-        subnet: {
-          id: 1,
-          name: 'bj'
-        },
-        asset: {
-          id: 1,
-          name: 'bj'
-        },
-        addr: '192.168.40.0',
-        mac: '1a:1b:6b:1d:65:1d',
-        remark: '',
-        state: 1,
-        uts: 1646982371692
-      }]
       this.$get(this.url, { ...this.searchLabel }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {

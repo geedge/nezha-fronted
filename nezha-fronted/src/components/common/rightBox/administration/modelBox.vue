@@ -237,6 +237,14 @@ export default {
             id: e.type.id
           }
         })
+        for (let i = 0; i < this.typeDataList.length - 1; i++) {
+          for (let j = i + 1; j < this.typeDataList.length; j++) {
+            if (this.typeDataList[i].id == this.typeDataList[j].id) {
+              this.typeDataList.splice(j, 1)
+              j--
+            }
+          }
+        }
       })
     }
   }
