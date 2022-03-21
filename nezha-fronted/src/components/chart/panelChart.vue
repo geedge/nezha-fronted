@@ -358,114 +358,18 @@ export default {
           }
           case 'topology': {
             this.loading = true
-            console.log(this.chartInfo)
             const params = {
               type: this.chartInfo.linkType,
               id: this.chartInfo.id
             }
             this.$get('/stat/rel', params).then(res => {
               this.loading = false
-              console.log(this.chartInfo,this.chartInfo.id)
               const parentId = this.chartInfo.linkType + '-' + this.chartInfo.id
-              // res = {
-              //   msg: 'success',
-              //   code: 200,
-              //   data: {
-              //     nodes: [{
-              //       id: 'asset-1',
-              //       type: 'asset',
-              //       category: 'asset',
-              //       name: 'dddeee',
-              //       hasChildren: false,
-              //       alert: [{
-              //         priority: 'P2',
-              //         num: 7
-              //       }, {
-              //         priority: 'P3',
-              //         num: 5
-              //       }]
-              //     }, {
-              //       id: 'endpoint-1',
-              //       type: 'endpoint',
-              //       category: 'endpoint',
-              //       name: 'ddd',
-              //       hasChildren: true,
-              //       alert: [{
-              //         priority: 'P3',
-              //         num: 1
-              //       }]
-              //     },
-              //     {
-              //       id: 'asset-2',
-              //       type: 'dc',
-              //       category: 'asset',
-              //       name: 'ddd',
-              //       hasChildren: false,
-              //       alert: [{
-              //         priority: 'P1',
-              //         num: 10
-              //       }]
-              //     }, {
-              //       id: 'endpoint-2',
-              //       type: 'project',
-              //       category: 'endpoint',
-              //       name: 'ddd',
-              //       hasChildren: true,
-              //       alert: [{
-              //         priority: 'P1',
-              //         num: 30
-              //       }]
-              //     },
-              //     {
-              //       id: 'asset-3',
-              //       type: 'module',
-              //       category: 'asset',
-              //       name: 'ddd',
-              //       hasChildren: false,
-              //       alert: [{
-              //         priority: 'P1',
-              //         num: 10
-              //       }]
-              //     }, {
-              //       id: 'endpoint-3',
-              //       type: 'endpoint',
-              //       category: 'endpoint',
-              //       name: 'ddd',
-              //       hasChildren: true,
-              //       alert: [{
-              //         priority: 'P3',
-              //         num: 10
-              //       }]
-              //     }
-              //     ],
-              //     links: [{
-              //       source: 'asset-1',
-              //       target: 'endpoint-1'
-              //     },
-              //     {
-              //       source: 'asset-1',
-              //       target: 'endpoint-2'
-              //     },
-              //     {
-              //       source: 'asset-1',
-              //       target: 'endpoint-3'
-              //     },
-              //     {
-              //       source: 'asset-1',
-              //       target: 'asset-2'
-              //     },
-              //     {
-              //       source: 'asset-1',
-              //       target: 'asset-3'
-              //     }
-              //     ]
-              //   }
-              // }
               res.data.nodes.forEach(item => {
-                item.parentId = parentId
+                item.parentId = [parentId]
                 if (item.id === parentId) {
                   item.hasChildren = true
-                  item.parentId = 'undefind'
+                  item.parentId = []
                   item.fx = 0
                   item.fy = 0
                 } else {
@@ -473,6 +377,9 @@ export default {
                 }
                 item.radius = this.getRadius(item) // 需要计算 分三级
                 item.color = this.getColor(item) // 需要计算 分三级
+              })
+              res.data.links.forEach(item => {
+                item.id = item.source + '-' + item.target
               })
               this.chartData = [res.data]
             })
@@ -590,28 +497,29 @@ export default {
     getRadius (item) {
       let sum = 0
       item.alert && item.alert.forEach(alert => {
-        sum += alert.num
+        sum += Number(alert.num)
       })
       if (sum === 0) {
-        return 15
+        return 14
       } else if (sum <= 10) {
-        return 25
+        return 20
       } else {
-        return 35
+        return 27
       }
     },
     getColor (item) {
-      const arr = []
+      // const arr = []
       let color = ''
-      item.alert && item.alert.forEach(alert => {
-        arr.push(alert.priority)
-      })
+      // item.alert && item.alert.forEach(alert => {
+      //   arr.push(alert.priority)
+      // })
       this.severityDataWeight.forEach(severity => {
-        if (arr.indexOf(severity.name) !== -1 && !color && severity.num > 0) {
+        const num = item.alert.find(alert => alert.priority === severity.name)
+        if (num && !color && num.num > 0) {
           color = severity.color
         }
       })
-      if (!arr.length || !color) {
+      if (!color) {
         color = '#23bf9a'
       }
       return color
