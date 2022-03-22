@@ -9,7 +9,6 @@
         <el-dropdown-menu></el-dropdown-menu>
         <div id="header-open-global-search" @click="openGlobalSearch">
           <div class="header-menu__item"><i class="nz-icon nz-icon-search"></i></div>
-          <span v-show="$store.state.consoleCount>0" class="right-tip">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</span>
         </div>
       </el-dropdown>
       <el-dropdown trigger="click">
