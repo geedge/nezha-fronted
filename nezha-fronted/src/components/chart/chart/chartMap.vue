@@ -1,7 +1,7 @@
 <template>
   <div class="overview">
     <div class="content-col-content">
-      <div :id="'map' + (isFullscreen ? '-screen-' : '' ) + chartInfo.id " style="height: 100%; width: 100%" :style="theme=='light'? '': ' filter: invert(1) hue-rotate(0.5turn);opacity: 0.75;'"></div>
+      <div :id="'map' + (isFullscreen ? '-screen-' : '' ) + chartInfo.id " style="height: 100%; width: 100%" :style="theme=='darkk'? 'filter: invert(1) hue-rotate(0.5turn);opacity: 0.75;': ''"></div>
     </div>
     <!--自定义地图鼠标悬浮提示dom，避免被overflow：hidden裁剪-->
     <div :style="{'left': `${tooltip.x}px`, 'top': `${tooltip.y}px`}" class="my-pane" :class="'my-pane-' + chartId"></div>
