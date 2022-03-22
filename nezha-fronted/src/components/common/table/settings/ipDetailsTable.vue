@@ -116,13 +116,11 @@ export default {
           prop: 'mac',
           show: true,
           minWidth: 200,
-          sortable: 'custom'
         }, {
           label: this.$t('config.ipamip.asset'),
           prop: 'asset',
           show: true,
           width: 200,
-          sortable: 'custom'
         }, {
           label: this.$t('overall.state'),
           prop: 'state',

@@ -118,14 +118,12 @@ export default {
         }, {
           name: 'IP',
           type: 'input',
-          label: 'manageIp',
+          label: 'addr',
           disabled: false
         }, {
           name: this.$t('asset.state'),
-          type: 'assetState',
-          label: 'stateIds',
-          id: 'stateIds',
-          readonly: true,
+          type: 'input',
+          label: 'state',
           disabled: false
         }]
       }
@@ -144,7 +142,7 @@ export default {
         delete this.searchLabel.orderBy
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
-      this.$set(this.searchLabel, 'ids', this.obj.id)
+      this.$set(this.searchLabel, 'subnetId', this.obj.id)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
       this.$get(this.url, { ...this.searchLabel }).then(response => {
