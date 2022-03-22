@@ -54,8 +54,11 @@ export default {
       firstInit: true,
       severityData: this.$store.getters.severityData,
       severityDataWeight: this.$store.getters.severityDataWeight,
-      distanceArr: [100, 150, 200, 250, 300, 350],
-      isDrag: false
+      distanceArr: [70, 100, 130, 170, 190, 210],
+      isDrag: false,
+      highlightId: '',
+      highlightAll: [],
+      radiusArr: [14, 20, 27]
     }
   },
   methods: {
@@ -70,7 +73,7 @@ export default {
         dom.append(this.ForceGraph({ nodes: this.data.nodes, links: this.data.links }, {
           width: dom.offsetWidth,
           height: dom.offsetHeight,
-          nodeStrength: -500,
+          // nodeStrength: 0,
           distanceNum: 150,
           distanceMin: -100
         }))
@@ -119,7 +122,7 @@ export default {
         module: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM8AAADICAYAAABPhLXnAAAAAXNSR0IArs4c6QAAE0lJREFUeF7tnQvMNkdZhu8nMVoRj+ApHI1aiBijURDjIS1SgUggUVCqoJVUQCiClKKgQDm2/HgCpdAaKQ0QtNFIWrV4RgUPKTTGRA0G5KCABzQNRiPx8Ji7/3zl7dfv/XZ25pndmXfvSd58yf/PMztz79y7187OzhiUpIAUKFLAiqIUJAWkAGQedQIpUKiAzFMonMKkgMyjPiAFChWQeQqFU5gUkHnUB6RAoQIyT6FwEWHufh6Ae6bfvdJfB/Chnd8tZvbeiOOpjFgFZJ5YPSdLc/f7ArgIwIUAzp0MOJvhJgDXAXirmX0iM0bZGisg8zQW+Kh4d+ed5TkALgZwTuFh/w7A1WZ2pjBeYYEKyDyBYu4ryt0vScahgSLSOwGcMbMbIgpTGWUKyDxlumVFufsFAC4DwL8t0uuTid7TonCVeboCMk+DHrKDaLzjtE4fA/BKoVxrme9cvswTrHkDRMutoVAuV6mgfDJPkJALIFpuTYVyuUpV5pN5KgVcGNFyayuUy1WqIp/MUyHeioiWW2uhXK5SBflkngLROkK03NoL5XKVmpFP5pkhVqeIltsCoVyuUpn5ZJ5MoQZAtMyWQCiXq9REPplnQqABES23awjlcpXak0/m2SPM4IiW2y2EcrlKnZBP5jlBlANCtNyuIZTLVWonn8yzI8YBI1pu1xDK5SoFaPUcarURRMvtFkK5TKU2f+fZIKJldg2Nyk0JtVnzCNGmusbt/y+U02jbWQWEaNmm2c0olNv6aJsQrcg4u0EaldvaaJsQrdo0xwsQyh36aJsQLdw0Qrkt3HmEaE2NI5Q7xDuPEG0x02we5Q5mqFqItpppNotyB2EeIVoXxtkcyg1tHiFad6bZFMoNaR4hWvem2QTKDWceIdpQxjlolBvGPEK0YU1zsCjXvXmEaAdjmoNDua7NI0Q7SOMcDMp1aR4h2sGb5iBQrivzCNE2Z5qhUa4b8wjRNm2cIVFudfMI0WSaPQp0/9nDauYRosk0GQp0/QXrKuYRomV0G2XpHuUWNY8QTY6oVKArlFvEPEK0yi6j8C5H5ZqbR4imnt9IgdUXI2lmHiFaoy6jYrt5wRpuHiGaevcKCqwyKhdqHiHaCt1Gh1xtVC7EPEI09eDOFFhkVK7KPEK0zrqMqrPoqFyxeYRo6qmDKNBsVG62eYRog3QZVbP5qFy2eYRo6o0HoEDoqFyWedz9wQCuBXD/AxBQTZACNwD4fjO7tUaKSfO4+8MBvBHA3WsOpFgp0JkCfBZ6gpm9v7Rep5rH3e8D4AOlhStOCnSuwLvM7IGldZwyz+PTXae0fMVJgd4VeKSZ/UZJJafMcz2Ax5YUrBgpMIgCv2xmjyup65R5Xg7guSUFK0YKDKLAi8zs8pK6TpnnYQDeVlKwYqTAIAo8wMz+uqSuU+b5LAB/DOCrSgpXjBToXIHrzey7S+uYM1R9TwDXAXhI6UEUJwU6VOBqM3tKTb0mzcPC3f2u6SXpY2oOplgp0IkCLzOzn6itS5Z5jg7i7k8E8BwA96s9sOKlwAoK/A6AV5oZ/1anWeZJdyHONLgsmai6AipACiygwN8DOGNmPx95rNnm2bkLfWMy0KMiK6SypECwAjQMjUMDhaZi8wjlQs+DCotXIBTRTqpetXmEcvFnXSVWKdAE0ZqZRyhXdbIVHKdAM0Rrbh6hXFwvUEmzFGiOaIuZRyg368Qrc7kCiyHaouYRypX3CEVmKbAooq1iHqFcVkdQpnwFVkG0Vc0jlMvvHcp5ogKrItrq5hHKyRaFCqyOaN2YRyhX2IW2F9YNonVnHqHc9tyQ2eLuEK1L8wjlMrvTdrJ1iWhdm0cotx137Glp14g2hHmEcpsz0RCINox5hHKbMdAwiLaKedz9i83sozXdQV+w1qjXZWwIorn7eWb29rVaGPJJwkmVT4vDXwXgawC80MxeXNNId9cXrDUC9hEbgmju/pkArgZwIYA3AXiamX186SaGm8fd7wLgtQC+71hj/gHAk8zspppGuru+YK0RcL3YEERz90sB/OQJzaCBeLFeLIWaJzXspQDOOaUFv5ZMxL1SipNQrli6pQOjEO38dLf58lMacAuAZ5jZO5ZoZIh50m5xXJr362ZU+nlmdsWM/HfKKpSrUa95bBSiceFNItqc9aR5B3pp7bP2lEJV5nH3LwJwJTcKmjrQnv/n3ihEud8tjL8tTChXo16T2ChEezaXiiqs4ScAPKslyhWbx925/NSPArhbYeN2w7gbwyVm9i81ZQnlatQLiY1CNK5Oy7vNlwXUiqNxV5jZbweUdYciZpvH3R8B4McAfEt0ZbgenJmd9DCYfSihXLZUkRmjEO2zk2mK148+pVGv40CDmb0vquHZ5nH3e6c7zVOjDr6nnL9NKPeHNccRytWoNys2CtFIMmdmHXl+ZpIN13CrukAfHTbLPCtt6PvmxKz/PF+jT0YI5WrUOzU2CtG+FQANuORm0ZvZ0PeZZvaqmi4glKtR706xUYj2OQnRviu0dvmFNd/Ql9uLhC9Tmt++23P+FYCnmtkfFcTeHiKUq1HvttgoRONmAS8D8CnVNaor4GYze1BpEVObW3E/Uo6E9ZLewMEKM/unmgoJ5WarF4VoDwXwMwC+cnYN2gWcXzo/bso8HC58Urt6F5dcPRVDKJelfRSifW5CtB43h77KzJ6WpcaxTFPmeQ1xqaTgBWL+Ik3FEMq1ETsK0fgu8EUAPq1NNatLfbWZPaOklCnzPBLAjSUFLxjzCwBeYGb/WHNModzt6kUh2gVp6Pmra87LArEPNLN3lRxnyjx8acUr+wgb+j7ZzK4pEeEoZuMoF4Von5cGFvi5QO9JG/runKGb0ywFvWCd122jEI0zT7jX52fMO/wqubWh7x7ZOav2JUK5yU4ZhWjfloae58yqn6xcwwza0HdC3P8G8HQz44hhcTpQlItCNE4K5tDzE4oFXjYw5GJxVOWs6Tm77RuwM/0JgB8vHcvfeR46lC9YoxDtuWmuI5+Le08hF4vjjZxtnoE7E6f4vKL2A6mBR+VCrrru/jAAlwN4cO+OSfULuVic1NZi8+yY6IlpV+z7DSDmfwK41Mw4Pb04DXb3DbnqpjZz1vMPFAu3bGDIxeK0Klebh4UP1plYZX4g9WIz+4Oa8znAXLmQq667cy4afxEfPtZInhMbcrHIOVCIeQZGuZ/lZ75m9pEcsfbl6RDlQq667v5wPi8C+KYafRaMDblY5NY31DyDotytALgYCZfLKk6d3H1Drrru/vlp6PkHiwVZNjDkYjG3yk3MMyjK8QRcaWa/P1fE3fwrolzIVdfdn5UQ7QtrdFgoNuRiUVrXZuYZGOU4KkeU+3CpqOnisdRASshVN61Nweea82ravWBsyMWipr7NzTMoyvFbdy4R3DPKhVx13f0L0tDzD9V0pAVjQy4WEfVdzDyDotxvpQUjekO5kKuuu/9wQrR7RHSmxmWEXCwi67ioeQZGuVcnE0WgHN+TlI5evQXAtWbGq29xSiu8EtH4ZecIKeRiEd3QVcwzKMpxOJsTCqsXE+fWGGmV1YsyTui7AfBTixsDZkdwEIBDz0/POG4PWbpBtJPEWNU8g6IcV57k2l+/F9G73J2LrNwLAP/y5wA+cPQzMw6lVyd35xfBvNvcp7qw9gV0h2hdmmdglPu5ZCJundJtcnfuLkDT8IXnCKlLROvaPIOi3AfTsDbXeugqpUX4uX7AM7uq2P7KdI1oQ5hnUJTjiSfKVe32ENXJ3Z0rHvFu86VRZTYsZwhEG8Y8A6Pcqsjh7t+cTMOFW0ZIq+pVK9DqAwY5Dehw4uVp1f5QQjl2jEVSmldHRON+NiOk4RBt8TuPu/80gG8HwJVtqnYt7mTi5ZyOyQ5yjZn9ypygOXnd/dPTkDefa0b4nioM0dz9yQD4XdbFZvaLc3SLytvkzuPufBHI6f7cEu8o8QUfTfTvNZVfceJlabW5OOMv8WdmHGCoTu7+JQC+J22afG51gcsUEIJo7v71acNo7rJ+lP4UwFPM7C+XacrZo4Sax92/FgCHcL/hlEY828x+qraRg6Ecm8uLxpGJiqb7uPt3APhOAPx72qbJtfJGxocgmrt/arrTnPYlKxcjeb6Z/UdkA/aVFWKe1DAO116cWWluYLVFlDuSh6ubHr0IfQ+AfwXwb+nHPFw4kD9+ucmtBfnjLtD8t1FSJKJxRgSnSOWkj6cdNbi/U9NUbZ40uZArqXBz37mJKMe9SNlxitOAKFfc1kECoxCNo4ec2f6AgnZzUu/lZvZnBbFZIcXmSW+unxc0uXCrKJd1kgbKFIVod02I9r0BbeeiJdyLtGqz6JPqMds87k6UeD53KAho2G4RW0e5YDkXLS4S0S5lZw+uPadQcQXZqrXMj9dplnncnc80XI+45Ztrohy3Uqzdi/RQFikM7kfhxUUhGvcm5XNzyyH3t6W7UMik3izzuDtvo9cCeEy49PsLFMotKHbBoaIQjYMgfF+z5MZXy6xVnabMXwfgIQUC14YI5WoVjI+PRDQONL08vopZJbbdJcHde9mfhyh3WcCiHEK5rH61N1MUoj0iLRDfEtFyWtpufx53721nOKFcTpeIzxOFaHydQUR7dHwVi0tstjNcj3uSEuX4bqj2O/67826WZiEXK3/ggZGI9sK0Sk9vkjXbk7TX3bB5AohyXOmTb+qLk16wNkc03mVe0XgUrfj8A2i2GzZHQK6vqdkCsUK5WJGjEO3eaZ7jo2KrF17a+aUz/qc29OWCFLx1956Icj9iZr9ZU9EBP3uoae7x2EhE4wgaR9J6Tzeb2YNKKzn5nietlP9GAHxG6D0R5bit/HtrKrpBlIsaRSOpvKRjRNvtFu/kdpBm9v7SvjJpHhbs7twFjC9J7196oIXjOKxdPcVjwM8e5sochWic9c3PTHpHtCN9buBHhLXLemWZJxmIa4txUYlL5p6hlfIT5WgiClWcDhTlIhGNgwHsFyOkj6VP5DlZtDplm+foSGmpVg7xXlB99GUKIMpxUuDf1BzugFAuCtE445kThNd+0Zl7Wl+fVjji91MhabZ5dkzEOxCvOLwjjZD4AMup6f9TU9mBUS4K0b4CwBUDIRqfbbgsWBWBnNRnis0zMMrx3dCvVhpopBesQrSak31KbJV5Bkc57gJXtWDEACgXhWhcN4BLW20W0cLvPMcLdPfRUO4F6QHyv2ouTh2iXBSicYWay4VoJ/eOkDvPbtHuPuKoHHeB48o2xamTUTkhWvEZnB8Ybp6BUY7m4V6kt8yX8ZMRK6JcFKIttZdqjcy7seGjaLkVa2aegUfl+IacJqpdnHGpThiFaFxMkAu6jPKis9koWjfmGXhUju+G3pQr5En5GqNcCKKlNfd4wdjki86a89v8znPseYgvVkd6wcohbd6F/rxG5AYoJ0SrOSFBsYuaZ2CUuzKZqHZxRqJcDxv6jvY5+uqI1nyoeo6hBx2V47shTpCtSitu6MtVkDilRohWdQbPBq9y5xkc5TjNgyj3jgD9OWN9qQ19lxrAiJCFZaw2ipbbgNXNMzDK8ZMHmqhqccbcE1War8HzVmlVcuO6RLSusG3P6NRoL1j50R0NFLqMa24vOy2fu3MxQU6pEaJFCHpCGd3ceQZHOX7+TRNV7X4XdY47nC401bTuEa37O8/xCg44V+5VyUQfnuotLf5fiNZC1f1ldnnnOXYXGg3luBQW70JXLXUqG7+MbdGM0C86W1Qwp8zuzbMzoDDaC1ZOm+GCer+ecyJK86SdK7gLtj4XKBWxMG4Y8ww8Kndj2hU71ERpf1JuN3he4blfOmyYUbRcYYYzDxs24AtWVptTfLg/zE2l033c/aFpJz7+5ebJI6SDQLThBgymesaAi5EcNel9APgV67sB8Ip8WuKifJzxzN89pjTp7P+HHEXL1XDIO8/xxg04Kpd7fkbNd3CIdnB3nt0GDYpyo5pjX70PFtEO2jw7AwqjjcodioEOGtE2YZ6BR+VGNdEmEG1T5hl4VG4UE20K0TZnHqFcMx9uDtE2ax6hXJiJNotomzePUK7YRJtHNJlnR4GBX7AWO6AwUIi2R7iDeEla2CluC9ML1r3qCdEmOtbmzSOUu1MPEaJlXo1lHqHcblcRomUah9lknhPE2iDKCdFmmOYoq8yzR7SNzJUTohWYRubJFO2AR+WEaJl9YF823XkyBTwglBOiZZ7zqWwyz5RCdxxQGG0xkt3WCdFmnOucrDJPjkrH8gyIckK0gvM8FSLzTCl0yv8PgHJCtIrzOxUq80wpNPH/nY7KCdEqz2tOuMyTo1JGno5QToiWcb4issg8ESrecVDhkrS4OgcXlkxCtCXV1gyDNmovjHJCtDancbJU3XkmJSrPsADKCdHKT091pMxTLeF0AQ1G5YRo07I3zyHzNJf47AF2UO5iAOcUHpYrjV5jZmcK4xUWqIDMEyhmTlHufl8AFwG4EMC5OTEA3gLgegA3mtn/ZsYoW2MFZJ7GAp9WfNoVmxv67m7q+38AuMfPB9Pft5vZrStWU4feo4DMo64hBQoVkHkKhVOYFJB51AekQKECMk+hcAqTAjKP+oAUKFRA5ikUTmFSQOZRH5AChQr8P95OujLJokVuAAAAAElFTkSuQmCC'
       }
       // Compute values.
-      const types = ['licensing', 'suit', 'resolved']
+      let circleAll = ''
       const N = d3.map(nodes, nodeId).map(intern)
       const LS = d3.map(links, linkSource).map(intern)
       const LT = d3.map(links, linkTarget).map(intern)
@@ -175,24 +178,22 @@ export default {
         .on('click', reset)
       const svg = svgBox.append('g')
       // 箭头
-
-      const defs = svg.append('defs')
-
-      const arrowMarker = defs.append('marker')
-        .attr('id', 'arrow')
-        .attr('markerUnits', 'strokeWidth')
-        .attr('markerWidth', '60')
-        .attr('markerHeight', '60')
-        .attr('viewBox', '0 0 60 60')
-        .attr('refX', '21')
-        .attr('refY', '4')
-        .attr('orient', 'auto')
-
       const arrowPath = 'M2,2 L8,4 L2,6 L2,2'
-
-      arrowMarker.append('path')
-        .attr('d', arrowPath)
-        .attr('fill', '#000')
+      const defs = svg.append('defs')
+      self.radiusArr.forEach(radiusItem => {
+        defs.append('marker')
+          .attr('id', `arrow${radiusItem}`)
+          .attr('markerUnits', 'strokeWidth')
+          .attr('markerWidth', '60')
+          .attr('markerHeight', '60')
+          .attr('viewBox', '0 0 60 60')
+          .attr('refX', radiusItem / 2 + 8)
+          .attr('refY', '4')
+          .attr('orient', 'auto')
+          .append('path')
+          .attr('d', arrowPath)
+          .attr('fill', '#000')
+      })
       const link = svg.append('g')
         .attr('stroke', typeof linkStroke !== 'function' ? linkStroke : null)
         .attr('stroke-opacity', linkStrokeOpacity)
@@ -211,9 +212,13 @@ export default {
         .selectAll('.node')
       let node = nodeAll.data(nodes)
         .enter().append('g')
-        .attr('class', 'node')
+        .attr('class', 'node animation')
         .attr('id', function (d) { return 'node' + d.id })
-        .attr('style', 'cursor:pointer')
+        .attr('style', function (d) {
+          let str = 'opacity:'
+          str += 1
+          return str + ';cursor:pointer'
+        })
         .call(drag(simulation))
         .on('mouseleave', nodeMouseout)
         .on('click', showChildren)
@@ -232,7 +237,9 @@ export default {
           .attr('y1', d => d.source.y)
           .attr('x2', d => d.target.x)
           .attr('y2', d => d.target.y)
-          .attr('marker-end', 'url(#arrow)')
+          .attr('marker-end', function (d) {
+            return `url(#arrow${d.target.radius})`
+          })
         node
           .attr('transform', function (d) {
             if (d.id === self.parentId && self.firstInit) {
@@ -274,10 +281,11 @@ export default {
             clearTimeout(self.timer2)
             self.timer2 = null
           }
-          self.timer2 = setTimeout(() => {
-            if (!event.active) simulation.alphaTarget(0)
-            simulation.stop()
-          }, 5000)
+          simulation.alphaTarget(0)
+          // self.timer2 = setTimeout(() => {
+          //   if (!event.active) simulation.alphaTarget(0)
+          //   simulation.stop()
+          // }, 5000)
         }
 
         return d3.drag()
@@ -286,13 +294,61 @@ export default {
           .on('end', dragended)
       }
 
+      function highlightNode (id) {
+        self.highlightAll.push(id)
+        links.forEach(item => {
+          if (item.source.id === id) {
+            self.highlightAll.push(item.target.id)
+          }
+          if (item.target.id === id) {
+            self.highlightAll.push(item.source.id)
+          }
+        })
+        node.transition().attr('style', function (d) {
+          let str = 'opacity:'
+          if (self.highlightAll.indexOf(d.id) !== -1) {
+            str += 1
+          } else {
+            str += 0.05
+          }
+          if (d.id === id) {
+
+          }
+          return str + ';cursor:pointer'
+        }).duration(500)
+        linkCopy.transition().attr('style', function (d) {
+          let str = 'opacity:'
+          if (d.target.id === id || d.source.id === id) {
+            str += 1
+          } else {
+            str += 0.05
+          }
+          return str + ''
+        }).duration(500)
+      }
+
+      function clearHighlight () {
+        self.highlightAll = []
+        self.highlightId = ''
+        node.transition().attr('style', function (d) {
+          let str = 'opacity:'
+          str += 1
+          return str + ';cursor:pointer'
+        }).duration(500)
+        linkCopy.transition().attr('style', function (d) {
+          let str = 'opacity:'
+          str += 1
+          return str + ''
+        }).duration(500)
+      }
+
       function nodeMouseover (event, d) {
         if (self.isDrag) {
           self.alertLabelShow = false
           return
         }
         const paramsId = d.id.split('-')[1]
-        d.highlight = true
+        highlightNode(d.id)
         if (self.alertLabelId === paramsId) {
           return
         }
@@ -320,8 +376,8 @@ export default {
       function nodeMouseout (event, d) {
         // console.log(d, 'nodeMouseout')
         clearTimeout(self.timer)
+        clearHighlight()
         self.timer = null
-        d.highlight = false
         self.alertLabelShow = false
         self.alertLabelId = ''
         self.alertLabelObj = {
@@ -335,6 +391,7 @@ export default {
         }
         self.alertLabelType = d.type === 'datacenter' ? 'dc' : d.type
       }
+
       function showChildren (event, d, a) {
         window.event ? window.event.cancelBubble = true : event.stopPropagation()
         // console.log(event, d, a, 'showChildren')
@@ -400,6 +457,7 @@ export default {
           simulation.restart().tick()
         })
       }
+
       function hideChildren (d) {
         // 创建一个数组 隐藏所有相关联的 节点 连线
         if (d.id) {
@@ -442,8 +500,9 @@ export default {
           simulation.restart().tick()
         }
       }
+
       function render () {
-        node.append('circle')
+        circleAll = node.append('circle')
           .attr('r', function (d) { return d.radius })
           .attr('fill', function (d) { return d.color })
           .on('mouseenter', nodeMouseover)
@@ -522,8 +581,16 @@ export default {
         }
         self.timer2 = setTimeout(() => {
           simulation.stop()
-        }, 5000)
+          node.attr('fx', function (d) {
+            d.fx = d.x
+            return d.fx
+          }).attr('fy', function (d) {
+            d.fy = d.y
+            return d.fy
+          })
+        }, 2000)
       }
+
       function reset () {
         // svg.transition().duration(750).call(
         //   zoom.transform,
@@ -531,11 +598,13 @@ export default {
         //   d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
         // )
       }
+
       function zoomed (event) {
         const { transform } = event
         svg.attr('transform', transform)
         svg.attr('stroke-width', 1 / transform.k)
       }
+
       setTimeout(() => {
         self.firstInit = false
       }, 1000)
@@ -548,11 +617,11 @@ export default {
         sum += alert.num
       })
       if (sum === 0) {
-        return 10
+        return this.radiusArr[0]
       } else if (sum <= 10) {
-        return 15
+        return this.radiusArr[1]
       } else {
-        return 25
+        return this.radiusArr[2]
       }
     },
     getColor (item) {

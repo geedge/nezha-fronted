@@ -367,6 +367,7 @@ export default {
               const parentId = this.chartInfo.linkType + '-' + this.chartInfo.id
               res.data.nodes.forEach(item => {
                 item.parentId = [parentId]
+                item.highlight = true
                 if (item.id === parentId) {
                   item.hasChildren = true
                   item.parentId = []
