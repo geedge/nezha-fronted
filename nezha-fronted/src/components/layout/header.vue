@@ -192,7 +192,7 @@ export default {
     },
     testUser () {
       if (this.username != localStorage.getItem('nz-username')) {
-        window.location.reload()
+        this.$router.go(0)
       }
     }
   },
