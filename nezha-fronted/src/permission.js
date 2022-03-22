@@ -11,6 +11,10 @@ Vue.use(VueResource)
 const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state', '/sys/appearance'] // 免登陆白名单
 const permissionWhiteList = ['/profile', '/menu', ...loginWhiteList] // 权限白名单
 router.beforeEach((to, from, next) => {
+  if (store.getters.getNowPath == to.path) {
+    return
+  }
+  store.commit('setNowPath', to.path)
   requestsArr.forEach(xhr => xhr.cancel())
   const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
   if (to.path === '/login') { // 拦截登录页面，现货区外观设置 再系统初始化检查
@@ -81,7 +85,7 @@ router.beforeEach((to, from, next) => {
                     })
                   } else {
                     localStorage.setItem('nz-token', '')
-                    next({})
+                    next()
                   }
                 })
               } else {
@@ -164,6 +168,9 @@ router.beforeEach((to, from, next) => {
       next({ path: '/login' })
     }
   }
+})
+router.afterEach((to, from) => {
+  // store.commit('setNowPath', '')
 })
 
 // menuList中是否包含route权限
