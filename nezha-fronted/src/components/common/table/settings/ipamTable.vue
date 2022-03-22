@@ -36,7 +36,7 @@
       <template slot-scope="scope" :column="item">
         <span v-if="item.prop === 'dc'">{{scope.row[item.prop]?scope.row[item.prop].name:'-'}}</span>
         <span v-else-if="item.prop === 'CIDR'">
-          <template>{{ scope.row.addr }} / {{scope.row.mask}}</template>
+          <template>{{ scope.row.addr }}/{{scope.row.mask}}</template>
         </span>
         <span v-else-if="item.prop === 'type'">
           <template v-if="scope.row.type === 4">IPV4</template>
