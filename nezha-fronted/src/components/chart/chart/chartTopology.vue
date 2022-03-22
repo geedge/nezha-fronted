@@ -311,11 +311,8 @@ export default {
           } else {
             str += 0.05
           }
-          if (d.id === id) {
-
-          }
           return str + ';cursor:pointer'
-        }).duration(500)
+        }).duration(300)
         linkCopy.transition().attr('style', function (d) {
           let str = 'opacity:'
           if (d.target.id === id || d.source.id === id) {
@@ -324,7 +321,30 @@ export default {
             str += 0.05
           }
           return str + ''
-        }).duration(500)
+        }).duration(300)
+        circleAll.transition()
+          .attr('r', function (d) {
+            if (d.id === id) {
+              return d.radius * 1.2
+            }
+            return d.radius
+          })
+          .attr('fill', function (d) {
+            if (d.id === id) {
+              switch (d.color) {
+                case '#eb1010':
+                  return '#FF1010'
+                case '#f89984':
+                  return '#FF9984'
+                case '#f7ba78':
+                  return '#FFBA78'
+                case '#23bf9a':
+                  return '#63FFDA'
+              }
+            }
+            return d.color
+          })
+          .duration(300)
       }
 
       function clearHighlight () {
@@ -334,12 +354,16 @@ export default {
           let str = 'opacity:'
           str += 1
           return str + ';cursor:pointer'
-        }).duration(500)
+        }).duration(300)
         linkCopy.transition().attr('style', function (d) {
           let str = 'opacity:'
           str += 1
           return str + ''
-        }).duration(500)
+        }).duration(300)
+        circleAll.transition()
+          .attr('r', function (d) { return d.radius })
+          .attr('fill', function (d) { return d.color })
+          .duration(300)
       }
 
       function nodeMouseover (event, d) {
