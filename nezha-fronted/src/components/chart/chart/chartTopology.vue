@@ -54,7 +54,7 @@ export default {
       firstInit: true,
       severityData: this.$store.getters.severityData,
       severityDataWeight: this.$store.getters.severityDataWeight,
-      distanceArr: [70, 100, 130, 170, 190, 210],
+      distanceArr: [80, 130, 170, 210, 230, 260],
       isDrag: false,
       highlightId: '',
       highlightAll: [],
