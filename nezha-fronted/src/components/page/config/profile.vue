@@ -369,7 +369,7 @@ export default {
     },
     downloadTxt () {
       const element = document.createElement('a')
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponentComponent(this.fileContent))
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.fileContent))
       element.setAttribute('download', 'Nezha recovery codes')
       element.style.display = 'none'
       element.click()
