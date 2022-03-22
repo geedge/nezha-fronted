@@ -368,6 +368,8 @@ export default {
               res.data.nodes.forEach(item => {
                 item.parentId = [parentId]
                 item.highlight = true
+                item.x = 0
+                item.y = 0
                 if (item.id === parentId) {
                   item.hasChildren = true
                   item.parentId = []

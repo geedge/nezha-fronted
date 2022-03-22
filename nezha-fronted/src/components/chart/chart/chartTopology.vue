@@ -122,7 +122,7 @@ export default {
         module: 'data:image/png;base64,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'
       }
       // Compute values.
-      let circleAll = ''
+      const circleAll = ''
       const N = d3.map(nodes, nodeId).map(intern)
       const LS = d3.map(links, linkSource).map(intern)
       const LT = d3.map(links, linkTarget).map(intern)
@@ -158,12 +158,12 @@ export default {
       const zoom = d3.zoom()
         .scaleExtent([0.3, 4])
         .on('zoom', zoomed)
-      // const forceCollide = d3.forceCollide()
-      //   .radius(function (d) { return d.radius})
+      const forceCollide = d3.forceCollide()
+        .radius(function (d) { return d.radius })
       const simulation = d3.forceSimulation(nodes)
         .force('link', forceLink)
         .force('charge', forceNode)
-        // .force('collide', forceCollide)
+        .force('collide', forceCollide)
         .alpha(1)
         .alphaMin(0.3)
         .alphaDecay(0)
@@ -227,6 +227,7 @@ export default {
       if (L) linkCopy.attr('stroke', ({ index: i }) => L[i])
       if (G) node.attr('fill', ({ index: i }) => color(G[i]))
       if (T) node.append('title').text(({ index: i }) => T[i])
+
       function intern (value) {
         return value !== null && typeof value === 'object' ? value.valueOf() : value
       }
@@ -282,6 +283,7 @@ export default {
             self.timer2 = null
           }
           simulation.alphaTarget(0)
+          simulation.stop()
           // self.timer2 = setTimeout(() => {
           //   if (!event.active) simulation.alphaTarget(0)
           //   simulation.stop()
@@ -322,7 +324,7 @@ export default {
           }
           return str + ''
         }).duration(300)
-        circleAll.transition()
+        d3.selectAll('.circle-topology').transition()
           .attr('r', function (d) {
             if (d.id === id) {
               return d.radius * 1.2
@@ -360,10 +362,15 @@ export default {
           str += 1
           return str + ''
         }).duration(300)
-        circleAll.transition()
+        d3.selectAll('.circle-topology')
+          .transition()
           .attr('r', function (d) { return d.radius })
           .attr('fill', function (d) { return d.color })
           .duration(300)
+        // circleAll.transition()
+        //   .attr('r', function (d) { return d.radius })
+        //   .attr('fill', function (d) { return d.color })
+        //   .duration(300)
       }
 
       function nodeMouseover (event, d) {
@@ -398,7 +405,6 @@ export default {
       }
 
       function nodeMouseout (event, d) {
-        // console.log(d, 'nodeMouseout')
         clearTimeout(self.timer)
         clearHighlight()
         self.timer = null
@@ -418,8 +424,6 @@ export default {
 
       function showChildren (event, d, a) {
         window.event ? window.event.cancelBubble = true : event.stopPropagation()
-        // console.log(event, d, a, 'showChildren')
-        // console.log(event.path[0].className.baseVal)
         // if (event.path[0].className.baseVal !== 'topology-button') {
         //   return
         // }
@@ -436,12 +440,14 @@ export default {
         self.$get('/stat/rel', params).then(res => {
           const parentId = d.id
           const prevParentId = d.parentId ? d.parentId[d.parentId.length - 1] : ''
-          // res.data.nodes = res.data.nodes.filter(item => item.id !== parentId) // 处理连线 node 重复的问题
-          // res.data.nodes = res.data.nodes.filter(item => item.id !== prevParentId)
+          res.data.nodes = res.data.nodes.filter(item => item.id !== parentId) // 处理连线 node 重复的问题
+          res.data.nodes = res.data.nodes.filter(item => item.id !== prevParentId)
           res.data.links = res.data.links.filter(item => item.source !== prevParentId)
           res.data.links = res.data.links.filter(item => item.target !== prevParentId)
           res.data.nodes.forEach(item => {
             item.hasChildren = false
+            item.x = d.x
+            item.y = d.y
             item.parentId = JSON.parse(JSON.stringify(d.parentId))
             item.parentId.push(parentId)
             item.radius = self.getRadius(item) // 需要计算 分三级
@@ -526,79 +532,78 @@ export default {
       }
 
       function render () {
-        circleAll = node.append('circle')
-          .attr('r', function (d) { return d.radius })
-          .attr('fill', function (d) { return d.color })
-          .on('mouseenter', nodeMouseover)
-        node.append('image')
-          .attr('xlink:href', function (d) { return icon[d.type] })
-          .attr('width', function (d) { return d.radius + 'px' })
-          .attr('height', function (d) { return d.radius + 'px' })
-          .attr('x', function (d) { return d.radius * 1 / 2 * -1 })
-          .attr('y', function (d) { return d.radius * 1 / 2 * -1 })
-          .on('mouseenter', nodeMouseover)
-        // node.append('rect')
-        //   .attr('width', function (d) { return nodeRadius * 2 + 40 + 'px' })
-        //   .attr('height', '22px')
-        //   .attr('x', function (d) { return nodeRadius * -1 - 20 })
-        //   .attr('y', function (d) { return d.radius * 1 + 5 })
-        //   .attr('style', 'cursor:pointer')
-        //   .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes' : 'hide' })
-        //   .style('fill', '#ffffff')
-        //   .attr('stroke', '#DEDEDE')
-        //   .attr('stroke-width', 1)
-        //   .attr('rx', '4')
-        //   .attr('ry', '4')
-        // node.append('foreignObject')
-        //   .attr('width', function (d) { return nodeRadius * 2 + 15 + 'px' })
-        //   .attr('height', '20px')
-        //   .attr('x', function (d) { return nodeRadius * -1 - 14 })
-        //   .attr('y', function (d) { return d.radius * 1 + 5 })
-        //   .append('xhtml:div')
-        //   .text(function (d) {
-        //     return d.name
-        //   })
-        //   .attr('style', 'overflow: hidden; text-overflow: ellipsis; white-space: nowrap;width: 100%;color: #666 ;font-size:14px;line-height:20px')
-          // .attr('font-size', 14)
-          // .attr('stroke', '#6666')
-          // .attr('stroke-width', 1)
-        // .attr('width', nodeRadius * 2 + 10 + 'px')
-          // .attr('height', '5px')
-        // node.append('rect')
-        //   .attr('x', function (d) { return nodeRadius * 1 - 2 })
-        //   .attr('y', function (d) { return d.radius * 1 + 5 })
-        //   .attr('height', '22px')
-        //   .attr('width', '22px')
-        //   .style('fill', function (d) { return d.hasChildren ? '#f9f9f9' : '#ffffff' })
-        //   .attr('stroke', function (d) { return d.hasChildren ? '#DEDEDE' : '#FA901C' })
-        //   .attr('stroke-width', 1)
-        //   .attr('rx', '4')
-        //   .attr('ry', '4')
-        //   .attr('class', 'topology-button')
-        //   .on('click', showChildren)
-        // const button = node.append('svg')
-        //   .attr('width', '14px')
-        //   .attr('height', '14px')
-        //   .attr('x', function (d) { return nodeRadius * 1 + 2 })
-        //   .attr('y', function (d) { return d.radius * 1 + 9 })
-        //   .attr('style', 'cursor:pointer')
-        //   .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes topology-button' : 'hide topology-button' })
-        //   .attr('viewBox', '0 0 512 512')
-        // button.append('polygon')
-        //   .attr('points', '508.3,204.302 508.3,94.372 232.104,94.372 232.104,119.163 2.128,119.163 2.128,148.02 103.282,148.02   103.282,395.751 104.073,395.751 104.073,395.879 231.416,395.879 231.416,433.091 507.612,433.091 507.612,323.161   231.416,323.161 231.416,365.65 135.572,365.65 135.572,148.02 232.104,148.02 232.104,204.302 ')
-        //   .attr('fill', function (d) { return d.hasChildren ? '#666666' : '#FA901C' })
-        //   .attr('class', 'topology-button')
-        //   .on('click', showChildren)
-          // .off('click', showChildren.bind(this, '2'))
-          // .on('click', showChildren.bind(this, '2'))
-        node.attr('class', function (d) {
-          let cl = 'node'
-          if (d.hasChildren && (d.expanded == undefined || (d.expanded != undefined && d.expanded == false))) {
-            cl += ' closed'
+        node.nodes().forEach(item => {
+          const box = d3.select(item)
+          const d = box.data()[0]
+          if (document.getElementById('#circle' + d.id)) {
+            return
           }
-          return cl
+          box.append('circle')
+            .attr('r', d.radius)
+            .attr('fill', d.color)
+            .attr('id', '#circle' + d.id)
+            .attr('class', 'circle-topology')
+            .on('mouseenter', nodeMouseover)
+          box.append('image')
+            .attr('xlink:href', icon[d.type])
+            .attr('width', d.radius + 'px')
+            .attr('height', d.radius + 'px')
+            .attr('x', d.radius * 1 / 2 * -1)
+            .attr('y', d.radius * 1 / 2 * -1)
+            .on('mouseenter', nodeMouseover)
+          // box.append('rect')
+          //   .attr('width', function (d) { return nodeRadius * 2 + 40 + 'px' })
+          //   .attr('height', '22px')
+          //   .attr('x', function (d) { return nodeRadius * -1 - 20 })
+          //   .attr('y', function (d) { return d.radius * 1 + 5 })
+          //   .attr('style', 'cursor:pointer')
+          //   .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes' : 'hide' })
+          //   .style('fill', '#ffffff')
+          //   .attr('stroke', '#DEDEDE')
+          //   .attr('stroke-width', 1)
+          //   .attr('rx', '4')
+          //   .attr('ry', '4')
+          // box.append('foreignObject')
+          //   .attr('width', function (d) { return nodeRadius * 2 + 15 + 'px' })
+          //   .attr('height', '20px')
+          //   .attr('x', function (d) { return nodeRadius * -1 - 14 })
+          //   .attr('y', function (d) { return d.radius * 1 + 5 })
+          //   .append('xhtml:div')
+          //   .text(function (d) {
+          //     return d.name
+          //   })
+          //   .attr('style', 'overflow: hidden; text-overflow: ellipsis; white-space: nowrap;width: 100%;color: #666 ;font-size:14px;line-height:20px')
+          //   .attr('font-size', 14)
+          // box.append('rect')
+          //   .attr('x', function (d) { return nodeRadius * 1 - 2 })
+          //   .attr('y', function (d) { return d.radius * 1 + 5 })
+          //   .attr('height', '22px')
+          //   .attr('width', '22px')
+          //   .style('fill', function (d) { return d.hasChildren ? '#f9f9f9' : '#ffffff' })
+          //   .attr('stroke', function (d) { return d.hasChildren ? '#DEDEDE' : '#FA901C' })
+          //   .attr('stroke-width', 1)
+          //   .attr('rx', '4')
+          //   .attr('ry', '4')
+          //   .attr('class', 'topology-button')
+          //   .on('click', showChildren)
+          // const button = box.append('svg')
+          //   .attr('width', '14px')
+          //   .attr('height', '14px')
+          //   .attr('x', function (d) { return nodeRadius * 1 + 2 })
+          //   .attr('y', function (d) { return d.radius * 1 + 9 })
+          //   .attr('style', 'cursor:pointer')
+          //   .attr('class', function (d) { return d.hasChildren ? 'toggle-nodes topology-button' : 'hide topology-button' })
+          //   .attr('viewBox', '0 0 512 512')
+          // button.append('polygon')
+          //   .attr('points', '508.3,204.302 508.3,94.372 232.104,94.372 232.104,119.163 2.128,119.163 2.128,148.02 103.282,148.02   103.282,395.751 104.073,395.751 104.073,395.879 231.416,395.879 231.416,433.091 507.612,433.091 507.612,323.161   231.416,323.161 231.416,365.65 135.572,365.65 135.572,148.02 232.104,148.02 232.104,204.302 ')
+          //   .attr('fill', function (d) { return d.hasChildren ? '#666666' : '#FA901C' })
+          //   .attr('class', 'topology-button')
+          //   .on('click', showChildren)
+          //   .off('click', showChildren.bind(this, '2'))
+          //   .on('click', showChildren.bind(this, '2'))
+          box.attr('class', 'node')
+          box.attr('fixed', false)
         })
-        node.attr('fixed', false)
         if (self.timer2) {
           clearTimeout(self.timer2)
           self.timer2 = null
@@ -612,7 +617,7 @@ export default {
             d.fy = d.y
             return d.fy
           })
-        }, 2000)
+        }, 1000)
       }
 
       function reset () {
