@@ -421,6 +421,7 @@ export default {
             this.closeRightBox(true)
           } else {
             this.$message.error(response.msg)
+            this.$store.dispatch('clearPanel')
           }
         })
       })

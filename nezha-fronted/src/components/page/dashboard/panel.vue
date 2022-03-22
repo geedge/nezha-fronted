@@ -512,6 +512,7 @@ export default {
             // this.getTableData(); //删除相关图表后，刷新面板数据
           } else {
             this.$message.error(response.msg)
+            this.$store.dispatch('clearPanel')
           }
         })
       }).catch(() => {
