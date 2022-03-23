@@ -296,7 +296,6 @@ export default {
         } else {
           url = this.url
         }
-        this.$delete(url + '?ids=' + row.id + '&state=' + this.state).then(response => {
         this.$delete(url + '?ids=' + row.id + '&state=' + row.state).then(response => {
           if (response.code === 200) {
             self.delFlag = true
