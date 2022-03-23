@@ -53,7 +53,7 @@ import { getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/charts/chartDataFormat'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { initColor } from '@/components/chart/chart/tools'
-import fontWidth from '@/components/chart/chart/options/fontWidth'
+// import fontWidth from '@/components/chart/chart/options/fontWidth'
 
 export default {
   name: 'chart-stat',
