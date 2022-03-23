@@ -115,8 +115,8 @@
           </div>
           <div class="basic-info-table-list">
             <div class="basic-info-table-title">{{$t('overall.alert')}}</div>
-            <div class="basic-info-table-value" v-if="chartDetailList">
-              <i :class="chartDetailList.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
+            <div class="basic-info-table-value" v-if="chartDetail">
+              <i :class="chartDetail.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
               <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
                 <div class="tooltip-title">Alert message (active)</div>
                 <div class="severity-info" style='justify-content: space-between'>
@@ -211,26 +211,6 @@ export default {
     },
     init () {
       this.loading = true
-      if (this.chartInfo.type === 'assetInfo') {
-        this.$get('asset/asset/' + this.chartDetail.id).then((res) => {
-          if (res.msg === 'success') {
-            this.loading = false
-            this.chartDetailList = res.data
-          } else {
-            this.$message.error(res.msg)
-          }
-        })
-      }
-      if (this.chartInfo.type === 'endpointInfo') {
-        this.$get('monitor/endpoint/' + this.chartDetail.id).then((res) => {
-          if (res.msg === 'success') {
-            this.loading = false
-            this.chartDetailList = res.data
-          } else {
-            this.$message.error(res.msg)
-          }
-        })
-      }
       const weekDays = this.getWeeksTime()
       if (this.trendTimer) {
         clearTimeout(this.trendTimer)
@@ -248,7 +228,6 @@ export default {
         } else if (this.chartInfo.type === 'endpointInfo') {
           params.endpointId = this.chartDetail.id
         }
-        // params[this.chartInfo.type + 'Id'] = this.chartDetail.id
         this.$get('/stat/alertMessage/trend', params).then((res) => {
           if (!res.data) {
             return
