@@ -160,7 +160,7 @@ export default {
     },
     jumpModule (row) {
       localStorage.setItem('moduleProjectId', JSON.stringify([row.id, row.name]))
-      this.$router.push({ path: '/monitor/module' })
+      this.$router.push({ path: '/module' })
     },
     jumpAlertMessage (row) {
       localStorage.setItem('alertMessageProjectId', row.id)
@@ -168,7 +168,7 @@ export default {
     },
     jumpEndpoint (row) {
       localStorage.setItem('endpointProjectId', row.id)
-      this.$router.push({ path: '/monitor/endpoint' })
+      this.$router.push({ path: '/endpoint' })
     }
   },
   computed: {

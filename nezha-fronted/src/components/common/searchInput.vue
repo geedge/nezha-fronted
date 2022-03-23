@@ -1475,7 +1475,7 @@ export default {
       if (this.$route.path === '/assetLabel') {
         this.getGroupData()
       }
-      if (this.$route.path === '/monitor/module') {
+      if (this.$route.path === '/module') {
         this.getProjectData()
       }
       if (this.$route.path === '/alertRule') {

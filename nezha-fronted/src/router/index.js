@@ -34,16 +34,16 @@ export default new Router({
           component: resolve => require(['../components/page/dashboard/overview/overview.vue'], resolve)
         },
         {
-          path: '/monitor/project',
+          path: '/project',
           component: resolve => require(['../components/page/monitor/project/index.vue'], resolve)
         },
         {
-          path: '/monitor/module',
-          name: '/monitor/module',
+          path: '/module',
+          name: '/module',
           component: resolve => require(['../components/page/monitor/module/moduleList.vue'], resolve)
         },
         {
-          path: '/monitor/endpoint',
+          path: '/endpoint',
           component: resolve => require(['../components/page/monitor/endpoint/endpointList.vue'], resolve)
         },
         {

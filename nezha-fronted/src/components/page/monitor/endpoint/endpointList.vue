@@ -618,7 +618,7 @@ export default {
       this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
-          if (response.statistics && this.$route.path === '/monitor/endpoint') {
+          if (response.statistics && this.$route.path === '/endpoint') {
             this.setSearchData(response.statistics)
           }
           for (let i = 0; i < response.data.list.length; i++) {

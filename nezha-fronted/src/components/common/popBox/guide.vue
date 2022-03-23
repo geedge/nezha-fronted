@@ -100,7 +100,7 @@ export default {
           permissionCode: 'asset_view'
         },
         {
-          route: '/monitor/project',
+          route: '/project',
           title: this.$t('overall.monitor'),
           icon: 'nz-icon nz-icon-menu-project',
           tip: this.$t('guide.monitorTip'),
@@ -238,7 +238,7 @@ export default {
           }
           this.$emit('close')
           this.$router.push({
-            path: '/monitor/project',
+            path: '/project',
             query: {
               t: +new Date(),
               add: 'project'
@@ -252,7 +252,7 @@ export default {
           }
           this.$emit('close')
           this.$router.push({
-            path: '/monitor/module',
+            path: '/module',
             query: {
               t: +new Date(),
               add: 'module'
@@ -266,7 +266,7 @@ export default {
           }
           this.$emit('close')
           this.$router.push({
-            path: '/monitor/endpoint',
+            path: '/endpoint',
             query: {
               t: +new Date(),
               add: 'endpoint'
@@ -280,7 +280,7 @@ export default {
           }
           this.$emit('close')
           this.$router.push({
-            path: '/monitor/endpoint',
+            path: '/endpoint',
             query: {
               t: +new Date(),
               importEndpoint: 'importEndpoint'
