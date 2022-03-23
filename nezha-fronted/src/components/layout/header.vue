@@ -66,9 +66,9 @@
       </el-dropdown>
     </div>
     <guide :show-dialog="showGuide" @dialogClosed="dialogClosed" @close="showGuide = false"></guide>
-    <span v-for="item in fontData" :key="item">
-      <span class="temp-dom" :class="`temp-dom--${fontSzie}`" v-for="fontSzie in [12,13,14,15]" :key="fontSzie">{{item}}</span>
-    </span>
+<!--    <span v-for="item in fontData" :key="item">-->
+<!--      <span class="temp-dom" :class="`temp-dom&#45;&#45;${fontSzie}`" v-for="fontSzie in [12,13,14,15]" :key="fontSzie">{{item}}</span>-->
+<!--    </span>-->
   </div>
 </template>
 
@@ -120,7 +120,7 @@ export default {
         }
       ],
       showGuide: false,
-      fontData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ' ', '@', '$', '-']
+      // fontData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ' ', '@', '$', '-']
     }
   },
   methods: {
@@ -201,12 +201,12 @@ export default {
     }
   },
   mounted () {
-    for (let i = 65; i < 91; i++) {
-      this.fontData.push(String.fromCharCode(i))
-    }
-    for (let i = 97; i < 123; i++) {
-      this.fontData.push(String.fromCharCode(i))
-    }
+    // for (let i = 65; i < 91; i++) {
+    //   this.fontData.push(String.fromCharCode(i))
+    // }
+    // for (let i = 97; i < 123; i++) {
+    //   this.fontData.push(String.fromCharCode(i))
+    // }
     this.$i18n.locale = this.language
     if (localStorage.getItem('nz-token')) {
       this.initEvent()

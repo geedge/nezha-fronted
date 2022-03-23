@@ -343,8 +343,11 @@ export default {
             this.getTableData(true)
           } else {
             this.$message.error(response.msg)
+            this.$store.dispatch('clearPanel')
           }
         })
+      }).catch(() => {
+        this.$store.dispatch('clearPanel')
       })
     },
     edit (u) {

@@ -424,6 +424,8 @@ export default {
             this.$store.dispatch('clearPanel')
           }
         })
+      }).catch(() => {
+        this.$store.dispatch('clearPanel')
       })
     },
     addGroupItem (groupId) {
