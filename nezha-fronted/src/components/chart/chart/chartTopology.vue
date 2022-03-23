@@ -73,9 +73,9 @@ export default {
         dom.append(this.ForceGraph({ nodes: this.data.nodes, links: this.data.links }, {
           width: dom.offsetWidth,
           height: dom.offsetHeight,
-          // nodeStrength: 0,
+          nodeStrength: -30,
           distanceNum: 150,
-          distanceMin: -100
+          // distanceMin: -100
         }))
         const svg = document.getElementById('svgHex' + this.chartId)
         svg.setAttribute('width', '100%')
@@ -145,8 +145,8 @@ export default {
       const forceNode = d3.forceManyBody()
       const forceLink = d3.forceLink(links).id(({ index: i }) => N[i])
       if (nodeStrength !== undefined) forceNode.strength(nodeStrength)
-      if (distanceMin !== undefined) forceNode.strength(distanceMin)
-      if (distanceMax !== undefined) forceNode.strength(distanceMax)
+      // if (distanceMin !== undefined) forceNode.strength(distanceMin)
+      // if (distanceMax !== undefined) forceNode.strength(distanceMax)
       if (distanceNum !== undefined) {
         forceLink.distance(function (d) {
           if (!d.random) {
@@ -158,12 +158,12 @@ export default {
       const zoom = d3.zoom()
         .scaleExtent([0.3, 4])
         .on('zoom', zoomed)
-      const forceCollide = d3.forceCollide()
-        .radius(function (d) { return d.radius })
+      // const forceCollide = d3.forceCollide()
+      //   .radius(function (d) { return d.radius })
       const simulation = d3.forceSimulation(nodes)
         .force('link', forceLink)
         .force('charge', forceNode)
-        .force('collide', forceCollide)
+        // .force('collide', forceCollide)
         .alpha(1)
         .alphaMin(0.3)
         .alphaDecay(0)
@@ -226,7 +226,7 @@ export default {
       if (W) linkCopy.attr('stroke-width', ({ index: i }) => W[i])
       if (L) linkCopy.attr('stroke', ({ index: i }) => L[i])
       if (G) node.attr('fill', ({ index: i }) => color(G[i]))
-      if (T) node.append('title').text(({ index: i }) => T[i])
+      // if (T) node.append('title').text(({ index: i }) => T[i])
 
       function intern (value) {
         return value !== null && typeof value === 'object' ? value.valueOf() : value
@@ -251,9 +251,6 @@ export default {
             }
             return 'translate(' + d.x + ',' + d.y + ')'
           })
-        if (simulation.alpha() <= 0.3) {
-          simulation.stop()
-        }
       }
 
       function drag (simulation) {
@@ -427,6 +424,11 @@ export default {
         // if (event.path[0].className.baseVal !== 'topology-button') {
         //   return
         // }
+        d3.select('#node' + d.id).attr('x', d.x).attr('y', d.y)
+        d3.select('#node' + d.id).attr('fx', d.x).attr('fy', d.y)
+        console.log(d3.select('#node' + d.id),d.x,d.y)
+        d.fx = d.x
+        d.fy = d.y
         if (d.hasChildren) {
           hideChildren(d)
           return
@@ -437,55 +439,55 @@ export default {
           id: d.id
         }
         params.id = params.id.split('-')[1]
-        self.$get('/stat/rel', params).then(res => {
-          const parentId = d.id
-          const prevParentId = d.parentId ? d.parentId[d.parentId.length - 1] : ''
-          res.data.nodes = res.data.nodes.filter(item => item.id !== parentId) // 处理连线 node 重复的问题
-          res.data.nodes = res.data.nodes.filter(item => item.id !== prevParentId)
-          res.data.links = res.data.links.filter(item => item.source !== prevParentId)
-          res.data.links = res.data.links.filter(item => item.target !== prevParentId)
-          res.data.nodes.forEach(item => {
-            item.hasChildren = false
-            item.x = d.x
-            item.y = d.y
-            item.parentId = JSON.parse(JSON.stringify(d.parentId))
-            item.parentId.push(parentId)
-            item.radius = self.getRadius(item) // 需要计算 分三级
-            item.color = self.getColor(item) // 需要计算 分三级
+        setTimeout(() => {
+          self.$get('/stat/rel', params).then(res => {
+            const parentId = d.id
+            const prevParentId = d.parentId ? d.parentId[d.parentId.length - 1] : ''
+            res.data.nodes = res.data.nodes.filter(item => item.id !== parentId) // 处理连线 node 重复的问题
+            res.data.nodes = res.data.nodes.filter(item => item.id !== prevParentId)
+            res.data.links = res.data.links.filter(item => item.source !== prevParentId)
+            res.data.links = res.data.links.filter(item => item.target !== prevParentId)
+            res.data.nodes.forEach(item => {
+              item.hasChildren = false
+              item.parentId = JSON.parse(JSON.stringify(d.parentId))
+              item.parentId.push(parentId)
+              item.radius = self.getRadius(item) // 需要计算 分三级
+              item.color = self.getColor(item) // 需要计算 分三级
+            })
+            nodes.push(...res.data.nodes)
+            nodes = lodash.uniqBy(nodes, 'id')
+            simulation.stop()
+            node = node
+              .data(nodes)
+              .join(
+                enter => enter.append('g').attr('class', 'node')
+                  .attr('id', function (d) { return 'node' + d.id })
+                  .call(drag(simulation))
+                  .on('mouseleave', nodeMouseout)
+                  .on('click', showChildren),
+                update => update,
+                exit => exit.remove()
+              )
+            render()
+            const reslinks = res.data.links.map((item, index) => {
+              return {
+                index: links.length + index,
+                source: nodes.find(child => child.id === item.source),
+                target: nodes.find(child => child.id === item.target),
+                id: item.source + '-' + item.target
+              }
+            })
+            links.push(...reslinks)
+            links = lodash.uniqBy(links, 'id')
+            links = links.map(d => Object.assign({}, d))
+            linkCopy = linkCopy
+              .data(links)
+              .join('line')
+            simulation.nodes(nodes)
+            simulation.force('link').links(links)
+            simulation.restart().tick()
           })
-          nodes.push(...res.data.nodes)
-          nodes = lodash.uniqBy(nodes, 'id')
-          simulation.stop()
-          node = node
-            .data(nodes)
-            .join(
-              enter => enter.append('g').attr('class', 'node')
-                .attr('id', function (d) { return 'node' + d.id })
-                .call(drag(simulation))
-                .on('mouseleave', nodeMouseout)
-                .on('click', showChildren),
-              update => update,
-              exit => exit.remove()
-            )
-          render()
-          const reslinks = res.data.links.map((item, index) => {
-            return {
-              index: links.length + index,
-              source: nodes.find(child => child.id === item.source),
-              target: nodes.find(child => child.id === item.target),
-              id: item.source + '-' + item.target
-            }
-          })
-          links.push(...reslinks)
-          links = lodash.uniqBy(links, 'id')
-          links = links.map(d => Object.assign({}, d))
-          linkCopy = linkCopy
-            .data(links)
-            .join('line')
-          simulation.nodes(nodes)
-          simulation.force('link').links(links)
-          simulation.restart().tick()
-        })
+        }, 100)
       }
 
       function hideChildren (d) {
@@ -610,14 +612,14 @@ export default {
         }
         self.timer2 = setTimeout(() => {
           simulation.stop()
-          node.attr('fx', function (d) {
-            d.fx = d.x
-            return d.fx
-          }).attr('fy', function (d) {
-            d.fy = d.y
-            return d.fy
-          })
-        }, 1000)
+          // node.attr('fx', function (d) {
+          //   d.fx = d.x
+          //   return d.fx
+          // }).attr('fy', function (d) {
+          //   d.fy = d.y
+          //   return d.fy
+          // })
+        }, 1500)
       }
 
       function reset () {
