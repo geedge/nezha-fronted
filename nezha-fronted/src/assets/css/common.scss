@@ -374,6 +374,9 @@ td .nz-icon-gear:before{
   color: $--color-text-regular !important;
   box-shadow: none !important;
 }
+.loading-hide {
+  display: none;
+}
 input, textarea {
   font-family: Inter-Regular !important;
 }

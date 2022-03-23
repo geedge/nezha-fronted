@@ -3,7 +3,7 @@
     <left-menu @refresh="refresh"></left-menu>
     <div ref="body" class="body">
       <Header></Header>
-      <container v-if="containerShow" ref="container"></container>
+      <container v-if="containerShow" ref="container" v-my-loading:ldsFacebook="myLoading"></container>
     </div>
     <!--web-ssh-->
     <web-ssh ref="webSsh"></web-ssh>
@@ -35,13 +35,19 @@ export default {
   },
   data () {
     return {
-      containerShow: true
+      containerShow: true,
+      myLoading: true
     }
   },
   methods: {
     refresh () {
       this.$store.commit('setIsRouteLive')
     }
+  },
+  mounted () {
+    // setInterval(() => {
+    //   this.myLoading = !this.myLoading
+    // }, 1000)
   },
   destroyed () {
     localStorage.removeItem('moduleProjectId')

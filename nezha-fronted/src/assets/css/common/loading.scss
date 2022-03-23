@@ -1,5 +1,10 @@
 // https://github.com/loadingio/css-spinner/tree/master/dist 从当前链接现在在 在tools.js 的myLoading 进行判断处理
 // 高度 宽度 等细节 记得处理
+
+loading-hide{
+  display: none;
+}
+
 // 1
 .lds-dual-ring,
 .lds-dual-ring:after {

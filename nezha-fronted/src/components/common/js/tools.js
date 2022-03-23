@@ -117,6 +117,8 @@ function myLoadingFunction (el, binding, vnode) {
       return
     }
     //  若果是true创建一个div
+    const divBox = document.createElement('div')
+    divBox.setAttribute('class', 'el-loading-mask')
     const div = document.createElement('div')
     div.style.textAlign = 'center'
     if (binding.modifiers.scaleMin) {
@@ -138,12 +140,13 @@ function myLoadingFunction (el, binding, vnode) {
       newDiv1.setAttribute('class', 'el-loading-spinner')
       div.appendChild(newDiv1)
     }
+    divBox.appendChild(div)
     //  插入到被绑定的元素内部
-    el.appendChild(div)
+    el.appendChild(divBox)
     //  div内部加入内容
     // div.innerHTML = '加载中...'
     //  el 元素设置相对定位   div设置绝对定位
-    el.setAttribute('class', 'elrelative')
+    el.setAttribute('class', 'el-loading-parent--relative')
     //  设置绝对定位
     div.setAttribute('class', className)
   } else {
