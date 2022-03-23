@@ -285,7 +285,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete(this.url + '?ids=' + row.id + '&state=' + this.state).then(response => {
+        this.$delete(this.url + '?ids=' + row.id + '&state=' + row.state).then(response => {
           if (response.code === 200) {
             self.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })

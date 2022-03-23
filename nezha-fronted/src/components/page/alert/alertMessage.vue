@@ -526,15 +526,39 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete(this.url + '?ids=' + this.batchDeleteObjs.map(m => m.id).join(',') + '&state=' + this.state).then(response => {
-          if (response.code === 200) {
-            this.delFlag = true
-            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.getTableData()
-          } else {
-            this.$message.error(response.msg)
+        const arrState = []
+        const promiseArr = []
+        this.batchDeleteObjs.forEach(item => {
+          if (arrState.indexOf(item.state) === -1) {
+            arrState.push(item.state)
           }
         })
+        arrState.forEach(state => {
+          const batchDeleteArr = this.batchDeleteObjs.filter(m => m.state === state)
+          promiseArr.push(this.$delete(this.url + '?ids=' + batchDeleteArr.map(m => m.id).join(',') + '&state=' + state))
+        })
+        Promise.all(promiseArr)
+          .then(res => {
+            let error = ''
+            let flag = false
+            for (let i = 0; i < res.length; i++) {
+              if (res[i].code !== 200 && !flag) {
+                error = res[i].msg
+                flag = true
+              }
+            }
+            if (!flag) {
+              this.delFlag = true
+              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+              this.getTableData()
+            } else {
+              this.$message.error(error)
+            }
+          })
+          .catch(response => {
+            console.log(response)
+            this.$message.error(response.msg)
+          })
       })
     },
     del (row) {
@@ -543,7 +567,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete(this.url + '?ids=' + row.id + '&state=' + this.state).then(response => {
+        this.$delete(this.url + '?ids=' + row.id + '&state=' + row.state).then(response => {
           if (response.code === 200) {
             this.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
