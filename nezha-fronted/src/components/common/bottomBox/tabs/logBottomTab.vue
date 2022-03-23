@@ -120,8 +120,12 @@ export default {
         })
         axios.all(requestArr).then(res => {
           this.logData = res.map(r => r.data)
-          if (this.logData[0].result.length > 0) {
-            this.endpointLoading = false
+          if (this.logData[0]) {
+            if (this.logData[0].result.length > 0) {
+              this.endpointLoading = false
+            } else {
+              this.endpointLoading = true
+            }
           } else {
             this.endpointLoading = true
           }

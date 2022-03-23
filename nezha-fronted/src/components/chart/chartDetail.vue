@@ -65,9 +65,16 @@
           </div>
           <div class="basic-info-table-list">
             <div class="basic-info-table-title">{{ $t('overall.alert') }}</div>
-            <div class="basic-info-table-value">
-              <i :class="chartDetail && chartDetail.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
-              <span>{{chartDetail ? chartDetail.alertNum : 0}}</span>
+            <div class="basic-info-table-value" v-if="chartDetailList">
+              <i :class="chartDetailList.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
+              <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
+                <div class="tooltip-title">Alert message (active)</div>
+                <div class="severity-info" style='justify-content: space-between'>
+                  <div class="severity-name">{{$t('overall.result.total')}}</div>
+                  <div class="severity-value">{{chartDetail.alertNum}}</div>
+                </div>
+              </div>
+              <alertDaysInfo v-show="!trendLoading" :alertDaysData="alertDaysData"/>
             </div>
           </div>
           <div class="basic-info-table-list">
@@ -108,9 +115,16 @@
           </div>
           <div class="basic-info-table-list">
             <div class="basic-info-table-title">{{$t('overall.alert')}}</div>
-            <div class="basic-info-table-value">
-              <i :class="chartDetail && chartDetail.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
-              <span>{{chartDetail && chartDetail.alertNum ? chartDetail.alertNum : 0}}</span>
+            <div class="basic-info-table-value" v-if="chartDetailList">
+              <i :class="chartDetailList.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
+              <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
+                <div class="tooltip-title">Alert message (active)</div>
+                <div class="severity-info" style='justify-content: space-between'>
+                  <div class="severity-name">{{$t('overall.result.total')}}</div>
+                  <div class="severity-value">{{chartDetail.alertNum}}</div>
+                </div>
+              </div>
+              <alertDaysInfo v-show="!trendLoading" :alertDaysData="alertDaysData"/>
             </div>
           </div>
           <div class="basic-info-table-list">
@@ -150,6 +164,7 @@
 
 <script>
 import bus from '@/libs/bus'
+import trendMixin from '../common/alert/trendMixins'
 
 export default {
   name: 'chartDetail',
@@ -157,6 +172,7 @@ export default {
     chartDetail: Object,
     chartInfo: Object
   },
+  mixins: [trendMixin],
   watch: {
     chartDetail: {
       immediate: true,
@@ -174,16 +190,85 @@ export default {
           })
         }
       }
+    },
+    'chartDetail.id': {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        this.init()
+      }
     }
   },
   data () {
     return {
-      showBasicInfo: false
+      showBasicInfo: false,
+      chartDetailList: null
     }
   },
   methods: {
     hideElement () {
       this.showBasicInfo = !this.showBasicInfo
+    },
+    init () {
+      this.loading = true
+      if (this.chartInfo.type === 'assetInfo') {
+        this.$get('asset/asset/' + this.chartDetail.id).then((res) => {
+          if (res.msg === 'success') {
+            this.loading = false
+            this.chartDetailList = res.data
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+      if (this.chartInfo.type === 'endpointInfo') {
+        this.$get('monitor/endpoint/' + this.chartDetail.id).then((res) => {
+          if (res.msg === 'success') {
+            this.loading = false
+            this.chartDetailList = res.data
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+      const weekDays = this.getWeeksTime()
+      if (this.trendTimer) {
+        clearTimeout(this.trendTimer)
+        this.trendTimer = null
+      }
+      this.trendTimer = setTimeout(() => {
+        this.trendLoading = true
+        const params = {
+          type: 'total',
+          dimension: 'priority',
+          step: 'd'
+        }
+        if (this.chartInfo.type === 'assetInfo') {
+          params.assetId = this.chartDetail.id
+        } else if (this.chartInfo.type === 'endpointInfo') {
+          params.endpointId = this.chartDetail.id
+        }
+        // params[this.chartInfo.type + 'Id'] = this.chartDetail.id
+        this.$get('/stat/alertMessage/trend', params).then((res) => {
+          if (!res.data) {
+            return
+          }
+          const alertDaysData = res.data.result ? res.data.result[0].values : []
+          const newWeekDays = JSON.parse(JSON.stringify(weekDays))
+          alertDaysData.forEach(item => {
+            item.values.forEach(time => {
+              const findItem = newWeekDays.find(days => days.time == time[0])
+              if (findItem) {
+                findItem[item.metric.priority] = time[1]
+              }
+            })
+          })
+          setTimeout(() => {
+            this.alertDaysData = newWeekDays
+            this.trendLoading = false
+          })
+        })
+      })
     }
   }
 }
