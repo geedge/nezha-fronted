@@ -50,7 +50,7 @@
         </el-dropdown-menu>
       </el-dropdown>
       <el-dropdown trigger="click">
-        <div class="personal-avatar"><span>{{name.substr(0, 1)}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
+        <div class="personal-avatar"><span>{{name ? name.substr(0, 1) : ''}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
         <el-dropdown-menu  slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top" style="width: 142px; line-height: 36px;">
           <div class="personal-dropdown">
             <div class="personal-dropdown__username">{{name}}</div>
@@ -83,9 +83,9 @@ export default {
   },
   data () {
     return {
-      username: localStorage.getItem('nz-username'),
-      name: localStorage.getItem('nz-user-name'),
-      language: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en',
+      username: '',
+      name: '',
+      language: 'en',
       // 顶部菜单相关
       createMenu: [ // 新增按钮内容
         {
@@ -119,7 +119,7 @@ export default {
           permission: 'header_add_rule'
         }
       ],
-      showGuide: false,
+      showGuide: false
       // fontData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ' ', '@', '$', '-']
     }
   },
@@ -212,6 +212,9 @@ export default {
       this.initEvent()
       this.getLinkData()
     }
+    this.name = localStorage.getItem('nz-user-name')
+    this.username = localStorage.getItem('nz-user-name')
+    this.language = localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en'
     window.addEventListener('visibilitychange', this.testUser)
   },
   computed: {
