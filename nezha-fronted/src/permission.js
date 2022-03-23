@@ -10,7 +10,7 @@ Vue.use(VueResource)
 
 const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state', '/sys/appearance'] // 免登陆白名单
 const permissionWhiteList = ['/profile', '/menu', ...loginWhiteList] // 权限白名单
-const requestsWhiteList = ['js', 'css']
+const requestsWhiteList = ['js', 'css', 'png', 'woff', 'ttf', 'woff2', 'gif', '']
 router.beforeEach((to, from, next) => {
   if (store.getters.getNowPath !== to.path && store.getters.getNowPath !== '/login') {
     requestsArr.forEach(xhr => {
