@@ -14,6 +14,30 @@ const chartBarOption = {
   },
   xAxis: {
     type: 'category',
+    animation: false,
+    showAllSymbol: false,
+    axisLabel: {
+      interval: '0',
+      showMaxLabel: false,
+      rotate: 0,
+      show: false,
+      fontSize: 10
+      // formatter: 动态生成
+    },
+    axisPointer: { // y轴上显示指针对应的值
+      show: false
+    },
+    splitLine: {
+      show: false,
+      lineStyle: {
+        color: '#d9d9d9',
+        opacity: 0.8,
+        width: 1
+      }
+    },
+    axisLine: {
+      show: false
+    },
     axisTick: {
       show: false
     }

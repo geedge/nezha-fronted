@@ -3,7 +3,7 @@
 <!--    {{timestampStr(item.time, 'YYYY-MM-DD')}} {{item.P1+' '+item.P2+' '+item.P3}}-->
     <div v-for="item in alertDaysData" :key="item.time" :style="showPriority(item)" @mouseenter="tooltipHover(item,true, $event)" @mouseleave="tooltipHover(item,false, $event)">
       <div v-if="item.tooltipShow" class="alert-days-info-tooltip" :style="{left: item.position.left + 'px',top:item.position.top + 'px'}">
-        <div class="tooltip-title severity-time">{{timestampStr(item.time, 'YYYY-MM-DD')}}</div>
+        <div class="tooltip-title severity-time">{{timestampStr(item.time, dateFormatStr)}}</div>
         <div v-for="(severity,index) in severityDataWeight" :key="index" class="severity-info">
           <div class="severity-block" :style="{background: severity.color}"></div>
           <div class="severity-name">{{severity.name}}</div>
@@ -24,7 +24,8 @@ export default {
     return {
       daysData: [],
       severityData: this.$store.getters.severityData,
-      severityDataWeight: this.$store.getters.severityDataWeight
+      severityDataWeight: this.$store.getters.severityDataWeight,
+      dateFormatStr: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD'
     }
   },
   // watch: {
@@ -35,6 +36,14 @@ export default {
   //     }
   //   }
   // },
+  created () {
+    const dateFormatStr = localStorage.getItem('nz-default-dateFormat')
+    if (dateFormatStr) {
+      this.dateFormatStr = dateFormatStr.split(' ')[0]
+    } else {
+      this.dateFormatStr = 'YYYY-MM-DD'
+    }
+  },
   methods: {
     showPriority (daysData) {
       let style = {}

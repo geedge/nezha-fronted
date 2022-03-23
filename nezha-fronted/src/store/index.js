@@ -43,7 +43,8 @@ const store = new Vuex.Store({
     timeFormatMain: localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss',
     globalShow: false,
     globalSearchId: '',
-    isRouteLive: true
+    isRouteLive: true,
+    nowPath: ''
   },
   getters: {
     getGlobalSearchId (state) {
@@ -93,6 +94,9 @@ const store = new Vuex.Store({
     },
     getIsRouteLive (state) {
       return state.isRouteLive
+    },
+    getNowPath (state) {
+      return state.nowPath
     },
     i18nIsReady (state) {
       return state.i18nReady
@@ -196,6 +200,9 @@ const store = new Vuex.Store({
       setTimeout(() => {
         state.isRouteLive = true
       })
+    },
+    setNowPath (state, path) {
+      state.nowPath = path
     },
     i18nReady (state, ready) {
       state.i18nReady = ready

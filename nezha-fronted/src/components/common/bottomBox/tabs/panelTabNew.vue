@@ -421,8 +421,11 @@ export default {
             this.closeRightBox(true)
           } else {
             this.$message.error(response.msg)
+            this.$store.dispatch('clearPanel')
           }
         })
+      }).catch(() => {
+        this.$store.dispatch('clearPanel')
       })
     },
     addGroupItem (groupId) {

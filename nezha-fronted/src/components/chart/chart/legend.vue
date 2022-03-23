@@ -216,7 +216,7 @@ export default {
     getMaxValue (dataArg, chartInfo) {
       let maxValue = 0
       let minValue = 0
-      if (chartInfo.unit && dataArg.length > 0) {
+      if (dataArg.length > 0) {
         maxValue = 0
         minValue = 0
         for (let j = 0; j < dataArg.length; j++) {

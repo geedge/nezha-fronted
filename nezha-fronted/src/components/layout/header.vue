@@ -9,7 +9,6 @@
         <el-dropdown-menu></el-dropdown-menu>
         <div id="header-open-global-search" @click="openGlobalSearch">
           <div class="header-menu__item"><i class="nz-icon nz-icon-search"></i></div>
-          <span v-show="$store.state.consoleCount>0" class="right-tip">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</span>
         </div>
       </el-dropdown>
       <el-dropdown trigger="click">
@@ -67,6 +66,9 @@
       </el-dropdown>
     </div>
     <guide :show-dialog="showGuide" @dialogClosed="dialogClosed" @close="showGuide = false"></guide>
+<!--    <span v-for="item in fontData" :key="item">-->
+<!--      <span class="temp-dom" :class="`temp-dom&#45;&#45;${fontSzie}`" v-for="fontSzie in [12,13,14,15]" :key="fontSzie">{{item}}</span>-->
+<!--    </span>-->
   </div>
 </template>
 
@@ -117,7 +119,8 @@ export default {
           permission: 'header_add_rule'
         }
       ],
-      showGuide: false
+      showGuide: false,
+      // fontData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ' ', '@', '$', '-']
     }
   },
   methods: {
@@ -193,11 +196,17 @@ export default {
     },
     testUser () {
       if (this.username != localStorage.getItem('nz-username')) {
-        window.location.reload()
+        this.$router.go(0)
       }
     }
   },
   mounted () {
+    // for (let i = 65; i < 91; i++) {
+    //   this.fontData.push(String.fromCharCode(i))
+    // }
+    // for (let i = 97; i < 123; i++) {
+    //   this.fontData.push(String.fromCharCode(i))
+    // }
     this.$i18n.locale = this.language
     if (localStorage.getItem('nz-token')) {
       this.initEvent()
