@@ -10,9 +10,15 @@ Vue.use(VueResource)
 
 const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state', '/sys/appearance'] // 免登陆白名单
 const permissionWhiteList = ['/profile', '/menu', ...loginWhiteList] // 权限白名单
+const requestsWhiteList = ['js', 'css']
 router.beforeEach((to, from, next) => {
   if (store.getters.getNowPath !== to.path && store.getters.getNowPath !== '/login') {
-    requestsArr.forEach(xhr => xhr.cancel())
+    requestsArr.forEach(xhr => {
+      const arr = xhr.config.url.split('.')
+      if (requestsWhiteList.indexOf(arr[arr.length - 1]) === -1) {
+        xhr.source.cancel()
+      }
+    })
   }
   store.commit('setNowPath', to.path)
   const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
