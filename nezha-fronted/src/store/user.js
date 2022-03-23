@@ -12,7 +12,7 @@ const user = {
     roleList: [],
     language: localStorage.getItem('nz-language'),
     severityData: localStorage.getItem('nz-severityData') ? JSON.parse(localStorage.getItem('nz-severityData')) : [],
-    severityDataWeight:  localStorage.getItem('nz-severityDataWeight') ? JSON.parse(localStorage.getItem('nz-severityDataWeight')) : []
+    severityDataWeight: localStorage.getItem('nz-severityDataWeight') ? JSON.parse(localStorage.getItem('nz-severityDataWeight')) : []
   },
   mutations: {
     setLanguage (state, language) {
@@ -71,6 +71,7 @@ const user = {
   },
   actions: {
     loginSuccess (store, res) {
+
       const defaultAppearance = {
         system_name: localStorage.getItem('nz-sys-name'),
         system_logo: localStorage.getItem('nz-sys-logo'),

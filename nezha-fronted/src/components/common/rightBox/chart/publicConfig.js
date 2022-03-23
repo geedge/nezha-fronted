@@ -435,7 +435,6 @@ export default {
     },
     showError () {
       this.$refs.chartForm.validate((blooen, object) => {
-        console.log(blooen, object)
         Object.keys(object).forEach(item => {
           const keyArr = item.split('.')
           if (keyArr.length >= 4) {

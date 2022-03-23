@@ -10,15 +10,9 @@ Vue.use(VueResource)
 
 const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state', '/sys/appearance'] // 免登陆白名单
 const permissionWhiteList = ['/profile', '/menu', ...loginWhiteList] // 权限白名单
-const requestsWhiteList = ['js', 'css', 'png', 'woff', 'ttf', 'woff2', 'gif', '']
 router.beforeEach((to, from, next) => {
   if (store.getters.getNowPath !== to.path && store.getters.getNowPath !== '/login') {
-    requestsArr.forEach(xhr => {
-      const arr = xhr.config.url.split('.')
-      if (requestsWhiteList.indexOf(arr[arr.length - 1]) === -1) {
-        xhr.source.cancel()
-      }
-    })
+    requestsArr.forEach(xhr => xhr.cancel())
   }
   store.commit('setNowPath', to.path)
   const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
@@ -140,7 +134,8 @@ router.beforeEach((to, from, next) => {
               returnMenuCode(res.data.menus, arr)
               store.commit('setButtonList', arr)
               store.commit('setRoleList', res.data.roles)
-              document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`))
+              const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
+              document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + theme)
               resolve()
             } else {
               localStorage.removeItem('nz-token')
