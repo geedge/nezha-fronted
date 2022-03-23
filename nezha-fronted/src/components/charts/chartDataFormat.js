@@ -421,7 +421,7 @@ function timeFormat34 (value) {
   return bus.timeFormate(parseInt(value), 'YYYY-MM-DD HH:mm:ss')
 }
 function timeFormat35 (value) {
-  return bus.timeFormate(parseInt(value), 'MM/dd/yyyy h:mm:ss a')
+  return bus.timeFormate(parseInt(value), 'MM/DD/yyyy h:mm:ss A')
 }
 // unit转化配置信息
 /*

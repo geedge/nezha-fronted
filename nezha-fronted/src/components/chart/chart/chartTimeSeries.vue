@@ -82,7 +82,7 @@ export default {
       chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, dot)
       chartOption.yAxis.minInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'min')
       chartOption.yAxis.maxInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
-      if (unit.type = 'Time') {
+      if (unit.type === 'Time') {
         delete chartOption.yAxis.minInterval
         delete chartOption.yAxis.maxInterval
       }
