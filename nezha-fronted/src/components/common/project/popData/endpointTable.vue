@@ -16,6 +16,7 @@
           <endpoint-table
             style="height: calc(100% - 200px)"
             ref="dataTable"
+            :orderByFa="orderBy"
             v-loading="tools.loading"
             :loading="tools.loading"
             :api="url"
