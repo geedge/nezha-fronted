@@ -623,7 +623,7 @@ export default {
               const newLabel = showData.filter(item => { return !oldLabelTitle.find(t => { return item.label === t.label }) })
               const keepLabel = oldLabelTitle.filter(item => showData.find(t => item.label === t.label))
 
-              let result = originalTitle.concat([{ label: 'Label', show: false, NotSet: true, type: 'title', prop: 'table-label' }])
+              let result = originalTitle.concat([{ label: this.$t('overall.labels'), show: false, NotSet: true, type: 'title', prop: 'table-label' }])
 
               result = result.concat(keepLabel).concat(newLabel)
               this.tools.customTableTitle = JSON.parse(JSON.stringify(result))
