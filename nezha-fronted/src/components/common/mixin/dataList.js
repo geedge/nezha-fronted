@@ -336,7 +336,10 @@ export default {
     }
   },
   created () {
-    const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
+    let path = ''
+    if (this.$route.fullPath.match(/\/(\S*)\?/)) {
+      path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
+    }
     if (this.$route.query.orderBy && !this.isSubList) {
       this.orderBy = this.$route.query.orderBy
     }

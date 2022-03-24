@@ -444,7 +444,7 @@ export default {
       this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
     },
     filterShowData (source, pageObj) {
-      return source.slice((pageObj.pageNo - 1) * pageObj.pageSize, pageObj.pageNo * pageObj.pageSize)
+      if (source) return source.slice((pageObj.pageNo - 1) * pageObj.pageSize, pageObj.pageNo * pageObj.pageSize)
     },
     chartUnitChange (unit) {
       this.chartUnit = unit
