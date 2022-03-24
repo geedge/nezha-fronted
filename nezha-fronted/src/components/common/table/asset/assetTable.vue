@@ -274,12 +274,12 @@ export default {
           minWidth: 110,
           sortable: 'custom'
         }, {
-          label: 'SN',
+          label: this.$t('asset.sn'),
           prop: 'sn',
           show: true,
           minWidth: 110
         }, {
-          label: 'Talon',
+          label: this.$t('asset.talon'),
           // prop: 'clientState',
           prop: 'talon',
           show: true,

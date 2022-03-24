@@ -450,7 +450,7 @@
             </span>
             </el-form-item>
             <div @click="addThresholds" class="thresholds-add">
-              Add thresholds
+             {{$t('overall.addThresholds')}}
             </div>
           </el-row>
         </transition>
@@ -486,13 +486,13 @@
           <transition-group appear tag="div" name="el-zoom-in-top">
             <el-row class="thresholds-item" v-show="item.show" :key="1">
               <div>
-                <div class='mapping-display'>Title</div>
+                <div class='mapping-display'>{{$t('project.topology.title')}}</div>
               </div>
               <el-form-item :prop="'param.columns.' + index + '.title'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item" style="flex: 1">
                 <el-input size="small" v-model="item.title" @change="change('columns',index)"></el-input>
               </el-form-item>
               <div>
-                <div class='mapping-display'>Unit</div>
+                <div class='mapping-display'>{{$t('dashboard.panel.chartForm.unit')}}</div>
               </div>
               <el-cascader :id="'columns-unit' + index" v-model="item.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
                            placeholder=""
@@ -505,7 +505,7 @@
             </el-row>
             <el-row class="thresholds-item" v-show="item.show" :key="2">
               <div>
-                <div class='mapping-display'>Display</div>
+                <div class='mapping-display'>{{$t('dashboard.panel.chartForm.display')}}</div>
               </div>
               <el-form-item :prop="'param.columns.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                 <el-input v-model="item.display"  style="margin-right: 10px" size="small"  @change="change('columns',index)"/>
@@ -514,7 +514,7 @@
           </transition-group>
         </div>
         <div @click="addColumns" class="thresholds-add">
-          Add Colums
+          {{$t('overall.addColumns')}}
         </div>
       </div>
 
@@ -583,7 +583,7 @@
                       <el-option
                         v-for="item in mappingTypeList"
                         :value="item.value"
-                        :label="item.label"
+                        :label="$t(item.label)"
                         :key="item.value"/>
                     </el-select>
                   </div>
@@ -645,13 +645,13 @@
                 </el-row>
                 <el-row v-show="item.show" :key="2" class="thresholds-item">
                   <div v-if="isTable(chartConfig.type)">
-                    <div class='mapping-display'>Columns</div>
+                    <div class='mapping-display'>{{$t('dashboard.panel.chartForm.columns')}}</div>
                   </div>
                   <el-form-item v-if="isTable(chartConfig.type)" :prop="'param.valueMapping.' + index + '.column'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.column"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.column')" size="small" @change="change('valueMapping', index)"/>
                   </el-form-item>
                   <div>
-                    <div class='mapping-display'>Display</div>
+                    <div class='mapping-display'>{{$t('dashboard.panel.chartForm.display')}}</div>
                   </div>
                   <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.display"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)"/>
@@ -661,7 +661,7 @@
               </transition-group>
             </div>
             <div @click="addMapping" class="thresholds-add">
-              Add valueMapping
+              {{$t('overall.addMapping')}}
             </div>
           </el-row>
         </transition>

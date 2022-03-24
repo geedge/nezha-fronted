@@ -69,16 +69,16 @@
           <span>{{$t('dashboard.panel.chartForm.dataConfig')}}</span>
         </div>
         <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange" type="card">
-          <el-tab-pane label="Metrics" name="metrics">
+          <el-tab-pane :label="$t('project.metrics.metrics')" name="metrics">
             <chart-config  ref="childrenFrommetrics" :type="'metrics'" v-if="editChart.datasource == 'metrics'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
-          <el-tab-pane label="Logs" name="logs">
+          <el-tab-pane :label="$t('overall.logs')" name="logs">
             <chart-config ref="childrenFromlogs" :type="'log'" v-if="editChart.datasource == 'logs'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
-          <el-tab-pane label="System" name="system">
+          <el-tab-pane :label="$t('overall.system')" name="system">
             <system-chart-config ref="childrenFromsystem" v-if="editChart.datasource == 'system'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
-          <el-tab-pane label="Misc" name="misc">
+          <el-tab-pane :label="$t('overall.misc')" name="misc">
             <other-chart-config ref="childrenFrommisc" v-if="editChart.datasource == 'misc'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
         </el-tabs>

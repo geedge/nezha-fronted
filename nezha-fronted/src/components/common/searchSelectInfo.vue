@@ -18,7 +18,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   promType: [ // promServer类型
     {
       value: 1,
-      label: 'Global'
+      label: i18n.t('overall.global')
     },
     {
       value: 2,
@@ -54,22 +54,22 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   endpointState: [
     {
       value: 1,
-      label: 'UP'
+      label: i18n.t('config.agent.up')
     }, {
       value: 0,
-      label: 'DOWN'
+      label: i18n.t('config.agent.down')
     }, {
       value: 2,
-      label: 'SUSPENDED'
+      label: i18n.t('cconfig.dc.suspended')
     }
   ],
   promState: [
     {
       value: 1,
-      label: 'UP'
+      label: i18n.t('config.agent.up')
     }, {
       value: '0,-1',
-      label: 'DOWN'
+      label: i18n.t('config.agent.down')
     }
   ],
   pingStatus: [
@@ -240,17 +240,17 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   searchMetrics: [
     {
       id: 1,
-      name: 'Metrics',
+      name: i18n.t('project.metrics.metrics'),
       searchType: 'alertTypes'
     },
     {
       id: 2,
-      name: 'Logs',
+      name: i18n.t('overall.logs'),
       searchType: 'alertTypes'
     },
     {
       id: 3,
-      name: 'SNMP trap',
+      name: i18n.t('overall.SNMPTrap'),
       searchType: 'alertTypes'
     }
   ]
