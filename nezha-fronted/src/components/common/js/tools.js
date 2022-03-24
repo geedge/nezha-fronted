@@ -146,7 +146,13 @@ function myLoadingFunction (el, binding, vnode) {
     //  div内部加入内容
     // div.innerHTML = '加载中...'
     //  el 元素设置相对定位   div设置绝对定位
-    el.setAttribute('class', 'el-loading-parent--relative')
+    console.log(el.className)
+    const elClassname = el.className.split(' ')
+    if (elClassname.indexOf('my-loading-parent--relative') === -1) {
+      className.push('my-loading-parent--relative')
+      el.className = className.join(' ')
+    }
+    // el.setAttribute('class', 'el-loading-parent--relative')
     //  设置绝对定位
     div.setAttribute('class', className)
   } else {

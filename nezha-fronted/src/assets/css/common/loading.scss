@@ -1,5 +1,25 @@
 // https://github.com/loadingio/css-spinner/tree/master/dist 从当前链接现在在 在tools.js 的myLoading 进行判断处理
 // 高度 宽度 等细节 记得处理
+.my-loading-parent--relative {
+  height: 100%;
+  width: 100%;
+  position: relative !important;
+}
+.my-loading-box {
+  height: 100%;
+  width: 100%;
+  position: relative !important;
+}
+.my-loading{
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  top: 50%;
+  left: 50%;
+  margin-top: 0;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
 
 loading-hide{
   display: none;
