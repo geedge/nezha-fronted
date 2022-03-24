@@ -99,6 +99,7 @@ export default {
       const self = this
       const s = lodash.cloneDeep(seriesTemplate)
       s.data = []
+      this.isNoData = true
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
           this.isNoData = false

@@ -67,6 +67,7 @@ export default {
     initHexagonData (chartInfo, originalDatas) {
       this.HexagonData = []
       this.isInit = false
+      this.isNoData = true
       return new Promise(resolve => {
         let colorIndex = 0
         originalDatas.forEach((originalData, expressionIndex) => {

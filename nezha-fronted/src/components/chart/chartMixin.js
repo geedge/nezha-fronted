@@ -43,6 +43,7 @@ export default {
     handleTimeSeries (chartInfo, seriesTemplate, originalDatas) {
       const series = []
       let colorIndex = 0
+      this.isNoData = true
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
           if (colorIndex >= 20 && !this.showAllData) {
@@ -266,6 +267,8 @@ export default {
         if (!this.isInit && this.chartOption.color) {
           this.colorList = this.colorList.slice(0, 20)
           this.chartOption.color = this.chartOption.color.slice(0, 20)
+        }
+        if (!this.isInit) {
           this.initChart(this.chartOption)
         }
       }
