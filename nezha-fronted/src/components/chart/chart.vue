@@ -252,6 +252,16 @@ export default {
       chartChildrenData: false
     }
   },
+  watch: {
+    chartData: {
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.chartChildrenData = false
+        }
+      }
+    }
+  },
   computed: {
     isNoData () {
       return lodash.isEmpty(this.chartData) && ['text', 'url', 'clock'].indexOf(this.chartInfo.type) === -1
