@@ -298,9 +298,9 @@ export default {
       }
     },
     getAssetData () {
-      this.$refs.transfer.startLoading()
+      this.$refs.transfer && this.$refs.transfer.startLoading()
       this.$get('asset/asset', { ...this.transfer.searchLabel, ...this.transfer.pageObj }).then(response => {
-        this.$refs.transfer.endLoading()
+        this.$refs.transfer && this.$refs.transfer.endLoading()
         if (response.code === 200) {
           this.transfer.tableData = response.data.list
           this.transfer.pageObj.total = response.data.total
@@ -309,13 +309,13 @@ export default {
       })
     },
     getEndpointData () {
-      this.$refs.transfer.startLoading()
+      this.$refs.transfer && this.$refs.transfer.startLoading()
       const idFilter = {}
       if (this.from === fromRoute.asset) {
         idFilter.assetIds = this.obj.varIds[0]
       }
       this.$get('monitor/endpoint', { ...this.transfer.searchLabel, ...this.transfer.pageObj, ...idFilter }).then(response => {
-        this.$refs.transfer.endLoading()
+        this.$refs.transfer && this.$refs.transfer.endLoading()
         if (response.code === 200) {
           this.transfer.tableData = response.data.list
           this.transfer.pageObj.total = response.data.total

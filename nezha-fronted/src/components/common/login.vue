@@ -147,6 +147,7 @@ export default {
       fileShow: false,
       fileContent: '',
       recoveryCode: [],
+      userInfo: {},
       bgImg: '' // 背景图
     }
   },
@@ -165,6 +166,7 @@ export default {
             this.lang = res.data.user.lang || localStorage.getItem('nz-language')
             this.$i18n.locale = this.lang
             this.theme = res.data.user.theme
+            this.userInfo = res.data.user
             // 获取可选语言
             get('/sys/dict/all?type=lang').then(response => {
               if (response.code === 200) {
@@ -221,8 +223,7 @@ export default {
           localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
           localStorage.setItem('nz-language', this.lang)
           res.data.user = {
-            lang: this.lang,
-            theme: this.theme
+            ...this.userInfo
           }
           this.loginSuccess(res)
         } else {

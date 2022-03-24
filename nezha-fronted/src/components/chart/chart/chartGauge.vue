@@ -63,6 +63,7 @@ export default {
       this.gaugeData = []
       this.isInit = false
       const decimals = this.chartInfo.param.decimals || 2
+      this.isNoData = true
       return new Promise(resolve => {
         let colorIndex = 0
         originalDatas.forEach((originalData, expressionIndex) => {

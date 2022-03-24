@@ -102,6 +102,7 @@ export default {
       const decimals = this.chartInfo.param.decimals || 2
       const s = lodash.cloneDeep(seriesTemplate)
       s.data = []
+      this.isNoData = true
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
           this.isNoData = false

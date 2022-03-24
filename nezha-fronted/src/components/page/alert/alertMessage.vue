@@ -556,7 +556,6 @@ export default {
             }
           })
           .catch(response => {
-            console.log(response)
             this.$message.error(response.msg)
           })
       })
@@ -620,7 +619,6 @@ export default {
         chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '')
         chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
         chartInfo.unit = this.currentMsg.alertRule.unit
-        console.log(chartInfo.unit)
         this.showFullscreen(true, chartInfo)
       } else if (this.currentMsg.alertRule.type === 2) {
         const chartInfo = lodash.cloneDeep(logData)

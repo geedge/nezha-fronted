@@ -93,6 +93,7 @@ export default {
       const decimals = this.chartInfo.param.decimals || 2
       return new Promise(resolve => {
         let colorIndex = 0
+        this.isNoData = true
         originalDatas.forEach((originalData, expressionIndex) => {
           originalData.forEach((data, dataIndex) => {
             this.isNoData = false

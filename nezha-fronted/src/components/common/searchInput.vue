@@ -664,7 +664,7 @@ export default {
       })
     },
     getModuleData () {
-      this.$get('module', { pageNo: 1, pageSize: -1 }).then(response => {
+      this.$get('monitor/module', { pageNo: 1, pageSize: -1 }).then(response => {
         if (response.code === 200) {
           this.moduleSelect = response.data.list
           this.moduleSelect.forEach((item, index) => {
@@ -1475,7 +1475,7 @@ export default {
       if (this.$route.path === '/assetLabel') {
         this.getGroupData()
       }
-      if (this.$route.path === '/monitor/module') {
+      if (this.$route.path === '/module') {
         this.getProjectData()
       }
       if (this.$route.path === '/alertRule') {

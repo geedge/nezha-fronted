@@ -596,7 +596,7 @@ export default {
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      if (this.$route.path === '/monitor/endpoint') {
+      if (this.$route.path === '/endpoint') {
         this.$set(this.searchLabel, 'statistics', 1)
       }
       const params = {
@@ -619,7 +619,7 @@ export default {
       this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
-          if (response.statistics && this.$route.path === '/monitor/endpoint') {
+          if (response.statistics && this.$route.path === '/endpoint') {
             this.setSearchData(response.statistics)
           }
           for (let i = 0; i < response.data.list.length; i++) {

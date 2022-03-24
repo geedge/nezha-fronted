@@ -21,6 +21,7 @@
           <alert-message-table
             ref="dataTable"
             :api="url"
+            :orderByFa="orderBy"
             :custom-table-title="tableTitle"
             :height="mainTableHeight"
             :now-time="nowTime"

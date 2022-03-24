@@ -28,6 +28,7 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { chartLegendPlacement } from '@/components/common/js/constants'
 import { getChart, setChart } from '@/components/common/js/common'
 import { initColor } from '@/components/chart/chart/tools'
+import lodash from 'lodash'
 
 export default {
   name: 'chart-time-series', // x轴是时间的图，包括折线、柱状、堆叠、散点
@@ -69,9 +70,14 @@ export default {
     }
   },
   methods: {
-    initChart (chartOption = this.chartOption) {
+    initChart (chartOptions = this.chartOption) {
+      const chartOption = lodash.cloneDeep(chartOptions)
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+      if (!this.series.length) {
+        this.isNoData = true
+        this.$emit('chartIsNoData', this.isNoData)
+      }
       if (this.isNoData) {
         return
       }
@@ -190,7 +196,7 @@ export default {
         let flag = true
         params.forEach((item, i) => {
           const seriesName = item.seriesName.split('-')[0]
-          if (i === 0) {
+          if (i === 0 && item.seriesName.indexOf('Previous') === -1) {
             const value = bus.computeTimezone(item.data[0] * 1000)
             const tData = new Date(value)
             str += '<div class="tooltip-title" style="margin-bottom: 5px">'
