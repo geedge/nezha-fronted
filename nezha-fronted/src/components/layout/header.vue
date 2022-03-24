@@ -207,14 +207,14 @@ export default {
     // for (let i = 97; i < 123; i++) {
     //   this.fontData.push(String.fromCharCode(i))
     // }
+    this.name = localStorage.getItem('nz-username')
+    this.username = localStorage.getItem('nz-username')
+    this.language = localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en'
     this.$i18n.locale = this.language
     if (localStorage.getItem('nz-token')) {
       this.initEvent()
       this.getLinkData()
     }
-    this.name = localStorage.getItem('nz-username')
-    this.username = localStorage.getItem('nz-username')
-    this.language = localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en'
     window.addEventListener('visibilitychange', this.testUser)
   },
   computed: {
