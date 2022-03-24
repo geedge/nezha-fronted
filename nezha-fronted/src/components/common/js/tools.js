@@ -102,7 +102,7 @@ export const myLoading = {
   bind: myLoadingFunction,
   update: myLoadingFunction,
   unbind: function (el, binding) {
-    const className = binding.arg || 'el-loading-mask'
+    const className = binding.arg || 'bars1'
     const ds = el.getElementsByClassName(className)[0]
     if (ds) {
       el.removeChild(ds)
@@ -110,7 +110,7 @@ export const myLoading = {
   }
 }
 function myLoadingFunction (el, binding, vnode) {
-  const className = binding.arg || 'el-loading-mask'
+  const className = binding.arg || 'bars1'
   const ds = el.getElementsByClassName(className)[0]
   if (binding.value) {
     if (ds) {
@@ -118,7 +118,7 @@ function myLoadingFunction (el, binding, vnode) {
     }
     //  若果是true创建一个div
     const divBox = document.createElement('div')
-    divBox.setAttribute('class', 'el-loading-mask')
+    divBox.setAttribute('class', 'bars1')
     const div = document.createElement('div')
     div.style.textAlign = 'center'
     if (binding.modifiers.scaleMin) {
@@ -127,18 +127,17 @@ function myLoadingFunction (el, binding, vnode) {
     if (binding.modifiers.scaleMax) {
       div.style.transform = 'scale(2)'
     }
-    if (className === 'ldsFacebook') {
-      const newDiv1 = document.createElement('div')
-      const newDiv2 = document.createElement('div')
-      const newDiv3 = document.createElement('div')
+    if (className === 'bars1') {
+      const newDiv1 = document.createElement('span')
+      const newDiv2 = document.createElement('span')
+      const newDiv3 = document.createElement('span')
+      const newDiv4 = document.createElement('span')
+      const newDiv5 = document.createElement('span')
       div.appendChild(newDiv1)
       div.appendChild(newDiv2)
       div.appendChild(newDiv3)
-    }
-    if (className === 'el-loading-mask') {
-      const newDiv1 = document.createElement('div')
-      newDiv1.setAttribute('class', 'el-loading-spinner')
-      div.appendChild(newDiv1)
+      div.appendChild(newDiv4)
+      div.appendChild(newDiv5)
     }
     divBox.appendChild(div)
     //  插入到被绑定的元素内部
@@ -148,11 +147,11 @@ function myLoadingFunction (el, binding, vnode) {
     //  el 元素设置相对定位   div设置绝对定位
     console.log(el.className)
     const elClassname = el.className.split(' ')
+    console.log(elClassname)
     if (elClassname.indexOf('my-loading-parent--relative') === -1) {
-      className.push('my-loading-parent--relative')
-      el.className = className.join(' ')
+      elClassname.push('my-loading-parent--relative')
+      el.setAttribute('class', elClassname.join(' '))
     }
-    // el.setAttribute('class', 'el-loading-parent--relative')
     //  设置绝对定位
     div.setAttribute('class', className)
   } else {
@@ -161,6 +160,9 @@ function myLoadingFunction (el, binding, vnode) {
       el.removeChild(ds)
     }
   }
+}
+function myLoadingFunctionUpdate(el, binding, vnode) {
+
 }
 export const cancelWithChange = {
   bind: function (el, binding) {
