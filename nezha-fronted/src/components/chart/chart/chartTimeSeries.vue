@@ -188,7 +188,7 @@ export default {
         let flag = true
         params.forEach((item, i) => {
           const seriesName = item.seriesName.split('-')[0]
-          if (i === 0) {
+          if (i === 0 && item.seriesName.indexOf('Previous') === -1) {
             const value = bus.computeTimezone(item.data[0] * 1000)
             const tData = new Date(value)
             str += '<div class="tooltip-title" style="margin-bottom: 5px">'
