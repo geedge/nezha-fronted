@@ -51,8 +51,8 @@
             :popper-class="'popover-webshell'"
           >
             <div>
-              <div class="popover-webshell-item"  @click="assetShowChange"><i class="nz-icon nz-icon-menu-assets" />Select asset</div>
-              <div  class="popover-webshell-item"  @click="customShow=true"><i class="nz-icon nz-icon-edit" />Custom connect</div>
+              <div class="popover-webshell-item"  @click="assetShowChange"><i class="nz-icon nz-icon-menu-assets" />{{$t('webshell.selAsset')}}</div>
+              <div  class="popover-webshell-item"  @click="customShow=true"><i class="nz-icon nz-icon-edit" />{{$t('webshell.custom')}}</div>
             </div>
             <span slot="reference" style="padding:8px;font-size:20px;font-weight:bold;">+</span>
           </el-popover>
@@ -153,7 +153,7 @@
         </div>
       </el-dialog>
       <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog" width="620px">
-        <div slot="title">Connect</div>
+        <div slot="title">{{$t('webshell.connect')}}</div>
         <div >
           <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-loading="assetLoading" >
             <el-form-item :label='$t("overall.asset")' prop="assetId" class="flex">
@@ -190,7 +190,7 @@
         </div>
       </el-dialog>
       <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px"destroy-on-close >
-        <div slot="title">Connect</div>
+        <div slot="title">{{$t('webshell.connect')}}</div>
         <div >
           <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules=" customConnect.authProtocol ===2 ? rulesCustom2: rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">
             <el-form-item :label='$t("webshell.protocol")' prop="authProtocol">
@@ -243,7 +243,7 @@
                 <span>{{$t('overall.cancel')}}</span>
               </button>
               <button id="asset-edit-save" :disabled="prevent_opt.save" class="footer__btn" @click.prevent="connect" type="button">
-                <span>Connect</span>
+                <span>{{$t('webshell.connect')}}</span>
               </button>
             </div>
           </el-form>
