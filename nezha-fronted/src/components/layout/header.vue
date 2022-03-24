@@ -83,7 +83,7 @@ export default {
   },
   data () {
     return {
-      username: '',
+      username:  '',
       name: '',
       language: 'en',
       // 顶部菜单相关
@@ -212,8 +212,8 @@ export default {
       this.initEvent()
       this.getLinkData()
     }
-    this.name = localStorage.getItem('nz-user-name')
-    this.username = localStorage.getItem('nz-user-name')
+    this.name = localStorage.getItem('nz-username')
+    this.username = localStorage.getItem('nz-username')
     this.language = localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en'
     window.addEventListener('visibilitychange', this.testUser)
   },

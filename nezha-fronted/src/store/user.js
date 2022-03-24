@@ -148,7 +148,7 @@ const user = {
           // 保存当前用户的 userId
           localStorage.setItem('nz-user-id', user.id)
           // 保存当前用户 name
-          localStorage.setItem('nz-user-name', user.name)
+          localStorage.setItem('nz-username', user.name)
         }
       })
       get('alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
