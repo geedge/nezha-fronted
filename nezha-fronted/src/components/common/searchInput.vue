@@ -664,7 +664,7 @@ export default {
       })
     },
     getModuleData () {
-      this.$get('module', { pageNo: 1, pageSize: -1 }).then(response => {
+      this.$get('monitor/module', { pageNo: 1, pageSize: -1 }).then(response => {
         if (response.code === 200) {
           this.moduleSelect = response.data.list
           this.moduleSelect.forEach((item, index) => {

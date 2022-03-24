@@ -78,9 +78,9 @@ export default {
         bus.$emit('clear-asset-filter') // 清除leftMenu左侧菜单过滤条件
         // if(this.$store.getters.getIdcArr.length===0){return}//如果不存在idc 则不跳转
       }
-      if (data === 'project' || data === 'module' || data === 'endpoint') {
-        data = 'monitor/' + data
-      }
+      // if (data === 'project' || data === 'module' || data === 'endpoint') {
+      //   data = data
+      // }
       if (data === 'alertList') {
         data = 'alertMessage'
       }

@@ -340,7 +340,7 @@ export default {
         route += 'asset'
       } else {
         tableId = type + 'Table'
-        route += 'monitor/' + type
+        route += type
       }
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + tableId)
       if (!(pageSize && pageSize !== 'undefined')) {
