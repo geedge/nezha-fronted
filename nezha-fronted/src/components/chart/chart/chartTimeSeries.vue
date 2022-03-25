@@ -134,9 +134,14 @@ export default {
       })
       minTime = timeSorted.length ? timeSorted[0][0] : ''
       maxTime = timeSorted.length ? timeSorted[timeSorted.length - 1][0] : ''
-      minValue = valueSorted.length ? valueSorted[0][1] : ''
-      maxValue = valueSorted.length ? valueSorted[valueSorted.length - 1][1] : ''
+      minValue = valueSorted.length ? valueSorted[0][1] : 0
+      maxValue = valueSorted.length ? valueSorted[valueSorted.length - 1][1] : 0
       const unit = chartDataFormat.getUnit(chartUnit)
+      if (!isNaN(maxValue)) {
+        maxValue = Number(maxValue)
+      } else {
+        maxValue = 0
+      }
       maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii) // 取最大值后 需要对其进行取整
       let oldValue = maxValue
       let dot = 0
@@ -155,7 +160,8 @@ export default {
         maxValue = Math.floor(oldValue) / Math.pow(10, dot)
         dot++
       }
-      const copies = chartDataFormat.copies(oldValue, unit.type)
+      console.log(oldValue)
+      const copies = chartDataFormat.copies(Number(oldValue), unit.type)
       return { minTime, maxTime, minValue, maxValue, copies, unit, dot }
     },
     xAxisLabelFormatter (minTime, maxTime) {

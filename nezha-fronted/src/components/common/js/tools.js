@@ -99,6 +99,10 @@ function isEqual (o1, o2) {
   return isEqualForInner(o1, o2)
 }
 export const myLoading = {
+  // v-my-loading:circle3.scaleMin.icon= flag
+  // 参数 circle3 为对应的class 名 需要添加div的 在bind内处理。
+  // 后续可跟多个参数 scaleMin 缩小0.5 scaleMax 放大2倍
+  // icon 为box 没有宽高 、icon 以及flex内的小块使用
   bind: myLoadingFunction,
   update: myLoadingFunctionUpdate,
   unbind: function (el, binding) {

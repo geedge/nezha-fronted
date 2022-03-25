@@ -790,6 +790,9 @@ export default {
     }
   },
   Interval: function (value, copies, type, interValType) {
+    if (!copies) {
+      copies = 1
+    }
     if (interValType === 'max' && value < 1) {
       if (value < 1) {
         value = 1
