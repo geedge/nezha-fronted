@@ -117,22 +117,24 @@ function myLoadingFunction (el, binding, vnode) {
       dsBox = item
     }
   })
-  console.log(dsBox)
   if (dsBox) {
     return
   }
   //  若果是true创建一个div
   const divBox = document.createElement('div')
   divBox.setAttribute('class', 'my-loading-box')
-  const div = document.createElement('div')
-  div.setAttribute('class', className + ' my-loading')
-  div.style.textAlign = 'center'
+  if (binding.modifiers.icon) {
+    divBox.setAttribute('class', 'my-loading-box')
+  }
+  divBox.style.textAlign = 'center'
   if (binding.modifiers.scaleMin) {
-    div.style.transform = 'scale(0.5)'
+    divBox.style.transform = 'scale(0.5)'
   }
   if (binding.modifiers.scaleMax) {
-    div.style.transform = 'scale(2)'
+    divBox.style.transform = 'scale(2)'
   }
+  const div = document.createElement('div')
+  div.setAttribute('class', className + ' my-loading')
   if (className === 'bars1') {
     const newDiv1 = document.createElement('span')
     const newDiv2 = document.createElement('span')
@@ -145,6 +147,9 @@ function myLoadingFunction (el, binding, vnode) {
     div.appendChild(newDiv4)
     div.appendChild(newDiv5)
   }
+  // if (className === 'circle3') {
+  //
+  // }
   divBox.appendChild(div)
   //  插入到被绑定的元素内部
   el.appendChild(divBox)
@@ -166,13 +171,16 @@ function myLoadingFunctionUpdate (el, binding, vnode) {
     divBox.style.display = 'block'
     if (elClassname.indexOf('my-loading-parent--relative') === -1) {
       elClassname.push('my-loading-parent--relative')
+      if (binding.modifiers.icon) {
+        elClassname.push('my-loading-parent-icon')
+      }
       el.setAttribute('class', elClassname.join(' '))
     }
   } else {
     divBox.style.display = 'none'
     //  去掉div  去掉样式  去掉定位
     if (elClassname.indexOf('my-loading-parent--relative') !== -1) {
-      elClassname = elClassname.filter(item => item !== 'my-loading-parent--relative')
+      elClassname = elClassname.filter(item => item !== 'my-loading-parent--relative' && item !== 'my-loading-parent-icon')
       el.setAttribute('class', elClassname.join(' '))
     }
   }

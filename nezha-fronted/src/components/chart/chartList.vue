@@ -1,5 +1,5 @@
 <template>
-  <div :id='`chartList${(isGroup ? "Group" : "") + timestamp}`' class="chart-list" :loading="gridLayoutLoading" ref="layoutBox">
+  <div :id='`chartList${(isGroup ? "Group" : "") + timestamp}`' class="chart-list" v-my-loading="gridLayoutLoading" ref="layoutBox">
     <grid-layout
       ref="layout"
       v-if="gridLayoutShow"
