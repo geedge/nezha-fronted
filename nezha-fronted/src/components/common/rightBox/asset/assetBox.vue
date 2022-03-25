@@ -35,8 +35,8 @@
             <el-select v-model="editAsset.stateId" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
               <el-option v-for="state in options.stateOptions" :key="state.id" :label="state.name" :value="state.id">
                 <div style="display: flex;justify-content: space-between;padding: 5px;">
-                  <div>{{state.name}}</div>
-                  <div style="width: 450px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;color: #999999" :title="state.remark">{{state.remark}}</div>
+                  <div>{{$t(state.name)}}</div>
+                  <div style="width: 450px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;color: #999999" :title="state.remark">{{$t(state.remark)}}</div>
                 </div>
               </el-option>
             </el-select>

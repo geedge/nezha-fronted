@@ -19,7 +19,7 @@
             node-key="id"
             ref="assetTypeTree">
             <div :class="{'tree--node__disabled': data.disabled}" class="tree--node" slot-scope="{ node, data }">
-              <span>{{ node.label }}</span>
+              <span>{{ $t(node.label) }}</span>
             </div>
           </el-tree>
         </div>
