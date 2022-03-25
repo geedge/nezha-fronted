@@ -47,7 +47,7 @@ export default {
   mounted () {
     // setInterval(() => {
     //   this.myLoading = !this.myLoading
-    // }, 1000)
+    // }, 3000)
   },
   destroyed () {
     localStorage.removeItem('moduleProjectId')

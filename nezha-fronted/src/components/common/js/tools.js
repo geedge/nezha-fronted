@@ -100,7 +100,7 @@ function isEqual (o1, o2) {
 }
 export const myLoading = {
   bind: myLoadingFunction,
-  update: myLoadingFunction,
+  update: myLoadingFunctionUpdate,
   unbind: function (el, binding) {
     const className = binding.arg || 'bars1'
     const ds = el.getElementsByClassName(className)[0]
@@ -112,57 +112,59 @@ export const myLoading = {
 function myLoadingFunction (el, binding, vnode) {
   const className = binding.arg || 'bars1'
   const ds = el.getElementsByClassName(className)[0]
+  const dsBox = el.getElementsByClassName('my-loading-box')[0]
+  if (dsBox) {
+    return
+  }
+  //  若果是true创建一个div
+  const divBox = document.createElement('div')
+  divBox.setAttribute('class', 'my-loading-box')
+  const div = document.createElement('div')
+  div.setAttribute('class', className + ' my-loading')
+  div.style.textAlign = 'center'
+  if (binding.modifiers.scaleMin) {
+    div.style.transform = 'scale(0.5)'
+  }
+  if (binding.modifiers.scaleMax) {
+    div.style.transform = 'scale(2)'
+  }
+  if (className === 'bars1') {
+    const newDiv1 = document.createElement('span')
+    const newDiv2 = document.createElement('span')
+    const newDiv3 = document.createElement('span')
+    const newDiv4 = document.createElement('span')
+    const newDiv5 = document.createElement('span')
+    div.appendChild(newDiv1)
+    div.appendChild(newDiv2)
+    div.appendChild(newDiv3)
+    div.appendChild(newDiv4)
+    div.appendChild(newDiv5)
+  }
+  divBox.appendChild(div)
+  //  插入到被绑定的元素内部
+  el.appendChild(divBox)
+  //  div内部加入内容
+  // div.innerHTML = '加载中...'
+  //  el 元素设置相对定位   div设置绝对定位
+  myLoadingFunctionUpdate(el, binding, vnode)
+}
+function myLoadingFunctionUpdate (el, binding, vnode) {
+  const divBox = el.getElementsByClassName('my-loading-box')[0]
+  let elClassname = el.className.split(' ')
   if (binding.value) {
-    if (ds) {
-      return
-    }
-    //  若果是true创建一个div
-    const divBox = document.createElement('div')
-    divBox.setAttribute('class', 'bars1')
-    const div = document.createElement('div')
-    div.style.textAlign = 'center'
-    if (binding.modifiers.scaleMin) {
-      div.style.transform = 'scale(0.5)'
-    }
-    if (binding.modifiers.scaleMax) {
-      div.style.transform = 'scale(2)'
-    }
-    if (className === 'bars1') {
-      const newDiv1 = document.createElement('span')
-      const newDiv2 = document.createElement('span')
-      const newDiv3 = document.createElement('span')
-      const newDiv4 = document.createElement('span')
-      const newDiv5 = document.createElement('span')
-      div.appendChild(newDiv1)
-      div.appendChild(newDiv2)
-      div.appendChild(newDiv3)
-      div.appendChild(newDiv4)
-      div.appendChild(newDiv5)
-    }
-    divBox.appendChild(div)
-    //  插入到被绑定的元素内部
-    el.appendChild(divBox)
-    //  div内部加入内容
-    // div.innerHTML = '加载中...'
-    //  el 元素设置相对定位   div设置绝对定位
-    console.log(el.className)
-    const elClassname = el.className.split(' ')
-    console.log(elClassname)
+    divBox.style.display = 'block'
     if (elClassname.indexOf('my-loading-parent--relative') === -1) {
       elClassname.push('my-loading-parent--relative')
       el.setAttribute('class', elClassname.join(' '))
     }
-    //  设置绝对定位
-    div.setAttribute('class', className)
   } else {
+    divBox.style.display = 'none'
     //  去掉div  去掉样式  去掉定位
-    if (ds) {
-      el.removeChild(ds)
+    if (elClassname.indexOf('my-loading-parent--relative') !== -1) {
+      elClassname = elClassname.filter(item => item !== 'my-loading-parent--relative')
+      el.setAttribute('class', elClassname.join(' '))
     }
   }
-}
-function myLoadingFunctionUpdate(el, binding, vnode) {
-
 }
 export const cancelWithChange = {
   bind: function (el, binding) {
