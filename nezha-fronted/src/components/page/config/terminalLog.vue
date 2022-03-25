@@ -115,6 +115,7 @@ export default {
     return {
       url: 'terminal/session',
       tableId: 'terminalLogTable', // 需要分页的table的id，用于记录每页数量
+      orderBy: '-id',
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [
           {

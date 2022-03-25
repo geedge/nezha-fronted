@@ -3,7 +3,7 @@
     <div class="basic-info">
       <div class="basic-info-title">
         <span style="cursor: pointer"><i @click="hideElement" :class="{'nz-icon nz-icon-caret-right': showBasicInfo,'nz-icon nz-icon-caret-bottom': !showBasicInfo}"></i></span>
-        <span>Basic info</span>
+        <span>{{$t('overall.basicInfo')}}</span>
       </div>
       <el-collapse-transition>
         <!--asset info-->
@@ -78,7 +78,7 @@
             </div>
           </div>
           <div class="basic-info-table-list">
-            <div class="basic-info-table-title">Endpoint</div>
+            <div class="basic-info-table-title">{{$t('asset.endpoint')}}</div>
             <div class="basic-info-table-value">
               <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;
               <span>{{chartDetail ? chartDetail.endpointNum : 0}}</span>

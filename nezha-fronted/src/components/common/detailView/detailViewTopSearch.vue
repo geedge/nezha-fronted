@@ -18,7 +18,7 @@
                 </span>
                 </div>
                 <div class="detail-top-search" style="text-align: center" v-else>
-                  All
+                  {{$t('config.assetLabel.all')}}
                 </div>
                 <i class="nz-icon nz-icon-arrow-down search-value"/>
               </div>
@@ -50,7 +50,7 @@
                 </span>
                 </div>
                 <div class="detail-top-search" style="text-align: center" v-else>
-                  All
+                 {{$t('config.assetLabel.all')}}
                 </div>
                 <i class="nz-icon nz-icon-arrow-down search-value"/>
               </div>
