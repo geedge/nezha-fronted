@@ -102,10 +102,9 @@ export const myLoading = {
   bind: myLoadingFunction,
   update: myLoadingFunctionUpdate,
   unbind: function (el, binding) {
-    const className = binding.arg || 'bars1'
-    const ds = el.getElementsByClassName(className)[0]
-    if (ds) {
-      el.removeChild(ds)
+    const dsBox = el.getElementsByClassName('my-loading-box')[0]
+    if (dsBox) {
+      el.removeChild(dsBox)
     }
   }
 }
