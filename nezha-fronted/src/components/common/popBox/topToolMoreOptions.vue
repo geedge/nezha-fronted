@@ -13,7 +13,7 @@
         <div id="chart-import" @click="showImportBox(1)"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</div>
       </el-dropdown-item>
       <el-dropdown-item v-has="permissions.export" v-if="exportUrl">
-        <div id="chart-export"@click="showImportBox(2)"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</div>
+        <div id="chart-export" @click="showImportBox(2)"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</div>
       </el-dropdown-item>
       <!-- import、export之后的内容 -->
       <slot name="after"></slot>
