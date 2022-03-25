@@ -111,7 +111,13 @@ export const myLoading = {
 function myLoadingFunction (el, binding, vnode) {
   const className = binding.arg || 'bars1'
   const ds = el.getElementsByClassName(className)[0]
-  const dsBox = el.getElementsByClassName('my-loading-box')[0]
+  let dsBox = ''
+  el.children.forEach((item) => {
+    if (item.className.indexOf('my-loading-box') !== -1) {
+      dsBox = item
+    }
+  })
+  console.log(dsBox)
   if (dsBox) {
     return
   }
@@ -148,7 +154,13 @@ function myLoadingFunction (el, binding, vnode) {
   myLoadingFunctionUpdate(el, binding, vnode)
 }
 function myLoadingFunctionUpdate (el, binding, vnode) {
-  const divBox = el.getElementsByClassName('my-loading-box')[0]
+  let divBox = ''
+  el.children.forEach((item) => {
+    if (item.className.indexOf('my-loading-box') !== -1) {
+      divBox = item
+    }
+  })
+  // const divBox = el.getElementsByClassName('my-loading-box')[0]
   let elClassname = el.className.split(' ')
   if (binding.value) {
     divBox.style.display = 'block'
