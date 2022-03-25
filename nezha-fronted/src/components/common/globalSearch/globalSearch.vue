@@ -129,7 +129,7 @@ export default {
     return {
       firstShow: true,
       searchStr: '',
-      loading: true,
+      loading: false,
       nextLoading: false,
       jumpLoading: false,
       selectIndex: '',
