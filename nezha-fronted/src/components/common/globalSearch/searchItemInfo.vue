@@ -503,12 +503,12 @@ export default {
     searchItemPath (item) {
       let str = ''
       switch (item.type) {
-        case 'asset' : str += '<span>Asset</span> <span>/</span> <span>Asset</span>'; break
-        case 'datacenter' : str += '<span>Setting</span> <span>/</span> <span>Data center</span>'; break
-        case 'project' : str += '<span>Monitor</span> <span>/</span> <span>Project</span>'; break
-        case 'module' :str += '<span>Monitor</span> <span>/</span> <span>Module</span>'; break
-        case 'endpoint' : str += '<span>Monitor</span> <span>/</span> <span>Endpoint</span>'; break
-        case 'alertrule' : str += '<span>Alert</span> <span>/</span> <span>Alert rule</span>'; break
+        case 'asset' : str += `<span>${this.$t('overall.asset')}</span> <span>/</span> <span>${this.$t('overall.asset')}</span>`; break
+        case 'datacenter' : str += `<span>${this.$t('config.config')}</span> <span>/</span> <span>${this.$t('overall.dc')}</span>`; break
+        case 'project' : str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('dashboard.overview.project.project')}</span>`; break
+        case 'module' :str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('overall.module')}</span>`; break
+        case 'endpoint' : str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('asset.endpoint')}</span>`; break
+        case 'alertrule' : str += `<span>${this.$t('overall.alert')}</span> <span>/</span> <span>${this.$t('dashboard.overview.alert.alertRule')}</span>`; break
       }
       return str
     },

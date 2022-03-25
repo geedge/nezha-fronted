@@ -185,8 +185,8 @@ export default {
       filterPanel: '',
       groupArr: [],
       varTypeArr: [
-        { name: 'Asset', id: 1 },
-        { name: 'Endpoint', id: 2 }
+        { name: this.$t('asset.asset'), id: 1 },
+        { name: this.$t('asset.endpoint'), id: 2 }
       ],
       panelName: '',
       rules: {

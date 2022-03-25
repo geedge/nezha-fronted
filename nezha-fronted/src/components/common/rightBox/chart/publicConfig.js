@@ -36,13 +36,13 @@ export default {
       statisticsList: this.$CONSTANTS.statisticsList,
       legendPositionList: [
         {
-          label: 'bottom',
+          label: this.$t('overall.bottom'),
           value: 'bottom'
         }, {
-          label: 'left',
+          label: this.$t('overall.left'),
           value: 'left'
         }, {
-          label: 'right',
+          label: this.$t('overall.right'),
           value: 'right'
         }
       ],
@@ -156,16 +156,16 @@ export default {
       ],
       textList: [
         {
-          label: 'All',
+          label: this.$t('config.assetLabel.all'),
           value: 'all'
         }, {
-          label: 'Value',
+          label: this.$t('overall.value'),
           value: 'value'
         }, {
-          label: 'Legend',
+          label: this.$t('dashboard.panel.chartForm.legend'),
           value: 'legend'
         }, {
-          label: 'None',
+          label: this.$t('config.assetLabel.all'),
           value: 'none'
         }
       ],

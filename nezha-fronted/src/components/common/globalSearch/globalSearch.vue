@@ -93,7 +93,7 @@
             {{$t('globalSearch.toEsc')}}
           </div>
           <div class="global-search-footer-right">
-            <div class="scope-box" v-for="item in scope" :class="item.isSelect ? 'is-select' : ''" :key="item.type" @click="scopeChange(item)" :title="item.type">
+            <div class="scope-box" v-for="item in scope" :class="item.isSelect ? 'is-select' : ''" :key="item.type" @click="scopeChange(item)" :title="item.title">
               <i class="nz-icon" :class="selectIcon(item)" />
               {{stat[item.type] || 0}}
             </div>
