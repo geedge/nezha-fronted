@@ -6,7 +6,7 @@
 import bus from '../../libs/bus'
 import { formatScientificNotation } from '@/components/common/js/tools'
 function none (value, index) {
-  const scientificNotationValue = formatScientificNotation(num, dot)
+  const scientificNotationValue = formatScientificNotation(value, 2)
   if (!numberWithEConvent(scientificNotationValue)) {
     return scientificNotationValue
   }
