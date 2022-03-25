@@ -4,8 +4,12 @@
 * type:自定义参数，用于区分是y轴调用还是tooltip调用,以设置不同精度  type =1 y轴调用 type=2 tooltip调用
 * */
 import bus from '../../libs/bus'
-
+import { formatScientificNotation } from '@/components/common/js/tools'
 function none (value, index) {
+  const scientificNotationValue = formatScientificNotation(num, dot)
+  if (!numberWithEConvent(scientificNotationValue)) {
+    return scientificNotationValue
+  }
   return keepDoubleNumber(value)
 }
 function short (value, index, type = 1, dot) {
@@ -18,14 +22,26 @@ function short (value, index, type = 1, dot) {
   }
 }
 function percent01 (value, index) {
+  const scientificNotationValue = formatScientificNotation(value, 2)
+  if (!numberWithEConvent(scientificNotationValue)) {
+    return `${scientificNotationValue} %`
+  }
   value = parseFloat(keepDoubleNumber(Number(value)))
   return `${value} %`
 }
 function percent02 (value, index) {
+  const scientificNotationValue = formatScientificNotation(value, 2)
+  if (!numberWithEConvent(scientificNotationValue)) {
+    return `${scientificNotationValue} %`
+  }
   value = parseFloat(keepDoubleNumber(Number(value) * 100))
   return `${value} %`
 }
 function localFormat (value, index) {
+  const scientificNotationValue = formatScientificNotation(value, 2)
+  if (!numberWithEConvent(scientificNotationValue)) {
+    return `${scientificNotationValue} %`
+  }
   let num = (value || 0).toString()
   let result = ''
   while (num.length > 3) {
@@ -287,6 +303,32 @@ function days (value, index, type = 1, dot) {
     return timeCompute(value, 'day', 3)
   }
 }
+function numberWithEConvent (num) {
+  if (num) {
+    if ((('' + num).indexOf('E') !== -1) || (('' + num).indexOf('e') !== -1)) {
+      const regExp = /'^((\\d+.?\\d+)[Ee]{1}(\\d+))$', 'ig'/
+      let result = regExp.exec(num)
+      let resultValue = ''
+      let power
+      if (result != null) {
+        resultValue = result[2]
+        power = result[3]
+        result = regExp.exec(num)
+      }
+
+      if (resultValue) {
+        if (power) {
+          const powVer = Math.pow(10, power)
+          resultValue = resultValue * powVer
+          return resultValue
+        }
+      }
+    } else {
+      return num
+    }
+  }
+  return 0
+}
 /*
 * 一般数值格式化方法
 * num: 需要格式化的值
@@ -295,6 +337,10 @@ function days (value, index, type = 1, dot) {
 * dot：保留的小数位，
 * */
 function asciiCompute (num, ascii, units, dot = 2) {
+  const scientificNotationValue = formatScientificNotation(num, dot)
+  if (!numberWithEConvent(scientificNotationValue)) {
+    return scientificNotationValue
+  }
   if (!num && num !== 0 && num !== '0') {
     return ''
   }
