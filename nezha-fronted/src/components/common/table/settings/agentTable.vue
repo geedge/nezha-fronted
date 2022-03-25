@@ -128,6 +128,7 @@ export default {
           label: this.$t('config.agent.type'),
           prop: 'type',
           show: true,
+          minWidth: 100,
           sortable: 'custom'
         }, {
           label: this.$t('asset.state'),

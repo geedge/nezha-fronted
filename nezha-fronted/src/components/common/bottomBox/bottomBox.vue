@@ -175,32 +175,32 @@ export default {
           panel: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: true },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: 'Endpoint', active: false },
-            { prop: 'log', name: 'Log', active: false }
+            { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
+            { prop: 'log', name: this.$t('overall.logs'), active: false }
           ],
           alertMessage: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true },
-            { prop: 'endpointTab', name: 'Endpoint', active: false },
-            { prop: 'log', name: 'Log', active: false }
+            { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
+            { prop: 'log', name: this.$t('overall.logs'), active: false }
           ],
           endpoint: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: 'Endpoint', active: true },
-            { prop: 'log', name: 'Log', active: false }
+            { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: true },
+            { prop: 'log', name: this.$t('overall.logs'), active: false }
           ],
           log: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: 'Endpoint', active: false },
-            { prop: 'log', name: 'Log', active: true }
+            { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
+            { prop: 'log', name: this.$t('overall.logs'), active: true }
           ],
           alertMessageSub: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: 'Endpoint', active: false },
-            { prop: 'log', name: 'Log', active: false },
+            { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
+            { prop: 'log', name: this.$t('overall.logs'), active: false },
             { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: true }
           ]
         },
@@ -215,8 +215,8 @@ export default {
           endpointTabTitle: [
             { prop: 'panelTab', name: this.$t('overall.detail') },
             { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
-            { prop: 'Metrics', name: 'Metrics' },
-            { prop: 'log', name: 'Log' }
+            { prop: 'Metrics', name: this.$t('project.metrics.metrics') },
+            { prop: 'log', name: this.$t('overall.logs') }
           ]
         },
         chartTemp: {
@@ -273,10 +273,10 @@ export default {
       const tabs = [
         { prop: 'panelTab', name: this.$t('overall.detail') },
         { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
-        { prop: 'Metrics', name: 'Metrics' }
+        { prop: 'Metrics', name: this.$t('project.metrics.metrics') }
       ]
       if (hasLog) {
-        tabs.push({ prop: 'log', name: 'Log' })
+        tabs.push({ prop: 'log', name: this.$t('overall.logs') })
       }
       return tabs
     }

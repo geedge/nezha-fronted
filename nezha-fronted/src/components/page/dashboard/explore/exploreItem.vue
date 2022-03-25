@@ -26,7 +26,8 @@
             </el-col>
           </el-row>
           <div class="top-tool-right">
-            <button v-if="!closable" class="top-tool-btn top-tool-btn--text margin-r-10" style="cursor: pointer;" type="button" @click="split">Split</button>
+            <button v-if="!closable" class="top-tool-btn top-tool-btn--text margin-r-10" style="cursor: pointer;" type="button" @click="split">
+              {{$t('overall.split')}}</button>
             <pick-time id="explore" ref="pickTime" v-model="filterTime" :class="{'margin-r-10': showMetrics}" :refresh-data-func="expressionChange" @unitChange="chartUnitChange">
 <!--              <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>-->
               <template slot="added-text">{{$t('overall.query')}}</template>

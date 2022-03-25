@@ -163,7 +163,7 @@ export default {
           label: this.$t('config.dc.cabinetNum'),
           prop: 'cabinetNum',
           show: true,
-          minWidth: 100,
+          minWidth: 110,
           sortable: 'custom'
         }, {
           label: this.$t('config.dc.assets'),

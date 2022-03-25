@@ -5,7 +5,7 @@
         <i class="nz-icon nz-icon-search" v-loading="loading"></i>
         <el-input v-model="searchStr" @input="searchAll" ref="searchStr" :placeholder="$t('globalSearch.placeholder')" @keydown.native="inputKeydown" clearable></el-input>
         <div @click="close" class="global-search-cancel">
-          Cancel
+          {{$t('overall.cancel')}}
         </div>
       </div>
       <div class="global-search-content" v-if="!firstShow">

@@ -48,13 +48,13 @@ export default {
       ],
       mappingTypeList: [
         {
-          label: 'Value',
+          label: this.$t('overall.value'),
           value: 'value'
         }, {
-          label: 'Range',
+          label: this.$t('dashboard.panel.chartForm.valMapping.range'),
           value: 'range'
         }, {
-          label: 'Regx',
+          label: this.$t('dashboard.panel.chartForm.valMapping.regx'),
           value: 'regx'
         }
       ],

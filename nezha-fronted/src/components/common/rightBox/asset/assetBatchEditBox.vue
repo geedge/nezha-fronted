@@ -205,9 +205,9 @@
                          @search="search"
                          @leftToRight="addAsset"
                          @rightToLeft="removeAsset">
-              <template v-slot:title>Selected</template>
+              <template v-slot:title>{{$t('overall.selected')}}</template>
             </nz-transfer>
-            <div v-if="showError" class="el-form-item__error">{{this.$t('validate.required')}}</div>
+            <div v-if="showError" class="el-form-item__error">{{$t('validate.required')}}</div>
           </div>
         </el-form>
       </div>
@@ -292,13 +292,13 @@ export default {
               disabled: false
             }, {
               id: 20,
-              name: 'SN',
+              name: this.$t('asset.sn'),
               type: 'input',
               label: 'sn',
               disabled: false
             }, {
               id: 21,
-              name: 'Host',
+              name: this.$t('webshell.host'),
               type: 'input',
               label: 'manageIp',
               disabled: false
@@ -310,7 +310,7 @@ export default {
               disabled: false
             }, {
               id: 23,
-              name: 'pingStatus',
+              name: this.$t('asset.pingStatus'),
               type: 'select',
               label: 'pingStatus',
               disabled: false
