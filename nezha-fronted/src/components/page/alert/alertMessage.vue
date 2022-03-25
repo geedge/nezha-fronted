@@ -9,7 +9,7 @@
       :layout="dataListLayout"
       :search-msg="searchMsg"
       @search="search"
-      v-loading="tools.loading"
+      v-my-loading="tools.loading"
     >
       <template v-slot:top-tool-right>
         <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 100px">

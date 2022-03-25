@@ -1,6 +1,6 @@
 <template>
   <div class="info-content pop-data-info-content" v-if="showInfo">
-    <div class="info-box" v-loading="loading">
+    <div class="info-box" v-my-loading="loading">
       <div class="info-box-title">Module info</div>
       <div class="info-box-content">
         <div class="content-box">

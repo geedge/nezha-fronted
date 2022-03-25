@@ -1,5 +1,5 @@
 <template>
-  <div :style="calcPosition(that.position,that)" class="alert-label__border alert-label" v-loading="loading" ref="alertLabels">
+  <div :style="calcPosition(that.position,that)" class="alert-label__border alert-label" v-my-loading="loading" ref="alertLabels">
     <div class="alert-rule-info" >
       <div class="alert-rule-box">
         <div class="alert-rule-title">ID</div>

@@ -14,7 +14,7 @@
             check-strictly
             highlight-current
             node-key="id"
-            v-loading="typeContentLoading"
+            v-my-loading="typeContentLoading"
             ref="panelTree">
             <div slot-scope="{ node }" class="tree--node">
               <span>{{ node.label }}</span>

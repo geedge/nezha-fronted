@@ -12,7 +12,6 @@
       @changeTab="changeTab"
       @search="search"
       class="full-width-height"
-      v-loading="tools.loading"
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
@@ -26,6 +25,7 @@
           ref="dataTable"
           :api="url"
           :orderByFa="orderBy"
+          v-my-loading="tools.loading"
           :loading="tools.loading"
           :custom-table-title="tools.customTableTitle"
           :height="subTableHeight"
@@ -33,6 +33,7 @@
           :table-data="tableData"
           :alertMessageTabNew="true"
           @del="del"
+          class="bottom-box__top"
           @showText="showText"
           @edit="edit"
           @orderBy="tableDataSort"
@@ -74,7 +75,7 @@
 <!--          <pick-time v-model="searchTime" :refresh-data-func="queryDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;"></pick-time>-->
 <!--        </div>-->
 <!--      </div>-->
-<!--      <div style="width: 100%;height: 100%" v-loading="chartLoading">-->
+<!--      <div style="width: 100%;height: 100%" v-my-loading="chartLoading">-->
 <!--        <chart v-if="resultType === 'matrix'" ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>-->
 <!--        <log-tab v-if="resultType === 'streamsFormat'" ref="logDetailScreen" :log-data="logData" :showSwitch="false" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>-->
 <!--      </div>-->

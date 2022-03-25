@@ -20,7 +20,7 @@
       <template v-slot:default="slotProps">
         <notify-method-table
           ref="dataTable"
-          v-loading="tools.loading"
+          v-my-loading="tools.loading"
           :loading="tools.loading"
           :table-id="tableId"
           :api="url"

@@ -1,7 +1,7 @@
 <template>
   <div class="module-list">
     <nzDetailView
-      v-loading="detailViewLoading || tools.loading"
+      v-my-loading="detailViewLoading || tools.loading"
       v-if="detailType !== 'list'"
       :api="url"
       ref="detailList"
@@ -41,7 +41,7 @@
           class="data-detail"
           ref="dataDetail"
           :orderByFa="orderBy"
-          v-loading="tools.loading"
+          v-my-loading="tools.loading"
           :detailViewRightObj="detailViewRightObj"
           :api="url"
           :table-data="tableData"
@@ -111,7 +111,7 @@
       <template v-slot="slotProps">
         <module-table
           ref="dataTable"
-          v-loading="tools.loading"
+          v-my-loading="tools.loading"
           :orderByFa="orderBy"
           :loading="tools.loading"
           :api="url"

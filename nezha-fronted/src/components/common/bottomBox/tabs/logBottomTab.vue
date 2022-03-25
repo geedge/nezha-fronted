@@ -32,8 +32,8 @@
       </pick-time>
     </template>
     <template v-slot>
-      <log-tab ref="logDetail" v-loading="loading" :loading-bottom="endpointLoading" :log-data="logData" :tab-index="9" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
-<!--      <div v-loading="loading" v-if="!logData" style="height: 300px; width: 100%; display: flex; justify-content: center; align-items: center; color: #999;">No Data</div>-->
+      <log-tab ref="logDetail" v-my-loading="loading" :loading-bottom="endpointLoading" :log-data="logData" :tab-index="9" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+<!--      <div v-my-loading="loading" v-if="!logData" style="height: 300px; width: 100%; display: flex; justify-content: center; align-items: center; color: #999;">No Data</div>-->
     </template>
   </nz-bottom-data-list>
 </template>

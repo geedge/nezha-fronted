@@ -23,7 +23,7 @@
       <!--第一行-->
       <div class="content-row-box">
         <div class="content-col-box">
-          <div class="content-col-content clickable" v-loading="assetLoading" @click="jumpTo('asset')" id="overview-to-asset">
+          <div class="content-col-content clickable" v-my-loading="assetLoading" @click="jumpTo('asset')" id="overview-to-asset">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-project"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="assetData ? assetData.totalStat.total  + '' : ''" class="item" effect="light" placement="top">
@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-content" v-loading="projectLoading">
+          <div class="content-col-content" v-my-loading="projectLoading">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-project"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="projectData ? projectData.projectStat.length + '' : ''" class="item" effect="light" placement="top">
@@ -54,7 +54,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-content" v-loading="moduleLoading">
+          <div class="content-col-content" v-my-loading="moduleLoading">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-module"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="moduleData ? moduleData.moduleStat.length + '' : ''" class="item" effect="light" placement="top">
@@ -69,7 +69,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-content" v-loading="endpointLoading">
+          <div class="content-col-content" v-my-loading="endpointLoading">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-endpoint"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="endpointData ? endpointData.total + '' : ''" class="item" effect="light" placement="top">
@@ -84,7 +84,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-content clickable" v-loading="alertMessageLoading" @click="jumpTo('alertList')" id="overview-to-alertlist" >
+          <div class="content-col-content clickable" v-my-loading="alertMessageLoading" @click="jumpTo('alertList')" id="overview-to-alertlist" >
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-alert"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="alertMessageData ? alertMessageData.alertMessageTotal + '' : ''" class="item" effect="light" placement="top">
@@ -124,7 +124,7 @@
               <!--</span>-->
             <!--</span>-->
           </div>
-          <div class="content-col-content"  v-loading="topologyLoading">
+          <div class="content-col-content"  v-my-loading="topologyLoading">
             <transition name = "el-zoom-in-center">
               <div style="width: 100%;height: 100%;position: relative" v-if="allProject&&allProject.length>0">
                 <el-carousel :interval="5000"  arrow="hover" :trigger="'click'">

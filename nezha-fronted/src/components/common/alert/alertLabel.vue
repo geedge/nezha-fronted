@@ -1,6 +1,6 @@
 <template>
   <div :class="calcHeight(that.position,that)" :style="calcPosition(that.position,that)" class="alert-label__border" ref="alertLabels">
-    <div class="alert-label-info" v-if="type==='asset'" v-loading="loading">
+    <div class="alert-label-info" v-if="type==='asset'" v-my-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
@@ -69,7 +69,7 @@
       </div>
     </div>
 
-    <div class="alert-label-info" v-if="type==='module'" v-loading="loading">
+    <div class="alert-label-info" v-if="type==='module'" v-my-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
@@ -118,7 +118,7 @@
       </div>
     </div>
 
-    <div class="alert-label-info" v-if="type==='project'" v-loading="loading">
+    <div class="alert-label-info" v-if="type==='project'" v-my-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData ? alertLabelData.id : '--'}}</div>
@@ -170,7 +170,7 @@
       </div>
     </div>
 
-    <div class="alert-label-info" v-if="type==='endpoint'" v-loading="loading">
+    <div class="alert-label-info" v-if="type==='endpoint'" v-my-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
@@ -245,7 +245,7 @@
       </div>
     </div>
 
-    <div class="alert-label-info" v-if="type==='dc'" v-loading="loading">
+    <div class="alert-label-info" v-if="type==='dc'" v-my-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>

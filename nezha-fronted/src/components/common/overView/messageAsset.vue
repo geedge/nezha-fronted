@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%;height: 100%" v-loading="loading">
+  <div style="width: 100%;height: 100%" v-my-loading="loading">
     <hexagonBox
       ref="hexagonBox"
       :hexData="data"
@@ -20,7 +20,7 @@
     />
     <alertLabel
       v-if="showTooltip&&assetData.show"
-      v-loading="assetData.loading"
+      v-my-loading="assetData.loading"
       ref="alertLabel"
       :id="assetData.id"
       :that="assetData"

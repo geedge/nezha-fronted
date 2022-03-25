@@ -65,7 +65,7 @@
     </div>
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
      <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
-               :pagination-show="false" class="nz-table endpoint-query-table" ref="endpointQueryTable" style="width: 100%;" v-loading="loading"
+               :pagination-show="false" class="nz-table endpoint-query-table" ref="endpointQueryTable" style="width: 100%;" v-my-loading="loading"
                v-if="tableShow && plTableSHow" id="endpoint-list-table" :tooltip-effect="'light'" @selection-change="selectChange">
       <pl-table-column
         type="selection"

@@ -1,7 +1,7 @@
 <template>
   <div>
     <nzDetailView
-      v-loading="detailViewLoading || tools.loading"
+      v-my-loading="detailViewLoading || tools.loading"
       v-if="detailType !== 'list'"
       :api="url"
       ref="detailList"
@@ -41,7 +41,7 @@
           class="data-detail"
           ref="dataDetail"
           :orderByFa="orderBy"
-          v-loading="tools.loading"
+          v-my-loading="tools.loading"
           :loading="tools.loading"
           :detailViewRightObj="detailViewRightObj"
           :api="url"
@@ -110,7 +110,7 @@
         <alert-rule-table
           ref="dataTable"
           :orderByFa="orderBy"
-          v-loading="tools.loading"
+          v-my-loading="tools.loading"
           :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"

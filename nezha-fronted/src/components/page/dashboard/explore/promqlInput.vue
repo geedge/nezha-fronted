@@ -9,7 +9,7 @@
             <button class="top-tool-btn top-tool-btn--text" type="button" @click="toggleDropdown">{{type === 'log' ? $t("overall.logLabels") : $t("overall.metric") }}
               <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px"></i></button>
             <el-cascader-panel v-show="dropDownVisible" ref="metricSelector" slot="dropdown" v-model="cascaderValue"
-                               v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading" :loading="loading" :options="metricOptions"
+                               v-clickoutside="closeDropdown" v-my-loading="tempBoxShowLoading" :loading="loading" :options="metricOptions"
                                v-if="type !== 'log'" :props="cascaderProps" @change="metricChangeNew" style="margin-top: 5px">
 
               <template slot-scope="{ node, data }">
@@ -21,7 +21,7 @@
               </template>
             </el-cascader-panel>
             <el-cascader-panel v-else v-show="dropDownVisible" ref="metricSelector" slot="dropdown"
-                               v-model="cascaderValue" v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading"
+                               v-model="cascaderValue" v-clickoutside="closeDropdown" v-my-loading="tempBoxShowLoading"
                                :loading="loading" :props="cascaderProps" @change="logLabelChange" style="margin-top: 5px;">
               <template slot-scope="{ node, data }">
                 <div :title="data.label" class="nz-cascade">
@@ -58,7 +58,7 @@
                 <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">{{type === 'log' ? $t("overall.logLabels") : $t("overall.metric") }}<i
                   class="nz-icon nz-icon-arrow-down"
                   style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
-                <el-cascader-panel v-loading="tempBoxShowLoading" v-show="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue"
+                <el-cascader-panel v-my-loading="tempBoxShowLoading" v-show="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue"
                                    style="text-align: left;margin-top: 5px" slot="dropdown" ref="metricSelector"
                                    v-if="type !== 'log'"  :props="{emitPath:false}" :options="metricOptions" @change="metricChangeNew">
 
@@ -72,7 +72,7 @@
 
                 </el-cascader-panel>
                 <el-cascader-panel v-else v-show="dropDownVisible" ref="metricSelector" slot="dropdown"
-                                   v-model="cascaderValue" v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading"
+                                   v-model="cascaderValue" v-clickoutside="closeDropdown" v-my-loading="tempBoxShowLoading"
                                    :loading="loading" :props="cascaderProps" @change="logLabelChange">
                   <template slot-scope="{ node, data }">
                     <div :title="data.label" class="nz-cascade">

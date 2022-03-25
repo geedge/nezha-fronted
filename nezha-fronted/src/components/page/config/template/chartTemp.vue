@@ -47,7 +47,7 @@
         <chartTmplTable
           ref="dataTable"
           :orderByFa="orderBy"
-          v-loading="tools.loading"
+          v-my-loading="tools.loading"
           :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
@@ -82,7 +82,7 @@
 <!--        v-if="rightBox.show"></chart-box>-->
       <chart-right-box
         v-if="rightBox.show"
-        v-loading="rightBox.loading"
+        v-my-loading="rightBox.loading"
         ref="addChartModal"
         :chart="object"
         :from="'chartTemp'"

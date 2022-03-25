@@ -75,7 +75,7 @@
     <el-dialog :visible.sync="authBindShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
                :show-close="true" width="620px" class="nz-dialog" @closed="closeDialog">
 
-      <div v-loading="dialogLoading">
+      <div v-my-loading="dialogLoading">
         <div class="login-dialog-title">
           1 Download your preferred authenticator app to your phone (any will work). If you don't
           have a preferred app, we recommend using <span @click="jumpDlw" class="verify-link">Google Authenticator.</span>

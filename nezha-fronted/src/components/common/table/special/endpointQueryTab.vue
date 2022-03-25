@@ -4,7 +4,7 @@
       id="endpointTable"
       ref="dataTable"
       :data="currentTableData"
-      v-loading="loading"
+      v-my-loading="loading"
       :height="'calc(100% - 48px)'"
       border
       @header-dragend="dragend"
@@ -108,7 +108,7 @@
       <!--      ></chart-box>-->
       <chart-right-box
         v-if="chartRightBoxShow"
-        v-loading="rightBox.loading"
+        v-my-loading="rightBox.loading"
         ref="addChartModal"
         :chart="chart"
         :showPanel="{}"

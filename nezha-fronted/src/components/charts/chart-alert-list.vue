@@ -133,7 +133,7 @@
               <pick-time :refresh-data-func="queryDate" :use-refresh="true" :use-chart-unit="false" v-model="searchTimeDialog" style="height: 28px;" id="alert-sub-chart"></pick-time>
             </div>
           </div>
-          <div style="width: 100%;height: 100%" v-loading="chartLoading">
+          <div style="width: 100%;height: 100%" v-my-loading="chartLoading">
             <chart v-if="resultType === 'matrix'" ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
             <log-tab v-if="resultType === 'streamsFormat'" ref="logDetailScreen" :log-data="logData" :showSwitch="false" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
           </div>

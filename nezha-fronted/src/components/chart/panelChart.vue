@@ -1,6 +1,6 @@
 <template>
   <!-- chart外层箱子 -->
-  <div :class="{'panel-chart--fullscreen': isFullscreen}" class="panel-chart" :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)"  v-loading="loading">
+  <div :class="{'panel-chart--fullscreen': isFullscreen}" class="panel-chart" :id="isFullscreen ? ('chart-screen-' + chartInfo.id ) : ('chart-local-' + chartInfo.id)"  v-my-loading="loading">
     <!-- title和工具栏，支持浮动 -->
     <chart-header
       v-if="!isFullscreen&&showHeader"

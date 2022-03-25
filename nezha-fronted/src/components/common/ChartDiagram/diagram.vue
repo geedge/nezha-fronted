@@ -3,7 +3,7 @@
   @import "../project/L5/css/props.css";
 </style>
 <template>
-  <div class="project-box list-page" v-loading="topologyLoading">
+  <div class="project-box list-page" v-my-loading="topologyLoading">
     <div class="main-list" style="overflow: hidden">
       <div class="main-container" :class="fromOverView?'from-overview':'from-project'" style="background: #fff">
         <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);display: inline-block">
@@ -13,7 +13,7 @@
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown" @click="dropdownClick">
-              <div style="height: 450px"  v-loading="imgageLoading">
+              <div style="height: 450px"  v-my-loading="imgageLoading">
                 <el-card shadow="hover" style="height:420px;width:284px;overflow-y: auto"
                          class="project-topology-add-node">
                 <!--<div class="drag-header">——</div>-->

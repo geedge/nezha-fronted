@@ -10,7 +10,7 @@
         :layout="['searchInput', 'pagination']"
         :search-msg="searchMsg"
         @search="search"
-        v-loading="tools.loading"
+        v-my-loading="tools.loading"
       >
         <template v-slot:top-tool-right>
           <el-select v-model="state" size="small" value-key="value" popper-class="right-box-select-top right-public-box-dropdown-top" @change="getTableData">

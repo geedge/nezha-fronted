@@ -66,7 +66,7 @@
         <div class="license-right-header-title">{{$t('license.devices')}}&nbsp;({{tableData ? tableData.length : 0}})</div>
       </div>
       <div class="license-right-table">
-        <el-table :data="tableData" v-loading="loading">
+        <el-table :data="tableData" v-my-loading="loading">
           <el-table-column v-for="(item, index) in tableTitle" :key="index">
             <template slot="header">
               <span class="data-column__span">{{item.label}} <i class="nz-icon nz-icon-label" v-if="item.type==='label'"/></span>

@@ -42,7 +42,7 @@
         <model-table
           ref="dataTable"
           :orderByFa="orderBy"
-          v-loading="tools.loading"
+          v-my-loading="tools.loading"
           :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"

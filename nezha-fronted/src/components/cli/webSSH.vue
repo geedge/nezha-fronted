@@ -155,7 +155,7 @@
       <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog" width="620px">
         <div slot="title">{{$t('webshell.connect')}}</div>
         <div >
-          <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-loading="assetLoading" >
+          <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-my-loading="assetLoading" >
             <el-form-item :label='$t("overall.asset")' prop="assetId" class="flex">
               <el-dropdown trigger="click" class="header-el-dropdown">
               <span class="el-dropdown-link">
@@ -192,7 +192,7 @@
       <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px"destroy-on-close >
         <div slot="title">{{$t('webshell.connect')}}</div>
         <div >
-          <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules=" customConnect.authProtocol ===2 ? rulesCustom2: rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">
+          <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules=" customConnect.authProtocol ===2 ? rulesCustom2: rulesCustom" ref="customConnect" v-my-loading="assetLoading" class="custom">
             <el-form-item :label='$t("webshell.protocol")' prop="authProtocol">
               <el-select  @change="protocolChange" value-key="id" popper-class="config-dropdown w260 right-box-select-top right-public-box-dropdown-top" v-model="customConnect.authProtocol" placeholder="" size="small" id="webshell-box-input-protocol">
                 <el-option v-for="item in authProtocol" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>

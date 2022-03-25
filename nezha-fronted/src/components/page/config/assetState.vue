@@ -21,7 +21,7 @@
         <el-table
           id="role-list-table"
           ref="dataTable"
-          v-loading="tools.loading"
+          v-my-loading="tools.loading"
           :loading="tools.loading"
           :data="tableData"
           :height="mainTableHeight"

@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width-height chart-list panel-tab-new asset-detail" v-loading="panelTabLoading">
+  <div class="full-width-height chart-list panel-tab-new asset-detail" v-my-loading="panelTabLoading">
     <nz-bottom-data-list
       :showTitle='showTitle'
       :obj='obj'
@@ -88,7 +88,7 @@
       <!--图表-->
       <div id="tableList" class="table-list" style="padding-top: 0;overflow: hidden">
         <div id="dashboardScrollbar" class="table-list-box">
-          <div class="box-content"  ref="dashboardScrollbar" v-loading="chartListLoading" style="overflow-y: auto">
+          <div class="box-content"  ref="dashboardScrollbar" v-my-loading="chartListLoading" style="overflow-y: auto">
             <chart-list
               ref="chartList"
               name="panel"
@@ -114,7 +114,7 @@
 <!--      <chart-box v-if="rightBox.chart.show" ref="addChartModal" :chart="chart" :from="from" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>-->
       <chart-right-box
         v-if="chartRightBoxShow"
-        v-loading="rightBox.loading"
+        v-my-loading="rightBox.loading"
         ref="addChartModal"
         :chart="chart"
         :from="from"

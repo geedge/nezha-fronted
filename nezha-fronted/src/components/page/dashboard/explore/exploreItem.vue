@@ -117,7 +117,7 @@
                 <!-- 自定义table列 -->
                 <div class="nz-table2 explore-table">
                   <el-table ref="exploreTable"
-                            v-loading="tools.loading"
+                            v-my-loading="tools.loading"
                             class="metric-table"
                             :data="tableData"
                             border
@@ -158,11 +158,11 @@
             <template v-else>
               <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" title="Graph" class="el-collapse-item__height">
                 <div class="chart-room">
-                  <chart ref="logChart" :unit="chartUnit" v-loading="chartLoading"></chart>
+                  <chart ref="logChart" :unit="chartUnit" v-my-loading="chartLoading"></chart>
                 </div>
               </el-collapse-item>
               <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-                <log-tab ref="logDetail" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData" v-loading="chartLoading"></log-tab>
+                <log-tab ref="logDetail" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData" v-my-loading="chartLoading"></log-tab>
               </el-collapse-item>
             </template>
           </el-collapse>

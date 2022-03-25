@@ -14,7 +14,7 @@
       </div>
       <div class="box__table">
         <el-table
-          v-loading="loading"
+          v-my-loading="loading"
           :data="selectableData"
           :row-class-name="setRowShow"
           height="100%"

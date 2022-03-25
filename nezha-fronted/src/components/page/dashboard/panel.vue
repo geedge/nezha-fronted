@@ -1,5 +1,5 @@
 <template>
-  <div class="panel list-page" v-loading="panelTabLoading">
+  <div class="panel list-page" v-my-loading="panelTabLoading">
     <div class="main-list">
       <div>
         <transition name="el-zoom-in-center">
@@ -81,7 +81,7 @@
         </div>
         <div id="tableList" class="table-list" style='overflow-y: unset'>
           <div class="table-list-box">
-            <div  id="dashboardScrollbar" class="box-content" v-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
+            <div  id="dashboardScrollbar" class="box-content" v-my-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
               <chart-list
                 ref="chartList"
                 name="panel"
@@ -123,7 +123,7 @@
 <!--      ></chart-box>-->
       <chart-right-box
         v-if="chartRightBoxShow"
-        v-loading="rightBox.loading"
+        v-my-loading="rightBox.loading"
         ref="addChartModal"
         :chart="chart"
         :from="fromRoute.panel"

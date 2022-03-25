@@ -1,7 +1,7 @@
 <template>
   <div>
     <nzDetailView
-      v-loading="detailViewLoading || tools.loading"
+      v-my-loading="detailViewLoading || tools.loading"
       v-if="detailType !== 'list'"
       :api="url"
       ref="detailList"
@@ -41,7 +41,7 @@
           class="data-detail"
           ref="dataDetail"
           :orderByFa="orderBy"
-          v-loading="tools.loading"
+          v-my-loading="tools.loading"
           :detailViewRightObj="detailViewRightObj"
           :api="url"
           :table-data="tableData"
@@ -68,7 +68,7 @@
       </template>
     </nzDetailView>
     <nz-data-list
-      v-loading="detailViewLoading"
+      v-my-loading="detailViewLoading"
       ref="dataList"
       v-if="detailType === 'list'"
       :api="url"
@@ -126,7 +126,7 @@
       <template  v-slot:default="slotProps">
         <endpoint-table
           ref="dataTable"
-           v-loading="tools.loading"
+           v-my-loading="tools.loading"
           :orderByFa="orderBy"
           :loading="tools.loading"
           :api="url"

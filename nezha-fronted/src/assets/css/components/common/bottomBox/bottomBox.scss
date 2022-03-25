@@ -168,8 +168,11 @@
 .bottom-box .sub-container{
   height: calc(100% - 64px);
 }
-.bottom-box .sub-container .nz-table2{
+.bottom-box .sub-container .nz-table2 {
   height: calc(100% - 20px);
+  .bottom-box__top .my-loading-box {
+    height: calc(100% + 20px) !important;
+  }
 }
 .asset-detail .sub-container .nz-table2 {
   height: 100%;

@@ -8,7 +8,7 @@
       label-width="120px"
     >
 
-      <div  v-loading="loading" v-for="(item, index) in chartConfig.param.datasource " :key="index" class="chart-system-top-box">
+      <div  v-my-loading="loading" v-for="(item, index) in chartConfig.param.datasource " :key="index" class="chart-system-top-box">
         <div class="chart-title chart-title-config">
             <span class="chart-title-content el-form-item" :class="{
               'is-error' : systemNameShow[0].error,
