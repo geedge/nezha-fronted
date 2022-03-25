@@ -3,7 +3,7 @@
     <left-menu @refresh="refresh"></left-menu>
     <div ref="body" class="body">
       <Header></Header>
-      <container v-if="containerShow" ref="container" v-my-loading="myLoading"></container>
+      <container v-if="containerShow" ref="container"></container>
     </div>
     <!--web-ssh-->
     <web-ssh ref="webSsh"></web-ssh>
@@ -36,7 +36,6 @@ export default {
   data () {
     return {
       containerShow: true,
-      myLoading: true
     }
   },
   methods: {
@@ -45,9 +44,6 @@ export default {
     }
   },
   mounted () {
-    // setInterval(() => {
-    //   this.myLoading = !this.myLoading
-    // }, 3000)
   },
   destroyed () {
     localStorage.removeItem('moduleProjectId')
