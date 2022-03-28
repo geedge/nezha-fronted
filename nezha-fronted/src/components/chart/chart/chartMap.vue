@@ -182,7 +182,7 @@ export default {
           <div class="tooltip--row">
             <div class="legend-value legend-value-asset">
              <div class="map-asset">
-                <div class="progress-title">Asset ok</div>
+                <div class="progress-title">${self.$t('panel.assetOk')}</div>
                 <div class="success-progress progress-box">
                     <div class="top-progress" style="width: ${(dcStat.asset.ok / dcStat.asset.total) * 100}%"></div>
                     <div style="width: 100%" class="bottom-progress"></div>
@@ -190,7 +190,7 @@ export default {
                 <div class="success-progress progress-content">${dcStat.asset.ok}</div>
               </div>
              <div class="map-asset">
-                <div class="progress-title">Asset alarm</div>
+                <div class="progress-title">${self.$t('panel.assetAlarm')}</div>
                 <div class="error-progress progress-box">
                     <div class="top-progress" style="width: ${(dcStat.asset.alarm / dcStat.asset.total) * 100}%"></div>
                     <div style="width: 100%" class="bottom-progress"></div>
@@ -201,7 +201,7 @@ export default {
             <div class="partition"></div>
             <div class="legend-value legend-value-agent">
             <div class="map-asset">
-                <div class="progress-title">agent up</div>
+                <div class="progress-title">${self.$t('config.agent.agent.agent')} up</div>
                 <div class="success-progress progress-box">
                     <div class="top-progress" style="width: ${(dcStat.agent.up / (dcStat.agent.up + dcStat.agent.down)) * 100}%"></div>
                     <div style="width: 100%" class="bottom-progress"></div>
@@ -209,7 +209,7 @@ export default {
                 <div class="success-progress progress-content">${dcStat.agent.up}</div>
              </div>
              <div class="map-asset">
-                <div class="progress-title">agent down</div>
+                <div class="progress-title">${self.$t('config.agent.agent.agent')} down</div>
                 <div class="error-progress progress-box">
                     <div class="top-progress" style="width: ${(dcStat.agent.down / (dcStat.agent.up + dcStat.agent.down)) * 100}%"></div>
                     <div style="width: 100%" class="bottom-progress"></div>
