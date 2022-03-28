@@ -199,7 +199,12 @@ export default {
         let sum = 0
         let flag = true
         params.forEach((item, i) => {
-          const seriesName = item.seriesName.split('-')[0]
+          const nameArr = item.seriesName.split('-')
+          if (nameArr.length > 1) {
+            nameArr.splice(nameArr.length - 1, 1)
+          }
+          console.log(nameArr)
+          const seriesName = nameArr.join('-')
           if (i === 0 && item.seriesName.indexOf('Previous') === -1) {
             const value = bus.computeTimezone(item.data[0] * 1000)
             const tData = new Date(value)
