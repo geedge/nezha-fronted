@@ -56,8 +56,8 @@ export default {
           }
         }
       })
-      const width = sum > 0 ? (sum <= 10 ? 12 : 14) : 10
-      style.width = (width + 'px')
+      const height = sum > 0 ? (sum <= 10 ? 12 : 14) : 10
+      style.height = (height + 'px')
       return style
     },
     tooltipHover (item, flag, e) {

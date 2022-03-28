@@ -147,7 +147,7 @@ export default {
           label: this.$t('project.module.alerts'),
           prop: 'alertNum',
           show: true,
-          width: 170,
+          width: 120,
           sortable: 'custom'
         },
         {

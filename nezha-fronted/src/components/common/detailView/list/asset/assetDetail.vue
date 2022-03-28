@@ -119,7 +119,7 @@ export default {
           label: this.$t('asset.alertNum'),
           prop: 'alertNum',
           show: true,
-          minWidth: 170,
+          width: 120,
           sortable: 'custom'
         }, {
           label: this.$t('asset.endpointNum2'),
