@@ -84,6 +84,9 @@
     cursor: pointer;
     font-size: 14px;
     transition: all linear .2s;
+    .my-loading-box .my-loading {
+      margin-top: -10px;
+    }
   }
   .login-btn:not(.nz-btn-disabled):hover {
     background-color: mix(white, #FA901C, 30%);

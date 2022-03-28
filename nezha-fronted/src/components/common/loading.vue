@@ -1,6 +1,11 @@
 <template>
-  <div v-show="showLoading" class="el-loading-mask">
-    <div class="el-loading-spinner">
+  <div v-show="showLoading" style="text-align: center" class="my-loading-box">
+    <div class="bars1 my-loading">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
   </div>
 </template>
