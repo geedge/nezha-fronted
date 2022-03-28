@@ -201,7 +201,7 @@ export default {
             <div class="partition"></div>
             <div class="legend-value legend-value-agent">
             <div class="map-asset">
-                <div class="progress-title">${self.$t('config.agent.agent.agent')} up</div>
+                <div class="progress-title">${self.$t('guide.agent')} ${self.$t('overall.normal')}</div>
                 <div class="success-progress progress-box">
                     <div class="top-progress" style="width: ${(dcStat.agent.up / (dcStat.agent.up + dcStat.agent.down)) * 100}%"></div>
                     <div style="width: 100%" class="bottom-progress"></div>
@@ -209,7 +209,7 @@ export default {
                 <div class="success-progress progress-content">${dcStat.agent.up}</div>
              </div>
              <div class="map-asset">
-                <div class="progress-title">${self.$t('config.agent.agent.agent')} down</div>
+                <div class="progress-title">${self.$t('guide.agent')} ${self.$t('overall.unusual')}</div>
                 <div class="error-progress progress-box">
                     <div class="top-progress" style="width: ${(dcStat.agent.down / (dcStat.agent.up + dcStat.agent.down)) * 100}%"></div>
                     <div style="width: 100%" class="bottom-progress"></div>
