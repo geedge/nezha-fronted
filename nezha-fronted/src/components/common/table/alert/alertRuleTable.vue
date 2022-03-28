@@ -228,7 +228,7 @@ export default {
           label: this.$t('alert.alert'),
           prop: 'alertNum',
           show: true,
-          width: 150,
+          minWidth: 170,
           sortable: 'custom'
         }, {
           label: this.$t('alert.config.receiver'),

@@ -148,7 +148,7 @@ export default {
           label: this.$t('project.endpoint.alerts'),
           prop: 'alertNum',
           show: true,
-          width: 120,
+          width: 170,
           sortable: 'custom'
         }
       ]

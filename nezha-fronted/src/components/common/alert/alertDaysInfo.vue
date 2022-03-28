@@ -47,18 +47,17 @@ export default {
   methods: {
     showPriority (daysData) {
       let style = {}
-      // let sum = 0
+      let sum = 0
       this.severityDataWeight.forEach(item => {
-        // sum += Number(daysData[item.name])
+        sum += Number(daysData[item.name])
         if (daysData[item.name] && !style.background) {
           style = {
             background: item.color
           }
         }
       })
-      // const height = sum > 0 ? (sum < 10 ? 20 : 24) : 16
-      // console.log(sum, height)
-      // style.height = (height + 'px')
+      const width = sum > 0 ? (sum <= 10 ? 12 : 14) : 10
+      style.width = (width + 'px')
       return style
     },
     tooltipHover (item, flag, e) {
