@@ -106,9 +106,14 @@ export const myLoading = {
   bind: myLoadingFunction,
   update: myLoadingFunctionUpdate,
   unbind: function (el, binding) {
-    const dsBox = el.getElementsByClassName('my-loading-box')[0]
-    if (dsBox) {
-      el.removeChild(dsBox)
+    let divBox = ''
+    el.children.forEach((item) => {
+      if (item.className.indexOf('my-loading-box') !== -1) {
+        divBox = item
+      }
+    })
+    if (el && divBox) {
+      el.removeChild(divBox)
     }
   }
 }
