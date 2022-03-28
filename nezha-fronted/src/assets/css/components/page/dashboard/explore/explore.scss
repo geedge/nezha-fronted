@@ -64,6 +64,11 @@
   }
 }
 .explore {
+  .el-collapse-item__height{
+    .el-collapse-item__wrap{
+      overflow: unset;
+    }
+  }
   .chart-view__switch {
     margin-top: 20px;
     border: 1px solid $--border-color-light;
