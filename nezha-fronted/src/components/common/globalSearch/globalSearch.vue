@@ -52,7 +52,7 @@
                     <div class="list-item-sub" v-if="item.sub">
                       {{ item.sub }}
                     </div>
-                    <div class="is-jump" v-my-loading="jumpLoading">
+                    <div class="is-jump" v-my-loading:circle3.scaleMin.icon="jumpLoading">
                       <i class="nz-icon nz-icon-huiche"></i>
                     </div>
                   </li>
