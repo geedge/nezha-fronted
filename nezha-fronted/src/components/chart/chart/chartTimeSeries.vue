@@ -72,6 +72,15 @@ export default {
   methods: {
     initChart (chartOptions = this.chartOption) {
       const chartOption = lodash.cloneDeep(chartOptions)
+      if (this.chartInfo.isAlertMessage) {
+        chartOption.title = {
+          show: true,
+          text: this.$t('project.endpoint.dialogTitle'),
+          top: 20
+        }
+        chartOption.grid.top = 70
+        chartOption.toolbox.top = 20
+      }
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       if (!this.series.length) {

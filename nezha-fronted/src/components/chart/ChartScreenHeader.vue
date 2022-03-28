@@ -26,7 +26,10 @@
           </span>
      </el-popover>
     </span>
-    <div class="chart-header__title" :title="chartInfo.name">{{chartInfo.name}}</div>
+    <div class="chart-header__title" :title="chartInfo.name">
+      <slot name="title-icon"></slot>
+      {{chartInfo.name}}
+    </div>
     <div class="chart-header__tools">
       <span v-if="chartInfo.remark" class="chart-header__tool top-tool-btn-group">
         <el-tooltip :content="chartInfo.remark" effect="light" placement="top">
