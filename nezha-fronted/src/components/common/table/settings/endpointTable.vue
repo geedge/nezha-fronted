@@ -262,7 +262,7 @@ export default {
           label: this.$t('project.endpoint.alerts'),
           prop: 'alerts',
           show: true,
-          minWidth: 150,
+          minWidth: 180,
           sortable: 'custom'
         },
         {

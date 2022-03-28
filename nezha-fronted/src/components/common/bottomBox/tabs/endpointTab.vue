@@ -249,7 +249,7 @@ export default {
           label: this.$t('project.endpoint.alerts'),
           prop: 'alerts',
           show: true,
-          width: 150
+          width: 180
         },
         /* {
             label: this.$t("project.endpoint.lastUpdate"),

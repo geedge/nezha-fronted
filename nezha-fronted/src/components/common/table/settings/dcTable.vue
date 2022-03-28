@@ -174,6 +174,7 @@ export default {
         }, {
           label: this.$t('config.dc.alert'),
           prop: 'alertNum',
+          width: 120,
           show: true
         }, {
           label: this.$t('asset.tel'),
