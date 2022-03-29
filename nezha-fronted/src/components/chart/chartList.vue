@@ -305,15 +305,16 @@ export default {
           if (dom) {
             let top = dom.style.top
             top = Number(top.substring(0, top.length - 2)) + groupTop
+            if (item.type === 'group' && item.loaded) {
+              this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.onScroll(scrollTop, top)
+              return
+            }
             if (item.type === 'group' && !item.loaded) {
               item.loaded = true
               this.$refs['chart' + item.id][0].getChartData()
-            }
-            if (item.type === 'group') {
               setTimeout(() => {
                 this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.onScroll(scrollTop, top)
-              },100)
-              return
+              },300)
             }
             if (item.loaded) {
               return

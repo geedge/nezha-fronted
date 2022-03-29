@@ -192,7 +192,7 @@ export default new Vue({
           statisticsRlt = dataArray.reduce(function (a, b) {
             return b > a ? b : a
           })
-        } else if (statistics === 'average') { // average：平均值
+        } else if (statistics === 'avg') { // avg：平均值
           let sum = 0
           dataArray.forEach((item) => {
             sum = Number(sum) + Number(item)

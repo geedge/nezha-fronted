@@ -1449,7 +1449,7 @@ export default {
           })
           break
         }
-        case 'average': {
+        case 'avg': {
           result = classifies.map(group => {
             const groupData = group.map(t => parseFloat(t.data[1]))
             const sum = eval(groupData.join('+'))

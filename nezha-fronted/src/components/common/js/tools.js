@@ -13,7 +13,7 @@ export const clickoutside = {
     let oldValue
     try {
       oldValue = JSON.parse(JSON.stringify(binding.value.obj))
-      el.__oldValue__ = oldValue
+      el.__newValue__ = oldValue
     } catch (e) {
 
     }
@@ -37,8 +37,8 @@ export const clickoutside = {
           return false
         }
         if (oldValue) {
-          const newValue = JSON.parse(JSON.stringify(binding.value.obj))
-          if (unsavedChange == 'on' && !isEqual(oldValue, newValue)) {
+          // const newValue = JSON.parse(JSON.stringify(binding.value.obj))
+          if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__)) {
             MessageBox.confirm(i18n.t('tip.confirmCancel'), {
               confirmButtonText: i18n.t('tip.yes'),
               cancelButtonText: i18n.t('tip.no'),
@@ -68,59 +68,7 @@ export const clickoutside = {
     document.addEventListener('mousedown', documentHandler)
   },
   update (el, binding, vnode) {
-    if (!binding.expression) return
-    const oldValue = el.__oldValue__
-    const unsavedChange = localStorage.getItem('nz-unnsaved-change')
-    document.removeEventListener('mousedown', el.__vueClickOutside__)
-    function documentHandler (e) {
-      if (el.contains(e.target)) {
-        return false
-      } else {
-        let flag = true
-        const path = e.path || (e.composedPath && e.composedPath())
-        // eslint-disable-next-line no-labels
-        top: for (let i = 0; i < path.length; i++) {
-          for (let j = 0; j < exceptClassName.length; j++) {
-            if (path[i].className && path[i].className.indexOf && path[i].className.indexOf(exceptClassName[j]) !== -1) {
-              flag = false
-              // eslint-disable-next-line no-labels
-              break top
-            }
-          }
-        }
-        if (!flag) {
-          return false
-        }
-        if (oldValue) {
-          const newValue = JSON.parse(JSON.stringify(binding.value.obj))
-          if (unsavedChange == 'on' && !isEqual(oldValue, newValue)) {
-            MessageBox.confirm(i18n.t('tip.confirmCancel'), {
-              confirmButtonText: i18n.t('tip.yes'),
-              cancelButtonText: i18n.t('tip.no'),
-              type: 'warning'
-            }).then(() => {
-              if (binding.value.func) {
-                binding.value.func()
-              }
-            })
-          } else {
-            binding.value.func()
-          }
-        } else {
-          if (binding.arg) {
-            binding.value(e, binding.arg)
-          } else {
-            if (binding.value) {
-              binding.value(e)
-            }
-          }
-        }
-      }
-    }
-
-    // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
-    el.__vueClickOutside__ = documentHandler
-    document.addEventListener('mousedown', documentHandler)
+    el.__newValue__ = binding.value.obj
   },
   unbind (el, binding) {
     // 解除事件监听
@@ -922,7 +870,7 @@ export function getMetricTypeValue (queryItem, type) {
       const max = copy.sort((x, y) => { return parseFloat(y[1]) - parseFloat(x[1]) })[0][1]
       return max
     }
-    case 'average': {
+    case 'avg': {
       copy = copy.map(t => parseFloat(t[1]))
       const sum = eval(copy.join('+'))
       const avg = sum / copy.length
