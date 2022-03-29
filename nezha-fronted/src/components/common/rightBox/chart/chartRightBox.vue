@@ -1,5 +1,5 @@
 <template>
-  <div v-clickoutside="{obj:editChart, func:clickOutside}" :class="boxClass" class="right-box right-box-chart">
+  <div v-clickoutside="{obj: editChart, func:clickOutside}" :class="boxClass" class="right-box right-box-chart">
     <transition v-if="from !== 'chartTemp'" name="right-box">
 <!--      <panel-box v-if="!showPanel.type" ref="panelBox2" :panel="panel" @reload="panelReload"></panel-box>-->
     </transition>
@@ -457,42 +457,42 @@ export default {
         if (obj.param && !obj.param.thresholds) {
           obj.param.thresholds = []
         }
-        this.editChart = obj
-        if (this.editChart.groupId === -1) {
-          this.editChart.groupId = ''
+        if (obj.groupId === -1) {
+          obj.groupId = ''
         }
-        if (this.editChart.param) {
-          if (!this.editChart.param.min) {
-            this.editChart.param.min = 0
+        if (obj.param) {
+          if (!obj.param.min) {
+            obj.param.min = 0
           }
-          if (!this.editChart.param.max) {
-            this.editChart.param.max = 100
+          if (!obj.param.max) {
+            obj.param.max = 100
           }
-          if (!this.editChart.param.link) {
-            this.$set(this.editChart.param, 'link', '')
+          if (!obj.param.link) {
+            this.$set(obj.param, 'link', '')
           }
-          if (!this.editChart.param.enable) {
-            this.editChart.param.enable = {
+          if (!obj.param.enable) {
+            obj.param.enable = {
               thresholds: false,
               legend: false,
               valueMapping: false
             }
           }
           // this.editChart.varType = 1
-          if (this.editChart.param.enable.legend && !this.editChart.param.legend) {
-            this.editChart.param.legend = { placement: 'bottom', values: [], show: true }
+          if (obj.param.enable.legend && !obj.param.legend) {
+            obj.param.legend = { placement: 'bottom', values: [], show: true }
           }
-          if (this.editChart.param.datasource && !this.editChart.param.datasource[0].legend) {
-            this.editChart.param.datasource[0].legend = ''
+          if (obj.param.datasource && !obj.param.datasource[0].legend) {
+            obj.param.datasource[0].legend = ''
           }
-          if (this.editChart.param.valueMapping) {
-            this.editChart.param.valueMapping.forEach(item => {
+          if (obj.param.valueMapping) {
+            obj.param.valueMapping.forEach(item => {
               if (!item.show) {
                 item.show = false
               }
             })
           }
         }
+        this.editChart = obj
       }
     },
     'editChart.type': {
@@ -500,6 +500,12 @@ export default {
         if (n === 'group') {
           this.editChart.groupId = ''
         }
+      }
+    },
+    editChart: {
+      deep: true,
+      handler () {
+
       }
     }
   }

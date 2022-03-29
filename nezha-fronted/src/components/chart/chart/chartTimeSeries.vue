@@ -88,6 +88,9 @@ export default {
       chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, dot)
       chartOption.yAxis.minInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'min')
       chartOption.yAxis.maxInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
+      if (this.chartInfo.param.stack) {
+        chartOption.yAxis.maxInterval = chartOption.yAxis.maxInterval * (Math.ceil(chartOption.series.length / 5) + 1)
+      }
       if (unit.type === 'Time') {
         delete chartOption.yAxis.minInterval
         delete chartOption.yAxis.maxInterval
@@ -159,7 +162,6 @@ export default {
         maxValue = Math.floor(oldValue) / Math.pow(10, dot)
         dot++
       }
-      console.log(oldValue)
       const copies = chartDataFormat.copies(Number(oldValue), unit.type)
       return { minTime, maxTime, minValue, maxValue, copies, unit, dot }
     },
@@ -320,6 +322,11 @@ export default {
         self.isStack = !self.isStack
         // 改变tooltip
         option.tooltip[0].formatter = self.tooltipFormatter(self.isStack)
+        if (!self.chartInfo.param.stack) {
+          option.yAxis.maxInterval = option.yAxis.maxInterval / (Math.ceil(option.series.length / 5) + 1)
+        } else {
+          option.yAxis.maxInterval = option.yAxis.maxInterval * (Math.ceil(option.series.length / 5) + 1)
+        }
         myChart.setOption(option)
       }
     },
