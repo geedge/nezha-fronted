@@ -47,6 +47,7 @@
           :chart-info="item"
           :from="from"
           :time-range="timeRange"
+          @groupShow="groupShow"
           :chart-detail-info="chartDetailInfo"
           @refreshPanel="refreshPanel"
           @showFullscreen="showFullscreen"
@@ -298,14 +299,21 @@ export default {
       this.scrollTopTimer = setTimeout(() => {
         this.copyDataList.forEach(item => {
           if (!this.$refs['grid-item' + item.id] || !this.$refs['grid-item' + item.id][0]) {
-            return;
+            return
           }
           const dom = this.$refs['grid-item' + item.id][0].$el
           if (dom) {
             let top = dom.style.top
             top = Number(top.substring(0, top.length - 2)) + groupTop
+            if (item.type === 'group' && !item.loaded) {
+              item.loaded = true
+              this.$refs['chart' + item.id][0].getChartData()
+            }
             if (item.type === 'group') {
-              this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.onScroll(scrollTop, top)
+              setTimeout(() => {
+                this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.onScroll(scrollTop, top)
+              },100)
+              return
             }
             if (item.loaded) {
               return
@@ -397,7 +405,9 @@ export default {
           this.copyDataList = JSON.parse(JSON.stringify(tempList))
           setTimeout(() => {
             this.gridLayoutShow = true
-            this.onScroll()
+            if (!this.isGroup) {
+              this.onScroll()
+            }
           })
           setTimeout(() => {
             this.firstInit = false
