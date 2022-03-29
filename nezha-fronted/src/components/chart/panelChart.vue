@@ -468,7 +468,7 @@ export default {
     timeRange: {
       deep: true,
       handler (n) {
-        this.refresh()
+        // this.refresh()
       }
     },
     loading: {

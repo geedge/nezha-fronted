@@ -244,6 +244,7 @@ export default {
       this.onScroll(this.scrollTop)
     },
     moveChart () {
+      this.onScroll(this.scrollTop)
       if (this.timer) {
         clearTimeout(this.timer)
         this.timer = null
@@ -312,9 +313,6 @@ export default {
             if (item.type === 'group' && !item.loaded) {
               item.loaded = true
               this.$refs['chart' + item.id][0].getChartData()
-              setTimeout(() => {
-                this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.onScroll(scrollTop, top)
-              },300)
             }
             if (item.loaded) {
               return
