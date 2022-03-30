@@ -117,10 +117,10 @@ export default {
       // 处理legend别名
       alias = alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
       if (!alias) {
-        alias = legend
+        alias = chartInfo.elements[expressionIndex].expression
       }
       if (alias == 'Previous ') {
-        alias += legend
+        alias += chartInfo.elements[expressionIndex].expression
       }
       // proj_status_
       const name = alias + '-' + dataIndex

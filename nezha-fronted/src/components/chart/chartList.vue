@@ -233,7 +233,7 @@ export default {
         this.copyDataList = [...this.copyDataList]
         // this.$refs.layout.layoutUpdate()
       }
-      this.moveChart()
+      this.onScroll(this.scrollTop)
     },
     cleanData () {
 
@@ -245,51 +245,45 @@ export default {
     },
     moveChart () {
       this.onScroll(this.scrollTop)
-      if (this.timer) {
-        clearTimeout(this.timer)
-        this.timer = null
-      }
-      this.timer = setTimeout(() => {
-        const arr = this.copyDataList.filter(item => !item.staic)
-        const charts = []
-        let weight = 0
-        arr.forEach(item => {
-          charts.push({
-            id: item.id,
-            x: item.x,
-            y: item.y,
-            span: item.span,
-            height: item.height,
-            groupId: item.groupId,
-            weight: weight
-          })
-          weight++
-          if (item.type === 'group') {
-            item.children && item.children.forEach(children => {
-              charts.push({
-                id: children.id,
-                x: children.x,
-                y: children.y,
-                span: children.span,
-                height: children.height,
-                groupId: children.groupId,
-                weight: weight
-              })
-              weight++
-            })
-          }
+      const arr = this.copyDataList.filter(item => !item.staic)
+      const charts = []
+      let weight = 0
+      arr.forEach(item => {
+        charts.push({
+          id: item.id,
+          x: item.x,
+          y: item.y,
+          span: item.span,
+          height: item.height,
+          groupId: item.groupId,
+          weight: weight
         })
-        const params = {
-          panelId: this.panelId,
-          charts: charts
-        }
-        if (charts && charts.length) {
-          this.$put('/visual/panel/chart/weights', params).then(() => {
-            const position = getLayoutPosition(this.copyDataList)
-            this.$store.commit('setChartLastPosition', position)
+        weight++
+        if (item.type === 'group') {
+          item.children && item.children.forEach(children => {
+            charts.push({
+              id: children.id,
+              x: children.x,
+              y: children.y,
+              span: children.span,
+              height: children.height,
+              groupId: children.groupId,
+              weight: weight
+            })
+            weight++
           })
         }
-      }, 1000)
+      })
+      const params = {
+        panelId: this.panelId,
+        charts: charts
+      }
+      if (charts && charts.length) {
+        this.$put('/visual/panel/chart/weights', params).then(() => {
+          const position = getLayoutPosition(this.copyDataList)
+          this.$store.commit('setChartLastPosition', position)
+        })
+      }
     },
     onScroll (scrollTop = 0, groupTop = 0) {
       const self = this
@@ -353,6 +347,8 @@ export default {
       bus.$on('groupMove', this.changeGroupHeight)
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)
     }
+  },
+  beforeDestroy () {
   },
   watch: {
     dataList: {
