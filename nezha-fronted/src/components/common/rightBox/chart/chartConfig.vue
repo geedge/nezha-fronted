@@ -487,7 +487,7 @@
                   <span @click="addColumns('')">
                       <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
                   </span>
-                  <span class="nz-icon-copy">
+                  <span style="margin-right: 5px">
                       <i @click="copyColumns(index)" class="nz-icon nz-icon-override"></i>
                   </span>
                   <span class="nz-icon-minus-medium">

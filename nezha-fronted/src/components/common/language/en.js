@@ -365,7 +365,7 @@ const en = {
         statisticsVal: {
           min: 'Min',
           max: 'Max',
-          average: 'Average',
+          avg: 'Avg',
           total: 'Total',
           first: 'First',
           last: 'Last',

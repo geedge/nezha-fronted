@@ -47,6 +47,7 @@
           :chart-info="item"
           :from="from"
           :time-range="timeRange"
+          @groupShow="groupShow"
           :chart-detail-info="chartDetailInfo"
           @refreshPanel="refreshPanel"
           @showFullscreen="showFullscreen"
@@ -232,7 +233,7 @@ export default {
         this.copyDataList = [...this.copyDataList]
         // this.$refs.layout.layoutUpdate()
       }
-      this.moveChart()
+      this.onScroll(this.scrollTop)
     },
     cleanData () {
 
@@ -243,51 +244,46 @@ export default {
       this.onScroll(this.scrollTop)
     },
     moveChart () {
-      if (this.timer) {
-        clearTimeout(this.timer)
-        this.timer = null
-      }
-      this.timer = setTimeout(() => {
-        const arr = this.copyDataList.filter(item => !item.staic)
-        const charts = []
-        let weight = 0
-        arr.forEach(item => {
-          charts.push({
-            id: item.id,
-            x: item.x,
-            y: item.y,
-            span: item.span,
-            height: item.height,
-            groupId: item.groupId,
-            weight: weight
-          })
-          weight++
-          if (item.type === 'group') {
-            item.children && item.children.forEach(children => {
-              charts.push({
-                id: children.id,
-                x: children.x,
-                y: children.y,
-                span: children.span,
-                height: children.height,
-                groupId: children.groupId,
-                weight: weight
-              })
-              weight++
-            })
-          }
+      this.onScroll(this.scrollTop)
+      const arr = this.copyDataList.filter(item => !item.staic)
+      const charts = []
+      let weight = 0
+      arr.forEach(item => {
+        charts.push({
+          id: item.id,
+          x: item.x,
+          y: item.y,
+          span: item.span,
+          height: item.height,
+          groupId: item.groupId,
+          weight: weight
         })
-        const params = {
-          panelId: this.panelId,
-          charts: charts
-        }
-        if (charts && charts.length) {
-          this.$put('/visual/panel/chart/weights', params).then(() => {
-            const position = getLayoutPosition(this.copyDataList)
-            this.$store.commit('setChartLastPosition', position)
+        weight++
+        if (item.type === 'group') {
+          item.children && item.children.forEach(children => {
+            charts.push({
+              id: children.id,
+              x: children.x,
+              y: children.y,
+              span: children.span,
+              height: children.height,
+              groupId: children.groupId,
+              weight: weight
+            })
+            weight++
           })
         }
-      }, 1000)
+      })
+      const params = {
+        panelId: this.panelId,
+        charts: charts
+      }
+      if (charts && charts.length) {
+        this.$put('/visual/panel/chart/weights', params).then(() => {
+          const position = getLayoutPosition(this.copyDataList)
+          this.$store.commit('setChartLastPosition', position)
+        })
+      }
     },
     onScroll (scrollTop = 0, groupTop = 0) {
       const self = this
@@ -298,14 +294,19 @@ export default {
       this.scrollTopTimer = setTimeout(() => {
         this.copyDataList.forEach(item => {
           if (!this.$refs['grid-item' + item.id] || !this.$refs['grid-item' + item.id][0]) {
-            return;
+            return
           }
           const dom = this.$refs['grid-item' + item.id][0].$el
           if (dom) {
             let top = dom.style.top
             top = Number(top.substring(0, top.length - 2)) + groupTop
-            if (item.type === 'group') {
+            if (item.type === 'group' && item.loaded) {
               this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.onScroll(scrollTop, top)
+              return
+            }
+            if (item.type === 'group' && !item.loaded) {
+              item.loaded = true
+              this.$refs['chart' + item.id][0].getChartData()
             }
             if (item.loaded) {
               return
@@ -333,6 +334,16 @@ export default {
         })
       }, 200)
     },
+    resize () {
+      this.init()
+      this.copyDataList.forEach(item => {
+        if (item.type === 'group') {
+          this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].groupShow(item.param.collapse)
+          this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.resize()
+        }
+        this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].resize()
+      })
+    },
     refreshPanel () {
       bus.$emit('refreshPanel')
     }
@@ -345,7 +356,11 @@ export default {
     if (!this.isGroup) {
       bus.$on('groupMove', this.changeGroupHeight)
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)
+      window.addEventListener('resize', this.resize)
     }
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.resize)
   },
   watch: {
     dataList: {
@@ -397,7 +412,9 @@ export default {
           this.copyDataList = JSON.parse(JSON.stringify(tempList))
           setTimeout(() => {
             this.gridLayoutShow = true
-            this.onScroll()
+            if (!this.isGroup) {
+              this.onScroll()
+            }
           })
           setTimeout(() => {
             this.firstInit = false

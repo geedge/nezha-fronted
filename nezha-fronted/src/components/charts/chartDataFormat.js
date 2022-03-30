@@ -397,6 +397,9 @@ function asciiCompute2 (num, ascii, units, dot = 2, unitIndex = 0) {
 * unit:设置的单位
 * */
 function timeCompute (value, unit, dot = 0) {
+  if (isNaN(value)) {
+    return `0 ${unit}`
+  }
   if (unit == 'year') {
     return `${value.toFixed(dot)} ${unit}`
   }

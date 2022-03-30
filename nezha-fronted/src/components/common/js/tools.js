@@ -13,6 +13,7 @@ export const clickoutside = {
     let oldValue
     try {
       oldValue = JSON.parse(JSON.stringify(binding.value.obj))
+      el.__newValue__ = oldValue
     } catch (e) {
 
     }
@@ -36,8 +37,8 @@ export const clickoutside = {
           return false
         }
         if (oldValue) {
-          const newValue = JSON.parse(JSON.stringify(binding.value.obj))
-          if (unsavedChange == 'on' && !isEqual(oldValue, newValue)) {
+          // const newValue = JSON.parse(JSON.stringify(binding.value.obj))
+          if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__)) {
             MessageBox.confirm(i18n.t('tip.confirmCancel'), {
               confirmButtonText: i18n.t('tip.yes'),
               cancelButtonText: i18n.t('tip.no'),
@@ -65,6 +66,9 @@ export const clickoutside = {
     // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
     el.__vueClickOutside__ = documentHandler
     document.addEventListener('mousedown', documentHandler)
+  },
+  update (el, binding, vnode) {
+    el.__newValue__ = binding.value.obj
   },
   unbind (el, binding) {
     // 解除事件监听
@@ -907,7 +911,7 @@ export function getMetricTypeValue (queryItem, type) {
       const max = copy.sort((x, y) => { return parseFloat(y[1]) - parseFloat(x[1]) })[0][1]
       return max
     }
-    case 'average': {
+    case 'avg': {
       copy = copy.map(t => parseFloat(t[1]))
       const sum = eval(copy.join('+'))
       const avg = sum / copy.length
