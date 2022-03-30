@@ -34,7 +34,7 @@ function percent02 (value, index) {
   if (!numberWithEConvent(scientificNotationValue)) {
     return `${scientificNotationValue} %`
   }
-  value = parseFloat(keepDoubleNumber(Number(value) * 100))
+  value = parseFloat(keepDoubleNumber((Number(value) * 100).toFixed(2)))
   return `${value} %`
 }
 function localFormat (value, index) {
@@ -728,7 +728,7 @@ export default {
         pow++
         value = value * 10
       }
-      return Math.ceil(value + 1) / Math.pow(10, pow)
+      return Math.floor(value + 1) / Math.pow(10, pow)
     }
     if (type === 'Time') {
       return value
