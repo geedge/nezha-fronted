@@ -1,10 +1,9 @@
 <template>
   <div>
-    <el-tabs v-model="activeName" type="card" v-if="nodata">
-      <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
-      <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
-      <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
-      <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+    <el-tabs v-model="activeName" type="card" v-if="!nodata">
+      <el-tab-pane v-for="item in cardNames" :label="item.label" :name="item.key" :key="item.key">
+        {{item.key}}
+      </el-tab-pane>
     </el-tabs>
     <div v-else class="table-no-data">
       <svg class="icon" aria-hidden="true">
@@ -19,34 +18,62 @@
 export default {
   name: 'alertMessageInfoTab',
   props: {
-    id: {
-      type: Number
+    infoData: {
+      type: Object
     }
   },
   data () {
     return {
-      activeName: '',
+      activeName: 'detail',
       nodata: false,
       cardNames: [{
         key: 'detail',
         label: this.$t('overall.detail')
+      }],
+      sysArr: [{
+        key: 'dc',
+        label: this.$t('overall.dc')
+      }, {
+        key: 'asset',
+        label: this.$t('overall.asset')
+      }, {
+        key: 'alertRule',
+        label: this.$t('alert.alertRule')
+      }, {
+        key: 'endpoint',
+        label: this.$t('overall.endpoint')
+      }, {
+        key: 'module',
+        label: this.$t('overall.module')
+      }, {
+        key: 'project',
+        label: this.$t('overall.project')
       }]
     }
   },
+  watch: {
+    infoData: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+          this.cardNames = [{
+            key: 'detail',
+            label: this.$t('overall.detail')
+          }]
+          this.sysArr.forEach(item => {
+            if (n[item.key]) {
+              this.cardNames.push(item)
+            }
+          })
+        }
+      }
+    }
+  },
   mounted () {
-    this.getAlertMessageInfo()
+
   },
   methods: {
-    getAlertMessageInfo () {
-      this.nodata = false
-      this.$get('/alert/message/' + this.id).then(res => {
-        if (res.code === 200) {
-          console.log(res)
-        } else {
-          this.nodata = true
-        }
-      })
-    }
+
   }
 }
 </script>

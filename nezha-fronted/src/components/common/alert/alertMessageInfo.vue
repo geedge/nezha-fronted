@@ -42,7 +42,7 @@
         ></chart>
         <alertMessageInfoTab
           class="alert-message-info-tab"
-          :id="chartInfo.id" />
+          :infoData="infoData" />
       </div>
       <div class="info-box-right">
         时间
@@ -93,7 +93,8 @@ export default {
       showAllData: false,
       allDataLength: 0,
       severityData: this.$store.getters.severityData,
-      severityDataWeight: this.$store.getters.severityDataWeight
+      severityDataWeight: this.$store.getters.severityDataWeight,
+      infoData: {}
     }
   },
   computed: {
@@ -306,6 +307,17 @@ export default {
     },
     showFullscreen (show) {
       this.$emit('showFullscreen', show, this.chartInfo)
+    },
+    getAlertMessageInfo () {
+      this.nodata = false
+      this.$get('/alert/message/' + this.chartInfo.id).then(res => {
+        if (res.code === 200) {
+          this.infoData = res.data
+          this.nodata = false
+        } else {
+          this.nodata = true
+        }
+      })
     }
   },
   watch: {
@@ -326,6 +338,7 @@ export default {
   mounted () {
     this.chartInfo.loaded && this.getChartData()
     this.showAllData = !this.showMultiple(this.chartInfo.type)
+    this.getAlertMessageInfo()
   }
 }
 </script>
