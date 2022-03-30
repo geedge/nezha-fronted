@@ -309,7 +309,6 @@ export default {
       this.chartChildrenData = flag
     },
     resize () {
-      console.log(this.$refs['chart' + this.chartInfo.id])
       this.$refs['chart' + this.chartInfo.id] && this.$refs['chart' + this.chartInfo.id].resize()
     },
     refreshLogs (params) {

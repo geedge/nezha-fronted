@@ -203,9 +203,9 @@ export const cancelWithChange = {
     if (!binding.value || !binding.value.obj) return
     const unsavedChange = localStorage.getItem('nz-unnsaved-change')
     const oldValue = JSON.parse(JSON.stringify(binding.value.obj))
+    el.__newValue__ = oldValue
     function domClick (e) {
-      const newValue = JSON.parse(JSON.stringify(binding.value.obj))
-      if (unsavedChange == 'on' && !isEqual(oldValue, newValue)) {
+      if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__)) {
         MessageBox.confirm(i18n.t('tip.confirmCancel'), {
           confirmButtonText: i18n.t('tip.yes'),
           cancelButtonText: i18n.t('tip.no'),
@@ -221,6 +221,9 @@ export const cancelWithChange = {
     }
     el.__vueDomClick__ = domClick
     el.addEventListener('click', domClick)
+  },
+  update (el, binding, vnode) {
+    el.__newValue__ = binding.value.obj
   },
   unbind: function (el, binding) {
     // 解除事件监听

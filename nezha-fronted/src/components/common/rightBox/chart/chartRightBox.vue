@@ -234,13 +234,17 @@ export default {
           params.x = 0
           params.y = 0
         }
-        if (!params.x && !params.y && params.groupId) { // group 内的坐标需要单独计算
+        if (isNaN(params.y) && isNaN(params.y) && params.groupId) { // group 内的坐标需要单独计算
           params.x = 0
           params.y = 999
         }
-        if (!params.x && !params.y) {
+        if (isNaN(params.y) && isNaN(params.y)) {
           params.x = this.chartLastPosition.x + params.span > 12 ? 0 : this.chartLastPosition.x
           params.y = this.chartLastPosition.y + 12
+        }
+        if (params.x + params.span > 12) {
+          params.x = 0
+          params.y += 1
         }
         delete params.panel
         if (params.type === 'table') {
