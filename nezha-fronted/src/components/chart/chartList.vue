@@ -338,6 +338,7 @@ export default {
       this.init()
       this.copyDataList.forEach(item => {
         if (item.type === 'group') {
+          this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].groupShow(item.param.collapse)
           this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.resize()
         }
         this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].resize()
