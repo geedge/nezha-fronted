@@ -386,7 +386,7 @@ export default {
       })
     },
     resize () {
-      this.$refs.chart.resize()
+      this.$refs.chart && this.$refs.chart.resize()
     },
     refresh () {
       this.getChartData(true)

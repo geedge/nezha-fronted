@@ -331,7 +331,10 @@ export default {
       }
     },
     resize () {
-      getChart(this.chartId).resize()
+      console.log(213)
+      setTimeout(() => {
+        getChart(this.chartId) && getChart(this.chartId).resize()
+      }, 100)
     }
   },
   mounted () {

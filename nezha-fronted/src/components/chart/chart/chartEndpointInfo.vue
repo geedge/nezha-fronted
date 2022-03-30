@@ -17,6 +17,11 @@ export default {
     return {
 
     }
+  },
+  methods: {
+    resize () {
+
+    }
   }
 }
 </script>

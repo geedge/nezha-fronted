@@ -334,6 +334,15 @@ export default {
         })
       }, 200)
     },
+    resize () {
+      this.init()
+      this.copyDataList.forEach(item => {
+        if (item.type === 'group') {
+          this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.resize()
+        }
+        this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].resize()
+      })
+    },
     refreshPanel () {
       bus.$emit('refreshPanel')
     }
@@ -346,9 +355,11 @@ export default {
     if (!this.isGroup) {
       bus.$on('groupMove', this.changeGroupHeight)
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)
+      window.addEventListener('resize', this.resize)
     }
   },
   beforeDestroy () {
+    window.removeEventListener('resize', this.resize)
   },
   watch: {
     dataList: {
