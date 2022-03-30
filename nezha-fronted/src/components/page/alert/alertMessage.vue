@@ -625,6 +625,7 @@ export default {
           }]
         }
       }
+      chartInfo.id = this.currentMsg.id
       chartInfo.name = this.currentMsg.alertRule.name
       chartInfo.isAlertMessage = true
       chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))

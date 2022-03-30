@@ -40,8 +40,9 @@
           :showAllData="showAllData"
           v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
         ></chart>
-        <alertMessageInfoTab class="alert-message-info-tab">
-        </alertMessageInfoTab>
+        <alertMessageInfoTab
+          class="alert-message-info-tab"
+          :id="chartInfo.id" />
       </div>
       <div class="info-box-right">
         时间
