@@ -104,7 +104,7 @@ Vue.mixin({
     },
     utcTimeToTimezoneStr: function (time) {
       if (time) {
-        return bus.timeFormate(time, localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
+        return bus.timeFormate(bus.UTCTimeToConfigTimezone(time), localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
       } else {
         return '-'
       }

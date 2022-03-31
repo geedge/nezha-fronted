@@ -3,6 +3,9 @@
     <el-tabs v-model="activeName" type="card" v-if="!nodata">
       <el-tab-pane v-for="item in cardNames" :label="item.label" :name="item.key" :key="item.key">
         {{item.key}}
+        <div v-if="item.key === 'detail'">
+          <alert-message-info-detail :info-data="infoData"/>
+        </div>
       </el-tab-pane>
     </el-tabs>
     <div v-else class="table-no-data">
@@ -15,8 +18,12 @@
 </template>
 
 <script>
+import alertMessageInfoDetail from '@/components/common/alert/alertMessageInfoDetail'
 export default {
   name: 'alertMessageInfoTab',
+  components: {
+    alertMessageInfoDetail
+  },
   props: {
     infoData: {
       type: Object
