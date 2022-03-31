@@ -5,7 +5,7 @@
         <div v-if="item.key === 'detail' && activeName === 'detail'">
           <alert-message-info-detail :info-data="infoData"/>
         </div>
-        <div v-else-if="(activeName === 'alertRule' || activeName === 'dc' || activeName === 'asset' || activeName === 'project' || activeName === 'module' || activeName === 'endpoint') && infoData[item.key]">
+        <div v-else-if="(activeName === item.key) && infoData[item.key]" class="no-position-alert-label">
 <!--          <searchItemInfo :obj="findData(item.key)" :severityData="severityData" :fa-loading="false"></searchItemInfo>-->
           <alertLabel
             v-if="item.key !=='alertRule'"
@@ -52,6 +52,10 @@ export default {
   props: {
     infoData: {
       type: Object
+    },
+    nodata: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -62,7 +66,6 @@ export default {
   data () {
     return {
       activeName: 'detail',
-      nodata: false,
       cardNames: [{
         key: 'detail',
         label: this.$t('overall.detail')

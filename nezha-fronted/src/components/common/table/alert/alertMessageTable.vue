@@ -86,7 +86,7 @@
           </span>
           </template>
           <span v-else-if="item.prop === 'state'">
-            <span class="alert-message-state" :class="{'green-bg': scope.row['state'] == 3, 'red-bg': scope.row['state'] == 1,'yellow-bg': scope.row['state'] == 2}">
+            <span class="alert-message-state" :class="{'gray-bg': scope.row['state'] == 3, 'red-bg': scope.row['state'] == 1,'yellow-bg': scope.row['state'] == 2}">
               {{$t(stateOptions.find(state=>state.value == scope.row['state']).label)}}
             </span>
           </span>

@@ -17,7 +17,7 @@
       @close="showFullscreen"
       class="alert-message-info-header"
     >
-      <span slot="title-icon"> active </span>
+      <span slot="title-icon" v-if="infoData['state']" style="margin-left: 5px" class="alert-message-state" :class="{'gray-bg': infoData['state'] == 3, 'red-bg': infoData['state'] == 1,'yellow-bg': infoData['state'] == 2}">{{$t(stateOptions.find(state=>state.value == infoData['state']).label)}}</span>
     </chart-screen-header>
     <!-- chart -->
     <!-- 数据查询后传入chart组件，chart组件内不查询，只根据接传递的数据来渲染 -->
@@ -42,10 +42,11 @@
         ></chart>
         <alertMessageInfoTab
           class="alert-message-info-tab"
+          :noData="tabNoData"
           :infoData="infoData" />
       </div>
       <div class="info-box-right">
-        <alertMessageInfoTimeLine />
+        <alertMessageInfoTimeLine :info-data="chartInfo" :time="time"/>
       </div>
     </div>
   </div>
@@ -55,7 +56,7 @@
 import ChartScreenHeader from '@/components/chart/ChartScreenHeader'
 import chart from '@/components/chart/chart'
 import { isChartPie, isTimeSeries, getGroupHeight, isGroup } from '@/components/chart/chart/tools'
-import { chartType, fromRoute } from '@/components/common/js/constants'
+import {alertMessage as alertMessageConstant, chartType, fromRoute} from '@/components/common/js/constants'
 import bus from '@/libs/bus'
 import axios from 'axios'
 import chartTempData from '@/components/charts/chartTempData'
@@ -63,7 +64,6 @@ import logsData from '@/components/chart/logsData'
 import lodash from 'lodash'
 import alertMessageInfoTab from '@/components/common/alert/alertMessageInfoTab'
 import alertMessageInfoTimeLine from '@/components/common/alert/alertMessageInfoTimeLine'
-
 export default {
   name: 'panelChart',
   components: {
@@ -96,7 +96,12 @@ export default {
       allDataLength: 0,
       severityData: this.$store.getters.severityData,
       severityDataWeight: this.$store.getters.severityDataWeight,
-      infoData: {}
+      infoData: {},
+      timeLineData: [],
+      tabNoData: false,
+      timeLineNoData: false,
+      time: [],
+      stateOptions: alertMessageConstant.states
     }
   },
   computed: {
@@ -152,6 +157,7 @@ export default {
       const step = bus.getStep(startTime, endTime)
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
+      this.time = [startTime, endTime]
       const elements = this.chartInfo.elements || []
       this.chartInfo.loaded && this.query(elements, startTime, endTime, step, params)
     },
@@ -311,13 +317,13 @@ export default {
       this.$emit('showFullscreen', show, this.chartInfo)
     },
     getAlertMessageInfo () {
-      this.nodata = false
+      this.tabNoData = false
       this.$get('/alert/message/' + this.chartInfo.id).then(res => {
         if (res.code === 200) {
           this.infoData = res.data
-          this.nodata = false
+          this.tabNoData = false
         } else {
-          this.nodata = true
+          this.tabNoData = true
         }
       })
     }

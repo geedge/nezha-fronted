@@ -59,10 +59,6 @@
             overflow-y: auto;
           }
         }
-        .alert-label.alert-label__border{
-          border: none !important;
-          position: unset;
-        }
       }
     }
     .info-box-right{
@@ -71,7 +67,54 @@
       border: 1px solid #E7EAED;
       border-radius: 2px;
       box-sizing: border-box;
-      padding: 20px;
+      padding: 0px 20px 20px 0;
+      .time-line-header{
+        padding: 20px;
+        font-size: 16px;
+        color: $--color-text-primary;
+        font-weight: 600;
+      }
+      .el-timeline{
+        height: calc(100% - 80px);
+        overflow-y: auto;
+        padding-top: 14px;
+        padding-left: 40px;
+        box-sizing: border-box;
+        .el-timeline-item{
+          padding-bottom: 24px;
+        }
+        .has-time{
+          padding-top: 36px;
+          .el-timeline-item__tail{
+            height: calc(100% + 14px);
+            top: -14px;
+          }
+        }
+        .el-timeline-item:last-child .el-timeline-item__tail{
+          display: block;
+          top: -100%;
+        }
+        .el-timeline-item:last-child .el-timeline-item__tail.only{
+          display: block;
+          top: -100%;
+        }
+        .el-timeline-item__timestamp.is-top{
+          position: absolute;
+          top: -40px;
+          left: -20px;
+          font-size: 14px;
+          color: $--color-text-regular;
+          font-weight: 600;
+          background: $--background-color-empty;
+          margin: 0;
+          padding: 10px 0;
+        }
+        .time-line-item-header{
+          font-size: 14px;
+          color: #333333;
+          font-weight: 400;
+        }
+      }
     }
     .table-no-data {
       width: 100%;
