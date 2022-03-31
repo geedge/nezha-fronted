@@ -135,6 +135,9 @@ Vue.mixin({
         return '-'
       }
     },
+    timeFormate (time) {
+      return bus.timeFormate(time)
+    },
     hasButton (code) {
       return hasButton(this.$store.getters.buttonList, code)
     },

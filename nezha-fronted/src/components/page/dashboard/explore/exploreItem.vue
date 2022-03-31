@@ -134,7 +134,7 @@
                       show-overflow-tooltip
                     >
                       <template slot-scope="scope" :column="item">
-                        <template v-if="item.prop === 'time'">{{bus.timeFormate(scope.row.time)}}</template>
+                        <template v-if="item.prop === 'time'">{{timeFormate(scope.row.time)}}</template>
                         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
                         <template v-else>-</template>
                       </template>
