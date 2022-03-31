@@ -167,14 +167,6 @@ export default {
             this.$i18n.locale = this.lang
             this.theme = res.data.user.theme
             this.userInfo = res.data.user
-            // 获取可选语言
-            get('/sys/dict/all?type=lang').then(response => {
-              if (response.code === 200) {
-                const langList = response.data.map(lang => ({ name: lang.name, value: lang.value }))
-                this.$store.commit('setLangList', langList)
-                localStorage.setItem('nz-language-list', JSON.stringify(langList))
-              }
-            })
             localStorage.setItem('nz-token', res.data.authToken)
             if (res.data.authFlag === 1) {
               if (res.data.authBind === 0) {
