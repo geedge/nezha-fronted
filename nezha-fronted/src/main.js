@@ -14,7 +14,7 @@ import router from './router'
 import VueResource from 'vue-resource'
 import axios from 'axios'
 import { hasPermission, hasButton } from './permission'
-
+import loadsh from 'lodash'
 import plTable from 'pl-table'
 import 'pl-table/themes/index.css'
 
@@ -62,6 +62,7 @@ Vue.prototype.$post = post
 Vue.prototype.$get = get
 Vue.prototype.$put = put
 Vue.prototype.$delete = del
+Vue.prototype.$loadsh = loadsh
 Vue.prototype.$CONSTANTS = constants
 Vue.prototype.$TOOLS = tools
 Vue.prototype.$bottomBoxWindow = bottomBoxWindow // 底部上滑框控制

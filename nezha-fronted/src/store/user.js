@@ -102,6 +102,14 @@ const user = {
       localStorage.setItem('nz-mfa-enable', Number(res.data.mfaAuthEnable) ? 1 : 0)
       store.commit('setLanguage', res.data.user.lang || defaultAppearance.language)
       store.commit('setTimeFormatMain', localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
+      // 获取可选语言
+      get('/sys/dict/all?type=lang').then(response => {
+        if (response.code === 200) {
+          const langList = response.data.map(lang => ({ name: lang.name, value: lang.value }))
+          store.commit('setLangList', langList)
+          localStorage.setItem('nz-language-list', JSON.stringify(langList))
+        }
+      })
       post('/sys/user/permissions', { token: res.data.token }).then(res => {
         const menuList = sortByOrderNum(res.data.menus)
         // localStorage.setItem('nz-user-permissions', JSON.stringify(res.data.buttons))

@@ -2,9 +2,26 @@
   <div>
     <el-tabs v-model="activeName" type="card" v-if="!nodata">
       <el-tab-pane v-for="item in cardNames" :label="item.label" :name="item.key" :key="item.key">
-        {{item.key}}
-        <div v-if="item.key === 'detail'">
+        <div v-if="item.key === 'detail' && activeName === 'detail'">
           <alert-message-info-detail :info-data="infoData"/>
+        </div>
+        <div v-else-if="(activeName === 'alertRule' || activeName === 'dc' || activeName === 'asset' || activeName === 'project' || activeName === 'module' || activeName === 'endpoint') && infoData[item.key]">
+<!--          <searchItemInfo :obj="findData(item.key)" :severityData="severityData" :fa-loading="false"></searchItemInfo>-->
+          <alertLabel
+            v-if="item.key !=='alertRule'"
+            :id="infoData[item.key].id"
+            :that="findData2(item.key)"
+            :type="item.key"/>
+          <alertRuleInfo
+            v-else
+            :id="infoData[item.key].id"
+            :severity-data="severityData"
+            :that="findData2(item.key)"
+          />
+        </div>
+        <div v-else-if="item.key === 'trbShot' && activeName === 'trbShot'">
+          <div v-html="infoData.alertRule.trbShot">
+          </div>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -19,14 +36,27 @@
 
 <script>
 import alertMessageInfoDetail from '@/components/common/alert/alertMessageInfoDetail'
+import searchItemInfo from '@/components/common/globalSearch/searchItemInfo'
+import alertLabel from '@/components/common/alert/alertLabel'
+import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
+// import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'alertMessageInfoTab',
   components: {
-    alertMessageInfoDetail
+    alertMessageInfoDetail,
+    searchItemInfo,
+    alertLabel,
+    alertRuleInfo
   },
+  // mixins: [alertLabelMixin],
   props: {
     infoData: {
       type: Object
+    }
+  },
+  computed: {
+    severityData () {
+      return this.$store.getters.severityData
     }
   },
   data () {
@@ -38,14 +68,14 @@ export default {
         label: this.$t('overall.detail')
       }],
       sysArr: [{
+        key: 'alertRule',
+        label: this.$t('alert.alertRule')
+      }, {
         key: 'dc',
         label: this.$t('overall.dc')
       }, {
         key: 'asset',
         label: this.$t('overall.asset')
-      }, {
-        key: 'alertRule',
-        label: this.$t('alert.alertRule')
       }, {
         key: 'endpoint',
         label: this.$t('overall.endpoint')
@@ -72,6 +102,12 @@ export default {
               this.cardNames.push(item)
             }
           })
+          if (n.alertRule && n.alertRule.trbShot) {
+            this.cardNames.push({
+              key: 'trbShot',
+              label: this.$t('alert.config.trbShot')
+            })
+          }
         }
       }
     }
@@ -80,7 +116,33 @@ export default {
 
   },
   methods: {
-
+    findData (key) {
+      if (key) {
+        const obj = {
+          ...this.$loadsh.cloneDeep(this.infoData[key]),
+          type: key
+        }
+        if (key === 'dc') {
+          obj.type = 'datacenter'
+        } else if (key === 'alertRule') {
+          obj.type = 'alertrule'
+        }
+        return { ...obj }
+      }
+    },
+    findData2 (key) {
+      if (key) {
+        const obj = {
+          ...this.$loadsh.cloneDeep(this.infoData[key]),
+          type: key,
+          position: {
+            top: 0,
+            left: 0
+          }
+        }
+        return { ...obj }
+      }
+    }
   }
 }
 </script>

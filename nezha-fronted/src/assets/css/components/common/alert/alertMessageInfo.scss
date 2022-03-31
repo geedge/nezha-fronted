@@ -57,6 +57,10 @@
             overflow-y: auto;
           }
         }
+        .alert-label.alert-label__border{
+          border: none !important;
+          position: unset;
+        }
       }
     }
     .info-box-right{
