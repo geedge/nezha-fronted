@@ -1,4 +1,8 @@
+import alertLabel from '@/components/common/alert/alertLabel'
 export default {
+  components: {
+    alertLabel
+  },
   data () {
     return {
       alertLabelShow: false,
