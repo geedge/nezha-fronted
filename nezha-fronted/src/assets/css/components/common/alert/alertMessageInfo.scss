@@ -4,6 +4,7 @@
     padding-bottom: 20px;
   }
   .alert-message-info-box{
+    box-sizing: border-box;
     padding: 20px;
     display: flex;
     width: 100%;
@@ -23,6 +24,7 @@
         flex: none;
       }
       .alert-message-info-tab{
+        height: 63%;
         flex: 1;
         .el-tabs.el-tabs--card {
           height: 100%;
@@ -65,6 +67,11 @@
     }
     .info-box-right{
       flex: 1;
+      height: 100%;
+      border: 1px solid #E7EAED;
+      border-radius: 2px;
+      box-sizing: border-box;
+      padding: 20px;
     }
     .table-no-data {
       width: 100%;

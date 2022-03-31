@@ -2,7 +2,7 @@
   <div class="info-box-header">
     <div v-for="item in cardNames" :key="item.key" v-if="infoData[item.key]">
       <div class="info-box-title">{{item.label}}</div>
-      <div v-if="item.key === 'summary' || item.key === 'remark'" class="info-box-content">
+      <div v-if="item.key === 'summary' || item.key === 'description'" class="info-box-content">
         {{infoData[item.key]}}
       </div>
       <div v-if="item.key==='labels'" class="info-box-content">
@@ -49,7 +49,7 @@ export default {
     return {
       cardNames: [
         { key: 'summary', label: this.$t('alert.summary') },
-        { key: 'remark', label: this.$t('overall.remark') },
+        { key: 'description', label: this.$t('overall.remark') },
         { key: 'labels', label: this.$t('alert.list.labels') },
         { key: 'startAt', label: this.$t('alert.startAt') }
       ]

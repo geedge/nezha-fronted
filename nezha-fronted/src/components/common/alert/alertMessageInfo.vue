@@ -45,7 +45,7 @@
           :infoData="infoData" />
       </div>
       <div class="info-box-right">
-        时间
+        <alertMessageInfoTimeLine />
       </div>
     </div>
   </div>
@@ -62,13 +62,15 @@ import chartTempData from '@/components/charts/chartTempData'
 import logsData from '@/components/chart/logsData'
 import lodash from 'lodash'
 import alertMessageInfoTab from '@/components/common/alert/alertMessageInfoTab'
+import alertMessageInfoTimeLine from '@/components/common/alert/alertMessageInfoTimeLine'
 
 export default {
   name: 'panelChart',
   components: {
     alertMessageInfoTab,
     chart,
-    ChartScreenHeader
+    ChartScreenHeader,
+    alertMessageInfoTimeLine
   },
   props: {
     chartInfo: Object, // 其中的param json串已转化为对象
