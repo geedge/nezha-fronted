@@ -73,6 +73,9 @@
         font-size: 16px;
         color: $--color-text-primary;
         font-weight: 600;
+        #time-line-scope{
+          //float: right;
+        }
       }
       .el-timeline{
         height: calc(100% - 80px);

@@ -2,6 +2,24 @@
   <div style="height: 100%;width: 100%">
     <div class="time-line-header">
       {{$t('alert.relatedAlerts')}}
+      <el-select
+        id="time-line-scope"
+        v-model="scope"
+        multiple
+        collapse-tags
+        :placeholder="$t('el.select.placeholder')"
+        popper-class="right-box-select-top prevent-clickoutside"
+        size="small"
+        @change="changeScope"
+      >
+        <el-option
+          v-for="item in scopeList"
+          :key="item.key"
+          :label="$t(item.label)"
+          :value="item.key"
+        >
+        </el-option>
+      </el-select>
     </div>
     <el-timeline v-my-loading="loading" v-if="!noData">
       <el-timeline-item
@@ -36,7 +54,15 @@
           </div>
         </div>
       </el-timeline-item>
+<!--      <div @click="getTimeLineData" v-if="timeLineData.length === total">加载更多</div>-->
+<!--      <div v-else>没有更多了</div>-->
     </el-timeline>
+    <div class="table-no-data" v-else>
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#nz-icon-no-data-list"></use>
+      </svg>
+      <div class="table-no-data__title">No results found</div>
+    </div>
     <alertLabel
       v-if="alertLabelShow"
       :id="alertLabelId"
@@ -75,7 +101,32 @@ export default {
       loading: false,
       dateFormatStr: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:ss:mm',
       noData: false,
-      stateOptions: alertMessageConstant.states
+      stateOptions: alertMessageConstant.states,
+      scopeList: [{
+        key: 'asset',
+        label: this.$t('overall.asset')
+      }, {
+        key: 'datacenter',
+        label: this.$t('overall.dc')
+      }, {
+        key: 'project',
+        label: this.$t('overall.project')
+      }, {
+        key: 'module',
+        label: this.$t('overall.module')
+      }, {
+        key: 'endpoint',
+        label: this.$t('overall.endpoint')
+      },
+      {
+        key: 'alertrule',
+        label: this.$t('alert.alertRule')
+      }, {
+        key: 'hash',
+        label: this.$t('overall.hash')
+      }
+      ],
+      total: 20
     }
   },
   mounted () {
@@ -88,7 +139,7 @@ export default {
     }
   },
   methods: {
-    getTimeLineData (pageNo) {
+    getTimeLineData (pageNo = this.pageNo) {
       this.noData = false
       this.loading = true
       const params = {
@@ -104,6 +155,7 @@ export default {
       this.$get('/alert/message/rel', params).then(res => {
         this.loading = false
         if (res.code === 200) {
+          this.total = res.data.total
           if (pageNo == 1) {
             this.timeLineData = res.data.list
           } else {
@@ -111,6 +163,7 @@ export default {
           }
           this.disposeTime(pageNo)
           this.noData = false
+          this.pageNo++
         } else {
           this.noData = true
         }
@@ -130,6 +183,10 @@ export default {
           this.timeLineData[i].startAt = ''
         }
       }
+    },
+    changeScope (value) {
+      console.log(value)
+      this.getTimeLineData(1)
     }
   }
 }
