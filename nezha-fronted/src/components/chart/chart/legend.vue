@@ -205,16 +205,6 @@ export default {
       if (isNaN(result)) {
         return '--'
       }
-      // result = Math.round(num * 100) / 100
-      // let decimal = result.toString()
-      // let posDecimal = decimal.indexOf('.')
-      // if (posDecimal < 0) {
-      //   posDecimal = decimal.length
-      //   decimal += '.'
-      // }
-      // while (decimal.length <= posDecimal + 2) {
-      //   decimal += '0'
-      // }
       result = chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(result, null, -1, 2)
       return result
     },
