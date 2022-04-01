@@ -2,25 +2,11 @@
   <div style="height: 100%;width: 100%">
     <div class="time-line-header">
       <span>{{$t('alert.relatedAlerts')}}</span>
-      <el-select
-        id="time-line-scope"
-        v-model="scope"
-        multiple
-        collapse-tags
-        :popper-append-to-body="false"
-        :placeholder="$t('el.select.placeholder')"
-        popper-class="right-box-select-top prevent-clickoutside"
-        size="small"
-        @change="changeScope"
-      >
-        <el-option
-          v-for="item in scopeList"
-          :key="item.key"
-          :label="$t(item.label)"
-          :value="item.key"
-        >
-        </el-option>
-      </el-select>
+      <div class="scope-icon-box">
+        <div class="scope-box" v-for="item in scopeList" :class="item.isSelect ? 'is-select' : ''" :key="item.type" @click="scopeChange(item)" :title="item.label">
+          <i class="nz-icon" :class="selectIcon(item)" />
+        </div>
+      </div>
     </div>
     <el-timeline v-my-loading="loading" v-if="!noData && timeLineData.length">
       <el-timeline-item
@@ -122,29 +108,37 @@ export default {
       stateOptions: alertMessageConstant.states,
       scopeList: [{
         key: 'asset',
+        isSelect: true,
         label: this.$t('overall.asset')
       }, {
         key: 'datacenter',
+        isSelect: true,
         label: this.$t('overall.dc')
       }, {
         key: 'project',
+        isSelect: true,
         label: this.$t('overall.project')
       }, {
         key: 'module',
+        isSelect: true,
         label: this.$t('overall.module')
       }, {
         key: 'endpoint',
+        isSelect: true,
         label: this.$t('overall.endpoint')
       },
       {
         key: 'alertrule',
+        isSelect: true,
         label: this.$t('alert.alertRule')
       }, {
         key: 'hash',
+        isSelect: true,
         label: this.$t('overall.hash')
       }
       ],
-      total: 20
+      total: 20,
+      scopeChangeTimer: null
     }
   },
   mounted () {
@@ -163,7 +157,7 @@ export default {
       const params = {
         pageNo: this.pageNo,
         pageSize: this.pageSize,
-        scope: this.scope.join(','),
+        scope: this.scopeList.filter(item => item.isSelect).map(item => item.key).join(','),
         id: this.infoData.id,
         state: '',
         startAt: this.timezoneToUtcTimeStr(this.time[0] * 1000, 'YYYY-MM-DD HH:mm:ss'),
@@ -203,10 +197,41 @@ export default {
         }
       }
     },
-    changeScope (value) {
-      console.log(value)
-      this.pageNo = 1
-      this.getTimeLineData()
+    selectIcon (item) {
+      switch (item.key) {
+        case 'asset' : return 'nz-icon-overview-project'
+        case 'datacenter' : return 'nz-icon-Datacenter2'
+        case 'project' : return 'nz-icon-project'
+        case 'module' : return 'nz-icon-overview-module'
+        case 'endpoint' : return 'nz-icon-overview-endpoint'
+        case 'alertrule' : return 'nz-icon-Alertrule'
+        case 'hash' : return 'nz-icon-module5'
+      }
+      return 'nz-icon-module5'
+    },
+    scopeChange (scope) {
+      if (this.scopeChangeTimer) {
+        clearInterval(this.scopeChangeTimer)
+        this.scopeChangeTimer = null
+      }
+      this.loading = true
+      const isSelectArr = this.scopeList.filter(item => item.isSelect)
+      if (isSelectArr.length === this.scopeList.length) {
+        this.scopeList.forEach(item => {
+          item.isSelect = false
+        })
+        scope.isSelect = !scope.isSelect
+      } else if (isSelectArr.length === 1 && isSelectArr[0].type === scope.type) {
+        this.scopeList.forEach(item => {
+          item.isSelect = true
+        })
+      } else {
+        scope.isSelect = !scope.isSelect
+      }
+      this.scopeChangeTimer = setTimeout(() => {
+        this.pageNo = 1
+        this.getTimeLineData()
+      }, 100)
     }
   }
 }

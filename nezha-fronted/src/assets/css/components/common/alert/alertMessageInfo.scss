@@ -68,6 +68,9 @@
       border-radius: 2px;
       box-sizing: border-box;
       padding: 0px 20px 20px 0;
+      .table-no-data {
+        height: calc(100% - 80px);
+      }
       .time-line-header{
         padding: 20px;
         font-size: 16px;
@@ -75,6 +78,26 @@
         font-weight: 600;
         display: flex;
         justify-content: space-between;
+        .scope-icon-box {
+          display: flex;
+          flex: 1;
+          justify-content: right;
+        }
+        .scope-box {
+          cursor: pointer;
+          color: $--background-color-disabled;
+          .nz-icon {
+            margin-right: 5px;
+            color: $--background-color-disabled ;
+            font-weight: 400;
+          }
+        }
+        .scope-box.is-select{
+          color: $--color-monitor;
+          .nz-icon {
+            color: $--color-monitor;
+          }
+        }
         #time-line-scope{
           //float: right;
         }
