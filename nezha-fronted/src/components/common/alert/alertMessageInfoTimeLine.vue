@@ -91,6 +91,16 @@ export default {
       return this.$store.getters.severityData
     }
   },
+  watch: {
+    time: {
+      deep: true,
+      handler (n) {
+        if (n && n.length) {
+          this.getTimeLineData(1)
+        }
+      }
+    }
+  },
   data () {
     return {
       pageNo: 1,
