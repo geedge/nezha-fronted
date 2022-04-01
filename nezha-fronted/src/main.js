@@ -98,24 +98,24 @@ Vue.mixin({
     }
   },
   methods: {
-    utcTimeToTimezone: function (time) {
+    utcTimeToTimezone: function (time) { // 将utc时间 转为系统设者的时间  返回时间戳
       if (time) {
         return bus.UTCTimeToConfigTimezone(time)
       }
     },
-    utcTimeToTimezoneStr: function (time) {
+    utcTimeToTimezoneStr: function (time) { // 将utc时间 转为系统设者的时间  返回String
       if (time) {
         return bus.timeFormate(bus.UTCTimeToConfigTimezone(time), localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
       } else {
         return '-'
       }
     },
-    timezoneToUtcTime: function (time) {
+    timezoneToUtcTime: function (time) { // 将系统设者的时间 转为utc时间 返回时间戳
       if (time) {
         return bus.configTimezoneToUTCTime(time)
       }
     },
-    timezoneToUtcTimeStr: function (time, fmt) {
+    timezoneToUtcTimeStr: function (time, fmt) { // 将系统设者的时间 转为utc时间 返回String
       if (!fmt) {
         fmt = localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss'
       }
@@ -123,7 +123,7 @@ Vue.mixin({
         return bus.timeFormate(this.timezoneToUtcTime(time), fmt)
       }
     },
-    timestampStr: function (time, fmt) {
+    timestampStr: function (time, fmt) { // 将utc时间 转为系统设者的时间  返回String
       const date = new Date(time)
       const localOffset = date.getTimezoneOffset() * 60 * 1000 // 默认 一分钟显示时区偏移的结果
       const dateStr = new Date(time).getTime() + localOffset

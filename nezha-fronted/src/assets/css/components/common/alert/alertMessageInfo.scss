@@ -73,6 +73,8 @@
         font-size: 16px;
         color: $--color-text-primary;
         font-weight: 600;
+        display: flex;
+        justify-content: space-between;
         #time-line-scope{
           //float: right;
         }
@@ -93,7 +95,7 @@
             top: -14px;
           }
         }
-        .el-timeline-item:last-child .el-timeline-item__tail{
+        .el-timeline-item.last .el-timeline-item__tail{
           display: block;
           top: -100%;
         }
@@ -112,11 +114,19 @@
           margin: 0;
           padding: 10px 0;
         }
+        .el-timeline-item__node {
+          z-index: 1;
+        }
         .time-line-item-header{
           font-size: 14px;
           color: #333333;
           font-weight: 400;
         }
+      }
+      .load-more-box{
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
     .table-no-data {

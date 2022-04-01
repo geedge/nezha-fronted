@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%;width: 100%">
     <div class="time-line-header">
-      {{$t('alert.relatedAlerts')}}
+      <span>{{$t('alert.relatedAlerts')}}</span>
       <el-select
         id="time-line-scope"
         v-model="scope"
@@ -21,14 +21,16 @@
         </el-option>
       </el-select>
     </div>
-    <el-timeline v-my-loading="loading" v-if="!noData">
+    <el-timeline v-my-loading="loading" v-if="!noData && timeLineData.length">
       <el-timeline-item
         v-for="(item,index) in timeLineData"
         :key="item.id"
         :class="{
           'only': timeLineData.length === 1 ,
-          'has-time': item.startAt
+          'has-time': item.startAt,
+          'last': index === timeLineData.length-1 && index !==0
         }"
+        :color="item.severity.color"
         :timestamp="item.startAt?item.startAt: ''"
         placement="top">
         <div >
@@ -54,8 +56,10 @@
           </div>
         </div>
       </el-timeline-item>
-<!--      <div @click="getTimeLineData" v-if="timeLineData.length === total">加载更多</div>-->
-<!--      <div v-else>没有更多了</div>-->
+      <div  v-if="timeLineData.length >= total">{{$t('overall.noMoreData')}}}</div>
+      <div v-else class="load-more-box">
+        <el-button size="small" @click="getTimeLineData()" :loading="loading">{{$t('overall.loadMore')}}}</el-button>
+      </div>
     </el-timeline>
     <div class="table-no-data" v-else>
       <svg class="icon" aria-hidden="true">
@@ -65,6 +69,7 @@
     </div>
     <alertLabel
       v-if="alertLabelShow"
+      :alertTableDialog="true"
       :id="alertLabelId"
       :that="alertLabelObj"
       :type="alertLabelType"
@@ -93,10 +98,12 @@ export default {
   },
   watch: {
     time: {
+      immediate: true,
       deep: true,
       handler (n) {
         if (n && n.length) {
-          this.getTimeLineData(1)
+          this.pageNo = 1
+          this.getTimeLineData()
         }
       }
     }
@@ -140,7 +147,7 @@ export default {
     }
   },
   mounted () {
-    this.getTimeLineData(1)
+    // this.getTimeLineData(1)
     const dateFormatStr = localStorage.getItem('nz-default-dateFormat')
     if (dateFormatStr) {
       this.dateFormatStr = dateFormatStr.split(' ')[0]
@@ -149,29 +156,29 @@ export default {
     }
   },
   methods: {
-    getTimeLineData (pageNo = this.pageNo) {
+    getTimeLineData () {
       this.noData = false
       this.loading = true
       const params = {
-        pageNo: pageNo,
+        pageNo: this.pageNo,
         pageSize: this.pageSize,
         scope: this.scope.join(','),
         id: this.infoData.id,
         state: '',
-        startAt: this.time[1],
-        endAt: this.time[0],
+        startAt: this.timezoneToUtcTimeStr(this.time[0] * 1000, 'YYYY-MM-DD HH:mm:ss'),
+        endAt: this.timezoneToUtcTimeStr(this.time[1] * 1000, 'YYYY-MM-DD HH:mm:ss'),
         orderBy: '-startAt'
       }
       this.$get('/alert/message/rel', params).then(res => {
         this.loading = false
         if (res.code === 200) {
           this.total = res.data.total
-          if (pageNo == 1) {
+          if (this.pageNo == 1) {
             this.timeLineData = res.data.list
           } else {
             this.timeLineData.push(...res.data.list)
           }
-          this.disposeTime(pageNo)
+          this.disposeTime(this.pageNo)
           this.noData = false
           this.pageNo++
         } else {
@@ -186,6 +193,7 @@ export default {
       let i = (pageNo - 1) * this.pageSize
       for (i; i < this.timeLineData.length; i++) {
         const lastDataTime = this.timestampStr(this.timeLineData[i].startAt, this.dateFormatStr)
+        this.timeLineData[i].color = '#fa8'
         if (this.lastDataTime !== lastDataTime) {
           this.lastDataTime = lastDataTime
           this.timeLineData[i].startAt = lastDataTime
@@ -196,7 +204,8 @@ export default {
     },
     changeScope (value) {
       console.log(value)
-      this.getTimeLineData(1)
+      this.pageNo = 1
+      this.getTimeLineData()
     }
   }
 }

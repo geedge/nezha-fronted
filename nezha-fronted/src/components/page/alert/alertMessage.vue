@@ -604,7 +604,7 @@ export default {
     queryDate () {
       this.chartLoading = true
       let chartInfo = {}
-      if (this.currentMsg.alertRule.type === 1) {
+      if (this.currentMsg.alertRule.type === 1  || this.currentMsg.alertRule.type === 3) {
         chartInfo = lodash.cloneDeep(lineData)
         chartInfo.elements = [{}]
         if (!isNaN(this.currentMsg.alertRule.threshold)) {

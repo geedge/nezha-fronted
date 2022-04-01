@@ -11,6 +11,7 @@
             v-if="item.key !=='alertRule'"
             :id="infoData[item.key].id"
             :that="findData2(item.key)"
+            :alertTableDialog="true"
             :type="item.key"/>
           <alertRuleInfo
             v-else

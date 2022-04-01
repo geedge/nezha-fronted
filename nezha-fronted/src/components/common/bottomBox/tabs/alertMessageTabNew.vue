@@ -90,7 +90,7 @@
       fullscreen
       :modal-append-to-body="false"
     >
-      <panel-chart
+      <alertMessageInfo
         :ref="'chart-fullscreen' + chartInfo.id"
         :chart-info="chartInfo"
         :from="fromRoute.alertMessage"
@@ -98,7 +98,7 @@
         :is-fullscreen="true"
         :time-range="searchTime"
         @showFullscreen="showFullscreen"
-      ></panel-chart>
+      ></alertMessageInfo>
     </el-dialog>
     <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
                :visible.sync="dialogShowText"
@@ -131,6 +131,7 @@ import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant, fromRoute } from '@/components/common/js/constants'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
+import alertMessageInfo from '@/components/common/alert/alertMessageInfo'
 import panelChart from '@/components/chart/panelChart'
 import lodash from 'lodash'
 import lineData from '@/components/chart/defaultLineData'
@@ -144,7 +145,8 @@ export default {
     alertMessageTable,
     alertSilenceBox,
     chart,
-    panelChart
+    panelChart,
+    alertMessageInfo
   },
   props: {
     from: String
@@ -426,9 +428,6 @@ export default {
       this.deleteBox.show = true
     },
     messageDetail (row) {
-      if (row.alertRule.type == 3) {
-        return
-      }
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.$nextTick(() => {
@@ -635,8 +634,9 @@ export default {
     },
     queryDate () {
       this.chartLoading = true
-      if (this.currentMsg.alertRule.type === 1) {
-        const chartInfo = lodash.cloneDeep(lineData)
+      let chartInfo = {}
+      if (this.currentMsg.alertRule.type === 1 || this.currentMsg.alertRule.type === 3) {
+        chartInfo = lodash.cloneDeep(lineData)
         chartInfo.elements = [{}]
         if (!isNaN(this.currentMsg.alertRule.threshold)) {
           chartInfo.param.enable.thresholds = true
@@ -645,12 +645,8 @@ export default {
             color: '#d64f40'
           }]
         }
-        chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, '')
-        chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
-        chartInfo.unit = this.currentMsg.alertRule.unit
-        this.showFullscreen(true, chartInfo)
       } else if (this.currentMsg.alertRule.type === 2) {
-        const chartInfo = lodash.cloneDeep(logData)
+        chartInfo = lodash.cloneDeep(logData)
         chartInfo.elements = [{}]
         if (!isNaN(this.currentMsg.alertRule.threshold)) {
           chartInfo.param.enable.thresholds = true
@@ -659,11 +655,14 @@ export default {
             color: '#d64f40'
           }]
         }
-        chartInfo.elements[0].expression = encodeURIComponent(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
-        chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels)))
-        chartInfo.unit = this.currentMsg.alertRule.unit
-        this.showFullscreen(true, chartInfo)
       }
+      chartInfo.id = this.currentMsg.id
+      chartInfo.name = this.currentMsg.alertRule.name
+      chartInfo.isAlertMessage = true
+      chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
+      chartInfo.elements && (chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels))))
+      chartInfo.unit = this.currentMsg.alertRule.unit
+      this.showFullscreen(true, chartInfo)
     },
     exportLog ({ limit, descending }) {
       const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')

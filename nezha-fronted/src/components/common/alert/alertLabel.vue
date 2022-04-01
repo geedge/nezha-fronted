@@ -318,7 +318,8 @@ export default {
     return {
       alertLabelData: null,
       loading: true,
-      heightList: 0
+      heightList: 0,
+      boxWidth: 0
     }
   },
   watch: {
@@ -347,29 +348,45 @@ export default {
     calcPosition () {
       return function (position) {
         const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
-        const leftOffSetView = this.detailList ? -80 : 10
-        const leftOffSet = this.detailList ? -80 : 10
-        const topOffSet = this.detailList ? 60 : 22
-        if (position.top > clientHeight / 2) {
-          return {
-            left: `${position.left + position.width + leftOffSet}px`,
-            top: `${position.top - this.heightList + topOffSet}px`
+        const clientWidth = (document.body.clientWidth < document.documentElement.clientWidth) ? document.body.clientWidth : document.documentElement.clientWidth
+        let leftOffSetView = 0
+        let leftOffSet = this.detailList ? -80 : 10
+        let topOffSet = this.detailList ? 60 : 22
+        let topOffSetView = 0
+        let labelPosition = {
+          top: 0,
+          left: 0,
+          right: 0
+        }
+        if (this.alertTableDialog) {
+          let dialog = document.querySelector('#dialog-alert-massage .el-dialog')
+          if (!dialog) {
+            dialog = document.querySelector('#viewGraphDialog .el-dialog')
           }
-        } else if (this.alertTableDialog) {
-          const dialog = document.querySelector('#dialog-alert-massage .el-dialog')
           const dialogHeight = dialog.getBoundingClientRect()
-          if (dialogHeight) {
-            return {
-              left: `${position.left + position.width + 10 - dialogHeight.x}px`,
-              top: `${position.top - dialogHeight.y}px`
-            }
+          console.log(dialogHeight, 'dialogHeight')
+          leftOffSet = leftOffSet - dialogHeight.x
+          leftOffSetView = dialogHeight.x
+          topOffSet = topOffSet - dialogHeight.y
+          topOffSetView = topOffSet
+        }
+        if (position.top > clientHeight / 2) {
+          labelPosition = {
+            left: `${position.left + position.width + leftOffSet}px`,
+            top: `${position.top - this.heightList - topOffSetView}px`
           }
         } else {
-          return {
-            left: `${position.left + position.width + leftOffSetView}px`,
-            top: `${position.top}px`
+          labelPosition = {
+            left: `${position.left + position.width + leftOffSet}px`,
+            top: `${position.top + topOffSet}px`
           }
         }
+        if (position.left > clientWidth / 2) {
+          delete labelPosition.left
+
+          labelPosition.right = (clientWidth - position.left - leftOffSetView) + 'px'
+        }
+        return labelPosition
       }
     },
     calcHeight () {
@@ -486,8 +503,10 @@ export default {
   mounted () {
     if (this.$refs.alertLabels) {
       this.heightList = this.$refs.alertLabels.getBoundingClientRect().height
+      this.boxWidth = this.$refs.alertLabels.getBoundingClientRect().width
     } else {
-      this.heightList = ''
+      this.heightList = 0
+      this.boxWidth = 0
     }
   },
   beforeDestroy () {

@@ -25,6 +25,7 @@
       <div class="info-box-left">
         <chart
           ref="chart"
+          v-if="chartInfo.alertRule && chartInfo.alertRule.type !== 3"
           :chart-data="chartData"
           :chart-info="chartInfo"
           :panelLock="panelLock"
@@ -38,7 +39,6 @@
           :multipleTime="multipleTime"
           :isFullscreen="isFullscreen"
           :showAllData="showAllData"
-          v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
         ></chart>
         <alertMessageInfoTab
           class="alert-message-info-tab"
@@ -131,7 +131,8 @@ export default {
         this.minusTime = ''
         this.multipleTime = false
       }
-      this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
+      this.time = [startTime, endTime]
+      this.chartInfo.loaded && this.chartInfo.alertRule.type !== 3 && this.query(elements, startTime, endTime, step)
     },
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh, params) {
