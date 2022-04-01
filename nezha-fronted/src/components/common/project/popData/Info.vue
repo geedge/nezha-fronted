@@ -1,7 +1,7 @@
 <template>
   <div class="info-content pop-data-info-content" v-if="showInfo">
     <div class="info-box" v-loading="loading">
-      <div class="info-box-title">Module info</div>
+      <div class="info-box-title">{{$t('overall.module')}} {{$t('project.topo.icon.info')}}</div>
       <div class="info-box-content">
         <div class="content-box">
           <span class="content-title">ID</span>
@@ -16,7 +16,7 @@
           <span class="content-text">{{moduleInfo.project ? moduleInfo.project.name : '--'}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title">{{ $t('project.endpoint.endpoints') }}</span>
+          <span class="content-title">{{ $t('asset.endpoint') }}</span>
           <span class="content-text">
             <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;
             <span>{{moduleInfo.endpointNum ? moduleInfo.endpointNum : 0}}</span>
