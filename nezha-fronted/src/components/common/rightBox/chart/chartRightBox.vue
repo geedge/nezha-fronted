@@ -207,6 +207,8 @@ export default {
     },
     // 保存endpoint
     save () {
+      const self = this
+      let resetFlag = false // 页面是否需要重排
       const arr = [this.$refs.chartForm.validate()]
       arr.push(this.$refs['childrenFrom' + this.editChart.datasource].$refs.chartForm.validate())
       Promise.all(arr).then(res => {
@@ -245,6 +247,7 @@ export default {
         if (params.x + params.span > 12) {
           params.x = 0
           params.y += 1
+          resetFlag = true
         }
         delete params.panel
         if (params.type === 'table') {
@@ -257,8 +260,18 @@ export default {
           this.$put('visual/panel/chart', params).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-              this.$emit('on-create-success', { id: this.panelId, name: this.panelName })
-              this.esc(true)
+              if (resetFlag) {
+                bus.$emit('creat-chart-success', {
+                  ...params,
+                  cb: function () {
+                    self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                    self.esc(true)
+                  }
+                })
+              } else {
+                self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                self.esc(true)
+              }
             } else {
               this.$message.error(response.msg)
             }
@@ -267,8 +280,18 @@ export default {
           this.$post('visual/panel/chart', params).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-              this.$emit('on-create-success', { id: this.panelId, name: this.panelName })
-              this.esc(true)
+              if (resetFlag) {
+                bus.$emit('creat-chart-success', {
+                  ...params,
+                  cb: function () {
+                    self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                    self.esc(true)
+                  }
+                })
+              } else {
+                self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                self.esc(true)
+              }
             } else {
               this.$message.error(response.msg)
             }

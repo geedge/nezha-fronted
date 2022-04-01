@@ -49,7 +49,7 @@
         <div class="alert-label-value" v-if="alertLabelData">
           <i :class="alertLabelData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
           <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
-            <div class="tooltip-title">Alert message (active)</div>
+            <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
             <div class="severity-info" style='justify-content: space-between'>
               <div class="severity-name">{{$t('overall.result.total')}}</div>
               <div class="severity-value">{{alertLabelData.alertNum}}</div>
@@ -62,7 +62,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">Endpoint</div>
+        <div class="alert-label-title">{{$t('asset.endpoint')}}</div>
         <div class="alert-label-value">
           <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;
           <span>{{alertLabelData && alertLabelData.endpointNum ? alertLabelData.endpointNum : 0}}</span></div>
@@ -83,7 +83,7 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.project && alertLabelData.project.name ?alertLabelData.project.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">Endpoint</div>
+        <div class="alert-label-title">{{$t('asset.endpoint')}}</div>
         <div class="alert-label-value">
           <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;
           <span>{{alertLabelData && alertLabelData.endpointNum ? alertLabelData.endpointNum : 0}}</span></div>
@@ -100,7 +100,7 @@
         <div class="alert-label-value" v-if="alertLabelData">
           <i :class="alertLabelData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
           <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
-            <div class="tooltip-title">Alert message (active)</div>
+            <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
             <div class="severity-info" style='justify-content: space-between'>
               <div class="severity-name">{{$t('overall.result.total')}}</div>
               <div class="severity-value">{{alertLabelData.alertNum}}</div>
@@ -152,7 +152,7 @@
         <div class="alert-label-value" v-if="alertLabelData">
           <i :class="alertLabelData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
           <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
-            <div class="tooltip-title">Alert message (active)</div>
+            <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
             <div class="severity-info" style='justify-content: space-between'>
               <div class="severity-name">{{$t('overall.result.total')}}</div>
               <div class="severity-value">{{alertLabelData.alertNum}}</div>
@@ -202,7 +202,7 @@
         <div class="alert-label-value" v-if="alertLabelData">
           <i :class="alertLabelData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
           <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
-            <div class="tooltip-title">Alert message (active)</div>
+            <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
             <div class="severity-info" style='justify-content: space-between'>
               <div class="severity-name">{{$t('overall.result.total')}}</div>
               <div class="severity-value">{{alertLabelData.alertNum}}</div>
@@ -276,7 +276,7 @@
         <div class="alert-label-value" v-if="alertLabelData">
           <i :class="alertLabelData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
           <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
-            <div class="tooltip-title">Alert message (active)</div>
+            <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
             <div class="severity-info" style='justify-content: space-between'>
               <div class="severity-name">{{$t('overall.result.total')}}</div>
               <div class="severity-value">{{alertLabelData.alertNum}}</div>

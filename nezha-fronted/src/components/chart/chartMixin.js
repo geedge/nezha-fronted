@@ -261,7 +261,6 @@ export default {
       }
     },
     resize () {
-      console.log('reszie')
       setTimeout(() => {
         getChart(this.chartId) && getChart(this.chartId).resize()
       }, 100)

@@ -210,6 +210,8 @@ export default {
       if (!this.isGroup) {
         this.moveChart()
         this.onScroll(this.scrollTop)
+      } else {
+        bus.$emit('groupChildMove')
       }
     },
     containerResizedEvent (i, newH, newW, newHPx, newWPx) {
@@ -346,6 +348,65 @@ export default {
     },
     refreshPanel () {
       bus.$emit('refreshPanel')
+    },
+    createChartSuccess (params) {
+      const arr = this.copyDataList.filter(item => !item.staic)
+      const charts = []
+      let weight = 0
+      arr.forEach(item => {
+        const chart = {
+          id: item.id,
+          x: item.x,
+          y: item.y,
+          span: item.span,
+          height: item.height,
+          groupId: item.groupId,
+          weight: weight
+        }
+        if (!params.groupId && chart.y >= params.y) {
+          chart.y = chart.y + 1
+        }
+        if (params.id == item.id) {
+          chart.y = params.y
+          chart.x = params.x
+        }
+        charts.push(chart)
+
+        weight++
+        if (item.type === 'group') {
+          item.children && item.children.forEach(children => {
+            const childrenChart = {
+              id: children.id,
+              x: children.x,
+              y: children.y,
+              span: children.span,
+              height: children.height,
+              groupId: children.groupId,
+              weight: weight
+            }
+            if (item.id === params.groupId && children.y >= params.y) {
+              childrenChart.y = childrenChart.y + 1
+            }
+            if (params.id == childrenChart.id) {
+              childrenChart.y = params.y
+              childrenChart.x = params.x
+            }
+            charts.push(childrenChart)
+            weight++
+          })
+        }
+      })
+      const chartParams = {
+        panelId: this.panelId,
+        charts: charts
+      }
+      if (charts && charts.length) {
+        this.$put('/visual/panel/chart/weights', chartParams).then(() => {
+          if (params.cb) {
+            params.cb()
+          }
+        })
+      }
     }
   },
   created () {
@@ -355,6 +416,8 @@ export default {
     this.init()
     if (!this.isGroup) {
       bus.$on('groupMove', this.changeGroupHeight)
+      bus.$on('creat-chart-success', this.createChartSuccess)
+      bus.$on('groupChildMove', this.moveChart)
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)
       window.addEventListener('resize', this.resize)
     }
