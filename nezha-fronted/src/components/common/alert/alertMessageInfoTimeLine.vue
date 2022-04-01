@@ -7,6 +7,7 @@
         v-model="scope"
         multiple
         collapse-tags
+        :popper-append-to-body="false"
         :placeholder="$t('el.select.placeholder')"
         popper-class="right-box-select-top prevent-clickoutside"
         size="small"
@@ -112,7 +113,7 @@ export default {
     return {
       pageNo: 1,
       pageSize: 20,
-      scope: ['asset', 'datacenter', 'project', 'module', 'endpoint', 'alertrule', 'hash '],
+      scope: ['asset', 'datacenter', 'project', 'module', 'endpoint', 'alertrule', 'hash'],
       timeLineData: [],
       lastDataTime: '',
       loading: false,
