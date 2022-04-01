@@ -867,8 +867,8 @@ export function getMetricTypeValue (queryItem, type) {
   switch (type) {
     case 'min': {
       let min = copy.sort((x, y) => {
-        const x1 = isNaN(x[1]) ? 0 : x[1]
-        const y1 = isNaN(x[1]) ? 0 : y[1]
+        const x1 = isNaN(x[1]) && !x[1] ? 0 : x[1]
+        const y1 = isNaN(y[1]) && !y[1] ? 0 : y[1]
         return x1 - y1
       })[0][1]
       if (isNaN(min)) {
@@ -878,8 +878,8 @@ export function getMetricTypeValue (queryItem, type) {
     }
     case 'max': {
       let max = copy.sort((x, y) => {
-        const x1 = isNaN(x[1]) ? 0 : x[1]
-        const y1 = isNaN(x[1]) ? 0 : y[1]
+        const x1 = isNaN(x[1]) && !x[1] ? 0 : x[1]
+        const y1 = isNaN(y[1]) && !y[1] ? 0 : y[1]
         return y1 - x1
       })[0][1]
       if (isNaN(max)) {
@@ -889,7 +889,7 @@ export function getMetricTypeValue (queryItem, type) {
     }
     case 'avg': {
       copy = copy.map(t => {
-        const t1 = isNaN(t[1]) ? 0 : t[1]
+        const t1 = isNaN(t[1]) && !t[1] ? 0 : t[1]
         return parseFloat(t1)
       })
       const sum = eval(copy.join('+'))
@@ -906,7 +906,7 @@ export function getMetricTypeValue (queryItem, type) {
     }
     case 'total': {
       copy = copy.map(t => {
-        const t1 = isNaN(t[1]) ? 0 : t[1]
+        const t1 = isNaN(t[1]) && !t[1] ? 0 : t[1]
         return parseFloat(t1)
       })
       const total = eval(copy.join('+'))
@@ -914,16 +914,16 @@ export function getMetricTypeValue (queryItem, type) {
     }
     case 'range': {
       let min = copy.sort((x, y) => {
-        const x1 = isNaN(x[1]) ? 0 : x[1]
-        const y1 = isNaN(x[1]) ? 0 : y[1]
+        const x1 = isNaN(x[1]) && !x[1] ? 0 : x[1]
+        const y1 = isNaN(y[1]) && !y[1] ? 0 : y[1]
         return x1 - y1
       })[0][1]
       if (isNaN(min)) {
         min = 0
       }
       let max = copy.sort((x, y) => {
-        const x1 = isNaN(x[1]) ? 0 : x[1]
-        const y1 = isNaN(x[1]) ? 0 : y[1]
+        const x1 = isNaN(x[1]) && !x[1] ? 0 : x[1]
+        const y1 = isNaN(y[1]) && !y[1] ? 0 : y[1]
         return y1 - x1
       })[0][1]
       if (isNaN(max)) {
