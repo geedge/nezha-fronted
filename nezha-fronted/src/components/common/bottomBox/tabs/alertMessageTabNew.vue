@@ -645,6 +645,7 @@ export default {
             color: '#d64f40'
           }]
         }
+        chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
       } else if (this.currentMsg.alertRule.type === 2) {
         chartInfo = lodash.cloneDeep(logData)
         chartInfo.elements = [{}]
@@ -655,11 +656,12 @@ export default {
             color: '#d64f40'
           }]
         }
+        chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\r|\n+/g, ''))
       }
       chartInfo.id = this.currentMsg.id
       chartInfo.name = this.currentMsg.alertRule.name
       chartInfo.isAlertMessage = true
-      chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
+      chartInfo.alertRule = this.currentMsg.alertRule
       chartInfo.elements && (chartInfo.elements[0].filter = encodeURIComponent(decodeURIComponent(this.promQueryParamLabels(this.currentMsg.labels))))
       chartInfo.unit = this.currentMsg.alertRule.unit
       this.showFullscreen(true, chartInfo)

@@ -907,15 +907,32 @@ export function getMetricTypeValue (queryItem, type) {
   let copy = JSON.parse(JSON.stringify(queryItem))
   switch (type) {
     case 'min': {
-      const min = copy.sort((x, y) => { return parseFloat(x[1]) - parseFloat(y[1]) })[0][1]
+      let min = copy.sort((x, y) => {
+        const x1 = isNaN(x[1]) ? 0 : x[1]
+        const y1 = isNaN(x[1]) ? 0 : y[1]
+        return x1 - y1
+      })[0][1]
+      if (isNaN(min)) {
+        min = 0
+      }
       return min
     }
     case 'max': {
-      const max = copy.sort((x, y) => { return parseFloat(y[1]) - parseFloat(x[1]) })[0][1]
+      let max = copy.sort((x, y) => {
+        const x1 = isNaN(x[1]) ? 0 : x[1]
+        const y1 = isNaN(x[1]) ? 0 : y[1]
+        return y1 - x1
+      })[0][1]
+      if (isNaN(max)) {
+        max = 0
+      }
       return max
     }
     case 'avg': {
-      copy = copy.map(t => parseFloat(t[1]))
+      copy = copy.map(t => {
+        const t1 = isNaN(t[1]) ? 0 : t[1]
+        return parseFloat(t1)
+      })
       const sum = eval(copy.join('+'))
       const avg = sum / copy.length
       return avg
@@ -929,13 +946,30 @@ export function getMetricTypeValue (queryItem, type) {
       return first
     }
     case 'total': {
-      copy = copy.map(t => parseFloat(t[1]))
+      copy = copy.map(t => {
+        const t1 = isNaN(t[1]) ? 0 : t[1]
+        return parseFloat(t1)
+      })
       const total = eval(copy.join('+'))
       return total
     }
     case 'range': {
-      const min = copy.sort((x, y) => { return parseFloat(x[1]) - parseFloat(y[1]) })[0][1]
-      const max = copy.sort((x, y) => { return parseFloat(y[1]) - parseFloat(x[1]) })[0][1]
+      let min = copy.sort((x, y) => {
+        const x1 = isNaN(x[1]) ? 0 : x[1]
+        const y1 = isNaN(x[1]) ? 0 : y[1]
+        return x1 - y1
+      })[0][1]
+      if (isNaN(min)) {
+        min = 0
+      }
+      let max = copy.sort((x, y) => {
+        const x1 = isNaN(x[1]) ? 0 : x[1]
+        const y1 = isNaN(x[1]) ? 0 : y[1]
+        return y1 - x1
+      })[0][1]
+      if (isNaN(max)) {
+        max = 0
+      }
       return max - min
     }
     case 'different': {

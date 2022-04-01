@@ -139,10 +139,12 @@ export default {
         })
       })
       const timeSorted = datas.sort((a, b) => {
-        return a[0] - b[0]
+        return Number(a[0]) - Number(b[0])
       })
       const valueSorted = datas.sort((a, b) => {
-        return a[1] - b[1]
+        const a1 = isNaN(a[1]) ? 0 : Number(a[1])
+        const b1 = isNaN(b[1]) ? 0 : Number(b[1])
+        return a1 - b1
       })
       minTime = timeSorted.length ? timeSorted[0][0] : ''
       maxTime = timeSorted.length ? timeSorted[timeSorted.length - 1][0] : ''

@@ -56,7 +56,7 @@
           </div>
         </div>
       </el-timeline-item>
-      <div  v-if="timeLineData.length >= total">{{$t('overall.noMoreData')}}}</div>
+      <div  v-if="timeLineData.length >= total" style="text-align: center">{{$t('overall.noMoreData')}}</div>
       <div v-else class="load-more-box">
         <el-button size="small" @click="getTimeLineData()" :loading="loading">{{$t('overall.loadMore')}}}</el-button>
       </div>

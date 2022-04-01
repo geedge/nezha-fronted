@@ -132,7 +132,7 @@ export default {
         this.multipleTime = false
       }
       this.time = [startTime, endTime]
-      this.chartInfo.loaded && this.chartInfo.alertRule.type !== 3 && this.query(elements, startTime, endTime, step)
+      this.chartInfo.loaded && this.chartInfo.alertRule && this.chartInfo.alertRule.type !== 3 && this.query(elements, startTime, endTime, step)
     },
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh, params) {
