@@ -165,7 +165,7 @@ export default {
           label: this.$t('dashboard.panel.chartForm.legend'),
           value: 'legend'
         }, {
-          label: this.$t('config.assetLabel.all'),
+          label: this.$t('project.topology.none'),
           value: 'none'
         }
       ],
