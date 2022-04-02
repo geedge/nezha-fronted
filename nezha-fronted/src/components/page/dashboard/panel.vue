@@ -319,11 +319,11 @@ export default {
         nowTimeType: JSON.stringify(this.nowTimeType),
         searchTime: JSON.stringify(this.searchTime)
       }
-      // this.dateChange()
       // this.getTableData()
       const path = this.fromRoute.panel
       this.updatePath(param, path)
-      this.getData(this.filter)
+      this.dateChange()
+      // this.getData(this.filter)
       this.$refs.chartList.cleanData()
     },
 
