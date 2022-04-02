@@ -494,6 +494,9 @@ export default {
           if (!obj.param.max) {
             obj.param.max = 100
           }
+          if (!obj.param.text && obj.param.display) {
+            obj.param.text = obj.param.display
+          }
           if (!obj.param.link) {
             this.$set(obj.param, 'link', '')
           }
@@ -515,6 +518,12 @@ export default {
             obj.param.valueMapping.forEach(item => {
               if (!item.show) {
                 item.show = false
+              }
+              if (item.text && !item.display) {
+                item.display = item.text
+              }
+              if (item.columns && !item.column) {
+                item.column = item.columns
               }
             })
           }
