@@ -449,6 +449,19 @@ export default {
             // }
             height = (item.type === 'group' && item.param.collapse) ? this.headerH : item.height
             param.showHeader = true
+            if (param.valueMapping) {
+              param.valueMapping.forEach(valueMapping => {
+                if (!valueMapping.show) {
+                  valueMapping.show = false
+                }
+                if (valueMapping.text && !valueMapping.display) {
+                  valueMapping.display = valueMapping.text
+                }
+                if (valueMapping.columns && !valueMapping.column) {
+                  valueMapping.column = valueMapping.columns
+                }
+              })
+            }
           }
           return {
             ...item,

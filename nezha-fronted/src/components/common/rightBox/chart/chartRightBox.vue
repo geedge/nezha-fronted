@@ -521,6 +521,8 @@ export default {
               }
               if (item.text && !item.display) {
                 item.display = item.text
+              } else if (!item.display) {
+                item.display = '{{A.$value}}'
               }
               if (item.columns && !item.column) {
                 item.column = item.columns
