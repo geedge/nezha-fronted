@@ -93,6 +93,23 @@ export default {
         default: return false
       }
     },
+    isThresholdConfig(type) {
+      switch (type) {
+        case 'line':
+        case 'area':
+        case 'point':
+          return true
+        case 'table':
+        case 'stat':
+        case 'hexagon':
+        case 'gauge':
+        case 'treemap':
+        case 'pie':
+        case 'bar':
+          return false
+        default: return false
+      }
+    },
     isShowLegendVlaues (type) {
       switch (type) {
         case 'line':
