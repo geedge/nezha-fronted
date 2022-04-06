@@ -28,7 +28,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('config.system.basic.defTheme')" prop="defTheme" style="display: none">
+        <el-form-item :label="$t('config.system.basic.defTheme')" prop="defTheme">
           <el-select id="account-input-language"
                      class="right-box__select"
                      v-model="basic.theme"
