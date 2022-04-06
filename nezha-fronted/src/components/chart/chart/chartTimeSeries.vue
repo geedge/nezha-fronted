@@ -71,6 +71,9 @@ export default {
   },
   methods: {
     initChart (chartOptions = this.chartOption) {
+      try {
+        this.isStack = this.chartInfo.param.stack
+      } catch (e) {}
       const chartOption = lodash.cloneDeep(chartOptions)
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
