@@ -69,7 +69,7 @@ export default {
         x: 0,
         y: 0,
         title: 0,
-        value: 0,
+        value: 0,  
         show: false
       },
       fontSize: 12,
