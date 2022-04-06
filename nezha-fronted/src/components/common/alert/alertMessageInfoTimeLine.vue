@@ -45,7 +45,7 @@
       </el-timeline-item>
       <div  v-if="timeLineData.length >= total" style="text-align: center">{{$t('overall.noMoreData')}}</div>
       <div v-else class="load-more-box">
-        <el-button size="small" @click="getTimeLineData()" :loading="loading">{{$t('overall.loadMore')}}}</el-button>
+        <el-button size="small" @click="getTimeLineData()" :loading="loading">{{$t('overall.loadMore')}}</el-button>
       </div>
     </el-timeline>
     <div class="table-no-data" v-else>
@@ -221,7 +221,7 @@ export default {
           item.isSelect = false
         })
         scope.isSelect = !scope.isSelect
-      } else if (isSelectArr.length === 1 && isSelectArr[0].type === scope.type) {
+      } else if (isSelectArr.length === 1 && isSelectArr[0].key === scope.key) {
         this.scopeList.forEach(item => {
           item.isSelect = true
         })
