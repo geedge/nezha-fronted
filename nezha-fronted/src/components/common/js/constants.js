@@ -212,7 +212,7 @@ export const alertMessage = {
 export const statisticsList = [
   { value: 'min', label: i18n.t('dashboard.panel.chartForm.statisticsVal.min') },
   { value: 'max', label: i18n.t('dashboard.panel.chartForm.statisticsVal.max') },
-  { value: 'average', label: i18n.t('dashboard.panel.chartForm.statisticsVal.average') },
+  { value: 'avg', label: i18n.t('dashboard.panel.chartForm.statisticsVal.average') },
   { value: 'total', label: i18n.t('dashboard.panel.chartForm.statisticsVal.total') },
   { value: 'first', label: i18n.t('dashboard.panel.chartForm.statisticsVal.first') },
   { value: 'last', label: i18n.t('dashboard.panel.chartForm.statisticsVal.last') },

@@ -25,7 +25,7 @@ export default {
       daysData: [],
       severityData: this.$store.getters.severityData,
       severityDataWeight: this.$store.getters.severityDataWeight,
-      dateFormatStr: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD'
+      dateFormatStr: localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:ss:mm'
     }
   },
   // watch: {

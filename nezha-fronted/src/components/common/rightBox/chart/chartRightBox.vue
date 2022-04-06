@@ -1,5 +1,5 @@
 <template>
-  <div v-clickoutside="{obj:editChart, func:clickOutside}" :class="boxClass" class="right-box right-box-chart">
+  <div v-clickoutside="{obj: editChart, func:clickOutside}" :class="boxClass" class="right-box right-box-chart">
     <transition v-if="from !== 'chartTemp'" name="right-box">
 <!--      <panel-box v-if="!showPanel.type" ref="panelBox2" :panel="panel" @reload="panelReload"></panel-box>-->
     </transition>
@@ -207,6 +207,8 @@ export default {
     },
     // 保存endpoint
     save () {
+      const self = this
+      let resetFlag = false // 页面是否需要重排
       const arr = [this.$refs.chartForm.validate()]
       arr.push(this.$refs['childrenFrom' + this.editChart.datasource].$refs.chartForm.validate())
       Promise.all(arr).then(res => {
@@ -234,13 +236,18 @@ export default {
           params.x = 0
           params.y = 0
         }
-        if (!params.x && !params.y && params.groupId) { // group 内的坐标需要单独计算
+        if (isNaN(params.y) && isNaN(params.y) && params.groupId) { // group 内的坐标需要单独计算
           params.x = 0
           params.y = 999
         }
-        if (!params.x && !params.y) {
+        if (isNaN(params.y) && isNaN(params.y)) {
           params.x = this.chartLastPosition.x + params.span > 12 ? 0 : this.chartLastPosition.x
           params.y = this.chartLastPosition.y + 12
+        }
+        if (params.x + params.span > 12) {
+          params.x = 0
+          params.y += 1
+          resetFlag = true
         }
         delete params.panel
         if (params.type === 'table') {
@@ -253,8 +260,18 @@ export default {
           this.$put('visual/panel/chart', params).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-              this.$emit('on-create-success', { id: this.panelId, name: this.panelName })
-              this.esc(true)
+              if (resetFlag) {
+                bus.$emit('creat-chart-success', {
+                  ...params,
+                  cb: function () {
+                    self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                    self.esc(true)
+                  }
+                })
+              } else {
+                self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                self.esc(true)
+              }
             } else {
               this.$message.error(response.msg)
             }
@@ -263,8 +280,18 @@ export default {
           this.$post('visual/panel/chart', params).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-              this.$emit('on-create-success', { id: this.panelId, name: this.panelName })
-              this.esc(true)
+              if (resetFlag) {
+                bus.$emit('creat-chart-success', {
+                  ...params,
+                  cb: function () {
+                    self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                    self.esc(true)
+                  }
+                })
+              } else {
+                self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                self.esc(true)
+              }
             } else {
               this.$message.error(response.msg)
             }
@@ -457,42 +484,53 @@ export default {
         if (obj.param && !obj.param.thresholds) {
           obj.param.thresholds = []
         }
-        this.editChart = obj
-        if (this.editChart.groupId === -1) {
-          this.editChart.groupId = ''
+        if (obj.groupId === -1) {
+          obj.groupId = ''
         }
-        if (this.editChart.param) {
-          if (!this.editChart.param.min) {
-            this.editChart.param.min = 0
+        if (obj.param) {
+          if (!obj.param.min) {
+            obj.param.min = 0
           }
-          if (!this.editChart.param.max) {
-            this.editChart.param.max = 100
+          if (!obj.param.max) {
+            obj.param.max = 100
           }
-          if (!this.editChart.param.link) {
-            this.$set(this.editChart.param, 'link', '')
+          if (!obj.param.text && obj.param.display) {
+            obj.param.text = obj.param.display
           }
-          if (!this.editChart.param.enable) {
-            this.editChart.param.enable = {
+          if (!obj.param.link) {
+            this.$set(obj.param, 'link', '')
+          }
+          if (!obj.param.enable) {
+            obj.param.enable = {
               thresholds: false,
               legend: false,
               valueMapping: false
             }
           }
           // this.editChart.varType = 1
-          if (this.editChart.param.enable.legend && !this.editChart.param.legend) {
-            this.editChart.param.legend = { placement: 'bottom', values: [], show: true }
+          if (obj.param.enable.legend && !obj.param.legend) {
+            obj.param.legend = { placement: 'bottom', values: [], show: true }
           }
-          if (this.editChart.param.datasource && !this.editChart.param.datasource[0].legend) {
-            this.editChart.param.datasource[0].legend = ''
+          if (obj.param.datasource && !obj.param.datasource[0].legend) {
+            obj.param.datasource[0].legend = ''
           }
-          if (this.editChart.param.valueMapping) {
-            this.editChart.param.valueMapping.forEach(item => {
+          if (obj.param.valueMapping) {
+            obj.param.valueMapping.forEach(item => {
               if (!item.show) {
                 item.show = false
+              }
+              if (item.text && !item.display) {
+                item.display = item.text
+              } else if (!item.display) {
+                item.display = '{{A.$value}}'
+              }
+              if (item.columns && !item.column) {
+                item.column = item.columns
               }
             })
           }
         }
+        this.editChart = obj
       }
     },
     'editChart.type': {
@@ -500,6 +538,12 @@ export default {
         if (n === 'group') {
           this.editChart.groupId = ''
         }
+      }
+    },
+    editChart: {
+      deep: true,
+      handler () {
+
       }
     }
   }

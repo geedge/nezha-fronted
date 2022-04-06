@@ -63,6 +63,12 @@
     position: absolute;
   }
 }
+.no-position-alert-label {
+  .alert-label.alert-label__border{
+    border: none !important;
+    position: unset;
+  }
+}
 //.alert-label::after, .alert-labelUp::after {
 //  content: '';
 //  display: block;

@@ -54,9 +54,8 @@ export default {
       setTimeout(() => {
         this.dataList = this.dataList.map(item => {
           return {
-            ...item,
+            ...item
             // hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
-            loaded: false
           }
         })
       }, 100)
@@ -70,9 +69,9 @@ export default {
           const arr = JSON.parse(JSON.stringify(n))
           this.dataList = arr.map(item => {
             return {
-              ...item,
+              ...item
               // hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
-              loaded: false
+              // loaded: false
             }
           })
         })

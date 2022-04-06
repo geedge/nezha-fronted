@@ -72,6 +72,15 @@ export default {
   methods: {
     initChart (chartOptions = this.chartOption) {
       const chartOption = lodash.cloneDeep(chartOptions)
+      if (this.chartInfo.isAlertMessage) {
+        chartOption.title = {
+          show: true,
+          text: this.$t('project.endpoint.dialogTitle'),
+          top: 20
+        }
+        chartOption.grid.top = 70
+        chartOption.toolbox.top = 20
+      }
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       if (!this.series.length) {
@@ -89,6 +98,9 @@ export default {
       chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, decimals)
       chartOption.yAxis.minInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'min')
       chartOption.yAxis.maxInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
+      if (this.chartInfo.param.stack) {
+        chartOption.yAxis.maxInterval = chartOption.yAxis.maxInterval * (Math.ceil(chartOption.series.length / 5) + 1)
+      }
       if (unit.type === 'Time') {
         delete chartOption.yAxis.minInterval
         delete chartOption.yAxis.maxInterval
@@ -127,10 +139,12 @@ export default {
         })
       })
       const timeSorted = datas.sort((a, b) => {
-        return a[0] - b[0]
+        return Number(a[0]) - Number(b[0])
       })
       const valueSorted = datas.sort((a, b) => {
-        return a[1] - b[1]
+        const a1 = isNaN(a[1]) && !a[1] ? 0 : Number(a[1])
+        const b1 = isNaN(b[1]) && !b[1] ? 0 : Number(b[1])
+        return a1 - b1
       })
       minTime = timeSorted.length ? timeSorted[0][0] : ''
       maxTime = timeSorted.length ? timeSorted[timeSorted.length - 1][0] : ''
@@ -160,7 +174,6 @@ export default {
         maxValue = Math.floor(oldValue) / Math.pow(10, dot)
         dot++
       }
-      console.log(oldValue)
       const copies = chartDataFormat.copies(Number(oldValue), unit.type)
       return { minTime, maxTime, minValue, maxValue, copies, unit, dot }
     },
@@ -201,7 +214,11 @@ export default {
         let sum = 0
         let flag = true
         params.forEach((item, i) => {
-          const seriesName = item.seriesName.split('-')[0]
+          const nameArr = item.seriesName.split('-')
+          if (nameArr.length > 1) {
+            nameArr.splice(nameArr.length - 1, 1)
+          }
+          const seriesName = nameArr.join('-')
           if (i === 0 && item.seriesName.indexOf('Previous') === -1) {
             const value = bus.computeTimezone(item.data[0] * 1000)
             const tData = new Date(value)
@@ -283,7 +300,7 @@ export default {
     yAxisLabelFormatter (minValue, maxValue, copies, unit, dot) {
       const self = this
       return function (val, index) {
-        const value = formatScientificNotation(val, 2)
+        const value = formatScientificNotation(val, 6)
         // let chartUnit = self.chartInfo.unit
         // chartUnit = chartUnit || 2
         // const unit = chartDataFormat.getUnit(chartUnit)
@@ -317,11 +334,18 @@ export default {
         self.isStack = !self.isStack
         // 改变tooltip
         option.tooltip[0].formatter = self.tooltipFormatter(self.isStack)
+        if (!self.chartInfo.param.stack) {
+          option.yAxis.maxInterval = option.yAxis.maxInterval / (Math.ceil(option.series.length / 5) + 1)
+        } else {
+          option.yAxis.maxInterval = option.yAxis.maxInterval * (Math.ceil(option.series.length / 5) + 1)
+        }
         myChart.setOption(option)
       }
     },
     resize () {
-      getChart(this.chartId).resize()
+      setTimeout(() => {
+        getChart(this.chartId) && getChart(this.chartId).resize()
+      }, 100)
     }
   },
   mounted () {

@@ -5,7 +5,10 @@
       <div class="legend--table">
         <div class="legend--table-row table-header">
           <div class="legend--table-cell"></div>
-          <div v-for="statistics in chartInfo.param.legend.values" :key="statistics" class="legend--table-cell">{{statistics}}</div>
+          <div v-for="statistics in chartInfo.param.legend.values" :key="statistics" class="legend--table-cell">
+            <span v-if="statisticsList.find(key=>key.value === statistics)">{{$t(statisticsList.find(key=>key.value === statistics).label)}}</span>
+            <span v-else>--</span>
+          </div>
         </div>
         <div v-for="(item, index) in legends"
              :key="index"
@@ -40,6 +43,7 @@
 import lodash from 'lodash'
 import { getChart } from '@/components/common/js/common'
 import chartDataFormat from '@/components/charts/chartDataFormat'
+import { statisticsList } from '@/components/common/js/constants'
 export default {
   name: 'chartLegend',
   props: {
@@ -51,6 +55,7 @@ export default {
   },
   data () {
     return {
+      statisticsList,
       isGrey: [],
       legendDefaultCount: 20, // 初始显示的legend条数
       showLegends: [], // 要显示的legend；若legend数量过多，初始时这个数据里只有前20条legend
@@ -200,16 +205,6 @@ export default {
       if (isNaN(result)) {
         return '--'
       }
-      // result = Math.round(num * 100) / 100
-      // let decimal = result.toString()
-      // let posDecimal = decimal.indexOf('.')
-      // if (posDecimal < 0) {
-      //   posDecimal = decimal.length
-      //   decimal += '.'
-      // }
-      // while (decimal.length <= posDecimal + 2) {
-      //   decimal += '0'
-      // }
       result = chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(result, null, -1, 2)
       return result
     },

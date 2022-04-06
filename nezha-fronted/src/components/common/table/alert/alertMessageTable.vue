@@ -86,7 +86,7 @@
           </span>
           </template>
           <span v-else-if="item.prop === 'state'">
-            <span class="alert-message-state" :class="{'green-bg': scope.row['state'] == 3, 'red-bg': scope.row['state'] == 1,'yellow-bg': scope.row['state'] == 2}">
+            <span class="alert-message-state" :class="{'gray-bg': scope.row['state'] == 3, 'red-bg': scope.row['state'] == 1,'yellow-bg': scope.row['state'] == 2}">
               {{$t(stateOptions.find(state=>state.value == scope.row['state']).label)}}
             </span>
           </span>
@@ -101,7 +101,7 @@
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
-          <button v-if="scope.row.alertRule&&scope.row.alertRule.type !== 3" class="table-operation-item" @click="$emit('messageDetail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+          <button v-if="scope.row.alertRule" class="table-operation-item" @click="$emit('messageDetail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown v-has="['alertMessage_expired', 'alertSilence_add']" size="medium" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more">
               <i class="nz-icon nz-icon-more3"></i>
@@ -139,19 +139,16 @@
 import bus from '../../../../libs/bus'
 import axios from 'axios'
 import table from '@/components/common/mixin/table'
-import nzAlertTag from '../../../page/alert/nzAlertTag'
 import chartDataFormat from '../../../charts/chartDataFormat'
 import alertRuleInfo from '../../alert/alertRuleInfo'
-import alertLabel from '../../alert/alertLabel'
 import { calcDurationByStringTimeB } from '../../js/tools'
 import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
 import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
+import alertMessageLabelMixin from '@/components/common/alert/alertMessageLabelMixin'
 export default {
   name: 'alertMessageTable',
   components: {
-    nzAlertTag,
     alertRuleInfo: alertRuleInfo,
-    alertLabel: alertLabel
   },
   props: {
     nowTime: {
@@ -165,7 +162,7 @@ export default {
     loading: Boolean,
     chartAlertList: Boolean
   },
-  mixins: [table, bus, alertLabelMixin],
+  mixins: [table, bus, alertLabelMixin, alertMessageLabelMixin],
   data () {
     return {
       /* 二级列表相关 */
@@ -176,7 +173,6 @@ export default {
       graphShow: false,
       chartDatas: [],
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'dc'],
-      exclusiveLabels: ['_id', 'severity', '__name__'],
       legend: [],
       searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
       currentMsg: {},
@@ -254,29 +250,6 @@ export default {
     }
   },
   computed: {
-    tagType () {
-      return (key) => {
-        if (key == 'asset' || key == 'module' || key == 'project' || key == 'dc' || key == 'endpoint') {
-          return 'normal'
-        } else {
-          return 'info'
-        }
-      }
-    },
-    tagValue () {
-      return (key, value) => {
-        if (key == 'type') {
-          if (value == 1) {
-            value = this.$t('project.project.projectName')
-          } else if (value == 2) {
-            value = this.$t('module.module.module')
-          } else if (value == 3) {
-            value = this.$t('asset.asset')
-          }
-        }
-        return key + '：' + value
-      }
-    },
     getDuration () {
       return function (record) {
         if (record.endAt) {
@@ -296,35 +269,6 @@ export default {
           this.severityData = response.data.list
         }
       })
-    },
-    labelsSort (obj) {
-      const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'datacenter', 'project', 'parent_asset', 'user']
-      if (typeof obj === 'string') obj = JSON.parse(obj)
-      const labels = JSON.parse(JSON.stringify(obj))
-      const result = []
-      for (const key of this.exclusiveLabels) {
-        Object.keys(labels).forEach(labelsKey => {
-          if (labelsKey.indexOf(key) !== -1) {
-            delete labels[labelsKey]
-          }
-        })
-      }
-      for (const key of buildIn) {
-        if (key in labels) {
-          if (key === 'datacenter') {
-            result.push({ label: 'dc', value: labels.datacenter })
-            delete labels.datacenter
-          } else {
-            result.push({ label: key, value: labels[key] })
-          }
-          delete labels[key]
-        }
-      }
-      Object.keys(labels).sort().forEach(key => {
-        result.push({ label: key, value: labels[key] })
-        delete labels[key]
-      })
-      return result
     },
     chartUnitChange: function (unit) {
       this.chartUnit = unit

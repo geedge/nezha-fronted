@@ -13,6 +13,7 @@ export const clickoutside = {
     let oldValue
     try {
       oldValue = JSON.parse(JSON.stringify(binding.value.obj))
+      el.__newValue__ = oldValue
     } catch (e) {
 
     }
@@ -36,8 +37,8 @@ export const clickoutside = {
           return false
         }
         if (oldValue) {
-          const newValue = JSON.parse(JSON.stringify(binding.value.obj))
-          if (unsavedChange == 'on' && !isEqual(oldValue, newValue)) {
+          // const newValue = JSON.parse(JSON.stringify(binding.value.obj))
+          if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__)) {
             MessageBox.confirm(i18n.t('tip.confirmCancel'), {
               confirmButtonText: i18n.t('tip.yes'),
               cancelButtonText: i18n.t('tip.no'),
@@ -65,6 +66,9 @@ export const clickoutside = {
     // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
     el.__vueClickOutside__ = documentHandler
     document.addEventListener('mousedown', documentHandler)
+  },
+  update (el, binding, vnode) {
+    el.__newValue__ = binding.value.obj
   },
   unbind (el, binding) {
     // 解除事件监听
@@ -199,9 +203,9 @@ export const cancelWithChange = {
     if (!binding.value || !binding.value.obj) return
     const unsavedChange = localStorage.getItem('nz-unnsaved-change')
     const oldValue = JSON.parse(JSON.stringify(binding.value.obj))
+    el.__newValue__ = oldValue
     function domClick (e) {
-      const newValue = JSON.parse(JSON.stringify(binding.value.obj))
-      if (unsavedChange == 'on' && !isEqual(oldValue, newValue)) {
+      if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__)) {
         MessageBox.confirm(i18n.t('tip.confirmCancel'), {
           confirmButtonText: i18n.t('tip.yes'),
           cancelButtonText: i18n.t('tip.no'),
@@ -217,6 +221,9 @@ export const cancelWithChange = {
     }
     el.__vueDomClick__ = domClick
     el.addEventListener('click', domClick)
+  },
+  update (el, binding, vnode) {
+    el.__newValue__ = binding.value.obj
   },
   unbind: function (el, binding) {
     // 解除事件监听
@@ -900,15 +907,32 @@ export function getMetricTypeValue (queryItem, type) {
   let copy = JSON.parse(JSON.stringify(queryItem))
   switch (type) {
     case 'min': {
-      const min = copy.sort((x, y) => { return parseFloat(x[1]) - parseFloat(y[1]) })[0][1]
+      let min = copy.sort((x, y) => {
+        const x1 = isNaN(x[1]) && !x[1] ? 0 : x[1]
+        const y1 = isNaN(y[1]) && !y[1] ? 0 : y[1]
+        return x1 - y1
+      })[0][1]
+      if (isNaN(min)) {
+        min = 0
+      }
       return min
     }
     case 'max': {
-      const max = copy.sort((x, y) => { return parseFloat(y[1]) - parseFloat(x[1]) })[0][1]
+      let max = copy.sort((x, y) => {
+        const x1 = isNaN(x[1]) && !x[1] ? 0 : x[1]
+        const y1 = isNaN(y[1]) && !y[1] ? 0 : y[1]
+        return y1 - x1
+      })[0][1]
+      if (isNaN(max)) {
+        max = 0
+      }
       return max
     }
-    case 'average': {
-      copy = copy.map(t => parseFloat(t[1]))
+    case 'avg': {
+      copy = copy.map(t => {
+        const t1 = isNaN(t[1]) && !t[1] ? 0 : t[1]
+        return parseFloat(t1)
+      })
       const sum = eval(copy.join('+'))
       const avg = sum / copy.length
       return avg
@@ -922,13 +946,30 @@ export function getMetricTypeValue (queryItem, type) {
       return first
     }
     case 'total': {
-      copy = copy.map(t => parseFloat(t[1]))
+      copy = copy.map(t => {
+        const t1 = isNaN(t[1]) && !t[1] ? 0 : t[1]
+        return parseFloat(t1)
+      })
       const total = eval(copy.join('+'))
       return total
     }
     case 'range': {
-      const min = copy.sort((x, y) => { return parseFloat(x[1]) - parseFloat(y[1]) })[0][1]
-      const max = copy.sort((x, y) => { return parseFloat(y[1]) - parseFloat(x[1]) })[0][1]
+      let min = copy.sort((x, y) => {
+        const x1 = isNaN(x[1]) && !x[1] ? 0 : x[1]
+        const y1 = isNaN(y[1]) && !y[1] ? 0 : y[1]
+        return x1 - y1
+      })[0][1]
+      if (isNaN(min)) {
+        min = 0
+      }
+      let max = copy.sort((x, y) => {
+        const x1 = isNaN(x[1]) && !x[1] ? 0 : x[1]
+        const y1 = isNaN(y[1]) && !y[1] ? 0 : y[1]
+        return y1 - x1
+      })[0][1]
+      if (isNaN(max)) {
+        max = 0
+      }
       return max - min
     }
     case 'different': {

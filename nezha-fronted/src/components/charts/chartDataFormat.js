@@ -34,7 +34,7 @@ function percent02 (value, index) {
   if (!numberWithEConvent(scientificNotationValue)) {
     return `${scientificNotationValue} %`
   }
-  value = parseFloat((Number(value) * 100))
+  value = parseFloat((Number(value) * 100).toFixed(2))
   return `${value} %`
 }
 function localFormat (value, index) {
@@ -397,6 +397,9 @@ function asciiCompute2 (num, ascii, units, dot = 2, unitIndex = 0) {
 * unit:设置的单位
 * */
 function timeCompute (value, unit, dot = 0) {
+  if (isNaN(value)) {
+    return `0 ${unit}`
+  }
   if (unit == 'year') {
     return `${value.toFixed(dot)} ${unit}`
   }
@@ -725,7 +728,7 @@ export default {
         pow++
         value = value * 10
       }
-      return Math.ceil(value + 1) / Math.pow(10, pow)
+      return Math.floor(value + 1) / Math.pow(10, pow)
     }
     if (type === 'Time') {
       return value

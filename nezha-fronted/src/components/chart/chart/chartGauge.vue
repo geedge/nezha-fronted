@@ -214,9 +214,11 @@ export default {
       })
     },
     resize () {
-      this.getLayout().then(layout => {
-        this.renderGauge(layout).then(() => {
-          this.gaugeChartResize()
+      setTimeout(() => {
+        this.getLayout().then(layout => {
+          this.renderGauge(layout).then(() => {
+            this.gaugeChartResize()
+          })
         })
       })
     },

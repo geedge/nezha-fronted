@@ -14,7 +14,7 @@
       >
         <template  v-slot:default="slotProps">
           <endpoint-table
-            style="height: calc(100% - 200px)"
+            style="height: 100%"
             ref="dataTable"
             :orderByFa="orderBy"
             v-my-loading="tools.loading"

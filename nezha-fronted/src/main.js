@@ -14,7 +14,7 @@ import router from './router'
 import VueResource from 'vue-resource'
 import axios from 'axios'
 import { hasPermission, hasButton } from './permission'
-
+import loadsh from 'lodash'
 import plTable from 'pl-table'
 import 'pl-table/themes/index.css'
 
@@ -62,6 +62,7 @@ Vue.prototype.$post = post
 Vue.prototype.$get = get
 Vue.prototype.$put = put
 Vue.prototype.$delete = del
+Vue.prototype.$loadsh = loadsh
 Vue.prototype.$CONSTANTS = constants
 Vue.prototype.$TOOLS = tools
 Vue.prototype.$bottomBoxWindow = bottomBoxWindow // 底部上滑框控制
@@ -97,24 +98,24 @@ Vue.mixin({
     }
   },
   methods: {
-    utcTimeToTimezone: function (time) {
+    utcTimeToTimezone: function (time) { // 将utc时间 转为系统设者的时间  返回时间戳
       if (time) {
         return bus.UTCTimeToConfigTimezone(time)
       }
     },
-    utcTimeToTimezoneStr: function (time) {
+    utcTimeToTimezoneStr: function (time) { // 将utc时间 转为系统设者的时间  返回String
       if (time) {
-        return bus.timeFormate(bus.UTCTimeToConfigTimezone(time), localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
+        return bus.timeFormate(bus.UTCTimeToConfigTimezone(time), localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
       } else {
         return '-'
       }
     },
-    timezoneToUtcTime: function (time) {
+    timezoneToUtcTime: function (time) { // 将系统设者的时间 转为utc时间 返回时间戳
       if (time) {
         return bus.configTimezoneToUTCTime(time)
       }
     },
-    timezoneToUtcTimeStr: function (time, fmt) {
+    timezoneToUtcTimeStr: function (time, fmt) { // 将系统设者的时间 转为utc时间 返回String
       if (!fmt) {
         fmt = localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss'
       }
@@ -122,7 +123,7 @@ Vue.mixin({
         return bus.timeFormate(this.timezoneToUtcTime(time), fmt)
       }
     },
-    timestampStr: function (time, fmt) {
+    timestampStr: function (time, fmt) { // 将utc时间 转为系统设者的时间  返回String
       const date = new Date(time)
       const localOffset = date.getTimezoneOffset() * 60 * 1000 // 默认 一分钟显示时区偏移的结果
       const dateStr = new Date(time).getTime() + localOffset
@@ -134,6 +135,9 @@ Vue.mixin({
       } else {
         return '-'
       }
+    },
+    timeFormate (time) {
+      return bus.timeFormate(time)
     },
     hasButton (code) {
       return hasButton(this.$store.getters.buttonList, code)

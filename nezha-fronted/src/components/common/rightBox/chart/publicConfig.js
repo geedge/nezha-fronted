@@ -165,7 +165,7 @@ export default {
           label: this.$t('dashboard.panel.chartForm.legend'),
           value: 'legend'
         }, {
-          label: this.$t('config.assetLabel.all'),
+          label: this.$t('project.topology.none'),
           value: 'none'
         }
       ],
@@ -346,6 +346,7 @@ export default {
     },
     showMapping (index) {
       this.chartConfig.param.valueMapping[index].show = !this.chartConfig.param.valueMapping[index].show
+      this.change()
     },
     mappingItemChange (index, type) {
       const mapping = this.chartConfig.param.valueMapping[index]
@@ -416,6 +417,7 @@ export default {
     },
     showColumns (index) {
       this.chartConfig.param.columns[index].show = !this.chartConfig.param.columns[index].show
+      this.change()
     },
     tagsChange (newTags) {
       this.chartConfig.param.tags = newTags

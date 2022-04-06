@@ -6,6 +6,11 @@
 
 <script>
 export default {
-  name: 'chartNoData'
+  name: 'chartNoData',
+  methods: {
+    resize () {
+
+    }
+  }
 }
 </script>

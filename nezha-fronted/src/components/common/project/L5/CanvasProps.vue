@@ -6,7 +6,7 @@
       <el-tab-pane :label="$t('project.topology.data')" name="1">
         <el-form v-model="selection.pen.data" class="pens-data" label-position="top">
           <!--module-->
-          <el-form-item v-if="!selection.pen.type&&!fromDiagram" class="sub-box half-form-item" label="Module"
+          <el-form-item v-if="!selection.pen.type&&!fromDiagram" class="sub-box half-form-item" :label="$t('overall.module')"
                         prop="moduleId">
             <el-select v-model="selection.pen.data.moduleId" :placeholder="$t('el.select.placeholder')"
                        :popper-append-to-body="true" popper-class="asset-dropdown right-box-select-top" size="small"
@@ -274,7 +274,7 @@
           <!--</div>-->
           <!--</el-collapse-item>-->
           <!--样式-->
-          <el-collapse-item :title="'Style'" name="4" v-if="selection.pen">
+          <el-collapse-item :title="$t('project.topology.style')" name="4" v-if="selection.pen">
             <div class="flex flex-warp">
 
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
@@ -650,7 +650,7 @@
 
             </div>
           </el-collapse-item>
-          <el-collapse-item :title="'Font'" name="5" v-if="selection.pen&&!selection.pen.type">
+          <el-collapse-item :title="$t('project.topology.font')" name="5" v-if="selection.pen&&!selection.pen.type">
             <div class="flex flex-warp">
               <div class="props-pen-item" style="width: 100%">
                 <div>{{ $t('project.topology.textContent') }}</div>

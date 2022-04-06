@@ -422,7 +422,7 @@
         </transition>
 
         <!--thresholdConfig-->
-        <div class="form__sub-title">
+        <div class="form__sub-title" v-if="isThresholdConfig(chartConfig.type)">
           <span>{{$t('dashboard.panel.chartForm.threshold')}}</span>
           <el-switch
             v-model="chartConfig.param.enable.thresholds"
@@ -431,7 +431,7 @@
           ></el-switch>
         </div>
         <transition name="el-zoom-in-top">
-          <el-row v-if="chartConfig.param.enable.thresholds">
+          <el-row v-if="chartConfig.param.enable.thresholds && isThresholdConfig(chartConfig.type)">
             <el-form-item
               v-for="(item,index) in chartConfig.param.thresholds"
               :key="index"
@@ -487,7 +487,7 @@
                   <span @click="addColumns('')">
                       <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
                   </span>
-                  <span class="nz-icon-copy">
+                  <span style="margin-right: 5px">
                       <i @click="copyColumns(index)" class="nz-icon nz-icon-override"></i>
                   </span>
                   <span class="nz-icon-minus-medium">

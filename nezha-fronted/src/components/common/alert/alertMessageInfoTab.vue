@@ -1,0 +1,156 @@
+<template>
+  <div>
+    <el-tabs v-model="activeName" type="card" v-if="!nodata">
+      <el-tab-pane v-for="item in cardNames" :label="item.label" :name="item.key" :key="item.key">
+        <div v-if="item.key === 'detail' && activeName === 'detail'">
+          <alert-message-info-detail :info-data="infoData"/>
+        </div>
+        <div v-else-if="(activeName === item.key) && infoData[item.key]" class="no-position-alert-label">
+<!--          <searchItemInfo :obj="findData(item.key)" :severityData="severityData" :fa-loading="false"></searchItemInfo>-->
+          <alertLabel
+            v-if="item.key !=='alertRule'"
+            :id="infoData[item.key].id"
+            :that="findData2(item.key)"
+            :alertTableDialog="true"
+            :type="item.key"/>
+          <alertRuleInfo
+            v-else
+            :id="infoData[item.key].id"
+            :severity-data="severityData"
+            :that="findData2(item.key)"
+          />
+        </div>
+        <div v-else-if="item.key === 'trbShot' && activeName === 'trbShot'">
+          <div v-html="infoData.alertRule.trbShot">
+          </div>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+    <div v-else class="table-no-data">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#nz-icon-no-data-list"></use>
+      </svg>
+      <div class="table-no-data__title">No results found</div>
+    </div>
+  </div>
+</template>
+
+<script>
+import alertMessageInfoDetail from '@/components/common/alert/alertMessageInfoDetail'
+import searchItemInfo from '@/components/common/globalSearch/searchItemInfo'
+import alertLabel from '@/components/common/alert/alertLabel'
+import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
+// import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
+export default {
+  name: 'alertMessageInfoTab',
+  components: {
+    alertMessageInfoDetail,
+    searchItemInfo,
+    alertLabel,
+    alertRuleInfo
+  },
+  // mixins: [alertLabelMixin],
+  props: {
+    infoData: {
+      type: Object
+    },
+    nodata: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    severityData () {
+      return this.$store.getters.severityData
+    }
+  },
+  data () {
+    return {
+      activeName: 'detail',
+      cardNames: [{
+        key: 'detail',
+        label: this.$t('overall.detail')
+      }],
+      sysArr: [{
+        key: 'alertRule',
+        label: this.$t('alert.alertRule')
+      }, {
+        key: 'dc',
+        label: this.$t('overall.dc')
+      }, {
+        key: 'asset',
+        label: this.$t('overall.asset')
+      }, {
+        key: 'endpoint',
+        label: this.$t('overall.endpoint')
+      }, {
+        key: 'module',
+        label: this.$t('overall.module')
+      }, {
+        key: 'project',
+        label: this.$t('overall.project')
+      }]
+    }
+  },
+  watch: {
+    infoData: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+          this.cardNames = [{
+            key: 'detail',
+            label: this.$t('overall.detail')
+          }]
+          this.sysArr.forEach(item => {
+            if (n[item.key]) {
+              this.cardNames.push(item)
+            }
+          })
+          if (n.alertRule && n.alertRule.trbShot) {
+            this.cardNames.push({
+              key: 'trbShot',
+              label: this.$t('alert.config.trbShot')
+            })
+          }
+        }
+      }
+    }
+  },
+  mounted () {
+
+  },
+  methods: {
+    findData (key) {
+      if (key) {
+        const obj = {
+          ...this.$loadsh.cloneDeep(this.infoData[key]),
+          type: key
+        }
+        if (key === 'dc') {
+          obj.type = 'datacenter'
+        } else if (key === 'alertRule') {
+          obj.type = 'alertrule'
+        }
+        return { ...obj }
+      }
+    },
+    findData2 (key) {
+      if (key) {
+        const obj = {
+          ...this.$loadsh.cloneDeep(this.infoData[key]),
+          type: key,
+          position: {
+            top: 0,
+            left: 0
+          }
+        }
+        return { ...obj }
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>
