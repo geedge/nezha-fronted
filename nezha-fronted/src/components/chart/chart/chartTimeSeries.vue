@@ -290,7 +290,7 @@ export default {
     yAxisLabelFormatter (minValue, maxValue, copies, unit, dot) {
       const self = this
       return function (val, index) {
-        const value = formatScientificNotation(val, 2)
+        const value = formatScientificNotation(val, 6)
         let chartUnit = self.chartInfo.unit
         chartUnit = chartUnit || 2
         const unit = chartDataFormat.getUnit(chartUnit)
