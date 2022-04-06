@@ -99,23 +99,23 @@
 
         </span>
           <span class="float-right">
-          <button @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light"
+          <button type="button" @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light"
                   style="margin-right: 20px"
           >
              {{$t('project.topology.preview')}}
            </button>
-            <button v-if="isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="previewExit"
+            <button type="button" v-if="isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="previewExit"
                     style="margin-right: 20px"
             >
              {{$t('project.topology.previewExit')}}
            </button>
-           <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="saveTopology"
+           <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="saveTopology"
                    :disabled="prevent_opt.save"
                    :class="{'nz-btn-disabled':prevent_opt.save}"
                    style="margin-right: 20px">
              {{$t('project.topology.save')}}
            </button>
-           <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-right: 20px" @click="cancelTopology">
+           <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-right: 20px" @click="cancelTopology">
              {{$t('project.topology.exit')}}
            </button>
          </span>
@@ -294,11 +294,11 @@
       </el-row>
       <div class="upload-pic-row" style="text-align: center">
             <span>
-               <button class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-right: 20px" @click="uploadPicShow=false">
+               <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-right: 20px" @click="uploadPicShow=false">
              {{$t('project.topology.exit')}}
            </button>
 
-              <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="imgUpload"
+              <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="imgUpload"
                       v-has="'topo_icon_save'" :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
                       style="margin-right: 20px">

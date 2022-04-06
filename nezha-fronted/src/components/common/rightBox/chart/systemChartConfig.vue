@@ -384,7 +384,7 @@
         </transition>
 
         <!--thresholdConfig-->
-        <div class="form__sub-title">
+        <div class="form__sub-title" v-if="isThresholdConfig(chartConfig.type)">
           <span>{{$t('dashboard.panel.chartForm.threshold')}}</span>
           <el-switch
             v-model="chartConfig.param.enable.thresholds"
@@ -393,7 +393,7 @@
           ></el-switch>
         </div>
         <transition name="el-zoom-in-top">
-          <el-row v-if="chartConfig.param.enable.thresholds">
+          <el-row v-if="chartConfig.param.enable.thresholds && isThresholdConfig(chartConfig.type)">
             <el-form-item
               v-for="(item,index) in chartConfig.param.thresholds"
               :key="index"
