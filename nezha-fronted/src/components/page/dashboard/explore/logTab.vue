@@ -58,7 +58,7 @@
         <el-table-column
           v-if="time"
           prop="date"
-          width="140"
+          width="160"
         >
           <template slot-scope="{ row }">{{utcTimeToTimezoneStr(row.date)}}</template>
         </el-table-column>
