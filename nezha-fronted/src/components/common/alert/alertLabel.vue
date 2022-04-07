@@ -1,13 +1,17 @@
 <template>
   <div :class="calcHeight(that.position,that)" :style="calcPosition(that.position,that)" class="alert-label__border" ref="alertLabels">
+    <div class="alert-label-header-title">
+      <div class="alert-label-header-circle" :style="`background: ${alertColor}`">
+        <i  class="nz-icon" :class="selectIcon(type)"></i>
+      </div>
+      <div class="alert-label-header-name">
+        {{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}
+      </div>
+    </div>
     <div class="alert-label-info" v-if="type==='asset'" v-my-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.manageIp')}}</div>
@@ -75,10 +79,6 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
-      </div>
-      <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.project')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.project && alertLabelData.project.name ?alertLabelData.project.name : '--'}}</div>
       </div>
@@ -122,10 +122,6 @@
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData ? alertLabelData.id : '--'}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData ? alertLabelData.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.module')}}</div>
@@ -174,10 +170,6 @@
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.project')}}</div>
@@ -251,10 +243,6 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
-      </div>
-      <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.location')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.location && alertLabelData.location ? alertLabelData.location : '--'}}</div>
       </div>
@@ -303,6 +291,7 @@
 
 <script>
 import trendMixin from './trendMixins'
+
 export default {
   name: 'alertLabel',
   mixins: [trendMixin],
@@ -319,7 +308,9 @@ export default {
       alertLabelData: null,
       loading: true,
       heightList: 0,
-      boxWidth: 0
+      boxWidth: 0,
+      severityDataWeight: this.$store.getters.severityDataWeight,
+      alertColor: '#23bf9a'
     }
   },
   watch: {
@@ -364,7 +355,6 @@ export default {
             dialog = document.querySelector('#viewGraphDialog .el-dialog')
           }
           const dialogHeight = dialog.getBoundingClientRect()
-          console.log(dialogHeight, 'dialogHeight')
           leftOffSet = leftOffSet - dialogHeight.x
           leftOffSetView = dialogHeight.x
           topOffSet = topOffSet - dialogHeight.y
@@ -410,6 +400,7 @@ export default {
           if (res.msg === 'success') {
             this.loading = false
             this.alertLabelData = res.data
+            this.alertColor = this.returnColor(res.data.alert)
           } else {
             this.$message.error(res.msg)
           }
@@ -420,6 +411,7 @@ export default {
           if (res.msg === 'success') {
             this.loading = false
             this.alertLabelData = res.data
+            this.alertColor = this.returnColor(res.data.alert)
           } else {
             this.$message.error(res.msg)
           }
@@ -430,6 +422,7 @@ export default {
           if (res.msg === 'success') {
             this.loading = false
             this.alertLabelData = res.data
+            this.alertColor = this.returnColor(res.data.alert)
           } else {
             this.$message.error(res.msg)
           }
@@ -440,6 +433,7 @@ export default {
           if (res.msg === 'success') {
             this.loading = false
             this.alertLabelData = res.data
+            this.alertColor = this.returnColor(res.data.alert)
           } else {
             this.$message.error(res.msg)
           }
@@ -450,6 +444,7 @@ export default {
           if (res.msg === 'success') {
             this.loading = false
             this.alertLabelData = res.data
+            this.alertColor = this.returnColor(res.data.alert)
           } else {
             this.$message.error(res.msg)
           }
@@ -497,6 +492,34 @@ export default {
         return this.$t('asset.inStock')
       } else {
         return this.$t('asset.notInStock')
+      }
+    },
+    selectIcon (type) {
+      switch (type) {
+        case 'asset' : return 'nz-icon-overview-project'
+        case 'dc' : return 'nz-icon-Datacenter2'
+        case 'project' : return 'nz-icon-project'
+        case 'module' : return 'nz-icon-overview-module'
+        case 'endpoint' : return 'nz-icon-overview-endpoint'
+        case 'alertrule' : return 'nz-icon-Alertrule'
+      }
+      return 'nz-icon-module5'
+    },
+    returnColor (obj) {
+      let color = ''
+      if (!obj) {
+        return '#23bf9a'
+      } else {
+        this.severityDataWeight.forEach(severity => {
+          const num = obj.find(alert => alert.priority === severity.name)
+          if (num && !color && num.num > 0) {
+            color = severity.color
+          }
+        })
+        if (!color) {
+          color = '#23bf9a'
+        }
+        return color
       }
     }
   },

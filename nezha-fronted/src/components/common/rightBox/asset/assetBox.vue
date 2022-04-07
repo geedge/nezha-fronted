@@ -78,7 +78,7 @@
             </my-date-picker>
           </el-form-item>
           <!-- labels -->
-          <div class="form__sub-title">{{$t('overall.labels')}}</div>
+          <div class="form__sub-title">{{$t('config.assetLabel.assetLabel')}}</div>
           <div v-for="(label, i) in editAsset.fields" :key="i" class="form__dotted-item">
             <el-form-item :prop="'fields.' + i + '.value'">
               <template v-slot:label>

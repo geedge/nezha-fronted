@@ -71,6 +71,9 @@ export default {
   },
   methods: {
     initChart (chartOptions = this.chartOption) {
+      try {
+        this.isStack = this.chartInfo.param.stack
+      } catch (e) {}
       const chartOption = lodash.cloneDeep(chartOptions)
       if (this.chartInfo.isAlertMessage) {
         chartOption.title = {
