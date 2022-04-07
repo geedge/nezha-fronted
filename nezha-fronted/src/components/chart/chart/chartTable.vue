@@ -208,7 +208,7 @@ export default {
                 value = chartDataFormat.getUnit(column.unit ? column.unit : 2).compute(value, null, -1, 2)
               }
             }
-            return value || label
+            return value || ''
           })
           obj[column.title + 'display'] = labelValue
         } else {
