@@ -20,7 +20,7 @@
           {{ tableData[0].retention }}
         </span>
         <span v-if="item.prop === 'last'">
-          {{ tableData[0].schedule && tableData[0].schedule.stime }}
+          {{ tableData[0].schedule && utcTimeToTimezoneStr(tableData[0].schedule.stime) }}
         </span>
         <span v-if="item.prop === 'state'">
           <el-switch class="switch" v-model="switchStatus"> </el-switch>
@@ -79,121 +79,120 @@
 </template>
 
 <script>
-import { get, post } from "@/http";
-import lodash from "lodash";
-import bus from "@/libs/bus";
+import { get, post } from '@/http'
+import lodash from 'lodash'
+import bus from '@/libs/bus'
 
 export default {
-  name: "backupsTable",
+  name: 'backupsTable',
   mixins: [],
 
   props: {
     loading: Boolean,
     customTableTitle: Array,
     isConfigurations: Boolean,
-    isState: Boolean,
+    isState: Boolean
   },
-  data() {
+  data () {
     return {
       switchStatus: true,
       tableData: [
         {
-          retention: "",
-          state: "",
+          retention: '',
+          state: '',
           schedule: {
-            repeat: "",
-            stime: "",
-            type: "",
-            nums: [],
-          },
-        },
+            repeat: '',
+            stime: '',
+            type: '',
+            nums: []
+          }
+        }
       ],
       tableData2: [
         {
-          fileName: "",
-          time: "",
-          size: "",
-        },
-      ],
-    };
+          fileName: '',
+          time: '',
+          size: ''
+        }
+      ]
+    }
   },
 
   components: {},
 
   computed: {},
 
-  created() {},
+  created () {},
 
-  mounted() {
-    this.getTableData();
+  mounted () {
+    this.getTableData()
     this.monitoring()
   },
 
   methods: {
-      monitoring(){
-        this.$on('getData',(res)=>{
-            console.log('getdata');
-            this.getTableData()
-            window.location.reload()
-
-        })
+    monitoring () {
+      this.$on('getData', (res) => {
+        console.log('getdata')
+        this.getTableData()
+        window.location.reload()
+      })
     },
-    async getTableData() {
-      await get("/sys/backup").then((res) => {
+    async getTableData () {
+      await get('/sys/backup').then((res) => {
         if (res.code === 200) {
           if (res.data) {
-            this.tableData[0].retention = res.data.retention;
-            this.tableData[0].state = res.data.state;
-            this.switchStatus = res.data.state === 1 ? true : false;
-            for (let i in res.data.schedule) {
-              this.tableData[0].schedule[i] = res.data.schedule[i];
+            this.tableData[0].retention = res.data.retention
+            this.tableData[0].state = res.data.state
+            this.switchStatus = res.data.state === 1
+            for (const i in res.data.schedule) {
+              this.tableData[0].schedule[i] = res.data.schedule[i]
             }
           }
         }
-      });
-      await post("/sys/backup/list").then((res) => {
+      })
+      await post('/sys/backup/list').then((res) => {
         if (res.code === 200) {
           if (res.data) {
-            for (let i in res.data) {
-              this.tableData2[i].fileName = res.data[i].fileName;
-              this.tableData2[i].size = bus.getNumStr(res.data[i].size);
-              this.tableData2[i].time = res.data[i].time;
+            for (const i in res.data) {
+              this.tableData2[i].fileName = res.data[i].fileName
+              this.tableData2[i].size = bus.getNumStr(res.data[i].size)
+              this.tableData2[i].time = res.data[i].time
             }
           }
         }
-      });
+      })
     },
-    backupNow(item) {
-      post("/sys/backup").then((res) => {
-        console.log(res);
-      });
+    backupNow (item) {
+      post('/sys/backup').then((res) => {
+        console.log(res)
+      })
     },
-    tableOperation(command) {
+    tableOperation (command) {
       if (command) {
-        if (command === "edit") {
-          this.$emit("edit", this.tableData[0]);
-        } else if (command === "del") {
+        if (command === 'edit') {
+          this.$emit('edit', this.tableData[0])
+        } else if (command === 'del') {
         }
       }
-    },
+    }
   },
 
   watch: {
     isState: {
       deep: true,
-      handler(n) {
-        this.switchStatus = n;
-        this.tableData[0].state = n === true ? 1 : 0;
-      },
+      handler (n) {
+        this.switchStatus = n
+        this.tableData[0].state = n === true ? 1 : 0
+      }
     },
-    switchStatus:{
-        deep:true,
-        handler(n){
-            this.tableData[0].state = n=== true ? 1 : 0;
-        }
+    switchStatus: {
+      deep: true,
+      handler (n) {
+        this.tableData[0].state = n === true ? 1 : 0
+      }
     }
-  },
-};
+  }
+}
 </script>
 <style lang='' scoped>
 </style>
