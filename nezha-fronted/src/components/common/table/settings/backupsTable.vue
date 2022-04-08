@@ -20,13 +20,13 @@
           {{ tableData[0].retention }}
         </span>
         <span v-if="item.prop === 'last'">
-          {{ tableData[0].schedule && utcTimeToTimezoneStr(tableData[0].schedule.stime) }}
+          {{ tableData[0].schedule && utcTimeToTimezoneStr(tableData[0].schedule.stime) ?utcTimeToTimezoneStr(tableData[0].schedule.stime):'' }}
         </span>
         <span v-if="item.prop === 'state'">
           <el-switch class="switch" v-model="switchStatus"> </el-switch>
         </span>
         <span v-if="item.prop === 'time'">
-          {{ scope.row.time ? scope.row.time : "-" }}
+          {{ scope.row.time ? scope.row.time : "" }}
         </span>
         <span v-if="item.prop === 'size'">
           {{ scope.row.size ? scope.row.size : "" }}
@@ -146,6 +146,11 @@ export default {
             await post('/sys/backup/list').then((res) => {
               if (res.code === 200) {
                 if (res.data) {
+                    // res.data.forEach((e,i)=>{
+                    //     this.tableData2[i].fileName = e.fileName
+                    // this.tableData2[i].size = bus.getNumStr(e.size)
+                    // this.tableData2[i].time = e.time
+                    // })
                   for (const i in res.data) {
                     this.tableData2[i].fileName = res.data[i].fileName
                     this.tableData2[i].size = bus.getNumStr(res.data[i].size)

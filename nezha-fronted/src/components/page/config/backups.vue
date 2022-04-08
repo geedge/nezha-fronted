@@ -81,7 +81,9 @@ export default {
       ],
       tableData2: [
         {
-          list: {}
+          list: {
+              
+          }
         }
       ],
       rightBoxshow: false,
@@ -100,7 +102,11 @@ export default {
 
   methods: {
     edit (row) {
-      this.object = { ...row }
+      this.object = { ...row ,
+      checkDay:'',
+      checkDays:'',
+      datepicker:''
+      }
       this.object.name = this.$t('backup.edit')
       if (this.object.schedule) {
         for (const i in this.object.schedule) {

@@ -442,12 +442,7 @@ export default {
               checkdays.push(6);
             }
           });
-          // for (let i in checkdays) {
-          //   this.checkDay.push(this.week[i]);
-          // }
           this.$set(this.editBackup, "checkDay", checkdays);
-
-          //   this.editBackup.checkDay = checkdays
         } else if (this.editBackup.type == 4) {
           this.editBackup.nums.forEach((e) => {
             if (e === -1) {
@@ -459,9 +454,6 @@ export default {
           this.$set(this.editBackup, "checkDays", checkdays);
         }
         console.log("editBackupNow", this.editBackup);
-        // this.$nextTick(() => {
-        //   this.$forceUpdate();
-        // });
         this.$forceUpdate();
       },
     },
@@ -508,17 +500,6 @@ export default {
         );
       },
     },
-    // "editBackup.checkDays": {
-    //   deep: true,
-    //   handler(n) {
-    //     n.forEach((e, i) => {
-    //       if (e === 31) {
-    //         this.editBackup.checkDays[i] = -2;
-    //       }
-    //     });
-    //     console.log("checkDays", this.editBackup.checkDays);
-    //   },
-    // },
   },
 };
 </script>
