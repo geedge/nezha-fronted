@@ -198,6 +198,10 @@ export default new Router({
           path: '/backup',
           component: resolve => require(['../components/page/config/backups.vue'], resolve)
         },
+        {
+          path: '/ping',
+          component: resolve => require(['../components/page/tool/ping.vue'], resolve)
+        }
       ]
     }
   ]

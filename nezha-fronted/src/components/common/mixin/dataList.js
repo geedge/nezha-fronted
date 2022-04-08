@@ -346,6 +346,7 @@ export default {
       }
     }
   },
+
   created () {
     let path = ''
     if (this.$route.fullPath.match(/\/(\S*)\?/)) {

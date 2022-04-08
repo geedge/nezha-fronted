@@ -297,3 +297,4 @@ export default {
     setChart(this.chartId, null)
   }
 }
+ 

@@ -1,14 +1,22 @@
 <template>
   <div :style="calcPosition(that.position,that)" class="alert-label__border alert-label" v-my-loading="loading" ref="alertLabels">
+    <div class="alert-label-header-title">
+      <div class="alert-label-header-circle" :style="`background: ${alertColor}`">
+        <i  class="nz-icon nz-icon-Alertrule"></i>
+      </div>
+      <div class="alert-label-header-name">
+        {{alertRuleData && alertRuleData.name ? alertRuleData.name : '--'}}
+      </div>
+    </div>
     <div class="alert-rule-info" >
       <div class="alert-rule-box">
         <div class="alert-rule-title">ID</div>
         <div class="alert-rule-value">{{alertRuleData.id ? alertRuleData.id : '--'}}</div>
       </div>
-      <div class="alert-rule-box">
-        <div class="alert-rule-title">{{$t('alert.name')}}</div>
-        <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
-      </div>
+<!--      <div class="alert-rule-box">-->
+<!--        <div class="alert-rule-title">{{$t('alert.name')}}</div>-->
+<!--        <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : '&#45;&#45;'}}</div>-->
+<!--      </div>-->
       <div class="alert-rule-box">
         <div class="alert-rule-title">{{$t('alert.type')}}</div>
         <div class="alert-rule-value">
@@ -85,7 +93,9 @@ export default {
     return {
       loading: true,
       alertRuleData: '',
-      severityColor: ''
+      severityColor: '',
+      severityDataWeight: this.$store.getters.severityDataWeight,
+      alertColor: '#23bf9a'
     }
   },
   components: {
@@ -135,6 +145,23 @@ export default {
       this.severityData.map(item => {
         this.severityColor = item.color
       })
+    },
+    returnColor (obj) {
+      let color = '#23bf9a'
+      if (!obj) {
+        return color
+      } else {
+        this.severityDataWeight.forEach(severity => {
+          const num = obj.find(alert => alert.priority === severity.name)
+          if (num && !color && num.num > 0) {
+            color = severity.color
+          }
+        })
+        if (!color) {
+          color = '#23bf9a'
+        }
+        return color
+      }
     }
   },
   mounted () {
@@ -143,6 +170,7 @@ export default {
         this.loading = false
         this.severityDataColor()
         this.alertRuleData = res.data
+        this.alertColor = this.returnColor(res.data.alert)
         const weekDays = this.getWeeksTime()
         if (this.trendTimer) {
           clearTimeout(this.trendTimer)

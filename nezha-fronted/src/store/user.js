@@ -71,7 +71,6 @@ const user = {
   },
   actions: {
     loginSuccess (store, res) {
-
       const defaultAppearance = {
         system_name: localStorage.getItem('nz-sys-name'),
         system_logo: localStorage.getItem('nz-sys-logo'),

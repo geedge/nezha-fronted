@@ -11,21 +11,21 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/apis': {
-        target: 'http://192.168.40.42:8080/nz-admin', //设置调用接口域名和端口号别忘了加http
+        target: 'http://192.168.40.42:8080/nz-admin', // 设置调用接口域名和端口号别忘了加http
         changeOrigin: true,
         pathRewrite: {
-          '^/apis': '/' //这里理解成用‘/api’代替target里面的地址，组件中我们调接口时直接用/api代替
-        },
+          '^/apis': '/' // 这里理解成用‘/api’代替target里面的地址，组件中我们调接口时直接用/api代替
+        }
       }
     },
     // Various Dev Server settings
-    host: '0.0.0.0', // can be overwritten by process.env.HOST
+    // host: '0.0.0.0', // can be overwritten by process.env.HOST
+    host: '127.0.0.1', // can be overwritten by process.env.HOST
     port: 80, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
-
 
     /**
      * Source Maps
@@ -45,7 +45,7 @@ module.exports = {
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
-    version:'1.2',
+    version: '1.2',
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
