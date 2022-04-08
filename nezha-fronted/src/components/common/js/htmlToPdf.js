@@ -16,7 +16,7 @@ export default {
         // height: 240, //canvas高度
         x: x || 0, // x坐标 需要计算
         y: y || 0, // y坐标 需要计算
-        async: true, // 是否异步解析和呈现元素
+        async: false, // 是否异步解析和呈现元素
         foreignObjectRendering: true // 是否在浏览器支持的情况下使用ForeignObject渲染
       }).then(function (canvas) {
         loading.close()
@@ -38,7 +38,7 @@ export default {
           PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight)
         } else {
           while (leftHeight > 0) {
-            PDF.addImage(pageData, 'JPEG', 20, position, imgWidth, imgHeight)
+            PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
             leftHeight -= pageHeight
             position -= 841.89
             if (leftHeight > 0) {

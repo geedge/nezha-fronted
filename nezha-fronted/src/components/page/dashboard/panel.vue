@@ -1,5 +1,5 @@
 <template>
-  <div class="panel list-page" v-my-loading="panelTabLoading">
+  <div class="panel list-page" v-loading="panelTabLoading">
     <div class="main-list">
       <div>
         <transition name="el-zoom-in-center">
@@ -75,7 +75,7 @@
                     <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
                   </el-dropdown-item>
                   <el-dropdown-item v-has="'main_add'">
-                    <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
+                    <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>
                   </el-dropdown-item>
                 </template>
               </top-tool-more-options>
@@ -84,7 +84,7 @@
         </div>
         <div id="tableList" class="table-list" style='overflow-y: unset'>
           <div class="table-list-box">
-            <div  id="dashboardScrollbar" class="box-content" v-my-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
+            <div  id="dashboardScrollbar" class="box-content" v-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
               <chart-list
                 ref="chartList"
                 name="panel"
@@ -126,7 +126,7 @@
 <!--      ></chart-box>-->
       <chart-right-box
         v-if="chartRightBoxShow"
-        v-my-loading="rightBox.loading"
+        v-loading="rightBox.loading"
         ref="addChartModal"
         :chart="chart"
         :from="fromRoute.panel"
@@ -834,7 +834,7 @@ export default {
     htmlToPdf () {
       let dom = document.getElementsByClassName(this.pdfId)[0]
       if (dom) {
-        dom = dom.getElementsByClassName('vue-grid-layout')[0]
+        // dom = dom.getElementsByClassName('vue-grid-layout')[0]
         this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
         this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
         let flag = true
@@ -855,10 +855,12 @@ export default {
             timer = null
             setTimeout(() => {
               document.body.style.height = 'auto'
-              document.getElementsByTagName('html')[0].style.overflow = 'visible'
+              // document.getElementsByTagName('html')[0].style.overflow = 'visible'
               const position = dom.getBoundingClientRect()
+              console.log(position)
               this.getPdf(dom, -1 * position.left, -1 * position.top)
-            }, 500)
+              // this.getPdf(dom, 0, 0)
+            }, 2000)
           }
         }, 200)
       } else {

@@ -3,6 +3,7 @@
     <grid-layout
       ref="layout"
       v-if="gridLayoutShow"
+      class="pdfDom"
       :class="firstInit ? 'no-animation' : ''"
       :col-num="12"
       :is-draggable="!panelLock"

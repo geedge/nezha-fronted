@@ -168,6 +168,7 @@ export default {
           obj[column.title + 'mapping'] = ''
           if (this.chartInfo.param.enable && this.chartInfo.param.enable.valueMapping) {
             valueMapping[column.title].forEach(item => {
+              // const rowValue = row.display[column.title + 'display']
               const rowValue = row.display[column.title + 'display']
               if (item.type === 'value') {
                 if (rowValue == item.value) {
