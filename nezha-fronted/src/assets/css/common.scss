@@ -367,6 +367,12 @@ td .nz-icon-gear:before{
     }
   }
 }
+.el-dropdown-menu-link .el-dropdown-menu__item{
+  padding: 0;
+  .link-title {
+    padding: 0 20px;
+  }
+}
 .chart-bar,.chart-gauge,.chart-time-series,.chart-treemap,.chart-pie,.chart-canvas-tooltip,.line-chart-block-Zindex,.alert-label,.alert-labelUp,.alert-days-info-tooltip,.nz-tooltip-bac{
   background-color: $--tooltip-background-color !important;
   border: 2px solid $--tooltip-border-color !important;

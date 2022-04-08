@@ -115,9 +115,12 @@
   .left-menu--pin-reverse{
   }
 }
-.link-title a {
-  color: inherit;
+a.link-title {
+  color: $--color-text-regular !important;
   text-decoration: none;
+}
+a.link-title:hover{
+  color: $--color-primary !important;
 }
 .nz-breakcrumb {
   padding-left: 15px;
