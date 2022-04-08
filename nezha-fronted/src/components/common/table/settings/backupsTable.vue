@@ -41,7 +41,7 @@
         v-if="isConfigurations"
       >
         <button class="table-operation-button" @click="backupNow(scope.row)">
-          backup now
+          {{$t('backup.backupNow')}}
         </button>
         <el-dropdown size="medium" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
@@ -68,7 +68,7 @@
       </div>
       <div slot-scope="scope" v-else class="table-operation-items">
         <button class="table-operation-button" @click="Restore(scope.row)">
-          Restore
+          {{$t('backup.Restore')}}
         </button>
         <button class="table-operation-del" @click="del(scope.row)">
           <i class="nz-icon nz-icon-delete"></i>

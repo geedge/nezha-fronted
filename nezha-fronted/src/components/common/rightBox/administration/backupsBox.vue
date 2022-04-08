@@ -17,21 +17,21 @@
           label-width="120px"
           ref="backupsForm"
         >
-          <el-form-item label="schedule" prop="type">
+          <el-form-item :label="$t('backup.schedule')" prop="type">
             <el-tabs
               v-model="editBackup.type"
               @tab-click="datasourceChange"
               type="card"
               class="backups-info-tab"
             >
-              <el-tab-pane label="One time only" name="1"> </el-tab-pane>
-              <el-tab-pane label="Daily" name="2"> </el-tab-pane>
-              <el-tab-pane label="Weekly" name="3"> </el-tab-pane>
-              <el-tab-pane label="Monthly" name="4"> </el-tab-pane>
+              <el-tab-pane :label="$t('backup.only')" name="1"> </el-tab-pane>
+              <el-tab-pane :label="$t('backup.Daily')" name="2"> </el-tab-pane>
+              <el-tab-pane :label="$t('backup.Weekly')" name="3"> </el-tab-pane>
+              <el-tab-pane :label="$t('backup.Monthly')" name="4"> </el-tab-pane>
             </el-tabs>
           </el-form-item>
           <el-form-item
-            label="Start at"
+            :label="$t('backup.start')"
             prop="datepicker"
             v-if="whoshow"
             class="start_at"
@@ -40,7 +40,7 @@
               v-model="editBackup.datepicker[0]"
               type="date"
               :format="timeFormatStrToDatePickFormat(dateFormatStr)"
-              placeholder="选择日期"
+              :placeholder="$t('backup.SelectData')"
             >
             </my-date-picker>
 
@@ -48,12 +48,13 @@
               :value-format="'HH:mm:ss'"
               :format="'HH:mm:ss'"
               v-model="editBackup.datepicker[1]"
-              placeholder="选择时间"
+              :placeholder="$t('backup.SelectTime')"
             >
             </el-time-picker>
           </el-form-item>
           <el-form-item
-            label="Enable"
+            :label="$t('backup.Enable')"
+
             prop="status"
             class="form-item__switch"
             v-if="whoshow !== 2 ? true : false"
@@ -66,7 +67,7 @@
             </el-switch>
           </el-form-item>
           <el-form-item
-            label="Every day of the months"
+            :label="$t('backup.DayOfMonth')"
             prop="checkDays"
             v-if="whoshow === 4 ? true : false"
             class="check-month_box"
@@ -84,7 +85,8 @@
             </el-checkbox-group>
           </el-form-item>
           <el-form-item
-            label="Backup Retention"
+            :label="$t('backup.backupRetention')"
+
             prop="retention"
             v-if="whoshow !== 2 ? true : false"
           >
@@ -97,7 +99,7 @@
             ></el-input>
           </el-form-item>
           <el-form-item
-            label="Week on"
+            :label="$t('backup.WeekOn')"
             prop="checkDay"
             v-if="whoshow === 3 ? true : false"
             class="check_box"
@@ -115,7 +117,7 @@
             </el-checkbox-group>
           </el-form-item>
           <el-form-item
-            label="Repeat every"
+            :label="$t('backup.RepeatEvery')"
             prop="repeat"
             v-if="whoshow === 2 || whoshow === 3 ? true : false"
           >
@@ -126,7 +128,7 @@
               id="chart-box-title"
               @change="inputchange"
             >
-              <template slot="append">week</template>
+              <template slot="append">{{$t('backup.week')}}</template>
             </el-input>
             <el-input
               v-if="whoshow === 2 ? true : false"
@@ -135,7 +137,7 @@
               id="chart-box-title"
               @change="inputchange"
             >
-              <template slot="append">days</template>
+              <template slot="append">{{$t('backup.day')}}</template>
             </el-input>
           </el-form-item>
         </el-form>
@@ -242,7 +244,7 @@ export default {
         ],
         checkDay: [{ validator: arrLength, trigger: "blur" }],
       },
-      week: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+      week: [this.$t('week.Mon'),this.$t('week.Tue'),this.$t('week.Wed'),this.$t('week.Thu'),this.$t('week.Fri'),this.$t('week.Sat'),this.$t('week.Sun'),],
       month: [
         1,
         2,
@@ -336,8 +338,6 @@ export default {
     save() {
       this.$refs.backupsForm.validate((valid) => {
         if (valid) {
-          console.log(this.editBackup);
-
           this.editBackup.stime = this.editBackup.datepicker.join(" ");
           this.editBackup.stime = this.timezoneToUtcTime(this.editBackup.stime); // 将本地时间转 utc时间
           put("/sys/backup", {
@@ -352,6 +352,7 @@ export default {
           }).then((res) => {
             if (res.code === 200) {
               this.esc(true);
+              console.log(this.editBackup);
             }
           });
         }

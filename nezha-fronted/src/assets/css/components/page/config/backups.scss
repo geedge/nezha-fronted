@@ -1,5 +1,8 @@
 .system {
     padding-top: 40px;
+    .system-config-backup{
+      width: 100% !important;
+    }
   .system-config-form {
     padding-bottom: 20px;
     .system-title {
@@ -22,8 +25,6 @@
               .items-button {
                 background: $--color-warning;
                 border-radius: 2px;
-                width: 98px;
-                height: 30px;
                 font-family: PingFangSC-Regular;
                 font-size: 14px;
                 color: $--license-left-title-color;

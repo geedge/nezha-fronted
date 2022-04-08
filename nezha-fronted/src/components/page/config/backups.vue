@@ -1,7 +1,7 @@
 <template>
   <div class="system">
-    <div class="system-config-form">
-      <div class="system-title">backup configurations</div>
+    <div class="system-config-form system-config-backup">
+      <div class="system-title">{{$t('backup.configurations')}}</div>
       <nz-data-list
         ref="dataList"
         id="modelTable"
@@ -22,8 +22,8 @@
       </nz-data-list>
     </div>
 
-    <div class="system-config-form">
-      <div class="system-title">Recent backup</div>
+    <div class="system-config-form system-config-backup">
+      <div class="system-title">{{$t('backup.recent')}}</div>
       <nz-data-list
         ref="dataList"
         id="modelTable"
@@ -61,16 +61,16 @@ export default {
 
       url: '/sys/backup/list',
       customTableTitle: [
-        { label: 'Frequency', prop: 'repeat' },
-        { label: 'Backup Retention', prop: 'retention' },
-        { label: 'Last backup at', prop: 'last' },
-        { label: 'Enable', prop: 'state' }
+        { label: this.$t('backup.frequency'), prop: 'repeat' },
+        { label: this.$t('backup.backupRetention'), prop: 'retention' },
+        { label: this.$t('backup.last'), prop: 'last' },
+        { label: this.$t('backup.Enable'), prop: 'state' }
       ],
       customTableTitle2: [
-        { label: 'Date', prop: 'time' },
-        { label: 'File', prop: 'fileName' },
-        { label: 'Size', prop: 'size' },
-        { label: 'Description', prop: 'Description' }
+        { label: this.$t('backup.Date'), prop: 'time' },
+        { label: this.$t('backup.File'), prop: 'fileName' },
+        { label: this.$t('backup.size'), prop: 'size' },
+        { label: this.$t('backup.Description'), prop: 'Description' }
       ],
       tableData: [
         {
@@ -101,7 +101,7 @@ export default {
   methods: {
     edit (row) {
       this.object = { ...row }
-      this.object.name = 'Edit backup configurations'
+      this.object.name = this.$t('backup.edit')
       if (this.object.schedule) {
         for (const i in this.object.schedule) {
           this.object[i] = this.object.schedule[i]
