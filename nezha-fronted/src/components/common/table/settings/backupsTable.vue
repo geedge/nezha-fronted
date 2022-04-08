@@ -29,7 +29,7 @@
           {{ scope.row.time ? scope.row.time : "" }}
         </span>
         <span v-if="item.prop === 'size'">
-          {{ scope.row.size ? scope.row.size : "" }}
+          {{ scope.row.size ? getNum(scope.row.size) : "" }}
         </span>
         <span v-if="item.prop === 'fileName'"> {{ scope.row.fileName }} </span>
       </template>
@@ -129,6 +129,9 @@ export default {
   },
 
   methods: {
+      getNum(item){
+          return bus.getNumStr(item)
+      },
     async getTableData (item) {
         if(!item){
             await get('/sys/backup').then((res) => {
@@ -146,16 +149,8 @@ export default {
             await post('/sys/backup/list').then((res) => {
               if (res.code === 200) {
                 if (res.data) {
-                    // res.data.forEach((e,i)=>{
-                    //     this.tableData2[i].fileName = e.fileName
-                    // this.tableData2[i].size = bus.getNumStr(e.size)
-                    // this.tableData2[i].time = e.time
-                    // })
-                  for (const i in res.data) {
-                    this.tableData2[i].fileName = res.data[i].fileName
-                    this.tableData2[i].size = bus.getNumStr(res.data[i].size)
-                    this.tableData2[i].time = res.data[i].time
-                  }
+                    this.tableData2 = res.data
+                    
                 }
               }
             })
