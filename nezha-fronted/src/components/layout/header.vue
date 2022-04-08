@@ -13,12 +13,12 @@
       </el-dropdown>
       <el-dropdown trigger="click">
         <div class="header-menu__item"><i class="nz-icon nz-icon-more-app"></i></div>
-        <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
+        <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top el-dropdown-menu-link">
           <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index" v-if="linkData.length">
-            <span class="link-title">
+            <a :href='item.url' rel="noopener noreferrer" :title="item.name" target="_blank" class="link-title nz-  a">
               <i class="nz-icon nz-icon-link"></i>
-              <a :href='item.url' rel="noopener noreferrer" :title="item.name"  class="nz-  a" target="_blank">{{item.name}}</a>
-            </span>
+              <span class="nz-  a">{{item.name}}</span>
+            </a>
           </el-dropdown-item>
           <div v-if="!linkData.length" class="header-link-nodata">
             {{$t('overall.noData')}}

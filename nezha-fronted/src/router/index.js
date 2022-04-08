@@ -195,6 +195,10 @@ export default new Router({
           component: resolve => require(['../components/page/config/template/chartTemp.vue'], resolve)
         },
         {
+          path: '/backup',
+          component: resolve => require(['../components/page/config/backups.vue'], resolve)
+        },
+        {
           path: '/ping',
           component: resolve => require(['../components/page/tool/ping.vue'], resolve)
         }

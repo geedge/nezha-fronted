@@ -1,0 +1,510 @@
+<template>
+  <div
+    v-clickoutside="{ obj: editBackup, func: esc }"
+    class="right-box "
+  >
+    <div class="right-box__header">
+      <div class="header__title">{{ editBackup.name }}</div>
+      <div class="header__operation">
+        <span v-cancel="{ obj: editBackup, func: esc }"
+          ><i class="nz-icon nz-icon-close"></i
+        ></span>
+      </div>
+    </div>
+    <div class="right-box__container right-box-container__left">
+      <div class="container__form">
+        <el-form
+          :model="editBackup"
+          :rules="rules"
+          label-position="top"
+          label-width="120px"
+          ref="backupsForm"
+        >
+          <el-form-item label="schedule" prop="type">
+            <el-tabs
+              v-model="editBackup.type"
+              @tab-click="datasourceChange"
+              type="card"
+              class="backups-info-tab"
+            >
+              <el-tab-pane label="One time only" name="1"> </el-tab-pane>
+              <el-tab-pane label="Daily" name="2"> </el-tab-pane>
+              <el-tab-pane label="Weekly" name="3"> </el-tab-pane>
+              <el-tab-pane label="Monthly" name="4"> </el-tab-pane>
+            </el-tabs>
+          </el-form-item>
+          <el-form-item label="Start at" prop="datepicker" v-if="whoshow" class="start_at">
+            <el-date-picker
+              v-model="editBackup.datepicker[0]"
+              type="date"
+              placeholder="选择日期"
+            >
+            </el-date-picker>
+
+            <el-time-picker
+              :value-format="'HH:mm:ss'"
+              :format="'HH:mm:ss'"
+              v-model="editBackup.datepicker[1]"
+              placeholder="选择时间"
+            >
+            </el-time-picker>
+          </el-form-item>
+          <el-form-item
+            label="Enable"
+            prop="status"
+            class="form-item__switch"
+            v-if="whoshow !== 2 ? true : false"
+          >
+            <el-switch
+            class="switch"
+              v-model="editBackup.status"
+              @change="statusChange"
+            >
+            </el-switch>
+          </el-form-item>
+          <el-form-item
+            label="Every day of the months"
+            prop="checkDays"
+            v-if="whoshow === 4 ? true : false"
+            style=""
+          >
+            <el-checkbox-group
+              v-model="editBackup.checkDays"
+              @change="changeCheck"
+            >
+              <el-checkbox-button
+                v-for="(item, day) in month"
+                :label="day"
+                :key="item"
+                >{{ item }}</el-checkbox-button
+              >
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item
+            label="Backup Retention"
+            prop="retention"
+            v-if="whoshow !== 2 ? true : false"
+          >
+            <el-input
+              maxlength="64"
+              size="small"
+              v-model="editBackup.retention"
+              id="chart-box-title"
+              @change="inputchange"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="Week on"
+            prop="checkDay"
+            v-if="whoshow === 3 ? true : false"
+            class="check_box"
+          >
+            <el-checkbox-group
+              v-model="editBackup.checkDay"
+              @change="changeCheck"
+            >
+              <el-checkbox-button
+                v-for="(day, index) in week"
+                :label="index"
+                :key="index"
+                >{{ week[index] }}</el-checkbox-button
+              >
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item
+            label="Repeat every"
+            prop="repeat"
+            v-if="whoshow === 2 || whoshow === 3 ? true : false"
+          >
+            <el-input
+              v-if="whoshow === 3 ? true : false"
+              size="small"
+              v-model="editBackup.repeat"
+              id="chart-box-title"
+              @change="inputchange"
+            >
+              <template slot="append">week</template>
+            </el-input>
+            <el-input
+              v-if="whoshow === 2 ? true : false"
+              size="small"
+              v-model="editBackup.repeat"
+              id="chart-box-title"
+              @change="inputchange"
+            >
+              <template slot="append">days</template>
+            </el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
+    <div class="right-box__footer">
+      <button
+        id="asset-edit-cancel"
+        v-cancel="{ obj: editBackup, func: esc }"
+        class="footer__btn footer__btn--light"
+      >
+        <span>{{ $t("overall.cancel") }}</span>
+      </button>
+      <button
+        id="asset-edit-save"
+        :class="{ 'footer__btn--disabled': prevent_opt.save }"
+        :disabled="prevent_opt.save"
+        class="footer__btn"
+        @click="save"
+      >
+        <span>{{ $t("overall.save") }}</span>
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import bus from "@/libs/bus";
+import { put } from "@/http";
+
+export default {
+  name: "backupsBox",
+  props: {
+    obj: {
+      type: Object,
+    },
+  },
+  data() {
+    return {
+      editBackup: {
+        status: "",
+        checkDays: [],
+        checkDay: [],
+        timepicker: "",
+        datepicker: "",
+        retention: "",
+        state: "",
+        schedule: {
+          repeat: "",
+          stime: "",
+          type: "",
+          nums: [],
+        },
+      },
+      whoshow: "",
+      activeName: "",
+
+      rules: {
+        type: [
+          {
+            required: true,
+            message: this.$t("validate.required"),
+            trigger: "change",
+          },
+        ],
+        datepicker: [
+          {
+            required: true,
+            message: this.$t("validate.required"),
+            trigger: "change",
+          },
+        ],
+        checkDays: [
+          {
+            required: true,
+            message: this.$t("validate.required"),
+            trigger: "change",
+          },
+        ],
+        retention: [
+          {
+            required: true,
+            message: this.$t("validate.required"),
+            trigger: ["blur", "change"],
+          },
+        ],
+        Status: [
+          {
+            required: true,
+            message: this.$t("validate.required"),
+            trigger: "change",
+          },
+        ],
+        repeat: [
+          {
+            required: true,
+            message: this.$t("validate.required"),
+            trigger: "blur",
+          },
+        ],
+        checkDay: [
+          {
+            required: true,
+            message: this.$t("validate.required"),
+            trigger: "change",
+          },
+        ],
+      },
+      week: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+      month: [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        "Last",
+      ],
+    };
+  },
+
+  components: {},
+
+  computed: {},
+
+  beforeMount() {},
+
+  mounted() {
+  },
+
+  methods: {
+    
+    changeCheck(item) {
+      if (this.editBackup.type == 3) {
+        let nums = [];
+        this.editBackup.nums = [];
+        for (let i in this.editBackup.checkDay) {
+          nums.push(Number(this.editBackup.checkDay[i]) + 1);
+        }
+        console.log(nums);
+        this.editBackup.nums = nums;
+      } else if (this.editBackup.type == 4) {
+        let nums = [];
+        this.editBackup.nums = [];
+        this.editBackup.checkDays.forEach((e, i) => {
+          if (e === 31) {
+            nums.push(-1);
+          } else {
+            nums.push(Number(this.editBackup.checkDays[i]) + 1);
+          }
+        });
+        console.log(nums);
+        this.editBackup.nums = nums;
+      }
+      this.$forceUpdate();
+    },
+    statusChange(item){
+      this.$forceUpdate();
+        console.log(item);
+        if(item){
+            this.editBackup.state = 1;
+            this.$emit("statechange", true);
+        }else{
+            this.editBackup.state = 0;
+            this.$emit("statechange", false);
+        }
+    },
+    save() {
+      console.log(this.editBackup);
+
+      this.editBackup.stime = this.editBackup.datepicker.join(" ");
+      put("/sys/backup", {
+        state: Number(this.editBackup.state),
+        schedule: {
+          type: Number(this.editBackup.type),
+          stime: this.editBackup.stime,
+          repeat: Number(this.editBackup.repeat),
+          nums: this.editBackup.nums,
+        },
+        retention: Number(this.editBackup.retention),
+      }).then((res) => {
+        if (res.code === 200) {
+          this.esc(true);
+        }
+      });
+    },
+    inputchange(n) {
+      this.$forceUpdate();
+    },
+    datasourceChange(tab) {
+      console.log(tab.name);
+      switch (tab.name) {
+        case "2":
+          this.whoshow = 2;
+          break;
+        case "1":
+          this.whoshow = 1;
+          break;
+        case "3":
+          this.whoshow = 3;
+          break;
+        case "4":
+          this.whoshow = 4;
+          break;
+      }
+      console.log(this.whoshow);
+      console.log(this.editBackup);
+      this.$forceUpdate();
+    },
+    clickOutside() {
+      this.esc(false);
+    },
+    /* 关闭弹框 */
+    esc(refresh) {
+      this.$emit("close", refresh);
+    },
+  },
+
+  watch: {
+    obj: {
+      deep: true,
+      immediate: true,
+      handler(n) {
+        //   debugger
+        console.log(n);
+        this.editBackup = JSON.parse(JSON.stringify(n));
+        this.editBackup.checkDay = [];
+        this.editBackup.checkDays = [];
+        this.editBackup.type = this.editBackup.type + "";
+        let stime = this.editBackup.stime;
+        let time = stime.split(" ");
+        this.$set(this.editBackup, "datepicker", time);
+        console.log("obj", this.editBackup);
+        if (this.editBackup.state == 1) {
+          this.editBackup.status = true;
+          this.$emit("statechange", true);
+        } else {
+          this.editBackup.status = false;
+          this.$emit("statechange", false);
+        }
+        switch (this.editBackup.type) {
+          case "1":
+            this.activeName = "1";
+            this.whoshow = 1;
+            break;
+          case "2":
+            this.activeName = "2";
+            this.whoshow = 2;
+            break;
+          case "3":
+            this.activeName = "3";
+            this.whoshow = 3;
+            break;
+          case "4":
+            this.activeName = "4";
+            this.whoshow = 4;
+            break;
+        }
+        let checkdays = [];
+
+        this.checkDay = [];
+        if (this.editBackup.type == 3) {
+          this.editBackup.nums.forEach((e) => {
+            checkdays.push(e - 1);
+            if (e === -1) {
+              checkdays.push(6);
+            }
+          });
+          // for (let i in checkdays) {
+          //   this.checkDay.push(this.week[i]);
+          // }
+          this.$set(this.editBackup, "checkDay", checkdays);
+
+          //   this.editBackup.checkDay = checkdays
+        } else if (this.editBackup.type == 4) {
+          this.editBackup.nums.forEach((e) => {
+            if (e === -1) {
+              checkdays.push(31);
+            } else {
+              checkdays.push(e - 1);
+            }
+          });
+          this.$set(this.editBackup, "checkDays", checkdays);
+        }
+        console.log("editBackupNow", this.editBackup);
+        // this.$nextTick(() => {
+        //   this.$forceUpdate();
+        // });
+        this.$forceUpdate();
+      },
+    },
+    "editBackup.status": {
+      deep: true,
+      handler(n) {
+        console.log(n);
+        if (n) {
+          this.editBackup.state = 1;
+          this.editBackup.status = n;
+          this.$emit("statechange", true);
+        } else {
+          this.editBackup.state = 0;
+          this.editBackup.status = n;
+          this.$emit("statechange", false);
+        }
+      },
+    },
+    "editBackup.checkDay": {
+      deep: true,
+      handler(n) {
+        console.log(n);
+        n.forEach((e, i) => {
+          if (e === 6) {
+            this.editBackup.checkDay[i] = -1;
+          }
+        });
+        let nums = [];
+        this.editBackup.nums = [];
+        this.editBackup.checkDay.forEach((e, i) => {
+          nums.push(Number(i) + 1);
+        });
+
+        this.editBackup.nums = nums;
+        console.log("checkDay", this.editBackup.checkDay);
+      },
+    },
+    "editBackup.datepicker": {
+      deep: true,
+      handler(n) {
+        this.editBackup.datepicker[0] = bus.timeFormate(
+          new Date(n[0]),
+          "YYYY-MM-DD"
+        );
+      },
+    },
+    // "editBackup.checkDays": {
+    //   deep: true,
+    //   handler(n) {
+    //     n.forEach((e, i) => {
+    //       if (e === 31) {
+    //         this.editBackup.checkDays[i] = -2;
+    //       }
+    //     });
+    //     console.log("checkDays", this.editBackup.checkDays);
+    //   },
+    // },
+  },
+};
+</script>
+<style lang='' scoped>
+</style>

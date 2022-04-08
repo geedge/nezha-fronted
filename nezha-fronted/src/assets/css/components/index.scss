@@ -33,6 +33,7 @@
 @import './common/project/topology.scss';
 @import './common/project/topologyL5.scss';
 @import './common/rightBox/asset/assetBox.scss';
+@import './common/rightBox/backupsBox.scss';
 @import './common/rightBox/trafficSetting/subBox.scss';
 @import './common/rightBox/trafficSetting/trafficSettingTab.scss';
 @import './common/rightBox/addEndpointBox.scss';
@@ -54,6 +55,7 @@
 @import './common/table/alert/alertSilenceTable.scss';
 @import './common/table/asset/assetTable.scss';
 @import './common/table/settings/userTable.scss';
+@import './common/table/settings/backupsTable.scss';
 @import './common/table/settings/switchTab.scss';
 @import './common/table/special/endpointQuery.scss';
 @import './common/globalSearch/globalSearch';
@@ -84,6 +86,7 @@
 @import './page/config/about.scss';
 @import './page/config/agent.scss';
 @import './page/config/assetMeta.scss';
+@import './page/config/backups.scss';
 @import './page/config/mibBrowser.scss';
 @import './page/config/operationRecord.scss';
 @import './page/config/profile.scss';

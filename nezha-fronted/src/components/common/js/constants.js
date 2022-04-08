@@ -368,6 +368,7 @@ export const fromRoute = {
   ipam: 'ipam',
   apiKey: 'apiKey',
   chartTemp: 'chartTemp',
+  backups:'backups',
   ping: 'ping'
 }
 

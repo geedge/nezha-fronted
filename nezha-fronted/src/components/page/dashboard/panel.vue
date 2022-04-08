@@ -74,6 +74,9 @@
                   <el-dropdown-item v-has="'panel_view'">
                     <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
                   </el-dropdown-item>
+                  <el-dropdown-item v-has="'main_add'">
+                    <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>
+                  </el-dropdown-item>
                 </template>
               </top-tool-more-options>
             </div>
@@ -159,14 +162,17 @@ import { fromRoute } from '@/components/common/js/constants'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { lineChartMove } from '@/components/common/js/common'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
+import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 // import chartData from './testData'
 
 export default {
   name: 'panel',
-  mixins: [routerPathParams],
+  mixins: [routerPathParams, htmlToPdfMixin],
   data () {
     return {
       fromRoute,
+      pdfId: 'pdfDom',
+      htmlTitle: 'panel',
       panelTabLoading: false,
       overScroll10: false,
       isLoading: true,
@@ -824,6 +830,42 @@ export default {
     afterImport () {
       this.dateChange()
       this.panelReloadOnlyPanel()
+    },
+    htmlToPdf () {
+      let dom = document.getElementsByClassName(this.pdfId)[0]
+      if (dom) {
+        // dom = dom.getElementsByClassName('vue-grid-layout')[0]
+        this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
+        this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
+        let flag = true
+        this.showScreenLoading(true)
+        let timer = setInterval(() => {
+          flag = true
+          this.$refs.chartList.copyDataList.forEach(chart => {
+            if (chart.type !== 'group') {
+              flag = flag && chart.loaded
+            } else if (chart.collapse) {
+              chart.children.forEach(groupChart => {
+                flag = flag && groupChart.loaded
+              })
+            }
+          })
+          if (flag) {
+            clearInterval(timer)
+            timer = null
+            setTimeout(() => {
+              document.body.style.height = 'auto'
+              // document.getElementsByTagName('html')[0].style.overflow = 'visible'
+              const position = dom.getBoundingClientRect()
+              console.log(position)
+              this.getPdf(dom, -1 * position.left, -1 * position.top)
+              // this.getPdf(dom, 0, 0)
+            }, 2000)
+          }
+        }, 200)
+      } else {
+        this.showScreenLoading(false)
+      }
     }
   },
   created () {

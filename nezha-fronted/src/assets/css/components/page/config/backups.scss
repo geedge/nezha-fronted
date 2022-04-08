@@ -1,0 +1,39 @@
+.system {
+    padding-top: 40px;
+  .system-config-form {
+    padding-bottom: 20px;
+    .system-title {
+      font-family: Roboto-Medium;
+      font-size: 14px;
+      color: $--license-left-title-color;
+      letter-spacing: 0;
+      font-weight: 500;
+      margin-bottom: -2px;
+    }
+
+    #modelTable {
+      .main-list {
+        .main-container {
+          border: none;
+          padding: inherit;
+
+          .el-table__header-wrapper {
+            .table-operation-items {
+              .items-button {
+                background: $--color-warning;
+                border-radius: 2px;
+                width: 98px;
+                height: 30px;
+                font-family: PingFangSC-Regular;
+                font-size: 14px;
+                color: $--license-left-title-color;
+                font-weight: 400;
+              }
+            }
+
+          }
+        }
+      }
+    }
+  }
+}
