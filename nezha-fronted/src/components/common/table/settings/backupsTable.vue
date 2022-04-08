@@ -134,7 +134,8 @@ export default {
       this.$on('getData', (res) => {
         console.log('getdata')
         this.getTableData()
-        window.location.reload()
+      this.$forceUpdate();
+        // window.location.reload()
       })
     },
     async getTableData () {
