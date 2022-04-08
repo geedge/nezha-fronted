@@ -53,8 +53,8 @@ export default {
       if (flag) {
         loading = Loading.service({
           lock: true,
-          text: '正在下载pdf...',
-          background: 'rgba(0,500,200,.5)'
+          text: this.$t('overall.downloadProgress') + 'pdf...',
+          background: 'rgba(0,0,0,.3)'
         })
       } else {
         if (loading) {
