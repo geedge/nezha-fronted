@@ -30,9 +30,12 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'state'">
-          <div class="active-icon green-bg inline-block" v-if="scope.row.state===1"></div>
-          <div class="active-icon gray-bg inline-block" v-else-if="scope.row.state===0"></div>
+          <div class="active-icon green-bg inline-block" v-if="scope.row.state"></div>
+          <div class="active-icon gray-bg inline-block" v-else></div>
         </template>
+        <span v-else-if="item.prop === 'dc'&&scope.row[item.prop]!==undefined">{{scope.row[item.prop].name}}</span>
+        <span v-else-if="item.prop === 'rate'&&scope.row[item.prop]!==undefined">{{scope.row[item.prop]}}%</span>
+        <span v-else-if="(item.prop === 'avg'||item.prop === 'min'||item.prop === 'max')&&scope.row[item.prop]!==undefined">{{scope.row[item.prop]}}ms</span>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <span v-else>-</span>
       </template>
@@ -62,7 +65,7 @@ export default {
       tableTitle: [ // 原table列
         {
           label: this.$t('overall.dc'),
-          prop: 'dataCenter'
+          prop: 'dc'
         }, {
           label: this.$t('ping.sourceIp'),
           prop: 'source'
