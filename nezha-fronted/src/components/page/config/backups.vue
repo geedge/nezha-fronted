@@ -11,7 +11,7 @@
       >
         <template v-slot="slotProps">
           <backups-table
-          ref="backupsTable"
+          ref="backupsTable1"
             :custom-table-title="customTableTitle"
             :is-configurations="true"
             :is-state ='isState'
@@ -33,7 +33,7 @@
       >
         <template v-slot="slotProps">
           <backups-table
-          ref="backupsTable"
+          ref="backupsTable2"
             :custom-table-title="customTableTitle2"
             :is-configurations="false"
           >
@@ -111,7 +111,7 @@ export default {
     },
     closeRightBox (refresh) {
       if (refresh) {
-        this.$refs.backupsTable.$emit('getData')
+        this.$refs.backupsTable1.getTableData('backupsTable1')
       }
       this.rightBoxshow = false
     },

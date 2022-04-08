@@ -35,6 +35,16 @@
           }
         }
       }
+      .check-month_box{
+        .el-form-item__content{
+          .el-checkbox-button{
+            width: calc(100% / 7);
+            .el-checkbox-button__inner{
+              width: 100%;
+            }
+          }
+        } 
+      }
       .start_at{
         .el-form-item__content{
           .el-date-editor--date{

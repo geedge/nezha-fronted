@@ -126,42 +126,48 @@ export default {
 
   mounted () {
     this.getTableData()
-    this.monitoring()
   },
 
   methods: {
-    monitoring () {
-      this.$on('getData', (res) => {
-        console.log('getdata')
-        this.getTableData()
-      this.$forceUpdate();
-        // window.location.reload()
-      })
-    },
-    async getTableData () {
-      await get('/sys/backup').then((res) => {
-        if (res.code === 200) {
-          if (res.data) {
-            this.tableData[0].retention = res.data.retention
-            this.tableData[0].state = res.data.state
-            this.switchStatus = res.data.state === 1
-            for (const i in res.data.schedule) {
-              this.tableData[0].schedule[i] = res.data.schedule[i]
-            }
-          }
+    async getTableData (item) {
+        if(!item){
+            await get('/sys/backup').then((res) => {
+              if (res.code === 200) {
+                if (res.data) {
+                  this.tableData[0].retention = res.data.retention
+                  this.tableData[0].state = res.data.state
+                  this.switchStatus = res.data.state === 1
+                  for (const i in res.data.schedule) {
+                    this.tableData[0].schedule[i] = res.data.schedule[i]
+                  }
+                }
+              }
+            })
+            await post('/sys/backup/list').then((res) => {
+              if (res.code === 200) {
+                if (res.data) {
+                  for (const i in res.data) {
+                    this.tableData2[i].fileName = res.data[i].fileName
+                    this.tableData2[i].size = bus.getNumStr(res.data[i].size)
+                    this.tableData2[i].time = res.data[i].time
+                  }
+                }
+              }
+            })
+        }else{
+            await get('/sys/backup').then((res) => {
+              if (res.code === 200) {
+                if (res.data) {
+                  this.tableData[0].retention = res.data.retention
+                  this.tableData[0].state = res.data.state
+                  this.switchStatus = res.data.state === 1
+                  for (const i in res.data.schedule) {
+                    this.tableData[0].schedule[i] = res.data.schedule[i]
+                  }
+                }
+              }
+            })
         }
-      })
-      await post('/sys/backup/list').then((res) => {
-        if (res.code === 200) {
-          if (res.data) {
-            for (const i in res.data) {
-              this.tableData2[i].fileName = res.data[i].fileName
-              this.tableData2[i].size = bus.getNumStr(res.data[i].size)
-              this.tableData2[i].time = res.data[i].time
-            }
-          }
-        }
-      })
     },
     backupNow (item) {
       post('/sys/backup').then((res) => {
