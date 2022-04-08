@@ -1,0 +1,37 @@
+.right-box{
+  .right-box__container{
+    
+    .container__form{
+      .el-tabs--card>.el-tabs__header{
+        .el-tabs__nav{
+          width: 100%;
+          > div{
+            width: 25%;
+            box-sizing: border-box;
+            text-align: center;
+            padding: 0!important;
+          }
+        }
+      }
+      .el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+        color: $--color-primary;
+        border: 1px solid $--color-primary;
+
+      }
+      .el-tabs--card>.el-tabs__header .el-tabs__item{
+          border-bottom: 1px solid $--border-color-light ;
+
+      }
+      .el-tabs--card>.el-tabs__content{
+        display: none;
+      }
+      .start_at{
+        .el-form-item__content{
+          .el-date-editor:first{
+            margin-right: 20px;
+          }
+        }
+      }
+    }
+  }
+}

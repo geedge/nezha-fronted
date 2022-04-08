@@ -367,7 +367,8 @@ export const fromRoute = {
   link: 'link',
   ipam: 'ipam',
   apiKey: 'apiKey',
-  chartTemp: 'chartTemp'
+  chartTemp: 'chartTemp',
+  backups:'backups'
 }
 
 export const chartdatasource = [
