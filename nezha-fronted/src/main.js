@@ -35,6 +35,8 @@ import bus from '@/libs/bus'
 import myDatePicker from '@/components/common/myDatePicker'
 import vSelectPage from '@/components/common/v-selectpagenew'
 import nzDataList from '@/components/common/table/nzDataList'
+import htmlToPdf from '@/components/common/js/htmlToPdf'
+Vue.use(htmlToPdf)
 Vue.use(vSelectPage, {
   dataLoad: function (vue, url, params) {
     if (params.pageNumber) {
