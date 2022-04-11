@@ -142,13 +142,17 @@ export default {
       this.$emit('showText')
     },
     severityDataColor () {
-      this.severityData.map(item => {
-        this.severityColor = item.color
+      this.severityData.forEach(item => {
+        if (this.alertRuleData.severityId === item.id) {
+          this.severityColor = item.color
+        }
       })
     },
     returnColor (obj) {
-      let color = '#23bf9a'
+      console.log(obj,  this.severityDataWeight)
+      let color = ''
       if (!obj) {
+        color = '#23bf9a'
         return color
       } else {
         this.severityDataWeight.forEach(severity => {
@@ -168,8 +172,8 @@ export default {
     this.$get('/alert/rule/' + this.id).then((res) => {
       if (res.msg === 'success') {
         this.loading = false
-        this.severityDataColor()
         this.alertRuleData = res.data
+        this.severityDataColor()
         this.alertColor = this.returnColor(res.data.alert)
         const weekDays = this.getWeeksTime()
         if (this.trendTimer) {
