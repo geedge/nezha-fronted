@@ -14,7 +14,6 @@
           ref="backupsTable1"
             :custom-table-title="customTableTitle"
             :is-configurations="true"
-            :is-state ='isState'
             @edit="edit"
           >
           </backups-table>
@@ -42,7 +41,7 @@
       </nz-data-list>
     </div>
     <transition name="right-box">
-      <backups-box v-if="rightBoxshow"  :obj="object" @close="closeRightBox" @statechange='statechange'></backups-box>
+      <backups-box v-if="rightBoxshow"  :obj="object" @close="closeRightBox" class="backup_box"></backups-box>
     </transition>
   </div>
 </template>
@@ -82,12 +81,11 @@ export default {
       tableData2: [
         {
           list: {
-              
+
           }
         }
       ],
       rightBoxshow: false,
-      isState: '',
       isRefresh: ''
     }
   },
@@ -117,13 +115,10 @@ export default {
     },
     closeRightBox (refresh) {
       if (refresh) {
-        this.$refs.backupsTable1.getTableData('backupsTable1')
+        this.$refs.backupsTable1.getTableData('backup')
       }
       this.rightBoxshow = false
     },
-    statechange (Boolean) {
-      this.isState = Boolean
-    }
   },
 
   watch: {}

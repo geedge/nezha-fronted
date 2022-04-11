@@ -1,4 +1,5 @@
 <template>
+<div class="backups-table">
   <el-table :data="isConfigurations ? tableData : tableData2" border>
     <el-table-column
       class="table-column__head"
@@ -23,10 +24,10 @@
           {{ tableData[0].schedule && utcTimeToTimezoneStr(tableData[0].schedule.stime) ?utcTimeToTimezoneStr(tableData[0].schedule.stime):'' }}
         </span>
         <span v-if="item.prop === 'state'">
-          <el-switch class="switch" v-model="switchStatus"> </el-switch>
+          <el-switch class="switch" v-model="tableData[0].state" disabled> </el-switch>
         </span>
         <span v-if="item.prop === 'time'">
-          {{ scope.row.time ? scope.row.time : "" }}
+          {{ scope.row.time ? changeDate(scope.row.time ) : "" }}
         </span>
         <span v-if="item.prop === 'size'">
           {{ scope.row.size ? getNum(scope.row.size) : "" }}
@@ -34,7 +35,9 @@
         <span v-if="item.prop === 'fileName'"> {{ scope.row.fileName }} </span>
       </template>
     </el-table-column>
-    <el-table-column :resizable="false" fixed="right">
+    <el-table-column :resizable="false" fixed="right" 
+    width="165px"
+    >
       <div
         slot-scope="scope"
         class="table-operation-items"
@@ -43,45 +46,29 @@
         <button class="table-operation-button" @click="backupNow(scope.row)">
           {{$t('backup.backupNow')}}
         </button>
-        <el-dropdown size="medium" trigger="click" @command="tableOperation">
-          <div class="table-operation-item table-operation-item--more">
-            <i class="nz-icon nz-icon-more3"></i>
-          </div>
-          <el-dropdown-menu
-            slot="dropdown"
-            class="right-box-select-top right-public-box-dropdown-top"
-          >
-            <el-dropdown-item command="edit"
-              ><i class="nz-icon nz-icon-edit"></i
-              ><span class="operation-dropdown-text">{{
-                $t("overall.edit")
-              }}</span></el-dropdown-item
-            >
-            <el-dropdown-item @click="tableOperation('del', scope.row)"
-              ><i class="nz-icon nz-icon-delete"></i
-              ><span class="operation-dropdown-text">{{
-                $t("overall.delete")
-              }}</span></el-dropdown-item
-            >
-          </el-dropdown-menu>
-        </el-dropdown>
+        <button class="table-operation-edit" @click="edit(scope.row)">
+         <i class="nz-icon-gear nz-icon"></i>
+        </button>
       </div>
+
       <div slot-scope="scope" v-else class="table-operation-items">
         <button class="table-operation-button" @click="Restore(scope.row)">
           {{$t('backup.Restore')}}
         </button>
-        <button class="table-operation-del" @click="del(scope.row)">
-          <i class="nz-icon nz-icon-delete"></i>
+        <button class="table-operation-edit" @click="del(scope.row)">
+          <i class="nz-icon nz-icon-delete" style="font-size='12px'"></i>
         </button>
       </div>
     </el-table-column>
   </el-table>
+</div>
 </template>
 
 <script>
-import { get, post } from '@/http'
+import { get, post ,put} from '@/http'
 import lodash from 'lodash'
 import bus from '@/libs/bus'
+
 
 export default {
   name: 'backupsTable',
@@ -91,11 +78,10 @@ export default {
     loading: Boolean,
     customTableTitle: Array,
     isConfigurations: Boolean,
-    isState: Boolean
   },
   data () {
     return {
-      switchStatus: true,
+        
       tableData: [
         {
           retention: '',
@@ -129,6 +115,21 @@ export default {
   },
 
   methods: {
+      Restore(row){
+          put('/sys/backup/restore',{filename:row.fileName}).then(res=>{
+            if(res.code == 200){
+                this.getTableData('backup')
+            }
+        })
+      },
+      del(item){
+          console.log(item);
+      },
+      changeDate(item){
+          let time =Date.parse(item)
+          let time1 = this.timeFormate(time)
+          return time1
+      },
       getNum(item){
           return bus.getNumStr(item)
       },
@@ -138,8 +139,7 @@ export default {
               if (res.code === 200) {
                 if (res.data) {
                   this.tableData[0].retention = res.data.retention
-                  this.tableData[0].state = res.data.state
-                  this.switchStatus = res.data.state === 1
+                  this.tableData[0].state = res.data.state == 1? true :false
                   for (const i in res.data.schedule) {
                     this.tableData[0].schedule[i] = res.data.schedule[i]
                   }
@@ -154,19 +154,31 @@ export default {
                 }
               }
             })
-        }else{
-            await get('/sys/backup').then((res) => {
+        }else if(item == 'backup'){
+             get('/sys/backup').then((res) => {
               if (res.code === 200) {
                 if (res.data) {
                   this.tableData[0].retention = res.data.retention
-                  this.tableData[0].state = res.data.state
-                  this.switchStatus = res.data.state === 1
+                  this.tableData[0].state = res.data.state == 1? true :false
                   for (const i in res.data.schedule) {
                     this.tableData[0].schedule[i] = res.data.schedule[i]
                   }
                 }
               }
             })
+      this.$forceUpdate();
+
+        }else if(item == 'recent'){
+             post('/sys/backup/list').then((res) => {
+              if (res.code === 200) {
+                if (res.data) {
+                    this.tableData2 = res.data
+                    
+                }
+              }
+            })
+      this.$forceUpdate();
+
         }
     },
     backupNow (item) {
@@ -174,30 +186,12 @@ export default {
         console.log(res)
       })
     },
-    tableOperation (command) {
-      if (command) {
-        if (command === 'edit') {
+    edit () {
           this.$emit('edit', this.tableData[0])
-        } else if (command === 'del') {
-        }
-      }
     }
   },
 
   watch: {
-    isState: {
-      deep: true,
-      handler (n) {
-        this.switchStatus = n
-        this.tableData[0].state = n === true ? 1 : 0
-      }
-    },
-    switchStatus: {
-      deep: true,
-      handler (n) {
-        this.tableData[0].state = n === true ? 1 : 0
-      }
-    }
   }
 }
 </script>

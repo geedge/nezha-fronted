@@ -17,7 +17,11 @@
           label-width="120px"
           ref="backupsForm"
         >
-          <el-form-item :label="$t('backup.schedule')" prop="type">
+          <el-form-item
+            :label="$t('backup.schedule')"
+            prop="type"
+            class="form-tabs"
+          >
             <el-tabs
               v-model="editBackup.type"
               @tab-click="datasourceChange"
@@ -27,7 +31,8 @@
               <el-tab-pane :label="$t('backup.only')" name="1"> </el-tab-pane>
               <el-tab-pane :label="$t('backup.Daily')" name="2"> </el-tab-pane>
               <el-tab-pane :label="$t('backup.Weekly')" name="3"> </el-tab-pane>
-              <el-tab-pane :label="$t('backup.Monthly')" name="4"> </el-tab-pane>
+              <el-tab-pane :label="$t('backup.Monthly')" name="4">
+              </el-tab-pane>
             </el-tabs>
           </el-form-item>
           <el-form-item
@@ -53,18 +58,28 @@
             </el-time-picker>
           </el-form-item>
           <el-form-item
-            :label="$t('backup.Enable')"
-
-            prop="status"
-            class="form-item__switch"
-            v-if="whoshow !== 2 ? true : false"
+            :label="$t('backup.RepeatEvery')"
+            prop="repeat"
+            v-if="whoshow === 2 || whoshow === 3 ? true : false"
           >
-            <el-switch
-              class="switch"
-              v-model="editBackup.status"
-              @change="statusChange"
+            <el-input
+              v-if="whoshow === 3 ? true : false"
+              size="small"
+              v-model="editBackup.repeat"
+              id="chart-box-title"
+              @change="inputchange"
             >
-            </el-switch>
+              <template slot="append">{{ $t("backup.week") }}</template>
+            </el-input>
+            <el-input
+              v-if="whoshow === 2 ? true : false"
+              size="small"
+              v-model="editBackup.repeat"
+              id="chart-box-title"
+              @change="inputchange"
+            >
+              <template slot="append">{{ $t("backup.day") }}</template>
+            </el-input>
           </el-form-item>
           <el-form-item
             :label="$t('backup.DayOfMonth')"
@@ -85,20 +100,6 @@
             </el-checkbox-group>
           </el-form-item>
           <el-form-item
-            :label="$t('backup.backupRetention')"
-
-            prop="retention"
-            v-if="whoshow !== 2 ? true : false"
-          >
-            <el-input
-              maxlength="64"
-              size="small"
-              v-model="editBackup.retention"
-              id="chart-box-title"
-              @change="inputchange"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
             :label="$t('backup.WeekOn')"
             prop="checkDay"
             v-if="whoshow === 3 ? true : false"
@@ -117,28 +118,31 @@
             </el-checkbox-group>
           </el-form-item>
           <el-form-item
-            :label="$t('backup.RepeatEvery')"
-            prop="repeat"
-            v-if="whoshow === 2 || whoshow === 3 ? true : false"
+            :label="$t('backup.backupRetention')"
+            prop="retention"
+            v-if="whoshow !== 2 ? true : false"
           >
             <el-input
-              v-if="whoshow === 3 ? true : false"
+              maxlength="64"
               size="small"
-              v-model="editBackup.repeat"
+              v-model="editBackup.retention"
               id="chart-box-title"
               @change="inputchange"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item
+            :label="$t('backup.Enable')"
+            prop="status"
+            class="form-item__switch"
+            v-if="whoshow !== 2 ? true : false"
+          >
+            <el-switch
+              class="switch"
+              v-model="editBackup.status"
+              @change="statusChange"
             >
-              <template slot="append">{{$t('backup.week')}}</template>
-            </el-input>
-            <el-input
-              v-if="whoshow === 2 ? true : false"
-              size="small"
-              v-model="editBackup.repeat"
-              id="chart-box-title"
-              @change="inputchange"
-            >
-              <template slot="append">{{$t('backup.day')}}</template>
-            </el-input>
+            </el-switch>
           </el-form-item>
         </el-form>
       </div>
@@ -167,7 +171,8 @@
 <script>
 import bus from "@/libs/bus";
 import { put } from "@/http";
-import { arrLength } from "@/components/common/js/validate";
+import { arrLength, datePicker } from "@/components/common/js/validate";
+import moment from "moment-timezone";
 
 export default {
   name: "backupsBox",
@@ -206,13 +211,7 @@ export default {
             trigger: "change",
           },
         ],
-        datepicker: [
-          {
-            required: true,
-            message: this.$t("validate.required"),
-            trigger: "change",
-          },
-        ],
+        datepicker: [{ validator: datePicker, trigger: "blur" }],
         checkDays: [
           {
             required: true,
@@ -244,7 +243,15 @@ export default {
         ],
         checkDay: [{ validator: arrLength, trigger: "blur" }],
       },
-      week: [this.$t('week.Mon'),this.$t('week.Tue'),this.$t('week.Wed'),this.$t('week.Thu'),this.$t('week.Fri'),this.$t('week.Sat'),this.$t('week.Sun'),],
+      week: [
+        this.$t("week.Mon"),
+        this.$t("week.Tue"),
+        this.$t("week.Wed"),
+        this.$t("week.Thu"),
+        this.$t("week.Fri"),
+        this.$t("week.Sat"),
+        this.$t("week.Sun"),
+      ],
       month: [
         1,
         2,
@@ -307,7 +314,6 @@ export default {
         for (const i in this.editBackup.checkDay) {
           nums.push(Number(this.editBackup.checkDay[i]) + 1);
         }
-        console.log(nums);
         this.editBackup.nums = nums;
       } else if (this.editBackup.type == 4) {
         const nums = [];
@@ -319,27 +325,32 @@ export default {
             nums.push(Number(this.editBackup.checkDays[i]) + 1);
           }
         });
-        console.log(nums);
         this.editBackup.nums = nums;
       }
       this.$forceUpdate();
     },
     statusChange(item) {
       this.$forceUpdate();
-      console.log(item);
-      if (item) {
+      if (item == true) {
         this.editBackup.state = 1;
-        this.$emit("statechange", true);
       } else {
         this.editBackup.state = 0;
-        this.$emit("statechange", false);
       }
     },
     save() {
       this.$refs.backupsForm.validate((valid) => {
         if (valid) {
+          this.editBackup.datepicker[0] = bus
+            .timeFormate(this.editBackup.datepicker[0])
+            .split(" ")[0];
+
           this.editBackup.stime = this.editBackup.datepicker.join(" ");
-          this.editBackup.stime = this.timezoneToUtcTime(this.editBackup.stime); // 将本地时间转 utc时间
+          let offset = localStorage.getItem("nz-sys-timezone");
+          offset = moment.tz(offset).format("Z");
+          this.editBackup.stime = new Date(this.editBackup.stime).getTime();
+          offset = Number.parseInt(offset);
+          this.editBackup.stime -= offset * 60 * 60 * 1000;
+
           put("/sys/backup", {
             state: Number(this.editBackup.state),
             schedule: {
@@ -352,7 +363,6 @@ export default {
           }).then((res) => {
             if (res.code === 200) {
               this.esc(true);
-              console.log(this.editBackup);
             }
           });
         }
@@ -362,7 +372,6 @@ export default {
       this.$forceUpdate();
     },
     datasourceChange(tab) {
-      console.log(tab.name);
       switch (tab.name) {
         case "2":
           this.whoshow = 2;
@@ -377,8 +386,6 @@ export default {
           this.whoshow = 4;
           break;
       }
-      console.log(this.whoshow);
-      console.log(this.editBackup);
       this.$forceUpdate();
     },
     clickOutside() {
@@ -395,8 +402,6 @@ export default {
       deep: true,
       immediate: true,
       handler(n) {
-        //   debugger
-        console.log(n);
         this.editBackup = JSON.parse(JSON.stringify(n));
         this.editBackup.checkDay = [];
         this.editBackup.checkDays = [];
@@ -406,7 +411,6 @@ export default {
         const time = stime1.split(" ");
         time[0] = stime;
         this.$set(this.editBackup, "datepicker", time);
-        console.log("obj", this.editBackup);
         if (this.editBackup.state == 1) {
           this.editBackup.status = true;
           this.$emit("statechange", true);
@@ -453,14 +457,12 @@ export default {
           });
           this.$set(this.editBackup, "checkDays", checkdays);
         }
-        console.log("editBackupNow", this.editBackup);
         this.$forceUpdate();
       },
     },
     "editBackup.status": {
       deep: true,
       handler(n) {
-        console.log(n);
         if (n) {
           this.editBackup.state = 1;
           this.editBackup.status = n;
@@ -475,7 +477,6 @@ export default {
     "editBackup.checkDay": {
       deep: true,
       handler(n) {
-        console.log(n);
         n.forEach((e, i) => {
           if (e === 6) {
             this.editBackup.checkDay[i] = -1;
@@ -488,16 +489,14 @@ export default {
         });
 
         this.editBackup.nums = nums;
-        console.log("checkDay", this.editBackup.checkDay);
       },
     },
     "editBackup.datepicker": {
       deep: true,
       handler(n) {
-        this.editBackup.datepicker[0] = bus.timeFormate(
-          new Date(n[0]),
-          "YYYY-MM-DD"
-        );
+        this.editBackup.datepicker[0] = bus
+          .timeFormate(new Date(n[0]))
+          .split(" ")[0];
       },
     },
   },

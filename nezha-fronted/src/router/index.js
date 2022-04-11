@@ -201,6 +201,10 @@ export default new Router({
         {
           path: '/ping',
           component: resolve => require(['../components/page/tool/ping.vue'], resolve)
+        },
+        {
+          path: '/trace',
+          component: resolve => require(['../components/page/tool/trace.vue'], resolve)
         }
       ]
     }

@@ -37,4 +37,16 @@
       }
     }
   }
+  .backup_box{
+    .el-form-item:last-of-type {
+
+      .el-form-item__content {
+        margin-left: 0 !important;
+        text-align: unset !important;
+      }
+      .nz-btn {
+        margin: 0 10px;
+      }
+    }
+  }
 }
