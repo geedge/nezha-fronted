@@ -13,24 +13,24 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const fileManagerPlugin = require('filemanager-webpack-plugin')
 const WebpackZipPlugin = require('webpack-zip-plugin')
 // const GitRevisionPlugin = require('git-revision-webpack-plugin')
-const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
-const WebpackShellPlugin = require('webpack-shell-plugin');
+const GenerateAssetPlugin = require('generate-asset-webpack-plugin')
+const WebpackShellPlugin = require('webpack-shell-plugin')
 
-const serverConfig = require('../static/config.json')//引入根目录下的配置文件
+const serverConfig = require('../static/config.json')// 引入根目录下的配置文件
 
 // const gitRevisionPlugin = new GitRevisionPlugin();
-const createJson = function() {
+const createJson = function () {
   // serverConfig.version=config.build.version +"-"+gitRevisionPlugin.commithash();
-  serverConfig.version=config.build.version;
-  return JSON.stringify(serverConfig);
-};
+  serverConfig.version = config.build.version
+  return JSON.stringify(serverConfig)
+}
 
 const env = require('../config/prod.env')
-/*const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
+/* const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
 const createConfig = function(compilation){
   let cfgJson={baseUrl:"http://192.168.40.247:8080/nz-admin"};
   return JSON.stringify(cfgJson);
-}*/
+} */
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
@@ -46,13 +46,13 @@ const webpackConfig = merge(baseWebpackConfig, {
     chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
   },
   plugins: [
-    /*new GenerateAssetPlugin({
+    /* new GenerateAssetPlugin({
       filename: 'config.json',
       fn: (compilation, cb) => {
         cb(null, createConfig(compilation));
       },
       extraFiles: []
-    }),*/
+    }), */
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env
@@ -74,7 +74,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
       // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`,
       // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
-      allChunks: true,
+      allChunks: true
     }),
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
@@ -89,7 +89,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: config.build.index,
       template: 'index.html',
-      hash:false,
+      hash: false,
       inject: true,
       minify: {
         removeComments: true,
@@ -104,8 +104,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     new GenerateAssetPlugin({
       filename: 'static/config.json',
       fn: (compilation, cb) => {
-        cb(null, createJson());
-      },
+        cb(null, createJson())
+      }
     }),
     // keep module.id stable when vendor modules does not change
     new webpack.HashedModuleIdsPlugin(),
@@ -147,47 +147,52 @@ const webpackConfig = merge(baseWebpackConfig, {
         from: path.resolve(__dirname, '../static'),
         to: config.build.assetsSubDirectory,
         ignore: ['*']
+      },
+      {
+        from: path.resolve(__dirname, '../src/components/chart'),
+        to: 'components',
+        ignore: ['.*']
       }
-    ]),
+    ])
   ]
 })
 
-if(process.env.NODE_ENV == 'development'){
+if (process.env.NODE_ENV == 'development') {
   webpackConfig.plugins.push(
     new fileManagerPlugin({
-      onStart:[
+      onStart: [
         {
-          delete:[path.join(__dirname,'../dist/') ]
+          delete: [path.join(__dirname, '../dist/')]
         }
       ],
       onEnd: [
         {
-          move:[
-            { source: path.join(__dirname,'../dist','/static/config.json'), destination: path.join(__dirname,'../dist/config.json') },
+          move: [
+            { source: path.join(__dirname, '../dist', '/static/config.json'), destination: path.join(__dirname, '../dist/config.json') }
 
           ],
-          mkdir:[
-            path.join(__dirname,'../dist','/static')
+          mkdir: [
+            path.join(__dirname, '../dist', '/static')
           ],
-          copy:[
-            { source: path.join(__dirname,'../dist','/config.json'), destination: path.join(__dirname,'../dist','/static/config.json') }
-          ],
-        },
-        {
-          delete:[
-            path.join(__dirname,'../dist','/config.json')
+          copy: [
+            { source: path.join(__dirname, '../dist', '/config.json'), destination: path.join(__dirname, '../dist', '/static/config.json') }
           ]
         },
         {
-          archive:[
-            { source: path.join(__dirname,'../dist'), destination: path.join(__dirname,'../dist','/nz-gui.zip') }
+          delete: [
+            path.join(__dirname, '../dist', '/config.json')
+          ]
+        },
+        {
+          archive: [
+            { source: path.join(__dirname, '../dist'), destination: path.join(__dirname, '../dist', '/nz-gui.zip') }
           ]
         }
       ]
-    }),
+    })
 
   )
-}else{
+} else {
   webpackConfig.plugins.push(
     // new WebpackZipPlugin({
     //   initialFile: './dist',
@@ -196,9 +201,9 @@ if(process.env.NODE_ENV == 'development'){
     //   behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip;"+(process.env.BUILD_MODE=='all'?'mkdir -p ./dist/static;echo "start add map picture to zip file,it will take a few moment,please wait...";cp -r ../static/Tiles dist/static/;zip -gr nz-gui-${md5}.zip dist/static/Tiles>/dev/null;rm -rf dist;':'')
     // }),
     new WebpackShellPlugin({
-      onBuildStart: ['/bin/bash '+path.join(__dirname,'script')+'/buildStart.sh'],
-      onBuildEnd: ['/bin/bash '+path.join(__dirname,'script')+'/buildEnd.sh '+process.env.BUILD_MODE]
-    }),
+      onBuildStart: ['/bin/bash ' + path.join(__dirname, 'script') + '/buildStart.sh'],
+      onBuildEnd: ['/bin/bash ' + path.join(__dirname, 'script') + '/buildEnd.sh ' + process.env.BUILD_MODE]
+    })
     // new fileManagerPlugin({
     //   onStart:[
     //     {

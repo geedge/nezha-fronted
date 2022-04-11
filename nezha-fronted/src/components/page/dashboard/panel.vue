@@ -77,6 +77,9 @@
                   <el-dropdown-item v-has="'main_add'">
                     <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>
                   </el-dropdown-item>
+                  <el-dropdown-item v-has="'main_add'">
+                    <div id="chart-export-html" @click="exportHtml"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>
+                  </el-dropdown-item>
                 </template>
               </top-tool-more-options>
             </div>
@@ -163,11 +166,12 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { lineChartMove } from '@/components/common/js/common'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
+import exportHtmlMixin from '@/components/common/mixin/exportHtml'
 // import chartData from './testData'
 
 export default {
   name: 'panel',
-  mixins: [routerPathParams, htmlToPdfMixin],
+  mixins: [routerPathParams, htmlToPdfMixin, exportHtmlMixin],
   data () {
     return {
       fromRoute,
@@ -832,7 +836,7 @@ export default {
       this.panelReloadOnlyPanel()
     },
     htmlToPdf () {
-      let dom = document.getElementsByClassName(this.pdfId)[0]
+      const dom = document.getElementsByClassName(this.pdfId)[0]
       if (dom) {
         // dom = dom.getElementsByClassName('vue-grid-layout')[0]
         this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight

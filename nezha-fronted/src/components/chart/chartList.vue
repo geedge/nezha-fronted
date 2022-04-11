@@ -106,7 +106,8 @@ export default {
     isGroup: Boolean,
     groupInfo: {},
     from: String,
-    dataList: Array // 看板中所有图表信息
+    dataList: Array, // 看板中所有图表信息
+    isExportHtml: false
   },
   components: {
     GridLayout: GridLayout,
