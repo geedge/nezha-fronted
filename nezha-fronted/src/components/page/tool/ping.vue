@@ -96,7 +96,7 @@
 <script>
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
-import pingTable from '@/components/common/table/settings/pingTable'
+import pingTable from '@/components/common/table/tool/pingTable'
 import { positiveInteger } from '../../common/js/validate'
 export default {
   mixins: [dataListMixin],
@@ -200,6 +200,7 @@ export default {
     },
     // 请求任务id
     async getId () {
+      this.loading = true
       const params = {
         ip: this.ip,
         dcIds: this.checked.join(','),
@@ -221,6 +222,10 @@ export default {
             this.clearTask()
           }
         }, 300)
+        // 如果没有数据，loading取消
+        if (!response.data.task.total) {
+          this.loading = false
+        }
       })
     },
     // 请求表格数据
@@ -232,6 +237,10 @@ export default {
           this.total = response.data.task.total
           this.process = response.data.task.process
           this.tableData.push(...response.data.list)
+          // 收到数据，loading取消
+          if (this.tableData.length) {
+            this.loading = false
+          }
         }
       })
     },
@@ -248,6 +257,7 @@ export default {
       await this.$get('/tool/ping/cancel/' + this.tid)
       this.isStart = false
       this.flag = true
+      this.loading = false
     },
     // 空函数 防止mixins中的函数执行
     getTableData () { }
