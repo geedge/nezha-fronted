@@ -316,6 +316,7 @@ export default {
         }
         this.editBackup.nums = nums;
       } else if (this.editBackup.type == 4) {
+
         const nums = [];
         this.editBackup.nums = [];
         this.editBackup.checkDays.forEach((e, i) => {
@@ -441,15 +442,17 @@ export default {
         this.checkDay = [];
         if (this.editBackup.type == 3) {
           this.editBackup.nums.forEach((e) => {
-            checkdays.push(e - 1);
-            if (e === -1) {
-              checkdays.push(6);
+              if (e == -1 ) {
+                  checkdays.push(6);
+            }else{
+                checkdays.push(e - 1);
+
             }
           });
           this.$set(this.editBackup, "checkDay", checkdays);
         } else if (this.editBackup.type == 4) {
           this.editBackup.nums.forEach((e) => {
-            if (e === -1) {
+            if (e == -1) {
               checkdays.push(31);
             } else {
               checkdays.push(e - 1);
@@ -472,23 +475,6 @@ export default {
           this.editBackup.status = n;
           this.$emit("statechange", false);
         }
-      },
-    },
-    "editBackup.checkDay": {
-      deep: true,
-      handler(n) {
-        n.forEach((e, i) => {
-          if (e === 6) {
-            this.editBackup.checkDay[i] = -1;
-          }
-        });
-        const nums = [];
-        this.editBackup.nums = [];
-        this.editBackup.checkDay.forEach((e, i) => {
-          nums.push(Number(i) + 1);
-        });
-
-        this.editBackup.nums = nums;
       },
     },
     "editBackup.datepicker": {
