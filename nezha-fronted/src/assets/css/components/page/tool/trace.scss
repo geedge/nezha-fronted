@@ -1,0 +1,125 @@
+.trace{
+  .choose{
+    width: 50px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+    padding: 0 !important;
+    border-radius: 2px 0px 0px 2px !important;
+    border-right: none !important;
+    span{
+      display: flex;
+      align-content: center;
+      justify-content: center;
+    }
+    i{
+      font-size: 20px !important;
+    }
+  }
+  .btn{
+    width: 50px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+    padding: 0 !important;
+    border-radius: 0px 2px 2px 0px !important;
+    span{
+      display: flex;
+      align-content: center;
+      justify-content: center;
+    }
+    i{
+      font-size: 22px !important;
+      color: $--color-primary !important;
+    }
+    i.quadrate{
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: $--color-primary;
+    }
+  }
+
+  .nz-table2{
+    height: calc(100% - 64px) !important;
+    .empty{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .el-steps{
+        width: 620px;
+      }
+      .el-step__icon{
+        width: 64px;
+        height: 64px;
+        border: 1px solid $--border-color-light;
+        background-color: $--background-color-empty;
+      }
+      .el-step__line{
+        top: 32px;
+        height: 1px;
+      }
+      span{
+        color: #BEBEBE;
+      }
+      .nz-icon-edit{
+        font-size: 26px;
+      } 
+      .el-icon-more{
+        font-size: 22px;
+      }
+      .msg{
+        font-size: 18px;
+      }
+      .txt{
+        color: $--color-text-regular;
+      }
+    }
+    .data-wrap{
+      height: 100%;
+      .data-top{
+        width: 100%;
+        padding-left: 15px;
+        box-sizing: border-box;
+        height: 36px;
+        line-height: 36px;
+        border: 1px solid $--border-color-light;
+        margin-bottom: 14px;
+        span{
+          color: $--color-text-primary;
+          margin-right: 30px;
+          font-size: 14px;
+          font-weight: 500;
+          font-weight: bold;
+        }
+      }
+      .data-bottom{
+        height: calc(100% - 50px) !important;
+        .details{
+          padding: 20px;
+        }
+      }
+    }
+  }
+}
+
+.wrap{
+  .el-input,.el-input__inner{
+    height: 100%;
+  }
+  .el-input-group__append{
+    color: $--color-text-primary;
+  }
+}
+.pop-tit{
+  font-size: 14px;
+  color: $--color-text-primary;
+  line-height: 40px;
+}
+.pop-list-wrap{
+  border: 1px solid $--button-light-border-color !important;
+}
+.pop-list{
+  max-height: 144px;
+  overflow-y: auto;
+}
