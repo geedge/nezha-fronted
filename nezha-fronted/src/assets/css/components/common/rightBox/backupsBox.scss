@@ -44,62 +44,55 @@
             }
             
           }
-          .el-checkbox-button .is-focus {
-            .el-checkbox-button__inner{
-            border: none;
-            }
+          .el-checkbox-button.is-focus .el-checkbox-button__inner{
+            border-color: $--border-color-base;
           }
         }
       }
       .check-month_box{
         .el-form-item__content{
+          .el-checkbox-button.is-focus .el-checkbox-button__inner{
+            border-color: $--border-color-base;
+          }
           .el-checkbox-button{
-            border: 1px solid $--border-color-base;
             width: calc((100% / 7) - 2px);
             .el-checkbox-button__inner{
               width: 100%;
-              border: none;
+              border-bottom: none;
           }
         } 
-        .el-checkbox-button .is-checked{
-          border: none;
+        .el-checkbox-button:nth-of-type(8) .el-checkbox-button__inner{
+          border-left: 1px solid $--border-color-base;
         }
-        .el-checkbox-button  .is-focus{
-          border: 1px solid $--border-color-base;
-
+        .el-checkbox-button:nth-of-type(15) .el-checkbox-button__inner{
+          border-left: 1px solid $--border-color-base;
+        }
+        .el-checkbox-button:nth-of-type(22) .el-checkbox-button__inner{
+          border-left: 1px solid $--border-color-base;
+        }
+        .el-checkbox-button:nth-of-type(29) .el-checkbox-button__inner{
+          border-left: 1px solid $--border-color-base;
+          border-bottom: 1px solid $--border-color-base;
+        }
+        .el-checkbox-button:nth-of-type(26) .el-checkbox-button__inner{
+          border-bottom: 1px solid $--border-color-base;
+        }
+        .el-checkbox-button:nth-of-type(27) .el-checkbox-button__inner{
+          border-bottom: 1px solid $--border-color-base;
+        }
+        .el-checkbox-button:nth-of-type(28) .el-checkbox-button__inner{
+          border-bottom: 1px solid $--border-color-base;
+        }
+        .el-checkbox-button:nth-of-type(30) .el-checkbox-button__inner{
+          border-bottom: 1px solid $--border-color-base;
+        }
+        .el-checkbox-button:nth-of-type(31) .el-checkbox-button__inner{
+          border-bottom: 1px solid $--border-color-base;
+        }
+        .el-checkbox-button:last-of-type .el-checkbox-button__inner{
+          border-bottom: 1px solid $--border-color-base;
         }
 
-        // .el-checkbox-button:nth-of-type(8){
-        //   border-left: 1px solid $--border-color-base;
-        // }
-        // .el-checkbox-button:nth-of-type(15){
-        //   border-left: 1px solid $--border-color-base;
-        // }
-        // .el-checkbox-button:nth-of-type(22){
-        //   border-left: 1px solid $--border-color-base;
-        // }
-        // .el-checkbox-button:nth-of-type(29){
-        //   border-left: 1px solid $--border-color-base;
-        //   border-bottom: 1px solid $--border-color-base;
-        // }
-        // .el-checkbox-button:nth-of-type(26){
-        //   border-bottom: 1px solid $--border-color-base;
-        // }
-        // .el-checkbox-button:nth-of-type(27){
-        //   border-bottom: 1px solid $--border-color-base;
-        // }
-        // .el-checkbox-button:nth-of-type(28){
-        //   border-bottom: 1px solid $--border-color-base;
-        // }
-        // .el-checkbox-button:nth-of-type(30){
-        //   border-bottom: 1px solid $--border-color-base;
-        // }
-        // .el-checkbox-button:nth-of-type(31){
-        //   border-bottom: 1px solid $--border-color-base;
-        // }
-        // .el-checkbox-button:last-of-type{
-        //   border-bottom: 1px solid $--border-color-base;
-        // }
       }
       .start_at{
         .el-form-item__content{

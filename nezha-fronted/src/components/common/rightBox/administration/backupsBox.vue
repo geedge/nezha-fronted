@@ -314,7 +314,6 @@ export default {
         for (const i in this.editBackup.checkDay) {
           nums.push(Number(this.editBackup.checkDay[i]) + 1);
         }
-        console.log(nums);
         this.editBackup.nums = nums;
       } else if (this.editBackup.type == 4) {
         const nums = [];
@@ -326,7 +325,6 @@ export default {
             nums.push(Number(this.editBackup.checkDays[i]) + 1);
           }
         });
-        console.log(nums);
         this.editBackup.nums = nums;
       }
       this.$forceUpdate();
@@ -459,14 +457,12 @@ export default {
           });
           this.$set(this.editBackup, "checkDays", checkdays);
         }
-        console.log("editBackupNow", this.editBackup);
         this.$forceUpdate();
       },
     },
     "editBackup.status": {
       deep: true,
       handler(n) {
-        console.log(n);
         if (n) {
           this.editBackup.state = 1;
           this.editBackup.status = n;
@@ -481,7 +477,6 @@ export default {
     "editBackup.checkDay": {
       deep: true,
       handler(n) {
-        console.log(n);
         n.forEach((e, i) => {
           if (e === 6) {
             this.editBackup.checkDay[i] = -1;
@@ -494,17 +489,14 @@ export default {
         });
 
         this.editBackup.nums = nums;
-        console.log("checkDay", this.editBackup.checkDay);
       },
     },
     "editBackup.datepicker": {
       deep: true,
       handler(n) {
-        console.log(n);
         this.editBackup.datepicker[0] = bus
           .timeFormate(new Date(n[0]))
           .split(" ")[0];
-        console.log(this.editBackup.datepicker[0]);
       },
     },
   },
