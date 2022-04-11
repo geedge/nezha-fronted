@@ -300,7 +300,7 @@ export default {
     hideTableTooltip,
     tableDataSort (item) {
       let orderBy = ''
-      let str = item.prop
+      const str = item.prop
       if (str === 'dc') {
         orderBy = str
       }

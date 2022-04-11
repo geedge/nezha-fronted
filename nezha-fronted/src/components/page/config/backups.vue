@@ -101,60 +101,59 @@ export default {
   created () {},
 
   mounted () {
-      this.getTableData()
+    this.getTableData()
   },
 
   methods: {
-      
-     getTableData (item) {
-        if(!item){
-             this.$get('/sys/backup').then((res) => {
-              if (res.code === 200) {
-                if (res.data) {
-                  this.tableData[0].retention = res.data.retention
-                  this.tableData[0].state = res.data.state == 1? true :false
-                  for (const i in res.data.schedule) {
-                    this.tableData[0].schedule[i] = res.data.schedule[i]
-                  }
-                }
+
+    getTableData (item) {
+      if (!item) {
+        this.$get('/sys/backup').then((res) => {
+          if (res.code === 200) {
+            if (res.data) {
+              this.tableData[0].retention = res.data.retention
+              this.tableData[0].state = res.data.state == 1
+              for (const i in res.data.schedule) {
+                this.tableData[0].schedule[i] = res.data.schedule[i]
               }
-            })
-             this.$post('/sys/backup/list').then((res) => {
-              if (res.code === 200) {
-                if (res.data) {
-                    this.tableData2 = res.data
-                    
-                }
+            }
+          }
+        })
+        this.$post('/sys/backup/list').then((res) => {
+          if (res.code === 200) {
+            if (res.data) {
+              this.tableData2 = res.data
+            }
+          }
+        })
+      } else if (item == 'backup') {
+        this.$get('/sys/backup').then((res) => {
+          if (res.code === 200) {
+            if (res.data) {
+              this.tableData[0].retention = res.data.retention
+              this.tableData[0].state = res.data.state == 1
+              for (const i in res.data.schedule) {
+                this.tableData[0].schedule[i] = res.data.schedule[i]
               }
-            })
-        }else if(item == 'backup'){
-             this.$get('/sys/backup').then((res) => {
-              if (res.code === 200) {
-                if (res.data) {
-                  this.tableData[0].retention = res.data.retention
-                  this.tableData[0].state = res.data.state == 1? true :false
-                  for (const i in res.data.schedule) {
-                    this.tableData[0].schedule[i] = res.data.schedule[i]
-                  }
-                }
-              }
-            })
-        }else if(item == 'recent'){
-             this.$post('/sys/backup/list').then((res) => {
-              if (res.code === 200) {
-                if (res.data) {
-                    this.tableData2 = res.data
-                    
-                }
-              }
-            })
-        }
+            }
+          }
+        })
+      } else if (item == 'recent') {
+        this.$post('/sys/backup/list').then((res) => {
+          if (res.code === 200) {
+            if (res.data) {
+              this.tableData2 = res.data
+            }
+          }
+        })
+      }
     },
     edit (row) {
-      this.object = { ...row ,
-      checkDay:'',
-      checkDays:'',
-      datepicker:''
+      this.object = {
+        ...row,
+        checkDay: '',
+        checkDays: '',
+        datepicker: ''
       }
       this.object.name = this.$t('backup.edit')
       if (this.object.schedule) {
@@ -169,7 +168,7 @@ export default {
         this.getTableData('backup')
       }
       this.rightBoxshow = false
-    },
+    }
   },
 
   watch: {}

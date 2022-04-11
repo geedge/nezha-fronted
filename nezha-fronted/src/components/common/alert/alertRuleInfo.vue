@@ -149,7 +149,6 @@ export default {
       })
     },
     returnColor (obj) {
-      console.log(obj,  this.severityDataWeight)
       let color = ''
       if (!obj) {
         color = '#23bf9a'

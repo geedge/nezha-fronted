@@ -642,7 +642,7 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editAlertRule = JSON.parse(JSON.stringify(n))
-        console.log(this.editAlertRule);
+        console.log(this.editAlertRule)
         if (this.editAlertRule.id || this.editAlertRule.name) {
           this.expressions = [this.editAlertRule.expr]
           this.showTypeSelect = true // 当 edit 时禁用 type下拉框

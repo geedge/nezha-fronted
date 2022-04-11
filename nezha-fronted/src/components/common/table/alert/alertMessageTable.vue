@@ -148,7 +148,7 @@ import alertMessageLabelMixin from '@/components/common/alert/alertMessageLabelM
 export default {
   name: 'alertMessageTable',
   components: {
-    alertRuleInfo: alertRuleInfo,
+    alertRuleInfo: alertRuleInfo
   },
   props: {
     nowTime: {

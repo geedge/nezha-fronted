@@ -56,7 +56,7 @@
 import ChartScreenHeader from '@/components/chart/ChartScreenHeader'
 import chart from '@/components/chart/chart'
 import { isChartPie, isTimeSeries, getGroupHeight, isGroup } from '@/components/chart/chart/tools'
-import {alertMessage as alertMessageConstant, chartType, fromRoute} from '@/components/common/js/constants'
+import { alertMessage as alertMessageConstant, chartType, fromRoute } from '@/components/common/js/constants'
 import bus from '@/libs/bus'
 import axios from 'axios'
 import chartTempData from '@/components/charts/chartTempData'
