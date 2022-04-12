@@ -13,8 +13,8 @@
   "dependencies": {
     "@johmun/vue-tags-input": "^2.1.0",
     "@riophae/vue-treeselect": "^0.4.0",
-    "@svgdotjs/svg.js": "^3.0.16",
-    "@svgdotjs/svg.panzoom.js": "^2.1.1",
+    "@svgdotjs/svg.js": "3.0.16",
+    "@svgdotjs/svg.panzoom.js": "2.1.1",
     "@topology/activity-diagram": "^0.3.0",
     "@topology/chart-diagram": "^0.3.0",
     "@topology/class-diagram": "^0.3.0",
