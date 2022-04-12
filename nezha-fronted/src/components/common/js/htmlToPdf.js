@@ -21,6 +21,7 @@ export default {
       }).then(function (canvas) {
         loading.close()
         document.body.style.height = '100%'
+        document.getElementsByClassName('left-menu')[0].style.height = '100%'
         document.getElementsByTagName('html')[0].style.overflow = 'hidden'
         const contentWidth = canvas.width
         const contentHeight = canvas.height
@@ -53,12 +54,13 @@ export default {
       if (flag) {
         loading = Loading.service({
           lock: true,
+          customClass: 'export-pdf-mask',
           text: this.$t('overall.downloadProgress') + 'pdf...',
-          background: 'rgba(0,500,200,.5)'
+          background: 'rgba(0,0,0,.3)'
         })
       } else {
         if (loading) {
-          loading.close()
+          // loading.close()
           document.body.style.height = '100%'
           document.getElementsByTagName('html')[0].style.overflow = 'hidden'
         }

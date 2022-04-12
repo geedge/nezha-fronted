@@ -24,7 +24,7 @@ import { chartLegendPlacement } from '@/components/common/js/constants'
 import * as echarts from 'echarts'
 import { getChart, setChart } from '@/components/common/js/common'
 import { formatScientificNotation, getMetricTypeValue } from '@/components/common/js/tools'
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 import { initColor } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
 

@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import chartDataFormat from '../../charts/chartDataFormat'
+import chartDataFormat from '../../chart/chartDataFormat'
 import trendMixins from '@/components/common/alert/trendMixins'
 export default {
   name: 'alert-rule-info',

@@ -735,6 +735,7 @@ export default {
     },
     htmlToPdf () {
       const dom = document.getElementsByClassName(this.pdfId)[0]
+      this.htmlTitle = this.obj.name || 'pdf'
       if (dom) {
         // dom = dom.getElementsByClassName('vue-grid-layout')[0]
         this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight

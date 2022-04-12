@@ -42,7 +42,7 @@
 <script>
 import lodash from 'lodash'
 import { getChart } from '@/components/common/js/common'
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 import { statisticsList } from '@/components/common/js/constants'
 export default {
   name: 'chartLegend',

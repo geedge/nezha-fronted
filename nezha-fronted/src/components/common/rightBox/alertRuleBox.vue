@@ -342,11 +342,11 @@
 </template>
 
 <script>
-import chartDataFormat from '../../charts/chartDataFormat'
+import chartDataFormat from '../../chart/chartDataFormat'
 import promqlInput from '../../page/dashboard/explore/promqlInput'
 import { noSpecialChar, nzNumber } from '../js/validate'
 import editRigthBox from '../mixin/editRigthBox'
-import richTextEditor from '@/components/charts/richTextEditor'
+import richTextEditor from '@/components/chart/richTextEditor'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
 export default {
   name: 'alertRuleBox',

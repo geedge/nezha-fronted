@@ -22,7 +22,7 @@ import chartFormat from '@/components/chart/chartFormat'
 import { initColor } from '@/components/chart/chart/tools'
 import '@svgdotjs/svg.panzoom.js'
 import { getMetricTypeValue } from '@/components/common/js/tools'
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 export default {
   name: 'chartHexagonD3',
   mixins: [chartMixin, chartFormat],

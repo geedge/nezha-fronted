@@ -110,20 +110,6 @@
     <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
-<!--      <chart-box-->
-<!--        v-if="rightBox.chart.show"-->
-<!--        ref="addChartModal"-->
-<!--        :chart="chart"-->
-<!--        :from="fromRoute.panel"-->
-<!--        :panel-data="panelData"-->
-<!--        :show-panel="showPanel"-->
-<!--        @close="closeChartBox"-->
-<!--        @reload="panelReload"-->
-<!--        @reloadOnlyPanel="panelReloadOnlyPanel"-->
-<!--        @delete-chart="delChart"-->
-<!--        @on-create-success="createSuccess"-->
-<!--        @on-delete-success="delChartOk"-->
-<!--      ></chart-box>-->
       <chart-right-box
         v-if="chartRightBoxShow"
         v-loading="rightBox.loading"
@@ -150,7 +136,6 @@
 </template>
 
 <script>
-import ChartBox from './chartBox'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
@@ -285,7 +270,6 @@ export default {
     }
   },
   components: {
-    'chart-box': ChartBox,
     'pick-time': pickTime,
     'panel-box': panelBox,
     topToolMoreOptions,
@@ -835,6 +819,7 @@ export default {
       let dom = document.getElementsByClassName(this.pdfId)[0]
       if (dom) {
         // dom = dom.getElementsByClassName('vue-grid-layout')[0]
+        this.htmlTitle = this.panel.name
         this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
         this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
         let flag = true
@@ -855,6 +840,7 @@ export default {
             timer = null
             setTimeout(() => {
               document.body.style.height = 'auto'
+              document.getElementsByClassName('left-menu')[0].style.height = '100vh'
               // document.getElementsByTagName('html')[0].style.overflow = 'visible'
               const position = dom.getBoundingClientRect()
               console.log(position)

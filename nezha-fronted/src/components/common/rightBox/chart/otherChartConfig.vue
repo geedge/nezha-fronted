@@ -156,7 +156,7 @@
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import diagram from '@/components/common/ChartDiagram/diagram'
-import richTextEditor from '@/components/charts/richTextEditor'
+import richTextEditor from '@/components/chart/richTextEditor'
 export default {
   name: 'otherChartConfig',
   mixins: [publicConfig, chartTypeShow],
