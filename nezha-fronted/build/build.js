@@ -4,8 +4,8 @@ require('./check-versions')()
 let arg = process.argv.splice(2)[0];
 process.env.NODE_ENV = arg == 'dev' ? 'development' : 'production'
 process.env.BUILD_MODE = arg
-
 const ora = require('ora')
+
 const rm = require('rimraf')
 const path = require('path')
 const chalk = require('chalk')

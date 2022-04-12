@@ -14,8 +14,8 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-        <span v-if="item.prop === 'repeat'">
-          {{ tableData[0].schedule && tableData[0].schedule.repeat }}
+        <span v-if="item.prop === 'schedule'">
+          {{ tableData[0].schedule && changeType(tableData[0].schedule.type)? changeType(tableData[0].schedule.type):''}}
         </span>
         <span v-if="item.prop === 'retention'">
           {{ tableData[0].retention }}
@@ -110,15 +110,34 @@ export default {
   computed: {},
 
   methods: {
+    changeType (item) {
+      if (item == 1) {
+        return this.$t('backup.only')
+      } else if (item == 2) {
+        return this.$t('backup.Daily')
+      } else if (item == 3) {
+        return this.$t('backup.Weekly')
+      } else {
+        return this.$t('backup.Monthly')
+      }
+    },
     Restore (row) {
       put('/sys/backup/restore', { filename: row.fileName }).then(res => {
         if (res.code == 200) {
-          this.$emit('getTableData', 'backup')
+          this.$emit("getTableData", 'recent')
+        } else {
+          this.$message.error(response.msg)
         }
       })
     },
-    del (item) {
-      console.log(item)
+    del (row) {
+      this.$delete('/sys/backup?filename=' + row.fileName).then(res => {
+        if (res.code == 200) {
+          this.$emit("getTableData", 'recent')
+        } else {
+          this.$message.error(response.msg)
+        }
+      })
     },
     changeDate (item) {
       const time = Date.parse(item)
@@ -130,7 +149,6 @@ export default {
     },
     backupNow (item) {
       post('/sys/backup').then((res) => {
-        // console.log(res)
       })
     },
     edit () {
