@@ -14,8 +14,9 @@
           ref="backupsTable1"
             :custom-table-title="customTableTitle"
             :is-configurations="true"
-            @edit="edit"
             :table-data="tableData"
+            @edit="edit"
+
           >
           </backups-table>
         </template>
@@ -38,6 +39,7 @@
             :is-configurations="false"
             key="backups2"
             :table-data2="tableData2"
+            @getTableData="getTableData"
 
           >
           </backups-table>
@@ -62,9 +64,9 @@ export default {
   data () {
     return {
 
-      url: '/sys/backup/list',
+      url: '/sys/backup',
       customTableTitle: [
-        { label: this.$t('backup.schedule'), prop: 'repeat' },
+        { label: this.$t('backup.schedule'), prop: 'schedule' },
         { label: this.$t('backup.backupRetention'), prop: 'retention' },
         { label: this.$t('backup.last'), prop: 'last' },
         { label: this.$t('backup.Enable'), prop: 'state' }
@@ -107,6 +109,7 @@ export default {
   methods: {
       
      getTableData (item) {
+       console.log(item);
         if(!item){
              this.$get('/sys/backup').then((res) => {
               if (res.code === 200) {
@@ -149,6 +152,7 @@ export default {
               }
             })
         }
+        console.log(this.tableData);
     },
     edit (row) {
       this.object = { ...row ,
