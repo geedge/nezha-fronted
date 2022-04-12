@@ -45,7 +45,7 @@
 import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
 import { getMetricTypeValue } from '@/components/common/js/tools'
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 import lodash from 'lodash'
 export default {
   name: 'chart-table',

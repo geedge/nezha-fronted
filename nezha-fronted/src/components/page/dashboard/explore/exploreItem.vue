@@ -331,9 +331,8 @@ import bus from '../../../../libs/bus'
 import promqlInput from './promqlInput'
 import chart from '../overview/chart'
 import axios from 'axios'
-import chartBox from '../../../page/dashboard/chartBox'
 import { getUUID } from '../../../common/js/common'
-import chartDataFormat from '../../../charts/chartDataFormat'
+import chartDataFormat from '../../../chart/chartDataFormat'
 import logTab from './logTab'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
@@ -342,7 +341,6 @@ export default {
   name: 'exploreItem',
   components: {
     'promql-input': promqlInput,
-    'chart-box': chartBox,
     chartRightBox,
     chart,
     logTab

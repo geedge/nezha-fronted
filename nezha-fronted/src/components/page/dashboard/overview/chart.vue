@@ -18,7 +18,7 @@
 
 <script>
 import * as echarts from 'echarts'
-import chartDataFormat from '../../../charts/chartDataFormat'
+import chartDataFormat from '../../../chart/chartDataFormat'
 import loading from '../../../common/loading'
 import chartConfig from './chartConfig'
 import bus from '../../../../libs/bus'
