@@ -32,14 +32,14 @@
 </template>
 
 <script>
-import lineChartBlock from '../../../charts/line-chart-block'
-import chartTable from '../../../charts/chart-table'
+import lineChartBlock from '@/components/chart/chart/line-chart-block'
+import chartTable from '@/components/chart/chart/chart-table'
 import bus from '../../../../libs/bus'
 import ExpressionInfo from '../popData/expressionInfo'
 import { fromRoute } from '@/components/common/js/constants'
-import chartTempData from '@/components/charts/chartTempData'
+import chartTempData from '@/components/chart/chartTempData'
 import axios from 'axios'
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 import { dealLegendAlias } from '@/components/common/js/tools'
 export default {
   name: 'topoTooltip',

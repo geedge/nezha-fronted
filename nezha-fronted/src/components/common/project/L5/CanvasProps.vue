@@ -1093,7 +1093,7 @@
 <script>
 import { alignNodes, spaceBetween, layout } from '@topology/layout'
 import { getTopology, resetZIndex } from '../../js/common'
-import chartDataFormat from '../../../charts/chartDataFormat'
+import chartDataFormat from '../../../chart/chartDataFormat'
 import promqlInput from '../../../page/dashboard/explore/promqlInput'
 import nezhaColor from '../../nezhaColor'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'

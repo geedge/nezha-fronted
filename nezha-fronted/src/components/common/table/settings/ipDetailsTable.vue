@@ -115,12 +115,12 @@ export default {
           label: 'MAC',
           prop: 'mac',
           show: true,
-          minWidth: 200,
+          minWidth: 200
         }, {
           label: this.$t('config.ipamip.asset'),
           prop: 'asset',
           show: true,
-          width: 200,
+          width: 200
         }, {
           label: this.$t('overall.state'),
           prop: 'state',

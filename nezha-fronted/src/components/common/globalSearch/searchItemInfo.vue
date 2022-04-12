@@ -91,7 +91,7 @@
 
 <script>
 import lodash from 'lodash'
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
 export default {
   name: 'searchItemInfo',

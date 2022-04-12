@@ -23,7 +23,7 @@
 import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
 import { getMetricTypeValue } from '@/components/common/js/tools'
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 import * as echarts from 'echarts'
 import lodash from 'lodash'
 import { getChart } from '@/components/common/js/common'

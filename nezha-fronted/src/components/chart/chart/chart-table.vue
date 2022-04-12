@@ -119,8 +119,8 @@
 </template>
 
 <script>
-import bus from '../../libs/bus'
-import chartDataFormat from './chartDataFormat'
+import bus from '../../../libs/bus'
+import chartDataFormat from '../chartDataFormat'
 import chartDataList from '@/components/common/mixin/chartDataList'
 
 export default {

@@ -200,14 +200,12 @@ export function arrLength (rule, value, callback) { // 校验数组
   }
 }
 export function datePicker (rule, value, callback) { // 校验时间选择
-  if(value[0]&&value[1]){
+  if (value[0] && value[1]) {
     callback()
-  }else{
+  } else {
     callback(new Error(vm.$t('validate.required')))
   }
-   
-  }
-
+}
 
 export function sysObjectIdInput (rule, value, callback) {
   const sysId = /^(\d{1,9}\.){0,}[\d]+$/

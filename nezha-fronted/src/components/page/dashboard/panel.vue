@@ -77,6 +77,9 @@
                   <el-dropdown-item v-has="'main_add'">
                     <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>
                   </el-dropdown-item>
+                  <el-dropdown-item v-has="'main_add'">
+                    <div id="chart-htmltoData" @click="exportData"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>
+                  </el-dropdown-item>
                 </template>
               </top-tool-more-options>
             </div>
@@ -110,20 +113,6 @@
     <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
-<!--      <chart-box-->
-<!--        v-if="rightBox.chart.show"-->
-<!--        ref="addChartModal"-->
-<!--        :chart="chart"-->
-<!--        :from="fromRoute.panel"-->
-<!--        :panel-data="panelData"-->
-<!--        :show-panel="showPanel"-->
-<!--        @close="closeChartBox"-->
-<!--        @reload="panelReload"-->
-<!--        @reloadOnlyPanel="panelReloadOnlyPanel"-->
-<!--        @delete-chart="delChart"-->
-<!--        @on-create-success="createSuccess"-->
-<!--        @on-delete-success="delChartOk"-->
-<!--      ></chart-box>-->
       <chart-right-box
         v-if="chartRightBoxShow"
         v-my-loading="rightBox.loading"
@@ -150,7 +139,6 @@
 </template>
 
 <script>
-import ChartBox from './chartBox'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
@@ -163,6 +151,7 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { lineChartMove } from '@/components/common/js/common'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
+import FileSaver from 'file-saver'
 // import chartData from './testData'
 
 export default {
@@ -285,7 +274,6 @@ export default {
     }
   },
   components: {
-    'chart-box': ChartBox,
     'pick-time': pickTime,
     'panel-box': panelBox,
     topToolMoreOptions,
@@ -832,9 +820,10 @@ export default {
       this.panelReloadOnlyPanel()
     },
     htmlToPdf () {
-      let dom = document.getElementsByClassName(this.pdfId)[0]
+      const dom = document.getElementsByClassName(this.pdfId)[0]
       if (dom) {
         // dom = dom.getElementsByClassName('vue-grid-layout')[0]
+        this.htmlTitle = this.panel.name
         this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
         this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
         let flag = true
@@ -855,9 +844,9 @@ export default {
             timer = null
             setTimeout(() => {
               document.body.style.height = 'auto'
+              document.getElementsByClassName('left-menu')[0].style.height = '100vh'
               // document.getElementsByTagName('html')[0].style.overflow = 'visible'
               const position = dom.getBoundingClientRect()
-              console.log(position)
               this.getPdf(dom, -1 * position.left, -1 * position.top)
               // this.getPdf(dom, 0, 0)
             }, 2000)
@@ -866,6 +855,44 @@ export default {
       } else {
         this.showScreenLoading(false)
       }
+    },
+    exportData () {
+      this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
+      this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
+      let flag = true
+      let timer = setInterval(() => {
+        flag = true
+        this.$refs.chartList.copyDataList.forEach(chart => {
+          if (chart.type !== 'group') {
+            flag = flag && chart.loaded
+          } else if (chart.collapse) {
+            chart.children.forEach(groupChart => {
+              flag = flag && groupChart.loaded
+            })
+          }
+        })
+        if (flag) {
+          clearInterval(timer)
+          timer = null
+          setTimeout(() => {
+            this.dataList.forEach(item => {
+              if (item.type === 'group') {
+                item.chartData = [item.children]
+              }
+              if (item.type === 'group' && !item.param.collapse) {
+                item.children.forEach(child => {
+                  child.chartData = this.$refs.chartList.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.$refs['chart' + child.id][0].chartData
+                })
+              } else {
+                item.chartData = this.$refs.chartList.$refs['chart' + item.id][0].chartData
+              }
+            })
+            const data = JSON.stringify(this.dataList)
+            const blob = new Blob([data], { type: '' })
+            FileSaver.saveAs(blob, 'ceshi.json')
+          }, 2000)
+        }
+      }, 200)
     }
   },
   created () {

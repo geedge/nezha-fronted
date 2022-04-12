@@ -83,7 +83,7 @@ export default {
   },
   data () {
     return {
-      username:  '',
+      username: '',
       name: '',
       language: 'en',
       // 顶部菜单相关

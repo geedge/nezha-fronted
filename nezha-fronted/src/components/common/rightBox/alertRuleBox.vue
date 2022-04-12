@@ -342,11 +342,11 @@
 </template>
 
 <script>
-import chartDataFormat from '../../charts/chartDataFormat'
+import chartDataFormat from '../../chart/chartDataFormat'
 import promqlInput from '../../page/dashboard/explore/promqlInput'
 import { noSpecialChar, nzNumber } from '../js/validate'
 import editRigthBox from '../mixin/editRigthBox'
-import richTextEditor from '@/components/charts/richTextEditor'
+import richTextEditor from '@/components/chart/richTextEditor'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
 export default {
   name: 'alertRuleBox',
@@ -642,7 +642,7 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editAlertRule = JSON.parse(JSON.stringify(n))
-        console.log(this.editAlertRule);
+        console.log(this.editAlertRule)
         if (this.editAlertRule.id || this.editAlertRule.name) {
           this.expressions = [this.editAlertRule.expr]
           this.showTypeSelect = true // 当 edit 时禁用 type下拉框

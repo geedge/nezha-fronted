@@ -65,7 +65,7 @@ import { isChartPie, isTimeSeries, getGroupHeight, isGroup } from './chart/tools
 import { chartType, fromRoute } from '@/components/common/js/constants'
 import bus from '@/libs/bus'
 import axios from 'axios'
-import chartTempData from '@/components/charts/chartTempData'
+import chartTempData from '@/components/chart/chartTempData'
 import logsData from '@/components/chart/logsData'
 import lodash from 'lodash'
 
@@ -99,7 +99,8 @@ export default {
       showAllData: false,
       allDataLength: 0,
       severityData: this.$store.getters.severityData,
-      severityDataWeight: this.$store.getters.severityDataWeight
+      severityDataWeight: this.$store.getters.severityDataWeight,
+      isExportData: false
     }
   },
   computed: {
@@ -161,6 +162,9 @@ export default {
     query (elements, startTime, endTime, step, params) {
       this.isError = false
       this.allDataLength = 0
+      if (this.isExportData) {
+        this.chartData = this.chartInfo.chartData
+      }
       try {
         switch (this.chartInfo.datasource) {
           case 'metrics':

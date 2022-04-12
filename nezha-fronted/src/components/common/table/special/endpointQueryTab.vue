@@ -71,41 +71,10 @@
         @showFullscreen="showFullscreen"
       ></panel-chart>
     </el-dialog>
-<!--    <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"-->
-<!--               :title="$t('project.endpoint.dialogTitle')"-->
-<!--               :visible.sync="graphShow"-->
-<!--               width="90%"-->
-<!--               height="80%"-->
-<!--               :modal-append-to-body="false"-->
-<!--               id="viewGraphDialog"-->
-<!--               @close="dialogClose">-->
-<!--      <div slot="title">-->
-<!--        {{$t("project.endpoint.dialogTitle")}}-->
-<!--        <div class="float-right panel-calendar dialog-tool" style="display: flex;margin-right: 30px">-->
-<!--          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange" id="endpoint-query-full-chart" :show-multiple="true" ref="pickTime"></pick-time>-->
-<!--          <button id="endpoint-query-full-chart-save" v-has="'main_add'" class="nz-btn nz-btn-size-large nz-btn-style-normal" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <chart ref="endpointChart" :unit="chartUnit" :minusTime="minusTime" v-if="graphShow"></chart>-->
-<!--    </el-dialog>-->
     <transition name="right-box">
       <chart-box :chart="chart" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'endpointQuery'}" @close="rightBox.show = false" @on-create-success="createSuccess" @reload="getPanelData" @reloadOnlyPanel="getPanelData" box-class="save-chart-box" from="project_endpoint_query" ref="addChartModal" v-if="rightBox.show" style="z-index: 2900" :fromEndpoint="true"></chart-box>
     </transition>
     <transition name="right-box">
-      <!--      <chart-box-->
-      <!--        v-if="rightBox.chart.show"-->
-      <!--        ref="addChartModal"-->
-      <!--        :chart="chart"-->
-      <!--        :from="fromRoute.panel"-->
-      <!--        :panel-data="panelData"-->
-      <!--        :show-panel="showPanel"-->
-      <!--        @close="closeChartBox"-->
-      <!--        @reload="panelReload"-->
-      <!--        @reloadOnlyPanel="panelReloadOnlyPanel"-->
-      <!--        @delete-chart="delChart"-->
-      <!--        @on-create-success="createSuccess"-->
-      <!--        @on-delete-success="delChartOk"-->
-      <!--      ></chart-box>-->
       <chart-right-box
         v-if="chartRightBoxShow"
         v-my-loading="rightBox.loading"
@@ -122,9 +91,7 @@
 </template>
 
 <script>
-import chartBox from '@/components/page/dashboard/chartBox'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
-import axios from 'axios'
 import bus from '../../../../libs/bus'
 import chart from '@/components/page/dashboard/overview/chart'
 import { sameLabels, fromRoute } from '@/components/common/js/constants'
@@ -135,7 +102,6 @@ import lineData from '@/components/chart/defaultLineData'
 export default {
   name: 'endpointQueryTab',
   components: {
-    chartBox,
     chart,
     metaData,
     panelChart,

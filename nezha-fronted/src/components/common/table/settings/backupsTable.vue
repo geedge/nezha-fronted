@@ -35,7 +35,7 @@
         <span v-if="item.prop === 'fileName'"> {{ scope.row.fileName }} </span>
       </template>
     </el-table-column>
-    <el-table-column :resizable="false" fixed="right" 
+    <el-table-column :resizable="false" fixed="right"
     width="165px"
     >
       <div
@@ -65,10 +65,9 @@
 </template>
 
 <script>
-import {  post ,put} from '@/http'
+import { post, put } from '@/http'
 import lodash from 'lodash'
 import bus from '@/libs/bus'
-
 
 export default {
   name: 'backupsTable',
@@ -79,11 +78,11 @@ export default {
     customTableTitle: Array,
     isConfigurations: Boolean,
     tableData: Array,
-    tableData2: Array,
+    tableData2: Array
   },
   data () {
     return {
-        
+
       // tableData: [
       //   {
       //     retention: '',
@@ -110,56 +109,50 @@ export default {
 
   computed: {},
 
-
-
   methods: {
-    changeType(item){
-      if(item == 1){
+    changeType (item) {
+      if (item == 1) {
         return this.$t('backup.only')
-      }else if(item ==2){
+      } else if (item == 2) {
         return this.$t('backup.Daily')
-
-      }else if(item == 3 ){
+      } else if (item == 3) {
         return this.$t('backup.Weekly')
-        
-      }else{
+      } else {
         return this.$t('backup.Monthly')
-
       }
     },
-      Restore(row){
-          put('/sys/backup/restore',{filename:row.fileName}).then(res=>{
-            if(res.code == 200){
-                this.$emit("getTableData",'recent')
-            }else {
-            this.$message.error(response.msg)
-          }
-        })
-      },
-      del(row){
-          this.$delete('/sys/backup?filename='+row.fileName).then(res=>{
-            if(res.code == 200){
-                this.$emit("getTableData",'recent')
-            }else {
-            this.$message.error(response.msg)
-          }
-        })
-      },
-      changeDate(item){
-          let time =Date.parse(item)
-          let time1 = this.timeFormate(time)
-          return time1
-      },
-      getNum(item){
-          return bus.getNumStr(item)
-      },
+    Restore (row) {
+      put('/sys/backup/restore', { filename: row.fileName }).then(res => {
+        if (res.code == 200) {
+          this.$emit("getTableData", 'recent')
+        } else {
+          this.$message.error(response.msg)
+        }
+      })
+    },
+    del (row) {
+      this.$delete('/sys/backup?filename=' + row.fileName).then(res => {
+        if (res.code == 200) {
+          this.$emit("getTableData", 'recent')
+        } else {
+          this.$message.error(response.msg)
+        }
+      })
+    },
+    changeDate (item) {
+      const time = Date.parse(item)
+      const time1 = this.timeFormate(time)
+      return time1
+    },
+    getNum (item) {
+      return bus.getNumStr(item)
+    },
     backupNow (item) {
       post('/sys/backup').then((res) => {
-        // console.log(res)
       })
     },
     edit () {
-          this.$emit('edit', this.tableData[0])
+      this.$emit('edit', this.tableData[0])
     }
   },
 
