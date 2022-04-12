@@ -23,6 +23,7 @@
       :resizable="true"
       :width="`${item.width}`"
       class="data-column"
+      :sortable="item.sortable"
     >
       <template slot="header">
         <span class="data-column__span">{{item.label}}</span>
@@ -30,12 +31,11 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'state'">
-          <div class="active-icon green-bg inline-block" v-if="scope.row.state"></div>
-          <div class="active-icon gray-bg inline-block" v-else></div>
+          <div class="active-icon green-bg inline-block" v-if="scope.row.state===1"></div>
+          <div class="active-icon red-bg inline-block" v-else></div>
         </template>
         <span v-else-if="item.prop === 'dc'&&scope.row[item.prop]!==undefined">{{scope.row[item.prop].name}}</span>
-        <span v-else-if="item.prop === 'rate'&&scope.row[item.prop]!==undefined">{{scope.row[item.prop]}}%</span>
-        <span v-else-if="(item.prop === 'avg'||item.prop === 'min'||item.prop === 'max')&&scope.row[item.prop]!==undefined">{{scope.row[item.prop]}}ms</span>
+        <span v-else-if="item.prop === 'time'&&scope.row[item.prop]!==undefined">{{scope.row[item.prop]}}ms</span>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <span v-else>-</span>
       </template>
@@ -65,28 +65,24 @@ export default {
       tableTitle: [ // 原table列
         {
           label: this.$t('overall.dc'),
-          prop: 'dc'
+          prop: 'dc',
+          sortable: true
         }, {
           label: this.$t('ping.sourceIp'),
-          prop: 'source'
+          prop: 'source',
+          sortable: true
         }, {
           label: this.$t('ping.targetIp'),
-          prop: 'ip'
+          prop: 'ip',
+          sortable: true
         }, {
           label: this.$t('overall.state'),
-          prop: 'state'
+          prop: 'state',
+          sortable: true
         }, {
-          label: this.$t('ping.packetLossRate'),
-          prop: 'rate'
-        }, {
-          label: this.$t('ping.rttAverage'),
-          prop: 'avg'
-        }, {
-          label: this.$t('ping.rttMinimum'),
-          prop: 'min'
-        }, {
-          label: this.$t('ping.rttMaximum'),
-          prop: 'max'
+          label: this.$t('trace.totalTime'),
+          prop: 'time',
+          sortable: true
         }
       ]
     }
