@@ -4,7 +4,7 @@
     :class="{ 'calendar--small': size === 'small' }"
     class="calendar"
   >
-    <!-- <my-date-picker
+  <!-- <my-date-picker
       prefix-icon=" "
       class="panel-time-picker-hidden"
       size="mini"
@@ -22,7 +22,6 @@
       align="right"
     >
     </my-date-picker> -->
-
     <div @click="showDropdown" class="date-range-text">
       <div class="calendar-popover-text">
         <i class="nz-icon nz-icon-time"></i>
@@ -37,7 +36,7 @@
         </div>
       </div>
       <div class="calendar-popover-text" v-else>
-        <div class="time-no-data">{{$t("dashboard.panel.noDate")}}</div>
+        <div class="time-no-data">{{showTime.text}}</div>
       </div>
       <div class="calendar-popover-text">
         <i
@@ -96,36 +95,29 @@
               Absolute time range
             </div>
             <my-date-picker
-              popper-class="panel-time-picker-popper time-picker-popover__select-top"
-              :default-time="['00:00:00', '23:59:59']"
-              :range-separator="$t('dashboard.panel.to')"
-              :start-placeholder="$t('dashboard.panel.startTime')"
-              :end-placeholder="$t('dashboard.panel.endTime')"
-              align="right"
-              prefix-icon=" "
-              class="panel-time-picker-hidden"
-              size="mini"
-              ref="calendar"
-              :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
-              :format="timeFormatStrToDatePickFormat(timeFormatMain)"
-              :clearable="false"
-              :editable="false"
-              v-model="searchTime"
-              type="datetimerange"
-              placement="left-start"
-              style="position: absolute"
-              @change="dateChange"
-            />
-            <div @click="myDatePickerShow" class="content-title">From</div>
-            <div  tabindex="1" class="content-input">
+      prefix-icon=" "
+      class="panel-time-picker-hidden"
+      size="mini"
+      ref="calendar"
+      :format="timeFormatStrToDatePickFormat(timeFormatMain)"
+      @change="dateChange"
+      v-model="searchTime"
+      type="date"
+      popper-class="panel-time-picker-popper time-picker-popover__select-top"
+      align="right"
+    >
+    </my-date-picker>
+            
+            <div  class="content-title">From</div>
+            <div @click="myDatePickerShow" tabindex="1" class="content-input">
               {{ searchTime[0] }}
             </div>
-            <div @click="myDatePickerShow" class="content-title">To</div>
-            <div  tabindex="2" class="content-input">
+            <div  class="content-title">To</div>
+            <div @click="myDatePickerShow" tabindex="2" class="content-input">
               {{ searchTime[1] }}
             </div>
             <div>
-              <el-button @click="timeRange" type="primary" size="mini"
+              <el-button @click="timeRange(searchTime)" type="primary" size="mini"
                 >Apply time range</el-button
               >
             </div>
@@ -139,9 +131,10 @@
                 class="date-range-history-item"
                 @click="historyChange(item)"
               >
-                {{bus.timeFormate(item[0])}}
+                <!-- {{this.timeFormate(item.start)}} -->
+                {{bus.timeFormate(item.start)}}
                 —
-                {{bus.timeFormate(item[1])}}
+                {{this.timeFormate(item.end)}}
 
               </div>
             </div>
@@ -156,16 +149,18 @@
               <li
                 v-for="(item,key) in timeData"
                 @click="timeChange(item)"
-                :class="showTime.id === item.id ? 'nz-dashboard-dropdown-bg' : ''"
+                :class="showTime.id === item.id ? 'active' : ''"
                 :key="key"
+
               >
-                <span style="position: relative">
+                <span style="position: relative"
+                v-if="item.id !== 12 || showEmpty"
+                
+                >
                   {{ item.text }}
                   <i
-                    v-if="
-                      item.id !== 12 || showEmpty
-                    "
-                    class="cn-icon cn-icon-check"
+                v-if="showTime.id === item.id "
+                    class="nz-icon nz-icon-check"
                   ></i>
                 </span>
               </li>
@@ -194,12 +189,12 @@ export default {
     },
   },
   data() {
-    return ({
-      rangeHistory : localStorage.getItem("date-range-history")? JSON.parse(localStorage.getItem("date-range-history")): [],
-      rangeHistoryArr: this.getRangeHistoryArr(),
-        address: localStorage.getItem("cn-sys-timezone"),
+    return {
+      rangeHistory : [],
+      rangeHistoryArr: [],
+        address: '',
         utc: localStorage.getItem("timezoneOffset"),
-        utcStr: this.getUtcStr(),
+        utcStr: '',
         dropdownFlag: false,
         isPopoverDisabled: false,
         isCustom: false,
@@ -295,52 +290,57 @@ export default {
           type: "hour",
           value: 1,
         },
-    })
+    }
   },
-  
+  mounted(){
+    this.getItem()
+    this.getUtcStr()
+    this.getRangeHistoryArr()
+  },
   methods: {
+    getItem(){
+      this.rangeHistory = localStorage.getItem("date-range-history")? JSON.parse(localStorage.getItem("date-range-history")): [];
+      this.address= localStorage.getItem("nz-sys-timezone");
+      this.utc= localStorage.getItem("timezoneOffset");
+    },
     myDatePickerShow(){
             this.$refs.calendar.pickerVisible = true;
     },
     historyChange (item)  {
-      this.myStartTime = item.start
-      this.myEndTime = item.end
+      console.log(item);
+      this.searchTime[0] = item.start
+      this.searchTime[1] = item.end
       this.isCustom = true
-      returnValue()
     },
     getRangeHistoryArr(){
-      // return this.rangeHistory.slice(0, 4)
+      // this.rangeHistoryArr = this.rangeHistory.slice(0, 4)
+      // this.rangeHistoryArr = this.$loadsh.slice(this.rangeHistory,0, 4)
+      console.log('rangeHistoryArr',this.rangeHistoryArr);
     },
     getUtcStr() {
-      console.log(this.utc);
       let str = "UTC ";
-      if (this.utc < 0) {
-        str += "- ";
-      } else {
-        str += "+ ";
-      }
-      const abs = Math.abs(this.utc);
-      if (abs > 10) {
-        str += abs + "";
-      } else {
-        str += "0" + (abs + "");
-      }
-      str += ":00 ";
-      console.log(str);
-      return str;
+      this.utcStr = str + this.utc
     },
-    timeRange() {
+    timeRange(item) {
+      console.log(item);
       this.isCustom = true;
+      this.rangeHistory.unshift({
+        start: item[0],
+        end: item[1]
+      })
+      localStorage.setItem('date-range-history', JSON.stringify(this.rangeHistory))
+      this.showDropdown()
+      this.$emit("change", this.searchTime);
     },
     showDropdown() {
       this.dropdownFlag = !this.dropdownFlag;
     },
     dateChange(val) {
+      console.log('val',val);
       const startTime = bus.timeFormate(val[0]);
       const endTime = bus.timeFormate(val[1]);
       this.$set(this.searchTime, 0, startTime);
       this.$set(this.searchTime, 1, endTime);
-
       this.$set(this.showTime, "id", 0);
       this.$set(
         this.showTime,
@@ -351,8 +351,8 @@ export default {
           " " +
           this.searchTime[1]
       );
-      localStorage.setItem('date-range-history', JSON.stringify(rangeHistory))
-      this.$emit("change", this.searchTime);
+      // localStorage.setItem('date-range-history', JSON.stringify(rangeHistory))
+      // this.$emit("change", this.searchTime);
     },
     setCustomTime(timeGroup, timeRange) {
       if (timeGroup) {
@@ -517,6 +517,7 @@ export default {
     defaultPick: {
       immediate: true,
       handler(n, o) {
+        console.log(n);
         if (n && Number.isInteger(n)) {
           const showTime = this.timeData.find((item) => item.id == n);
           if (showTime) {

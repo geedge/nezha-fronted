@@ -179,7 +179,7 @@ export default {
   margin-left: 5px;
 }
 .time-picker {
-  padding-left: 8px;
+  /* padding-left: 8px; */
   display: flex;
 }
 </style>
