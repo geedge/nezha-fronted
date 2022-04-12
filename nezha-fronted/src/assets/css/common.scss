@@ -29,7 +29,16 @@
   margin-top: 0;
   transform: translate(-50%, -50%);
 }
-
+.export-pdf-mask {
+  .el-loading-spinner {
+    .el-loading-text{
+      white-space: nowrap;
+      margin-left: 54px;
+      margin-top: 10px;
+      color: #f8f8f8;
+    }
+  }
+}
 /* 自定义的dropdown */
 .nz-dropdown {
   width: 90px;

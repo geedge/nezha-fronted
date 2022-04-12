@@ -59,7 +59,7 @@ import { isChartPie, isTimeSeries, getGroupHeight, isGroup } from '@/components/
 import { alertMessage as alertMessageConstant, chartType, fromRoute } from '@/components/common/js/constants'
 import bus from '@/libs/bus'
 import axios from 'axios'
-import chartTempData from '@/components/charts/chartTempData'
+import chartTempData from '@/components/chart/chartTempData'
 import logsData from '@/components/chart/logsData'
 import lodash from 'lodash'
 import alertMessageInfoTab from '@/components/common/alert/alertMessageInfoTab'
