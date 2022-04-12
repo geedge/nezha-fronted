@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('./font/iconfont.woff2?t=1642413628496') format('woff2'),
-  url('./font/iconfont.woff?t=1642413628496') format('woff'),
-  url('./font/iconfont.ttf?t=1642413628496') format('truetype');
+  src: url('./font/iconfont.woff2?t=1649756762091') format('woff2'),
+  url('./font/iconfont.woff?t=1649756762091') format('woff'),
+  url('./font/iconfont.ttf?t=1649756762091') format('truetype');
 }
 
 .nz-icon {
@@ -11,6 +11,62 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nz-icon-tool:before {
+  content: "\e76f";
+}
+
+.nz-icon-export-pdf:before {
+  content: "\e770";
+}
+
+.nz-icon-Router:before {
+  content: "\e766";
+}
+
+.nz-icon-Computer:before {
+  content: "\e767";
+}
+
+.nz-icon-a-Networkdevices:before {
+  content: "\e768";
+}
+
+.nz-icon-Other:before {
+  content: "\e769";
+}
+
+.nz-icon-a-Virtualmachine:before {
+  content: "\e76a";
+}
+
+.nz-icon-Switch:before {
+  content: "\e76b";
+}
+
+.nz-icon-Server:before {
+  content: "\e76c";
+}
+
+.nz-icon-ADC:before {
+  content: "\e76d";
+}
+
+.nz-icon-Firewall:before {
+  content: "\e76e";
+}
+
+.nz-icon-Topology:before {
+  content: "\e763";
+}
+
+.nz-icon-a-Silencealert:before {
+  content: "\e764";
+}
+
+.nz-icon-role1:before {
+  content: "\e760";
 }
 
 .nz-icon-Cabinet1:before {
