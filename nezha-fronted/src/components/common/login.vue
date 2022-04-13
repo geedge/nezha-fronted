@@ -23,7 +23,7 @@
           {{$t('login.verifyContent')}}
         </div>
         <div class="login-foot">
-          <button  v-if="!verifyShow" id="login" v-my-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">Login</button>
+          <button  v-if="!verifyShow" id="login" v-my-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">{{$t("login.login")}}</button>
           <button  v-if="verifyShow" id="verify" v-my-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="verify">{{$t("login.verify")}}</button>
         </div>
         <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>
@@ -132,10 +132,10 @@ export default {
         token: '',
         valid: true
       },
+      lang: this.$store.getters.getLanguage || 'en',
       uploadFileList: [],
       uploadFile: { file: '', path: '', uuid: '' },
       loading: false,
-      lang: 'en', // en/cn
       verifyShow: false,
       theme: 1,
       authBindShow: false,
@@ -371,6 +371,11 @@ export default {
       bus.$on('profile-dialog', () => {
         this.authBindShow = true
       })
+    }
+  },
+  watch: {
+    lang (n) {
+      this.$i18n.locale = this.lang
     }
   },
   mounted () {
