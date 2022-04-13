@@ -822,6 +822,11 @@ export default {
         this.htmlTitle = this.panel.name
         this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
         this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
+        console.log(dom.children)
+        // const div = document.createElement('div')
+        // div.setAttribute('class', 'el-loading-spinner')
+        // div.innerText = '12321312312312321'
+        // dom.insertBefore(div,)
         let flag = true
         this.showScreenLoading(true)
         let timer = setInterval(() => {

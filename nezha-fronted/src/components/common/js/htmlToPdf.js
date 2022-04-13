@@ -31,7 +31,18 @@ export default {
         // a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
         const imgWidth = 595.28
         const imgHeight = 592.28 / contentWidth * contentHeight
-        const pageData = canvas.toDataURL('image/jpeg', 1.0)
+        console.log(canvas)
+        // canvas.paddingTop = '30px'
+        const pageDataImg = canvas.toDataURL('image/jpeg', 1.0)
+        const canvasBox = document.createElement('canvas')
+        canvasBox.setAttribute('width', contentWidth + 30 + '')
+        canvasBox.setAttribute('height', pageHeight + '')
+        const ctx = canvasBox.getContext('2d')
+        ctx.font = '24 Arial'
+        ctx.strokeStyle = 'rgb(0,0,0)'
+        ctx.strokeText('九段刀客', 10, 10)
+        ctx.drawImage(pageDataImg, 0, 30, contentWidth, contentHeight)
+        const pageData = canvasBox.toDataURL('image/jpeg', 1.0)
         const PDF = new JsPDF('', 'pt', 'a4')
         // 有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
         // 当内容未超过pdf一页显示的范围，无需分页
