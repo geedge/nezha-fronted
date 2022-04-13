@@ -92,7 +92,7 @@
     color: #60BEFF;
     font-size: 13px
   }
-
+  
   .panel-dropdown-btn:hover {
     color: #409EFF;
   }
@@ -150,6 +150,11 @@
     button:hover {
       background: $--background-color-empty;
     }
+  }
+  &.el-button--mini{
+    color: $--color-text-label;
+    background-color: $--color-primary;
+    border-color: $--color-primary;
   }
 
   .nz-dashboard-dropdown {

@@ -3,6 +3,7 @@
     id="panel-calender"
     :class="{ 'calendar--small': size === 'small' }"
     class="calendar"
+    v-clickoutside="changeDropdownFlag"
   >
 
     <div @click="showDropdown" class="date-range-text">
@@ -63,6 +64,7 @@
                 @click="timeRange(searchTime)"
                 type="primary"
                 size="mini"
+                class="time-range-button el-button--primary"
                 >Apply time range</el-button
               >
             </div>
@@ -248,6 +250,11 @@ export default {
     console.log(this.sign)
   },
   methods: {
+    changeDropdownFlag(){
+      if (this.dropdownFlag) {
+        this.dropdownFlag = false
+      }
+    },
     getItem () {
       this.rangeHistory = localStorage.getItem('date-range-history' + this.sign)
         ? JSON.parse(localStorage.getItem('date-range-history' + this.sign))
