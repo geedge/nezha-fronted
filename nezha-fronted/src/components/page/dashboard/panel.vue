@@ -826,6 +826,10 @@ export default {
         this.htmlTitle = this.panel.name
         this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
         this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
+        // const div = document.createElement('div')
+        // div.setAttribute('class', 'el-loading-spinner')
+        // div.innerText = '12321312312312321'
+        // dom.insertBefore(div,)
         let flag = true
         this.showScreenLoading(true)
         let timer = setInterval(() => {
@@ -847,7 +851,7 @@ export default {
               document.getElementsByClassName('left-menu')[0].style.height = '100vh'
               // document.getElementsByTagName('html')[0].style.overflow = 'visible'
               const position = dom.getBoundingClientRect()
-              this.getPdf(dom, -1 * position.left, -1 * position.top)
+              this.getPdf(dom, -1 * position.left, -1 * position.top, this.searchTime)
               // this.getPdf(dom, 0, 0)
             }, 2000)
           }
@@ -940,9 +944,6 @@ export default {
       }, 100)
     }
   },
-  beforeDestroy () {
-    this.$store.dispatch('dispatchPanelLock', { flag: true })
-  },
   watch: {
     'filter.searchName': function (n, o) {
       const temp = this
@@ -994,6 +995,7 @@ export default {
     }
   },
   beforeDestroy () {
+    this.$store.dispatch('dispatchPanelLock', { flag: true })
     if (document.querySelector('#tableList')) {
       document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)
       document.querySelector('#tableList').removeEventListener('mouseleave', this.tableListLeave)
