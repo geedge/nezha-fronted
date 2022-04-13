@@ -4,7 +4,7 @@ import { Loading } from 'element-ui' // 此处根据你实际使用的框架的l
 let loading
 export default {
   install (Vue, options) {
-    Vue.prototype.getPdf = function (dom, x, y) { // 传入需要导出的 dom
+    Vue.prototype.getPdf = function (dom, x, y, time) { // 传入需要导出的 dom
       const title = this.htmlTitle || 'pdf'
       // html2Canvas(document.querySelector('#pdfDom'), { //这是在界面上设置一个id
       // 只下载id为pdfDom的内容
@@ -34,31 +34,38 @@ export default {
         console.log(canvas)
         // canvas.paddingTop = '30px'
         const pageDataImg = canvas.toDataURL('image/jpeg', 1.0)
-        const canvasBox = document.createElement('canvas')
-        canvasBox.setAttribute('width', contentWidth + 30 + '')
-        canvasBox.setAttribute('height', pageHeight + '')
-        const ctx = canvasBox.getContext('2d')
-        ctx.font = '24 Arial'
-        ctx.strokeStyle = 'rgb(0,0,0)'
-        ctx.strokeText('九段刀客', 10, 10)
-        ctx.drawImage(pageDataImg, 0, 30, contentWidth, contentHeight)
-        const pageData = canvasBox.toDataURL('image/jpeg', 1.0)
-        const PDF = new JsPDF('', 'pt', 'a4')
-        // 有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
-        // 当内容未超过pdf一页显示的范围，无需分页
-        if (leftHeight < pageHeight) {
-          PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight)
-        } else {
-          while (leftHeight > 0) {
-            PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
-            leftHeight -= pageHeight
-            position -= 841.89
-            if (leftHeight > 0) {
-              PDF.addPage()
+        const img = new Image()
+        img.src = pageDataImg
+        img.onload = function () {
+          const canvasBox = document.createElement('canvas')
+          canvasBox.setAttribute('width', contentWidth + 30 + '')
+          canvasBox.setAttribute('height', contentHeight + '')
+          const ctx = canvasBox.getContext('2d')
+          ctx.fillStyle = '#fff'
+          ctx.fillRect(0, 0, contentWidth + 30, contentHeight)
+          ctx.font = '12pt Roboto-Regular'
+          ctx.strokeStyle = '#333333'
+          ctx.fillStyle = '#333333'
+          ctx.fillText(time[0] + ' - ' + time[1], 10, 24)
+          ctx.drawImage(this, 0, 30, contentWidth, contentHeight)
+          const pageData = canvasBox.toDataURL('image/jpeg', 1.0)
+          const PDF = new JsPDF('', 'pt', 'a4')
+          // 有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
+          // 当内容未超过pdf一页显示的范围，无需分页
+          if (leftHeight < pageHeight) {
+            PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight)
+          } else {
+            while (leftHeight > 0) {
+              PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+              leftHeight -= pageHeight
+              position -= 841.89
+              if (leftHeight > 0) {
+                PDF.addPage()
+              }
             }
           }
+          PDF.save(title + '.pdf')
         }
-        PDF.save(title + '.pdf')
       })
     }
     Vue.prototype.showScreenLoading = function (flag) {

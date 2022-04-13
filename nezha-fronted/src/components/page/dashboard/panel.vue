@@ -849,7 +849,7 @@ export default {
               // document.getElementsByTagName('html')[0].style.overflow = 'visible'
               const position = dom.getBoundingClientRect()
               console.log(position)
-              this.getPdf(dom, -1 * position.left, -1 * position.top)
+              this.getPdf(dom, -1 * position.left, -1 * position.top, this.searchTime)
               // this.getPdf(dom, 0, 0)
             }, 2000)
           }
@@ -904,9 +904,6 @@ export default {
       }, 100)
     }
   },
-  beforeDestroy () {
-    this.$store.dispatch('dispatchPanelLock', { flag: true })
-  },
   watch: {
     'filter.searchName': function (n, o) {
       const temp = this
@@ -958,6 +955,7 @@ export default {
     }
   },
   beforeDestroy () {
+    this.$store.dispatch('dispatchPanelLock', { flag: true })
     if (document.querySelector('#tableList')) {
       document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)
       document.querySelector('#tableList').removeEventListener('mouseleave', this.tableListLeave)
