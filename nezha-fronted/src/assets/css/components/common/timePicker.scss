@@ -58,7 +58,7 @@
   margin-left: 4px;
 }
 .panel-time-picker-popper[x-placement^=bottom] .popper__arrow {
-  left: 85% !important;
+  left: 50% !important;
 }
 
 .panel-time-picker-popper .el-date-table td.today span {
@@ -84,6 +84,10 @@
 
   .utc-str {
     text-align: right;
+    span{
+      font-size: 12px;
+      background: $--background-color-2;
+    }
   }
 }
 .date-range-refresh {
@@ -96,6 +100,8 @@
 
 .date-range-item {
   list-style-type: none;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .panel-time-picker-hidden {
@@ -157,25 +163,23 @@
 }
 
 .date-range-panel {
-  height: 480px;
+  height: 460px;
   width: 500px;
   background: #FFFFFF;
   box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
   position: absolute;
-  right: 5%;
-  top: 34px;
+  right: 4%;
+  top: 50px;
   z-index: 1;
 
   .date-range-panel-content-left {
     padding-left: 10px;
     display: flex;
     flex-direction: column;
-
     .content-title {
       font-size: 14px;
       color: #666666;
       font-weight: 400;
-      margin-bottom: 12px;
     }
 
     .content-input {
@@ -204,12 +208,14 @@
 
       .date-range-history-item {
         padding: 5px 0;
+        font-size: 12px;
+        font-weight: 400;
         cursor: pointer;
       }
 
       .date-range-history-item:hover {
         /*font-weight: 600;*/
-        background: #f9f9f9;
+        background: $--background-color-2;
       }
     }
   }
@@ -238,16 +244,16 @@
       }
 
       li:hover {
-        background: #F2F9FF;
+        background: #F5F5F5;
         color: #333333;
       }
       li.active :hover {
-        background: $--color-primary;
-        color: $--time-picker-hover-color !important;
+        background: #F5F5F5;
+        color: $--color-primary !important;
       }
       li.active {
-        background: $--color-primary;
-        color: $--time-picker-hover-color !important;
+        background: #F5F5F5;
+        color: $--color-primary !important;
         font-weight: 400;
 
         .cn-icon-check {

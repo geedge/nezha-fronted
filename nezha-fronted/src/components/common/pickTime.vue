@@ -1,6 +1,6 @@
 <template>
   <div class="interval-refresh margin-r-10">
-    <time-picker v-if="showTimePicker" ref="timePicker" v-model="searchTime" :default-pick="defaultPick" :show-empty="showEmpty" class="time-picker margin-r-10" size="small" @change="dateChange"></time-picker>
+    <time-picker v-if="showTimePicker" ref="timePicker" v-model="searchTime" :default-pick="defaultPick" :show-empty="showEmpty" class="time-picker margin-r-10" size="small" @change="dateChange" :sign="sign"></time-picker>
     <multipleTime v-if="showMultiple" ref="multipleTime" :stepSearchTime="searchTime" class="multiple-time margin-r-10" @change="dateChange(searchTime)"/>
     <chart-unit v-if="useChartUnit" v-model="unit" class="margin-r-10"></chart-unit>
     <div v-show="useRefresh" class="top-tool-btn-group">
@@ -66,7 +66,8 @@ export default {
     },
     defaultPick: Number,
     showEmpty: { type: Boolean, default: false },
-    id: String
+    id: String,
+    sign:[Number,String]
   },
   data () {
     return {
