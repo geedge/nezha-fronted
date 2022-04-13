@@ -23,8 +23,8 @@
           {{$t('login.verifyContent')}}
         </div>
         <div class="login-foot">
-          <button  v-if="!verifyShow" id="login" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">Login</button>
-          <button  v-if="verifyShow" id="verify" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="verify">{{$t("login.verify")}}</button>
+          <button  v-if="!verifyShow" id="login" v-my-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">{{$t("login.login")}}</button>
+          <button  v-if="verifyShow" id="verify" v-my-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="verify">{{$t("login.verify")}}</button>
         </div>
         <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>
         <div class="login-license">
@@ -54,7 +54,7 @@
     <el-dialog :visible.sync="authBindShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
                :show-close="true" width="620px" class="nz-dialog" >
 
-      <div v-loading="dialogLoading">
+      <div v-my-loading="dialogLoading">
         <div class="login-dialog-title">
           1 Download your preferred authenticator app to your phone (any will work). If you don't
           have a preferred app, we recommend using <span @click="jumpDlw" class="verify-link">Google Authenticator.</span>
@@ -132,10 +132,10 @@ export default {
         token: '',
         valid: true
       },
+      lang: this.$store.getters.getLanguage || 'en',
       uploadFileList: [],
       uploadFile: { file: '', path: '', uuid: '' },
       loading: false,
-      lang: 'en', // en/cn
       verifyShow: false,
       theme: 1,
       authBindShow: false,
@@ -371,6 +371,11 @@ export default {
       bus.$on('profile-dialog', () => {
         this.authBindShow = true
       })
+    }
+  },
+  watch: {
+    lang (n) {
+      this.$i18n.locale = this.lang
     }
   },
   mounted () {
