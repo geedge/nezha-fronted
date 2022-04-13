@@ -470,7 +470,6 @@ export default {
       // }
     },
     setSearchTime (type, val, time) {
-      debugger
       if (type === 'minute') {
         const startTime = bus.timeFormate(
           new Date(bus.computeTimezone(new Date().getTime())).setMinutes(

@@ -45,6 +45,7 @@
           ref="pickTime"
           style="height: 28px;"
           id="line-chart"
+          :sign="chartInfo.id"
           @unitChange="unitChange"
         ></pick-time>
       </span>
