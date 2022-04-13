@@ -73,6 +73,7 @@ export default {
         show: false
       },
       fontSize: 12,
+      minFontSzie: 12,
       defaultUnit: 60 // 根据stat的长宽取 需要的字体 = (取最短的边 / defaultUnit) * fontSize 因为 需要的字体/fontSize = 实际宽 / defaultUnit
     }
   },
@@ -215,7 +216,7 @@ export default {
     },
     setFontSize (item) {
       let fontSize = item.height > item.width ? (14 * (item.width / 60)) : (14 * (item.height / 60))
-      fontSize = fontSize > 12 ? fontSize : 8
+      fontSize = fontSize > 12 ? fontSize : this.minFontSzie
       return fontSize + 'px'
     }
   },
