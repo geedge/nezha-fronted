@@ -214,10 +214,8 @@ export default {
       }, 50)
     },
     setFontSize (item) {
-      let fontSize = item.height > item.width ? (16 * (item.width / 60)) : (16 * (item.height / 60))
-      if (fontSize < 12) {
-        fontSize = 12
-      }
+      let fontSize = item.height > item.width ? (14 * (item.width / 60)) : (14 * (item.height / 60))
+      fontSize = fontSize > 12 ? fontSize : 8
       return fontSize + 'px'
     }
   },
