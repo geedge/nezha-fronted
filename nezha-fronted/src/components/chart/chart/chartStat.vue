@@ -11,7 +11,7 @@
         background:item.mapping ? item.mapping.color.bac : (statData.length===1 ? '' : colorList[index]),
         height:item.height+'px',
         width:item.width + 'px',
-        fontSize: item.height > item.width ? (14 * (item.width/60)+ 'px') : (14 * (item.height/60)+ 'px')
+        fontSize: setFontSize(item)
       }"
     >
       <span v-if="chartInfo.param.text==='all'">
@@ -211,6 +211,11 @@ export default {
           this.renderStat(layout)
         })
       }, 50)
+    },
+    setFontSize (item) {
+      let fontSize = item.height > item.width ? (14 * (item.width / 60)) : (14 * (item.height / 60))
+      fontSize = fontSize > 12 ? fontSize : 8
+      return fontSize + 'px'
     }
   },
   mounted () {
