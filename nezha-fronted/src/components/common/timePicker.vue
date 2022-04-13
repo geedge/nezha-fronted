@@ -4,7 +4,7 @@
     :class="{ 'calendar--small': size === 'small' }"
     class="calendar"
   >
-  <!-- <my-date-picker
+    <!-- <my-date-picker
       prefix-icon=" "
       class="panel-time-picker-hidden"
       size="mini"
@@ -28,20 +28,18 @@
       </div>
       <div class="calendar-popover-text" style="display: flex" v-if="isCustom">
         <div class="calendar-popover-text">
-          {{searchTime[0]}}
+          {{ searchTime[0] }}
         </div>
-        <div class="calendar-popover-text">{{$t('dashboard.panel.to')}}</div>
+        <div class="calendar-popover-text">{{ $t("dashboard.panel.to") }}</div>
         <div class="calendar-popover-text">
-          {{searchTime[1]}}
+          {{ searchTime[1] }}
         </div>
       </div>
       <div class="calendar-popover-text" v-else>
-        <div class="time-no-data">{{showTime.text}}</div>
+        <div class="time-no-data">{{ showTime.text }}</div>
       </div>
       <div class="calendar-popover-text">
-        <i
-          class="el-icon-arrow-down"
-        ></i>
+        <i class="el-icon-arrow-down"></i>
       </div>
     </div>
     <!-- <el-dropdown ref="timePickerDropdown" class="calendar-dropdown-title" trigger="click" @command="timeChange" @visible-change="popoverClick">
@@ -95,29 +93,36 @@
               Absolute time range
             </div>
             <my-date-picker
-      prefix-icon=" "
-      class="panel-time-picker-hidden"
-      size="mini"
-      ref="calendar"
-      :format="timeFormatStrToDatePickFormat(timeFormatMain)"
-      @change="dateChange"
-      v-model="searchTime"
-      type="date"
-      popper-class="panel-time-picker-popper time-picker-popover__select-top"
-      align="right"
-    >
-    </my-date-picker>
-            
-            <div  class="content-title">From</div>
-            <div @click="myDatePickerShow" tabindex="1" class="content-input">
-              {{ searchTime[0] }}
+              prefix-icon=" "
+              class="panel-time-picker-hidden"
+              size="mini"
+              ref="calendar"
+              :format="timeFormatStrToDatePickFormat(timeFormatMain)"
+              @change="dateChange(whoChoose)"
+              v-model="searchTimeValue"
+              type="date"
+              popper-class="panel-time-picker-popper time-picker-popover__select-top"
+              align="right"
+            >
+            </my-date-picker>
+
+            <div class="content-title">From</div>
+            <div @click="myDatePickerShow('start')" tabindex="1" class="content-input">
+              <!-- {{ searchTime[0] }} -->
+              <el-input v-model="searchTime[0]" @change="dateChange('start',searchTime[0])"> </el-input>
             </div>
-            <div  class="content-title">To</div>
-            <div @click="myDatePickerShow" tabindex="2" class="content-input">
-              {{ searchTime[1] }}
+            <div class="content-title">To</div>
+            <div @click="myDatePickerShow('end')" tabindex="2" class="content-input">
+              <el-input v-model="searchTime[1]" @change="dateChange('end',searchTime[1])"> </el-input>
+
+              <!-- {{ searchTime[1] }} -->
+
             </div>
             <div>
-              <el-button @click="timeRange(searchTime)" type="primary" size="mini"
+              <el-button
+                @click="timeRange(searchTime)"
+                type="primary"
+                size="mini"
                 >Apply time range</el-button
               >
             </div>
@@ -131,11 +136,9 @@
                 class="date-range-history-item"
                 @click="historyChange(item)"
               >
-                <!-- {{this.timeFormate(item.start)}} -->
-                {{bus.timeFormate(item.start)}}
+                {{ timeFormate(item.start) }}
                 —
-                {{this.timeFormate(item.end)}}
-
+                {{ timeFormate(item.end) }}
               </div>
             </div>
           </el-col>
@@ -147,19 +150,18 @@
             <div class="date-range-title">Relatime time ranges</div>
             <ul class="date-range-item">
               <li
-                v-for="(item,key) in timeData"
+                v-for="(item, key) in timeData"
                 @click="timeChange(item)"
                 :class="showTime.id === item.id ? 'active' : ''"
                 :key="key"
-
               >
-                <span style="position: relative"
-                v-if="item.id !== 12 || showEmpty"
-                
+                <span
+                  style="position: relative"
+                  v-if="item.id !== 12 || showEmpty"
                 >
                   {{ item.text }}
                   <i
-                v-if="showTime.id === item.id "
+                    v-if="showTime.id === item.id"
                     class="nz-icon nz-icon-check"
                   ></i>
                 </span>
@@ -190,157 +192,203 @@ export default {
   },
   data() {
     return {
-      rangeHistory : [],
+      whoChoose:'',
+      searchTimeValue:'',
+      rangeHistory: [],
       rangeHistoryArr: [],
-        address: '',
-        utc: localStorage.getItem("timezoneOffset"),
-        utcStr: '',
-        dropdownFlag: false,
-        isPopoverDisabled: false,
-        isCustom: false,
-        searchTime: [
-          bus.timeFormate(bus.getOffsetTimezoneData(-1)),
-          bus.timeFormate(bus.getOffsetTimezoneData()),
-        ],
-        showTime: {
-          id: 4,
-          text: this.$t("dashboard.panel.lastOneHour"),
+      address: "",
+      utc: localStorage.getItem("timezoneOffset"),
+      utcStr: "",
+      dropdownFlag: false,
+      isPopoverDisabled: false,
+      isCustom: false,
+      searchTime: [
+        bus.timeFormate(bus.getOffsetTimezoneData(-1)),
+        bus.timeFormate(bus.getOffsetTimezoneData()),
+      ],
+      showTime: {
+        id: 4,
+        text: this.$t("dashboard.panel.lastOneHour"),
+      },
+      timeData: [
+        // {
+        //   id: 0,
+        //   text: this.$t("dashboard.panel.customTimeRange"),
+        //   value: -1,
+        // },
+        {
+          id: 12,
+          text: this.$t("dashboard.panel.noDate"),
+          value: 0,
         },
-        timeData: [
-          // {
-          //   id: 0,
-          //   text: this.$t("dashboard.panel.customTimeRange"),
-          //   value: -1,
-          // },
-          {
-            id: 12,
-            text: this.$t("dashboard.panel.noDate"),
-            value: 0,
-          },
-          {
-            id: 1,
-            text: this.$t("dashboard.panel.lastFiveMin"),
-            type: "minute",
-            value: 5,
-          },
-          {
-            id: 2,
-            text: this.$t("dashboard.panel.lastFifteenMin"),
-            type: "minute",
-            value: 15,
-          },
-          {
-            id: 3,
-            text: this.$t("dashboard.panel.lastThirtyMin"),
-            type: "minute",
-            value: 30,
-          },
-          {
-            id: 4,
-            text: this.$t("dashboard.panel.lastOneHour"),
-            type: "hour",
-            value: 1,
-          },
-          {
-            id: 5,
-            text: this.$t("dashboard.panel.lastThreeHour"),
-            type: "hour",
-            value: 3,
-          },
-          {
-            id: 6,
-            text: this.$t("dashboard.panel.lastSixHour"),
-            type: "hour",
-            value: 6,
-          },
-          {
-            id: 7,
-            text: this.$t("dashboard.panel.lastTwelveHour"),
-            type: "hour",
-            value: 12,
-          },
-          {
-            id: 8,
-            text: this.$t("dashboard.panel.lastTwentyFourHour"),
-            type: "hour",
-            value: 24,
-          },
-          {
-            id: 9,
-            text: this.$t("dashboard.panel.lastTwoDay"),
-            type: "date",
-            value: 2,
-          },
-          {
-            id: 10,
-            text: this.$t("dashboard.panel.lastSevenDay"),
-            type: "date",
-            value: 7,
-          },
-          {
-            id: 11,
-            text: this.$t("dashboard.panel.lastThirtyDay"),
-            type: "date",
-            value: 30,
-          },
-        ],
-        nowTimeType: {
+        {
+          id: 1,
+          text: this.$t("dashboard.panel.lastFiveMin"),
+          type: "minute",
+          value: 5,
+        },
+        {
+          id: 2,
+          text: this.$t("dashboard.panel.lastFifteenMin"),
+          type: "minute",
+          value: 15,
+        },
+        {
+          id: 3,
+          text: this.$t("dashboard.panel.lastThirtyMin"),
+          type: "minute",
+          value: 30,
+        },
+        {
           id: 4,
           text: this.$t("dashboard.panel.lastOneHour"),
           type: "hour",
           value: 1,
         },
-    }
+        {
+          id: 5,
+          text: this.$t("dashboard.panel.lastThreeHour"),
+          type: "hour",
+          value: 3,
+        },
+        {
+          id: 6,
+          text: this.$t("dashboard.panel.lastSixHour"),
+          type: "hour",
+          value: 6,
+        },
+        {
+          id: 7,
+          text: this.$t("dashboard.panel.lastTwelveHour"),
+          type: "hour",
+          value: 12,
+        },
+        {
+          id: 8,
+          text: this.$t("dashboard.panel.lastTwentyFourHour"),
+          type: "hour",
+          value: 24,
+        },
+        {
+          id: 9,
+          text: this.$t("dashboard.panel.lastTwoDay"),
+          type: "date",
+          value: 2,
+        },
+        {
+          id: 10,
+          text: this.$t("dashboard.panel.lastSevenDay"),
+          type: "date",
+          value: 7,
+        },
+        {
+          id: 11,
+          text: this.$t("dashboard.panel.lastThirtyDay"),
+          type: "date",
+          value: 30,
+        },
+      ],
+      nowTimeType: {
+        id: 4,
+        text: this.$t("dashboard.panel.lastOneHour"),
+        type: "hour",
+        value: 1,
+      },
+    };
   },
-  mounted(){
-    this.getItem()
-    this.getUtcStr()
-    this.getRangeHistoryArr()
+  mounted() {
+    this.getItem();
+    this.getUtcStr();
+    this.getRangeHistoryArr();
   },
   methods: {
-    getItem(){
-      this.rangeHistory = localStorage.getItem("date-range-history")? JSON.parse(localStorage.getItem("date-range-history")): [];
-      this.address= localStorage.getItem("nz-sys-timezone");
-      this.utc= localStorage.getItem("timezoneOffset");
+    getItem() {
+      this.rangeHistory = localStorage.getItem("date-range-history")
+        ? JSON.parse(localStorage.getItem("date-range-history"))
+        : [];
+      this.address = localStorage.getItem("nz-sys-timezone");
+      this.utc = localStorage.getItem("timezoneOffset");
     },
-    myDatePickerShow(){
-            this.$refs.calendar.pickerVisible = true;
+    myDatePickerShow(item) {
+      this.whoChoose = item
+        this.$refs.calendar.pickerVisible = true;
     },
-    historyChange (item)  {
-      console.log(item);
-      this.searchTime[0] = item.start
-      this.searchTime[1] = item.end
-      this.isCustom = true
+    historyChange(item) {
+      this.searchTime[0] = item.start;
+      this.searchTime[1] = item.end;
+      this.isCustom = true;
+      this.showDropdown();
+      this.$emit("change", this.searchTime);
+      this.setSearchTime('','',this.searchTime)
     },
-    getRangeHistoryArr(){
-      // this.rangeHistoryArr = this.rangeHistory.slice(0, 4)
-      // this.rangeHistoryArr = this.$loadsh.slice(this.rangeHistory,0, 4)
-      console.log('rangeHistoryArr',this.rangeHistoryArr);
+    getRangeHistoryArr() {
+      const arr = this.rangeHistory.slice(0, 3)
+      this.rangeHistoryArr = arr
     },
     getUtcStr() {
       let str = "UTC ";
-      this.utcStr = str + this.utc
+      this.utcStr = str + this.utc;
     },
     timeRange(item) {
-      console.log(item);
+      
       this.isCustom = true;
       this.rangeHistory.unshift({
         start: item[0],
-        end: item[1]
-      })
-      localStorage.setItem('date-range-history', JSON.stringify(this.rangeHistory))
-      this.showDropdown()
+        end: item[1],
+      });
+      localStorage.setItem(
+        "date-range-history",
+        JSON.stringify(this.rangeHistory)
+      );
+      this.showDropdown();
+      this.getRangeHistoryArr()
+      console.log('timerange里searchTime',this.searchTime);
+      this.searchTime[2]=''
       this.$emit("change", this.searchTime);
+      this.setSearchTime('','',this.searchTime)
     },
     showDropdown() {
       this.dropdownFlag = !this.dropdownFlag;
     },
-    dateChange(val) {
-      console.log('val',val);
-      const startTime = bus.timeFormate(val[0]);
-      const endTime = bus.timeFormate(val[1]);
-      this.$set(this.searchTime, 0, startTime);
-      this.$set(this.searchTime, 1, endTime);
+    dateChange(type,v) {
+      if(type == 'start'){
+        if(!v){
+          const startTime = bus.timeFormate(this.searchTimeValue).trim().split(" ")[0] + ' ';
+        this.$set(this.searchTime, 0, startTime);
+        }else{
+          console.log(v);
+          let str = v.trim().split(' ')[1]
+          console.log(str);
+          let reg = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
+          if(reg.test(str)){
+            const startTime = bus.timeFormate(v)
+          this.$set(this.searchTime, 0, startTime);
+          }else{
+            console.log('输入不规范');
+          this.$set(this.searchTime, 0, '');
+
+          }
+        }
+      }else if(type == 'end'){
+        if(!v){
+          const endTime = bus.timeFormate(this.searchTimeValue).trim().split(" ")[0] + ' ';
+        this.$set(this.searchTime, 1, endTime);
+        }else{
+           let str = v.trim().split(' ')[1]
+          console.log(str);
+          let reg = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
+          if(reg.test(str)){
+            const endTime = bus.timeFormate(v)
+          this.$set(this.searchTime, 1, endTime);
+          }else{
+            console.log('输入不规范');
+          this.$set(this.searchTime, 1, '');
+
+          }
+        }
+      }
+      this.searchTime[2] = ''
+      console.log('searchTime',this.searchTime);
       this.$set(this.showTime, "id", 0);
       this.$set(
         this.showTime,
@@ -351,39 +399,48 @@ export default {
           " " +
           this.searchTime[1]
       );
-      // localStorage.setItem('date-range-history', JSON.stringify(rangeHistory))
-      // this.$emit("change", this.searchTime);
+      console.log('showTime',this.showTime);
     },
     setCustomTime(timeGroup, timeRange) {
       if (timeGroup) {
+        console.log('timeGroup',timeGroup);
         this.showTime = this.nowTimeType = this.timeData.find(
           (item) => item.id == timeGroup.id
         );
+        console.log(this.showTime);
         if (this.showTime) {
           this.showTime = Object.assign({}, this.showTime);
           this.$set(this.searchTime, 0, timeGroup.start_time);
           this.$set(this.searchTime, 1, timeGroup.end_time);
         } else {
-          this.showTime = this.nowTimeType = {
-            id: 4,
-            text: this.$t("dashboard.panel.lastOneHour"),
-            type: "hour",
-            value: 1,
-          };
-          const time = bus.getTimezontDateRange();
-          if (timeGroup.start_time) {
-            this.$set(
-              this.searchTime,
-              0,
-              bus.timeFormate(timeGroup.start_time)
-            );
-            this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time));
-          } else {
-            this.$set(this.searchTime, 0, bus.timeFormate(time[0]));
-            this.$set(this.searchTime, 1, bus.timeFormate(time[1]));
+          const time = this.searchTime.splice(' ')
+          this.showTime= this.nowTimeType ={
+            text:time[0] +' ' + this.$t('dashboard.panel.to') +' '+time[1]
           }
+          this.$set(this.searchTime, 0, bus.timeFormate(time[0]));
+          this.$set(this.searchTime, 1, bus.timeFormate(time[1]));
+          // this.showTime = this.nowTimeType = {
+          //   id: 4,
+          //   text: this.$t("dashboard.panel.lastOneHour"),
+          //   type: "hour",
+          //   value: 1,
+          // };
+          // const time = bus.getTimezontDateRange();
+          // if (timeGroup.start_time) {
+          //   this.$set(
+          //     this.searchTime,
+          //     0,
+          //     bus.timeFormate(timeGroup.start_time)
+          //   );
+          //   this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time));
+          // } else {
+          //   this.$set(this.searchTime, 0, bus.timeFormate(time[0]));
+          //   this.$set(this.searchTime, 1, bus.timeFormate(time[1]));
+          // }
+            // this.$set(this.searchTime, 0, bus.timeFormate(time[0]));
         }
       } else {
+        console.log('no timegroup');
         this.showTime = this.nowTimeType = {
           id: 4,
           text: this.$t("dashboard.panel.lastOneHour"),
@@ -396,7 +453,7 @@ export default {
       }
     },
     timeChange(val, from) {
-      console.log(val,from);
+      console.log(val, from);
       this.nowTimeType = val;
       this.$set(this.showTime, "id", val.id);
       this.$set(this.showTime, "text", val.text);
@@ -436,30 +493,35 @@ export default {
             }
           }
         } else {
-          this.isCustom = false;
+          console.log('else',this.searchTime);
+          // this.isCustom = false;
+          this.showDropdown()
           if (this.showEmpty && id === 12) {
             this.searchTime = [];
           }
           this.$emit("change", this.searchTime);
         }
       }
+
     },
     getCurrentTime() {
-      let timeTypeId = this.showTime.id;
-      if (timeTypeId === 0) {
         return this.searchTime;
-      } else {
-        if (!timeTypeId) {
-          timeTypeId = 4;
-        }
-        const currentTime = this.timeData.find(
-          (item) => item.id === timeTypeId
-        );
-        this.setSearchTime(currentTime.type, currentTime.value);
-        return this.searchTime;
-      }
+      console.log('getcurrenttime');
+      // let timeTypeId = this.showTime.id;
+      // if (timeTypeId === 0) {
+      //   return this.searchTime;
+      // } else {
+      //   if (!timeTypeId) {
+      //     timeTypeId = 4;
+      //   }
+      //   const currentTime = this.timeData.find(
+      //     (item) => item.id === timeTypeId
+      //   );
+      //   this.setSearchTime(currentTime.type, currentTime.value);
+      //   return this.searchTime;
+      // }
     },
-    setSearchTime(type, val) {
+    setSearchTime(type, val,time) {
       if (type === "minute") {
         const startTime = bus.timeFormate(
           new Date(bus.computeTimezone(new Date().getTime())).setMinutes(
@@ -497,6 +559,10 @@ export default {
         this.$set(this.searchTime, 0, startTime);
         this.$set(this.searchTime, 1, endTime);
         this.$set(this.searchTime, 2, val + "d");
+      }else{
+        this.$set(this.searchTime, 0, time[0]);
+        this.$set(this.searchTime, 1, time[1]);
+
       }
     },
     setCostomTime: function (costomTime) {
