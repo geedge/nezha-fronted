@@ -34,7 +34,7 @@
             class="date-range-panel-content date-range-panel-content-left"
           >
             <div class="date-range-title" style="padding-left: 0">
-              Absolute time range
+              {{$t('timepicker.timerange')}}
             </div>
             <my-date-picker
               prefix-icon=" "
@@ -50,13 +50,13 @@
             >
             </my-date-picker>
 
-            <div class="content-title">From</div>
+            <div class="content-title">{{$t('dashboard.panel.chartForm.valMapping.from')}}</div>
             <div @click="myDatePickerShow('start')" tabindex="1" class="content-input">
-              <el-input v-model="searchTime[0]" @change="dateChange('start',searchTime[0])"> </el-input>
+              <el-input  v-model="searchTime[0]" @change="dateChange('start',searchTime[0])"> </el-input>
             </div>
-            <div class="content-title">To</div>
+            <div class="content-title">{{$t('dashboard.panel.chartForm.valMapping.to')}}</div>
             <div @click="myDatePickerShow('end')" tabindex="2" class="content-input">
-              <el-input v-model="searchTime[1]" @change="dateChange('end',searchTime[1])"> </el-input>
+              <el-input  v-model="searchTime[1]" @change="dateChange('end',searchTime[1])"> </el-input>
 
             </div>
             <div>
@@ -65,11 +65,11 @@
                 type="primary"
                 size="mini"
                 class="time-range-button el-button--primary"
-                >Apply time range</el-button
+                >{{$t('timepicker.applytimerange')}}</el-button
               >
             </div>
             <div class="date-range-title" style="padding-left: 0">
-              Recently used absolute ranges
+              {{$t('timepicker.recentlyUsed')}}
             </div>
             <div class="date-range-history">
               <div
@@ -79,7 +79,7 @@
                 @click="historyChange(item)"
               >
                 {{ timeFormate(item.start) }}
-                —
+                {{ $t("dashboard.panel.to") }}
                 {{ timeFormate(item.end) }}
               </div>
             </div>
@@ -89,7 +89,7 @@
             class="date-range-panel-content date-range-panel-content-right"
             style="border-left: 1px solid rgba(0, 0, 0, 0.09)"
           >
-            <div class="date-range-title">Relatime time ranges</div>
+            <div class="date-range-title">{{$t('timepicker.relatime')}}</div>
             <ul class="date-range-item">
               <li
                 v-for="(item, key) in timeData"
@@ -247,7 +247,6 @@ export default {
     this.getItem()
     this.getUtcStr()
     this.getRangeHistoryArr()
-    console.log(this.sign)
   },
   methods: {
     changeDropdownFlag(){
@@ -300,10 +299,8 @@ export default {
       this.$set(this.searchTime, 2, '')
       this.showDropdown()
       this.getRangeHistoryArr()
-      console.log('timerange里searchTime', this.searchTime)
       this.setSearchTime('', '', this.searchTime)
       this.$emit('change', this.searchTime)
-      console.log(this.searchTime)
     },
     showDropdown () {
       this.dropdownFlag = !this.dropdownFlag
@@ -314,9 +311,7 @@ export default {
           const startTime = bus.timeFormate(this.searchTimeValue).trim().split(' ')[0] + ' '
           this.$set(this.searchTime, 0, startTime)
         } else {
-          console.log(v)
           const str = v.trim().split(' ')[1]
-          console.log(str)
           const reg = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
           if (reg.test(str)) {
             const startTime = bus.timeFormate(v)
@@ -331,7 +326,6 @@ export default {
           this.$set(this.searchTime, 1, endTime)
         } else {
           const str = v.trim().split(' ')[1]
-          console.log(str)
           const reg = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
           if (reg.test(str)) {
             const endTime = bus.timeFormate(v)
@@ -342,7 +336,6 @@ export default {
         }
       }
       this.searchTime[2] = ''
-      console.log('searchTime', this.searchTime)
       this.$set(this.showTime, 'id', 0)
       this.$set(
         this.showTime,
@@ -353,15 +346,12 @@ export default {
           ' ' +
           this.searchTime[1]
       )
-      console.log('showTime', this.showTime)
     },
     setCustomTime (timeGroup, timeRange) {
       if (timeGroup) {
-        console.log('timeGroup', timeGroup)
         this.showTime = this.nowTimeType = this.timeData.find(
           (item) => item.id == timeGroup.id
         )
-        console.log(this.showTime)
         if (this.showTime) {
           this.showTime = Object.assign({}, this.showTime)
           this.$set(this.searchTime, 0, timeGroup.start_time)
@@ -371,7 +361,6 @@ export default {
           this.showTime = this.nowTimeType = {
             text: time[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + time[1]
           }
-          console.log(this.showTime)
           this.$set(this.searchTime, 0, bus.timeFormate(time[0]))
           this.$set(this.searchTime, 1, bus.timeFormate(time[1]))
           // this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time));
@@ -397,7 +386,6 @@ export default {
           // this.$set(this.searchTime, 0, bus.timeFormate(time[0]));
         }
       } else {
-        console.log('no timegroup')
         this.showTime = this.nowTimeType = {
           id: 4,
           text: this.$t('dashboard.panel.lastOneHour'),
@@ -410,7 +398,6 @@ export default {
       }
     },
     timeChange (val, from) {
-      console.log(val, from)
       this.nowTimeType = val
       this.$set(this.showTime, 'id', val.id)
       this.$set(this.showTime, 'text', val.text)
@@ -450,7 +437,6 @@ export default {
             }
           }
         } else {
-          console.log('else', this.searchTime)
           // this.isCustom = false;
           this.showDropdown()
           if (this.showEmpty && id === 12) {
@@ -534,11 +520,6 @@ export default {
     }
   },
   watch: {
-    searchTime: {
-      handler (n, o) {
-        console.log(n)
-      }
-    },
     defaultPick: {
       immediate: true,
       handler (n, o) {

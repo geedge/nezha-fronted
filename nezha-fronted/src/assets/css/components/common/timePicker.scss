@@ -108,7 +108,7 @@
   visibility: hidden !important;
   position: absolute;
   top: 0;
-  left: 0;
+  left: -20px;
 }
 
 .date-range-text {
@@ -183,7 +183,9 @@
     }
 
     .content-input {
+      width: 230px;
       .el-input{
+        width: auto;
         .el-input__inner{
           border: 1px solid #E7EAED;
           border-radius: 2px;
@@ -196,10 +198,6 @@
         }
 
       }
-    }
-
-    .content-input:focus {
-      border: 1px solid #169AFF;
     }
 
     .date-range-history {

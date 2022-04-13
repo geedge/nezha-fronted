@@ -151,10 +151,17 @@
       background: $--background-color-empty;
     }
   }
-  &.el-button--mini{
-    color: $--color-text-label;
-    background-color: $--color-primary;
-    border-color: $--color-primary;
+  .date-range-panel{
+    .el-button--primary{
+      color: $--color-text-label;
+      background-color: $--color-primary;
+      border-color: $--color-primary;
+    }
+    .el-button--primary:hover{
+      color: $--color-text-label;
+      background-color: $--color-primary;
+      border-color: $--color-primary;
+    }
   }
 
   .nz-dashboard-dropdown {
