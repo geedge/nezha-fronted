@@ -110,10 +110,11 @@ export default {
       if (data.metric.__name__) {
         legend += '}'
       }
-      // if (!legend && chartInfo.elements) {
-      //   // legend = chartInfo.elements[expressionIndex].expression
-      //   legend = ''
-      // }
+      if (!legend && chartInfo.elements) {
+        legend = chartInfo.elements[expressionIndex].expression
+        //  legend = ''
+      }
+      console.log('处理前',legend);
       // 处理legend别名
       alias = alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
       if (!alias) {
@@ -147,9 +148,9 @@ export default {
       if (/\{\{.+\}\}/.test(aliasExpression)) {
         const labelValue = aliasExpression.replace(/(\{\{.+?\}\})/g, function (i) {
           const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          if (!legend) {
-            return label
-          }
+          // if (!legend) {
+          //   return label
+          // }
           const reg = new RegExp(label + '=".+?"')
           let value = null
           if (reg.test(legend)) {
@@ -161,7 +162,9 @@ export default {
         return labelValue
       } else {
         if (!aliasExpression) {
-          return ''
+          // return ''
+          let result =legend.substr(legend.indexOf('"') + 1,legend.lastIndexOf('"') - legend.indexOf('"') - 1);
+          return result
         }
         return aliasExpression
       }
@@ -290,6 +293,7 @@ export default {
     }
   },
   mounted () {
+    
     this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
   },
   beforeDestroy () {
