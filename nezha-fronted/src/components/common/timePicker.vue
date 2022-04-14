@@ -98,7 +98,7 @@
               <li
                 v-for="(item, key) in timeData"
                 @click="timeChange(item)"
-                :class="showTime.id === item.id ? 'active' : ''"
+                :class="showTime.id === item.id ? 'activeLi' : ''"
                 :key="key"
                 :v-if="item.id !== 12 || showEmpty"
 

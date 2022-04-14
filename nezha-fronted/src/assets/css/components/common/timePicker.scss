@@ -246,11 +246,11 @@
         background: #F5F5F5;
         color: #333333;
       }
-      li.active :hover {
+      li.activeLi :hover {
         background: #F5F5F5;
         color: $--color-primary !important;
       }
-      li.active {
+      li.activeLi {
         background: #F5F5F5;
         color: $--color-primary !important;
         font-weight: 400;
