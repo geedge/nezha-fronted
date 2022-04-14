@@ -86,6 +86,7 @@ export default {
       }
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+      chartOption.color = this.colorList
       if (!this.series.length) {
         this.isNoData = true
         this.$emit('chartIsNoData', this.isNoData)

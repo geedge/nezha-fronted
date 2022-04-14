@@ -13,7 +13,7 @@
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
         <div v-if="from === fromRoute.asset" style="display: flex">
-          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
+          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'panel' + obj.id"></pick-time>
           <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
                   type="button" @click="addChart">
             <i class="nz-icon-create-square nz-icon"></i>
@@ -48,7 +48,7 @@
           </top-tool-more-options>
         </div>
         <div v-else-if="from === fromRoute.endpoint" style="display: flex">
-          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
+          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'panel' + obj.id"></pick-time>
           <button id="endpoint-create-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
@@ -163,7 +163,8 @@ export default {
     paramsType: {
       type: String,
       default: 'dashboard'
-    }
+    },
+    sign:[Number,String]
   },
   computed: {
     chartRightBoxShow () {

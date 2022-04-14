@@ -83,6 +83,7 @@
   font-size: 14px;
 
   .utc-str {
+    line-height: 44px;
     text-align: right;
     span{
       font-size: 12px;
@@ -108,7 +109,7 @@
   visibility: hidden !important;
   position: absolute;
   top: 0;
-  left: 0;
+  left: -20px;
 }
 
 .date-range-text {
@@ -163,7 +164,7 @@
 }
 
 .date-range-panel {
-  height: 460px;
+  // height: 460px;
   width: 500px;
   background: #FFFFFF;
   box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
@@ -183,7 +184,9 @@
     }
 
     .content-input {
+      width: 230px;
       .el-input{
+        width: auto;
         .el-input__inner{
           border: 1px solid #E7EAED;
           border-radius: 2px;
@@ -196,10 +199,6 @@
         }
 
       }
-    }
-
-    .content-input:focus {
-      border: 1px solid #169AFF;
     }
 
     .date-range-history {
@@ -247,11 +246,11 @@
         background: #F5F5F5;
         color: #333333;
       }
-      li.active :hover {
+      li.activeLi :hover {
         background: #F5F5F5;
         color: $--color-primary !important;
       }
-      li.active {
+      li.activeLi {
         background: #F5F5F5;
         color: $--color-primary !important;
         font-weight: 400;
