@@ -67,35 +67,43 @@ export default {
         {
           label: this.$t('overall.dc'),
           prop: 'dc',
-          sortable: true
+          sortable: true,
+          minWidth: 200
         }, {
           label: this.$t('ping.sourceIp'),
           prop: 'source',
-          sortable: true
+          sortable: true,
+          minWidth: 200
         }, {
           label: this.$t('ping.targetIp'),
           prop: 'ip',
-          sortable: true
+          sortable: true,
+          minWidth: 200
         }, {
           label: this.$t('overall.state'),
           prop: 'state',
-          sortable: true
+          sortable: true,
+          width: 150
         }, {
           label: this.$t('ping.packetLossRate'),
           prop: 'rate',
-          sortable: true
+          sortable: true,
+          minWidth: 200
         }, {
           label: this.$t('ping.rttAverage'),
           prop: 'avg',
-          sortable: true
+          sortable: true,
+          minWidth: 200
         }, {
           label: this.$t('ping.rttMinimum'),
           prop: 'min',
-          sortable: true
+          sortable: true,
+          minWidth: 200
         }, {
           label: this.$t('ping.rttMaximum'),
           prop: 'max',
-          sortable: true
+          sortable: true,
+          minWidth: 200
         }
       ]
     }
