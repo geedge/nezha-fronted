@@ -118,7 +118,8 @@ export default {
     obj: Object, // 关联的实体对象
     from: String, // 来自哪个页面
     tabList: Array, // 动态页签列表
-    targetTab: String // 展示哪个页签
+    targetTab: String, // 展示哪个页签
+    sign:[Number,String], //pickTime历史记录的唯一标识
   },
   watch: {
     obj: {

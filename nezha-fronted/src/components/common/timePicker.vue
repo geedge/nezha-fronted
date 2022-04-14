@@ -20,7 +20,11 @@
         </div>
       </div>
       <div class="calendar-popover-text" v-else>
-        <div class="time-no-data">{{ showTime.text }}</div>
+        <el-tooltip class="item" effect="light"  placement="bottom">
+          <div slot="content"> {{searchTime[0]}}<br/><p style="text-align:center">{{$t("dashboard.panel.to")}} </p>{{searchTime[1]}}</div>
+      <div class="time-no-data">{{ showTime.text }}</div>
+    </el-tooltip>
+        <!-- <div class="time-no-data">{{ showTime.text }}</div> -->
       </div>
       <div class="calendar-popover-text">
         <i class="el-icon-arrow-down"></i>
@@ -96,6 +100,8 @@
                 @click="timeChange(item)"
                 :class="showTime.id === item.id ? 'active' : ''"
                 :key="key"
+                :v-if="item.id !== 12 || showEmpty"
+
               >
                 <span
                   style="position: relative"
@@ -263,7 +269,27 @@ export default {
     },
     myDatePickerShow (item) {
       this.whoChoose = item
-      this.$refs.calendar.pickerVisible = true
+            this.isCustom = true
+      this.$refs.calendar.focus()
+            this.$refs.calendar.pickerVisible = true
+            if (document.getElementById('viewGraphDialog')) {
+              // 处理 多弹出的z-index的问题 当前为 alertMessage的处理
+              const viewGraphDialogStyle = window.getComputedStyle(
+                document.getElementById('viewGraphDialog', null)
+              )
+              setTimeout(() => {
+                if (viewGraphDialogStyle['z-index'] !== 'auto') {
+                  const dom =
+                    document.getElementsByClassName('el-picker-panel')
+                  Array.prototype.forEach.call(dom, function (element) {
+                    element.style['z-index'] =
+                      viewGraphDialogStyle['z-index'] + 1
+                  })
+                  this.$refs.calendar.$el.style['z-index'] =
+                    viewGraphDialogStyle['z-index'] + 1
+                }
+              })
+            }
     },
     historyChange (item) {
       this.searchTime[0] = item.start
@@ -357,33 +383,33 @@ export default {
           this.$set(this.searchTime, 0, timeGroup.start_time)
           this.$set(this.searchTime, 1, timeGroup.end_time)
         } else {
-          const time = this.searchTime.splice(' ')
-          this.showTime = this.nowTimeType = {
-            text: time[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + time[1]
-          }
-          this.$set(this.searchTime, 0, bus.timeFormate(time[0]))
-          this.$set(this.searchTime, 1, bus.timeFormate(time[1]))
-          // this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time));
-          // this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time));
+          // const time = this.searchTime.splice(' ')
           // this.showTime = this.nowTimeType = {
-          //   id: 4,
-          //   text: this.$t("dashboard.panel.lastOneHour"),
-          //   type: "hour",
-          //   value: 1,
-          // };
-          // const time = bus.getTimezontDateRange();
-          // if (timeGroup.start_time) {
-          //   this.$set(
-          //     this.searchTime,
-          //     0,
-          //     bus.timeFormate(timeGroup.start_time)
-          //   );
-          //   this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time));
-          // } else {
-          //   this.$set(this.searchTime, 0, bus.timeFormate(time[0]));
-          //   this.$set(this.searchTime, 1, bus.timeFormate(time[1]));
+          //   text: time[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + time[1]
           // }
-          // this.$set(this.searchTime, 0, bus.timeFormate(time[0]));
+          // this.$set(this.searchTime, 0, bus.timeFormate(time[0]))
+          // this.$set(this.searchTime, 1, bus.timeFormate(time[1]))
+          this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time));
+          this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time));
+          this.showTime = this.nowTimeType = {
+            id: 4,
+            text: this.$t("dashboard.panel.lastOneHour"),
+            type: "hour",
+            value: 1,
+          };
+          const time = bus.getTimezontDateRange();
+          if (timeGroup.start_time) {
+            this.$set(
+              this.searchTime,
+              0,
+              bus.timeFormate(timeGroup.start_time)
+            );
+            this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time));
+          } else {
+            this.$set(this.searchTime, 0, bus.timeFormate(time[0]));
+            this.$set(this.searchTime, 1, bus.timeFormate(time[1]));
+          }
+          this.$set(this.searchTime, 0, bus.timeFormate(time[0]));
         }
       } else {
         this.showTime = this.nowTimeType = {
@@ -437,7 +463,7 @@ export default {
             }
           }
         } else {
-          // this.isCustom = false;
+          this.isCustom = false;
           this.showDropdown()
           if (this.showEmpty && id === 12) {
             this.searchTime = []

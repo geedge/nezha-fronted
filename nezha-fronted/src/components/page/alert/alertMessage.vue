@@ -580,7 +580,6 @@ export default {
     },
     messageDetail (row) {
       this.sign = Number(row.alertRule.id)
-      console.log(this.sign);
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.$nextTick(() => {
