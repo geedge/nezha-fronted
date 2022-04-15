@@ -50,13 +50,17 @@
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-          <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)">
+          <span
+            style="cursor: pointer"
+            @click="$emit('showBottomBox', 'alertMessageTab', scope.row)"
+          >
             <i
               :class="scope.row.alertNum > 0 ? 'gray' : 'green'"
               class="nz-icon nz-icon-overview-alert vertical-align-top;"
               @mouseenter="tooltipHover(scope.row, true, $event)"
               @mouseleave="tooltipHover(scope.row, false, $event)"
-            ></i><span>{{scope.row.alerts}}</span>
+            ></i
+            ><span>{{ scope.row.alerts }}</span>
           </span>
         </template>
         <template v-else-if="item.prop === 'matchers'">
@@ -208,13 +212,6 @@ export default {
           sortable: "custom",
         },
         {
-          label: this.$t("alert.alert"),
-          prop: "alertNum",
-          show: true,
-          minWidth: 120,
-          sortable: "custom",
-        },
-        {
           label: this.$t("alert.silence.startTime"),
           prop: "startAt",
           show: true,
@@ -238,6 +235,13 @@ export default {
           prop: "utime",
           show: false,
           width: 300,
+        },
+        {
+          label: this.$t("alert.alert"),
+          prop: "alertNum",
+          show: true,
+          minWidth: 120,
+          sortable: "custom",
         },
         {
           label: this.$t("alert.silence.state"),
