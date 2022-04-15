@@ -83,38 +83,6 @@ export default new Vue({
         return date
       }
     },
-    // 格式化tag为字符串表达式
-    tagsToString (metric, arr) {
-      let str = metric
-      let sepStr = ''
-      arr.forEach((item, index) => {
-        if (index === 0) {
-          str += '{'
-          if (item.value.length === 1) {
-            str += `${item.name}='${item.value.join('|')}'`
-            sepStr = ','
-          } else if (item.value.length > 1) {
-            str += `${item.name}=~'${item.value.join('|')}'`
-            sepStr = ','
-          }
-        } else {
-          if (item.value.length === 1) {
-            str += sepStr + `${item.name}='${item.value.join('|')}'`
-            sepStr = ','
-          } else if (item.value.length > 1) {
-            str += sepStr + `${item.name}=~'${item.value.join('|')}'`
-            sepStr = ','
-          }
-        }
-      })
-      if (str.indexOf('{') > -1) {
-        str += '}'
-      }
-      if (str.endsWith('{}')) {
-        str = str.substring(0, str.indexOf('{'))
-      }
-      return str
-    },
     getStep (startTime, endTime) {
       const start = new Date(startTime)
       const end = new Date(endTime)
@@ -125,9 +93,9 @@ export default new Vue({
       const thirtyDay = 2592000000
       if (numInterval < oneDay) { // 小于1天，step为15s
         step = '15s'
-      } else if (numInterval < sevenDay) {
+      } else if (numInterval < sevenDay) { // 小于7天，step为15s
         step = '5m'
-      } else if (numInterval < thirtyDay) {
+      } else if (numInterval < thirtyDay) { // 小于30天，step为15s
         step = '10m'
       } else {
         step = '30m'
