@@ -114,7 +114,6 @@ export default {
         legend = chartInfo.elements[expressionIndex].expression
         //  legend = ''
       }
-      console.log('处理前',legend);
       // 处理legend别名
       alias = alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
       if (!alias) {
@@ -162,9 +161,9 @@ export default {
         return labelValue
       } else {
         if (!aliasExpression) {
-          // return ''
-          let result =legend.substr(legend.indexOf('"') + 1,legend.lastIndexOf('"') - legend.indexOf('"') - 1);
-          return result
+          return legend
+          // let result =legend.substr(legend.indexOf('"') + 1,legend.lastIndexOf('"') - legend.indexOf('"') - 1);
+          // return result
         }
         return aliasExpression
       }
