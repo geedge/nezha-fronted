@@ -73,7 +73,7 @@
               <i class="el-icon-copy-document" style="font-size: 16px;"></i>
               <span>{{$t('dashboard.duplicate')}}</span>
             </li>
-            <li v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.pid" v-has="'main_edit'" class="el-dropdown-menu__item" @click="$emit('sync')">
+            <li v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.pid" v-has="'main_edit'" class="el-dropdown-menu__item" @click="sync">
               <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>
               <span>{{$t('overall.syncChart')}}</span>
             </li>
