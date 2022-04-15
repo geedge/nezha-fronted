@@ -63,7 +63,7 @@ export default {
       statData: [],
       boxWidth: 0,
       boxHeight: 0,
-      boxPadding: 5,
+      boxPadding: 2,
       statTimer: null,
       tooltip: {
         x: 0,
