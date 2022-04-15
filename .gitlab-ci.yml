@@ -47,6 +47,7 @@ dev_build:
     - echo "<pre>" > ./static/git-log.html
     - "git log -100 --pretty=format:'%ad : %s' >> ./static/git-log.html"
     - echo "</pre>" >> ./static/git-log.html
+    - echo "{'baseUrl':'/','version':'$CI_COMMIT_SHORT_SHA'}" > ./static/config.json
     - zip -q -r $FILE_NAME ./*
 
     # 将 dist zip 上传到 minio 
