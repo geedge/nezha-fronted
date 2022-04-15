@@ -77,9 +77,9 @@
                   <el-dropdown-item v-has="'main_add'">
                     <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-export-pdf"></i>{{ $t('overall.downloadToPdf') }}</div>
                   </el-dropdown-item>
-                  <el-dropdown-item v-has="'main_add'">
-                    <div id="chart-htmltoData" @click="exportData"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>
-                  </el-dropdown-item>
+<!--                  <el-dropdown-item v-has="'main_add'">-->
+<!--                    <div id="chart-htmltoData" @click="exportData"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>-->
+<!--                  </el-dropdown-item>-->
                 </template>
               </top-tool-more-options>
             </div>
@@ -823,7 +823,7 @@ export default {
       const dom = document.getElementsByClassName(this.pdfId)[0]
       if (dom) {
         // dom = dom.getElementsByClassName('vue-grid-layout')[0]
-        this.htmlTitle = this.panel.name
+        this.htmlTitle = this.showPanel.name
         this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
         this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
         // const div = document.createElement('div')

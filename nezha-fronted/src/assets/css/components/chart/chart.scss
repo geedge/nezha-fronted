@@ -425,10 +425,10 @@
 }
 .chart-stat{
   width: 100%;
-  height: calc(100% - 20px);
+  height: 100%;
   display: flex;
   flex-wrap: wrap;
-  padding: 5px;
+  padding: 2px;
   box-sizing: border-box;
   flex-direction: row;
   align-items: center;
@@ -441,7 +441,7 @@
     word-break: break-all;
     border-radius: 2px;
     box-sizing: border-box;
-    padding: 2px;
+    //padding: 2px;
     overflow: hidden;
     color: $--color-text-regular;
     flex-grow: 1
