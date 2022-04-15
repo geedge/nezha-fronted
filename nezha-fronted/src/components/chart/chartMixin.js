@@ -123,7 +123,8 @@ export default {
         alias += chartInfo.elements[expressionIndex].expression
       }
       // proj_status_
-      const name = alias + '-' + dataIndex
+      const legendIndex = expressionIndex + 'and' + dataIndex
+      const name = alias + '-' + legendIndex
 
       // 若需要统计，处理统计数据
       const statisticsTypes = chartInfo.param.legend ? chartInfo.param.legend.values : ''
