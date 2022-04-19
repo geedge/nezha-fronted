@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './user'
 import panel from './panel'
+// import topology from './topology'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({

@@ -1,1 +1,5 @@
-module.exports = 'test-file-stub';
+module.exports = {
+  'test-file-stub': 'test-file-stub',
+  getters: {},
+  commit: ()=>{}
+}

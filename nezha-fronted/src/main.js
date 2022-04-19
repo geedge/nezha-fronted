@@ -36,6 +36,18 @@ import myDatePicker from '@/components/common/myDatePicker'
 import vSelectPage from '@/components/common/v-selectpagenew'
 import nzDataList from '@/components/common/table/nzDataList'
 import htmlToPdf from '@/components/common/js/htmlToPdf'
+import { registerNode } from '@topology/core'
+import {
+  myAnchors,
+  myCubeAnchors,
+  myCubec,
+  myIconRect,
+  myShape,
+  myTextRect
+} from '@/components/common/project/L5/services/canvas'
+// 注册到画布
+registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
+registerNode('myCube', myCubec, myCubeAnchors, null, null)
 Vue.use(htmlToPdf)
 Vue.use(vSelectPage, {
   dataLoad: function (vue, url, params) {

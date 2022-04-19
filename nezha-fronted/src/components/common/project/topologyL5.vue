@@ -351,7 +351,7 @@ import {
   myCubec,
   myCubeAnchors
 } from './L5/services/canvas.js'
-import { getTopology, setTopology } from '../js/common'
+import { getTopology, setTopology, getTopologyImg, setTopologyImg } from '../js/common'
 import CanvasProps from './L5/CanvasProps'
 import topologyTopTool from './L5//topologyTopTool'
 import CanvasContextMenu from './L5/CanvasContextMenu'
@@ -1723,13 +1723,21 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
+            if (getTopologyImg(item.id)) {
+              promiseArr.push(getTopologyImg(item.id))
+            } else {
+              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
+            }
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
-              item.image = res2[index].data
+              console.log(res2[index])
+              item.image = res2[index].data || res2[index]
+              if (!getTopologyImg(item.id)) {
+                setTopologyImg(item.id, item.image)
+              }
               const group = this.tools.find(tool => tool.group === item.unit)
               if (group) {
                 group.children.push({
@@ -1780,7 +1788,11 @@ export default {
           }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
-              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
+              if (getTopologyImg(item.data.imageId)) {
+                promiseArr.push(getTopologyImg(item.data.imageId))
+              } else {
+                promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
+              }
             } else if (item.data.imageId) {
               promiseArr.push(imgDefault)
             } else {
@@ -1795,7 +1807,10 @@ export default {
             })
             this.iconArray.forEach((item, index) => {
               if (item.id) {
-                item.image = res2[index].data
+                item.image = res2[index].data || res2[index]
+                if (!getTopologyImg(item.id)) {
+                  setTopologyImg(item.id, item.image)
+                }
               }
             })
             this.imgInit = true
@@ -2254,6 +2269,10 @@ export default {
     if (getTopology(this.topologyIndex)) {
       getTopology(this.topologyIndex).destroy()
       setTopology(this.topologyIndex, null)
+      window.topology = null
+      window.Le5leTopologyPoint = null
+      window.topologyPoint = null
+      window.topologyRect = null
     }
     if (document.getElementById('topology-canvas' + this.topologyIndexF)) {
       document.getElementById('topology-canvas' + this.topologyIndexF).removeEventListener('mousemove', this.canvasMove)
