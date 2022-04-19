@@ -65,7 +65,7 @@ export default {
             temp.push(item)
           })
           this.allProject = JSON.parse(JSON.stringify(temp))
-          temp = []
+          temp = null
           this.topologyLoading = false
         })
       })
@@ -99,7 +99,7 @@ export default {
     }
   },
   mounted () {
-    this.queryAllProjectData()
+
   }
 }
 </script>

@@ -439,6 +439,7 @@ export default {
       timer: null, // 处理project短时间呢频繁变更的定时器
       timer2: null, // 处理平移画布显示iconState的定时器
       timer3: null, // 处理tooltip的显示定时器
+      timer4: null,
       nodesArr: [],
       notModuleIDArr: [],
       popData: [
@@ -660,10 +661,10 @@ export default {
       this.chartGetData = []
       const axiosArr = []
       const promiseArr = []
-      const pensPromise = (pen, arr, index) => {
+      let pensPromise = (pen, arr, index) => {
         return new Promise((resolve, reject) => {
           Promise.all(arr).then((res) => {
-            this.chartGetData[index].res = this.computeData(res, pen.data.aggregation, pen)
+            this.chartGetData[index].res = JSON.parse(JSON.stringify(this.computeData(res, pen.data.aggregation, pen)))
             this.setAnimation(pen, this.chartGetData[index].res)
             resolve()
           })
@@ -734,6 +735,7 @@ export default {
         // getTopology(this.topologyIndex).fitView();
         this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
         this.getNodesArr()
+        pensPromise = null
       })
     },
     dateChange () {
@@ -821,7 +823,7 @@ export default {
             }
             this.projectInfoShow = true
             this.projectAlertShow = true
-            this.saveData = { ...data }
+            this.saveData = JSON.parse(JSON.stringify(data))
             this.topologyInfo.name = this.obj.name
             resolve(data)
           } else {
@@ -846,7 +848,7 @@ export default {
               const arr = data.pens.filter(item => !item.type)
               this.addNodeInit(arr)
             }
-            let timer = setInterval(() => {
+            this.timer4 = setInterval(() => {
               if (!this.imgInit) {
                 return
               }
@@ -913,17 +915,17 @@ export default {
                     }
                   }
                 })
-                this.saveData = { ...data }
+                this.saveData = JSON.parse(JSON.stringify(data))
                 resolve(data)
-                clearInterval(timer)
-                timer = null
+                clearInterval(this.timer4)
+                this.timer4 = null
               }).catch(res => {
-                this.saveData = { ...data }
+                this.saveData = JSON.parse(JSON.stringify(data))
                 resolve(data)
-                clearInterval(timer)
-                timer = null
+                clearInterval(this.timer4)
+                this.timer4 = null
               })
-            }, 100)
+            }, 2000)
           }
         })
       })
@@ -1056,7 +1058,7 @@ export default {
       this.$get('/monitor/module?pageSize=-1&projectIds=' + this.obj.id).then(response => {
         if (response.code === 200) {
           this.projectInfo.loading = false
-          this.allModules = response.data.list
+          this.allModules = JSON.parse(JSON.stringify(response.data.list))
           this.modulesDiff()
         }
       })
@@ -1800,6 +1802,7 @@ export default {
             })
             this.imgInit = true
             this.imgageLoading = false
+            imgidList = null
           })
         })
       }
@@ -2253,6 +2256,10 @@ export default {
     if (this.timer) {
       clearInterval(this.timer)
       this.timer = null
+    }
+    if (this.timer4) {
+      clearInterval(this.timer4)
+      this.timer4 = null
     }
     if (getTopology(this.topologyIndex)) {
       getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
