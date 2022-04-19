@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="topologyLoading" class="overview">
+  <div v-my-loading="topologyLoading" class="overview">
     <transition name = "el-zoom-in-center">
       <div v-if="allProject&&allProject.length>0" style="width: 100%;height: 100%;position: relative">
         <el-carousel :interval="5000" :trigger="'click'" arrow="hover">
@@ -46,7 +46,7 @@ export default {
       this.$get('monitor/project', { pageSize: -1 }).then(res => {
         this.topologyLoading = true
         const axiosAll = []
-        const temp = []
+        let temp = []
         if (res.data.list.length === 0) {
           this.topologyLoading = false
         }
@@ -64,7 +64,8 @@ export default {
           res2.forEach(item => {
             temp.push(item)
           })
-          this.allProject = temp
+          this.allProject = JSON.parse(JSON.stringify(temp))
+          temp = []
           this.topologyLoading = false
         })
       })
