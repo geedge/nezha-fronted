@@ -172,6 +172,15 @@
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
       ></chart-clock>
+      <chart-topology
+        :ref="'chart' + chartInfo.id"
+        v-if="isTopology(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
+      ></chart-topology>
     </template>
   </div>
 </template>
@@ -198,7 +207,8 @@ import chartUrl from './chart/chartUrl'
 import chartValue from './chart/chartValue'
 import chartHexagonD3 from './chart/chartHexagonD3'
 import chartMap from './chart/chartMap'
-import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable, isGauge, isClock } from './chart/tools'
+import chartTopology from './chart/chartTopology'
+import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable, isGauge, isClock, isTopology } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -224,7 +234,8 @@ export default {
     chartUrl,
     chartValue,
     chartHexagonD3,
-    chartMap
+    chartMap,
+    chartTopology
   },
   props: {
     chartInfo: Object,
@@ -293,6 +304,7 @@ export default {
     isTable,
     isGauge,
     isClock,
+    isTopology,
     chartIsNoData (flag) {
       this.chartChildrenData = flag
     },
