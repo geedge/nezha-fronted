@@ -850,7 +850,7 @@ export default {
               if (!this.imgInit) {
                 return
               }
-              const promiseArr = []
+              const promiseArr = [this.$get('stat/module/abnormal', { projectId: this.obj.id })]
               const self = this
               for (let i = 0; i < data.pens.length; i++) {
                 const line = data.pens[i]
@@ -867,13 +867,13 @@ export default {
                   item.image = img ? img.image : imgDefault
                 }
                 if (item.type === 0) {
-                  promiseArr.push(this.$get('stat/module/abnormal', { moduleId: item.data.moduleId }))
+                  // promiseArr.push(this.$get('stat/module/abnormal', { moduleId: item.data.moduleId }))
                   item.data.state = {}
                   item.data.state.asset = false
                   item.data.state.endpoint = false
                   item.data.state.alert = false
                 } else {
-                  promiseArr.push({ type: 1 })
+                  // promiseArr.push({ type: 1 })
                   item.data.state = {}
                   item.data.state.asset = false
                   item.data.state.endpoint = false
@@ -898,13 +898,13 @@ export default {
                 data.bkColor = '#FFFFFF00'
               }
               Promise.all(promiseArr).then(res => {
-                res.forEach((response, index) => {
-                  const item = data.pens[index]
+                res[0].data.list.forEach((module, index) => {
+                  const item = data.pens.find(pens => module.id === pens.data.moduleId)
                   if (item.type === 0 && item.data.state && res[index].data.list.length) {
-                    item.data.state.error = item.data.error = !res[index].data.list[0].state
-                    item.data.state.asset = !!res[index].data.list[0].asset
-                    item.data.state.alert = !!res[index].data.list[0].alert
-                    item.data.state.endpoint = !!res[index].data.list[0].endpoint
+                    item.data.state.error = item.data.error = !module.state
+                    item.data.state.asset = !!module.asset
+                    item.data.state.alert = !!module.alert
+                    item.data.state.endpoint = !!module.endpoint
                   } else {
                     item.data.state = {
                       error: false,
