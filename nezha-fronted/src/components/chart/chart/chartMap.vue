@@ -16,12 +16,7 @@ import axios from 'axios'
 import icon from 'leaflet/dist/images/marker-icon.png'
 import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 import 'leaflet/dist/leaflet.css'
-import * as echarts from 'echarts'
-import chartConfig from '@/components/page/dashboard/overview/chartConfig'
-// 引入Leaflet对象 挂载到Vue上，便于全局使用，也可以单独页面中单独引用
 
-let tooltipEndpointChart
-let tooltipPrometheusChart
 const regNum = /^[0-9]+.?[0-9]*/
 export default {
   name: 'chartMap',
@@ -61,7 +56,6 @@ export default {
       }, 500)
     },
     loadMapConfig () {
-      const vm = this
       return new Promise(resolve => {
         const DefaultIcon = L.icon({
           iconUrl: icon,
@@ -85,13 +79,13 @@ export default {
               maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180))
             }).setView([mapConfig.latitude, mapConfig.longitude], mapConfig.zoom)
             map.createPane('myPane', document.querySelector('.my-pane-' + this.chartId))
-            map.on('tooltipopen', function (param) {
-              // setTimeout(() => {
-              //   vm.initTooltipChart(param)
-              // }, 100)
-            })
-            map.on('tooltipclose', function (param) {
-            })
+            // map.on('tooltipopen', function (param) {
+            //   // setTimeout(() => {
+            //   //   vm.initTooltipChart(param)
+            //   // }, 100)
+            // })
+            // map.on('tooltipclose', function (param) {
+            // })
             this.map = map
 
             L.tileLayer(

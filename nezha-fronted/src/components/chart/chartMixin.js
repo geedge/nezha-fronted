@@ -144,7 +144,7 @@ export default {
       }
     },
     handleLegendAlias (legend, aliasExpression) {
-      console.log(legend, aliasExpression)
+      // console.log(legend, aliasExpression)
       if (/\{\{.+\}\}/.test(aliasExpression)) {
         const labelValue = aliasExpression.replace(/(\{\{.+?\}\})/g, function (i) {
           const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
@@ -293,11 +293,11 @@ export default {
     }
   },
   mounted () {
-
     this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
   },
   beforeDestroy () {
-    getChart(this.chartId) && getChart(this.chartId).dispose()
-    setChart(this.chartId, null)
+    // getChart(this.chartId) && getChart(this.chartId).dispose()
+    // setChart(this.chartId, null)
+    getChart(this.chartId) && setChart(this.chartId, null)
   }
 }
