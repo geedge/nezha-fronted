@@ -145,7 +145,6 @@ export default {
       }
     },
     handleLegendAlias (legend, aliasExpression) {
-      console.log(legend, aliasExpression)
       if (/\{\{.+\}\}/.test(aliasExpression)) {
         const labelValue = aliasExpression.replace(/(\{\{.+?\}\})/g, function (i) {
           const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)

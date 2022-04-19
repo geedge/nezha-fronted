@@ -348,6 +348,7 @@ import { noSpecialChar, nzNumber } from '../js/validate'
 import editRigthBox from '../mixin/editRigthBox'
 import richTextEditor from '@/components/chart/richTextEditor'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
+
 export default {
   name: 'alertRuleBox',
   props: {

@@ -12,6 +12,13 @@
     "unit": "jest --config test/unit/jest.conf.js --coverage"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^0.19.15",
+    "@codemirror/basic-setup": "^0.19.3",
+    "@codemirror/highlight": "^0.19.8",
+    "@codemirror/language": "^0.19.10",
+    "@codemirror/lint": "^0.19.6",
+    "@codemirror/state": "^0.19.9",
+    "@codemirror/view": "^0.19.48",
     "@johmun/vue-tags-input": "^2.1.0",
     "@riophae/vue-treeselect": "^0.4.0",
     "@svgdotjs/svg.js": "^3.0.16",
@@ -24,6 +31,7 @@
     "@topology/layout": "^0.3.0",
     "@topology/sequence-diagram": "^0.3.0",
     "axios": "^0.19.0",
+    "codemirror-promql": "^0.19.0",
     "cytoscape": "^3.15.2",
     "d3": "^6.7.0",
     "d3-hexbin": "^0.2.2",
