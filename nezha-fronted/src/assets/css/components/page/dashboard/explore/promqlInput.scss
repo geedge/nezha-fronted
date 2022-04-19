@@ -2,6 +2,9 @@
   position: relative;
   width: 100%;
   display: flex;
+  #editor{
+    width: 100%;
+  }
   .no-resize{
     background: rgba(255,255,255,0);
     .el-textarea__inner {
