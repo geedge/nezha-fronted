@@ -172,15 +172,6 @@
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
       ></chart-clock>
-      <chart-topology
-        :ref="'chart' + chartInfo.id"
-        v-if="isTopology(chartInfo.type)"
-        :chart-data="chartData"
-        :chart-info="chartInfo"
-        :chart-option="chartOption"
-        :is-fullscreen="isFullscreen"
-        @chartIsNoData="chartIsNoData"
-      ></chart-topology>
     </template>
   </div>
 </template>
@@ -233,8 +224,7 @@ export default {
     chartUrl,
     chartValue,
     chartHexagonD3,
-    chartMap,
-    chartTopology
+    chartMap
   },
   props: {
     chartInfo: Object,
@@ -303,7 +293,6 @@ export default {
     isTable,
     isGauge,
     isClock,
-    isTopology,
     chartIsNoData (flag) {
       this.chartChildrenData = flag
     },
