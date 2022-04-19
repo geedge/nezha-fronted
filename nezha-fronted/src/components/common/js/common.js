@@ -34,11 +34,24 @@ export function getHexagon (key) {
 const topologyCache = {}
 
 export function getTopology (key) {
+  // console.log(topologyCache, 'topologyCache')
   return topologyCache[`topology${key}`]
 }
 
 export function setTopology (key, value) {
   topologyCache[`topology${key}`] = value
+}
+
+// const topologyImgList = localStorage.getItem('nz-imgList') ? JSON.parse(localStorage.getItem('nz-imgList')) : {}
+
+export function getTopologyImg (key) {
+  // console.log(topologyCache, 'topologyCache')
+  // console.log(localStorage.getItem('nz-img-' + key), !localStorage.getItem('nz-img-' + key))
+  return localStorage.getItem('nz-img-' + key)
+}
+
+export function setTopologyImg (key, img) {
+  localStorage.setItem('nz-img-' + key, img)
 }
 
 export function setHexagon (key, value) {
