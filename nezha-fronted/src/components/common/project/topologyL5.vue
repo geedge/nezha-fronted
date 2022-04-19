@@ -3,7 +3,7 @@
 <!--  @import "./L5/css/props.css";-->
 <!--</style>-->
 <template>
-  <div class="project-box list-page" v-my-loading="topologyLoading">
+  <div class="project-box list-page" v-loading="topologyLoading">
     <div class="main-list" :style="{height: fromOverView ?'100%' : 'calc(100% - 30px)'}">
       <div class="main-container" :class="fromOverView?'from-overview':'from-project'">
         <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 40px);display: inline-block">
@@ -13,7 +13,7 @@
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown" @click="dropdownClick" class="right-box-select-top right-public-box-dropdown-top">
-              <div style="height: 450px"  v-my-loading="imgageLoading">
+              <div style="height: 450px"  v-loading="imgageLoading">
                 <el-card shadow="hover" style="height:420px;width:284px;overflow-y: auto"
                          class="project-topology-add-node">
                 <!--<div class="drag-header">——</div>-->
@@ -1067,9 +1067,10 @@ export default {
 
     getNodesArr () {
       if (!getTopology(this.topologyIndex)) return
+      let arr = []
       this.offsetX = getTopology(this.topologyIndex).data.x
       this.offsetY = getTopology(this.topologyIndex).data.y
-      this.nodesArr = getTopology(this.topologyIndex).data.pens.filter(item => {
+      arr = getTopology(this.topologyIndex).data.pens.filter(item => {
         if (!item.data) {
           item.data = {
             moduleId: '',
@@ -1084,7 +1085,14 @@ export default {
         return item.type === 0
       })
       // 打开动画 是否更新顶部图标
+      this.nodesArr = arr.map(item => {
+        return {
+          rect: item.rect,
+          data: item.data
+        }
+      })
       this.nodesArr = JSON.parse(JSON.stringify(this.nodesArr))
+      arr = null
     },
 
     modelTopClick (item, index) {
@@ -1291,9 +1299,9 @@ export default {
           this.tooltipPosition.show = false
           setTimeout(() => {
             this.tooltipPosition.show = true
-            const ePosition = window.ePosition
-            const boxWidth = document.getElementsByClassName('page')[0].offsetWidth
-            const boxHeight = document.getElementsByClassName('page')[0].offsetHeight
+            let ePosition = window.ePosition
+            let boxWidth = document.getElementsByClassName('page')[0].offsetWidth
+            let boxHeight = document.getElementsByClassName('page')[0].offsetHeight
             this.tooltipPosition.left = ePosition.layerX + 20
             this.tooltipPosition.top = ePosition.layerY
             this.$nextTick(() => {
@@ -1309,6 +1317,9 @@ export default {
                   this.tooltipPosition.top = ePosition.layerY - this.$refs.topoTooltip.offsetHeight
                 }
               }
+              ePosition = null
+              boxWidth = null
+              boxHeight = null
             })
           }, 100)
           break
@@ -1435,22 +1446,26 @@ export default {
             }
             break
           case 'resize': {
-            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-            const domRect = dom ? dom.getBoundingClientRect() : {}
+            let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+            let domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
             }
+            dom = null
+            domRect = null
             break
           }
           case 'scale': {
             if (this.$refs.topTool) {
               this.$refs.topTool.scaleNum = parseInt(data * 100)
             }
-            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-            const domRect = dom ? dom.getBoundingClientRect() : {}
+            let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+            let domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
             }
+            dom = null
+            domRect = null
             break
           }
           case 'locked': {
@@ -1721,8 +1736,8 @@ export default {
         this.$get('monitor/project/topo/icon').then(res => {
           this.imgageLoading = true
           this.tools = [...Tools]
-          const imgArr = []
-          const promiseArr = []
+          let imgArr = []
+          let promiseArr = []
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
@@ -1780,12 +1795,14 @@ export default {
 
             this.imgInit = true
             this.imgageLoading = false
+            imgArr = null
+            promiseArr = null
           })
         })
       } else {
         this.imgageLoading = true
         this.$get('monitor/project/topo/icon').then((imageAllId) => {
-          const promiseArr = []
+          let promiseArr = []
           if (!imageAllId || !imageAllId.data) {
             return
           }
@@ -1818,6 +1835,7 @@ export default {
             })
             this.imgInit = true
             this.imgageLoading = false
+            promiseArr = null
           })
         })
       }
@@ -2055,10 +2073,12 @@ export default {
       this.editTopologyFlag = false
       this.$nextTick(() => {
         getTopology(this.topologyIndex).lock(1)
-        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-        const domRect = dom ? dom.getBoundingClientRect() : {}
+        let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+        let domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         this.$store.commit('setShowTopoScreen', this.topoScreenState)
+        dom = null
+        domRect = null
       })
       this.reload()
     },
@@ -2130,7 +2150,7 @@ export default {
 
     winResize () {
       setTimeout(() => {
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
+        let domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
           getTopology(this.topologyIndex).open(this.oldTopologyData)
@@ -2153,6 +2173,7 @@ export default {
         getTopology(this.topologyIndex).resize()
         getTopology(this.topologyIndex).centerView()
         this.getNodesArr()
+        domRect = null
       }, 500)
     },
     contextmenuNone () {
@@ -2200,18 +2221,6 @@ export default {
         flag = false
       }
       return flag
-    },
-    modelPopError (pen, state) {
-      if (item.id === 'asset' && this.activeModelItem.assetError) {
-        return true
-      }
-      if (item.id === 'alert' && this.activeModelItem.alertError) {
-        return true
-      }
-      if (item.id === 'endpoint' && this.activeModelItem.endpointError) {
-        return true
-      }
-      return false
     },
     redoIndexChange (index) {
       this.redoIndex = index

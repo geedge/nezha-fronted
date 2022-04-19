@@ -1,5 +1,5 @@
 <template>
-  <div v-my-loading="topologyLoading" class="overview">
+  <div v-loading="topologyLoading" class="overview">
     <transition name = "el-zoom-in-center">
       <div v-if="allProject&&allProject.length>0" style="width: 100%;height: 100%;position: relative">
         <el-carousel :interval="5000" :trigger="'click'" arrow="hover">
