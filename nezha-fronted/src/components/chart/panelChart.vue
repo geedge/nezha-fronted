@@ -304,6 +304,7 @@ export default {
             }
             const chartData = []
             const params = {
+              t: this.chartInfo.id,
               q: encodeURIComponent(JSON.stringify(q)),
               stat: startTime,
               end: endTime,
