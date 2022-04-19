@@ -181,6 +181,7 @@ export default {
     return {
       fromRoute,
       pdfId: 'pdfDom',
+      htmlTitle: 'panel',
       panelTabLoading: false,
       showTopBtn: false, // top按钮
       visible: false,

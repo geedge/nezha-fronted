@@ -1,9 +1,10 @@
-<template>
+
+ <template>
   <div :style="showHeader&&chartInfo.param.showHeader ? '' : 'padding-top: 15px;'" class="nz-chart" :class="showHeader&&chartInfo.param.showHeader ? '' : 'no-header'" >
     <loading :loading="loading"></loading>
     <chart-no-data  v-if="isNoData || isError || chartChildrenData"></chart-no-data>
     <template v-else>
-      <!-- <chart-time-series
+      <chart-time-series
         v-if="isTimeSeries(chartInfo.type)"
         :ref="'chart' + chartInfo.id"
         :chart-data="chartData"
@@ -105,7 +106,7 @@
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
         :chart-option="chartOption"
-      ></chart-diagram> -->
+      ></chart-diagram>
       <chartAutotopology
         :ref="'chart' + chartInfo.id"
         v-if="isAutotopology(chartInfo.type)"
@@ -115,7 +116,7 @@
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
       ></chartAutotopology>
-      <!-- <chartMap
+      <chartMap
         :ref="'chart' + chartInfo.id"
         v-if="isMap(chartInfo.type)"
         :chart-data="chartData"
@@ -180,7 +181,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
-      ></chart-topology> -->
+      ></chart-topology>
     </template>
   </div>
 </template>
