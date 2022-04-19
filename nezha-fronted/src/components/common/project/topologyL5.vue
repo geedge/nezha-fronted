@@ -660,12 +660,11 @@ export default {
       this.chartGetData = []
       const axiosArr = []
       const promiseArr = []
-      const self = this
       const pensPromise = (pen, arr, index) => {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
           Promise.all(arr).then((res) => {
-            self.chartGetData[index].res = self.computeData(res, pen.data.aggregation, pen)
-            self.setAnimation(pen, self.chartGetData[index].res)
+            this.chartGetData[index].res = this.computeData(res, pen.data.aggregation, pen)
+            this.setAnimation(pen, this.chartGetData[index].res)
             resolve()
           })
         })
@@ -774,9 +773,10 @@ export default {
           return
         }
         if (!getTopology(this.topologyIndex)) {
-          const canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
+          let canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
           canvas.open(data)
           setTopology(this.topologyIndex, canvas)
+          canvas = null
         } else {
           getTopology(this.topologyIndex).open(data)
         }
@@ -801,7 +801,7 @@ export default {
           if (!res.data) {
             return
           }
-          let data = res.data.topo
+          let data = JSON.parse(JSON.stringify(res.data.topo))
           if (!res.data.topo || !res.data.topo.pens.length) {
             this.showNoData = true
           } else {
@@ -824,6 +824,7 @@ export default {
             this.saveData = { ...data }
             this.topologyInfo.name = this.obj.name
             resolve(data)
+            data = null
           } else {
             if (data.data) {
               this.topologyInfo = {
@@ -846,7 +847,7 @@ export default {
               const arr = data.pens.filter(item => !item.type)
               this.addNodeInit(arr)
             }
-            const timer = setInterval(() => {
+            let timer = setInterval(() => {
               if (!this.imgInit) {
                 return
               }
@@ -914,13 +915,17 @@ export default {
                     }
                   }
                 })
-                self.saveData = { ...data }
+                this.saveData = { ...data }
                 resolve(data)
+                data = null
                 clearInterval(timer)
+                timer = null
               }).catch(res => {
-                self.saveData = { ...data }
+                this.saveData = { ...data }
                 resolve(data)
+                data = null
                 clearInterval(timer)
+                timer = null
               })
             }, 100)
           }
@@ -1062,11 +1067,11 @@ export default {
     },
 
     getNodesArr () {
-      const arr = []
       if (!getTopology(this.topologyIndex)) return
+      let arr = []
       this.offsetX = getTopology(this.topologyIndex).data.x
       this.offsetY = getTopology(this.topologyIndex).data.y
-      this.nodesArr = getTopology(this.topologyIndex).data.pens.filter(item => {
+      arr = getTopology(this.topologyIndex).data.pens.filter(item => {
         if (!item.data) {
           item.data = {
             moduleId: '',
@@ -1081,7 +1086,14 @@ export default {
         return item.type === 0
       })
       // 打开动画 是否更新顶部图标
+      this.nodesArr = arr.map(item => {
+        return {
+          rect: item.rect,
+          data: item.data
+        }
+      })
       this.nodesArr = JSON.parse(JSON.stringify(this.nodesArr))
+      arr = null
     },
 
     modelTopClick (item, index) {
@@ -1288,9 +1300,9 @@ export default {
           this.tooltipPosition.show = false
           setTimeout(() => {
             this.tooltipPosition.show = true
-            const ePosition = window.ePosition
-            const boxWidth = document.getElementsByClassName('page')[0].offsetWidth
-            const boxHeight = document.getElementsByClassName('page')[0].offsetHeight
+            let ePosition = window.ePosition
+            let boxWidth = document.getElementsByClassName('page')[0].offsetWidth
+            let boxHeight = document.getElementsByClassName('page')[0].offsetHeight
             this.tooltipPosition.left = ePosition.layerX + 20
             this.tooltipPosition.top = ePosition.layerY
             this.$nextTick(() => {
@@ -1306,6 +1318,9 @@ export default {
                   this.tooltipPosition.top = ePosition.layerY - this.$refs.topoTooltip.offsetHeight
                 }
               }
+              ePosition = null
+              boxWidth = null
+              boxHeight = null
             })
           }, 100)
           break
@@ -1432,22 +1447,26 @@ export default {
             }
             break
           case 'resize': {
-            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-            const domRect = dom ? dom.getBoundingClientRect() : {}
+            let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+            let domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
             }
+            dom = null
+            domRect = null
             break
           }
           case 'scale': {
             if (this.$refs.topTool) {
               this.$refs.topTool.scaleNum = parseInt(data * 100)
             }
-            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-            const domRect = dom ? dom.getBoundingClientRect() : {}
+            let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+            let domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
             }
+            dom = null
+            domRect = null
             break
           }
           case 'locked': {
@@ -1556,7 +1575,7 @@ export default {
         fileList = fileList.splice(fileList.length - 1, 1)
         return false
       }
-      const isSize = new Promise(function (resolve, reject) {
+      new Promise(function (resolve, reject) {
         const width = 0
         const height = 0
         const _URL = window.URL || window.webkitURL
@@ -1718,8 +1737,8 @@ export default {
         this.$get('monitor/project/topo/icon').then(res => {
           this.imgageLoading = true
           this.tools = [...Tools]
-          const imgArr = []
-          const promiseArr = []
+          let imgArr = []
+          let promiseArr = []
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
@@ -1777,12 +1796,14 @@ export default {
 
             this.imgInit = true
             this.imgageLoading = false
+            imgArr = null
+            promiseArr = null
           })
         })
       } else {
         this.imgageLoading = true
         this.$get('monitor/project/topo/icon').then((imageAllId) => {
-          const promiseArr = []
+          let promiseArr = []
           if (!imageAllId || !imageAllId.data) {
             return
           }
@@ -1815,6 +1836,7 @@ export default {
             })
             this.imgInit = true
             this.imgageLoading = false
+            promiseArr = null
           })
         })
       }
@@ -1854,8 +1876,7 @@ export default {
               //   resolve(img)
               // })
             })
-            .catch(err => {
-            })
+            .catch()
         })
       }
     },
@@ -2053,10 +2074,12 @@ export default {
       this.editTopologyFlag = false
       this.$nextTick(() => {
         getTopology(this.topologyIndex).lock(1)
-        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-        const domRect = dom ? dom.getBoundingClientRect() : {}
+        let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+        let domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         this.$store.commit('setShowTopoScreen', this.topoScreenState)
+        dom = null
+        domRect = null
       })
       this.reload()
     },
@@ -2128,7 +2151,7 @@ export default {
 
     winResize () {
       setTimeout(() => {
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
+        let domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
           getTopology(this.topologyIndex).open(this.oldTopologyData)
@@ -2151,6 +2174,7 @@ export default {
         getTopology(this.topologyIndex).resize()
         getTopology(this.topologyIndex).centerView()
         this.getNodesArr()
+        domRect = null
       }, 500)
     },
     contextmenuNone () {
@@ -2198,18 +2222,6 @@ export default {
         flag = false
       }
       return flag
-    },
-    modelPopError (pen, state) {
-      if (item.id === 'asset' && this.activeModelItem.assetError) {
-        return true
-      }
-      if (item.id === 'alert' && this.activeModelItem.alertError) {
-        return true
-      }
-      if (item.id === 'endpoint' && this.activeModelItem.endpointError) {
-        return true
-      }
-      return false
     },
     redoIndexChange (index) {
       this.redoIndex = index
@@ -2265,8 +2277,13 @@ export default {
       }
     }
   },
-  destroyed () {
+  beforeDestroy () {
+    if (this.timer) {
+      clearInterval(this.timer)
+      this.timer = null
+    }
     if (getTopology(this.topologyIndex)) {
+      getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
       getTopology(this.topologyIndex).destroy()
       setTopology(this.topologyIndex, null)
       window.topology = null
@@ -2278,7 +2295,7 @@ export default {
       document.getElementById('topology-canvas' + this.topologyIndexF).removeEventListener('mousemove', this.canvasMove)
     }
     window.removeEventListener('resize', this.winResize)
-    window.removeEventListener('resize', this.contextmenuNone)
+    window.removeEventListener('click', this.contextmenuNone)
   }
 }
 </script>
