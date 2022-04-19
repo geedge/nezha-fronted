@@ -8,10 +8,16 @@ describe('时间函数', () => {
   //   expect(dealLegendAlias(str, '{{module}}')).toBe('node-exporter')
   // })
 
-  it('正常替换一个', () => {
+  it('utc时间转系统时间 返回时间戳', () => {
     expect(main.utcTimeToTimezone(1650006960000)).toBe(1650006960000)
   })
-  it('2', () => {
+  it('utc时间转系统时间 返回时间戳', () => {
+    expect(main.utcTimeToTimezone('2022-04-15 15:16:00')).toBe(1650006960000)
+  })
+  it('utc时间转系统时间 返回时间字符串', () => {
+    expect(main.utcTimeToTimezone(1650006960000)).toBe(1650006960000)
+  })
+  it('utc时间转系统时间 返回时间字符串', () => {
     expect(main.utcTimeToTimezone('2022-04-15 15:16:00')).toBe(1650006960000)
   })
 })
