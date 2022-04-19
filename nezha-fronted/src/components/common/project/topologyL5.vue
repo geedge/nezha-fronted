@@ -1,7 +1,7 @@
-<!--<style>-->
-<!--  @import "./L5/css/iconfont.css";-->
-<!--  @import "./L5/css/props.css";-->
-<!--</style>-->
+<style>
+  @import "./L5/css/iconfont.css";
+  @import "./L5/css/props.css";
+</style>
 <template>
   <div class="project-box list-page" v-loading="topologyLoading">
     <div class="main-list" :style="{height: fromOverView ?'100%' : 'calc(100% - 30px)'}">
