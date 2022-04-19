@@ -290,7 +290,6 @@ export const chart = {
 
 export const intervalList = [
   { value: -1, label: i18n.t('dashboard.panel.refreshInterval.never') },
-  { value: 3, label: '3s' },
   { value: 30, label: '30s' },
   { value: 60, label: '1m' },
   { value: 300, label: '5m' },
