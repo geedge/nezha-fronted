@@ -2289,9 +2289,6 @@ export default {
       getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
       getTopology(this.topologyIndex).destroy()
       window.topology = null
-      window.Le5leTopologyPoint = null
-      window.topologyPoint = null
-      window.topologyRect = null
       Object.keys(getTopology(this.topologyIndex)).forEach(key => {
         getTopology(this.topologyIndex)[key] = null
       })
