@@ -13,6 +13,10 @@
         <div class="alert-rule-title">ID</div>
         <div class="alert-rule-value">{{alertRuleData.id ? alertRuleData.id : '--'}}</div>
       </div>
+      <div class="alert-rule-box name-labe">
+        <div class="alert-rule-title">Name</div>
+        <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
+      </div>
 <!--      <div class="alert-rule-box">-->
 <!--        <div class="alert-rule-title">{{$t('alert.name')}}</div>-->
 <!--        <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : '&#45;&#45;'}}</div>-->
