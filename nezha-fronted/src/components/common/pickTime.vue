@@ -67,7 +67,7 @@ export default {
     defaultPick: Number,
     showEmpty: { type: Boolean, default: false },
     id: String,
-    sign:[Number,String]
+    sign: [Number, String]
   },
   data () {
     return {
@@ -167,6 +167,12 @@ export default {
       handler (n, o) {
         this.$emit('unitChange', n)
       }
+    }
+  },
+  beforeDestroy () {
+    if (this.intervalTimer) {
+      clearInterval(this.intervalTimer)
+      this.intervalTimer = null
     }
   }
 }

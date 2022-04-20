@@ -1,4 +1,4 @@
- 
+
  <template>
   <div :style="showHeader&&chartInfo.param.showHeader ? '' : 'padding-top: 15px;'" class="nz-chart" :class="showHeader&&chartInfo.param.showHeader ? '' : 'no-header'" >
     <loading :loading="loading"></loading>
