@@ -285,6 +285,9 @@
 .el-dialog__body {
   .alert-message-info-box {
     .info-box-right {
+      #alert .name-labe {
+        display: none;
+      }
       .el-timeline {
         .el-timeline-item {
           .el-timeline-item__wrapper {
@@ -294,7 +297,7 @@
                 font-size: 14px;
                 font-weight: 400;
                 padding-left: 5px;
-              } 
+              }
 
               .alert-message-startAt {
                 font-size: 14px;
@@ -375,9 +378,22 @@
     }
 
     .info-box-left {
+      .alert .name-labe {
+        display: block;
+      }
+      .name-labe{
+        display: none;
+      }
       .alert-message-info-tab {
         .el-tabs.el-tabs--card.el-tabs--top {
           .el-tabs__content {
+            #pane-alertRule{
+              .alert-rule-nfo{
+                .alert-rule-box{
+                  display: flex;
+                }
+              }
+            }
             #pane-detail {
               .info-box-header {
                 .info-box-content {
@@ -433,6 +449,7 @@
               .alert-label-info {
                 .alert-label-box {
                   margin-bottom: 25px;
+                  display: flex;
 
                   .alert-label-title {
                     margin-right: 30px;
@@ -445,7 +462,7 @@
               .alert-label-info {
                 .alert-label-box {
                   margin-bottom: 25px;
-
+                  display: flex;
                   .alert-label-title {
                     margin-right: 30px;
                   }
@@ -457,7 +474,7 @@
               .alert-label-info {
                 .alert-label-box {
                   margin-bottom: 25px;
-
+                  display: flex;
                   .alert-label-title {
                     margin-right: 30px;
                   }
@@ -469,7 +486,7 @@
               .alert-label-info {
                 .alert-label-box {
                   margin-bottom: 25px;
-
+                  display: flex;
                   .alert-label-title {
                     margin-right: 30px;
                   }
@@ -481,7 +498,7 @@
               .alert-label-info {
                 .alert-label-box {
                   margin-bottom: 25px;
-
+                  display: flex;
                   .alert-label-title {
                     margin-right: 30px;
                   }
@@ -502,3 +519,6 @@
     }
   }
 }
+
+
+

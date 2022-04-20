@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%; width: 100%" class="message-time-line">
+  <div style="height: 100%; width: 100%" id="alert" class="message-time-line">
     <div class="time-line-header">
       <span>{{ $t("alert.relatedAlerts") }}</span>
       <div class="scope-icon-box">
