@@ -676,19 +676,11 @@ export default {
           if (!dialog) {
             dialog = document.querySelector("#viewGraphDialog .el-dialog");
           }
-<<<<<<< HEAD
-          const dialogHeight = dialog.getBoundingClientRect();
-          leftOffSet = leftOffSet - dialogHeight.x;
-          leftOffSetView = dialogHeight.x;
-          topOffSet = topOffSet - dialogHeight.y;
-          topOffSetView = topOffSet;
-=======
           const dialogHeight = dialog.getBoundingClientRect()
           leftOffSet = leftOffSet - 3 * dialogHeight.x
           leftOffSetView = dialogHeight.x
           topOffSet = topOffSet - dialogHeight.y
           topOffSetView = topOffSet
->>>>>>> 367c493975c4bbf015cdbba1e145e67964759399
         }
         if (position.top > clientHeight / 2) {
           labelPosition = {
