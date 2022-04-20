@@ -8,6 +8,7 @@
 <!--            <span class="project-name">{{item.name}}</span>-->
             <topology
               :fromOverView="true"
+              :from-chart="true"
               :obj="item"
               :ref="'topology' + index"
               :topologyIndexF="isFullscreen?('screen'+chartInfo.id+'-'+index):(chartInfo.id+'-'+index)"

@@ -310,6 +310,7 @@ export default {
             }
             const chartData = []
             const params = {
+              t: this.chartInfo.id,
               q: encodeURIComponent(JSON.stringify(q)),
               stat: startTime,
               end: endTime,
@@ -325,6 +326,16 @@ export default {
               this.chartData = JSON.parse(JSON.stringify(chartData))
               this.loading = false
             })
+            // this.sendAjax('/stat', params).then(res => {
+            //   if (res.code === 200) {
+            //     chartData.push(res.data.result)
+            //   } else {
+            //     chartData.push({ error: res.msg || res.error || res })
+            //     this.isError = true
+            //   }
+            //   this.chartData = chartData
+            //   this.loading = false
+            // })
             break
           }
           case 'misc': {
@@ -530,6 +541,41 @@ export default {
         color = '#23bf9a'
       }
       return color
+    },
+    sendAjax (url, params) {
+      // 构造表单数据
+      return new Promise(resolve => {
+        let nowUrl = url
+        Object.keys(params).forEach((key, index) => {
+          if (index == 0) {
+            nowUrl += '?' + key + '=' + params[key]
+          } else {
+            nowUrl += '&' + key + '=' + params[key]
+          }
+        })
+        const formData = new FormData()
+        formData.append('username', 'johndoe')
+        formData.append('id', 123456)
+        // 创建xhr对象
+        const xhr = new XMLHttpRequest()
+        // 设置xhr请求的超时时间
+        xhr.timeout = 3000
+        // 设置响应返回的数据格式
+        xhr.responseType = ''
+        // 创建一个 post 请求，采用异步
+        xhr.open('get', 'http://192.168.44.100/' + nowUrl, true)
+        xhr.setRequestHeader('Authorization', localStorage.getItem('nz-token'));
+        // 注册相关事件回调处理函数
+        xhr.onload = function (e) {
+          if (this.status == 200 || this.status == 304) {
+            // alert(this.responseText)
+            resolve(JSON.parse(this.responseText))
+          }
+        }
+        xhr.onerror = function(e) { console.log(e) };
+        // 发送数据
+        xhr.send()
+      })
     }
   },
   watch: {
