@@ -761,7 +761,6 @@ export default {
               document.body.style.height = 'auto'
               // document.getElementsByTagName('html')[0].style.overflow = 'visible'
               const position = dom.getBoundingClientRect()
-              console.log(position)
               this.getPdf(dom, -1 * position.left, -1 * position.top,this.searchTime)
               // this.getPdf(dom, 0, 0)
             }, 2000)

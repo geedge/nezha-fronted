@@ -31,7 +31,6 @@ export default {
         // a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
         const imgWidth = 595.28
         const imgHeight = 592.28 / contentWidth * contentHeight
-        console.log(canvas)
         // canvas.paddingTop = '30px'
         const pageDataImg = canvas.toDataURL('image/jpeg', 1.0)
         const img = new Image()

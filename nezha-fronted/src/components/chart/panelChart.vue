@@ -501,7 +501,6 @@ export default {
         xhr.onload = function (e) {
           if (this.status == 200 || this.status == 304) {
             // alert(this.responseText)
-            console.log(this, this.responseText)
             resolve(JSON.parse(this.responseText))
           }
         }
