@@ -157,7 +157,7 @@
             <!--画布部分-->
             <div :id="'topology-canvas' + topologyIndexF" :ref="'topology-canvas'+ topologyIndexF" class="full" @contextmenu="onContextMenu($event)"></div>
             <!--设置属性-->
-            <div v-if="editTopologyFlag&&toolShow.attr" class="props">
+            <div v-if="editTopologyFlag&&toolShow.attr && !fromOverView" class="props">
               <canvas-props ref="CanvasProps"
                             :index="topologyIndex"
                             :imgArr = 'tools'
@@ -170,7 +170,7 @@
                             @notModuleIDArrChange="notModuleIDArrChange">
               </canvas-props>
             </div>
-            <div class="context-menu" v-if="contextmenu.left && editTopologyFlag && 0" :style="this.contextmenu">
+            <div class="context-menu" v-if="contextmenu.left && editTopologyFlag && 0 && !fromOverView" :style="this.contextmenu">
               <CanvasContextMenu :index="topologyIndexF" :props.sync="props"></CanvasContextMenu>
             </div>
             <!--所有节点上的小图标-->
@@ -1751,7 +1751,6 @@ export default {
           Promise.all(promiseArr).then((res2, header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
-              console.log(res2[index])
               item.image = res2[index].data || res2[index]
               if (!getTopologyImg(item.id)) {
                 setTopologyImg(item.id, item.image)
