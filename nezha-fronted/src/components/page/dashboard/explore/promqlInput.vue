@@ -77,6 +77,7 @@
           @click="dropDownVisible = false"
         >
         <div id="editor"
+        class="not-fixed-height no-resize no-close"
         >
         </div>
           <!-- <el-input
@@ -227,7 +228,7 @@
               v-if="plugins.indexOf('metric-input') > -1"
             >
             <div id="editor"
-            class="not-fixed-height no-resize"
+            class="not-fixed-height no-resize no-close"
                 ref="elInput"
 
             ></div>
@@ -450,7 +451,8 @@ export default {
   },
   data () {
     return {
-      a: 'a',
+      newView:null,
+      codeMirrorValue: '',
       dropDownVisible: false,
       // metricStore:[],
       metricOptions: [],
@@ -516,7 +518,14 @@ export default {
     }
   },
   mounted () {
-    const self = this
+    this.initCodeMirror()
+    if (!this.fromFatherData && this.type !== 'logs') {
+      this.queryMetrics()
+    }
+  },
+  methods: {
+    initCodeMirror(){
+      const self = this
     const promQL = new PromQLExtension().setComplete(
       {
         remote: {
@@ -539,80 +548,102 @@ export default {
       promQL.asExtension(),
       baseTheme
     ]
-    // const dynamicConfigCompartment = new Compartment();
-    const EditorViewstate = EditorState.create({
-      extensions: [
-        baseTheme,
-        highlightSpecialChars(),
-        history(),
-        EditorState.allowMultipleSelections.of(true),
-        indentOnInput(),
-        bracketMatching(),
-        closeBrackets(),
-        autocompletion(),
-        highlightSelectionMatches(),
-        EditorView.lineWrapping,
-        keymap.of([
-          ...closeBracketsKeymap,
-          ...defaultKeymap,
-          ...historyKeymap,
-          ...commentKeymap,
-          ...completionKeymap,
-          ...lintKeymap
-        ]),
-        placeholder('Expression (press Shift+Enter for newlines)'),
-        dynamicConfigCompartment.of(dynamicConfig),
-        // This keymap is added without precedence so that closing the autocomplete dropdown
-        // via Escape works without blurring the editor.
-        keymap.of([
-          {
-            key: 'Escape',
-            run: (v) => {
-              v.contentDOM.blur()
-              return false
-            }
-          }
-        ]),
-        Prec.override(
+    if(!this.newView){
+      const EditorViewstate = EditorState.create({
+        extensions: [
+          baseTheme,
+          highlightSpecialChars(),
+          history(),
+          EditorState.allowMultipleSelections.of(true),
+          indentOnInput(),
+          bracketMatching(),
+          closeBrackets(),
+          autocompletion(),
+          highlightSelectionMatches(),
+          EditorView.lineWrapping,
+          keymap.of([
+            ...closeBracketsKeymap,
+            ...defaultKeymap,
+            ...historyKeymap,
+            ...commentKeymap,
+            ...completionKeymap,
+            ...lintKeymap
+          ]),
+          placeholder('Expression (press Shift+Enter for newlines)'),
+          dynamicConfigCompartment.of(dynamicConfig),
+          // This keymap is added without precedence so that closing the autocomplete dropdown
+          // via Escape works without blurring the editor.
           keymap.of([
             {
-              key: 'Enter',
+              key: 'Escape',
               run: (v) => {
-                self.newChange()
-                return true
+                v.contentDOM.blur()
+                return false
               }
-            },
-            {
-              key: 'Shift-Enter',
-              run: insertNewlineAndIndent
             }
-          ])
-        ),
-        EditorView.updateListener.of((update) => {
-          self.newChange(update.state.doc.toString())
+          ]),
+          Prec.override(
+            keymap.of([
+              {
+                key: 'Enter',
+                run: (v) => {
+                  self.newChange()
+                  return true
+                }
+              },
+              {
+                key: 'Shift-Enter',
+                run: insertNewlineAndIndent
+              }
+            ])
+          ),
+          EditorView.updateListener.of((update) => {
+            self.newChange(update.state.doc.toString())
+          })
+        ],
+        doc: self.codeMirrorValue,
+        editorState: {
+          changeByRange: self.newChange(),
+          changes: self.newDoc(),
+          facet: self.newChange()
+        }
+      })
+      const view = new EditorView({
+        state: EditorViewstate,
+        parent: document.getElementById('editor')
+      })
+      self.newView = view
+    }else{
+      console.log('viewIsOk');
+      self.newView.dispatch(
+        self.newView.state.update({
+          effects: dynamicConfigCompartment.reconfigure(dynamicConfig),
         })
-      ],
-      doc: self.a,
-      editorState: {
-        changeByRange: self.newChange(),
-        changes: self.newDoc(),
-        facet: self.newChange()
-      }
-    })
-    new EditorView({
-      state: EditorViewstate,
-      parent: document.getElementById('editor')
-    })
-    if (!this.fromFatherData && this.type !== 'logs') {
-      this.queryMetrics()
+      );
     }
-  },
-  methods: {
+const insertAtCursor = (value) => {
+    const view = this.newView;
+    if (view === null) {
+      return;
+    }
+    const { from, to } = view.state.selection.ranges[0];
+    console.log(from,to);
+    view.dispatch(
+      view.update({
+        changes: { from, to, insert: value },
+      })
+    );
+  }
+    },
     newChange (val) {
-      console.log(val)
+      this.codeMirrorValue = val
+      this.metricKeyDown(val)
+      console.log('change',val)
+      console.log(this.newView);
+
     },
     newDoc (val) {
-      console.log(val)
+      console.log('doc',val)
     },
     closeDropdown () {
       this.dropDownVisible = false
@@ -688,6 +719,7 @@ export default {
     },
     metricChange: function (value) {
       this.expressionList[this.index] = value
+      this.codeMirrorValue = value
       this.dropDownVisible = false
       this.$emit('change', value)
       this.$forceUpdate()
@@ -700,6 +732,7 @@ export default {
       this.$emit('change', value)
       this.$forceUpdate()
       this.cascaderValue = ''
+      this.initCodeMirror()
     },
     logLabelChange (value) {
       if (!value || value.length === 0) return
@@ -947,21 +980,24 @@ export default {
     },
     insertText (insertTxt) {
       // 获取el-input中的input元素
-      const elInput = this.$refs.elInput.$el.firstElementChild
+      // const elInput = this.$refs.elInput.$el.firstElementChild
       // 获取el-input的值
-      const txt = elInput.value
+      // const txt = elInput.value
       // 获取选区开始位置
-      const startPos = elInput.selectionStart
+      // const startPos = elInput.selectionStart
       // 获取选区结束位置
-      const endPos = elInput.selectionEnd
-      if (startPos === undefined || endPos === undefined) return
-
+      // const endPos = elInput.selectionEnd
+      // if (startPos === undefined || endPos === undefined) return
       // 将文本插入光标位置
-      this.expressionList[this.index] = txt.substring(0, startPos) + insertTxt + txt.substring(endPos)
+      // this.expressionList[this.index] = txt.substring(0, startPos) + insertTxt + txt.substring(endPos)
       // 将光标移至文本末尾
-      elInput.focus()
-      elInput.selectionStart = startPos + insertTxt.length
-      elInput.selectionEnd = startPos + insertTxt.length
+      // elInput.focus()
+      // elInput.selectionStart = startPos + insertTxt.length
+      // elInput.selectionEnd = startPos + insertTxt.length
+      this.expressionList[this.index]= insertTxt
+      this.codeMirrorValue = insertTxt
+      console.log('inserttext',this.codeMirrorValue);
+      this.initCodeMirror()
     }
     /* setMsg:function(){
         this.appendMsg
@@ -976,9 +1012,10 @@ export default {
         }
       }
     },
-    a () {
-      console.log(this.a)
-    },
+    // codeMirrorValue () {
+    //   console.log('watch',this.codeMirrorValue)
+
+    // },
     metricOptionsParent: {
       deep: true,
       immediate: true,
