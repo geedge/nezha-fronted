@@ -411,6 +411,7 @@ import { lintKeymap } from '@codemirror/lint'
 import { baseTheme, promqlHighlighter } from './CMTheme.tsx'
 import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets'
 import { autocompletion, completionKeymap, CompletionContext, CompletionResult } from '@codemirror/autocomplete'
+import Vue from 'vue'
 
 export default {
   name: 'promqlInput',
@@ -520,6 +521,8 @@ export default {
     const promQL = new PromQLExtension().setComplete(
       {
         remote: {
+          url: 'http://192.168.40.42:8080/prom',
+          fetchFn: this.fetchFn,
           cache: {
             initialMetricList: [
               'ALERTS',
@@ -592,12 +595,7 @@ export default {
           self.newChange(update.state.doc.toString())
         })
       ],
-      doc: self.a,
-      editorState: {
-        changeByRange: self.newChange(),
-        changes: self.newDoc(),
-        facet: self.newChange()
-      }
+      doc: self.a
     })
     new EditorView({
       state: EditorViewstate,
@@ -613,6 +611,59 @@ export default {
     },
     newDoc (val) {
       console.log(val)
+    },
+    getHint (val, params, b, c, d) {
+      if (params) {
+        console.log(val, params, b, c, d, 123123123)
+        console.log(JSON.stringify(params.body))
+        return this.sendAjax('', params)
+      } else {
+        return this.sendAjax('http://192.168.44.61:10091/api/v1/series', {})
+      }
+
+      // this.$post('api/v1/series')
+    },
+    fetchFn (a, b) {
+      if (b) {
+        const form = new FormData()
+        console.log(b.body)
+        form.append('match[]', b.body.getAll('match[]'))
+        return this.$post(a, form)
+      } else {
+        return this.$get(a)
+      }
+    },
+    sendAjax (url, body) {
+      // 构造表单数据
+      return new Promise(resolve => {
+        const nowUrl = url
+        const formData = new FormData()
+        formData.append('username', 'johndoe')
+        formData.append('id', 123456)
+        // 创建xhr对象
+        const xhr = {
+          ...new XMLHttpRequest(),
+          ...body
+        }
+
+        // 设置xhr请求的超时时间
+        xhr.timeout = 3000
+        // 设置响应返回的数据格式
+        xhr.responseType = ''
+        // 创建一个 post 请求，采用异步
+        xhr.open('post', nowUrl, true)
+        xhr.setRequestHeader('Authorization', localStorage.getItem('nz-token'))
+        // 注册相关事件回调处理函数
+        xhr.onload = function (e) {
+          if (this.status == 200 || this.status == 304) {
+            // alert(this.responseText)
+            resolve(JSON.parse(this.responseText))
+          }
+        }
+        xhr.onerror = function (e) { console.log(e) }
+        // 发送数据
+        xhr.send()
+      })
     },
     closeDropdown () {
       this.dropDownVisible = false
