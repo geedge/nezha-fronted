@@ -2287,12 +2287,12 @@ export default {
       this.timer4 = null
     }
     if (getTopology(this.topologyIndex)) {
-      getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
-      getTopology(this.topologyIndex).destroy()
       window.topology = null
       window.Le5leTopologyPoint = null
       window.topologyPoint = null
       window.topologyRect = null
+      getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
+      getTopology(this.topologyIndex).destroy()
       Object.keys(getTopology(this.topologyIndex)).forEach(key => {
         getTopology(this.topologyIndex)[key] = null
       })

@@ -266,7 +266,7 @@ export default {
                   }
                 }
               })
-              this.chartData = chartData
+              this.chartData = JSON.parse(JSON.stringify(chartData))
               if (this.chartInfo.type === 'log') {
                 this.logChartDataFormat()
               }
@@ -322,7 +322,7 @@ export default {
                 chartData.push({ error: res.msg || res.error || res })
                 this.isError = true
               }
-              this.chartData = chartData
+              this.chartData = JSON.parse(JSON.stringify(chartData))
               this.loading = false
             })
             break
@@ -334,7 +334,7 @@ export default {
             })
             if (this.chartInfo.type === 'hexagon') {
               this.getHexagonFigureData().then(res => {
-                this.chartData = res
+                this.chartData = JSON.parse(JSON.stringify(res))
               }).finally(() => {
                 this.loading = false
               })
@@ -388,7 +388,7 @@ export default {
               res.data.links.forEach(item => {
                 item.id = item.source + '-' + item.target
               })
-              this.chartData = [res.data]
+              this.chartData = JSON.parse(JSON.stringify([res.data]))
             })
             break
           }
