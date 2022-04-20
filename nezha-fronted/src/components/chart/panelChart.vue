@@ -316,17 +316,7 @@ export default {
               end: endTime,
               resultType: 'matrix'
             }
-            // this.$get('/stat', params).then(res => {
-            //   if (res.code === 200) {
-            //     chartData.push(res.data.result)
-            //   } else {
-            //     chartData.push({ error: res.msg || res.error || res })
-            //     this.isError = true
-            //   }
-            //   this.chartData = chartData
-            //   this.loading = false
-            // })
-            this.sendAjax('/stat', params).then(res => {
+            this.$get('/stat', params).then(res => {
               if (res.code === 200) {
                 chartData.push(res.data.result)
               } else {
@@ -336,6 +326,16 @@ export default {
               this.chartData = chartData
               this.loading = false
             })
+            // this.sendAjax('/stat', params).then(res => {
+            //   if (res.code === 200) {
+            //     chartData.push(res.data.result)
+            //   } else {
+            //     chartData.push({ error: res.msg || res.error || res })
+            //     this.isError = true
+            //   }
+            //   this.chartData = chartData
+            //   this.loading = false
+            // })
             break
           }
           case 'misc': {
