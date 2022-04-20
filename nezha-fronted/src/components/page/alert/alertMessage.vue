@@ -399,6 +399,7 @@ export default {
       pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
       pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      sign: '',
       ids: {
         target: this.searchLabel,
         isSearchInput: true,

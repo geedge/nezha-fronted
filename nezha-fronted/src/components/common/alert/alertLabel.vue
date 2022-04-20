@@ -17,6 +17,10 @@
         <div class="alert-label-title">{{$t('overall.manageIp')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.manageIp ? alertLabelData.manageIp : '--'}}</div>
       </div>
+      <div class="alert-label-box name-label">
+        <div class="alert-label-title">{{$t('overall.name')}}</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
+      </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.type')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.type && alertLabelData.type.name ? alertLabelData.type.name:'--'}}</div>
@@ -355,7 +359,7 @@ export default {
             dialog = document.querySelector('#viewGraphDialog .el-dialog')
           }
           const dialogHeight = dialog.getBoundingClientRect()
-          leftOffSet = leftOffSet - dialogHeight.x
+          leftOffSet = leftOffSet - 3 * dialogHeight.x
           leftOffSetView = dialogHeight.x
           topOffSet = topOffSet - dialogHeight.y
           topOffSetView = topOffSet
@@ -538,3 +542,5 @@ export default {
 }
 
 </script>
+<style>
+</style>

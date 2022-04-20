@@ -56,7 +56,7 @@ module.exports = {
     // 'test/unit/specs/*.(js)',
     'src/components/common/js/example.js',
     'src/libs/bus.js',
-    'src/main.js',
+    'src/components/common/mixin/*.js',
     // 'src/components/common/js/tools.js',
     // '!src/*.(js)',
     '!src/http.js',

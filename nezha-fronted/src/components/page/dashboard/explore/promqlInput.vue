@@ -394,24 +394,24 @@
 </template>
 
 <script>
-import selectAlertSilence from '../../../common/alert/selectAlertSilence';
-        import { get } from '@/http';
-import { PromQLExtension } from 'codemirror-promql';
-import { basicSetup } from '@codemirror/basic-setup';
+import selectAlertSilence from '../../../common/alert/selectAlertSilence'
+import { get } from '@/http'
+import { PromQLExtension } from 'codemirror-promql'
+import { basicSetup } from '@codemirror/basic-setup'
 // import { EditorState } from '@codemirror/state';
-import { highlightSelectionMatches } from '@codemirror/search';
-import { EditorState, Prec, Compartment } from '@codemirror/state';
-import { indentOnInput, syntaxTree } from '@codemirror/language';
-import { EditorView , highlightSpecialChars, keymap, ViewUpdate, placeholder} from '@codemirror/view';
-import { history, historyKeymap } from '@codemirror/history';
-import { bracketMatching } from '@codemirror/matchbrackets';
-import { defaultKeymap, insertNewlineAndIndent } from '@codemirror/commands';
-import { commentKeymap } from '@codemirror/comment';
-import { lintKeymap } from '@codemirror/lint';
-import { baseTheme, lightTheme, darkTheme, promqlHighlighter } from './CMTheme.tsx';
-import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets';
-import { autocompletion, completionKeymap, CompletionContext, CompletionResult } from '@codemirror/autocomplete';
-      
+import { highlightSelectionMatches } from '@codemirror/search'
+import { EditorState, Prec, Compartment } from '@codemirror/state'
+import { indentOnInput, syntaxTree } from '@codemirror/language'
+import { EditorView, highlightSpecialChars, keymap, ViewUpdate, placeholder } from '@codemirror/view'
+import { history, historyKeymap } from '@codemirror/history'
+import { bracketMatching } from '@codemirror/matchbrackets'
+import { defaultKeymap, insertNewlineAndIndent } from '@codemirror/commands'
+import { commentKeymap } from '@codemirror/comment'
+import { lintKeymap } from '@codemirror/lint'
+import { baseTheme, promqlHighlighter } from './CMTheme.tsx'
+import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets'
+import { autocompletion, completionKeymap, CompletionContext, CompletionResult } from '@codemirror/autocomplete'
+
 export default {
   name: 'promqlInput',
   components: {
@@ -450,6 +450,7 @@ export default {
   },
   data () {
     return {
+      a: 'a',
       dropDownVisible: false,
       // metricStore:[],
       metricOptions: [],
@@ -515,43 +516,104 @@ export default {
     }
   },
   mounted () {
-    
-    let promQL = new PromQLExtension().setComplete(
-      // { 
-      //   remote: { url: 'https://prometheus.land' } 
-      //   }
-        )
-// const dynamicConfigCompartment = new Compartment();
-
-      new EditorView({
-      state: EditorState.create({
-          extensions: [
-            baseTheme,
-          highlightSpecialChars(),
-          history(),
-          indentOnInput(),
-          bracketMatching(),
-          closeBrackets(),
-          autocompletion(),
-          highlightSelectionMatches(),
-            keymap.of([
-            ...closeBracketsKeymap,
-            ...defaultKeymap,
-            ...historyKeymap,
-            ...commentKeymap,
-            ...completionKeymap,
-            ...lintKeymap,
-          ]),
-          placeholder('Expression (press Shift+Enter for newlines)'),
-            basicSetup, promQL.asExtension()],
-      }),
+    const self = this
+    const promQL = new PromQLExtension().setComplete(
+      {
+        remote: {
+          cache: {
+            initialMetricList: [
+              'ALERTS',
+              'ALERTS_FOR_STATE',
+              'alertmanager_alerts',
+              'alertmanager_alerts_invalid_total',
+              'alertmanager_alerts_received_total',
+              'nz-agent'
+            ]
+          }
+        }
+      }
+    )
+    const dynamicConfigCompartment = new Compartment()
+    const dynamicConfig = [
+      promqlHighlighter,
+      promQL.asExtension(),
+      baseTheme
+    ]
+    // const dynamicConfigCompartment = new Compartment();
+    const EditorViewstate = EditorState.create({
+      extensions: [
+        baseTheme,
+        highlightSpecialChars(),
+        history(),
+        EditorState.allowMultipleSelections.of(true),
+        indentOnInput(),
+        bracketMatching(),
+        closeBrackets(),
+        autocompletion(),
+        highlightSelectionMatches(),
+        EditorView.lineWrapping,
+        keymap.of([
+          ...closeBracketsKeymap,
+          ...defaultKeymap,
+          ...historyKeymap,
+          ...commentKeymap,
+          ...completionKeymap,
+          ...lintKeymap
+        ]),
+        placeholder('Expression (press Shift+Enter for newlines)'),
+        dynamicConfigCompartment.of(dynamicConfig),
+        // This keymap is added without precedence so that closing the autocomplete dropdown
+        // via Escape works without blurring the editor.
+        keymap.of([
+          {
+            key: 'Escape',
+            run: (v) => {
+              v.contentDOM.blur()
+              return false
+            }
+          }
+        ]),
+        Prec.override(
+          keymap.of([
+            {
+              key: 'Enter',
+              run: (v) => {
+                self.newChange()
+                return true
+              }
+            },
+            {
+              key: 'Shift-Enter',
+              run: insertNewlineAndIndent
+            }
+          ])
+        ),
+        EditorView.updateListener.of((update) => {
+          self.newChange(update.state.doc.toString())
+        })
+      ],
+      doc: self.a,
+      editorState: {
+        changeByRange: self.newChange(),
+        changes: self.newDoc(),
+        facet: self.newChange()
+      }
+    })
+    new EditorView({
+      state: EditorViewstate,
       parent: document.getElementById('editor')
-  });
+    })
     if (!this.fromFatherData && this.type !== 'logs') {
       this.queryMetrics()
     }
   },
   methods: {
+    newChange (val) {
+      console.log(val)
+    },
+    newDoc (val) {
+      console.log(val)
+    },
     closeDropdown () {
       this.dropDownVisible = false
     },
@@ -648,13 +710,11 @@ export default {
       this.cascaderValue = ''
     },
     metricKeyDown (val) {
-      console.log(val);
       if (this.required) {
         this.metricChange(val)
       }
     },
     expressionChange: function () {
-      console.log('expressionChange');
       this.$emit('change')
     },
     setError: function (errMsg) {
@@ -915,6 +975,9 @@ export default {
           this.cascaderValue = ''
         }
       }
+    },
+    a () {
+      console.log(this.a)
     },
     metricOptionsParent: {
       deep: true,

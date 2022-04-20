@@ -8,6 +8,7 @@
         <div v-else-if="(activeName === item.key) && infoData[item.key]" class="no-position-alert-label">
 <!--          <searchItemInfo :obj="findData(item.key)" :severityData="severityData" :fa-loading="false"></searchItemInfo>-->
           <alertLabel
+            class="a"
             v-if="item.key !=='alertRule'"
             :id="infoData[item.key].id"
             :that="findData2(item.key)"
@@ -151,6 +152,5 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
 </style>

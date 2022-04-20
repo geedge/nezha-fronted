@@ -169,7 +169,6 @@ export default {
   },
   methods: {
     queryMessage(alertRule) {
-      console.log(alertRule);
       this.$refs.dataList.showBottomBox('alertRuleAlertMessage', alertRule)
     },
     closeRightBox(refresh) {
