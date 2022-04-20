@@ -18,7 +18,7 @@
         <button id="asset-filter" :class="[dataListLayout.indexOf('clickSearch') > -1?'is-focus':'' ]" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
-        <pick-time v-model="searchTime" :sign="sign?sign:'message'" :default-pick="10" :refresh-data-func="getTableData" :show-empty="false" :use-chart-unit="false" :use-refresh="false"></pick-time>
+        <pick-time v-model="searchTime" sign="message" :default-pick="10" :refresh-data-func="getTableData" :show-empty="false" :use-chart-unit="false" :use-refresh="false"></pick-time>
         <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcelLower')" class="top-tool-btn margin-r-10"
                 type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
@@ -399,6 +399,7 @@ export default {
       pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
       pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
       orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+      sign: '',
       ids: {
         target: this.searchLabel,
         isSearchInput: true,
@@ -578,7 +579,7 @@ export default {
       })
     },
     messageDetail (row) {
-      this.sign = Number(row.alertRule.id)
+      // this.sign = Number(row.alertRule.id)
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.$nextTick(() => {

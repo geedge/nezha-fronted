@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%; width: 100%" id="alert">
+  <div style="height: 100%; width: 100%" id="alert" class="message-time-line">
     <div class="time-line-header">
       <span>{{ $t("alert.relatedAlerts") }}</span>
       <div class="scope-icon-box">
@@ -54,7 +54,7 @@
           <div class="alert-message-summary">{{ item.summary }}</div>
           <div class="alert-message-startAt">
             <span>Start time:</span>
-            <span>{{item.startTime.split(" ")[1]}}</span>
+            <span>{{utcTimeToTimezoneStr(item.startTime)}}</span>
             <span>Duration:</span>
             <span>{{getDuration(item)}}</span>
           </div>
@@ -114,7 +114,6 @@ import { alertMessage as alertMessageConstant } from "@/components/common/js/con
 import alertMessageLabelMixin from "@/components/common/alert/alertMessageLabelMixin";
 import alertLabelMixin from "@/components/common/mixin/alertLabelMixin";
 import { calcDurationByStringTimeB } from '@/components/common/js/tools.js'
-
 export default {
   name: "alertMessageInfoTimeLine",
   props: {
@@ -144,6 +143,7 @@ export default {
       handler(n) {
         if (n && n.length) {
           this.pageNo = 1;
+          this.lastDataTime = ''
           this.getTimeLineData();
         }
       },
@@ -268,7 +268,7 @@ export default {
     disposeTime(pageNo) {
       let i = (pageNo - 1) * this.pageSize;
       for (i; i < this.timeLineData.length; i++) {
-        const lastDataTime = this.timestampStr(
+        const lastDataTime = this.utcTimeToTimezoneStr(
           this.timeLineData[i].startAt,
           this.dateFormatStr
         );
@@ -322,6 +322,7 @@ export default {
       }
       this.scopeChangeTimer = setTimeout(() => {
         this.pageNo = 1;
+        this.lastDataTime = ''
         this.getTimeLineData();
       }, 100);
     },

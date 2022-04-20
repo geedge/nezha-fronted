@@ -221,7 +221,7 @@ export default {
       // this.$refs['chart' + i][0].resize()
     },
     showFullscreen (show, chartInfo) {
-      this.fullscreen.chartInfo = chartInfo
+      this.fullscreen.chartInfo = JSON.parse(JSON.stringify(chartInfo))
       this.fullscreen.visible = show
     },
     changeGroupHeight (copyList, group, flag) {
@@ -429,7 +429,7 @@ export default {
   watch: {
     dataList: {
       deep: true,
-      handler (n, o) {
+      handler (n) {
         this.gridLayoutShow = false
         this.firstInit = true
         this.gridLayoutLoading = true
@@ -438,11 +438,11 @@ export default {
           const position = getLayoutPosition(n)
           this.$store.commit('setChartLastPosition', position)
         }
-        const tempList = n.map(item => {
+        let tempList = n.map(item => {
           let param = ''
           let height = ''
           if (item.param) {
-            param = item.param
+            param = JSON.parse(JSON.stringify(item.param))
             // try {
             //   param = JSON.parse(item.param)
             // } catch (e) {
@@ -487,6 +487,7 @@ export default {
         }
         this.$nextTick(() => {
           this.copyDataList = JSON.parse(JSON.stringify(tempList))
+          tempList = null
           setTimeout(() => {
             this.gridLayoutShow = true
             if (!this.isGroup) {

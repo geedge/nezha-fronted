@@ -43,6 +43,10 @@
           }}
         </div>
       </div>
+      <div class="alert-label-box name-label">
+        <div class="alert-label-title">{{$t('overall.name')}}</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
+      </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("overall.type") }}</div>
         <div class="alert-label-value">
@@ -672,11 +676,19 @@ export default {
           if (!dialog) {
             dialog = document.querySelector("#viewGraphDialog .el-dialog");
           }
+<<<<<<< HEAD
           const dialogHeight = dialog.getBoundingClientRect();
           leftOffSet = leftOffSet - dialogHeight.x;
           leftOffSetView = dialogHeight.x;
           topOffSet = topOffSet - dialogHeight.y;
           topOffSetView = topOffSet;
+=======
+          const dialogHeight = dialog.getBoundingClientRect()
+          leftOffSet = leftOffSet - 3 * dialogHeight.x
+          leftOffSetView = dialogHeight.x
+          topOffSet = topOffSet - dialogHeight.y
+          topOffSetView = topOffSet
+>>>>>>> 367c493975c4bbf015cdbba1e145e67964759399
         }
         if (position.top > clientHeight / 2) {
           labelPosition = {

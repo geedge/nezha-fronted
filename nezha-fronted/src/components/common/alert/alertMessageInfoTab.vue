@@ -153,8 +153,7 @@ export default {
 }
 </script>
 
+
 <style scoped>
-.alert .name-labe{
-  display: block;
-}
+
 </style>
