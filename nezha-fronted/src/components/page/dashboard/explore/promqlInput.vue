@@ -572,7 +572,7 @@ export default {
               ...completionKeymap,
               ...lintKeymap
             ]),
-            placeholder('Expression (press Shift+Enter for newlines)'),
+            // placeholder('Expression (press Shift+Enter for newlines)'),
             dynamicConfigCompartment.of(dynamicConfig),
             // This keymap is added without precedence so that closing the autocomplete dropdown
             // via Escape works without blurring the editor.
@@ -618,9 +618,11 @@ export default {
         self.newView = view
       } else {
         console.log('viewIsOk')
+        const { from, to } = self.newView.state.selection.ranges[0]
         self.newView.dispatch(
           self.newView.state.update({
-            effects: dynamicConfigCompartment.reconfigure(dynamicConfig)
+            effects: dynamicConfigCompartment.reconfigure(dynamicConfig),
+            changes:{from,to,insert:self.codeMirrorValue}
           })
         )
       }
@@ -777,6 +779,7 @@ export default {
       this.codeMirrorValue = value
       this.dropDownVisible = false
       this.$emit('change', value)
+      // this.initCodeMirror()
       this.$forceUpdate()
       this.cascaderValue = ''
     },
@@ -787,7 +790,6 @@ export default {
       this.$emit('change', value)
       this.$forceUpdate()
       this.cascaderValue = ''
-      this.initCodeMirror()
     },
     logLabelChange (value) {
       if (!value || value.length === 0) return
@@ -1079,7 +1081,16 @@ export default {
           this.metricOptions = JSON.parse(JSON.stringify(n))
         }
       }
-    }
+    },
+    // expressionList:{
+    //   deep: true,
+    //   immediate: true,
+    //   handler (n, o) {
+    //     console.log(n,n[this.index]);
+    //     this.codeMirrorValue = n[this.index];
+    //     this.initCodeMirror()
+    //   }
+    // }
   }
 }
 </script>
