@@ -77,6 +77,7 @@
           @click="dropDownVisible = false"
         >
         <div id="editor"
+        class="not-fixed-height no-resize no-close"
         >
         </div>
           <!-- <el-input
@@ -227,7 +228,7 @@
               v-if="plugins.indexOf('metric-input') > -1"
             >
             <div id="editor"
-            class="not-fixed-height no-resize"
+            class="not-fixed-height no-resize no-close"
                 ref="elInput"
 
             ></div>
@@ -411,6 +412,7 @@ import { lintKeymap } from '@codemirror/lint'
 import { baseTheme, promqlHighlighter } from './CMTheme.tsx'
 import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets'
 import { autocompletion, completionKeymap, CompletionContext, CompletionResult } from '@codemirror/autocomplete'
+import Vue from 'vue'
 
 export default {
   name: 'promqlInput',
@@ -450,7 +452,8 @@ export default {
   },
   data () {
     return {
-      a: 'a',
+      newView: null,
+      codeMirrorValue: '',
       dropDownVisible: false,
       // metricStore:[],
       metricOptions: [],
@@ -516,103 +519,188 @@ export default {
     }
   },
   mounted () {
-    const self = this
-    const promQL = new PromQLExtension().setComplete(
-      {
-        remote: {
-          cache: {
-            initialMetricList: [
-              'ALERTS',
-              'ALERTS_FOR_STATE',
-              'alertmanager_alerts',
-              'alertmanager_alerts_invalid_total',
-              'alertmanager_alerts_received_total',
-              'nz-agent'
-            ]
-          }
-        }
-      }
-    )
-    const dynamicConfigCompartment = new Compartment()
-    const dynamicConfig = [
-      promqlHighlighter,
-      promQL.asExtension(),
-      baseTheme
-    ]
-    // const dynamicConfigCompartment = new Compartment();
-    const EditorViewstate = EditorState.create({
-      extensions: [
-        baseTheme,
-        highlightSpecialChars(),
-        history(),
-        EditorState.allowMultipleSelections.of(true),
-        indentOnInput(),
-        bracketMatching(),
-        closeBrackets(),
-        autocompletion(),
-        highlightSelectionMatches(),
-        EditorView.lineWrapping,
-        keymap.of([
-          ...closeBracketsKeymap,
-          ...defaultKeymap,
-          ...historyKeymap,
-          ...commentKeymap,
-          ...completionKeymap,
-          ...lintKeymap
-        ]),
-        placeholder('Expression (press Shift+Enter for newlines)'),
-        dynamicConfigCompartment.of(dynamicConfig),
-        // This keymap is added without precedence so that closing the autocomplete dropdown
-        // via Escape works without blurring the editor.
-        keymap.of([
-          {
-            key: 'Escape',
-            run: (v) => {
-              v.contentDOM.blur()
-              return false
-            }
-          }
-        ]),
-        Prec.override(
-          keymap.of([
-            {
-              key: 'Enter',
-              run: (v) => {
-                self.newChange()
-                return true
-              }
-            },
-            {
-              key: 'Shift-Enter',
-              run: insertNewlineAndIndent
-            }
-          ])
-        ),
-        EditorView.updateListener.of((update) => {
-          self.newChange(update.state.doc.toString())
-        })
-      ],
-      doc: self.a,
-      editorState: {
-        changeByRange: self.newChange(),
-        changes: self.newDoc(),
-        facet: self.newChange()
-      }
-    })
-    new EditorView({
-      state: EditorViewstate,
-      parent: document.getElementById('editor')
-    })
+    this.initCodeMirror()
     if (!this.fromFatherData && this.type !== 'logs') {
       this.queryMetrics()
     }
   },
   methods: {
+    initCodeMirror () {
+      const self = this
+      const promQL = new PromQLExtension().setComplete(
+        {
+          remote: {
+            url: 'http://192.168.40.42:8080/prom',
+            fetchFn: this.fetchFn,
+            cache: {
+              initialMetricList: [
+                'ALERTS',
+                'ALERTS_FOR_STATE',
+                'alertmanager_alerts',
+                'alertmanager_alerts_invalid_total',
+                'alertmanager_alerts_received_total',
+                'nz-agent'
+              ]
+            }
+          }
+        }
+      )
+      const dynamicConfigCompartment = new Compartment()
+      const dynamicConfig = [
+        promqlHighlighter,
+        promQL.asExtension(),
+        baseTheme
+      ]
+      if (!this.newView) {
+        const EditorViewstate = EditorState.create({
+          extensions: [
+            baseTheme,
+            highlightSpecialChars(),
+            history(),
+            EditorState.allowMultipleSelections.of(true),
+            indentOnInput(),
+            bracketMatching(),
+            closeBrackets(),
+            autocompletion(),
+            highlightSelectionMatches(),
+            EditorView.lineWrapping,
+            keymap.of([
+              ...closeBracketsKeymap,
+              ...defaultKeymap,
+              ...historyKeymap,
+              ...commentKeymap,
+              ...completionKeymap,
+              ...lintKeymap
+            ]),
+            // placeholder('Expression (press Shift+Enter for newlines)'),
+            dynamicConfigCompartment.of(dynamicConfig),
+            // This keymap is added without precedence so that closing the autocomplete dropdown
+            // via Escape works without blurring the editor.
+            keymap.of([
+              {
+                key: 'Escape',
+                run: (v) => {
+                  v.contentDOM.blur()
+                  return false
+                }
+              }
+            ]),
+            Prec.override(
+              keymap.of([
+                {
+                  key: 'Enter',
+                  run: (v) => {
+                    self.newChange()
+                    return true
+                  }
+                },
+                {
+                  key: 'Shift-Enter',
+                  run: insertNewlineAndIndent
+                }
+              ])
+            ),
+            EditorView.updateListener.of((update) => {
+              self.newChange(update.state.doc.toString())
+            })
+          ],
+          doc: self.codeMirrorValue,
+          editorState: {
+            changeByRange: self.newChange(),
+            changes: self.newDoc(),
+            facet: self.newChange()
+          }
+        })
+        const view = new EditorView({
+          state: EditorViewstate,
+          parent: document.getElementById('editor')
+        })
+        self.newView = view
+      } else {
+        console.log('viewIsOk')
+        const { from, to } = self.newView.state.selection.ranges[0]
+        self.newView.dispatch(
+          self.newView.state.update({
+            effects: dynamicConfigCompartment.reconfigure(dynamicConfig),
+            changes:{from,to,insert:self.codeMirrorValue}
+          })
+        )
+      }
+      const insertAtCursor = (value) => {
+        const view = this.newView
+        if (view === null) {
+          return
+        }
+        const { from, to } = view.state.selection.ranges[0]
+        console.log(from, to)
+        view.dispatch(
+          view.update({
+            changes: { from, to, insert: value }
+          })
+        )
+      }
+    },
     newChange (val) {
-      console.log(val)
+      this.codeMirrorValue = val
+      this.metricKeyDown(val)
+      console.log('change', val)
+      console.log(this.newView)
     },
     newDoc (val) {
-      console.log(val)
+      console.log('doc', val)
+    },
+    getHint (val, params, b, c, d) {
+      if (params) {
+        console.log(val, params, b, c, d, 123123123)
+        console.log(JSON.stringify(params.body))
+        return this.sendAjax('', params)
+      } else {
+        return this.sendAjax('http://192.168.44.61:10091/api/v1/series', {})
+      }
+
+      // this.$post('api/v1/series')
+    },
+    fetchFn (a, b) {
+      if (b) {
+        const form = new FormData()
+        console.log(b.body)
+        form.append('match[]', b.body.getAll('match[]'))
+        return this.$post(a, form)
+      } else {
+        return this.$get(a)
+      }
+    },
+    sendAjax (url, body) {
+      // 构造表单数据
+      return new Promise(resolve => {
+        const nowUrl = url
+        const formData = new FormData()
+        formData.append('username', 'johndoe')
+        formData.append('id', 123456)
+        // 创建xhr对象
+        const xhr = {
+          ...new XMLHttpRequest(),
+          ...body
+        }
+
+        // 设置xhr请求的超时时间
+        xhr.timeout = 3000
+        // 设置响应返回的数据格式
+        xhr.responseType = ''
+        // 创建一个 post 请求，采用异步
+        xhr.open('post', nowUrl, true)
+        xhr.setRequestHeader('Authorization', localStorage.getItem('nz-token'))
+        // 注册相关事件回调处理函数
+        xhr.onload = function (e) {
+          if (this.status == 200 || this.status == 304) {
+            // alert(this.responseText)
+            resolve(JSON.parse(this.responseText))
+          }
+        }
+        xhr.onerror = function (e) { console.log(e) }
+        // 发送数据
+        xhr.send()
+      })
     },
     closeDropdown () {
       this.dropDownVisible = false
@@ -688,8 +776,10 @@ export default {
     },
     metricChange: function (value) {
       this.expressionList[this.index] = value
+      this.codeMirrorValue = value
       this.dropDownVisible = false
       this.$emit('change', value)
+      // this.initCodeMirror()
       this.$forceUpdate()
       this.cascaderValue = ''
     },
@@ -947,21 +1037,24 @@ export default {
     },
     insertText (insertTxt) {
       // 获取el-input中的input元素
-      const elInput = this.$refs.elInput.$el.firstElementChild
+      // const elInput = this.$refs.elInput.$el.firstElementChild
       // 获取el-input的值
-      const txt = elInput.value
+      // const txt = elInput.value
       // 获取选区开始位置
-      const startPos = elInput.selectionStart
+      // const startPos = elInput.selectionStart
       // 获取选区结束位置
-      const endPos = elInput.selectionEnd
-      if (startPos === undefined || endPos === undefined) return
-
+      // const endPos = elInput.selectionEnd
+      // if (startPos === undefined || endPos === undefined) return
       // 将文本插入光标位置
-      this.expressionList[this.index] = txt.substring(0, startPos) + insertTxt + txt.substring(endPos)
+      // this.expressionList[this.index] = txt.substring(0, startPos) + insertTxt + txt.substring(endPos)
       // 将光标移至文本末尾
-      elInput.focus()
-      elInput.selectionStart = startPos + insertTxt.length
-      elInput.selectionEnd = startPos + insertTxt.length
+      // elInput.focus()
+      // elInput.selectionStart = startPos + insertTxt.length
+      // elInput.selectionEnd = startPos + insertTxt.length
+      this.expressionList[this.index] = insertTxt
+      this.codeMirrorValue = insertTxt
+      console.log('inserttext', this.codeMirrorValue)
+      this.initCodeMirror()
     }
     /* setMsg:function(){
         this.appendMsg
@@ -976,9 +1069,10 @@ export default {
         }
       }
     },
-    a () {
-      console.log(this.a)
-    },
+    // codeMirrorValue () {
+    //   console.log('watch',this.codeMirrorValue)
+
+    // },
     metricOptionsParent: {
       deep: true,
       immediate: true,
@@ -987,7 +1081,16 @@ export default {
           this.metricOptions = JSON.parse(JSON.stringify(n))
         }
       }
-    }
+    },
+    // expressionList:{
+    //   deep: true,
+    //   immediate: true,
+    //   handler (n, o) {
+    //     console.log(n,n[this.index]);
+    //     this.codeMirrorValue = n[this.index];
+    //     this.initCodeMirror()
+    //   }
+    // }
   }
 }
 </script>

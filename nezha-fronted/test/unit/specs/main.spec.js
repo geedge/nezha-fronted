@@ -1,34 +1,35 @@
 import mainMixin from '@/components/common/mixin/mainMixinFun'
 import i18n from '@/components/common/i18n'
+import moment from 'moment-timezone'
 describe('时间函数', () => {
-  localStorage.setItem('nz-sys-timezone', 'Asia/Shanghai')
+  localStorage.setItem('nz-sys-timezone', 'America/Danmarkshavn')
   it('utc时间转系统时间 返回时间戳', () => {
-    expect(mainMixin.methods.utcTimeToTimezone(1650006960000)).toBe(1650035760000)
+    expect(mainMixin.methods.utcTimeToTimezone(1650006960000)).toBe(1650006960000)
   })
   it('utc时间转系统时间 返回时间戳', () => {
-    expect(mainMixin.methods.utcTimeToTimezone('2022-04-15 15:16:00')).toBe(1650035760000)
+    expect(mainMixin.methods.utcTimeToTimezone('2022-04-15 15:16:00')).toBe(1650006960000)
   })
   it('utc时间转系统时间 返回时间字符串', () => {
-    expect(mainMixin.methods.utcTimeToTimezoneStr(1650006960000)).toBe('2022-04-15 23:16:00')
+    expect(mainMixin.methods.utcTimeToTimezoneStr(1650006960000)).toBe('2022-04-15 15:16:00')
   })
   it('utc时间转系统时间 返回时间字符串', () => {
-    expect(mainMixin.methods.utcTimeToTimezoneStr('2022-04-15 15:16:00')).toBe('2022-04-15 23:16:00')
+    expect(mainMixin.methods.utcTimeToTimezoneStr('2022-04-15 15:16:00')).toBe('2022-04-15 15:16:00')
   })
   it('utc时间转系统时间 返回时间字符串 指定时间格式', () => {
     expect(mainMixin.methods.utcTimeToTimezoneStr('2022-04-15 15:16:00', 'DD/MM/YYYY')).toBe('15/04/2022')
   })
 
   it('系统时间转utc时间转 返回时间戳', () => {
-    expect(mainMixin.methods.timezoneToUtcTime(1650006960000)).toBe(1649978160000)
+    expect(mainMixin.methods.timezoneToUtcTime(1650006960000)).toBe(1650006960000)
   })
   it('系统时间转utc时间转 返回时间戳', () => {
-    expect(mainMixin.methods.timezoneToUtcTime('2022-04-15 15:16:00')).toBe(1649978160000)
+    expect(mainMixin.methods.timezoneToUtcTime('2022-04-15 15:16:00')).toBe(1650006960000)
   })
   it('系统时间转utc时间转  返回时间字符串', () => {
-    expect(mainMixin.methods.timezoneToUtcTimeStr(1650006960000)).toBe('2022-04-15 07:16:00')
+    expect(mainMixin.methods.timezoneToUtcTimeStr(1650006960000)).toBe('2022-04-15 15:16:00')
   })
   it('系统时间转utc时间转  返回时间字符串', () => {
-    expect(mainMixin.methods.timezoneToUtcTimeStr('2022-04-15 15:16:00')).toBe('2022-04-15 07:16:00')
+    expect(mainMixin.methods.timezoneToUtcTimeStr('2022-04-15 15:16:00')).toBe('2022-04-15 15:16:00')
   })
   it('系统时间转utc时间转 返回时间字符串 指定时间格式', () => {
     expect(mainMixin.methods.timezoneToUtcTimeStr('2022-04-15 15:16:00', 'DD/MM/YYYY')).toBe('15/04/2022')
