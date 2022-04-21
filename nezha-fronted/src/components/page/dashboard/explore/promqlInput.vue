@@ -76,10 +76,14 @@
           class="input-box"
           @click="dropDownVisible = false"
         >
-        <div id="editor"
+        <div :id="'editor'+index"
         class="not-fixed-height no-resize no-close"
         >
         </div>
+        <!-- <div id='editor'
+        class="not-fixed-height no-resize no-close"
+        >
+        </div> -->
           <!-- <el-input
             :id="inputId"
             v-model="expressionList[index]"
@@ -227,11 +231,15 @@
               @click="dropDownVisible = false"
               v-if="plugins.indexOf('metric-input') > -1"
             >
-            <div id="editor"
+            <div :id="'editor'+index"
+        class="not-fixed-height no-resize no-close"
+        >
+        </div>
+            <!-- <div id="editor"
             class="not-fixed-height no-resize no-close"
                 ref="elInput"
 
-            ></div>
+            ></div> -->
               <!-- <el-input
                 v-model="expressionList[index]"
                 @input="metricKeyDown"
@@ -412,7 +420,6 @@ import { lintKeymap } from '@codemirror/lint'
 import { baseTheme, promqlHighlighter } from './CMTheme.tsx'
 import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets'
 import { autocompletion, completionKeymap, CompletionContext, CompletionResult } from '@codemirror/autocomplete'
-import Vue from 'vue'
 
 export default {
   name: 'promqlInput',
@@ -452,8 +459,9 @@ export default {
   },
   data () {
     return {
+      oldcCodeLength:'',
       newView: null,
-      codeMirrorValue: '',
+      codeMirrorValue: [],
       dropDownVisible: false,
       // metricStore:[],
       metricOptions: [],
@@ -604,7 +612,7 @@ export default {
               self.newChange(update.state.doc.toString())
             })
           ],
-          doc: self.codeMirrorValue,
+          doc: self.codeMirrorValue[self.index],
           editorState: {
             changeByRange: self.newChange(),
             changes: self.newDoc(),
@@ -613,38 +621,38 @@ export default {
         })
         const view = new EditorView({
           state: EditorViewstate,
-          parent: document.getElementById('editor')
+          // parent: document.getElementById('editor')
+          parent: document.getElementById('editor'+self.index)
         })
         self.newView = view
       } else {
         console.log('viewIsOk')
-        const { from, to } = self.newView.state.selection.ranges[0]
+        // const { from} = self.newView.state.selection.ranges[0]
+        // const to = self.codeMirrorValue.length
+        const to = self.oldcCodeLength
+        const from = self.oldcCodeLength
+        console.log(from,to);
         self.newView.dispatch(
           self.newView.state.update({
             effects: dynamicConfigCompartment.reconfigure(dynamicConfig),
-            changes:{from,to,insert:self.codeMirrorValue}
-          })
-        )
-      }
-      const insertAtCursor = (value) => {
-        const view = this.newView
-        if (view === null) {
-          return
-        }
-        const { from, to } = view.state.selection.ranges[0]
-        console.log(from, to)
-        view.dispatch(
-          view.update({
-            changes: { from, to, insert: value }
+            changes:{from,to,insert:self.codeMirrorValue[self.index]}
           })
         )
       }
     },
     newChange (val) {
-      this.codeMirrorValue = val
-      this.metricKeyDown(val)
-      console.log('change', val)
-      console.log(this.newView)
+      console.log('newchange', val)
+      if(val){
+        this.oldcCodeLength = val.length
+        console.log(this.oldcCodeLength);
+        this.codeMirrorValue[this.index] = val
+        this.expressionList[this.index] = val
+        console.log(this.codeMirrorValue);
+        this.metricKeyDown(val)
+      }else{
+        this.oldcCodeLength = 0;
+        this.codeMirrorValue[this.index] = ''
+      }
     },
     newDoc (val) {
       console.log('doc', val)
@@ -776,7 +784,7 @@ export default {
     },
     metricChange: function (value) {
       this.expressionList[this.index] = value
-      this.codeMirrorValue = value
+      this.codeMirrorValue[this.index] = value
       this.dropDownVisible = false
       this.$emit('change', value)
       // this.initCodeMirror()
@@ -784,6 +792,7 @@ export default {
       this.cascaderValue = ''
     },
     metricChangeNew (value) {
+      console.log(value);
       if (!value) return
       this.insertText(value)
       this.dropDownVisible = false
@@ -794,6 +803,7 @@ export default {
     logLabelChange (value) {
       if (!value || value.length === 0) return
       this.expressionList[this.index] = `{${value[0]}="${value[1]}"}`
+      this.codeMirrorValue[this.index] = `{${value[0]}="${value[1]}"}`
       this.dropDownVisible = false
       this.$emit('change', value)
       this.$forceUpdate()
@@ -1052,8 +1062,8 @@ export default {
       // elInput.selectionStart = startPos + insertTxt.length
       // elInput.selectionEnd = startPos + insertTxt.length
       this.expressionList[this.index] = insertTxt
-      this.codeMirrorValue = insertTxt
-      console.log('inserttext', this.codeMirrorValue)
+      this.codeMirrorValue[this.index] = insertTxt
+      console.log('inserttext', this.codeMirrorValue[this.index])
       this.initCodeMirror()
     }
     /* setMsg:function(){
@@ -1069,10 +1079,6 @@ export default {
         }
       }
     },
-    // codeMirrorValue () {
-    //   console.log('watch',this.codeMirrorValue)
-
-    // },
     metricOptionsParent: {
       deep: true,
       immediate: true,
@@ -1082,13 +1088,23 @@ export default {
         }
       }
     },
-    // expressionList:{
-    //   deep: true,
-    //   immediate: true,
-    //   handler (n, o) {
-    //     console.log(n,n[this.index]);
-    //     this.codeMirrorValue = n[this.index];
-    //     this.initCodeMirror()
+    expressionList:{
+      deep: true,
+      immediate: true,
+      handler (n, o) {
+        console.log(n,n[this.index]);
+        this.codeMirrorValue[this.index] = n[this.index];
+        
+      }
+    },
+    
+    // codeMirrorValue:{
+    //   deep:true,
+    //   imediate:true,
+    //   handler(n){
+    //     if(n){
+    //       this.oldcCodeLength = n.length
+    //     }
     //   }
     // }
   }

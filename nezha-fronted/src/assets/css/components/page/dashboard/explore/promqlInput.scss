@@ -2,7 +2,11 @@
   position: relative;
   width: 100%;
   display: flex;
-  #editor{
+  // #editor{
+  //   width: 100%;
+  //   border: 1px solid $--border-color-light;
+  // }
+  .no-close{
     width: 100%;
     border: 1px solid $--border-color-light;
   }
@@ -155,5 +159,12 @@
   .explore-select-header {
     text-align: center;
     margin-bottom: 14px;
+  }
+  .cm-line{
+    color: $--color-text-regular,
+
+  }
+  .el-col .el-col-24 .metric-selector-input-box{
+
   }
 }
