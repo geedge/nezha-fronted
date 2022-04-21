@@ -2,7 +2,7 @@
   <div class="login" id="login-bgimg">
     <div class="model"></div>
     <div class="login-main">
-      <div class="logo"><img src="../../assets/img/logo-big.png"></div>
+      <div class="logo"><img src="../../assets/img/logo带文字深色模式.png"></div>
       <div class='login-box'>
         <div class="login-label"></div>
         <div class="login-input" v-if="!verifyShow">

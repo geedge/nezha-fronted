@@ -84,17 +84,13 @@
       .logo {
         display: flex;
         box-sizing: border-box;
-
-        img {
-          box-shadow: 0 0 2px 0 rgba(0,0,0,0.50);
-        }
-
+        
         .system-name {
           padding-left: 5px;
           color: white;
           font-size: 12px;
           letter-spacing: 0;
-          line-height: 34px;
+          line-height: 28px;
           font-weight: 400;
         }
       }
