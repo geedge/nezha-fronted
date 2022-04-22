@@ -420,6 +420,7 @@ import { lintKeymap } from '@codemirror/lint'
 import { baseTheme, promqlHighlighter } from './CMTheme.tsx'
 import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets'
 import { autocompletion, completionKeymap, CompletionContext, CompletionResult } from '@codemirror/autocomplete'
+import { newCompleteStrategy } from 'codemirror-promql/dist/esm/complete'
 
 export default {
   name: 'promqlInput',
@@ -459,7 +460,7 @@ export default {
   },
   data () {
     return {
-      oldcCodeLength:'',
+      oldcCodeLength: '',
       newView: null,
       codeMirrorValue: [],
       dropDownVisible: false,
@@ -537,22 +538,49 @@ export default {
       const self = this
       const promQL = new PromQLExtension().setComplete(
         {
-          remote: {
-            url: 'http://192.168.40.42:8080/prom',
-            fetchFn: this.fetchFn,
-            cache: {
-              initialMetricList: [
-                'ALERTS',
-                'ALERTS_FOR_STATE',
-                'alertmanager_alerts',
-                'alertmanager_alerts_invalid_total',
-                'alertmanager_alerts_received_total',
-                'nz-agent'
-              ]
+          completeStrategy: query(newCompleteStrategy({
+            remote: {
+              url: 'http://192.168.40.42:8080/prom',
+              fetchFn: this.fetchFn
             }
-          }
+          }))
         }
       )
+      function query (CompleteStrategy) {
+        const obj = {}
+        obj.complete = CompleteStrategy
+        obj.queryHistory = []
+        obj.promQL = function (context) {
+          return Promise.resolve(this.complete.promQL(context)).then((res) => {
+            console.log(res)
+            const { state, pos } = context
+            const tree = syntaxTree(state).resolve(pos, -1)
+            const start = res != null ? res.from : tree.from
+
+            if (start !== 0) {
+              return res
+            }
+
+            const historyItems = {
+              from: start,
+              to: pos,
+              options: this.queryHistory.map((q) => ({
+                label: q.length < 80 ? q : q.slice(0, 76).concat('...'),
+                detail: 'past query',
+                apply: q,
+                info: q.length < 80 ? undefined : q
+              })),
+              span: /^[a-zA-Z0-9_:]+$/
+            }
+            if (res !== null) {
+              historyItems.options = historyItems.options.concat(res.options)
+            }
+            // console.log(historyItems)
+            return historyItems
+          })
+        }
+        return obj
+      }
       const dynamicConfigCompartment = new Compartment()
       const dynamicConfig = [
         promqlHighlighter,
@@ -622,92 +650,64 @@ export default {
         const view = new EditorView({
           state: EditorViewstate,
           // parent: document.getElementById('editor')
-          parent: document.getElementById('editor'+self.index)
+          parent: document.getElementById('editor' + self.index)
         })
         self.newView = view
       } else {
-        console.log('viewIsOk')
+        // console.log('viewIsOk')
         // const { from} = self.newView.state.selection.ranges[0]
         // const to = self.codeMirrorValue.length
         const to = self.oldcCodeLength
         const from = self.oldcCodeLength
-        console.log(from,to);
+        // console.log(from, to)
         self.newView.dispatch(
           self.newView.state.update({
             effects: dynamicConfigCompartment.reconfigure(dynamicConfig),
-            changes:{from,to,insert:self.codeMirrorValue[self.index]}
+            changes: { from, to, insert: self.codeMirrorValue[self.index] }
           })
         )
       }
     },
     newChange (val) {
-      console.log('newchange', val)
-      if(val){
+      // console.log('newchange', val)
+      if (val) {
         this.oldcCodeLength = val.length
-        console.log(this.oldcCodeLength);
+        // console.log(this.oldcCodeLength)
         this.codeMirrorValue[this.index] = val
         this.expressionList[this.index] = val
-        console.log(this.codeMirrorValue);
+        // console.log(this.codeMirrorValue)
         this.metricKeyDown(val)
-      }else{
-        this.oldcCodeLength = 0;
+      } else {
+        this.oldcCodeLength = 0
         this.codeMirrorValue[this.index] = ''
       }
     },
     newDoc (val) {
-      console.log('doc', val)
-    },
-    getHint (val, params, b, c, d) {
-      if (params) {
-        console.log(val, params, b, c, d, 123123123)
-        console.log(JSON.stringify(params.body))
-        return this.sendAjax('', params)
-      } else {
-        return this.sendAjax('http://192.168.44.61:10091/api/v1/series', {})
-      }
-
-      // this.$post('api/v1/series')
+      // console.log('doc', val)
     },
     fetchFn (a, b) {
+      const params = {}
+      console.log(b)
       if (b) {
-        const form = new FormData()
-        console.log(b.body)
-        form.append('match[]', b.body.getAll('match[]'))
-        return this.$post(a, form)
-      } else {
-        return this.$get(a)
-      }
-    },
-    sendAjax (url, body) {
-      // 构造表单数据
-      return new Promise(resolve => {
-        const nowUrl = url
-        const formData = new FormData()
-        formData.append('username', 'johndoe')
-        formData.append('id', 123456)
-        // 创建xhr对象
-        const xhr = {
-          ...new XMLHttpRequest(),
-          ...body
-        }
-
-        // 设置xhr请求的超时时间
-        xhr.timeout = 3000
-        // 设置响应返回的数据格式
-        xhr.responseType = ''
-        // 创建一个 post 请求，采用异步
-        xhr.open('post', nowUrl, true)
-        xhr.setRequestHeader('Authorization', localStorage.getItem('nz-token'))
-        // 注册相关事件回调处理函数
-        xhr.onload = function (e) {
-          if (this.status == 200 || this.status == 304) {
-            // alert(this.responseText)
-            resolve(JSON.parse(this.responseText))
+        params['match[]'] = b.body.get('match[]')
+        params.start = b.body.get('start')
+        params.end = b.body.get('end')
+        a += '?match[]=' + b.body.get('match[]')
+        return fetch(a, {
+          ...b,
+          // body: JSON.stringify(params),
+          redirect: 'follow',
+          headers: {
+            Authorization: localStorage.getItem('nz-token'),
+            'content-type':'application/x-www-form-urlencoded'
           }
+        })
+      }
+      return fetch(a, {
+        ...b,
+        headers: {
+          Authorization: localStorage.getItem('nz-token')
         }
-        xhr.onerror = function (e) { console.log(e) }
-        // 发送数据
-        xhr.send()
       })
     },
     closeDropdown () {
@@ -792,7 +792,7 @@ export default {
       this.cascaderValue = ''
     },
     metricChangeNew (value) {
-      console.log(value);
+      // console.log(value)
       if (!value) return
       this.insertText(value)
       this.dropDownVisible = false
@@ -1088,16 +1088,15 @@ export default {
         }
       }
     },
-    expressionList:{
+    expressionList: {
       deep: true,
       immediate: true,
       handler (n, o) {
-        console.log(n,n[this.index]);
-        this.codeMirrorValue[this.index] = n[this.index];
-        
+        // console.log(n, n[this.index])
+        this.codeMirrorValue[this.index] = n[this.index]
       }
-    },
-    
+    }
+
     // codeMirrorValue:{
     //   deep:true,
     //   imediate:true,
