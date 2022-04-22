@@ -289,8 +289,8 @@ export default {
       this.getData(this.filter)
     },
     refreshTime (st, et) {
-      const startTime = bus.timeFormate(st, 'yyyy-MM-dd hh:mm')
-      const endTime = bus.timeFormate(et, 'yyyy-MM-dd hh:mm')
+      const startTime = bus.timeFormate(st)
+      const endTime = bus.timeFormate(et)
       this.searchTime = [startTime, endTime]
     },
     panelReloadForDel () {
@@ -494,9 +494,10 @@ export default {
       if (this.$refs.pickTime) {
         const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+        console.log(nowTimeType, this.nowTimeType)
         this.setSearchTime(nowTimeType.type, nowTimeType.value)
-        this.filter.start_time = bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
-        this.filter.end_time = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
+        this.filter.start_time = bus.timeFormate(this.searchTime[0])
+        this.filter.end_time = bus.timeFormate(this.searchTime[1])
         this.filter.panelId = this.showPanel.id
         this.getData(this.filter)
         this.$store.dispatch('dispatchPanelTime', {
@@ -508,20 +509,21 @@ export default {
     /* 时间条件查询--end */
     setSearchTime (type, val) { // 设置searchTime
       if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'YYYY-MM-DD HH:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'm')
       } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'YYYY-MM-DD HH:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'h')
+        console.log(this.searchTime)
       } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'YYYY-MM-DD HH:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'd')

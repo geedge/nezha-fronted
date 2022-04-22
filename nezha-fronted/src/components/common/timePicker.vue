@@ -255,7 +255,7 @@ export default {
     this.getRangeHistoryArr()
   },
   methods: {
-    changeDropdownFlag(){
+    changeDropdownFlag () {
       if (this.dropdownFlag) {
         this.dropdownFlag = false
       }
@@ -269,27 +269,27 @@ export default {
     },
     myDatePickerShow (item) {
       this.whoChoose = item
-            this.isCustom = true
+      this.isCustom = true
       this.$refs.calendar.focus()
-            this.$refs.calendar.pickerVisible = true
-            if (document.getElementById('viewGraphDialog')) {
-              // 处理 多弹出的z-index的问题 当前为 alertMessage的处理
-              const viewGraphDialogStyle = window.getComputedStyle(
-                document.getElementById('viewGraphDialog', null)
-              )
-              setTimeout(() => {
-                if (viewGraphDialogStyle['z-index'] !== 'auto') {
-                  const dom =
+      this.$refs.calendar.pickerVisible = true
+      if (document.getElementById('viewGraphDialog')) {
+        // 处理 多弹出的z-index的问题 当前为 alertMessage的处理
+        const viewGraphDialogStyle = window.getComputedStyle(
+          document.getElementById('viewGraphDialog', null)
+        )
+        setTimeout(() => {
+          if (viewGraphDialogStyle['z-index'] !== 'auto') {
+            const dom =
                     document.getElementsByClassName('el-picker-panel')
-                  Array.prototype.forEach.call(dom, function (element) {
-                    element.style['z-index'] =
+            Array.prototype.forEach.call(dom, function (element) {
+              element.style['z-index'] =
                       viewGraphDialogStyle['z-index'] + 1
-                  })
-                  this.$refs.calendar.$el.style['z-index'] =
+            })
+            this.$refs.calendar.$el.style['z-index'] =
                     viewGraphDialogStyle['z-index'] + 1
-                }
-              })
-            }
+          }
+        })
+      }
     },
     historyChange (item) {
       this.searchTime[0] = item.start
@@ -389,27 +389,27 @@ export default {
           // }
           // this.$set(this.searchTime, 0, bus.timeFormate(time[0]))
           // this.$set(this.searchTime, 1, bus.timeFormate(time[1]))
-          this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time));
-          this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time));
+          this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time))
+          this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time))
           this.showTime = this.nowTimeType = {
             id: 4,
-            text: this.$t("dashboard.panel.lastOneHour"),
-            type: "hour",
-            value: 1,
-          };
-          const time = bus.getTimezontDateRange();
+            text: this.$t('dashboard.panel.lastOneHour'),
+            type: 'hour',
+            value: 1
+          }
+          const time = bus.getTimezontDateRange()
           if (timeGroup.start_time) {
             this.$set(
               this.searchTime,
               0,
               bus.timeFormate(timeGroup.start_time)
-            );
-            this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time));
+            )
+            this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time))
           } else {
-            this.$set(this.searchTime, 0, bus.timeFormate(time[0]));
-            this.$set(this.searchTime, 1, bus.timeFormate(time[1]));
+            this.$set(this.searchTime, 0, bus.timeFormate(time[0]))
+            this.$set(this.searchTime, 1, bus.timeFormate(time[1]))
           }
-          this.$set(this.searchTime, 0, bus.timeFormate(time[0]));
+          this.$set(this.searchTime, 0, bus.timeFormate(time[0]))
         }
       } else {
         this.showTime = this.nowTimeType = {
@@ -463,7 +463,7 @@ export default {
             }
           }
         } else {
-          this.isCustom = false;
+          this.isCustom = false
           this.showDropdown()
           if (this.showEmpty && id === 12) {
             this.searchTime = []
