@@ -3,7 +3,7 @@
     <el-menu :collapse="isShrink" active-text-color="#ffffff" class="header-logo" text-color="#ffffff">
       <el-menu-item index="logo">
         <div id="home-to-overview" class="logo link">
-          <img alt="loading..." height="26" :src="logo?logo:require('../../assets/img/logo.png')"/>
+          <img alt="loading..." height="26" :src="logo?logo:require('../../assets/img/logo1-2.png')"/>
           <span class="system-name">{{systemName && systemName !== 'undefined' ? systemName : $t('dashboard.overview.contentTitle')}}</span>
         </div>
       </el-menu-item>
