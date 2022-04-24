@@ -552,7 +552,6 @@ export default {
         obj.queryHistory = []
         obj.promQL = function (context) {
           return Promise.resolve(this.complete.promQL(context)).then((res) => {
-            console.log(res)
             const { state, pos } = context
             const tree = syntaxTree(state).resolve(pos, -1)
             const start = res != null ? res.from : tree.from
@@ -687,7 +686,6 @@ export default {
     },
     fetchFn (a, b) {
       const params = {}
-      console.log(b)
       if (b) {
         params['match[]'] = b.body.get('match[]')
         params.start = b.body.get('start')
@@ -699,7 +697,7 @@ export default {
           redirect: 'follow',
           headers: {
             Authorization: localStorage.getItem('nz-token'),
-            'content-type':'application/x-www-form-urlencoded'
+            'content-type': 'application/x-www-form-urlencoded'
           }
         })
       }
@@ -1063,7 +1061,6 @@ export default {
       // elInput.selectionEnd = startPos + insertTxt.length
       this.expressionList[this.index] = insertTxt
       this.codeMirrorValue[this.index] = insertTxt
-      console.log('inserttext', this.codeMirrorValue[this.index])
       this.initCodeMirror()
     }
     /* setMsg:function(){

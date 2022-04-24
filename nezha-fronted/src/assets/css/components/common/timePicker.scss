@@ -166,7 +166,7 @@
 .date-range-panel {
   // height: 460px;
   width: 500px;
-  background: #FFFFFF;
+  background: $--background-color-empty;
   box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
   position: absolute;
   right: 4%;
@@ -179,25 +179,57 @@
     flex-direction: column;
     .content-title {
       font-size: 14px;
-      color: #666666;
+      color: $--color-text-regular;
       font-weight: 400;
     }
 
     .content-input {
       width: 230px;
+      display: flex;
+      position: relative;
+      align-items: center;
+      margin-bottom: 12px;
       .el-input{
         width: auto;
+        flex: 1;
         .el-input__inner{
-          border: 1px solid #E7EAED;
-          border-radius: 2px;
+          border: 1px solid $--border-color-light;
+          border-radius: 2px 0px 0px 2px;
           width: 230px;
           padding: 0 8px;
-          height: 30px;
-          line-height: 30px;
-          margin-bottom: 12px;
+          //height: 30px;
+          //line-height: 30px;
           outline: #169AFF;
         }
 
+      }
+      .input-hint{
+        display: none;
+      }
+      .nz-icon-box{
+        height: 28px;
+        box-sizing: border-box;
+        background: $--background-color-disabled;
+        line-height: 28px;
+        padding: 0 4px;
+        border-radius: 0 2px 2px 0;
+
+      }
+      &.input-error{
+        .el-input{
+          .el-input__inner{
+            border: 1px solid $--color-danger;
+            outline: $--color-danger;
+          }
+        }
+        .input-hint{
+          display: block;
+          color: $--color-danger;
+          position: absolute;
+          left: 0;
+          font-size: 14px;
+          bottom: -25px;
+        }
       }
     }
 
@@ -236,22 +268,22 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        color: #333333;
+        color: $--color-text-primary;
         font-weight: 400;
         padding: 0 10px;
         cursor: pointer;
       }
 
       li:hover {
-        background: #F5F5F5;
-        color: #333333;
+        background: $--alert-rule-background-color;
+        color: $--color-text-primary;
       }
       li.activeLi :hover {
-        background: #F5F5F5;
+        background: $--alert-rule-background-color;
         color: $--color-primary !important;
       }
       li.activeLi {
-        background: #F5F5F5;
+        background: $--alert-rule-background-color;
         color: $--color-primary !important;
         font-weight: 400;
 

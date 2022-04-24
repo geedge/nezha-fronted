@@ -46,22 +46,31 @@
               size="mini"
               ref="calendar"
               :format="timeFormatStrToDatePickFormat(timeFormatMain)"
-              @change="dateChange(whoChoose)"
-              v-model="searchTimeValue"
-              type="date"
+              :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+              @change="dateChange"
+              :default-time="['00:00:00', '23:59:59']"
+              v-model="oldSearchTime"
+              type="daterange"
               popper-class="panel-time-picker-popper time-picker-popover__select-top"
               align="right"
             >
             </my-date-picker>
-
+<!--            @change="dateChange(whoChoose)"-->
             <div class="content-title">{{$t('dashboard.panel.chartForm.valMapping.from')}}</div>
-            <div @click="myDatePickerShow('start')" tabindex="1" class="content-input">
-              <el-input  v-model="searchTime[0]" @change="dateChange('start',searchTime[0])"> </el-input>
+            <div  tabindex="1" class="content-input" :class="oldSearchTimeError[0] ? 'input-error' : ''">
+              <el-input   @focus="searchTimeValue = oldSearchTime[0]"  v-model="oldSearchTime[0]" @change="dateInputChange('start',oldSearchTime[0])" size="mini"> </el-input>
+              <div @click="myDatePickerShow()" class="nz-icon-box">
+                <i class="nz-icon nz-icon-table1"/>
+              </div>
+              <div class="input-hint">{{inputError}}</div>
             </div>
             <div class="content-title">{{$t('dashboard.panel.chartForm.valMapping.to')}}</div>
-            <div @click="myDatePickerShow('end')" tabindex="2" class="content-input">
-              <el-input  v-model="searchTime[1]" @change="dateChange('end',searchTime[1])"> </el-input>
-
+            <div tabindex="2" class="content-input" :class="oldSearchTimeError[1] ? 'input-error' : ''">
+              <el-input  @focus="searchTimeValue = oldSearchTime[1]" v-model="oldSearchTime[1]" @change="dateInputChange('end',oldSearchTime[1])" size="mini"> </el-input>
+              <div  @click="myDatePickerShow()" class="nz-icon-box">
+                <i class="nz-icon nz-icon-table1"/>
+              </div>
+              <div class="input-hint">{{$t('date.formatError')}}</div>
             </div>
             <div>
               <el-button
@@ -132,6 +141,7 @@
 
 <script>
 import bus from '@/libs/bus'
+import moment from 'moment-timezone'
 
 export default {
   name: 'timePicker',
@@ -159,6 +169,13 @@ export default {
         bus.timeFormate(bus.getOffsetTimezoneData(-1)),
         bus.timeFormate(bus.getOffsetTimezoneData())
       ],
+      oldSearchTime: [bus.timeFormate(bus.getOffsetTimezoneData(-1)),
+        bus.timeFormate(bus.getOffsetTimezoneData())],
+      oldSearchTimeError: {
+        0: false,
+        1: false
+      },
+      inputError: this.$t('date.formatError'),
       showTime: {
         id: 4,
         text: this.$t('dashboard.panel.lastOneHour')
@@ -253,6 +270,9 @@ export default {
     this.getItem()
     this.getUtcStr()
     this.getRangeHistoryArr()
+    const timeTemp = this.$loadsh.cloneDeep(this.searchTime)
+    this.oldSearchTime[0] = timeTemp[0]
+    this.oldSearchTime[1] = timeTemp[1]
   },
   methods: {
     changeDropdownFlag () {
@@ -268,8 +288,8 @@ export default {
       this.utc = localStorage.getItem('timezoneOffset')
     },
     myDatePickerShow (item) {
-      this.whoChoose = item
-      this.isCustom = true
+      // this.whoChoose = item
+      // this.isCustom = true
       this.$refs.calendar.focus()
       this.$refs.calendar.pickerVisible = true
       if (document.getElementById('viewGraphDialog')) {
@@ -308,9 +328,13 @@ export default {
       this.utcStr = str + this.utc
     },
     timeRange (item) {
+      if (this.oldSearchTimeError[0] || this.oldSearchTimeError[1]) {
+        return
+      }
+      this.searchTime = this.$loadsh.cloneDeep(this.oldSearchTime)
       this.showTime = this.nowTimeType = {
         id: 0,
-        text: this.$t('dashboard.panel.customTimeRange'),
+        text: this.searchTime[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + this.searchTime[1],
         value: -1
       }
       this.isCustom = true
@@ -329,49 +353,42 @@ export default {
       this.$emit('change', this.searchTime)
     },
     showDropdown () {
+      const timeTemp = this.$loadsh.cloneDeep(this.searchTime)
+      this.oldSearchTime[0] = timeTemp[0]
+      this.oldSearchTime[1] = timeTemp[1]
+      this.oldSearchTimeError[0] = false
+      this.oldSearchTimeError[1] = false
       this.dropdownFlag = !this.dropdownFlag
     },
-    dateChange (type, v) {
+    dateInputChange (type, v) {
       if (type == 'start') {
-        if (!v) {
-          const startTime = bus.timeFormate(this.searchTimeValue).trim().split(' ')[0] + ' '
-          this.$set(this.searchTime, 0, startTime)
+        const dateValidate = moment(this.oldSearchTime[0], this.timeFormatMain).isValid()
+        if (!dateValidate) {
+          this.inputError = this.$t('date.formatError')
+          this.oldSearchTimeError[0] = true
         } else {
-          const str = v.trim().split(' ')[1]
-          const reg = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
-          if (reg.test(str)) {
-            const startTime = bus.timeFormate(v)
-            this.$set(this.searchTime, 0, startTime)
-          } else {
-            this.$set(this.searchTime, 0, '')
-          }
+          this.oldSearchTimeError[0] = false
+          this.oldSearchTime[0] = bus.timeFormate(this.oldSearchTime[0])
         }
       } else if (type == 'end') {
-        if (!v) {
-          const endTime = bus.timeFormate(this.searchTimeValue).trim().split(' ')[0] + ' '
-          this.$set(this.searchTime, 1, endTime)
+        const dateValidate = moment(this.oldSearchTime[1], this.timeFormatMain).isValid()
+        if (!dateValidate) {
+          this.oldSearchTimeError[1] = true
         } else {
-          const str = v.trim().split(' ')[1]
-          const reg = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
-          if (reg.test(str)) {
-            const endTime = bus.timeFormate(v)
-            this.$set(this.searchTime, 1, endTime)
-          } else {
-            this.$set(this.searchTime, 1, '')
-          }
+          this.oldSearchTimeError[1] = false
+          // this.$set(this.oldSearchTime, 1, bus.timeFormate(this.oldSearchTime[1]))
+          this.oldSearchTime[1] = bus.timeFormate(this.oldSearchTime[1])
         }
       }
-      this.searchTime[2] = ''
-      this.$set(this.showTime, 'id', 0)
-      this.$set(
-        this.showTime,
-        'text',
-        this.searchTime[0] +
-          ' ' +
-          this.$t('dashboard.panel.to') +
-          ' ' +
-          this.searchTime[1]
-      )
+      console.log(moment(this.oldSearchTime[0], this.timeFormatMain).isValid(), moment(this.oldSearchTime[1], this.timeFormatMain).isValid(), !moment(this.oldSearchTimeError[0]).isBefore(this.oldSearchTime[1]))
+      if (moment(this.oldSearchTime[0], this.timeFormatMain).isValid() && moment(this.oldSearchTime[1], this.timeFormatMain).isValid() && !moment(this.oldSearchTimeError[0]).isBefore(this.oldSearchTime[1])) {
+        this.oldSearchTimeError[0] = true
+        this.inputError = this.$t('date.fromGreaterTo')
+      }
+    },
+    dateChange () {
+      this.oldSearchTimeError[0] = false
+      this.oldSearchTimeError[1] = false
     },
     setCustomTime (timeGroup, timeRange) {
       if (timeGroup) {

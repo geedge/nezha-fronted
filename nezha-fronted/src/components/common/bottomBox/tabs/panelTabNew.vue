@@ -494,7 +494,6 @@ export default {
       if (this.$refs.pickTime) {
         const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-        console.log(nowTimeType, this.nowTimeType)
         this.setSearchTime(nowTimeType.type, nowTimeType.value)
         this.filter.start_time = bus.timeFormate(this.searchTime[0])
         this.filter.end_time = bus.timeFormate(this.searchTime[1])
@@ -520,7 +519,6 @@ export default {
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'h')
-        console.log(this.searchTime)
       } else if (type === 'date') {
         const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
         const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
