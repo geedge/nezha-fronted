@@ -27,7 +27,7 @@
           {{ alertLabelData && alertLabelData.id ? alertLabelData.id : "--" }}
         </div>
       </div>
-      <div class="alert-label-box name-label">
+      <div class="alert-label-box name-labe">
         <div class="alert-label-title">{{$t('overall.name')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
       </div>
