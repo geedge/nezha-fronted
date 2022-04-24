@@ -91,7 +91,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      favicon: require('../src/assets/img/favicon.ico'),
+      favicon: path.resolve(__dirname, '../src/assets/img/favicon.ico'),
       filename: config.build.index,
       template: 'index.html',
       hash: false,
