@@ -11,6 +11,7 @@
       align-items: center;
       font-weight: 600;
       font-family: PingFangSC-Medium;
+      color: $--color-text-primary;
 
       .alert-message-state {
         display: block;
@@ -18,10 +19,9 @@
         margin-right: 15px;
         font-size: 14px;
         font-weight: normal;
-
-        padding: 2px 8px;
-        border-radius: 4px;
         color: $--color-text-label;
+        padding: 2px 8px;
+        border-radius: 4px; 
       }
     }
 
@@ -235,7 +235,7 @@
 
         .time-line-item-header {
           font-size: 14px;
-          color: #333333;
+          color: $--color-text-primary;
           font-weight: 400;
         }
       }
@@ -274,7 +274,8 @@
 
     .info-box-content {
       font-size: 14px;
-      color: #666666;
+      // color: #666666;
+      color: $--color-text-regular;
       font-weight: 400;
       width: 100%;
       margin-bottom: 40px;
@@ -307,12 +308,12 @@
                 padding-left: 5px;
 
                 span:nth-of-type(n) {
-                  color: #999999;
+                  color: $--color-text-secondary;
                   margin-right: 5px;
                 }
 
                 span:nth-of-type(2n) {
-                  color: #666666;
+                  color: $--color-text-regular;
                   margin-right: 15px;
                 }
               }
@@ -417,6 +418,7 @@
                     .nz-alert-tag__content {
                       padding-left: 6px;
                       padding-right: 6px;
+                      color: $--color-text-primary;
                       display: flex;
                       align-items: center;
                       justify-content: center;
