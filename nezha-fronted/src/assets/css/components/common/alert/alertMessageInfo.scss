@@ -51,7 +51,7 @@
       }
 
       .alert-message-info-tab {
-        height: 63%;
+        height: 61.8%;
         flex: 1;
 
         .alert-label-header-title {
@@ -97,6 +97,8 @@
           }
 
           .el-tabs__content {
+            // box-sizing:content-box;
+            // height: 100%;
             padding: 25px 30px;
             flex: 1;
             border: 1px solid $--border-color-light;
