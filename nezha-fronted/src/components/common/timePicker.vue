@@ -577,6 +577,13 @@ export default {
           }
         }
       }
+    },
+    sign (n) {
+      if (n) {
+        this.rangeHistory = localStorage.getItem('date-range-history' + this.sign)
+          ? JSON.parse(localStorage.getItem('date-range-history' + this.sign))
+          : []
+      }
     }
   }
 }

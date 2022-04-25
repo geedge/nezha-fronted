@@ -221,6 +221,10 @@
         .nz-icon{
           font-size: 14px;
         }
+        &:hover{
+          border-color: $--color-primary;
+           color: $--color-primary;
+        }
       }
       &.input-error{
         .el-input{
