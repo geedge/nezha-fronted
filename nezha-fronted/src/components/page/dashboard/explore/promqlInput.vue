@@ -1111,9 +1111,11 @@ export default {
     type: {
       deep: true,
       immediate: true,
-      handler(n) {
+      handler (n) {
         if (n !== 'log') {
-          this.initCodeMirror()
+          this.$nextTick(() => {
+            this.initCodeMirror()
+          })
         }
       }
     }
