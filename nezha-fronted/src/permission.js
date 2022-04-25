@@ -143,6 +143,8 @@ router.beforeEach((to, from, next) => {
           })
         })
       } else {
+        const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
+        document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + theme)
         resolve()
       }
     })

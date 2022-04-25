@@ -76,15 +76,18 @@
           class="input-box"
           @click="dropDownVisible = false"
         >
-        <div :id="'editor'+index"
-        class="not-fixed-height no-resize no-close"
+        <div
+          :id="'editor'+index"
+          v-if="type !== 'log'"
+          class="not-fixed-height no-resize no-close"
         >
         </div>
         <!-- <div id='editor'
         class="not-fixed-height no-resize no-close"
         >
         </div> -->
-          <!-- <el-input
+           <el-input
+             v-if="type == 'log'"
             :id="inputId"
             v-model="expressionList[index]"
             :autosize="{ minRows: 1, maxRows: 6 }"
@@ -93,7 +96,7 @@
             @input="metricKeyDown"
             @keyup.enter.native="expressionChange"
             ref="elInput"
-          ></el-input> -->
+          ></el-input>
 
           <div v-if="errorMsg" class="append-msg error">
             <span>{{ errorMsg }}</span>
@@ -231,8 +234,10 @@
               @click="dropDownVisible = false"
               v-if="plugins.indexOf('metric-input') > -1"
             >
-            <div :id="'editor'+index"
-        class="not-fixed-height no-resize no-close"
+            <div
+              :id="'editor'+index"
+              v-if="type !== 'log'"
+              class="not-fixed-height no-resize no-close"
         >
         </div>
             <!-- <div id="editor"
@@ -240,8 +245,9 @@
                 ref="elInput"
 
             ></div> -->
-              <!-- <el-input
+               <el-input
                 v-model="expressionList[index]"
+                v-if="type === 'log'"
                 @input="metricKeyDown"
                 type="textarea"
                 :maxlength="styleType === 3 ? 512 : 4096"
@@ -249,7 +255,7 @@
                 :autosize="{ minRows: 1, maxRows: 6 }"
                 class="not-fixed-height no-resize"
                 ref="elInput"
-              ></el-input> -->
+              ></el-input>
               <div class="append-msg error" v-if="errorMsg">
                 <span>{{ errorMsg }}</span>
               </div>
@@ -528,8 +534,7 @@ export default {
     }
   },
   mounted () {
-    this.initCodeMirror()
-    if (!this.fromFatherData && this.type !== 'logs') {
+    if (!this.fromFatherData && this.type !== 'log') {
       this.queryMetrics()
     }
   },
@@ -1092,7 +1097,7 @@ export default {
         // console.log(n, n[this.index])
         this.codeMirrorValue[this.index] = n[this.index]
       }
-    }
+    },
 
     // codeMirrorValue:{
     //   deep:true,
@@ -1103,6 +1108,15 @@ export default {
     //     }
     //   }
     // }
+    type: {
+      deep: true,
+      immediate: true,
+      handler(n) {
+        if (n !== 'log') {
+          this.initCodeMirror()
+        }
+      }
+    }
   }
 }
 </script>
