@@ -50,6 +50,7 @@
               @change="dateChange"
               :default-time="['00:00:00', '23:59:59']"
               v-model="oldSearchTime"
+              :isOnly="true"
               type="daterange"
               popper-class="panel-time-picker-popper time-picker-popover__select-top"
               align="right"
