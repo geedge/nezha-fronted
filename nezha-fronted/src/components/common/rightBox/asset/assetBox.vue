@@ -554,10 +554,7 @@ export default {
   methods: {
     judgeType () {
       if (!this.editAsset.type.name) {
-        this.$message({
-          type: 'error',
-          message: '请先选择Type值'
-        })
+        this.$message.error(this.$t('asset.assetBox.message.type'))
         return false
       } else {
         this.judgeTypes = false
