@@ -564,7 +564,7 @@ export default {
         xhr.responseType = ''
         // 创建一个 post 请求，采用异步
         xhr.open('get', 'http://192.168.44.100/' + nowUrl, true)
-        xhr.setRequestHeader('Authorization', localStorage.getItem('nz-token'));
+        xhr.setRequestHeader('Authorization', localStorage.getItem('nz-token'))
         // 注册相关事件回调处理函数
         xhr.onload = function (e) {
           if (this.status == 200 || this.status == 304) {
@@ -572,7 +572,7 @@ export default {
             resolve(JSON.parse(this.responseText))
           }
         }
-        xhr.onerror = function(e) { console.log(e) };
+        xhr.onerror = function (e) { console.log(e) }
         // 发送数据
         xhr.send()
       })
