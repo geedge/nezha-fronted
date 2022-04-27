@@ -5,7 +5,8 @@
       class="el-picker-panel el-date-range-picker el-popper time-picker-popover__select-top"
       :class="[{
         'has-sidebar': $slots.sidebar || shortcuts,
-        'has-time': showTime
+        'has-time': showTime,
+        'el-picker-panel__body__only': isOnly
       }, popperClass]">
       <div class="el-picker-panel__body-wrapper">
         <slot name="sidebar" class="el-picker-panel__sidebar"></slot>
@@ -17,7 +18,7 @@
             :key="key"
             @click="handleShortcutClick(shortcut)">{{shortcut.text}}</button>
         </div>
-        <div class="el-picker-panel__body">
+        <div class="el-picker-panel__body" style="min-width: auto">
           <div class="el-date-range-picker__time-header" v-if="showTime">
             <span class="el-date-range-picker__editors-wrap">
               <span class="el-date-range-picker__time-picker-wrap">
@@ -84,7 +85,9 @@
               </span>
             </span>
           </div>
-          <div class="el-picker-panel__content el-date-range-picker__content is-left">
+          <div class="el-picker-panel__content el-date-range-picker__content is-left" :class="{
+             'el-date-range-picker__content__only': isOnly
+          }">
             <div class="el-date-range-picker__header">
               <button
                 type="button"
@@ -108,7 +111,32 @@
                 :disabled="!enableMonthArrow"
                 :class="{ 'is-disabled': !enableMonthArrow }"
                 class="el-picker-panel__icon-btn el-icon-arrow-right"></button>
+              <button
+                type="button"
+                @click="rightPrevYear"
+                v-if="unlinkPanels&&isOnly"
+                :disabled="!enableYearArrow"
+                :class="{ 'is-disabled': !enableYearArrow }"
+                class="el-picker-panel__icon-btn el-icon-d-arrow-left"></button>
+              <button
+                type="button"
+                @click="rightPrevMonth"
+                v-if="unlinkPanels&&isOnly"
+                :disabled="!enableMonthArrow"
+                :class="{ 'is-disabled': !enableMonthArrow }"
+                class="el-picker-panel__icon-btn el-icon-arrow-left"></button>
+              <button
+                type="button"
+                v-if="isOnly"
+                @click="rightNextYear"
+                class="el-picker-panel__icon-btn el-icon-d-arrow-right"></button>
+              <button
+                type="button"
+                v-if="isOnly"
+                @click="rightNextMonth"
+                class="el-picker-panel__icon-btn el-icon-arrow-right"></button>
               <div>{{ leftLabel }}</div>
+<!--              <div>{{ rightLabel }}</div>-->
             </div>
             <date-table
               :timezone="timezone"
@@ -125,7 +153,7 @@
               @pick="handleRangePick">
             </date-table>
           </div>
-          <div class="el-picker-panel__content el-date-range-picker__content is-right">
+          <div class="el-picker-panel__content el-date-range-picker__content is-right" v-if="!isOnly">
             <div class="el-date-range-picker__header">
               <button
                 type="button"
@@ -321,6 +349,7 @@ export default {
     return {
       popperClass: '',
       value: [],
+      isOnly: false,
       defaultValue: null,
       defaultTime: null,
       minDate: '',
@@ -439,6 +468,12 @@ export default {
         this.rightDate = val && val[1] && this.unlinkPanels
           ? right
           : nextMonth(this.leftDate)
+      }
+    },
+    isOnly: {
+      immediate: true,
+      handler (n) {
+        console.log(n,'isOnly')
       }
     }
   },

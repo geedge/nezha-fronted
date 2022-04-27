@@ -43,7 +43,12 @@ const chartBarOption = {
     }
   },
   yAxis: {
-    type: 'value'
+    type: 'value',
+    axisLabel: {
+      show: true,
+      fontSize: 10
+      // formatter: 动态生成
+    }
   },
   series: [
     {

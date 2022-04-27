@@ -120,15 +120,15 @@ export const baseTheme = EditorView.theme({
     lineHeight: '1',
     marginRight: '10px',
     verticalAlign: 'top',
-    '&:after': { content: "'\\ea88'" },
-    fontFamily: 'codicon',
+    '&:after': { content: "'\\e76f'" },
+    fontFamily: 'nz-icon',
     paddingRight: '0',
     opacity: '1',
     color: '#007acc',
   },
 
   '.cm-completionIcon-function, .cm-completionIcon-method': {
-    '&:after': { content: "'\\ea8c'" },
+    '&:after': { content: "'\\e76f'" },
     color: '#652d90',
   },
   '.cm-completionIcon-class': {
@@ -141,7 +141,7 @@ export const baseTheme = EditorView.theme({
     '&:after': { content: "'𝑥'" },
   },
   '.cm-completionIcon-constant': {
-    '&:after': { content: "'\\eb5f'" },
+    '&:after': { content: "'\\e76f'" },
     color: '#007acc',
   },
   '.cm-completionIcon-type': {
@@ -154,14 +154,14 @@ export const baseTheme = EditorView.theme({
     '&:after': { content: "'□'" },
   },
   '.cm-completionIcon-keyword': {
-    '&:after': { content: "'\\eb62'" },
+    '&:after': { content: "'\\e76f'" },
     color: '#616161',
   },
   '.cm-completionIcon-namespace': {
     '&:after': { content: "'▢'" },
   },
   '.cm-completionIcon-text': {
-    '&:after': { content: "'\\ea95'" },
+    '&:after': { content: "'\\e76f'" },
     color: '#ee9d28',
   },
 });

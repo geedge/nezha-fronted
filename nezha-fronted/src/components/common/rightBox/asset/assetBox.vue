@@ -51,7 +51,11 @@
             <el-input  maxlength="128" show-word-limit v-model="editAsset.number" size="small"/>
           </el-form-item>
           <el-form-item :label="$t('asset.brandAndModel')" class="placeholder-emphasize" prop="brandAndModel">
-            <el-cascader
+            <div @click="judgeType">
+              <el-cascader
+              ref="cascader"
+              :clearable="true"
+              :disabled="judgeTypes"
               v-model="editAsset.brandAndModel"
               :placeholder="lockModelInputValue"
               :options="options.brandAndModelOptions"
@@ -60,6 +64,7 @@
               size="small"
               style="width: 100%;"
             ></el-cascader>
+            </div>
           </el-form-item>
           <el-form-item :label="$t('asset.location')" prop="location" class="is-required">
             <location-cascader v-if="!vmLock" ref="locationCascader" :dc-option="options.dcOptions" :default-model-u-size="1" @change="setLocationData"></location-cascader>
@@ -327,6 +332,7 @@ export default {
     const vm = this
     return {
       assetConstants,
+      judgeTypes: true,
       showAllTalonOption: false,
       showAddressOption: true,
       talonShowTow: true,
@@ -546,6 +552,14 @@ export default {
     this.getFieldGroupData()
   },
   methods: {
+    judgeType () {
+      if (!this.editAsset.type.name) {
+        this.$message.error(this.$t('asset.assetBox.message.type'))
+        return false
+      } else {
+        this.judgeTypes = false
+      }
+    },
     clickOutside () {
       this.esc(false)
     },
@@ -629,6 +643,10 @@ export default {
       })
     },
     selectType (type) {
+      this.$refs.cascader.$refs.panel.clearCheckedNodes()
+      this.$refs.cascader.$refs.panel.activePath = []
+      this.editAsset.brandAndModel = ''
+      this.lockModelInputValue = ''
       this.editAsset.type = { ...type }
       this.editAsset.typeId = type.id ? type.id : ''
       this.editAsset.authType = ''
@@ -639,6 +657,7 @@ export default {
       this.editAsset.snmpCredentialId = ''
       this.editAsset.authProtocolPort = ''
       this.editAsset.pid = ''
+      this.getModelData()
     },
     addLabel ([groupId, metaId]) {
       const label = this.options.metaOptions.find(m => m.id === metaId)
@@ -798,7 +817,7 @@ export default {
     },
     getModelData () {
       return new Promise(resolve => {
-        this.$get('asset/model?pageSize=-1').then(response => {
+        this.$get('asset/model?pageSize=-1&typeIds=' + this.editAsset.typeId).then(response => {
           if (response.code === 200) {
             this.options.modelOptions = response.data.list
             const titleSearchData = {}
@@ -810,6 +829,11 @@ export default {
               }
             })
             this.options.brandAndModelOptions = Object.keys(titleSearchData).map(b => titleSearchData[b])
+            if (!this.editAsset.type.name) {
+              this.judgeTypes = true
+            } else {
+              this.judgeTypes = false
+            }
           }
           resolve()
         })

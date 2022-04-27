@@ -40,8 +40,8 @@
 <script>
 import alertMessageInfoDetail from '@/components/common/alert/alertMessageInfoDetail'
 import searchItemInfo from '@/components/common/globalSearch/searchItemInfo'
-import alertLabel from '@/components/common/alert/alertLabel'
-import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
+import alertLabel from '@/components/common/alert/alertLabel3'
+import alertRuleInfo from '@/components/common/alert/alertRuleInfo2'
 // import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'alertMessageInfoTab',

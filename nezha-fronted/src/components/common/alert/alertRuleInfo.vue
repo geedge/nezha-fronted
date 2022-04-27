@@ -14,7 +14,7 @@
         <div class="alert-rule-value">{{alertRuleData.id ? alertRuleData.id : '--'}}</div>
       </div>
       <div class="alert-rule-box name-labe">
-        <div class="alert-rule-title">Name</div>
+        <div class="alert-rule-title">{{$t('overall.name')}}</div>
         <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
       </div>
 <!--      <div class="alert-rule-box">-->

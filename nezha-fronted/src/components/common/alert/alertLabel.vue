@@ -27,12 +27,16 @@
           {{ alertLabelData && alertLabelData.id ? alertLabelData.id : "--" }}
         </div>
       </div>
-       <div class="alert-label-box name-labe">
+      <div class="alert-label-box name-labe">
+        <div class="alert-label-title">{{$t('overall.name')}}</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
+      </div>
+       <!-- <div class="alert-label-box name-labe">
         <div class="alert-label-title">Name</div>
         <div class="alert-label-value">
           {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
         </div>
-      </div>
+      </div> -->
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("overall.manageIp") }}</div>
         <div class="alert-label-value">
@@ -42,10 +46,6 @@
               : "--"
           }}
         </div>
-      </div>
-      <div class="alert-label-box name-label">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("overall.type") }}</div>
@@ -188,7 +188,7 @@
         </div>
       </div>
       <div class="alert-label-box name-labe">
-        <div class="alert-label-title">Name</div>
+        <div class="alert-label-title">{{$t('overall.name')}}</div>
         <div class="alert-label-value">
           {{ alertLabelData && alertLabelData.Name ? alertLabelData.Name : "--" }}
         </div>
@@ -281,7 +281,7 @@
         </div>
       </div>
        <div class="alert-label-box name-labe">
-        <div class="alert-label-title">Name</div>
+        <div class="alert-label-title">{{$t('overall.name')}}</div>
         <div class="alert-label-value">
           {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
         </div>
@@ -376,7 +376,7 @@
         </div>
       </div>
       <div class="alert-label-box name-labe">
-        <div class="alert-label-title">Name</div>
+        <div class="alert-label-title">{{$t('overall.name')}}</div>
         <div class="alert-label-value">
           {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
         </div>
@@ -508,7 +508,7 @@
         </div>
       </div>
        <div class="alert-label-box name-labe">
-        <div class="alert-label-title">Name</div>
+        <div class="alert-label-title">{{$t('overall.name')}}</div>
         <div class="alert-label-value">
           {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
         </div>
