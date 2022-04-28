@@ -635,7 +635,7 @@ export default {
       const vm = this
       this.$get('visual/panel?type=dashboard&pageSize=-1').then(response => {
         if (response.code === 200) {
-          this.panelData = response.data.list
+          this.panelData = JSON.parse(JSON.stringify(response.data.list))
           let isInitData = false
           if (response.data.list.length > 0) {
             if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {

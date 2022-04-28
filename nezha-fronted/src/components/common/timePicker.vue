@@ -50,6 +50,7 @@
               @change="dateChange"
               :default-time="['00:00:00', '23:59:59']"
               v-model="oldSearchTime"
+              :isOnly="true"
               type="daterange"
               popper-class="panel-time-picker-popper time-picker-popover__select-top"
               align="right"
@@ -60,7 +61,7 @@
             <div  tabindex="1" class="content-input" :class="oldSearchTimeError[0] ? 'input-error' : ''">
               <el-input   @focus="searchTimeValue = oldSearchTime[0]"  v-model="oldSearchTime[0]" @change="dateInputChange('start',oldSearchTime[0])" size="mini"> </el-input>
               <div @click="myDatePickerShow()" class="nz-icon-box">
-                <i class="nz-icon nz-icon-table1"/>
+                <i class="nz-icon nz-icon-date"/>
               </div>
               <div class="input-hint">{{inputError}}</div>
             </div>
@@ -68,7 +69,7 @@
             <div tabindex="2" class="content-input" :class="oldSearchTimeError[1] ? 'input-error' : ''">
               <el-input  @focus="searchTimeValue = oldSearchTime[1]" v-model="oldSearchTime[1]" @change="dateInputChange('end',oldSearchTime[1])" size="mini"> </el-input>
               <div  @click="myDatePickerShow()" class="nz-icon-box">
-                <i class="nz-icon nz-icon-table1"/>
+                <i class="nz-icon nz-icon-date"/>
               </div>
               <div class="input-hint">{{$t('date.formatError')}}</div>
             </div>

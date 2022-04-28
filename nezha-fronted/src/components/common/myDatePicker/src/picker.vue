@@ -392,6 +392,10 @@ export default {
     validateEvent: {
       type: Boolean,
       default: true
+    },
+    isOnly: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -444,6 +448,9 @@ export default {
       if (!valueEquals(val, oldVal) && !this.pickerVisible && this.validateEvent) {
         this.dispatch('ElFormItem', 'el.form.change', val)
       }
+    },
+    isOnly:{
+      immediate: true
     }
   },
 
@@ -840,6 +847,7 @@ export default {
       this.popperElm = this.picker.$el
       this.picker.width = this.reference.getBoundingClientRect().width
       this.picker.showTime = this.type === 'datetime' || this.type === 'datetimerange'
+      this.picker.isOnly = this.isOnly
       this.picker.selectionMode = this.selectionMode
       this.picker.unlinkPanels = this.unlinkPanels
       this.picker.arrowControl = this.arrowControl || this.timeArrowControl || false
