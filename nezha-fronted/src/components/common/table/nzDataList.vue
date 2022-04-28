@@ -67,6 +67,7 @@
                   @getTableData = 'getTableData'
                   ref="bottomBox"
                   :from="from"
+                  :sign ="sign"
                   :is-full-screen="bottomBox.isFullScreen"
                   :obj="bottomBox.object"
                   :sub-resize-show="bottomBox.subResizeShow"
@@ -153,6 +154,7 @@ export default {
   },
   data () {
     return {
+      sign:'',
       fromRoute: fromRoute,
       /* 二级页面相关 */
       bottomBox: {
@@ -193,6 +195,7 @@ export default {
       bottomBoxWindow.listResize(vm, e)
     },
     showBottomBox (targetTab, row) {
+      this.sign = row.id
       this.bottomBox.targetTab = targetTab
       this.bottomBox.object = JSON.parse(JSON.stringify(row))
       this.bottomBox.showSubList = true

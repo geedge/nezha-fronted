@@ -5,7 +5,16 @@
       :from="fromRoute.trace"
     >
     <template v-slot:top-tool-left>
-      <el-input v-model="ip" size='medium' style="width:250px" :placeholder="$t('overall.placeHolder')+' IP/Hostname'"></el-input>
+      <vue-tags-input
+        class="ipInput"
+        v-model="ip"
+        :placeholder="$t('overall.placeHolder')+' IP'"
+        :add-from-paste="false"
+        :tags="tags"
+        @tags-changed="newTags => tags = newTags"
+        @before-adding-tag="value => beforeAddTag(value)"
+        @adding-duplicate="value => addDuplicate(value)"
+      />
       <el-popover
         placement="bottom"
         width="220"
@@ -64,7 +73,7 @@
         <el-steps align-center>
           <el-step>
             <span class="nz-icon nz-icon-edit" slot="icon"></span>
-            <p class="txt" slot="title">{{$t('overall.placeHolder')}} IP/Hostname</p>
+            <p class="txt" slot="title">{{$t('overall.placeHolder')}}IP</p>
           </el-step>
           <el-step>
             <span class="el-icon-more" slot="icon"></span>
@@ -79,7 +88,7 @@
       <!-- 存在任务id时展示表格 -->
       <div class="data-wrap" v-show="tid!==undefined">
         <div class="data-top">
-          <span>IP {{$t('ping.total')}}:{{total}}</span>
+          <span>{{$t('asset.total')}}:{{total}}</span>
           <span>{{$t('ping.done')}}:{{done}}</span>
           <span>{{$t('ping.progress')}}:{{process}}%</span>
         </div>
@@ -100,15 +109,20 @@
 </template>
 
 <script>
+import bus from '@/libs/bus'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import traceTable from '@/components/common/table/tool/traceTable'
+import VueTagsInput from '@johmun/vue-tags-input'
 import { positiveInteger } from '../../common/js/validate'
+const ipv4 = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\:\d{0,5})?$/
+const ipv6 = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/
 export default {
   mixins: [dataListMixin],
   components: {
     nzDataList,
-    traceTable
+    traceTable,
+    VueTagsInput
   },
   data () {
     return {
@@ -118,6 +132,7 @@ export default {
       // 弹出框是否显示
       visible: false,
       ip: '',
+      tags: [],
       // 是否全选
       checkAll: true,
       isIndeterminate: false,
@@ -155,6 +170,27 @@ export default {
     this.getDataCenter()
   },
   methods: {
+    // 使用防抖是因为,防止标签输入框失去焦点校验和开始任务校验重复(连续两次message提示)
+    validateHost: bus.debounce(function () {
+      this.$message.error(this.$t('validate.host'))
+    },
+    50),
+    // 使用防抖是因为,防止标签输入框失去焦点校验和开始任务校验重复(连续两次message提示)
+    validateDuplicate: bus.debounce(function () {
+      this.$message.error(this.$t('ping.duplicate') + ' IP')
+    },
+    50),
+    // 添加标签之前
+    beforeAddTag ({ tag, addTag }) {
+      if (!ipv4.test(tag.text) && !ipv6.test(tag.text)) {
+        return this.validateHost()
+      }
+      addTag()
+    },
+    // 添加重复的标签
+    addDuplicate () {
+      return this.validateDuplicate()
+    },
     close () {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
@@ -186,16 +222,25 @@ export default {
     },
     // 开始任务
     startTask () {
-      const ipv4 = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\:\d{0,5})?$/
-      const ipv6 = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/
-      if (!ipv4.test(this.ip) && !ipv6.test(this.ip)) {
-        return this.$message.error(this.$t('validate.host'))
-      }
       if (!this.flag) {
         return false
       }
-      this.flag = false
-      this.getId()
+      setTimeout(() => {
+        if (this.ip) {
+          // 校验ip格式
+          if (!ipv4.test(this.ip) && !ipv6.test(this.ip)) {
+            return this.validateHost()
+          }
+          // 判断ip是否重复
+          if (this.tags.some(item => item.text === this.ip)) {
+            return this.validateDuplicate()
+          }
+        } else if (!this.tags.length) {
+          return this.validateHost()
+        }
+        this.flag = false
+        this.getId()
+      })
     },
     // 请求dataCenter
     getDataCenter () {
@@ -210,8 +255,9 @@ export default {
     // 请求任务id
     async getId () {
       this.loading = true
+      const ipArr = this.tags.map(item => item.text)
       const params = {
-        ip: this.ip,
+        ips: ipArr.join(','),
         dcIds: this.checked.join(','),
         maxHops: this.ruleForm.maxHops,
         timeout: this.ruleForm.timeout

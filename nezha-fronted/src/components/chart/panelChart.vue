@@ -65,7 +65,7 @@ import { isChartPie, isTimeSeries, getGroupHeight, isGroup } from './chart/tools
 import { chartType, fromRoute } from '@/components/common/js/constants'
 import bus from '@/libs/bus'
 import axios from 'axios'
-import chartTempData from '@/components/charts/chartTempData'
+import chartTempData from '@/components/chart/chartTempData'
 import logsData from '@/components/chart/logsData'
 import lodash from 'lodash'
 
@@ -99,7 +99,8 @@ export default {
       showAllData: false,
       allDataLength: 0,
       severityData: this.$store.getters.severityData,
-      severityDataWeight: this.$store.getters.severityDataWeight
+      severityDataWeight: this.$store.getters.severityDataWeight,
+      isExportData: false
     }
   },
   computed: {
@@ -161,6 +162,9 @@ export default {
     query (elements, startTime, endTime, step, params) {
       this.isError = false
       this.allDataLength = 0
+      if (this.isExportData) {
+        this.chartData = this.chartInfo.chartData
+      }
       try {
         switch (this.chartInfo.datasource) {
           case 'metrics':
@@ -262,7 +266,7 @@ export default {
                   }
                 }
               })
-              this.chartData = chartData
+              this.chartData = JSON.parse(JSON.stringify(chartData))
               if (this.chartInfo.type === 'log') {
                 this.logChartDataFormat()
               }
@@ -306,6 +310,7 @@ export default {
             }
             const chartData = []
             const params = {
+              t: this.chartInfo.id,
               q: encodeURIComponent(JSON.stringify(q)),
               stat: startTime,
               end: endTime,
@@ -318,9 +323,19 @@ export default {
                 chartData.push({ error: res.msg || res.error || res })
                 this.isError = true
               }
-              this.chartData = chartData
+              this.chartData = JSON.parse(JSON.stringify(chartData))
               this.loading = false
             })
+            // this.sendAjax('/stat', params).then(res => {
+            //   if (res.code === 200) {
+            //     chartData.push(res.data.result)
+            //   } else {
+            //     chartData.push({ error: res.msg || res.error || res })
+            //     this.isError = true
+            //   }
+            //   this.chartData = chartData
+            //   this.loading = false
+            // })
             break
           }
           case 'misc': {
@@ -330,7 +345,7 @@ export default {
             })
             if (this.chartInfo.type === 'hexagon') {
               this.getHexagonFigureData().then(res => {
-                this.chartData = res
+                this.chartData = JSON.parse(JSON.stringify(res))
               }).finally(() => {
                 this.loading = false
               })
@@ -384,7 +399,7 @@ export default {
               res.data.links.forEach(item => {
                 item.id = item.source + '-' + item.target
               })
-              this.chartData = [res.data]
+              this.chartData = JSON.parse(JSON.stringify([res.data]))
             })
             break
           }
@@ -526,6 +541,41 @@ export default {
         color = '#23bf9a'
       }
       return color
+    },
+    sendAjax (url, params) {
+      // 构造表单数据
+      return new Promise(resolve => {
+        let nowUrl = url
+        Object.keys(params).forEach((key, index) => {
+          if (index == 0) {
+            nowUrl += '?' + key + '=' + params[key]
+          } else {
+            nowUrl += '&' + key + '=' + params[key]
+          }
+        })
+        const formData = new FormData()
+        formData.append('username', 'johndoe')
+        formData.append('id', 123456)
+        // 创建xhr对象
+        const xhr = new XMLHttpRequest()
+        // 设置xhr请求的超时时间
+        xhr.timeout = 3000
+        // 设置响应返回的数据格式
+        xhr.responseType = ''
+        // 创建一个 post 请求，采用异步
+        xhr.open('get', 'http://192.168.44.100/' + nowUrl, true)
+        xhr.setRequestHeader('Authorization', localStorage.getItem('nz-token'))
+        // 注册相关事件回调处理函数
+        xhr.onload = function (e) {
+          if (this.status == 200 || this.status == 304) {
+            // alert(this.responseText)
+            resolve(JSON.parse(this.responseText))
+          }
+        }
+        xhr.onerror = function (e) { console.log(e) }
+        // 发送数据
+        xhr.send()
+      })
     }
   },
   watch: {

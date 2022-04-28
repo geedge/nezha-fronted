@@ -1,4 +1,4 @@
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 import { getUUID, resetZIndex } from '@/components/common/js/common'
 import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
 import { isStat } from '@/components/chart/chart/tools'

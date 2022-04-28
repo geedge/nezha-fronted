@@ -8,12 +8,14 @@
         <div v-else-if="(activeName === item.key) && infoData[item.key]" class="no-position-alert-label">
 <!--          <searchItemInfo :obj="findData(item.key)" :severityData="severityData" :fa-loading="false"></searchItemInfo>-->
           <alertLabel
+            class="alert"
             v-if="item.key !=='alertRule'"
             :id="infoData[item.key].id"
             :that="findData2(item.key)"
             :alertTableDialog="true"
             :type="item.key"/>
           <alertRuleInfo
+            class="alert"
             v-else
             :id="infoData[item.key].id"
             :severity-data="severityData"
@@ -38,8 +40,8 @@
 <script>
 import alertMessageInfoDetail from '@/components/common/alert/alertMessageInfoDetail'
 import searchItemInfo from '@/components/common/globalSearch/searchItemInfo'
-import alertLabel from '@/components/common/alert/alertLabel'
-import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
+import alertLabel from '@/components/common/alert/alertLabel3'
+import alertRuleInfo from '@/components/common/alert/alertRuleInfo2'
 // import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'alertMessageInfoTab',
@@ -150,6 +152,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
 

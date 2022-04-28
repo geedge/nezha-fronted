@@ -169,88 +169,88 @@
 </template>
 
 <script>
-import bus from "@/libs/bus";
-import { put } from "@/http";
-import { arrLength, datePicker } from "@/components/common/js/validate";
-import moment from "moment-timezone";
+import bus from '@/libs/bus'
+import { put } from '@/http'
+import { arrLength, datePicker } from '@/components/common/js/validate'
+import moment from 'moment-timezone'
 
 export default {
-  name: "backupsBox",
+  name: 'backupsBox',
   props: {
     obj: {
-      type: Object,
-    },
+      type: Object
+    }
   },
-  data() {
+  data () {
     return {
       editBackup: {
-        status: "",
+        status: '',
         checkDays: [],
         checkDay: [],
-        timepicker: "",
-        datepicker: "",
-        retention: "",
-        state: "",
+        timepicker: '',
+        datepicker: '',
+        retention: '',
+        state: '',
         schedule: {
-          repeat: "",
-          stime: "",
-          type: "",
-          nums: [],
-        },
+          repeat: '',
+          stime: '',
+          type: '',
+          nums: []
+        }
       },
-      whoshow: "",
-      activeName: "",
-      dateFormatStr: localStorage.getItem("nz-default-dateFormat")
-        ? localStorage.getItem("nz-default-dateFormat")
-        : "YYYY-MM-DD HH:ss:mm",
+      whoshow: '',
+      activeName: '',
+      dateFormatStr: localStorage.getItem('nz-default-dateFormat')
+        ? localStorage.getItem('nz-default-dateFormat')
+        : 'YYYY-MM-DD HH:ss:mm',
       rules: {
         type: [
           {
             required: true,
-            message: this.$t("validate.required"),
-            trigger: "change",
-          },
+            message: this.$t('validate.required'),
+            trigger: 'change'
+          }
         ],
-        datepicker: [{ validator: datePicker, trigger: "blur" }],
+        datepicker: [{ validator: datePicker, trigger: 'blur' }],
         checkDays: [
           {
             required: true,
-            message: this.$t("validate.required"),
-            trigger: "change",
+            message: this.$t('validate.required'),
+            trigger: 'change'
           },
-          { validator: arrLength, trigger: "blur" },
+          { validator: arrLength, trigger: 'blur' }
         ],
         retention: [
           {
             required: true,
-            message: this.$t("validate.required"),
-            trigger: ["blur", "change"],
-          },
+            message: this.$t('validate.required'),
+            trigger: ['blur', 'change']
+          }
         ],
         Status: [
           {
             required: true,
-            message: this.$t("validate.required"),
-            trigger: "change",
-          },
+            message: this.$t('validate.required'),
+            trigger: 'change'
+          }
         ],
         repeat: [
           {
             required: true,
-            message: this.$t("validate.required"),
-            trigger: "blur",
-          },
+            message: this.$t('validate.required'),
+            trigger: 'blur'
+          }
         ],
-        checkDay: [{ validator: arrLength, trigger: "blur" }],
+        checkDay: [{ validator: arrLength, trigger: 'blur' }]
       },
       week: [
-        this.$t("week.Mon"),
-        this.$t("week.Tue"),
-        this.$t("week.Wed"),
-        this.$t("week.Thu"),
-        this.$t("week.Fri"),
-        this.$t("week.Sat"),
-        this.$t("week.Sun"),
+        this.$t('week.Mon'),
+        this.$t('week.Tue'),
+        this.$t('week.Wed'),
+        this.$t('week.Thu'),
+        this.$t('week.Fri'),
+        this.$t('week.Sat'),
+        this.$t('week.Sun')
       ],
       month: [
         1,
@@ -284,223 +284,207 @@ export default {
         29,
         30,
         31,
-        "Last",
-      ],
-    };
+        'Last'
+      ]
+    }
   },
 
   components: {},
 
   computed: {},
 
-  created() {
-    const dateFormatStr = localStorage.getItem("nz-default-dateFormat");
+  created () {
+    const dateFormatStr = localStorage.getItem('nz-default-dateFormat')
     if (dateFormatStr) {
-      this.dateFormatStr = dateFormatStr.split(" ")[0];
+      this.dateFormatStr = dateFormatStr.split(' ')[0]
     } else {
-      this.dateFormatStr = "YYYY-MM-DD";
+      this.dateFormatStr = 'YYYY-MM-DD'
     }
   },
 
-  beforeMount() {},
+  beforeMount () {},
 
-  mounted() {},
+  mounted () {},
 
   methods: {
-    changeCheck(item) {
+    changeCheck (item) {
       if (this.editBackup.type == 3) {
-        const nums = [];
-        this.editBackup.nums = [];
+        const nums = []
+        this.editBackup.nums = []
         for (const i in this.editBackup.checkDay) {
-          nums.push(Number(this.editBackup.checkDay[i]) + 1);
+          nums.push(Number(this.editBackup.checkDay[i]) + 1)
         }
-        this.editBackup.nums = nums;
+        this.editBackup.nums = nums
       } else if (this.editBackup.type == 4) {
-        const nums = [];
-        this.editBackup.nums = [];
+        const nums = []
+        this.editBackup.nums = []
         this.editBackup.checkDays.forEach((e, i) => {
           if (e === 31) {
-            nums.push(-1);
+            nums.push(-1)
           } else {
-            nums.push(Number(this.editBackup.checkDays[i]) + 1);
+            nums.push(Number(this.editBackup.checkDays[i]) + 1)
           }
-        });
-        this.editBackup.nums = nums;
+        })
+        this.editBackup.nums = nums
       }
-      this.$forceUpdate();
+      this.$forceUpdate()
     },
-    statusChange(item) {
-      this.$forceUpdate();
+    statusChange (item) {
+      this.$forceUpdate()
       if (item == true) {
-        this.editBackup.state = 1;
+        this.editBackup.state = 1
       } else {
-        this.editBackup.state = 0;
+        this.editBackup.state = 0
       }
     },
-    save() {
+    save () {
       this.$refs.backupsForm.validate((valid) => {
         if (valid) {
           this.editBackup.datepicker[0] = bus
             .timeFormate(this.editBackup.datepicker[0])
-            .split(" ")[0];
+            .split(' ')[0]
 
-          this.editBackup.stime = this.editBackup.datepicker.join(" ");
-          let offset = localStorage.getItem("nz-sys-timezone");
-          offset = moment.tz(offset).format("Z");
-          this.editBackup.stime = new Date(this.editBackup.stime).getTime();
-          offset = Number.parseInt(offset);
-          this.editBackup.stime -= offset * 60 * 60 * 1000;
+          this.editBackup.stime = this.editBackup.datepicker.join(' ')
+          let offset = localStorage.getItem('nz-sys-timezone')
+          offset = moment.tz(offset).format('Z')
+          this.editBackup.stime = new Date(this.editBackup.stime).getTime()
+          offset = Number.parseInt(offset)
+          this.editBackup.stime -= offset * 60 * 60 * 1000
 
-          put("/sys/backup", {
+          put('/sys/backup', {
             state: Number(this.editBackup.state),
             schedule: {
               type: Number(this.editBackup.type),
               stime: this.editBackup.stime,
               repeat: Number(this.editBackup.repeat),
-              nums: this.editBackup.nums,
+              nums: this.editBackup.nums
             },
-            retention: Number(this.editBackup.retention),
+            retention: Number(this.editBackup.retention)
           }).then((res) => {
             if (res.code === 200) {
-              this.esc(true);
+              this.esc(true)
             }
-          });
+          })
         }
-      });
+      })
     },
-    inputchange(n) {
-      this.$forceUpdate();
+    inputchange (n) {
+      this.$forceUpdate()
     },
-    datasourceChange(tab) {
+    datasourceChange (tab) {
       switch (tab.name) {
-        case "2":
-          this.whoshow = 2;
-          break;
-        case "1":
-          this.whoshow = 1;
-          break;
-        case "3":
-          this.whoshow = 3;
-          break;
-        case "4":
-          this.whoshow = 4;
-          break;
+        case '2':
+          this.whoshow = 2
+          break
+        case '1':
+          this.whoshow = 1
+          break
+        case '3':
+          this.whoshow = 3
+          break
+        case '4':
+          this.whoshow = 4
+          break
       }
-      this.$forceUpdate();
+      this.$forceUpdate()
     },
-    clickOutside() {
-      this.esc(false);
+    clickOutside () {
+      this.esc(false)
     },
     /* 关闭弹框 */
-    esc(refresh) {
-      this.$emit("close", refresh);
-    },
+    esc (refresh) {
+      this.$emit('close', refresh)
+    }
   },
 
   watch: {
     obj: {
       deep: true,
       immediate: true,
-      handler(n) {
-        this.editBackup = JSON.parse(JSON.stringify(n));
-        this.editBackup.checkDay = [];
-        this.editBackup.checkDays = [];
-        this.editBackup.type = this.editBackup.type + "";
-        const stime1 = this.utcTimeToTimezoneStr(this.editBackup.stime);
-        const stime = this.utcTimeToTimezone(this.editBackup.stime);
-        const time = stime1.split(" ");
-        time[0] = stime;
-        this.$set(this.editBackup, "datepicker", time);
+      handler (n) {
+        this.editBackup = JSON.parse(JSON.stringify(n))
+        this.editBackup.checkDay = []
+        this.editBackup.checkDays = []
+        this.editBackup.type = this.editBackup.type + ''
+        const stime1 = this.utcTimeToTimezoneStr(this.editBackup.stime)
+        const stime = this.utcTimeToTimezone(this.editBackup.stime)
+        const time = stime1.split(' ')
+        time[0] = stime
+        this.$set(this.editBackup, 'datepicker', time)
         if (this.editBackup.state == 1) {
-          this.editBackup.status = true;
-          this.$emit("statechange", true);
+          this.editBackup.status = true
+          this.$emit('statechange', true)
         } else {
-          this.editBackup.status = false;
-          this.$emit("statechange", false);
+          this.editBackup.status = false
+          this.$emit('statechange', false)
         }
         switch (this.editBackup.type) {
-          case "1":
-            this.activeName = "1";
-            this.whoshow = 1;
-            break;
-          case "2":
-            this.activeName = "2";
-            this.whoshow = 2;
-            break;
-          case "3":
-            this.activeName = "3";
-            this.whoshow = 3;
-            break;
-          case "4":
-            this.activeName = "4";
-            this.whoshow = 4;
-            break;
+          case '1':
+            this.activeName = '1'
+            this.whoshow = 1
+            break
+          case '2':
+            this.activeName = '2'
+            this.whoshow = 2
+            break
+          case '3':
+            this.activeName = '3'
+            this.whoshow = 3
+            break
+          case '4':
+            this.activeName = '4'
+            this.whoshow = 4
+            break
         }
-        const checkdays = [];
+        const checkdays = []
 
-        this.checkDay = [];
+        this.checkDay = []
         if (this.editBackup.type == 3) {
           this.editBackup.nums.forEach((e) => {
-            checkdays.push(e - 1);
-            if (e === -1) {
-              checkdays.push(6);
+            if (e == -1) {
+              checkdays.push(6)
+            } else {
+              checkdays.push(e - 1)
             }
-          });
-          this.$set(this.editBackup, "checkDay", checkdays);
+          })
+          this.$set(this.editBackup, 'checkDay', checkdays)
         } else if (this.editBackup.type == 4) {
           this.editBackup.nums.forEach((e) => {
-            if (e === -1) {
-              checkdays.push(31);
+            if (e == -1) {
+              checkdays.push(31)
             } else {
-              checkdays.push(e - 1);
+              checkdays.push(e - 1)
             }
-          });
-          this.$set(this.editBackup, "checkDays", checkdays);
+          })
+          this.$set(this.editBackup, 'checkDays', checkdays)
         }
-        this.$forceUpdate();
-      },
+        this.$forceUpdate()
+      }
     },
-    "editBackup.status": {
+    'editBackup.status': {
       deep: true,
-      handler(n) {
+      handler (n) {
         if (n) {
-          this.editBackup.state = 1;
-          this.editBackup.status = n;
-          this.$emit("statechange", true);
+          this.editBackup.state = 1
+          this.editBackup.status = n
+          this.$emit('statechange', true)
         } else {
-          this.editBackup.state = 0;
-          this.editBackup.status = n;
-          this.$emit("statechange", false);
+          this.editBackup.state = 0
+          this.editBackup.status = n
+          this.$emit('statechange', false)
         }
-      },
+      }
     },
-    "editBackup.checkDay": {
+    'editBackup.datepicker': {
       deep: true,
-      handler(n) {
-        n.forEach((e, i) => {
-          if (e === 6) {
-            this.editBackup.checkDay[i] = -1;
-          }
-        });
-        const nums = [];
-        this.editBackup.nums = [];
-        this.editBackup.checkDay.forEach((e, i) => {
-          nums.push(Number(i) + 1);
-        });
-
-        this.editBackup.nums = nums;
-      },
-    },
-    "editBackup.datepicker": {
-      deep: true,
-      handler(n) {
+      handler (n) {
         this.editBackup.datepicker[0] = bus
           .timeFormate(new Date(n[0]))
-          .split(" ")[0];
-      },
-    },
-  },
-};
+          .split(' ')[0]
+      }
+    }
+  }
+}
 </script>
 <style lang='' scoped>
 </style>

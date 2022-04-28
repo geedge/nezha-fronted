@@ -25,9 +25,10 @@ import { chartLegendPlacement } from '@/components/common/js/constants'
 import * as echarts from 'echarts'
 import { getChart, setChart } from '@/components/common/js/common'
 import { formatScientificNotation, getMetricTypeValue } from '@/components/common/js/tools'
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 import { initColor } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
+import bus from "@/libs/bus";
 
 export default {
   name: 'chart-bar',
@@ -106,6 +107,13 @@ export default {
             return params
           }
         }
+      }
+      chartOption.yAxis.axisLabel.formatter = function (val, index) {
+        const value = formatScientificNotation(val, 6)
+        let chartUnit = self.chartInfo.unit
+        chartUnit = chartUnit || 2
+        const unit = chartDataFormat.getUnit(chartUnit)
+        return unit.compute(value, index, -1, 2)
       }
       chartOption.tooltip.formatter = this.formatterFunc
       chartOption.tooltip.position = this.tooltipPosition

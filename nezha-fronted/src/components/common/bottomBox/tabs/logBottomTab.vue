@@ -27,7 +27,7 @@
           </el-option>
         </el-select>
       </el-input>
-      <pick-time id="explore" ref="pickTime" v-model="filterTime" :refresh-data-func="queryLogData" :use-chart-unit="false" :use-refresh="false">
+      <pick-time id="explore" ref="pickTime" v-model="filterTime" :refresh-data-func="queryLogData" :sign="sign" :use-chart-unit="false" :use-refresh="false">
         <template slot="added-text">{{$t('overall.query')}}</template>
       </pick-time>
     </template>
@@ -54,12 +54,15 @@ export default {
     nzBottomDataList,
     logTab
   },
+  props: {
+    sign:[Number,String]
+  },
   data () {
     return {
       logData: null,
       filterTime: [
-        bus.timeFormate(bus.getOffsetTimezoneData(-1), this.timeFormatMain),
-        bus.timeFormate(bus.getOffsetTimezoneData(), this.timeFormatMain)
+        bus.timeFormate(bus.getOffsetTimezoneData(-1)),
+        bus.timeFormate(bus.getOffsetTimezoneData())
       ],
       expressions: [''],
       matchSymbol: '|=',
@@ -72,8 +75,8 @@ export default {
     exportLog ({ limit, descending }) {
       const params = {
         logql: this.expressions,
-        start: this.$stringTimeParseToUnix(this.filterTime[0]),
-        end: this.$stringTimeParseToUnix(this.filterTime[1]),
+        start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])),
+        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])),
         direction: descending ? 'backward' : 'forward',
         limit
       }
@@ -115,7 +118,9 @@ export default {
           if (item != '') {
             let expr = item
             this.matchContent && (expr = `${item} ${this.matchSymbol} "${this.matchContent}"`)
-            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(expr) + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&limit=' + limit))
+            const statTime = bus.formateTimeToTime(this.filterTime[0])
+            const endTime = bus.formateTimeToTime(this.filterTime[1])
+            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(expr) + '&start=' + this.$stringTimeParseToUnix(statTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&limit=' + limit))
           }
         })
         axios.all(requestArr).then(res => {

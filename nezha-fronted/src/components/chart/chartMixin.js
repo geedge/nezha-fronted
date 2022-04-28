@@ -110,20 +110,21 @@ export default {
       if (data.metric.__name__) {
         legend += '}'
       }
-      // if (!legend && chartInfo.elements) {
-      //   // legend = chartInfo.elements[expressionIndex].expression
-      //   legend = ''
-      // }
+      if (!legend && chartInfo.elements) {
+        legend = chartInfo.elements[expressionIndex].expression
+        //  legend = ''
+      }
       // 处理legend别名
       alias = alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
       if (!alias) {
-        alias = chartInfo.elements[expressionIndex].expression
+        alias = chartInfo.elements[expressionIndex].expression || ''
       }
       if (alias == 'Previous ') {
         alias += chartInfo.elements[expressionIndex].expression
       }
       // proj_status_
-      const name = alias + '-' + dataIndex
+      const legendIndex = expressionIndex + 'and' + dataIndex
+      const name = alias + '-' + legendIndex
 
       // 若需要统计，处理统计数据
       const statisticsTypes = chartInfo.param.legend ? chartInfo.param.legend.values : ''
@@ -161,7 +162,9 @@ export default {
         return labelValue
       } else {
         if (!aliasExpression) {
-          return ''
+          return legend
+          // let result =legend.substr(legend.indexOf('"') + 1,legend.lastIndexOf('"') - legend.indexOf('"') - 1);
+          // return result
         }
         return aliasExpression
       }
@@ -293,8 +296,8 @@ export default {
     this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
   },
   beforeDestroy () {
-    getChart(this.chartId) && getChart(this.chartId).dispose()
-    setChart(this.chartId, null)
+    // getChart(this.chartId) && getChart(this.chartId).dispose()
+    // setChart(this.chartId, null)
+    getChart(this.chartId) && setChart(this.chartId, null)
   }
 }
- 

@@ -1,59 +1,148 @@
 <template>
-  <div id="panel-calender" :class="{'calendar--small': size === 'small'}" class="calendar">
-    <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
-                    :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
-                    :format="timeFormatStrToDatePickFormat(timeFormatMain)" @change="dateChange" v-model="searchTime" type="datetimerange"
-                    popper-class="panel-time-picker-popper time-picker-popover__select-top"
-                    :default-time="['00:00:00', '23:59:59']"
-                    :range-separator="$t('dashboard.panel.to')"
-                    :start-placeholder="$t('dashboard.panel.startTime')"
-                    :end-placeholder="$t('dashboard.panel.endTime')" align="right">
-    </my-date-picker>
-    <el-dropdown ref="timePickerDropdown" class="calendar-dropdown-title" trigger="click" @command="timeChange" @visible-change="popoverClick">
-      <el-popover
-        placement="bottom-end"
-        min-width="120px"
-        :visible-arrow="false"
-        :disabled="isPopoverDisabled"
-        trigger="hover"
-        popper-class="popper-z-index right-box-select-top right-public-box-dropdown-top"
-        id="panel-calender-popover">
-        <template v-if="this.searchTime&&this.searchTime.length>1">
-          <el-row  :gutter="10" class="calendar-popover">
-            <el-col :span="24" class="calendar-popover-text">{{searchTime[0]}}</el-col>
-          </el-row>
-          <el-row  :gutter="10" class="calendar-popover">
-            <el-col :span="24" class="calendar-popover-text">{{$t('dashboard.panel.to')}}</el-col>
-          </el-row>
-          <el-row  :gutter="10" class="calendar-popover">
-            <el-col :span="24" class="calendar-popover-text">{{searchTime[1]}}</el-col>
-          </el-row>
-        </template>
-        <template v-else>
-          <div class="time-no-data">{{$t("dashboard.panel.noDate")}}</div>
-        </template>
-        <div  class="el-dropdown-link" slot="reference">
-          <i class="nz-icon nz-icon-time" style="width:20px;"></i>
-          <span class="panel-list-title" id="timePickerContent">{{showTime.text}}</span>
-          <span class="dropdown--suffix">
-            <i class="el-icon-arrow-down"></i>
-          </span>
-        </div>
-      </el-popover>
-      <el-dropdown-menu class="nz-dashboard-dropdown popper-z-index" style="margin-top: 5px" slot="dropdown">
-        <template v-for="(item, index) in timeData" >
-          <el-dropdown-item v-if="item.id !== 12 || showEmpty" :key="index" :class="showTime.id === item.id ? 'nz-dashboard-dropdown-bg' : ''" :command="item">
-            {{item.text}}
-          </el-dropdown-item>
-        </template>
+  <div
+    id="panel-calender"
+    :class="{ 'calendar--small': size === 'small' }"
+    class="calendar"
+    v-clickoutside="changeDropdownFlag"
+  >
 
-      </el-dropdown-menu>
-    </el-dropdown>
+    <div @click="showDropdown" class="date-range-text">
+      <div class="calendar-popover-text">
+        <i class="nz-icon nz-icon-time"></i>
+      </div>
+      <div class="calendar-popover-text" style="display: flex" v-if="isCustom">
+        <div class="calendar-popover-text">
+          {{ searchTime[0] }}
+        </div>
+        <div class="calendar-popover-text">{{ $t("dashboard.panel.to") }}</div>
+        <div class="calendar-popover-text">
+          {{ searchTime[1] }}
+        </div>
+      </div>
+      <div class="calendar-popover-text" v-else>
+        <el-tooltip class="item" effect="light"  placement="bottom">
+          <div slot="content"> {{searchTime[0]}}<br/><p style="text-align:center">{{$t("dashboard.panel.to")}} </p>{{searchTime[1]}}</div>
+      <div class="time-no-data">{{ showTime.text }}</div>
+    </el-tooltip>
+        <!-- <div class="time-no-data">{{ showTime.text }}</div> -->
+      </div>
+      <div class="calendar-popover-text">
+        <i class="el-icon-arrow-down"></i>
+      </div>
+    </div>
+    <transition name="el-zoom-in-top">
+      <div v-if="dropdownFlag" class="date-range-panel popper-z-index">
+        <el-row class="date-range-panel-top" style="position: relative">
+          <el-col
+            :span="16"
+            class="date-range-panel-content date-range-panel-content-left"
+          >
+            <div class="date-range-title" style="padding-left: 0">
+              {{$t('timepicker.timerange')}}
+            </div>
+            <my-date-picker
+              prefix-icon=" "
+              class="panel-time-picker-hidden"
+              size="mini"
+              ref="calendar"
+              :format="timeFormatStrToDatePickFormat(timeFormatMain)"
+              :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+              @change="dateChange"
+              :default-time="['00:00:00', '23:59:59']"
+              v-model="oldSearchTime"
+              :isOnly="true"
+              type="daterange"
+              popper-class="panel-time-picker-popper time-picker-popover__select-top"
+              align="right"
+            >
+            </my-date-picker>
+<!--            @change="dateChange(whoChoose)"-->
+            <div class="content-title">{{$t('dashboard.panel.chartForm.valMapping.from')}}</div>
+            <div  tabindex="1" class="content-input" :class="oldSearchTimeError[0] ? 'input-error' : ''">
+              <el-input   @focus="searchTimeValue = oldSearchTime[0]"  v-model="oldSearchTime[0]" @change="dateInputChange('start',oldSearchTime[0])" size="mini"> </el-input>
+              <div @click="myDatePickerShow()" class="nz-icon-box">
+                <i class="nz-icon nz-icon-date"/>
+              </div>
+              <div class="input-hint">{{inputError}}</div>
+            </div>
+            <div class="content-title">{{$t('dashboard.panel.chartForm.valMapping.to')}}</div>
+            <div tabindex="2" class="content-input" :class="oldSearchTimeError[1] ? 'input-error' : ''">
+              <el-input  @focus="searchTimeValue = oldSearchTime[1]" v-model="oldSearchTime[1]" @change="dateInputChange('end',oldSearchTime[1])" size="mini"> </el-input>
+              <div  @click="myDatePickerShow()" class="nz-icon-box">
+                <i class="nz-icon nz-icon-date"/>
+              </div>
+              <div class="input-hint">{{$t('date.formatError')}}</div>
+            </div>
+            <div>
+              <el-button
+                @click="timeRange(searchTime)"
+                type="primary"
+                size="mini"
+                class="time-range-button el-button--primary"
+                >{{$t('timepicker.applytimerange')}}</el-button
+              >
+            </div>
+            <div class="date-range-title" style="padding-left: 0">
+              {{$t('timepicker.recentlyUsed')}}
+            </div>
+            <div class="date-range-history">
+              <div
+                v-for="(item, index) in rangeHistoryArr"
+                :key="index"
+                class="date-range-history-item"
+                @click="historyChange(item)"
+              >
+                {{ timeFormate(item.start) }}
+                {{ $t("dashboard.panel.to") }}
+                {{ timeFormate(item.end) }}
+              </div>
+            </div>
+          </el-col>
+          <el-col
+            :span="8"
+            class="date-range-panel-content date-range-panel-content-right"
+            style="border-left: 1px solid rgba(0, 0, 0, 0.09)"
+          >
+            <div class="date-range-title">{{$t('timepicker.relatime')}}</div>
+            <ul class="date-range-item">
+              <li
+                v-for="(item, key) in timeData"
+                @click="timeChange(item)"
+                :class="showTime.id === item.id ? 'activeLi' : ''"
+                :key="key"
+                :v-if="item.id !== 12 || showEmpty"
+
+              >
+                <span
+                  style="position: relative"
+                  v-if="item.id !== 12 || showEmpty"
+                >
+                  {{ item.text }}
+                  <i
+                    v-if="showTime.id === item.id"
+                    class="nz-icon nz-icon-check"
+                  ></i>
+                </span>
+              </li>
+            </ul>
+          </el-col>
+        </el-row>
+        <el-row class="date-range-panel-bottom" style="">
+          <el-col :span="12">{{ address }}</el-col>
+          <el-col :span="12" class="utc-str">
+            <span>
+            {{ utcStr }}
+            </span>
+            </el-col>
+        </el-row>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
 import bus from '@/libs/bus'
+import moment from 'moment-timezone'
 
 export default {
   name: 'timePicker',
@@ -62,26 +151,42 @@ export default {
     showEmpty: { default: false, type: Boolean },
     size: {
       type: String
-    }
+    },
+    sign: [Number, String]
   },
   data () {
     return {
+      whoChoose: '',
+      searchTimeValue: '',
+      rangeHistory: [],
+      rangeHistoryArr: [],
+      address: '',
+      utc: localStorage.getItem('timezoneOffset'),
+      utcStr: '',
+      dropdownFlag: false,
       isPopoverDisabled: false,
       isCustom: false,
       searchTime: [
         bus.timeFormate(bus.getOffsetTimezoneData(-1)),
         bus.timeFormate(bus.getOffsetTimezoneData())
       ],
+      oldSearchTime: [bus.timeFormate(bus.getOffsetTimezoneData(-1)),
+        bus.timeFormate(bus.getOffsetTimezoneData())],
+      oldSearchTimeError: {
+        0: false,
+        1: false
+      },
+      inputError: this.$t('date.formatError'),
       showTime: {
         id: 4,
         text: this.$t('dashboard.panel.lastOneHour')
       },
       timeData: [
-        {
-          id: 0,
-          text: this.$t('dashboard.panel.customTimeRange'),
-          value: -1
-        },
+        // {
+        //   id: 0,
+        //   text: this.$t("dashboard.panel.customTimeRange"),
+        //   value: -1,
+        // },
         {
           id: 12,
           text: this.$t('dashboard.panel.noDate'),
@@ -162,25 +267,148 @@ export default {
       }
     }
   },
+  mounted () {
+    this.getItem()
+    this.getUtcStr()
+    this.getRangeHistoryArr()
+    const timeTemp = this.$loadsh.cloneDeep(this.searchTime)
+    this.oldSearchTime[0] = timeTemp[0]
+    this.oldSearchTime[1] = timeTemp[1]
+  },
   methods: {
-    dateChange (val) {
-      const startTime = bus.timeFormate(val[0])
-      const endTime = bus.timeFormate(val[1])
-      this.$set(this.searchTime, 0, startTime)
-      this.$set(this.searchTime, 1, endTime)
-
-      this.$set(this.showTime, 'id', 0)
-      this.$set(this.showTime, 'text', this.searchTime[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + this.searchTime[1])
+    changeDropdownFlag () {
+      if (this.dropdownFlag) {
+        this.dropdownFlag = false
+      }
+    },
+    getItem () {
+      this.rangeHistory = localStorage.getItem('date-range-history' + this.sign)
+        ? JSON.parse(localStorage.getItem('date-range-history' + this.sign))
+        : []
+      this.address = localStorage.getItem('nz-sys-timezone')
+      this.utc = localStorage.getItem('timezoneOffset')
+    },
+    myDatePickerShow (item) {
+      // this.whoChoose = item
+      // this.isCustom = true
+      this.$refs.calendar.focus()
+      this.$refs.calendar.pickerVisible = true
+      if (document.getElementById('viewGraphDialog')) {
+        // 处理 多弹出的z-index的问题 当前为 alertMessage的处理
+        const viewGraphDialogStyle = window.getComputedStyle(
+          document.getElementById('viewGraphDialog', null)
+        )
+        setTimeout(() => {
+          if (viewGraphDialogStyle['z-index'] !== 'auto') {
+            const dom =
+                    document.getElementsByClassName('el-picker-panel')
+            Array.prototype.forEach.call(dom, function (element) {
+              element.style['z-index'] =
+                      viewGraphDialogStyle['z-index'] + 1
+            })
+            this.$refs.calendar.$el.style['z-index'] =
+                    viewGraphDialogStyle['z-index'] + 1
+          }
+        })
+      }
+    },
+    historyChange (item) {
+      this.searchTime[0] = item.start
+      this.searchTime[1] = item.end
+      this.isCustom = true
+      this.showDropdown()
       this.$emit('change', this.searchTime)
+      this.setSearchTime('', '', this.searchTime)
+    },
+    getRangeHistoryArr () {
+      const arr = this.rangeHistory.slice(0, 3)
+      this.rangeHistoryArr = arr
+    },
+    getUtcStr () {
+      const str = 'UTC '
+      this.utcStr = str + this.utc
+    },
+    timeRange (item) {
+      if (this.oldSearchTimeError[0] || this.oldSearchTimeError[1]) {
+        return
+      }
+      this.searchTime = this.$loadsh.cloneDeep(this.oldSearchTime)
+      this.showTime = this.nowTimeType = {
+        id: 0,
+        text: this.searchTime[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + this.searchTime[1],
+        value: -1
+      }
+      this.isCustom = true
+      this.rangeHistory.unshift({
+        start: item[0],
+        end: item[1]
+      })
+      localStorage.setItem(
+        'date-range-history' + this.sign,
+        JSON.stringify(this.rangeHistory)
+      )
+      this.$set(this.searchTime, 2, '')
+      this.showDropdown()
+      this.getRangeHistoryArr()
+      this.setSearchTime('', '', this.searchTime)
+      this.$emit('change', this.searchTime)
+    },
+    showDropdown () {
+      const timeTemp = this.$loadsh.cloneDeep(this.searchTime)
+      this.oldSearchTime[0] = timeTemp[0]
+      this.oldSearchTime[1] = timeTemp[1]
+      this.oldSearchTimeError[0] = false
+      this.oldSearchTimeError[1] = false
+      this.dropdownFlag = !this.dropdownFlag
+    },
+    dateInputChange (type, v) {
+      if (type == 'start') {
+        const dateValidate = moment(this.oldSearchTime[0], this.timeFormatMain).isValid()
+        if (!dateValidate) {
+          this.inputError = this.$t('date.formatError')
+          this.oldSearchTimeError[0] = true
+        } else {
+          this.oldSearchTimeError[0] = false
+          this.oldSearchTime[0] = bus.timeFormate(this.oldSearchTime[0])
+        }
+      } else if (type == 'end') {
+        const dateValidate = moment(this.oldSearchTime[1], this.timeFormatMain).isValid()
+        if (!dateValidate) {
+          this.oldSearchTimeError[1] = true
+        } else {
+          this.oldSearchTimeError[1] = false
+          // this.$set(this.oldSearchTime, 1, bus.timeFormate(this.oldSearchTime[1]))
+          this.oldSearchTime[1] = bus.timeFormate(this.oldSearchTime[1])
+        }
+      }
+      console.log(moment(this.oldSearchTime[0], this.timeFormatMain).isValid(), moment(this.oldSearchTime[1], this.timeFormatMain).isValid(), !moment(this.oldSearchTimeError[0]).isBefore(this.oldSearchTime[1]))
+      if (moment(this.oldSearchTime[0], this.timeFormatMain).isValid() && moment(this.oldSearchTime[1], this.timeFormatMain).isValid() && !moment(this.oldSearchTimeError[0]).isBefore(this.oldSearchTime[1])) {
+        this.oldSearchTimeError[0] = true
+        this.inputError = this.$t('date.fromGreaterTo')
+      }
+    },
+    dateChange () {
+      this.oldSearchTimeError[0] = false
+      this.oldSearchTimeError[1] = false
     },
     setCustomTime (timeGroup, timeRange) {
       if (timeGroup) {
-        this.showTime = this.nowTimeType = this.timeData.find(item => item.id == timeGroup.id)
+        this.showTime = this.nowTimeType = this.timeData.find(
+          (item) => item.id == timeGroup.id
+        )
         if (this.showTime) {
           this.showTime = Object.assign({}, this.showTime)
           this.$set(this.searchTime, 0, timeGroup.start_time)
           this.$set(this.searchTime, 1, timeGroup.end_time)
         } else {
+          // const time = this.searchTime.splice(' ')
+          // this.showTime = this.nowTimeType = {
+          //   text: time[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + time[1]
+          // }
+          // this.$set(this.searchTime, 0, bus.timeFormate(time[0]))
+          // this.$set(this.searchTime, 1, bus.timeFormate(time[1]))
+          this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time))
+          this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time))
           this.showTime = this.nowTimeType = {
             id: 4,
             text: this.$t('dashboard.panel.lastOneHour'),
@@ -189,12 +417,17 @@ export default {
           }
           const time = bus.getTimezontDateRange()
           if (timeGroup.start_time) {
-            this.$set(this.searchTime, 0, bus.timeFormate(timeGroup.start_time))
+            this.$set(
+              this.searchTime,
+              0,
+              bus.timeFormate(timeGroup.start_time)
+            )
             this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time))
           } else {
             this.$set(this.searchTime, 0, bus.timeFormate(time[0]))
             this.$set(this.searchTime, 1, bus.timeFormate(time[1]))
           }
+          this.$set(this.searchTime, 0, bus.timeFormate(time[0]))
         }
       } else {
         this.showTime = this.nowTimeType = {
@@ -219,7 +452,8 @@ export default {
         this.setSearchTime(val.type, val.value)
 
         const id = val.id
-        if (id === 0) { // custom
+        if (id === 0) {
+          // custom
           if (from === 'chart') {
             this.isCustom = false
             this.$emit('change', this.searchTime)
@@ -227,21 +461,28 @@ export default {
             this.isCustom = true
             this.$refs.calendar.focus()
             this.$refs.calendar.pickerVisible = true
-            if (document.getElementById('viewGraphDialog')) { // 处理 多弹出的z-index的问题 当前为 alertMessage的处理
-              const viewGraphDialogStyle = window.getComputedStyle(document.getElementById('viewGraphDialog', null))
+            if (document.getElementById('viewGraphDialog')) {
+              // 处理 多弹出的z-index的问题 当前为 alertMessage的处理
+              const viewGraphDialogStyle = window.getComputedStyle(
+                document.getElementById('viewGraphDialog', null)
+              )
               setTimeout(() => {
                 if (viewGraphDialogStyle['z-index'] !== 'auto') {
-                  const dom = document.getElementsByClassName('el-picker-panel')
+                  const dom =
+                    document.getElementsByClassName('el-picker-panel')
                   Array.prototype.forEach.call(dom, function (element) {
-                    element.style['z-index'] = viewGraphDialogStyle['z-index'] + 1
+                    element.style['z-index'] =
+                      viewGraphDialogStyle['z-index'] + 1
                   })
-                  this.$refs.calendar.$el.style['z-index'] = viewGraphDialogStyle['z-index'] + 1
+                  this.$refs.calendar.$el.style['z-index'] =
+                    viewGraphDialogStyle['z-index'] + 1
                 }
               })
             }
           }
         } else {
           this.isCustom = false
+          this.showDropdown()
           if (this.showEmpty && id === 12) {
             this.searchTime = []
           }
@@ -250,35 +491,62 @@ export default {
       }
     },
     getCurrentTime () {
-      let timeTypeId = this.showTime.id
-      if (timeTypeId === 0) {
-        return this.searchTime
-      } else {
-        if (!timeTypeId) { timeTypeId = 4 }
-        const currentTime = this.timeData.find(item => item.id === timeTypeId)
-        this.setSearchTime(currentTime.type, currentTime.value)
-        return this.searchTime
-      }
+      return this.searchTime
+      // let timeTypeId = this.showTime.id;
+      // if (timeTypeId === 0) {
+      //   return this.searchTime;
+      // } else {
+      //   if (!timeTypeId) {
+      //     timeTypeId = 4;
+      //   }
+      //   const currentTime = this.timeData.find(
+      //     (item) => item.id === timeTypeId
+      //   );
+      //   this.setSearchTime(currentTime.type, currentTime.value);
+      //   return this.searchTime;
+      // }
     },
-    setSearchTime (type, val) {
+    setSearchTime (type, val, time) {
       if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        const startTime = bus.timeFormate(
+          new Date(bus.computeTimezone(new Date().getTime())).setMinutes(
+            new Date(bus.computeTimezone(new Date().getTime())).getMinutes() -
+              val
+          )
+        )
+        const endTime = bus.timeFormate(
+          new Date(bus.computeTimezone(new Date().getTime()))
+        )
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'm')
       } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        const startTime = bus.timeFormate(
+          new Date(bus.computeTimezone(new Date().getTime())).setHours(
+            new Date(bus.computeTimezone(new Date().getTime())).getHours() - val
+          )
+        )
+        const endTime = bus.timeFormate(
+          new Date(bus.computeTimezone(new Date().getTime()))
+        )
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'h')
       } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        const startTime = bus.timeFormate(
+          new Date(bus.computeTimezone(new Date().getTime())).setDate(
+            new Date(bus.computeTimezone(new Date().getTime())).getDate() - val
+          )
+        )
+        const endTime = bus.timeFormate(
+          new Date(bus.computeTimezone(new Date().getTime()))
+        )
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'd')
+      } else {
+        this.$set(this.searchTime, 0, time[0])
+        this.$set(this.searchTime, 1, time[1])
       }
     },
     setCostomTime: function (costomTime) {
@@ -295,14 +563,12 @@ export default {
       }
     }
   },
-  created () {
-  },
   watch: {
     defaultPick: {
       immediate: true,
       handler (n, o) {
         if (n && Number.isInteger(n)) {
-          const showTime = this.timeData.find(item => item.id == n)
+          const showTime = this.timeData.find((item) => item.id == n)
           if (showTime) {
             this.showTime = Object.assign({}, showTime)
             this.searchTime = this.$parent.searchTime
@@ -311,6 +577,13 @@ export default {
             this.searchTime = []
           }
         }
+      }
+    },
+    sign (n) {
+      if (n) {
+        this.rangeHistory = localStorage.getItem('date-range-history' + this.sign)
+          ? JSON.parse(localStorage.getItem('date-range-history' + this.sign))
+          : []
       }
     }
   }

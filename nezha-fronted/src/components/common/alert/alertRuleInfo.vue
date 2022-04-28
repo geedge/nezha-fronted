@@ -8,10 +8,14 @@
         {{alertRuleData && alertRuleData.name ? alertRuleData.name : '--'}}
       </div>
     </div>
-    <div class="alert-rule-info" >
+    <div class="alert-rule-nfo" >
       <div class="alert-rule-box">
         <div class="alert-rule-title">ID</div>
         <div class="alert-rule-value">{{alertRuleData.id ? alertRuleData.id : '--'}}</div>
+      </div>
+      <div class="alert-rule-box name-labe">
+        <div class="alert-rule-title">{{$t('overall.name')}}</div>
+        <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
       </div>
 <!--      <div class="alert-rule-box">-->
 <!--        <div class="alert-rule-title">{{$t('alert.name')}}</div>-->
@@ -77,7 +81,7 @@
 </template>
 
 <script>
-import chartDataFormat from '../../charts/chartDataFormat'
+import chartDataFormat from '../../chart/chartDataFormat'
 import trendMixins from '@/components/common/alert/trendMixins'
 export default {
   name: 'alert-rule-info',
@@ -149,7 +153,6 @@ export default {
       })
     },
     returnColor (obj) {
-      console.log(obj,  this.severityDataWeight)
       let color = ''
       if (!obj) {
         color = '#23bf9a'

@@ -29,6 +29,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       ]
     },
     hot: true,
+    inline:true,
     contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,
     host: HOST || config.dev.host,
@@ -54,6 +55,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
+      favicon: path.resolve(__dirname, '../src/assets/img/favicon.ico'),
       filename: 'index.html',
       template: 'index.html',
       inject: true

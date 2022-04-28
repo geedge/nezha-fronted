@@ -13,7 +13,7 @@
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
         <div v-if="from === fromRoute.asset" style="display: flex">
-          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
+          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'panel' + obj.id"></pick-time>
           <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
                   type="button" @click="addChart">
             <i class="nz-icon-create-square nz-icon"></i>
@@ -41,11 +41,14 @@
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
               </el-dropdown-item>
+              <el-dropdown-item v-has="'main_edit'">
+                <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-export-pdf"></i>{{ $t('overall.downloadToPdf') }}</div>
+              </el-dropdown-item>
             </template>
           </top-tool-more-options>
         </div>
         <div v-else-if="from === fromRoute.endpoint" style="display: flex">
-          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
+          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'panel' + obj.id"></pick-time>
           <button id="endpoint-create-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
@@ -71,6 +74,9 @@
               </el-dropdown-item>
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
+              </el-dropdown-item>
+              <el-dropdown-item v-has="'main_edit'">
+                <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-export-pdf"></i>{{ $t('overall.downloadToPdf') }}</div>
               </el-dropdown-item>
             </template>
           </top-tool-more-options>
@@ -146,9 +152,10 @@ import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
+import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 export default {
   name: 'panelTabNew',
-  mixins: [subDataListMixin, detailViewRightMixin],
+  mixins: [subDataListMixin, detailViewRightMixin, htmlToPdfMixin],
   props: {
     from: String,
     obj: Object,
@@ -156,7 +163,8 @@ export default {
     paramsType: {
       type: String,
       default: 'dashboard'
-    }
+    },
+    sign:[Number,String]
   },
   computed: {
     chartRightBoxShow () {
@@ -172,6 +180,8 @@ export default {
   data () {
     return {
       fromRoute,
+      pdfId: 'pdfDom',
+      htmlTitle: 'panel',
       panelTabLoading: false,
       showTopBtn: false, // top按钮
       visible: false,
@@ -279,8 +289,8 @@ export default {
       this.getData(this.filter)
     },
     refreshTime (st, et) {
-      const startTime = bus.timeFormate(st, 'yyyy-MM-dd hh:mm')
-      const endTime = bus.timeFormate(et, 'yyyy-MM-dd hh:mm')
+      const startTime = bus.timeFormate(st)
+      const endTime = bus.timeFormate(et)
       this.searchTime = [startTime, endTime]
     },
     panelReloadForDel () {
@@ -485,8 +495,8 @@ export default {
         const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.setSearchTime(nowTimeType.type, nowTimeType.value)
-        this.filter.start_time = bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
-        this.filter.end_time = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
+        this.filter.start_time = bus.timeFormate(this.searchTime[0])
+        this.filter.end_time = bus.timeFormate(this.searchTime[1])
         this.filter.panelId = this.showPanel.id
         this.getData(this.filter)
         this.$store.dispatch('dispatchPanelTime', {
@@ -498,20 +508,20 @@ export default {
     /* 时间条件查询--end */
     setSearchTime (type, val) { // 设置searchTime
       if (type === 'minute') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'YYYY-MM-DD HH:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'm')
       } else if (type === 'hour') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'YYYY-MM-DD HH:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'h')
       } else if (type === 'date') {
-        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'YYYY-MM-DD HH:mm:ss')
-        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
         this.$set(this.searchTime, 0, startTime)
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'd')
@@ -723,6 +733,42 @@ export default {
       }
       if (type === 'duplicate') {
         this.editChart(chartInfo, true)
+      }
+    },
+    htmlToPdf () {
+      const dom = document.getElementsByClassName(this.pdfId)[0]
+      this.htmlTitle = this.obj.name || 'pdf'
+      if (dom) {
+        // dom = dom.getElementsByClassName('vue-grid-layout')[0]
+        this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
+        this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
+        let flag = true
+        this.showScreenLoading(true)
+        let timer = setInterval(() => {
+          flag = true
+          this.$refs.chartList.copyDataList.forEach(chart => {
+            if (chart.type !== 'group') {
+              flag = flag && chart.loaded
+            } else if (chart.collapse) {
+              chart.children.forEach(groupChart => {
+                flag = flag && groupChart.loaded
+              })
+            }
+          })
+          if (flag) {
+            clearInterval(timer)
+            timer = null
+            setTimeout(() => {
+              document.body.style.height = 'auto'
+              // document.getElementsByTagName('html')[0].style.overflow = 'visible'
+              const position = dom.getBoundingClientRect()
+              this.getPdf(dom, -1 * position.left, -1 * position.top,this.searchTime)
+              // this.getPdf(dom, 0, 0)
+            }, 2000)
+          }
+        }, 200)
+      } else {
+        this.showScreenLoading(false)
       }
     }
   },

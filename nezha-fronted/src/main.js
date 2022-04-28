@@ -31,11 +31,12 @@ import chartList from '@/components/chart/chartList.vue' // 全局引入 chartLi
 
 import loading from '@/components/common/loading'
 import pickTime from '@/components/common/pickTime'
-import bus from '@/libs/bus'
 import myDatePicker from '@/components/common/myDatePicker'
 import vSelectPage from '@/components/common/v-selectpagenew'
 import nzDataList from '@/components/common/table/nzDataList'
 import htmlToPdf from '@/components/common/js/htmlToPdf'
+import mainMixin from '@/components/common/mixin/mainMixinFun'
+
 Vue.use(htmlToPdf)
 Vue.use(vSelectPage, {
   dataLoad: function (vue, url, params) {
@@ -99,127 +100,6 @@ Vue.mixin({
       }
     }
   },
-  methods: {
-    utcTimeToTimezone: function (time) { // 将utc时间 转为系统设者的时间  返回时间戳
-      if (time) {
-        return bus.UTCTimeToConfigTimezone(time)
-      }
-    },
-    utcTimeToTimezoneStr: function (time) { // 将utc时间 转为系统设者的时间  返回String
-      if (time) {
-        return bus.timeFormate(bus.UTCTimeToConfigTimezone(time), localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
-      } else {
-        return '-'
-      }
-    },
-    timezoneToUtcTime: function (time) { // 将系统设者的时间 转为utc时间 返回时间戳
-      if (time) {
-        return bus.configTimezoneToUTCTime(time)
-      }
-    },
-    timezoneToUtcTimeStr: function (time, fmt) { // 将系统设者的时间 转为utc时间 返回String
-      if (!fmt) {
-        fmt = localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss'
-      }
-      if (time) {
-        return bus.timeFormate(this.timezoneToUtcTime(time), fmt)
-      }
-    },
-    timestampStr: function (time, fmt) { // 将utc时间 转为系统设者的时间  返回String
-      const date = new Date(time)
-      const localOffset = date.getTimezoneOffset() * 60 * 1000 // 默认 一分钟显示时区偏移的结果
-      const dateStr = new Date(time).getTime() + localOffset
-      if (!fmt) {
-        fmt = localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss'
-      }
-      if (time) {
-        return bus.timeFormate(bus.UTCTimeToConfigTimezone(dateStr), fmt)
-      } else {
-        return '-'
-      }
-    },
-    timeFormate (time) {
-      return bus.timeFormate(time)
-    },
-    hasButton (code) {
-      return hasButton(this.$store.getters.buttonList, code)
-    },
-    numberWithEConvent (num) {
-      if (num) {
-        if ((('' + num).indexOf('E') !== -1) || (('' + num).indexOf('e') !== -1)) {
-          const regExp = /'^((\\d+.?\\d+)[Ee]{1}(\\d+))$', 'ig'/
-          let result = regExp.exec(num)
-          let resultValue = ''
-          let power
-          if (result != null) {
-            resultValue = result[2]
-            power = result[3]
-            result = regExp.exec(num)
-          }
-
-          if (resultValue) {
-            if (power) {
-              const powVer = Math.pow(10, power)
-              resultValue = resultValue * powVer
-              return resultValue
-            }
-          }
-        } else {
-          return num
-        }
-      }
-      return 0
-    },
-    translation (key) {
-      return i18n.t(key)
-    },
-    timeFormatStrToDatePickFormat (str, flag) {
-      if (flag) {
-        const reg = /Y/g
-        str = str.replace(reg, 'y')
-        const reg1 = /D/g
-        str = str.replace(reg1, 'd')
-        const reg2 = /[H,m,s,:]/g
-        str = str.replace(reg2, '')
-        return str
-      } else {
-        const reg = /Y/g
-        str = str.replace(reg, 'y')
-        const reg1 = /D/g
-        str = str.replace(reg1, 'd')
-        return str
-      }
-    },
-    copyRow (row, rightBoxValKey, idKey = 'id', show = false, format, callback) {
-      /*
-      row 表格当前行
-      rightBoxValKey 右侧弹窗绑定的 data
-      idKey 当前数据的唯一标识
-      show 打开对应的弹窗 函数
-      format 是否需要对当前行进行处理
-      callBack 回调
-      */
-      let rowCopy = { ...row }
-      if (rowCopy.name) {
-        rowCopy.name = 'Copy from ' + rowCopy.name
-      }
-      if (format) {
-        rowCopy = format(rowCopy)
-      }
-      delete rowCopy[idKey]
-      this[rightBoxValKey] = rowCopy
-      if (typeof show === 'function') {
-        show()
-      } else if (typeof show === 'string') {
-        this[show] = true
-      } else {
-        this.rightBox.show = true
-      }
-      if (callback) {
-        callback()
-      }
-    }
-  },
   computed: {
     timeFormatMain () {
       return this.$store.getters.getTimeFormatMain
@@ -233,7 +113,8 @@ Vue.mixin({
     $routePath () {
       return this.$route.path
     }
-  }
+  },
+  ...mainMixin
 })
 
 Vue.config.productionTip = false

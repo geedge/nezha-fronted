@@ -6,100 +6,283 @@
         <div v-if="plugins.indexOf('metric-selector') > -1">
           <el-dropdown class="metric-selector">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
-            <button class="top-tool-btn top-tool-btn--text" type="button" @click="toggleDropdown">{{type === 'log' ? $t("overall.logLabels") : $t("overall.metric") }}
-              <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px"></i></button>
-            <el-cascader-panel v-show="dropDownVisible" ref="metricSelector" slot="dropdown" v-model="cascaderValue"
-                               v-clickoutside="closeDropdown" v-my-loading="tempBoxShowLoading" :loading="loading" :options="metricOptions"
-                               v-if="type !== 'log'" :props="cascaderProps" @change="metricChangeNew" style="margin-top: 5px">
-
+            <button
+              class="top-tool-btn top-tool-btn--text"
+              type="button"
+              @click="toggleDropdown"
+            >
+              {{
+                type === "log" ? $t("overall.logLabels") : $t("overall.metric")
+              }}
+              <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px"></i>
+            </button>
+            <el-cascader-panel
+              v-show="dropDownVisible"
+              ref="metricSelector"
+              slot="dropdown"
+              v-model="cascaderValue"
+              v-clickoutside="closeDropdown"
+              v-my-loading="tempBoxShowLoading"
+              :loading="loading"
+              :options="metricOptions"
+              v-if="type !== 'log'"
+              :props="cascaderProps"
+              @change="metricChangeNew"
+              style="margin-top: 5px"
+            >
               <template slot-scope="{ node, data }">
-                <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'',data.more?'cascader-panel-more':'']" @click="()=>{lazyLoad(node,data)}" :title="data.label">
+                <div
+                  :class="[
+                    'nz-cascade',
+                    data.temp && !data.child ? 'nz-cascade-temp' : '',
+                    data.more ? 'cascader-panel-more' : '',
+                  ]"
+                  @click="
+                    () => {
+                      lazyLoad(node, data);
+                    }
+                  "
+                  :title="data.label"
+                >
                   <i class="nz-icon nz-icon-template2"></i>
-                  {{data.label}}
+                  {{ data.label }}
                   <i v-if="data.more" class="nz-icon nz-icon-arrow-down"></i>
                 </div>
               </template>
             </el-cascader-panel>
-            <el-cascader-panel v-else v-show="dropDownVisible" ref="metricSelector" slot="dropdown"
-                               v-model="cascaderValue" v-clickoutside="closeDropdown" v-my-loading="tempBoxShowLoading"
-                               :loading="loading" :props="cascaderProps" @change="logLabelChange" style="margin-top: 5px;">
+            <el-cascader-panel
+              v-else
+              v-show="dropDownVisible"
+              ref="metricSelector"
+              slot="dropdown"
+              v-model="cascaderValue"
+              v-clickoutside="closeDropdown"
+              v-my-loading="tempBoxShowLoading"
+              :loading="loading"
+              :props="cascaderProps"
+              @change="logLabelChange"
+              style="margin-top: 5px"
+            >
               <template slot-scope="{ node, data }">
                 <div :title="data.label" class="nz-cascade">
-                  {{data.label}}
+                  {{ data.label }}
                 </div>
               </template>
             </el-cascader-panel>
           </el-dropdown>
         </div>
-        <div v-if="plugins.indexOf('metric-input') > -1" class="input-box" @click="dropDownVisible=false">
-          <el-input :id="inputId" v-model="expressionList[index]" :autosize="{ minRows: 1, maxRows: 6}"
-                    class="not-fixed-height no-resize" type="textarea"
-                    @input="metricKeyDown" @keyup.enter.native="expressionChange" ref="elInput"></el-input>
-          <div v-if="errorMsg" class="append-msg error"><span>{{errorMsg}}</span></div>
-          <div v-if="appendMsg" class="append-msg error"><span>{{appendMsg}}</span></div>
+        <div
+          v-if="plugins.indexOf('metric-input') > -1"
+          class="input-box"
+          @click="dropDownVisible = false"
+        >
+        <div
+          :id="'editor'+index"
+          v-if="type !== 'log'"
+          class="not-fixed-height no-resize no-close"
+        >
+        </div>
+        <!-- <div id='editor'
+        class="not-fixed-height no-resize no-close"
+        >
+        </div> -->
+           <el-input
+             v-if="type == 'log'"
+            :id="inputId"
+            v-model="expressionList[index]"
+            :autosize="{ minRows: 1, maxRows: 6 }"
+            class="not-fixed-height no-resize"
+            type="textarea"
+            @input="metricKeyDown"
+            @keyup.enter.native="expressionChange"
+            ref="elInput"
+          ></el-input>
+
+          <div v-if="errorMsg" class="append-msg error">
+            <span>{{ errorMsg }}</span>
+          </div>
+          <div v-if="appendMsg" class="append-msg error">
+            <span>{{ appendMsg }}</span>
+          </div>
         </div>
         <div class="top-tool-btn-group">
-          <button v-if="plugins.indexOf('add') > -1" class="top-tool-btn"
-               @click="addExpression"><i class="nz-icon nz-icon-plus"></i></button>
-          <button v-if="plugins.indexOf('copy') > -1" class="top-tool-btn"
-               @click="copyExpression"><i class="nz-icon nz-icon-override"></i></button>
-          <button v-if="plugins.indexOf('remove') > -1" class="top-tool-btn"
-               @click="removeExpression"><i class="nz-icon nz-icon-minus"></i></button>
+          <button
+            v-if="plugins.indexOf('add') > -1"
+            class="top-tool-btn"
+            @click="addExpression"
+          >
+            <i class="nz-icon nz-icon-plus"></i>
+          </button>
+          <button
+            v-if="plugins.indexOf('copy') > -1"
+            class="top-tool-btn"
+            @click="copyExpression"
+          >
+            <i class="nz-icon nz-icon-override"></i>
+          </button>
+          <button
+            v-if="plugins.indexOf('remove') > -1"
+            class="top-tool-btn"
+            @click="removeExpression"
+          >
+            <i class="nz-icon nz-icon-minus"></i>
+          </button>
         </div>
       </template>
       <!--right-box里的样式-->
       <template v-if="styleType === 2 || styleType === 3">
-          <el-row v-if="plugins.indexOf('metric-input') > -1 || plugins.indexOf('metric-selector') > -1"
-                  style="width: 100%;">
-            <el-col
-              :class="[plugins.indexOf('metric-selector') > -1 ?'metric-selector-title':'metric-null-title']">
-              <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
-                <el-dropdown-menu style="display: none"></el-dropdown-menu>
-                <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">{{type === 'log' ? $t("overall.logLabels") : $t("overall.metric") }}<i
+        <el-row
+          v-if="
+            plugins.indexOf('metric-input') > -1 ||
+            plugins.indexOf('metric-selector') > -1
+          "
+          style="width: 100%"
+        >
+          <el-col
+            :class="[
+              plugins.indexOf('metric-selector') > -1
+                ? 'metric-selector-title'
+                : 'metric-null-title',
+            ]"
+          >
+            <el-dropdown
+              class="metric-selector"
+              v-if="plugins.indexOf('metric-selector') > -1"
+            >
+              <el-dropdown-menu style="display: none"></el-dropdown-menu>
+              <span
+                :class="{ 'expr-title': projectRightBox }"
+                style="cursor: pointer"
+                @click="toggleDropdown"
+                >{{
+                  type === "log"
+                    ? $t("overall.logLabels")
+                    : $t("overall.metric")
+                }}<i
                   class="nz-icon nz-icon-arrow-down"
-                  style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
-                <el-cascader-panel v-my-loading="tempBoxShowLoading" v-show="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue"
-                                   style="text-align: left;margin-top: 5px" slot="dropdown" ref="metricSelector"
-                                   v-if="type !== 'log'"  :props="{emitPath:false}" :options="metricOptions" @change="metricChangeNew">
+                  style="
+                    font-size: 14px;
+                    -webkit-transform: scale(0.75);
+                    display: inline-block;
+                  "
+                ></i
+              ></span>
+              <el-cascader-panel
+                v-my-loading="tempBoxShowLoading"
+                v-show="dropDownVisible"
+                v-clickoutside="closeDropdown"
+                v-model="cascaderValue"
+                style="text-align: left; margin-top: 5px"
+                slot="dropdown"
+                ref="metricSelector"
+                v-if="type !== 'log'"
+                :props="{ emitPath: false }"
+                :options="metricOptions"
+                @change="metricChangeNew"
+              >
+                <template slot-scope="{ node, data }">
+                  <div
+                    :class="[
+                      'nz-cascade',
+                      data.temp && !data.child ? 'nz-cascade-temp' : '',
+                      data.more ? 'cascader-panel-more' : '',
+                    ]"
+                    @click="
+                      () => {
+                        lazyLoad(node, data);
+                      }
+                    "
+                    :title="data.label"
+                  >
+                    <i class="nz-icon nz-icon-template2"></i>
+                    {{ data.label }}
+                    <i v-if="data.more" class="nz-icon nz-icon-arrow-down"></i>
+                  </div>
+                </template>
+              </el-cascader-panel>
+              <el-cascader-panel
+                v-else
+                v-show="dropDownVisible"
+                ref="metricSelector"
+                slot="dropdown"
+                v-model="cascaderValue"
+                v-clickoutside="closeDropdown"
+                v-my-loading="tempBoxShowLoading"
+                :loading="loading"
+                :props="cascaderProps"
+                @change="logLabelChange"
+              >
+                <template slot-scope="{ node, data }">
+                  <div :title="data.label" class="nz-cascade">
+                    {{ data.label }}
+                  </div>
+                </template>
+              </el-cascader-panel>
+            </el-dropdown>
+          </el-col>
+          <el-col
+            :class="
+              plugins.indexOf('metric-selector') > -1
+                ? 'metric-selector-input-box'
+                : 'metric-null-input-box'
+            "
+            :style="{ height: '100%' }"
+          >
 
-                  <template slot-scope="{ node, data }">
-                    <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'',data.more?'cascader-panel-more':'']" @click="()=>{lazyLoad(node,data)}" :title="data.label">
-                      <i class="nz-icon nz-icon-template2"></i>
-                      {{data.label}}
-                      <i v-if="data.more" class="nz-icon nz-icon-arrow-down"></i>
-                    </div>
-                  </template>
+            <div
+              class="input-box"
+              @click="dropDownVisible = false"
+              v-if="plugins.indexOf('metric-input') > -1"
+            >
+            <div
+              :id="'editor'+index"
+              v-if="type !== 'log'"
+              class="not-fixed-height no-resize no-close"
+        >
+        </div>
+            <!-- <div id="editor"
+            class="not-fixed-height no-resize no-close"
+                ref="elInput"
 
-                </el-cascader-panel>
-                <el-cascader-panel v-else v-show="dropDownVisible" ref="metricSelector" slot="dropdown"
-                                   v-model="cascaderValue" v-clickoutside="closeDropdown" v-my-loading="tempBoxShowLoading"
-                                   :loading="loading" :props="cascaderProps" @change="logLabelChange">
-                  <template slot-scope="{ node, data }">
-                    <div :title="data.label" class="nz-cascade">
-                      {{data.label}}
-                    </div>
-                  </template>
-                </el-cascader-panel>
-              </el-dropdown>
-            </el-col>
-            <el-col
-              :class="plugins.indexOf('metric-selector') > -1 ?'metric-selector-input-box':'metric-null-input-box'"
-              :style="{height: '100%'}">
-              <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
-                <el-input v-model="expressionList[index]" @input="metricKeyDown" type="textarea" :maxlength="styleType === 3 ? 512 : 4096" show-word-limit
-                          :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize" ref="elInput"></el-input>
-                <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
-                <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
+            ></div> -->
+               <el-input
+                v-model="expressionList[index]"
+                v-if="type === 'log'"
+                @input="metricKeyDown"
+                type="textarea"
+                :maxlength="styleType === 3 ? 512 : 4096"
+                show-word-limit
+                :autosize="{ minRows: 1, maxRows: 6 }"
+                class="not-fixed-height no-resize"
+                ref="elInput"
+              ></el-input>
+              <div class="append-msg error" v-if="errorMsg">
+                <span>{{ errorMsg }}</span>
               </div>
-            </el-col>
-          </el-row>
-        </template>
+              <div class="append-msg error" v-if="appendMsg">
+                <span>{{ appendMsg }}</span>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+      </template>
     </div>
-    <div v-if="styleType == 2&&showRemove">
-      <div class="option" @click="addExpression" v-if="plugins.indexOf('add') > -1"><i class="nz-icon nz-icon-plus"></i>
+    <div v-if="styleType == 2 && showRemove">
+      <div
+        class="option"
+        @click="addExpression"
+        v-if="plugins.indexOf('add') > -1"
+      >
+        <i class="nz-icon nz-icon-plus"></i>
       </div>
-      <div class="option" style="margin-left: 5px; line-height: 32px;" @click="removeExpression"
-           v-if="plugins.indexOf('remove') > -1"><i class="nz-icon nz-icon-minus"></i></div>
+      <div
+        class="option"
+        style="margin-left: 5px; line-height: 32px"
+        @click="removeExpression"
+        v-if="plugins.indexOf('remove') > -1"
+      >
+        <i class="nz-icon nz-icon-minus"></i>
+      </div>
     </div>
 
     <el-dialog
@@ -109,56 +292,142 @@
       :custom-class="'nz-temp-box'"
       :destroy-on-close="true"
       @closed="tempBoxClose"
-      center>
-      <el-form v-model="tempBox" class="temp-form-box" ref="tempFormBox" v-if="tempBoxShow">
+      center
+    >
+      <el-form
+        v-model="tempBox"
+        class="temp-form-box"
+        ref="tempFormBox"
+        v-if="tempBoxShow"
+      >
         <span class="temp-form-box-title">Expression</span>
         <el-form-item prop="expression">
-          <el-input class="temp-form-box-input" v-model="tempBox.expression" size="small" disabled></el-input>
+          <el-input
+            class="temp-form-box-input"
+            v-model="tempBox.expression"
+            size="small"
+            disabled
+          ></el-input>
         </el-form-item>
-        <span class="temp-form-box-title" v-if="tempBox.vars.length">Variable</span>
-        <el-form-item v-for="(item,index) in tempBox.vars"  :prop="item" :key="index">
+        <span class="temp-form-box-title" v-if="tempBox.vars.length"
+          >Variable</span
+        >
+        <el-form-item
+          v-for="(item, index) in tempBox.vars"
+          :prop="item"
+          :key="index"
+        >
           <el-row>
             <el-col :span="7" class="temp-form-box-col">
-              <el-input class="temp-form-box-input" v-model="tempBox.vars[index]" :id="'tempBox'+index" size="small" :disabled="true"></el-input>
+              <el-input
+                class="temp-form-box-input"
+                v-model="tempBox.vars[index]"
+                :id="'tempBox' + index"
+                size="small"
+                :disabled="true"
+              ></el-input>
             </el-col>
             <el-col :span="16" v-if="format(item).key">
-              <select-alert-silence :filter-silence="filterSilence" :silence-data="format(item).arr" :panel-lock="false" :placement="'bottom-start'" :typeContentLoading="typeContentLoading"
-                                    @selectSilence="(val)=>{silenceChange(val,item)}" ref="selectPanel" style="width: 240px;">
+              <select-alert-silence
+                :filter-silence="filterSilence"
+                :silence-data="format(item).arr"
+                :panel-lock="false"
+                :placement="'bottom-start'"
+                :typeContentLoading="typeContentLoading"
+                @selectSilence="
+                  (val) => {
+                    silenceChange(val, item);
+                  }
+                "
+                ref="selectPanel"
+                style="width: 240px"
+              >
                 <template v-slot:header>
                   <div class="explore-select-header">
-                    <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 300px;padding: 0 10px;" v-model="filterSilence" id="panel-list-search"></el-input>
+                    <el-input
+                      :placeholder="$t('overall.search')"
+                      clearable
+                      size="mini"
+                      style="width: 300px; padding: 0 10px"
+                      v-model="filterSilence"
+                      id="panel-list-search"
+                    ></el-input>
                   </div>
                 </template>
 
                 <template v-slot:trigger>
-                  <el-input class="panel-name" placeholder="" readonly="readonly" v-model="tempBox[item]" size="small">
-                    <span slot="suffix" class="el-input__icon el-icon-circle-close el-input__clear" @click.stop="clearValue(item)"></span>
+                  <el-input
+                    class="panel-name"
+                    placeholder=""
+                    readonly="readonly"
+                    v-model="tempBox[item]"
+                    size="small"
+                  >
+                    <span
+                      slot="suffix"
+                      class="
+                        el-input__icon
+                        el-icon-circle-close
+                        el-input__clear
+                      "
+                      @click.stop="clearValue(item)"
+                    ></span>
                   </el-input>
                 </template>
               </select-alert-silence>
             </el-col>
             <el-col :span="17" v-else>
-              <el-input v-model="tempBox[item]" :id="'tempBox'+item"  size="small"></el-input>
+              <el-input
+                v-model="tempBox[item]"
+                :id="'tempBox' + item"
+                size="small"
+              ></el-input>
             </el-col>
           </el-row>
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <button id="temp-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="tempBoxShowChange(false)">
-          <span>{{$t('overall.cancel')}}</span>
+        <button
+          id="temp-box-esc"
+          class="nz-btn nz-btn-size-normal nz-btn-style-light"
+          @click="tempBoxShowChange(false)"
+        >
+          <span>{{ $t("overall.cancel") }}</span>
         </button>
-      <button id="chart-box-save" v-has="`expressionTemplate_add`" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="tempBoxShowChange(true)" >
-        <span>{{$t('overall.save')}}</span>
-      </button>
+        <button
+          id="chart-box-save"
+          v-has="`expressionTemplate_add`"
+          :disabled="prevent_opt.save"
+          class="nz-btn nz-btn-size-normal nz-btn-style-normal"
+          @click="tempBoxShowChange(true)"
+        >
+          <span>{{ $t("overall.save") }}</span>
+        </button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
 import selectAlertSilence from '../../../common/alert/selectAlertSilence'
 import { get } from '@/http'
+import { PromQLExtension } from 'codemirror-promql'
+import { basicSetup } from '@codemirror/basic-setup'
+// import { EditorState } from '@codemirror/state';
+import { highlightSelectionMatches } from '@codemirror/search'
+import { EditorState, Prec, Compartment } from '@codemirror/state'
+import { indentOnInput, syntaxTree } from '@codemirror/language'
+import { EditorView, highlightSpecialChars, keymap, ViewUpdate, placeholder } from '@codemirror/view'
+import { history, historyKeymap } from '@codemirror/history'
+import { bracketMatching } from '@codemirror/matchbrackets'
+import { defaultKeymap, insertNewlineAndIndent } from '@codemirror/commands'
+import { commentKeymap } from '@codemirror/comment'
+import { lintKeymap } from '@codemirror/lint'
+import { baseTheme, promqlHighlighter } from './CMTheme.tsx'
+import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets'
+import { autocompletion, completionKeymap, CompletionContext, CompletionResult } from '@codemirror/autocomplete'
+import { newCompleteStrategy } from 'codemirror-promql/dist/esm/complete'
+
 export default {
   name: 'promqlInput',
   components: {
@@ -197,6 +466,9 @@ export default {
   },
   data () {
     return {
+      oldcCodeLength: '',
+      newView: null,
+      codeMirrorValue: [],
       dropDownVisible: false,
       // metricStore:[],
       metricOptions: [],
@@ -262,11 +534,185 @@ export default {
     }
   },
   mounted () {
-    if (!this.fromFatherData && this.type !== 'logs') {
+    if (!this.fromFatherData && this.type !== 'log') {
       this.queryMetrics()
     }
   },
   methods: {
+    initCodeMirror () {
+      const self = this
+      const promQL = new PromQLExtension().setComplete(
+        {
+          completeStrategy: query(newCompleteStrategy({
+            remote: {
+              url: 'http://192.168.40.42:8080/prom',
+              fetchFn: this.fetchFn
+            }
+          }))
+        }
+      )
+      function query (CompleteStrategy) {
+        const obj = {}
+        obj.complete = CompleteStrategy
+        obj.queryHistory = []
+        obj.promQL = function (context) {
+          return Promise.resolve(this.complete.promQL(context)).then((res) => {
+            const { state, pos } = context
+            const tree = syntaxTree(state).resolve(pos, -1)
+            const start = res != null ? res.from : tree.from
+
+            if (start !== 0) {
+              return res
+            }
+
+            const historyItems = {
+              from: start,
+              to: pos,
+              options: this.queryHistory.map((q) => ({
+                label: q.length < 80 ? q : q.slice(0, 76).concat('...'),
+                detail: 'past query',
+                apply: q,
+                info: q.length < 80 ? undefined : q
+              })),
+              span: /^[a-zA-Z0-9_:]+$/
+            }
+            if (res !== null) {
+              historyItems.options = historyItems.options.concat(res.options)
+            }
+            // console.log(historyItems)
+            return historyItems
+          })
+        }
+        return obj
+      }
+      const dynamicConfigCompartment = new Compartment()
+      const dynamicConfig = [
+        promqlHighlighter,
+        promQL.asExtension(),
+        baseTheme
+      ]
+      if (!this.newView) {
+        const EditorViewstate = EditorState.create({
+          extensions: [
+            baseTheme,
+            highlightSpecialChars(),
+            history(),
+            EditorState.allowMultipleSelections.of(true),
+            indentOnInput(),
+            bracketMatching(),
+            closeBrackets(),
+            autocompletion(),
+            highlightSelectionMatches(),
+            EditorView.lineWrapping,
+            keymap.of([
+              ...closeBracketsKeymap,
+              ...defaultKeymap,
+              ...historyKeymap,
+              ...commentKeymap,
+              ...completionKeymap,
+              ...lintKeymap
+            ]),
+            // placeholder('Expression (press Shift+Enter for newlines)'),
+            dynamicConfigCompartment.of(dynamicConfig),
+            // This keymap is added without precedence so that closing the autocomplete dropdown
+            // via Escape works without blurring the editor.
+            keymap.of([
+              {
+                key: 'Escape',
+                run: (v) => {
+                  v.contentDOM.blur()
+                  return false
+                }
+              }
+            ]),
+            Prec.override(
+              keymap.of([
+                {
+                  key: 'Enter',
+                  run: (v) => {
+                    self.newChange()
+                    return true
+                  }
+                },
+                {
+                  key: 'Shift-Enter',
+                  run: insertNewlineAndIndent
+                }
+              ])
+            ),
+            EditorView.updateListener.of((update) => {
+              self.newChange(update.state.doc.toString())
+            })
+          ],
+          doc: self.codeMirrorValue[self.index],
+          editorState: {
+            changeByRange: self.newChange(),
+            changes: self.newDoc(),
+            facet: self.newChange()
+          }
+        })
+        const view = new EditorView({
+          state: EditorViewstate,
+          // parent: document.getElementById('editor')
+          parent: document.getElementById('editor' + self.index)
+        })
+        self.newView = view
+      } else {
+        // console.log('viewIsOk')
+        // const { from} = self.newView.state.selection.ranges[0]
+        // const to = self.codeMirrorValue.length
+        const to = self.oldcCodeLength
+        const from = self.oldcCodeLength
+        // console.log(from, to)
+        self.newView.dispatch(
+          self.newView.state.update({
+            effects: dynamicConfigCompartment.reconfigure(dynamicConfig),
+            changes: { from, to, insert: self.codeMirrorValue[self.index] }
+          })
+        )
+      }
+    },
+    newChange (val) {
+      // console.log('newchange', val)
+      if (val) {
+        this.oldcCodeLength = val.length
+        // console.log(this.oldcCodeLength)
+        this.codeMirrorValue[this.index] = val
+        this.expressionList[this.index] = val
+        // console.log(this.codeMirrorValue)
+        this.metricKeyDown(val)
+      } else {
+        this.oldcCodeLength = 0
+        this.codeMirrorValue[this.index] = ''
+      }
+    },
+    newDoc (val) {
+      // console.log('doc', val)
+    },
+    fetchFn (a, b) {
+      const params = {}
+      if (b) {
+        params['match[]'] = b.body.get('match[]')
+        params.start = b.body.get('start')
+        params.end = b.body.get('end')
+        a += '?match[]=' + b.body.get('match[]')
+        return fetch(a, {
+          ...b,
+          // body: JSON.stringify(params),
+          redirect: 'follow',
+          headers: {
+            Authorization: localStorage.getItem('nz-token'),
+            'content-type': 'application/x-www-form-urlencoded'
+          }
+        })
+      }
+      return fetch(a, {
+        ...b,
+        headers: {
+          Authorization: localStorage.getItem('nz-token')
+        }
+      })
+    },
     closeDropdown () {
       this.dropDownVisible = false
     },
@@ -341,12 +787,15 @@ export default {
     },
     metricChange: function (value) {
       this.expressionList[this.index] = value
+      this.codeMirrorValue[this.index] = value
       this.dropDownVisible = false
       this.$emit('change', value)
+      // this.initCodeMirror()
       this.$forceUpdate()
       this.cascaderValue = ''
     },
     metricChangeNew (value) {
+      // console.log(value)
       if (!value) return
       this.insertText(value)
       this.dropDownVisible = false
@@ -357,6 +806,7 @@ export default {
     logLabelChange (value) {
       if (!value || value.length === 0) return
       this.expressionList[this.index] = `{${value[0]}="${value[1]}"}`
+      this.codeMirrorValue[this.index] = `{${value[0]}="${value[1]}"}`
       this.dropDownVisible = false
       this.$emit('change', value)
       this.$forceUpdate()
@@ -600,21 +1050,23 @@ export default {
     },
     insertText (insertTxt) {
       // 获取el-input中的input元素
-      const elInput = this.$refs.elInput.$el.firstElementChild
+      // const elInput = this.$refs.elInput.$el.firstElementChild
       // 获取el-input的值
-      const txt = elInput.value
+      // const txt = elInput.value
       // 获取选区开始位置
-      const startPos = elInput.selectionStart
+      // const startPos = elInput.selectionStart
       // 获取选区结束位置
-      const endPos = elInput.selectionEnd
-      if (startPos === undefined || endPos === undefined) return
-
+      // const endPos = elInput.selectionEnd
+      // if (startPos === undefined || endPos === undefined) return
       // 将文本插入光标位置
-      this.expressionList[this.index] = txt.substring(0, startPos) + insertTxt + txt.substring(endPos)
+      // this.expressionList[this.index] = txt.substring(0, startPos) + insertTxt + txt.substring(endPos)
       // 将光标移至文本末尾
-      elInput.focus()
-      elInput.selectionStart = startPos + insertTxt.length
-      elInput.selectionEnd = startPos + insertTxt.length
+      // elInput.focus()
+      // elInput.selectionStart = startPos + insertTxt.length
+      // elInput.selectionEnd = startPos + insertTxt.length
+      this.expressionList[this.index] = insertTxt
+      this.codeMirrorValue[this.index] = insertTxt
+      this.initCodeMirror()
     }
     /* setMsg:function(){
         this.appendMsg
@@ -637,24 +1089,53 @@ export default {
           this.metricOptions = JSON.parse(JSON.stringify(n))
         }
       }
+    },
+    expressionList: {
+      deep: true,
+      immediate: true,
+      handler (n, o) {
+        // console.log(n, n[this.index])
+        this.codeMirrorValue[this.index] = n[this.index]
+      }
+    },
+
+    // codeMirrorValue:{
+    //   deep:true,
+    //   imediate:true,
+    //   handler(n){
+    //     if(n){
+    //       this.oldcCodeLength = n.length
+    //     }
+    //   }
+    // }
+    type: {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        if (n !== 'log') {
+          this.$nextTick(() => {
+            this.initCodeMirror()
+          })
+        }
+      }
     }
   }
 }
 </script>
 <style>
-  .input-box .el-input__inner {
-    height: 30px;
-  }
-  .nz-temp-box /deep/ .el-dialog__body{
-    padding: 10px 20px 0 20px;
-  }
-  .nz-temp-box /deep/ .el-dialog__footer{
-    margin-top: 0;
-  }
-  .nz-temp-box .nz-btn-style-light{
-    margin-right: 10px;
-  }
-  .nz-temp-box .nz-btn-style-normal{
-    margin-left: 10px;
-  }
+.input-box .el-input__inner {
+  height: 30px;
+}
+.nz-temp-box /deep/ .el-dialog__body {
+  padding: 10px 20px 0 20px;
+}
+.nz-temp-box /deep/ .el-dialog__footer {
+  margin-top: 0;
+}
+.nz-temp-box .nz-btn-style-light {
+  margin-right: 10px;
+}
+.nz-temp-box .nz-btn-style-normal {
+  margin-left: 10px;
+}
 </style>

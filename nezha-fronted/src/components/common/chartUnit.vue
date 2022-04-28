@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import chartDataFormat from '../charts/chartDataFormat'
+import chartDataFormat from '../chart/chartDataFormat'
 export default {
   name: 'chartUnit',
   model: {

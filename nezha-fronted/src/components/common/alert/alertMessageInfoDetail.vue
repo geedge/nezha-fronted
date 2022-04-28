@@ -30,6 +30,7 @@
       :id="alertLabelId"
       :that="alertLabelObj"
       :type="alertLabelType"
+      :alertTableDialog="true"
     ></alertLabel>
   </div>
 </template>

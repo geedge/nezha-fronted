@@ -157,7 +157,7 @@
             <!--画布部分-->
             <div :id="'topology-canvas' + topologyIndexF" :ref="'topology-canvas'+ topologyIndexF" class="full" @contextmenu="onContextMenu($event)"></div>
             <!--设置属性-->
-            <div v-if="editTopologyFlag&&toolShow.attr" class="props">
+            <div v-if="editTopologyFlag&&toolShow.attr && !fromOverView" class="props">
               <canvas-props ref="CanvasProps"
                             :index="topologyIndex"
                             :imgArr = 'tools'
@@ -170,7 +170,7 @@
                             @notModuleIDArrChange="notModuleIDArrChange">
               </canvas-props>
             </div>
-            <div class="context-menu" v-if="contextmenu.left && editTopologyFlag && 0" :style="this.contextmenu">
+            <div class="context-menu" v-if="contextmenu.left && editTopologyFlag && 0 && !fromOverView" :style="this.contextmenu">
               <CanvasContextMenu :index="topologyIndexF" :props.sync="props"></CanvasContextMenu>
             </div>
             <!--所有节点上的小图标-->
@@ -351,7 +351,7 @@ import {
   myCubec,
   myCubeAnchors
 } from './L5/services/canvas.js'
-import { getTopology, setTopology } from '../js/common'
+import { getTopology, setTopology, getTopologyImg, setTopologyImg } from '../js/common'
 import CanvasProps from './L5/CanvasProps'
 import topologyTopTool from './L5//topologyTopTool'
 import CanvasContextMenu from './L5/CanvasContextMenu'
@@ -439,6 +439,7 @@ export default {
       timer: null, // 处理project短时间呢频繁变更的定时器
       timer2: null, // 处理平移画布显示iconState的定时器
       timer3: null, // 处理tooltip的显示定时器
+      timer4: null,
       nodesArr: [],
       notModuleIDArr: [],
       popData: [
@@ -660,12 +661,11 @@ export default {
       this.chartGetData = []
       const axiosArr = []
       const promiseArr = []
-      const self = this
-      const pensPromise = (pen, arr, index) => {
-        return new Promise(function (resolve, reject) {
+      let pensPromise = (pen, arr, index) => {
+        return new Promise((resolve, reject) => {
           Promise.all(arr).then((res) => {
-            self.chartGetData[index].res = self.computeData(res, pen.data.aggregation, pen)
-            self.setAnimation(pen, self.chartGetData[index].res)
+            this.chartGetData[index].res = JSON.parse(JSON.stringify(this.computeData(res, pen.data.aggregation, pen)))
+            this.setAnimation(pen, this.chartGetData[index].res)
             resolve()
           })
         })
@@ -735,6 +735,7 @@ export default {
         // getTopology(this.topologyIndex).fitView();
         this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
         this.getNodesArr()
+        pensPromise = null
       })
     },
     dateChange () {
@@ -774,9 +775,10 @@ export default {
           return
         }
         if (!getTopology(this.topologyIndex)) {
-          const canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
+          let canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
           canvas.open(data)
           setTopology(this.topologyIndex, canvas)
+          canvas = null
         } else {
           getTopology(this.topologyIndex).open(data)
         }
@@ -801,7 +803,7 @@ export default {
           if (!res.data) {
             return
           }
-          let data = res.data.topo
+          let data = JSON.parse(JSON.stringify(res.data.topo))
           if (!res.data.topo || !res.data.topo.pens.length) {
             this.showNoData = true
           } else {
@@ -821,9 +823,10 @@ export default {
             }
             this.projectInfoShow = true
             this.projectAlertShow = true
-            this.saveData = { ...data }
+            this.saveData = JSON.parse(JSON.stringify(data))
             this.topologyInfo.name = this.obj.name
             resolve(data)
+            data = null
           } else {
             if (data.data) {
               this.topologyInfo = {
@@ -846,12 +849,11 @@ export default {
               const arr = data.pens.filter(item => !item.type)
               this.addNodeInit(arr)
             }
-            const timer = setInterval(() => {
+            this.timer4 = setInterval(() => {
               if (!this.imgInit) {
                 return
               }
               const promiseArr = []
-              const self = this
               for (let i = 0; i < data.pens.length; i++) {
                 const line = data.pens[i]
                 if (line.type === 1) {
@@ -867,13 +869,13 @@ export default {
                   item.image = img ? img.image : imgDefault
                 }
                 if (item.type === 0) {
-                  promiseArr.push(this.$get('stat/module/abnormal', { moduleId: item.data.moduleId }))
+                  // promiseArr.push(this.$get('stat/module/abnormal', { moduleId: item.data.moduleId }))
                   item.data.state = {}
                   item.data.state.asset = false
                   item.data.state.endpoint = false
                   item.data.state.alert = false
                 } else {
-                  promiseArr.push({ type: 1 })
+                  // promiseArr.push({ type: 1 })
                   item.data.state = {}
                   item.data.state.asset = false
                   item.data.state.endpoint = false
@@ -898,13 +900,13 @@ export default {
                 data.bkColor = '#FFFFFF00'
               }
               Promise.all(promiseArr).then(res => {
-                res.forEach((response, index) => {
-                  const item = data.pens[index]
+                res[0].data.list.forEach((module, index) => {
+                  const item = data.pens.find(pens => module.id === pens.data.moduleId)
                   if (item.type === 0 && item.data.state && res[index].data.list.length) {
-                    item.data.state.error = item.data.error = !res[index].data.list[0].state
-                    item.data.state.asset = !!res[index].data.list[0].asset
-                    item.data.state.alert = !!res[index].data.list[0].alert
-                    item.data.state.endpoint = !!res[index].data.list[0].endpoint
+                    item.data.state.error = item.data.error = !module.state
+                    item.data.state.asset = !!module.asset
+                    item.data.state.alert = !!module.alert
+                    item.data.state.endpoint = !!module.endpoint
                   } else {
                     item.data.state = {
                       error: false,
@@ -914,15 +916,17 @@ export default {
                     }
                   }
                 })
-                self.saveData = { ...data }
+                this.saveData = JSON.parse(JSON.stringify(data))
                 resolve(data)
-                clearInterval(timer)
+                clearInterval(this.timer4)
+                this.timer4 = null
               }).catch(res => {
-                self.saveData = { ...data }
+                this.saveData = JSON.parse(JSON.stringify(data))
                 resolve(data)
-                clearInterval(timer)
+                clearInterval(this.timer4)
+                this.timer4 = null
               })
-            }, 100)
+            }, 2000)
           }
         })
       })
@@ -1055,18 +1059,18 @@ export default {
       this.$get('/monitor/module?pageSize=-1&projectIds=' + this.obj.id).then(response => {
         if (response.code === 200) {
           this.projectInfo.loading = false
-          this.allModules = response.data.list
+          this.allModules = JSON.parse(JSON.stringify(response.data.list))
           this.modulesDiff()
         }
       })
     },
 
     getNodesArr () {
-      const arr = []
       if (!getTopology(this.topologyIndex)) return
+      let arr = []
       this.offsetX = getTopology(this.topologyIndex).data.x
       this.offsetY = getTopology(this.topologyIndex).data.y
-      this.nodesArr = getTopology(this.topologyIndex).data.pens.filter(item => {
+      arr = getTopology(this.topologyIndex).data.pens.filter(item => {
         if (!item.data) {
           item.data = {
             moduleId: '',
@@ -1081,7 +1085,14 @@ export default {
         return item.type === 0
       })
       // 打开动画 是否更新顶部图标
+      this.nodesArr = arr.map(item => {
+        return {
+          rect: item.rect,
+          data: item.data
+        }
+      })
       this.nodesArr = JSON.parse(JSON.stringify(this.nodesArr))
+      arr = null
     },
 
     modelTopClick (item, index) {
@@ -1288,9 +1299,9 @@ export default {
           this.tooltipPosition.show = false
           setTimeout(() => {
             this.tooltipPosition.show = true
-            const ePosition = window.ePosition
-            const boxWidth = document.getElementsByClassName('page')[0].offsetWidth
-            const boxHeight = document.getElementsByClassName('page')[0].offsetHeight
+            let ePosition = window.ePosition
+            let boxWidth = document.getElementsByClassName('page')[0].offsetWidth
+            let boxHeight = document.getElementsByClassName('page')[0].offsetHeight
             this.tooltipPosition.left = ePosition.layerX + 20
             this.tooltipPosition.top = ePosition.layerY
             this.$nextTick(() => {
@@ -1306,6 +1317,9 @@ export default {
                   this.tooltipPosition.top = ePosition.layerY - this.$refs.topoTooltip.offsetHeight
                 }
               }
+              ePosition = null
+              boxWidth = null
+              boxHeight = null
             })
           }, 100)
           break
@@ -1432,22 +1446,26 @@ export default {
             }
             break
           case 'resize': {
-            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-            const domRect = dom ? dom.getBoundingClientRect() : {}
+            let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+            let domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
             }
+            dom = null
+            domRect = null
             break
           }
           case 'scale': {
             if (this.$refs.topTool) {
               this.$refs.topTool.scaleNum = parseInt(data * 100)
             }
-            const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-            const domRect = dom ? dom.getBoundingClientRect() : {}
+            let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+            let domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
             }
+            dom = null
+            domRect = null
             break
           }
           case 'locked': {
@@ -1556,7 +1574,7 @@ export default {
         fileList = fileList.splice(fileList.length - 1, 1)
         return false
       }
-      const isSize = new Promise(function (resolve, reject) {
+      new Promise(function (resolve, reject) {
         const width = 0
         const height = 0
         const _URL = window.URL || window.webkitURL
@@ -1718,18 +1736,25 @@ export default {
         this.$get('monitor/project/topo/icon').then(res => {
           this.imgageLoading = true
           this.tools = [...Tools]
-          const imgArr = []
-          const promiseArr = []
+          let imgArr = []
+          let promiseArr = []
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
+            if (getTopologyImg(item.id)) {
+              promiseArr.push(getTopologyImg(item.id))
+            } else {
+              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
+            }
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
-              item.image = res2[index].data
+              item.image = res2[index].data || res2[index]
+              if (!getTopologyImg(item.id)) {
+                setTopologyImg(item.id, item.image)
+              }
               const group = this.tools.find(tool => tool.group === item.unit)
               if (group) {
                 group.children.push({
@@ -1769,18 +1794,24 @@ export default {
 
             this.imgInit = true
             this.imgageLoading = false
+            imgArr = null
+            promiseArr = null
           })
         })
       } else {
         this.imgageLoading = true
         this.$get('monitor/project/topo/icon').then((imageAllId) => {
-          const promiseArr = []
+          let promiseArr = []
           if (!imageAllId || !imageAllId.data) {
             return
           }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
-              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
+              if (getTopologyImg(item.data.imageId)) {
+                promiseArr.push(getTopologyImg(item.data.imageId))
+              } else {
+                promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
+              }
             } else if (item.data.imageId) {
               promiseArr.push(imgDefault)
             } else {
@@ -1795,11 +1826,16 @@ export default {
             })
             this.iconArray.forEach((item, index) => {
               if (item.id) {
-                item.image = res2[index].data
+                item.image = res2[index].data || res2[index]
+                if (!getTopologyImg(item.id)) {
+                  setTopologyImg(item.id, item.image)
+                }
               }
             })
             this.imgInit = true
             this.imgageLoading = false
+            imgidList = null
+            promiseArr = null
           })
         })
       }
@@ -1839,8 +1875,7 @@ export default {
               //   resolve(img)
               // })
             })
-            .catch(err => {
-            })
+            .catch()
         })
       }
     },
@@ -2038,10 +2073,12 @@ export default {
       this.editTopologyFlag = false
       this.$nextTick(() => {
         getTopology(this.topologyIndex).lock(1)
-        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-        const domRect = dom ? dom.getBoundingClientRect() : {}
+        let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
+        let domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         this.$store.commit('setShowTopoScreen', this.topoScreenState)
+        dom = null
+        domRect = null
       })
       this.reload()
     },
@@ -2113,7 +2150,7 @@ export default {
 
     winResize () {
       setTimeout(() => {
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
+        let domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
           getTopology(this.topologyIndex).open(this.oldTopologyData)
@@ -2136,6 +2173,7 @@ export default {
         getTopology(this.topologyIndex).resize()
         getTopology(this.topologyIndex).centerView()
         this.getNodesArr()
+        domRect = null
       }, 500)
     },
     contextmenuNone () {
@@ -2183,18 +2221,6 @@ export default {
         flag = false
       }
       return flag
-    },
-    modelPopError (pen, state) {
-      if (item.id === 'asset' && this.activeModelItem.assetError) {
-        return true
-      }
-      if (item.id === 'alert' && this.activeModelItem.alertError) {
-        return true
-      }
-      if (item.id === 'endpoint' && this.activeModelItem.endpointError) {
-        return true
-      }
-      return false
     },
     redoIndexChange (index) {
       this.redoIndex = index
@@ -2250,16 +2276,32 @@ export default {
       }
     }
   },
-  destroyed () {
+  beforeDestroy () {
+    if (this.timer) {
+      clearInterval(this.timer)
+      this.timer = null
+    }
+    if (this.timer4) {
+      clearInterval(this.timer4)
+      this.timer4 = null
+    }
     if (getTopology(this.topologyIndex)) {
+      window.topology = null
+      window.Le5leTopologyPoint = null
+      window.topologyPoint = null
+      window.topologyRect = null
+      getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
       getTopology(this.topologyIndex).destroy()
+      Object.keys(getTopology(this.topologyIndex)).forEach(key => {
+        getTopology(this.topologyIndex)[key] = null
+      })
       setTopology(this.topologyIndex, null)
     }
     if (document.getElementById('topology-canvas' + this.topologyIndexF)) {
       document.getElementById('topology-canvas' + this.topologyIndexF).removeEventListener('mousemove', this.canvasMove)
     }
     window.removeEventListener('resize', this.winResize)
-    window.removeEventListener('resize', this.contextmenuNone)
+    window.removeEventListener('click', this.contextmenuNone)
   }
 }
 </script>

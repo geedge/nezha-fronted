@@ -35,7 +35,7 @@ export default {
   },
   data () {
     return {
-      containerShow: true,
+      containerShow: true
     }
   },
   methods: {

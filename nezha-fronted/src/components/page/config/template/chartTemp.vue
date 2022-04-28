@@ -100,7 +100,6 @@
 
 <script>
 import exportXLSX from '@/components/common/exportXLSX'
-import chartBox from '@/components/page/dashboard/chartBox'
 import deleteButton from '@/components/common/deleteButton'
 import dataListMixin from '@/components/common/mixin/dataList'
 import chartTmplTable from '@/components/common/table/settings/chartTmplTable'
@@ -112,7 +111,6 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 export default {
   name: 'chartTemp',
   components: {
-    chartBox,
     deleteButton,
     chartTmplTable,
     'export-excel': exportXLSX,

@@ -23,7 +23,7 @@ import * as echarts from 'echarts'
 import moment from 'moment-timezone'
 import bus from '@/libs/bus'
 import { formatScientificNotation } from '@/components/common/js/tools'
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { chartLegendPlacement } from '@/components/common/js/constants'
 import { getChart, setChart } from '@/components/common/js/common'
@@ -86,6 +86,7 @@ export default {
       }
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+      chartOption.color = this.colorList
       if (!this.series.length) {
         this.isNoData = true
         this.$emit('chartIsNoData', this.isNoData)

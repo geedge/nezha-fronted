@@ -1,5 +1,6 @@
 'use strict'
 const path = require('path')
+
 const utils = require('./utils')
 const webpack = require('webpack')
 const config = require('../config')
@@ -9,7 +10,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 const fileManagerPlugin = require('filemanager-webpack-plugin')
 const WebpackZipPlugin = require('webpack-zip-plugin')
 // const GitRevisionPlugin = require('git-revision-webpack-plugin')
@@ -57,15 +58,18 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': env
     }),
-    new UglifyJsPlugin({
-      uglifyOptions: {
+    new ParallelUglifyPlugin({
+      cacheDir: '.cache/',
+      uglifyJS: {
+        output: {
+          comments: false
+        },
+        warnings: false,
         compress: {
-          warnings: false
+          drop_debugger: true,
+          drop_console: true
         }
-      },
-      exclude: /manifest.+js/,
-      sourceMap: config.build.productionSourceMap,
-      parallel: true
+      }
     }),
     // extract css into its own file
     new ExtractTextPlugin({
@@ -87,6 +91,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
+      favicon: path.resolve(__dirname, '../src/assets/img/favicon.ico'),
       filename: config.build.index,
       template: 'index.html',
       hash: false,
@@ -190,26 +195,57 @@ if (process.env.NODE_ENV == 'development') {
         }
       ]
     })
-
   )
 } else {
   webpackConfig.plugins.push(
+    new fileManagerPlugin({
+      onStart: [
+        {
+          delete: [path.join(__dirname, '../dist/')]
+        }
+      ],
+      onEnd: [
+        {
+          move: [
+            { source: path.join(__dirname, '../dist', '/static/config.json'), destination: path.join(__dirname, '../dist/config.json') }
+
+          ],
+          mkdir: [
+            path.join(__dirname, '../dist', '/static')
+          ],
+          copy: [
+            { source: path.join(__dirname, '../dist', '/config.json'), destination: path.join(__dirname, '../dist', '/static/config.json') }
+          ]
+        },
+        {
+          delete: [
+            path.join(__dirname, '../dist', '/config.json'),
+            path.join(__dirname, '../.cache/')
+          ]
+        },
+        {
+          archive: [
+            { source: path.join(__dirname, '../dist'), destination: path.join(__dirname, '../dist', '/nz-gui.zip') }
+          ]
+        }
+      ]
+    }),
     // new WebpackZipPlugin({
     //   initialFile: './dist',
     //   endPath: './dist',
-    //   zipName: 'nz-gui.zip',
-    //   behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip;"+(process.env.BUILD_MODE=='all'?'mkdir -p ./dist/static;echo "start add map picture to zip file,it will take a few moment,please wait...";cp -r ../static/Tiles dist/static/;zip -gr nz-gui-${md5}.zip dist/static/Tiles>/dev/null;rm -rf dist;':'')
-    // }),
-    new WebpackShellPlugin({
-      onBuildStart: ['/bin/bash ' + path.join(__dirname, 'script') + '/buildStart.sh'],
-      onBuildEnd: ['/bin/bash ' + path.join(__dirname, 'script') + '/buildEnd.sh ' + process.env.BUILD_MODE]
-    })
+    //   zipName: 'nz-gui.zip'
+    //   // behindShell: 'cd ' + path.join(__dirname, '../dist/') + ";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip;" + (process.env.BUILD_MODE == 'all' ? 'mkdir -p ./dist/static;echo "start add map picture to zip file,it will take a few moment,please wait...";cp -r ../static/Tiles dist/static/;zip -gr nz-gui-${md5}.zip dist/static/Tiles>/dev/null;rm -rf dist;' : '')
+    // })
+    // new WebpackShellPlugin({
+    //   onBuildStart: ['/bin/bash ' + path.join(__dirname, 'script') + '/buildStart.sh'],
+    //   onBuildEnd: ['/bin/bash ' + path.join(__dirname, 'script') + '/buildEnd.sh ' + process.env.BUILD_MODE]
+    // })
     // new fileManagerPlugin({
-    //   onStart:[
+    //   onStart: [
     //     {
-    //       delete:[path.join(__dirname,'../dist/') ]
+    //       delete: [path.join(__dirname, '../dist/')]
     //     }
-    //   ],
+    //   ]
     // })
   )
 }

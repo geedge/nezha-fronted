@@ -14,8 +14,8 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-        <span v-if="item.prop === 'repeat'">
-          {{ tableData[0].schedule && tableData[0].schedule.repeat }}
+        <span v-if="item.prop === 'schedule'">
+          {{ tableData[0].schedule && changeType(tableData[0].schedule.type)? changeType(tableData[0].schedule.type):''}}
         </span>
         <span v-if="item.prop === 'retention'">
           {{ tableData[0].retention }}
@@ -35,7 +35,7 @@
         <span v-if="item.prop === 'fileName'"> {{ scope.row.fileName }} </span>
       </template>
     </el-table-column>
-    <el-table-column :resizable="false" fixed="right" 
+    <el-table-column :resizable="false" fixed="right"
     width="165px"
     >
       <div
@@ -65,10 +65,9 @@
 </template>
 
 <script>
-import { get, post ,put} from '@/http'
+import { post, put } from '@/http'
 import lodash from 'lodash'
 import bus from '@/libs/bus'
-
 
 export default {
   name: 'backupsTable',
@@ -78,29 +77,31 @@ export default {
     loading: Boolean,
     customTableTitle: Array,
     isConfigurations: Boolean,
+    tableData: Array,
+    tableData2: Array
   },
   data () {
     return {
-        
-      tableData: [
-        {
-          retention: '',
-          state: '',
-          schedule: {
-            repeat: '',
-            stime: '',
-            type: '',
-            nums: []
-          }
-        }
-      ],
-      tableData2: [
-        {
-          fileName: '',
-          time: '',
-          size: ''
-        }
-      ]
+
+      // tableData: [
+      //   {
+      //     retention: '',
+      //     state: '',
+      //     schedule: {
+      //       repeat: '',
+      //       stime: '',
+      //       type: '',
+      //       nums: []
+      //     }
+      //   }
+      // ],
+      // tableData2: [
+      //   {
+      //     fileName: '',
+      //     time: '',
+      //     size: ''
+      //   }
+      // ]
     }
   },
 
@@ -108,86 +109,50 @@ export default {
 
   computed: {},
 
-  created () {},
-
-  mounted () {
-    this.getTableData()
-  },
-
   methods: {
-      Restore(row){
-          put('/sys/backup/restore',{filename:row.fileName}).then(res=>{
-            if(res.code == 200){
-                this.getTableData('backup')
-            }
-        })
-      },
-      del(item){
-          console.log(item);
-      },
-      changeDate(item){
-          let time =Date.parse(item)
-          let time1 = this.timeFormate(time)
-          return time1
-      },
-      getNum(item){
-          return bus.getNumStr(item)
-      },
-    async getTableData (item) {
-        if(!item){
-            await get('/sys/backup').then((res) => {
-              if (res.code === 200) {
-                if (res.data) {
-                  this.tableData[0].retention = res.data.retention
-                  this.tableData[0].state = res.data.state == 1? true :false
-                  for (const i in res.data.schedule) {
-                    this.tableData[0].schedule[i] = res.data.schedule[i]
-                  }
-                }
-              }
-            })
-            await post('/sys/backup/list').then((res) => {
-              if (res.code === 200) {
-                if (res.data) {
-                    this.tableData2 = res.data
-                    
-                }
-              }
-            })
-        }else if(item == 'backup'){
-             get('/sys/backup').then((res) => {
-              if (res.code === 200) {
-                if (res.data) {
-                  this.tableData[0].retention = res.data.retention
-                  this.tableData[0].state = res.data.state == 1? true :false
-                  for (const i in res.data.schedule) {
-                    this.tableData[0].schedule[i] = res.data.schedule[i]
-                  }
-                }
-              }
-            })
-      this.$forceUpdate();
-
-        }else if(item == 'recent'){
-             post('/sys/backup/list').then((res) => {
-              if (res.code === 200) {
-                if (res.data) {
-                    this.tableData2 = res.data
-                    
-                }
-              }
-            })
-      this.$forceUpdate();
-
+    changeType (item) {
+      if (item == 1) {
+        return this.$t('backup.only')
+      } else if (item == 2) {
+        return this.$t('backup.Daily')
+      } else if (item == 3) {
+        return this.$t('backup.Weekly')
+      } else {
+        return this.$t('backup.Monthly')
+      }
+    },
+    Restore (row) {
+      put('/sys/backup/restore', { filename: row.fileName }).then(res => {
+        if (res.code == 200) {
+          this.$emit("getTableData", 'recent')
+        } else {
+          this.$message.error(response.msg)
         }
+      })
+    },
+    del (row) {
+      this.$delete('/sys/backup?filename=' + row.fileName).then(res => {
+        if (res.code == 200) {
+          this.$emit("getTableData", 'recent')
+        } else {
+          this.$message.error(response.msg)
+        }
+      })
+    },
+    changeDate (item) {
+      const time = Date.parse(item)
+      const time1 = this.timeFormate(time)
+      return time1
+    },
+    getNum (item) {
+      return bus.getNumStr(item)
     },
     backupNow (item) {
       post('/sys/backup').then((res) => {
-        console.log(res)
       })
     },
     edit () {
-          this.$emit('edit', this.tableData[0])
+      this.$emit('edit', this.tableData[0])
     }
   },
 

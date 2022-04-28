@@ -158,7 +158,7 @@
 
 <script>
 import table from '@/components/common/mixin/table'
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 export default {
   name: 'alertRuleTable',
   mixins: [table],

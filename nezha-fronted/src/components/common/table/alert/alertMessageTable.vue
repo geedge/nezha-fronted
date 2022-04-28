@@ -139,7 +139,7 @@
 import bus from '../../../../libs/bus'
 import axios from 'axios'
 import table from '@/components/common/mixin/table'
-import chartDataFormat from '../../../charts/chartDataFormat'
+import chartDataFormat from '../../../chart/chartDataFormat'
 import alertRuleInfo from '../../alert/alertRuleInfo'
 import { calcDurationByStringTimeB } from '../../js/tools'
 import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
@@ -148,7 +148,7 @@ import alertMessageLabelMixin from '@/components/common/alert/alertMessageLabelM
 export default {
   name: 'alertMessageTable',
   components: {
-    alertRuleInfo: alertRuleInfo,
+    alertRuleInfo: alertRuleInfo
   },
   props: {
     nowTime: {

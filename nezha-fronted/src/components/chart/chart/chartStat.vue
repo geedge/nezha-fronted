@@ -11,7 +11,7 @@
         background:item.mapping ? item.mapping.color.bac : (statData.length===1 ? '' : colorList[index]),
         height:item.height+'px',
         width:item.width + 'px',
-        fontSize: item.height > item.width ? (14 * (item.width/60)+ 'px') : (14 * (item.height/60)+ 'px')
+        fontSize: setFontSize(item)
       }"
     >
       <span v-if="chartInfo.param.text==='all'">
@@ -50,7 +50,7 @@
 import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
 import { getMetricTypeValue } from '@/components/common/js/tools'
-import chartDataFormat from '@/components/charts/chartDataFormat'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { initColor } from '@/components/chart/chart/tools'
 // import fontWidth from '@/components/chart/chart/options/fontWidth'
@@ -63,7 +63,7 @@ export default {
       statData: [],
       boxWidth: 0,
       boxHeight: 0,
-      boxPadding: 5,
+      boxPadding: 2,
       statTimer: null,
       tooltip: {
         x: 0,
@@ -73,6 +73,7 @@ export default {
         show: false
       },
       fontSize: 12,
+      minFontSzie: 12,
       defaultUnit: 60 // 根据stat的长宽取 需要的字体 = (取最短的边 / defaultUnit) * fontSize 因为 需要的字体/fontSize = 实际宽 / defaultUnit
     }
   },
@@ -212,6 +213,11 @@ export default {
           this.renderStat(layout)
         })
       }, 50)
+    },
+    setFontSize (item) {
+      let fontSize = item.height > item.width ? (14 * (item.width / 60)) : (14 * (item.height / 60))
+      fontSize = fontSize > 12 ? fontSize : this.minFontSzie
+      return fontSize + 'px'
     }
   },
   mounted () {

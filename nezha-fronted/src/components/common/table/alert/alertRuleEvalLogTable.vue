@@ -48,13 +48,13 @@
           <el-tooltip :disabled="!scope.row.etts" effect="light" placement="right">
             <div slot="content">
               {{$t('config.terminallog.endTime')}}<br/>
-              {{timestampStr(scope.row.etts)}}
+              {{utcTimeToTimezoneStr(scope.row.etts)}}
             </div>
             <span>{{getDuration(scope.row)}}</span>
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'stts'">
-          {{timestampStr(scope.row[item.prop])}}
+          {{utcTimeToTimezoneStr(scope.row[item.prop])}}
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <template v-else>-</template>

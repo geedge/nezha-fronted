@@ -1,7 +1,7 @@
 <template>
   <div class="system">
     <div class="system-config-form system-config-backup">
-      <div class="system-title">{{$t('backup.configurations')}}</div>
+      <div class="system-title">{{ $t("backup.configurations") }}</div>
       <nz-data-list
         ref="dataList"
         id="modelTable"
@@ -11,9 +11,10 @@
       >
         <template v-slot="slotProps">
           <backups-table
-          ref="backupsTable1"
+            ref="backupsTable1"
             :custom-table-title="customTableTitle"
             :is-configurations="true"
+            :table-data="tableData"
             @edit="edit"
           >
           </backups-table>
@@ -22,7 +23,7 @@
     </div>
 
     <div class="system-config-form system-config-backup">
-      <div class="system-title">{{$t('backup.recent')}}</div>
+      <div class="system-title">{{ $t("backup.recent") }}</div>
       <nz-data-list
         ref="dataList"
         id="modelTable"
@@ -32,16 +33,24 @@
       >
         <template v-slot="slotProps">
           <backups-table
-          ref="backupsTable2"
+            ref="backupsTable2"
             :custom-table-title="customTableTitle2"
             :is-configurations="false"
+            key="backups2"
+            :table-data2="tableData2"
+            @getTableData="getTableData"
           >
           </backups-table>
         </template>
       </nz-data-list>
     </div>
     <transition name="right-box">
-      <backups-box v-if="rightBoxshow"  :obj="object" @close="closeRightBox" class="backup_box"></backups-box>
+      <backups-box
+        v-if="rightBoxshow"
+        :obj="object"
+        @close="closeRightBox"
+        class="backup_box"
+      ></backups-box>
     </transition>
   </div>
 </template>
@@ -58,9 +67,9 @@ export default {
   data () {
     return {
 
-      url: '/sys/backup/list',
+      url: '/sys/backup',
       customTableTitle: [
-        { label: this.$t('backup.frequency'), prop: 'repeat' },
+        { label: this.$t('backup.schedule'), prop: 'schedule' },
         { label: this.$t('backup.backupRetention'), prop: 'retention' },
         { label: this.$t('backup.last'), prop: 'last' },
         { label: this.$t('backup.Enable'), prop: 'state' }
@@ -96,14 +105,68 @@ export default {
 
   created () {},
 
-  mounted () {},
+  mounted () {
+    this.getTableData()
+  },
 
   methods: {
+
+    getTableData (item) {
+      if (!item) {
+        this.$get('/sys/backup').then((res) => {
+          if (res.code === 200) {
+            if (res.data) {
+              this.tableData[0].retention = res.data.retention
+              this.tableData[0].state = res.data.state == 1
+              for (const i in res.data.schedule) {
+                this.tableData[0].schedule[i] = res.data.schedule[i]
+              }
+            }
+          }
+        })
+        this.$post('/sys/backup/list').then((res) => {
+          if (res.code === 200) {
+            if (res.data) {
+              this.tableData2 = res.data
+            }
+          }
+        })
+      } else if (item == 'backup') {
+        this.$get('/sys/backup').then((res) => {
+          if (res.code === 200) {
+            if (res.data) {
+              this.tableData[0].retention = res.data.retention
+              this.tableData[0].state = res.data.state == 1
+              for (const i in res.data.schedule) {
+                this.tableData[0].schedule[i] = res.data.schedule[i]
+              }
+            }
+          }
+        })
+
+        this.$post('/sys/backup/list').then((res) => {
+          if (res.code === 200) {
+            if (res.data) {
+              this.tableData2 = res.data
+            }
+          }
+        })
+      } else if (item == 'recent') {
+        this.$post('/sys/backup/list').then((res) => {
+          if (res.code === 200) {
+            if (res.data) {
+              this.tableData2 = res.data
+            }
+          }
+        })
+      }
+    },
     edit (row) {
-      this.object = { ...row ,
-      checkDay:'',
-      checkDays:'',
-      datepicker:''
+      this.object = {
+        ...row,
+        checkDay: '',
+        checkDays: '',
+        datepicker: ''
       }
       this.object.name = this.$t('backup.edit')
       if (this.object.schedule) {
@@ -115,10 +178,10 @@ export default {
     },
     closeRightBox (refresh) {
       if (refresh) {
-        this.$refs.backupsTable1.getTableData('backup')
+        this.getTableData('backup')
       }
       this.rightBoxshow = false
-    },
+    }
   },
 
   watch: {}

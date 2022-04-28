@@ -82,7 +82,6 @@ export default {
   },
   methods: {
     edit (row, copyFlag) {
-      console.log(row,copyFlag);
       this.object = { ...row }
       if (copyFlag) {
         this.object.name = this.object.name + '-copy'

@@ -40,7 +40,7 @@
 <!--                </el-input>-->
 <!--              </div>-->
 
-              <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10"></pick-time>
+              <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id"></pick-time>
 
               <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
                       type="button" @click="addChartBefore">
@@ -75,7 +75,7 @@
                     <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
                   </el-dropdown-item>
                   <el-dropdown-item v-has="'main_add'">
-                    <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>
+                    <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-export-pdf"></i>{{ $t('overall.downloadToPdf') }}</div>
                   </el-dropdown-item>
                   <el-dropdown-item v-has="'main_add'">
                     <div id="chart-export-html" @click="exportHtml"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>
@@ -113,20 +113,6 @@
     <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
-<!--      <chart-box-->
-<!--        v-if="rightBox.chart.show"-->
-<!--        ref="addChartModal"-->
-<!--        :chart="chart"-->
-<!--        :from="fromRoute.panel"-->
-<!--        :panel-data="panelData"-->
-<!--        :show-panel="showPanel"-->
-<!--        @close="closeChartBox"-->
-<!--        @reload="panelReload"-->
-<!--        @reloadOnlyPanel="panelReloadOnlyPanel"-->
-<!--        @delete-chart="delChart"-->
-<!--        @on-create-success="createSuccess"-->
-<!--        @on-delete-success="delChartOk"-->
-<!--      ></chart-box>-->
       <chart-right-box
         v-if="chartRightBoxShow"
         v-my-loading="rightBox.loading"
@@ -153,7 +139,6 @@
 </template>
 
 <script>
-import ChartBox from './chartBox'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
@@ -167,6 +152,7 @@ import { lineChartMove } from '@/components/common/js/common'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
+import FileSaver from 'file-saver'
 // import chartData from './testData'
 
 export default {
@@ -289,7 +275,6 @@ export default {
     }
   },
   components: {
-    'chart-box': ChartBox,
     'pick-time': pickTime,
     'panel-box': panelBox,
     topToolMoreOptions,
@@ -651,7 +636,7 @@ export default {
       const vm = this
       this.$get('visual/panel?type=dashboard&pageSize=-1').then(response => {
         if (response.code === 200) {
-          this.panelData = response.data.list
+          this.panelData = JSON.parse(JSON.stringify(response.data.list))
           let isInitData = false
           if (response.data.list.length > 0) {
             if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
@@ -839,8 +824,13 @@ export default {
       const dom = document.getElementsByClassName(this.pdfId)[0]
       if (dom) {
         // dom = dom.getElementsByClassName('vue-grid-layout')[0]
+        this.htmlTitle = this.showPanel.name
         this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
         this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
+        // const div = document.createElement('div')
+        // div.setAttribute('class', 'el-loading-spinner')
+        // div.innerText = '12321312312312321'
+        // dom.insertBefore(div,)
         let flag = true
         this.showScreenLoading(true)
         let timer = setInterval(() => {
@@ -859,10 +849,10 @@ export default {
             timer = null
             setTimeout(() => {
               document.body.style.height = 'auto'
+              document.getElementsByClassName('left-menu')[0].style.height = '100vh'
               // document.getElementsByTagName('html')[0].style.overflow = 'visible'
               const position = dom.getBoundingClientRect()
-              console.log(position)
-              this.getPdf(dom, -1 * position.left, -1 * position.top)
+              this.getPdf(dom, -1 * position.left, -1 * position.top, this.searchTime)
               // this.getPdf(dom, 0, 0)
             }, 2000)
           }
@@ -870,6 +860,44 @@ export default {
       } else {
         this.showScreenLoading(false)
       }
+    },
+    exportData () {
+      this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
+      this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
+      let flag = true
+      let timer = setInterval(() => {
+        flag = true
+        this.$refs.chartList.copyDataList.forEach(chart => {
+          if (chart.type !== 'group') {
+            flag = flag && chart.loaded
+          } else if (chart.collapse) {
+            chart.children.forEach(groupChart => {
+              flag = flag && groupChart.loaded
+            })
+          }
+        })
+        if (flag) {
+          clearInterval(timer)
+          timer = null
+          setTimeout(() => {
+            this.dataList.forEach(item => {
+              if (item.type === 'group') {
+                item.chartData = [item.children]
+              }
+              if (item.type === 'group' && !item.param.collapse) {
+                item.children.forEach(child => {
+                  child.chartData = this.$refs.chartList.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.$refs['chart' + child.id][0].chartData
+                })
+              } else {
+                item.chartData = this.$refs.chartList.$refs['chart' + item.id][0].chartData
+              }
+            })
+            const data = JSON.stringify(this.dataList)
+            const blob = new Blob([data], { type: '' })
+            FileSaver.saveAs(blob, 'ceshi.json')
+          }, 2000)
+        }
+      }, 200)
     }
   },
   created () {
@@ -916,9 +944,6 @@ export default {
         }
       }, 100)
     }
-  },
-  beforeDestroy () {
-    this.$store.dispatch('dispatchPanelLock', { flag: true })
   },
   watch: {
     'filter.searchName': function (n, o) {
@@ -971,6 +996,7 @@ export default {
     }
   },
   beforeDestroy () {
+    this.$store.dispatch('dispatchPanelLock', { flag: true })
     if (document.querySelector('#tableList')) {
       document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)
       document.querySelector('#tableList').removeEventListener('mouseleave', this.tableListLeave)

@@ -200,7 +200,7 @@ export default {
           endpointTabTitle: [
             { prop: 'panelTab', name: this.$t('overall.detail') },
             { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
-            { prop: 'endpointQuery', name: this.$t('project.metrics.metrics')  },
+            { prop: 'endpointQuery', name: this.$t('project.metrics.metrics') },
             { prop: 'log', name: this.$t('overall.logs') }
           ]
         },
