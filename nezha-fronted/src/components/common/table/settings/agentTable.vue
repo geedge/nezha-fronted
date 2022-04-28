@@ -41,6 +41,7 @@
                 {{findServerType(scope.row[item.prop]).text}}
               </span>
         <span v-else-if="item.prop === 'checkTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+        <span v-else-if="item.prop === 'ts'">{{scope.row[item.prop]?utcTimeToTimezoneStr(scope.row[item.prop]):'-'}}</span>
         <span v-else-if="item.prop === 'status'">
           <el-popover :content="$t('asset.assetStatPre')+(scope.row.checkTime?utcTimeToTimezoneStr(scope.row.checkTime):$t('asset.assetStatDown'))" placement="right" trigger="hover" width="200">
             <div slot="reference" style="width: 60px">
@@ -144,6 +145,12 @@ export default {
         }, {
           label: this.$t('config.agent.protocol'),
           prop: 'protocol',
+          show: false,
+          minWidth: 150
+        },
+        {
+          label: this.$t('dashboard.panel.chartForm.typeVal.server'),
+          prop: 'ts',
           show: false,
           minWidth: 150
         }
