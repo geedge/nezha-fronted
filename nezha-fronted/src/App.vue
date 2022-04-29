@@ -15,6 +15,7 @@ export default {
     browserWindowZoom
   },
   async created () {
+    console.log(12312312312312312313123)
     const herfSpiltArr = window.location.href.split('/')
     if (herfSpiltArr[3] !== '#') {
       herfSpiltArr[3] = '#'

@@ -3,15 +3,39 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
-
+console.log(process.env.ONLY_HTML)
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
-
+const onlyHtml = {
+  // publicPath: '', // 使用相对路径
+  // indexPath: 'index.html',
+  // outputDir: 'dist',
+  // // assetsDir: 'static',
+  // productionSourceMap: false,
+  // chainWebpack: config => {
+  //   config.plugin('preload').tap(args => {
+  //     args[0].fileBlacklist.push(/\.css/, /\.js/)
+  //     return args
+  //   })
+  //   config.plugin('inline-source')
+  //     .use(require('html-webpack-inline-source-plugin'))
+  //   config.plugin('html').tap(args => {
+  //     args[0].chunksSortMode = 'none'
+  //     args[0].inlineSource = '(\.css|\.js$)'
+  //     return args
+  //   })
+  //   config.resolve.alias // 添加别名
+  //     .set('@', resolve('src'))
+  //     .set('@assets', resolve('src/assets'))
+  //     .set('@components', resolve('src/components'))
+  // }
+}
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './src/main.js'
+    app: './src/main.js',
+    entrance: './src/entrance/entrance.main.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -96,5 +120,6 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
-  }
+  },
+  ...onlyHtml
 }

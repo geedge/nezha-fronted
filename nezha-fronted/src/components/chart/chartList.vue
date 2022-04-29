@@ -49,6 +49,7 @@
           :from="from"
           :time-range="timeRange"
           @groupShow="groupShow"
+          :isExportHtml="isExportHtml"
           :chart-detail-info="chartDetailInfo"
           @refreshPanel="refreshPanel"
           @showFullscreen="showFullscreen"
@@ -423,12 +424,18 @@ export default {
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)
       window.addEventListener('resize', this.resize)
     }
+    if (this.isExportHtml) {
+      this.$nextTick(() => {
+        this.onScroll(999999)
+      })
+    }
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.resize)
   },
   watch: {
     dataList: {
+      immediate: true,
       deep: true,
       handler (n) {
         this.gridLayoutShow = false

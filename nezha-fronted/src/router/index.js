@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router)
-
+console.log('app.router')
 export default new Router({
   routes: [
     {

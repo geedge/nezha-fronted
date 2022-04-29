@@ -87,7 +87,8 @@ export default {
     showHeader: {
       type: Boolean,
       default: true
-    }
+    },
+    isExportHtml: false
   },
   data () {
     return {
@@ -99,8 +100,8 @@ export default {
       showAllData: false,
       allDataLength: 0,
       severityData: this.$store.getters.severityData,
-      severityDataWeight: this.$store.getters.severityDataWeight,
-      isExportData: false
+      severityDataWeight: this.$store.getters.severityDataWeight
+      // isExportData: false
     }
   },
   computed: {
@@ -162,8 +163,25 @@ export default {
     query (elements, startTime, endTime, step, params) {
       this.isError = false
       this.allDataLength = 0
-      if (this.isExportData) {
-        this.chartData = this.chartInfo.chartData
+      this.chartData = this.chartInfo.chartData
+      if (this.isExportHtml) {
+        switch (this.chartInfo.datasource) {
+          case 'metrics':
+          case 'logs': {
+            this.chartData.forEach(item => {
+              item.forEach(children => {
+                children.elements = elements[0]
+              })
+            })
+            this.loading = false
+          }
+            break
+          case 'system': {
+            this.chartInfo.elements = this.chartInfo.param.datasource
+          }
+        }
+        this.loading = false
+        return
       }
       try {
         switch (this.chartInfo.datasource) {
