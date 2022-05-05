@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import vm from '../../../main'
+import vm from '../../../app/main'
 
 export default {
   name: 'licenseGen',

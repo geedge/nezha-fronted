@@ -4,29 +4,29 @@ import 'xterm/dist/xterm.css'
 import '@/assets/css/main.scss'
 import '@/assets/css/font/iconfont.js'
 import ElementUI from 'element-ui'
-import i18n from './components/common/i18n'
+import i18n from '@/components/common/i18n'
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-import store from './store/index'
-import App from './App'
-import router from './router'
+import store from '@/store/index'
+import App from '@/app/App'
+import router from '@/router'
 import VueResource from 'vue-resource'
 import axios from 'axios'
-import { hasPermission, hasButton } from './permission'
+import { hasPermission, hasButton } from '@/permission'
 import loadsh from 'lodash'
 import plTable from 'pl-table'
 import 'pl-table/themes/index.css'
 
-import { post, get, put, del } from './http.js'
-import { clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet, cancelWithChange, myLoading } from './components/common/js/tools.js'
-import * as tools from './components/common/js/tools.js'
-import * as constants from './components/common/js/constants.js'
+import { post, get, put, del } from '@/http.js'
+import { clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet, cancelWithChange, myLoading } from '@/components/common/js/tools.js'
+import * as tools from '@/components/common/js/tools.js'
+import * as constants from '@/components/common/js/constants.js'
 
-import Pagination from './components/common/pagination' // 引入全局分页组件
-import searchInput from './components/common/searchInput' // 搜索框组件
-import elementSet from './components/common/elementSet' // 自定义表头组件
-import MyElSelect from './components/common/elSelect/MyElSelect'
+import Pagination from '@/components/common/pagination' // 引入全局分页组件
+import searchInput from '@/components/common/searchInput' // 搜索框组件
+import elementSet from '@/components/common/elementSet' // 自定义表头组件
+import MyElSelect from '@/components/common/elSelect/MyElSelect'
 import chartList from '@/components/chart/chartList.vue' // 全局引入 chartList 组件 防止 chart-group爆粗
 
 import loading from '@/components/common/loading'

@@ -25,11 +25,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
-        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') }
+        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'src/app/index.html') }
       ]
     },
     hot: true,
-    inline:true,
+    inline: true,
     contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,
     host: HOST || config.dev.host,
@@ -57,9 +57,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       favicon: path.resolve(__dirname, '../src/assets/img/favicon.ico'),
       filename: 'index.html',
-      template: 'index.html',
+      template: 'src/app/index.html',
       inject: true,
-      chunks: ['entrance']
+      chunks: ['app']
     }),
     // copy custom static assets
     new CopyWebpackPlugin([

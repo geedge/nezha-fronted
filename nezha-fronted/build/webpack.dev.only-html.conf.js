@@ -26,7 +26,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
-        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') }
+        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'src/entrance/entrance.html') }
       ]
     },
     hot: true,
@@ -58,9 +58,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       favicon: path.resolve(__dirname, '../src/assets/img/favicon.ico'),
       filename: 'entrance.html',
-      template: 'entrance.html',
+      template: 'src/entrance/entrance.html',
       inject: true,
-      chunks: ['app']
+      chunks: ['entrance']
     }),
     // copy custom static assets
     new CopyWebpackPlugin([

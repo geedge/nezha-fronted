@@ -36,7 +36,7 @@ import vSelectPage from '@/components/common/v-selectpagenew'
 import nzDataList from '@/components/common/table/nzDataList'
 import htmlToPdf from '@/components/common/js/htmlToPdf'
 import mainMixin from '@/components/common/mixin/mainMixinFun'
-
+window.entrance = true
 Vue.use(htmlToPdf)
 Vue.use(vSelectPage, {
   dataLoad: function (vue, url, params) {

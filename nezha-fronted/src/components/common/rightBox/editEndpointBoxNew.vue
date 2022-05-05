@@ -587,7 +587,7 @@ import pipelineSelect from './pipelineSelect'
 import selectWalk from '../popBox/selectWalk'
 import editRigthBox from '../mixin/editRigthBox'
 import VueTagsInput from '@johmun/vue-tags-input'
-import vm from '@/main'
+import vm from '@/app/main'
 
 export default {
   name: 'editEndpointBoxNew',
