@@ -3,39 +3,16 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
-console.log(process.env.ONLY_HTML)
+const arg = process.env.BUILD_MODE
+const devStart = process.env.npm_lifecycle_event
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
-const onlyHtml = {
-  // publicPath: '', // 使用相对路径
-  // indexPath: 'index.html',
-  // outputDir: 'dist',
-  // // assetsDir: 'static',
-  // productionSourceMap: false,
-  // chainWebpack: config => {
-  //   config.plugin('preload').tap(args => {
-  //     args[0].fileBlacklist.push(/\.css/, /\.js/)
-  //     return args
-  //   })
-  //   config.plugin('inline-source')
-  //     .use(require('html-webpack-inline-source-plugin'))
-  //   config.plugin('html').tap(args => {
-  //     args[0].chunksSortMode = 'none'
-  //     args[0].inlineSource = '(\.css|\.js$)'
-  //     return args
-  //   })
-  //   config.resolve.alias // 添加别名
-  //     .set('@', resolve('src'))
-  //     .set('@assets', resolve('src/assets'))
-  //     .set('@components', resolve('src/components'))
-  // }
-}
-module.exports = {
+const baseConfig = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './src/app/main.js',
-    entrance: './src/entrance/entrance.main.js'
+    app: './src/entrance/app/main.js',
+    exportHtml: './src/entrance/exportHtml/exportHtml.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -120,6 +97,50 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
-  },
-  ...onlyHtml
+  }
 }
+if (arg === 'html' || devStart === 'dev:html') {
+  delete baseConfig.entry.app
+  baseConfig.module.rules.unshift({
+    include: [
+      resolve('src/entrance/app'),
+      resolve('src/components/common/alert'),
+      resolve('src/components/common/bottomBox'),
+      resolve('src/components/common/detailView'),
+      resolve('src/components/common/elSelect'),
+      resolve('src/components/common/filterSearch'),
+      resolve('src/components/common/globalSearch'),
+      resolve('src/components/common/honeycomb'),
+      resolve('src/components/common/myDatePicker'),
+      resolve('src/components/common/overView'),
+      resolve('src/components/common/popBox'),
+      resolve('src/components/common/project'),
+      resolve('src/components/common/rightBox'),
+      resolve('src/components/common/table'),
+      resolve('src/components/common/v-selectpagenew'),
+      resolve('src/components/page')
+    ],
+    loader: 'url-loader',
+    options: {
+      limit: 10,
+      generator: (content, mimetype, encoding, resourcePath) => {
+        return ''
+      }
+    }
+  })
+} else if (arg === 'app' || devStart === 'dev') {
+  delete baseConfig.entry.exportHtml
+  baseConfig.module.rules.unshift({
+    include: [
+      resolve('src/entrance/exportHtml')
+    ],
+    loader: 'url-loader',
+    options: {
+      limit: 10,
+      generator: (content, mimetype, encoding, resourcePath) => {
+        return ''
+      }
+    }
+  })
+}
+module.exports = { ...baseConfig }

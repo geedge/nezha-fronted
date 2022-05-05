@@ -32,5 +32,7 @@ specs 配置对应的测试用例 （https://docs.geedge.net/pages/viewpage.acti
 #思维导图
 https://docs.geedge.net/pages/viewpage.action?pageId=67209306
 
-
+#配置多入口
+dev  正常启动
+dev:html   导出为html
 

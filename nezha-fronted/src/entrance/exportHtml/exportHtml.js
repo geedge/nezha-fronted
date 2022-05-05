@@ -8,55 +8,25 @@ import i18n from '@/components/common/i18n'
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-import store from '@/store/index'
-import App from '@/app/App'
-import router from '@/router'
+import store from '@/store/exportHtml'
+import App from './App.vue'
+import router from '@/router/exportHtmlRouter'
 import VueResource from 'vue-resource'
 import axios from 'axios'
-import { hasPermission, hasButton } from '@/permission'
+import { hasPermission } from '@/permission'
 import loadsh from 'lodash'
-import plTable from 'pl-table'
-import 'pl-table/themes/index.css'
 
 import { post, get, put, del } from '@/http.js'
 import { clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet, cancelWithChange, myLoading } from '@/components/common/js/tools.js'
 import * as tools from '@/components/common/js/tools.js'
 import * as constants from '@/components/common/js/constants.js'
 
-import Pagination from '@/components/common/pagination' // 引入全局分页组件
-import searchInput from '@/components/common/searchInput' // 搜索框组件
-import elementSet from '@/components/common/elementSet' // 自定义表头组件
-import MyElSelect from '@/components/common/elSelect/MyElSelect'
 import chartList from '@/components/chart/chartList.vue' // 全局引入 chartList 组件 防止 chart-group爆粗
 
-import loading from '@/components/common/loading'
 import pickTime from '@/components/common/pickTime'
-import myDatePicker from '@/components/common/myDatePicker'
-import vSelectPage from '@/components/common/v-selectpagenew'
 import nzDataList from '@/components/common/table/nzDataList'
-import htmlToPdf from '@/components/common/js/htmlToPdf'
 import mainMixin from '@/components/common/mixin/mainMixinFun'
-
-Vue.use(htmlToPdf)
-Vue.use(vSelectPage, {
-  dataLoad: function (vue, url, params) {
-    if (params.pageNumber) {
-      params.pageNo = params.pageNumber
-    }
-    return new Promise((resolve, reject) => {
-      get(url, params).then(res => {
-        resolve(res)
-      }, e => reject(e))
-    })
-  }
-})
-Vue.use(myDatePicker)
-Vue.component('Pagination', Pagination)
-Vue.component('searchInput', searchInput)
-Vue.component('element-set', elementSet)
-Vue.component('loading', loading)
 Vue.component('pick-time', pickTime)
-Vue.component('myDatePicker', myDatePicker)
 Vue.component('nzDataList', nzDataList)
 Vue.component('chartList', chartList)
 
@@ -121,8 +91,6 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(Vuex)
 Vue.use(VueResource)
-Vue.use(plTable)
-Vue.component('el-select', MyElSelect)
 Vue.use(hasPermission)
 
 /* 指令 */
@@ -131,7 +99,7 @@ Vue.directive('clickoutside', clickoutside)
 Vue.directive('myLoading', myLoading)
 window.resizing = false
 window.vm = new Vue({
-  el: '#app',
+  el: '#entrance',
   router,
   i18n,
   store,

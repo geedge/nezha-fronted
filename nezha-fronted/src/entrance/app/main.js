@@ -9,8 +9,8 @@ import i18n from '@/components/common/i18n'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import store from '@/store/index'
-import App from './entrance.vue'
-import router from './entrance.router'
+import App from './App'
+import router from '@/router'
 import VueResource from 'vue-resource'
 import axios from 'axios'
 import { hasPermission, hasButton } from '@/permission'
@@ -36,7 +36,7 @@ import vSelectPage from '@/components/common/v-selectpagenew'
 import nzDataList from '@/components/common/table/nzDataList'
 import htmlToPdf from '@/components/common/js/htmlToPdf'
 import mainMixin from '@/components/common/mixin/mainMixinFun'
-window.entrance = true
+
 Vue.use(htmlToPdf)
 Vue.use(vSelectPage, {
   dataLoad: function (vue, url, params) {
@@ -131,7 +131,7 @@ Vue.directive('clickoutside', clickoutside)
 Vue.directive('myLoading', myLoading)
 window.resizing = false
 window.vm = new Vue({
-  el: '#entrance',
+  el: '#app',
   router,
   i18n,
   store,

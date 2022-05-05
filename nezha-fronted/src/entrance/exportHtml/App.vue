@@ -1,5 +1,5 @@
 <template>
-  <div id="entrance" class="theme-light">
+  <div id="entrance" class="theme-light body">
     <chartList
       ref="chartList"
       name="panel"

@@ -82,7 +82,7 @@
 
 <script>
 import editRigthBox from '../mixin/editRigthBox'
-import vm from '../../../app/main'
+import vm from '../../../entrance/app/main'
 
 export default {
   name: 'ipamBox',

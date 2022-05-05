@@ -12,8 +12,10 @@ const portfinder = require('portfinder')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
-
-const devWebpackConfig = merge(baseWebpackConfig, {
+const devStart = process.env.npm_lifecycle_event
+const indexHtml = devStart === 'dev' ? 'src/entrance/app/index.html' : 'src/entrance/exportHtml/exportHtml.html'
+let devWebpackConfig = ''
+devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
@@ -25,7 +27,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
-        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'src/app/index.html') }
+        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, indexHtml) }
       ]
     },
     hot: true,
@@ -57,9 +59,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       favicon: path.resolve(__dirname, '../src/assets/img/favicon.ico'),
       filename: 'index.html',
-      template: 'src/app/index.html',
+      template: indexHtml,
       inject: true,
-      chunks: ['app']
+      chunks: devStart === 'dev' ? ['app'] : ['exportHtml']
     }),
     // copy custom static assets
     new CopyWebpackPlugin([
