@@ -1,22 +1,31 @@
 <template>
-  <div id="entrance" class="theme-light body">
-    <chartList
-      ref="chartList"
-      name="panel"
-      :panelId="'export'"
-      :class="{'show-top': true}"
-      :data-list="dataJson"
-      :is-export-html="true"
-      :nowTimeType="nowTimeType"
-      :from="'panel'"
-      :time-range="searchTime"
-      @edit-chart="editChart"
-      @on-refresh-time="refreshTime"
-      @on-remove-chart="delChart"
-      @on-add-group-item-chart="addGroupItem"
-      @refreshPanel="refreshPanel"
-      :loading="chartListLoading"
-    />
+  <div id="entrance" class="theme-light body container list-page" style="height: 100%">
+    <div class="main-list">
+      <div id="tableList" class="table-list" style='overflow-y: unset'>
+        <div class="table-list-box">
+          <div  id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow-y: auto'>
+            <chartList
+              ref="chartList"
+              name="panel"
+              :panelId="'export'"
+              :class="{'show-top': true}"
+              :data-list="dataJson"
+              :is-export-html="true"
+              :nowTimeType="nowTimeType"
+              :from="'panel'"
+              :time-range="searchTime"
+              @edit-chart="editChart"
+              @on-refresh-time="refreshTime"
+              @on-remove-chart="delChart"
+              @on-add-group-item-chart="addGroupItem"
+              @refreshPanel="refreshPanel"
+              :loading="chartListLoading"
+            />
+          </div>
+        </div>
+      </div>
+
+    </div>
     <span class="temp-dom"></span>
   </div>
 </template>
@@ -54,6 +63,7 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
+    margin-top: 10px;
+    padding-bottom: 20px;
   }
 </style>
