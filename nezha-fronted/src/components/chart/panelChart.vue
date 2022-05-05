@@ -42,6 +42,7 @@
       :chart-data="chartData"
       :chart-info="chartInfo"
       :panelLock="panelLock"
+      :isExportHtml="isExportHtml"
       :filter="filter"
       :from="from"
       @refreshLogs="refreshLogs"
@@ -88,7 +89,10 @@ export default {
       type: Boolean,
       default: true
     },
-    isExportHtml: false
+    isExportHtml: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
@@ -167,7 +171,7 @@ export default {
       if (this.isExportHtml) {
         switch (this.chartInfo.datasource) {
           case 'metrics':
-          case 'logs': {
+          case 'logs' : {
             this.chartData.forEach(item => {
               item.forEach(children => {
                 children.elements = elements[0]
@@ -179,6 +183,13 @@ export default {
           case 'system': {
             this.chartInfo.elements = this.chartInfo.param.datasource
           }
+            break
+          case 'misc': {
+            if (this.chartInfo.type === 'diagram' || this.chartInfo.type === 'topology'|| this.chartInfo.type === 'map') {
+              this.chartData === []
+            }
+          }
+            break
         }
         this.loading = false
         return
