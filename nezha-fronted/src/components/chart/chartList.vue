@@ -50,6 +50,7 @@
           :time-range="timeRange"
           @groupShow="groupShow"
           :isExportHtml="isExportHtml"
+          :dataJson="dataJson"
           :chart-detail-info="chartDetailInfo"
           @refreshPanel="refreshPanel"
           @showFullscreen="showFullscreen"
@@ -80,6 +81,7 @@
         :filter="filter"
         :is-fullscreen="true"
         @groupShow="groupShow"
+        :dataJson="dataJson"
         :panelLock="panelLock"
         :time-range="timeRange"
         @showFullscreen="showFullscreen"
@@ -111,6 +113,12 @@ export default {
     isExportHtml: {
       type: Boolean,
       default: false
+    },
+    dataJson: {
+      type: Object,
+      default: () => {
+        return {}
+      }
     }
   },
   components: {
@@ -428,7 +436,7 @@ export default {
       window.addEventListener('resize', this.resize)
     }
     if (this.isExportHtml) {
-      setTimeout(()=>{
+      setTimeout(() => {
         this.onScroll(999999)
       }, 500)
     }

@@ -270,7 +270,7 @@ export default {
             label: 'summary',
             disabled: false
           }, {
-            name: this.$t('overall.labels'),
+            name: this.$t('alert.list.labels'),
             type: 'input',
             label: 'labels',
             disabled: false
