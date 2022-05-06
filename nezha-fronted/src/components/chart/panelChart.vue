@@ -5,6 +5,7 @@
     <chart-header
       v-if="!isFullscreen&&showHeader"
       :is-group="isGroup(chartInfo.type)"
+      :isExportHtml="isExportHtml"
       :isError="isError"
       :chartData="chartData"
       :chart-info="chartInfo"

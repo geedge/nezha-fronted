@@ -108,7 +108,10 @@ export default {
     groupInfo: {},
     from: String,
     dataList: Array, // 看板中所有图表信息
-    isExportHtml: false
+    isExportHtml: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     GridLayout: GridLayout,
@@ -425,9 +428,9 @@ export default {
       window.addEventListener('resize', this.resize)
     }
     if (this.isExportHtml) {
-      this.$nextTick(() => {
+      setTimeout(()=>{
         this.onScroll(999999)
-      })
+      }, 500)
     }
   },
   beforeDestroy () {

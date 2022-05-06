@@ -99,12 +99,24 @@ if (arg === 'html') {
         inlineSource: '.(js|css)$', // embed all javascript and css inline
         hash: false,
         inject: true,
-        minify: {
-          removeComments: true,
-          collapseWhitespace: true,
-          removeAttributeQuotes: true
-          // more options:
-          // https://github.com/kangax/html-minifier#options-quick-reference
+        // minify: {
+        //   removeComments: true,
+        //   collapseWhitespace: true,
+        //   removeAttributeQuotes: true
+        //   // more options:
+        //   // https://github.com/kangax/html-minifier#options-quick-reference
+        // },
+        minify: { // 压缩html
+          collapseWhitespace: true, // 折叠空白区域
+          keepClosingSlash: true, // 保持闭合间隙
+          removeComments: true, // 移除注释
+          removeRedundantAttributes: true, // 删除冗余属性
+          removeScriptTypeAttributes: true, // 删除Script脚本类型属性
+          removeStyleLinkTypeAttributes: true, // 删除样式链接类型属性
+          useShortDoctype: true, // 使用短文档类型
+          preserveLineBreaks: true, // 保留换行符
+          minifyCSS: true, // 压缩文内css
+          minifyJS: true // 压缩文内js
         },
         // necessary to consistently work with multiple chunks via CommonsChunkPlugin
         chunksSortMode: 'dependency',

@@ -1,8 +1,8 @@
 // import '@/assets/stylus/index.scss'
 // import 'element-ui/lib/theme-chalk/index.css'
-import 'xterm/dist/xterm.css'
+// import 'xterm/dist/xterm.css'
 import '@/assets/css/main.scss'
-import '@/assets/css/font/iconfont.js'
+// import '@/assets/css/font/iconfont.js'
 import ElementUI from 'element-ui'
 import i18n from '@/components/common/i18n'
 
@@ -13,7 +13,7 @@ import App from './App.vue'
 import router from '@/router/exportHtmlRouter'
 import VueResource from 'vue-resource'
 import axios from 'axios'
-import { hasPermission } from '@/permission'
+// import { hasPermission } from '@/permission'
 import loadsh from 'lodash'
 
 import { post, get, put, del } from '@/http.js'
@@ -91,6 +91,13 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(Vuex)
 Vue.use(VueResource)
+const hasPermission = {
+  install (Vue, options) {
+    Vue.directive('has', {
+      inserted: (el, binding, vnode) => {}
+    })
+  }
+}
 Vue.use(hasPermission)
 
 /* 指令 */

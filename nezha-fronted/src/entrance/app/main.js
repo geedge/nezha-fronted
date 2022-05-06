@@ -114,7 +114,12 @@ Vue.mixin({
       return this.$route.path
     }
   },
-  ...mainMixin
+  methods: {
+    hasButton (code) {
+      return hasButton(this.$store.getters.buttonList, code)
+    },
+    ...mainMixin.methods
+  }
 })
 
 Vue.config.productionTip = false
