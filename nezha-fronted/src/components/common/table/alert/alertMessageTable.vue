@@ -90,6 +90,7 @@
               {{$t(stateOptions.find(state=>state.value == scope.row['state']).label)}}
             </span>
           </span>
+          <span v-else-if="item.prop === 'id'"><i :style="{'font-size':'12px','margin-right':'5px'}" class="nz-icon nz-icon-circle" :class="scope.row.ack == 1 ? 'blues' : 'gray'"></i>{{scope.row[item.prop]}}</span>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
           <template v-else>-</template>
         </template>

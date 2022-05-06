@@ -38,7 +38,7 @@
               <el-dropdown-item>
                 <delete-button id="alert-msg-batch-delete" v-has="'alertMessage_expired'" :api="url" :clickFunction="batchDel" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" :title="$t('overall.batchDel')" :type="'link'"></delete-button>
               </el-dropdown-item>
-              <el-dropdown-item>
+              <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <div id="alert-msg-batch-ack" v-has="'alertMessage_expired'" @click="batchAck"><i class="nz-icon nz-icon-queren"></i>{{$t('overall.batchAck')}}</div>
               </el-dropdown-item>
             </div>
@@ -530,24 +530,29 @@ export default {
   },
   methods: {
     batchAck () {
-      const params = []
-      const obj = {}
-      this.batchDeleteObjs.forEach(item => {
-        obj.id = item.id
-        obj.ack = item.ack
-        params.push(obj)
-      })
-      if (params.length === 0) {
-        this.$message({ type: 'error', message: this.$t('tip.SelectAlertMessages') })
-      } else {
+      if (this.batchDeleteObjs.length < 1) return
+      this.$confirm(this.$t('tip.confirmBatchAck', [this.batchDeleteObjs.length]), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.delFlag = true
+        const params = []
+        const obj = {}
+        this.batchDeleteObjs.forEach(item => {
+          obj.id = item.id
+          obj.ack = item.ack
+          params.push(obj)
+        })
         this.$put('alert/message/ack', params).then(response => {
           if (response.code == 200) {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.ackSuccess') })
           } else {
             this.$message.error(response.msg)
           }
+          this.getTableData()
         })
-      }
+      })
     },
     labelsSort (obj) {
       const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'project', 'datacenter', 'parent_asset', 'user']
