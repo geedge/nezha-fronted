@@ -60,6 +60,7 @@
           :table-data="tableData"
           :loading="tools.loading"
           @del="del"
+          @acknowledge="acknowledge"
           @edit="edit"
           @showText="showText"
           @orderBy="tableDataSort"
@@ -541,7 +542,7 @@ export default {
         const obj = {}
         this.batchDeleteObjs.forEach(item => {
           obj.id = item.id
-          obj.ack = item.ack
+          obj.ack = 1
           params.push(obj)
         })
         this.$put('alert/message/ack', params).then(response => {
@@ -625,6 +626,27 @@ export default {
           if (response.code === 200) {
             this.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getTableData()
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    acknowledge (row) {
+      this.$confirm(this.$t('tip.confirmAck'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        const params = []
+        const obj = {}
+        obj.id = row.id
+        obj.ack = 1
+        params.push(obj)
+        this.$put('alert/message/ack', params).then(response => {
+          if (response.code == 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.ackSuccess') })
             this.getTableData()
           } else {
             this.$message.error(response.msg)

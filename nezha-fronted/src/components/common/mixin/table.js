@@ -37,6 +37,10 @@ export default {
           this.$emit('del', row)
           break
         }
+        case 'ack': {
+          this.$emit('acknowledge', row)
+          break
+        }
         case 'recordTab': {
           this.$emit('showBottomBox', 'recordTab', row)
           break
