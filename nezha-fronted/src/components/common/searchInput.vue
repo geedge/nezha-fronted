@@ -921,6 +921,8 @@ export default {
               objectInfo.operation = val.val
             } else if (val.label === 'state') {
               objectInfo.state = val.val
+            } else if (val.label === 'acknowledge') {
+              objectInfo.acknowledge = val.val
             }
           } else {
             objectInfo[val.label] = val.val

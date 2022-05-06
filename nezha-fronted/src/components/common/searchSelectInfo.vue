@@ -173,6 +173,16 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: i18n.t('overall.disabled')
     }
   ],
+  acknowledge: [
+    {
+      value: 'success',
+      label: i18n.t('config.system.reset.yes')
+    },
+    {
+      value: 'fail',
+      label: i18n.t('config.system.reset.no')
+    }
+  ],
   varType: [
     { value: '1', label: i18n.t('asset.asset') },
     { value: '2', label: i18n.t('asset.endpoint') }

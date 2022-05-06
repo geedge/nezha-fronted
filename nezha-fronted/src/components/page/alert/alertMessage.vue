@@ -23,7 +23,28 @@
                 type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
         </button>
-        <delete-button id="alert-msg-batch-delete" v-has="'alertMessage_expired'" :api="url" :clickFunction="batchDel" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+         <top-tool-more-options
+          :delete-objs="batchDeleteObjs"
+          ref="export"
+          id="model"
+          :params="searchLabel"
+          :params2="searchCheckBox"
+          export-file-name="AlertMessage"
+          class="top-tool-export margin-r-10"
+          @afterImport="getTableData"
+        >
+          <template v-slot:before>
+            <div>
+              <el-dropdown-item>
+                <delete-button id="alert-msg-batch-delete" v-has="'alertMessage_expired'" :api="url" :clickFunction="batchDel" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" :title="$t('overall.batchDel')" :type="'link'"></delete-button>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <div id="alert-msg-batch-ack" v-has="'alertMessage_expired'" @click="batchAck"><i class="nz-icon nz-icon-queren"></i>{{$t('overall.batchAck')}}</div>
+              </el-dropdown-item>
+            </div>
+          </template>
+        </top-tool-more-options>
+
       </template>
       <template v-slot:search >
         <click-search ref="clickSearch" :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"/>
@@ -161,6 +182,7 @@ import alertMessageInfo from '@/components/common/alert/alertMessageInfo'
 import lineData from '@/components/chart/defaultLineData'
 import logData from '@/components/chart/defaultLogData'
 import lodash from 'lodash'
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 
 export default {
   name: 'alertMessage',
@@ -172,7 +194,8 @@ export default {
     deleteButton,
     alertSilenceBox,
     clickSearch,
-    alertMessageInfo
+    alertMessageInfo,
+    topToolMoreOptions
   },
   mixins: [dataListMixin, routerPathParams],
   data () {
@@ -249,6 +272,12 @@ export default {
             name: this.$t('overall.labels'),
             type: 'input',
             label: 'labels',
+            disabled: false
+          }, {
+            name: this.$t('overall.acknowledge'),
+            type: 'selectString',
+            label: 'acknowledge',
+            readonly: true,
             disabled: false
           }
         ]
@@ -500,6 +529,26 @@ export default {
     // this.getTitleSearch()
   },
   methods: {
+    batchAck () {
+      const params = []
+      const obj = {}
+      this.batchDeleteObjs.forEach(item => {
+        obj.id = item.id
+        obj.ack = item.ack
+        params.push(obj)
+      })
+      if (params.length === 0) {
+        this.$message({ type: 'error', message: this.$t('tip.SelectAlertMessages') })
+      } else {
+        this.$put('alert/message/ack', params).then(response => {
+          if (response.code == 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.ackSuccess') })
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      }
+    },
     labelsSort (obj) {
       const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'project', 'datacenter', 'parent_asset', 'user']
       const labels = JSON.parse(JSON.stringify(obj))
