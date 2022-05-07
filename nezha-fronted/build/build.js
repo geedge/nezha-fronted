@@ -12,6 +12,12 @@ const webpack = require('webpack')
 const config = require('../config')
 const webpackConfig = require('./webpack.prod.conf')
 const spinner = ora('building for production...')
+console.log(config, webpackConfig)
+if (webpackConfig.entry.exportHtml) {
+  config.build.index = path.resolve(__dirname, '../exportHtml/index.html')
+  config.build.assetsRoot = path.resolve(__dirname, '../exportHtml')
+}
+console.log(config, webpackConfig.entry.exportHtml)
 spinner.start()
 
 rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {

@@ -381,8 +381,8 @@ export default {
           this.oldSearchTime[1] = bus.timeFormate(this.oldSearchTime[1])
         }
       }
-      console.log(moment(this.oldSearchTime[0], this.timeFormatMain).isValid(), moment(this.oldSearchTime[1], this.timeFormatMain).isValid(), !moment(this.oldSearchTimeError[0]).isBefore(this.oldSearchTime[1]))
-      if (moment(this.oldSearchTime[0], this.timeFormatMain).isValid() && moment(this.oldSearchTime[1], this.timeFormatMain).isValid() && !moment(this.oldSearchTimeError[0]).isBefore(this.oldSearchTime[1])) {
+      console.log(moment(this.oldSearchTime[0], this.timeFormatMain).isValid(), moment(this.oldSearchTime[1], this.timeFormatMain).isValid(), !moment(this.oldSearchTime[0]).isBefore(this.oldSearchTime[1]))
+      if (moment(this.oldSearchTime[0], this.timeFormatMain).isValid() && moment(this.oldSearchTime[1], this.timeFormatMain).isValid() && !moment(this.oldSearchTime[0]).isBefore(this.oldSearchTime[1])) {
         this.oldSearchTimeError[0] = true
         this.inputError = this.$t('date.fromGreaterTo')
       }

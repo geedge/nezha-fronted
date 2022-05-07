@@ -394,7 +394,6 @@ export default {
       default: true
     },
     isOnly: {
-      type: Boolean,
       default: false
     }
   },
@@ -448,9 +447,6 @@ export default {
       if (!valueEquals(val, oldVal) && !this.pickerVisible && this.validateEvent) {
         this.dispatch('ElFormItem', 'el.form.change', val)
       }
-    },
-    isOnly:{
-      immediate: true
     }
   },
 
