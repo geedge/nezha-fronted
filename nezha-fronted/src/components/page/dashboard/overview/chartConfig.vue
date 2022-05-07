@@ -1,6 +1,6 @@
 <script>
 import bus from '../../../../libs/bus'
-import vm from '../../../../main'
+import vm from '../../../../entrance/app/main'
 window.onload = function () {
   commonOption.toolbox.feature.dataZoom.title.zoom = vm.$i18n.t('overall.toolBox.zoom')
   commonOption.toolbox.feature.dataZoom.title.back = vm.$i18n.t('overall.toolBox.back')

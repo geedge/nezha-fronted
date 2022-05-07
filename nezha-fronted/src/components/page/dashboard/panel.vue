@@ -77,9 +77,10 @@
                   <el-dropdown-item v-has="'main_add'">
                     <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-export-pdf"></i>{{ $t('overall.downloadToPdf') }}</div>
                   </el-dropdown-item>
-<!--                  <el-dropdown-item v-has="'main_add'">-->
-<!--                    <div id="chart-htmltoData" @click="exportData"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>-->
-<!--                  </el-dropdown-item>-->
+                  <el-dropdown-item v-has="'main_add'">
+<!--                    <div id="chart-export-html" @click="exportHtml"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>-->
+                    <div id="chart-export-html" @click="exportData"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>
+                  </el-dropdown-item>
                 </template>
               </top-tool-more-options>
             </div>
@@ -94,6 +95,7 @@
                 :panelId="showPanel.id"
                 :class="{'show-top':showTopBtn}"
                 :data-list="dataList"
+                :is-export-html="false"
                 :nowTimeType="nowTimeType"
                 :from="fromRoute.panel"
                 :time-range="searchTime"
@@ -151,12 +153,12 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { lineChartMove } from '@/components/common/js/common'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
+import exportHtmlMixin from '@/components/common/mixin/exportHtml'
 import FileSaver from 'file-saver'
 // import chartData from './testData'
-
 export default {
   name: 'panel',
-  mixins: [routerPathParams, htmlToPdfMixin],
+  mixins: [routerPathParams, htmlToPdfMixin, exportHtmlMixin],
   data () {
     return {
       fromRoute,
@@ -882,21 +884,37 @@ export default {
             this.dataList.forEach(item => {
               if (item.type === 'group') {
                 item.chartData = [item.children]
+                item.loaded = false
               }
               if (item.type === 'group' && !item.param.collapse) {
                 item.children.forEach(child => {
                   child.chartData = this.$refs.chartList.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.$refs['chart' + child.id][0].chartData
+                  item.loaded = false
                 })
               } else {
                 item.chartData = this.$refs.chartList.$refs['chart' + item.id][0].chartData
+                item.loaded = false
               }
             })
             const data = JSON.stringify(this.dataList)
             const blob = new Blob([data], { type: '' })
             FileSaver.saveAs(blob, 'ceshi.json')
+            // const a = document.createElement('a')
+            // const url = window.URL.createObjectURL(
+            //   new Blob([this.gethtml()], {
+            //     type: ''
+            //   })
+            // )
+            // a.href = url
+            // a.download = 'file.html'
+            // a.click()
+            // window.URL.revokeObjectURL(url)
           }, 2000)
         }
       }, 200)
+    },
+    gethtml () {
+
     }
   },
   created () {

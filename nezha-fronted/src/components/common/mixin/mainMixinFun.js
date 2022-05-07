@@ -1,5 +1,4 @@
 import bus from '@/libs/bus'
-import { hasButton } from '@/permission'
 import i18n from '@/components/common/i18n'
 export default {
   methods: {
@@ -33,9 +32,6 @@ export default {
     },
     timeFormate (time) {
       return bus.timeFormate(time)
-    },
-    hasButton (code) {
-      return hasButton(this.$store.getters.buttonList, code)
     },
     numberWithEConvent (num) {
       if (num) {

@@ -12,8 +12,10 @@ const portfinder = require('portfinder')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
-
-const devWebpackConfig = merge(baseWebpackConfig, {
+const devStart = process.env.npm_lifecycle_event
+const indexHtml = devStart === 'dev' ? 'src/entrance/app/index.html' : 'src/entrance/exportHtml/exportHtml.html'
+let devWebpackConfig = ''
+devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
@@ -25,11 +27,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
-        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
-      ],
+        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, indexHtml) }
+      ]
     },
     hot: true,
-    inline:true,
+    inline: true,
     contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,
     host: HOST || config.dev.host,
@@ -38,12 +40,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     overlay: config.dev.errorOverlay
       ? { warnings: false, errors: true }
       : false,
-    publicPath: "/",
-    /*publicPath: config.dev.assetsPublicPath,*/
+    publicPath: '/',
+    /* publicPath: config.dev.assetsPublicPath, */
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
-      poll: config.dev.poll,
+      poll: config.dev.poll
     }
   },
   plugins: [
@@ -57,14 +59,20 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       favicon: path.resolve(__dirname, '../src/assets/img/favicon.ico'),
       filename: 'index.html',
-      template: 'index.html',
-      inject: true
+      template: indexHtml,
+      inject: true,
+      chunks: devStart === 'dev' ? ['app'] : ['exportHtml']
     }),
     // copy custom static assets
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, '../static'),
         to: config.dev.assetsSubDirectory,
+        ignore: ['.*']
+      },
+      {
+        from: path.resolve(__dirname, '../src/components/chart'),
+        to: 'components/chart',
         ignore: ['.*']
       }
     ])
@@ -85,11 +93,11 @@ module.exports = new Promise((resolve, reject) => {
       // Add FriendlyErrorsPlugin
       devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
         compilationSuccessInfo: {
-          messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
+          messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`]
         },
         onErrors: config.dev.notifyOnErrors
-        ? utils.createNotifierCallback()
-        : undefined
+          ? utils.createNotifierCallback()
+          : undefined
       }))
 
       resolve(devWebpackConfig)

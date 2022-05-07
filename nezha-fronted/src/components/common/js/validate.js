@@ -1,4 +1,4 @@
-import vm from '../../../main'
+import vm from '../../../entrance/app/main'
 import lodash from 'lodash'
 
 // ipv4 ip校验

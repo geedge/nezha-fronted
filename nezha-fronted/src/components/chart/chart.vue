@@ -2,7 +2,7 @@
  <template>
   <div :style="showHeader&&chartInfo.param.showHeader ? '' : 'padding-top: 15px;'" class="nz-chart" :class="showHeader&&chartInfo.param.showHeader ? '' : 'no-header'" >
     <loading :loading="loading"></loading>
-    <chart-no-data  v-if="isNoData || isError || chartChildrenData"></chart-no-data>
+    <chart-no-data  v-if="isNoData || isError || chartChildrenData || (isExportHtml&&(isAutotopology(chartInfo.type) || isDiagram(chartInfo.type) || isMap(chartInfo.type)))"></chart-no-data>
     <template v-else>
       <chart-time-series
         v-if="isTimeSeries(chartInfo.type)"
@@ -257,6 +257,10 @@ export default {
     showHeader: {
       type: Boolean,
       default: true
+    },
+    isExportHtml: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

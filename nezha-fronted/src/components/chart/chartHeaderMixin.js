@@ -22,6 +22,10 @@ export default {
     allDataLength: {
       type: Number,
       default: 0
+    },
+    isExportHtml: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

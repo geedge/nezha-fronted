@@ -5,6 +5,7 @@
     <chart-header
       v-if="!isFullscreen&&showHeader"
       :is-group="isGroup(chartInfo.type)"
+      :isExportHtml="isExportHtml"
       :isError="isError"
       :chartData="chartData"
       :chart-info="chartInfo"
@@ -42,6 +43,7 @@
       :chart-data="chartData"
       :chart-info="chartInfo"
       :panelLock="panelLock"
+      :isExportHtml="isExportHtml"
       :filter="filter"
       :from="from"
       @refreshLogs="refreshLogs"
@@ -87,6 +89,13 @@ export default {
     showHeader: {
       type: Boolean,
       default: true
+    },
+    isExportHtml: {
+      type: Boolean,
+      default: false
+    },
+    dataJson: {
+      type: Object
     }
   },
   data () {
@@ -99,8 +108,8 @@ export default {
       showAllData: false,
       allDataLength: 0,
       severityData: this.$store.getters.severityData,
-      severityDataWeight: this.$store.getters.severityDataWeight,
-      isExportData: false
+      severityDataWeight: this.$store.getters.severityDataWeight
+      // isExportData: false
     }
   },
   computed: {
@@ -157,14 +166,16 @@ export default {
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
       const elements = this.chartInfo.elements || []
+      if (this.isExportHtml) {
+        this.chartInfo.loaded && this.queryData(elements, startTime, endTime, step, params)
+        return
+      }
       this.chartInfo.loaded && this.query(elements, startTime, endTime, step, params)
     },
     query (elements, startTime, endTime, step, params) {
       this.isError = false
       this.allDataLength = 0
-      if (this.isExportData) {
-        this.chartData = this.chartInfo.chartData
-      }
+      // this.chartData = this.chartInfo.chartData
       try {
         switch (this.chartInfo.datasource) {
           case 'metrics':
@@ -404,6 +415,95 @@ export default {
             break
           }
         }
+      } catch (e) {
+        this.loading = false
+      }
+    },
+    queryData (elements, startTime, endTime, step, params) {
+      this.isError = false
+      this.allDataLength = 0
+      // this.chartData = this.chartInfo.chartData
+      try {
+        switch (this.chartInfo.datasource) {
+          case 'metrics':
+          case 'logs': {
+            this.chartData = []
+            elements.forEach((element,index) => {
+              this.chartData.push(this.dataJson[this.chartInfo.id + '_' + index].data.result)
+            })
+            break
+          }
+          case 'system': {
+            this.chartData = []
+            this.chartData.push(this.dataJson[this.chartInfo.id + '_' + 0])
+          }
+          case 'misc': {
+            this.loading = false
+            setTimeout(() => {
+              this.loading = false
+            })
+            if (this.chartInfo.type === 'hexagon') {
+              this.getHexagonFigureData().then(res => {
+                this.chartData = JSON.parse(JSON.stringify(res))
+              }).finally(() => {
+                this.loading = false
+              })
+            }
+            if (this.chartInfo.type === 'diagram') {
+              this.chartData = [this.chartInfo.param.topo]
+              if (!this.chartInfo.param.topo || !this.chartInfo.param.topo.pens.length) {
+                this.chartData = []
+              } else {
+                this.chartData = [this.chartInfo.param.topo]
+              }
+            }
+            if (this.chartInfo.type === 'group') {
+              this.chartData = lodash.get(this, 'chartInfo.children', [])
+              this.loading = false
+              this.groupInit()
+            }
+            if (this.chartInfo.type === 'topology') {
+              this.chartData = ['topology']
+            }
+            if (this.chartInfo.type === 'map') {
+              this.chartData = ['map']
+            }
+            break
+          }
+          case 'topology': {
+            this.loading = true
+            const params = {
+              type: this.chartInfo.linkType,
+              id: this.chartInfo.id
+            }
+            this.$get('/stat/rel', params).then(res => {
+              this.loading = false
+              const parentId = this.chartInfo.linkType + '-' + this.chartInfo.id
+              res.data.nodes.forEach(item => {
+                item.parentId = [parentId]
+                item.highlight = true
+                item.x = 0
+                item.y = 0
+                if (item.id === parentId) {
+                  item.hasChildren = true
+                  item.parentId = []
+                  item.fx = 0
+                  item.fy = 0
+                } else {
+                  item.hasChildren = false
+                }
+                item.radius = this.getRadius(item) // 需要计算 分三级
+                item.color = this.getColor(item) // 需要计算 分三级
+              })
+              res.data.links.forEach(item => {
+                item.id = item.source + '-' + item.target
+              })
+              this.chartData = JSON.parse(JSON.stringify([res.data]))
+            })
+            break
+          }
+        }
+        this.loading = false
       } catch (e) {
         this.loading = false
       }

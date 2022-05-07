@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
 Vue.use(Router)
-
+console.log('router1')
 export default new Router({
   routes: [
     {
@@ -11,19 +10,19 @@ export default new Router({
     },
     {
       path: '/login',
-      component: resolve => require(['../components/common/login.vue'], resolve)
+      component: resolve => require(['@/components/common/login'], resolve)
     },
     {
       path: '/setup',
-      component: resolve => require(['../components/page/config/setup.vue'], resolve)
+      component: resolve => require(['@/components/page/config/setup'], resolve)
     },
     {
       path: '/',
-      component: resolve => require(['../components/layout/home.vue'], resolve),
+      component: resolve => require(['@/components/layout/home'], resolve),
       children: [
         {
           path: '/panel',
-          component: resolve => require(['../components/page/dashboard/panel.vue'], resolve)
+          component: resolve => require(['@/components/page/dashboard/panel'], resolve)
         },
         {
           path: '/explore',
@@ -31,88 +30,88 @@ export default new Router({
         },
         {
           path: '/overview',
-          component: resolve => require(['../components/page/dashboard/overview/overview.vue'], resolve)
+          component: resolve => require(['@/components/page/dashboard/overview/overview'], resolve)
         },
         {
           path: '/project',
-          component: resolve => require(['../components/page/monitor/project/index.vue'], resolve)
+          component: resolve => require(['@/components/page/monitor/project/index'], resolve)
         },
         {
           path: '/module',
           name: '/module',
-          component: resolve => require(['../components/page/monitor/module/moduleList.vue'], resolve)
+          component: resolve => require(['@/components/page/monitor/module/moduleList'], resolve)
         },
         {
           path: '/endpoint',
-          component: resolve => require(['../components/page/monitor/endpoint/endpointList.vue'], resolve)
+          component: resolve => require(['@/components/page/monitor/endpoint/endpointList'], resolve)
         },
         {
           path: '/asset',
-          component: resolve => require(['../components/page/asset/asset.vue'], resolve)
+          component: resolve => require(['@/components/page/asset/asset'], resolve)
         },
         {
           path: '/user',
-          component: resolve => require(['../components/page/config/user.vue'], resolve)
+          component: resolve => require(['@/components/page/config/user'], resolve)
         },
         {
           path: '/menu',
-          component: resolve => require(['../components/page/config/menus.vue'], resolve)
+          component: resolve => require(['@/components/page/config/menus'], resolve)
         },
         {
           path: '/roles',
-          component: resolve => require(['../components/page/config/roles.vue'], resolve)
+          component: resolve => require(['@/components/page/config/roles'], resolve)
         },
         {
           path: '/agent',
-          component: resolve => require(['../components/page/config/agent.vue'], resolve)
+          component: resolve => require(['@/components/page/config/agent'], resolve)
         },
         {
           path: '/assetType',
-          component: resolve => require(['../components/page/config/assetType.vue'], resolve)
+          component: resolve => require(['@/components/page/config/assetType'], resolve)
         },
         {
           path: '/assetState',
-          component: resolve => require(['../components/page/config/assetState.vue'], resolve)
+          component: resolve => require(['@/components/page/config/assetState'], resolve)
         },
         {
           path: '/assetLabel',
-          component: resolve => require(['../components/page/config/assetMeta.vue'], resolve)
+          component: resolve => require(['@/components/page/config/assetMeta'], resolve)
         },
         {
           path: '/dc',
-          component: resolve => require(['../components/page/config/dc.vue'], resolve)
+          component: resolve => require(['@/components/page/config/dc'], resolve)
         },
         {
           path: '/model',
-          component: resolve => require(['../components/page/config/model.vue'], resolve)
+          component: resolve => require(['@/components/page/config/model'], resolve)
         },
         {
           path: '/terminalLog',
-          component: resolve => require(['../components/page/config/terminalLog.vue'], resolve)
+          component: resolve => require(['@/components/page/config/terminalLog'], resolve)
         },
         {
           path: '/operationLog',
-          component: resolve => require(['../components/page/config/operationLog.vue'], resolve)
+          component: resolve => require(['@/components/page/config/operationLog'], resolve)
         },
         {
           path: '/about',
-          component: resolve => require(['../components/page/config/about.vue'], resolve)
+          component: resolve => require(['@/components/page/config/about'], resolve)
         },
         {
           path: '/ipam',
-          component: resolve => require(['../components/page/config/ipam.vue'], resolve)
+          component: resolve => require(['@/components/page/config/ipam'], resolve)
         },
         {
           path: '/license/gen',
-          component: resolve => require(['../components/page/config/licenseGen.vue'], resolve)
+          component: resolve => require(['@/components/page/config/licenseGen'], resolve)
         },
         {
           path: '/profile',
-          component: resolve => require(['../components/page/config/profile.vue'], resolve)
+          component: resolve => require(['@/components/page/config/profile'], resolve)
         },
         {
           path: '/mib/:tab',
-          component: resolve => require(['../components/page/config/snmp.vue'], resolve)
+          component: resolve => require(['@/components/page/config/snmp'], resolve)
         },
         // {
         //   path: '/snmp',
@@ -120,55 +119,55 @@ export default new Router({
         // },
         {
           path: '/mib',
-          component: resolve => require(['../components/page/config/mib.vue'], resolve)
+          component: resolve => require(['@/components/page/config/mib'], resolve)
         },
         {
           path: '/mibBrowser',
-          component: resolve => require(['../components/page/config/mibBrowser.vue'], resolve)
+          component: resolve => require(['@/components/page/config/mibBrowser'], resolve)
         },
         {
           path: '/credentials',
-          component: resolve => require(['../components/page/config/credentials.vue'], resolve)
+          component: resolve => require(['@/components/page/config/credentials'], resolve)
         },
         {
           path: '/system',
-          component: resolve => require(['../components/page/config/basic.vue'], resolve)
+          component: resolve => require(['@/components/page/config/basic'], resolve)
         },
         {
           path: '/notification',
-          component: resolve => require(['../components/page/config/system/notifyMethodTab.vue'], resolve)
+          component: resolve => require(['@/components/page/config/system/notifyMethodTab'], resolve)
         },
         {
           path: '/apiKey',
-          component: resolve => require(['../components/page/config/system/apiKeyTab.vue'], resolve)
+          component: resolve => require(['@/components/page/config/system/apiKeyTab'], resolve)
         },
         {
           path: '/license',
-          component: resolve => require(['../components/page/config/system/license.vue'], resolve)
+          component: resolve => require(['@/components/page/config/system/license'], resolve)
         },
         {
           path: '/link',
-          component: resolve => require(['../components/page/config/system/linkTab.vue'], resolve)
+          component: resolve => require(['@/components/page/config/system/linkTab'], resolve)
         },
         {
           path: '/appearance',
-          component: resolve => require(['../components/page/config/basic.vue'], resolve)
+          component: resolve => require(['@/components/page/config/basic'], resolve)
         },
         {
           path: '/email',
-          component: resolve => require(['../components/page/config/email.vue'], resolve)
+          component: resolve => require(['@/components/page/config/email'], resolve)
         },
         {
           path: '/ldap',
-          component: resolve => require(['../components/page/config/ldap.vue'], resolve)
+          component: resolve => require(['@/components/page/config/ldap'], resolve)
         },
         {
           path: '/monitor',
-          component: resolve => require(['../components/page/config/monitor.vue'], resolve)
+          component: resolve => require(['@/components/page/config/monitor'], resolve)
         },
         {
           path: '/terminal',
-          component: resolve => require(['../components/page/config/terminal.vue'], resolve)
+          component: resolve => require(['@/components/page/config/terminal'], resolve)
         },
         {
           path: '/i18n',
@@ -176,35 +175,35 @@ export default new Router({
         },
         {
           path: '/alertMessage',
-          component: resolve => require(['../components/page/alert/alertMessage.vue'], resolve)
+          component: resolve => require(['@/components/page/alert/alertMessage'], resolve)
         },
         {
           path: '/alertRule',
-          component: resolve => require(['../components/page/alert/alertRule.vue'], resolve)
+          component: resolve => require(['@/components/page/alert/alertRule'], resolve)
         },
         {
           path: '/alertSilence',
-          component: resolve => require(['../components/page/alert/alertSilence.vue'], resolve)
+          component: resolve => require(['@/components/page/alert/alertSilence'], resolve)
         },
         {
           path: '/exprTemp',
-          component: resolve => require(['../components/page/config/template/exprTemp.vue'], resolve)
+          component: resolve => require(['@/components/page/config/template/exprTemp'], resolve)
         },
         {
           path: '/chartTemp',
-          component: resolve => require(['../components/page/config/template/chartTemp.vue'], resolve)
+          component: resolve => require(['@/components/page/config/template/chartTemp'], resolve)
         },
         {
           path: '/backup',
-          component: resolve => require(['../components/page/config/backups.vue'], resolve)
+          component: resolve => require(['@/components/page/config/backups'], resolve)
         },
         {
           path: '/ping',
-          component: resolve => require(['../components/page/tool/ping.vue'], resolve)
+          component: resolve => require(['@/components/page/tool/ping'], resolve)
         },
         {
           path: '/trace',
-          component: resolve => require(['../components/page/tool/trace.vue'], resolve)
+          component: resolve => require(['@/components/page/tool/trace'], resolve)
         }
       ]
     }
