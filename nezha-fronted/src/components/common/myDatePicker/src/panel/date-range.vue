@@ -473,7 +473,6 @@ export default {
     isOnly: {
       immediate: true,
       handler (n) {
-        console.log(n,'isOnly')
       }
     }
   },

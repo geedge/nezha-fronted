@@ -139,6 +139,9 @@ export default {
             return
           }
           seriesIndex++
+          if (!data.values) {
+            data.values = []
+          }
           datas = [...datas, ...data.values]
         })
       })

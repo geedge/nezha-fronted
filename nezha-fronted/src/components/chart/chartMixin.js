@@ -95,6 +95,9 @@ export default {
       if (!data.metric) {
         data.metric = data.stream
       }
+      if (!data.metric) {
+        data.metric = {}
+      }
       if (data.metric.__name__) {
         legend += `${data.metric.__name__}{`
       }
