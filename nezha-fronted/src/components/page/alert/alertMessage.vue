@@ -277,7 +277,7 @@ export default {
           }, {
             name: this.$t('overall.acknowledge'),
             type: 'selectString',
-            label: 'acknowledge',
+            label: 'ack',
             readonly: true,
             disabled: false
           }
@@ -539,10 +539,11 @@ export default {
       }).then(() => {
         this.delFlag = true
         const params = []
-        const obj = {}
         this.batchDeleteObjs.forEach(item => {
-          obj.id = item.id
-          obj.ack = 1
+          const obj = {
+            id: item.id,
+            ack: 1
+          }
           params.push(obj)
         })
         this.$put('alert/message/ack', params).then(response => {

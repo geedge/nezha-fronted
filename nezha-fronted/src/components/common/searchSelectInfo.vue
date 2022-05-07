@@ -173,13 +173,13 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: i18n.t('overall.disabled')
     }
   ],
-  acknowledge: [
+  ack: [
     {
-      value: 'success',
+      value: '1',
       label: i18n.t('config.system.reset.yes')
     },
     {
-      value: 'fail',
+      value: '0',
       label: i18n.t('config.system.reset.no')
     }
   ],

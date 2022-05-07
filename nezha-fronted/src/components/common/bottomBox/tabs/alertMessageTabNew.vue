@@ -33,6 +33,7 @@
           :table-data="tableData"
           :alertMessageTabNew="true"
           @del="del"
+          @acknowledge="acknowledge"
           class="bottom-box__top"
           @showText="showText"
           @edit="edit"
@@ -230,6 +231,12 @@ export default {
             type: 'input',
             label: 'labels',
             disabled: false
+          }, {
+            name: this.$t('overall.acknowledge'),
+            type: 'selectString',
+            label: 'ack',
+            readonly: true,
+            disabled: false
           }
         ]
       },
@@ -305,6 +312,27 @@ export default {
             self.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
             self.getTableData()
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    acknowledge (row) {
+      this.$confirm(this.$t('tip.confirmAck'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        const params = []
+        const obj = {}
+        obj.id = row.id
+        obj.ack = 1
+        params.push(obj)
+        this.$put('alert/message/ack', params).then(response => {
+          if (response.code == 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.ackSuccess') })
+            this.getTableData()
           } else {
             this.$message.error(response.msg)
           }
