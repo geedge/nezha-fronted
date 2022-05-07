@@ -33,7 +33,7 @@
         class="legend-item"
         @click="clickLegend(item.name, index)"
       >
-        <span :style="{background: item.color}" class="legend-shape"></span>{{item.alias ? item.alias : item.name}}
+        <span :style="{background: item.color}" class="legend-shape"></span>{{item.alias ? item.alias : item.name.split('-')[0]}}
       </div>
     </template>
   </div>
