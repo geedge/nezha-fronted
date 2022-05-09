@@ -16,18 +16,29 @@
     >
       <span v-if="chartInfo.param.text==='all'">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
-          {{item.legend}}<br/><span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+          {{item.legend}}<br/>
+          <template v-if="item.mapping && item.mapping.icon">
+            <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
+          </template>
+          <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
         </span>
         <span v-else>{{item.legend}}<br/><span>{{item.showValue}}</span></span>
       </span>
       <span v-if="chartInfo.param.text==='legend'">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
-           {{item.legend}}<br/><span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+          {{item.legend}}<br/>
+          <template v-if="item.mapping && item.mapping.icon">
+            <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
+          </template>
+          <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
         </span>
         <span v-else>{{item.legend}}</span>
       </span>
       <span v-if="chartInfo.param.text==='value'|| !chartInfo.param.text">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
+          <template v-if="item.mapping && item.mapping.icon">
+            <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
+          </template>
           {{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}
         </span>
         <span v-else>{{item.showValue}}</span>
@@ -40,7 +51,12 @@
       </div>
       <div class="chart-canvas-tooltip-content">
         <div>value</div>
-        <div>{{tooltip.value}}</div>
+        <div>
+          <div v-if="tooltip.mapping && tooltip.mapping.icon" style="display: inline-block">
+            <i :class="tooltip.mapping.icon" :style="{color: tooltip.mapping.color.icon}"></i>
+          </div>
+          <div style="display: inline-block">{{tooltip.value}}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -70,6 +86,7 @@ export default {
         y: 0,
         title: 0,
         value: 0,
+        mapping: {},
         show: false
       },
       fontSize: 12,
@@ -149,6 +166,7 @@ export default {
     statMouseEnter (that) {
       this.tooltip.title = that.legend
       this.tooltip.value = that.showValue
+      this.tooltip.mapping = that.mapping
       this.tooltip.show = true
     },
     statMouseleave (taht) {

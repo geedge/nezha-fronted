@@ -522,11 +522,14 @@
                     <span v-if="item.type === 'regx'">
                       {{item.regx}}
                     </span>
-                     <div :style="{background:item.color.bac}" class="prev-mapping-box">
-                        <span :style="{color:item.color.text}">
-                          {{item.display || "T"}}
-                        </span>
-                      </div>
+                    <div class="prev-mapping-icon">
+                      <i :class="item.icon" :style="{ color: item.color.icon }"></i>
+                    </div>
+                    <div :style="{background:item.color.bac}" class="prev-mapping-box">
+                      <span :style="{color:item.color.text}">
+                        {{item.display || "T"}}
+                      </span>
+                    </div>
                   </span>
                 </span>
                 <span>
@@ -627,10 +630,36 @@
                   <div>
                     <div class='mapping-display'>{{$t('dashboard.panel.chartForm.display')}}</div>
                   </div>
+                  <div>
+                    <el-select
+                      v-model="item.icon"
+                      size="small"
+                      style="width: 75px"
+                      :placeholder="$t('el.select.placeholder')"
+                      @change="change('valueMapping', index)"
+                    >
+                    <template slot="prefix">
+                      <i class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>
+                    </template>
+                      <el-option
+                        v-for="item in mappingIconList"
+                        :value="item.value"
+                        :key="item.value"
+                        label=" "
+                      >
+                        <i :class="item.value"></i>
+                      </el-option>
+                    </el-select>
+                  </div>
                   <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.display"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)"/>
                   </el-form-item>
-                  <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(val, key, index)}"/>
+                  <nezhaColor
+                    :color-val="item.color"
+                    :single="false"
+                    :value-arr="[{name:'icon',value:item.color.icon,key:'icon'},{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]"
+                    @colorChange="(val,key)=>{colorChange(val, key, index)}"
+                  />
                 </el-row>
               </transition-group>
             </div>

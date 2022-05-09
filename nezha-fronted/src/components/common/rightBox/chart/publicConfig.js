@@ -58,6 +58,29 @@ export default {
           value: 'regx'
         }
       ],
+      mappingIconList: [
+        {
+          value: 'nz-icon nz-icon-failed'
+        }, {
+          value: 'nz-icon nz-icon-Firewall'
+        }, {
+          value: 'nz-icon nz-icon-ADC'
+        }, {
+          value: 'nz-icon nz-icon-overview-alert'
+        }, {
+          value: 'nz-icon nz-icon-yanzhengma'
+        }, {
+          value: 'nz-icon nz-icon-Switch'
+        }, {
+          value: 'nz-icon nz-icon-connecting'
+        }, {
+          value: 'nz-icon nz-icon-language-change'
+        }, {
+          value: 'nz-icon nz-icon-overview-alert1'
+        }, {
+          value: 'nz-icon nz-icon-model'
+        }
+      ],
       letter: [
         'A', 'B', 'C', 'D', 'E', 'F', 'G',
         'H', 'I', 'J', 'K', 'L', 'M', 'N',
@@ -327,7 +350,8 @@ export default {
         display: '',
         color: {
           bac: bacColor + 'FF',
-          text: ColorReverse(bacColor) + 'FF'
+          text: ColorReverse(bacColor) + 'FF',
+          icon: randomcolor() + 'FF'
         }
       }
       if (this.chartConfig.type === 'table') {
@@ -386,6 +410,10 @@ export default {
       }
       if (key === 'text') {
         this.chartConfig.param.valueMapping[index].color.text = val
+        this.$set(this.chartConfig.param.valueMapping, index, this.chartConfig.param.valueMapping[index])
+      }
+      if (key === 'icon') {
+        this.chartConfig.param.valueMapping[index].color.icon = val
         this.$set(this.chartConfig.param.valueMapping, index, this.chartConfig.param.valueMapping[index])
       }
       this.change()

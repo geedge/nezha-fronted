@@ -19,8 +19,8 @@ module.exports = {
       }
     },
     // Various Dev Server settings
-    // host: '0.0.0.0', // can be overwritten by process.env.HOST
     host: '0.0.0.0', // can be overwritten by process.env.HOST
+    // host: 'localhost', // can be overwritten by process.env.HOST
     port: 80, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
@@ -71,5 +71,5 @@ module.exports = {
     // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
     bundleAnalyzerReport: process.env.npm_config_report
-  },
+  }
 }

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-
+import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { Sketch } from 'vue-color'
 export default {
   name: 'nezhaColor',
@@ -91,8 +91,9 @@ export default {
     }
   },
   mounted () {
-    this.colors = this.valueArr[0].value
     this.keyName = this.valueArr[0].name
+    this.colors = this.valueArr[0].value || randomcolor() + 'FF'
+    this.$emit('colorChange', this.colors, this.keyName)
   },
   methods: {
     updateValue (color) {
@@ -134,7 +135,7 @@ export default {
     },
     colorTabChange (item) {
       this.keyName = item.name
-      this.colors = this.colorVal[item.name]
+      this.colors = this.colorVal[item.name] || randomcolor() + 'FF'
     },
     exitColor () {
       this.showColorPicker = false
