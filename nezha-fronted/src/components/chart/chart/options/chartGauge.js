@@ -21,14 +21,14 @@ const chartGaugeOption = {
         show: true,
         width: 30
       },
-      tooltip: {
-        trigger: 'axis',
-        confine: false,
-        extraCssText: 'z-index:1000;',
-        z: 9,
-        animation: false,
-        appendToBody: true
-      },
+      // tooltip: {
+      //   trigger: 'axis',
+      //   confine: false,
+      //   extraCssText: 'z-index:1000;',
+      //   z: 9,
+      //   animation: false,
+      //   appendToBody: true
+      // },
       pointer: {
         show: false
       },

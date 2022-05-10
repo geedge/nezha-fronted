@@ -60,21 +60,7 @@ export default {
       ],
       mappingIconList: [
         {
-          value: 'nz-icon nz-icon-failed'
-        }, {
-          value: 'nz-icon nz-icon-Firewall'
-        }, {
-          value: 'nz-icon nz-icon-ADC'
-        }, {
           value: 'nz-icon nz-icon-overview-alert'
-        }, {
-          value: 'nz-icon nz-icon-yanzhengma'
-        }, {
-          value: 'nz-icon nz-icon-Switch'
-        }, {
-          value: 'nz-icon nz-icon-connecting'
-        }, {
-          value: 'nz-icon nz-icon-language-change'
         }, {
           value: 'nz-icon nz-icon-overview-alert1'
         }, {

@@ -43,10 +43,6 @@ export function getOption (type) {
       chartOption = lodash.cloneDeep(chartTreemapOption)
       break
     }
-    case chartType.gauge: {
-      chartOption = lodash.cloneDeep(chartGaugeOption)
-      break
-    }
     case chartType.clock: {
       chartOption = lodash.cloneDeep(chartClockOption)
       break
