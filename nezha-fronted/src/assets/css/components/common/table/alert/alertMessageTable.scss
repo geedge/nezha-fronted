@@ -107,6 +107,18 @@
   color: $--color-text-label;
 }
 
-.blues{
-  color: $--color-text-link;
+.blue-bg{
+  background-color: $--color-text-link;
+}
+.id-alertMessage{
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+.id-alert{
+  display: flex;
+  align-items: center;
 }
