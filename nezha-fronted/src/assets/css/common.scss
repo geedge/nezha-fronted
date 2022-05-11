@@ -392,6 +392,14 @@ td .nz-icon-gear:before{
 .el-icon-arrow-right:before {
   content: "\e6ad";
 }
+.el-table__header-wrapper {
+  th{
+    border-right:none ;
+  }
+  th:hover{
+    border-right: 2px solid #E7EAED;
+  }
+}
 .chart-bar,.chart-gauge,.chart-time-series,.chart-treemap,.chart-pie,.chart-canvas-tooltip,.line-chart-block-Zindex,.alert-label,.alert-labelUp,.alert-days-info-tooltip,.nz-tooltip-bac{
   background-color: $--tooltip-background-color !important;
   border: 2px solid $--tooltip-border-color !important;
