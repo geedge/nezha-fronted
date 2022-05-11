@@ -1,5 +1,5 @@
 <template>
-  <div id="entrance" class="theme-light body container list-page" style="height: 100%">
+  <div id="entrance" class="theme-light body container list-page" style="height: calc(100% - 50px)">
     <div class="main-list">
       <div id="tableList" class="table-list" style='overflow-y: unset'>
         <div class="table-list-box">
@@ -9,12 +9,12 @@
                     height="40px"
                    style="vertical-align: middle;margin-left: 5px"
               />
-              {{dataJson.panel.name}}
+              {{dataJson.panel.data.name}}
             </span>
 
             <span>
-              <i class="nz-icon nz-icon-arrow-down"/>
-              {{timeFormate(dataJson.start)}} - {{timeFormate(dataJson.start)}}
+<!--              <i class="nz-icon nz-icon-arrow-down"/>-->
+              {{timeFormate(dataJson.start * 1000)}} - {{timeFormate(dataJson.start * 1000)}}
             </span>
           </div>
           <div  id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow-y: auto'>

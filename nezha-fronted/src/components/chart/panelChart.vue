@@ -435,8 +435,9 @@ export default {
           }
           case 'system': {
             this.chartData = []
-            this.chartData.push(this.dataJson[this.chartInfo.id + '_' + 0])
+            this.chartData.push(this.dataJson[this.chartInfo.id + '_' + 0].result)
           }
+            break
           case 'misc': {
             this.loading = false
             setTimeout(() => {
@@ -502,6 +503,9 @@ export default {
             })
             break
           }
+        }
+        if (this.chartInfo.type === 'log') {
+          this.logChartDataFormat()
         }
         this.loading = false
       } catch (e) {

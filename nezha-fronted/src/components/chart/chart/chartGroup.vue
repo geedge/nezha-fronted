@@ -6,6 +6,8 @@
       name="group"
       :class="{'show-top':showTopBtn}"
       :data-list="dataList"
+      :dataJson = "dataJson.chartsData"
+      :is-export-html="!!dataJson"
       :nowTimeType="nowTimeType"
       :from="from"
       :panel-lock="panelLock"
@@ -43,7 +45,8 @@ export default {
       fromRoute,
       dataList: [],
       showTopBtn: false,
-      chartListLoading: false
+      chartListLoading: false,
+      dataJson: window.dataJson || ''
     }
   },
   methods: {

@@ -424,7 +424,7 @@ export default {
           item.chartId = ''
           delete item.seq
         })
-        if (this.chart.datasource !== 'metrics' && this.chart.datasource !== 'log') {
+        if (this.chart.datasource !== 'metrics' && this.chart.datasource !== 'logs') {
           delete this.chart.elements
         }
         if (!this.chart.groupId || this.chart.groupId == -1) {

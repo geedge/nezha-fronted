@@ -118,12 +118,16 @@ export default {
         //  legend = ''
       }
       // 处理legend别名
-      alias = alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
-      if (!alias) {
-        alias = chartInfo.elements[expressionIndex].expression || ''
-      }
-      if (alias == 'Previous ') {
-        alias += chartInfo.elements[expressionIndex].expression
+      if (chartInfo.elements) {
+        if (chartInfo.elements[expressionIndex]) {
+          alias = alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
+        }
+        if (!alias) {
+          alias = chartInfo.elements[expressionIndex].expression || ''
+        }
+        if (alias == 'Previous ') {
+          alias += chartInfo.elements[expressionIndex].expression
+        }
       }
       // proj_status_
       const legendIndex = expressionIndex + 'and' + dataIndex
