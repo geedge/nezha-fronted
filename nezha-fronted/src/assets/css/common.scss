@@ -394,10 +394,12 @@ td .nz-icon-gear:before{
 }
 .el-table__header-wrapper {
   th{
-    border-right:none ;
+    border-right-color: transparent ;
   }
-  th:hover{
-    border-right: 2px solid #E7EAED;
+}
+.el-table__header-wrapper:hover {
+  th{
+    border-right-color: #E7EAED;
   }
 }
 .chart-bar,.chart-gauge,.chart-time-series,.chart-treemap,.chart-pie,.chart-canvas-tooltip,.line-chart-block-Zindex,.alert-label,.alert-labelUp,.alert-days-info-tooltip,.nz-tooltip-bac{
