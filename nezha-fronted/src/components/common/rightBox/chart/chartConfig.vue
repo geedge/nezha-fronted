@@ -675,6 +675,7 @@
                       style="width: 75px"
                       :placeholder="$t('el.select.placeholder')"
                       @change="change('valueMapping', index)"
+                      class="mapping-iconSelect"
                     >
                     <template slot="prefix">
                       <i class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>

@@ -148,6 +148,24 @@
         padding-left: 10px;
         box-sizing: border-box;
       }
+      .mapping-iconSelect {
+        .el-input__inner{
+          color: transparent;
+        }
+        .el-input__inner::-webkit-input-placeholder {    /* Chrome/Opera/Safari */
+          color: $--color-text-placeholder;
+        }
+        .el-input__inner::-moz-placeholder { /* Firefox 19+ */
+          color: $--color-text-placeholder;
+        }
+        .el-input__inner:-ms-input-placeholder { /* IE 10+ */
+          color: $--color-text-placeholder;
+        }
+        .el-input__inner:-moz-placeholder { /* Firefox 18- */
+          color: $--color-text-placeholder;
+        }
+      }
+      
       .mapping-icon{
         position: absolute;
         left: 8px;
