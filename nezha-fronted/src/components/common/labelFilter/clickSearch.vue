@@ -131,7 +131,7 @@ export default {
           labelRowCount++
         }
       })
-      return paddingHeight + checkBoxRowHeight * checkBoxRowCount + labelRowHeight * labelRowCount + checkBoxRowCount + labelRowCount + 1
+      return paddingHeight + checkBoxRowHeight * checkBoxRowCount + labelRowHeight * labelRowCount + checkBoxRowCount + labelRowCount + 2
     },
     getHeight () {
       if (this.changeMoreNum) {

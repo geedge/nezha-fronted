@@ -1,8 +1,11 @@
 .system {
-  height: calc(100% - 40px) !important;
+  height: calc(100% - 20px) !important;
   position: relative;
   overflow: auto;
-  margin: 10px;
+  margin: 0px;
+  .el-form{
+    padding-left: 15px;
+  }
   .el-tag.el-tag--info {
     background-color: $--chart-title-hover-background-color;
     border: 1px solid $--border-color-light;
@@ -154,7 +157,7 @@
   color: $--color-text-regular;
   letter-spacing: 0;
   text-align: left;
-  padding-left: 20px;
+  padding-left: 10px;
   font-weight: 500;
   margin-bottom: 30px;
 }

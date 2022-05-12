@@ -63,7 +63,7 @@
   align-items: unset;
 }
 .search-content-box:last-of-type{
-  border-bottom: none;
+  border-bottom: none !important;
 }
 .search-items {
   display: flex;

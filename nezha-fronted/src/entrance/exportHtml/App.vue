@@ -13,7 +13,7 @@
 
             <div style="display: flex;flex-direction: column">
 <!--              <i class="nz-icon nz-icon-arrow-down"/>-->
-              <span style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px"> {{dataJson.panel.data.name}} </span>
+              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right"> {{dataJson.panel.data.name}} </div>
               <span>  {{timeFormate(dataJson.start * 1000)}} - {{timeFormate(dataJson.start * 1000)}} </span>
             </div>
           </div>

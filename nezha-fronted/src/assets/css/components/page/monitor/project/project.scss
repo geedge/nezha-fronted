@@ -4,10 +4,15 @@
     display: flex;
     background-color: $--background-color-base;
     overflow-x: auto;
+  .project-table {
+    //width: calc(100% - 10px) !important;
+  }
   .projectList{
     flex: 1;
-    width: calc(50% - 10px);
-    margin-right: 10px;
+    //width: calc(50% - 10px);
+    height: calc(100% - 5px);
+    width: 50px;
+    margin-right: 0px;
     min-width: 745px;
   }
   .projectTopo{
@@ -70,6 +75,9 @@
   .page.topo-page,.props-box {
     border: 1px solid $--border-color-light;
   }
+  .page.topo-page{
+    height: calc(100% - 10px);
+  }
   .project-title {
     background-color: $--background-color-base;
   }
@@ -113,8 +121,8 @@
     }
   }
   .pagination-bottom{
-    width: calc(100% - 30px) !important;
-    bottom: 18px !important;
+    width: calc(100% - 20px) !important;
+    bottom: 7px !important;
   }
 }
 .el-card {
