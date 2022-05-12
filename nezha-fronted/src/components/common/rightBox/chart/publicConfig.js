@@ -3,6 +3,7 @@ import { getUUID, resetZIndex } from '@/components/common/js/common'
 import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
 import { isStat } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
+import iconList from '@/assets/css/font/iconfont.json'
 const rz = {
   methods: {
     rz (e) {
@@ -58,15 +59,7 @@ export default {
           value: 'regx'
         }
       ],
-      mappingIconList: [
-        {
-          value: 'nz-icon nz-icon-overview-alert'
-        }, {
-          value: 'nz-icon nz-icon-overview-alert1'
-        }, {
-          value: 'nz-icon nz-icon-model'
-        }
-      ],
+      mappingIconList: this.iconFormat(), // 获取icon列表
       letter: [
         'A', 'B', 'C', 'D', 'E', 'F', 'G',
         'H', 'I', 'J', 'K', 'L', 'M', 'N',
@@ -193,6 +186,20 @@ export default {
   mixins: [rz],
   methods: {
     isStat,
+    iconFormat () {
+      const iconArr = iconList.glyphs.map(item => {
+        const str = iconList.font_family + ' ' + iconList.css_prefix_text + item.font_class
+        return {
+          value: str
+        }
+      })
+      return iconArr
+      // return [
+      //   {
+      //     value: 'nz-icon nz-icon-overview-alert'
+      //   }
+      // ]
+    },
     expressionChange: function () {
       if (this.expressions.length) {
         this.chartConfig.elements = []
