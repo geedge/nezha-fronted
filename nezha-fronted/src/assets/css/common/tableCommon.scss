@@ -49,7 +49,9 @@
     }
   }
   .panel-top-tools{
-    border-bottom: 1px solid $--border-color-light;
+    &.panel-top-tools-bottom{
+      border-bottom: 1px solid $--border-color-light;
+    }
   }
   .top-tool-btn-group {
     display: flex;

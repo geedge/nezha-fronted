@@ -7,7 +7,7 @@
         </transition>
       </div>
       <div class="main-container">
-        <div class="top-tools panel-top-tools">
+        <div class="top-tools panel-top-tools" :class="showTopLine? 'panel-top-tools-bottom' : ''">
           <div v-if="panelData.length === 0" class="top-tool-left" style="margin-left: 10px;">
             <button id="panel-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
           </div>
@@ -272,7 +272,8 @@ export default {
       // ---图表相关参数--end
       scrollbarWrap: null,
       batchDeleteObjs: [],
-      nowTimeType: {}
+      nowTimeType: {},
+      showTopLine: false
     }
   },
   components: {
@@ -750,7 +751,9 @@ export default {
         _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50
         _self.overScroll10 = _self.scrollbarWrap.scrollTop > 50
         _self.$refs.chartList.onScroll(_self.scrollbarWrap.scrollTop)
-      }, 300))
+      }, 300, function () {
+        _self.showTopLine = _self.scrollbarWrap.scrollTop > 10
+      }))
     },
     focusInput () {
       let classVal = document.getElementById('queryPanel').parentElement.getAttribute('class')

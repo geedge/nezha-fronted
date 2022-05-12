@@ -231,13 +231,16 @@ export default new Vue({
     getOffsetTimezoneData (offset = 0) {
       return new Date(this.computeTimezone(new Date().getTime())).setHours(new Date(this.computeTimezone(new Date().getTime())).getHours() + offset)
     },
-    debounce (fn, delay) {
+    debounce (fn, delay, fn1) {
       // 记录上一次的延时器
       let timer = null
       delay = delay || 200
       return function () {
         const args = arguments
         const that = this
+        if (fn1) {
+          fn1()
+        }
         // 清除上一次延时器
         clearTimeout(timer)
         timer = setTimeout(function () {
