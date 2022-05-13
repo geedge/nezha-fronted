@@ -149,31 +149,30 @@
         box-sizing: border-box;
       }
       .mapping-iconSelect {
-        .el-input__inner{
-          color: transparent;
-        }
-        .el-input__inner::-webkit-input-placeholder {    /* Chrome/Opera/Safari */
-          color: $--color-text-placeholder;
-        }
-        .el-input__inner::-moz-placeholder { /* Firefox 19+ */
-          color: $--color-text-placeholder;
-        }
-        .el-input__inner:-ms-input-placeholder { /* IE 10+ */
-          color: $--color-text-placeholder;
-        }
-        .el-input__inner:-moz-placeholder { /* Firefox 18- */
-          color: $--color-text-placeholder;
-        }
-      }
-      
-      .mapping-icon{
-        position: absolute;
-        left: 8px;
-        height: 100%;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        font-size: 18px;
-        font-style: normal;
+        width: 76px;
+        height: 32px;
+        padding:0px 5px;
+        box-sizing: border-box;
+        border: 1px solid $--border-color-light;
+        cursor: pointer;
+        .mapping-icon{
+          font-size: 18px;
+          margin-left: 6px;
+        }
+        span{
+          font-size: 14px;
+          color: $--color-text-placeholder;
+        }
+        .el-icon-arrow-down{
+          transition: transform .2s;
+          color: $--color-text-placeholder;
+        }
+        .el-icon-arrow-down.is-active{
+          transform: rotate(-180deg);
+        }
       }
     }
     .thresholds-add{
@@ -192,17 +191,17 @@
       left: 200px;
     }
     .prev-mapping-box{
-      border: 1px solid $--border-color-light;
       display: inline-block;
       min-width: 18px;
-      height: 25px;
-      line-height: 25px;
+      height: 30px;
+      line-height: 30px;
       border-radius: 5px;
       padding: 0 3px;
       text-align: center;
       position: absolute;
       top: 0;
-      left: 250px;
+      left: 230px;
+      box-sizing: border-box;
     }
     .element-item {
       padding: 0;
@@ -269,3 +268,42 @@
     //}
   }
 }
+
+
+.mapping-iconPop{
+  .mapping-iconList{
+    width: 285px;
+    height: 175px;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    .mapping-iconItem{
+      width: 40px;
+      height: 40px;
+      border: 1px solid $--button-icon-border-color;
+      background-color: $--right-box-sub-title-background-color;
+      border-radius: 2px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-left: 5px;
+      margin-top: 5px;
+      i{
+        font-size: 18px;
+      }
+      &:nth-of-type(6n+1){
+        margin-left: 0;
+      }
+      &:nth-of-type(-n+6){
+        margin-top: 0;
+      }
+    }
+    .mapping-iconItem.active{
+      border-color: #fa901c ;
+      color: #fa901c;
+    }
+  }
+}
+

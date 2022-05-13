@@ -668,28 +668,24 @@
                   <div>
                     <div class='mapping-display'>{{$t('dashboard.panel.chartForm.display')}}</div>
                   </div>
-                  <div>
-                    <el-select
-                      v-model="item.icon"
-                      size="small"
-                      style="width: 75px"
-                      :placeholder="$t('el.select.placeholder')"
-                      @change="change('valueMapping', index)"
-                      class="mapping-iconSelect"
+                  <el-popover
+                    placement="top-start"
+                    trigger="manual"
+                    popper-class="mapping-iconPop no-style-class"
+                    v-clickoutside="()=>{closeChoose(index)}"
+                    v-model="isChoose[index]"
                     >
-                    <template slot="prefix">
-                      <i class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>
-                    </template>
-                      <el-option
-                        v-for="item in mappingIconList"
-                        :value="item.value"
-                        :key="item.value"
-                        label=" "
-                      >
-                        <i :class="item.value"></i>
-                      </el-option>
-                    </el-select>
-                  </div>
+                    <ul class="mapping-iconList">
+                      <li class="mapping-iconItem" :class="{active:item.icon===subItem.value}" v-for="subItem in mappingIconList" @click="iconActive(item,subItem,index)" :key="subItem.value">
+                        <i :class="subItem.value"></i>
+                      </li>
+                    </ul>
+                    <div class="mapping-iconSelect" slot="reference" @click="chooseIcon(isChoose[index],index)">
+                      <i v-if="item.icon" class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>
+                      <span v-else>{{$t('el.select.placeholder')}}</span>
+                      <i class="el-icon-arrow-down" :class="{'is-active':isChoose[index]}"></i>
+                    </div>
+                  </el-popover>
                   <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.display"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)"/>
                   </el-form-item>

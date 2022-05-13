@@ -3,7 +3,6 @@ import { getUUID, resetZIndex } from '@/components/common/js/common'
 import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
 import { isStat } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
-import iconList from '@/assets/css/font/iconfont.json'
 const rz = {
   methods: {
     rz (e) {
@@ -59,7 +58,125 @@ export default {
           value: 'regx'
         }
       ],
-      mappingIconList: this.iconFormat(), // 获取icon列表
+      mappingIconList: [
+        {
+          value: 'nz-icon nz-icon-Router'
+        }, {
+          value: 'nz-icon nz-icon-Computer'
+        }, {
+          value: 'nz-icon nz-icon-a-Networkdevices'
+        }, {
+          value: 'nz-icon nz-icon-Other'
+        }, {
+          value: 'nz-icon nz-icon-a-Virtualmachine'
+        }, {
+          value: 'nz-icon nz-icon-Switch'
+        }, {
+          value: 'nz-icon nz-icon-Server'
+        }, {
+          value: 'nz-icon nz-icon-ADC'
+        }, {
+          value: 'nz-icon nz-icon-Firewall'
+        }, {
+          value: 'nz-icon nz-icon-guide'
+        }, {
+          value: 'nz-icon nz-icon-Silence'
+        }, {
+          value: 'nz-icon nz-icon-fast-silence'
+        }, {
+          value: 'nz-icon nz-icon-mute'
+        }, {
+          value: 'nz-icon nz-icon-overview-alert'
+        }, {
+          value: 'nz-icon nz-icon-overview-endpoint'
+        }, {
+          value: 'nz-icon nz-icon-Alertrule'
+        }, {
+          value: 'nz-icon nz-icon-import-success1'
+        }, {
+          value: 'nz-icon nz-icon-import-failed1'
+        }, {
+          value: 'nz-icon nz-icon-stop'
+        }, {
+          value: 'nz-icon nz-icon-failed'
+        }, {
+          value: 'nz-icon nz-icon-unknown-error'
+        }, {
+          value: 'nz-icon nz-icon-role1'
+        }, {
+          value: 'nz-icon nz-icon-Cabinet1'
+        }, {
+          value: 'nz-icon nz-icon-user1'
+        }, {
+          value: 'nz-icon nz-icon-Datacenter2'
+        }, {
+          value: 'nz-icon nz-icon-overview-project'
+        }, {
+          value: 'nz-icon nz-icon-project'
+        }, {
+          value: 'nz-icon nz-icon-overview-module'
+        }, {
+          value: 'el-icon-share'
+        }, {
+          value: 'el-icon-d-caret'
+        }, {
+          value: 'el-icon-caret-left'
+        }, {
+          value: 'el-icon-caret-right'
+        }, {
+          value: 'el-icon-caret-bottom'
+        }, {
+          value: 'el-icon-caret-top'
+        }, {
+          value: 'el-icon-bottom-left'
+        }, {
+          value: 'el-icon-bottom-right'
+        }, {
+          value: 'el-icon-back'
+        }, {
+          value: 'el-icon-right'
+        }, {
+          value: 'el-icon-bottom'
+        }, {
+          value: 'el-icon-top'
+        }, {
+          value: 'el-icon-top-left'
+        }, {
+          value: 'el-icon-top-right'
+        }, {
+          value: 'el-icon-arrow-left'
+        }, {
+          value: 'el-icon-arrow-right'
+        }, {
+          value: 'el-icon-arrow-down'
+        }, {
+          value: 'el-icon-arrow-up'
+        }, {
+          value: 'el-icon-d-arrow-left'
+        }, {
+          value: 'el-icon-d-arrow-right'
+        }, {
+          value: 'el-icon-video-pause'
+        }, {
+          value: 'el-icon-video-play'
+        }, {
+          value: 'el-icon-refresh'
+        }, {
+          value: 'el-icon-refresh-right'
+        }, {
+          value: 'el-icon-refresh-left'
+        }, {
+          value: 'el-icon-finished'
+        }, {
+          value: 'el-icon-sort'
+        }, {
+          value: 'el-icon-sort-up'
+        }, {
+          value: 'el-icon-sort-down'
+        }, {
+          value: 'el-icon-rank'
+        }
+      ], // 获取icon列表
       letter: [
         'A', 'B', 'C', 'D', 'E', 'F', 'G',
         'H', 'I', 'J', 'K', 'L', 'M', 'N',
@@ -180,25 +297,31 @@ export default {
           value: 'server',
           label: this.$t('dashboard.panel.chartForm.typeVal.server')
         }
-      ]
+      ],
+      isChoose: []
     }
   },
   mixins: [rz],
   methods: {
     isStat,
-    iconFormat () {
-      const iconArr = iconList.glyphs.map(item => {
-        const str = iconList.font_family + ' ' + iconList.css_prefix_text + item.font_class
-        return {
-          value: str
-        }
-      })
-      return iconArr
-      // return [
-      //   {
-      //     value: 'nz-icon nz-icon-overview-alert'
-      //   }
-      // ]
+    // 隐藏icon列表
+    closeChoose (index) {
+      this.$set(this.isChoose, index, false)
+    },
+    // 显示icon列表
+    chooseIcon (value, index) {
+      this.$set(this.isChoose, index, !value)
+    },
+    // icon点击
+    iconActive (item, subItem, index) {
+      if (item.icon === subItem.value) {
+        this.chartConfig.param.valueMapping[index].icon = ''
+        this.$set(this.chartConfig.param.valueMapping, index, this.chartConfig.param.valueMapping[index])
+      } else {
+        this.chartConfig.param.valueMapping[index].icon = subItem.value
+        this.$set(this.chartConfig.param.valueMapping, index, this.chartConfig.param.valueMapping[index])
+      }
+      this.change()
     },
     expressionChange: function () {
       if (this.expressions.length) {
