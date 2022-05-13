@@ -449,7 +449,9 @@ export default {
         this.isCustom = false
         return false
       } else {
-        this.setSearchTime(val.type, val.value)
+        if (val.id !== 12) {
+          this.setSearchTime(val.type, val.value)
+        }
 
         const id = val.id
         if (id === 0) {
@@ -484,7 +486,7 @@ export default {
           this.isCustom = false
           this.showDropdown()
           if (this.showEmpty && id === 12) {
-            this.searchTime = []
+            this.searchTime = ['', '']
           }
           this.$emit('change', this.searchTime)
         }

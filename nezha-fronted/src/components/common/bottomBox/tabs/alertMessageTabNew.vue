@@ -351,7 +351,7 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.$set(this.searchLabel, 'state', this.state)
-      if (this.searchTimeHeader && this.searchTimeHeader.length > 1) {
+      if (this.searchTimeHeader && this.searchTimeHeader.length > 1 && this.searchTimeHeader[0] && this.searchTimeHeader[1]) {
         this.$set(this.searchLabel, 'startAt', bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTimeHeader[0])), 'YYYY-MM-DD HH:mm:ss'))
         this.$set(this.searchLabel, 'endAt', bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTimeHeader[1])), 'YYYY-MM-DD HH:mm:ss'))
       } else {
