@@ -435,11 +435,6 @@ export default {
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)
       window.addEventListener('resize', this.resize)
     }
-    if (this.isExportHtml) {
-      setTimeout(() => {
-        this.onScroll(999999)
-      }, 500)
-    }
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.resize)
@@ -509,8 +504,10 @@ export default {
           tempList = null
           setTimeout(() => {
             this.gridLayoutShow = true
-            if (!this.isGroup) {
+            if (!this.isGroup && !this.isExportHtml) {
               this.onScroll()
+            } else {
+              this.onScroll(999999)
             }
           })
           setTimeout(() => {
