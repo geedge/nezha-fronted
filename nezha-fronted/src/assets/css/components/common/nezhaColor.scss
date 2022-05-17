@@ -65,7 +65,8 @@
     border-radius: 5px;
     display: flex;
     align-items: center;
-    height: 30px;
+    height: 32px;
+    box-sizing: border-box;
   }
 
   .color-show .color-text {

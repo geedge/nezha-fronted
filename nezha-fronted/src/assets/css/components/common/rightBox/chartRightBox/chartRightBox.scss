@@ -148,31 +148,39 @@
         padding-left: 10px;
         box-sizing: border-box;
       }
+      .mapping-display-input{
+        input{
+          padding-left: 42px;
+        }
+        .el-input__prefix{
+          display: flex;
+          align-items: center;
+          left: 10px;
+        }
+      }
       .mapping-iconSelect {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 76px;
-        height: 32px;
-        padding:0px 5px;
+        width: 22px;
+        height: 22px;
         box-sizing: border-box;
-        border: 1px solid $--border-color-light;
+        border: 1px dotted #fa901c;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
-        .mapping-icon{
-          font-size: 18px;
-          margin-left: 6px;
+        i{
+          font-size: 12px;
+          color: #fa901c;
         }
-        span{
-          font-size: 14px;
-          color: $--color-text-placeholder;
-        }
-        .el-icon-arrow-down{
-          transition: transform .2s;
-          color: $--color-text-placeholder;
-        }
-        .el-icon-arrow-down.is-active{
-          transform: rotate(-180deg);
-        }
+      }
+      .mapping-icon{
+        font-size: 18px;
+        width: 22px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
       }
     }
     .thresholds-add{
@@ -261,19 +269,14 @@
       height: 100%;
       width: calc(60% - 10px);
     }
-    //.el-select__tags > span {
-    //  display: flex;
-    //  width: 100%;
-    //  overflow-x: auto;
-    //}
   }
 }
 
 
 .mapping-iconPop{
   .mapping-iconList{
-    width: 285px;
-    height: 175px;
+    width: 240px;
+    height: 130px;
     overflow-y: auto;
     display: flex;
     flex-wrap: wrap;
@@ -293,10 +296,10 @@
       i{
         font-size: 18px;
       }
-      &:nth-of-type(6n+1){
+      &:nth-of-type(5n+1){
         margin-left: 0;
       }
-      &:nth-of-type(-n+6){
+      &:nth-of-type(-n+5){
         margin-top: 0;
       }
     }

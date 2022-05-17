@@ -60,6 +60,8 @@ export default {
       ],
       mappingIconList: [
         {
+          value: undefined
+        }, {
           value: 'nz-icon nz-icon-Router'
         }, {
           value: 'nz-icon nz-icon-Computer'
@@ -315,7 +317,7 @@ export default {
     // icon点击
     iconActive (item, subItem, index) {
       if (item.icon === subItem.value) {
-        this.chartConfig.param.valueMapping[index].icon = ''
+        this.chartConfig.param.valueMapping[index].icon = undefined
         this.$set(this.chartConfig.param.valueMapping, index, this.chartConfig.param.valueMapping[index])
       } else {
         this.chartConfig.param.valueMapping[index].icon = subItem.value
