@@ -208,7 +208,8 @@ export default {
             thresholds: false
           },
           thresholdShow: true,
-          thresholds: [{ value: undefined, color: randomcolor() }]
+          thresholds: [{ value: undefined, color: randomcolor() }],
+          showHeader: 1
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
         panel: '',

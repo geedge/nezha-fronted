@@ -6,6 +6,83 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "29755584",
+      "name": "密码可见",
+      "font_class": "mimakejian",
+      "unicode": "e77a",
+      "unicode_decimal": 59258
+    },
+    {
+      "icon_id": "29755585",
+      "name": "密码不可见",
+      "font_class": "mimabukejian",
+      "unicode": "e77b",
+      "unicode_decimal": 59259
+    },
+    {
+      "icon_id": "29755586",
+      "name": "空添加icon",
+      "font_class": "kongtianjiaicon",
+      "unicode": "e77c",
+      "unicode_decimal": 59260
+    },
+    {
+      "icon_id": "29684748",
+      "name": "下",
+      "font_class": "arrow-down",
+      "unicode": "e777",
+      "unicode_decimal": 59255
+    },
+    {
+      "icon_id": "29684749",
+      "name": "左",
+      "font_class": "arrow-left",
+      "unicode": "e778",
+      "unicode_decimal": 59256
+    },
+    {
+      "icon_id": "29684750",
+      "name": "右",
+      "font_class": "arrow-right",
+      "unicode": "e779",
+      "unicode_decimal": 59257
+    },
+    {
+      "icon_id": "29684477",
+      "name": "上",
+      "font_class": "arrow-up",
+      "unicode": "e776",
+      "unicode_decimal": 59254
+    },
+    {
+      "icon_id": "29610781",
+      "name": "scan",
+      "font_class": "scan",
+      "unicode": "e774",
+      "unicode_decimal": 59252
+    },
+    {
+      "icon_id": "29610763",
+      "name": "输入",
+      "font_class": "shuru",
+      "unicode": "e772",
+      "unicode_decimal": 59250
+    },
+    {
+      "icon_id": "29610764",
+      "name": "Ping",
+      "font_class": "Ping",
+      "unicode": "e773",
+      "unicode_decimal": 59251
+    },
+    {
+      "icon_id": "29610766",
+      "name": "Trace",
+      "font_class": "Trace",
+      "unicode": "e775",
+      "unicode_decimal": 59253
+    },
+    {
       "icon_id": "29460715",
       "name": "确认",
       "font_class": "queren",
@@ -1219,28 +1296,28 @@
     {
       "icon_id": "16915855",
       "name": "上",
-      "font_class": "arrow-up",
+      "font_class": "arrow-up6",
       "unicode": "e6af",
       "unicode_decimal": 59055
     },
     {
       "icon_id": "16915856",
       "name": "下",
-      "font_class": "arrow-down",
+      "font_class": "arrow-down6",
       "unicode": "e6b0",
       "unicode_decimal": 59056
     },
     {
       "icon_id": "16915721",
       "name": "右",
-      "font_class": "arrow-right",
+      "font_class": "arrow-right6",
       "unicode": "e6ad",
       "unicode_decimal": 59053
     },
     {
       "icon_id": "16915722",
       "name": "左",
-      "font_class": "arrow-left",
+      "font_class": "arrow-left6",
       "unicode": "e6ae",
       "unicode_decimal": 59054
     },

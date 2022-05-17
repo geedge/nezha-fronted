@@ -16,7 +16,17 @@
     <div class="right-box-form-box right-box__container chart-right-box">
       <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px">
         <el-form-item :label='$t("dashboard.panel.chartForm.name")' prop="name">
-          <el-input maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
+          <div style="display:flex;align-items:center">
+            <el-input style="flex:1;margin-right:10px" maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
+            <!-- 显示头部 -->
+            <div class="choose-header-btn" v-if="editChart.param&&editChart.param.showHeader!==0" @click="switchHeader(0)">
+              <i class="nz-icon nz-icon-mimakejian"></i>
+            </div>
+            <!-- 隐藏头部 -->
+            <div class="choose-header-btn" v-else @click="switchHeader(1)">
+              <i class="nz-icon nz-icon-mimabukejian"></i>
+            </div>
+          </div>
         </el-form-item>
 
         <div class="form-items--half-width-group">
@@ -196,6 +206,12 @@ export default {
     }
   },
   methods: {
+
+    switchHeader (value) {
+      // 1为显示 0为隐藏
+      this.editChart.param.showHeader = value
+    },
+
     clickOutside () {
       this.esc(false)
     },
@@ -356,7 +372,8 @@ export default {
               legend: true,
               valueMapping: false
             },
-            thresholds: [{ value: undefined, color: '#eeeeeeff' }]
+            thresholds: [{ value: undefined, color: '#eeeeeeff' }],
+            showHeader: 1
           }
         }
       }
@@ -374,7 +391,8 @@ export default {
           },
           elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
           param: {
-            limit: 100
+            limit: 100,
+            showHeader: 1
           }
         }
       }
@@ -409,7 +427,8 @@ export default {
               legend: ''
             }
             ],
-            valueMapping: []
+            valueMapping: [],
+            showHeader: 1
           }
         }
         delete this.editChart.elements
@@ -426,7 +445,8 @@ export default {
             valueMapping: false
           },
           param: {
-            url: ''
+            url: '',
+            showHeader: 1
           }
         }
         delete this.editChart.elements
