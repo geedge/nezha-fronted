@@ -8,7 +8,7 @@
     <template v-slot:top-tool-left>
       <div class="tools-header">
         <div class="tools-header-left">
-          <span>Ip</span>
+          <span>{{$t('config.operationlog.ip')}}</span>
           <vue-tags-input
             class="ipInput"
             style="height: 190px"
@@ -52,22 +52,22 @@
             <div class="radar-line"></div>
           </div>
           <div class="tools-header-right-content">
-            <div class="tools-header-right-title right-content-text">Statistics</div>
-            <div class="right-content-text">
-              IP
+            <div class="tools-header-right-title right-content-text">{{$t('dashboard.panel.chartForm.statistics')}}</div>
+            <div class="right-content-text right-content-box">
+              {{$t('config.operationlog.ip')}}
               <span class="margin-l-5">{{$t('asset.total')}}:<span class="margin-l-10 margin-r-30">{{total}}</span></span>
               <span>{{$t('ping.done')}}:<span class="margin-l-10 margin-r-30">{{done}}</span></span>
               <span>{{$t('ping.progress')}}:<span class="margin-l-10 margin-r-30">{{process}}%</span></span>
             </div>
             <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-if="!isStart" @click="startTask">
-              Ping
+              {{$t('asset.pingInfo')}}}
             </el-button>
             <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-else @click="clearTask">
-              Stop
+              {{$t('config.terminallog.stop')}}}
             </el-button>
           </div>
         </div>
-        <div class="tools-header-title">Configuration</div>
+        <div class="tools-header-title">{{$t('project.endpoint.configs')}}}</div>
       </div>
     </template>
 
