@@ -60,14 +60,14 @@
               <span>{{$t('ping.progress')}}:<span class="margin-l-10 margin-r-30">{{process}}%</span></span>
             </div>
             <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-if="!isStart" @click="startTask">
-              {{$t('asset.pingInfo')}}}
+              {{$t('asset.pingInfo')}}
             </el-button>
             <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-else @click="clearTask">
-              {{$t('config.terminallog.stop')}}}
+              {{$t('config.terminallog.stop')}}
             </el-button>
           </div>
         </div>
-        <div class="tools-header-title">{{$t('project.endpoint.configs')}}}</div>
+        <div class="tools-header-title">{{$t('project.endpoint.configs')}}</div>
       </div>
     </template>
 

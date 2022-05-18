@@ -67,11 +67,11 @@
                 {{$t('ping.trance')}}
               </el-button>
               <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-else @click="clearTask">
-                {{$t('config.terminallog.stop')}}}
+                {{$t('config.terminallog.stop')}}
               </el-button>
             </div>
           </div>
-          <div class="tools-header-title">{{$t('project.endpoint.configs')}}}</div>
+          <div class="tools-header-title">{{$t('project.endpoint.configs')}}</div>
         </div>
       </template>
     <template v-slot:default>
