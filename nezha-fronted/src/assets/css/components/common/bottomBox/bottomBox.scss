@@ -72,6 +72,9 @@
   height: 50%;
   position: relative;
   padding: 0;
+  .top-tools.top-tools--sub{
+    border-bottom: 1px solid $--border-color-light;
+  }
   .bottom-data-list {
     .sub-container {
       //padding: 10px;
