@@ -3,62 +3,72 @@
       ref="dataList"
       :layout="[]"
       :from="fromRoute.ping"
+      class="radar-box"
     >
     <template v-slot:top-tool-left>
-      <vue-tags-input
-        class="ipInput"
-        v-model="ip"
-        :placeholder="$t('overall.placeHolder')+' IP'"
-        :add-from-paste="false"
-        :tags="tags"
-        @tags-changed="newTags => tags = newTags"
-        @before-adding-tag="value => beforeAddTag(value)"
-        @adding-duplicate="value => addDuplicate(value)"
-      />
-      <el-popover
-        placement="bottom"
-        width="220"
-        trigger="manual"
-        v-model="visible"
-        v-clickoutside="close"
-        popper-class="no-style-class"
-        >
-        <el-form size="small" ref="ruleForm" label-position="top" :model="ruleForm" :rules="formRules">
-          <el-form-item style="margin-bottom:0px">
-            <p class="pop-tit">{{$t('ping.dcs')}}</p>
-            <ul class="pop-list-wrap">
-              <li class="el-dropdown-menu__item">
-                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="checkAllChange">{{$t('overall.all')}}</el-checkbox>
-              </li>
-              <ul class="pop-list">
-                <el-checkbox-group v-model="checked" @change="checkedChange">
-                  <li class="el-dropdown-menu__item" v-for="item in dataCenter" :key="item.id">
-                    <el-checkbox :label="item.id">{{item.name}}</el-checkbox>
-                  </li>
-                </el-checkbox-group>
-              </ul>
-            </ul>
-          </el-form-item>
-          <el-form-item prop="timeout" style="margin-bottom:10px">
-            <div class="pop-tit">{{$t('ping.timeout')}}</div>
-            <div class="wrap" style="height:32px">
-              <el-input v-model.number="ruleForm.timeout" placeholder="" >
-                <template slot="append">{{$t('config.system.basic.second')}}</template>
-              </el-input>
-            </div>
-          </el-form-item>
-        </el-form>
-        <el-button slot="reference" class="top-tool-btn margin-l-10 choose" @click="triggerVisible">
-          <i class="el-icon-more"></i>
-        </el-button>
-      </el-popover>
+      <div class="tools-header">
+        <div class="tools-header-left">
+          <span>Ip</span>
+          <vue-tags-input
+            class="ipInput"
+            style="height: 190px"
+            v-model="ip"
+            :placeholder="$t('overall.placeHolder')+' IP'"
+            :add-from-paste="false"
+            :tags="tags"
+            @tags-changed="newTags => tags = newTags"
+            @before-adding-tag="value => beforeAddTag(value)"
+            @adding-duplicate="value => addDuplicate(value)"
+          />
+        </div>
 
-      <el-button class="top-tool-btn btn" v-if="!isStart" @click="startTask">
-        <i class="el-icon-caret-right"></i>
-      </el-button>
-      <el-button class="top-tool-btn btn" v-else @click="clearTask">
-        <i class="quadrate"></i>
-      </el-button>
+        <div  class="tools-header-center">
+          <el-form size="small" ref="ruleForm" :model="ruleForm" :rules="formRules" label-position="right" label-width="150px">
+            <el-form-item style="margin-bottom:10px" :label="$t('ping.dcs')">
+            <el-select v-model="checked" multiple @change="checkedChange"  >
+              <el-option
+                :key="item.id"
+                v-for="item in dataCenter"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+            </el-form-item>
+            <el-form-item prop="timeout" style="margin-bottom:10px" :label="$t('ping.timeout')">
+              <div class="wrap" style="height:32px">
+                <el-input v-model.number="ruleForm.timeout" placeholder="" >
+                  <template slot="append">{{$t('config.system.basic.second')}}</template>
+                </el-input>
+              </div>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="tools-header-right">
+          <div class="radar">
+            <div class="first-circle"></div>
+            <div class="second-circle"></div>
+            <div class="third-circle"></div>
+            <div class="sector" :class="isStart?'active':''"></div>
+            <div class="radar-line"></div>
+          </div>
+          <div class="tools-header-right-content">
+            <div class="tools-header-right-title right-content-text">Statistics</div>
+            <div class="right-content-text">
+              IP
+              <span class="margin-l-5">{{$t('asset.total')}}:<span class="margin-l-10 margin-r-30">{{total}}</span></span>
+              <span>{{$t('ping.done')}}:<span class="margin-l-10 margin-r-30">{{done}}</span></span>
+              <span>{{$t('ping.progress')}}:<span class="margin-l-10 margin-r-30">{{process}}%</span></span>
+            </div>
+            <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-if="!isStart" @click="startTask">
+              Ping
+            </el-button>
+            <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-else @click="clearTask">
+              Stop
+            </el-button>
+          </div>
+        </div>
+        <div class="tools-header-title">Configuration</div>
+      </div>
     </template>
 
     <template v-slot:default>
@@ -81,11 +91,6 @@
       </div>
       <!-- 存在任务id时展示表格 -->
       <div class="data-wrap" v-show="tid!==undefined">
-        <div class="data-top">
-          <span>{{$t('asset.total')}}:{{total}}</span>
-          <span>{{$t('ping.done')}}:{{done}}</span>
-          <span>{{$t('ping.progress')}}:{{process}}%</span>
-        </div>
         <div class="data-bottom">
           <ping-table
             ref="dataTable"
@@ -132,8 +137,10 @@ export default {
       isIndeterminate: false,
       // 数据中心
       dataCenter: [],
-      // 复选框选中的值
+      // 实际选中的值
       checked: [],
+      // 复选框选中的值
+      oldChecked: [-1],
       // 是否正在请求数据
       isStart: false,
       // 定时器id

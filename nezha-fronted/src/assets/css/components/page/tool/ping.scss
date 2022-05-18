@@ -3,9 +3,9 @@
     // align-items: center;
   }
   .ipInput{
-    width:250px;
+    width:280px;
     min-height: 36px;
-    max-height: 62px;
+    max-height: 128px;
   }
   .ti-tag-input{
     background: transparent ;
@@ -13,7 +13,8 @@
   .vue-tags-input,.ti-new-tag-input {
     .ti-input {
       min-height: 36px;
-      max-height: 62px;
+      //max-height: 62px;
+      height: 100%;
       overflow-y: auto;
       box-sizing: border-box;
       border-radius: 2px;
@@ -26,6 +27,7 @@
         color: $--color-text-regular !important;
       }
       .ti-tags{
+        height: 24px;
         .ti-tag{
           word-break: break-all;
         }
@@ -103,7 +105,7 @@
       }
       .nz-icon-edit{
         font-size: 26px;
-      } 
+      }
       .el-icon-more{
         font-size: 22px;
       }
@@ -163,4 +165,226 @@
 .pop-list{
   max-height: 144px;
   overflow-y: auto;
+}
+.radar-box{
+  .top-tools {
+    width: 100%;
+    .top-tool-left{
+      width: 100%;
+    }
+  }
+  .tools-header {
+    width: 100%;
+    height: 154px;
+    display: flex;
+    margin-top: 50px;
+    position: relative;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.06);
+    border-radius: 2px;
+    .tools-header-title{
+      top: -50px;
+      left: 0px;
+      position: absolute;
+      display: block;
+      margin-right: 5px;
+      font-size: 14px;
+      color: #666666;
+      letter-spacing: 0;
+      text-align: right;
+      line-height: 30px;
+      font-weight: 400;
+    }
+    .tools-header-left {
+      width: 360px;
+      display: flex;
+      > span{
+        display: block;
+        margin-right: 5px;
+        font-size: 14px;
+        color: #666666;
+        letter-spacing: 0;
+        text-align: right;
+        line-height: 30px;
+        font-weight: 400;
+      }
+    }
+    .tools-header-center {
+      width: 360px;
+      display: flex;
+      .el-select__tags{
+        height: 24px;
+        overflow-y: auto;
+      }
+    }
+    .tools-header-right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      .tools-header-right-title{
+        color: #FA901C;
+      }
+      .right-content-text {
+        font-size: 14px;
+        line-height: 22px;
+        font-weight: 600;
+        letter-spacing: 0;
+        margin-bottom: 10px;
+      }
+      .tools-header-right-content{
+        margin-left: 30px;
+      }
+    }
+  }
+  // 雷达
+  .radar {
+    /*margin-left: 50px;*/
+    width: 92px;
+
+    height: 92px;
+
+    position: relative;
+
+    /* 元素居中定位 */
+
+    border-radius: 50%;
+
+    border: 3px solid #FA901C;
+
+    overflow: hidden;
+    div {
+      opacity: 0.7;
+    }
+    .first-circle {
+      width: 61px;
+
+      height: 61px;
+
+      position: absolute;
+
+      left: 50%;
+
+      top: 50%;
+
+      /* 元素居中定位 */
+
+      transform: translate(-50%, -50%);
+
+      border-radius: 50%;
+
+      border: 1px solid #FA901C;
+
+      overflow: hidden;
+    }
+    .second-circle{
+      width: 29px;
+
+      height: 29px;
+
+      position: absolute;
+
+      left: 50%;
+
+      top: 50%;
+
+      /* 元素居中定位 */
+
+      transform: translate(-50%, -50%);
+
+      border-radius: 50%;
+
+      border: 1px solid #FA901C;
+
+      overflow: hidden;
+      background: rgba(250,144,28, 0.2);
+    }
+    .radar-line:before{
+      content: ' ';
+      width: 100%;
+      height: 0;
+      border-top: 1px solid #FA901C;
+      position: absolute;
+      left: 50%;
+
+      top: 50%;
+
+      /* 元素居中定位 */
+
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+    .radar-line:after{
+      content: ' ';
+      width: 100%;
+      height: 0;
+      border-top: 1px solid #FA901C;
+      position: absolute;
+      left: 50%;
+
+      top: 50%;
+
+      /* 元素居中定位 */
+
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+  // 扫描块
+  .sector {
+    display: block;
+    animation: radar-beam 5s infinite;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 50%;
+    transform-origin: 0% 100%;
+    /* 速度相同 */
+    animation-timing-function: linear;
+    opacity: 1;
+    animation-play-state:paused;
+  }
+  .sector.active{
+    animation-play-state:running;
+  }
+  .sector:before{
+    content: ' ';
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: 0% 100%;
+    transform: rotate(0deg) skewY(-22deg);
+    background: #FA901C;
+    opacity: 0.3;
+  }
+  .sector:after{
+    content: ' ';
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: 0% 100%;
+    transform: rotate(18deg) skewY(-58deg);
+    background: #FA901C;
+    opacity: 0.9;
+  }
+
+  @keyframes radar-beam {
+
+    0% {
+
+      transform: rotate(0deg);
+
+    }
+
+    100% {
+
+      transform: rotate(360deg);
+
+    }
+
+  }
 }
