@@ -54,7 +54,6 @@
           <div class="tools-header-right-content">
             <div class="tools-header-right-title right-content-text">{{$t('dashboard.panel.chartForm.statistics')}}</div>
             <div class="right-content-text right-content-box">
-              {{$t('config.operationlog.ip')}}
               <span class="margin-l-5">{{$t('asset.total')}}:<span class="margin-l-10 margin-r-30">{{total}}</span></span>
               <span>{{$t('ping.done')}}:<span class="margin-l-10 margin-r-30">{{done}}</span></span>
               <span>{{$t('ping.progress')}}:<span class="margin-l-10 margin-r-30">{{process}}%</span></span>
