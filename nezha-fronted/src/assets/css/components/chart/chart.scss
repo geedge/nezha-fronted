@@ -1,23 +1,32 @@
+.el-dropdown-menu.el-popper{
+  border: none;
+}
+
 .panel-chart {
   border: 1px solid $--chart-box-border-color;
   height: 100%;
   display: flex;
   position: relative;
   flex-direction: column;
-
+  &:hover .chart-header--float{
+    background-color: $--chart-title-hover-background-color;
+    height: 39px !important;
+    opacity: 1 !important;
+  }
   .chart-header {
     &.chart-header--float {
       position: absolute;
+      top: 0;
       width: 100%;
-      z-index: 100;
+      z-index: 500;
       box-sizing: border-box;
-      height: 10px;
+      height: 0px;
       opacity: 0;
-      transition: all linear .2s;
-
-      &:hover {
-        height: 39px;
-        opacity: 1;
+      transition: all linear .3s;
+      .chart-header__tools {
+        .chart-header__tool .tool__icon {
+          visibility: visible;
+        }
       }
     }
     display: flex;
@@ -25,15 +34,12 @@
     align-items:center;
     padding: 0 10px;
     height: 39px;
-
     font-size: 14px;
     line-height: 40px;
     color: $--color-text-primary;
     transition: all 0.2s;
-
     &:hover {
       background-color: $--chart-title-hover-background-color;
-
       .chart-header__tools {
         .chart-header__tool .tool__icon {
           visibility: visible;
@@ -105,20 +111,19 @@
     width: 100%;
     box-sizing: border-box;
     margin-top: 15px;
-    &.chart-header--float {
-      position: absolute;
-      width: 100%;
-      z-index: 100;
-      box-sizing: border-box;
-      height: 10px;
-      opacity: 0;
-      transition: all linear .2s;
-
-      &:hover {
-        height: 39px;
-        opacity: 1;
-      }
-    }
+    // &.chart-header--float {
+    //   position: absolute;
+    //   width: 100%;
+    //   z-index: 500;
+    //   box-sizing: border-box;
+    //   height: 10px;
+    //   opacity: 0;
+    //   transition: all linear .3s;
+    //   &:hover {
+    //     height: 39px;
+    //     opacity: 1;
+    //   }
+    // }
     .chart-header__title {
       max-width: calc(100% - 100px);
       text-overflow: ellipsis;

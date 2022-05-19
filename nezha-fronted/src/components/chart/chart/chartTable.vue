@@ -1,5 +1,5 @@
 <template>
-  <div class="nz-table2" style="height: 100%;padding: 0 10px 10px 10px;box-sizing: border-box">
+  <div class="nz-table2" style="height: 100%;padding: 10px;box-sizing: border-box">
     <el-table
       ref="dataTable"
       class="chart-table"

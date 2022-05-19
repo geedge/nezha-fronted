@@ -209,7 +209,7 @@ export default {
 
     switchHeader (value) {
       // 1为显示 0为隐藏
-      this.editChart.param.showHeader = value
+      this.$set(this.editChart.param, 'showHeader', value)
     },
 
     clickOutside () {
@@ -373,7 +373,7 @@ export default {
               valueMapping: false
             },
             thresholds: [{ value: undefined, color: '#eeeeeeff' }],
-            showHeader: 1
+            showHeader: this.editChart.param.showHeader
           }
         }
       }
@@ -392,7 +392,7 @@ export default {
           elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
           param: {
             limit: 100,
-            showHeader: 1
+            showHeader: this.editChart.param.showHeader
           }
         }
       }
@@ -428,7 +428,7 @@ export default {
             }
             ],
             valueMapping: [],
-            showHeader: 1
+            showHeader: this.editChart.param.showHeader
           }
         }
         delete this.editChart.elements
@@ -446,7 +446,7 @@ export default {
           },
           param: {
             url: '',
-            showHeader: 1
+            showHeader: this.editChart.param.showHeader
           }
         }
         delete this.editChart.elements

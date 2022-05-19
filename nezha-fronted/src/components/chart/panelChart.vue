@@ -428,7 +428,7 @@ export default {
           case 'metrics':
           case 'logs': {
             this.chartData = []
-            elements.forEach((element,index) => {
+            elements.forEach((element, index) => {
               this.chartData.push(this.dataJson[this.chartInfo.id + '_' + index].data.result)
             })
             break

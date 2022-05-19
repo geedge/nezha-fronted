@@ -468,7 +468,7 @@ export default {
             //   console.info(e)
             // }
             height = (item.type === 'group' && item.param.collapse) ? this.headerH : item.height
-            param.showHeader = true
+            // param.showHeader = true
             if (param.valueMapping) {
               param.valueMapping.forEach(valueMapping => {
                 if (!valueMapping.show) {
