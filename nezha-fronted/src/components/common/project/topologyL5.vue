@@ -3,7 +3,7 @@
   @import "./L5/css/props.css";
 </style>
 <template>
-  <div class="project-box list-page" v-loading="topologyLoading">
+  <div class="project-box list-page" v-my-loading="topologyLoading">
     <div class="main-list" :style="{height: fromOverView ?'100%' : 'calc(100% - 30px)'}">
       <div class="main-container" :class="fromOverView?'from-overview':'from-project'">
         <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 40px);display: inline-block">
@@ -13,7 +13,7 @@
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown" @click="dropdownClick" class="right-box-select-top right-public-box-dropdown-top">
-              <div style="height: 450px"  v-loading="imgageLoading">
+              <div style="height: 450px"  v-my-loading="imgageLoading">
                 <el-card shadow="hover" style="height:420px;width:284px;overflow-y: auto"
                          class="project-topology-add-node">
                 <!--<div class="drag-header">——</div>-->
@@ -439,6 +439,7 @@ export default {
       timer: null, // 处理project短时间呢频繁变更的定时器
       timer2: null, // 处理平移画布显示iconState的定时器
       timer3: null, // 处理tooltip的显示定时器
+      timer4: null,
       nodesArr: [],
       notModuleIDArr: [],
       popData: [
@@ -660,10 +661,10 @@ export default {
       this.chartGetData = []
       const axiosArr = []
       const promiseArr = []
-      const pensPromise = (pen, arr, index) => {
+      let pensPromise = (pen, arr, index) => {
         return new Promise((resolve, reject) => {
           Promise.all(arr).then((res) => {
-            this.chartGetData[index].res = this.computeData(res, pen.data.aggregation, pen)
+            this.chartGetData[index].res = JSON.parse(JSON.stringify(this.computeData(res, pen.data.aggregation, pen)))
             this.setAnimation(pen, this.chartGetData[index].res)
             resolve()
           })
@@ -734,6 +735,7 @@ export default {
         // getTopology(this.topologyIndex).fitView();
         this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
         this.getNodesArr()
+        pensPromise = null
       })
     },
     dateChange () {
@@ -821,7 +823,7 @@ export default {
             }
             this.projectInfoShow = true
             this.projectAlertShow = true
-            this.saveData = { ...data }
+            this.saveData = JSON.parse(JSON.stringify(data))
             this.topologyInfo.name = this.obj.name
             resolve(data)
             data = null
@@ -847,11 +849,11 @@ export default {
               const arr = data.pens.filter(item => !item.type)
               this.addNodeInit(arr)
             }
-            let timer = setInterval(() => {
+            this.timer4 = setInterval(() => {
               if (!this.imgInit) {
                 return
               }
-              const promiseArr = [this.$get('stat/module/abnormal', { projectId: this.obj.id })]
+              const promiseArr = []
               for (let i = 0; i < data.pens.length; i++) {
                 const line = data.pens[i]
                 if (line.type === 1) {
@@ -914,19 +916,17 @@ export default {
                     }
                   }
                 })
-                this.saveData = { ...data }
+                this.saveData = JSON.parse(JSON.stringify(data))
                 resolve(data)
-                data = null
-                clearInterval(timer)
-                timer = null
+                clearInterval(this.timer4)
+                this.timer4 = null
               }).catch(res => {
-                this.saveData = { ...data }
+                this.saveData = JSON.parse(JSON.stringify(data))
                 resolve(data)
-                data = null
-                clearInterval(timer)
-                timer = null
+                clearInterval(this.timer4)
+                this.timer4 = null
               })
-            }, 100)
+            }, 2000)
           }
         })
       })
@@ -1059,7 +1059,7 @@ export default {
       this.$get('/monitor/module?pageSize=-1&projectIds=' + this.obj.id).then(response => {
         if (response.code === 200) {
           this.projectInfo.loading = false
-          this.allModules = response.data.list
+          this.allModules = JSON.parse(JSON.stringify(response.data.list))
           this.modulesDiff()
         }
       })
@@ -1741,19 +1741,27 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            if (getTopologyImg(item.id)) {
-              promiseArr.push(getTopologyImg(item.id))
+            const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
+            if (nowImage && nowImage.data) {
+              console.log(nowImage)
+              promiseArr.push(nowImage)
             } else {
               promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
             }
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
+            console.log(res2, 'Promise')
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
-              item.image = res2[index].data || res2[index]
-              if (!getTopologyImg(item.id)) {
-                setTopologyImg(item.id, item.image)
+              item.image = res2[index].data
+              const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
+              if (!nowImage || (nowImage && !nowImage.data)) {
+                setTopologyImg(item.id, JSON.stringify({
+                  data: res2[index].data,
+                  width: res2[index].width,
+                  height: res2[index].height
+                }))
               }
               const group = this.tools.find(tool => tool.group === item.unit)
               if (group) {
@@ -1807,8 +1815,9 @@ export default {
           }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
-              if (getTopologyImg(item.data.imageId)) {
-                promiseArr.push(getTopologyImg(item.data.imageId))
+              const nowImage = getTopologyImg(item.data.imageId) ? JSON.parse(getTopologyImg(item.data.imageId)) : ''
+              if (nowImage && nowImage.data) {
+                promiseArr.push(nowImage)
               } else {
                 promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
               }
@@ -1826,14 +1835,20 @@ export default {
             })
             this.iconArray.forEach((item, index) => {
               if (item.id) {
-                item.image = res2[index].data || res2[index]
-                if (!getTopologyImg(item.id)) {
-                  setTopologyImg(item.id, item.image)
+                item.image = res2[index].data
+                const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
+                if (!nowImage || (nowImage && !nowImage.image)) {
+                  setTopologyImg(item.id, JSON.stringify({
+                    data: res2[index].data,
+                    width: res2[index].width,
+                    height: res2[index].height
+                  }))
                 }
               }
             })
             this.imgInit = true
             this.imgageLoading = false
+            imgidList = null
             promiseArr = null
           })
         })
@@ -2280,14 +2295,21 @@ export default {
       clearInterval(this.timer)
       this.timer = null
     }
+    if (this.timer4) {
+      clearInterval(this.timer4)
+      this.timer4 = null
+    }
     if (getTopology(this.topologyIndex)) {
-      getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
-      getTopology(this.topologyIndex).destroy()
-      setTopology(this.topologyIndex, null)
       window.topology = null
       window.Le5leTopologyPoint = null
       window.topologyPoint = null
       window.topologyRect = null
+      getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
+      getTopology(this.topologyIndex).destroy()
+      Object.keys(getTopology(this.topologyIndex)).forEach(key => {
+        getTopology(this.topologyIndex)[key] = null
+      })
+      setTopology(this.topologyIndex, null)
     }
     if (document.getElementById('topology-canvas' + this.topologyIndexF)) {
       document.getElementById('topology-canvas' + this.topologyIndexF).removeEventListener('mousemove', this.canvasMove)
