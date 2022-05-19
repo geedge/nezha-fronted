@@ -1746,7 +1746,6 @@ export default {
             delete item.name
             const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
             if (nowImage && nowImage.data) {
-              console.log(nowImage)
               promiseArr.push(nowImage)
             } else {
               promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))

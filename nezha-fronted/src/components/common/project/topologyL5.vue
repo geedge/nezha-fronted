@@ -1743,7 +1743,6 @@ export default {
             delete item.name
             const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
             if (nowImage && nowImage.data) {
-              console.log(nowImage)
               promiseArr.push(nowImage)
             } else {
               promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
@@ -1751,7 +1750,6 @@ export default {
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
-            console.log(res2, 'Promise')
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index].data

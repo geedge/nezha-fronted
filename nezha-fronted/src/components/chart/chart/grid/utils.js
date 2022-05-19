@@ -227,8 +227,7 @@ export function moveElement (layout, l, x, y, isUserAction, preventCollision) {
   // nearest collision.
   let sorted = sortLayoutItemsByRowCol(layout)
   if (movingUp) sorted = sorted.reverse()
-  const collisions = getAllCollisions(sorted, l)
-
+  let collisions = getAllCollisions(sorted, l)
   if (preventCollision && collisions.length) {
     l.x = oldX
     l.y = oldY
@@ -237,7 +236,6 @@ export function moveElement (layout, l, x, y, isUserAction, preventCollision) {
   }
   // Move each item that collides away from this element.
   for (let i = 0, len = collisions.length; i < len; i++) {
-    console.log(collisions, collisions[0].name,  collisions[0].y,  collisions[0].h,' collisions')
     const collision = collisions[i]
     // console.log('resolving collision between', l.i, 'at', l.y, 'and', collision.i, 'at', collision.y);
 
@@ -246,7 +244,6 @@ export function moveElement (layout, l, x, y, isUserAction, preventCollision) {
 
     // This makes it feel a bit more precise by waiting to swap for just a bit when moving up.
     if (l.y > collision.y && l.y - collision.y > collision.h / 4) continue
-    console.log(l.y, l.y - collision.y > collision.h / 4, l.y > collision.y )
     if (l.type == 'group') {
       if (l.y + l.h > collision.y && l.y + l.h - collision.y > collision.h / 4) continue
     }
@@ -294,7 +291,8 @@ export function moveElementAwayFromCollision (layout, collidesWith, itemToMove, 
 
   // Previously this was optimized to move below the collision directly, but this can cause problems
   // with cascading moves, as an item may actually leapflog a collision and cause a reversal in order.
-  return moveElement(layout, itemToMove, undefined, itemToMove.y + 1, preventCollision)
+
+  return moveElement(layout, itemToMove, undefined, itemToMove.y + 0.15, preventCollision)
 }
 
 /**
