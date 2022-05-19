@@ -235,9 +235,9 @@ export function moveElement (layout, l, x, y, isUserAction, preventCollision) {
     l.moved = false
     return layout
   }
-
   // Move each item that collides away from this element.
   for (let i = 0, len = collisions.length; i < len; i++) {
+    console.log(collisions, collisions[0].name,  collisions[0].y,  collisions[0].h,' collisions')
     const collision = collisions[i]
     // console.log('resolving collision between', l.i, 'at', l.y, 'and', collision.i, 'at', collision.y);
 
@@ -246,6 +246,10 @@ export function moveElement (layout, l, x, y, isUserAction, preventCollision) {
 
     // This makes it feel a bit more precise by waiting to swap for just a bit when moving up.
     if (l.y > collision.y && l.y - collision.y > collision.h / 4) continue
+    console.log(l.y, l.y - collision.y > collision.h / 4, l.y > collision.y )
+    if (l.type == 'group') {
+      if (l.y + l.h > collision.y && l.y + l.h - collision.y > collision.h / 4) continue
+    }
 
     // Don't move static items - we have to move *this* element away
     if (collision.static) {
@@ -268,8 +272,7 @@ export function moveElement (layout, l, x, y, isUserAction, preventCollision) {
  * @param  {Boolean} [isUserAction]  If true, designates that the item we're moving is being dragged/resized
  *                                   by the user.
  */
-export function moveElementAwayFromCollision (layout, collidesWith,
-  itemToMove, isUserAction) {
+export function moveElementAwayFromCollision (layout, collidesWith, itemToMove, isUserAction) {
   const preventCollision = false // we're already colliding
   // If there is enough space above the collision to put this element, move it there.
   // We only do this on the main collision as this can get funky in cascades and cause
