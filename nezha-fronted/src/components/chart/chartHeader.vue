@@ -60,7 +60,7 @@
       <span class="chart-header__tool">
         <el-dropdown v-clickoutside="clickos" v-has="['main_edit','main_delete','main_add']" trigger="click">
           <i class="el-icon-more tool__icon" @click.stop="dropdownMenuShow = !dropdownMenuShow"></i>
-          <el-dropdown-menu style="display: none"></el-dropdown-menu>
+          <el-dropdown-menu style="display: none" class="temp-dropdown"></el-dropdown-menu>
           <ul v-show="dropdownMenuShow" slot="dropdown" class="el-dropdown-menu nz-chart-dropdown">
             <li class="el-dropdown-menu__item" v-has="'main_edit'" @click="editChart">
               <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i>
