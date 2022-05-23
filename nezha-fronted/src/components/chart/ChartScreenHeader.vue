@@ -1,5 +1,6 @@
 <template>
-  <div :class="{'chart-header--float': !chartInfo.param.showHeader}" class="chart-screen-header list-page">
+  <!-- <div :class="{'chart-header--float': !chartInfo.param.showHeader}" class="chart-screen-header list-page"> -->
+  <div class="chart-screen-header list-page">
     <span v-if="isError" class="chart-header-error">
      <el-popover
        placement="top-start"

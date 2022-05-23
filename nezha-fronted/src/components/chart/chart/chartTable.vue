@@ -1,5 +1,5 @@
 <template>
-  <div class="nz-table2" style="height: 100%;padding: 0 10px 10px 10px;box-sizing: border-box">
+  <div class="nz-table2" style="height: 100%;padding: 10px;box-sizing: border-box">
     <el-table
       ref="dataTable"
       class="chart-table"
@@ -30,6 +30,9 @@
           }"
                class="value-mapping-table"
           >
+            <template v-if="scope.row.valueMapping && scope.row.valueMapping[col.title + 'mapping']">
+              <i :class="scope.row.valueMapping[col.title + 'mapping'].icon" :style="{color: scope.row.valueMapping[col.title + 'mapping'].color.icon}"></i>
+            </template>
             {{showValueMapping(scope.row,col.title)}}
           </div>
           <div class="value-mapping-table" v-else>

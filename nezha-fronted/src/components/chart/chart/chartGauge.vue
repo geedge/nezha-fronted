@@ -26,7 +26,6 @@ import { getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import * as echarts from 'echarts'
 import lodash from 'lodash'
-import { getChart } from '@/components/common/js/common'
 import { initColor } from '@/components/chart/chart/tools'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 
@@ -166,7 +165,7 @@ export default {
         const chartId = this.isFullscreen ? 'chart-gauge-screen-' : 'chart-gauge-'
         const myChart = echarts.init(document.getElementById(chartId + this.chartInfo.id + '-' + index))
         const option = lodash.cloneDeep(this.chartOption)
-        option.tooltip = {}
+        // option.tooltip = {}
         option.series[0].data.push(item)
         option.series[0].max = item.max
         option.series[0].detail = {
@@ -229,8 +228,13 @@ export default {
                         <div class="tooltip-title" style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${params.data.alias}</div>
                         <div style="font-size:12px;display:flex;justify-content: space-between;">
                             <div>value</div>
-                            <div style="display: ${params.data.mapping && params.data.mapping.display ? 'none' : 'inline-block'}">${params.data.showValue}</div>
-                            <div style="display: ${params.data.mapping && params.data.mapping.display ? 'inline-block' : 'none'}">${self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue })}</div>
+                            <div>
+                              <div style="display: ${params.data.mapping && params.data.mapping.icon ? 'inline-block' : 'none'}">
+                                <i class="${params.data.mapping && params.data.mapping.icon}" style="color: ${params.data.mapping && params.data.mapping.color && params.data.mapping.color.icon}"></i>
+                              </div>
+                              <div style="display: ${params.data.mapping && params.data.mapping.display ? 'none' : 'inline-block'}">${params.data.showValue}</div>
+                              <div style="display: ${params.data.mapping && params.data.mapping.display ? 'inline-block' : 'none'}">${self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue })}</div>
+                            </div>
                         </div>
                     </div>
                 </div>

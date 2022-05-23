@@ -150,9 +150,14 @@ export default {
                         <div class="tooltip-title" style="max-width: 500px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom: 5px">${params.data.alias}</div>
                         <div style="font-size:12px;display:flex;justify-content: space-between;">
                             <div>value</div>
-                            <div style="display: ${(params.data.mapping && params.data.mapping.display) ? 'none' : 'inline-block'}">${params.data.showValue}</div>
-                            <div style="display: ${(params.data.mapping && params.data.mapping.display) ? 'inline-block' : 'none'}">
-                                ${(params.data.mapping && params.data.mapping.display) ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : ''}
+                            <div>
+                              <div style="display: ${params.data.mapping && params.data.mapping.icon ? 'inline-block' : 'none'}">
+                                <i class="${params.data.mapping && params.data.mapping.icon}" style="color: ${params.data.mapping && params.data.mapping.color && params.data.mapping.color.icon}"></i>
+                              </div>
+                              <div style="display: ${(params.data.mapping && params.data.mapping.display) ? 'none' : 'inline-block'}">${params.data.showValue}</div>
+                              <div style="display: ${(params.data.mapping && params.data.mapping.display) ? 'inline-block' : 'none'}">
+                                  ${(params.data.mapping && params.data.mapping.display) ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : ''}
+                              </div>
                             </div>
                         </div>
                     </div>

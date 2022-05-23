@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('iconfont.woff2?t=1651733602600') format('woff2'),
-       url('iconfont.woff?t=1651733602600') format('woff'),
-       url('iconfont.ttf?t=1651733602600') format('truetype');
+  src: url('iconfont.woff2?t=1652772229392') format('woff2'),
+       url('iconfont.woff?t=1652772229392') format('woff'),
+       url('iconfont.ttf?t=1652772229392') format('truetype');
 }
 
 .nz-icon {
@@ -11,6 +11,50 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nz-icon-mimakejian:before {
+  content: "\e77a";
+}
+
+.nz-icon-mimabukejian:before {
+  content: "\e77b";
+}
+
+.nz-icon-kongtianjiaicon:before {
+  content: "\e77c";
+}
+
+.nz-icon-arrow-down:before {
+  content: "\e777";
+}
+
+.nz-icon-arrow-left:before {
+  content: "\e778";
+}
+
+.nz-icon-arrow-right:before {
+  content: "\e779";
+}
+
+.nz-icon-arrow-up:before {
+  content: "\e776";
+}
+
+.nz-icon-scan:before {
+  content: "\e774";
+}
+
+.nz-icon-shuru:before {
+  content: "\e772";
+}
+
+.nz-icon-Ping:before {
+  content: "\e773";
+}
+
+.nz-icon-Trace:before {
+  content: "\e775";
 }
 
 .nz-icon-queren:before {
@@ -705,19 +749,19 @@
   content: "\e6b6";
 }
 
-.nz-icon-arrow-up:before {
+.nz-icon-arrow-up6:before {
   content: "\e6af";
 }
 
-.nz-icon-arrow-down:before {
+.nz-icon-arrow-down6:before {
   content: "\e6b0";
 }
 
-.nz-icon-arrow-right:before {
+.nz-icon-arrow-right6:before {
   content: "\e6ad";
 }
 
-.nz-icon-arrow-left:before {
+.nz-icon-arrow-left6:before {
   content: "\e6ae";
 }
 

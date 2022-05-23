@@ -522,11 +522,14 @@
                     <span v-if="item.type === 'regx'">
                       {{item.regx}}
                     </span>
-                     <div :style="{background:item.color.bac}" class="prev-mapping-box">
-                        <span :style="{color:item.color.text}">
-                          {{item.display || "T"}}
-                        </span>
-                      </div>
+                    <div class="prev-mapping-icon">
+                      <i :class="item.icon" :style="{ color: item.color.icon }"></i>
+                    </div>
+                    <div :style="{background:item.color.bac}" class="prev-mapping-box">
+                      <span :style="{color:item.color.text}">
+                        {{item.display || "T"}}
+                      </span>
+                    </div>
                   </span>
                 </span>
                 <span>
@@ -628,9 +631,36 @@
                     <div class='mapping-display'>{{$t('dashboard.panel.chartForm.display')}}</div>
                   </div>
                   <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
-                    <el-input v-model="item.display"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)"/>
+                    <el-input v-model="item.display" style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)" class="mapping-display-input">
+                      <el-popover
+                        slot="prefix"
+                        placement="top-start"
+                        trigger="manual"
+                        popper-class="mapping-iconPop no-style-class"
+                        v-clickoutside="()=>{closeChoose(index)}"
+                        v-model="isChoose[index]"
+                        >
+                        <ul class="mapping-iconList">
+                          <li class="mapping-iconItem" :class="{active:item.icon===subItem.value}" v-for="subItem in mappingIconList" @click="iconActive(item,subItem,index)" :key="subItem.value">
+                            <i :class="subItem.value"></i>
+                          </li>
+                        </ul>
+                        <div slot="reference" @click="chooseIcon(isChoose[index],index)">
+                          <i v-if="item.icon" class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>
+                          <div v-else class="mapping-iconSelect">
+                            <i class="nz-icon nz-icon-create-square"></i>
+                          </div>
+                        </div>
+                      </el-popover>
+                    </el-input>
                   </el-form-item>
-                  <nezhaColor :color-val="item.color" :single="false" :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChange(val, key, index)}"/>
+                  <nezhaColor
+                    :color-val="item.color"
+                    :single="false"
+                    :value-arr="[{name:'icon',value:item.color.icon,key:'icon'},{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'}]"
+                    @colorChange="(val,key)=>{colorChange(val, key, index)}"
+                    style="margin-right:1px"
+                  />
                 </el-row>
               </transition-group>
             </div>

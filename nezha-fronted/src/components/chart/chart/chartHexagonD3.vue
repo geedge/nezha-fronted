@@ -7,7 +7,12 @@
       </div>
       <div class="chart-canvas-tooltip-content">
         <div>value</div>
-        <div>{{tooltip.value}}</div>
+        <div>
+          <div v-if="tooltip.mapping && tooltip.mapping.icon" style="display: inline-block">
+            <i :class="tooltip.mapping.icon" :style="{color: tooltip.mapping.color.icon}"></i>
+          </div>
+          <div style="display: inline-block">{{tooltip.value}}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -15,7 +20,6 @@
 
 <script>
 import * as d3 from 'd3'
-import { SVG } from '@svgdotjs/svg.js'
 import hexbin from '@/components/chart/chart/options/chartHexagonD3'
 import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
@@ -38,6 +42,7 @@ export default {
         y: 0,
         title: 0,
         value: 0,
+        mapping: {},
         show: false
       },
       svgDom: null,
@@ -185,6 +190,7 @@ export default {
     hexagonOver (that, e) { // 移入六边形
       this.tooltip.title = that.alias
       this.tooltip.value = that.showValue
+      this.tooltip.mapping = that.mapping
       this.tooltip.show = true
       this.setPosition(e)
     },
@@ -271,14 +277,31 @@ export default {
         const scrollDiv = fObj.append('xhtml:div')
         scrollDiv
           .html(`<div style="color:${textColor};width:${hexWidth}px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px;box-sizing: border-box;padding: 0 10px;text-align: center">${str}</div>`)
-        group.append('text')
-          .attr('x', vals[0])
-          .attr('y', vals[1] + 16)
-          .text(valueStr)
+        // group.append('text')
+        //   .attr('x', vals[0])
+        //   .attr('y', vals[1] + 16)
+        //   .text(valueStr)
+        //   .attr('text-anchor', 'middle')
+        //   .attr('alignment-baseline', 'central')
+        //   .style('font-size', fontSize)
+        //   .style('fill', textColor)
+        const fObj2 = group.append('foreignObject')
+          .attr('width', hexWidth || 60)
+          .attr('height', 24)
+        fObj2
+          .attr('x', vals[0] - hexWidth / 2)
+          .attr('y', vals[1])
+          // .text(str)
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'central')
           .style('font-size', fontSize)
           .style('fill', textColor)
+        const scrollDiv2 = fObj2.append('xhtml:div')
+        scrollDiv2
+          .html(
+            `<div style="color:${textColor};width:${hexWidth}px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px;box-sizing: border-box;padding: 0 10px;text-align: center">
+              <i class="${point.mapping && point.mapping.icon}" style="color: ${point.mapping && point.mapping.color && point.mapping.color.icon}"></i> ${valueStr}
+            </div>`)
         return
       }
       if (str) {
@@ -295,18 +318,37 @@ export default {
           .style('fill', textColor)
         const scrollDiv = fObj.append('xhtml:div')
         scrollDiv
-          .html(`<div style="color:${textColor};width:${hexWidth}px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px;box-sizing: border-box;padding: 0 10px;text-align: center">${str}</div>`)
+          .html(
+            `<div style="color:${textColor};width:${hexWidth}px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px;box-sizing: border-box;padding: 0 10px;text-align: center">
+              <i class="${point.mapping && point.mapping.icon}" style="color: ${point.mapping && point.mapping.color && point.mapping.color.icon}"></i> ${str}
+            </div>`)
         return
       }
       if (valueStr) {
-        group.append('text')
-          .attr('x', vals[0])
-          .attr('y', vals[1])
-          .text(valueStr)
+        // group.append('text')
+        //   .attr('x', vals[0])
+        //   .attr('y', vals[1])
+        //   .text(valueStr)
+        //   .attr('text-anchor', 'middle')
+        //   .attr('alignment-baseline', 'central')
+        //   .style('font-size', fontSize)
+        //   .style('fill', textColor)
+        const fObj = group.append('foreignObject')
+          .attr('width', hexWidth || 60)
+          .attr('height', 24)
+        fObj
+          .attr('x', vals[0] - hexWidth / 2)
+          .attr('y', vals[1] - 10)
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'central')
           .style('font-size', fontSize)
           .style('fill', textColor)
+        const scrollDiv = fObj.append('xhtml:div')
+        scrollDiv
+          .html(
+            `<div style="color:${textColor};width:${hexWidth}px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px;box-sizing: border-box;padding: 0 10px;text-align: center">
+              <i class="${point.mapping && point.mapping.icon}" style="color: ${point.mapping && point.mapping.color && point.mapping.color.icon}"></i> ${valueStr}
+            </div>`)
       }
     },
     getCenter (hexaRadius, row, col) {
