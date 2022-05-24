@@ -72,11 +72,15 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-export function get (url, params) {
+export function get (url, params, responseType) {
+  const config = {
+    params: params
+  }
+  if (responseType) {
+    config.responseType = responseType
+  }
   return new Promise((resolve) => {
-    axios.get(url, {
-      params: params
-    }).then(response => {
+    axios.get(url, config).then(response => {
       if (url.indexOf('/sys/license/token') !== -1) {
         resolve({
           data: response.data,

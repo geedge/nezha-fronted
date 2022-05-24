@@ -53,7 +53,7 @@
           <div class="export-box">
             <span class="export-title">File format</span>
             <el-radio-group v-model="importBox.format"  size="small">
-              <el-radio-button :label="item.value" v-for="(item,index) in formatArr" :key="index" :disabled="item.value!==1">{{item.name}}</el-radio-button>
+              <el-radio-button :label="item.value" v-for="(item,index) in formatArr" :key="index">{{item.name}}</el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -153,7 +153,10 @@ export default {
       type: String,
       default: ''
     },
-    deleteObjs: Array
+    deleteObjs: Array,
+    exportBoxShow: {
+      type: Boolean, default: false
+    }
   },
   computed: {
     language () { return this.$store.getters.getLanguage }
@@ -175,8 +178,8 @@ export default {
         { name: 'XLSX', value: 1 },
         { name: 'CSV', value: 2 },
         { name: 'JSON', value: 3 }
-      ]
-
+      ],
+      suffix: '.xlsx'
     }
   },
   mounted () {
@@ -279,6 +282,7 @@ export default {
           this.importFile = null
           this.importBox.value = 1
           this.importBox.record = 'all'
+          this.importBox.format = 1
         })
       }, 200)
     },
@@ -350,7 +354,7 @@ export default {
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
       delete params.statistics
-      this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
+      this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + this.suffix)
       this.closeDialog()
     },
     exportAll () {
@@ -384,7 +388,7 @@ export default {
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
       delete params.statistics
-      this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
+      this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + this.suffix)
       this.closeDialog()
     },
     exportRecords () {
@@ -419,10 +423,25 @@ export default {
       params.format = this.importBox.format
       params.ids = this.deleteObjs.map(item => item.id).join(',')
       delete params.statistics
-      this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
+      this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + this.suffix)
       this.closeDialog()
     },
     exportData () {
+      if (this.importBox.format == 1) {
+        this.suffix = '.xlsx'
+      } else if (this.importBox.format == 2) {
+        this.suffix = '.csv'
+      } else if (this.importBox.format == 3) {
+        this.suffix = '.json'
+      } else if (this.importBox.format == 4) {
+        this.suffix = '.pdf'
+        this.$emit('export', 'PDF')
+        return
+      } else if (this.importBox.format == 5) {
+        this.suffix = '.html'
+        this.$emit('export', 'Html')
+        return
+      }
       if (this.importBox.record === 'all') {
         this.exportAll()
       } else if (this.importBox.record === 'current') {
@@ -481,7 +500,19 @@ export default {
         this.importBox.width = '600px'
       } else if (type == 2) { // export
         this.importBox.title = this.$t('overall.exportExcel')
-        this.importBox.width = '580px'
+        this.importBox.width = this.exportBoxShow ? '850px' : '580px'
+        if (this.exportBoxShow) {
+          this.formatArr = [
+            { name: 'XLSX', value: 1 },
+            { name: 'CSV', value: 2 },
+            { name: 'JSON', value: 3 },
+            { name: 'PDF', value: 4 },
+            { name: 'Html', value: 5 }]
+        } else {
+          this.formatArr = [{ name: 'XLSX', value: 1 },
+            { name: 'CSV', value: 2 },
+            { name: 'JSON', value: 3 }]
+        }
       }
     },
     getTimeString () {
@@ -497,6 +528,13 @@ export default {
     },
     formatNum (num) {
       return num > 9 ? num : '0' + num
+    },
+    exportHtml () {
+      this.$emit('export', this.exportHtmlType)
+    },
+    closeExportHtml () {
+      this.exportHtmlType = 'PDF'
+      this.$emit('closeExportBox')
     }
   },
   watch: {

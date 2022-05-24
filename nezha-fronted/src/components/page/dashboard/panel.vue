@@ -49,6 +49,7 @@
 
              <top-tool-more-options
                 :delete-objs="batchDeleteObjs"
+                ref="topTool"
                 id="panel"
                 :params="filter"
                 :permissions="{
@@ -60,6 +61,8 @@
                 export-file-name="chart"
                 export-url="/visual/panel/export"
                 import-url="/visual/panel/import"
+                :exportBoxShow="true"
+                @export="exportType"
                 @afterImport="afterImport"
               >
                 <template v-slot:before>
@@ -73,13 +76,6 @@
                   </el-dropdown-item>
                   <el-dropdown-item v-has="'panel_view'">
                     <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-                  </el-dropdown-item>
-                  <el-dropdown-item v-has="'main_add'">
-                    <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-export-pdf"></i>{{ $t('overall.downloadToPdf') }}</div>
-                  </el-dropdown-item>
-                  <el-dropdown-item v-has="'main_add'">
-<!--                    <div id="chart-export-html" @click="exportHtml"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>-->
-                    <div id="chart-export-html" @click="exportData"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.downloadToPdf') }}</div>
                   </el-dropdown-item>
                 </template>
               </top-tool-more-options>
@@ -274,7 +270,9 @@ export default {
       scrollbarWrap: null,
       batchDeleteObjs: [],
       nowTimeType: {},
-      showTopLine: false
+      showTopLine: false,
+      // 导出html 以及 pdf的弹窗
+      exportBoxShow: false
     }
   },
   components: {
@@ -865,60 +863,14 @@ export default {
       } else {
         this.showScreenLoading(false)
       }
+      this.$refs.topTool.closeDialog()
     },
-    exportData () {
-      this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
-      this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
-      let flag = true
-      let timer = setInterval(() => {
-        flag = true
-        this.$refs.chartList.copyDataList.forEach(chart => {
-          if (chart.type !== 'group') {
-            flag = flag && chart.loaded
-          } else if (chart.collapse) {
-            chart.children.forEach(groupChart => {
-              flag = flag && groupChart.loaded
-            })
-          }
-        })
-        if (flag) {
-          clearInterval(timer)
-          timer = null
-          setTimeout(() => {
-            this.dataList.forEach(item => {
-              if (item.type === 'group') {
-                item.chartData = [item.children]
-                item.loaded = false
-              }
-              if (item.type === 'group' && !item.param.collapse) {
-                item.children.forEach(child => {
-                  child.chartData = this.$refs.chartList.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.$refs['chart' + child.id][0].chartData
-                  item.loaded = false
-                })
-              } else {
-                item.chartData = this.$refs.chartList.$refs['chart' + item.id][0].chartData
-                item.loaded = false
-              }
-            })
-            const data = JSON.stringify(this.dataList)
-            const blob = new Blob([data], { type: '' })
-            FileSaver.saveAs(blob, 'ceshi.json')
-            // const a = document.createElement('a')
-            // const url = window.URL.createObjectURL(
-            //   new Blob([this.gethtml()], {
-            //     type: ''
-            //   })
-            // )
-            // a.href = url
-            // a.download = 'file.html'
-            // a.click()
-            // window.URL.revokeObjectURL(url)
-          }, 2000)
-        }
-      }, 200)
-    },
-    gethtml () {
-
+    exportType (type) {
+      if (type === 'PDF') {
+        this.htmlToPdf()
+      } else {
+        this.exportToHtml(this.showPanel.name)
+      }
     }
   },
   created () {
