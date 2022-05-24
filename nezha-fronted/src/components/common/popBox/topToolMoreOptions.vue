@@ -528,13 +528,6 @@ export default {
     },
     formatNum (num) {
       return num > 9 ? num : '0' + num
-    },
-    exportHtml () {
-      this.$emit('export', this.exportHtmlType)
-    },
-    closeExportHtml () {
-      this.exportHtmlType = 'PDF'
-      this.$emit('closeExportBox')
     }
   },
   watch: {
