@@ -2,10 +2,43 @@
   <el-popover :placement="placement" :popper-class="chartBox === true ? 'nz-pop nz-pop-select-panel right-box-select-top nz-pop-select-panel__dropdown' : 'nz-pop nz-pop-select-panel right-box-select-top right-public-box-dropdown-top nz-pop-select-panel__dropdown'" ref="selectPanelPopBox" transition="slide" v-model="popBox.show" :width="chartBox === true ? 626 : 310" :disabled="disabled">
     <div>
       <div class="pop-item-wider">
-
         <slot name="header"></slot>
-
         <div :class="{'movable': !panelLock}" class="select-panel-tree">
+          <el-tree
+            v-if="starredData[0].children.length"
+            :data="starredData"
+            :expand-on-click-node="false"
+            :filter-node-method="filterNode"
+            :props="{label: 'name', children: 'children'}"
+            @node-click="selectPanel"
+            default-expand-all
+            node-key="id"
+            ref="starredTree"
+            style="margin-bottom:8px"
+            >
+            <div class="tree--node" slot-scope="{ node, data }">
+              <span :title="data.chartNum?node.label + ' (' + data.chartNum +' charts）':''">{{ node.label }}</span>
+              <el-row class="block-col-2" style="margin-left:10px">
+                <el-col>
+                  <el-dropdown v-if="!panelLock"  placement="bottom-end" trigger="click" style="margin-right:10px">
+                    <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
+                    <el-dropdown-menu class="right-box-select-top" slot="dropdown"  v-has="['main_edit', 'main_delete']">
+                      <el-dropdown-item>
+                        <div @click="editPanel(data)" v-has="'main_edit'"><i  class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</div>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <div @click="deletePanel(data)" v-has="'main_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</div>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                  <template v-if="node.label!=='Starred'">
+                    <i v-if="data.starred" class="el-rate__icon el-icon-star-on" @click.stop="delStarred(data)"></i>
+                    <i v-else class="el-rate__icon el-icon-star-off" @click.stop="addStarred(data)"></i>
+                  </template>
+                </el-col>
+              </el-row>
+            </div>
+          </el-tree>
           <el-tree
             :data="panelData"
             :draggable="!panelLock"
@@ -22,9 +55,9 @@
             ref="panelTree">
             <div class="tree--node" slot-scope="{ node, data }">
               <span :title="node.label + ' (' + data.chartNum +' charts）' ">{{ node.label }}</span>
-              <el-row class="block-col-2" v-if="!panelLock"  style="width: 35px;">
+              <el-row class="block-col-2" style="margin-left:10px">
                 <el-col>
-                  <el-dropdown placement="bottom-end" trigger="click">
+                  <el-dropdown v-if="!panelLock"  placement="bottom-end" trigger="click" style="margin-right:10px">
                     <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
                     <el-dropdown-menu class="right-box-select-top" slot="dropdown"  v-has="['main_edit', 'main_delete']">
                       <el-dropdown-item>
@@ -35,6 +68,8 @@
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
+                  <i v-if="data.starred" class="el-rate__icon el-icon-star-on"  @click.stop="delStarred(data)"></i>
+                  <i v-else class="el-rate__icon el-icon-star-off"  @click.stop="addStarred(data)"></i>
                 </el-col>
               </el-row>
             </div>
@@ -72,6 +107,7 @@ export default {
       immediate: true,
       handler (n) {
         this.$refs.panelTree && this.$refs.panelTree.filter(n)
+        // this.$refs.starredTree && this.$refs.starredTree.filter(n)
       }
     },
     showPanel: {
@@ -95,10 +131,88 @@ export default {
   data () {
     return {
       popBox: { show: false },
-      panel: { id: 0, name: '' }
+      panel: { id: 0, name: '' },
+      starredData: [
+        {
+          name: 'Starred',
+          children: []
+        }
+      ],
+      tempArr: []
     }
   },
   methods: {
+    // 获取收藏的列表
+    async getStarred () {
+      const params = {
+        type: 'panel'
+      }
+      const response = await this.$get('/sys/user/starred', params)
+      if (response.code === 200) {
+        this.tempArr = []
+        this.recursionStarred(this.panelData, response.data)
+        this.starredData[0].children = this.formatStarred(this.tempArr)
+        this.$emit('refreshStarred', this.panelData)
+      }
+    },
+    // 比对收藏的列表和全部列表 改变状态
+    recursionStarred (allList, starredList) {
+      allList.forEach((item) => {
+        item.starred = false
+        starredList.forEach((subItem) => {
+          // 判断全部列表每一项的id和收藏列表每一项的id是否相等
+          if (item.id === subItem.tid) {
+            if (this.tempArr.every(val => val.id !== item.id)) {
+              item.starred = true
+              this.tempArr.push({
+                ...item,
+                children: []
+              })
+            }
+          }
+        })
+        if (item.children && item.children.length) {
+          this.recursionStarred(item.children, starredList)
+        }
+      })
+    },
+    // 格式化收藏列表 (树形)
+    formatStarred (list) {
+      const arr = JSON.parse(JSON.stringify(list))
+      arr.reverse()
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].pid) {
+          // 找到父级所在下标
+          const parentIndex = arr.findIndex(subItem => subItem.id === arr[i].pid)
+          if (parentIndex > -1) {
+            arr[parentIndex].children.unshift(arr[i])
+            arr.splice(i, 1)
+            i--
+          }
+        }
+      }
+      return arr.reverse()
+    },
+    // 新增收藏
+    addStarred (data) {
+      const params = {
+        type: 'panel',
+        tid: data.id
+      }
+      this.$post('/sys/user/starred', params).then(response => {
+        if (response.code === 200) {
+          this.getStarred()
+        }
+      })
+    },
+    // 删除收藏
+    delStarred (data) {
+      this.$delete('/sys/user/starred?type=panel&tid=' + data.id).then(response => {
+        if (response.code === 200) {
+          this.getStarred()
+        }
+      })
+    },
     /*
         * node: 被拖的节点
         * relative: 发生关系的节点
@@ -119,8 +233,8 @@ export default {
     updateWeight () {
       const toUpdate = []
       let count = 0
-      handler(this.panelData)
 
+      handler(this.panelData)
       function handler (panelData) {
         panelData.forEach(panel => {
           panel.weight = count++
@@ -130,7 +244,7 @@ export default {
           }
         })
       }
-
+      this.getStarred()
       this.$put('visual/panel/tree', toUpdate)
     },
     deletePanel (data) {
@@ -144,6 +258,9 @@ export default {
     },
     // 确认选择某个节点，与父组件交互
     selectPanel (data, checked, child) {
+      if (data.name === 'Starred') {
+        return false
+      }
       this.$emit('selectPanel', data)
       this.$refs.panelTree.setCurrentKey(data)
       this.esc()
@@ -151,3 +268,13 @@ export default {
   }
 }
 </script>
+<style scoped>
+.el-rate__icon{
+  cursor: pointer;
+  margin-right: 0px;
+}
+.el-icon-star-on{
+ color:#FF9219;
+ transform: scale(1.2);
+}
+</style>
