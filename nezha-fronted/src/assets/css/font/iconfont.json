@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2781697",
+      "name": "数据备份恢复",
+      "font_class": "shujubeifenhuifu",
+      "unicode": "e6ba",
+      "unicode_decimal": 59066
+    },
+    {
+      "icon_id": "6537208",
+      "name": "备份",
+      "font_class": "beifen",
+      "unicode": "e686",
+      "unicode_decimal": 59014
+    },
+    {
       "icon_id": "29755584",
       "name": "密码可见",
       "font_class": "mimakejian",

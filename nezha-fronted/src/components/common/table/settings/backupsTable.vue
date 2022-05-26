@@ -5,6 +5,7 @@
       class="table-column__head"
       v-for="(item, index) in customTableTitle"
       :key="`col-${index}`"
+      :width="`${item.width}`"
       :label="item.label"
       :prop="item.prop"
       :resizable="true"
@@ -44,7 +45,7 @@
         v-if="isConfigurations"
       >
         <button class="table-operation-button" @click="backupNow(scope.row)">
-          {{$t('backup.backupNow')}}
+         <i class="nz-icon-beifen nz-icon"></i>
         </button>
         <button class="table-operation-edit" @click="edit(scope.row)">
          <i class="nz-icon-gear nz-icon"></i>
@@ -53,7 +54,7 @@
 
       <div slot-scope="scope" v-else class="table-operation-items">
         <button class="table-operation-button" @click="Restore(scope.row)">
-          {{$t('backup.Restore')}}
+         <i class="nz-icon-shujubeifenhuifu nz-icon"></i>
         </button>
         <button class="table-operation-edit" @click="del(scope.row)">
           <i class="nz-icon nz-icon-delete" style="font-size='12px'"></i>
@@ -82,7 +83,6 @@ export default {
   },
   data () {
     return {
-
       // tableData: [
       //   {
       //     retention: '',
@@ -124,7 +124,7 @@ export default {
     Restore (row) {
       put('/sys/backup/restore', { filename: row.fileName }).then(res => {
         if (res.code == 200) {
-          this.$emit("getTableData", 'recent')
+         this.$emit("getTableData", 'recent')
         } else {
           this.$message.error(response.msg)
         }
@@ -133,7 +133,7 @@ export default {
     del (row) {
       this.$delete('/sys/backup?filename=' + row.fileName).then(res => {
         if (res.code == 200) {
-          this.$emit("getTableData", 'recent')
+         this.$emit("getTableData", 'recent')
         } else {
           this.$message.error(response.msg)
         }

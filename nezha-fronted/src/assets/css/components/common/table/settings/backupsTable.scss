@@ -16,7 +16,7 @@
           background: $--background-color-2;
           border: 1px solid $--border-color-base;
           border-radius: 2px;
-          width: 22px;
+          width: 30px;
           height: 22px;
           i{
             font-size: 12px !important;
@@ -42,13 +42,18 @@
           justify-content: center;
           align-items: center;
           height: 22px;
-          // width: 130px;
-          max-width: 98px;
-          min-width: 74px;
+          width: 30px;
           padding: 0 5px 0 5px;
           margin-right: 10px;
           cursor: pointer;
+          i.nz-icon-beifen.nz-icon::before {
+            font-size: 12px;
+          }
         }
       }
+    }
+
+    .nz-icon-shujubeifenhuifu::before{
+      font-size: 12px;
     }
 }

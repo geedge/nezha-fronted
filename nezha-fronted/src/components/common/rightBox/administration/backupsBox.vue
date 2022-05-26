@@ -37,25 +37,27 @@
           </el-form-item>
           <el-form-item
             :label="$t('backup.start')"
-            prop="datepicker"
+            prop="schedule.datepicker"
             v-if="whoshow"
             class="start_at"
           >
             <my-date-picker
-              v-model="editBackup.datepicker[0]"
-              type="date"
+              v-model="editBackup.schedule.datepicker"
+              class="my-datetime-picker"
+              type="datetime"
+              prefix-icon="el-icon-date"
               :format="timeFormatStrToDatePickFormat(dateFormatStr)"
               :placeholder="$t('backup.SelectData')"
             >
             </my-date-picker>
 
-            <el-time-picker
+            <!-- <el-time-picker
               :value-format="'HH:mm:ss'"
               :format="'HH:mm:ss'"
               v-model="editBackup.datepicker[1]"
               :placeholder="$t('backup.SelectTime')"
             >
-            </el-time-picker>
+            </el-time-picker> -->
           </el-form-item>
           <el-form-item
             :label="$t('backup.RepeatEvery')"
@@ -86,6 +88,7 @@
             prop="checkDays"
             v-if="whoshow === 4 ? true : false"
             class="check-month_box"
+            id="DayOfMonth"
           >
             <el-checkbox-group
               v-model="editBackup.checkDays"
@@ -104,6 +107,7 @@
             prop="checkDay"
             v-if="whoshow === 3 ? true : false"
             class="check_box"
+            id="week-on"
           >
             <el-checkbox-group
               v-model="editBackup.checkDay"
@@ -120,7 +124,6 @@
           <el-form-item
             :label="$t('backup.backupRetention')"
             prop="retention"
-            v-if="whoshow !== 2 ? true : false"
           >
             <el-input
               maxlength="64"
@@ -135,7 +138,6 @@
             :label="$t('backup.Enable')"
             prop="status"
             class="form-item__switch"
-            v-if="whoshow !== 2 ? true : false"
           >
             <el-switch
               class="switch"
@@ -188,14 +190,15 @@ export default {
         checkDays: [],
         checkDay: [],
         timepicker: '',
-        datepicker: '',
+        // datepicker: '',
         retention: '',
         state: '',
         schedule: {
           repeat: '',
           stime: '',
           type: '',
-          nums: []
+          nums: [],
+          datepicker: ''
         }
       },
       whoshow: '',
@@ -211,7 +214,12 @@ export default {
             trigger: 'change'
           }
         ],
-        datepicker: [{ validator: datePicker, trigger: 'blur' }],
+        "schedule.datepicker": [{
+          required: true,
+          message: this.$t('validate.required')
+          // trigger: 'change'
+        },
+        { validator: datePicker, trigger: 'blur' }],
         checkDays: [
           {
             required: true,
@@ -227,7 +235,7 @@ export default {
             trigger: ['blur', 'change']
           }
         ],
-        Status: [
+        status: [
           {
             required: true,
             message: this.$t('validate.required'),
@@ -241,7 +249,14 @@ export default {
             trigger: 'blur'
           }
         ],
-        checkDay: [{ validator: arrLength, trigger: 'blur' }]
+        checkDay: [
+          {
+            required: true,
+            message: this.$t('validate.required'),
+            trigger: 'change'
+          },
+          { validator: arrLength, trigger: 'blur' }
+        ]
       },
       week: [
         this.$t('week.Mon'),
@@ -295,11 +310,12 @@ export default {
 
   created () {
     const dateFormatStr = localStorage.getItem('nz-default-dateFormat')
-    if (dateFormatStr) {
-      this.dateFormatStr = dateFormatStr.split(' ')[0]
-    } else {
-      this.dateFormatStr = 'YYYY-MM-DD'
-    }
+    this.dateFormatStr = 'YYYY-MM-DD HH:mm:ss'
+    // if (dateFormatStr) {
+    //   this.dateFormatStr = dateFormatStr.split(' ')[0]
+    // } else {
+    //   this.dateFormatStr = 'YYYY-MM-DD'
+    // }
   },
 
   beforeMount () {},
@@ -343,8 +359,8 @@ export default {
           this.editBackup.datepicker[0] = bus
             .timeFormate(this.editBackup.datepicker[0])
             .split(' ')[0]
-
-          this.editBackup.stime = this.editBackup.datepicker.join(' ')
+          // this.editBackup.stime = this.editBackup.datepicker.join(' ')
+          this.editBackup.stime = this.editBackup.schedule.datepicker
           let offset = localStorage.getItem('nz-sys-timezone')
           offset = moment.tz(offset).format('Z')
           this.editBackup.stime = new Date(this.editBackup.stime).getTime()
@@ -357,7 +373,8 @@ export default {
               type: Number(this.editBackup.type),
               stime: this.editBackup.stime,
               repeat: Number(this.editBackup.repeat),
-              nums: this.editBackup.nums
+              nums: this.editBackup.nums,
+              datepicker: this.editBackup.schedule.datepicker
             },
             retention: Number(this.editBackup.retention)
           }).then((res) => {
@@ -475,12 +492,14 @@ export default {
         }
       }
     },
-    'editBackup.datepicker': {
+    'editBackup.schedule.datepicker': {
       deep: true,
       handler (n) {
-        this.editBackup.datepicker[0] = bus
-          .timeFormate(new Date(n[0]))
-          .split(' ')[0]
+        // this.editBackup.datepicker[0] = bus
+        //   .timeFormate(new Date(n[0]))
+        //   .split(' ')[0]
+        this.editBackup.schedule.datepicker = bus
+          .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
       }
     }
   }

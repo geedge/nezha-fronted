@@ -69,16 +69,16 @@ export default {
 
       url: '/sys/backup',
       customTableTitle: [
-        { label: this.$t('backup.schedule'), prop: 'schedule' },
-        { label: this.$t('backup.backupRetention'), prop: 'retention' },
-        { label: this.$t('backup.last'), prop: 'last' },
-        { label: this.$t('backup.Enable'), prop: 'state' }
+        { label: this.$t('backup.schedule'), prop: 'schedule', width: 288 },
+        { label: this.$t('backup.backupRetention'), prop: 'retention', width: 303 },
+        { label: this.$t('backup.last'), prop: 'last', width: 306 },
+        { label: this.$t('backup.Enable'), prop: 'state', width: 569 }
       ],
       customTableTitle2: [
-        { label: this.$t('backup.Date'), prop: 'time' },
-        { label: this.$t('backup.File'), prop: 'fileName' },
-        { label: this.$t('backup.size'), prop: 'size' },
-        { label: this.$t('backup.Description'), prop: 'Description' }
+        { label: this.$t('backup.Date'), prop: 'time', width: 228 },
+        { label: this.$t('backup.File'), prop: 'fileName', width: 363 },
+        { label: this.$t('backup.size'), prop: 'size', width: 306 },
+        { label: this.$t('backup.Description'), prop: 'Description', width: 569 }
       ],
       tableData: [
         {
