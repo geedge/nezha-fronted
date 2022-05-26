@@ -21,9 +21,6 @@
         <span v-if="item.prop === 'retention'">
           {{ tableData[0].retention }}
         </span>
-        <span v-if="item.prop === 'last'">
-          {{ tableData[0].schedule && utcTimeToTimezoneStr(tableData[0].schedule.stime) ?utcTimeToTimezoneStr(tableData[0].schedule.stime):'' }}
-        </span>
         <span v-if="item.prop === 'state'">
           <el-switch class="switch" v-model="tableData[0].state" disabled> </el-switch>
         </span>

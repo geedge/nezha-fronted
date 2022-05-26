@@ -71,7 +71,6 @@ export default {
       customTableTitle: [
         { label: this.$t('backup.schedule'), prop: 'schedule', width: 288 },
         { label: this.$t('backup.backupRetention'), prop: 'retention', width: 303 },
-        { label: this.$t('backup.last'), prop: 'last', width: 306 },
         { label: this.$t('backup.Enable'), prop: 'state', width: 569 }
       ],
       customTableTitle2: [
