@@ -5,7 +5,7 @@
         <slot name="header"></slot>
         <div :class="{'movable': !panelLock}" class="select-panel-tree">
           <el-tree
-            v-if="starredData[0].children.length"
+            v-show="starredData[0].children.length"
             :data="starredData"
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
@@ -14,7 +14,8 @@
             default-expand-all
             node-key="id"
             ref="starredTree"
-            style="margin-bottom:8px"
+            style="margin-bottom:5px"
+            class="starred-tree"
             >
             <div class="tree--node" slot-scope="{ node, data }">
               <span :title="data.chartNum?node.label + ' (' + data.chartNum +' charts）':''">{{ node.label }}</span>
@@ -107,7 +108,7 @@ export default {
       immediate: true,
       handler (n) {
         this.$refs.panelTree && this.$refs.panelTree.filter(n)
-        // this.$refs.starredTree && this.$refs.starredTree.filter(n)
+        this.$refs.starredTree && this.$refs.starredTree.filter(n)
       }
     },
     showPanel: {
@@ -269,6 +270,9 @@ export default {
 }
 </script>
 <style scoped>
+.starred-tree>>>.el-tree__empty-block{
+  display: none;
+}
 .el-rate__icon{
   cursor: pointer;
   margin-right: 0px;

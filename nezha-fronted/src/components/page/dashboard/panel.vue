@@ -302,8 +302,13 @@ export default {
     refreshStarred (value) {
       // 重新赋值，否则树形菜单不更新
       this.panelData = JSON.parse(JSON.stringify(value))
+      this.$nextTick(() => {
+        this.$refs.selectPanel.$refs.starredTree.filter(this.filterPanel)
+        this.$refs.selectPanel.$refs.panelTree.filter(this.filterPanel)
+        this.$refs.selectPanel.$refs.panelTree.setCurrentKey(this.showPanel)
+      })
+      // // 判断当前页面收藏状态
       const starredArr = this.$refs.selectPanel.tempArr
-      // 判断当前页面收藏状态
       this.showPanel.starred = starredArr.some(item => item.id === this.showPanel.id)
     },
     // 新增收藏
