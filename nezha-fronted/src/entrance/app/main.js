@@ -50,14 +50,14 @@ Vue.use(vSelectPage, {
     })
   }
 })
-Vue.use(myDatePicker)
-Vue.component('Pagination', Pagination)
-Vue.component('searchInput', searchInput)
-Vue.component('element-set', elementSet)
-Vue.component('loading', loading)
-Vue.component('pick-time', pickTime)
+Vue.use(myDatePicker) // 对element-ui的时间组件进行二次重构
+Vue.component('Pagination', Pagination) // 公用分页组件
+Vue.component('searchInput', searchInput) // 公用搜索组件
+Vue.component('element-set', elementSet) // 公用设置表头
+Vue.component('loading', loading)// 公用loading 除特殊情况使用 正常使用自定义指令 v-my-loading
+Vue.component('pick-time', pickTime)// 时间组件 包含刷新 单位 同步等
 Vue.component('myDatePicker', myDatePicker)
-Vue.component('nzDataList', nzDataList)
+Vue.component('nzDataList', nzDataList) // 公用表格父组件
 Vue.component('chartList', chartList)
 
 Vue.prototype.$axios = axios
@@ -65,11 +65,11 @@ Vue.prototype.$post = post
 Vue.prototype.$get = get
 Vue.prototype.$put = put
 Vue.prototype.$delete = del
-Vue.prototype.$loadsh = loadsh
+Vue.prototype.$loadsh = loadsh // JavaScript 实用工具库  https://www.lodashjs.com/
 Vue.prototype.$CONSTANTS = constants
 Vue.prototype.$TOOLS = tools
 Vue.prototype.$bottomBoxWindow = bottomBoxWindow // 底部上滑框控制
-Vue.prototype.$stringTimeParseToUnix = stringTimeParseToUnix
+Vue.prototype.$stringTimeParseToUnix = stringTimeParseToUnix // 处理string类型的时间为时间戳 单位s
 Vue.prototype.$unixTimeParseToString = unixTimeParseToString
 Vue.prototype.$chartResizeTool = chartResizeTool
 Vue.prototype.$tableSet = tableSet
@@ -101,13 +101,13 @@ Vue.mixin({
     }
   },
   computed: {
-    timeFormatMain () {
+    timeFormatMain () { // 所有组件添加默认时间格式
       return this.$store.getters.getTimeFormatMain
     },
-    getMenuList () {
+    getMenuList () { // 所有的菜单权限
       return this.$store.state.user.menuList
     },
-    getButtonList () {
+    getButtonList () { // 所有的按钮权限
       return this.$store.state.buttonList
     },
     $routePath () {
@@ -115,7 +115,7 @@ Vue.mixin({
     }
   },
   methods: {
-    hasButton (code) {
+    hasButton (code) { // 同v-has 主要判断button的权限
       return hasButton(this.$store.getters.buttonList, code)
     },
     ...mainMixin.methods

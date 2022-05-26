@@ -33,7 +33,8 @@
   }
   &>.nz-table2 {
     height: 100%;
-    padding-top: 20px !important;
+    padding: 20px 20px 10px 20px !important;
+    box-sizing: border-box;
     .table-list {
       background-color: $--background-color-empty;
       .list-width {
@@ -43,6 +44,9 @@
         overflow: hidden;
       }
     }
+  }
+  &>.bottom-panel{
+    padding: 15px 10px 10px 10px !important;
   }
 }
 .sub-top-tools .top-tool-btn-txt .nz-icon{
@@ -141,9 +145,7 @@
 }
 
 .bottom-panel {
-  padding-top: 15px;
   background-color: $--background-color-empty;
-  padding-bottom: 10px;
   height: calc(100% - 30px);
 }
 .bottom-log {

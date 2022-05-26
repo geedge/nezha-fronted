@@ -99,8 +99,8 @@ export default {
     subContentClass () {
       const className = []
       switch (this.targetTab) {
-        case 'panel':
-          className.push('bottom-panel')
+        case 'panelTab':
+          className.push('nz-table2 bottom-panel')
           break
         case 'log': {
           className.push('bottom-log')
