@@ -19,7 +19,8 @@
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
          <top-tool-more-options
-          :delete-objs="batchDeleteObjs"
+            ref="topTool"
+            :delete-objs="batchDeleteObjs"
             id="asset-list"
             :params="filter"
             :params-type="paramsType"
@@ -29,9 +30,10 @@
             export-url="visual/panel/export"
             import-url="visual/panel/import"
             @afterImport="getTableData"
-            :showCur="false"
             :link="obj"
             :showLock="from === fromRoute.asset"
+            :exportBoxShow="true"
+            @export="exportType"
             @panelLockChange="panelLockChange"
           >
             <template v-slot:after>
@@ -40,9 +42,6 @@
               </el-dropdown-item>
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-              </el-dropdown-item>
-              <el-dropdown-item v-has="'main_edit'">
-                <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-export-pdf"></i>{{ $t('overall.downloadToPdf') }}</div>
               </el-dropdown-item>
             </template>
           </top-tool-more-options>
@@ -53,12 +52,12 @@
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
          <top-tool-more-options
-          :delete-objs="batchDeleteObjs"
+            ref="topTool"
+            :delete-objs="batchDeleteObjs"
             id="asset-list"
             :link="obj"
             :params="filter"
             :permissions="{import: 'main_add', export: 'main_edit'}"
-            :showCur="false"
             :params-type="paramsType"
             :showLock="from === fromRoute.endpoint"
             class="top-tool-export margin-r-10"
@@ -66,6 +65,8 @@
             :export-url="'visual/panel/export'"
             :import-url="'visual/panel/import'"
             @afterImport="getTableData"
+            :exportBoxShow="true"
+            @export="exportType"
             @panelLockChange="panelLockChange"
           >
             <template v-slot:after>
@@ -74,9 +75,6 @@
               </el-dropdown-item>
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-              </el-dropdown-item>
-              <el-dropdown-item v-has="'main_edit'">
-                <div id="chart-htmltopdf" @click="htmlToPdf"><i class="nz-icon nz-icon-export-pdf"></i>{{ $t('overall.downloadToPdf') }}</div>
               </el-dropdown-item>
             </template>
           </top-tool-more-options>
@@ -153,9 +151,10 @@ import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
+import exportHtmlMixin from '@/components/common/mixin/exportHtml'
 export default {
   name: 'panelTabNew',
-  mixins: [subDataListMixin, detailViewRightMixin, htmlToPdfMixin],
+  mixins: [subDataListMixin, detailViewRightMixin, htmlToPdfMixin, exportHtmlMixin],
   props: {
     from: String,
     obj: Object,
@@ -769,6 +768,14 @@ export default {
         }, 200)
       } else {
         this.showScreenLoading(false)
+      }
+      this.$refs.topTool.closeDialog()
+    },
+    exportType (type) {
+      if (type === 'PDF') {
+        this.htmlToPdf()
+      } else {
+        this.exportToHtml(this.obj.name)
       }
     }
   },

@@ -1,6 +1,4 @@
-import JSZip from 'jszip'
-import { saveAs } from 'file-saver'
-import Vue from 'vue'
+import bus from '@/libs/bus'
 export default {
   data () {
     return {
@@ -8,84 +6,47 @@ export default {
     }
   },
   methods: {
-    exportHtml () {
-      // 创建一个JSZIP实例
-      const zip = new JSZip()
-      // 在zip压缩包中创建一个文件夹，用来放相关依赖
-      const panel = zip.folder('panel')
-      const packages = panel.folder('packages')
-      const fileArr = []
-      let filename = []
-      // 引入含有html字符串的js文件，构造html文件
-      this.returnHtml().then((modules) => {
-        panel.file('index.html', modules)
-        Vue.http.get('components/chart/panelTemp/jsData.json').then((res) => {
-          filename = res.body.data
-          for (const i in res.body.data) {
-            fileArr.push(Vue.http.get(`components/chart/${res.body.data[i]}`))
+    exportToHtml (name) {
+      const params = {
+        format: 'html',
+        panelId: this.showPanel.id,
+        start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[0])),
+        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[0]))
+      }
+      this.$get('/visual/panel/snapshot', params, 'blob').then(res => {
+        const self = this
+        let fileName = name
+        const resFileName = ''
+        if (resFileName) {
+          fileName = resFileName
+        }
+        if (res.type == 'application/json') {
+          const reader = new FileReader() // 创建一个FileReader实例
+          reader.readAsText(res, 'utf-8') // 读取文件,结果用字符串形式表示
+          reader.onload = function () { // 读取完成后,**获取reader.result**
+            const { msg } = JSON.parse(reader.result)
+            self.$message.error(msg) // 弹出错误提示
           }
-          Promise.all(fileArr).then((contents) => {
-            for (const i in contents) {
-              packages.file(filename[i], contents[i].data)
-            }
-            // console.log(chartList)
-            // packages.file('vue/chartList.vue', chartList)
-            zip.generateAsync({
-              type: 'blob'
-            }).then((content) => {
-              // 此处采用file-saver的saveAs方法和直接创建a标签下载的效果是一样的，只是saveAs写起来更简便写
-              saveAs(content, `${this.fileName}.zip`)
-            })
-          })
-        })
-      })
-    },
-    returnHtml (data) {
-      data = [{
-        id: 1
-      }]
-      let str = ''
-      str += `<!DOCTYPE html>
-              <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Panel</title>
-                </head>
-                <script src="./packages/panelTemp/js/vue.js"></script>
-                <script src="./packages/panelTemp/js/echarts.js"></script>
-                <script src="./packages/panelTemp/js/httpVueLoader.js"></script>
-                <body>
-                  <div id="app">
-                  <div>
-                    <chartList
-                        :data-list="dataList"
-                        :isExportHtml="true"
-                    ></chartList>
-                  </div>
-                    {{message}}
-                  </div>
-                </body>
-                <script type="text/javascript">
-                var app = new Vue({
-                  el: '#app',
-                  components:{
-                      chartList: httpVueLoader('/packages/chartList.vue')
-                  },
-                  data: {
-                    message: 'Hello Vue!',
-                    dataList: ${JSON.stringify(data)}
-                  },
-                  mounted () {
-                    // axios.get('./data.json').then(res=>{
-                    //   console.log(res)
-                    // })
-                  }
-                })
-              </script>
-              </html>
-                `
-      return new Promise(resolve => {
-        resolve(str)
+          return
+        }
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          const blobObject = new Blob([res])
+          window.navigator.msSaveOrOpenBlob(blobObject, fileName + '.html')
+        } else {
+          const blob = new Blob([res])
+          const link = document.createElement('a')
+          const href = window.URL.createObjectURL(blob) // 下载链接
+          link.href = href
+          link.download = fileName + '.html' // 下载后文件名
+          document.body.appendChild(link)
+          link.click() // 点击下载
+          document.body.removeChild(link) // 下载完成移除元素
+          window.URL.revokeObjectURL(href) // 释放blob对象
+        }
+        this.$refs.topTool.closeDialog()
+      }, error => {
+        this.$message.error('123')
       })
     }
   }
