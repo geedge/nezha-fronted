@@ -88,6 +88,7 @@
 </template>
 
 <script>
+import bus from '@/libs/bus'
 export default {
   name: 'selectPanel',
   props: {
@@ -195,7 +196,7 @@ export default {
       return arr.reverse()
     },
     // 新增收藏
-    addStarred (data) {
+    addStarred: bus.debounceFn(function (data) {
       const params = {
         type: 'panel',
         tid: data.id
@@ -206,14 +207,17 @@ export default {
         }
       })
     },
+    300, true),
+
     // 删除收藏
-    delStarred (data) {
+    delStarred: bus.debounceFn(function (data) {
       this.$delete('/sys/user/starred?type=panel&tid=' + data.id).then(response => {
         if (response.code === 200) {
           this.getStarred()
         }
       })
     },
+    300, true),
     /*
         * node: 被拖的节点
         * relative: 发生关系的节点
