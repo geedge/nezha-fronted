@@ -500,19 +500,19 @@ export default {
         this.importBox.width = '600px'
       } else if (type == 2) { // export
         this.importBox.title = this.$t('overall.exportExcel')
-        this.importBox.width = this.exportBoxShow ? '850px' : '580px'
-        if (this.exportBoxShow) {
-          this.formatArr = [
-            { name: 'XLSX', value: 1 },
-            { name: 'CSV', value: 2 },
-            { name: 'JSON', value: 3 },
-            { name: 'PDF', value: 4 },
-            { name: 'Html', value: 5 }]
-        } else {
-          this.formatArr = [{ name: 'XLSX', value: 1 },
-            { name: 'CSV', value: 2 },
-            { name: 'JSON', value: 3 }]
-        }
+        this.importBox.width = '580px'
+        // if (this.exportBoxShow) {
+        //   this.formatArr = [
+        //     { name: 'XLSX', value: 1 },
+        //     { name: 'CSV', value: 2 },
+        //     { name: 'JSON', value: 3 },
+        //     { name: 'PDF', value: 4 },
+        //     { name: 'Html', value: 5 }]
+        // } else {
+        //   this.formatArr = [{ name: 'XLSX', value: 1 },
+        //     { name: 'CSV', value: 2 },
+        //     { name: 'JSON', value: 3 }]
+        // }
       }
     },
     getTimeString () {
