@@ -165,7 +165,7 @@ export default {
   },
   methods: {
     // 获取收藏的列表
-    async getStarred () {
+    async getStarred (type) {
       const params = {
         type: 'panel'
       }
@@ -174,7 +174,12 @@ export default {
         this.tempArr = []
         this.recursionStarred(this.panelData, response.data)
         this.starredData[0].children = this.formatStarred(this.tempArr)
-        this.$emit('refreshStarred', this.panelData)
+        if (type === 'tree') {
+          // 刷新树形控件
+          this.$emit('refreshStarred', { data: this.panelData, type: 'tree' })
+        } else {
+          this.$emit('refreshStarred', { data: this.panelData })
+        }
       }
     },
     // 比对收藏的列表和全部列表 改变状态
@@ -221,9 +226,10 @@ export default {
         type: 'panel',
         tid: data.id
       }
-      this.$post('/sys/user/starred', params).then(response => {
+      this.$post('/sys/user/starred', params).then(async response => {
         if (response.code === 200) {
-          this.getStarred()
+          await this.getStarred()
+          data.starred = true
         }
       })
     },
@@ -231,9 +237,10 @@ export default {
 
     // 删除收藏
     delStarred: bus.debounceFn(function (data) {
-      this.$delete('/sys/user/starred?type=panel&tid=' + data.id).then(response => {
+      this.$delete('/sys/user/starred?type=panel&tid=' + data.id).then(async response => {
         if (response.code === 200) {
-          this.getStarred()
+          await this.getStarred()
+          data.starred = false
         }
       })
     },

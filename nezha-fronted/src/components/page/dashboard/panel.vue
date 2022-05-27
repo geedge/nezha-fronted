@@ -308,15 +308,17 @@ export default {
     }
   },
   methods: {
-    refreshStarred (value) {
-      // 重新赋值，否则树形菜单不更新
-      this.panelData = JSON.parse(JSON.stringify(value))
+    // 刷新树形菜单视图
+    refreshStarred ({ data, type }) {
+      if (type === 'tree') {
+        this.panelData = JSON.parse(JSON.stringify(data))
+      }
       this.$nextTick(() => {
         this.$refs.selectPanel.$refs.starredTree.filter(this.filterPanel)
         this.$refs.selectPanel.$refs.panelTree.filter(this.filterPanel)
         this.$refs.selectPanel.$refs.panelTree.setCurrentKey(this.showPanel)
       })
-      // // 判断当前页面收藏状态
+      // 判断当前页面收藏状态
       const starredArr = this.$refs.selectPanel.tempArr
       this.showPanel.starred = starredArr.some(item => item.id === this.showPanel.id)
     },
@@ -673,7 +675,7 @@ export default {
           let isInitData = false
           this.panelData = JSON.parse(JSON.stringify(response.data.list))
           this.$nextTick(() => {
-            this.$refs.selectPanel.getStarred()
+            this.$refs.selectPanel.getStarred('tree')
           })
           if (response.data.list.length > 0) {
             if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
