@@ -13,7 +13,7 @@
           </div>
           <template v-else>
             <div class="top-tool-left" style="cursor: pointer;">
-              <select-panel ref="selectPanel" :filter-panel="filterPanel" :panel-data="panelData" :panel-lock="panelLock" :placement="'bottom-start'"
+              <select-panel ref="selectPanel" @refreshStarred="refreshStarred" :filter-panel="filterPanel" :panel-data="panelData" :panel-lock="panelLock" :placement="'bottom-start'"
                             :show-panel="showPanel" style="display: inline-block;padding: 0" @deletePanel="del" @editPanel="edit" @selectPanel="panelChange">
                 <template v-slot:header>
                   <div class="panel-select-header">
@@ -24,7 +24,9 @@
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
                   <span :title="showPanel.name  + ' (' + showPanel.chartNum +' charts）' " class="show-panel-name">{{showPanel.name}}</span>
-                  <i style="font-size: 12px;color: #BEBEBE;" class="nz-icon nz-icon-arrow-down"></i>
+                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="el-rate__icon el-icon-star-on"></i>
+                  <i @click.stop="addStarred(showPanel)" v-else class="el-rate__icon el-icon-star-off"></i>
+                  <i  style="font-size: 12px;color: #BEBEBE;" class="nz-icon nz-icon-arrow-down"></i>
                 </template>
                 <template v-slot:tail>
                   <div class="panel-select-tail">
@@ -298,6 +300,26 @@ export default {
     }
   },
   methods: {
+    refreshStarred (value) {
+      // 重新赋值，否则树形菜单不更新
+      this.panelData = JSON.parse(JSON.stringify(value))
+      this.$nextTick(() => {
+        this.$refs.selectPanel.$refs.starredTree.filter(this.filterPanel)
+        this.$refs.selectPanel.$refs.panelTree.filter(this.filterPanel)
+        this.$refs.selectPanel.$refs.panelTree.setCurrentKey(this.showPanel)
+      })
+      // // 判断当前页面收藏状态
+      const starredArr = this.$refs.selectPanel.tempArr
+      this.showPanel.starred = starredArr.some(item => item.id === this.showPanel.id)
+    },
+    // 新增收藏
+    addStarred (data) {
+      this.$refs.selectPanel.addStarred(data)
+    },
+    // 删除收藏
+    delStarred (data) {
+      this.$refs.selectPanel.delStarred(data)
+    },
     // 刷新
     refreshPanel () {
       this.getData(this.filter)
@@ -358,12 +380,12 @@ export default {
         return
       }
       this.rightBox.panel.show = true
-      this.$refs.panelBox.show(true)
+      // this.$refs.panelBox.show(true)
       this.panel = {
         id: '',
         name: ''
       }
-      this.$refs.panelBox.setTitle(this.$t('dashboard.panel.createPanelTitle'))
+      // this.$refs.panelBox.setTitle(this.$t('dashboard.panel.createPanelTitle'))
     },
     panelReload (clearShowPanel) {
       this.getTableData(clearShowPanel)
@@ -640,8 +662,11 @@ export default {
       const vm = this
       this.$get('visual/panel?type=dashboard&pageSize=-1').then(response => {
         if (response.code === 200) {
-          this.panelData = JSON.parse(JSON.stringify(response.data.list))
           let isInitData = false
+          this.panelData = JSON.parse(JSON.stringify(response.data.list))
+          this.$nextTick(() => {
+            this.$refs.selectPanel.getStarred()
+          })
           if (response.data.list.length > 0) {
             if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
               this.showPanel = JSON.parse(JSON.stringify(this.$store.state.showPanel))
@@ -987,3 +1012,14 @@ export default {
   }
 }
 </script>
+<style scoped>
+.el-rate__icon{
+  cursor: pointer;
+  margin-right: 0px;
+  transform: translateY(1px);
+}
+.el-icon-star-on{
+ color:#FF9219;
+ transform: translateY(1px) scale(1.2);
+}
+</style>
