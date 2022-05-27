@@ -24,14 +24,46 @@
           <div  class="tools-header-center">
             <el-form size="small" ref="ruleForm" :model="ruleForm" :rules="formRules" label-position="right" label-width="150px">
               <el-form-item style="margin-bottom:10px" :label="$t('ping.dcs')">
-                <el-select v-model="checked" multiple @change="checkedChange"  >
-                  <el-option
-                    :key="item.id"
-                    v-for="item in dataCenter"
-                    :label="item.name"
-                    :value="item.id">
-                  </el-option>
-                </el-select>
+                <!--            <el-select v-model="checked" multiple @change="checkedChange"  >-->
+                <!--              <el-option-->
+                <!--                :key="item.id"-->
+                <!--                v-for="item in dataCenter"-->
+                <!--                :label="item.name"-->
+                <!--                :value="item.id">-->
+                <!--              </el-option>-->
+                <!--            </el-select>-->
+                <el-popover
+                  placement="bottom"
+                  width="220"
+                  trigger="manual"
+                  v-model="visible"
+                  v-clickoutside="close"
+                  popper-class="no-style-class ping-popover"
+                >
+                  <el-form-item style="margin-bottom:0px">
+                    <ul class="pop-list-wrap">
+                      <li class="el-dropdown-menu__item">
+                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="checkAllChange">{{$t('overall.all')}}</el-checkbox>
+                      </li>
+                      <ul class="pop-list">
+                        <el-checkbox-group v-model="checked" @change="checkedChange">
+                          <li class="el-dropdown-menu__item" v-for="item in dataCenter" :key="item.id">
+                            <el-checkbox :label="item.id">{{item.name}}</el-checkbox>
+                          </li>
+                        </el-checkbox-group>
+                      </ul>
+                    </ul>
+                  </el-form-item>
+                  <div slot="reference" class="choose-box"  @click="triggerVisible">
+                    <div v-if="checkAll" style="flex: 1">All</div>
+                    <div v-else style="width: 100%;flex: 1">
+                    <span class="choose" v-for="item in dataCenter" :key="item.id" v-if="checked.indexOf(item.id) !== -1">
+                      <span> {{item.name}} <i class="nz-icon nz-icon-close" @click="removeCheckedItem(item.id)"/></span>
+                    </span>
+                    </div>
+                    <i class="nz-icon nz-icon-arrow-down6"/>
+                  </div>
+                </el-popover>
               </el-form-item>
               <el-form-item prop="maxHops" style="margin-bottom:10px" :label="$t('trace.maxHops')">
                 <div class="wrap" style="height:32px">
@@ -80,10 +112,6 @@
           <el-step>
             <span class="nz-icon nz-icon-edit" slot="icon"></span>
             <p class="txt" slot="title">{{$t('overall.placeHolder')}}IP</p>
-          </el-step>
-          <el-step>
-            <span class="el-icon-more" slot="icon"></span>
-            <p class="txt" slot="title">{{$t('ping.filter')}}</p>
           </el-step>
           <el-step>
             <span class="msg" slot="icon">Trace</span>
@@ -159,7 +187,7 @@ export default {
         // 最大跃点数
         maxHops: '',
         // 超时时间
-        timeout: ''
+        timeout: 30
       },
       formRules: {
         timeout: [{ validator: positiveInteger, trigger: 'blur' }],
@@ -169,6 +197,22 @@ export default {
   },
   created () {
     this.getDataCenter()
+  },
+  mounted () {
+    const tiInput = document.getElementsByClassName('ti-input')[0]
+    tiInput.addEventListener('click', (e) => {
+      const event = e || window.event
+      if (event && event.stopPropagation) {
+        event.stopPropagation()
+      } else {
+        event.cancelBubble = true
+      }
+      if (event.path[0].className === 'ti-input') {
+        const tiInputBox = document.getElementsByClassName('ti-new-tag-input')[0]
+        console.log(tiInputBox)
+        tiInputBox.focus()
+      }
+    })
   },
   methods: {
     // 使用防抖是因为,防止标签输入框失去焦点校验和开始任务校验重复(连续两次message提示)
@@ -220,6 +264,16 @@ export default {
       const checkedCount = value.length
       this.checkAll = checkedCount === this.dataCenter.length
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataCenter.length
+    },
+    // 删除选中
+    removeCheckedItem (id, e) {
+      const event = e || window.event
+      if (event && event.stopPropagation) {
+        event.stopPropagation()
+      } else {
+        event.cancelBubble = true
+      }
+      this.checked = this.checked.filter(dcId => dcId !== id)
     },
     // 开始任务
     startTask () {

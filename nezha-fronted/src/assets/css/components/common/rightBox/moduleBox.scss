@@ -269,8 +269,8 @@
   .ti-input {
     border: 1px solid $--border-color-light;
     .ti-tag.ti-valid {
-      background-color: $--value-background-color;
-      color: $--value-color;
+      background-color: $--label-background-color !important;;
+      color: $--color-text-primary !important;;
     }
     .ti-new-tag-input {
       color: $--color-text-regular !important;
