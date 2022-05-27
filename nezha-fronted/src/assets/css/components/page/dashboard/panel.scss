@@ -135,7 +135,7 @@
 }
 .show-panel-name{
   display: inline-block;
-  padding: 0 7px;
+  padding: 0 5px;
   font-weight: bold;
   max-width: 310px;
   overflow:hidden;
@@ -143,4 +143,10 @@
   white-space:nowrap;
   vertical-align: bottom;
   color: $--color-text-primary;
+}
+
+.starred-pop{
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  min-width: auto;
 }

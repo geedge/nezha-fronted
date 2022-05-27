@@ -24,9 +24,17 @@
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
                   <span :title="showPanel.name  + ' (' + showPanel.chartNum +' charts）' " class="show-panel-name">{{showPanel.name}}</span>
-                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="el-rate__icon el-icon-star-on"></i>
-                  <i @click.stop="addStarred(showPanel)" v-else class="el-rate__icon el-icon-star-off"></i>
-                  <i  style="font-size: 12px;color: #BEBEBE;" class="nz-icon nz-icon-arrow-down"></i>
+                  <el-popover
+                    placement="top-start"
+                    trigger="hover"
+                    :content="$t('tip.addFavorites')"
+                    popper-class="starred-pop"
+                    >
+                    <span slot="reference">
+                      <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="el-rate__icon el-icon-star-on"></i>
+                      <i @click.stop="addStarred(showPanel)" v-else class="el-rate__icon el-icon-star-off"></i>
+                    </span>
+                  </el-popover>
                 </template>
                 <template v-slot:tail>
                   <div class="panel-select-tail">
@@ -1059,12 +1067,13 @@ export default {
 </script>
 <style scoped>
 .el-rate__icon{
+  color: #C0C4CC !important;
   cursor: pointer;
   margin-right: 0px;
   transform: translateY(1px);
 }
 .el-icon-star-on{
- color:#FF9219;
- transform: translateY(1px) scale(1.2);
+  color:#FF9219 !important;
+  transform: translateY(1px) scale(1.2);
 }
 </style>

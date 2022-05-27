@@ -18,7 +18,7 @@
             class="starred-tree"
             >
             <div class="tree--node" slot-scope="{ node, data }">
-              <span :title="data.chartNum?node.label + ' (' + data.chartNum +' charts）':''">{{ node.label }}</span>
+              <span :title="data.id?node.label + ' (' + data.chartNum +' charts）':''" :class="{'select-panel-title':data.id===0}">{{ node.label }}</span>
               <el-row class="block-col-2" style="margin-left:10px">
                 <el-col>
                   <el-dropdown v-if="!panelLock"  placement="bottom-end" trigger="click" style="margin-right:10px">
@@ -32,7 +32,7 @@
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
-                  <template v-if="node.label!=='Starred'">
+                  <template v-if="data.id">
                     <i v-if="data.starred" class="el-rate__icon el-icon-star-on" @click.stop="delStarred(data)"></i>
                     <i v-else class="el-rate__icon el-icon-star-off" @click.stop="addStarred(data)"></i>
                   </template>
@@ -41,7 +41,7 @@
             </div>
           </el-tree>
           <el-tree
-            :data="panelData"
+            :data="treeData"
             :draggable="!panelLock"
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
@@ -55,7 +55,7 @@
             node-key="id"
             ref="panelTree">
             <div class="tree--node" slot-scope="{ node, data }">
-              <span :title="node.label + ' (' + data.chartNum +' charts）' ">{{ node.label }}</span>
+              <span :title="data.id?node.label + ' (' + data.chartNum +' charts）':''" :class="{'select-panel-title':data.id===0}">{{ node.label }}</span>
               <el-row class="block-col-2" style="margin-left:10px">
                 <el-col>
                   <el-dropdown v-if="!panelLock"  placement="bottom-end" trigger="click" style="margin-right:10px">
@@ -69,8 +69,10 @@
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
-                  <i v-if="data.starred" class="el-rate__icon el-icon-star-on"  @click.stop="delStarred(data)"></i>
-                  <i v-else class="el-rate__icon el-icon-star-off"  @click.stop="addStarred(data)"></i>
+                  <template v-if="data.id">
+                    <i v-if="data.starred" class="el-rate__icon el-icon-star-on" @click.stop="delStarred(data)"></i>
+                    <i v-else class="el-rate__icon el-icon-star-off" @click.stop="addStarred(data)"></i>
+                  </template>
                 </el-col>
               </el-row>
             </div>
@@ -119,6 +121,14 @@ export default {
           this.panel = JSON.parse(JSON.stringify(n))
         }
       }
+    },
+    panelData: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+          this.treeData[0].children = n
+        }
+      }
     }
     /* panel: {
           immediate: true,
@@ -134,9 +144,19 @@ export default {
     return {
       popBox: { show: false },
       panel: { id: 0, name: '' },
+      // 全部列表
+      treeData: [
+        {
+          id: 0,
+          name: 'All Panels',
+          children: []
+        }
+      ],
+      // 收藏夹列表
       starredData: [
         {
-          name: 'Starred',
+          id: 0,
+          name: 'Starred Panels',
           children: []
         }
       ],
@@ -263,7 +283,9 @@ export default {
     },
     // 确认选择某个节点，与父组件交互
     selectPanel (data, checked, child) {
-      if (data.name === 'Starred') {
+      // 判断是否点击的Starred Panels或All Panels
+      if (!data.id) {
+        this.$refs.panelTree.setCurrentKey(this.showPanel)
         return false
       }
       this.$emit('selectPanel', data)
@@ -277,12 +299,18 @@ export default {
 .starred-tree>>>.el-tree__empty-block{
   display: none;
 }
+.select-panel-title{
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+}
 .el-rate__icon{
+  color: #C0C4CC !important;
   cursor: pointer;
   margin-right: 0px;
 }
 .el-icon-star-on{
- color:#FF9219;
- transform: scale(1.2);
+  color:#FF9219 !important;
+  transform: scale(1.2);
 }
 </style>
