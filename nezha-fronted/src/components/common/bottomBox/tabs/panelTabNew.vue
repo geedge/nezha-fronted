@@ -43,6 +43,9 @@
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
               </el-dropdown-item>
+              <el-dropdown-item v-has="'panel_view'">
+                <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.snapshoot') }}</div>
+              </el-dropdown-item>
             </template>
           </top-tool-more-options>
         </div>
@@ -75,6 +78,9 @@
               </el-dropdown-item>
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
+              </el-dropdown-item>
+              <el-dropdown-item v-has="'panel_view'">
+                <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.snapshoot') }}</div>
               </el-dropdown-item>
             </template>
           </top-tool-more-options>

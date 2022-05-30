@@ -1,5 +1,5 @@
 <template>
-  <div class="system">
+  <div class="system backup">
     <div class="system-config-form system-config-backup">
       <div class="system-title">{{ $t("backup.configurations") }}</div>
       <nz-data-list

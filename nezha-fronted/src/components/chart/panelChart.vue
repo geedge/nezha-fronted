@@ -72,6 +72,7 @@ import logsData from '@/components/chart/logsData'
 import lodash from 'lodash'
 
 export default {
+  // 该组件用于获取chart的具体数据
   name: 'panelChart',
   components: {
     chartHeader,
@@ -79,44 +80,44 @@ export default {
     ChartScreenHeader
   },
   props: {
-    chartInfo: Object, // 其中的param json串已转化为对象
+    chartInfo: Object, // 其中的param json串已转化为对象  // 当前chart的具体信息
     timeRange: Array, // 时间范围
-    isFullscreen: Boolean,
-    panelLock: Boolean,
+    isFullscreen: Boolean, // 是否全屏
+    panelLock: Boolean, // 是否被锁定
     chartDetailInfo: Object,
-    from: String,
+    from: String, // 使用该组件的位置
     filter: {},
-    showHeader: {
+    showHeader: { // 是否显示header
       type: Boolean,
       default: true
     },
-    isExportHtml: {
+    isExportHtml: { // 是否是导出的html
       type: Boolean,
       default: false
     },
-    dataJson: {
+    dataJson: { // 导出的html的数据
       type: Object
     }
   },
   data () {
     return {
-      chartData: [],
+      chartData: [], // 当前chart的数据
       loading: true,
       isError: false,
-      multipleTime: false,
-      minusTime: '',
-      showAllData: false,
+      multipleTime: false, // 是否开启对比
+      minusTime: '', // 是否开启对比相差的时间
+      showAllData: false, // 是否显示所有legend
       allDataLength: 0,
-      severityData: this.$store.getters.severityData,
+      severityData: this.$store.getters.severityData, // 告警级别的数据
       severityDataWeight: this.$store.getters.severityDataWeight
       // isExportData: false
     }
   },
   computed: {
-    headerH () {
+    headerH () { // 50px header所包含的高
       return this.$store.getters.getHeaderH
     },
-    headerHPadding () {
+    headerHPadding () { // 50px header + padding 主要用于展开的空group
       return this.$store.getters.getHeaderHPadding
     }
   },
@@ -142,7 +143,7 @@ export default {
       this.chartInfo.loaded && this.query(elements, startTime, endTime, step)
     },
     // 参数 isRefresh 标识是否是刷新操作
-    getChartData (isRefresh, params) {
+    getChartData (isRefresh, params) { // 获取chart的数据前的准备 主要用于处理时间参数
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
@@ -172,7 +173,7 @@ export default {
       }
       this.chartInfo.loaded && this.query(elements, startTime, endTime, step, params)
     },
-    query (elements, startTime, endTime, step, params) {
+    query (elements, startTime, endTime, step, params) { // 获取chart的数据
       this.isError = false
       this.allDataLength = 0
       // this.chartData = this.chartInfo.chartData
@@ -419,7 +420,7 @@ export default {
         this.loading = false
       }
     },
-    queryData (elements, startTime, endTime, step, params) {
+    queryData (elements, startTime, endTime, step, params) { // 获取chart的数据主要用于导出的html
       this.isError = false
       this.allDataLength = 0
       // this.chartData = this.chartInfo.chartData

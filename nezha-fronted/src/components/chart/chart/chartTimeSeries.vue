@@ -197,13 +197,13 @@ export default {
         let minute = tData.getMinutes()
         minute = minute > 9 ? minute : '0' + minute // 如果分钟小于10,则在前面加0补充为两位数字
         if (minTime !== null && maxTime !== null) {
-          const diffSec = (maxTime - minTime) / 1000
+          const diffSec = (maxTime - minTime)
           const secOneDay = 24 * 60 * 60// 1天的秒数
           const secOneMonth = secOneDay * 30// 30天的秒数
           if (diffSec <= secOneDay) { // 同一天
             return [hour, minute].join(':')
           } else if (diffSec < secOneMonth) { // 大于1天，小于30天
-            return [tData.getMonth() + 1, tData.getDate()].join('/') + ' ' + [hour, minute].join(':')
+            return [tData.getMonth() + 1, tData.getDate()].join('/') + '\n' + [hour, minute].join(':')
           } else { // 大于等于30天
             return [tData.getMonth() + 1, tData.getDate()].join('/')
           }

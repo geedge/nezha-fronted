@@ -19,8 +19,8 @@
       border-radius: 2px;
       border: 1px solid $--button-icon-border-color !important;
       .ti-tag.ti-valid {
-        background-color: $--value-background-color;
-        color: $--value-color;
+        background-color: $--label-background-color !important;;
+        color: $--color-text-primary !important;;
       }
       .ti-new-tag-input {
         color: $--color-text-regular !important;
@@ -33,20 +33,31 @@
     }
     .ti-input:hover{}
   }
-  .choose{
-    width: 50px !important;
-    height: 36px !important;
-    line-height: 36px !important;
-    padding: 0 !important;
-    border-radius: 2px 0px 0px 2px !important;
-    border-right: none !important;
-    span{
-      display: flex;
-      align-content: center;
-      justify-content: center;
+  .choose-box {
+    overflow: hidden;
+    width: calc(100% - 7px);
+    height: 30px;
+    border: 1px solid $--border-color-light;
+    padding-left: 5px;
+    display: flex;
+    //align-items: center;
+    .nz-icon-arrow-down6{
+      font-size: 12px;
+      color: $--color-text-secondary;
     }
+  }
+  .choose{
+    width: auto;
+    height: 26px !important;
+    line-height: 30px !important;
+    padding: 2px 4px !important;
+    border-radius: 2px !important;
+    border-right: none !important;
+    background: $--label-background-color;
+    margin-right: 5px;
+    color: $--color-text-primary;
     i{
-      font-size: 20px !important;
+      font-size: 14px !important;
     }
   }
   .btn{
@@ -103,7 +114,7 @@
       }
       .nz-icon-edit{
         font-size: 26px;
-      } 
+      }
       .el-icon-more{
         font-size: 22px;
       }
