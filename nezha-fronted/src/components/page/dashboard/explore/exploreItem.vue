@@ -86,14 +86,14 @@
           <el-collapse v-show="!showIntroduce" v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
             <!--metric-->
             <template v-if="showMetrics">
-              <el-collapse-item name="1" title="Graph" class="el-collapse-item__height">
+              <el-collapse-item name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
                 <div class="chart-room">
                   <chart ref="exploreChart" :unit="chartUnit"></chart>
                 </div>
               </el-collapse-item>
               <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
                 <div slot="title" class="explore-table-title">
-                  Table
+                  {{$t('dashboard.panel.chartForm.typeVal.table.label')}}
                   <i
                     class="nz-icon-gear nz-icon"
                     style="position: absolute;right: 10px;top: 8px"
@@ -156,7 +156,7 @@
             </template>
             <!--log-->
             <template v-else>
-              <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" title="Graph" class="el-collapse-item__height">
+              <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
                 <div class="chart-room">
                   <chart ref="logChart" :unit="chartUnit" v-my-loading="chartLoading"></chart>
                 </div>

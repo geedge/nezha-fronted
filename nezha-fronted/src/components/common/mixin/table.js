@@ -131,6 +131,9 @@ export default {
         }
         this.$set(item, 'alertNumtooltipShow', flag)
       }
+    },
+    rowKey (row) { // ping trace的 唯一key
+      return row.ip + '-' + row.dc.id
     }
   },
   watch: {

@@ -1,11 +1,15 @@
+.ping-popover.el-popover {
+  padding: 0;
+  margin-top: 5px;
+}
 .trace{
   .top-tool-left{
     // align-items: center;
   }
   .ipInput{
-    width:250px;
+    width:280px;
     min-height: 36px;
-    max-height: 62px;
+    max-height: 128px;
   }
   .ti-tag-input{
     background: transparent ;
@@ -13,7 +17,8 @@
   .vue-tags-input,.ti-new-tag-input {
     .ti-input {
       min-height: 36px;
-      max-height: 62px;
+      //max-height: 62px;
+      height: 100%;
       overflow-y: auto;
       box-sizing: border-box;
       border-radius: 2px;
@@ -26,6 +31,7 @@
         color: $--color-text-regular !important;
       }
       .ti-tags{
+        height: 24px;
         .ti-tag{
           word-break: break-all;
         }
@@ -145,13 +151,16 @@
         }
       }
       .data-bottom{
-        height: calc(100% - 50px) !important;
+        height: 100% !important;
         overflow: hidden;
         .details{
           padding: 20px;
         }
       }
     }
+  }
+  .nz-table2{
+    flex: 1 !important;
   }
 }
 
