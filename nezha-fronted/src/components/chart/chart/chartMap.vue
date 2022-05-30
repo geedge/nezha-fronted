@@ -1,6 +1,6 @@
 <template>
   <div class="overview">
-    <div class="content-col-content">
+    <div class="content-col-content" style="padding:0">
       <div :id="'map' + (isFullscreen ? '-screen-' : '' ) + chartInfo.id " style="height: 100%; width: 100%" :style="theme=='dark'? 'filter: invert(1) hue-rotate(0.5turn);opacity: 0.75;': ''"></div>
     </div>
     <!--自定义地图鼠标悬浮提示dom，避免被overflow：hidden裁剪-->
