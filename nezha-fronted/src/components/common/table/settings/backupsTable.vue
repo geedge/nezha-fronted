@@ -6,6 +6,7 @@
       v-for="(item, index) in customTableTitle"
       :key="`col-${index}`"
       :width="`${item.width}`"
+      :min-width="`${item.minWidth}`"
       :label="item.label"
       :prop="item.prop"
       :resizable="true"
