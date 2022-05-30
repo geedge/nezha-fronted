@@ -113,6 +113,14 @@
     }
     #week-on {
       margin-bottom: 26px !important;
+      position: relative;
+      .el-form-item__content{
+          .el-form-item__error{
+            position: absolute;
+            top: 40px;
+            left: 0px;
+          }
+        }
     }
     #DayOfMonth{
       height: 202px;
@@ -123,7 +131,7 @@
           .el-form-item__error{
             position: absolute;
             top: 181px;
-            left: 10px;
+            left: 0px;
           }
         .el-checkbox-group{
           display: flex;
