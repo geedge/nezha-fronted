@@ -122,9 +122,10 @@ export default {
     Restore (row) {
       put('/sys/backup/restore', { filename: row.fileName }).then(res => {
         if (res.code == 200) {
-         this.$emit("getTableData", 'recent')
+          this.$emit('getTableData', 'recent')
+          this.$message.success(this.$t('backup.Restore'))
         } else {
-          this.$message.error(response.msg)
+          this.$message.error(res.msg)
         }
       })
     },
@@ -133,7 +134,7 @@ export default {
         if (res.code == 200) {
          this.$emit("getTableData", 'recent')
         } else {
-          this.$message.error(response.msg)
+          this.$message.error(res.msg)
         }
       })
     },
@@ -147,6 +148,11 @@ export default {
     },
     backupNow (item) {
       post('/sys/backup').then((res) => {
+        if (res.code == 200) {
+          this.$message.success(this.$t('backup.backupNow'))
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     },
     edit () {
