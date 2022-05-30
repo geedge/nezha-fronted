@@ -128,7 +128,6 @@
             :loading="loading"
             v-my-loading="loading"
             :custom-table-title="tools.customTableTitle"
-            :height="mainTableHeight"
             :table-data="tableData"
             >
           </ping-table>

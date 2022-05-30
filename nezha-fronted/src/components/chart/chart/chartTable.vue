@@ -1,10 +1,10 @@
 <template>
-  <div class="nz-table2" style="height: 100%;padding: 10px;box-sizing: border-box">
+  <div class="nz-table2" style="height: 100%;padding: 0 10px 10px 10px;box-sizing: border-box">
     <el-table
       ref="dataTable"
       class="chart-table"
       :data="tableData"
-      :height="'calc(100% - 5px)'"
+      :height="'calc(100% - 0px)'"
       :width="'100%'"
       border
       @sort-change="tableDataSort"

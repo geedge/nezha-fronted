@@ -151,13 +151,16 @@
         }
       }
       .data-bottom{
-        height: calc(100% - 50px) !important;
+        height: 100% !important;
         overflow: hidden;
         .details{
           padding: 20px;
         }
       }
     }
+  }
+  .nz-table2{
+    flex: 1 !important;
   }
 }
 

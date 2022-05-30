@@ -210,6 +210,12 @@
 }
 .no-header.nz-chart{
   height: 100%;
+  &>.overview{
+    padding: 10px;
+  }
+  &>.nz-table2{
+    padding-top: 10px !important;
+  }
 }
 .nz-chart {
   position: relative;

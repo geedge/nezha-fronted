@@ -2,7 +2,8 @@
   <el-table
       id="pingTable"
       ref="dataTable"
-      :height="height"
+      :height="'calc(100% - 10px)'"
+      :row-key="rowKey"
       :data="tableData"
       border
       @header-dragend="dragend"
@@ -105,7 +106,8 @@ export default {
           sortable: true,
           minWidth: 200
         }
-      ]
+      ],
+      expandRowKeys: []
     }
   },
   methods: {
