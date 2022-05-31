@@ -1107,7 +1107,7 @@ export default {
         this.editEndpoint.moduleId = ''
         this.editEndpoint.name = ''
         this.editEndpoint.assetName = ''
-        this.editEndpoint.assetId = ''
+        // this.editEndpoint.assetId = ''
         this.$refs.sp.remove()
         this.$refs.moduleForm.clearValidate('moduleId')
       }
@@ -1479,7 +1479,9 @@ export default {
     }
   },
   mounted () {
-
+    setTimeout(() => {
+      this.editEndpoint.assetId = this.module.assetId + ''
+    }, 500)
   },
   created () {
     this.getProjectList()

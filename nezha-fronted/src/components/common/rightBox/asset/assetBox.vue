@@ -433,7 +433,8 @@ export default {
             })
           }
         }
-      }
+      },
+      assetId: ''
     }
   },
   watch: {
@@ -686,6 +687,8 @@ export default {
       })
     },
     save () {
+      const self = this
+      // console.log(123123132, self, 'params.id')
       if (this.prevent_opt.save) { return }
       this.prevent_opt.save = true
 
@@ -740,7 +743,7 @@ export default {
             this.$put(this.url, params).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
-                this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { assetId: res.data.id }, false)
                 this.esc(true)
               } else {
                 this.$message.error(res.msg)
@@ -750,7 +753,7 @@ export default {
             this.$post(this.url, params).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
-                this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { assetId: res.data.id }, false)
                 this.esc(true)
               } else {
                 this.$message.error(res.msg)
@@ -763,7 +766,6 @@ export default {
         }
       })
     },
-
     getStateData () {
       return new Promise(resolve => {
         this.$get('asset/stateConf?pageSize=-1').then(response => {

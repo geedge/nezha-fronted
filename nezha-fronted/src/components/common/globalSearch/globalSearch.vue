@@ -11,7 +11,7 @@
       <div class="global-search-content" v-if="!firstShow">
         <div class="global-search-content-content" v-if="!isNoData">
           <div class="global-search-content-left">
-            <el-skeleton :loading="loading" animated  class="list">
+            <el-skeleton :loading="true" animated  class="list">
               <template slot="template">
                   <li
                     v-for="(item,index) in skeletonArr"
