@@ -11,7 +11,7 @@
       <div class="global-search-content" v-if="!firstShow">
         <div class="global-search-content-content" v-if="!isNoData">
           <div class="global-search-content-left">
-            <el-skeleton :loading="true" animated  class="list">
+            <el-skeleton :loading="loading" animated  class="list">
               <template slot="template">
                   <li
                     v-for="(item,index) in skeletonArr"
@@ -52,7 +52,7 @@
                     <div class="list-item-sub" v-if="item.sub">
                       {{ item.sub }}
                     </div>
-                    <div class="is-jump" v-my-loading:circle3.scaleMin.icon="jumpLoading">
+                    <div class="is-jump" v-my-loading:circle3.scaleMin.icon="true">
                       <i class="nz-icon nz-icon-huiche"></i>
                     </div>
                   </li>

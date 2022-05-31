@@ -1,5 +1,5 @@
 <template>
-  <el-skeleton style="height: 100%;width: 100%" :loading="true" animated>
+  <el-skeleton style="height: 100%;width: 100%" :loading="loading || faLoading" animated>
     <template slot="template">
       <div class="search-item-box">
         <div class="search-item-title-icon">

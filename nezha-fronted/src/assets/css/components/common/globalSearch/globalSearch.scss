@@ -119,7 +119,7 @@
           }
         }
         .is-jump{
-          position: absolute;
+          position: absolute !important;
           right: 5px;
           top: 20px;
           padding: 0;
@@ -218,6 +218,6 @@
   font-size: 12px;
 }
 .el-skeleton__item{
-  //background-color: $--background-color-disabled !important;
-  //background-image: unset !important;
+  background-color: $--explore-border-color-bottom !important;
+  background-image: unset !important;
 }
