@@ -164,4 +164,17 @@
   .el-table--border th:first-child .cell {
     padding-left: 20px !important;
   }
+  .el-checkbox-button__inner{
+    background-color:$--background-color-empty;
+  }
+  .el-checkbox-button.is-checked .el-checkbox-button__inner {
+    color: #fff;
+    background-color: #FA901C;
+    border-color: #FA901C;
+    -webkit-box-shadow: -1px 0 0 0 #fcbc77;
+    box-shadow: -1px 0 0 0 #fcbc77;
+  }
+  .nz-icon-delete:before{
+    color: $--color-text-regular;
+  }
 }
