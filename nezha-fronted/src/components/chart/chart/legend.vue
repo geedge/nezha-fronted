@@ -226,9 +226,21 @@ export default {
       const chartUnit = chartInfo.unit ? chartInfo.unit : 2
       const unit = chartDataFormat.getUnit(chartUnit)
       minValue = minValue > 0 ? 0 : minValue
+      if (maxValue < 0) {
+        maxValue = Math.abs(maxValue)
+      }
+      if (Math.abs(minValue) > Math.abs(maxValue)) {
+        maxValue = Math.abs(minValue)
+      }
       maxValue = maxValue - minValue
       maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii)
       let oldValue = maxValue
+      if (maxValue < 0) {
+        oldValue = Math.abs(maxValue)
+      }
+      if (minValue < 0) {
+        oldValue = Math.abs(maxValue - minValue)
+      }
       let dot = 0
       if (maxValue == 1) {
         dot++

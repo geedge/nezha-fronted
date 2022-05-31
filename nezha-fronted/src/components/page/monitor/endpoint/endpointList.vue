@@ -875,6 +875,13 @@ export default {
     this.initQueryFromPath(searchKeys)
   },
   mounted () {
+    if (this.$route.query && this.$route.query.assetId) {
+      this.object = {
+        ...this.newObject(),
+        assetId: JSON.stringify(this.$route.query.assetId),
+      }
+      this.rightBox.show = true
+    }
     if (localStorage.getItem('endpointProjectId')) {
       this.selectValue.projectIds = [Number(localStorage.getItem('endpointProjectId'))]
       // this.$refs.clickSearch.selectValueOut.projectIds = [localStorage.getItem('endpointProjectId')]

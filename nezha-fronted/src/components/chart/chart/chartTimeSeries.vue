@@ -158,11 +158,19 @@ export default {
       minValue = valueSorted.length ? valueSorted[0][1] : 0
       maxValue = valueSorted.length ? valueSorted[valueSorted.length - 1][1] : 0
       const unit = chartDataFormat.getUnit(chartUnit)
+      minValue = minValue > 0 ? 0 : minValue
       if (!isNaN(maxValue)) {
         maxValue = Number(maxValue)
       } else {
         maxValue = 0
       }
+      if (maxValue < 0) {
+        maxValue = Math.abs(maxValue)
+      }
+      if (Math.abs(minValue) > Math.abs(maxValue)) {
+        maxValue = Math.abs(minValue)
+      }
+      maxValue = maxValue - minValue
       maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii) // 取最大值后 需要对其进行取整
       let oldValue = maxValue
       let dot = 0
@@ -192,7 +200,7 @@ export default {
         offset = Number.parseInt(offset)
         const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
         if (window.dataJson) {
-          offset = new Date().getTimezoneOffset()* -1/60
+          offset = new Date().getTimezoneOffset() * -1 / 60
         }
         const tData = new Date(value - localOffset + offset * 60 * 60 * 1000)
         let hour = tData.getHours()
