@@ -120,19 +120,26 @@ export default {
       }
     },
     Restore (row) {
-      put('/sys/backup/restore', { filename: row.fileName }).then(res => {
-        if (res.code == 200) {
-          this.$emit('getTableData', 'recent')
-          this.$message.success(this.$t('backup.Restore'))
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
+      let ts = true
+      if (ts) {
+        ts = false
+        setTimeout(() => {
+          ts = true
+          put('/sys/backup/restore', { filename: row.fileName }).then(res => {
+            if (res.code == 200) {
+              this.$emit('getTableData', 'recent')
+              this.$message.success(this.$t('backup.Restore'))
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        }, 400)
+      }
     },
     del (row) {
       this.$delete('/sys/backup?filename=' + row.fileName).then(res => {
         if (res.code == 200) {
-         this.$emit("getTableData", 'recent')
+          this.$emit('getTableData', 'recent')
         } else {
           this.$message.error(res.msg)
         }
