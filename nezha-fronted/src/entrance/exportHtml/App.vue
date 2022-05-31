@@ -14,7 +14,7 @@
             <div style="display: flex;flex-direction: column">
 <!--              <i class="nz-icon nz-icon-arrow-down"/>-->
               <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right"> {{dataJson.panel.data.name}} </div>
-              <span>  {{timeFormate(dataJson.start * 1000)}} - {{timeFormate(dataJson.start * 1000)}} </span>
+              <span>  {{timeFormate(dataJson.start * 1000)}} - {{timeFormate(dataJson.end * 1000)}} </span>
             </div>
           </div>
           <div  id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow:hidden; overflow-y: auto;height: calc(100% - 60px)'>
@@ -47,6 +47,7 @@
 
 <script>
 import chartList from '@/components/chart/chartList.vue'
+import moment from 'moment-timezone'
 import { loadI18n } from '@/components/common/i18n'
 import i18nData from '@/entrance/exportHtml/i18nData'
 const dataJson = window.dataJson || {}
@@ -65,6 +66,8 @@ export default {
   created () {
     this.$i18n.locale = this.dataJson.language
     loadI18n(i18nData)
+    const localOffset = moment.tz.guess()// 默认 一分钟显示时区偏移的结果
+    localStorage.setItem('nz-sys-timezone', JSON.stringify(localOffset))
   },
   mounted () {
   },
