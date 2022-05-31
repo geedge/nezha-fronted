@@ -303,13 +303,11 @@ export default {
 }
 </script>
 <style scoped>
+.theme-light .select-panel-title{
+  color: #333;
+}
 .starred-tree>>>.el-tree__empty-block{
   display: none;
-}
-.select-panel-title{
-  font-weight: bold;
-  font-size: 14px;
-  color: #333;
 }
 .el-rate__icon{
   color: #C0C4CC !important;

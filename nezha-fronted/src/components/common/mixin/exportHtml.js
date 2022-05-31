@@ -11,7 +11,7 @@ export default {
         format: 'html',
         panelId: this.showPanel.id,
         start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[0])),
-        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[0]))
+        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[1]))
       }
       this.$get('/visual/panel/snapshot', params, 'blob').then(res => {
         const self = this

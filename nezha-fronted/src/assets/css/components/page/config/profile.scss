@@ -1,12 +1,13 @@
 .profile {
   display: flex;
-  height: calc(100% - 10px);
+  height: 100%;
   .profile-left {
-    margin: 10px 0 10px 10px;
+    //margin: 10px 0 10px 10px;
     background: $--background-color-empty;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.06);
     border-radius: 2px;
-    height: calc(100% - 20px);
+    //height: calc(100% - 20px);
+    border-right: 1px solid $--explore-border-color-bottom;
     width: 360px;
     overflow: auto;
     position: relative;
@@ -224,7 +225,7 @@
   }
   .list-page.profile-right {
     width: calc(100% - 370px);
-    padding: 11px 10px 7px 10px;
+    padding: 0px 0px 7px 0px;
     pxbox-shadow: 0 1px 2px 0 rgba(0,0,0,0.06);
     border-radius: 2px;
     .nz-table2 {
