@@ -100,6 +100,16 @@
                                 <li v-for="(item,key) in assetStateSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                               </ul>
                             </div>
+                          <div v-if="val.type === 'assetType'" :style="'top:' + selectDom.top +'; left:'+selectDom.left" class="select_info_list">
+                            <el-scrollbar v-if="assetTypeTree.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                              <ul>
+                                <li v-for="(item,key) in assetTypeTree" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
+                              </ul>
+                            </el-scrollbar>
+                            <ul v-else>
+                              <li v-for="(item,key) in assetTypeTree" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
+                            </ul>
+                          </div>
                             <div v-if="val.type === 'brand'" :style="'top:' + selectDom.top +'; left:'+selectDom.left" class="select_info_list">
                               <el-scrollbar v-if="brandSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
@@ -316,7 +326,8 @@ export default {
       selectInfo: false,
       disabaled: true,
       downBool: false,
-      where: this.$route.path
+      where: this.$route.path,
+      assetTypeTree: []
     }
   },
   watch: {
@@ -509,6 +520,10 @@ export default {
           val.val = selectItem.name
           val.valnum = selectItem.id
           val.valString = ''
+        } else if (val.type == 'assetType' && selectItem.searchType == 'assetType') {
+          val.val = selectItem.name
+          val.valnum = selectItem.id
+          val.valString = ''
         } else if (val.type === 'brand' && selectItem.searchType === 'brand') {
           val.val = selectItem.name
           val.valnum = selectItem.id
@@ -609,6 +624,16 @@ export default {
           this.assetStateSelect = response.data.list
           this.assetStateSelect.forEach((item, index) => {
             this.$set(item, 'searchType', 'assetState')
+          })
+        }
+      })
+    },
+    getAssetTypeData () {
+      this.$get('asset/typeConf/tree').then(response => {
+        if (response.code === 200) {
+          this.assetTypeTree = response.data.list
+          this.assetTypeTree.forEach((item, index) => {
+            this.$set(item, 'searchType', 'assetType')
           })
         }
       })
@@ -869,6 +894,8 @@ export default {
               objectInfo.type = val.valnum
             } else if (val.label === 'assetState') {
               objectInfo.state = val.valnum
+            } else if (val.label === 'assetType') {
+              objectInfo.typeIds = val.valnum
             } else if (val.label === 'credentialType') {
               objectInfo.types = val.valnum
             } else if (val.label === 'promState') {
@@ -902,8 +929,11 @@ export default {
             objectInfo.moduleId = val.valnum
           } else if (val.type === 'project') {
             objectInfo.projectIds = val.valnum
-          } else if (val.type === 'assetState') {
-            objectInfo.stateIds = val.valnum
+          } else if (val.label === 'assetState') {
+            console.log(val)
+            objectInfo.state = val.valnum
+          } else if (val.label === 'assetType') {
+            objectInfo.typeIds = val.valnum
           } else if (val.type === 'brand') {
             objectInfo.brandIds = val.valnum
           } else if (val.type === 'group') {
@@ -1467,6 +1497,7 @@ export default {
     setTimeout(() => {
       if (this.$route.path === '/asset' || this.targetTab === 'asset') {
         this.getAssetStateData()
+        this.getAssetTypeData()
       }
       if (this.$route.path === '/agent' || this.$route.path === '/ipam') {
         this.getDcData()
