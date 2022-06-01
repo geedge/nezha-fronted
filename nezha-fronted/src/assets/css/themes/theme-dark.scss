@@ -253,7 +253,7 @@ $--right-box-sub-title-border-color: $--border-color-light;
 $--tooltip-background-color: #222329;
 $--tooltip-border-color: rgba(112,116,122,0.6);
 /* 17.label*/
-$--label-background-color: #18171D;
+$--label-background-color: $--background-color-empty;
 
 /*** themes/common.scss是与主题切换无关的变量 ***/
 @import './src/common/var.scss';

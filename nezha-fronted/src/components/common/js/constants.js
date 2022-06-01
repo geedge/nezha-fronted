@@ -156,7 +156,7 @@ export const asset = {
   },
   editTypeOptions: [
     { value: 1, label: i18n.t('overall.account') },
-    { value: 2, label: 'Label' },
+    { value: 2, label: i18n.t('overall.labels') },
     { value: 3, label: i18n.t('asset.state') },
     { value: 4, label: i18n.t('asset.snmpCredential') }
   ],

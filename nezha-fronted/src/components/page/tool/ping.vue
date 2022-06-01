@@ -208,7 +208,6 @@ export default {
       }
       if (event.path[0].className === 'ti-input') {
         const tiInputBox = document.getElementsByClassName('ti-new-tag-input')[0]
-        console.log(tiInputBox)
         tiInputBox.focus()
       }
     })

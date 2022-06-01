@@ -158,11 +158,19 @@ export default {
       minValue = valueSorted.length ? valueSorted[0][1] : 0
       maxValue = valueSorted.length ? valueSorted[valueSorted.length - 1][1] : 0
       const unit = chartDataFormat.getUnit(chartUnit)
+      minValue = minValue > 0 ? 0 : minValue
       if (!isNaN(maxValue)) {
         maxValue = Number(maxValue)
       } else {
         maxValue = 0
       }
+      if (maxValue < 0) {
+        maxValue = Math.abs(maxValue)
+      }
+      if (Math.abs(minValue) > Math.abs(maxValue)) {
+        maxValue = Math.abs(minValue)
+      }
+      maxValue = maxValue - minValue
       maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii) // 取最大值后 需要对其进行取整
       let oldValue = maxValue
       let dot = 0
@@ -185,6 +193,7 @@ export default {
       return { minTime, maxTime, minValue, maxValue, copies, unit, dot }
     },
     xAxisLabelFormatter (minTime, maxTime) {
+      let self = this
       return function (val, index) {
         const value = val * 1000
         let offset = localStorage.getItem('nz-sys-timezone')
@@ -192,7 +201,7 @@ export default {
         offset = Number.parseInt(offset)
         const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
         if (window.dataJson) {
-          offset = new Date().getTimezoneOffset()* -1/60
+          offset = new Date().getTimezoneOffset() * -1 / 60
         }
         const tData = new Date(value - localOffset + offset * 60 * 60 * 1000)
         let hour = tData.getHours()
@@ -203,12 +212,23 @@ export default {
           const diffSec = (maxTime - minTime)
           const secOneDay = 24 * 60 * 60// 1天的秒数
           const secOneMonth = secOneDay * 30// 30天的秒数
+          const dateFormatStr = self.timeFormatMain.split(' ')[0]
+          let str = ''
+          const month = tData.getMonth() + 1
+          const day = tData.getDate()
+          if (dateFormatStr === 'DD/MM/YYYY') {
+            str += [day, month].join('/')
+          } else if (dateFormatStr === 'MM/DD/YYYY') {
+            str += [month, day].join('/')
+          } else {
+            str += [month, day].join('-')
+          }
           if (diffSec <= secOneDay) { // 同一天
             return [hour, minute].join(':')
           } else if (diffSec < secOneMonth) { // 大于1天，小于30天
-            return [tData.getMonth() + 1, tData.getDate()].join('/') + '\n' + [hour, minute].join(':')
+            return str + '\n' + [hour, minute].join(':')
           } else { // 大于等于30天
-            return [tData.getMonth() + 1, tData.getDate()].join('/')
+            return str
           }
         } else {
           return [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('/') + '\n' +

@@ -283,45 +283,51 @@ export default {
         selectedData: [],
         searchLabel: {},
         searchMsg: { // 给搜索框子组件传递的信息
-          searchLabelList: [
-            {
-              id: 1,
-              name: 'ID',
-              type: 'input',
-              label: 'id',
-              disabled: false
-            }, {
-              id: 20,
-              name: this.$t('asset.sn'),
-              type: 'input',
-              label: 'sn',
-              disabled: false
-            }, {
-              id: 21,
-              name: this.$t('webshell.host'),
-              type: 'input',
-              label: 'manageIp',
-              disabled: false
-            }, {
-              id: 22,
-              name: this.$t('asset.state'),
-              type: 'select',
-              label: 'assetState',
-              disabled: false
-            }, {
-              id: 23,
-              name: this.$t('asset.pingStatus'),
-              type: 'select',
-              label: 'pingStatus',
-              disabled: false
-            }, {
-              id: 23,
-              name: this.$t('asset.cabinet'),
-              type: 'input',
-              label: 'cabinetName',
-              disabled: false
-            }
-          ]
+          searchLabelList: [{
+            id: 'ids',
+            name: 'ID',
+            type: 'input',
+            label: 'ids',
+            disabled: false
+          }, {
+            name: this.$t('overall.name'),
+            type: 'input',
+            label: 'name',
+            id: 'name',
+            disabled: false
+          }, {
+            name: 'SN',
+            type: 'input',
+            label: 'sn',
+            id: 'sn',
+            disabled: false
+          }, {
+            name: this.$t('dashboard.overview.dataCenter.dataCenter'),
+            type: 'dc',
+            label: 'dcIds',
+            readonly: true,
+            disabled: false
+          }, {
+            name: 'IP',
+            type: 'input',
+            label: 'manageIp',
+            id: 'manageIp',
+            disabled: false
+          }, {
+            name: this.$t('asset.state'),
+            type: 'assetState',
+            label: 'stateIds',
+            id: 'stateIds',
+            readonly: true,
+            disabled: false
+          }, {
+            name: this.$t('asset.type'),
+            type: 'assetType',
+            label: 'assetType',
+            id: 'typeIds',
+            readonly: true,
+            disabled: false
+          }]
         },
         tableTitle: [
           {

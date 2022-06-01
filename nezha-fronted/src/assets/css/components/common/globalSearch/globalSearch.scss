@@ -119,7 +119,7 @@
           }
         }
         .is-jump{
-          position: absolute;
+          position: absolute !important;
           right: 5px;
           top: 20px;
           padding: 0;
@@ -216,4 +216,8 @@
 }
 .fz12{
   font-size: 12px;
+}
+.el-skeleton__item{
+  background-color: $--explore-border-color-bottom !important;
+  background-image: unset !important;
 }

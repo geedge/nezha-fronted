@@ -578,7 +578,6 @@ export default {
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.chartListLoading = false
-          // response = chartData
           this.dataList = response.data.list.map(item => {
             return {
               ...item,

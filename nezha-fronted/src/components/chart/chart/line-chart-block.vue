@@ -2071,6 +2071,17 @@ export default {
       const chartUnit = chartInfo.unit ? chartInfo.unit : 2
       const unit = chartDataFormat.getUnit(chartUnit)
       minValue = minValue > 0 ? 0 : minValue
+      if (!isNaN(maxValue)) {
+        maxValue = Number(maxValue)
+      } else {
+        maxValue = 0
+      }
+      if (maxValue < 0) {
+        maxValue = Math.abs(maxValue)
+      }
+      if (Math.abs(minValue) > Math.abs(maxValue)) {
+        maxValue = Math.abs(minValue)
+      }
       maxValue = maxValue - minValue
       maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii)
       let oldValue = maxValue

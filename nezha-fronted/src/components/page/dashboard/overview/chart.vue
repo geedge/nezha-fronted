@@ -41,7 +41,8 @@ export default {
     yAxisFormatter: Function,
     map: {},
     axisTooltip: { type: String }, // x/y
-    minusTime: {} // 用于比较图表时的时间差值
+    minusTime: {}, // 用于比较图表时的时间差值
+    timeRange: {}
   },
   data () {
     return {
@@ -387,8 +388,22 @@ export default {
       const day = tData.getDate() > 9 ? tData.getDate() : '0' + tData.getDate()
       const hour = tData.getHours() > 9 ? tData.getHours() : '0' + tData.getHours()
       const minute = tData.getMinutes() > 9 ? tData.getMinutes() : '0' + tData.getMinutes()
-      return [month, day].join('-') + '\n' +
-          [hour, minute].join(':')
+      const dateFormatStr = this.timeFormatMain.split(' ')[0]
+      const diffSec = (this.timezoneToUtcTime(this.timeRange[1]) - this.timezoneToUtcTime(this.timeRange[0]))
+      const secOneDay = 24 * 60 * 60 * 1000// 1天的毫秒数
+      let str = ''
+      if (dateFormatStr === 'DD/MM/YYYY') {
+        str += [day, month].join('/')
+      } else if (dateFormatStr === 'MM/DD/YYYY') {
+        str += [month, day].join('/')
+      } else {
+        str += [month, day].join('-')
+      }
+      if (diffSec <= secOneDay) { // 同一天
+        return [hour, minute].join(':')
+      } else { // 大于1天，小于30天
+        return str + '\n' + [hour, minute].join(':')
+      }
     },
     defaultToolBoxFormatter (params) {
       if (params.name === 'stack') {
@@ -544,6 +559,17 @@ export default {
       const chartUnit = chartInfo.unit ? chartInfo.unit : 2
       const unit = chartDataFormat.getUnit(chartUnit)
       minValue = minValue > 0 ? 0 : minValue
+      if (!isNaN(maxValue)) {
+        maxValue = Number(maxValue)
+      } else {
+        maxValue = 0
+      }
+      if (maxValue < 0) {
+        maxValue = Math.abs(maxValue)
+      }
+      if (Math.abs(minValue) > Math.abs(maxValue)) {
+        maxValue = Math.abs(minValue)
+      }
       maxValue = maxValue - minValue
       maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii)
       let oldValue = maxValue
