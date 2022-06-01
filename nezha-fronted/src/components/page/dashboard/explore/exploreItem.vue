@@ -88,7 +88,7 @@
             <template v-if="showMetrics">
               <el-collapse-item name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
                 <div class="chart-room">
-                  <chart ref="exploreChart" :unit="chartUnit"></chart>
+                  <chart ref="exploreChart" :unit="chartUnit" :timeRange="filterTime"></chart>
                 </div>
               </el-collapse-item>
               <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
@@ -158,7 +158,7 @@
             <template v-else>
               <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
                 <div class="chart-room">
-                  <chart ref="logChart" :unit="chartUnit" v-my-loading="chartLoading"></chart>
+                  <chart ref="logChart" :unit="chartUnit" v-my-loading="chartLoading" :timeRange="filterTime"></chart>
                 </div>
               </el-collapse-item>
               <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
