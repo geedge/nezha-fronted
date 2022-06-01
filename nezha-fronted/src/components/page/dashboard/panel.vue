@@ -942,8 +942,17 @@ export default {
         nowTimeType: this.nowTimeType
       })
     },
-    // 按ESC退出查看模式
+    // 按ESC键退出查看模式
     escExit (e) {
+      const message = document.querySelectorAll('.el-message-box__wrapper')
+      const showMessage = message.length && Array.from(message).some(item => {
+        return item.style.display !== 'none'
+      })
+      const showFullscreen = document.querySelector('.chart-fullscreen')
+      // 防止ESC键冲突
+      if (showMessage || showFullscreen) {
+        return false
+      }
       if (e.keyCode === 27 && this.mode) {
         // 默认模式
         this.mode = ''
