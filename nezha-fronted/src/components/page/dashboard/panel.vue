@@ -924,11 +924,11 @@ export default {
         this.mode = ''
       }
       this.$store.commit('setMode', this.mode)
-      setTimeout(() => {
-        this.$nextTick(() => {
+      this.$nextTick(() => {
+        setTimeout(() => {
           this.$refs.chartList.resize()
-        })
-      }, 200)
+        }, 200)
+      })
       const param = {
         panelId: this.panelId,
         nowTimeType: JSON.stringify(this.nowTimeType),
@@ -948,11 +948,11 @@ export default {
         // 默认模式
         this.mode = ''
         this.$store.commit('setMode', this.mode)
-        setTimeout(() => {
-          this.$nextTick(() => {
+        this.$nextTick(() => {
+          setTimeout(() => {
             this.$refs.chartList.resize()
-          })
-        }, 200)
+          }, 200)
+        })
         const param = {
           panelId: this.panelId,
           nowTimeType: JSON.stringify(this.nowTimeType),
@@ -980,11 +980,11 @@ export default {
     })
     // 设置查看模式
     this.$store.commit('setMode', this.mode)
-    setTimeout(() => {
-      this.$nextTick(() => {
+    this.$nextTick(() => {
+      setTimeout(() => {
         this.$refs.chartList.resize()
-      })
-    }, 200)
+      }, 200)
+    })
     if (this.nowTimeType.type) {
       this.setSearchTime(this.nowTimeType.type, this.nowTimeType.value, this.nowTimeType)
       this.filter.start_time = bus.timeFormate(this.searchTime[0], this.panelDateFormatTime)
