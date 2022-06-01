@@ -95,7 +95,7 @@
                 <span>{{$t('ping.progress')}}:<span class="margin-l-10 margin-r-30">{{process}}%</span></span>
               </div>
               <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-if="!isStart" @click="startTask">
-                {{$t('ping.trance')}}
+                {{$t('ping.trace')}}
               </el-button>
               <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-else @click="clearTask">
                 {{$t('config.terminallog.stop')}}

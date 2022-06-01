@@ -387,7 +387,16 @@ export default {
       const day = tData.getDate() > 9 ? tData.getDate() : '0' + tData.getDate()
       const hour = tData.getHours() > 9 ? tData.getHours() : '0' + tData.getHours()
       const minute = tData.getMinutes() > 9 ? tData.getMinutes() : '0' + tData.getMinutes()
-      return [month, day].join('-') + '\n' +
+      const dateFormatStr = this.timeFormatMain.split(' ')[0]
+      let str = ''
+      if (dateFormatStr === 'DD/MM/YYYY') {
+        str += [day, month].join('/')
+      } else if (dateFormatStr === 'MM/DD/YYYY') {
+        str += [month, day].join('/')
+      } else {
+        str += [month, day].join('-')
+      }
+      return str + '\n' +
           [hour, minute].join(':')
     },
     defaultToolBoxFormatter (params) {
