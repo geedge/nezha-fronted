@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" :class="mode">
     <left-menu @refresh="refresh"></left-menu>
     <div ref="body" class="body">
       <Header></Header>
@@ -36,6 +36,12 @@ export default {
   data () {
     return {
       containerShow: true
+    }
+  },
+  computed: {
+    // 查看模式
+    mode () {
+      return this.$store.state.panel.mode
     }
   },
   methods: {

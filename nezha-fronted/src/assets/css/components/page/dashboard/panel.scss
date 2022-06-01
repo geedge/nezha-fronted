@@ -8,7 +8,7 @@
 }
 .panel.list-page {
   .table-list {
-    height: calc(100% - 58px);
+    height: calc(100% - 60px);
     padding-left: 10px;
   }
   .no-data {
@@ -126,6 +126,7 @@
 .select-panel-title{
   font-weight: bold;
   font-size: 14px;
+  color:$--color-text-primary;
 }
 /* end-chart list*/
 .panel-loading {
@@ -147,10 +148,4 @@
   white-space:nowrap;
   vertical-align: bottom;
   color: $--color-text-primary;
-}
-
-.starred-pop{
-  padding: 8px 12px;
-  margin-bottom: 8px;
-  min-width: auto;
 }

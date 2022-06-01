@@ -303,9 +303,6 @@ export default {
 }
 </script>
 <style scoped>
-.theme-light .select-panel-title{
-  color: #333;
-}
 .starred-tree>>>.el-tree__empty-block{
   display: none;
 }

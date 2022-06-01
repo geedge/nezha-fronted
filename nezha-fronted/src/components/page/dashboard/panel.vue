@@ -24,17 +24,8 @@
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
                   <span :title="showPanel.name  + ' (' + showPanel.chartNum +' charts）' " class="show-panel-name">{{showPanel.name}}</span>
-                  <el-popover
-                    placement="top-start"
-                    trigger="hover"
-                    :content="$t('tip.addFavorites')"
-                    popper-class="starred-pop"
-                    >
-                    <span slot="reference">
-                      <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="el-rate__icon el-icon-star-on"></i>
-                      <i @click.stop="addStarred(showPanel)" v-else class="el-rate__icon el-icon-star-off"></i>
-                    </span>
-                  </el-popover>
+                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="el-rate__icon el-icon-star-on"></i>
+                  <i @click.stop="addStarred(showPanel)" v-else class="el-rate__icon el-icon-star-off"></i>
                 </template>
                 <template v-slot:tail>
                   <div class="panel-select-tail">
@@ -49,6 +40,11 @@
 <!--                  <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>-->
 <!--                </el-input>-->
 <!--              </div>-->
+
+              <!-- 切换查看模式 -->
+              <button slot="reference" class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
+                <i class="el-icon-monitor"></i>
+              </button>
 
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id"></pick-time>
 
@@ -285,7 +281,9 @@ export default {
       nowTimeType: {},
       showTopLine: false,
       // 导出html 以及 pdf的弹窗
-      exportBoxShow: false
+      exportBoxShow: false,
+      // 查看模式
+      mode: ''
     }
   },
   components: {
@@ -909,6 +907,62 @@ export default {
       } else {
         this.exportToHtml(this.showPanel.name)
       }
+    },
+    // 切换查看模式
+    cycle () {
+      if (!this.mode) {
+        // TV模式（隐藏 menu，header）
+        this.mode = 'tv'
+      } else if (this.mode === 'tv') {
+        // 简易模式（隐藏 menu，header 和 操作栏）
+        this.mode = 'se'
+        this.$message({
+          type: 'success',
+          message: this.$t('overall.toExit')
+        })
+      } else if (this.mode === 'se') {
+        // 默认模式
+        this.mode = ''
+      }
+      this.$store.commit('setMode', this.mode)
+      setTimeout(() => {
+        this.$nextTick(() => {
+          this.$refs.chartList.resize()
+        })
+      }, 200)
+      const param = {
+        panelId: this.panelId,
+        nowTimeType: JSON.stringify(this.nowTimeType),
+        searchTime: JSON.stringify(this.searchTime),
+        mode: this.mode
+      }
+      const path = this.fromRoute.panel
+      this.updatePath(param, path)
+      this.$store.dispatch('dispatchPanelTime', {
+        time: this.searchTime,
+        nowTimeType: this.nowTimeType
+      })
+    },
+    // 按ESC退出查看模式
+    escExit (e) {
+      if (e.keyCode === 27 && this.mode) {
+        // 默认模式
+        this.mode = ''
+        this.$store.commit('setMode', this.mode)
+        setTimeout(() => {
+          this.$nextTick(() => {
+            this.$refs.chartList.resize()
+          })
+        }, 200)
+        const param = {
+          panelId: this.panelId,
+          nowTimeType: JSON.stringify(this.nowTimeType),
+          searchTime: JSON.stringify(this.searchTime),
+          mode: this.mode
+        }
+        const path = this.fromRoute.panel
+        this.updatePath(param, path)
+      }
     }
   },
   created () {
@@ -917,13 +971,21 @@ export default {
       // value: vue set 参数
       panelId: { target: this, propertyName: 'panelId', type: 'number' },
       searchTime: { target: this, propertyName: 'searchTime', type: 'jsonParse' },
-      nowTimeType: { target: this, propertyName: 'nowTimeType', type: 'jsonParse' }
+      nowTimeType: { target: this, propertyName: 'nowTimeType', type: 'jsonParse' },
+      mode: { target: this, propertyName: 'mode', type: 'string' }
     }
     this.initQueryFromPath(searchKeys)
     setTimeout(() => {
       this.showPanel.id = this.panelId
       this.filter.panelId = this.panelId
     })
+    // 设置查看模式
+    this.$store.commit('setMode', this.mode)
+    setTimeout(() => {
+      this.$nextTick(() => {
+        this.$refs.chartList.resize()
+      })
+    }, 200)
     if (this.nowTimeType.type) {
       this.setSearchTime(this.nowTimeType.type, this.nowTimeType.value, this.nowTimeType)
       this.filter.start_time = bus.timeFormate(this.searchTime[0], this.panelDateFormatTime)
@@ -938,6 +1000,8 @@ export default {
     })
   },
   mounted () {
+    // 监听键盘ESC事件
+    document.addEventListener('keydown', this.escExit)
     bus.$on('refreshPanel', this.refreshPanel)
     this.scrollbarWrap = this.$refs.dashboardScrollbar
     this.onScroll()
@@ -1007,6 +1071,8 @@ export default {
     }
   },
   beforeDestroy () {
+    // 移除键盘ESC事件
+    document.removeEventListener('keydown', this.escExit)
     this.$store.dispatch('dispatchPanelLock', { flag: true })
     if (document.querySelector('#tableList')) {
       document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)
@@ -1032,5 +1098,16 @@ export default {
 .el-icon-star-on{
   color:#FF9219 !important;
   transform: translateY(1px) scale(1.2);
+}
+.view-mode{
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.view-mode .el-icon-monitor{
+  display: flex;
+  align-items: center;
+  font-size: 20px;
 }
 </style>

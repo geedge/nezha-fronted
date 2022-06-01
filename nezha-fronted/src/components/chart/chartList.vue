@@ -533,8 +533,10 @@ export default {
 .chart-list {
   height: 100%;
   width: 100%;
+  border-top: 1px solid transparent;
+  box-sizing: border-box;
 }
-  .group-hide-header {
-    height: 40px!important;
-  }
+.group-hide-header {
+  height: 40px!important;
+}
 </style>

@@ -11,10 +11,10 @@
     </div>
 </template>
 <style>
-    .vue-grid-layout {
-        position: relative;
-        transition: height 200ms ease;
-    }
+  .vue-grid-layout {
+    position: relative;
+    transition: height 200ms ease;
+  }
 </style>
 <script>
 import Vue from 'vue'

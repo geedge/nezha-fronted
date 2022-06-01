@@ -17,7 +17,9 @@ const panel = {
       y: 0
     },
     topologyShow: false,
-    topologyChartInfo: {}
+    topologyChartInfo: {},
+    // 查看模式
+    mode: ''
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -67,6 +69,10 @@ const panel = {
     },
     setTopologyChartInfo (state, topologyChartInfo) {
       state.topologyChartInfo = topologyChartInfo
+    },
+    // 设置查看模式
+    setMode (state, mode) {
+      state.mode = mode
     }
   },
   getters: {
