@@ -926,7 +926,7 @@ export default {
           } else if (val.type === 'asset') {
             objectInfo.asset = val.val
           } else if (val.type === 'module') {
-            objectInfo.moduleId = val.valnum
+            objectInfo.moduleIds = val.valnum
           } else if (val.type === 'project') {
             objectInfo.projectIds = val.valnum
           } else if (val.label === 'assetState') {
@@ -1509,6 +1509,10 @@ export default {
       }
       if (this.$route.path === '/module') {
         this.getProjectData()
+      }
+      if (this.$route.path === '/endpoint') {
+        this.getProjectData()
+        this.getModuleData()
       }
       if (this.$route.path === '/alertRule') {
         this.getSeverityData()

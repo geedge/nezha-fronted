@@ -166,8 +166,12 @@
     <transition name="right-box">
       <batchAddEndpoint v-if="rightBox.batchAdd" @close="closeRightBatchAdd"></batchAddEndpoint>
     </transition>
-    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
-</transition>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box></transition>
+    <transition name="right-box">
+      <batchEditEndpoint    v-if="rightBox.batchShow"
+                            @close="closeRightBatchModify"
+                            @refresh="getTableData"></batchEditEndpoint>
+    </transition>
     <el-dialog :close-on-click-modal="false" :show-close="true" destroy-on-close :title='$t("overall.batchAddEndpoint")' :visible.sync="importBoxShow" :width="'600px'" append-to-body class="nz-dialog" @close="closeDialog">
       <div class="upload-body result-body">
         <div v-if="importResult&&importResult.failNum">
@@ -238,6 +242,7 @@ import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import endpointDetail from '@/components/common/detailView/list/endpoint/endpointDetail'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
+import batchEditEndpoint from '@/components/common/rightBox/batchEditEndpoint'
 import lodash from 'lodash'
 
 export default {
@@ -255,7 +260,8 @@ export default {
     batchAddEndpoint,
     nzDetailView,
     endpointDetail,
-    detailViewTopSearch
+    detailViewTopSearch,
+    batchEditEndpoint
   },
   mixins: [dataListMixin, detailViewMixin, routerPathParams],
   data () {
@@ -578,6 +584,7 @@ export default {
     },
     closeRightBatchModify (refresh) {
       this.rightBox.batchModify = false
+      this.rightBox.batchShow = false
       if (refresh) {
         this.delFlag = true
         this.getTableData()
@@ -885,7 +892,7 @@ export default {
     if (this.$route.query && this.$route.query.assetId) {
       this.object = {
         ...this.newObject(),
-        assetId: JSON.stringify(this.$route.query.assetId),
+        assetId: JSON.stringify(this.$route.query.assetId)
       }
       this.rightBox.show = true
     }

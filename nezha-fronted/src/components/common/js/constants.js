@@ -184,7 +184,13 @@ export const asset = {
     dateTime: 'dateTime'
   }
 }
-
+export const endpoint = {
+  editTypeOptions: [
+    { value: 1, label: i18n.t('endpoint.metricLabel') },
+    { value: 2, label: i18n.t('endpoint.metricEnable') },
+    { value: 3, label: i18n.t('endpoint.logEnable') }
+  ],
+}
 export const alertMessage = {
   severityData: [
     { value: 'P1', label: i18n.t('alert.config.P1') },
