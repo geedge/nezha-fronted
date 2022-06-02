@@ -169,7 +169,7 @@
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box></transition>
     <transition name="right-box">
       <batchEditEndpoint    v-if="rightBox.batchShow"
-                            @close="closeRightBox"
+                            @close="closeRightBatchModify"
                             @refresh="getTableData"></batchEditEndpoint>
     </transition>
     <el-dialog :close-on-click-modal="false" :show-close="true" destroy-on-close :title='$t("overall.batchAddEndpoint")' :visible.sync="importBoxShow" :width="'600px'" append-to-body class="nz-dialog" @close="closeDialog">
@@ -584,6 +584,7 @@ export default {
     },
     closeRightBatchModify (refresh) {
       this.rightBox.batchModify = false
+      this.rightBox.batchShow = false
       if (refresh) {
         this.delFlag = true
         this.getTableData()
