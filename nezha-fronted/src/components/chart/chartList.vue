@@ -504,10 +504,12 @@ export default {
           tempList = null
           setTimeout(() => {
             this.gridLayoutShow = true
-            if (!this.isGroup && !this.isExportHtml) {
-              this.onScroll()
-            } else {
-              this.onScroll(999999)
+            if (!this.isGroup) {
+              if (!this.isExportHtml) {
+                this.onScroll()
+              } else {
+                this.onScroll(999999)
+              }
             }
           })
           setTimeout(() => {
