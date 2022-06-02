@@ -4,7 +4,7 @@ import i18n from '../i18n'
 import bus from '@/libs/bus'
 import moment from 'moment-timezone'
 /* 弹窗点击外部后关闭 */
-const exceptClassName = ['prevent-clickoutside', 'config-dropdown', 'nz-pop', 'el-picker', 'chart-box-dropdown', 'metric-dropdown', 'el-cascader__dropdown', 'no-style-class', 'el-message-box', 'nz-dashboard-dropdown', 'el-autocomplete-suggestion', 'nz-temp-box', 'el-time-panel', 'el-dropdown-menu', 'el-select-dropdown','no-close'] // clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
+const exceptClassName = ['prevent-clickoutside', 'config-dropdown', 'nz-pop', 'el-picker', 'chart-box-dropdown', 'metric-dropdown', 'el-cascader__dropdown', 'no-style-class', 'el-message-box', 'nz-dashboard-dropdown', 'el-autocomplete-suggestion', 'nz-temp-box', 'el-time-panel', 'el-dropdown-menu', 'el-select-dropdown', 'no-close'] // clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
 export const clickoutside = {
   // 初始化指令
   bind (el, binding, vnode) {
@@ -39,14 +39,17 @@ export const clickoutside = {
         if (oldValue) {
           // const newValue = JSON.parse(JSON.stringify(binding.value.obj))
           if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__)) {
-            MessageBox.confirm(i18n.t('tip.confirmCancel'), {
-              confirmButtonText: i18n.t('tip.yes'),
-              cancelButtonText: i18n.t('tip.no'),
-              type: 'warning'
-            }).then(() => {
-              if (binding.value.func) {
-                binding.value.func()
-              }
+            // 防止表单自动聚焦
+            setTimeout(() => {
+              MessageBox.confirm(i18n.t('tip.confirmCancel'), {
+                confirmButtonText: i18n.t('tip.yes'),
+                cancelButtonText: i18n.t('tip.no'),
+                type: 'warning'
+              }).then(() => {
+                if (binding.value.func) {
+                  binding.value.func()
+                }
+              }).catch(err => err)
             })
           } else {
             binding.value.func()
