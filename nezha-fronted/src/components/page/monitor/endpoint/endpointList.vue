@@ -106,10 +106,13 @@
           <template v-slot:before>
             <div>
               <el-dropdown-item>
-                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="account-list-batch-delete" v-has="'monitor_endpoint_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+                <div id="batch-add" v-has="'monitor_endpoint_add'" @click="batchAdd"><i class="nz-icon nz-icon-batchadd"></i>{{$t('overall.batchAdd')}}</div>
               </el-dropdown-item>
               <el-dropdown-item>
-                <div id="batch-add" v-has="'monitor_endpoint_add'" @click="batchAdd"><i class="nz-icon nz-icon-batchadd"></i>{{$t('overall.batchAdd')}}</div>
+                <div id="asset-batch-asset" v-has="'asset_edit'" @click="batchEdit"><i class="nz-icon nz-icon-batch-edit"></i>{{$t('overall.batchEdit')}}</div>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="account-list-batch-delete" v-has="'monitor_endpoint_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
               </el-dropdown-item>
             </div>
           </template>
@@ -365,7 +368,8 @@ export default {
         editShow: false,
         show: false,
         batchModify: false,
-        batchAdd: false
+        batchAdd: false,
+        batchShow: false
       },
       titleSearch: {},
       titleSearchList: {
@@ -794,6 +798,9 @@ export default {
     },
     batchAdd () {
       this.rightBox.batchAdd = true
+    },
+    batchEdit () {
+      this.rightBox.batchShow = true
     },
     rollbackImport () {
       this.$delete('monitor/endpoint/cancelImport' + '?seq=' + this.importResult.seq).then(response => {

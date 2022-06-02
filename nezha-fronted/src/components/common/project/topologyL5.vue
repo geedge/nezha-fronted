@@ -1201,6 +1201,9 @@ export default {
       }
       if (!Array.isArray(data) && data) { // 判断不是数组 提前个data配置好节点属性
         if (data.type === 0 && !data.data.moduleId) {
+          if (!data.fillStyle) {
+            data.fillStyle = '#FFFFFF00'
+          }
           data.data = {
             ...data.data,
             moduleId: '',
@@ -1208,8 +1211,8 @@ export default {
             show: false,
             error: false,
             animatePlay: false,
-            fillStyle: data.fillStyle,
-            strokeStyle: data.strokeStyle,
+            fillStyle: data.fillStyle || '#ffffff',
+            strokeStyle: data.strokeStyle || '#ffffff',
             gradientColor: '#bae7ff',
             gradientType: 0,
             lineWidth: this.nodeDefaultWidth(data.name),

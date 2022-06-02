@@ -223,10 +223,13 @@ export default new Vue({
         new Date(this.computeTimezone(new Date().getTime()))
       ]
     },
-    getNewTime (time, num) {
+    getNewTime (time, num, fmt) {
+      if (!fmt) {
+        fmt = localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss'
+      }
       const date = new Date(time)
       const newDate = new Date(parseInt(date.getTime(), 10) + num)
-      return this.timeFormate(newDate, localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss')
+      return this.timeFormate(newDate, fmt)
     },
     getOffsetTimezoneData (offset = 0) {
       return new Date(this.computeTimezone(new Date().getTime())).setHours(new Date(this.computeTimezone(new Date().getTime())).getHours() + offset)

@@ -930,7 +930,6 @@ export default {
           } else if (val.type === 'project') {
             objectInfo.projectIds = val.valnum
           } else if (val.label === 'assetState') {
-            console.log(val)
             objectInfo.state = val.valnum
           } else if (val.label === 'assetType') {
             objectInfo.typeIds = val.valnum

@@ -144,16 +144,17 @@ export default {
     },
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh, params) { // 获取chart的数据前的准备 主要用于处理时间参数
+      console.log(isRefresh)
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
       let endTime = ''
       if (isRefresh) { // 刷新则视情况更新时间范围
         const now = new Date(bus.computeTimezone(new Date().getTime()))
-        const origin = new Date(this.timeRange[1])
+        const origin = new Date(bus.timeFormate(bus.formateTimeToTime(this.timeRange[1]), 'YYYY-MM-DD HH:mm:ss'))
         const numInterval = now.getTime() - origin.getTime()
         if (numInterval >= 60000) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
-          startTime = bus.getNewTime(bus.formateTimeToTime(this.timeRange[0]), numInterval)
+          startTime = bus.getNewTime(bus.formateTimeToTime(this.timeRange[0]), numInterval, 'YYYY-MM-DD HH:mm:ss')
           endTime = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
         } else {
           startTime = bus.formateTimeToTime(this.timeRange[0])
