@@ -380,6 +380,14 @@ export default {
               type: 'success',
               message: this.$t('tip.deleteSuccess')
             })
+            const param = {
+              panelId: 0,
+              nowTimeType: JSON.stringify(this.nowTimeType),
+              searchTime: JSON.stringify(this.searchTime),
+              mode: this.mode
+            }
+            const path = this.fromRoute.panel
+            this.updatePath(param, path)
             this.getTableData(true)
           } else {
             this.$message.error(response.msg)
