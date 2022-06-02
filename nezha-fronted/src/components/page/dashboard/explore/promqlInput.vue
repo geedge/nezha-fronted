@@ -235,7 +235,7 @@
               v-if="plugins.indexOf('metric-input') > -1"
             >
             <div
-              :id="'editor'+index"
+              :id="pqid + 'editor'+index"
               v-if="type !== 'log'"
               class="not-fixed-height no-resize no-close"
         >
@@ -435,6 +435,9 @@ export default {
   },
   props: {
     index: { type: Number },
+    pqid: {
+      type: String, default: ''
+    },
     expressionList: {},
     plugins: { type: Array },
     styleType: Number,
@@ -654,7 +657,7 @@ export default {
         const view = new EditorView({
           state: EditorViewstate,
           // parent: document.getElementById('editor')
-          parent: document.getElementById('editor' + self.index)
+          parent: document.getElementById(this.pqid + 'editor' + self.index)
         })
         self.newView = view
       } else {
@@ -663,7 +666,6 @@ export default {
         // const to = self.codeMirrorValue.length
         const to = self.oldcCodeLength
         const from = self.oldcCodeLength
-        // console.log(from, to)
         self.newView.dispatch(
           self.newView.state.update({
             effects: dynamicConfigCompartment.reconfigure(dynamicConfig),
@@ -1096,6 +1098,14 @@ export default {
       handler (n, o) {
         // console.log(n, n[this.index])
         this.codeMirrorValue[this.index] = n[this.index]
+        setTimeout(() => {
+          const text = this.newView.state.doc.toString()
+          this.newView.dispatch(
+            this.newView.state.update({
+              changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
+            })
+          )
+        }, 200)
       }
     },
 

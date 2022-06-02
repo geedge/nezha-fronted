@@ -75,9 +75,23 @@ export default {
     showText: {
       type: Boolean,
       default: true
+    },
+    isTopo: {
+      type: Boolean,
+      default: false
     }
   },
-  watch: {},
+  watch: {
+    valueArr: {
+      handler (n) {
+        if (this.isTopo) {
+          this.keyName = this.valueArr[0].name
+          this.colors = this.valueArr[0].value || randomcolor() + 'FF'
+        }
+      },
+      deep: true
+    }
+  },
   data () {
     return {
       colors: '#ffffff',

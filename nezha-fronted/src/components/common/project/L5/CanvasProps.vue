@@ -106,7 +106,7 @@
                     <el-col :span="4" class="thresholds-cell">
                       <span v-if="item.level!==0">
                         <div style="display: inline-block">
-                          <nezhaColor
+                          <nezhaColor :isTopo="true"
                             :color-val="item.color"
                             :presetColors="predefineColors" :single="false"
                             :value-arr="[{name:'fill',value:item.color.fill,key:'bac'},{name:'line',value:item.color.line,key:'line'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChangeTable(item,val,key)}"/>
@@ -224,6 +224,7 @@
                   :from-father-data="true"
                   :metricOptionsParent="metricOptions"
                   :id="index"
+                  :pqid="'vm'"
                   :key="index"
                   :ref="'promql-'+index"
                   :expression-list="selection.pen.data.expressAllArr"
@@ -401,7 +402,7 @@
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type&&!selection.pen.iconFamily">
                 <div>{{ $t('project.topology.bac') }}</div>
                 <div class="p10 pl0">
-                  <nezhaColor :value-arr="[{name:'fillStyle',value:selection.pen.fillStyle}]"
+                  <nezhaColor :isTopo="true" :value-arr="[{name:'fillStyle',value:selection.pen.fillStyle}]"
                               @colorChange="colorChange"/>
                 </div>
               </div>
@@ -409,7 +410,7 @@
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type&&selection.pen.iconFamily">
                 <div>{{ $t('project.topology.iconColor') }}</div>
                 <div class="p10 pl0">
-                  <nezhaColor :value-arr="[{name:'iconColor',value:selection.pen.iconColor}]"
+                  <nezhaColor :isTopo="true" :value-arr="[{name:'iconColor',value:selection.pen.iconColor}]"
                               @colorChange="colorChange"/>
                 </div>
               </div>
@@ -430,7 +431,7 @@
                     <!--el-input__inner-->
                   </el-select>
                   <div class="gradient-to-color">
-                    <nezhaColor :value-arr="[{name:'gradientColor',value:selection.pen.data.gradientColor}]"
+                    <nezhaColor :isTopo="true" :value-arr="[{name:'gradientColor',value:selection.pen.data.gradientColor}]"
                                 @colorChange="colorChange"/>
                   </div>
                 </div>
@@ -636,14 +637,14 @@
               <div class="props-pen-item">
                 <div>{{ $t('project.topology.lineColor') }}</div>
                 <div class="p10 pl0">
-                  <nezhaColor :value-arr="[{name:'strokeStyle',value:selection.pen.strokeStyle}]"
+                  <nezhaColor :isTopo="true" :value-arr="[{name:'strokeStyle',value:selection.pen.strokeStyle}]"
                               @colorChange="colorChange"/>
                 </div>
               </div>
               <div class="props-pen-item" v-if="selection.pen&&selection.pen.type">
                 <div>{{ $t('project.topology.arrowColor') }}</div>
                 <div class="p10 pl0">
-                  <nezhaColor :value-arr="[{name:'toArrowColor',value:selection.pen.toArrowColor}]"
+                  <nezhaColor :isTopo="true" :value-arr="[{name:'toArrowColor',value:selection.pen.toArrowColor}]"
                               @colorChange="colorChange"/>
                 </div>
               </div>
@@ -678,7 +679,7 @@
               <div class="props-pen-item">
                 <div>{{ $t('project.topology.fontColor') }}</div>
                 <div class="p10 pl0">
-                  <nezhaColor :value-arr="[{name:'fontColor',value:selection.pen.fontColor}]"
+                  <nezhaColor :isTopo="true" :value-arr="[{name:'fontColor',value:selection.pen.fontColor}]"
                               @colorChange="colorChange"/>
                 </div>
               </div>
@@ -862,7 +863,7 @@
         <!--          <div class="project-content-item half">-->
         <!--            <label>{{$t('project.topology.fontColor')}}</label>-->
         <!--            <div class="full pr10 h32">-->
-        <!--              <nezhaColor :value-arr="[{name:'fontColor',value:topologyData.data.fontColor}]" @colorChange="(val,key)=>{-->
+        <!--              <nezhaColor :isTopo=true :value-arr="[{name:'fontColor',value:topologyData.data.fontColor}]" @colorChange="(val,key)=>{-->
         <!--                changeTopologyOpt(val,key,true)-->
         <!--                }"/>-->
         <!--            </div>-->
@@ -909,7 +910,7 @@
           <div class="project-content-item half">
             <label>{{ $t('project.topology.bac') }}</label>
             <div class="full pr10 h32">
-              <nezhaColor :value-arr="[{name:'bkColor',value:topologyData.data.bkColor}]" @colorChange="(val,key)=>{
+              <nezhaColor :isTopo="true" :value-arr="[{name:'bkColor',value:topologyData.data.bkColor}]" @colorChange="(val,key)=>{
                 changeTopologyOpt(val,key,true)
                 }"/>
             </div>
@@ -1423,7 +1424,7 @@ export default {
     //   immediate:false,
     // },
     selection: {
-      handler () {
+      handler (n) {
         // this.loading = false
         if (this.selection.pen && this.selection.pen.data && (!this.selection.pen.data.expressAllArr || this.selection.pen.data.expressAllArr.length === 0)) {
           this.selection.pen.data.expressAllArr = ['']
@@ -1432,6 +1433,14 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    'selection.pen.data': {
+      handler (n) {
+        // this.loading = false
+        if (this.selection.pen && JSON.stringify(this.selection.pen.type)) {
+          this.$emit('change', this.selection.pen)
+        }
+      }
     },
     fromDiagram: {
       handler () {

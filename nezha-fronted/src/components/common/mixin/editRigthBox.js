@@ -33,7 +33,6 @@ export default {
       assetAdd.addEventListener('click', this.saveNext)
     },
     saveNext () {
-      console.log(this.assetId)
       this.$router.push({
         path: this.messageParams.route,
         query: this.messageParams.params
