@@ -84,9 +84,12 @@ export default {
   watch: {
     valueArr: {
       handler (n) {
-        if (this.isTopo) {
+        if (!this.isTopo) {
           this.keyName = this.valueArr[0].name
           this.colors = this.valueArr[0].value || randomcolor() + 'FF'
+        } else {
+          this.keyName = this.valueArr[0].name
+          this.colors = this.valueArr[0].value
         }
       },
       deep: true
@@ -105,8 +108,13 @@ export default {
     }
   },
   mounted () {
-    this.keyName = this.valueArr[0].name
-    this.colors = this.valueArr[0].value || randomcolor() + 'FF'
+    if (!this.isTopo) {
+      this.keyName = this.valueArr[0].name
+      this.colors = this.valueArr[0].value || randomcolor() + 'FF'
+    } else {
+      this.keyName = this.valueArr[0].name
+      this.colors = this.valueArr[0].value
+    }
     this.$emit('colorChange', this.colors, this.keyName)
   },
   methods: {
