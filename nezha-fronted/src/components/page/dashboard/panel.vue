@@ -13,12 +13,22 @@
           </div>
           <template v-else>
             <div class="top-tool-left" style="cursor: pointer;">
-              <select-panel ref="selectPanel" @refreshStarred="refreshStarred" :filter-panel="filterPanel" :panel-data="panelData" :panel-lock="panelLock" :placement="'bottom-start'"
-                            :show-panel="showPanel" style="display: inline-block;padding: 0" @deletePanel="del" @editPanel="edit" @selectPanel="panelChange">
+              <select-panel
+                ref="selectPanel"
+                @refreshStarred="refreshStarred"
+                :filter-panel="filterPanel"
+                :panel-data="panelData"
+                :panel-lock="panelLock"
+                :placement="'bottom-start'"
+                :show-panel="showPanel"
+                style="display: inline-block;padding: 0"
+                @deletePanel="del"
+                @editPanel="edit"
+                @selectPanel="panelChange">
                 <template v-slot:header>
                   <div class="panel-select-header">
                     <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="mini" style="width: 286px;"></el-input>
-<!--                    <span id="panel-list-toadd" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span>-->
+                    <!-- <span id="panel-list-toadd" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span> -->
                   </div>
                 </template>
                 <template v-slot:trigger>
@@ -346,7 +356,8 @@ export default {
       const param = {
         panelId: this.panelId,
         nowTimeType: JSON.stringify(this.nowTimeType),
-        searchTime: JSON.stringify(this.searchTime)
+        searchTime: JSON.stringify(this.searchTime),
+        mode: this.mode
       }
       // this.getTableData()
       const path = this.fromRoute.panel
@@ -606,7 +617,8 @@ export default {
       const param = {
         panelId: this.panelId,
         nowTimeType: JSON.stringify(this.nowTimeType),
-        searchTime: JSON.stringify(this.searchTime)
+        searchTime: JSON.stringify(this.searchTime),
+        mode: this.mode
       }
       const path = this.fromRoute.panel
       this.updatePath(param, path)
