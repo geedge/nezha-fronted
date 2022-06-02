@@ -27,19 +27,21 @@
                 @selectPanel="panelChange">
                 <template v-slot:header>
                   <div class="panel-select-header">
-                    <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="mini" style="width: 286px;"></el-input>
+                    <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="small" style="padding:0 12px"></el-input>
                     <!-- <span id="panel-list-toadd" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span> -->
                   </div>
                 </template>
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
                   <span :title="showPanel.name  + ' (' + showPanel.chartNum +' charts）' " class="show-panel-name">{{showPanel.name}}</span>
-                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="el-rate__icon el-icon-star-on"></i>
-                  <i @click.stop="addStarred(showPanel)" v-else class="el-rate__icon el-icon-star-off"></i>
+                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="nz-icon nz-icon-a-xingzhuang2"></i>
+                  <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang"></i>
                 </template>
                 <template v-slot:tail>
                   <div class="panel-select-tail">
-                    <span id="panel-list-toadd" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{ $t('overall.addProject') }}</span>
+                    <span id="panel-list-toadd" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd">
+                      <i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t('overall.addDashboard')}}
+                    </span>
                   </div>
                 </template>
               </select-panel>
@@ -51,15 +53,14 @@
 <!--                </el-input>-->
 <!--              </div>-->
 
-              <!-- 切换查看模式 -->
-              <button slot="reference" class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
-                <i class="el-icon-monitor"></i>
-              </button>
-
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id"></pick-time>
 
-              <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
-                      type="button" @click="addChartBefore">
+              <!-- 切换查看模式 -->
+              <button slot="reference" class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
+                <i class="nz-icon nz-icon-moshiqiehuan"></i>
+              </button>
+
+              <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChartBefore">
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>
 
@@ -1011,8 +1012,11 @@ export default {
     this.$store.commit('setMode', this.mode)
     this.$nextTick(() => {
       setTimeout(() => {
-        this.$refs.chartList.resize()
-      }, 200)
+        try {
+          this.$refs.chartList.resize()
+        } catch (error) {
+        }
+      }, 300)
     })
     if (this.nowTimeType.type) {
       this.setSearchTime(this.nowTimeType.type, this.nowTimeType.value, this.nowTimeType)
@@ -1117,16 +1121,6 @@ export default {
 }
 </script>
 <style scoped>
-.el-rate__icon{
-  color: #C0C4CC !important;
-  cursor: pointer;
-  margin-right: 0px;
-  transform: translateY(1px);
-}
-.el-icon-star-on{
-  color:#FF9219 !important;
-  transform: translateY(1px) scale(1.2);
-}
 .view-mode{
   margin-right: 10px;
   display: flex;

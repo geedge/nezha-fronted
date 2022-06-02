@@ -1,6 +1,27 @@
 <template>
-  <el-popover :placement="placement" :popper-class="chartBox === true ? 'nz-pop nz-pop-select-panel right-box-select-top nz-pop-select-panel__dropdown' : 'nz-pop nz-pop-select-panel right-box-select-top right-public-box-dropdown-top nz-pop-select-panel__dropdown'" ref="selectPanelPopBox" transition="slide" v-model="popBox.show" :width="chartBox === true ? 626 : 310" :disabled="disabled">
-    <div>
+  <el-popover :placement="placement" :popper-class="chartBox === true ? 'nz-pop nz-pop-select-panel right-box-select-top nz-pop-select-panel__dropdown' : 'nz-pop nz-pop-select-panel right-box-select-top right-public-box-dropdown-top nz-pop-select-panel__dropdown'" ref="selectPanelPopBox" transition="slide" v-model="popBox.show" :width="chartBox === true ? 626 : 500" :disabled="disabled">
+    <div class="panel-select-wrap">
+      <div class="panel-select-left">
+        <ul class="panel-select-list">
+          <li class="panel-select-item active">
+            <i class="nz-icon nz-icon-a-leimucuquanbu"></i>
+            <span>全部仪表盘</span>
+          </li>
+          <li class="panel-select-item">
+            <i class="nz-icon nz-icon-xingzhuang"></i>
+            <span>我的收藏</span>
+          </li>
+          <li class="panel-select-item">
+            <i class="nz-icon nz-icon-wodechuangjian"></i>
+            <span>我的创建</span>
+          </li>
+          <li class="panel-select-item">
+            <i class="nz-icon nz-icon-liulanlishi"></i>
+            <span>最近浏览</span>
+          </li>
+        </ul>
+        <slot name="tail"></slot>
+      </div>
       <div class="pop-item-wider">
         <slot name="header"></slot>
         <div :class="{'movable': !panelLock}" class="select-panel-tree">
@@ -33,8 +54,8 @@
                     </el-dropdown-menu>
                   </el-dropdown>
                   <template v-if="data.id">
-                    <i v-if="data.starred" class="el-rate__icon el-icon-star-on" @click.stop="delStarred(data)"></i>
-                    <i v-else class="el-rate__icon el-icon-star-off" @click.stop="addStarred(data)"></i>
+                    <i v-if="data.starred" class="nz-icon nz-icon-a-xingzhuang2" @click.stop="delStarred(data)"></i>
+                    <i v-else class="nz-icon nz-icon-xingzhuang" @click.stop="addStarred(data)"></i>
                   </template>
                 </el-col>
               </el-row>
@@ -70,8 +91,8 @@
                     </el-dropdown-menu>
                   </el-dropdown>
                   <template v-if="data.id">
-                    <i v-if="data.starred" class="el-rate__icon el-icon-star-on" @click.stop="delStarred(data)"></i>
-                    <i v-else class="el-rate__icon el-icon-star-off" @click.stop="addStarred(data)"></i>
+                    <i v-if="data.starred" class="nz-icon nz-icon-a-xingzhuang2" @click.stop="delStarred(data)"></i>
+                    <i v-else class="nz-icon nz-icon-xingzhuang" @click.stop="addStarred(data)"></i>
                   </template>
                 </el-col>
               </el-row>
@@ -82,9 +103,6 @@
     </div>
     <div slot="reference">
       <slot name="trigger"></slot>
-    </div>
-    <div slot="default">
-      <slot name="tail"></slot>
     </div>
   </el-popover>
 </template>
@@ -172,7 +190,7 @@ export default {
       const response = await this.$get('/sys/user/starred', params)
       if (response.code === 200) {
         this.tempArr = []
-        this.recursionStarred(this.panelData, response.data)
+        this.recursionStarred(this.panelData, response.data.list)
         this.starredData[0].children = this.formatStarred(this.tempArr)
         if (type === 'tree') {
           // 刷新树形控件
@@ -302,17 +320,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.starred-tree>>>.el-tree__empty-block{
-  display: none;
-}
-.el-rate__icon{
-  color: #C0C4CC !important;
-  cursor: pointer;
-  margin-right: 0px;
-}
-.el-icon-star-on{
-  color:#FF9219 !important;
-  transform: scale(1.2);
-}
-</style>

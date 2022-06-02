@@ -144,7 +144,6 @@ export default {
     },
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh, params) { // 获取chart的数据前的准备 主要用于处理时间参数
-      console.log(isRefresh)
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
