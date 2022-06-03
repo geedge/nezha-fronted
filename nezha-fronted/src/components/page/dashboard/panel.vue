@@ -13,10 +13,9 @@
           </div>
           <template v-else>
             <div class="top-tool-left" style="cursor: pointer;">
-              <select-panel
-                ref="selectPanel"
+              <select-dashboard
+                ref="selectDashboard"
                 @refreshStarred="refreshStarred"
-                :filter-panel="filterPanel"
                 :panel-data="panelData"
                 :panel-lock="panelLock"
                 :placement="'bottom-start'"
@@ -24,13 +23,7 @@
                 style="display: inline-block;padding: 0"
                 @deletePanel="del"
                 @editPanel="edit"
-                @selectPanel="panelChange">
-                <template v-slot:header>
-                  <div class="panel-select-header">
-                    <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="small" style="padding:0 12px"></el-input>
-                    <!-- <span id="panel-list-toadd" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span> -->
-                  </div>
-                </template>
+                @selectDashboard="panelChange">
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
                   <span :title="showPanel.name  + ' (' + showPanel.chartNum +' charts）' " class="show-panel-name">{{showPanel.name}}</span>
@@ -38,14 +31,15 @@
                   <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang"></i>
                 </template>
                 <template v-slot:tail>
-                  <div class="panel-select-tail">
-                    <span id="panel-list-toadd" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd">
+                  <div class="dashboard-select-tail">
+                    <span class="dashboard-select-add" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd">
                       <i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t('overall.addDashboard')}}
                     </span>
                   </div>
                 </template>
-              </select-panel>
+              </select-dashboard>
             </div>
+
             <div class="top-tool-right">
 <!--              <div class="top-tool-search margin-r-20">-->
 <!--                <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">-->
@@ -160,7 +154,7 @@
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
-import selectPanel from '../../common/popBox/selectPanel'
+import selectDashboard from '../../common/popBox/selectDashboard'
 import panelBox from '@/components/common/rightBox/panelBox'
 import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
@@ -285,7 +279,6 @@ export default {
         id: 4
       },
       panelId: 0,
-      filterPanel: '',
       // ---图表相关参数--end
       scrollbarWrap: null,
       batchDeleteObjs: [],
@@ -301,7 +294,7 @@ export default {
     'pick-time': pickTime,
     'panel-box': panelBox,
     topToolMoreOptions,
-    selectPanel,
+    selectDashboard,
     chartTempBox,
     chartRightBox
   },
@@ -319,25 +312,24 @@ export default {
   methods: {
     // 刷新树形菜单视图
     refreshStarred ({ data, type }) {
-      if (type === 'tree') {
-        this.panelData = JSON.parse(JSON.stringify(data))
-      }
-      this.$nextTick(() => {
-        this.$refs.selectPanel.$refs.starredTree.filter(this.filterPanel)
-        this.$refs.selectPanel.$refs.panelTree.filter(this.filterPanel)
-        this.$refs.selectPanel.$refs.panelTree.setCurrentKey(this.showPanel)
-      })
-      // 判断当前页面收藏状态
-      const starredArr = this.$refs.selectPanel.tempArr
-      this.showPanel.starred = starredArr.some(item => item.id === this.showPanel.id)
+      // if (type === 'tree') {
+      //   this.panelData = JSON.parse(JSON.stringify(data))
+      // }
+      // this.$nextTick(() => {
+      //   // this.$refs.selectDashboard.$refs.panelTree.filter(this.filterPanel)
+      //   this.$refs.selectDashboard.$refs.panelTree.setCurrentKey(this.showPanel)
+      // })
+      // // 判断当前页面收藏状态
+      // const starredArr = this.$refs.selectDashboard.tempArr
+      // this.showPanel.starred = starredArr.some(item => item.id === this.showPanel.id)
     },
     // 新增收藏
     addStarred (data) {
-      this.$refs.selectPanel.addStarred(data)
+      this.$refs.selectDashboard.addStarred(data)
     },
     // 删除收藏
     delStarred (data) {
-      this.$refs.selectPanel.delStarred(data)
+      this.$refs.selectDashboard.delStarred(data)
     },
     // 刷新
     refreshPanel () {
@@ -693,7 +685,7 @@ export default {
           let isInitData = false
           this.panelData = JSON.parse(JSON.stringify(response.data.list))
           this.$nextTick(() => {
-            this.$refs.selectPanel.getStarred('tree')
+            this.$refs.selectDashboard.getStarred('tree')
           })
           if (response.data.list.length > 0) {
             if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
@@ -713,7 +705,7 @@ export default {
             }
             this.$nextTick(() => {
               try {
-                this.$refs.selectPanel.$refs.panelTree.setCurrentKey(this.showPanel)
+                this.$refs.selectDashboard.$refs.panelTree.setCurrentKey(this.showPanel)
               } catch (e) {}
             })
             this.isLoading = false
