@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('iconfont.woff2?t=1653383698922') format('woff2'),
-       url('iconfont.woff?t=1653383698922') format('woff'),
-       url('iconfont.ttf?t=1653383698922') format('truetype');
+  src: url('iconfont.woff2?t=1654482769343') format('woff2'),
+       url('iconfont.woff?t=1654482769343') format('woff'),
+       url('iconfont.ttf?t=1654482769343') format('truetype');
 }
 
 .nz-icon {
@@ -11,6 +11,34 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nz-icon-moshiqiehuan:before {
+  content: "\e783";
+}
+
+.nz-icon-a-xingzhuang2:before {
+  content: "\e781";
+}
+
+.nz-icon-xingzhuang:before {
+  content: "\e782";
+}
+
+.nz-icon-liulanlishi:before {
+  content: "\e77e";
+}
+
+.nz-icon-a-leimucuquanbu:before {
+  content: "\e77f";
+}
+
+.nz-icon-wodechuangjian:before {
+  content: "\e780";
+}
+
+.nz-icon-kuaizhao:before {
+  content: "\e77d";
 }
 
 .nz-icon-shujubeifenhuifu:before {

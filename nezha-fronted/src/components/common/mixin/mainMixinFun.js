@@ -1,4 +1,5 @@
 import bus from '@/libs/bus'
+import moment from 'moment-timezone'
 import i18n from '@/components/common/i18n'
 export default {
   methods: {
@@ -79,5 +80,17 @@ export default {
         return str
       }
     },
+    momentTz (timestamp, fmt) { // moment 转化时间戳为str
+      const offset = localStorage.getItem('nz-sys-timezone')
+      const format = fmt || localStorage.getItem('nz-default-dateFormat')
+      return moment.tz(timestamp, offset).format(format)
+    },
+    momentStrToTimestamp (str, fmt) {
+      const offset = localStorage.getItem('nz-sys-timezone')
+      const format = fmt || localStorage.getItem('nz-default-dateFormat')
+      const date = moment.tz(str, format, offset).valueOf()
+      console.log(date)
+      return date
+    }
   }
 }

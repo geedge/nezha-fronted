@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "30102525",
+      "name": "模式切换",
+      "font_class": "moshiqiehuan",
+      "unicode": "e783",
+      "unicode_decimal": 59267
+    },
+    {
+      "icon_id": "30097248",
+      "name": "形状 2",
+      "font_class": "a-xingzhuang2",
+      "unicode": "e781",
+      "unicode_decimal": 59265
+    },
+    {
+      "icon_id": "30097249",
+      "name": "形状",
+      "font_class": "xingzhuang",
+      "unicode": "e782",
+      "unicode_decimal": 59266
+    },
+    {
+      "icon_id": "30097042",
+      "name": "浏览历史",
+      "font_class": "liulanlishi",
+      "unicode": "e77e",
+      "unicode_decimal": 59262
+    },
+    {
+      "icon_id": "30097043",
+      "name": "类目－粗－全部",
+      "font_class": "a-leimucuquanbu",
+      "unicode": "e77f",
+      "unicode_decimal": 59263
+    },
+    {
+      "icon_id": "30097054",
+      "name": "我的创建",
+      "font_class": "wodechuangjian",
+      "unicode": "e780",
+      "unicode_decimal": 59264
+    },
+    {
+      "icon_id": "30091797",
+      "name": "快照",
+      "font_class": "kuaizhao",
+      "unicode": "e77d",
+      "unicode_decimal": 59261
+    },
+    {
       "icon_id": "2781697",
       "name": "数据备份恢复",
       "font_class": "shujubeifenhuifu",
