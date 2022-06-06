@@ -23,17 +23,19 @@
               <el-form-item :prop="'labels.' + index + '.value'">
                 <template v-slot:label>
                   <div class="form__labels-label">
-                    <span>{{item.name}}</span>
+                    <span>Label Key</span>
                     <div>
                       <el-checkbox v-model="item.action" :false-label="0" :label="$t('overall.delete')" :true-label="1" size="small" style="padding-right: 20px;"></el-checkbox>
                       <span @click="removeLabels(index)"><i class="nz-icon nz-icon-minus"></i></span>
                     </div>
                   </div>
-                  <el-form-item :prop="'labels.' + index + '.key'" class="param-box-row-key" :rules="[{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('overall.ASCIIKey') ,trigger: 'blur'}]">
+                  <el-form-item :prop="'labels.' + index + '.key'" :rules="[{ required: true,message: $t('validate.required'),trigger: 'blur'},{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('overall.ASCIIKey') ,trigger: 'blur'}]">
                     <el-input v-model="item.key" placeholder="key" size="mini" ></el-input>
                   </el-form-item>
-                  <span class="param-box-row-eq">=</span>
-                  <el-form-item :prop="'labels.' + index + '.value'" class="param-box-row-value">
+                  <div class="form__labels-label" style="margin-top: 10px">
+                    <span>Label Value</span>
+                  </div>
+                  <el-form-item :prop="'labels.' + index + '.value'" :rules="[{ required: !item.action,message: $t('validate.required'),trigger: 'blur'}]">
                     <el-input v-model="item.value" placeholder="value" size="mini"></el-input>
                   </el-form-item>
                 </template>
