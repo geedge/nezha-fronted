@@ -16,10 +16,10 @@
         <div class="panel-select-header">
           <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="small" style="padding:0 12px"></el-input>
         </div>
-        <div :class="{'movable': !panelLock}" class="select-panel-tree">
+        <div :class="{'movable': !panelLock&&currentTab==='all'}" class="select-panel-tree">
           <el-tree
-            :data="panelData"
-            :draggable="!panelLock"
+            :data="treeData"
+            :draggable="!panelLock&&currentTab==='all'"
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
             :props="{label: 'name', children: 'children'}"
@@ -32,7 +32,7 @@
             node-key="id"
             ref="panelTree">
             <div class="tree--node" slot-scope="{ node, data }">
-              <span :title="data.id?node.label + ' (' + data.chartNum +' charts）':''" :class="{'select-panel-title':data.id===0}">{{ node.label }}</span>
+              <span :title="node.label + ' (' + data.chartNum +' charts）' ">{{ node.label }}</span>
               <el-row class="block-col-2" style="margin-left:10px">
                 <el-col>
                   <el-dropdown v-if="!panelLock"  placement="bottom-end" trigger="click" style="margin-right:10px">
@@ -46,7 +46,7 @@
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
-                  <template v-if="data.id">
+                  <template>
                     <i v-if="data.starred" class="nz-icon nz-icon-a-xingzhuang2" @click.stop="delStarred(data)"></i>
                     <i v-else class="nz-icon nz-icon-xingzhuang" @click.stop="addStarred(data)"></i>
                   </template>
@@ -62,7 +62,6 @@
     </div>
   </el-popover>
 </template>
-
 <script>
 import bus from '@/libs/bus'
 export default {
@@ -74,6 +73,9 @@ export default {
     panelLock: { type: Boolean, default: true },
     disabled: { type: Boolean, default: false }
   },
+  created () {
+    this.getData('all')
+  },
   mounted () {
     this.$refs.panelTree.setCurrentKey(this.panel)
   },
@@ -82,7 +84,6 @@ export default {
       immediate: true,
       handler (n) {
         this.$refs.panelTree && this.$refs.panelTree.filter(n)
-        this.$refs.starredTree && this.$refs.starredTree.filter(n)
       }
     },
     showPanel: {
@@ -105,7 +106,8 @@ export default {
         { name: '最近浏览', icon: 'nz-icon-liulanlishi', value: 'browse' }
       ],
       currentTab: 'all',
-      filterPanel: ''
+      filterPanel: '',
+      treeData: []
     }
   },
   methods: {
@@ -113,7 +115,12 @@ export default {
     tabChange (value) {
       if (this.currentTab !== value) {
         this.currentTab = value
-        console.log(666)
+      }
+    },
+    // 获取数据
+    getData (type) {
+      if (type === 'all') {
+        this.treeData = this.panelData
       }
     },
     // 获取收藏的列表
@@ -241,11 +248,6 @@ export default {
     },
     // 确认选择某个节点，与父组件交互
     selectDashboard (data, checked, child) {
-      // 判断是否点击的Starred Panels或All Panels
-      if (!data.id) {
-        this.$refs.panelTree.setCurrentKey(this.showPanel)
-        return false
-      }
       this.$emit('selectDashboard', data)
       this.$refs.panelTree.setCurrentKey(data)
       this.esc()
