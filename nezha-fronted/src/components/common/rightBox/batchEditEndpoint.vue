@@ -23,7 +23,7 @@
               <el-form-item :prop="'labels.' + index + '.value'">
                 <template v-slot:label>
                   <div class="form__labels-label">
-                    <span>Label Key</span>
+                    <span>{{$t('endpoint.labelKey')}}</span>
                     <div>
                       <el-checkbox v-model="item.action" :false-label="0" :label="$t('overall.delete')" :true-label="1" size="small" style="padding-right: 20px;"></el-checkbox>
                       <span @click="removeLabels(index)"><i class="nz-icon nz-icon-minus"></i></span>
@@ -33,7 +33,7 @@
                     <el-input v-model="item.key" placeholder="key" size="mini" ></el-input>
                   </el-form-item>
                   <div class="form__labels-label" style="margin-top: 10px">
-                    <span>Label Value</span>
+                    <span>{{$t('endpoint.labelValue')}}</span>
                   </div>
                   <el-form-item :prop="'labels.' + index + '.value'" :rules="[{ required: !item.action,message: $t('validate.required'),trigger: 'blur'}]">
                     <el-input v-model="item.value" placeholder="value" size="mini"></el-input>
