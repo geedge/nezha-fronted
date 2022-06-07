@@ -440,6 +440,15 @@ export default {
     window.removeEventListener('resize', this.resize)
   },
   watch: {
+    // 监听查看模式变化
+    '$store.state.panel.mode': {
+      immediate: true,
+      handler () {
+        this.$nextTick(() => {
+          this.resize()
+        })
+      }
+    },
     dataList: {
       immediate: true,
       deep: true,

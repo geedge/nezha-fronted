@@ -15,12 +15,12 @@
             <div class="top-tool-left" style="cursor: pointer;">
               <select-dashboard
                 ref="selectDashboard"
-                @refreshStarred="refreshStarred"
                 :panel-data="panelData"
                 :panel-lock="panelLock"
                 :placement="'bottom-start'"
                 :show-panel="showPanel"
                 style="display: inline-block;padding: 0"
+                @updateWeight="updateWeight"
                 @deletePanel="del"
                 @editPanel="edit"
                 @selectDashboard="panelChange">
@@ -310,18 +310,9 @@ export default {
     }
   },
   methods: {
-    // 刷新树形菜单视图
-    refreshStarred ({ data, type }) {
-      // if (type === 'tree') {
-      //   this.panelData = JSON.parse(JSON.stringify(data))
-      // }
-      // this.$nextTick(() => {
-      //   // this.$refs.selectDashboard.$refs.panelTree.filter(this.filterPanel)
-      //   this.$refs.selectDashboard.$refs.panelTree.setCurrentKey(this.showPanel)
-      // })
-      // // 判断当前页面收藏状态
-      // const starredArr = this.$refs.selectDashboard.tempArr
-      // this.showPanel.starred = starredArr.some(item => item.id === this.showPanel.id)
+    // 更新Weight
+    updateWeight (value) {
+      this.panelData = JSON.parse(JSON.stringify(value))
     },
     // 新增收藏
     addStarred (data) {
@@ -353,10 +344,10 @@ export default {
         mode: this.mode
       }
       // this.getTableData()
+      // this.getData(this.filter)
       const path = this.fromRoute.panel
       this.updatePath(param, path)
       this.dateChange()
-      // this.getData(this.filter)
       this.$refs.chartList.cleanData()
     },
 
@@ -684,9 +675,6 @@ export default {
         if (response.code === 200) {
           let isInitData = false
           this.panelData = JSON.parse(JSON.stringify(response.data.list))
-          this.$nextTick(() => {
-            this.$refs.selectDashboard.getStarred('tree')
-          })
           if (response.data.list.length > 0) {
             if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
               this.showPanel = JSON.parse(JSON.stringify(this.$store.state.showPanel))
@@ -703,11 +691,6 @@ export default {
               handler(response.data.list)
               this.filter.panelId = this.showPanel.id
             }
-            this.$nextTick(() => {
-              try {
-                this.$refs.selectDashboard.$refs.panelTree.setCurrentKey(this.showPanel)
-              } catch (e) {}
-            })
             this.isLoading = false
           } else {
             this.showPanel.id = ''
@@ -937,11 +920,6 @@ export default {
         this.mode = ''
       }
       this.$store.commit('setMode', this.mode)
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.$refs.chartList.resize()
-        }, 200)
-      })
       const param = {
         panelId: this.panelId,
         nowTimeType: JSON.stringify(this.nowTimeType),
@@ -970,11 +948,6 @@ export default {
         // 默认模式
         this.mode = ''
         this.$store.commit('setMode', this.mode)
-        this.$nextTick(() => {
-          setTimeout(() => {
-            this.$refs.chartList.resize()
-          }, 200)
-        })
         const param = {
           panelId: this.panelId,
           nowTimeType: JSON.stringify(this.nowTimeType),
@@ -1002,14 +975,6 @@ export default {
     })
     // 设置查看模式
     this.$store.commit('setMode', this.mode)
-    this.$nextTick(() => {
-      setTimeout(() => {
-        try {
-          this.$refs.chartList.resize()
-        } catch (error) {
-        }
-      }, 300)
-    })
     if (this.nowTimeType.type) {
       this.setSearchTime(this.nowTimeType.type, this.nowTimeType.value, this.nowTimeType)
       this.filter.start_time = bus.timeFormate(this.searchTime[0], this.panelDateFormatTime)
