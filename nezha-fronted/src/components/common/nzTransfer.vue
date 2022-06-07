@@ -25,7 +25,7 @@
             :resizable="false"
             align="center"
             type="selection"
-            width="36">
+            width="50">
           </el-table-column>
           <el-table-column
             :label="item.label"
@@ -75,14 +75,14 @@
             :resizable="false"
             align="center"
             type="selection"
-            width="36">
+            width="50">
           </el-table-column>
           <el-table-column
             :label="item.label"
             v-for="(item,index) in tableTitle"
             :key="index"
           >
-            <template slot-scope="scope" v-if="!item.slot">{{scope.row[item.prop]}}</template>
+            <template slot-scope="scope" v-if="!item.slot">{{scope.row[item.prop].name || scope.row[item.prop]}}</template>
             <slot :name="item.prop" v-else></slot>
           </el-table-column>
         </el-table>

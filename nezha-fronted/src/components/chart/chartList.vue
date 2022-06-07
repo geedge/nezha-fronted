@@ -98,6 +98,7 @@ import { getGroupHeight, getLayoutPosition, isGroup } from './chart/tools'
 import panelChart from '@/components/chart/panelChart'
 import bus from '@/libs/bus'
 import groupData from '@/components/chart/tempGroup'
+import { lineChartMove } from '@/components/common/js/common'
 
 export default {
   name: 'chartList',
@@ -434,6 +435,9 @@ export default {
       bus.$on('groupChildMove', this.moveChart)
       this.$store.commit('setChartListId', `chartList${this.timestamp}`)
       window.addEventListener('resize', this.resize)
+    }
+    if (!document.onmousemove) { // 添加鼠标移动事件监听
+      document.onmousemove = lineChartMove
     }
   },
   beforeDestroy () {

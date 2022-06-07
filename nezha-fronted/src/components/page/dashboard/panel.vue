@@ -89,7 +89,7 @@
                     <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
                   </el-dropdown-item>
                   <el-dropdown-item v-has="'panel_view'">
-                    <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-download1"></i>{{ $t('overall.snapshoot') }}</div>
+                    <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
                   </el-dropdown-item>
                 </template>
               </top-tool-more-options>
@@ -160,7 +160,6 @@ import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import { fromRoute } from '@/components/common/js/constants'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
-import { lineChartMove } from '@/components/common/js/common'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
@@ -996,9 +995,6 @@ export default {
     this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
     document.querySelector('#tableList').addEventListener('mouseleave', this.tableListLeave)
-    if (!document.onmousemove) { // 添加鼠标移动事件监听
-      document.onmousemove = lineChartMove
-    }
     if (this.nowTimeType) {
       this.nowTimeType.start_time = this.searchTime[0]
       this.nowTimeType.end_time = this.searchTime[1]
