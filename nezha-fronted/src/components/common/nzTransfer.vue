@@ -25,7 +25,7 @@
             :resizable="false"
             align="center"
             type="selection"
-            width="36">
+            width="50">
           </el-table-column>
           <el-table-column
             :label="item.label"
@@ -75,7 +75,7 @@
             :resizable="false"
             align="center"
             type="selection"
-            width="36">
+            width="50">
           </el-table-column>
           <el-table-column
             :label="item.label"

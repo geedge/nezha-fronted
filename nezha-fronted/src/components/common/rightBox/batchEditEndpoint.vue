@@ -32,10 +32,10 @@
                   <el-form-item :prop="'labels.' + index + '.key'" :rules="[{ required: true,message: $t('validate.required'),trigger: 'blur'},{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('overall.ASCIIKey') ,trigger: 'blur'}]">
                     <el-input v-model="item.key" placeholder="key" size="mini" ></el-input>
                   </el-form-item>
-                  <div class="form__labels-label" style="margin-top: 10px">
+                  <div class="form__labels-label" style="margin-top: 10px" v-if="!item.action">
                     <span>{{$t('endpoint.labelValue')}}</span>
                   </div>
-                  <el-form-item :prop="'labels.' + index + '.value'" :rules="[{ required: !item.action,message: $t('validate.required'),trigger: 'blur'}]">
+                  <el-form-item :prop="'labels.' + index + '.value'" :rules="[{ required: !item.action,message: $t('validate.required'),trigger: 'blur'}]" v-if="!item.action">
                     <el-input v-model="item.value" placeholder="value" size="mini"></el-input>
                   </el-form-item>
                 </template>
@@ -118,7 +118,11 @@ export default {
       url: 'monitor/endpoint',
       editData: {
         editType: 1,
-        labels: [],
+        labels: [{
+          action: 0,
+          key: '',
+          value: ''
+        }],
         enable: 1
       },
       transfer: {
@@ -199,7 +203,11 @@ export default {
     endpointBatch () {
       // this.getTableData()
       this.editData.enable = 1
-      this.editData.labels = []
+      this.editData.labels = [{
+        action: 0,
+        key: '',
+        value: ''
+      }]
     },
     esc (refresh) {
       this.$emit('close', refresh)

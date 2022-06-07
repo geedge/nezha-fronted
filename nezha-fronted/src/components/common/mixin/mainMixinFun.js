@@ -89,7 +89,6 @@ export default {
       const offset = localStorage.getItem('nz-sys-timezone')
       const format = fmt || localStorage.getItem('nz-default-dateFormat')
       const date = moment.tz(str, format, offset).valueOf()
-      console.log(date)
       return date
     }
   }
