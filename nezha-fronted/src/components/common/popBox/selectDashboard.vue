@@ -73,8 +73,6 @@ export default {
     panelLock: { type: Boolean, default: true },
     disabled: { type: Boolean, default: false }
   },
-  mounted () {
-  },
   watch: {
     filterPanel: {
       immediate: true,
@@ -83,7 +81,6 @@ export default {
       }
     },
     showPanel: {
-      immediate: true,
       handler (n) {
         if (n) {
           this.panel = JSON.parse(JSON.stringify(n))
@@ -112,10 +109,18 @@ export default {
         { name: this.$t('dashboard.recentlyViewed'), icon: 'nz-icon-liulanlishi', value: 'browse' }
       ],
       currentTab: 'all',
+      // 过滤值
       filterPanel: '',
+      // 树形控件数据
       treeData: [],
-      starredList: []
+      // 收藏列表
+      starredList: [],
+      // 用户id
+      userId: ''
     }
+  },
+  created () {
+    this.userId = localStorage.getItem('nz-user-id')
   },
   methods: {
     // 左侧tab点击
@@ -133,11 +138,10 @@ export default {
       } else if (type === 'starred') { // 我的收藏
         this.treeData = JSON.parse(JSON.stringify(this.starredList))
       } else if (type === 'create') { // 我的创建
-        const userId = localStorage.getItem('nz-user-id')
         const flatArr = this.flatten(this.panelData)
-        this.treeData = flatArr.filter(item => item.createBy == userId)
+        this.treeData = flatArr.filter(item => item.createBy == this.userId)
       } else if (type === 'browse') { // 最近浏览
-        const browseArr = JSON.parse(localStorage.getItem('nz-recently-browse') || '[]')
+        const browseArr = JSON.parse(localStorage.getItem(`nz-${this.userId}-browse`) || '[]')
         const flatArr = this.flatten(this.panelData)
         const tempArr = []
         // 比对id获取最近浏览的数据
@@ -211,7 +215,7 @@ export default {
     // 设置最近浏览的面板
     setBrowse () {
       // 获取最近浏览id数组
-      let browseArr = JSON.parse(localStorage.getItem('nz-recently-browse') || '[]')
+      let browseArr = JSON.parse(localStorage.getItem(`nz-${this.userId}-browse`) || '[]')
       const flatArr = this.flatten(this.panelData)
       // 若最近浏览的数据已被删除 则截取掉
       for (let i = 0; i < browseArr.length; i++) {
@@ -232,7 +236,7 @@ export default {
       browseArr.unshift({ id: this.panel.id })
       // 如果数组长度大于10则截取
       browseArr.splice(10)
-      localStorage.setItem('nz-recently-browse', JSON.stringify(browseArr))
+      localStorage.setItem(`nz-${this.userId}-browse`, JSON.stringify(browseArr))
     },
     // 新增收藏
     addStarred: bus.debounceFn(function (data) {
@@ -274,7 +278,8 @@ export default {
     },
     filterNode (value, data) {
       if (!value) return true
-      return data.name.indexOf(value) !== -1
+      // 不区分大小写
+      return data.name.toLowerCase().indexOf(value.toLowerCase()) !== -1
     },
     updateWeight (data) {
       const toUpdate = []
