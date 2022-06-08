@@ -313,7 +313,7 @@ export default {
       chartInfo.type = 'topologyLink'
       chartInfo.linkType = type
       chartInfo.datasource = 'topology'
-      chartInfo.name = '关系图'
+      chartInfo.name = this.$t('overall.topology')
       this.$store.dispatch('showTopology', chartInfo)
     },
     closeDialog () {
