@@ -1,6 +1,13 @@
 <template>
   <div :ref="`chart-canvas-${chartId}`" style="height: 100%;width: 100%;overflow: hidden">
     <div :id="`chart-canvas-${chartId}`" class="chart__canvas chart-svg"></div>
+    <div class="graph-icon-info-box">
+      <div v-for="(item,index) in graphIconArr" :key="index">
+        <div class="graph-icon-content" @mouseenter="graphIconEnter(item)" @mouseleave="graphIconLeave(item)">
+          <i :class="item.class"/><span class="graph-icon-label">{{item.label}}</span>
+        </div>
+      </div>
+    </div>
     <alertLabel
       v-if="alertLabelShow"
       :id="alertLabelId"
@@ -59,7 +66,15 @@ export default {
       isDrag: false,
       highlightId: '',
       highlightAll: [],
-      radiusArr: [14, 20, 27]
+      radiusArr: [14, 20, 27],
+      graphIconArr: [],
+      nzIcon: [
+        { class: 'nz-icon nz-icon-overview-project', type: 'asset', label: this.$t('overall.asset') },
+        { class: 'nz-icon nz-icon-Datacenter2', type: 'datacenter', label: this.$t('overall.dc') },
+        { class: 'nz-icon nz-icon-project', type: 'project', label: this.$t('overall.project') },
+        { class: 'nz-icon nz-icon-overview-module', type: 'module', label: this.$t('overall.module') },
+        { class: 'nz-icon nz-icon-overview-endpoint', type: 'endpoint', label: this.$t('overall.endpoint') }
+      ]
     }
   },
   methods: {
@@ -452,6 +467,7 @@ export default {
             })
             nodes.push(...res.data.nodes)
             nodes = lodash.uniqBy(nodes, 'id')
+            self.data.nodes = nodes
             simulation.stop()
             node = node
               .data(nodes)
@@ -526,6 +542,7 @@ export default {
           simulation.nodes(nodes)
           simulation.force('link').links(links)
           simulation.restart().tick()
+          self.data.nodes = nodes
         }
       }
 
@@ -670,6 +687,59 @@ export default {
     },
     upDate () {
 
+    },
+    graphIconEnter (item) {
+      const svg = d3.select('#svgHex' + this.chartId)
+      const node = svg.selectAll('.node')
+      const linkCopy = svg.selectAll('line')
+      node.transition().attr('style', function (d) {
+        let str = 'opacity:'
+        if (d.type === item.type) {
+          str += 1
+        } else {
+          str += 0.05
+        }
+        return str + ';cursor:pointer'
+      }).duration(300)
+      linkCopy.transition().attr('style', function (d) {
+        let str = 'opacity:'
+        str += 0.05
+        return str + ';cursor:pointer'
+      }).duration(300)
+      console.log(svg, item, node, linkCopy)
+    },
+    graphIconLeave (item) {
+      const svg = d3.select('#svgHex' + this.chartId)
+      const node = svg.selectAll('.node')
+      const linkCopy = svg.selectAll('line')
+      node.transition().attr('style', function (d) {
+        let str = 'opacity:'
+        str += 1
+        return str + ';cursor:pointer'
+      }).duration(300)
+      linkCopy.transition().attr('style', function (d) {
+        let str = 'opacity:'
+        str += 1
+        return str + ';cursor:pointer'
+      }).duration(300)
+    }
+  },
+  watch: {
+    'data.nodes': {
+      handler (n) {
+        console.log(n, 'data.nodes')
+        this.graphIconArr = []
+        this.data.nodes.forEach(item => {
+          if (this.graphIconArr.indexOf(item.type) === -1) {
+            this.graphIconArr.push(item.type)
+          }
+        })
+        this.graphIconArr = this.graphIconArr.map(item => {
+          return this.nzIcon.find(nzIcon => nzIcon.type === item)
+        })
+      },
+      // deep: true,
+      immediate: true
     }
   },
   created () {
