@@ -133,6 +133,9 @@
     <transition name="right-box">
       <profile-box v-if="rightBox.show" :obj="object" @clickProfile="clickProfile" @close="closeRightBox"></profile-box>
     </transition>
+    <transition name="right-box">
+      <api-key-box v-if="apiRightBox" :obj="object"  @close="closeRightBox"></api-key-box>
+    </transition>
   </div>
 </template>
 
@@ -142,12 +145,15 @@ import QRCode from 'qrcodejs2'
 import MessageBox from 'element-ui/packages/message-box/src/main'
 import i18n from '@/components/common/i18n'
 import profileBox from '@/components/common/rightBox/profileBox'
+import apiKeyBox from '@/components/common/rightBox/apiKeyBox'
+import bus from '@/libs/bus'
 
 export default {
   name: 'profile',
   components: {
     operationRecord,
-    profileBox
+    profileBox,
+    apiKeyBox
   },
   data () {
     return {
@@ -167,6 +173,7 @@ export default {
       rightBox: {
         show: false
       },
+      apiRightBox: false,
       blankObject: { // 空白对象
         id: '',
         name: '',
@@ -226,6 +233,9 @@ export default {
   },
   mounted () {
     this.personalCenter()
+    bus.$on('addApiKeyBox', (e) => {
+      this.apiRightBox = e
+    })
   },
   computed: {
     langList () {
@@ -320,6 +330,7 @@ export default {
     },
     closeRightBox () {
       this.rightBox.show = false
+      this.apiRightBox = false
     },
     clickProfile (refresh) {
       this.personalCenter()

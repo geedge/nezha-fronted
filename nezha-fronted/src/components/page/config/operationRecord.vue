@@ -1,7 +1,7 @@
 <template>
     <nz-data-list
       ref="dataList"
-      :api="url"
+      :api="profileShowLabel === 1 ? url : url2"
       :layout="layout"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.operationLog"
@@ -10,14 +10,15 @@
       :search-msg="searchMsg">
       <template v-slot:top-tool-left>
         <div class="profile-right__tabs-title">
-          <div class="profile-right__tabs-active" :class="{'is-active': profileShow}" @click="tabsActive">{{$t('profile.operationRecord')}}</div>
-          <div class="profile-right__tabs-active" style="margin-left: 10px" :class="{'is-active': !profileShow}" @click="tabsActiveTow">{{$t('profile.changePassword')}}</div>
+          <div class="profile-right__tabs-active" :class="{'is-active': profileShowLabel === 1}" @click="tabsActive">{{$t('profile.operationRecord')}}</div>
+          <div class="profile-right__tabs-active" style="margin-left: 10px" :class="{'is-active': profileShowLabel === 3}" @click="tabsActiveThree">{{$t('system.apikey.apiKey')}}</div>
+          <div class="profile-right__tabs-active" style="margin-left: 10px" :class="{'is-active': profileShowLabel === 2}" @click="tabsActiveTow">{{$t('profile.changePassword')}}</div>
         </div>
         <div class="profile-hr"></div>
       </template>
       <template v-slot:default="slotProps">
         <operation-log-table
-          v-if="profileShow"
+          v-if="profileShowLabel === 1"
           ref="dataTable"
           :orderByFa="orderBy"
           v-my-loading="tools.loading"
@@ -32,12 +33,13 @@
           @reload="getTableData"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></operation-log-table>
-        <template v-else>
+        <api-key-tab v-if="profileShowLabel === 3"></api-key-tab>
+        <template v-else-if="profileShowLabel === 2">
          <profileChangePin/>
         </template>
       </template>
       <!-- 分页组件 -->
-      <template v-if="profileShow" v-slot:pagination>
+      <template v-if="profileShowLabel ===1" v-slot:pagination>
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
     </nz-data-list>
@@ -46,6 +48,7 @@
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import operationLogTable from '@/components/common/table/settings/operationLogTable'
+import apiKeyTab from '@/components/page/config/system/apiKeyTab2'
 import profileChangePin from '@/components//page/config/profileChangePin'
 
 export default {
@@ -53,12 +56,14 @@ export default {
   components: {
     nzDataList,
     operationLogTable,
-    profileChangePin
+    profileChangePin,
+    apiKeyTab
   },
   mixins: [dataListMixin],
   data () {
     return {
       url: 'sys/log',
+      url2: 'sys/apiKey/self',
       tableId: 'operationLogTable', // 需要分页的table的id，用于记录每页数量,
       mainTableHeight: this.$tableHeight.profile,
       username: localStorage.getItem('nz-username'),
@@ -98,7 +103,7 @@ export default {
           }
         ]
       },
-      profileShow: true
+      profileShowLabel: 1
     }
   },
   mounted () {
@@ -107,11 +112,15 @@ export default {
   },
   methods: {
     tabsActive () {
-      this.profileShow = true
+      this.profileShowLabel = 1
       this.layout = ['searchInput', 'elementSet', 'pagination']
     },
     tabsActiveTow () {
-      this.profileShow = false
+      this.profileShowLabel = 2
+      this.layout = []
+    },
+    tabsActiveThree () {
+      this.profileShowLabel = 3
       this.layout = []
     },
     getTableData () {

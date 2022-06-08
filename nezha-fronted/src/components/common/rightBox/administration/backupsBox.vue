@@ -483,7 +483,6 @@ export default {
     'editBackup.stime': {
       deep: true,
       handler (n) {
-        console.log(n);
         this.editBackup.stime = bus
           .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
       }
