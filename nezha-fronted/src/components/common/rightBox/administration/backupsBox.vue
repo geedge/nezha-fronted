@@ -37,12 +37,12 @@
           </el-form-item>
           <el-form-item
             :label="$t('backup.start')"
-            prop="schedule.datepicker"
+            prop="stime"
             v-if="whoshow"
             class="start_at"
           >
             <my-date-picker
-              v-model="editBackup.schedule.datepicker"
+              v-model="editBackup.stime"
               class="my-datetime-picker"
               type="datetime"
               prefix-icon="el-icon-date"
@@ -50,14 +50,6 @@
               :placeholder="$t('backup.SelectData')"
             >
             </my-date-picker>
-
-            <!-- <el-time-picker
-              :value-format="'HH:mm:ss'"
-              :format="'HH:mm:ss'"
-              v-model="editBackup.datepicker[1]"
-              :placeholder="$t('backup.SelectTime')"
-            >
-            </el-time-picker> -->
           </el-form-item>
           <el-form-item
             :label="$t('backup.RepeatEvery')"
@@ -190,15 +182,13 @@ export default {
         checkDays: [],
         checkDay: [],
         timepicker: '',
-        // datepicker: '',
         retention: '',
         state: '',
         schedule: {
           repeat: '',
           stime: '',
           type: '',
-          nums: [],
-          datepicker: ''
+          nums: []
         }
       },
       whoshow: '',
@@ -214,7 +204,7 @@ export default {
             trigger: 'change'
           }
         ],
-        "schedule.datepicker": [{
+        stime: [{
           required: true,
           message: this.$t('validate.required')
           // trigger: 'change'
@@ -356,25 +346,23 @@ export default {
     save () {
       this.$refs.backupsForm.validate((valid) => {
         if (valid) {
-          this.editBackup.datepicker[0] = bus
-            .timeFormate(this.editBackup.datepicker[0])
-            .split(' ')[0]
+          // this.editBackup.stime = bus
+          //   .timeFormate(this.editBackup.datepicker[0])
+          //   .split(' ')[0]
           // this.editBackup.stime = this.editBackup.datepicker.join(' ')
-          this.editBackup.stime = this.editBackup.schedule.datepicker
-          let offset = localStorage.getItem('nz-sys-timezone')
-          offset = moment.tz(offset).format('Z')
-          this.editBackup.stime = new Date(this.editBackup.stime).getTime()
-          offset = Number.parseInt(offset)
-          this.editBackup.stime -= offset * 60 * 60 * 1000
-
+          // this.editBackup.stime = this.editBackup.schedule.datepicker
+          // let offset = localStorage.getItem('nz-sys-timezone')
+          // offset = moment.tz(offset).format('Z')
+          // this.editBackup.stime = new Date(this.editBackup.stime).getTime()
+          // offset = Number.parseInt(offset)
+          // this.editBackup.stime -= offset * 60 * 60 * 1000
           put('/sys/backup', {
             state: Number(this.editBackup.state),
             schedule: {
               type: Number(this.editBackup.type),
               stime: this.editBackup.stime,
               repeat: Number(this.editBackup.repeat),
-              nums: this.editBackup.nums,
-              datepicker: this.editBackup.schedule.datepicker
+              nums: this.editBackup.nums
             },
             retention: Number(this.editBackup.retention)
           }).then((res) => {
@@ -423,11 +411,11 @@ export default {
         this.editBackup.checkDay = []
         this.editBackup.checkDays = []
         this.editBackup.type = this.editBackup.type + ''
-        const stime1 = this.utcTimeToTimezoneStr(this.editBackup.stime)
-        const stime = this.utcTimeToTimezone(this.editBackup.stime)
-        const time = stime1.split(' ')
-        time[0] = stime
-        this.$set(this.editBackup, 'datepicker', time)
+        // const stime1 = this.utcTimeToTimezoneStr(this.editBackup.stime)
+        // const stime = this.utcTimeToTimezone(this.editBackup.stime)
+        // const time = stime1.split(' ')
+        // time[0] = stime
+        // this.$set(this.editBackup, 'datepicker', time)
         if (this.editBackup.state == 1) {
           this.editBackup.status = true
           this.$emit('statechange', true)
@@ -492,13 +480,11 @@ export default {
         }
       }
     },
-    'editBackup.schedule.datepicker': {
+    'editBackup.stime': {
       deep: true,
       handler (n) {
-        // this.editBackup.datepicker[0] = bus
-        //   .timeFormate(new Date(n[0]))
-        //   .split(' ')[0]
-        this.editBackup.schedule.datepicker = bus
+        console.log(n);
+        this.editBackup.stime = bus
           .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
       }
     }
