@@ -81,7 +81,6 @@ export default {
   },
   watch: {
     filterPanel: {
-      immediate: true,
       handler (n) {
         this.$refs.panelTree && this.$refs.panelTree.filter(n)
       }
@@ -259,7 +258,10 @@ export default {
       this.$post('/sys/user/starred', params).then(async response => {
         if (response.code === 200) {
           await this.getStarred()
-          this.setData()
+          data.starred = true
+          if (this.currentTab === 'starred') {
+            this.setData()
+          }
         }
       })
     },
@@ -269,7 +271,10 @@ export default {
       this.$delete('/sys/user/starred?type=panel&tid=' + data.id).then(async response => {
         if (response.code === 200) {
           await this.getStarred()
-          this.setData()
+          data.starred = false
+          if (this.currentTab === 'starred') {
+            this.setData()
+          }
         }
       })
     },
