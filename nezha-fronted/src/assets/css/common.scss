@@ -421,4 +421,12 @@ input, textarea {
   float: unset;
   font-size: 10px;
   margin-left: 190px;
+  .message-next-continue{
+    color: $--color-text-primary;
+    font-weight: 400;
+  }
+  .message-next-content{
+    color: $--color-text-link;
+    font-weight: 600;
+  }
 }
