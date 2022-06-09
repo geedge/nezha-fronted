@@ -33,6 +33,7 @@
           @orderBy="tableDataSort"
           @addSilence="addSilence"
           @reload="getTableData"
+          @topology="topology"
           @selectionChange="selectionChange"
         ></endpoint-table>
       </template>
