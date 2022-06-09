@@ -937,7 +937,7 @@ export default {
     display: flex;
     flex-direction: column;
   }
-  /deep/ .nz-table2{
+  /deep/ .nz-table-list{
     flex: 1;
   }
 </style>

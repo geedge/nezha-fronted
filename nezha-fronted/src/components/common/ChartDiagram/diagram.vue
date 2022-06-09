@@ -122,7 +122,7 @@
         </div>
         <div v-if="(!editTopologyFlag&&!fromOverView)&&!fromChart" class="top-tools" style="padding-left: 10px">
         </div>
-        <div class="nz-table2" :class="fromChart ? 'h100': ''">
+        <div class="nz-table-list" :class="fromChart ? 'h100': ''">
           <!--悬浮network部分-->
           <div class="network-info">
             <div v-if="popDataShow.main">

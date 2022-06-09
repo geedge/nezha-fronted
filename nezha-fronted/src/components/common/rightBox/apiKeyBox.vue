@@ -1,7 +1,7 @@
 <template>
   <div v-clickoutside="{obj: apiKeyBox, func: esc}" class="right-box right-box-profile">
     <div class="right-box__header">
-      <div class="header__title">{{$t('profile.box.NewApiKey')}}</div>
+      <div class="header__title">{{$t('profile.box.newApiKey')}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: apiKeyBox, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -10,10 +10,10 @@
       <div class="container__form">
         <el-form ref="apiKeyBoxForm" :model="apiKeyBox" :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label="$t('profile.name')" prop="name">
-            <el-input maxlength="64" show-word-limit v-model="apiKeyBox.name" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="apiKeyBox.name" size="small" type="text" :placeholder="$t('profile.name')"></el-input>
           </el-form-item>
            <el-form-item
-            :label="$t('profile.apiKey.Box.ExpiredAt')"
+            :label="$t('profile.apiKey.box.expiredAt')"
             class="start_at"
           >
             <my-date-picker
@@ -23,12 +23,12 @@
               type="datetime"
               prefix-icon="el-icon-date"
               :format="timeFormatStrToDatePickFormat(dateFormatStr)"
-              :placeholder="$t('backup.SelectData')"
+              :placeholder="$t('backup.selectData')"
             >
             </my-date-picker>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')">
-            <el-input  show-word-limit v-model="apiKeyBox.remark" size="small" type="text"></el-input>
+            <el-input  show-word-limit v-model="apiKeyBox.remark" size="small" type="textarea" :placeholder="$t('overall.remark')" maxlength="256"></el-input>
           </el-form-item>
         </el-form>
       </div>

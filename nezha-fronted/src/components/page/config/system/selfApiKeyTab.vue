@@ -3,7 +3,7 @@
     <nz-data-list
       ref="dataList"
       :api="url"
-      :custom-table-title.sync="customTableTitle2"
+      :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.apiKey"
       :layout="['searchInput', 'elementSet', 'pagination']"
       :search-msg="searchMsg"
@@ -12,19 +12,19 @@
 
       </template>
       <template v-slot:top-tool-right>
-        <button id="api-key-add" v-has="'system_apiKey_add'" :title="$t('config.system.notification.create')" class="top-tool-btn margin-r-10" type="button" @click="addApiKey">
+        <button id="api-key-add" v-has="'system_apiKey_add'" class="top-tool-btn margin-r-10" type="button" @click="addApiKey">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
       </template>
       <template v-slot:default="slotProps">
-        <api-key-table
+        <self-api-key-table
           ref="dataTable"
           :orderByFa="orderBy"
           v-my-loading="tools.loading"
           :loading="tools.loading"
           :table-id="tableId"
           :api="url"
-          :custom-table-title="customTableTitle2"
+          :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
           :table-data="tableData"
           @del="del"
@@ -32,7 +32,7 @@
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
-        ></api-key-table>
+        ></self-api-key-table>
       </template>
       <!-- 分页组件 -->
       <template v-slot:pagination>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import apiKeyTable from './apiKeyTable2'
+import selfApiKeyTable from './selfApiKeyTable'
 import dataListMixin from '@/components/common/mixin/dataList'
 import nzDataList from '@/components/common/table/nzDataList'
 import { parentTableCommon } from './systemCommon'
@@ -51,7 +51,7 @@ import bus from '@/libs/bus'
 
 export default {
   name: 'apiKeyTab',
-  components: { nzDataList, apiKeyTable },
+  components: { nzDataList, selfApiKeyTable },
   mixins: [dataListMixin, parentTableCommon],
   props: {
     switchTab: String
@@ -59,7 +59,7 @@ export default {
   data () {
     return {
       url: 'sys/apiKey/self',
-      tableId: 'apiKeyTable',
+      tableId: 'api-key-tab',
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
@@ -76,7 +76,7 @@ export default {
           disabled: false
         }]
       },
-      customTableTitle2: [
+      tableTitle: [
         {
           label: 'ID',
           prop: 'id',
@@ -107,7 +107,7 @@ export default {
     }
   },
   mounted () {
-    this.getTableData()
+    // this.getTableData()
     bus.$on('apiKey-tab2', () => {
       this.getTableData()
     })

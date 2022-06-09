@@ -9,7 +9,7 @@
       padding: 0;
     }
 
-    .sub-box .sub-list__tabs .chart-list .nz-table2 {
+    .sub-box .sub-list__tabs .chart-list .nz-table-list {
       padding: 20px;
       height: 100%;
     }
@@ -36,14 +36,14 @@
       & > div {
         height: 100%;
 
-        & > .nz-table2 {
+        & > .nz-table-list {
           height: calc(100% - 92px);
           padding: 20px 20px 0;
         }
       }
 
       .chart-list {
-        .nz-table2 {
+        .nz-table-list {
           box-sizing: border-box;
           padding: 0;
         }

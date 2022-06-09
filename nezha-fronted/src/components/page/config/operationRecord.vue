@@ -33,7 +33,7 @@
           @reload="getTableData"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></operation-log-table>
-        <api-key-tab v-if="profileShowLabel === 3"></api-key-tab>
+        <self-api-key-tab v-if="profileShowLabel === 3"></self-api-key-tab>
         <template v-else-if="profileShowLabel === 2">
          <profileChangePin/>
         </template>
@@ -48,7 +48,7 @@
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import operationLogTable from '@/components/common/table/settings/operationLogTable'
-import apiKeyTab from '@/components/page/config/system/apiKeyTab2'
+import selfApiKeyTab from '@/components/page/config/system/selfApiKeyTab'
 import profileChangePin from '@/components//page/config/profileChangePin'
 
 export default {
@@ -57,7 +57,7 @@ export default {
     nzDataList,
     operationLogTable,
     profileChangePin,
-    apiKeyTab
+    selfApiKeyTab
   },
   mixins: [dataListMixin],
   data () {
@@ -108,7 +108,7 @@ export default {
   },
   mounted () {
     this.tabsActive()
-    this.getTableData()
+    // this.getTableData()
   },
   methods: {
     tabsActive () {

@@ -37,7 +37,7 @@
         style="height: 100%"
         :show-header="false"
         ref="logTable"
-        class="nz-table2"
+        class="nz-table-list"
         size="mini"
         v-if="tableData.length"
       >

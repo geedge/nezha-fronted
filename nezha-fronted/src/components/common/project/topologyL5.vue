@@ -141,7 +141,7 @@
             </button>
           </div>
         </div>
-        <div class="nz-table2">
+        <div class="nz-table-list">
           <!--悬浮network部分-->
           <div class="network-info">
             <div v-if="popDataShow.main">

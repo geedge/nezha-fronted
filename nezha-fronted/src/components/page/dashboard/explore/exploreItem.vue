@@ -125,7 +125,7 @@
                   </transition>
                 </div>
                 <!-- 自定义table列 -->
-                <div class="nz-table2 explore-table">
+                <div class="nz-table-list explore-table">
                   <el-table ref="exploreTable"
                             v-my-loading="tools.loading"
                             class="metric-table"

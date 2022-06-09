@@ -207,7 +207,7 @@
       color: $--color-primary;
     }
   }
-  .mt-10.table-container.nz-table2 {
+  .mt-10.table-container.nz-table-list {
     .el-table:not(.chart-table) {
       .gutter {
         position: fixed;
@@ -220,7 +220,7 @@
     }
   }
   /* 上滑resize工具条--end */
-  .nz-table2 {
+  .nz-table-list {
     position: relative;
     padding: 0 20px;
     width: 100%;
@@ -347,7 +347,7 @@
   .el-table__body-wrapper .is-hidden, .el-table__header-wrapper .is-hidden {
     visibility: hidden;
   }
-  .nz-table2 {
+  .nz-table-list {
     .el-table--border td {
       border-right: none !important;
     }
@@ -395,7 +395,7 @@
   .main-container {
    padding: 0;
   }
-  .list-page .nz-table2 .el-table:not(.chart-table) .gutter {
+  .list-page .nz-table-list .el-table:not(.chart-table) .gutter {
     position: fixed;
     right: 31px;
     height: 42px;
@@ -549,7 +549,7 @@
   height: 100%;
 }
 .list-page.detail-view .nz-detail-view-right{
-  .nz-table2 .el-table--border {
+  .nz-table-list .el-table--border {
     height: calc(100% - 45px) !important;
     .gutter {
       position: fixed;

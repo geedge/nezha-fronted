@@ -47,7 +47,7 @@
               type="datetime"
               prefix-icon="el-icon-date"
               :format="timeFormatStrToDatePickFormat(dateFormatStr)"
-              :placeholder="$t('backup.SelectData')"
+              :placeholder="$t('backup.selectData')"
             >
             </my-date-picker>
           </el-form-item>

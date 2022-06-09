@@ -31,7 +31,7 @@
   .pagination-bottom {
     bottom: 8px;
   }
-  &>.nz-table2 {
+  &>.nz-table-list {
     height: 100%;
     padding: 20px 20px 10px 20px !important;
     box-sizing: border-box;
@@ -88,7 +88,7 @@
 }
 .list-page {
   .sub-box.bottom-box {
-    .nz-table2 .el-table--border {
+    .nz-table-list .el-table--border {
       .gutter {
         position: fixed;
         right: 31px;
@@ -115,13 +115,13 @@
       height: 100%;
       background-color: $--background-color-base;
 
-      &>.nz-table2 {
+      &>.nz-table-list {
         height: calc(100% - 92px);
         padding: 20px 20px 0;
       }
     }
     .chart-list{
-      .nz-table2 {
+      .nz-table-list {
         box-sizing: border-box;
         padding: 0;
         height: 100%;
@@ -177,16 +177,16 @@
 .bottom-box .sub-container{
   height: calc(100% - 50px);
 }
-.bottom-box .sub-container .nz-table2 {
+.bottom-box .sub-container .nz-table-list {
   height: calc(100% - 20px);
   .bottom-box__top .my-loading-box {
     height: calc(100% + 20px) !important;
   }
 }
-.asset-detail .sub-container .nz-table2 {
+.asset-detail .sub-container .nz-table-list {
   height: 100%;
 }
-.endpoint-tab-new .sub-container .nz-table2 {
+.endpoint-tab-new .sub-container .nz-table-list {
   height: 100%;
 }
 /* end--二级顶部工具栏*/
