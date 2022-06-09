@@ -259,8 +259,22 @@ export default {
         if (response.code === 200) {
           await this.getStarred()
           data.starred = true
+          // 不每次使用this.setData() 是因为会刷新树形图展开收起状态
           if (this.currentTab === 'starred') {
             this.setData()
+          } else {
+            handler(this.treeData)
+            function handler (list) {
+              list.forEach(item => {
+                if (item.id === data.id) {
+                  item.starred = true
+                } else if (item.children && item.children.length > 0) {
+                  handler(item.children)
+                }
+              })
+            }
+            // 更新父组件面板收藏状态
+            this.$set(this.$parent.showPanel, 'starred', this.starredList.some(item => item.id === this.showPanel.id))
           }
         }
       })
@@ -272,8 +286,22 @@ export default {
         if (response.code === 200) {
           await this.getStarred()
           data.starred = false
+          // 不每次使用this.setData() 是因为会刷新树形图展开收起状态
           if (this.currentTab === 'starred') {
             this.setData()
+          } else {
+            handler(this.treeData)
+            function handler (list) {
+              list.forEach(item => {
+                if (item.id === data.id) {
+                  item.starred = false
+                } else if (item.children && item.children.length > 0) {
+                  handler(item.children)
+                }
+              })
+            }
+            // 更新父组件面板收藏状态
+            this.$set(this.$parent.showPanel, 'starred', this.starredList.some(item => item.id === this.showPanel.id))
           }
         }
       })
