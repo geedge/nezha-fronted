@@ -30,13 +30,6 @@
                   <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="nz-icon nz-icon-a-xingzhuang2"></i>
                   <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang"></i>
                 </template>
-                <template v-slot:tail>
-                  <div class="dashboard-select-tail">
-                    <span class="dashboard-select-add" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd">
-                      <i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t('overall.addDashboard')}}
-                    </span>
-                  </div>
-                </template>
               </select-dashboard>
             </div>
 

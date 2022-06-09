@@ -50,6 +50,7 @@ import chartList from '@/components/chart/chartList.vue'
 import moment from 'moment-timezone'
 import { loadI18n } from '@/components/common/i18n'
 import i18nData from '@/entrance/exportHtml/i18nData'
+
 const dataJson = window.dataJson || {}
 export default {
   name: 'Entrance',
@@ -67,7 +68,7 @@ export default {
     this.$i18n.locale = this.dataJson.language
     loadI18n(i18nData)
     const localOffset = moment.tz.guess()// 默认 一分钟显示时区偏移的结果
-    localStorage.setItem('nz-sys-timezone', JSON.stringify(localOffset))
+    localStorage.setItem('nz-sys-timezone', localOffset)
   },
   mounted () {
   },

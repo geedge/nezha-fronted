@@ -8,8 +8,10 @@
             <span>{{item.name}}</span>
           </li>
         </ul>
-        <div slot="default">
-          <slot name="tail"></slot>
+        <div class="dashboard-select-tail">
+          <span class="dashboard-select-add" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd">
+            <i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t('overall.addDashboard')}}
+          </span>
         </div>
       </div>
       <div class="pop-item-wider">
@@ -28,11 +30,11 @@
             check-on-click-node
             check-strictly
             default-expand-all
-            highlight-current
+            :highlight-current="true"
             node-key="id"
             ref="panelTree">
             <div class="tree--node" slot-scope="{ node, data }">
-              <span :title="node.label + ' (' + data.chartNum +' charts）' ">{{ node.label }}</span>
+              <HighlightText :queries="filterPanel" :highlightClass="'highlight-keyword'" style="vertical-align: middle" :title="node.label + ' (' + data.chartNum +' charts）' ">{{node.label}}</HighlightText>
               <el-row class="block-col-2" style="margin-left:10px;margin-right:8px">
                 <el-col>
                   <el-dropdown v-if="!panelLock"  placement="bottom-end" trigger="click" style="margin-right:10px">
@@ -64,8 +66,12 @@
 </template>
 <script>
 import bus from '@/libs/bus'
+import HighlightText from 'vue-text-highlight'
 export default {
   name: 'selectDashboard',
+  components: {
+    HighlightText
+  },
   props: {
     placement: { type: String },
     panelData: { type: Array },
@@ -123,6 +129,12 @@ export default {
     this.userId = localStorage.getItem('nz-user-id')
   },
   methods: {
+    // 新增仪表盘
+    toAdd () {
+      this.$parent.toAdd()
+      this.esc()
+    },
+
     // 左侧tab点击
     tabChange (value) {
       if (this.currentTab !== value) {
@@ -141,7 +153,7 @@ export default {
         const flatArr = this.flatten(this.panelData)
         this.treeData = flatArr.filter(item => item.createBy == this.userId)
       } else if (type === 'browse') { // 最近浏览
-        const browseArr = JSON.parse(localStorage.getItem(`nz-${this.userId}-browse`) || '[]')
+        const browseArr = JSON.parse(localStorage.getItem(`nz-view-dashboard-${this.userId}`) || '[]')
         const flatArr = this.flatten(this.panelData)
         const tempArr = []
         // 比对id获取最近浏览的数据
@@ -215,7 +227,7 @@ export default {
     // 设置最近浏览的面板
     setBrowse () {
       // 获取最近浏览id数组
-      let browseArr = JSON.parse(localStorage.getItem(`nz-${this.userId}-browse`) || '[]')
+      let browseArr = JSON.parse(localStorage.getItem(`nz-view-dashboard-${this.userId}`) || '[]')
       const flatArr = this.flatten(this.panelData)
       // 若最近浏览的数据已被删除 则截取掉
       for (let i = 0; i < browseArr.length; i++) {
@@ -236,7 +248,7 @@ export default {
       browseArr.unshift({ id: this.panel.id })
       // 如果数组长度大于10则截取
       browseArr.splice(10)
-      localStorage.setItem(`nz-${this.userId}-browse`, JSON.stringify(browseArr))
+      localStorage.setItem(`nz-view-dashboard-${this.userId}`, JSON.stringify(browseArr))
     },
     // 新增收藏
     addStarred: bus.debounceFn(function (data) {

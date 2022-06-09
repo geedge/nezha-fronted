@@ -107,17 +107,17 @@
         }
       }
       .panel-select-item:hover{
-        color: #FA901C; 
+        color: $--color-primary; 
         background: $--background-color-base;
         i{
-          color: #FA901C;
+          color: $--color-primary;
         }
       }
       .panel-select-item.active{
-        color: #FA901C;  
+        color: $--color-primary;  
         background: $--background-color-base;
         i{
-          color: #FA901C;
+          color: $--color-primary;
         }
       }
     }
@@ -160,5 +160,9 @@
   .nz-icon-a-xingzhuang2{
     color:#FF9219 !important;
     cursor: pointer ;
+  }
+  .highlight-keyword{
+    color:$--color-primary;
+    background: none;
   }
 }

@@ -327,7 +327,7 @@ import {
   myCubec,
   myCubeAnchors
 } from '../project/L5/services/canvas.js'
-import {getTopology, getTopologyImg, setTopology, setTopologyImg} from '../js/common'
+import {getTopology, setTopology} from '../js/common'
 import CanvasProps from '../project/L5/CanvasProps'
 import topologyTopTool from '../project/L5/topologyTopTool'
 import popDataMain from '../project/popData/Main'
@@ -1744,7 +1744,7 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
+            const nowImage = ''
             if (nowImage && nowImage.data) {
               promiseArr.push(nowImage)
             } else {
@@ -1756,14 +1756,6 @@ export default {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index].data
-              const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-              if (!nowImage || (nowImage && !nowImage.data)) {
-                setTopologyImg(item.id, JSON.stringify({
-                  data: res2[index].data,
-                  width: res2[index].width,
-                  height: res2[index].height
-                }))
-              }
               const group = this.tools.find(tool => tool.group === item.unit)
               if (group) {
                 group.children.push({
@@ -1814,7 +1806,7 @@ export default {
           }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
-              const nowImage = getTopologyImg(item.data.imageId) ? JSON.parse(getTopologyImg(item.data.imageId)) : ''
+              const nowImage = ''
               if (nowImage && nowImage.data) {
                 promiseArr.push(nowImage)
               } else {
@@ -1835,14 +1827,6 @@ export default {
             this.iconArray.forEach((item, index) => {
               if (item.id) {
                 item.image = res2[index].data
-                const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-                if (!nowImage || (nowImage && !nowImage.image)) {
-                  setTopologyImg(item.id, JSON.stringify({
-                    data: res2[index].data,
-                    width: res2[index].width,
-                    height: res2[index].height
-                  }))
-                }
               }
             })
             this.imgInit = true

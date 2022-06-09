@@ -351,7 +351,7 @@ import {
   myCubec,
   myCubeAnchors
 } from './L5/services/canvas.js'
-import { getTopology, setTopology, getTopologyImg, setTopologyImg } from '../js/common'
+import { getTopology, setTopology } from '../js/common'
 import CanvasProps from './L5/CanvasProps'
 import topologyTopTool from './L5//topologyTopTool'
 import CanvasContextMenu from './L5/CanvasContextMenu'
@@ -1744,26 +1744,13 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-            if (nowImage && nowImage.data) {
-              promiseArr.push(nowImage)
-            } else {
-              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
-            }
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index].data
-              const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-              if (!nowImage || (nowImage && !nowImage.data)) {
-                setTopologyImg(item.id, JSON.stringify({
-                  data: res2[index].data,
-                  width: res2[index].width,
-                  height: res2[index].height
-                }))
-              }
               const group = this.tools.find(tool => tool.group === item.unit)
               if (group) {
                 group.children.push({
@@ -1816,12 +1803,7 @@ export default {
           }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
-              const nowImage = getTopologyImg(item.data.imageId) ? JSON.parse(getTopologyImg(item.data.imageId)) : ''
-              if (nowImage && nowImage.data) {
-                promiseArr.push(nowImage)
-              } else {
-                promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
-              }
+              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
             } else if (item.data.imageId) {
               promiseArr.push(imgDefault)
             } else {
@@ -1837,14 +1819,6 @@ export default {
             this.iconArray.forEach((item, index) => {
               if (item.id) {
                 item.image = res2[index].data
-                const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-                if (!nowImage || (nowImage && !nowImage.image)) {
-                  setTopologyImg(item.id, JSON.stringify({
-                    data: res2[index].data,
-                    width: res2[index].width,
-                    height: res2[index].height
-                  }))
-                }
               }
             })
             this.imgInit = true
