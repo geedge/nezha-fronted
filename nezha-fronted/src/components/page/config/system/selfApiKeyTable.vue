@@ -40,10 +40,10 @@
                {{scope.row[item.prop]?scope.row[item.prop]:'-'}}
             </template>
              <template v-if="item.prop == 'expireAt'">
-              {{scope.row[item.prop]?timeFormates(scope.row[item.prop]):'-'}}
+              {{scope.row[item.prop]?utcTimeToTimezoneStr(scope.row[item.prop]):'-'}}
             </template>
             <template v-if="item.prop == 'createAt'">
-              {{scope.row[item.prop]?timeFormates(scope.row[item.prop]):'-'}}
+              {{scope.row[item.prop]?utcTimeToTimezoneStr(scope.row[item.prop]):'-'}}
             </template>
              <template v-if="item.prop == 'remark'">
               {{scope.row[item.prop]?scope.row[item.prop]:'-'}}
@@ -80,7 +80,6 @@
 <script>
 import { tableCommon } from './systemCommon'
 import table from '@/components/common/mixin/table'
-import bus from '@/libs/bus'
 export default {
   name: 'apiKeyTable',
   props: {
@@ -118,13 +117,13 @@ export default {
     }
   },
   methods: {
-    timeFormates (data) {
-      if (localStorage.getItem('nz-default-dateFormat')) {
-        return bus.timeFormate(new Date(data), localStorage.getItem('nz-default-dateFormat'))
-      } else {
-        return bus.timeFormate(new Date(data), 'YYYY-MM-DD HH:mm:ss')
-      }
-    }
+    // timeFormates (data) {
+    //   if (localStorage.getItem('nz-default-dateFormat')) {
+    //     return bus.timeFormate(new Date(data), localStorage.getItem('nz-default-dateFormat'))
+    //   } else {
+    //     return bus.timeFormate(new Date(data), 'YYYY-MM-DD HH:mm:ss')
+    //   }
+    // }
   },
   created () {
   },

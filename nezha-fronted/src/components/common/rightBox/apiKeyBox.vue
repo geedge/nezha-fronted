@@ -102,6 +102,7 @@ export default {
       this.$refs.apiKeyBoxForm.validate((valid) => {
         if (valid) {
           if (this.apiKeyBox.name) {
+            this.apiKeyBox.expireAt = this.timezoneToUtcTimeStr(this.apiKeyBox.expireAt, 'YYYY-MM-DD HH:mm:ss')
             this.$post('sys/apiKey/self', { ...this.apiKeyBox }).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
