@@ -34,7 +34,7 @@
             node-key="id"
             ref="panelTree">
             <div class="tree--node" slot-scope="{ node, data }">
-              <span :title="node.label + ' (' + data.chartNum +' charts）' " v-html="ruleTitle(node.label)"></span>
+              <HighlightText :queries="filterPanel" :highlightClass="'highlight-keyword'" style="vertical-align: middle" :title="node.label + ' (' + data.chartNum +' charts）' ">{{node.label}}</HighlightText>
               <el-row class="block-col-2" style="margin-left:10px;margin-right:8px">
                 <el-col>
                   <el-dropdown v-if="!panelLock"  placement="bottom-end" trigger="click" style="margin-right:10px">
@@ -66,8 +66,12 @@
 </template>
 <script>
 import bus from '@/libs/bus'
+import HighlightText from 'vue-text-highlight'
 export default {
   name: 'selectDashboard',
+  components: {
+    HighlightText
+  },
   props: {
     placement: { type: String },
     panelData: { type: Array },
@@ -288,16 +292,6 @@ export default {
       if (!value) return true
       // 不区分大小写
       return data.name.toLowerCase().indexOf(value.toLowerCase()) !== -1
-    },
-    // 高亮搜索的关键字
-    ruleTitle (title) {
-      const reg = new RegExp(this.filterPanel, 'ig')
-      const arr = title.match(reg)
-      let index = -1
-      return title.replace(reg, function () {
-        index++
-        return '<span class="highlight-keyword">' + arr[index] + '</span>'
-      })
     },
     updateWeight (data) {
       const toUpdate = []
