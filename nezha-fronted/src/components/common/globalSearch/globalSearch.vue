@@ -2,7 +2,7 @@
   <div class="global-search-bac" v-if="globalShow" @click.self="close">
     <div class="global-search-box" :class="firstShow? '' : 'search-after'" @click.self="close">
       <div class="global-search-input" :class="firstShow? '' : 'search-after'">
-        <i class="nz-icon nz-icon-search" v-my-loading:circle3.scaleMin.icon="jumpLoading"></i>
+        <i class="nz-icon nz-icon-search" v-my-loading:circle3.scaleMin.icon="loading"></i>
         <el-input v-model="searchStr" @input="searchAll" ref="searchStr" :placeholder="$t('globalSearch.placeholder')" @keydown.native="inputKeydown" clearable></el-input>
         <div @click="close" class="global-search-cancel">
           {{$t('overall.cancel')}}
@@ -52,7 +52,7 @@
                     <div class="list-item-sub" v-if="item.sub">
                       {{ item.sub }}
                     </div>
-                    <div class="is-jump" v-my-loading:circle3.scaleMin.icon="true">
+                    <div class="is-jump" v-my-loading:circle3.scaleMin.icon="jumpLoading">
                       <i class="nz-icon nz-icon-huiche"></i>
                     </div>
                   </li>
