@@ -220,7 +220,8 @@ td .nz-icon-gear:before{
 .time-no-data {
   text-align: center;
   width: 100%;
-  color: $--color-text-secondary;
+  // color: $--color-text-secondary;
+  color: $--color-text-regular;
   font-family: NotoSans !important;
   font-size: 12px !important;
 }
