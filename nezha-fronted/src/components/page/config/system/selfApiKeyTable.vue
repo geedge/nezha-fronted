@@ -39,6 +39,9 @@
             <template v-if="item.prop == 'name'">
                {{scope.row[item.prop]?scope.row[item.prop]:'-'}}
             </template>
+             <template v-if="item.prop == 'token'">
+               {{scope.row[item.prop]?scope.row[item.prop]:'-'}}
+            </template>
              <template v-if="item.prop == 'expireAt'">
               {{scope.row[item.prop]?utcTimeToTimezoneStr(scope.row[item.prop]):'-'}}
             </template>
@@ -97,10 +100,17 @@ export default {
         }, {
           label: this.$t('overall.name'),
           prop: 'name',
+          minWidth: 100,
+          show: true
+        }, {
+          label: this.$t('asset.talon.token'),
+          prop: 'token',
+          minWidth: 180,
           show: true
         }, {
           label: this.$t('config.system.apiKey.expireAt'),
           prop: 'expireAt',
+          minWidth: 100,
           show: true
         }, {
           label: this.$t('config.system.apiKey.creatAt'),

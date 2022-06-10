@@ -11,11 +11,6 @@
       <template v-slot:top-tool-left>
 
       </template>
-      <template v-slot:top-tool-right>
-        <button id="api-key-add" v-has="'system_apiKey_add'" :title="$t('config.system.notification.create')" class="top-tool-btn margin-r-10" type="button" @click="addApiKey">
-          <i class="nz-icon-create-square nz-icon"></i>
-        </button>
-      </template>
       <template v-slot:default="slotProps">
         <api-key-table
           ref="dataTable"
