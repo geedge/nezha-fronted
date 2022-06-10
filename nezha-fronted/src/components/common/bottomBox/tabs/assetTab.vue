@@ -32,6 +32,7 @@
           @addSilence="addSilence"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @topology="topology"
           @selectionChange="selectionChange"
           ></asset-table>
       </template>

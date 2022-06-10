@@ -743,7 +743,7 @@ export default {
             this.$put(this.url, params).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
-                this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { assetId: res.data.id }, false)
+                this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { assetId: res.data.id }, true, 'guide.addEndpoint')
                 this.esc(true)
               } else {
                 this.$message.error(res.msg)
@@ -753,7 +753,7 @@ export default {
             this.$post(this.url, params).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
-                this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { assetId: res.data.id }, false)
+                this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { assetId: res.data.id }, true, 'guide.addEndpoint')
                 this.esc(true)
               } else {
                 this.$message.error(res.msg)

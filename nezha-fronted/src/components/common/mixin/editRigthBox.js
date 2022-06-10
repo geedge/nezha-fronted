@@ -5,7 +5,8 @@ export default {
       messageParams: {
         route: '',
         params: {}
-      }
+      },
+      closeMessage: ''
     }
   },
   mounted () {
@@ -16,17 +17,18 @@ export default {
     }
   },
   methods: {
-    messageShow (msg, route, params, showNext = false) {
+    messageShow (msg, route, params, showNext = false, nextText = 'setup.next') {
       this.messageParams.route = route
       this.messageParams.params = params
-      this.$message({
+      this.closeMessage = this.$message({
         duration: 2000,
         dangerouslyUseHTMLString: true,
         type: 'success',
-        message: `<div>${msg} <span id="assetAdd" class="message-next ${showNext ? '' : 'hidden'}">Next</span></div>`,
+        message: `<div>${msg} <span class="message-next ${showNext ? '' : 'hidden'}"><span class="message-next-continue">${this.$t('overall.continue')}</span> <span id="assetAdd" class="message-next-content">${this.$t(nextText)}</span></span></div>`,
         onClose: () => {
           const assetAdd = document.getElementById('assetAdd')
           assetAdd.removeEventListener('click', this.saveNext)
+          this.closeMessage = ''
         }
       })
       const assetAdd = document.getElementById('assetAdd')
@@ -37,6 +39,7 @@ export default {
         path: this.messageParams.route,
         query: this.messageParams.params
       })
+      this.closeMessage.close()
     }
   },
   destroyed () {

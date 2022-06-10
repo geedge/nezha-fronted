@@ -59,6 +59,7 @@
 import nzDataList from '@/components/common/table/nzDataList'
 import backupsTable from '@/components/common/table/settings/backupsTable'
 import backupsBox from '@/components/common/rightBox/administration/backupsBox'
+import bus from '@/libs/bus'
 
 export default {
   name: 'backups',
@@ -106,6 +107,9 @@ export default {
 
   mounted () {
     this.getTableData()
+    bus.$on('backupNow', () => {
+      this.getTableData()
+    })
   },
 
   methods: {
@@ -123,7 +127,7 @@ export default {
             }
           }
         })
-        this.$post('/sys/backup/list').then((res) => {
+        this.$get('/sys/backup/list').then((res) => {
           if (res.code === 200) {
             if (res.data) {
               this.tableData2 = res.data
@@ -143,7 +147,7 @@ export default {
           }
         })
 
-        this.$post('/sys/backup/list').then((res) => {
+        this.$get('/sys/backup/list').then((res) => {
           if (res.code === 200) {
             if (res.data) {
               this.tableData2 = res.data
@@ -151,7 +155,7 @@ export default {
           }
         })
       } else if (item == 'recent') {
-        this.$post('/sys/backup/list').then((res) => {
+        this.$get('/sys/backup/list').then((res) => {
           if (res.code === 200) {
             if (res.data) {
               this.tableData2 = res.data

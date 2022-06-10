@@ -5,6 +5,7 @@
       :layout="layout"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.operationLog"
+      class="operation-log"
       :operation-record="true"
       @search="search"
       :search-msg="searchMsg">

@@ -5,6 +5,7 @@
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.apiKey"
+      class="api-key"
       :layout="['searchInput', 'elementSet', 'pagination']"
       :search-msg="searchMsg"
       @search="search">
@@ -86,6 +87,11 @@ export default {
           label: this.$t('overall.name'),
           prop: 'name',
           minWidth: 100,
+          show: true
+        }, {
+          label: this.$t('asset.talon.token'),
+          prop: 'token',
+          minWidth: 180,
           show: true
         }, {
           label: this.$t('config.system.apiKey.expireAt'),
