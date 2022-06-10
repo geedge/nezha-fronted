@@ -92,7 +92,7 @@
                     </div>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA">
-                    <el-input v-model="label.value" :maxlength="4096" size="small" type="textarea"/>
+                    <el-input v-model="label.value" :maxlength="4096" size="small" :rows="2" show-word-limit type="textarea"/>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.RADIO">
                     <el-radio v-for="item in JSON.parse(label.param).items" :key="item.name" v-model="label.value" :label="item.name">{{item.name}}</el-radio>

@@ -133,7 +133,7 @@
       </div>
       <!--url-->
       <el-form-item v-if="isUrl(chartConfig.type)" :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url">
-        <el-input id="chart-box-url" v-model="chartConfig.param.url" maxlength="1024" show-word-limit size="small" type="textarea" @change="change"></el-input>
+        <el-input id="chart-box-url" v-model="chartConfig.param.url" maxlength="1024" show-word-limit size="small" :rows="2" type="textarea" @change="change"></el-input>
       </el-form-item>
       <!--topoData-->
       <el-form-item v-if="isDiagram(chartConfig.type)" >

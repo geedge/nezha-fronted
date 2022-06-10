@@ -19,7 +19,7 @@
             <el-input v-model.number="editCabinet.uSize" :max="47" id="cabinet-box-input-uSize" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')">
-            <el-input size='mini' maxlength="256" show-word-limit v-model="editCabinet.remark" type="textarea" :rows="2" id="cabinet-box-input-remark"/>
+            <el-input size="small" :rows="2" maxlength="256" show-word-limit v-model="editCabinet.remark" type="textarea"  id="cabinet-box-input-remark"/>
           </el-form-item>
         </el-form>
       </div>

@@ -17,7 +17,7 @@
               <el-input placeholder="" maxlength="64" show-word-limit v-model="editMetaGroup.name" size="small" id="editMetaGroup-box-input-name"></el-input>
             </el-form-item>
             <el-form-item :label='$t("overall.remark")' prop="remark">
-              <el-input placeholder="" maxlength="256" type="textarea" show-word-limit v-model="editMetaGroup.remark" size="small" id="editMetaGroup-box-input-remark"></el-input>
+              <el-input placeholder="" maxlength="256" type="textarea" show-word-limit v-model="editMetaGroup.remark" size="small" :rows="2" id="editMetaGroup-box-input-remark"></el-input>
             </el-form-item>
           </el-form>
         </div>

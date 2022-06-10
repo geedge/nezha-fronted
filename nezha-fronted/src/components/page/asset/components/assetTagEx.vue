@@ -21,7 +21,7 @@
       </el-row>
     </div>
     <div v-else-if="type==='textarea'">
-      <el-input v-model="inputValue" size="small" type="textarea" maxlength="512" :autosize="{ minRows: 2, maxRows: 4}"/>
+      <el-input v-model="inputValue" size="small" type="textarea" show-word-limit maxlength="512" :rows="2"/>
     </div>
     <div v-else-if="type==='radio'">
       <el-radio-group v-model="optionValue" >

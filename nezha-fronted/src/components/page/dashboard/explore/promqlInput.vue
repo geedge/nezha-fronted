@@ -90,9 +90,10 @@
              v-if="type == 'log'"
             :id="inputId"
             v-model="expressionList[index]"
-            :autosize="{ minRows: 1, maxRows: 6 }"
+            size="small" :rows="2"
             class="not-fixed-height no-resize"
             type="textarea"
+            show-word-limit maxlength="256"
             @input="metricKeyDown"
             @keyup.enter.native="expressionChange"
             ref="elInput"
@@ -252,7 +253,7 @@
                 type="textarea"
                 :maxlength="styleType === 3 ? 512 : 4096"
                 show-word-limit
-                :autosize="{ minRows: 1, maxRows: 6 }"
+                size="small" :rows="2"
                 class="not-fixed-height no-resize"
                 ref="elInput"
               ></el-input>
