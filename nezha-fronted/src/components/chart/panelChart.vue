@@ -436,9 +436,14 @@ export default {
           }
           case 'system': {
             this.chartData = []
+            if (this.chartInfo.type === 'assetInfo' || this.chartInfo.type === 'endpointInfo') {
+              this.chartData = this.dataJson[this.chartInfo.id + '_' + 0].data
+              this.loading = false
+              break
+            }
             this.chartData.push(this.dataJson[this.chartInfo.id + '_' + 0].result)
-          }
             break
+          }
           case 'misc': {
             this.loading = false
             setTimeout(() => {

@@ -104,7 +104,6 @@ if (arg === 'html' || devStart === 'dev:html') {
   baseConfig.module.rules.unshift({
     include: [
       resolve('src/entrance/app'),
-      resolve('src/components/common/alert'),
       resolve('src/components/common/bottomBox'),
       resolve('src/components/common/detailView'),
       resolve('src/components/common/elSelect'),
