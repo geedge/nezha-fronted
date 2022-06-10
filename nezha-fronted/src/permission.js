@@ -97,6 +97,10 @@ router.beforeEach((to, from, next) => {
           }
         })
         if (!store.getters.i18nIsReady) {
+          const langList = localStorage.getItem('nz-language-list')
+          if (langList) {
+            store.commit('setLangList', JSON.parse(langList))
+          }
           get(config.body.baseUrl + 'sys/i18n/lang').then(res => {
             if (res.code === 200) {
               loadI18n(res.data)
