@@ -77,7 +77,7 @@
           @click="dropDownVisible = false"
         >
         <div
-          :id="'editor'+index"
+          :id="pqid + 'editor'+index"
           v-if="type !== 'log'"
           class="not-fixed-height no-resize no-close"
         >
@@ -238,8 +238,8 @@
               :id="pqid + 'editor'+index"
               v-if="type !== 'log'"
               class="not-fixed-height no-resize no-close"
-        >
-        </div>
+            >
+            </div>
             <!-- <div id="editor"
             class="not-fixed-height no-resize no-close"
                 ref="elInput"
@@ -438,7 +438,7 @@ export default {
     pqid: {
       type: String, default: ''
     },
-    expressionList: {},
+    expressionList: { type: Array },
     plugins: { type: Array },
     styleType: Number,
     historyParam: { type: Object },
@@ -1096,16 +1096,15 @@ export default {
       deep: true,
       immediate: true,
       handler (n, o) {
-        // console.log(n, n[this.index])
         this.codeMirrorValue[this.index] = n[this.index]
-        setTimeout(() => {
-          const text = this.newView.state.doc.toString()
-          this.newView.dispatch(
-            this.newView.state.update({
-              changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
-            })
-          )
-        }, 200)
+        // setTimeout(() => {
+        //   const text = this.newView.state.doc.toString()
+        //   this.newView.dispatch(
+        //     this.newView.state.update({
+        //       changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
+        //     })
+        //   )
+        // }, 200)
       }
     },
 

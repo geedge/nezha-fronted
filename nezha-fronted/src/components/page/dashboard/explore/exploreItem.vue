@@ -61,6 +61,7 @@
               :metricOptionsParent="metricOptions"
               v-for="index of promqlKeys.length"
               :id="promqlKeys[index-1]"
+              :pqid="tabIndex.toString()"
               :key="promqlKeys[index-1]"
               :ref="'promql-'+(index-1)"
               :expression-list="expressions"
@@ -78,6 +79,7 @@
             <promql-input
               v-for="index of promqlKeys.length"
               :id="promqlKeys[index-1]"
+              :pqid="tabIndex.toString()"
               :key="promqlKeys[index-1]"
               :ref="'promql-'+(index-1)"
               :expression-list="expressions"

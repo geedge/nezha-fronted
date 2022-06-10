@@ -114,7 +114,8 @@ export default {
     },
     filterNode (value, data) {
       if (!value) return true
-      return data.name.indexOf(value) !== -1
+      // 不区分大小写
+      return data.name.toLowerCase().indexOf(value.toLowerCase()) !== -1
     },
     updateWeight () {
       const toUpdate = []
