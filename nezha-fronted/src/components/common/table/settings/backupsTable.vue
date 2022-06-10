@@ -146,8 +146,8 @@ export default {
       })
     },
     changeDate (item) {
-      const time = Date.parse(item)
-      const time1 = this.timeFormate(time)
+      const time = this.utcTimeToTimezoneStr(item)
+      const time1 = this.timeFormate(Date.parse(time))
       return time1
     },
     getNum (item) {
@@ -157,6 +157,7 @@ export default {
       post('/sys/backup').then((res) => {
         if (res.code == 200) {
           this.$message.success(this.$t('backup.backupNow'))
+          bus.$emit('backupNow')
         } else {
           this.$message.error(res.msg)
         }
