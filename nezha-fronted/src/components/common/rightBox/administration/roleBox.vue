@@ -15,7 +15,7 @@
                        show-word-limit size="small" type="text" v-model="editRole.name"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')">
-            <el-input maxlength="256" show-word-limit :rows="2" size='mini' type="textarea" v-model="editRole.remark" id="role-box-input-remark"/>
+            <el-input maxlength="256" show-word-limit :rows="2" size='small' type="textarea" v-model="editRole.remark" id="role-box-input-remark"/>
           </el-form-item>
 
           <el-form-item :label="$t('config.roles.permission')">

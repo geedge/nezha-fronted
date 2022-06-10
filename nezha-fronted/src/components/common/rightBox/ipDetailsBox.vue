@@ -24,7 +24,7 @@
             <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.state" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')" prop="remark">
-            <el-input maxlength="256" rows="4" show-word-limit type="textarea" placeholder="" v-model="editipDetails.remark" size="small" id="mib-box-input-remark"></el-input>
+            <el-input maxlength="256" rows="2" show-word-limit type="textarea" placeholder="" v-model="editipDetails.remark" size="small" id="mib-box-input-remark"></el-input>
           </el-form-item>
         </el-form>
       </div>

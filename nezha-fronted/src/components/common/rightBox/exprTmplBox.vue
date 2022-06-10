@@ -48,10 +48,9 @@
           <el-form-item :label="$t('overall.remark')" prop="remark">
             <el-input
               v-model="editExprTemp.remark"
-              :placeholder="$t('overall.remark')"
               maxlength="256"
               show-word-limit
-              size="small"
+              size="small" :rows="2"
               type="textarea"
             ></el-input>
           </el-form-item>

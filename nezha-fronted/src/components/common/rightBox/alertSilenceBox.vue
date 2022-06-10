@@ -95,8 +95,8 @@
           <el-form-item :label='$t("overall.remark")' class="range-time" prop="remark">
             <el-input
               v-model="editAlertSilence.remark"
-              :placeholder="$t('overall.remark')"
               maxlength="256"
+              size="small" :rows="2"
               show-word-limit
               type="textarea">
 

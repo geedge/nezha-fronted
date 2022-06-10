@@ -112,7 +112,7 @@
               </div>
             </el-form-item>
             <el-form-item :label='$t("overall.remark")' prop="remark">
-              <el-input placeholder="" maxlength="256" type="textarea" show-word-limit v-model="editAssetMeta.remark" size="small" id="editAssetMeta-box-input-remark"></el-input>
+              <el-input placeholder="" maxlength="256" type="textarea" show-word-limit v-model="editAssetMeta.remark" size="small" :rows="2" id="editAssetMeta-box-input-remark"></el-input>
             </el-form-item>
 <!--            <el-form-item :label='$t("config.assetLabel.example")'>-->
 <!--              <assetTagEx :param="editAssetMeta.param" :type="editAssetMeta.type.toUpperCase()"/>-->

@@ -42,7 +42,7 @@
         </el-form-item>
         <!--descrption-->
         <el-form-item :label="$t('overall.remark')" prop="remark">
-          <el-input id="asset-state-input-description" placeholder="" size="small" type="textarea" v-model="editAssetState.remark"></el-input>
+          <el-input id="asset-state-input-description" placeholder="" size="small" :rows="2" type="textarea" show-word-limit maxlength="256" v-model="editAssetState.remark"></el-input>
         </el-form-item>
       </el-form>
     </div>
