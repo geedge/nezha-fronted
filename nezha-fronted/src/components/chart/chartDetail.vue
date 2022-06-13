@@ -210,6 +210,7 @@ export default {
       this.showBasicInfo = !this.showBasicInfo
     },
     init () {
+      if (window.dataJson) { return }
       this.loading = true
       const weekDays = this.getWeeksTime()
       if (this.trendTimer) {

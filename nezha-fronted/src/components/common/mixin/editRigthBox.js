@@ -21,7 +21,7 @@ export default {
       this.messageParams.route = route
       this.messageParams.params = params
       this.closeMessage = this.$message({
-        duration: 2000,
+        duration: showNext ? 5000 : 2000,
         dangerouslyUseHTMLString: true,
         type: 'success',
         message: `<div>${msg} <span class="message-next ${showNext ? '' : 'hidden'}"><span class="message-next-continue">${this.$t('overall.continue')}</span> <span id="assetAdd" class="message-next-content">${this.$t(nextText)}</span></span></div>`,

@@ -312,7 +312,8 @@ if (process.env.NODE_ENV == 'development') {
       onEnd: [
         {
           move: [
-            { source: path.join(__dirname, '../dist', '/static/config.json'), destination: path.join(__dirname, '../dist/config.json') }
+            { source: path.join(__dirname, '../dist', '/static/config.json'), destination: path.join(__dirname, '../dist/config.json') },
+            { source: path.join(__dirname, '../exportHtml', '/exportHtml.html'), destination: path.join(__dirname, '../dist/exportHtml.html') }
 
           ],
           mkdir: [
@@ -345,7 +346,8 @@ if (process.env.NODE_ENV == 'development') {
     onEnd: [
       {
         move: [
-          { source: path.join(__dirname, '../dist', '/static/config.json'), destination: path.join(__dirname, '../dist/config.json') }
+          { source: path.join(__dirname, '../dist', '/static/config.json'), destination: path.join(__dirname, '../dist/config.json') },
+          { source: path.join(__dirname, '../exportHtml', '/snapshot_template.html'), destination: path.join(__dirname, '../dist/snapshot_template.html') }
 
         ],
         mkdir: [
@@ -371,7 +373,7 @@ if (process.env.NODE_ENV == 'development') {
   if (arg === 'html') {
     plugin.onStart[0].delete.push(path.join(__dirname, '../exportHtml/'))
     plugin.onEnd[0].copy.push(
-      { source: path.join(__dirname, '../dist', '/index.html'), destination: path.join(__dirname, '../exportHtml', '/index.html') }
+      { source: path.join(__dirname, '../dist', '/index.html'), destination: path.join(__dirname, '../exportHtml', '/snapshot_template.html') }
     )
   }
   webpackConfig.plugins.push(
