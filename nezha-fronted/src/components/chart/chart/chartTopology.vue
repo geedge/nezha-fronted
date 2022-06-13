@@ -8,12 +8,12 @@
         </div>
       </div>
     </div>
-    <alertLabel
-      v-if="alertLabelShow"
-      :id="alertLabelId"
-      :that="alertLabelObj"
-      :type="alertLabelType"
-    ></alertLabel>
+<!--    <alertLabel-->
+<!--      v-if="alertLabelShow"-->
+<!--      :id="alertLabelId"-->
+<!--      :that="alertLabelObj"-->
+<!--      :type="alertLabelType"-->
+<!--    ></alertLabel>-->
   </div>
 </template>
 
@@ -456,7 +456,7 @@ export default {
             const prevParentId = d.parentId ? d.parentId[d.parentId.length - 1] : ''
             res.data.nodes = res.data.nodes.filter(item => item.id !== parentId) // 处理连线 node 重复的问题
             res.data.nodes = res.data.nodes.filter(item => item.id !== prevParentId)
-            res.data.links = res.data.links.filter(item => item.source !== prevParentId)
+            res.data.links = res.data.links.filter(item => item.source !== parentId)
             res.data.links = res.data.links.filter(item => item.target !== prevParentId)
             res.data.nodes.forEach(item => {
               item.hasChildren = false
