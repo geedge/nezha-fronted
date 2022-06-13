@@ -63,26 +63,8 @@
         #api-key-tab{
           height: calc(100% - 78px) !important;
         }
-        .el-table__fixed-header-wrapper.has-gutter{
-          height: 41px;
-        }
         .el-table__body-wrapper{
           overflow-x: hidden !important;
-          .el-table__row{
-            height: 63px !important;
-            
-          }
-        }
-        .el-table__fixed-right{
-          .el-table__fixed-header-wrapper{
-            height: 41px;
-          }
-          .el-table__fixed-body-wrapper{
-            .el-table__row{
-              height: 63px;
-            }
-          }
-          
         }
       }
     }
