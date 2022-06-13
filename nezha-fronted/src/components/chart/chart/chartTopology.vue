@@ -565,7 +565,10 @@ export default {
           if (document.getElementById('#circle' + d.id)) {
             return
           }
-          console.log(box, d.id)
+          box.attr('id', 'node' + d.id)
+          if (document.getElementById('node' + d.id)) {
+            document.getElementById('node' + d.id).innerHTML = ''
+          }
           box.append('circle')
             .attr('r', d.radius)
             .attr('fill', d.color)
