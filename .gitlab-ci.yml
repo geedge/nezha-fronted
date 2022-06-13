@@ -40,6 +40,9 @@ dev_build:
     - npm run build
 
     - cd /builds/nezha/nezha-fronted/nezha-fronted/dist 
+    # 链接 minio 引入模板
+    - mc alias set nz $MINIO_HOST $MINIO_USER $MINIO_PWD
+    - mc cp nz/depends/template/snapshot_template.html ./snapshot_template.html
     - rm -rf nz-gui*.zip
     - export FILE_NAME=nz-gui-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA.zip
     # 生成 git log 日志文件
@@ -50,7 +53,6 @@ dev_build:
     - zip -q -r $FILE_NAME ./*
 
     # 将 dist zip 上传到 minio 
-    - mc alias set nz $MINIO_HOST $MINIO_USER $MINIO_PWD
     - mc cp $FILE_NAME nz/ci-cd/nz-gui/$FILE_NAME
     - mc cp $FILE_NAME nz/ci-cd/nz-gui/nz-gui-$CI_COMMIT_REF_NAME-latest.zip
   artifacts:
@@ -80,9 +82,11 @@ rel_build:
     - echo "npm run build"
     - npm run build
     - cd /builds/nezha/nezha-fronted/nezha-fronted/dist
+    - mc alias set nz $MINIO_HOST $MINIO_USER $MINIO_PWD
+    - mc cp nz/depends/template/snapshot_template.html ./snapshot_template.html
+    - zip -m nz-gui*.zip ./snapshot_template.html
     - mv nz-gui*.zip nz-gui-$CI_COMMIT_SHORT_SHA.zip
     - md5sum nz-gui-$CI_COMMIT_SHORT_SHA.zip > nz-gui-$CI_COMMIT_SHORT_SHA.zip.md5sum.txt
-    - mc alias set nz $MINIO_HOST $MINIO_USER $MINIO_PWD
     - mc cp nz-gui-$CI_COMMIT_SHORT_SHA.zip nz/release/nz-gui/nz-gui-$CI_COMMIT_SHORT_SHA.zip
     - mc cp nz-gui-$CI_COMMIT_SHORT_SHA.zip.md5sum.txt nz/release/nz-gui/nz-gui-$CI_COMMIT_SHORT_SHA.zip.md5sum.txt
   artifacts:
