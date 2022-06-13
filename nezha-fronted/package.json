@@ -8,7 +8,7 @@
     "dev": "node --max-old-space-size=10240 ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --progress --config build/webpack.dev.conf.js",
     "dev:html": "node --max-old-space-size=10240 ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "build": "node build/build.js html && node build/build.js app",
+    "build": "node build/build.js app",
     "build:html": "node build/build.js html",
     "lint": "eslint --fix --ext .js,.vue src",
     "unit": "jest --config test/unit/jest.conf.js --coverage"

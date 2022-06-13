@@ -370,12 +370,12 @@ if (process.env.NODE_ENV == 'development') {
       }
     ]
   }
-  if (arg === 'html') {
-    plugin.onStart[0].delete.push(path.join(__dirname, '../exportHtml/'))
-    plugin.onEnd[0].copy.push(
-      { source: path.join(__dirname, '../dist', '/index.html'), destination: path.join(__dirname, '../exportHtml', '/snapshot_template.html') }
-    )
-  }
+  // if (arg === 'html') {
+  //   plugin.onStart[0].delete.push(path.join(__dirname, '../exportHtml/'))
+  //   plugin.onEnd[0].copy.push(
+  //     { source: path.join(__dirname, '../dist', '/index.html'), destination: path.join(__dirname, '../exportHtml', '/snapshot_template.html') }
+  //   )
+  // }
   webpackConfig.plugins.push(
     new fileManagerPlugin(plugin)
   )
