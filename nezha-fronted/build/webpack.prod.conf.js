@@ -313,7 +313,7 @@ if (process.env.NODE_ENV == 'development') {
         {
           move: [
             { source: path.join(__dirname, '../dist', '/static/config.json'), destination: path.join(__dirname, '../dist/config.json') },
-            { source: path.join(__dirname, '../exportHtml', '/snapshot_template.html'), destination: path.join(__dirname, '../dist/snapshot_template.html') }
+            // { source: path.join(__dirname, '../exportHtml', '/snapshot_template.html'), destination: path.join(__dirname, '../dist/snapshot_template.html') }
 
           ],
           mkdir: [
@@ -347,7 +347,7 @@ if (process.env.NODE_ENV == 'development') {
       {
         move: [
           { source: path.join(__dirname, '../dist', '/static/config.json'), destination: path.join(__dirname, '../dist/config.json') },
-          { source: path.join(__dirname, '../exportHtml', '/snapshot_template.html'), destination: path.join(__dirname, '../dist/snapshot_template.html') }
+          // { source: path.join(__dirname, '../exportHtml', '/snapshot_template.html'), destination: path.join(__dirname, '../dist/snapshot_template.html') }
 
         ],
         mkdir: [

@@ -8,12 +8,12 @@
         </div>
       </div>
     </div>
-<!--    <alertLabel-->
-<!--      v-if="alertLabelShow"-->
-<!--      :id="alertLabelId"-->
-<!--      :that="alertLabelObj"-->
-<!--      :type="alertLabelType"-->
-<!--    ></alertLabel>-->
+    <alertLabel
+      v-if="alertLabelShow"
+      :id="alertLabelId"
+      :that="alertLabelObj"
+      :type="alertLabelType"
+    ></alertLabel>
   </div>
 </template>
 
@@ -225,7 +225,10 @@ export default {
       let node = nodeAll.data(nodes)
         .enter().append('g')
         .attr('class', 'node animation')
-        .attr('id', function (d) { return 'node' + d.id })
+        .attr('id', function (d) {
+          console.log(d)
+          return 'node' + d.id
+        })
         .attr('style', function (d) {
           let str = 'opacity:'
           str += 1
@@ -456,7 +459,7 @@ export default {
             const prevParentId = d.parentId ? d.parentId[d.parentId.length - 1] : ''
             res.data.nodes = res.data.nodes.filter(item => item.id !== parentId) // 处理连线 node 重复的问题
             res.data.nodes = res.data.nodes.filter(item => item.id !== prevParentId)
-            res.data.links = res.data.links.filter(item => item.source !== parentId)
+            res.data.links = res.data.links.filter(item => item.source !== prevParentId)
             res.data.links = res.data.links.filter(item => item.target !== prevParentId)
             res.data.nodes.forEach(item => {
               item.hasChildren = false
@@ -473,7 +476,11 @@ export default {
               .data(nodes)
               .join(
                 enter => enter.append('g').attr('class', 'node')
-                  .attr('id', function (d) { return 'node' + d.id })
+                  .attr('id', function (child) {
+                    console.log(child)
+                    return 'node' + child.id
+                  }
+                  )
                   .call(drag(simulation))
                   .on('mouseleave', nodeMouseout)
                   .on('click', showChildren),
@@ -509,11 +516,15 @@ export default {
           const prevParentId = d.parentId ? d.parentId[d.parentId.length - 1] : ''
           simulation.stop()
           nodes = nodes.filter(child => child.parentId.indexOf(d.id) === -1)
+          console.log(nodes, 'hide')
           node = node
             .data(nodes)
             .join(
               enter => enter.append('g').attr('class', 'node')
-                .attr('id', function (d) { return 'node' + d.id })
+                .attr('id', function (child) {
+                  console.log(child)
+                  return 'node' + child.id
+                })
                 .call(drag(simulation))
                 .on('mouseleave', nodeMouseout)
                 .on('click', showChildren),
@@ -547,12 +558,14 @@ export default {
       }
 
       function render () {
+        console.log(node.nodes())
         node.nodes().forEach(item => {
           const box = d3.select(item)
           const d = box.data()[0]
           if (document.getElementById('#circle' + d.id)) {
             return
           }
+          console.log(box, d.id)
           box.append('circle')
             .attr('r', d.radius)
             .attr('fill', d.color)
@@ -745,6 +758,7 @@ export default {
   created () {
   },
   mounted () {
+
   },
   beforeDestroy () {
   }
