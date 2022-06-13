@@ -464,6 +464,10 @@ export default {
     },
     type: {
       type: String // metric和log两种，为空时视为metric
+    },
+    isTopo: {
+      type: Boolean,
+      default: false
     }
     // metricOptions: {type: Array},
     // metricStore: {type: Array}
@@ -1098,14 +1102,16 @@ export default {
       immediate: true,
       handler (n, o) {
         this.codeMirrorValue[this.index] = n[this.index]
-        // setTimeout(() => {
-        //   const text = this.newView.state.doc.toString()
-        //   this.newView.dispatch(
-        //     this.newView.state.update({
-        //       changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
-        //     })
-        //   )
-        // }, 200)
+        if (this.isTopo) {
+          setTimeout(() => {
+            const text = this.newView.state.doc.toString()
+            this.newView.dispatch(
+              this.newView.state.update({
+                changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
+              })
+            )
+          }, 200)
+        }
       }
     },
 

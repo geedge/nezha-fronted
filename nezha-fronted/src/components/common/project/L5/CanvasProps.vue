@@ -46,6 +46,7 @@
                       style="">
                 <promql-input
                   :from-father-data="true"
+                  :isTopo="true"
                   :metricOptionsParent="metricOptions"
                   :id="index"
                   :key="index"
@@ -222,6 +223,7 @@
                       style="width: 100%; border-radius: 2px; padding-right: 60px;">
                 <promql-input
                   :from-father-data="true"
+                  :isTopo="true"
                   :metricOptionsParent="metricOptions"
                   :id="index"
                   :pqid="'vm'"
