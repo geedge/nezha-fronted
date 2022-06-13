@@ -34,11 +34,20 @@
             </div>
 
             <div class="top-tool-right">
-<!--              <div class="top-tool-search margin-r-20">-->
-<!--                <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">-->
-<!--                  <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>-->
-<!--                </el-input>-->
-<!--              </div>-->
+             <!-- <div class="top-tool-search margin-r-20">
+               <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
+                 <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>
+               </el-input>
+             </div> -->
+
+             <!-- 测试图表联动 -->
+              <button slot="reference" class="top-tool-btn margin-r-10" @click="connect">
+                on
+              </button>
+              <!-- 测试图表联动 -->
+              <button slot="reference" class="top-tool-btn margin-r-10" @click="connect">
+                off
+              </button>
 
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id"></pick-time>
 
@@ -156,7 +165,9 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
-import FileSaver from 'file-saver'
+import { chartCache } from '@/components/common/js/common'
+import * as echarts from 'echarts'
+// import FileSaver from 'file-saver'
 // import chartData from './testData'
 export default {
   name: 'panel',
@@ -279,7 +290,9 @@ export default {
       // 导出html 以及 pdf的弹窗
       exportBoxShow: false,
       // 查看模式
-      mode: ''
+      mode: '',
+      // 多表联动（timeSeries类型图表）
+      isconnect: false
     }
   },
   components: {
@@ -302,6 +315,15 @@ export default {
     }
   },
   methods: {
+    // 测试图表联动
+    connect () {
+      this.isconnect = !this.isconnect
+      if (this.isconnect) {
+        echarts.connect('timeSeriesGroup')
+      } else {
+        echarts.disconnect('timeSeriesGroup')
+      }
+    },
     // 更新Weight
     updateWeight (value) {
       this.panelData = JSON.parse(JSON.stringify(value))
@@ -335,6 +357,8 @@ export default {
         searchTime: JSON.stringify(this.searchTime),
         mode: this.mode
       }
+      console.log(param.nowTimeType)
+      console.log(param.searchTime)
       // this.getTableData()
       // this.getData(this.filter)
       const path = this.fromRoute.panel

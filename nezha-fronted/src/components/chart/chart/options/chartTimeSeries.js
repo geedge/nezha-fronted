@@ -38,7 +38,13 @@ export const chartTimeSeriesLineOption = {
     z: 9,
     animation: false,
     appendToBody: true,
-    className: 'chart-time-series'
+    className: 'chart-time-series',
+    axisPointer: {
+      type: 'cross', // 十字准星指示器,表示启用两个正交的轴的 axisPointer
+      label: {
+        show: false
+      }
+    }
     // formatter: 动态生成
   },
   color: initColor(),
@@ -61,9 +67,9 @@ export const chartTimeSeriesLineOption = {
       fontSize: 10
       // formatter: 动态生成
     },
-    axisPointer: { // y轴上显示指针对应的值
-      show: true
-    },
+    // axisPointer: { // y轴上显示指针对应的值
+    //   show: true
+    // },
     splitLine: {
       show: true,
       lineStyle: {

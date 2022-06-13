@@ -123,6 +123,11 @@ export default {
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
         this.isInit = false
+        // timeSeries类型图表设置group 用于多表联动
+        myChart.group = 'timeSeriesGroup'
+        getChart(this.chartId).on('dataZoom', function (params) {
+          console.log(params)
+        })
       }, 200)
     },
     getMinMaxFromData (originalDatas, chartUnit = 2) {
@@ -193,7 +198,7 @@ export default {
       return { minTime, maxTime, minValue, maxValue, copies, unit, dot }
     },
     xAxisLabelFormatter (minTime, maxTime) {
-      let self = this
+      const self = this
       return function (val, index) {
         const value = val * 1000
         let offset = localStorage.getItem('nz-sys-timezone')
