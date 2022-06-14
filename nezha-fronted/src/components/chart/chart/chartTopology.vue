@@ -226,7 +226,6 @@ export default {
         .enter().append('g')
         .attr('class', 'node animation')
         .attr('id', function (d) {
-          console.log(d)
           return 'node' + d.id
         })
         .attr('style', function (d) {
@@ -477,7 +476,6 @@ export default {
               .join(
                 enter => enter.append('g').attr('class', 'node')
                   .attr('id', function (child) {
-                    console.log(child)
                     return 'node' + child.id
                   }
                   )
@@ -516,13 +514,11 @@ export default {
           const prevParentId = d.parentId ? d.parentId[d.parentId.length - 1] : ''
           simulation.stop()
           nodes = nodes.filter(child => child.parentId.indexOf(d.id) === -1)
-          console.log(nodes, 'hide')
           node = node
             .data(nodes)
             .join(
               enter => enter.append('g').attr('class', 'node')
                 .attr('id', function (child) {
-                  console.log(child)
                   return 'node' + child.id
                 })
                 .call(drag(simulation))
@@ -558,7 +554,6 @@ export default {
       }
 
       function render () {
-        console.log(node.nodes())
         node.nodes().forEach(item => {
           const box = d3.select(item)
           const d = box.data()[0]
@@ -722,7 +717,6 @@ export default {
         str += 0.05
         return str + ';cursor:pointer'
       }).duration(300)
-      console.log(svg, item, node, linkCopy)
     },
     graphIconLeave (item) {
       const svg = d3.select('#svgHex' + this.chartId)
@@ -743,7 +737,6 @@ export default {
   watch: {
     'data.nodes': {
       handler (n) {
-        console.log(n, 'data.nodes')
         this.graphIconArr = []
         this.data.nodes.forEach(item => {
           if (this.graphIconArr.indexOf(item.type) === -1) {
