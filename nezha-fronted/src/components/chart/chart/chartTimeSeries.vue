@@ -95,7 +95,8 @@ export default {
         return
       }
       const decimals = this.chartInfo.param.decimals || 2
-      const { minTime, maxTime, minValue, maxValue, copies, unit, dot } = this.getMinMaxFromData(this.chartData, this.chartInfo.unit) // 此处时间是秒
+      const { minTime, maxTime, minValue, maxValue, copies, unit, dot } = this.getMinMaxFromData(this.chartData, this.chartInfo.unit) //
+      console.log(maxTime - minTime, maxTime, minTime)
       chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime, maxTime)// 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
       chartOption.tooltip.position = this.tooltipPosition
@@ -145,9 +146,7 @@ export default {
           datas = [...datas, ...data.values]
         })
       })
-      const timeSorted = datas.sort((a, b) => {
-        return Number(a[0]) - Number(b[0])
-      })
+      const timeSorted = this.$loadsh.sortBy(datas, function (o) { return o[0] })
       const valueSorted = datas.sort((a, b) => {
         const a1 = isNaN(a[1]) && !a[1] ? 0 : Number(a[1])
         const b1 = isNaN(b[1]) && !b[1] ? 0 : Number(b[1])
