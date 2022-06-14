@@ -26,7 +26,7 @@ import { formatScientificNotation } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { chartLegendPlacement } from '@/components/common/js/constants'
-import { getChart, setChart } from '@/components/common/js/common'
+import { getChart, setChart, chartCache } from '@/components/common/js/common'
 import { initColor } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
 
@@ -66,6 +66,36 @@ export default {
         }
       } catch (e) {
         return ''
+      }
+    }
+  },
+  watch: {
+  // 监听当前鼠标所在的图表id变化
+    '$store.state.panel.currentMousemove': {
+      handler (n) {
+        // 判断是否是当前鼠标所在的图表
+        if (n === this.chartId) {
+          let option = {}
+          for (const key in chartCache) {
+            if (!chartCache[key] || chartCache[key].group !== 'timeSeriesGroup') {
+              continue
+            }
+            if (chartCache[key] === getChart(this.chartId)) {
+              option = {
+                tooltip: {
+                  className: 'chart-time-series'
+                }
+              }
+            } else {
+              option = {
+                tooltip: {
+                  className: 'chart-time-series hide'
+                }
+              }
+            }
+            chartCache[key].setOption(option)
+          }
+        }
       }
     }
   },
@@ -120,13 +150,21 @@ export default {
         if (!myChart) {
           return
         }
+        if (this.isInit) {
+          this.$store.commit('setCurrentMousemove', 0)
+        }
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
         this.isInit = false
         // timeSeries类型图表设置group 用于多表联动
         myChart.group = 'timeSeriesGroup'
-        getChart(this.chartId).on('dataZoom', function (params) {
-          console.log(params)
+        myChart.getZr().on('mousemove', params => {
+          if (this.$store.state.panel.isconnect !== 1) {
+            return false
+          }
+          if (this.$store.state.panel.currentMousemove !== this.chartId) {
+            this.$store.commit('setCurrentMousemove', this.chartId)
+          }
         })
       }, 200)
     },

@@ -88,11 +88,14 @@
     background-color: $--background-color-empty;
     transition:all .2s;
     color: $--button-icon-color;
-
     i {
       font-size: 14px;
       color: $--button-icon-color;
     }
+  }
+  .top-tool-btn.active{
+    background-color: $--button-icon-active-background-color;
+    border: 1px solid $--button-icon-active-border-color !important;
   }
   .top-tool-btn.top-tool-btn--text {
     padding: 0 8px;

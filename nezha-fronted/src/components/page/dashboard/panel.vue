@@ -41,11 +41,15 @@
              </div> -->
 
              <!-- 测试图表联动 -->
-              <button slot="reference" class="top-tool-btn margin-r-10" @click="connect">
-                on
+              <button slot="reference" class="top-tool-btn margin-r-10" @click="connect(1)" :class="{active:this.isconnect===1}">
+                on-1
               </button>
               <!-- 测试图表联动 -->
-              <button slot="reference" class="top-tool-btn margin-r-10" @click="connect">
+              <button slot="reference" class="top-tool-btn margin-r-10" @click="connect(2)" :class="{active:this.isconnect===2}">
+                on-2
+              </button>
+              <!-- 测试图表联动 -->
+              <button slot="reference" class="top-tool-btn margin-r-10" @click="connect(false)" :class="{active:this.isconnect===false}">
                 off
               </button>
 
@@ -153,6 +157,7 @@
 </template>
 
 <script>
+import { chartCache } from '@/components/common/js/common'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
@@ -165,7 +170,6 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
-import { chartCache } from '@/components/common/js/common'
 import * as echarts from 'echarts'
 // import FileSaver from 'file-saver'
 // import chartData from './testData'
@@ -315,12 +319,29 @@ export default {
     }
   },
   methods: {
-    // 测试图表联动
-    connect () {
-      this.isconnect = !this.isconnect
+    /**
+     * @param {*} value // 1 表示不显示tooltip  // 2 表示显示tooltip  // false 表示不联动
+     */
+    connect (value) {
+      // 每次切换联动模式 tooltip设置显示
+      const option = {
+        tooltip: {
+          className: 'chart-time-series'
+        }
+      }
+      for (const key in chartCache) {
+        if (!chartCache[key] || chartCache[key].group !== 'timeSeriesGroup') {
+          continue
+        }
+        chartCache[key].setOption(option)
+      }
+      this.$store.commit('setCurrentMousemove', 0)
+      this.isconnect = value
       if (this.isconnect) {
+        this.$store.commit('setConnect', this.isconnect)
         echarts.connect('timeSeriesGroup')
       } else {
+        this.$store.commit('setConnect', this.isconnect)
         echarts.disconnect('timeSeriesGroup')
       }
     },
@@ -357,8 +378,6 @@ export default {
         searchTime: JSON.stringify(this.searchTime),
         mode: this.mode
       }
-      console.log(param.nowTimeType)
-      console.log(param.searchTime)
       // this.getTableData()
       // this.getData(this.filter)
       const path = this.fromRoute.panel
@@ -1003,6 +1022,8 @@ export default {
       time: this.searchTime,
       nowTimeType: this.nowTimeType
     })
+    // 设置图表联动
+    this.isconnect = this.$store.state.panel.isconnect
   },
   mounted () {
     // 监听键盘ESC事件

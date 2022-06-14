@@ -32,6 +32,7 @@ export const chartTimeSeriesLineOption = {
     }
   },
   tooltip: {
+    show: true,
     trigger: 'axis',
     confine: false,
     extraCssText: 'z-index:99999999;',
@@ -45,7 +46,6 @@ export const chartTimeSeriesLineOption = {
         show: false
       }
     }
-    // formatter: 动态生成
   },
   color: initColor(),
   grid: {

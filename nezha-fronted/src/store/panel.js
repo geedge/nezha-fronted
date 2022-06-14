@@ -19,7 +19,11 @@ const panel = {
     topologyShow: false,
     topologyChartInfo: {},
     // 查看模式
-    mode: ''
+    mode: '',
+    // timeSeries类型图表联动
+    isconnect: false,
+    // 当前鼠标所在的图表id
+    currentMousemove: 0
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -73,6 +77,14 @@ const panel = {
     // 设置查看模式
     setMode (state, mode) {
       state.mode = mode
+    },
+    // 设置timeSeries类型图表联动
+    setConnect (state, value) {
+      state.isconnect = value
+    },
+    // 设置当前鼠标所在的图表id (timeSeries类型图表联动)
+    setCurrentMousemove (state, value) {
+      state.currentMousemove = value
     }
   },
   getters: {

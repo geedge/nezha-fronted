@@ -44,6 +44,8 @@ import lodash from 'lodash'
 import { getChart } from '@/components/common/js/common'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import { statisticsList } from '@/components/common/js/constants'
+import * as chart from 'echarts'
+import { isTimeSeries } from './tools'
 export default {
   name: 'chartLegend',
   props: {
@@ -65,6 +67,10 @@ export default {
   computed: {
     isStatistics () {
       return !lodash.isEmpty(this.chartInfo.param.legend.values)
+    },
+    // timeSeries类型图表联动
+    isconnect () {
+      return this.$store.state.panel.isconnect
     }
   },
   methods: {
@@ -94,6 +100,10 @@ export default {
       }
 
       if (echarts) {
+        // 判断timeSeries类型图表 先取消多表联动
+        if (isTimeSeries(this.chartInfo.type) && this.isconnect) {
+          chart.disconnect('timeSeriesGroup')
+        }
         if (!hasGrey) { // 1.除当前legend外全置灰
           echarts.dispatchAction({
             type: 'legendInverseSelect'
@@ -115,6 +125,10 @@ export default {
             name: legendName
           })
           this.$set(this.isGrey, index, !this.isGrey[index])
+        }
+        // 判断timeSeries类型图表 建立多表联动
+        if (isTimeSeries(this.chartInfo.type) && this.isconnect) {
+          chart.connect('timeSeriesGroup')
         }
         if (this.chartInfo.type !== 'pie' && this.chartInfo.type !== 'bar' && this.chartInfo.type !== 'treemap') {
           // 处理点击后的 Y轴
