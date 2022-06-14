@@ -230,21 +230,21 @@ export default {
       })
     },
     modelTypeList () {
-      this.$get('asset/model', { pageSize: -1, pageNo: 1 }).then(res => {
+      this.$get('asset/typeConf/tree', { pageSize: -1, pageNo: 1 }).then(res => {
         this.typeDataList = res.data.list.map((e, i) => {
           return {
-            name: e.type.name,
-            id: e.type.id
+            name: e.name,
+            id: e.id
           }
         })
-        for (let i = 0; i < this.typeDataList.length - 1; i++) {
-          for (let j = i + 1; j < this.typeDataList.length; j++) {
-            if (this.typeDataList[i].id == this.typeDataList[j].id) {
-              this.typeDataList.splice(j, 1)
-              j--
-            }
-          }
-        }
+        // for (let i = 0; i < this.typeDataList.length - 1; i++) {
+        //   for (let j = i + 1; j < this.typeDataList.length; j++) {
+        //     if (this.typeDataList[i].id == this.typeDataList[j].id) {
+        //       this.typeDataList.splice(j, 1)
+        //       j--
+        //     }
+        //   }
+        // }
       })
     }
   }
