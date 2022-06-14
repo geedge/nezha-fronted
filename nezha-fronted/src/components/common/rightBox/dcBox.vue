@@ -124,7 +124,7 @@ export default {
             this.$put('/dc', param).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
-                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.messageShow(this.$t('tip.saveSuccess'), '', { dcId: response.data.id, cabinetBoxShow: true }, false, 'guide.addCabinet', 'addCabinet')
                 this.esc(true)
               } else {
                 this.$message.error(response.msg)
@@ -147,7 +147,7 @@ export default {
             this.$post('/dc', param).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
-                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.messageShow(this.$t('tip.saveSuccess'), '', { dcId: response.data.id, cabinetBoxShow: true }, true, 'guide.addCabinet', 'addCabinet')
                 this.esc(true)
               } else {
                 this.$message.error(response.msg)

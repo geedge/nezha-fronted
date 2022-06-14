@@ -71,7 +71,8 @@ export default {
           if (this.editProject.id) {
             this.$put('monitor/project', this.editProject).then(response => {
               if (response.code === 200) {
-                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                // this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.messageShow(this.$t('tip.saveSuccess'), '/module', { projectId: response.data.id }, false, 'guide.addModule')
                 this.$store.commit('projectListChange')
                 this.$store.commit('setProject', this.project)
                 this.esc(true)
@@ -83,7 +84,7 @@ export default {
           } else {
             this.$post('monitor/project', this.editProject).then(response => {
               if (response.code === 200) {
-                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.messageShow(this.$t('tip.saveSuccess'), '/module', { projectId: response.data.id }, true, 'guide.addModule')
                 this.$store.commit('projectListChange')
                 this.esc(true)
               } else {

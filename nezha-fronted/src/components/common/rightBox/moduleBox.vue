@@ -934,7 +934,8 @@ export default {
             if (this.editModule.id) {
               this.$put('monitor/module', params).then(response => {
                 if (response.code === 200) {
-                  this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                  // this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                  this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { projectId: this.editModule.projectId, moduleId: response.data.id }, false, 'guide.addEndpoint')
                   this.$store.commit('setReloadFacade')
                   this.esc(true)
                 } else {
@@ -945,7 +946,7 @@ export default {
             } else {
               this.$post('monitor/module', params).then(response => {
                 if (response.code === 200) {
-                  this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                  this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { projectId: this.editModule.projectId, moduleId: response.data.id }, true, 'guide.addEndpoint')
                   this.$store.commit('setReloadFacade')
                   this.esc(true)
                 } else {

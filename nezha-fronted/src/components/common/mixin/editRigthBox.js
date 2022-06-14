@@ -4,7 +4,8 @@ export default {
       isEdit: false,
       messageParams: {
         route: '',
-        params: {}
+        params: {},
+        emit: ''
       },
       closeMessage: ''
     }
@@ -17,9 +18,10 @@ export default {
     }
   },
   methods: {
-    messageShow (msg, route, params, showNext = false, nextText = 'setup.next') {
+    messageShow (msg, route, params, showNext = false, nextText = 'setup.next', emit) {
       this.messageParams.route = route
       this.messageParams.params = params
+      this.messageParams.emit = emit
       this.closeMessage = this.$message({
         duration: showNext ? 5000 : 2000,
         dangerouslyUseHTMLString: true,
@@ -35,6 +37,10 @@ export default {
       assetAdd.addEventListener('click', this.saveNext)
     },
     saveNext () {
+      if (!this.messageParams.route) {
+        this.$store.dispatch(this.messageParams.emit, this.messageParams.params)
+        return
+      }
       this.$router.push({
         path: this.messageParams.route,
         query: this.messageParams.params

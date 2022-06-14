@@ -549,6 +549,13 @@ export default {
     this.initQueryFromPath(searchKeys)
   },
   mounted () {
+    if (this.$route.query && this.$route.query.projectId) {
+      this.object = {
+        ...this.newObject(),
+        projectId: Number(this.$route.query.projectId)
+      }
+      this.rightBox.show = true
+    }
   },
   watch: {
     $route: {

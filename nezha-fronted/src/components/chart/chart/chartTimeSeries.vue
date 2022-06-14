@@ -96,7 +96,6 @@ export default {
       }
       const decimals = this.chartInfo.param.decimals || 2
       const { minTime, maxTime, minValue, maxValue, copies, unit, dot } = this.getMinMaxFromData(this.chartData, this.chartInfo.unit) //
-      console.log(maxTime - minTime, maxTime, minTime)
       chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime, maxTime)// 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
       chartOption.tooltip.position = this.tooltipPosition

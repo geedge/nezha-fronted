@@ -19,7 +19,8 @@ const panel = {
     topologyShow: false,
     topologyChartInfo: {},
     // 查看模式
-    mode: ''
+    mode: '',
+    addCabinetBoxParams: { dcid: '', cabinetBoxShow: false }
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -53,6 +54,9 @@ const panel = {
       state.headerH = h.headerH
       state.headerHPadding = h.headerHPadding
       state.rowHeight = h.rowHeight
+    },
+    setCabinet (state, params) {
+      state.addCabinetBoxParams = params
     },
     cleanPanel (state) {
       state.showRightBox = false
@@ -120,6 +124,9 @@ const panel = {
     },
     getTopologyChartInfo (state) {
       return state.topologyChartInfo
+    },
+    getAddCabinetBoxParams (state) {
+      return state.addCabinetBoxParams
     }
   },
   actions: {
@@ -148,6 +155,9 @@ const panel = {
     },
     dispatchPanelLock (store, playload) {
       store.commit('setPanelLock', playload.flag)
+    },
+    addCabinet (store, playload) {
+      store.commit('setCabinet', playload)
     },
     clearPanel (store) {
       store.commit('cleanPanel')

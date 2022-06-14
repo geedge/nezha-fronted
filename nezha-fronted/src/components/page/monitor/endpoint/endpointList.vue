@@ -896,6 +896,14 @@ export default {
       }
       this.rightBox.show = true
     }
+    if (this.$route.query && this.$route.query.moduleId) {
+      this.object = {
+        ...this.newObject(),
+        moduleId: Number(this.$route.query.moduleId),
+        projectId: Number(this.$route.query.projectId)
+      }
+      this.rightBox.show = true
+    }
     if (localStorage.getItem('endpointProjectId')) {
       this.selectValue.projectIds = [Number(localStorage.getItem('endpointProjectId'))]
       // this.$refs.clickSearch.selectValueOut.projectIds = [localStorage.getItem('endpointProjectId')]
