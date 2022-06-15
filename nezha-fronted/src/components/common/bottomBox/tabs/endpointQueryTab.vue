@@ -705,6 +705,7 @@ export default {
       deep: true,
       handler (n) {
         if (n) {
+          this.searchLabel = {}
           this.currentEndpoint = JSON.parse(JSON.stringify(n))
           this.queryEndpoint()
         }

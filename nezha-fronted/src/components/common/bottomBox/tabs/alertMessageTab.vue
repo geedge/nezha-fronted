@@ -696,6 +696,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        this.searchLabel = {}
         if (this.from === fromRoute.module) {
           this.searchLabel.moduleIds = n.id
         } else {

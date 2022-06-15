@@ -808,6 +808,7 @@ export default {
       handler (n, o) {
         setTimeout(() => {
           if (n && n.id) {
+            this.searchLabel = {}
             this.getTableData(n.id)
             if (this.from === fromRoute.asset) {
               this.searchLabel.assetIds = n.id
