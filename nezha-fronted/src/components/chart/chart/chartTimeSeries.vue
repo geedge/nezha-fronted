@@ -150,22 +150,24 @@ export default {
         if (!myChart) {
           return
         }
-        if (this.isInit) {
-          this.$store.commit('setCurrentMousemove', 0)
-        }
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
+
+        this.$store.commit('setCurrentMousemove', 0)
+        if (this.isInit) {
+          // timeSeries类型图表设置group 用于多表联动
+          myChart.group = 'timeSeriesGroup'
+          myChart.getZr().on('mousemove', params => {
+            if (this.$store.state.panel.isconnect !== 1) {
+              return false
+            }
+            if (this.$store.state.panel.currentMousemove !== this.chartId) {
+              this.$store.commit('setCurrentMousemove', this.chartId)
+            }
+          })
+        }
+
         this.isInit = false
-        // timeSeries类型图表设置group 用于多表联动
-        myChart.group = 'timeSeriesGroup'
-        myChart.getZr().on('mousemove', params => {
-          if (this.$store.state.panel.isconnect !== 1) {
-            return false
-          }
-          if (this.$store.state.panel.currentMousemove !== this.chartId) {
-            this.$store.commit('setCurrentMousemove', this.chartId)
-          }
-        })
       }, 200)
     },
     getMinMaxFromData (originalDatas, chartUnit = 2) {
