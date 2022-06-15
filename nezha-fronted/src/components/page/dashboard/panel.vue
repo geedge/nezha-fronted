@@ -191,7 +191,23 @@ export default {
       },
       panel: { // 新增panel
         id: '',
-        name: ''
+        name: '',
+        remark: '',
+        param: {
+          report: {
+            enable: false,
+            range: {
+              unit: ''
+            },
+            schedule: {
+              stime: '',
+              etime: '',
+              repeat: 0,
+              nums: [],
+              type: 0
+            }
+          }
+        }
       },
       chart: {},
       blankChart: {
@@ -388,7 +404,23 @@ export default {
       // this.$refs.panelBox.show(true)
       this.panel = {
         id: '',
-        name: ''
+        name: '',
+        remark: '',
+        param: {
+          report: {
+            enable: false,
+            range: {
+              unit: ''
+            },
+            schedule: {
+              stime: '',
+              etime: '',
+              nums: [],
+              type: 0 + ''
+            }
+          },
+          chartShare: 'none'
+        }
       }
       // this.$refs.panelBox.setTitle(this.$t('dashboard.panel.createPanelTitle'))
     },

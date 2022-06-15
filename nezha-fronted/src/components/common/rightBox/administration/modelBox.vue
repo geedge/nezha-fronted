@@ -52,7 +52,7 @@
           </el-form-item>
           <!--remark-->
           <el-form-item :label="$t('overall.remark')" prop="remark">
-            <el-input maxlength="256" show-word-limit v-model="editModel.remark" size="small" type="text"></el-input>
+            <el-input maxlength="256" show-word-limit v-model="editModel.remark" size="small" :rows="2" type="textarea"></el-input>
           </el-form-item>
         </el-form>
       </div>

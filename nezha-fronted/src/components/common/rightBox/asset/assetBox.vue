@@ -106,7 +106,7 @@
                   </div>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA">
-                  <el-input v-model="label.value[0]" :maxlength="4096" size="small" type="textarea"/>
+                  <el-input v-model="label.value[0]" :maxlength="4096" show-word-limit size="small" :rows="2" type="textarea"/>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.RADIO">
                   <el-radio-group v-model="label.value[0]">
@@ -753,7 +753,7 @@ export default {
             this.$post(this.url, params).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
-                this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { assetId: res.data.id }, true, 'guide.addEndpoint')
+                this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { assetId: res.data.id }, false, 'guide.addEndpoint')
                 this.esc(true)
               } else {
                 this.$message.error(res.msg)

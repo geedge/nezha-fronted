@@ -21,7 +21,7 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('licenseGen.comment')" prop="comment">
-          <el-input id="alert-box-input-description"  placeholder="" size="small" type="textarea" v-model="licenseGen.comment"></el-input>
+          <el-input id="alert-box-input-description"  placeholder="" size="small" :rows="2" type="textarea" v-model="licenseGen.comment" show-word-limit maxlength="256"></el-input>
         </el-form-item>
         <el-form-item class="license-gen-error" prop="file">
           <div class="license-gen-form__upload">

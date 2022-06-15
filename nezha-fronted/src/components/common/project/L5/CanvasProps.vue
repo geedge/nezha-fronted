@@ -188,8 +188,8 @@
               </el-form-item>
               <!--remark-->
               <el-form-item :label="$t('overall.remark')" class="full-form-item" prop="remark">
-                <el-input v-model="selection.pen.data.remark" :autosize="{ minRows: 2, maxRows: 6}" maxlength="256"
-                          show-word-limit type="textarea"/>
+                <el-input v-model="selection.pen.data.remark" maxlength="256"
+                          show-word-limit type="textarea" size="small" :rows="2"/>
               </el-form-item>
               <!--chart unit-->
               <el-form-item v-show="selection.pen.data.type !='text'" :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item"

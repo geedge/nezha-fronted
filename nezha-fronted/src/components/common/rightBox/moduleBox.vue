@@ -28,12 +28,11 @@
             <el-input
               id="module-box-input-remark"
               v-model="editModule.remark"
-              :autosize="{ minRows: 1, maxRows: 6}"
               class="not-fixed-height no-resize"
               maxlength="256"
               show-word-limit
               placeholder=""
-              size="small"
+              size="small" :rows="2"
               type="textarea"></el-input>
           </el-form-item>
           <!--Enpoint template-->
