@@ -21,7 +21,7 @@ const panel = {
     // 查看模式
     mode: '',
     // timeSeries类型图表联动
-    isconnect: false,
+    isConnect: false,
     // 当前鼠标所在的图表id
     currentMousemove: 0
   },
@@ -80,7 +80,7 @@ const panel = {
     },
     // 设置timeSeries类型图表联动
     setConnect (state, value) {
-      state.isconnect = value
+      state.isConnect = value
     },
     // 设置当前鼠标所在的图表id (timeSeries类型图表联动)
     setCurrentMousemove (state, value) {

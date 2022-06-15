@@ -69,8 +69,8 @@ export default {
       return !lodash.isEmpty(this.chartInfo.param.legend.values)
     },
     // timeSeries类型图表联动
-    isconnect () {
-      return this.$store.state.panel.isconnect
+    isConnect () {
+      return this.$store.state.panel.isConnect
     }
   },
   methods: {
@@ -101,7 +101,7 @@ export default {
 
       if (echarts) {
         // 判断timeSeries类型图表 先取消多表联动
-        if (isTimeSeries(this.chartInfo.type) && this.isconnect) {
+        if (isTimeSeries(this.chartInfo.type) && (this.isConnect && this.isConnect !== 'none')) {
           chart.disconnect('timeSeriesGroup')
         }
         if (!hasGrey) { // 1.除当前legend外全置灰
@@ -127,7 +127,7 @@ export default {
           this.$set(this.isGrey, index, !this.isGrey[index])
         }
         // 判断timeSeries类型图表 建立多表联动
-        if (isTimeSeries(this.chartInfo.type) && this.isconnect) {
+        if (isTimeSeries(this.chartInfo.type) && (this.isConnect && this.isConnect !== 'none')) {
           chart.connect('timeSeriesGroup')
         }
         if (this.chartInfo.type !== 'pie' && this.chartInfo.type !== 'bar' && this.chartInfo.type !== 'treemap') {

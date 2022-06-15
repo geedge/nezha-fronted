@@ -158,9 +158,10 @@ export default {
           // timeSeries类型图表设置group 用于多表联动
           myChart.group = 'timeSeriesGroup'
           myChart.getZr().on('mousemove', params => {
-            if (this.$store.state.panel.isconnect !== 1) {
+            if (this.$store.state.panel.isConnect !== 'crosshair') {
               return false
             }
+            // crosshair 模式才会执行
             if (this.$store.state.panel.currentMousemove !== this.chartId) {
               this.$store.commit('setCurrentMousemove', this.chartId)
             }

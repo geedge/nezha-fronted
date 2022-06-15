@@ -40,19 +40,6 @@
                </el-input>
              </div> -->
 
-             <!-- 测试图表联动 -->
-              <button slot="reference" class="top-tool-btn margin-r-10" @click="connect(1)" :class="{active:this.isconnect===1}">
-                on-1
-              </button>
-              <!-- 测试图表联动 -->
-              <button slot="reference" class="top-tool-btn margin-r-10" @click="connect(2)" :class="{active:this.isconnect===2}">
-                on-2
-              </button>
-              <!-- 测试图表联动 -->
-              <button slot="reference" class="top-tool-btn margin-r-10" @click="connect(false)" :class="{active:this.isconnect===false}">
-                off
-              </button>
-
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id"></pick-time>
 
               <!-- 切换查看模式 -->
@@ -294,9 +281,7 @@ export default {
       // 导出html 以及 pdf的弹窗
       exportBoxShow: false,
       // 查看模式
-      mode: '',
-      // 多表联动（timeSeries类型图表）
-      isconnect: false
+      mode: ''
     }
   },
   components: {
@@ -319,32 +304,6 @@ export default {
     }
   },
   methods: {
-    /**
-     * @param {*} value // 1 表示不显示tooltip  // 2 表示显示tooltip  // false 表示不联动
-     */
-    connect (value) {
-      // 每次切换联动模式 tooltip设置显示
-      const option = {
-        tooltip: {
-          className: 'chart-time-series'
-        }
-      }
-      for (const key in chartCache) {
-        if (!chartCache[key] || chartCache[key].group !== 'timeSeriesGroup') {
-          continue
-        }
-        chartCache[key].setOption(option)
-      }
-      this.$store.commit('setCurrentMousemove', 0)
-      this.isconnect = value
-      if (this.isconnect) {
-        this.$store.commit('setConnect', this.isconnect)
-        echarts.connect('timeSeriesGroup')
-      } else {
-        this.$store.commit('setConnect', this.isconnect)
-        echarts.disconnect('timeSeriesGroup')
-      }
-    },
     // 更新Weight
     updateWeight (value) {
       this.panelData = JSON.parse(JSON.stringify(value))
@@ -1022,8 +981,6 @@ export default {
       time: this.searchTime,
       nowTimeType: this.nowTimeType
     })
-    // 设置图表联动
-    this.isconnect = this.$store.state.panel.isconnect
   },
   mounted () {
     // 监听键盘ESC事件
@@ -1044,6 +1001,30 @@ export default {
     }
   },
   watch: {
+    'showPanel.params.chartShare': {
+      handler (value) {
+        // 每次切换联动模式 tooltip设置显示
+        const option = {
+          tooltip: {
+            className: 'chart-time-series'
+          }
+        }
+        for (const key in chartCache) {
+          if (!chartCache[key] || chartCache[key].group !== 'timeSeriesGroup') {
+            continue
+          }
+          chartCache[key].setOption(option)
+        }
+        this.$store.commit('setCurrentMousemove', 0)
+        if (value && value !== 'none') {
+          this.$store.commit('setConnect', value)
+          echarts.connect('timeSeriesGroup')
+        } else {
+          this.$store.commit('setConnect', value)
+          echarts.disconnect('timeSeriesGroup')
+        }
+      }
+    },
     'filter.searchName': function (n, o) {
       const temp = this
       setTimeout(function () {
