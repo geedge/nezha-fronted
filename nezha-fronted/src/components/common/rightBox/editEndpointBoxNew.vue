@@ -654,7 +654,8 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' },
-          { validator: this.optionType === 'batch' ? '' : noSpecialChar, trigger: 'change' }
+          { validator: this.optionType === 'batch' ? '' : noSpecialChar, trigger: 'change' },
+          { max: 64, message: this.$t('config.system.link.nameMaxLength'), trigger: 'blur' }
         ],
         assetId: [
           { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'change' }
