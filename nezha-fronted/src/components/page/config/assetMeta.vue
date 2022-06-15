@@ -24,7 +24,7 @@
           </template>
           <template v-slot:tail>
             <div class="panel-select-tail">
-              <span id="panel-list-toadd" v-has="'asset_label_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="addGroup"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{ $t('overall.addProject') }}</span>
+              <span id="panel-list-toadd" v-has="'asset_label_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="addGroup"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{ $t('buttons.add') }}</span>
             </div>
           </template>
         </select-group>

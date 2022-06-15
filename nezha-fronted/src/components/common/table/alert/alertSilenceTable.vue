@@ -153,7 +153,7 @@
               :command="['delete', scope.row]"
               ><i class="nz-icon nz-icon-delete"></i
               ><span class="operation-dropdown-text">{{
-                $t("buttons.delete")
+                $t("overall.delete")
               }}</span></el-dropdown-item
             >
           </el-dropdown-menu>

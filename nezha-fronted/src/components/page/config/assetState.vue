@@ -151,7 +151,7 @@ export default {
           prop: 'ping',
           show: true
         }, {
-          label: this.$t('config.assetState.monitor'),
+          label: this.$t('config.system.monitor.monitor'),
           prop: 'monitor',
           show: true
         }, {

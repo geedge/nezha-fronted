@@ -8,7 +8,7 @@
     </div>
     <div class="line"></div>
     <div>
-      <a :class="{disabled:!props.node && !props.nodes && !props.line}" @click="onDel()">{{$t('project.topology.delete')}}</a>
+      <a :class="{disabled:!props.node && !props.nodes && !props.line}" @click="onDel()">{{$t('overall.delete')}}</a>
     </div>
     <div class="line"></div>
     <div>

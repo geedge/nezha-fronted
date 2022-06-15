@@ -45,7 +45,7 @@
               <li  @click="editChart" class="el-dropdown-menu__item">
                 <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i><span>{{$t('dashboard.edit')}}</span></li>
               <li  v-has="'main_delete'" class="el-dropdown-menu__item" @click="removeChart">
-                <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
+                <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('overall.delete')}}</li>
               <li  v-has="'main_add'" class="el-dropdown-menu__item" @click="duplicate">
                 <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
               <li  v-has="'main_edit'"  v-if="from !== 'chartTemp'&&chartData.pid" class="el-dropdown-menu__item" @click="$emit('sync')">
@@ -79,7 +79,7 @@
                       ref="Pagination" :append-to-body="false" pop-class="out-popper-fix"></Pagination>
         </div>
         <!--全屏-->
-        <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')" :visible.sync="screenModal"
+        <el-dialog class="nz-dialog table-chart-dialog" :title="$t('overall.view')" :visible.sync="screenModal"
                    width="96%" @close="screenModal = false" :modal-append-to-body="false">
           <div slot="title">
             <span class="nz-dialog-title">{{data.name}}</span>
