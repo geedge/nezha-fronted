@@ -32,18 +32,21 @@
       :width="`${item.width}`"
     >
       <template slot="header">
-        <span class="data-column__span">{{item.label}}</span>
+        <span class="data-column__span" :class="{'margin-l-10': item.prop === 'name'}">{{item.label}}</span>
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-          <div>
-            <div class="flex-align-center">
-              <span class="user-name-top">{{scope.row[item.prop]}}</span>
-              <el-tag size="mini" v-if="mfaEnable == '1' || scope.row.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
-            </div>
-            <div class="user-name-bottom">
-              @{{scope.row.username}}
+          <div class="user-name-td" :class="{'margin-l-10': !scope.row.online}">
+            <i class="nz-icon nz-icon-user1 user-online" v-if="scope.row.online"/>
+            <div>
+              <div class="flex-align-center">
+                <span class="user-name-top">{{scope.row[item.prop]}}</span>
+                <el-tag size="mini" v-if="mfaEnable == '1' || scope.row.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
+              </div>
+              <div class="user-name-bottom">
+                @{{scope.row.username}}
+              </div>
             </div>
           </div>
         </template>
