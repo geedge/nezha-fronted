@@ -38,7 +38,7 @@
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
           <div class="user-name-td" :class="{'margin-l-10': !scope.row.online}">
-            <i class="nz-icon nz-icon-user1 user-online" v-if="scope.row.online"/>
+            <i class="nz-icon nz-icon-user1 user-online" v-if="scope.row.online" :title="$t('overall.online')"/>
             <div>
               <div class="flex-align-center">
                 <span class="user-name-top">{{scope.row[item.prop]}}</span>
