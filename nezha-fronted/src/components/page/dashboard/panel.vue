@@ -1054,7 +1054,7 @@ export default {
     }
   },
   watch: {
-    'showPanel.params.chartShare': {
+    'showPanel.param.chartShare': {
       handler (value) {
         // 每次切换联动模式 tooltip设置显示
         const option = {
@@ -1142,6 +1142,8 @@ export default {
     if (!document.onmousemove) { // 添加鼠标移动事件监听
       document.onmousemove = null
     }
+
+    // 页面销毁 清除图表联动
     this.$store.commit('setCurrentMousemove', 0)
     this.$store.commit('setConnect', 'none')
     echarts.disconnect('timeSeriesGroup')
