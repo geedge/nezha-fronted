@@ -5,7 +5,7 @@
     </transition>
 
     <div class="right-box__header">
-      <div class="header__title" v-if="from !== 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("dashboard.panel.createChartTitle")}}</div>
+      <div class="header__title" v-if="from !== 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("overall.createChart")}}</div>
       <div class="header__title" v-if="from === 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTempTitle") : $t("dashboard.panel.createChartTempTitle")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editChart, func: clickOutside}"><i class="nz-icon nz-icon-close"></i></span>
@@ -15,7 +15,7 @@
     <!-- begin--表单-->
     <div class="right-box-form-box right-box__container chart-right-box">
       <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px">
-        <el-form-item :label='$t("dashboard.panel.chartForm.name")' prop="name">
+        <el-form-item :label='$t("overall.name")' prop="name">
           <div style="display:flex;align-items:center">
             <el-input style="flex:1;margin-right:10px" maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
             <!-- 显示头部 -->

@@ -32,6 +32,7 @@ html {
   @import './common/index.scss'; // 加载通用样式
   @import './common.scss';
   @import '../stylus/main.scss';
+  @import './components/introjs/introjs.scss';
 }
 
 .theme-dark {
@@ -42,4 +43,6 @@ html {
   @import './common/index.scss'; // 加载通用样式
   @import './common.scss';
   @import '../stylus/main.scss';
+  @import './components/introjs/introjs.scss';
+  @import './components/introjs/introjs-dark.scss';
 }

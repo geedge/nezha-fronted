@@ -344,7 +344,7 @@ export default {
                   }
                 })
                 this.select_list.push({
-                  name: this.$t('alert.list.state'),
+                  name: this.$t('overall.state'),
                   type: 'select',
                   label: 'state',
                   disabled: false,

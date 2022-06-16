@@ -45,10 +45,10 @@
     <transition name="right-box">
       <agent-box v-if="rightBox.show" :agent="object" @close="closeRightBox"></agent-box>
     </transition>
-    <el-dialog :title="$t('config.agent.agent.title')" :visible.sync="showAgentDownload" append-to-body class="nz-dialog agent-dialog" width="800px" @close="closeDialog">
+    <el-dialog :title="$t('guide.downloadAgent')" :visible.sync="showAgentDownload" append-to-body class="nz-dialog agent-dialog" width="800px" @close="closeDialog">
       <div v-if="showAgentDownload" class="agent-box">
         <el-form v-model="agentParam" class="right-box-form right-box-form-left" label-position = "top" label-width="120px" size="small" style="width: 100%">
-          <div class="right-box-sub-title">{{$t('config.agent.agent.download')}}</div>
+          <div class="right-box-sub-title">{{$t('overall.download')}}</div>
           <div style="margin-bottom: 20px;width: 100%"></div>
           <el-form-item :label="$t('config.agent.agent.osType')" class="half-form-item" prop="osType">
             <el-select v-model="agentParam.osType" class="right-box-row-with-btn" popper-class="right-box-select-top right-public-box-dropdown-top agent-select" placeholder="">
@@ -58,7 +58,7 @@
             </el-select>
           </el-form-item>
           <el-form-item   class="half-form-item">
-            <button :class="{'nz-btn-disabled':downloadAgentFlag}" :disabled="downloadAgentFlag" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="downloadAgent">{{$t('config.agent.agent.download')}}</button>
+            <button :class="{'nz-btn-disabled':downloadAgentFlag}" :disabled="downloadAgentFlag" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="downloadAgent">{{$t('overall.download')}}</button>
           </el-form-item>
           <div class="right-box-sub-title">{{$t('config.agent.agent.autoScript')}}</div>
           <div style="margin-bottom: 20px;width: 100%"></div>
@@ -79,14 +79,14 @@
           </el-form-item>
           <el-form-item label="cURL"  v-if="loadFinish" class="download-url">
             <el-input id="download-url-curl" :disabled="true" v-model="curlUrl">
-              <el-popover :content="$t('tip.copySuccess')" placement="top" trigger="manual" v-model="curlVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('curl')"  style="cursor: pointer">
+              <el-popover :content="$t('overall.search')" placement="top" trigger="manual" v-model="curlVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('curl')"  style="cursor: pointer">
                 <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-curl')"></i>
               </el-popover>
             </el-input>
           </el-form-item>
           <el-form-item label="Wget"  v-if="loadFinish" class="download-url">
             <el-input id="download-url-wget" :disabled="true" v-model="wgetUrl" >
-              <el-popover :content="$t('tip.copySuccess')" placement="top" trigger="manual" v-model="wgetVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('wget')" style="cursor: pointer">
+              <el-popover :content="$t('overall.search')" placement="top" trigger="manual" v-model="wgetVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('wget')" style="cursor: pointer">
                 <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-wget')"></i>
               </el-popover>
             </el-input>
@@ -150,12 +150,12 @@ export default {
           label: 'name',
           disabled: false
         }, {
-          name: this.$t('dashboard.overview.dataCenter.dataCenter'),
+          name: this.$t('overall.dc'),
           type: 'dc',
           label: 'dcIds',
           disabled: false
         }, {
-          name: this.$t('config.agent.type'),
+          name: this.$t('overall.type'),
           type: 'select',
           label: 'promType',
           readonly: true,

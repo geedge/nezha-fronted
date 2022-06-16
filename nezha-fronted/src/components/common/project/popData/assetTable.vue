@@ -111,7 +111,7 @@ export default {
           show: true,
           width: 110
         }, {
-          label: this.$t('asset.alertNum'),
+          label: this.$t('overall.alert'),
           prop: 'alertNum',
           show: true,
           width: 120

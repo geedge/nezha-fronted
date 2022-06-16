@@ -244,7 +244,7 @@ export default {
       tempEndpoint: {},
       tempEndpoint2: {},
       assetLoading: true,
-      rightBox: { show: false, title: this.$t('project.endpoint.createEndpoint'), isEdit: false },
+      rightBox: { show: false, title: this.$t('overall.createEndpoin'), isEdit: false },
       optionType: 'batch',
       blankEndpoint: {
         id: '',
@@ -292,17 +292,17 @@ export default {
       endpointList: [],
       endpointTableTitle: [
         {
-          label: this.$t('project.endpoint.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           width: 150,
           show: true
         }, {
-          label: this.$t('project.endpoint.asset'),
+          label: this.$t('guide.asset'),
           prop: 'asset',
           width: 80,
           show: true
         }, {
-          label: this.$t('project.endpoint.configs'),
+          label: this.$t('project.module.configs'),
           prop: 'configs',
           width: 80,
           show: true
@@ -313,7 +313,7 @@ export default {
       assetListHalf: false,
       assetTableTitle: [
         {
-          label: this.$t('asset.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: false,
           allowed: true,
@@ -356,7 +356,7 @@ export default {
           show: true,
           minWidth: '100'
         }, {
-          label: this.$t('asset.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           minWidth: '100'
@@ -381,7 +381,7 @@ export default {
         },
         {
           id: 11,
-          name: this.$t('asset.name'),
+          name: this.$t('overall.name'),
           type: 'input',
           label: 'name',
           disabled: false
@@ -430,7 +430,7 @@ export default {
         },
         {
           id: 11,
-          name: this.$t('asset.state'),
+          name: this.$t('overall.state'),
           type: 'input',
           label: 'state',
           disabled: false

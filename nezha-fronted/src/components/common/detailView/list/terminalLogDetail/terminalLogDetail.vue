@@ -92,7 +92,7 @@ export default {
     return {
       tableTitle: [
         {
-          label: this.$t('config.terminallog.id'),
+          label: this.$t('asset.id'),
           prop: 'id',
           show: true,
           width: 80,
@@ -103,13 +103,13 @@ export default {
           minWidth: 200,
           show: true
         }, {
-          label: this.$t('config.terminallog.username'),
+          label: this.$t('config.operationlog.username'),
           prop: 'username',
           minWidth: 200,
           show: true
         },
         {
-          label: this.$t('config.terminallog.source'),
+          label: this.$t('config.terminallog.sourceIp'),
           prop: 'sourceIp',
           minWidth: 115,
           show: true,
@@ -121,12 +121,12 @@ export default {
           show: true
         },
         {
-          label: this.$t('config.terminallog.protocol'),
+          label: this.$t('webshell.protocol'),
           prop: 'protocol',
           show: true
         },
         {
-          label: this.$t('config.terminallog.startTime'),
+          label: this.$t('overall.startTime'),
           prop: 'startTime',
           minWidth: 100,
           show: true
@@ -143,7 +143,7 @@ export default {
           show: false
         },
         {
-          label: this.$t('config.terminallog.status'), // killusername鼠标悬停形式
+          label: this.$t('overall.state'), // killusername鼠标悬停形式
           prop: 'state',
           show: true,
           width: 150,

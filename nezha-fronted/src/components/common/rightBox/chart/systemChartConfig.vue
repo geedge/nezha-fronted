@@ -85,7 +85,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item
-                    :label="$t('dashboard.panel.chartForm.limit')"
+                    :label="$t('overall.limit')"
                     class="form-item--half-width"
                     prop="param.limit"
                   >
@@ -133,7 +133,7 @@
       <div class="form-items--half-width-group">
         <!-- type -->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.type')"
+          :label="$t('overall.type')"
           class="form-item--half-width"
           prop="type"
         >
@@ -326,7 +326,7 @@
       <div v-if="isShowLegend(chartConfig.type)">
         <!--legendConfig-->
         <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.chartForm.legendConfig')}}</span>
+          <span>{{$t('dashboard.panel.chartForm.legend')}}</span>
           <el-switch v-model="chartConfig.param.enable.legend" size="small" @change="change"></el-switch>
         </div>
         <transition name="el-zoom-in-top">
@@ -385,7 +385,7 @@
 
         <!--thresholdConfig-->
         <div class="form__sub-title" v-if="isThresholdConfig(chartConfig.type)">
-          <span>{{$t('dashboard.panel.chartForm.threshold')}}</span>
+          <span>{{$t('alert.config.threshold')}}</span>
           <el-switch
             v-model="chartConfig.param.enable.thresholds"
             size="small"

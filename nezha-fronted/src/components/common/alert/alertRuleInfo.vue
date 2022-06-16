@@ -18,11 +18,11 @@
         <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
       </div>
 <!--      <div class="alert-rule-box">-->
-<!--        <div class="alert-rule-title">{{$t('alert.name')}}</div>-->
+<!--        <div class="alert-rule-title">{{$t('overall.name')}}</div>-->
 <!--        <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : '&#45;&#45;'}}</div>-->
 <!--      </div>-->
       <div class="alert-rule-box">
-        <div class="alert-rule-title">{{$t('alert.type')}}</div>
+        <div class="alert-rule-title">{{$t('overall.type')}}</div>
         <div class="alert-rule-value">
           <span v-if="alertRuleData.type === 1">
             {{$t('project.metrics.metrics')}}
@@ -64,7 +64,7 @@
         <div class="alert-rule-value" @click="trbShotShow"><i class="nz-icon nz-icon-guzhangshuju"></i></div>
       </div>
       <div class="alert-rule-box">
-        <div class="alert-rule-title">{{$t('alert.state')}}</div>
+        <div class="alert-rule-title">{{$t('overall.state')}}</div>
         <div class="alert-rule-value" style="margin-left: 3px">
           <div v-if="alertRuleData.state === 1">
             <i class="active-icon green-bg inline-block"></i>

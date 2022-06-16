@@ -111,11 +111,11 @@ export default {
     return {
       tableTitle: [
         {
-          label: this.$t('config.scrapeEndpoint.endpoint'),
+          label: this.$t('overall.endpoint'),
           prop: 'endpoint',
           show: true
         }, {
-          label: this.$t('config.scrapeEndpoint.labels'),
+          label: this.$t('alert.list.labels'),
           prop: 'labels',
           NotSet: true,
           show: true
@@ -128,7 +128,7 @@ export default {
           prop: 'lastScrapeDuration',
           show: true
         }, {
-          label: this.$t('config.scrapeEndpoint.state'),
+          label: this.$t('overall.state'),
           prop: 'health',
           show: true
         }, {

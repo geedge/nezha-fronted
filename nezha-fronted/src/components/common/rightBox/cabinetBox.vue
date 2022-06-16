@@ -22,7 +22,7 @@
             <el-option v-for="dc in dcData" :key="dc.id" :value="dc.id" :label="dc.name"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('asset.uSize')" prop="uSize">
+        <el-form-item :label="$t('config.cab.uSize')" prop="uSize">
           <el-input v-model.number="editCabinet.uSize" :max="47" size="small" id="cabinet-box-input-uSize"></el-input>
         </el-form-item>
         <el-form-item :label="$t('overall.remark')">

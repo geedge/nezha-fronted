@@ -43,11 +43,11 @@
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="" >
               <li  @click="editChart" class="el-dropdown-menu__item">
-                <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i><span>{{$t('dashboard.edit')}}</span></li>
+                <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i><span>{{$t('overall.edit')}}</span></li>
               <li  v-has="'main_delete'" class="el-dropdown-menu__item" @click="removeChart">
                 <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('overall.delete')}}</li>
               <li  v-has="'main_add'" class="el-dropdown-menu__item" @click="duplicate">
-                <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
+                <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('overall.duplicate')}}</li>
               <li  v-has="'main_edit'"  v-if="from !== 'chartTemp'&&chartData.pid" class="el-dropdown-menu__item" @click="$emit('sync')">
                 <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>{{$t('overall.syncChart')}}</li>
             </ul>
@@ -57,16 +57,16 @@
           <el-table :id="'tableContainer'+chartIndex" ref="tableContainer" :height="tableHeight" class="chart-table"
                     :data="seriesItem" border tooltip-effect="light" v-cloak
                     @sort-change="tableDataSort" >
-            <el-table-column :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" prop="time"
+            <el-table-column :label="$t('overall.time')" min-width="100" prop="time"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
             <el-table-column :show-overflow-tooltip="true" prop="element"
-                             :label="$t('dashboard.panel.chartTableColumn.element')" min-width="260"
+                             :label="$t('dashboard.panel.chartForm.element')" min-width="260"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
               </template>
             </el-table-column>
-            <el-table-column :label="$t('dashboard.panel.chartTableColumn.value')" class-name="costom-value" min-width="90" prop="value"
+            <el-table-column :label="$t('overall.value')" class-name="costom-value" min-width="90" prop="value"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}" >
@@ -90,16 +90,16 @@
           <el-table :data="seriesItemScreen" border height="95%" style="margin-top: 10px;"
                     ref="tableScreen"
                     @sort-change="tableDataSortScreen" tooltip-effect="light">
-            <el-table-column :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" prop="time"
+            <el-table-column :label="$t('overall.time')" min-width="100" prop="time"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
             <el-table-column :show-overflow-tooltip="true" prop="element"
-                             :label="$t('dashboard.panel.chartTableColumn.element')" min-width="420"
+                             :label="$t('dashboard.panel.chartForm.element')" min-width="420"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
               </template>
             </el-table-column>
-            <el-table-column :label="$t('dashboard.panel.chartTableColumn.value')" class-name="costom-value" min-width="90" prop="value"
+            <el-table-column :label="$t('overall.value')" class-name="costom-value" min-width="90" prop="value"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}" >

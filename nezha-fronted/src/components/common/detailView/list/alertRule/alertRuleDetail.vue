@@ -148,7 +148,7 @@ export default {
           show: false,
           minWidth: 100
         }, {
-          label: this.$t('config.dc.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           minWidth: 100,

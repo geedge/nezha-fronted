@@ -11,7 +11,7 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
-        <button id="assetState-add" v-has="'assetState_toAdd'" :title="$t('overall.createAssetState')" class="top-tool-btn margin-l-20"
+        <button id="assetState-add" v-has="'assetState_toAdd'" :title="$t('asset.createAssetState')" class="top-tool-btn margin-l-20"
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
@@ -155,7 +155,7 @@ export default {
           prop: 'monitor',
           show: true
         }, {
-          label: this.$t('config.assetState.alert'),
+          label: this.$t('overall.alert'),
           prop: 'alert',
           show: true
         }, {

@@ -218,13 +218,13 @@ export default {
           show: true,
           minWidth: 200
         }, {
-          label: this.$t('alert.list.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           width: 100
           // sortable: 'custom'
         }, {
-          label: this.$t('alert.startAt'),
+          label: this.$t('overall.startTime'),
           prop: 'startAt',
           show: true,
           width: 150,
@@ -499,7 +499,7 @@ export default {
     labelsClassName (row) {
       if (row.column.label == this.$t('alert.list.labels')) {
         return 'alert-message-list-labels'
-      } else if (row.column.label == this.$t('alert.list.state')) {
+      } else if (row.column.label == this.$t('overall.state')) {
         if (row.row.state == 1) {
           return ''
         } else if (row.row.state == 2) {

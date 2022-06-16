@@ -10,7 +10,7 @@
       <div class="container__form">
         <el-form ref="assetTypeForm" :model="editAssetType" :rules="rules" label-position="top" label-width="120px">
           <!--name-->
-          <el-form-item :label="$t('config.assetType.name')" prop="name">
+          <el-form-item :label="$t('overall.name')" prop="name">
             <el-input maxlength="64" show-word-limit v-model="editAssetType.name" size="small" type="text"></el-input>
           </el-form-item>
           <!--vm-->

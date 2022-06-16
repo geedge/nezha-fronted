@@ -97,7 +97,7 @@
               OK
             </div>
             <div v-else-if="scope.row['clientState']===0">
-              <div class="active-icon gray-bg inline-block"></div> {{ $t('config.user.disable') }}
+              <div class="active-icon gray-bg inline-block"></div> {{ $t('project.endpoint.disable') }}
             </div>
             <div v-else-if="scope.row['clientState']===2">
               <div class="active-icon red-bg inline-block"></div> {{ $t('asset.connectionTimedOut') }}
@@ -139,7 +139,7 @@
             <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
               <el-dropdown-item v-if="!assetTab" v-has="'asset_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_connect'" :command="['cli', scope.row]" :disabled="!scope.row.authUsername"><i class="nz-icon nz-icon-cli"></i><span class="operation-dropdown-text">{{$t('dashboard.connect')}}</span></el-dropdown-item>
-              <el-dropdown-item v-has="'asset_add'" :command="['duplicate', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('dashboard.duplicate')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'asset_add'" :command="['duplicate', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'asset']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_add'" :command="['topology', scope.row, 'asset']"><i class="nz-icon nz-icon-Topology"></i><span class="operation-dropdown-text">{{$t('overall.topology')}}</span></el-dropdown-item>
@@ -212,12 +212,12 @@ export default {
           minWidth: 140,
           sortable: 'custom'
         }, {
-          label: this.$t('overall.parent'),
+          label: this.$t('asset.parent'),
           prop: 'parent',
           show: false,
           minWidth: 110
         }, {
-          label: this.$t('overall.children'),
+          label: this.$t('overall.assetSubTab'),
           prop: 'children',
           show: false,
           minWidth: 120
@@ -228,7 +228,7 @@ export default {
           minWidth: 140,
           sortable: 'custom'
         }, {
-          label: this.$t('asset.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           minWidth: 110,
@@ -251,7 +251,7 @@ export default {
           minWidth: 110,
           sortable: 'custom'
         }, {
-          label: this.$t('asset.alertNum'),
+          label: this.$t('overall.alert'),
           prop: 'alertNum',
           show: true,
           width: 120,

@@ -29,7 +29,7 @@
           </div>
           <div class="search-item-value-box" v-if="obj.type === 'endpoint'&&item.key==='state'&&alertLabelData && alertLabelData.configs">
             <span style="width: auto">
-            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('project.endpoint.metrics')}} </span>
+            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('project.metrics.metrics')}} </span>
             <span v-if="alertLabelData && alertLabelData.configs[0].state === 0">
               <span class="active-icon red-bg inline-block"></span>
             </span>
@@ -41,7 +41,7 @@
             </span>
           </span>
             <span style="width: auto">
-            <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs active" /> {{$t('project.endpoint.logs')}} </span>
+            <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs active" /> {{$t('overall.logs')}} </span>
             <span v-if="alertLabelData && alertLabelData.configs[1].state === 0">
               <span class="active-icon red-bg inline-block"></span>
             </span>
@@ -136,7 +136,7 @@ export default {
             label: this.$t('overall.name')
           }, {
             key: 'manageIp',
-            label: this.$t('overall.manageIp')
+            label: this.$t('asset.manageIp')
           }, {
             key: 'type.name',
             label: this.$t('overall.type')
@@ -152,13 +152,13 @@ export default {
             label: this.$t('overall.dc')
           }, {
             key: 'cabinet.name',
-            label: this.$t('overall.cabinet')
+            label: this.$t('asset.cabinet')
           }, {
             key: 'brand.name',
-            label: this.$t('overall.brand')
+            label: this.$t('asset.brand')
           }, {
             key: 'model.name',
-            label: this.$t('overall.model')
+            label: this.$t('asset.model')
           }, {
             key: 'alertNum',
             icon: 'nz-icon-overview-alert',
@@ -174,11 +174,11 @@ export default {
             label: this.$t('overall.name')
           }, {
             key: 'location',
-            label: this.$t('overall.location')
+            label: this.$t('asset.location')
           }, {
             key: 'cabinetNum',
             icon: 'nz-icon-cabinet  monitorColor',
-            label: this.$t('overall.cabinet')
+            label: this.$t('asset.cabinet')
           }, {
             key: 'assetNum',
             icon: 'nz-icon-overview-project monitorColor',
@@ -279,10 +279,10 @@ export default {
             label: 'Id'
           }, {
             key: 'name',
-            label: this.$t('alert.name')
+            label: this.$t('overall.name')
           }, {
             key: 'type',
-            label: this.$t('alert.type')
+            label: this.$t('overall.type')
           }, {
             key: 'severityId',
             label: this.$t('alert.severity'),
@@ -505,10 +505,10 @@ export default {
       switch (item.type) {
         case 'asset' : str += `<span>${this.$t('overall.asset')}</span> <span>/</span> <span>${this.$t('overall.asset')}</span>`; break
         case 'datacenter' : str += `<span>${this.$t('config.config')}</span> <span>/</span> <span>${this.$t('overall.dc')}</span>`; break
-        case 'project' : str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('dashboard.overview.project.project')}</span>`; break
+        case 'project' : str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('project.project.projectName')}</span>`; break
         case 'module' :str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('overall.module')}</span>`; break
         case 'endpoint' : str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('asset.endpoint')}</span>`; break
-        case 'alertrule' : str += `<span>${this.$t('overall.alert')}</span> <span>/</span> <span>${this.$t('dashboard.overview.alert.alertRule')}</span>`; break
+        case 'alertrule' : str += `<span>${this.$t('overall.alert')}</span> <span>/</span> <span>${this.$t('alert.config.alertConfig')}</span>`; break
       }
       return str
     },

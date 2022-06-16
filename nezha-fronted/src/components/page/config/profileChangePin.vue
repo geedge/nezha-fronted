@@ -45,7 +45,7 @@ export default {
       if (value && value != '' && value == temp.user.newPin) {
         callback()
       } else {
-        callback(new Error(temp.$t('config.user.confirmPinErr')))
+        callback(new Error(temp.$t('profile.confirmPasswordErr')))
       }
     }
     return {

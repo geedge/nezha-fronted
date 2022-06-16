@@ -15,7 +15,7 @@
       </div>
       <div class="license-left-body">
         <div>
-          <div class="license-left-boyd-title" style="margin-top: 25px">{{$t('license.type')}}</div>
+          <div class="license-left-boyd-title" style="margin-top: 25px">{{$t('overall.type')}}</div>
           <div class="license-left-boyd-value">{{ licenseMark.type ? licenseMark.type : '-'}}</div>
         </div>
         <div>
@@ -104,11 +104,11 @@ export default {
       tableData: [],
       tableTitle: [
         {
-          label: this.$t('license.devicesName'),
+          label: this.$t('asset.host'),
           prop: 'devicesName'
         },
         {
-          label: this.$t('license.status'),
+          label: this.$t('overall.state'),
           prop: 'status'
         }
       ],

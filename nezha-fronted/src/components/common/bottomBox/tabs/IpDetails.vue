@@ -121,7 +121,7 @@ export default {
           label: 'addr',
           disabled: false
         }, {
-          name: this.$t('asset.state'),
+          name: this.$t('overall.state'),
           type: 'input',
           label: 'state',
           disabled: false

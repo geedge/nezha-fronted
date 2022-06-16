@@ -117,7 +117,7 @@ export default {
           show: true,
           minWidth: 200
         }, {
-          label: this.$t('config.ipamip.asset'),
+          label: this.$t('guide.asset'),
           prop: 'asset',
           show: true,
           width: 200

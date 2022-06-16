@@ -80,7 +80,7 @@
         :min-width="1000"
         column-key="element"
         :show-overflow-tooltip="true"
-        :label="$t('project.endpoint.element')">
+        :label="$t('dashboard.panel.chartForm.element')">
         <template v-slot="scope">
           <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
             <div>
@@ -100,7 +100,7 @@
         :resizable="false"
         prop="value"
         column-key="value"
-        :label="$t('project.endpoint.value')"
+        :label="$t('overall.value')"
         min-width="180">
       </pl-table-column>
     </pl-table>

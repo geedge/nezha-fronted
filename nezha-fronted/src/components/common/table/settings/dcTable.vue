@@ -166,7 +166,7 @@ export default {
           minWidth: 110,
           sortable: 'custom'
         }, {
-          label: this.$t('config.dc.assets'),
+          label: this.$t('guide.asset'),
           prop: 'assetNum',
           show: true,
           minWidth: 90,
@@ -177,12 +177,12 @@ export default {
           width: 120,
           show: true
         }, {
-          label: this.$t('asset.tel'),
+          label: this.$t('config.dc.tel'),
           prop: 'tel',
           show: false,
           minWidth: 100
         }, {
-          label: this.$t('asset.principal'),
+          label: this.$t('config.dc.principal'),
           prop: 'principal',
           show: false,
           minWidth: 120
@@ -197,7 +197,7 @@ export default {
           show: false,
           minWidth: 100
         }, {
-          label: this.$t('config.dc.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           minWidth: 100,

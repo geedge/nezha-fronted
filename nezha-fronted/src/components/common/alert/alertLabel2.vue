@@ -17,7 +17,7 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.manageIp')}}</div>
+        <div class="alert-label-title">{{$t('asset.manageIp')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.manageIp ? alertLabelData.manageIp : '--'}}</div>
       </div>
       <div class="alert-label-box">
@@ -40,15 +40,15 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.dc && alertLabelData.dc.name ? alertLabelData.dc.name:'--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.cabinet')}}</div>
+        <div class="alert-label-title">{{$t('asset.cabinet')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.cabinet && alertLabelData.cabinet.name ? alertLabelData.cabinet.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.brand')}}</div>
+        <div class="alert-label-title">{{$t('asset.brand')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.brand && alertLabelData.brand.name ? alertLabelData.brand.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.model')}}</div>
+        <div class="alert-label-title">{{$t('asset.model')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.model && alertLabelData.model.name ? alertLabelData.model.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
@@ -224,7 +224,7 @@
         <div class="alert-label-title">{{$t('overall.state')}}</div>
         <div class="alert-label-value">
            <span style="width: auto">
-            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
+            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.metrics.metrics')}} </span>
             <span v-if="alertLabelData && alertLabelData.configs[0].state === 0">
               <span class="active-icon red-bg inline-block"></span>
             </span>
@@ -236,7 +236,7 @@
             </span>
           </span>
           <span style="width: auto">
-            <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
+            <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('overall.logs')}} </span>
             <span v-if="alertLabelData && alertLabelData.configs[1].state === 0">
               <span class="active-icon red-bg inline-block"></span>
             </span>
@@ -261,11 +261,11 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.location')}}</div>
+        <div class="alert-label-title">{{$t('asset.location')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.location && alertLabelData.location ? alertLabelData.location : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.cabinet')}}</div>
+        <div class="alert-label-title">{{$t('asset.cabinet')}}</div>
         <div class="alert-label-value">
           <i v-if="alertLabelData" class="nz-icon nz-icon-cabinet monitorColor" :class="alertLabelData && alertLabelData.cabinetNum> 0 ? 'color23BF9A' : 'colorEF7458'"/>&nbsp;
           <span>{{alertLabelData && alertLabelData.cabinetNum ? alertLabelData.cabinetNum : 0}}</span></div>

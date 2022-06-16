@@ -178,11 +178,11 @@ export default {
       },
       resetOptions: [
         {
-          label: this.$t('config.system.reset.metric'),
+          label: this.$t('overall.metric'),
           value: 'metric'
         },
         {
-          label: this.$t('config.system.reset.alert'),
+          label: this.$t('overall.alert'),
           value: 'alert'
         },
         {

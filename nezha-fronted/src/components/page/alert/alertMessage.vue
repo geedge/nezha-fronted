@@ -244,7 +244,7 @@ export default {
         searchLabelList: [
           {
             id: 26,
-            name: this.$t('alert.list.id'),
+            name: this.$t('asset.id'),
             type: 'id',
             label: 'ids',
             disabled: false
@@ -290,7 +290,7 @@ export default {
       resultType: '',
       titleSearchList: {
         project: {
-          label: this.$t('dashboard.overview.project.project'),
+          label: this.$t('project.project.projectName'),
           key: 'projectIds',
           type: 'checkBox',
           children: [],
@@ -300,7 +300,7 @@ export default {
           index: -1
         },
         module: {
-          label: this.$t('dashboard.overview.project.module'),
+          label: this.$t('overall.module'),
           key: 'moduleIds',
           type: 'checkBox',
           children: [],
@@ -339,7 +339,7 @@ export default {
       },
       detailSearchList: {
         project: {
-          label: this.$t('dashboard.overview.project.project'),
+          label: this.$t('project.project.projectName'),
           key: 'projectIds',
           type: 'checkBox',
           children: [],
@@ -349,7 +349,7 @@ export default {
           index: -1
         },
         module: {
-          label: this.$t('dashboard.overview.project.module'),
+          label: this.$t('overall.module'),
           key: 'moduleIds',
           type: 'checkBox',
           children: [],

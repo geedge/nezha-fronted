@@ -86,7 +86,7 @@ export default {
     return {
       tableTitle: [
         {
-          label: this.$t('config.dc.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           minWidth: 100
@@ -96,7 +96,7 @@ export default {
           show: true,
           minWidth: 100
         }, {
-          label: this.$t('alert.silence.startTime'),
+          label: this.$t('overall.startTime'),
           prop: 'stts',
           show: true,
           minWidth: 300

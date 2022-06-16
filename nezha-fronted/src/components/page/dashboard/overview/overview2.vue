@@ -34,7 +34,7 @@
                 <span class="over-num" v-if="(assetData ? assetData.totalStat.total  : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("dashboard.overview.asset.title")}}</div>
+              <div class="content-col-content-title">{{$t("guide.asset")}}</div>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
                 <span class="over-num" v-if="(projectData ? projectData.projectStat.length : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("dashboard.overview.project.project")}}</div>
+              <div class="content-col-content-title">{{$t("project.project.projectName")}}</div>
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@
                 <span class="over-num" v-if="(moduleData ? moduleData.moduleStat.length : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("dashboard.overview.module.module")}}</div>
+              <div class="content-col-content-title">{{$t("overall.module")}}</div>
             </div>
           </div>
         </div>
@@ -79,7 +79,7 @@
                 <span class="over-num" v-if="(endpointData ? endpointData.total : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
+              <div class="content-col-content-title">{{$t("overall.endpoint")}}</div>
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@
               <!--<time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>-->
               <!--<span class="content-col-title-tool">-->
                 <!--<div class="diy-content">-->
-                  <!--<span>{{$t("dashboard.overview.dataCenter.dataCenter")}}</span>-->
+                  <!--<span>{{$t("overall.dc")}}</span>-->
                   <!--<i class="el-input__icon nz-icon nz-icon-arrow-down"></i>-->
                 <!--</div>-->
                 <!--<el-cascader-->
@@ -144,7 +144,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-title">{{$t("dashboard.overview.dataCenter.dataCenter")}}</div>
+          <div class="content-col-title">{{$t("overall.dc")}}</div>
           <div class="content-col-content">
             <!--<chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap" @is-loading="(isLoading)=>{this.mapLoading = isLoading}"></chart-box>-->
             <div id="map" style="height: 100%; width: 100%"></div>
@@ -181,8 +181,8 @@
                 <i class="nz-icon nz-icon-arrow-down"></i>
                 <transition name="el-zoom-in-top">
                   <ul class="el-dropdown-menu el-popper el-dropdown-menu&#45;&#45;mini" v-if="bottom3DropdownShow">
-                    <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.asset.title")}}</li>
-                    <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.module.module")}}</li>
+                    <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("guide.asset")}}</li>
+                    <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("overall.module")}}</li>
                   </ul>
                 </transition>
               </span>-->
@@ -900,18 +900,18 @@ export default {
         endpointOption.series[0].label.formatter = data.endpointTotal + ''
         endpointOption.series[0].data = [
           { name: vm.$t('dashboard.overview.asset.pingUp'), value: data.endpointUp ? data.endpointUp : 0 },
-          { name: vm.$t('dashboard.overview.asset.pingDown'), value: data.endpointDown ? data.endpointDown : 0 },
+          { name: vm.$t('asset.down'), value: data.endpointDown ? data.endpointDown : 0 },
           { name: vm.$t('asset.suspended'), value: data.endpointSuspended ? data.endpointSuspended : 0 }
         ]
         endpointOption.title.text = vm.$t('project.endpoint.endpoint')
-        endpointOption.legend.data = [vm.$t('dashboard.overview.asset.pingUp'), vm.$t('dashboard.overview.asset.pingDown'), vm.$t('asset.suspended')]
+        endpointOption.legend.data = [vm.$t('dashboard.overview.asset.pingUp'), vm.$t('asset.down'), vm.$t('asset.suspended')]
         prometheusOption.series[0].label.formatter = data.promTotal + ''
         prometheusOption.series[0].data = [
           { name: vm.$t('dashboard.overview.asset.pingUp'), value: data.promUp ? data.promUp : 0 },
-          { name: vm.$t('dashboard.overview.asset.pingDown'), value: data.promDown ? data.promDown : 0 }
+          { name: vm.$t('asset.down'), value: data.promDown ? data.promDown : 0 }
         ]
         prometheusOption.title.text = 'Prometheus'
-        prometheusOption.legend.data = [vm.$t('dashboard.overview.asset.pingUp'), vm.$t('dashboard.overview.asset.pingDown')]
+        prometheusOption.legend.data = [vm.$t('dashboard.overview.asset.pingUp'), vm.$t('asset.down')]
         tooltipEndpointChart.setOption(endpointOption, true)
         tooltipPrometheusChart.setOption(prometheusOption, true)
       }, 100)
@@ -1242,7 +1242,7 @@ export default {
             <div class="tooltip-asset">
               <div class="tooltip-asset--title"><span>${this.$t('asset.asset')}</span><span>Total：${dcStat.assetTotal}</span></div>
               <div class="tooltip-asset--row">
-                <div>${this.$t('asset.state')}</div>
+                <div>${this.$t('overall.state')}</div>
                 <div class="tooltip-asset--sub-rows">
                   <div class="tooltip-asset--sub-row">
                     <div class="sub-row--label">${this.$t('asset.inStock')}</div>
@@ -1266,14 +1266,14 @@ export default {
                     <div class="sub-row--value"><div class="sign green-sign"></div><span>${dcStat.assetPingUp}</span></div>
                   </div>
                   <div class="tooltip-asset--sub-row">
-                    <div class="sub-row--label">${this.$t('dashboard.overview.asset.pingDown')}</div>
+                    <div class="sub-row--label">${this.$t('asset.down')}</div>
                     <div class="sub-row--value"><div class="sign red-sign"></div><span>${dcStat.assetPingDown}</span></div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="tooltip-alert">
-              <div class="tooltip-alert--title"><span>${this.$t('dashboard.overview.asset.alert')}</span><span>${dcStat.alertTotal}</span></div>
+              <div class="tooltip-alert--title"><span>${this.$t('overall.alert')}</span><span>${dcStat.alertTotal}</span></div>
               <div class="tooltip-alert--row">
                 <div class="row--label row--label__p1">P1</div><div class="row--value row--value__p1">${dcStat.alertP1}</div>
               </div>

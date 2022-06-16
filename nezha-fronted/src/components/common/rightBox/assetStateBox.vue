@@ -35,7 +35,7 @@
           </el-switch>
         </el-form-item>
         <!--alert-->
-        <el-form-item :label="$t('config.assetState.alert')">
+        <el-form-item :label="$t('overall.alert')">
           <el-switch :active-value="1" :inactive-value="0" id="asset-state-alert-status"
                      v-model="editAssetState.alert">
           </el-switch>

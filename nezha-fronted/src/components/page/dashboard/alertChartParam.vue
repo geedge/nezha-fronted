@@ -1,6 +1,6 @@
 <template>
     <el-form :model="parameters" ref="alertChartParam" size="small" label-position="top" label-width="200px" class="alert-chart-param-form alert-chart__padding-top">
-      <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.select')" >
+      <el-form-item :label="$t('overall.select')" >
         <el-cascader
           id="alert-param-select"
           v-model="parameters.select"
@@ -10,7 +10,7 @@
           popper-class="alert-form-pop right-box-select-top right-public-box-dropdown-top no-style-class"
           clearable></el-cascader>
       </el-form-item>
-      <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.alertRule')">
+      <el-form-item :label="$t('alert.config.alertConfig')">
         <el-select class="form-item" size="small" :placeholder="$t('el.select.placeholder')" popper-class="alert-form-pop right-box-select-top right-public-box-dropdown-top no-style-class" v-model="parameters.alertRule" clearable id="alert-param-alertrule">
           <el-option v-for="(rule, index) in alertRules" :key="index" :label="rule.name" :value="rule.id"></el-option>
         </el-select>
@@ -25,7 +25,7 @@
         </el-select>
         <i class="nz-icon nz-icon-circle severity-circle" v-if="parameters.level" :style="{color: alertPriority.length > 0 && alertPriority.find(severity => severity.id ===  parameters.level).color,'font-size':'12px'}"></i>
       </el-form-item>
-      <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.state')">
+      <el-form-item :label="$t('overall.state')">
         <el-select class="form-item" size="small" popper-class="alert-form-pop right-box-select-top right-public-box-dropdown-top no-style-class" v-model="parameters.state" clearable id="alert-param-state">
           <el-option v-for="(item, index) in states" :key="index" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>

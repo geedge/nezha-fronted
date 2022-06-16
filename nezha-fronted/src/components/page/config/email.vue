@@ -12,9 +12,9 @@
       <el-form-item :label="$t('config.system.email.smtpPort')" prop="email_port">
         <el-input v-model.number="email.email_port" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_port"></el-input>
       </el-form-item>
-      <el-form-item :label="$t('config.system.email.timeout')" prop="email_timeout">
+      <el-form-item :label="$t('config.system.ldap.timeout')" prop="email_timeout">
         <el-input v-model.number="email.email_timeout" >
-          <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+          <template slot="append"><span >{{$t('alert.config.second')}}</span></template>
         </el-input>
       </el-form-item>
       <el-form-item :label="$t('config.system.email.smtpAccount')" prop="email_auth_account">
@@ -42,7 +42,7 @@
       <el-form-item style="padding-top: 20px;">
         <!--              <button id="system-email-reset" @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light" type="button">{{$t('overall.reset')}}</button>-->
         <button id="system-email-test" :class="{'nz-btn-disabled':email.email_enable == 'off','nz-btn-disabled':prevent_opt.save}" :disabled="email.email_enable == 'off' || prevent_opt.save" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button">{{$t('config.system.email.testConnection')}}</button>
-        <button id="system-email-save" v-has="'system_email_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('email','emailForm')">{{$t('overall.submit')}}</button>
+        <button id="system-email-save" v-has="'system_email_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('email','emailForm')">{{$t('overall.save')}}</button>
       </el-form-item>
     </el-form>
   </div>

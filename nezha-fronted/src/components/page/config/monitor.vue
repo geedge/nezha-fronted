@@ -8,17 +8,17 @@
         </el-form-item>
         <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="default_scrape_interval">
           <el-input v-model.number="monitor.default_scrape_interval" >
-            <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+            <template slot="append"><span >{{$t('alert.config.second')}}</span></template>
           </el-input>
         </el-form-item>
         <el-form-item :label="$t('config.system.basic.scrapeTimeout')" prop="default_scrape_timeout">
           <el-input v-model.number="monitor.default_scrape_timeout" >
-            <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+            <template slot="append"><span >{{$t('alert.config.second')}}</span></template>
           </el-input>
         </el-form-item>
         <el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
           <el-input v-model.number="monitor.asset_ping_interval" >
-            <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+            <template slot="append"><span >{{$t('alert.config.second')}}</span></template>
           </el-input>
         </el-form-item>
         <el-form-item :label="$t('config.system.monitor.asset_ping_from')" prop="asset_ping_from">
@@ -42,7 +42,7 @@
         </el-form-item>
         <transition name="el-zoom-in-top">
           <div v-show="monitor.metrics_storage_type == 2">
-            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_endpoint')" prop="metrics_storage_s3_endpoint" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+            <el-form-item :label="$t('asset.endpoint')" prop="metrics_storage_s3_endpoint" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
               <el-input v-model="monitor.metrics_storage_s3_endpoint" id="monitor-metrics_storage_s3_endpoint">
               </el-input>
             </el-form-item>
@@ -65,7 +65,7 @@
         </el-form-item>
         <!--logs-->
         <div class="system-title system-title-border">{{$t('config.system.monitor.logsTitle')}}</div>
-        <el-form-item :label="$t('config.system.monitor.logs_storage_retention')" prop="logs_storage_retention">
+        <el-form-item :label="$t('config.system.monitor.metrics_storage_retention')" prop="logs_storage_retention">
           <el-input v-model.number="monitor.logs_storage_retention" id="monitor-logs_storage_retention">
             <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
           </el-input>
@@ -78,7 +78,7 @@
         </el-form-item>
         <transition name="el-zoom-in-top">
           <div v-show="monitor.logs_storage_type == 2">
-            <el-form-item :label="$t('config.system.monitor.logs_storage_s3_endpoint')" prop="logs_storage_s3_endpoint" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+            <el-form-item :label="$t('asset.endpoint')" prop="logs_storage_s3_endpoint" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
               <el-input v-model="monitor.logs_storage_s3_endpoint" id="monitor-logs_storage_s3_endpoint">
               </el-input>
             </el-form-item>
@@ -86,11 +86,11 @@
               <el-input v-model="monitor.logs_storage_s3_bucket" id="monitor-logs_storage_s3_bucket">
               </el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.monitor.logs_storage_s3_access_key')" prop="logs_storage_s3_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_access_key')" prop="logs_storage_s3_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
               <el-input v-model="monitor.logs_storage_s3_access_key" id="monitor-logs_storage_s3_access_key">
               </el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.monitor.logs_storage_s3_secret_access_key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_secret_access_key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
               <el-input v-model="monitor.logs_storage_s3_secret_access_key" id="monitor-logs_storage_s3_secret_access_key" type="password">
               </el-input>
             </el-form-item>
@@ -100,7 +100,7 @@
           <el-input-number v-model="monitor.logs_query_range_default_limit" controls-position="right" :min="-1" :max="1000" :precision="0" id="system-monitor-logs_query_range_default_limit"></el-input-number>
         </el-form-item>
         <el-form-item>
-          <button id="system-monitor-save" v-has="'system_basic_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="saveSetInfo('monitor','monitorForm')">{{$t('overall.submit')}}</button>
+          <button id="system-monitor-save" v-has="'system_basic_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="saveSetInfo('monitor','monitorForm')">{{$t('overall.save')}}</button>
         </el-form-item>
       </el-form>
     </div>
