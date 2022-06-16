@@ -435,6 +435,7 @@ export default {
             break
           }
           case 'system': {
+            this.chartInfo.elements = this.chartInfo.param.datasource
             this.chartData = []
             if (this.chartInfo.type === 'assetInfo' || this.chartInfo.type === 'endpointInfo') {
               this.chartData = this.dataJson[this.chartInfo.id + '_' + 0].data
