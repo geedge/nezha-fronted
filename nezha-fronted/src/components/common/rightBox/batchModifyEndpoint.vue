@@ -157,7 +157,7 @@ export default {
       tempEndpoint: {},
       tempEndpoint2: {},
       assetLoading: true,
-      rightBox: { show: false, title: this.$t('project.endpoint.createEndpoint'), isEdit: false },
+      rightBox: { show: false, title: this.$t('overall.createEndpoin'), isEdit: false },
       blankEndpoint: {
         id: '',
         projectId: '',
@@ -203,12 +203,12 @@ export default {
       endpointList: [],
       endpointTableTitle: [ // 原始table列
         {
-          label: this.$t('project.endpoint.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true
         },
         {
-          label: this.$t('project.endpoint.asset'),
+          label: this.$t('guide.asset'),
           prop: 'asset',
           show: true
         },
@@ -218,12 +218,12 @@ export default {
           show: true
         },
         {
-          label: this.$t('project.endpoint.port'),
+          label: this.$t('asset.port'),
           prop: 'port',
           show: true
         },
         {
-          label: this.$t('project.endpoint.configs'),
+          label: this.$t('project.module.configs'),
           prop: 'configs',
           show: true
         }

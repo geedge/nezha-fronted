@@ -104,7 +104,7 @@ export default {
           label: 'manageIp',
           disabled: false
         }, {
-          name: this.$t('asset.state'),
+          name: this.$t('overall.state'),
           type: 'assetState',
           label: 'assetState',
           id: 'stateIds',

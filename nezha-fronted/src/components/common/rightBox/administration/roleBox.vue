@@ -1,7 +1,7 @@
 <template>
   <div v-clickoutside="{obj: editRole, func: esc}" class="right-box right-box-role">
     <div class="right-box__header">
-      <div class="header__title">{{editRole.id ? $t('config.roles.editRole') : $t('config.roles.createRole')}}</div>
+      <div class="header__title">{{editRole.id ? $t('config.roles.editRole') : $t('overall.createRole')}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editRole, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -10,7 +10,7 @@
       <div class="container__form">
         <el-form :disabled="detail" :model="editRole" :rules="rules" label-position="top" label-width="120px" ref="roleForm">
           <!--name-->
-          <el-form-item :label="$t('config.roles.name')" prop="name">
+          <el-form-item :label="$t('overall.name')" prop="name">
             <el-input  maxlength="64" placeholder="" id="role-box-input-name"
                        show-word-limit size="small" type="text" v-model="editRole.name"></el-input>
           </el-form-item>
@@ -18,7 +18,7 @@
             <el-input maxlength="256" show-word-limit :rows="2" size='small' type="textarea" v-model="editRole.remark" id="role-box-input-remark"/>
           </el-form-item>
 
-          <el-form-item :label="$t('config.roles.permission')">
+          <el-form-item :label="$t('config.menus.perms')">
             <!--<div class="tree-option">
               <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light option-btn" style="margin-left: 0px;" @click="expandAllOrNone" :class="{'btn-active':expandAllFlag}">展开/收缩</button>
               <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light option-btn" @click="selectAllOrNone" :class="{'btn-active':selectAllFlag}"><span ><i class="nz-icon nz-icon-delete"></i></span></button>

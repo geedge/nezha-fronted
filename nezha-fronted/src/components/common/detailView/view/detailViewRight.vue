@@ -216,22 +216,22 @@ export default {
           ]
         },
         model: [
-          { prop: 'asset', name: this.$t('asset.assets'), active: true }
+          { prop: 'asset', name: this.$t('guide.asset'), active: true }
         ],
         dc: {
           cabinet: [
-            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: true },
-            { prop: 'asset', name: this.$t('asset.assets'), active: false },
+            { prop: 'cabinet', name: this.$t('asset.cabinet'), active: true },
+            { prop: 'asset', name: this.$t('guide.asset'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false }
           ],
           asset: [
-            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: false },
-            { prop: 'asset', name: this.$t('asset.assets'), active: true },
+            { prop: 'cabinet', name: this.$t('asset.cabinet'), active: false },
+            { prop: 'asset', name: this.$t('guide.asset'), active: true },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false }
           ],
           alertMessage: [
-            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: false },
-            { prop: 'asset', name: this.$t('asset.assets'), active: false },
+            { prop: 'cabinet', name: this.$t('asset.cabinet'), active: false },
+            { prop: 'asset', name: this.$t('guide.asset'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
           ]
         }

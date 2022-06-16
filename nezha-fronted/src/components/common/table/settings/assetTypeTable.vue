@@ -113,7 +113,7 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('config.assetType.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           width: 120,

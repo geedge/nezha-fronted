@@ -121,7 +121,7 @@ export default {
           prop: 'name',
           show: true
         }, {
-          label: this.$t('config.system.notification.filePath'),
+          label: this.$t('webshell.filePath'),
           prop: 'filePath',
           show: true
         }, {

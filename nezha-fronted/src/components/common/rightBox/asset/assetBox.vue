@@ -20,7 +20,7 @@
               </template>
             </select-asset-type>
           </el-form-item>
-          <el-form-item v-if="editAsset.type && editAsset.type.vm === 1" :label="$t('overall.parent')" prop="pid">
+          <el-form-item v-if="editAsset.type && editAsset.type.vm === 1" :label="$t('asset.parent')" prop="pid">
             <el-select
               v-model="editAsset.pid"
               class="right-box__select"
@@ -31,7 +31,7 @@
               <el-option v-for="p in options.parentAssetOptions" :key="p.id" :label="p.name" :value="p.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('asset.state')" prop="stateId">
+          <el-form-item :label="$t('overall.state')" prop="stateId">
             <el-select v-model="editAsset.stateId" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
               <el-option v-for="state in options.stateOptions" :key="state.id" :label="state.name" :value="state.id">
                 <div style="display: flex;justify-content: space-between;padding: 5px;">
@@ -198,7 +198,7 @@
                   <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('asset.userName')" prop="authUsername">
+              <el-form-item :label="$t('profile.username')" prop="authUsername">
                 <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
               </el-form-item>
               <!-- Key支持私钥 -->
@@ -207,7 +207,7 @@
                   <el-input v-model="editAsset.authPriKey" size="small"/>
                 </el-form-item>
               </template>
-              <el-form-item :label="$t('asset.pin')" prop="authPin">
+              <el-form-item :label="$t('login.pin')" prop="authPin">
                 <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small" type="password"/>
               </el-form-item>
               <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
@@ -218,10 +218,10 @@
           <!-- TELNET -->
           <template v-if="editAsset.type && editAsset.type.authProtocol === assetConstants.authProtocolData.telnet">
             <div class="form__sub-title">TELNET</div>
-            <el-form-item :label="$t('asset.userName')" prop="authUsername">
+            <el-form-item :label="$t('profile.username')" prop="authUsername">
               <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
             </el-form-item>
-            <el-form-item :label="$t('asset.pin')" prop="authPin">
+            <el-form-item :label="$t('login.pin')" prop="authPin">
               <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small"  type="password"/>
             </el-form-item>
             <el-form-item :label="$t('asset.usernamePrompt')" prop="authUserTip">
@@ -264,10 +264,10 @@
               </div>
             </div>
             <transition name="el-zoom-in-top">
-             <!-- <el-form-item :label="$t('asset.userName')" prop="clientUser">
+             <!-- <el-form-item :label="$t('profile.username')" prop="clientUser">
               <el-input maxlength="64" show-word-limit v-model="editAsset.clientUser" size="small"/>
               </el-form-item>
-              <el-form-item :label="$t('asset.pin')" prop="clientPin">
+              <el-form-item :label="$t('login.pin')" prop="clientPin">
                 <el-input type="password" show-word-limit v-model="editAsset.clientPin" size="small"/>
               </el-form-item> -->
               <div v-if="editAsset.clientEnable === 1" v-show="talonShowTow">

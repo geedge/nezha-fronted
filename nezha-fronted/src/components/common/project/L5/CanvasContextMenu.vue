@@ -19,7 +19,7 @@
     </div>
     <div>
       <a @click="canvascopy()" class="flex">
-        <span class="full">{{$t('project.topology.copy')}}</span>
+        <span class="full">{{$t('overall.copy')}}</span>
         <span class="ml50">Ctrl + C</span>
       </a>
     </div>

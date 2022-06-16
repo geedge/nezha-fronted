@@ -126,12 +126,12 @@ export default {
           show: true,
           minWidth: 100
         }, {
-          label: this.$t('alert.list.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           width: 100
         }, {
-          label: this.$t('alert.startAt'),
+          label: this.$t('overall.startTime'),
           prop: 'startAt',
           show: true,
           width: 150

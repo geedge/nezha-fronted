@@ -38,7 +38,7 @@
         </div>
       </div> -->
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.manageIp") }}</div>
+        <div class="alert-label-title">{{ $t("asset.manageIp") }}</div>
         <div class="alert-label-value">
           {{
             alertLabelData && alertLabelData.manageIp
@@ -104,7 +104,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.cabinet") }}</div>
+        <div class="alert-label-title">{{ $t("asset.cabinet") }}</div>
         <div class="alert-label-value">
           {{
             alertLabelData &&
@@ -116,7 +116,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.brand") }}</div>
+        <div class="alert-label-title">{{ $t("asset.brand") }}</div>
         <div class="alert-label-value">
           {{
             alertLabelData && alertLabelData.brand && alertLabelData.brand.name
@@ -126,7 +126,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.model") }}</div>
+        <div class="alert-label-title">{{ $t("asset.model") }}</div>
         <div class="alert-label-value">
           {{
             alertLabelData && alertLabelData.model && alertLabelData.model.name
@@ -457,7 +457,7 @@
           <span style="width: auto">
             <span class="endpoint-cell-left"
               ><i class="nz-icon nz-icon-Metrics active" />
-              {{ $t("project.endpoint.metrics") }}
+              {{ $t("project.metrics.metrics") }}
             </span>
             <span
               v-if="alertLabelData && alertLabelData.configs[0].state === 0"
@@ -478,7 +478,7 @@
           <span style="width: auto">
             <span class="endpoint-cell-left" style="margin-left: 10px"
               ><i class="nz-icon nz-icon-logs active" />
-              {{ $t("project.endpoint.logs") }}
+              {{ $t("overall.logs") }}
             </span>
             <span
               v-if="alertLabelData && alertLabelData.configs[1].state === 0"
@@ -514,7 +514,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.location") }}</div>
+        <div class="alert-label-title">{{ $t("asset.location") }}</div>
         <div class="alert-label-value">
           {{
             alertLabelData && alertLabelData.location && alertLabelData.location
@@ -524,7 +524,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.cabinet") }}</div>
+        <div class="alert-label-title">{{ $t("asset.cabinet") }}</div>
         <div class="alert-label-value">
           <i
             v-if="alertLabelData"

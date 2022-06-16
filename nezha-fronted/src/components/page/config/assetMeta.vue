@@ -105,7 +105,7 @@ export default {
         groupShow: false
       },
       groupData: [{
-        name: this.$t('config.assetLabel.all'),
+        name: this.$t('overall.exportAll'),
         id: -1,
         children: []
       }],
@@ -134,7 +134,7 @@ export default {
             disabled: false
           }
           // , {
-          //   name: this.$t('config.assetLabel.group'),
+          //   name: this.$t('dashboard.panel.chartForm.group'),
           //   type: 'group',
           //   label: 'group',
           //   readonly: true,
@@ -246,7 +246,7 @@ export default {
 
             if (selectKey === group.id) {
               this.showGroup = {
-                name: this.$t('config.assetLabel.all'),
+                name: this.$t('overall.exportAll'),
                 id: -1,
                 children: []
               }

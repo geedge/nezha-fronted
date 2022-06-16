@@ -67,7 +67,7 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('project.endpoint.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           minWidth: 200,
@@ -80,7 +80,7 @@ export default {
           sortable: 'custom'
         },
         {
-          label: this.$t('project.endpoint.asset'),
+          label: this.$t('guide.asset'),
           prop: 'asset',
           show: true,
           minWidth: 90,
@@ -92,20 +92,20 @@ export default {
           show: true
         },
         {
-          label: this.$t('project.endpoint.configs'),
+          label: this.$t('project.module.configs'),
           prop: 'configs',
           minWidth: 150,
           show: false
         },
         {
-          label: this.$t('project.endpoint.alerts'),
+          label: this.$t('overall.alert'),
           prop: 'alerts',
           show: true,
           minWidth: 180,
           sortable: 'custom'
         },
         {
-          label: this.$t('project.endpoint.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           minWidth: 200

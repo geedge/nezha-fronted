@@ -73,13 +73,13 @@ export default {
           sortable: 'custom'
         },
         // {
-        //   label: this.$t('config.user.username'),
+        //   label: this.$t('login.username'),
         //   prop: 'username',
         //   show: true,
         //   width: 150
         // },
         {
-          label: this.$t('config.user.roles'),
+          label: this.$t('profile.role'),
           prop: 'roles',
           show: true,
           width: 150
@@ -89,17 +89,17 @@ export default {
           show: true,
           minWidth: 150
         }, {
-          label: this.$t('config.user.lastLoginTime'),
+          label: this.$t('profile.lastLoginTime'),
           prop: 'lastLoginTime',
           show: true,
           width: 200
         }, {
-          label: this.$t('config.user.lastLoginIp'),
+          label: this.$t('profile.lastLoginIp'),
           prop: 'lastLoginIp',
           show: true,
           width: 150
         }, {
-          label: this.$t('config.user.source'),
+          label: this.$t('profile.source'),
           prop: 'source',
           show: true,
           width: 150

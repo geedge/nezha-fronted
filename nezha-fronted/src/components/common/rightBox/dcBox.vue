@@ -17,10 +17,10 @@
             <el-form-item :label='$t("asset.location")' prop="location">
               <el-input placeholder="" maxlength="256" show-word-limit v-model="editDc.location" size="small" id="dc-box-input-location"></el-input>
             </el-form-item>
-            <el-form-item :label='$t("asset.tel")' prop="tel">
+            <el-form-item :label='$t("config.dc.tel")' prop="tel">
               <el-input placeholder="" maxlength="128" show-word-limit v-model="editDc.tel" size="small" id="dc-box-input-tel"></el-input>
             </el-form-item>
-            <el-form-item :label='$t("asset.principal")' prop="principal">
+            <el-form-item :label='$t("config.dc.principal")' prop="principal">
               <el-select value-key="id" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
                 <el-option v-for="item in userData" :key="item.id" :label="item.name" :value="item.id" style="width: 620px">
                   <span class="user-name" :title="item.name">{{item.name}}</span><span class="user-username" :title="item.username">@{{item.username}}</span>
@@ -39,7 +39,7 @@
                 ></latlng-picker>
               </div>
             </el-form-item>
-            <el-form-item :label='$t("config.dc.state")' prop="state">
+            <el-form-item :label='$t("overall.state")' prop="state">
               <el-switch
                 id="dc-box-input-name"
                 v-model="editDc.state"

@@ -49,6 +49,9 @@ if (arg === 'html') {
       chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
     },
     plugins: [
+      new webpack.ProvidePlugin({
+        introJs: ['intro.js'],
+      }),
       /* new GenerateAssetPlugin({
         filename: 'config.json',
         fn: (compilation, cb) => {
@@ -198,6 +201,9 @@ if (arg === 'html') {
         extraFiles: []
       }), */
       // http://vuejs.github.io/vue-loader/en/workflow/production.html
+      new webpack.ProvidePlugin({
+        introJs: ['intro.js']
+      }),
       new webpack.DefinePlugin({
         'process.env': env
       }),

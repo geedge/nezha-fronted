@@ -26,7 +26,7 @@
             </el-select>
           </el-form-item>
           <!--chartTemp list-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.pid')" prop="pid">
+          <el-form-item :label="$t('project.module.ChartTemplate')" prop="pid">
             <el-select id="chart-box-group"
                        v-model="editChartTemp.pid"
                        class="right-box__select" clearable
@@ -134,7 +134,7 @@ export default {
               disabled: false
             }, {
               id: 22,
-              name: this.$t('asset.state'),
+              name: this.$t('overall.state'),
               type: 'select',
               label: 'assetState',
               disabled: false
@@ -366,7 +366,7 @@ export default {
             disabled: false
           }, {
             id: 22,
-            name: this.$t('asset.state'),
+            name: this.$t('overall.state'),
             type: 'select',
             label: 'assetState',
             disabled: false
@@ -392,7 +392,7 @@ export default {
             show: true
           },
           {
-            label: this.$t('project.endpoint.name'),
+            label: this.$t('overall.name'),
             prop: 'name',
             show: true
           }

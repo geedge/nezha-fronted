@@ -77,12 +77,12 @@ export default {
           minWidth: 140,
           sortable: 'custom'
         }, {
-          label: this.$t('overall.parent'),
+          label: this.$t('asset.parent'),
           prop: 'parent',
           show: false,
           minWidth: 110
         }, {
-          label: this.$t('overall.children'),
+          label: this.$t('overall.assetSubTab'),
           prop: 'children',
           show: false,
           minWidth: 120
@@ -93,7 +93,7 @@ export default {
           minWidth: 140,
           sortable: 'custom'
         }, {
-          label: this.$t('asset.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           minWidth: 110,
@@ -116,7 +116,7 @@ export default {
           minWidth: 110,
           sortable: 'custom'
         }, {
-          label: this.$t('asset.alertNum'),
+          label: this.$t('overall.alert'),
           prop: 'alertNum',
           show: true,
           width: 120,

@@ -13,7 +13,7 @@
     <div class="right-box__container">
       <div class="container__form container__form-width">
         <el-form ref="ExprTempForm" :model="editExprTemp" :rules="rules" label-position="top" label-width="120px">
-          <el-form-item :label="$t('config.exprTemp.name')" prop="name">
+          <el-form-item :label="$t('overall.name')" prop="name">
             <el-input maxlength="64" show-word-limit v-model="editExprTemp.name" :placeholder="$t('overall.placeHolder')" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('config.exprTemp.gname')" prop="gname">

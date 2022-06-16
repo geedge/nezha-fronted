@@ -97,19 +97,19 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('config.exprTemp.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('config.exprTemp.type'),
+          label: this.$t('overall.type'),
           prop: 'type',
           show: true,
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('config.exprTemp.varType'),
+          label: this.$t('dashboard.panel.chartForm.varType'),
           prop: 'varType',
           show: true,
           minWidth: 200,

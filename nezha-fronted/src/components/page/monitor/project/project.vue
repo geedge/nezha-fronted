@@ -94,7 +94,7 @@ export default {
           show: true,
           width: 150
         }, {
-          label: this.$t('project.endpoint.asset'),
+          label: this.$t('guide.asset'),
           prop: 'asset',
           show: true,
           minWidth: 400
@@ -104,7 +104,7 @@ export default {
           show: true,
           width: 200
         }, {
-          label: this.$t('project.endpoint.port'),
+          label: this.$t('asset.port'),
           prop: 'port',
           show: true,
           width: 100
@@ -114,7 +114,7 @@ export default {
           show: false,
           width: 200
         }, {
-          label: this.$t('project.endpoint.labels'),
+          label: this.$t('alert.list.labels'),
           prop: 'labels',
           show: true,
           width: 200
@@ -124,17 +124,17 @@ export default {
           show: true,
           width: 200
         }, {
-          label: this.$t('project.endpoint.path'),
+          label: this.$t('config.terminallog.path'),
           prop: 'path',
           show: true,
           width: 200
         }, {
-          label: this.$t('alert.list.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           width: 80
         }, {
-          label: this.$t('project.endpoint.alerts'),
+          label: this.$t('overall.alert'),
           prop: 'alerts',
           show: true,
           width: 180
@@ -184,7 +184,7 @@ export default {
           disabled: false
         }, {
           id: 33,
-          name: this.$t('asset.state'),
+          name: this.$t('overall.state'),
           // name: this.$t('asset.asset'),
           type: 'select',
           label: 'endpointState',
@@ -508,7 +508,7 @@ export default {
         detail.account = account.user
         let loginType = ''
         if (account.authType == 1) {
-          loginType = this.$t('asset.pin')
+          loginType = this.$t('login.pin')
         } else if (account.authType == 2) {
           loginType = this.$t('asset.ssh')
         }
@@ -565,7 +565,7 @@ export default {
       })
     },
     messageStyle (e) {
-      if (e.column.label == 'Alerts' || e.column.label == this.$t('project.endpoint.alerts')) {
+      if (e.column.label == 'Alerts' || e.column.label == this.$t('overall.alert')) {
         if (e.row.alertNum > 0) {
           return 'danger'
         } else {

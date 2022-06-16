@@ -128,7 +128,7 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('project.project.project'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           sortable: 'custom',
@@ -146,7 +146,7 @@ export default {
           width: 120,
           sortable: 'custom'
         }, {
-          label: this.$t('project.endpoint.alerts'),
+          label: this.$t('overall.alert'),
           prop: 'alertNum',
           show: true,
           width: 120,

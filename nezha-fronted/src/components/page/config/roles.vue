@@ -72,7 +72,7 @@ export default {
         zheze_none: true,
         searchLabelList: [{
           id: 10,
-          name: this.$t('config.roles.name'),
+          name: this.$t('overall.name'),
           type: 'input',
           label: 'name',
           disabled: false

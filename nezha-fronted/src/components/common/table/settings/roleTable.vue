@@ -95,7 +95,7 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('config.roles.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           sortable: 'custom'

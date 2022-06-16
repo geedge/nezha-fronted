@@ -127,7 +127,7 @@
           </el-form-item>
 
           <el-form-item
-            :label="$t('backup.Enable')"
+            :label="$t('asset.talon.enable')"
             prop="status"
             class="form-item__switch"
           >

@@ -150,14 +150,14 @@ export default {
             disabled: false
           }, {
             id: 16,
-            name: this.$t('config.terminallog.protocol'),
+            name: this.$t('webshell.protocol'),
             type: 'selectString',
             label: 'protocol',
             readonly: true,
             disabled: false
           }, {
             id: 17,
-            name: this.$t('config.terminallog.status'),
+            name: this.$t('overall.state'),
             type: 'terminalStatus',
             label: 'state',
             readonly: true,
@@ -215,7 +215,7 @@ export default {
       }).then(() => {
         this.$put('/terminal/kill', { uuid: record.uuid }).then(res => {
           if (res.code === 200) {
-            this.$message.success(this.$t('config.terminallog.success'))
+            this.$message.success(this.$t('overall.result.success'))
             this.$refs.dataList.bottomBox.showSubList = false
             this.getTableData()
           } else {

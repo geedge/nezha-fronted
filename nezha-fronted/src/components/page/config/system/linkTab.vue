@@ -60,7 +60,7 @@ export default {
         searchLabelList: [
           // {
           //   id: 1,
-          //   name: this.$t('config.system.link.create'),
+          //   name: this.$t('config.system.apiKey.create'),
           //   type: 'input',
           //   label: 'createBy',
           //   disabled: false

@@ -126,7 +126,7 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('project.module.moduleName'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           minWidth: 200,
@@ -145,7 +145,7 @@ export default {
           width: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('project.module.alerts'),
+          label: this.$t('overall.alert'),
           prop: 'alertNum',
           show: true,
           width: 120,

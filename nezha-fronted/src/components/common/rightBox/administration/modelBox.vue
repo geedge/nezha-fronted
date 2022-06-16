@@ -1,7 +1,7 @@
 <template>
   <div v-clickoutside="{obj: editModel, func: esc}" class="right-box right-box-model">
     <div class="right-box__header">
-      <div class="header__title">{{editModel.id ? $t('config.model.editModel') : $t('config.model.createModel')}}</div>
+      <div class="header__title">{{editModel.id ? $t('config.model.editModel') : $t('overall.createModel')}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editModel, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -14,7 +14,7 @@
             <el-input maxlength="64" show-word-limit v-model="editModel.name" size="small" type="text"></el-input>
           </el-form-item>
           <!--brand-->
-          <el-form-item :label='$t("config.model.brand")' prop="brandId">
+          <el-form-item :label='$t("asset.brand")' prop="brandId">
             <el-select value-key="id" allow-create class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.brandId" placeholder="" size="small" id="module-box-input-project">
               <el-option :id="'module-project-'+item.id" v-for="item in brandList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
@@ -26,7 +26,7 @@
             </el-select>
           </el-form-item>
           <!-- ChartTemplate -->
-          <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
+          <el-form-item :label="$t('project.module.ChartTemplate')" prop="ChartTemplate">
             <v-selectpage
             :data="chartlList"
             :tb-columns="ChartSearchShowFields"
@@ -102,8 +102,8 @@ export default {
       chartlList: [], // chart 列表数据
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
-        { title: this.$t('config.model.titleName'), data: 'name', key: 'name' },
-        { title: this.$t('config.model.titleType'), data: 'type', key: 'type' },
+        { title: this.$t('overall.name'), data: 'name', key: 'name' },
+        { title: this.$t('overall.type'), data: 'type', key: 'type' },
         { title: this.$t('overall.remark'), data: 'remark', key: 'remark' }
       ],
       url: 'asset/model',
