@@ -1121,6 +1121,9 @@ export default {
     if (!document.onmousemove) { // 添加鼠标移动事件监听
       document.onmousemove = null
     }
+    this.$store.commit('setCurrentMousemove', 0)
+    this.$store.commit('setConnect', 'none')
+    echarts.disconnect('timeSeriesGroup')
   }
 }
 </script>

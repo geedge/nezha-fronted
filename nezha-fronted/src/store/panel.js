@@ -21,7 +21,7 @@ const panel = {
     // 查看模式
     mode: '',
     // timeSeries类型图表联动
-    isConnect: false,
+    isConnect: 'none',
     // 当前鼠标所在的图表id
     currentMousemove: 0
   },
