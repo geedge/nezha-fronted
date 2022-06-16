@@ -169,6 +169,7 @@ export default {
       deep: true,
       handler (n, o) {
         if (n) {
+          this.searchLabel = {}
           this.getTableData()
         }
       }

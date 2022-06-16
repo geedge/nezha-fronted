@@ -12,7 +12,7 @@
         <el-skeleton-item class="search-item-name" search-item-path variant="h3" style="width: 30%" />
         <div v-for="item in skeletonArr" :key="item" class="search-item-info">
           <el-skeleton-item class="search-item-key"/>
-          <el-skeleton-item class="search-item-value-box" style="margin-left: 20px"/>
+          <el-skeleton-item class="search-item-value-box" style="margin-left: 20px;height: 13px"/>
         </div>
       </div>
     </template>

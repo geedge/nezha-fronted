@@ -515,6 +515,7 @@ export default {
       deep: true,
       handler (n) {
         if (n) {
+          this.searchLabel = {}
           if (this.from === fromRoute.asset) {
             this.asset = JSON.parse(JSON.stringify(n))
             this.$nextTick(() => {

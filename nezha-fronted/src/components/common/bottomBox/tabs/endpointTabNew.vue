@@ -75,6 +75,7 @@ export default {
       immediate: true,
       handler (n) {
         if (n) {
+          this.searchLabel = {}
           this.getTableData()
         }
       }

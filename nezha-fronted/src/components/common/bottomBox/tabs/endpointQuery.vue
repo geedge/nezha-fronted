@@ -93,6 +93,7 @@ export default {
     obj: {
       immediate: true,
       handler (n) {
+        this.searchLabel = {}
         this.formatTime = bus.timeFormate(new Date(bus.computeTimezoneTime(new Date())))
       }
     }

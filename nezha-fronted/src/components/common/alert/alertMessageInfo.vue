@@ -348,6 +348,10 @@ export default {
     this.chartInfo.loaded && this.getChartData()
     this.showAllData = !this.showMultiple(this.chartInfo.type)
     this.getAlertMessageInfo()
+    window.addEventListener('resize', this.resize)
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.resize)
   }
 }
 </script>

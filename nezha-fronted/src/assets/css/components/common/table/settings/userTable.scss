@@ -22,4 +22,13 @@
     font-size: 14px;
     line-height: 14px;
   }
+  .user-name-td{
+    display: flex;
+    align-items: center;
+    .user-online{
+      margin-right: 5px;
+      margin-left: -10px;
+      color: #38cc20;
+    }
+  }
 }

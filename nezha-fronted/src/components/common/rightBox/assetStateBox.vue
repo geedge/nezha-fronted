@@ -29,7 +29,7 @@
           </el-switch>
         </el-form-item>
         <!--monitor-->
-        <el-form-item :label="$t('config.assetState.monitor')">
+        <el-form-item :label="$t('config.system.monitor.monitor')">
           <el-switch :active-value="1" :inactive-value="0" id="asset-state-monitor-status"
                      v-model="editAssetState.monitor">
           </el-switch>

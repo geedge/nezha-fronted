@@ -280,6 +280,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
+        this.searchLabel = {}
         this.searchLabel.dcIds = n.id
         if (this.from === fromRoute.model) {
           delete this.searchLabel.dcIds

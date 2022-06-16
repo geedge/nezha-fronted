@@ -158,9 +158,11 @@ export default {
       immediate: true,
       handler (n) {
         if (n) {
+          this.searchLabel = {}
           if (this.from === fromRoute.alertSilence) {
             this.state = '2'
           }
+          this.searchLabel = {}
           this.getTableData()
         }
       }
