@@ -200,8 +200,6 @@ export default {
               unit: ''
             },
             schedule: {
-              stime: '',
-              etime: '',
               repeat: 0,
               nums: [],
               type: 0
@@ -394,6 +392,28 @@ export default {
     },
     edit (u) {
       this.panel = Object.assign({}, u)
+      if (!this.panel.param.report) {
+        this.panel = {
+          ...u,
+          param: {
+            report: {
+              enable: false,
+              range: {
+                unit: ''
+              },
+              schedule: {
+                type: '0',
+                repeat: 1,
+                nums: [],
+                stime: '',
+                etime: ''
+              },
+              receivers: []
+            },
+            chartShare: 'none'
+          }
+        }
+      }
       this.rightBox.panel.show = true
     },
     toAdd () {
@@ -416,7 +436,8 @@ export default {
               stime: '',
               etime: '',
               nums: [],
-              type: 0 + ''
+              type: 0 + '',
+              repeat: 1
             }
           },
           chartShare: 'none'

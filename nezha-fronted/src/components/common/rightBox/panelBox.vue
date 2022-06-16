@@ -52,7 +52,7 @@
                   <el-form-item
                   :label="$t('backup.start')"
                   class="form-item--half-width"
-                  prop="stime"
+                  prop="param.report.schedule.stime"
                   >
                   <my-date-picker align="right" class=" "
                               v-model="editPanel.param.report.schedule.stime"
@@ -66,7 +66,7 @@
                   <el-form-item
                   :label="$t('dashboard.panel.endAt')"
                   class="form-item--half-width"
-                  prop="etime"
+                  prop="param.report.schedule.etime"
                   >
                      <my-date-picker align="right" class=" "
                             v-model="editPanel.param.report.schedule.etime"
@@ -77,7 +77,7 @@
                             type="datetime">
                          </my-date-picker>
                     </el-form-item>
-                  <el-form-item :label='$t("dashboard.panel.period")' class="range-time" prop="unit">
+                  <el-form-item :label='$t("dashboard.panel.period")' class="range-time" prop="param.report.range.unit">
                     <el-radio-group v-model="editPanel.param.report.range.unit" size="small">
                       <el-radio-button label="day">{{ $t("dashboard.panel.prevDay") }}</el-radio-button>
                       <el-radio-button label="week">{{ $t("dashboard.panel.prevWeek") }}</el-radio-button>
@@ -86,7 +86,7 @@
                     </el-form-item>
             <el-form-item
             :label="$t('backup.schedule')"
-            prop="schType"
+            prop="param.report.schedule.type"
             class="form-tabs">
             <el-tabs
               v-model="editPanel.param.report.schedule.type"
@@ -102,7 +102,7 @@
           <el-form-item
             v-if="isShow === 2 || isShow === 3 ? true :false"
             :label="$t('backup.RepeatEvery')"
-            prop="repeat"
+            prop="param.report.schedule.repeat"
             class="form-day-week">
             <el-input
               size="small"
@@ -144,7 +144,7 @@
                 >{{ item }}</el-checkbox-button>
              </el-checkbox-group>
                 </el-form-item>
-           <el-form-item v-if="isShow !== 0 ? true : false" :label="$t('dashboard.panel.receivers')" class="item-receivers" prop="receivers">
+           <el-form-item :label="$t('dashboard.panel.receivers')" class="item-receivers" prop="param.report.receivers">
              <el-select v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
                <el-option v-for="item in userData" :key="item.id" :label="item.name" :value="item.id">
                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
@@ -175,6 +175,7 @@
 <script>
 import editRigthBox from '../mixin/editRigthBox'
 import bus from '@/libs/bus'
+import { arrLength, datePicker } from '@/components/common/js/validate'
 export default {
   name: 'panelBox',
   props: {
@@ -192,6 +193,23 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        'param.report.range.unit': [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        'param.report.schedule.type': [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        'param.report.schedule.repeat': [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        'param.report.schedule.stime': [{
+          required: true,
+          message: this.$t('validate.required')
+        }, { validator: datePicker, trigger: 'blur' }],
+        'param.report.receivers': [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          { validator: arrLength }
         ]
       },
       week: [
@@ -247,8 +265,16 @@ export default {
     if (this.editPanel.id) {
       this.isShow = Number(this.editPanel.param.report.schedule.type)
       this.editPanel.param.report.schedule.type = this.editPanel.param.report.schedule.type + ''
-      this.editPanel.param.report.schedule.stime = this.utcTimeToTimezoneStr(this.editPanel.param.report.schedule.stime)
-      this.editPanel.param.report.schedule.etime = this.utcTimeToTimezoneStr(this.editPanel.param.report.schedule.etime)
+      if (this.editPanel.param.report.schedule.stime !== '') {
+        this.editPanel.param.report.schedule.stime = this.utcTimeToTimezoneStr(this.editPanel.param.report.schedule.stime)
+      } else {
+        this.editPanel.param.report.schedule.stime = ''
+      }
+      if (this.editPanel.param.report.schedule.etime !== '') {
+        this.editPanel.param.report.schedule.etime = this.utcTimeToTimezoneStr(this.editPanel.param.report.schedule.etime)
+      } else {
+        this.editPanel.param.report.schedule.etime = ''
+      }
     }
   },
   mounted () {
@@ -269,7 +295,7 @@ export default {
       this.isShow = Number(tab.name)
       if (this.editPanel.param.report.schedule.nums) {
         this.editPanel.param.report.schedule.nums = []
-        this.editPanel.param.report.schedule.repeat = 0
+        this.editPanel.param.report.schedule.repeat = 1
       }
     },
     /* 关闭弹框 */
@@ -300,9 +326,9 @@ export default {
             schedule: {
               type: Number(this.editPanel.param.report.schedule.type),
               repeat: this.editPanel.param.report.schedule.repeat ? this.editPanel.param.report.schedule.repeat : 1,
-              stime: this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.stime),
-              etime: this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.etime),
-              nums: this.editPanel.param.report.schedule.nums
+              nums: this.editPanel.param.report.schedule.nums,
+              stime: this.editPanel.param.report.schedule.stime !== '' ? this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.stime) : this.editPanel.param.report.schedule.stime,
+              etime: this.editPanel.param.report.schedule.etime !== '' ? this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.etime) : this.editPanel.param.report.schedule.etime
             },
             receivers: this.editPanel.param.report.receivers
           },
