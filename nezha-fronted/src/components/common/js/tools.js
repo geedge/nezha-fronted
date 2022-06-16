@@ -39,18 +39,15 @@ export const clickoutside = {
         if (oldValue) {
           // const newValue = JSON.parse(JSON.stringify(binding.value.obj))
           if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__)) {
-            // 防止表单自动聚焦
-            setTimeout(() => {
-              MessageBox.confirm(i18n.t('tip.confirmCancel'), {
-                confirmButtonText: i18n.t('tip.yes'),
-                cancelButtonText: i18n.t('tip.no'),
-                type: 'warning'
-              }).then(() => {
-                if (binding.value.func) {
-                  binding.value.func()
-                }
-              }).catch(err => err)
-            })
+            MessageBox.confirm(i18n.t('tip.confirmCancel'), {
+              confirmButtonText: i18n.t('tip.yes'),
+              cancelButtonText: i18n.t('tip.no'),
+              type: 'warning'
+            }).then(() => {
+              if (binding.value.func) {
+                binding.value.func()
+              }
+            }).catch(err => err)
           } else {
             binding.value.func()
           }
