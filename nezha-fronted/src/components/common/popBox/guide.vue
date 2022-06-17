@@ -87,7 +87,7 @@ export default {
         },
         {
           route: '/agent',
-          title: this.$t('guide.agent'),
+          title: this.$t('config.agent.agent.agent'),
           icon: 'nz-icon nz-icon-agent',
           tip: this.$t('guide.agentTip'),
           permissionCode: 'agent_view'
