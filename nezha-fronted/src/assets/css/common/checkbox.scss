@@ -29,7 +29,7 @@
 
 .el-checkbox__inner, .el-input__inner {
   border-color: $--checkbox-border-color;
-  background-color: $--background-color-empty;
+  background-color: $--background-color-empty !important;
 }
 .el-input__inner {
   border-color: $--border-color-light;
