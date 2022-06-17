@@ -195,6 +195,20 @@
       font-size: 12px;
     }
   }
+  .el-table{
+    background: $--background-color-empty;
+    border: 1px solid $--border-color-light;
+    .el-table--border::after{
+      background: $--border-color-light;
+    }
+    tr{
+      background: $--background-color-empty;
+      //border-bottom: 1px solid $--border-color-light !important;
+      th,td {
+        border-bottom: 1px solid $--border-color-light
+      }
+    }
+  }
 }
 .panel-chart.panel-chart--fullscreen {
   border: none;
