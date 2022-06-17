@@ -107,43 +107,6 @@ export default {
         this.$get('/sys/i18n', { pageSize: -1, pageNo: 1 }).then(response => {
           if (response.code === 200) {
             this.globalizationData = response.data.list
-            const allValue = []
-            let valueObj = {}
-            const allValue2 = []
-            let valueObj2 = {}
-            response.data.list.forEach(item => {
-              if (allValue.indexOf(item.code) == -1) {
-                allValue.push(item.code)
-                valueObj[item.code] = {
-                  values: [item.value],
-                  key: item.code
-                }
-              } else {
-                valueObj[item.code].values.push(item.value)
-              }
-            })
-            Object.keys(valueObj).forEach(key => {
-              const item = valueObj[key]
-              const strKey = item.values.join('&')
-              if (allValue2.indexOf(strKey) === -1) {
-                allValue2.push(strKey)
-                valueObj2[strKey] = {
-                  allKey: [item.key],
-                  key: strKey
-                }
-              } else {
-                valueObj2[strKey].allKey.push(item.key)
-              }
-            })
-            valueObj2 = this.$loadsh.filter(valueObj2, function (o) {
-              if (o.allKey.length > 1) {
-                return o
-              } else {
-                return false
-              }
-            })
-            console.log(valueObj2)
-            console.log(JSON.stringify(valueObj2))
           } else {
             this.$message.error(response.msg)
           }
