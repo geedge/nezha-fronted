@@ -1,7 +1,12 @@
 .temp-dropdown{
   border: none;
 }
-
+.my-loading-parent--relative {
+  position: relative;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+}
 .panel-chart {
   border: 1px solid $--chart-box-border-color;
   height: 100%;
