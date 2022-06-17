@@ -7,6 +7,13 @@
 .el-checkbox__input.is-checked .el-checkbox__inner {
   background-color: $--color-primary !important;
 }
+.el-checkbox__input.is-checked.is-disabled .el-checkbox__inner{
+  background-color: $--border-color-light !important;
+}
+.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+  display: none !important;
+}
+
 .el-checkbox__inner {
   width: 16px !important;
   height: 16px !important;
