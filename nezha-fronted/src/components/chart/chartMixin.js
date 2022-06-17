@@ -1,4 +1,5 @@
 import lodash from 'lodash'
+import * as echarts from 'echarts'
 import { getMetricTypeValue } from '@/components/common/js/tools'
 import { getChart, getMousePoint, setChart } from '@/components/common/js/common'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
@@ -40,6 +41,20 @@ export default {
     }
   },
   methods: {
+    // 十六进制转为rgba
+    hexToRgb (hex, a = 1) {
+      /*
+        hex: {String}, "#333", "#AF0382"
+      */
+      hex = hex.slice(1)
+      if (hex.length == 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
+      }
+      const r = parseInt(hex.slice(0, 2), 16)
+      const g = parseInt(hex.slice(2, 4), 16)
+      const b = parseInt(hex.slice(4, 6), 16)
+      return `rgba(${r}, ${g}, ${b}, ${a})`
+    },
     handleTimeSeries (chartInfo, seriesTemplate, originalDatas) {
       const series = []
       let colorIndex = 0
@@ -73,6 +88,21 @@ export default {
                   }
                 }
               })
+            }
+            // 判断如果是面积图 颜色设为渐变色
+            if (s.areaStyle && this.colorList.length) {
+              s.areaStyle = {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: this.hexToRgb(this.colorList[colorIndex], 0.1)
+                  },
+                  {
+                    offset: 1,
+                    color: this.hexToRgb(this.colorList[colorIndex], 1)
+                  }
+                ])
+              }
             }
             series.push(s)
             colorIndex++
