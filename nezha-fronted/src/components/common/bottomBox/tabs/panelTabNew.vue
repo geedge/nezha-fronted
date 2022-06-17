@@ -368,6 +368,7 @@ export default {
             } else {
               this.chartListLoading = false
               this.dataList = this.panelDataList
+              this.$emit('exit')
             }
           })
           this.$emit('getTableData')
