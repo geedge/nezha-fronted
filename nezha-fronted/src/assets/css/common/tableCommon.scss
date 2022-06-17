@@ -232,7 +232,10 @@
       width: 100%;
       border: 1px solid $--border-color-light;
       border-bottom: none;
-
+      .el-checkbox.is-disabled{
+        line-height: 1;
+        height: 16px;
+      }
       .caret-wrapper {
         height: 23px;
         .sort-caret.ascending {
