@@ -365,6 +365,9 @@ export default {
             if (this.panelDataList.length > 0) {
               this.showPanel.id = this.filter.panelId = 0
               this.getData(this.filter)
+            } else {
+              this.chartListLoading = false
+              this.dataList = this.panelDataList
             }
           })
           this.$emit('getTableData')
