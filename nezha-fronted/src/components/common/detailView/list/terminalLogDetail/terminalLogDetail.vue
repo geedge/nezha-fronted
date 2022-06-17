@@ -109,7 +109,7 @@ export default {
           show: true
         },
         {
-          label: this.$t('config.terminallog.sourceIp'),
+          label: this.$t('ping.sourceIp'),
           prop: 'sourceIp',
           minWidth: 115,
           show: true,

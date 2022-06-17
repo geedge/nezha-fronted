@@ -172,7 +172,7 @@ export default {
           minWidth: 90,
           sortable: 'custom'
         }, {
-          label: this.$t('config.dc.alert'),
+          label: this.$t('overall.alert'),
           prop: 'alertNum',
           width: 120,
           show: true

@@ -47,7 +47,7 @@
               type="datetime"
               prefix-icon="el-icon-date"
               :format="timeFormatStrToDatePickFormat(dateFormatStr)"
-              :placeholder="$t('backup.selectData')"
+              :placeholder="$t('el.datepicker.selectDate')"
             >
             </my-date-picker>
           </el-form-item>
@@ -63,7 +63,7 @@
               id="chart-box-title"
               @change="inputchange"
             >
-              <template slot="append">{{ $t("backup.week") }}</template>
+              <template slot="append">{{ $t("el.datepicker.week") }}</template>
             </el-input>
             <el-input
               v-if="whoshow === 2 ? true : false"

@@ -46,7 +46,7 @@
         <button
           type="button"
           class="el-time-panel__btn cancel"
-          @click="handleCancel()">{{ t('el.datepicker.cancel') }}</button>
+          @click="handleCancel()">{{ t('overall.cancel') }}</button>
         <button
           type="button"
           class="el-time-panel__btn confirm"

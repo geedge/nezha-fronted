@@ -129,7 +129,7 @@ export default {
           prop: 'account',
           show: true
         }, {
-          label: this.$t('config.system.notification.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true
         }
