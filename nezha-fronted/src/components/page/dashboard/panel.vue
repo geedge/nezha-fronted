@@ -389,30 +389,48 @@ export default {
       })
     },
     edit (u) {
-      this.panel = Object.assign({}, u)
-      if (!this.panel.param.report) {
-        this.panel = {
-          ...u,
-          param: {
-            report: {
-              enable: false,
-              range: {
-                unit: ''
-              },
-              schedule: {
-                type: '0',
-                repeat: 1,
-                nums: [],
-                stime: '',
-                etime: ''
-              },
-              receivers: []
-            },
-            chartShare: 'none'
+      this.$get('visual/panel?ids=' + u.id).then(res => {
+        if (res.code === 200) {
+          this.panel = res.data.list[0]
+          if (!this.panel.param.report) {
+            this.panel = {
+              ...this.panel,
+              param: {
+                report: {
+                  enable: false,
+                  range: {
+                    unit: ''
+                  },
+                  schedule: {
+                    type: '0',
+                    repeat: 1,
+                    nums: [],
+                    stime: '',
+                    etime: ''
+                  },
+                  receivers: []
+                },
+                chartShare: 'none'
+              }
+            }
           }
+          this.panel.param.report.schedule.type = this.panel.param.report.schedule.type + ''
+          const startTime = this.$loadsh.get(this.panel, 'param.report.schedule.stime', '')
+          if (startTime !== '') {
+            this.panel.param.report.schedule.stime = this.utcTimeToTimezoneStr(this.panel.param.report.schedule.stime, 'YYYY-MM-DD HH:mm:ss')
+          } else {
+            this.panel.param.report.schedule.stime = ''
+          }
+          const endTime = this.$loadsh.get(this.panel, 'param.report.schedule.etime', '')
+          if (endTime !== '') {
+            this.panel.param.report.schedule.etime = this.utcTimeToTimezoneStr(this.panel.param.report.schedule.etime, 'YYYY-MM-DD HH:mm:ss')
+          } else {
+            this.panel.param.report.schedule.etime = ''
+          }
+          this.rightBox.panel.show = true
         }
-      }
-      this.rightBox.panel.show = true
+      })
+      // this.panel = Object.assign({}, u)
     },
     toAdd () {
       if (!this.hasButton('panel_view')) {
