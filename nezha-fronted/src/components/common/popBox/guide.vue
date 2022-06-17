@@ -115,7 +115,7 @@ export default {
         },
         {
           route: '/alertRule',
-          title: this.$t('guide.alert'),
+          title: this.$t('overall.alert'),
           icon: 'nz-icon nz-icon-menu-alert',
           tip: this.$t('guide.alertTip'),
           permissionCode: 'alertRule_view'

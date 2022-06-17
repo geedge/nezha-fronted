@@ -4,13 +4,13 @@
       <div class="sub-list-tabs" v-if="from===fromRoute.asset">
         <div class="sub-list-tab-title">{{obj.host}}</div>
         <div class="sub-list-tab" @click="changeTab('panel')" id="endpoint-tab-change-panel">{{$t("overall.detail")}}</div>
-        <div @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'" id="endpoint-tab-change-alertmsg">{{$t("asset.alerts")}}</div>
+        <div @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'" id="endpoint-tab-change-alertmsg">{{$t("alert.alertMessage")}}</div>
         <div class="sub-list-tab sub-list-tab-active">{{$t("overall.endpoint")}}</div>
       </div>
       <div class="sub-list-tabs" v-if="from===fromRoute.module">
         <div class="sub-list-tab-title">{{obj.name}}</div>
         <div class="sub-list-tab sub-list-tab-active">{{$t("overall.endpoint")}}</div>
-        <div @click="changeTab('alertMessage')" class="sub-list-tab" id="endpoint-tab-change-alertmsg">{{$t("asset.alerts")}}</div>
+        <div @click="changeTab('alertMessage')" class="sub-list-tab" id="endpoint-tab-change-alertmsg">{{$t("alert.alertMessage")}}</div>
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search">

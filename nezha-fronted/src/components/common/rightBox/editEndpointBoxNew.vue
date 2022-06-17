@@ -715,7 +715,7 @@ export default {
         { name: this.$t('project.endpoint.authTypeToken'), value: 2 }
       ],
       endpointStateList: [
-        { name: this.$t('project.endpoint.enable'), value: 1 },
+        { name: this.$t('asset.talon.enable'), value: 1 },
         { name: this.$t('project.endpoint.disable'), value: 0 }
       ],
       configsCopyValue: '',

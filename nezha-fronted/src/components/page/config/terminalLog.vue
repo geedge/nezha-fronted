@@ -132,7 +132,7 @@ export default {
             disabled: false
           }, {
             id: 13,
-            name: this.$t('config.terminallog.sourceIp'),
+            name: this.$t('ping.sourceIp'),
             type: 'input',
             label: 'remoteAddr',
             disabled: false
