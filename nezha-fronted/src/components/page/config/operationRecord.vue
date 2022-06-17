@@ -73,13 +73,13 @@ export default {
         searchLabelList: [
           {
             id: 11,
-            name: this.$t('config.operationlog.type'),
+            name: this.$t('overall.type'),
             type: 'input',
             label: 'type',
             disabled: false
           }, {
             id: 13,
-            name: this.$t('config.operationlog.operation'),
+            name: this.$t('overall.option'),
             type: 'selectString',
             label: 'operation',
             disabled: false

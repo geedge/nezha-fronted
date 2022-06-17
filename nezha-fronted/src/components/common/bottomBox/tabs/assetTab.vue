@@ -104,7 +104,7 @@ export default {
           label: 'manageIp',
           disabled: false
         }, {
-          name: this.$t('asset.state'),
+          name: this.$t('overall.state'),
           type: 'assetState',
           label: 'assetState',
           id: 'stateIds',
@@ -284,6 +284,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
+        this.searchLabel = {}
         this.searchLabel.dcIds = n.id
         if (this.from === fromRoute.model) {
           delete this.searchLabel.dcIds

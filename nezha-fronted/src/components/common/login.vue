@@ -14,7 +14,7 @@
           <i class="nz-icon nz-icon-password"></i>
           <input v-model="loginData.pin" autocomplete="on" name="password" placeholder="Password" type="password" @keydown.enter="login"></input>
         </div>
-        <div class="login-label"  v-if="verifyShow">{{$t('login.verifyTitle')}}</div>
+        <div class="login-label"  v-if="verifyShow">{{$t('profile.twoFactorAuthentication')}}</div>
         <div class="login-input"  v-if="verifyShow">
           <i class="nz-icon nz-icon-yanzhengma"></i>
           <input v-model="loginData.authCode"  name="newPassword" autocomplete="off" :placeholder="$t('login.verifyPlaceholder')" @keydown.enter="verify"></input>

@@ -2,7 +2,7 @@
   <div v-clickoutside="{obj: editAlertRule, func: clickOutside}" class="right-box right-box-alert-rule">
     <div class="right-box__header">
       <!-- begin--标题-->
-      <div class="header__title">{{alertRule.id ? $t("alert.config.editAlertConfig") : $t("alert.config.createAlertConfig")}}</div>
+      <div class="header__title">{{alertRule.id ? $t("alert.config.editAlertConfig") : $t("overall.createAlertRule")}}</div>
       <!-- end--标题-->
       <div class="header__operation">
         <span v-cancel="{obj: editAlertRule, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
@@ -14,7 +14,7 @@
       <div class="container__form">
         <el-form ref="alertRuleForm" :model="editAlertRule" :rules="rules" label-position = "top" label-width="120px">
           <!--name-->
-          <el-form-item :label='$t("alert.config.name")' prop="name">
+          <el-form-item :label='$t("overall.name")' prop="name">
             <el-input id="alert-box-input-name" ref="alertName" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--type-->
@@ -46,7 +46,7 @@
             <i v-if="editAlertRule.severityId" :style="{color:severityData.length > 0 && severityData.find(severity => severity.id ===  editAlertRule.severityId).color,'font-size':'12px'}" class="nz-icon nz-icon-circle severity-circle"></i>
           </el-form-item>
           <!--expr-->
-          <el-form-item  v-if="showSnmpTrap" :label='$t("alert.config.exprBox")' prop="expr">
+          <el-form-item  v-if="showSnmpTrap" :label='$t("config.exprTemp.expression")' prop="expr">
               <template v-if="showMetrics">
                 <el-row style="line-height: 32px;">
                   <promql-input
@@ -157,7 +157,7 @@
           </el-form-item>
           <div class="alert-rule-split-title">{{ $t('alert.config.effectiveConfig') }}</div>
           <!--state-->
-          <el-form-item :label="$t('alert.config.state')" prop="state" class="half-form-item">
+          <el-form-item :label="$t('overall.state')" prop="state" class="half-form-item">
             <el-select
               id="alert-box-input-state"
               v-model="editAlertRule.state"
@@ -290,7 +290,7 @@
             </el-select>
           </el-form-item>
           <!--receiver-->
-          <el-form-item :label="$t('config.user.receiver')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
+          <el-form-item :label="$t('alert.receiver')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-select
               id="alert-box-input-receiver"
               v-model.trim="editAlertRule.receiverShow"

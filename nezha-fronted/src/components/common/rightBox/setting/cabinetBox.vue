@@ -15,7 +15,7 @@
           <el-form-item :label="$t('config.dc.dc')" prop="idcId">
             <el-input size='mini' v-model="currentDc.name" disabled id="cabinet-box-input-dc"/>
           </el-form-item>
-          <el-form-item :label="$t('asset.uSize')" prop="uSize">
+          <el-form-item :label="$t('config.cab.uSize')" prop="uSize">
             <el-input v-model.number="editCabinet.uSize" :max="47" id="cabinet-box-input-uSize" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')">

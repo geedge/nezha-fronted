@@ -116,13 +116,13 @@ export default {
           minWidth: 350,
           sortable: 'custom'
         }, {
-          label: this.$t('config.model.brand'),
+          label: this.$t('asset.brand'),
           prop: 'brand',
           show: true,
           width: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('config.model.assetNum'),
+          label: this.$t('guide.asset'),
           prop: 'assetNum',
           show: true,
           width: 120,

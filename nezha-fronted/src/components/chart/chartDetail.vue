@@ -17,7 +17,7 @@
             <div class="basic-info-table-value">{{chartDetail? chartDetail.name : '--' }}</div>
           </div>
           <div class="basic-info-table-list">
-            <div class="basic-info-table-title">{{$t('overall.manageIp')}}</div>
+            <div class="basic-info-table-title">{{$t('asset.manageIp')}}</div>
             <div class="basic-info-table-value">{{chartDetail ? chartDetail.manageIp : '--'}}</div>
           </div>
           <div class="basic-info-table-list">
@@ -40,15 +40,15 @@
             <div class="basic-info-table-value">{{chartDetail.dc ? chartDetail.dc.name : '--'}}</div>
           </div>
           <div class="basic-info-table-list">
-            <div class="basic-info-table-title">{{$t('overall.cabinet')}}</div>
+            <div class="basic-info-table-title">{{$t('asset.cabinet')}}</div>
             <div class="basic-info-table-value">{{chartDetail.cabinet ? chartDetail.cabinet.name : '--'}}</div>
           </div>
           <div class="basic-info-table-list">
-            <div class="basic-info-table-title">{{$t('overall.brand')}}</div>
+            <div class="basic-info-table-title">{{$t('asset.brand')}}</div>
             <div class="basic-info-table-value">{{chartDetail.brand ? chartDetail.brand.name : '--'}}</div>
           </div>
           <div class="basic-info-table-list">
-            <div class="basic-info-table-title">{{$t('overall.model')}}</div>
+            <div class="basic-info-table-title">{{$t('asset.model')}}</div>
             <div class="basic-info-table-value">{{chartDetail.model ? chartDetail.model.name : '--'}}</div>
           </div>
           <div class="basic-info-table-list">
@@ -131,7 +131,7 @@
             <div class="basic-info-table-title">{{$t('overall.state')}}</div>
             <div class="basic-info-table-value">
               <span style="width: auto">
-              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('project.endpoint.metrics')}} </span>
+              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('project.metrics.metrics')}} </span>
               <span v-if="chartDetail && chartDetail.configs[0].state === 0">
                 <span class="active-icon red-bg inline-block"></span>
               </span>
@@ -143,7 +143,7 @@
               </span>
             </span>
               <span style="width: auto">
-                <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs active" /> {{$t('project.endpoint.logs')}} </span>
+                <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs active" /> {{$t('overall.logs')}} </span>
                 <span v-if="chartDetail && chartDetail.configs[1].state === 0">
                   <span class="active-icon red-bg inline-block"></span>
                 </span>

@@ -69,7 +69,7 @@
             <el-form-item prop="timeout" style="margin-bottom:10px" :label="$t('ping.timeout')">
               <div class="wrap" style="height:32px">
                 <el-input v-model.number="ruleForm.timeout" placeholder="" >
-                  <template slot="append">{{$t('config.system.basic.second')}}</template>
+                  <template slot="append">{{$t('alert.config.second')}}</template>
                 </el-input>
               </div>
             </el-form-item>
@@ -98,7 +98,7 @@
             </el-button>
           </div>
         </div>
-        <div class="tools-header-title">{{$t('project.endpoint.configs')}}</div>
+        <div class="tools-header-title">{{$t('project.module.configs')}}</div>
       </div>
     </template>
 

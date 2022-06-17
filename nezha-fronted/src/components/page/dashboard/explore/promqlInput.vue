@@ -464,6 +464,10 @@ export default {
     },
     type: {
       type: String // metric和log两种，为空时视为metric
+    },
+    isTopo: {
+      type: Boolean,
+      default: false
     }
     // metricOptions: {type: Array},
     // metricStore: {type: Array}
@@ -894,20 +898,21 @@ export default {
             const children = this.$store.state.metricsList.find(item => item.value === data.value).children
             resolve(children)
           }).then((children) => {
-            const childrenCopy = JSON.parse(JSON.stringify(children))
-            this.metricOptions.find(item => item.label === data.label).children = childrenCopy
-            // if (childrenCopy.length > 100) {
-            //   childrenCopy.splice(100, children.length)
-            //   childrenCopy.push({
-            //     label: 'More',
-            //     value: false,
-            //     parent: data.label,
-            //     more: true
-            //   })
-            //   this.metricOptions.find(item => item.label === data.label).children = childrenCopy
-            // } else {
-            //   this.metricOptions.find(item => item.label === data.label).children = childrenCopy
-            // }
+            let childrenCopy = JSON.parse(JSON.stringify(children))
+            const findChild = this.metricOptions.find(item => item.label === data.label)
+
+            if (childrenCopy.length > 100) {
+              childrenCopy.splice(100, childrenCopy.length)
+              childrenCopy.push({
+                label: 'More',
+                value: false,
+                parent: data.label,
+                more: true
+              })
+              findChild.children = childrenCopy
+            } else {
+              findChild.children = childrenCopy
+            }
           })
         })
       } else if (data.more) {
@@ -916,7 +921,25 @@ export default {
             const children = this.$store.state.metricsList.find(item => item.label === data.parent).children
             resolve(children)
           }).then((children) => {
-            this.metricOptions.find(item => item.label === data.parent).children = children
+            let childrenCopy = JSON.parse(JSON.stringify(children))
+            const findChild = this.metricOptions.find(item => item.label === data.parent)
+            if (childrenCopy.length > 100) {
+              childrenCopy = childrenCopy.splice(findChild.children.length, findChild.children.length + 101)
+              findChild.children.splice(findChild.children.length - 1, 1)
+              findChild.children.push(...childrenCopy)
+              if (findChild.children.length < children.length) {
+                findChild.children.push({
+                  label: 'More',
+                  value: false,
+                  parent: data.parent,
+                  more: true
+                })
+              } else {
+                findChild.children.splice(findChild.children.length - 1, 1)
+              }
+            } else {
+              findChild.children = childrenCopy
+            }
           })
         })
       }
@@ -1098,14 +1121,16 @@ export default {
       immediate: true,
       handler (n, o) {
         this.codeMirrorValue[this.index] = n[this.index]
-        // setTimeout(() => {
-        //   const text = this.newView.state.doc.toString()
-        //   this.newView.dispatch(
-        //     this.newView.state.update({
-        //       changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
-        //     })
-        //   )
-        // }, 200)
+        if (this.isTopo) {
+          setTimeout(() => {
+            const text = this.newView.state.doc.toString()
+            this.newView.dispatch(
+              this.newView.state.update({
+                changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
+              })
+            )
+          }, 200)
+        }
       }
     },
 

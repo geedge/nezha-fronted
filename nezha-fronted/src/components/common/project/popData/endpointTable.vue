@@ -1,7 +1,7 @@
 <template>
   <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-project-endpoint">
-      <div class="right-box-title">{{ moduleName }} / {{$t('project.endpoint.endpoints')}}</div>
+      <div class="right-box-title">{{ moduleName }} / {{$t('overall.endpoint')}}</div>
       <nz-data-list
         ref="dataList"
         :api="url"
@@ -97,16 +97,16 @@ export default {
           show: true,
           width: 100
         }, {
-          label: this.$t('project.endpoint.asset'),
+          label: this.$t('guide.asset'),
           prop: 'asset',
           show: true,
           width: 150
         }, {
-          label: this.$t('project.endpoint.port'),
+          label: this.$t('asset.port'),
           prop: 'port',
           show: true
         }, {
-          label: this.$t('alert.list.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           width: 200,
           show: true
@@ -238,7 +238,7 @@ export default {
       this.esc(false)
     },
     messageStyle (e) {
-      if (e.column.label == 'Alerts' || e.column.label == this.$t('asset.alerts')) {
+      if (e.column.label == 'Alerts' || e.column.label == this.$t('alert.alertMessage')) {
         if (e.row.alertNum > 0) {
           return 'danger'
         } else {

@@ -4,13 +4,13 @@
       <div class="sub-list-tabs" v-if="from===fromRoute.asset">
         <div class="sub-list-tab-title">{{obj.host}}</div>
         <div class="sub-list-tab" @click="changeTab('panel')" id="endpoint-tab-change-panel">{{$t("overall.detail")}}</div>
-        <div @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'" id="endpoint-tab-change-alertmsg">{{$t("asset.alerts")}}</div>
-        <div class="sub-list-tab sub-list-tab-active">{{$t("asset.modules")}}</div>
+        <div @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'" id="endpoint-tab-change-alertmsg">{{$t("alert.alertMessage")}}</div>
+        <div class="sub-list-tab sub-list-tab-active">{{$t("overall.endpoint")}}</div>
       </div>
       <div class="sub-list-tabs" v-if="from===fromRoute.module">
         <div class="sub-list-tab-title">{{obj.name}}</div>
-        <div class="sub-list-tab sub-list-tab-active">{{$t("asset.modules")}}</div>
-        <div @click="changeTab('alertMessage')" class="sub-list-tab" id="endpoint-tab-change-alertmsg">{{$t("asset.alerts")}}</div>
+        <div class="sub-list-tab sub-list-tab-active">{{$t("overall.endpoint")}}</div>
+        <div @click="changeTab('alertMessage')" class="sub-list-tab" id="endpoint-tab-change-alertmsg">{{$t("alert.alertMessage")}}</div>
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search">
@@ -206,7 +206,7 @@ export default {
           show: true,
           width: '120'
         }, {
-          label: this.$t('project.endpoint.asset'),
+          label: this.$t('guide.asset'),
           prop: 'asset',
           show: true,
           minWidth: '400'
@@ -216,7 +216,7 @@ export default {
           show: true,
           width: 120
         }, {
-          label: this.$t('project.endpoint.port'),
+          label: this.$t('asset.port'),
           prop: 'port',
           show: true,
           width: '120'
@@ -226,7 +226,7 @@ export default {
           show: false,
           width: 120
         }, {
-          label: this.$t('project.endpoint.labels'),
+          label: this.$t('alert.list.labels'),
           prop: 'labels',
           show: true,
           width: 200
@@ -236,17 +236,17 @@ export default {
           show: true,
           width: 200
         }, {
-          label: this.$t('project.endpoint.path'),
+          label: this.$t('config.terminallog.path'),
           prop: 'path',
           show: true,
           width: 200
         }, {
-          label: this.$t('alert.list.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           width: '80'
         }, {
-          label: this.$t('project.endpoint.alerts'),
+          label: this.$t('overall.alert'),
           prop: 'alerts',
           show: true,
           width: 180
@@ -283,7 +283,7 @@ export default {
           disabled: false
         }, {
           id: 33,
-          name: this.$t('asset.state'),
+          name: this.$t('overall.state'),
           // name: this.$t('asset.asset'),
           type: 'select',
           label: 'endpointState',
@@ -499,7 +499,7 @@ export default {
       this.getTableData()
     },
     messageStyle (e) {
-      if (e.column.label == 'Alerts' || e.column.label == this.$t('project.endpoint.alerts')) {
+      if (e.column.label == 'Alerts' || e.column.label == this.$t('overall.alert')) {
         if (e.row.alertNum > 0) {
           return 'danger'
         } else {
@@ -515,6 +515,7 @@ export default {
       deep: true,
       handler (n) {
         if (n) {
+          this.searchLabel = {}
           if (this.from === fromRoute.asset) {
             this.asset = JSON.parse(JSON.stringify(n))
             this.$nextTick(() => {

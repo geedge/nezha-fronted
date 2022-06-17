@@ -22,7 +22,7 @@
 
           <!--value mapping-->
           <el-row class="form-row-title">
-            {{ $t('dashboard.panel.chartForm.thresholds') }}
+            {{ $t('alert.config.thresholds') }}
             <span v-if="selection.pen.data.valueMappingSort !=='desc'" class="title__label"
                   >（0:Ok > … >{{
                 selection.pen.data.valueMapping.length
@@ -46,6 +46,7 @@
                       style="">
                 <promql-input
                   :from-father-data="true"
+                  :isTopo="true"
                   :metricOptionsParent="metricOptions"
                   :id="index"
                   :key="index"
@@ -89,7 +90,7 @@
                   </span>
                     </el-col>
                     <el-col :span="4" class="thresholds-cell">{{ $t('project.topology.color') }}</el-col>
-                    <el-col :span="6" class="thresholds-cell">{{ $t('project.topology.value') }}</el-col>
+                    <el-col :span="6" class="thresholds-cell">{{ $t('overall.value') }}</el-col>
                     <el-col :span="8" class="thresholds-cell">{{ $t('project.topology.animation') }}</el-col>
                     <el-col :span="2" class="thresholds-cell"></el-col>
                   </el-row>
@@ -205,7 +206,7 @@
                 >
                 </el-cascader>
               </el-form-item>
-              <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item half-form-item--end"
+              <el-form-item :label="$t('overall.type')" class="half-form-item half-form-item--end"
                             prop="type">
                 <el-select v-model="selection.pen.data.type" :placeholder="$t('el.select.placeholder')"
                            :popper-append-to-body="true" class="right-box-row-with-btn"
@@ -222,6 +223,7 @@
                       style="width: 100%; border-radius: 2px; padding-right: 60px;">
                 <promql-input
                   :from-father-data="true"
+                  :isTopo="true"
                   :metricOptionsParent="metricOptions"
                   :id="index"
                   :pqid="'vm'"
@@ -320,7 +322,7 @@
               </div>
 
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
-                <div>{{ $t('project.topology.width') }}</div>
+                <div>{{ $t('dashboard.panel.chartForm.width') }}</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -341,7 +343,7 @@
               </div>
 
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
-                <div>{{ $t('project.topology.height') }}</div>
+                <div>{{ $t('dashboard.panel.chartForm.high') }}</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -834,7 +836,7 @@
         <!--        <div class="project-content-box" style="width: 100%">-->
 
         <!--          <div class="project-content-item">-->
-        <!--            <label>{{$t('project.topology.name')}}</label>-->
+        <!--            <label>{{$t('overall.name')}}</label>-->
         <!--            <div class="full pr10">-->
         <!--              <el-input class="input" size="small" v-model="topologyData.data.name" :placeholder="$t('el.select.placeholder')"-->
         <!--                        @change="changeTopologyOpt"></el-input>-->
@@ -903,7 +905,7 @@
 
         <!--        <div class="project-content-title">-->
         <!--          Appearance-->
-        <!--          &lt;!&ndash;{{$t('project.topology.name')}}&ndash;&gt;-->
+        <!--          &lt;!&ndash;{{$t('overall.name')}}&ndash;&gt;-->
         <!--        </div>-->
 
         <div class="project-content-box" style="width: 100%">
@@ -1071,7 +1073,7 @@
 
         <!--        </div>-->
 
-        <!--        <div class="project-content-title">{{$t('project.topology.link')}}</div>-->
+        <!--        <div class="project-content-title">{{$t('overall.link')}}</div>-->
 
         <!--        <div class="project-content-box" style="width: 100%">-->
 

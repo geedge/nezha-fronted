@@ -22,7 +22,7 @@
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{currentEndpoint ? currentEndpoint.id : ''}}</div><div
         class="sub-list-tab" @click="changeTab('panel')" id="endpoint-query-changepanel">{{$t("overall.detail")}}</div>
-        <div class="sub-list-tab" @click="changeTab('alertMessage')" id="endpoint-query-alertMessage">{{$t("asset.alerts")}}</div>
+        <div class="sub-list-tab" @click="changeTab('alertMessage')" id="endpoint-query-alertMessage">{{$t("alert.alertMessage")}}</div>
         <div class="sub-list-tab sub-list-tab-active">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">
@@ -80,7 +80,7 @@
         :min-width="1000"
         column-key="element"
         :show-overflow-tooltip="true"
-        :label="$t('project.endpoint.element')">
+        :label="$t('dashboard.panel.chartForm.element')">
         <template v-slot="scope">
           <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
             <div>
@@ -100,7 +100,7 @@
         :resizable="false"
         prop="value"
         column-key="value"
-        :label="$t('project.endpoint.value')"
+        :label="$t('overall.value')"
         min-width="180">
       </pl-table-column>
     </pl-table>
@@ -705,6 +705,7 @@ export default {
       deep: true,
       handler (n) {
         if (n) {
+          this.searchLabel = {}
           this.currentEndpoint = JSON.parse(JSON.stringify(n))
           this.queryEndpoint()
         }

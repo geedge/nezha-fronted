@@ -102,7 +102,7 @@
           <button type="button" @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light"
                   style="margin-right: 20px"
           >
-             {{$t('project.topology.preview')}}
+             {{$t('overall.preview')}}
            </button>
             <button type="button" v-if="isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="previewExit"
                     style="margin-right: 20px"
@@ -113,7 +113,7 @@
                    :disabled="prevent_opt.save"
                    :class="{'nz-btn-disabled':prevent_opt.save}"
                    style="margin-right: 20px">
-             {{$t('project.topology.save')}}
+             {{$t('overall.save')}}
            </button>
            <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-right: 20px" @click="cancelTopology">
              {{$t('project.topology.exit')}}
@@ -302,7 +302,7 @@
                       v-has="'topo_icon_save'" :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
                       style="margin-right: 20px">
-             {{$t('project.topology.save')}}
+             {{$t('overall.save')}}
            </button>
             </span>
       </div>

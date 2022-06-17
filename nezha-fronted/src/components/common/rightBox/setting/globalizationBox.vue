@@ -11,7 +11,7 @@
     <div class="right-box__container">
       <div class="container__form">
         <el-form label-width="120px" size="small" :model="editGlobalization" label-position = "top" ref="globalizationForm">
-          <el-form-item :label='$t("config.menus.name")' prop="name">
+          <el-form-item :label='$t("overall.name")' prop="name">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editGlobalization.name" size="small" id="dc-box-input-name"></el-input>
           </el-form-item>
           <el-form-item :label='$t("config.menus.code")' prop="code">

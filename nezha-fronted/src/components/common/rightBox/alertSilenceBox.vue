@@ -14,7 +14,7 @@
       <div class="container__form">
         <el-form ref="alertSilenceForm" :model="editAlertSilence"
                  :rules="rules" label-position="top" label-width="120px">
-          <el-form-item :label='$t("alert.silence.name")' class="range-name" prop="name">
+          <el-form-item :label='$t("overall.name")' class="range-name" prop="name">
             <el-input
               v-model="editAlertSilence.name" :placeholder="''"
               maxlength="64"
@@ -22,7 +22,7 @@
               size="small">
             </el-input>
           </el-form-item>
-          <el-form-item :label='$t("alert.silence.time")' class="range-time" prop="time">
+          <el-form-item :label='$t("overall.time")' class="range-time" prop="time">
             <div>
               <el-radio-group v-model="rangeTime" size="small" @change="rangeTimeChange">
                 <el-radio-button label="1">{{ $t("overall.oneHour") }}</el-radio-button>
@@ -37,7 +37,7 @@
             <div class="datepicker">
               <div class="datepicker-box">
                 <span class="datepicker-title">{{ $t("overall.startTime") }}</span>
-                <my-date-picker ref="calendar" v-model="editAlertSilence.startAt" :clearable="false" :placeholder="$t('dashboard.panel.startTime')"
+                <my-date-picker ref="calendar" v-model="editAlertSilence.startAt" :clearable="false" :placeholder="$t('overall.startTime')"
                                 align="right" class=" "
                                 :format="timeFormatStrToDatePickFormat(timeFormatMain)"
                                 popper-class="panel-time-picker-popper right-box-select-top"
@@ -50,7 +50,7 @@
               </div>
               <div class="datepicker-box">
                 <span class="datepicker-title">{{ $t("overall.endTime") }}</span>
-                <my-date-picker ref="calendar" v-model="editAlertSilence.endAt" :clearable="false" :placeholder="$t('dashboard.panel.startTime')"
+                <my-date-picker ref="calendar" v-model="editAlertSilence.endAt" :clearable="false" :placeholder="$t('overall.startTime')"
                                 align="right" class=" "
                                 :format="timeFormatStrToDatePickFormat(timeFormatMain)"
                                 popper-class="panel-time-picker-popper right-box-select-top"

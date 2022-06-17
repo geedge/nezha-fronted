@@ -18,7 +18,7 @@
         <detailViewTopSearch :selectValue.sync="selectValue" :detailSearchList="detailSearchList" @reload="reloadTable" />
       </template>
       <template v-slot:top-tool-right>
-        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
+        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('asset.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
        <top-tool-more-options
@@ -90,7 +90,7 @@
         <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
-        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
+        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('asset.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
        <top-tool-more-options
@@ -294,7 +294,7 @@ export default {
           id: 'manageIp',
           disabled: false
         }, {
-          name: this.$t('asset.state'),
+          name: this.$t('overall.state'),
           type: 'assetState',
           label: 'assetState',
           id: 'stateIds',

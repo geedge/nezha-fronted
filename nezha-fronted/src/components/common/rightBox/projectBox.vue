@@ -12,7 +12,7 @@
     <div class="right-box__container right-box-container__left">
       <div class="container__form">
         <el-form ref="projectForm" :model="editProject" :rules="rules" label-position = "top" label-width="120px">
-          <el-form-item :label='$t("project.project.project")' prop="name">
+          <el-form-item :label='$t("overall.name")' prop="name">
             <el-input id="project-box-input-name" v-model="editProject.name" maxlength="64" show-word-limit size="small"></el-input>
           </el-form-item>
           <el-form-item :label='$t("overall.remark")'>
@@ -71,7 +71,8 @@ export default {
           if (this.editProject.id) {
             this.$put('monitor/project', this.editProject).then(response => {
               if (response.code === 200) {
-                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                // this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.messageShow(this.$t('tip.saveSuccess'), '/module', { projectId: response.data.id }, false, 'guide.addModule')
                 this.$store.commit('projectListChange')
                 this.$store.commit('setProject', this.project)
                 this.esc(true)
@@ -83,7 +84,7 @@ export default {
           } else {
             this.$post('monitor/project', this.editProject).then(response => {
               if (response.code === 200) {
-                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.messageShow(this.$t('tip.saveSuccess'), '/module', { projectId: response.data.id }, true, 'guide.addModule')
                 this.$store.commit('projectListChange')
                 this.esc(true)
               } else {

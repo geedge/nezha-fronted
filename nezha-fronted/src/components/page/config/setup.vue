@@ -32,7 +32,7 @@
             <el-step :title="$t('setup.step0')" ></el-step>
             <el-step :title="$t('setup.step1')" ></el-step>
             <el-step :title="$t('setup.step2')"></el-step>
-            <el-step :title="$t('setup.step3')" ></el-step>
+            <el-step :title="$t('overall.system')" ></el-step>
           </el-steps>
         </div>
       </div>
@@ -89,19 +89,19 @@
           <template v-if="activeStep == 1">
             <div class="setup-config">
               <el-form ref="db-form" :model="database" label-width="80px" :rules="dbRules" label-position="top" size="small" style="width: 600px" :validate-on-rule-change="false" >
-                <el-form-item :label="$t('setup.host')" prop="host" key="dbhost" >
+                <el-form-item :label="$t('asset.host')" prop="host" key="dbhost" >
                   <el-input v-model="database.host"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.port')" prop="port" key="dbport" >
+                <el-form-item :label="$t('asset.port')" prop="port" key="dbport" >
                   <el-input v-model="database.port"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('setup.name')" prop="name" key="dbname" >
                   <el-input v-model="database.name"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.username')" prop="username" key="dbusername" >
+                <el-form-item :label="$t('asset.username')" prop="username" key="dbusername" >
                   <el-input v-model="database.username"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.pin')" prop="pin" key="dbpassword" >
+                <el-form-item :label="$t('login.pin')" prop="pin" key="dbpassword" >
                   <el-input v-model="database.pin" type="password" show-password ></el-input>
                 </el-form-item>
               </el-form>
@@ -118,13 +118,13 @@
           <template v-if="activeStep == 2">
             <div class="setup-config">
               <el-form ref="redis-form" :model="redis" label-width="80px" :rules="redisRules" label-position="top" size="small" style="width: 600px" :validate-on-rule-change="false" >
-                <el-form-item :label="$t('setup.host')" prop="host" key="rdhost" >
+                <el-form-item :label="$t('asset.host')" prop="host" key="rdhost" >
                   <el-input v-model="redis.host"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.port')" prop="port" key="rdport" >
+                <el-form-item :label="$t('asset.port')" prop="port" key="rdport" >
                   <el-input v-model="redis.port"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.pin')" prop="pin" key="rdpassword" >
+                <el-form-item :label="$t('login.pin')" prop="pin" key="rdpassword" >
                   <el-input v-model="redis.pin" type="password" show-password ></el-input>
                 </el-form-item>
               </el-form>
@@ -141,15 +141,15 @@
           <template v-if="activeStep == 3">
             <div class="setup-config">
               <el-form ref="sys-form" :model="system" label-width="80px" :rules="sysRules" label-position="top" size="small" style="width: 640px" :validate-on-rule-change="false" >
-                <el-form-item :label="$t('setup.username')" prop="host" key="syshost" >
+                <el-form-item :label="$t('asset.username')" prop="host" key="syshost" >
                   <el-input v-model="system.username"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.pin')" prop="pin" key="syspassword" >
+                <el-form-item :label="$t('login.pin')" prop="pin" key="syspassword" >
                   <el-input v-model="system.pin" type="password" show-password ></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('setup.system.federation')" prop="prometheusFederationEnabled" key="sysprometheusFederationEnabled" >
                   <el-select v-model="system.prometheusFederationEnabled" :placeholder="$t('el.select.placeholder')" style="width: 100%" >
-                    <el-option :label="$t('setup.system.federationEnable')" :value="1"></el-option>
+                    <el-option :label="$t('asset.talon.enable')" :value="1"></el-option>
                     <el-option :label="$t('setup.system.federationDisable')"  :value="0"></el-option>
                   </el-select>
                 </el-form-item>
@@ -167,7 +167,7 @@
           <div class="setup-bottom-btn">
 
             <button v-if="activeStep != 0" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="background-color:#fff;color:#333;border:1px solid rgba(0,0,0,0.15);" @click="preStep">
-              <span>{{$t('setup.back')}}</span>
+              <span>{{$t('overall.back')}}</span>
             </button>
             <button v-if="activeStep != 3"  :class="{'nz-btn-disabled':prevent_next}" :disabled="prevent_next" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="nextStep">
               <span>{{$t('setup.next')}}</span>

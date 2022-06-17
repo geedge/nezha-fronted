@@ -235,7 +235,7 @@ export default {
       }).then(() => {
         this.$put('/terminal/kill', { uuid: this.obj.uuid }).then(res => {
           if (res.code === 200) {
-            this.$message.success(this.$t('config.terminallog.success'))
+            this.$message.success(this.$t('overall.result.success'))
             this.$emit('exit')
           } else {
             this.$message.error(this.$t('config.terminallog.killErrorTip'))

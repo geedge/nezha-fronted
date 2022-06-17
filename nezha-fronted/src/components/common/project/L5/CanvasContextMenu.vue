@@ -8,7 +8,7 @@
     </div>
     <div class="line"></div>
     <div>
-      <a :class="{disabled:!props.node && !props.nodes && !props.line}" @click="onDel()">{{$t('project.topology.delete')}}</a>
+      <a :class="{disabled:!props.node && !props.nodes && !props.line}" @click="onDel()">{{$t('overall.delete')}}</a>
     </div>
     <div class="line"></div>
     <div>
@@ -19,7 +19,7 @@
     </div>
     <div>
       <a @click="canvascopy()" class="flex">
-        <span class="full">{{$t('project.topology.copy')}}</span>
+        <span class="full">{{$t('overall.copy')}}</span>
         <span class="ml50">Ctrl + C</span>
       </a>
     </div>

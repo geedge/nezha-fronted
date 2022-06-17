@@ -788,7 +788,7 @@ export default {
                 })
                 tLabels = tLabels.filter(label => label.prop !== 'time')
                 tLabels.unshift({
-                  label: this.$t('dashboard.panel.chartTableColumn.time'),
+                  label: this.$t('overall.time'),
                   prop: 'time',
                   show: true
                 })

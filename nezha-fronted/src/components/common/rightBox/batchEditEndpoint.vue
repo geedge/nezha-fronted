@@ -10,7 +10,7 @@
       <div class="container__form">
         <!-- Edit type -->
         <el-form ref="endpointEditForm" :model="editData" :rules="rules" label-position="top" label-width="120px">
-          <el-form-item :label="$t('overall.editType')" prop="editType">
+          <el-form-item :label="$t('overall.type')" prop="editType">
             <el-select v-model="editData.editType" @change="endpointBatch" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
               <el-option v-for="type in endpointConfig.editTypeOptions" :key="type.value" :label="$t(type.label)" :value="type.value"/>
             </el-select>

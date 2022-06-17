@@ -112,25 +112,25 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('config.assetLabel.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           minWidth: 250,
           sortable: 'custom'
         }, {
-          label: this.$t('config.assetLabel.key'),
+          label: this.$t('overall.key'),
           prop: 'metaKey',
           show: true,
           width: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('config.assetLabel.group'),
+          label: this.$t('dashboard.panel.chartForm.group'),
           prop: 'group',
           show: true,
           width: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('config.assetLabel.search'),
+          label: this.$t('overall.search'),
           prop: 'search',
           width: 120,
           show: true
@@ -140,7 +140,7 @@ export default {
           width: 120,
           show: true
         }, {
-          label: this.$t('config.assetLabel.type'),
+          label: this.$t('overall.type'),
           prop: 'type',
           width: 150,
           show: true

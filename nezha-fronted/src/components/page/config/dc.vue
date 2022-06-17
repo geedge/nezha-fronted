@@ -18,7 +18,7 @@
         <!--        <detailViewTopSearch :selectValue.sync="selectValue" :detailSearchList="detailSearchList" @reload="reloadTable" />-->
       </template>
       <template v-slot:top-tool-right>
-        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
+        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('asset.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
        <top-tool-more-options
@@ -137,7 +137,7 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <dc-box v-if="rightBox.show" :obj="object" :user-data="userData" @close="closeRightBox" @reload="getTableData"></dc-box>
+      <dc-box v-if="rightBox.show" :obj="object" :user-data="userData" @close="closeRightBox" @reload="getTableData" @addcabinet="addCabinet"></dc-box>
     </transition>
     <transition name="right-box">
       <cabinetBox v-if="cabinetBoxShow" :obj="cabinet" :current-dc="{}" @close="closeRightBox" :dcDisabled="false" @reload="getTableData"></cabinetBox>
@@ -217,7 +217,7 @@ export default {
             disabled: false
           },
           {
-            name: this.$t('asset.state'),
+            name: this.$t('overall.state'),
             type: 'selectString',
             label: 'dcState',
             readonly: true,
@@ -230,6 +230,11 @@ export default {
       cabinetBoxShow: false,
       needAlertDaysData: true,
       trendKey: 'dcId'
+    }
+  },
+  computed: {
+    addCabinetBoxShow () {
+      return this.$store.getters.getAddCabinetBoxParams
     }
   },
   methods: {
@@ -246,7 +251,11 @@ export default {
     regNumTest (val) { // 校验是否是数字
       return this.regNum.test(val)
     },
-    addCabinet () {
+    addCabinet (params) {
+      console.log('addCabinet')
+      if (params) {
+        this.cabinet.idcId = params.dcid
+      }
       this.cabinetBoxShow = true
     },
     add () {
@@ -261,8 +270,10 @@ export default {
       })
     },
     closeRightBox (refresh) {
+      console.log('closeRightBox')
       this.rightBox.show = false
       this.cabinetBoxShow = false
+      this.$store.dispatch('addCabinet', { dcid: '', cabinetBoxShow: false })
       if (refresh) {
         this.delFlag = true
         this.getTableData()
@@ -289,6 +300,12 @@ export default {
             this.addCabinet()
           }
         }
+      }
+    },
+    addCabinetBoxShow: {
+      handler (n) {
+        this.cabinetBoxShow = n.cabinetBoxShow
+        this.cabinet.idcId = n.dcId
       }
     }
   }

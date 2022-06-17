@@ -101,7 +101,7 @@ export default {
           show: true,
           width: 200
         }, {
-          label: this.$t('config.menus.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true
         }, {
@@ -113,7 +113,7 @@ export default {
           prop: 'i18n',
           show: true
         }, {
-          label: this.$t('config.menus.type'),
+          label: this.$t('overall.type'),
           prop: 'type',
           show: true
         }, {

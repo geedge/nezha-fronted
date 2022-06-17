@@ -14,7 +14,7 @@
       <div class="form-items--half-width-group">
         <!-- type -->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.type')"
+          :label="$t('overall.type')"
           class="form-item--half-width"
           prop="type"
         >
@@ -179,7 +179,7 @@ export default {
       chartTypeList: [
         {
           id: 'url',
-          name: this.$t('dashboard.panel.chartForm.typeVal.url.label')
+          name: this.$t('dashboard.panel.chartForm.url')
         },
         {
           id: 'text',
@@ -191,7 +191,7 @@ export default {
         },
         {
           id: 'group',
-          name: this.$t('dashboard.panel.chartForm.typeVal.group.label')
+          name: this.$t('dashboard.panel.chartForm.group')
         },
         {
           id: 'map',

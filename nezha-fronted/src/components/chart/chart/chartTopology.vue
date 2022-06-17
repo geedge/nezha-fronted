@@ -225,7 +225,9 @@ export default {
       let node = nodeAll.data(nodes)
         .enter().append('g')
         .attr('class', 'node animation')
-        .attr('id', function (d) { return 'node' + d.id })
+        .attr('id', function (d) {
+          return 'node' + d.id
+        })
         .attr('style', function (d) {
           let str = 'opacity:'
           str += 1
@@ -473,7 +475,10 @@ export default {
               .data(nodes)
               .join(
                 enter => enter.append('g').attr('class', 'node')
-                  .attr('id', function (d) { return 'node' + d.id })
+                  .attr('id', function (child) {
+                    return 'node' + child.id
+                  }
+                  )
                   .call(drag(simulation))
                   .on('mouseleave', nodeMouseout)
                   .on('click', showChildren),
@@ -513,7 +518,9 @@ export default {
             .data(nodes)
             .join(
               enter => enter.append('g').attr('class', 'node')
-                .attr('id', function (d) { return 'node' + d.id })
+                .attr('id', function (child) {
+                  return 'node' + child.id
+                })
                 .call(drag(simulation))
                 .on('mouseleave', nodeMouseout)
                 .on('click', showChildren),
@@ -552,6 +559,10 @@ export default {
           const d = box.data()[0]
           if (document.getElementById('#circle' + d.id)) {
             return
+          }
+          box.attr('id', 'node' + d.id)
+          if (document.getElementById('node' + d.id)) {
+            document.getElementById('node' + d.id).innerHTML = ''
           }
           box.append('circle')
             .attr('r', d.radius)
@@ -706,7 +717,6 @@ export default {
         str += 0.05
         return str + ';cursor:pointer'
       }).duration(300)
-      console.log(svg, item, node, linkCopy)
     },
     graphIconLeave (item) {
       const svg = d3.select('#svgHex' + this.chartId)
@@ -727,7 +737,6 @@ export default {
   watch: {
     'data.nodes': {
       handler (n) {
-        console.log(n, 'data.nodes')
         this.graphIconArr = []
         this.data.nodes.forEach(item => {
           if (this.graphIconArr.indexOf(item.type) === -1) {
@@ -745,6 +754,7 @@ export default {
   created () {
   },
   mounted () {
+
   },
   beforeDestroy () {
   }

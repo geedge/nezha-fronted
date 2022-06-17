@@ -49,6 +49,9 @@ if (arg === 'html') {
       chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
     },
     plugins: [
+      new webpack.ProvidePlugin({
+        introJs: ['intro.js'],
+      }),
       /* new GenerateAssetPlugin({
         filename: 'config.json',
         fn: (compilation, cb) => {
@@ -198,6 +201,9 @@ if (arg === 'html') {
         extraFiles: []
       }), */
       // http://vuejs.github.io/vue-loader/en/workflow/production.html
+      new webpack.ProvidePlugin({
+        introJs: ['intro.js']
+      }),
       new webpack.DefinePlugin({
         'process.env': env
       }),
@@ -313,7 +319,7 @@ if (process.env.NODE_ENV == 'development') {
         {
           move: [
             { source: path.join(__dirname, '../dist', '/static/config.json'), destination: path.join(__dirname, '../dist/config.json') },
-            { source: path.join(__dirname, '../exportHtml', '/exportHtml.html'), destination: path.join(__dirname, '../dist/exportHtml.html') }
+            // { source: path.join(__dirname, '../exportHtml', '/snapshot_template.html'), destination: path.join(__dirname, '../dist/snapshot_template.html') }
 
           ],
           mkdir: [
@@ -347,7 +353,7 @@ if (process.env.NODE_ENV == 'development') {
       {
         move: [
           { source: path.join(__dirname, '../dist', '/static/config.json'), destination: path.join(__dirname, '../dist/config.json') },
-          { source: path.join(__dirname, '../exportHtml', '/snapshot_template.html'), destination: path.join(__dirname, '../dist/snapshot_template.html') }
+          // { source: path.join(__dirname, '../exportHtml', '/snapshot_template.html'), destination: path.join(__dirname, '../dist/snapshot_template.html') }
 
         ],
         mkdir: [
@@ -370,12 +376,12 @@ if (process.env.NODE_ENV == 'development') {
       }
     ]
   }
-  if (arg === 'html') {
-    plugin.onStart[0].delete.push(path.join(__dirname, '../exportHtml/'))
-    plugin.onEnd[0].copy.push(
-      { source: path.join(__dirname, '../dist', '/index.html'), destination: path.join(__dirname, '../exportHtml', '/snapshot_template.html') }
-    )
-  }
+  // if (arg === 'html') {
+  //   plugin.onStart[0].delete.push(path.join(__dirname, '../exportHtml/'))
+  //   plugin.onEnd[0].copy.push(
+  //     { source: path.join(__dirname, '../dist', '/index.html'), destination: path.join(__dirname, '../exportHtml', '/snapshot_template.html') }
+  //   )
+  // }
   webpackConfig.plugins.push(
     new fileManagerPlugin(plugin)
   )

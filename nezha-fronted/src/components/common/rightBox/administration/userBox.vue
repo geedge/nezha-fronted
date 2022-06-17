@@ -1,7 +1,7 @@
 <template>
   <div v-clickoutside="{obj: editUser, func: esc}" class="right-box right-box-user">
     <div class="right-box__header">
-      <div class="header__title">{{editUser.id ? $t('config.user.editUser') : $t('config.user.createUser')}}</div>
+      <div class="header__title">{{editUser.id ? $t('config.user.editUser') : $t('overall.createUser')}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editUser, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -15,22 +15,22 @@
                       maxlength="64" placeholder="" show-word-limit size="small" type="text"></el-input>
           </el-form-item>
           <!--username-->
-          <el-form-item :label="$t('config.user.username')" prop="username">
+          <el-form-item :label="$t('login.username')" prop="username">
             <el-input id="account-input-username" v-model="editUser.username" :disabled="editUser.username==='admin' && editUser.id==1"
                       maxlength="64" placeholder="" show-word-limit size="small" type="text"></el-input>
           </el-form-item>
           <!--password-->
-          <el-form-item :label="$t('config.user.pin')" prop="pin">
+          <el-form-item :label="$t('login.pin')" prop="pin">
             <el-input id="account-input-password" v-model="editUser.pin"  maxlength="64" placeholder=""
                       show-word-limit size="small" type="password" @blur="pinBlur" autocomplete="new-password"></el-input>
           </el-form-item>
           <!--pinChange-->
-          <el-form-item :label="$t('config.user.confirmPin')" label-width="200px" prop="pinChange">
+          <el-form-item :label="$t('profile.confirmPassword')" label-width="200px" prop="pinChange">
             <el-input id="account-input-pinChange" v-model="editUser.pinChange"  maxlength="64" placeholder=""
                       show-word-limit size="small" type="password"></el-input>
           </el-form-item>
           <!--mfaLevel-->
-          <el-form-item :label="$t('config.user.mfaTitle')" label-width="200px" prop="mfaTitle">
+          <el-form-item :label="$t('profile.twoFactorAuthentication')" label-width="200px" prop="mfaTitle">
             <el-select id="account-input-mfaLevel"
                        v-model="editUser.mfaLevel"
                        class="right-box__select"
@@ -68,7 +68,7 @@
             </el-select>
           </el-form-item>
           <!--roles-->
-          <el-form-item :label="$t('config.user.roles')" prop="roleIds">
+          <el-form-item :label="$t('profile.role')" prop="roleIds">
             <el-select id="account-input-roleIds"
                        v-model="editUser.roleIds"
                        :disabled="(editUser.username==='admin') && editUser.id==1"
@@ -86,7 +86,7 @@
             </el-select>
           </el-form-item>
           <!--enable-->
-          <el-form-item :label="$t('config.user.state')">
+          <el-form-item :label="$t('overall.state')">
             <el-switch id="account-input-status" v-model="editUser.status" :disabled="isCurrentUser(editUser.username) || (editUser.username==='admin' && editUser.id==1) " active-value="1"
                        inactive-value="0">
             </el-switch>
@@ -137,7 +137,7 @@ export default {
       if (value === '' && this.editUser.pin) {
         callback(new Error(this.$t('config.user.inputConfirmPin')))
       } else if (value !== this.editUser.pin) {
-        callback(new Error(this.$t('config.user.confirmPinErr')))
+        callback(new Error(this.$t('profile.confirmPasswordErr')))
       } else {
         callback()
       }
@@ -183,8 +183,8 @@ export default {
       },
       roles: [],
       mfaLevelList: [
-        { value: 0, label: this.$t('config.user.disable') },
-        { value: 1, label: this.$t('config.user.enableMfa') },
+        { value: 0, label: this.$t('project.endpoint.disable') },
+        { value: 1, label: this.$t('asset.talon.enable') },
         { value: 2, label: this.$t('config.user.forceEnable') }
       ],
       languageList: [

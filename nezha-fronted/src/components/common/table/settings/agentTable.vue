@@ -113,7 +113,7 @@ export default {
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('config.agent.dataCenter'),
+          label: this.$t('overall.dc'),
           prop: 'dc',
           show: true,
           minWidth: 200,
@@ -123,17 +123,17 @@ export default {
           prop: 'host',
           show: true
         }, {
-          label: this.$t('config.agent.port'),
+          label: this.$t('asset.port'),
           prop: 'port',
           show: true
         }, {
-          label: this.$t('config.agent.type'),
+          label: this.$t('overall.type'),
           prop: 'type',
           show: true,
           minWidth: 100,
           sortable: 'custom'
         }, {
-          label: this.$t('asset.state'),
+          label: this.$t('overall.state'),
           prop: 'status',
           show: true,
           minWidth: 100,
@@ -144,7 +144,7 @@ export default {
           show: false,
           minWidth: 150
         }, {
-          label: this.$t('config.agent.protocol'),
+          label: this.$t('webshell.protocol'),
           prop: 'protocol',
           show: false,
           minWidth: 150

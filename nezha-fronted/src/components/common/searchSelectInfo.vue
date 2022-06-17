@@ -28,11 +28,11 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   alertType: [ // 告警类型
     {
       value: 1,
-      label: i18n.t('alert.config.typeOption.project')
+      label: i18n.t('project.project.projectName')
     },
     {
       value: 2,
-      label: i18n.t('alert.config.typeOption.module')
+      label: i18n.t('overall.module')
     },
     {
       value: 3,
@@ -57,10 +57,10 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: i18n.t('config.agent.up')
     }, {
       value: 0,
-      label: i18n.t('config.agent.down')
+      label: i18n.t('asset.down')
     }, {
       value: 2,
-      label: i18n.t('cconfig.dc.suspended')
+      label: i18n.t('asset.suspended')
     }
   ],
   promState: [
@@ -69,7 +69,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: i18n.t('config.agent.up')
     }, {
       value: '0,-1',
-      label: i18n.t('config.agent.down')
+      label: i18n.t('asset.down')
     }
   ],
   pingStatus: [
@@ -176,11 +176,11 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   ack: [
     {
       value: '1',
-      label: i18n.t('config.system.reset.yes')
+      label: i18n.t('tip.yes')
     },
     {
       value: '0',
-      label: i18n.t('config.system.reset.no')
+      label: i18n.t('tip.no')
     }
   ],
   varType: [
@@ -222,11 +222,11 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     },
     {
       value: 'url',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.url.label')
+      label: i18n.t('dashboard.panel.chartForm.url')
     },
     {
       value: 'group',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.group.label')
+      label: i18n.t('dashboard.panel.chartForm.group')
     }
   ],
   terminalStatus: [

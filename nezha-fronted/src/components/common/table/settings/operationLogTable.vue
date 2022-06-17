@@ -70,7 +70,7 @@ export default {
     return {
       tableTitle: [
         {
-          label: this.$t('config.operationlog.id'),
+          label: this.$t('asset.id'),
           prop: 'id',
           show: true,
           width: 80,
@@ -89,14 +89,14 @@ export default {
           minWidth: 80
         },
         {
-          label: this.$t('config.operationlog.operation'),
+          label: this.$t('overall.option'),
           prop: 'operation',
           show: true,
           minWidth: 140,
           sortable: 'custom'
         },
         {
-          label: this.$t('config.operationlog.type'),
+          label: this.$t('overall.type'),
           prop: 'type',
           show: true,
           minWidth: 80,

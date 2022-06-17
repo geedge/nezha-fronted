@@ -56,11 +56,11 @@
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="" >
               <li  @click="editChart" class="el-dropdown-menu__item">
-                <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i><span>{{$t('dashboard.edit')}}</span></li>
+                <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i><span>{{$t('overall.edit')}}</span></li>
               <li  v-has="'main_delete'" class="el-dropdown-menu__item" @click="removeChart">
-                <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
+                <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('overall.delete')}}</li>
               <li  v-has="'main_add'" class="el-dropdown-menu__item" @click="duplicate">
-                <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
+                <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('overall.duplicate')}}</li>
               <li  v-has="'main_edit'"  v-if="from !== 'chartTemp'&&chartData.pid" class="el-dropdown-menu__item" @click="$emit('sync')">
                 <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>{{$t('overall.syncChart')}}</li>
             </ul>
@@ -110,7 +110,7 @@
         <!--
         <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->
         <el-dialog class="line-chart-block-modal nz-dialog"
-                   :title="$t('dashboard.panel.view')"
+                   :title="$t('overall.view')"
                    :visible.sync="screenModal"
                    width="90%"
                    @close="screenModal = false;screenLegendListMore=[]"

@@ -112,7 +112,7 @@ export default {
             label: 'ids',
             disabled: false
           }, {
-            name: this.$t('config.exprTemp.name'),
+            name: this.$t('overall.name'),
             type: 'input',
             label: 'name',
             disabled: false

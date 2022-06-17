@@ -147,7 +147,7 @@ export default {
     },
     changeDate (item) {
       const time = this.utcTimeToTimezoneStr(item)
-      const time1 = this.timeFormate(Date.parse(time))
+      const time1 = this.timeFormate(time)
       return time1
     },
     getNum (item) {

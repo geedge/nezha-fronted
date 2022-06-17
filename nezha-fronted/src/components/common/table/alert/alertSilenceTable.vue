@@ -153,7 +153,7 @@
               :command="['delete', scope.row]"
               ><i class="nz-icon nz-icon-delete"></i
               ><span class="operation-dropdown-text">{{
-                $t("buttons.delete")
+                $t("overall.delete")
               }}</span></el-dropdown-item
             >
           </el-dropdown-menu>
@@ -199,7 +199,7 @@ export default {
           sortable: "custom",
         },
         {
-          label: this.$t("alert.silence.name"),
+          label: this.$t("overall.name"),
           prop: "name",
           show: true,
           minWidth: 150,
@@ -212,7 +212,7 @@ export default {
           sortable: "custom",
         },
         {
-          label: this.$t("alert.silence.startTime"),
+          label: this.$t("overall.startTime"),
           prop: "startAt",
           show: true,
           width: 300,
@@ -225,7 +225,7 @@ export default {
           width: 120,
         },
         {
-          label: this.$t("alert.silence.remark"),
+          label: this.$t("overall.remark"),
           prop: "remark",
           show: true,
           width: 120,
@@ -244,7 +244,7 @@ export default {
           sortable: "custom",
         },
         {
-          label: this.$t("alert.silence.state"),
+          label: this.$t("overall.state"),
           prop: "state",
           show: true,
           width: 120,
