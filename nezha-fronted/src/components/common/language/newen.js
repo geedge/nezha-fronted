@@ -75,13 +75,17 @@ const newen = {
   },
   asset: {
     host: 'Host',
-    port: 'Port'
+    port: 'Port',
+    talon: {
+      enable: 'Enable'
+    }
   },
   profile: {
     username: 'User name'
   },
   overall: {
-    system: 'System'
+    system: 'System',
+    back: 'Back'
   },
   ...enLocale
 }

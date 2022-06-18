@@ -67,13 +67,18 @@ const newcn = {
   },
   asset: {
     host: 'Host',
-    port: '端口'
+    port: '端口',
+    talon: {
+      enable: '启用'
+    }
+
   },
   profile: {
     username: '用户名'
   },
   overall: {
-    system: '系统'
+    system: '系统',
+    back: '返回'
   },
   ...zhLocale
 }
