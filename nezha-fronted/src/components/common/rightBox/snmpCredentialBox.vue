@@ -33,7 +33,7 @@
             <el-form-item :label='$t("config.mib.credential.writeCommunity")' prop="writeCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
               <el-input placeholder="" autocomplete="new-password" maxlength="64" show-word-limit v-model="editCredential.config.writeCommunity" size="small" id="credential-box-input-writeCommunity" type="password" show-password></el-input>
             </el-form-item>
-            <el-form-item :label='$t("asset.username")' prop="username" v-if="editCredential.type === 3">
+            <el-form-item :label='$t("profile.username")' prop="username" v-if="editCredential.type === 3">
               <el-input placeholder="" maxlength="64" show-word-limit v-model="editCredential.config.username" size="small" id="credential-box-input-username"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.contextName")' prop="contextname"  v-if="editCredential.type === 3">

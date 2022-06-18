@@ -98,7 +98,7 @@
                 <el-form-item :label="$t('setup.name')" prop="name" key="dbname" >
                   <el-input v-model="database.name"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('asset.username')" prop="username" key="dbusername" >
+                <el-form-item :label="$t('profile.username')" prop="username" key="dbusername" >
                   <el-input v-model="database.username"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('login.pin')" prop="pin" key="dbpassword" >
@@ -141,7 +141,7 @@
           <template v-if="activeStep == 3">
             <div class="setup-config">
               <el-form ref="sys-form" :model="system" label-width="80px" :rules="sysRules" label-position="top" size="small" style="width: 640px" :validate-on-rule-change="false" >
-                <el-form-item :label="$t('asset.username')" prop="host" key="syshost" >
+                <el-form-item :label="$t('profile.username')" prop="host" key="syshost" >
                   <el-input v-model="system.username"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('login.pin')" prop="pin" key="syspassword" >
