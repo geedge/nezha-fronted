@@ -65,6 +65,16 @@ const newcn = {
     verifyPlaceholder: '验证码',
     bindFail: '绑定失败'
   },
+  asset: {
+    host: 'Host',
+    port: '端口'
+  },
+  profile: {
+    username: '用户名'
+  },
+  overall: {
+    system: '系统'
+  },
   ...zhLocale
 }
 export default newcn
