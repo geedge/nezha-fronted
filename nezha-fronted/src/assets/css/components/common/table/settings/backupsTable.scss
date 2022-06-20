@@ -59,4 +59,15 @@
     .el-table--border td:first-child .cell{
       padding-left: 20px !important;
     }
+
+
+
+    .el-table__empty-block{
+      .el-table__empty-text{
+        .table-no-data{
+          height: 200px;
+          padding-top: 70px;
+        }
+      }
+    }
 }
