@@ -28,6 +28,7 @@
         :min-h="headerH"
         :max-h="12"
         :static="item.static"
+        :isGroup="isGroup"
         :class="{
           'group-hide-header':item.type === 'group' && item.param.collapse,
           'opacityItem': item.static
