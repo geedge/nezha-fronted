@@ -1,4 +1,13 @@
 .user-table {
+  .user-online{
+    color: #38cc20;
+    margin-right: 5px;
+    margin-left: -10px;
+  }
+  .user-name-td{
+    display: flex;
+    align-items: start;
+  }
   .flex-align-center {
     display: flex;
     align-items: center;
