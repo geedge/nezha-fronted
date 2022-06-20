@@ -268,7 +268,7 @@ export default {
       tempEndpoint: {},
       tempEndpoint2: {},
       assetLoading: true,
-      rightBox: { show: false, title: this.$t('overall.createEndpoin'), isEdit: false },
+      rightBox: { show: false, title: this.$t('overall.createEndpoint'), isEdit: false },
       optionType: 'batchAdd',
       endpointTableTitle: [ // 原始table列
         {

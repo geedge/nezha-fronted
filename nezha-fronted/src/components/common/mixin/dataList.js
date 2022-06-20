@@ -161,6 +161,7 @@ export default {
             self.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
             self.getTableData()
+            bus.$emit('delTableRow', [row.id])
           } else {
             this.$message.error(response.msg)
           }

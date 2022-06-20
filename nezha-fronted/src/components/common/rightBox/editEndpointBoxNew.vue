@@ -10,10 +10,10 @@
          {{ $t("project.module.batchEndpoint")}}
         </span>
           <span v-if="optionType === 'add'">
-         {{ $t("overall.createEndpoin")}}
+         {{ $t("overall.createEndpoint")}}
         </span>
         <span v-if="optionType === 'batchAdd'">
-         {{ $t("overall.createEndpoin")}}
+         {{ $t("overall.createEndpoint")}}
         </span>
       </div>
       <!-- end--标题-->

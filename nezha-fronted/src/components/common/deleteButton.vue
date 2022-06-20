@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import bus from '@/libs/bus'
 export default {
   name: 'deleteButton',
   props: {
@@ -44,6 +45,7 @@ export default {
           if (response.code === 200) {
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
             this.$emit('after')
+            bus.$emit('delTableRow', this.deleteObjs.map(item => item.id))
           } else {
             this.$message.error(response.msg)
           }
