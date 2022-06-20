@@ -4,7 +4,7 @@
       class="chart-stat-item"
       v-for="(item,index) in statData"
       :key="index"
-      @mouseenter="statMouseEnter(item)"
+      @mouseenter="statMouseEnter(item,$event)"
       @mouseleave="statMouseleave(item)"
       :class="statData.length===1 ?'only-stat' : ''"
       :style="{
@@ -163,11 +163,33 @@ export default {
         this.tooltip.x = e.pageX + 15
       }
     },
-    statMouseEnter (that) {
+    statMouseEnter (that, e) {
       this.tooltip.title = that.legend
       this.tooltip.value = that.showValue
       this.tooltip.mapping = that.mapping
       this.tooltip.show = true
+      this.$nextTick(() => {
+        const windowWidth = window.innerWidth// 窗口宽度
+        const windowHeight = window.innerHeight// 窗口高度
+        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        if (box) {
+          const boxWidth = box.offsetWidth
+          const boxHeight = box.offsetHeight
+          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            this.tooltip.x = e.pageX + 15
+          } else {
+            this.tooltip.x = e.pageX - boxWidth - 15
+          }
+          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            this.tooltip.y = e.pageY + 15
+          } else {
+            this.tooltip.y = e.pageY - boxHeight - 10
+          }
+        } else {
+          this.tooltip.y = e.pageY + 15
+          this.tooltip.x = e.pageX + 15
+        }
+      })
     },
     statMouseleave (taht) {
       this.tooltip.show = false
