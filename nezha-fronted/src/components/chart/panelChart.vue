@@ -582,6 +582,9 @@ export default {
       this.$emit('showFullscreen', show, this.chartInfo)
     },
     groupShow (flag) {
+      if (this.chartInfo.type === 'group' && !flag) {
+        this.chartData = lodash.get(this, 'chartInfo.children', [])
+      }
       this.chartInfo.param.collapse = flag
       this.groupInit()
       bus.$emit('groupMove', '', '', true)
