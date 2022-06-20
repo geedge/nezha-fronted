@@ -54,14 +54,14 @@ export default {
 
     },
     initChart () {
-      setTimeout(() => {
-        this.dataList = this.dataList.map(item => {
-          return {
-            ...item
-            // hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
-          }
-        })
-      }, 100)
+      // setTimeout(() => {
+      //   this.dataList = this.dataList.map(item => {
+      //     return {
+      //       ...item
+      //       // hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
+      //     }
+      //   })
+      // }, 100)
     }
   },
   watch: {
