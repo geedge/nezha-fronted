@@ -48,6 +48,7 @@ export default {
         case 'endpoint':
         case 'project':
         case 'dc':
+        case 'user':
           return false
         default: return true
       }
