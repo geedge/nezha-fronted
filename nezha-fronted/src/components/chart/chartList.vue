@@ -449,9 +449,9 @@ export default {
     '$store.state.panel.mode': {
       immediate: true,
       handler () {
-        this.$nextTick(() => {
+        setTimeout(() => {
           this.resize()
-        })
+        }, 100)
       }
     },
     dataList: {
