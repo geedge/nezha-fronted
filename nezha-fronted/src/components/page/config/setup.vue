@@ -447,6 +447,39 @@ export default {
     changeLocal: function (local) {
       this.language = local
       this.$i18n.locale = local
+      this.setRules()
+    },
+    setRules () {
+      this.dbRules = {
+        host: [
+          {
+            required: true,
+            message: this.$t('validate.required'),
+            trigger: 'blur'
+          },
+          { validator: host, trigger: 'blur' }
+        ],
+        port: [{ validator: port, trigger: 'blur' }],
+        name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+      }
+      this.redisRules = {
+        host: [
+          {
+            required: true,
+            message: this.$t('validate.required'),
+            trigger: 'blur'
+          },
+          { validator: host, trigger: 'blur' }
+        ],
+        port: [{ validator: port, trigger: 'blur' }]
+      }
+      this.sysRules = {
+        username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        haVip: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+      }
     }
   }
 }
