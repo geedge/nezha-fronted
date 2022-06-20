@@ -51,14 +51,23 @@
       </div>
 
       <div slot-scope="scope" v-else class="table-operation-items">
-        <button class="table-operation-button" @click="Restore(scope.row)">
+        <button class="table-operation-button" @click="Restore(scope.row)" v-if="scope.row">
          <i class="nz-icon-shujubeifenhuifu nz-icon"></i>
         </button>
-        <button class="table-operation-edit" @click="del(scope.row)">
+        <button class="table-operation-edit" @click="del(scope.row)" v-if="scope.row">
           <i class="nz-icon nz-icon-delete" style="font-size='12px'"></i>
         </button>
       </div>
     </el-table-column>
+     <template slot="empty">
+        <div  v-if="!loading" class="table-no-data">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#nz-icon-no-data-list"></use>
+          </svg>
+          <div class="table-no-data__title">No results found</div>
+        </div>
+        <div v-else>&nbsp;</div>
+      </template>
   </el-table>
 </div>
 </template>

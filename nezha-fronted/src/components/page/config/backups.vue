@@ -88,11 +88,11 @@ export default {
         }
       ],
       tableData2: [
-        {
-          list: {
+        // {
+        //   list: {
 
-          }
-        }
+        //   }
+        // }
       ],
       rightBoxshow: false,
       isRefresh: ''
@@ -159,6 +159,8 @@ export default {
           if (res.code === 200) {
             if (res.data) {
               this.tableData2 = res.data
+            } else {
+              this.tableData2 = []
             }
           }
         })
