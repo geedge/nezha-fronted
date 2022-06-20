@@ -17,6 +17,12 @@
     border-bottom: 1px solid $--border-color-light;
     //line-height: 23px;
     font-weight: 600;
+    .alert-label-fa{
+      font-weight: normal;
+      height: 12px;
+      line-height: 12px;
+      border-radius: 10px;
+    }
     .alert-label-header-circle {
       height: 24px;
       width: 24px;

@@ -226,6 +226,31 @@ export default {
       }
     }
     this.initQueryFromPath(searchKeys)
+  },
+  watch: {
+    tableData: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+          const arr = []
+          n.map(item => {
+            if (!item.position) {
+              const obj = {
+                ...this.$loadsh.cloneDeep(item),
+                type: 'user',
+                position: {
+                  top: 0,
+                  left: 0
+                },
+                loading: false
+              }
+              arr.push(obj)
+            }
+          })
+          return arr
+        }
+      }
+    }
   }
 }
 </script>

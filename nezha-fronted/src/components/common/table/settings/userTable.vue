@@ -1,4 +1,5 @@
 <template>
+<div height="100%">
   <el-table
     id="userTable"
     ref="dataTable"
@@ -37,13 +38,18 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-          <div>
-            <div class="flex-align-center">
-              <span class="user-name-top">{{scope.row[item.prop]}}</span>
-              <el-tag size="mini" v-if="mfaEnable == '1' || scope.row.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
-            </div>
-            <div class="user-name-bottom">
-              @{{scope.row.username}}
+          <div class="user-name-td" :class="{'margin-l-10': !scope.row.online}"
+           @mouseenter="labelHover(scope.row, 'user', true, false, $event)"
+           @mouseleave="labelHover(scope.row, 'user', false, false,)">
+            <i class="nz-icon nz-icon-user1 user-online" v-if="scope.row.online" :title="$t('overall.online')"/>
+            <div>
+              <div class="flex-align-center">
+                <span class="user-name-top">{{scope.row[item.prop]}}</span>
+                <el-tag size="mini" v-if="mfaEnable == '1' || scope.row.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
+              </div>
+              <div class="user-name-bottom">
+                @{{scope.row.username}}
+              </div>
             </div>
           </div>
         </template>
@@ -105,13 +111,21 @@
       <div v-else>&nbsp;</div>
     </template>
   </el-table>
+  <alertLabel
+      v-if="alertLabelShow"
+      :id="alertLabelId"
+      :that="alertLabelObj"
+      :type="alertLabelType"
+    ></alertLabel>
+  </div>
 </template>
 
 <script>
 import table from '@/components/common/mixin/table'
+import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'userTable',
-  mixins: [table],
+  mixins: [table, alertLabelMixin],
   props: {
     loading: Boolean
   },
