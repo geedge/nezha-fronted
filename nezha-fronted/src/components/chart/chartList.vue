@@ -359,7 +359,10 @@ export default {
           this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].groupShow(item.param.collapse)
           this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.resize()
         }
-        this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].resize()
+        try {
+          this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].resize()
+        } catch (error) {
+        }
       })
     },
     refreshPanel () {
@@ -448,10 +451,10 @@ export default {
     // 监听查看模式变化
     '$store.state.panel.mode': {
       immediate: true,
-      handler () {
+      handler (val) {
         setTimeout(() => {
           this.resize()
-        }, 100)
+        }, 200)
       }
     },
     dataList: {

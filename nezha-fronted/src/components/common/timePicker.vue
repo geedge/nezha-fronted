@@ -92,9 +92,9 @@
                 class="date-range-history-item"
                 @click="historyChange(item)"
               >
-                {{ timeFormate(item.start) }}
+                {{ momentTz(item.start) }}
                 {{ $t("dashboard.panel.to") }}
-                {{ timeFormate(item.end) }}
+                {{ momentTz(item.end) }}
               </div>
             </div>
           </el-col>
@@ -340,8 +340,8 @@ export default {
       }
       this.isCustom = true
       this.rangeHistory.unshift({
-        start: item[0],
-        end: item[1]
+        start: this.momentStrToTimestamp(item[0]),
+        end: this.momentStrToTimestamp(item[1])
       })
       localStorage.setItem(
         'date-range-history' + this.sign,
