@@ -182,6 +182,11 @@ export default {
     i: {
       required: true
     },
+    isGroup: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     dragIgnoreFrom: {
       type: String,
       required: false,
@@ -699,12 +704,16 @@ export default {
       // (l - m) / (c + m) = x
       // x = (left - margin) / (coldWidth + margin)
       let x = Math.round((left - this.margin[0]) / (colWidth + this.margin[0]))
-      let y = (top - this.margin[1]) / (this.rowHeight + this.margin[1])
 
+      let y = ''
+      if (this.isGroup) {
+        y = Math.round((top - this.margin[1]) / (this.rowHeight + this.margin[1]))
+      } else {
+        y = (top - this.margin[1]) / (this.rowHeight + this.margin[1])
+      }
       // Capping
       x = Math.max(Math.min(x, this.cols - this.innerW), 0)
       y = Math.max(Math.min(y, this.maxRows - this.innerH), 0)
-
       return { x, y }
     },
     // Helper for generating column width

@@ -209,7 +209,7 @@
             <el-form-item :label='$t("webshell.port")' prop="port">
               <el-input v-model="customConnect.port" size="small"/>
             </el-form-item>
-            <el-form-item :label='$t("asset.username")' prop="authUsername">
+            <el-form-item :label='$t("profile.username")' prop="authUsername">
               <el-input v-model="customConnect.authUsername" size="small" autocomplete="new-password"/>
             </el-form-item>
             <el-form-item
