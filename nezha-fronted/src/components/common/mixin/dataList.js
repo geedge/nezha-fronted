@@ -355,6 +355,8 @@ export default {
     }
     if (this.$route.query.orderBy && !this.isSubList) {
       this.orderBy = this.$route.query.orderBy
+    } else if (this.isSubList) {
+      return
     }
     let searchKeys = {}
     if (path === 'dc') {
