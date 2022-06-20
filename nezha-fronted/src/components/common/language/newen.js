@@ -83,7 +83,9 @@ const newen = {
   validate: {
     required: 'Required',
     host: 'Invalid Host',
-    number: 'Numberic'
+    number: 'Numberic',
+    port: 'Invalid port',
+    special: 'Cannot contain special characters'
   },
   profile: {
     username: 'User name'

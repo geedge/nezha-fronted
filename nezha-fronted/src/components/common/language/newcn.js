@@ -75,7 +75,9 @@ const newcn = {
   validate: {
     required: '必填项',
     host: '不合法的IP',
-    number: '必须是数字'
+    number: '必须是数字',
+    port: '不合法的端口',
+    special: '不能包含特殊字符'
   },
   profile: {
     username: '用户名'
