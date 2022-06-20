@@ -71,7 +71,11 @@ const newcn = {
     talon: {
       enable: '启用'
     }
-
+  },
+  validate: {
+    required: '必填项',
+    host: '不合法的IP',
+    number: '必须是数字'
   },
   profile: {
     username: '用户名'

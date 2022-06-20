@@ -80,6 +80,11 @@ const newen = {
       enable: 'Enable'
     }
   },
+  validate: {
+    required: 'Required',
+    host: 'Invalid Host',
+    number: 'Numberic'
+  },
   profile: {
     username: 'User name'
   },
