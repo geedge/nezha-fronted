@@ -89,7 +89,7 @@
             class="el-button el-button--default el-button--small"
             @click="exportCur"
           >
-            <span>{{ $t("overall.exportCur") }}</span>
+            <span>{{ $t("overall.current") }}</span>
           </button>
           <button
             id="alert-msg-exportall"

@@ -228,7 +228,7 @@ export const statisticsList = [
 
 export const alignList = [
   { value: 'left', label: i18n.t('dashboard.panel.chartForm.alignList.left') },
-  { value: 'center', label: i18n.t('dashboard.panel.chartForm.alignList.center') },
+  { value: 'center', label: i18n.t('project.topology.center') },
   { value: 'right', label: i18n.t('dashboard.panel.chartForm.alignList.right') }
 ]
 

@@ -132,7 +132,7 @@ export default {
           prop: 'health',
           show: true
         }, {
-          label: this.$t('config.scrapeEndpoint.error'),
+          label: this.$t('ERROR'),
           prop: 'lastError',
           show: true
         }

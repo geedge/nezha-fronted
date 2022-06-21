@@ -69,7 +69,7 @@
                   size="small"
                   class="el-date-range-picker__editor"
                   :disabled="rangeState.selecting"
-                  :placeholder="t('el.datepicker.endTime')"
+                  :placeholder="t('overall.endTime')"
                   :value="maxVisibleTime"
                   :readonly="!minDate"
                   @focus="minDate && (maxTimePickerVisible = true)"

@@ -374,17 +374,7 @@ const canvasOptions = {
   autoExpandDistance: 0,
   minScale: 0.2,
   scaleKey: -1,
-  keydown (e) {
-    console.log(e)
-    // if (e.target.className === 'cm-content cm-lineWrapping' && e.keyCode === 8) {
-    //   if (e & e.stopPropagation) {
-    //     e.stopPropagation() // iie 6, 7, 8
-    //   } else {
-    //     window.event.cancleBubble = true
-    //   }
-    //   return false
-    // }
-  }
+  keydown: 1
 }
 export default {
   name: 'topologyL5',

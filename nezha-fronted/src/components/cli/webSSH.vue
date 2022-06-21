@@ -198,7 +198,7 @@
                 <el-option v-for="item in authProtocol" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("webshell.authType")' prop="authType"  @change="authTypeChange" >
+            <el-form-item :label='$t("asset.authType")' prop="authType"  @change="authTypeChange" >
               <el-select value-key="id" popper-class="config-dropdown w260 right-box-select-top right-public-box-dropdown-top" v-model="customConnect.authType" :disabled="customConnect.authProtocol === 2" placeholder="" size="small" id="webshell-box-input-protocol">
                 <el-option v-for="item in authType" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
@@ -322,7 +322,7 @@ export default {
       uploadFile: { file: '', path: '', uuid: '' },
       uploadFileList: [],
       uploadResult: null,
-      downloadBox: { showDownload: false, title: this.$t('webshell.downloadTitle') },
+      downloadBox: { showDownload: false, title: this.$t('overall.download') },
       downloadFile: { path: '', uuid: '' },
       downloadFileList: [],
       downloadResult: null,

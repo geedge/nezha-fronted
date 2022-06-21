@@ -183,7 +183,7 @@ export default {
       },
       roles: [],
       mfaLevelList: [
-        { value: 0, label: this.$t('project.endpoint.disable') },
+        { value: 0, label: this.$t('profile.close') },
         { value: 1, label: this.$t('asset.talon.enable') },
         { value: 2, label: this.$t('config.user.forceEnable') }
       ],

@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="el-time-range-picker__cell">
-          <div class="el-time-range-picker__header">{{ t('el.datepicker.endTime') }}</div>
+          <div class="el-time-range-picker__header">{{ t('overall.endTime') }}</div>
           <div
             :class="{ 'has-seconds': showSeconds, 'is-arrow': arrowControl }"
             class="el-time-range-picker__body el-time-panel__content">

@@ -114,7 +114,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     },
     {
       value: 'delete',
-      label: i18n.t('config.operationlog.operations.delete')
+      label: i18n.t('overall.delete')
     },
     {
       value: 'reset',

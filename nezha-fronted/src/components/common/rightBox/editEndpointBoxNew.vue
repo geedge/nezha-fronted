@@ -173,7 +173,7 @@
                   <div v-show="showAllBasicOption" >
                     <!--scrape_interval-->
                     <el-form-item :label='$t("project.endpoint.scrape_interval")' class="half-form-item" prop="scrape_interval">
-                      <el-input id="module-box-input-scrape_interval" v-model.number="editEndpoint.configs[0].config.scrape_interval" :placeholder='$t("project.endpoint.scrape_interval_placeholder")' size="small">
+                      <el-input id="module-box-input-scrape_interval" v-model.number="editEndpoint.configs[0].config.scrape_interval" :placeholder='$t("alert.config.inrPlaceholder")' size="small">
                         <template slot="append">s</template>
                       </el-input>
                     </el-form-item>
@@ -716,7 +716,7 @@ export default {
       ],
       endpointStateList: [
         { name: this.$t('asset.talon.enable'), value: 1 },
-        { name: this.$t('project.endpoint.disable'), value: 0 }
+        { name: this.$t('profile.close'), value: 0 }
       ],
       configsCopyValue: '',
       pipelineOption: [

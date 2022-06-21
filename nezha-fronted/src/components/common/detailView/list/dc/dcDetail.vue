@@ -77,7 +77,7 @@ export default {
           prop: 'location',
           show: true
         }, {
-          label: this.$t('config.dc.cabinetNum'),
+          label: this.$t('asset.cabinet'),
           prop: 'cabinetNum',
           show: true,
           minWidth: 100,

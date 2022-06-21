@@ -1,7 +1,7 @@
 <template>
   <div class="system">
     <div class="system-config-form">
-    <div class="system-title">{{$t('config.system.basic.title')}}</div>
+    <div class="system-title">{{$t('overall.basicInfo')}}</div>
     <el-form :model="email"  label-width="180px" size="small" ref="emailForm" :rules="email.email_enable=='on'?emailRules:{}" :validate-on-rule-change="false">
       <el-form-item :label="$t('config.system.email.enable')" prop="email_enable">
         <el-checkbox v-model="email.email_enable" true-label="on" false-label="off"  @change="switchChange('emailForm')" id="system-email-email_enable"></el-checkbox>

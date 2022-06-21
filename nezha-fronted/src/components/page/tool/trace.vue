@@ -23,7 +23,7 @@
 
           <div  class="tools-header-center">
             <el-form size="small" ref="ruleForm" :model="ruleForm" :rules="formRules" label-position="right" label-width="150px">
-              <el-form-item style="margin-bottom:10px" :label="$t('ping.dcs')">
+              <el-form-item style="margin-bottom:10px" :label="$t('config.dc.dc')">
                 <!--            <el-select v-model="checked" multiple @change="checkedChange"  >-->
                 <!--              <el-option-->
                 <!--                :key="item.id"-->

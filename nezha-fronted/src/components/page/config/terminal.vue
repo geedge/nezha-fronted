@@ -1,7 +1,7 @@
 <template>
   <div class="system">
     <div class="system-config-form terminal">
-      <div class="system-title">{{$t('config.system.basic.title')}}</div>
+      <div class="system-title">{{$t('overall.basicInfo')}}</div>
       <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
         <!--            <el-form-item :label="$t('config.system.ldap.timeout')" prop="terminal_timeout">-->
         <!--              <el-input v-model="terminal.terminal_timeout" controls-position="right" :min="1"  id="system-terminal-max_terminal_num">-->
