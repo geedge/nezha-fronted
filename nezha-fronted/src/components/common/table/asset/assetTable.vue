@@ -41,13 +41,13 @@
           <template v-if="item.prop === 'name'">
             <div style="cursor:text" class="document-copy-block">
               {{scope.row.name ? scope.row.name : '-'}}
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;display:none" @click="onCopy(scope.row.name)"></i>
             </div>
           </template>
            <template v-else-if="item.prop === 'manageIp'">
             <div style="cursor:text" class="document-copy-block">
               {{scope.row.manageIp ? scope.row.manageIp : '-'}}
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.manageIp)"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;display:none" @click="onCopy(scope.row.manageIp)"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
@@ -106,7 +106,7 @@
           <template v-else-if="item.prop === 'sn'">
             <div style="cursor:text" class="document-copy-block">
               {{scope.row.sn ? scope.row.sn : '-'}}
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.sn)"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;display:none" @click="onCopy(scope.row.sn)"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'talon'">
@@ -296,7 +296,7 @@ export default {
           label: this.$t('asset.sn'),
           prop: 'sn',
           show: true,
-          minWidth: 110
+          minWidth: 120
         }, {
           label: this.$t('asset.talon'),
           // prop: 'clientState',
