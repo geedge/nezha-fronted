@@ -15,7 +15,7 @@
           <el-option v-for="(rule, index) in alertRules" :key="index" :label="rule.name" :value="rule.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.level')" prop="level" class="severity-box">
+      <el-form-item :label="$t('alert.severity')" prop="level" class="severity-box">
         <el-select class="form-item" size="small" :placeholder="$t('el.select.placeholder')" popper-class="alert-form-pop right-box-select-top right-public-box-dropdown-top no-style-class" v-model="parameters.level" clearable id="alert-param-level">
           <el-option v-for="item in alertPriority" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
               <span>

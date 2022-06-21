@@ -73,7 +73,7 @@ export default {
         { class: 'nz-icon nz-icon-Datacenter2', type: 'datacenter', label: this.$t('overall.dc') },
         { class: 'nz-icon nz-icon-project', type: 'project', label: this.$t('overall.project') },
         { class: 'nz-icon nz-icon-overview-module', type: 'module', label: this.$t('overall.module') },
-        { class: 'nz-icon nz-icon-overview-endpoint', type: 'endpoint', label: this.$t('overall.endpoint') }
+        { class: 'nz-icon nz-icon-overview-endpoint', type: 'endpoint', label: this.$t('asset.endpoint') }
       ]
     }
   },

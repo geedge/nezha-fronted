@@ -60,7 +60,7 @@
         <div slot="footer" class="footer">
           <div class="el-message-box__btns">
             <button :id="id+'-xlsx-import-export'"  class="nz-btn nz-btn-size-normal nz-btn-style-normal-new" @click="exportData">
-              <span style="text-transform:Capitalize">{{$t('config.operationlog.operations.export')}}</span>
+              <span style="text-transform:Capitalize">{{$t('overall.exportExcel')}}</span>
             </button>
             <button :id="id+'-xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
               <span>{{$t('overall.close')}}</span>

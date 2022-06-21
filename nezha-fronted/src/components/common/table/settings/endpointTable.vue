@@ -76,7 +76,7 @@
           <span style="cursor: pointer"  @click="showBottomBox('endpointAlertMessage', scope.row)">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
-              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
+              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
               <div class="severity-info" style='justify-content: space-between'>
                 <div class="severity-name">{{$t('overall.result.total')}}</div>
                 <div class="severity-value">{{scope.row.alertNum}}</div>
@@ -108,7 +108,7 @@
                   @mouseenter="labelHoverConfigs(scope.row, 0, true, $event)"
                   @mouseleave="labelHoverConfigs(scope.row, 0, false, $event)"
             >
-            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.metrics.metrics')}} </span>
+            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('overall.metric')}} </span>
             <span v-if="scope.row.configs[0].state===0 || !scope.row.configs[0].state">
               <span class="active-icon red-bg inline-block"></span>
             </span>
@@ -146,7 +146,7 @@
             </nz-tooltip>
           </template>
           <template v-else-if="item.prop === 'enabled'">
-            <span v-if="scope.row[item.prop] === 1">{{$t('asset.talon.enable')}}</span>
+            <span v-if="scope.row[item.prop] === 1">{{$t('overall.enable')}}</span>
             <span v-else>{{$t('profile.close')}}</span>
           </template>
           <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>

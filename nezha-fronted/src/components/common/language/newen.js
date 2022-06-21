@@ -85,7 +85,8 @@ const newen = {
     host: 'Invalid Host',
     number: 'Numberic',
     port: 'Invalid port',
-    special: 'Cannot contain special characters'
+    special: 'Cannot contain special characters',
+    unavailable: 'Unavailable'
   },
   profile: {
     username: 'User name'

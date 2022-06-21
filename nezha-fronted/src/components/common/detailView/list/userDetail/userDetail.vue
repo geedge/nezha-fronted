@@ -109,7 +109,7 @@ export default {
           show: true,
           width: 150
         }, {
-          label: this.$t('asset.talon.enable'),
+          label: this.$t('overall.enable'),
           prop: 'status',
           show: true,
           width: 100

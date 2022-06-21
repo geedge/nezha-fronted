@@ -45,7 +45,7 @@
           <span style="cursor: pointer" @click="queryMessage(scope.row)">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
-              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
+              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
               <div class="severity-info" style='justify-content: space-between'>
                 <div class="severity-name">{{$t('overall.result.total')}}</div>
                 <div class="severity-value">{{scope.row.alertNum}}</div>
@@ -58,7 +58,7 @@
           </span>
         </template>
         <template v-else-if="item.prop === 'type'">
-          <span v-if="scope.row[item.prop] === 1">{{ $t('project.metrics.metrics') }}</span>
+          <span v-if="scope.row[item.prop] === 1">{{ $t('overall.metric') }}</span>
           <span v-else-if="scope.row[item.prop] === 2">{{ $t('overall.logs') }}</span>
           <span v-else-if="scope.row[item.prop] === 3">SNMP trap</span>
           <span v-else>-</span>
@@ -252,25 +252,25 @@ export default {
       weekList: [
         {
           value: 1,
-          label: this.$t('week.SunAbbreviation')
+          label: this.$t('week.Sun')
         }, {
           value: 2,
-          label: this.$t('week.MonAbbreviation')
+          label: this.$t('week.Mon')
         }, {
           value: 3,
-          label: this.$t('week.TueAbbreviation')
+          label: this.$t('week.Tue')
         }, {
           value: 4,
-          label: this.$t('week.WedAbbreviation')
+          label: this.$t('week.Wed')
         }, {
           value: 5,
-          label: this.$t('week.ThuAbbreviation')
+          label: this.$t('week.Thu')
         }, {
           value: 6,
-          label: this.$t('week.FriAbbreviation')
+          label: this.$t('week.Fri')
         }, {
           value: 7,
-          label: this.$t('week.SatAbbreviation')
+          label: this.$t('week.Sat')
         }
       ]
     }

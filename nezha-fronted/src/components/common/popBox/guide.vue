@@ -80,7 +80,7 @@ export default {
       guideList: [
         {
           route: '/dc',
-          title: this.$t('asset.dc'),
+          title: this.$t('overall.dc'),
           icon: 'nz-icon nz-icon-datacenter1',
           tip: this.$t('guide.dcTip'),
           permissionCode: 'dc_view'

@@ -290,7 +290,7 @@
             </el-select>
           </el-form-item>
           <!--receiver-->
-          <el-form-item :label="$t('alert.receiver')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
+          <el-form-item :label="$t('alert.config.receiver')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-select
               id="alert-box-input-receiver"
               v-model.trim="editAlertRule.receiverShow"
@@ -320,7 +320,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <div class="alert-rule-split-title">{{ $t('alert.config.more') }}</div>
+          <div class="alert-rule-split-title">{{ $t('overall.more') }}</div>
           <el-form-item :label="$t('alert.config.trbShot')" prop="trbShot">
             <rich-text-editor ref="richTextEditor" :edit-data="editAlertRule.trbShot" @after-init="afterInitRich"></rich-text-editor>
           </el-form-item>
@@ -390,7 +390,7 @@ export default {
       searchMetrics: [
         {
           value: 1,
-          label: this.$t('project.metrics.metrics')
+          label: this.$t('overall.metric')
         },
         {
           value: 2,

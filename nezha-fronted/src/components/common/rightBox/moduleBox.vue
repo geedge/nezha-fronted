@@ -61,7 +61,7 @@
             ></el-autocomplete>
           </el-form-item>
           <!-- ChartTemplate  -->
-          <el-form-item :label="$t('project.module.ChartTemplate')" prop="ChartTemplate">
+          <el-form-item :label="$t('overall.chartTemp')" prop="ChartTemplate">
             <v-selectpage
               :data="chartTempList"
               :tb-columns="ChartSearchShowFields"
@@ -83,7 +83,7 @@
           <div class="endpoint-title">
             <span class="endpoint-title-content">
               <i class="nz-icon nz-icon-arrow-down" :class="metricsShow?'':'is-active'" @click="metricsShow = !metricsShow"></i>
-              {{$t('project.metrics.metrics')}}
+              {{$t('overall.metric')}}
             </span>
             <el-switch v-model="editModule.configs[0].enable" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
@@ -97,7 +97,7 @@
                 </el-select>
               </el-form-item>
               <!--host-->
-              <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+              <el-form-item :label='$t("asset.host")' class="half-form-item" prop="configs.0.config.host" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-host" v-model="editModule.configs[0].config.host" placeholder="" size="small"></el-input>
               </el-form-item>
               <!--path-->
@@ -173,7 +173,7 @@
                 </span>
               </div>
             </el-tab-pane>
-            <el-tab-pane :label="$t('project.endpoint.param')" name="Parameter">
+            <el-tab-pane :label="$t('config.assetLabel.params')" name="Parameter">
               <div id="module-box-params" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                 <div v-for="(item, index) in editModule.paramObj" :key="index" class="param-box-row">
                   <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key">

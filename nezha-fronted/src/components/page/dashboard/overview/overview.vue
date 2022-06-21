@@ -79,7 +79,7 @@
                   <span v-if="endpointData.num > 1000 " class="over-num">+</span>
                 </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("overall.endpoint")}}</div>
+              <div class="content-col-content-title">{{$t("asset.endpoint")}}</div>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@
       <div class="content-row-box">
         <div class="content-col-box">
           <div class="content-col-title">
-            <span>{{$t("dashboard.overview.projectTopoLogy")}}</span>
+            <span>{{$t("dashboard.panel.chartForm.typeVal.topology.label")}}</span>
           </div>
           <div v-my-loading="topologyLoading"  class="content-col-content">
             <transition name = "el-zoom-in-center">
@@ -641,12 +641,12 @@ export default {
         const prometheusOption = chartConfig.getOption('tooltipPie')
         endpointOption.series[0].label.formatter = data.asset.total + ''
         endpointOption.series[0].data = [
-          { name: vm.$t('dashboard.overview.asset.ok'), value: data.asset.ok ? data.asset.ok : 0 },
+          { name: vm.$t('el.datepicker.confirm'), value: data.asset.ok ? data.asset.ok : 0 },
           { name: vm.$t('dashboard.overview.asset.alarm'), value: data.asset.alarm ? data.asset.alarm : 0 }
           // { name: vm.$t('dashboard.overview.asset.total'), value: data.asset.total ? data.asset.total : 0 }
         ]
         endpointOption.title.text = vm.$t('asset.asset')
-        endpointOption.legend.data = [vm.$t('dashboard.overview.asset.ok'), vm.$t('dashboard.overview.asset.alarm')]
+        endpointOption.legend.data = [vm.$t('el.datepicker.confirm'), vm.$t('dashboard.overview.asset.alarm')]
         prometheusOption.series[0].label.formatter = data.agent.up + ''
         prometheusOption.series[0].data = [
           { name: vm.$t('config.agent.up'), value: data.agent.up ? data.agent.up : 0 },

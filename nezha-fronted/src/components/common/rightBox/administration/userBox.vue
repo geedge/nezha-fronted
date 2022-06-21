@@ -49,7 +49,7 @@
             <el-input id="account-input-email" v-model="editUser.email" maxlength="64" show-word-limit placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--mobile-->
-          <el-form-item :label="$t('config.user.mobile')" prop="mobile">
+          <el-form-item :label="$t('profile.mobile')" prop="mobile">
             <el-input id="account-input-mobile" v-model="editUser.mobile" maxlength="64" show-word-limit placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--language-->
@@ -92,7 +92,7 @@
             </el-switch>
           </el-form-item>
 
-          <el-form-item v-if="editUser.id" :label="$t('config.user.createTime')">
+          <el-form-item v-if="editUser.id" :label="$t('config.system.apiKey.creatAt')">
             <div class="right-box-form-content-txt">{{utcTimeToTimezoneStr(editUser.createAt)}}</div>
           </el-form-item>
 
@@ -135,7 +135,7 @@ export default {
     const vm = this
     const validatePin = (rule, value, callback) => { // 确认密码的二次校验
       if (value === '' && this.editUser.pin) {
-        callback(new Error(this.$t('config.user.inputConfirmPin')))
+        callback(new Error(this.$t('config.user.reinputPin')))
       } else if (value !== this.editUser.pin) {
         callback(new Error(this.$t('profile.confirmPasswordErr')))
       } else {
@@ -184,7 +184,7 @@ export default {
       roles: [],
       mfaLevelList: [
         { value: 0, label: this.$t('profile.close') },
-        { value: 1, label: this.$t('asset.talon.enable') },
+        { value: 1, label: this.$t('overall.enable') },
         { value: 2, label: this.$t('config.user.forceEnable') }
       ],
       languageList: [

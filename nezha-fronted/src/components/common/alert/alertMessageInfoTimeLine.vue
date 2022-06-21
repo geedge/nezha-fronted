@@ -194,7 +194,7 @@ export default {
         {
           key: "endpoint",
           isSelect: true,
-          label: this.$t("overall.endpoint"),
+          label: this.$t("asset.endpoint"),
         },
         {
           key: "alertrule",

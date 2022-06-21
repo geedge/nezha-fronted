@@ -119,7 +119,7 @@ export default {
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('config.agent.host'),
+          label: this.$t('asset.host'),
           prop: 'host',
           show: true
         }, {

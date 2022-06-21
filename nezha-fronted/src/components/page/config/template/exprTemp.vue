@@ -117,7 +117,7 @@ export default {
             label: 'name',
             disabled: false
           }, {
-            name: this.$t('config.exprTemp.gname'),
+            name: this.$t('dashboard.panel.chartForm.group'),
             type: 'input',
             label: 'gname',
             disabled: false

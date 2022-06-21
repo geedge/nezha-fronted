@@ -77,7 +77,8 @@ const newcn = {
     host: '不合法的IP',
     number: '必须是数字',
     port: '不合法的端口',
-    special: '不能包含特殊字符'
+    special: '不能包含特殊字符',
+    unavailable: '不可用'
   },
   profile: {
     username: '用户名'

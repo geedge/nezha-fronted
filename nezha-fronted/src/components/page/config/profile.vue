@@ -50,7 +50,7 @@
      </div>
       <div class="profile-left__button table-operation-items">
         <button @click="profileEnable" class="footer__btn"  v-if="mfaEnable != '1' && mfaLevel == 0">
-          <span>{{$t('asset.talon.enable')}}</span>
+          <span>{{$t('overall.enable')}}</span>
         </button>
         <button @click="profileDisable" class="footer__btn footer__btn--light"  :class="{'footer__btn--disabled': mfaEnable == 1 ||  mfaLevel == 2}" v-if="mfaEnable == '1' || mfaLevel > 0" :disabled="mfaEnable == 1 ||  mfaLevel == 2 ">
           <span>{{$t('profile.close')}}</span>

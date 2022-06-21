@@ -124,7 +124,7 @@
             <el-form-item :label="$t('config.system.monitor.prometheusFederation')" prop="prometheus_federation_enabled">
               <el-checkbox v-model="monitor.prometheus_federation_enabled" true-label="1" false-label="0"  id="system-monitor-prometheus_federation_enabled"></el-checkbox>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="default_scrape_interval">
+            <el-form-item :label="$t('project.endpoint.scrape_interval')" prop="default_scrape_interval">
               <el-input v-model.number="monitor.default_scrape_interval" >
                 <template slot="append"><span >{{$t('alert.config.second')}}</span></template>
               </el-input>
@@ -172,7 +172,7 @@
                   <el-input v-model="monitor.metrics_storage_s3_access_key" id="monitor-metrics_storage_s3_access_key">
                   </el-input>
                 </el-form-item>
-                <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_secret_access_key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+                <el-form-item :label="$t('config.terminallog.key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
                   <el-input v-model="monitor.metrics_storage_s3_secret_access_key" id="monitor-metrics_storage_s3_secret_access_key">
                   </el-input>
                 </el-form-item>
@@ -209,7 +209,7 @@
                   <el-input v-model="monitor.logs_storage_s3_access_key" id="monitor-logs_storage_s3_access_key">
                   </el-input>
                 </el-form-item>
-                <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_secret_access_key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+                <el-form-item :label="$t('config.terminallog.key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
                   <el-input v-model="monitor.logs_storage_s3_secret_access_key" id="monitor-logs_storage_s3_secret_access_key">
                   </el-input>
                 </el-form-item>

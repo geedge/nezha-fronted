@@ -150,7 +150,7 @@
             :style="{ left: position.left + 'px', top: position.top + 'px' }"
           >
             <div class="tooltip-title">
-              {{ $t("project.topology.alert") }}({{ $t("asset.pingActive") }})
+              {{ $t("project.topology.alert") }}({{ $t("overall.active") }})
             </div>
             <div class="severity-info" style="justify-content: space-between">
               <div class="severity-name">{{ $t("overall.result.total") }}</div>
@@ -244,7 +244,7 @@
             :style="{ left: position.left + 'px', top: position.top + 'px' }"
           >
             <div class="tooltip-title">
-              {{ $t("project.topology.alert") }}({{ $t("asset.pingActive") }})
+              {{ $t("project.topology.alert") }}({{ $t("overall.active") }})
             </div>
             <div class="severity-info" style="justify-content: space-between">
               <div class="severity-name">{{ $t("overall.result.total") }}</div>
@@ -339,7 +339,7 @@
             :style="{ left: position.left + 'px', top: position.top + 'px' }"
           >
             <div class="tooltip-title">
-              {{ $t("project.topology.alert") }}({{ $t("asset.pingActive") }})
+              {{ $t("project.topology.alert") }}({{ $t("overall.active") }})
             </div>
             <div class="severity-info" style="justify-content: space-between">
               <div class="severity-name">{{ $t("overall.result.total") }}</div>
@@ -438,7 +438,7 @@
             :style="{ left: position.left + 'px', top: position.top + 'px' }"
           >
             <div class="tooltip-title">
-              {{ $t("project.topology.alert") }}({{ $t("asset.pingActive") }})
+              {{ $t("project.topology.alert") }}({{ $t("overall.active") }})
             </div>
             <div class="severity-info" style="justify-content: space-between">
               <div class="severity-name">{{ $t("overall.result.total") }}</div>
@@ -457,7 +457,7 @@
           <span style="width: auto">
             <span class="endpoint-cell-left"
               ><i class="nz-icon nz-icon-Metrics active" />
-              {{ $t("project.metrics.metrics") }}
+              {{ $t("overall.metric") }}
             </span>
             <span
               v-if="alertLabelData && alertLabelData.configs[0].state === 0"
@@ -570,7 +570,7 @@
             :style="{ left: position.left + 'px', top: position.top + 'px' }"
           >
             <div class="tooltip-title">
-              {{ $t("project.topology.alert") }}({{ $t("asset.pingActive") }})
+              {{ $t("project.topology.alert") }}({{ $t("overall.active") }})
             </div>
             <div class="severity-info" style="justify-content: space-between">
               <div class="severity-name">{{ $t("overall.result.total") }}</div>

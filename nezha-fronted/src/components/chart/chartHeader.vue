@@ -43,7 +43,7 @@
         </el-tooltip>
       </span>
       <span  v-if="chartInfo.type=='group'" class="chart-header__tool" @click="addChartGroup">
-        <el-tooltip :content="$t('overall.add')" effect="light" placement="top">
+        <el-tooltip :content="$t('button.add')" effect="light" placement="top">
            <i class="nz-icon nz-icon-plus tool__icon"></i>
         </el-tooltip>
       </span>

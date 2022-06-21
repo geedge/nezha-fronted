@@ -70,9 +70,9 @@ export default {
 
       url: '/sys/backup',
       customTableTitle: [
-        { label: this.$t('backup.schedule'), prop: 'schedule' },
+        { label: this.$t('alert.config.schedEnable'), prop: 'schedule' },
         { label: this.$t('backup.backupRetention'), prop: 'retention' },
-        { label: this.$t('asset.talon.enable'), prop: 'state' }
+        { label: this.$t('overall.enable'), prop: 'state' }
       ],
       customTableTitle2: [
         { label: this.$t('config.assetLabel.date'), prop: 'time', minwidth: 228 },
