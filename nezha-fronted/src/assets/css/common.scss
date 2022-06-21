@@ -422,3 +422,10 @@ input, textarea {
   font-size: 10px;
   margin-left: 190px;
 }
+
+.document-copy-block:hover i{
+  visibility: visible !important;
+}
+.document-copy-block i{
+  font-size: 14px !important;
+}

@@ -38,7 +38,19 @@
           <div class="col-resize-area"></div>
         </template>
         <template slot-scope="scope" :column="item">
-          <template v-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
+          <template v-if="item.prop === 'name'">
+            <div style="cursor:text" class="document-copy-block">
+              {{scope.row.name ? scope.row.name : '-'}}
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)"></i>
+            </div>
+          </template>
+           <template v-else-if="item.prop === 'manageIp'">
+            <div style="cursor:text" class="document-copy-block">
+              {{scope.row.manageIp ? scope.row.manageIp : '-'}}
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.manageIp)"></i>
+            </div>
+          </template>
+          <template v-else-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
           <template v-else-if="item.prop === 'state'">{{scope.row.state ? scope.row.state.name : '-'}}</template>
           <template v-else-if="item.prop === 'endpointNum'">
             <span style="cursor: pointer" @click="$emit('showBottomBox', 'endpointTab', scope.row)"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span></span>
@@ -90,6 +102,12 @@
               {{scope.row.childrenNum}}</div>
             <!--          <span v-else-if="scope.row.pid == -1">  <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i> 0 </span>-->
             <span v-else> - </span>
+          </template>
+          <template v-else-if="item.prop === 'sn'">
+            <div style="cursor:text" class="document-copy-block">
+              {{scope.row.sn ? scope.row.sn : '-'}}
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.sn)"></i>
+            </div>
           </template>
           <template v-else-if="item.prop === 'talon'">
             <div v-if="scope.row['clientState']===1">

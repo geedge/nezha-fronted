@@ -16,6 +16,7 @@ import axios from 'axios'
 import { hasPermission, hasButton } from '@/permission'
 import loadsh from 'lodash'
 import plTable from 'pl-table'
+import VueClipboard from 'vue-clipboard2'
 import 'pl-table/themes/index.css'
 
 import { post, get, put, del } from '@/http.js'
@@ -126,6 +127,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(Vuex)
 Vue.use(VueResource)
+Vue.use(VueClipboard)
 Vue.use(plTable)
 Vue.component('el-select', MyElSelect)
 Vue.use(hasPermission)
