@@ -94,7 +94,7 @@ export default {
         },
         {
           route: '/asset',
-          title: this.$t('guide.asset'),
+          title: this.$t('asset.asset'),
           icon: 'nz-icon nz-icon-menu-assets',
           tip: this.$t('guide.assetTip'),
           permissionCode: 'asset_view'

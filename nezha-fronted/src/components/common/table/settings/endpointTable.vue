@@ -241,7 +241,7 @@ export default {
           sortable: 'custom'
         },
         {
-          label: this.$t('guide.asset'),
+          label: this.$t('asset.asset'),
           prop: 'asset',
           show: true,
           minWidth: 90,

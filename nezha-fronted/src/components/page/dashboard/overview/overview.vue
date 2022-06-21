@@ -34,7 +34,7 @@
                   <span v-if="assetData > 1000 " class="over-num">+</span>
                 </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("guide.asset")}}</div>
+              <div class="content-col-content-title">{{$t("asset.asset")}}</div>
             </div>
           </div>
         </div>

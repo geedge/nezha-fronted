@@ -208,7 +208,7 @@ export default {
           show: true
         },
         {
-          label: this.$t('guide.asset'),
+          label: this.$t('asset.asset'),
           prop: 'asset',
           show: true
         },

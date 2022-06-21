@@ -1482,6 +1482,16 @@ export default {
     // this.topologyData.data.rule= !!dataOption.rule;
     // this.topologyData.data.projectInfo= !!dataOption.projectInfo;
     // this.topologyData.data.alertInfo= !!dataOption.alertInfo;
+    // window.addEventListener('keydown', (e) => {
+    //   if (e.target.className === 'cm-content cm-lineWrapping' && e.keyCode === 8) {
+    //     if (e & e.stopPropagation) {
+    //       e.stopPropagation() // iie 6, 7, 8
+    //     } else {
+    //       window.event.cancleBubble = true
+    //     }
+    //     return false
+    //   }
+    // })
   },
   updated (n, o) {
     if (!this.selection.pen) { // 没选中node line返回

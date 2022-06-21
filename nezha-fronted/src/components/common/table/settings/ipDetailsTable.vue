@@ -117,7 +117,7 @@ export default {
           show: true,
           minWidth: 200
         }, {
-          label: this.$t('guide.asset'),
+          label: this.$t('asset.asset'),
           prop: 'asset',
           show: true,
           width: 200

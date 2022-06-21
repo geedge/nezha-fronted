@@ -83,7 +83,7 @@ export default {
           minWidth: 100,
           sortable: 'custom'
         }, {
-          label: this.$t('guide.asset'),
+          label: this.$t('asset.asset'),
           prop: 'assetNum',
           show: true,
           minWidth: 90,

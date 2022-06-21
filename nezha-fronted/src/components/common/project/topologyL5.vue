@@ -374,8 +374,16 @@ const canvasOptions = {
   autoExpandDistance: 0,
   minScale: 0.2,
   scaleKey: -1,
-  keyCode: {
-
+  keydown (e) {
+    console.log(e)
+    // if (e.target.className === 'cm-content cm-lineWrapping' && e.keyCode === 8) {
+    //   if (e & e.stopPropagation) {
+    //     e.stopPropagation() // iie 6, 7, 8
+    //   } else {
+    //     window.event.cancleBubble = true
+    //   }
+    //   return false
+    // }
   }
 }
 export default {
@@ -453,7 +461,7 @@ export default {
           id: 'endpoint',
           title: this.$t('project.topology.endpoint')
         },
-        { top: '-41px', left: '22px', className: 'nz-icon-asset', id: 'asset', title: this.$t('project.topology.asset') },
+        { top: '-41px', left: '22px', className: 'nz-icon-asset', id: 'asset', title: this.$t('asset.asset') },
         { top: '-2px', left: '45px', className: '', id: 'other', title: '' },
         { top: '37px', left: '22px', className: '', id: 'other', title: '' },
         { top: '37px', left: '-23px', className: 'nz-icon-info-normal', id: 'info', title: this.$t('project.topology.info') },

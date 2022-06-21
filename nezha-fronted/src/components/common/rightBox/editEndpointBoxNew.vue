@@ -39,7 +39,7 @@
             </el-select>
           </el-form-item>
           <!--asset-->
-          <el-form-item :label='$t("guide.asset")' label-width="125px" prop="assetId" v-if="!disabled">
+          <el-form-item :label='$t("asset.asset")' label-width="125px" prop="assetId" v-if="!disabled">
 <!--            <el-select id="module-box-input-asset"  @change="renderEndpoint" v-model="editEndpoint.assetId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">-->
 <!--              <el-option v-for="item in assetList" :id="'asset-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
 <!--            </el-select>-->
@@ -62,7 +62,7 @@
               :result-format="resultFormat"
             ></v-selectpage>
           </el-form-item>
-          <el-form-item :label='$t("guide.asset")' label-width="125px" prop="assetName" v-if="disabled">
+          <el-form-item :label='$t("asset.asset")' label-width="125px" prop="assetName" v-if="disabled">
             <el-input id="module-box-input-assetName" v-model="editEndpoint.assetName" :disabled="disabled"   placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--name-->
