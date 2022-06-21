@@ -53,6 +53,7 @@
                   :ref="'promql-'+'-1'"
                   :expression-list="selection.pen.data.expressArr"
                   :index="index"
+                  type="metric"
                   :plugins="['metric-selector', 'metric-input', 'remove']"
                   :showRemove="false"
                   :styleType="2"
@@ -1500,43 +1501,6 @@ export default {
     }
   },
   methods: {
-    queryMetrics () {
-      this.metricOptions = []
-      this.$get('prom/api/v1/label/__name__/values').then(response => {
-        if (response.status == 'success') {
-          const metrics = response.data.sort()
-          const metricMap = new Map()
-          metrics.forEach((item) => {
-            let key = ''
-            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
-              key = item.split('_')[0]
-            } else if (/^_\w*/.test(item)) {
-              key = '      '
-            } else {
-              key = item
-            }
-            if (metricMap.get(key)) {
-              const values = metricMap.get(key)
-              values.push({ label: item, value: item })
-            } else {
-              const values = [{ label: item, value: item }]
-              metricMap.set(key, values)
-            }
-            // this.metricStore.push({label:item,value:item,insertText:item})
-          })
-          for (const key of metricMap.keys()) {
-            const option = {
-              label: key,
-              value: key
-            }
-            if (metricMap.get(key) && metricMap.get(key).length > 1) {
-              option.children = metricMap.get(key)
-            }
-            this.metricOptions.push(option)
-          }
-        }
-      })
-    },
     tabClick (n) {
     },
     moduleIdChange (n) {
