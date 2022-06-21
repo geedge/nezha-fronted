@@ -650,7 +650,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("profile.email") }}</div>
+        <div class="alert-label-title">{{ $t("config.system.email.email") }}</div>
         <div class="alert-label-value">
           {{ alertLabelData && alertLabelData.email ? alertLabelData.email : "--" }}
         </div>
