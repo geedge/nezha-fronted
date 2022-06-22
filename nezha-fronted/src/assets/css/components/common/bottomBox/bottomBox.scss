@@ -78,6 +78,46 @@
   padding: 0;
   .top-tools.top-tools--sub{
     border-bottom: 1px solid $--border-color-light;
+    .top-tool-right{
+      margin-right: 10px;
+      .top-tool-search{
+        .el-input.el-input--mini.el-input--suffix{
+          height: 100%;
+          .el-input__inner{
+            height: 100%;
+            border-color: $--border-color-base;
+          }
+          .el-input__inner:focus{
+            border-color: $--asset-label-btn-border-color;
+          }
+        }
+        .el-input__suffix-inner{
+          color: $--color-text-regular;
+          font-size: 14px;
+        }
+      }
+      .nz-btn-group{
+        #endpoint-query-changetime:hover{
+          border:1px solid $--asset-label-btn-border-color;
+        }
+        .nz-btn.nz-btn-size-normal.nz-btn-style-light.control-icon-unchecked:hover{
+          border:1px solid $--asset-label-btn-border-color;
+          z-index: 2;
+        }
+        .nz-btn.nz-btn-size-normal.nz-btn-style-light.control-icon-unchecked{
+          margin-right: -1px;
+        }
+        .project-calendar.nz-input-group-middle{
+          border-left: 0;
+          border-right:0;
+          border-top: 1px solid $--border-color-base;
+          border-bottom: 1px solid $--border-color-base;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
   }
   .bottom-data-list {
     .sub-container {
@@ -188,6 +228,13 @@
 }
 .endpoint-tab-new .sub-container .nz-table-list {
   height: 100%;
+}
+.endpoint-tab-new .bottom-data-list .nz-btn-group .nz-input-group-middle input{
+  border-right: 0 !important;
+}
+.endpoint-tab-new .bottom-data-list .nz-btn-group.nz-btn-group-size-normal.nz-btn-group-light{
+  border: 0 !important;
+  box-shadow: 0 0 0px 0px rgba(0, 0, 0,0);
 }
 /* end--二级顶部工具栏*/
 
