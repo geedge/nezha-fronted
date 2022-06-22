@@ -195,8 +195,10 @@ export default {
       this.tooltip.show = false
     },
     getLayout () {
-      this.boxWidth = this.$refs['chart-stat-box'].offsetWidth - 3 * this.boxPadding
-      this.boxHeight = this.$refs['chart-stat-box'].offsetHeight - 3 * this.boxPadding
+      try {
+        this.boxWidth = this.$refs['chart-stat-box'].offsetWidth - 3 * this.boxPadding
+        this.boxHeight = this.$refs['chart-stat-box'].offsetHeight - 3 * this.boxPadding
+      } catch (error) {}
       return new Promise(resolve => {
         let rateMax = 0
         let col = 0
