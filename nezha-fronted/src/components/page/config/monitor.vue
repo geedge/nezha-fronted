@@ -3,7 +3,7 @@
     <div class="system-config-form basicForm">
       <div class="system-title">{{$t('overall.basicInfo')}}</div>
       <el-form :model="monitor"  label-width="180px" size="small" ref="monitorForm" :rules="monitorRules" :validate-on-rule-change="false">
-        <el-form-item :label="$t('config.system.monitor.prometheusFederation')" prop="prometheus_federation_enabled">
+        <el-form-item :label="$t('setup.system.federation')" prop="prometheus_federation_enabled">
           <el-checkbox v-model="monitor.prometheus_federation_enabled" true-label="1" false-label="0"  id="system-monitor-prometheus_federation_enabled"></el-checkbox>
         </el-form-item>
         <el-form-item :label="$t('project.endpoint.scrape_interval')" prop="default_scrape_interval">
