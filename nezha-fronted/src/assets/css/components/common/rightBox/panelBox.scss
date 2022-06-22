@@ -58,6 +58,9 @@
             }
           }
         }
+    .el-checkbox-button.is-checked{
+      border: 1px solid #fbb569 !important;
+    }
         
     .el-checkbox-button.is-checked .el-checkbox-button__inner {
       color: #fff;
@@ -76,6 +79,7 @@
               margin-right: -1px;
             }
             .el-radio-button.is-active{
+              border: 1px solid #fbb569 !important;
               border-radius: 0;
             }
             .el-radio-button__inner{
