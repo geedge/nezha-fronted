@@ -2,7 +2,7 @@
   font-family: Inter-Regular, NotoSans-Regular, NunitoSans-Regular;
 }
 /* 覆盖element的loading样式 */
-.el-loading-spinner .circular{
+.el-loading-spinner .circular {
   width: 42px;
   height: 42px;
   animation: loading-rotate 2s linear infinite;
@@ -19,7 +19,7 @@
   cursor: pointer;
   outline: 0;
 }
-.el-loading-mask .el-loading-spinner{
+.el-loading-mask .el-loading-spinner {
   background: url(~@/assets/img/loading.gif) no-repeat;
   background-size: 48px 48px;
   width: 48px;
@@ -31,7 +31,7 @@
 }
 .export-pdf-mask {
   .el-loading-spinner {
-    .el-loading-text{
+    .el-loading-text {
       white-space: nowrap;
       margin-left: 54px;
       margin-top: 10px;
@@ -63,7 +63,7 @@
   color: $--color-danger !important;
 }
 .green {
-  color:$--color-success !important;
+  color: $--color-success !important;
 }
 .gray {
   color: $--color-suspended !important;
@@ -81,10 +81,10 @@
   background-color: $--color-danger !important;
 }
 .green-bg {
-  background-color:$--color-success !important;
+  background-color: $--color-success !important;
 }
 .yellow-bg {
-  background-color:$--color-silence !important;
+  background-color: $--color-silence !important;
 }
 .gray-bg {
   background-color: $--color-suspended !important;
@@ -95,22 +95,22 @@
 .orange-bg {
   background-color: $--color-primary !important;
 }
-.colorffa416{
+.colorffa416 {
   color: #ffa416;
 }
-.colorec7f66{
+.colorec7f66 {
   color: #ec7f66;
 }
-.color535b64{
+.color535b64 {
   color: #535b64;
 }
-.color999999{
+.color999999 {
   color: #999999;
 }
-.color23bf9a{
+.color23bf9a {
   color: #23bf9a;
 }
-.timezone-area{
+.timezone-area {
   display: inline-block;
   vertical-align: middle;
   width: auto;
@@ -124,10 +124,10 @@
   margin-top: 3px;
   max-width: 30%;
   overflow: hidden;
-  text-overflow:ellipsis;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
-.timezone-offset{
+.timezone-offset {
   display: inline-block;
   vertical-align: middle;
   width: auto;
@@ -138,24 +138,27 @@
   line-height: 20px;
   font-weight: 400;
 }
-.active-icon{
-  margin-top:0px;
-  width:10px;
-  height:10px;
-  border-radius:50%;
+.active-icon {
+  margin-top: 0px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
   display: inline-block;
   margin-right: 5px;
 }
-.data-column__span{
+.data-column__span {
   display: inline-block;
 }
-.right-box__footer span{
+.right-box__footer span {
   display: inline-block;
 }
-.right-box__footer span:first-letter{
+.right-box__footer span:first-letter {
   text-transform: capitalize;
 }
-.data-column__span:first-letter,.el-tabs__item:first-letter,.header__title:first-letter,.operation-dropdown-text:first-letter{
+.data-column__span:first-letter,
+.el-tabs__item:first-letter,
+.header__title:first-letter,
+.operation-dropdown-text:first-letter {
   text-transform: capitalize;
 }
 .personal-dropdown {
@@ -185,7 +188,7 @@
     padding-bottom: 10px;
   }
 }
-td .nz-icon-gear:before{
+td .nz-icon-gear:before {
   color: $--color-text-regular;
 }
 
@@ -228,7 +231,8 @@ td .nz-icon-gear:before{
 .el-tree {
   background-color: $--background-color-empty !important;
 }
-.el-table::before,.el-table__fixed-right::before {
+.el-table::before,
+.el-table__fixed-right::before {
   background-color: $--border-color-light !important;
 }
 .el-message-box {
@@ -249,8 +253,9 @@ td .nz-icon-gear:before{
     opacity: 1 !important;
   }
 }
-.right-box .right-box-form-add,.right-box .right-box-form-minus-box{
-  padding:4px 6px;
+.right-box .right-box-form-add,
+.right-box .right-box-form-minus-box {
+  padding: 4px 6px;
   background: $--background-color-copy;
   border-radius: $--border-radius-small;
   border: 1px solid $--span-nz-icon-border-color;
@@ -268,7 +273,8 @@ td .nz-icon-gear:before{
 .el-scrollbar {
   background-color: $--background-color-empty;
 }
-.el-input-group.el-input-group--prepend,.query-input-inactive.el-input {
+.el-input-group.el-input-group--prepend,
+.query-input-inactive.el-input {
   .el-input-group__prepend {
     background-color: $--right-box-sub-title-background-color;
     border: 1px solid $--border-color-light;
@@ -328,7 +334,7 @@ td .nz-icon-gear:before{
       border-color: $--border-color-light;
     }
   }
-  .el-radio-button.is-active .el-radio-button__inner{
+  .el-radio-button.is-active .el-radio-button__inner {
     background-color: $--color-warning;
     border-color: $--color-warning;
   }
@@ -369,7 +375,9 @@ td .nz-icon-gear:before{
 .el-scrollbar-normal__color {
   color: $--color-text-regular;
 }
-.chart-body,.chart__canvas,.line-area {
+.chart-body,
+.chart__canvas,
+.line-area {
   div:nth-of-type(2) {
     background-color: $--chart-background-color !important;
     border-color: $--chart-border-color !important;
@@ -378,7 +386,7 @@ td .nz-icon-gear:before{
     }
   }
 }
-.el-dropdown-menu-link .el-dropdown-menu__item{
+.el-dropdown-menu-link .el-dropdown-menu__item {
   padding: 0;
   .link-title {
     padding: 0 20px;
@@ -395,16 +403,26 @@ td .nz-icon-gear:before{
   content: "\e6ad";
 }
 .el-table__header-wrapper {
-  th{
+  th {
     border-right-color: transparent !important;
   }
 }
 .el-table__header-wrapper:hover {
-  th{
+  th {
     border-right-color: $--border-color-light !important;
   }
 }
-.chart-bar,.chart-gauge,.chart-time-series,.chart-treemap,.chart-pie,.chart-canvas-tooltip,.line-chart-block-Zindex,.alert-label,.alert-labelUp,.alert-days-info-tooltip,.nz-tooltip-bac{
+.chart-bar,
+.chart-gauge,
+.chart-time-series,
+.chart-treemap,
+.chart-pie,
+.chart-canvas-tooltip,
+.line-chart-block-Zindex,
+.alert-label,
+.alert-labelUp,
+.alert-days-info-tooltip,
+.nz-tooltip-bac {
   background-color: $--tooltip-background-color !important;
   border: 2px solid $--tooltip-border-color !important;
   border-color: $--tooltip-border-color !important;
@@ -414,27 +432,35 @@ td .nz-icon-gear:before{
 .loading-hide {
   display: none;
 }
-input, textarea {
+input,
+textarea {
   font-family: Inter-Regular !important;
 }
-.message-next{
+.message-next {
   vertical-align: bottom;
   float: unset;
   font-size: 10px;
   margin-left: 190px;
-  .message-next-continue{
+  .message-next-continue {
     color: $--color-text-primary;
     font-weight: 400;
   }
-  .message-next-content{
+  .message-next-content {
     color: $--color-text-link;
     font-weight: 600;
   }
 }
-
-.document-copy-block:hover i{
-  display: inline-block !important;
+.document-copy-block {
+  padding-right: 15px;
+  position: relative;
 }
-.document-copy-block i{
+
+.document-copy-block:hover i {
+  display: block !important;
+}
+.document-copy-block i {
+  position: absolute;
+  top: calc((100% - 18px)/2);
+  right: 0;
   transform: scale(0.95);
 }
