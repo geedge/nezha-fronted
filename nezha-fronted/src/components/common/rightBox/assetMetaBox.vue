@@ -3,7 +3,7 @@
     <div class="right-box right-box-asset-meta" v-clickoutside="{obj:editAssetMeta,func:clickOutside}">
       <!-- begin--标题-->
       <div class="right-box__header">
-        <div class="header__title">{{editAssetMeta.id ? $t("config.assetLabel.editMeta"): $t("config.assetLabel.addMeta")}}
+        <div class="header__title">{{editAssetMeta.id ? $t("config.assetLabel.editMeta"): $t("overall.createLabel")}}
         </div>
         <div class="header__operation">
           <span v-cancel="{obj: editAssetMeta, func: esc}"><i class="nz-icon nz-icon-close"></i></span>

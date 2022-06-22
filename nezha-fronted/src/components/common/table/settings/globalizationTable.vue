@@ -102,7 +102,7 @@ export default {
           minWidth: 150,
           sortable: 'custom'
         }, {
-          label: this.$t('config.menus.lang'),
+          label: this.$t('config.user.language'),
           prop: 'lang',
           show: true,
           minWidth: 150,

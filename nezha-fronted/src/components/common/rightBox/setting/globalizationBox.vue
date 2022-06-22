@@ -17,7 +17,7 @@
           <el-form-item :label='$t("config.menus.code")' prop="code">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editGlobalization.code" size="small" id="dc-box-input-code"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('config.menus.lang')" prop="lang">
+          <el-form-item :label="$t('config.user.language')" prop="lang">
             <el-select id="account-input-language"
                        class="right-box__select"
                        v-model="editGlobalization.lang"
