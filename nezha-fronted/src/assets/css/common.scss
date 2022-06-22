@@ -395,6 +395,9 @@ td .nz-icon-gear:before{
   content: "\e6ad";
 }
 .el-table__header-wrapper {
+  table{
+    background-color: $--background-color-empty !important;
+  }
   th{
     border-right-color: transparent !important;
   }
