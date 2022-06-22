@@ -508,7 +508,7 @@ export default {
         case 'project' : str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('project.project.projectName')}</span>`; break
         case 'module' :str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('overall.module')}</span>`; break
         case 'endpoint' : str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('asset.endpoint')}</span>`; break
-        case 'alertrule' : str += `<span>${this.$t('overall.alert')}</span> <span>/</span> <span>${this.$t('alert.config.alertConfig')}</span>`; break
+        case 'alertrule' : str += `<span>${this.$t('overall.alert')}</span> <span>/</span> <span>${this.$t('alert.rule')}</span>`; break
       }
       return str
     },

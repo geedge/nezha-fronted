@@ -108,7 +108,7 @@ export default {
           minWidth: 150,
           sortable: 'custom'
         }, {
-          label: this.$t('config.menus.value'),
+          label: this.$t('overall.labels'),
           prop: 'value',
           minWidth: 150,
           show: true

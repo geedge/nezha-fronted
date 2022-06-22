@@ -10,7 +10,7 @@
           popper-class="alert-form-pop right-box-select-top right-public-box-dropdown-top no-style-class"
           clearable></el-cascader>
       </el-form-item>
-      <el-form-item :label="$t('alert.config.alertConfig')">
+      <el-form-item :label="$t('alert.rule')">
         <el-select class="form-item" size="small" :placeholder="$t('el.select.placeholder')" popper-class="alert-form-pop right-box-select-top right-public-box-dropdown-top no-style-class" v-model="parameters.alertRule" clearable id="alert-param-alertrule">
           <el-option v-for="(rule, index) in alertRules" :key="index" :label="rule.name" :value="rule.id"></el-option>
         </el-select>

@@ -113,7 +113,7 @@ export default {
           permission: 'header_add_asset'
         },
         {
-          label: this.$t('alert.config.alertConfig'),
+          label: this.$t('alert.rule'),
           url: 'alertConfig',
           type: 5,
           permission: 'header_add_rule'

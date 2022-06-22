@@ -238,7 +238,7 @@ export default {
       this.esc(false)
     },
     messageStyle (e) {
-      if (e.column.label == 'Alerts' || e.column.label == this.$t('alert.alertMessage')) {
+      if (e.column.label == 'Alerts' || e.column.label == this.$t('overall.alert')) {
         if (e.row.alertNum > 0) {
           return 'danger'
         } else {
