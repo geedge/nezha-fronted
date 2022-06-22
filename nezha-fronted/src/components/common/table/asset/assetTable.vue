@@ -185,6 +185,7 @@
 </template>
 
 <script>
+import mainMixinFun from '@/components/common/mixin/mainMixinFun'
 import table from '@/components/common/mixin/table'
 import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
 // import bus from '@/libs/bus'
@@ -193,7 +194,7 @@ import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
 import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'assetTable',
-  mixins: [table, alertLabelMixin],
+  mixins: [table, alertLabelMixin, mainMixinFun],
   components: {
     alertLabel: alertLabel,
     alertDaysInfo

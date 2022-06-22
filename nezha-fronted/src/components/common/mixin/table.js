@@ -134,11 +134,6 @@ export default {
     },
     rowKey (row) { // ping trace的 唯一key
       return row.ip + '-' + row.dc.id
-    },
-    onCopy (txt) {
-      this.$copyText(txt).then(() => {
-        this.$message.success({ message: this.$t('overall.copySuccess') })
-      })
     }
   },
   watch: {

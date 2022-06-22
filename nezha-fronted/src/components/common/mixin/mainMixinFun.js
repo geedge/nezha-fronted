@@ -90,6 +90,11 @@ export default {
       const format = fmt || localStorage.getItem('nz-default-dateFormat')
       const date = moment.tz(str, format, offset).valueOf()
       return date
+    },
+    onCopy (txt) {
+      this.$copyText(txt).then(() => {
+        this.$message.success({ message: this.$t('overall.copySuccess') })
+      })
     }
   }
 }
