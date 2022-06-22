@@ -13,7 +13,7 @@
             <el-input maxlength="64" show-word-limit v-model="apiKeyBox.name" size="small" type="text"></el-input>
           </el-form-item>
            <el-form-item
-            :label="$t('profile.apiKey.box.expiredAt')"
+            :label="$t('config.system.apiKey.expireAt')"
             class="start_at"
           >
             <my-date-picker

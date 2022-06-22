@@ -94,7 +94,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   operation: [
     {
       value: 'add',
-      label: i18n.t('config.operationlog.operations.add')
+      label: i18n.t('buttons.add')
     },
     {
       value: 'update',
@@ -114,7 +114,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     },
     {
       value: 'delete',
-      label: i18n.t('config.operationlog.operations.delete')
+      label: i18n.t('overall.delete')
     },
     {
       value: 'reset',

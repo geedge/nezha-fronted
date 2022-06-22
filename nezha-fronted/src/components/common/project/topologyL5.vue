@@ -373,7 +373,8 @@ const canvasOptions = {
   disableEmptyLine: true,
   autoExpandDistance: 0,
   minScale: 0.2,
-  scaleKey: -1
+  scaleKey: -1,
+  keydown: 1
 }
 export default {
   name: 'topologyL5',
@@ -450,7 +451,7 @@ export default {
           id: 'endpoint',
           title: this.$t('project.topology.endpoint')
         },
-        { top: '-41px', left: '22px', className: 'nz-icon-asset', id: 'asset', title: this.$t('project.topology.asset') },
+        { top: '-41px', left: '22px', className: 'nz-icon-asset', id: 'asset', title: this.$t('asset.asset') },
         { top: '-2px', left: '45px', className: '', id: 'other', title: '' },
         { top: '37px', left: '22px', className: '', id: 'other', title: '' },
         { top: '37px', left: '-23px', className: 'nz-icon-info-normal', id: 'info', title: this.$t('project.topology.info') },

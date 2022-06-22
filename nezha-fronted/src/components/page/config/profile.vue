@@ -32,7 +32,7 @@
       </div>
       <button id="asset-edit-cancel" class="profile-left__btn" @click="profileBox">
         <span><i class="nz-icon nz-icon-edit"></i></span>
-        <span>{{$t('profile.edit')}}</span>
+        <span>{{$t('profile.editProfile')}}</span>
       </button>
       <div v-for="item in tableProfile" :key="item.id" class="profile-left__center">
         <span style="margin:0 18px 0 0"><i :class="item.icon"></i></span>
@@ -194,7 +194,7 @@ export default {
           icon: 'nz-icon nz-icon-role profile-role'
         }, {
           id: 2,
-          label: this.$t('profile.email'),
+          label: this.$t('config.system.email.email'),
           prop: '',
           icon: 'nz-icon nz-icon-email profile-email'
         }, {

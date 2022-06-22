@@ -887,7 +887,7 @@ export default {
             }
           })
         }
-      } else if (data.children && !data.children.length && this.type !== 'log') {
+      } else if (data.children && (!data.children.length || data.children.length > 100) && this.type !== 'log') {
         this.metricOptions.forEach(item => {
           if (!item.temp && item.children && item.value != data.value) {
             item.children = []
@@ -898,7 +898,7 @@ export default {
             const children = this.$store.state.metricsList.find(item => item.value === data.value).children
             resolve(children)
           }).then((children) => {
-            let childrenCopy = JSON.parse(JSON.stringify(children))
+            const childrenCopy = JSON.parse(JSON.stringify(children))
             const findChild = this.metricOptions.find(item => item.label === data.label)
 
             if (childrenCopy.length > 100) {
@@ -927,7 +927,7 @@ export default {
               childrenCopy = childrenCopy.splice(findChild.children.length, findChild.children.length + 101)
               findChild.children.splice(findChild.children.length - 1, 1)
               findChild.children.push(...childrenCopy)
-              if (findChild.children.length < children.length) {
+              if (findChild.children.length < children.length - 1) {
                 findChild.children.push({
                   label: 'More',
                   value: false,

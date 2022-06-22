@@ -22,7 +22,7 @@
         <div class="top-tool-search">
           <search-input :default-item="'alertMessageState'" :default-value="defaultSearchValue" :searchMsg="searchMsg" @search="search" position="alert-bottom"></search-input>
         </div>
-        <button :title="$t('overall.exportExcelLower')" @click="importBox.show = true" type="button" v-has="['rule_alerts_export', 'project_endpoint_alerts_export', 'asset_alerts_export']"
+        <button :title="$t('overall.exportExcel')" @click="importBox.show = true" type="button" v-has="['rule_alerts_export', 'project_endpoint_alerts_export', 'asset_alerts_export']"
             class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
           <i class="nz-icon nz-icon-download1"></i>
         </button>
@@ -49,7 +49,7 @@
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="importBox.show = false" class="nz-dialog">
         <div class="upload-body">
           <button @click="exportCur" class="el-button el-button--default el-button--small">
-            <span>{{$t('overall.exportCur')}}</span>
+            <span>{{$t('overall.current')}}</span>
           </button>
           <button @click="exportAll" class="el-button el-button--default el-button--small">
             <span>{{$t('overall.exportAll')}}</span>

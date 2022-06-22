@@ -97,7 +97,7 @@
               OK
             </div>
             <div v-else-if="scope.row['clientState']===0">
-              <div class="active-icon gray-bg inline-block"></div> {{ $t('project.endpoint.disable') }}
+              <div class="active-icon gray-bg inline-block"></div> {{ $t('profile.close') }}
             </div>
             <div v-else-if="scope.row['clientState']===2">
               <div class="active-icon red-bg inline-block"></div> {{ $t('asset.connectionTimedOut') }}

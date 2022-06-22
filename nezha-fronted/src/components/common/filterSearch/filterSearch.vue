@@ -63,7 +63,7 @@
         </div>
       </template>
     </div>
-    <div class="tag-search__add cursor-pointer" @click="addCondition()">{{$t('project.topology.add')}}</div>
+    <div class="tag-search__add cursor-pointer" @click="addCondition()">{{$t('buttons.add')}}</div>
   </div>
 </template>
 

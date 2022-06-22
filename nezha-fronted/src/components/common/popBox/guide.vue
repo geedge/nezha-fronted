@@ -80,21 +80,21 @@ export default {
       guideList: [
         {
           route: '/dc',
-          title: this.$t('guide.dc'),
+          title: this.$t('asset.dc'),
           icon: 'nz-icon nz-icon-datacenter1',
           tip: this.$t('guide.dcTip'),
           permissionCode: 'dc_view'
         },
         {
           route: '/agent',
-          title: this.$t('config.agent.agent.agent'),
+          title: this.$t('guide.agent'),
           icon: 'nz-icon nz-icon-agent',
           tip: this.$t('guide.agentTip'),
           permissionCode: 'agent_view'
         },
         {
           route: '/asset',
-          title: this.$t('guide.asset'),
+          title: this.$t('asset.asset'),
           icon: 'nz-icon nz-icon-menu-assets',
           tip: this.$t('guide.assetTip'),
           permissionCode: 'asset_view'

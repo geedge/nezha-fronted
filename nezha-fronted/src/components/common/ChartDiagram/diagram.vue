@@ -491,7 +491,7 @@ export default {
           id: 'endpoint',
           title: this.$t('project.topology.endpoint')
         },
-        { top: '-40px', left: '19px', className: 'nz-icon-asset', id: 'asset', title: this.$t('project.topology.asset') },
+        { top: '-40px', left: '19px', className: 'nz-icon-asset', id: 'asset', title: this.$t('asset.asset') },
         { top: '-4px', left: '40px', className: '', id: 'other', title: '' },
         { top: '30px', left: '19px', className: '', id: 'other', title: '' },
         { top: '30px', left: '-21px', className: 'nz-icon-info-normal', id: 'info', title: this.$t('project.topology.info') },

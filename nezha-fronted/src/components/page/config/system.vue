@@ -4,7 +4,7 @@
       <el-tab-pane v-if="systemHasTab('system_basic_view')" :label="$t('config.system.basic.basic')" name="basic">
         <div class="system-config-form basicForm" v-if="switchTab === 'basic'">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
-            <div class="system-title">{{$t('config.system.basic.title')}}</div>
+            <div class="system-title">{{$t('overall.basicInfo')}}</div>
             <el-form-item :label="$t('config.system.basic.language')" prop="language">
               <el-select id="account-input-language"
                          class="right-box__select"
@@ -56,7 +56,7 @@
             <el-form-item :label="$t('config.system.basic.mapConfig')" class="basic-lnglat" prop="lnglat">
               <div style="display: flex">
                 <el-input v-model="basic.lnglat" maxlength="256" placeholder="" style="width: calc(100% - 50px); padding-right: 50px;">
-                  <template slot="prepend">{{$t('config.system.basic.lnglat')}}</template>
+                  <template slot="prepend">{{$t('config.dc.lnglat')}}</template>
                 </el-input>
                 <latlng-picker ref="latlngPicker" :init-data="basic.lnglat" :show-zoom="true" @lnglatChange="lnglatChange"></latlng-picker>
               </div>
@@ -119,7 +119,7 @@
       </el-tab-pane>
       <el-tab-pane v-if="systemHasTab('system_monitor_view')" :label="$t('config.system.monitor.monitor')" name="monitor">
         <div class="system-config-form basicForm" v-if="switchTab === 'monitor'">
-          <div class="system-title">{{$t('config.system.basic.title')}}</div>
+          <div class="system-title">{{$t('overall.basicInfo')}}</div>
           <el-form :model="monitor"  label-width="180px" size="small" ref="monitorForm" :rules="monitorRules" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.monitor.prometheusFederation')" prop="prometheus_federation_enabled">
               <el-checkbox v-model="monitor.prometheus_federation_enabled" true-label="1" false-label="0"  id="system-monitor-prometheus_federation_enabled"></el-checkbox>
@@ -201,7 +201,7 @@
                   <el-input v-model="monitor.logs_storage_s3_endpoint" id="monitor-logs_storage_s3_endpoint">
                   </el-input>
                 </el-form-item>
-                <el-form-item :label="$t('config.system.monitor.logs_storage_s3_bucket')" prop="logs_storage_s3_bucket" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+                <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_bucket')" prop="logs_storage_s3_bucket" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
                   <el-input v-model="monitor.logs_storage_s3_bucket" id="monitor-logs_storage_s3_bucket">
                   </el-input>
                 </el-form-item>
@@ -231,7 +231,7 @@
       </el-tab-pane>
       <el-tab-pane v-if="systemHasTab('system_email_view')" :label="$t('config.system.email.email')" name="email" >
         <div class="system-config-form" v-if="switchTab === 'email'">
-          <div class="system-title">{{$t('config.system.basic.title')}}</div>
+          <div class="system-title">{{$t('overall.basicInfo')}}</div>
           <el-form :model="email"  label-width="180px" size="small" ref="emailForm" :rules="email.email_enable=='on'?emailRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.email.enable')" prop="email_enable">
               <el-checkbox v-model="email.email_enable" true-label="on" false-label="off"  @change="switchChange('emailForm')" id="system-email-email_enable"></el-checkbox>
@@ -279,7 +279,7 @@
       </el-tab-pane>
       <el-tab-pane v-if="systemHasTab('system_terminal_view')" :label="$t('config.system.terminal.terminal')" name="terminal">
         <div class="system-config-form terminal" v-if="switchTab === 'terminal'">
-          <div class="system-title">{{$t('config.system.basic.title')}}</div>
+          <div class="system-title">{{$t('overall.basicInfo')}}</div>
           <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
 <!--            <el-form-item :label="$t('config.system.ldap.timeout')" prop="terminal_timeout">-->
 <!--              <el-input v-model="terminal.terminal_timeout" controls-position="right" :min="1"  id="system-terminal-max_terminal_num">-->
@@ -305,7 +305,7 @@
       </el-tab-pane>
       <el-tab-pane v-if="systemHasTab('system_ldap_view')" :label="$t('config.system.ldap.ldap')" name="ldap">
         <div class="system-config-form" v-if="switchTab === 'ldap'">
-          <div class="system-title">{{$t('config.system.basic.title')}}</div>
+          <div class="system-title">{{$t('overall.basicInfo')}}</div>
           <el-form :model="ldap"  label-width="180px" size="small" ref="ldapForm" :rules="ldap.ldap_enable == 'on'?ldapRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.ldap.active')" prop="ldap_enable">
               <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off' @change="switchChange('ldapForm')" id="system-ldap-ldap_enable"></el-checkbox>
@@ -356,7 +356,7 @@
       </el-tab-pane>
       <el-tab-pane v-if="systemHasTab('system_reset_view')" :label="$t('config.overall.reset')" name="reset">
         <div class="system-config-form" v-if="switchTab === 'reset'">
-          <div class="system-title">{{$t('config.system.basic.title')}}</div>
+          <div class="system-title">{{$t('overall.basicInfo')}}</div>
           <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
             <el-form-item  prop="type" :label="$t('overall.type')">
               <el-select v-model="reset.type" :placeholder="$t('el.select.placeholder')" multiple popper-class="right-box-select-top right-public-box-dropdown-top">

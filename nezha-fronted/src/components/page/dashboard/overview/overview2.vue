@@ -34,7 +34,7 @@
                 <span class="over-num" v-if="(assetData ? assetData.totalStat.total  : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("guide.asset")}}</div>
+              <div class="content-col-content-title">{{$t("asset.asset")}}</div>
             </div>
           </div>
         </div>
@@ -181,7 +181,7 @@
                 <i class="nz-icon nz-icon-arrow-down"></i>
                 <transition name="el-zoom-in-top">
                   <ul class="el-dropdown-menu el-popper el-dropdown-menu&#45;&#45;mini" v-if="bottom3DropdownShow">
-                    <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("guide.asset")}}</li>
+                    <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("asset.asset")}}</li>
                     <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("overall.module")}}</li>
                   </ul>
                 </transition>

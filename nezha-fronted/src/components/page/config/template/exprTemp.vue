@@ -67,7 +67,7 @@
                  :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
         <div class="upload-body">
           <button @click="exportCur" class="el-button el-button--default el-button--small" id="alert-msg-exportcur">
-            <span>{{$t('overall.exportCur')}}</span>
+            <span>{{$t('overall.current')}}</span>
           </button>
           <button @click="exportAll" class="el-button el-button--default el-button--small" id="alert-msg-exportall">
             <span>{{$t('overall.exportAll')}}</span>

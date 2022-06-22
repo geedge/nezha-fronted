@@ -15,7 +15,7 @@
           <el-form-item :label="$t('profile.username')" prop="username">
             <el-input maxlength="64" show-word-limit v-model="editProfile.username" disabled size="small" type="text"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('profile.email')" prop="email">
+          <el-form-item :label="$t('config.system.email.email')" prop="email">
             <el-input maxlength="64" show-word-limit v-model="editProfile.email" size="small" type="text"></el-input>
           </el-form-item>
           <el-form-item :label="$t('profile.mobile')" prop="mobile">

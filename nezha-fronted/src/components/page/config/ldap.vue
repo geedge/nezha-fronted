@@ -1,7 +1,7 @@
 <template>
   <div class="system">
     <div class="system-config-form">
-      <div class="system-title">{{$t('config.system.basic.title')}}</div>
+      <div class="system-title">{{$t('overall.basicInfo')}}</div>
       <el-form :model="ldap"  label-width="180px" size="small" ref="ldapForm" :rules="ldap.ldap_enable == 'on'?ldapRules:{}" :validate-on-rule-change="false">
         <el-form-item :label="$t('config.system.ldap.active')" prop="ldap_enable">
           <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off' @change="switchChange('ldapForm')" id="system-ldap-ldap_enable"></el-checkbox>

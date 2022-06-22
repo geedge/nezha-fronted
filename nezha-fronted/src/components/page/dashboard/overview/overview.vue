@@ -34,7 +34,7 @@
                   <span v-if="assetData > 1000 " class="over-num">+</span>
                 </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("guide.asset")}}</div>
+              <div class="content-col-content-title">{{$t("asset.asset")}}</div>
             </div>
           </div>
         </div>
@@ -652,7 +652,7 @@ export default {
           { name: vm.$t('config.agent.up'), value: data.agent.up ? data.agent.up : 0 },
           { name: vm.$t('asset.down'), value: data.agent.down ? data.agent.down : 0 }
         ]
-        prometheusOption.title.text = vm.$t('config.agent.agent.agent')
+        prometheusOption.title.text = vm.$t('guide.agent')
         prometheusOption.legend.data = [vm.$t('config.agent.up'), vm.$t('asset.down')]
         tooltipEndpointChart && tooltipEndpointChart.setOption(endpointOption, true)
         tooltipPrometheusChart && tooltipPrometheusChart.setOption(prometheusOption, true)

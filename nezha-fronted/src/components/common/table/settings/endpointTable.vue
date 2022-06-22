@@ -147,7 +147,7 @@
           </template>
           <template v-else-if="item.prop === 'enabled'">
             <span v-if="scope.row[item.prop] === 1">{{$t('asset.talon.enable')}}</span>
-            <span v-else>{{$t('project.endpoint.disable')}}</span>
+            <span v-else>{{$t('profile.close')}}</span>
           </template>
           <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
           <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
@@ -241,7 +241,7 @@ export default {
           sortable: 'custom'
         },
         {
-          label: this.$t('guide.asset'),
+          label: this.$t('asset.asset'),
           prop: 'asset',
           show: true,
           minWidth: 90,
