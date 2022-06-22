@@ -18,7 +18,7 @@
           ref="backupsForm"
         >
           <el-form-item
-            :label="$t('backup.schedule')"
+            :label="$t('alert.config.schedEnable')"
             prop="type"
             class="form-tabs"
           >
@@ -36,7 +36,7 @@
             </el-tabs>
           </el-form-item>
           <el-form-item
-            :label="$t('backup.start')"
+            :label="$t('overall.startTime')"
             prop="stime"
             v-if="whoshow"
             class="start_at"
@@ -127,7 +127,7 @@
           </el-form-item>
 
           <el-form-item
-            :label="$t('asset.talon.enable')"
+            :label="$t('overall.enable')"
             prop="status"
             class="form-item__switch"
           >

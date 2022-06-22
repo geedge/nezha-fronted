@@ -2,7 +2,7 @@
   <div v-clickoutside="{obj:editDc, func: esc}" class="right-box right-box-dc">
       <!-- begin--标题-->
       <div class="right-box__header">
-        <div class="header__title">{{editDc.id ? ($t("config.dc.editDc")) : $t("config.dc.createDc")}}</div>
+        <div class="header__title">{{editDc.id ? ($t("config.dc.editDc")) : $t("overall.createDatacenter")}}</div>
         <div class="header__operation">
           <span v-cancel="{obj: editDc, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
         </div>
@@ -124,7 +124,7 @@ export default {
             this.$put('/dc', param).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
-                this.messageShow(this.$t('tip.saveSuccess'), '', { dcId: response.data.id, cabinetBoxShow: true }, false, 'guide.addCabinet', 'addCabinet')
+                this.messageShow(this.$t('tip.saveSuccess'), '', { dcId: response.data.id, cabinetBoxShow: true }, false, 'overall.createCabinet', 'addCabinet')
                 this.esc(true)
               } else {
                 this.$message.error(response.msg)
@@ -147,7 +147,7 @@ export default {
             this.$post('/dc', param).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
-                this.messageShow(this.$t('tip.saveSuccess'), '', { dcId: response.data.id, cabinetBoxShow: true }, true, 'guide.addCabinet', 'addCabinet')
+                this.messageShow(this.$t('tip.saveSuccess'), '', { dcId: response.data.id, cabinetBoxShow: true }, true, 'overall.createCabinet', 'addCabinet')
                 this.esc(true)
               } else {
                 this.$message.error(response.msg)

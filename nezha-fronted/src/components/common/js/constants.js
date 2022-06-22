@@ -219,7 +219,7 @@ export const statisticsList = [
   { value: 'min', label: i18n.t('dashboard.panel.chartForm.min') },
   { value: 'max', label: i18n.t('dashboard.panel.chartForm.max') },
   { value: 'avg', label: i18n.t('dashboard.panel.chartForm.statisticsVal.average') },
-  { value: 'total', label: i18n.t('dashboard.panel.chartForm.statisticsVal.total') },
+  { value: 'total', label: i18n.t('dashboard.panel.chartTotal') },
   { value: 'first', label: i18n.t('dashboard.panel.chartForm.statisticsVal.first') },
   { value: 'last', label: i18n.t('dashboard.panel.chartForm.statisticsVal.last') },
   { value: 'range', label: i18n.t('dashboard.panel.chartForm.valMapping.range') },
@@ -227,7 +227,7 @@ export const statisticsList = [
 ]
 
 export const alignList = [
-  { value: 'left', label: i18n.t('dashboard.panel.chartForm.alignList.left') },
+  { value: 'left', label: i18n.t('project.topology.left') },
   { value: 'center', label: i18n.t('project.topology.center') },
   { value: 'right', label: i18n.t('dashboard.panel.chartForm.alignList.right') }
 ]
@@ -295,7 +295,7 @@ export const chart = {
 }
 
 export const intervalList = [
-  { value: -1, label: i18n.t('dashboard.panel.refreshInterval.never') },
+  { value: -1, label: i18n.t('dashboard.panel.chartForm.lockList.off') },
   { value: 30, label: '30s' },
   { value: 60, label: '1m' },
   { value: 300, label: '5m' },

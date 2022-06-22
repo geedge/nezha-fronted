@@ -99,7 +99,7 @@ export default {
           show: true,
           minWidth: 400
         }, {
-          label: this.$t('project.endpoint.host'),
+          label: this.$t('asset.host'),
           prop: 'host',
           show: true,
           width: 200
@@ -119,7 +119,7 @@ export default {
           show: true,
           width: 200
         }, {
-          label: this.$t('project.endpoint.param'),
+          label: this.$t('config.assetLabel.params'),
           prop: 'param',
           show: true,
           width: 200

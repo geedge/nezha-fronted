@@ -109,7 +109,7 @@ export default {
           minWidth: 80
         },
         // {
-        //   label: this.$t('config.operationlog.userId'),
+        //   label: this.$t('config.user.userId'),
         //   prop: 'userId',
         //   show: false,
         // },

@@ -2,7 +2,7 @@
   <div v-clickoutside="{obj:editPromServer,func:clickOutside}" class="right-box right-box-prom">
     <!-- begin--标题-->
     <div class="right-box__header">
-      <div class="header__title">{{editPromServer.id ? ($t("config.agent.editProm")) : $t("config.agent.createProm")}}</div>
+      <div class="header__title">{{editPromServer.id ? ($t("config.agent.editProm")) : $t("overall.createPrometheusServer")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editPromServer, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -27,7 +27,7 @@
             </div>
           </el-form-item>
           <!--host-->
-          <el-form-item :label="$t('config.agent.host')" prop="host">
+          <el-form-item :label="$t('asset.host')" prop="host">
             <el-input id="prom-box-input-host" maxlength="64" show-word-limit v-model="editPromServer.host" placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--Port-->

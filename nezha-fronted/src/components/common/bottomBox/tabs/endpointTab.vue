@@ -5,11 +5,11 @@
         <div class="sub-list-tab-title">{{obj.host}}</div>
         <div class="sub-list-tab" @click="changeTab('panel')" id="endpoint-tab-change-panel">{{$t("overall.detail")}}</div>
         <div @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'" id="endpoint-tab-change-alertmsg">{{$t("alert.alertMessage")}}</div>
-        <div class="sub-list-tab sub-list-tab-active">{{$t("overall.endpoint")}}</div>
+        <div class="sub-list-tab sub-list-tab-active">{{$t("asset.endpoint")}}</div>
       </div>
       <div class="sub-list-tabs" v-if="from===fromRoute.module">
         <div class="sub-list-tab-title">{{obj.name}}</div>
-        <div class="sub-list-tab sub-list-tab-active">{{$t("overall.endpoint")}}</div>
+        <div class="sub-list-tab sub-list-tab-active">{{$t("asset.endpoint")}}</div>
         <div @click="changeTab('alertMessage')" class="sub-list-tab" id="endpoint-tab-change-alertmsg">{{$t("alert.alertMessage")}}</div>
       </div>
       <div class="top-tool-right">
@@ -211,7 +211,7 @@ export default {
           show: true,
           minWidth: '400'
         }, {
-          label: this.$t('project.endpoint.host'),
+          label: this.$t('asset.host'),
           prop: 'host',
           show: true,
           width: 120
@@ -231,7 +231,7 @@ export default {
           show: true,
           width: 200
         }, {
-          label: this.$t('project.endpoint.param'),
+          label: this.$t('config.assetLabel.params'),
           prop: 'param',
           show: true,
           width: 200

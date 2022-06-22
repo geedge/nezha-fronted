@@ -3,7 +3,7 @@
     <div class="sub-top-tools">
       <div class="sub-list-tabs" v-if="from===fromRoute.module">
         <div class="sub-list-tab-title">{{obj.name}}</div>
-        <div @click="changeTab('endpoint')" class="sub-list-tab" id="endpoint-tab-change-endpoint">{{$t("overall.endpoint")}}</div>
+        <div @click="changeTab('endpoint')" class="sub-list-tab" id="endpoint-tab-change-endpoint">{{$t("asset.endpoint")}}</div>
         <div class="sub-list-tab sub-list-tab-active" >{{$t("alert.alertMessage")}}</div>
       </div>
       <div class="sub-list-tabs" v-else>
@@ -14,7 +14,7 @@
         </div><div :id="from+'-change-panelordetail'"
         @click="changeTab(from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.endpoint? 'panel' : 'detail')" class="sub-list-tab">{{$t("overall.detail")}}</div><div
         class="sub-list-tab sub-list-tab-active">{{$t("alert.alertMessage")}}</div><div v-if="from == $CONSTANTS.fromRoute.asset" :id="from+'-change-modules'"
-        @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'">{{$t("overall.endpoint")}}</div>
+        @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'">{{$t("asset.endpoint")}}</div>
         <div @click="changeTab('endpointQuery')" class="sub-list-tab" v-has="'project_endpoint_query_chart_view'" v-if="from == $CONSTANTS.fromRoute.endpoint" :id="from+'-change-endpoint'">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">

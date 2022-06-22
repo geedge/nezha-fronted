@@ -213,7 +213,7 @@ export default {
           show: true
         },
         {
-          label: this.$t('project.endpoint.host'),
+          label: this.$t('asset.host'),
           prop: 'host',
           show: true
         },

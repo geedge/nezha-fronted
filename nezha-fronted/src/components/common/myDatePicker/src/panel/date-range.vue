@@ -37,7 +37,7 @@
                   size="small"
                   class="el-date-range-picker__editor"
                   :disabled="rangeState.selecting"
-                  :placeholder="t('el.datepicker.startTime')"
+                  :placeholder="t('overall.startTime')"
                   :value="minVisibleTime"
                   @focus="minTimePickerVisible = true"
                   @input="val => handleTimeInput(val, 'min')"

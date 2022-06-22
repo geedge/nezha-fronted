@@ -134,7 +134,7 @@
               class="pickTime margin-r-10">
             </pick-time>
             <button v-has="'project_edit'" class="top-tool-btn margin-r-10" type="button" @click="editTopology">
-              <i :title="$t('project.topology.edit')" class="nz-icon nz-icon-edit"></i>
+              <i :title="$t('overall.edit')" class="nz-icon nz-icon-edit"></i>
             </button>
             <button class="top-tool-btn" type="button" @click="changeScreen">
               <i :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'" class="nz-icon"></i>
@@ -380,7 +380,7 @@ export default {
   name: 'topologyL5',
   data () {
     return {
-      title: this.$t('overall.customPicture'),
+      title: this.$t('overall.uploadCustomPicture'),
       objChange: false, // project 变化 用于判断 init是否执行完成 执行完成 才可以执行下次变化
       chartDataInfo: {},
       topoPrevData: {}, // 预览数据

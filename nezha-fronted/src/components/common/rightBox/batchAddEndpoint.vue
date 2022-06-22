@@ -53,7 +53,7 @@
           </el-form-item>
         </el-form>
 
-        <div class="right-box-sub-title">{{ $t("overall.configEndpoint") }}</div>
+        <div class="right-box-sub-title">{{ $t("project.module.configs") }}</div>
         <div class="right-box-line"></div>
 
         <el-table

@@ -70,7 +70,7 @@
             <el-input id="module-box-input-name" v-model="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--Enpoint template-->
-          <div class="right-box-sub-title">{{ $t("overall.configEndpoint") }}
+          <div class="right-box-sub-title">{{ $t("project.module.configs") }}
 <!--            <el-tooltip effect="light" placement="top">-->
 <!--              <div slot="content">-->
 <!--                {{$t('project.module.tip.defaultEndpointSet')}}-->
@@ -82,7 +82,7 @@
           </div>
           <div class="right-box-line"></div>
           <!-- ChartTemplate  -->
-<!--          <el-form-item :label="$t('project.module.ChartTemplate')" prop="ChartTemplate">-->
+<!--          <el-form-item :label="$t('overall.chartTemp')" prop="ChartTemplate">-->
 <!--            <v-selectpage-->
 <!--              v-model="editEndpoint.chartIds"-->
 <!--              :data="chartTempList"-->
@@ -103,7 +103,7 @@
           <div class="endpoint-title">
             <span class="endpoint-title-content">
               <i class="nz-icon nz-icon-arrow-down" :class="metricsShow?'':'is-active'" @click="metricsShow = !metricsShow"></i>
-             {{$t('project.metrics.metrics')}}
+             {{$t('overall.metric')}}
             </span>
             <el-switch v-model="editEndpoint.configs[0].enable" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
@@ -117,7 +117,7 @@
                   </el-select>
                 </el-form-item>
                 <!--host-->
-                <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host">
+                <el-form-item :label='$t("asset.host")' class="half-form-item" prop="configs.0.config.host">
                   <el-input id="module-box-input-host" v-model="editEndpoint.configs[0].config.host" placeholder="" size="small"></el-input>
                 </el-form-item>
                 <!--path-->
@@ -193,7 +193,7 @@
                 </span>
                 </div>
               </el-tab-pane>
-              <el-tab-pane :label="$t('project.endpoint.param')" name="Parameter" class="el-tab-pane-height">
+              <el-tab-pane :label="$t('config.assetLabel.params')" name="Parameter" class="el-tab-pane-height">
                 <div id="module-box-params" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                   <div v-for="(item, index) in editEndpoint.paramObj" :key="index" class="param-box-row">
                     <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key" :rules="[{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('overall.ASCIIKey') ,trigger: 'blur'}]">
@@ -715,7 +715,7 @@ export default {
         { name: this.$t('project.endpoint.authTypeToken'), value: 2 }
       ],
       endpointStateList: [
-        { name: this.$t('asset.talon.enable'), value: 1 },
+        { name: this.$t('overall.enable'), value: 1 },
         { name: this.$t('profile.close'), value: 0 }
       ],
       configsCopyValue: '',

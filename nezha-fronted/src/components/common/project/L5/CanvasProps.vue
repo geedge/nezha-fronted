@@ -22,7 +22,7 @@
 
           <!--value mapping-->
           <el-row class="form-row-title">
-            {{ $t('alert.config.thresholds') }}
+            {{ $t('alert.config.threshold') }}
             <span v-if="selection.pen.data.valueMappingSort !=='desc'" class="title__label"
                   >（0:Ok > … >{{
                 selection.pen.data.valueMapping.length
@@ -82,7 +82,7 @@
               <div style="width: 100%;margin: 10px 0; box-sizing: border-box; padding: 0 10px;">
                 <div class="thresholds-box">
                   <el-row class="thresholds-title">
-                    <el-col :span="4" class="thresholds-cell">{{ $t('project.topology.level') }}
+                    <el-col :span="4" class="thresholds-cell">{{ $t('alert.severity') }}
                       <span @click="changeValueMappingSort">
                     <i
                       :class="['nz-icon','nz-icon-arrow-up1',selection.pen.data.valueMappingSort==='desc'?'is-arrow-active':'']"></i>
@@ -1199,10 +1199,10 @@ export default {
       nodesAlign: [// 对齐方式
         {
           value: 'left',
-          desc: this.$t('project.topology.left')
+          desc: this.$t('ashboard.panel.chartForm.alignList.left')
         }, {
           value: 'right',
-          desc: this.$t('project.topology.right')
+          desc: this.$t('dashboard.panel.chartForm.alignList.right')
         }, {
           value: 'top',
           desc: this.$t('project.topology.topOffsetY')
@@ -1363,7 +1363,7 @@ export default {
       textAlignOptions: [
         {
           id: 'left',
-          name: this.$t('project.topology.left')
+          name: this.$t('ashboard.panel.chartForm.alignList.left')
         },
         {
           id: 'center',
@@ -1371,7 +1371,7 @@ export default {
         },
         {
           id: 'right',
-          name: this.$t('project.topology.right')
+          name: this.$t('dashboard.panel.chartForm.alignList.right')
         }
       ],
       textBaselineOptions: [

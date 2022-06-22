@@ -264,7 +264,7 @@ export default {
           errRows: []
         },
         {
-          label: this.$t('config.dc.traffic.tags'),
+          label: this.$t('overall.tag'),
           prop: 'tags',
           required: false,
           errRows: []

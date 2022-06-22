@@ -92,7 +92,7 @@ export default {
           show: true,
           sortable: 'custom'
         }, {
-          label: this.$t('config.exprTemp.gname'),
+          label: this.$t('dashboard.panel.chartForm.group'),
           prop: 'gname',
           show: true,
           sortable: 'custom'

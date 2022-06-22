@@ -210,7 +210,7 @@ export default {
           return this.noMatchText || this.t('el.select.noMatch')
         }
         if (this.options.length === 0) {
-          return this.noDataText || this.t('el.select.noData')
+          return this.noDataText || this.t('overall.noData')
         }
       }
       return null

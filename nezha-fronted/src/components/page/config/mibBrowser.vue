@@ -129,7 +129,7 @@
                 <span id="mib-browser-clear" :title="$t('overall.clear')" class="mib-browser-table-op" @click="clearResult"><i class="nz-icon nz-icon-close"></i></span>
               </span>
             </div>
-            <pl-table v-if="showTable" ref="resultTable" v-my-loading="loading" :datas="resultData" :empty-text="$t('config.mib.noData')" :pagination-show="false" :row-height="28"
+            <pl-table v-if="showTable" ref="resultTable" v-my-loading="loading" :datas="resultData" :empty-text="$t('overall.noData')" :pagination-show="false" :row-height="28"
                       border class="mib-browser-table" size="small" style="width: 100%; height: 100%" use-virtual>
               <pl-table-column v-slot="{row}" label="Name/OID">
                 <div class="too-long-split" @click="searchParam.oid = row.oid">{{row.name ? row.name : row.oid}}</div>

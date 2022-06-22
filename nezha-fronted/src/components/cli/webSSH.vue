@@ -95,7 +95,7 @@
           <div class="footer" slot="footer">
             <div class="el-message-box__btns" style="text-align: right;margin-top: 20px;">
               <button  @click="upload"  class="el-button el-button--default el-button--small">
-                <span>{{$t('asset.upload')}}</span>
+                <span>{{$t('overall.upload')}}</span>
               </button>
               <button @click="closeDialog"  class="el-button el-button--default el-button--small" >
                 <span>{{$t('overall.cancel')}}</span>
@@ -206,7 +206,7 @@
             <el-form-item :label='$t("asset.host")' prop="host">
               <el-input v-model="customConnect.host" size="small"/>
             </el-form-item>
-            <el-form-item :label='$t("webshell.port")' prop="port">
+            <el-form-item :label='$t("asset.port")' prop="port">
               <el-input v-model="customConnect.port" size="small"/>
             </el-form-item>
             <el-form-item :label='$t("profile.username")' prop="authUsername">
@@ -214,7 +214,7 @@
             </el-form-item>
             <el-form-item
               v-if="customConnect.authType === 2"
-              :label='$t("webshell.authPriKey")'
+              :label='$t("asset.talon.token")'
               prop="authPriKey"
             >
               <el-input v-model="customConnect.authPriKey" size="small" autocomplete="new-password"/>
@@ -318,7 +318,7 @@ export default {
       // upoload-download
 
       currentUuid: '',
-      uploadBox: { showUpload: false, title: this.$t('asset.upload') },
+      uploadBox: { showUpload: false, title: this.$t('overall.upload') },
       uploadFile: { file: '', path: '', uuid: '' },
       uploadFileList: [],
       uploadResult: null,

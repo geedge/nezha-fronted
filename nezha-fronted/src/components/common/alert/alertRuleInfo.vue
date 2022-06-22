@@ -26,7 +26,7 @@
           <div class="alert-rule-title">{{$t('overall.type')}}</div>
           <div class="alert-rule-value">
           <span v-if="alertRuleData.type === 1">
-            {{$t('project.metrics.metrics')}}
+            {{$t('overall.metric')}}
           </span>
             <span v-else-if="alertRuleData.type === 2">
             {{$t('overall.logs')}}
@@ -48,7 +48,7 @@
           <div class="alert-rule-value" v-if="alertRuleData">
             <i :class="alertRuleData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
             <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
-              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
+              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
               <div class="severity-info" style='justify-content: space-between'>
                 <div class="severity-name">{{$t('overall.result.total')}}</div>
                 <div class="severity-value">{{alertRuleData.alertNum}}</div>

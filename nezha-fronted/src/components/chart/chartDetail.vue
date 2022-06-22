@@ -68,7 +68,7 @@
             <div class="basic-info-table-value" v-if="chartDetail">
               <i :class="chartDetail.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
               <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
-                <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
+                <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
                 <div class="severity-info" style='justify-content: space-between'>
                   <div class="severity-name">{{$t('overall.result.total')}}</div>
                   <div class="severity-value">{{chartDetail.alertNum}}</div>
@@ -118,7 +118,7 @@
             <div class="basic-info-table-value" v-if="chartDetail">
               <i :class="chartDetail.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
               <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
-                <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
+                <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
                 <div class="severity-info" style='justify-content: space-between'>
                   <div class="severity-name">{{$t('overall.result.total')}}</div>
                   <div class="severity-value">{{chartDetail.alertNum}}</div>
@@ -131,7 +131,7 @@
             <div class="basic-info-table-title">{{$t('overall.state')}}</div>
             <div class="basic-info-table-value">
               <span style="width: auto">
-              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('project.metrics.metrics')}} </span>
+              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('overall.metric')}} </span>
               <span v-if="chartDetail && chartDetail.configs[0].state === 0">
                 <span class="active-icon red-bg inline-block"></span>
               </span>

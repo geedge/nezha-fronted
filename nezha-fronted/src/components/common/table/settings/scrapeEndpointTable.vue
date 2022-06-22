@@ -111,7 +111,7 @@ export default {
     return {
       tableTitle: [
         {
-          label: this.$t('overall.endpoint'),
+          label: this.$t('asset.endpoint'),
           prop: 'endpoint',
           show: true
         }, {

@@ -163,7 +163,7 @@ export default {
         }, {
           type: 'endpoint',
           isSelect: true,
-          title: this.$t('overall.endpoint')
+          title: this.$t('asset.endpoint')
         }, {
           type: 'alertrule',
           isSelect: true,

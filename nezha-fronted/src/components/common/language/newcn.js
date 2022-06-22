@@ -29,7 +29,7 @@ const newcn = {
     system: {
       configTitle: '系统配置',
       configTip: '请输入管理员的用户名和密码，并设置Nezha WEB模块的安装信息，如IP:port',
-      federation: '联邦',
+      federation: '集群',
       federationEnable: '可用',
       federationDisable: '不可用'
     },
@@ -77,7 +77,8 @@ const newcn = {
     host: '不合法的IP',
     number: '必须是数字',
     port: '不合法的端口',
-    special: '不能包含特殊字符'
+    special: '不能包含特殊字符',
+    unavailable: '不可用'
   },
   profile: {
     username: '用户名'

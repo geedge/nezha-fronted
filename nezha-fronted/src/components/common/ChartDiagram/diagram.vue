@@ -355,7 +355,7 @@ export default {
   name: 'diagram',
   data () {
     return {
-      title: this.$t('overall.customPicture'),
+      title: this.$t('overall.uploadCustomPicture'),
       objChange: false, // project 变化 用于判断 init是否执行完成 执行完成 才可以执行下次变化
       chartDataInfo: {},
       topoPrevData: {}, // 预览数据

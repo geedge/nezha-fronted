@@ -1,7 +1,7 @@
 <template>
   <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-project-endpoint">
-      <div class="right-box-title">{{ moduleName }} / {{$t('overall.endpoint')}}</div>
+      <div class="right-box-title">{{ moduleName }} / {{$t('asset.endpoint')}}</div>
       <nz-data-list
         ref="dataList"
         :api="url"
@@ -238,7 +238,7 @@ export default {
       this.esc(false)
     },
     messageStyle (e) {
-      if (e.column.label == 'Alerts' || e.column.label == this.$t('alert.alertMessage')) {
+      if (e.column.label == 'Alerts' || e.column.label == this.$t('overall.alert')) {
         if (e.row.alertNum > 0) {
           return 'danger'
         } else {

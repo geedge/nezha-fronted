@@ -375,7 +375,7 @@ export default {
       searchMetrics: [
         {
           value: 'Metrics',
-          label: this.$t('project.metrics.metrics'),
+          label: this.$t('overall.metric'),
           icon: 'nz-icon nz-icon-Metrics'
         },
         {
@@ -384,7 +384,7 @@ export default {
           icon: 'nz-icon nz-icon-logs'
         }
       ],
-      selectValue: this.$t('project.metrics.metrics'),
+      selectValue: this.$t('overall.metric'),
       selectIcon: 'nz-icon nz-icon-Metrics',
       showMetrics: true,
       promqlCount: 1,

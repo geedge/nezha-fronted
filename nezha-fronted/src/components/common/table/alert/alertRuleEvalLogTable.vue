@@ -47,7 +47,7 @@
         <template v-else-if="item.prop === 'duration'">
           <el-tooltip :disabled="!scope.row.etts" effect="light" placement="right">
             <div slot="content">
-              {{$t('config.terminallog.endTime')}}<br/>
+              {{$t('overall.endTime')}}<br/>
               {{utcTimeToTimezoneStr(scope.row.etts)}}
             </div>
             <span>{{getDuration(scope.row)}}</span>

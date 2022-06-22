@@ -341,7 +341,7 @@ export default {
           show: true,
           minWidth: '100'
         }, {
-          label: this.$t('asset.dc'),
+          label: this.$t('overall.dc'),
           prop: 'dc',
           show: true,
           minWidth: '100'
@@ -409,7 +409,7 @@ export default {
         },
         {
           id: 11,
-          name: this.$t('asset.dc'),
+          name: this.$t('overall.dc'),
           type: 'input',
           label: 'dc',
           disabled: false

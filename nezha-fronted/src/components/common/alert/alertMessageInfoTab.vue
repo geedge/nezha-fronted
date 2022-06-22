@@ -84,7 +84,7 @@ export default {
         label: this.$t('overall.asset')
       }, {
         key: 'endpoint',
-        label: this.$t('overall.endpoint')
+        label: this.$t('asset.endpoint')
       }, {
         key: 'module',
         label: this.$t('overall.module')

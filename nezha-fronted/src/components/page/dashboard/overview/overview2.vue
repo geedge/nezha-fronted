@@ -79,7 +79,7 @@
                 <span class="over-num" v-if="(endpointData ? endpointData.total : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("overall.endpoint")}}</div>
+              <div class="content-col-content-title">{{$t("asset.endpoint")}}</div>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@
       <div class="content-row-box">
         <div class="content-col-box">
           <div class="content-col-title">
-            <span>{{$t("dashboard.overview.projectTopoLogy")}}</span>
+            <span>{{$t("dashboard.panel.chartForm.typeVal.topology.label")}}</span>
             <!--<span class="content-col-title-tools">-->
               <!--<time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>-->
               <!--<span class="content-col-title-tool">-->
@@ -899,19 +899,19 @@ export default {
         const prometheusOption = chartConfig.getOption('tooltipPie')
         endpointOption.series[0].label.formatter = data.endpointTotal + ''
         endpointOption.series[0].data = [
-          { name: vm.$t('dashboard.overview.asset.pingUp'), value: data.endpointUp ? data.endpointUp : 0 },
+          { name: vm.$t('config.agent.up'), value: data.endpointUp ? data.endpointUp : 0 },
           { name: vm.$t('asset.down'), value: data.endpointDown ? data.endpointDown : 0 },
           { name: vm.$t('asset.suspended'), value: data.endpointSuspended ? data.endpointSuspended : 0 }
         ]
         endpointOption.title.text = vm.$t('project.endpoint.endpoint')
-        endpointOption.legend.data = [vm.$t('dashboard.overview.asset.pingUp'), vm.$t('asset.down'), vm.$t('asset.suspended')]
+        endpointOption.legend.data = [vm.$t('config.agent.up'), vm.$t('asset.down'), vm.$t('asset.suspended')]
         prometheusOption.series[0].label.formatter = data.promTotal + ''
         prometheusOption.series[0].data = [
-          { name: vm.$t('dashboard.overview.asset.pingUp'), value: data.promUp ? data.promUp : 0 },
+          { name: vm.$t('config.agent.up'), value: data.promUp ? data.promUp : 0 },
           { name: vm.$t('asset.down'), value: data.promDown ? data.promDown : 0 }
         ]
         prometheusOption.title.text = 'Prometheus'
-        prometheusOption.legend.data = [vm.$t('dashboard.overview.asset.pingUp'), vm.$t('asset.down')]
+        prometheusOption.legend.data = [vm.$t('config.agent.up'), vm.$t('asset.down')]
         tooltipEndpointChart.setOption(endpointOption, true)
         tooltipPrometheusChart.setOption(prometheusOption, true)
       }, 100)
@@ -1262,7 +1262,7 @@ export default {
                 <div style="line-height: 50px">${this.$t('asset.left.ping')}</div>
                 <div class="tooltip-asset--sub-rows">
                   <div class="tooltip-asset--sub-row">
-                    <div class="sub-row--label">${this.$t('dashboard.overview.asset.pingUp')}</div>
+                    <div class="sub-row--label">${this.$t('config.agent.up')}</div>
                     <div class="sub-row--value"><div class="sign green-sign"></div><span>${dcStat.assetPingUp}</span></div>
                   </div>
                   <div class="tooltip-asset--sub-row">

@@ -8,7 +8,7 @@
       :class="popperClass">
       <div class="el-time-range-picker__content">
         <div class="el-time-range-picker__cell">
-          <div class="el-time-range-picker__header">{{ t('el.datepicker.startTime') }}</div>
+          <div class="el-time-range-picker__header">{{ t('overall.startTime') }}</div>
           <div
             :class="{ 'has-seconds': showSeconds, 'is-arrow': arrowControl }"
             class="el-time-range-picker__body el-time-panel__content">

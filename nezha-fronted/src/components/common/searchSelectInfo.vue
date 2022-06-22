@@ -75,11 +75,11 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   pingStatus: [
     {
       value: '0',
-      label: i18n.t('asset.pingInactive')
+      label: i18n.t('license.inactive')
     },
     {
       value: '1',
-      label: i18n.t('asset.pingActive')
+      label: i18n.t('overall.active')
     }
   ],
   credentialType: [
@@ -98,19 +98,19 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     },
     {
       value: 'update',
-      label: i18n.t('config.operationlog.operations.update')
+      label: i18n.t('profile.update')
     },
     {
       value: 'query',
-      label: i18n.t('config.operationlog.operations.query')
+      label: i18n.t('overall.query')
     },
     {
       value: 'import',
-      label: i18n.t('config.operationlog.operations.import')
+      label: i18n.t('overall.importExcel')
     },
     {
       value: 'export',
-      label: i18n.t('config.operationlog.operations.export')
+      label: i18n.t('overall.exportExcel')
     },
     {
       value: 'delete',
@@ -118,7 +118,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     },
     {
       value: 'reset',
-      label: i18n.t('config.operationlog.operations.reset')
+      label: i18n.t('overall.reset')
     },
     {
       value: 'unknown',
@@ -126,11 +126,11 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     },
     {
       value: 'login',
-      label: i18n.t('config.operationlog.operations.login')
+      label: i18n.t('login.login')
     },
     {
       value: 'logout',
-      label: i18n.t('config.operationlog.operations.logout')
+      label: i18n.t('overall.signOut')
     }
   ],
   alertMessageState: [
@@ -150,7 +150,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     },
     {
       value: 'TELNET',
-      label: i18n.t('config.terminallog.TELNET')
+      label: i18n.t('asset.telnetProtocol')
     }
   ],
   state: [
@@ -250,7 +250,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   searchMetrics: [
     {
       id: 1,
-      name: i18n.t('project.metrics.metrics'),
+      name: i18n.t('overall.metric'),
       searchType: 'alertTypes'
     },
     {

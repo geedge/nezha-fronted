@@ -216,7 +216,7 @@ export default {
           endpointTabTitle: [
             { prop: 'panelTab', name: this.$t('overall.detail') },
             { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
-            { prop: 'Metrics', name: this.$t('project.metrics.metrics') },
+            { prop: 'Metrics', name: this.$t('overall.metric') },
             { prop: 'log', name: this.$t('overall.logs') }
           ]
         },
@@ -274,7 +274,7 @@ export default {
       const tabs = [
         { prop: 'panelTab', name: this.$t('overall.detail') },
         { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
-        { prop: 'Metrics', name: this.$t('project.metrics.metrics') }
+        { prop: 'Metrics', name: this.$t('overall.metric') }
       ]
       if (hasLog) {
         tabs.push({ prop: 'log', name: this.$t('overall.logs') })

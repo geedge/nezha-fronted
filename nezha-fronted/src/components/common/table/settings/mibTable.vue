@@ -146,7 +146,7 @@ export default {
           show: false,
           minWidth: 120
         }, {
-          label: this.$t('config.mib.updateAt'),
+          label: this.$t('alert.silence.upTime'),
           prop: 'updateAt',
           show: false,
           minWidth: 150

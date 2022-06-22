@@ -26,7 +26,7 @@
             </el-select>
           </el-form-item>
           <!--chartTemp list-->
-          <el-form-item :label="$t('project.module.ChartTemplate')" prop="pid">
+          <el-form-item :label="$t('overall.chartTemp')" prop="pid">
             <el-select id="chart-box-group"
                        v-model="editChartTemp.pid"
                        class="right-box__select" clearable
