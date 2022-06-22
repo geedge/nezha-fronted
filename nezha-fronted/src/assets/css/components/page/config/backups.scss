@@ -193,14 +193,17 @@
   .el-checkbox-button__inner{
     background-color:$--background-color-empty;
   }
+  .el-checkbox-button.is-checked{
+    border: 1px solid #fbb569 !important;
+  }
   .el-checkbox-button.is-checked .el-checkbox-button__inner {
     color: #fff;
     background-color: #FA901C;
     border-color: #FA901C;
-    border: 1px solid #FA901C;
-    margin-right: -1px;
+    // margin-right: -1px;
     -webkit-box-shadow: -1px 0 0 0 #fcbc77;
     box-shadow: -1px 0 0 0 #fcbc77;
+    border-radius: 0;
   }
   .nz-icon-delete:before{
     color: $--color-text-regular;

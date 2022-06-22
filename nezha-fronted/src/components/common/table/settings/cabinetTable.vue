@@ -82,12 +82,12 @@ export default {
           show: true
         },
         {
-          label: this.$t('asset.uSize'),
+          label: this.$t('config.cab.uSize'),
           prop: 'uSize',
           show: true
         },
         {
-          label: this.$t('config.dc.assets'),
+          label: this.$t('asset.asset'),
           prop: 'assetNum',
           show: true
         },

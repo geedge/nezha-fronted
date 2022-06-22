@@ -32,6 +32,7 @@
           @addSilence="addSilence"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @topology="topology"
           @selectionChange="selectionChange"
           ></asset-table>
       </template>
@@ -103,9 +104,9 @@ export default {
           label: 'manageIp',
           disabled: false
         }, {
-          name: this.$t('asset.state'),
+          name: this.$t('overall.state'),
           type: 'assetState',
-          label: 'stateIds',
+          label: 'assetState',
           id: 'stateIds',
           readonly: true,
           disabled: false
@@ -283,6 +284,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
+        this.searchLabel = {}
         this.searchLabel.dcIds = n.id
         if (this.from === fromRoute.model) {
           delete this.searchLabel.dcIds

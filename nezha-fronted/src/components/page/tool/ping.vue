@@ -24,7 +24,7 @@
 
         <div  class="tools-header-center">
           <el-form size="small" ref="ruleForm" :model="ruleForm" :rules="formRules" label-position="right" label-width="150px">
-            <el-form-item style="margin-bottom:10px" :label="$t('ping.dcs')">
+            <el-form-item style="margin-bottom:10px" :label="$t('config.dc.dc')">
 <!--            <el-select v-model="checked" multiple @change="checkedChange"  >-->
 <!--              <el-option-->
 <!--                :key="item.id"-->
@@ -69,7 +69,7 @@
             <el-form-item prop="timeout" style="margin-bottom:10px" :label="$t('ping.timeout')">
               <div class="wrap" style="height:32px">
                 <el-input v-model.number="ruleForm.timeout" placeholder="" >
-                  <template slot="append">{{$t('config.system.basic.second')}}</template>
+                  <template slot="append">{{$t('alert.config.second')}}</template>
                 </el-input>
               </div>
             </el-form-item>
@@ -98,7 +98,7 @@
             </el-button>
           </div>
         </div>
-        <div class="tools-header-title">{{$t('project.endpoint.configs')}}</div>
+        <div class="tools-header-title">{{$t('project.module.configs')}}</div>
       </div>
     </template>
 

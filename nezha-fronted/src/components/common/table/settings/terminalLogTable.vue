@@ -59,14 +59,14 @@
         <template v-else-if="item.prop === 'duration'">
           <el-tooltip effect="light" placement="right">
             <div slot="content">
-              {{$t('config.terminallog.endTime')}}<br/>
+              {{$t('overall.endTime')}}<br/>
               {{utcTimeToTimezoneStr(scope.row.endTime)}}
             </div>
             <span>{{getDuration(scope.row)}}</span>
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'authType'">
-          <span v-if="scope.row.authType == 1">{{$t('config.terminallog.pin')}}</span>
+          <span v-if="scope.row.authType == 1">{{$t('login.pin')}}</span>
           <span v-else-if="scope.row.authType == 2">{{$t('config.terminallog.key')}}</span>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -133,7 +133,7 @@ export default {
     return {
       tableTitle: [
         {
-          label: this.$t('config.terminallog.id'),
+          label: this.$t('asset.id'),
           prop: 'id',
           show: true,
           width: 80,
@@ -144,13 +144,13 @@ export default {
           minWidth: 200,
           show: true
         }, {
-          label: this.$t('config.terminallog.username'),
+          label: this.$t('config.operationlog.username'),
           prop: 'username',
           minWidth: 200,
           show: true
         },
         {
-          label: this.$t('config.terminallog.source'),
+          label: this.$t('ping.sourceIp'),
           prop: 'sourceIp',
           minWidth: 115,
           show: true,
@@ -162,12 +162,12 @@ export default {
           show: true
         },
         {
-          label: this.$t('config.terminallog.protocol'),
+          label: this.$t('webshell.protocol'),
           prop: 'protocol',
           show: true
         },
         {
-          label: this.$t('config.terminallog.startTime'),
+          label: this.$t('overall.startTime'),
           prop: 'startTime',
           minWidth: 100,
           show: true
@@ -184,7 +184,7 @@ export default {
           show: false
         },
         {
-          label: this.$t('config.terminallog.status'), // killusername鼠标悬停形式
+          label: this.$t('overall.state'), // killusername鼠标悬停形式
           prop: 'state',
           show: true,
           width: 150,

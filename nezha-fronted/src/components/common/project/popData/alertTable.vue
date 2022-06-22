@@ -1,7 +1,7 @@
 <template>
   <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-project-alert">
-      <div class="right-box-title">{{ moduleName }} / {{$t('dashboard.overview.alert.alertMessage')}}</div>
+      <div class="right-box-title">{{ moduleName }} / {{$t('project.topology.alert')}}</div>
       <nz-data-list
         ref="dataList"
         :api="url"
@@ -126,12 +126,12 @@ export default {
           show: true,
           minWidth: 100
         }, {
-          label: this.$t('alert.list.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           width: 100
         }, {
-          label: this.$t('alert.startAt'),
+          label: this.$t('overall.startTime'),
           prop: 'startAt',
           show: true,
           width: 150

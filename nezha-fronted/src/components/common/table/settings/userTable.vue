@@ -33,7 +33,7 @@
       :width="`${item.width}`"
     >
       <template slot="header">
-        <span class="data-column__span">{{item.label}}</span>
+        <span class="data-column__span" :class="{'margin-l-10': item.prop === 'name'}">{{item.label}}</span>
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
@@ -146,13 +146,13 @@ export default {
           sortable: 'custom'
         },
         // {
-        //   label: this.$t('config.user.username'),
+        //   label: this.$t('login.username'),
         //   prop: 'username',
         //   show: true,
         //   width: 150
         // },
         {
-          label: this.$t('config.user.roles'),
+          label: this.$t('profile.role'),
           prop: 'roles',
           show: true,
           width: 150
@@ -162,17 +162,17 @@ export default {
           show: true,
           minWidth: 150
         }, {
-          label: this.$t('config.user.lastLoginTime'),
+          label: this.$t('profile.lastLoginTime'),
           prop: 'lastLoginTime',
           show: true,
           width: 200
         }, {
-          label: this.$t('config.user.lastLoginIp'),
+          label: this.$t('profile.lastLoginIp'),
           prop: 'lastLoginIp',
           show: true,
           width: 150
         }, {
-          label: this.$t('config.user.source'),
+          label: this.$t('profile.source'),
           prop: 'source',
           show: true,
           width: 150
@@ -182,7 +182,7 @@ export default {
           show: true,
           width: 150
         }, {
-          label: this.$t('config.user.state'),
+          label: this.$t('overall.state'),
           prop: 'status',
           show: true,
           width: 100

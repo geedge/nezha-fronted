@@ -3,7 +3,7 @@
     <div class="right-box right-box-asset-meta" v-clickoutside="{obj:editAssetMeta,func:clickOutside}">
       <!-- begin--标题-->
       <div class="right-box__header">
-        <div class="header__title">{{editAssetMeta.id ? $t("config.assetLabel.editMeta"): $t("config.assetLabel.addMeta")}}
+        <div class="header__title">{{editAssetMeta.id ? $t("config.assetLabel.editMeta"): $t("overall.createLabel")}}
         </div>
         <div class="header__operation">
           <span v-cancel="{obj: editAssetMeta, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
@@ -13,18 +13,18 @@
       <div class="right-box__container">
         <div class="container__form">
           <el-form label-width="120px"  :model="editAssetMeta" label-position = "top" ref="editAssetMetaForm" :rules="rules">
-            <el-form-item :label='$t("config.assetLabel.name")' prop="name">
+            <el-form-item :label='$t("overall.name")' prop="name">
               <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetMeta.name" size="small" id="editAssetMeta-box-input-name"></el-input>
             </el-form-item>
-            <el-form-item :label='$t("config.assetLabel.key")' prop="metaKey">
+            <el-form-item :label='$t("overall.key")' prop="metaKey">
               <el-input placeholder="" maxlength="128" show-word-limit v-model="editAssetMeta.metaKey" size="small" id="editAssetMeta-box-input-key"></el-input>
             </el-form-item>
-            <el-form-item :label='$t("config.assetLabel.group")' prop="groupId">
+            <el-form-item :label='$t("dashboard.panel.chartForm.group")' prop="groupId">
               <el-select v-model="editAssetMeta.groupId" size="small" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" :popper-append-to-body="false">
                 <el-option v-for="(item, index) in groupData" :key="index" :value="item.id" :label="item.name"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("config.assetLabel.search")' prop="search">
+            <el-form-item :label='$t("overall.search")' prop="search">
               <el-switch
                 @change="switchSearch"
                 v-model="editAssetMeta.search"
@@ -39,7 +39,7 @@
                 inactive-value="0">
               </el-switch>
             </el-form-item>
-            <el-form-item :label='$t("config.assetLabel.type")' prop="type">
+            <el-form-item :label='$t("overall.type")' prop="type">
               <el-select v-model="editAssetMeta.type" :popper-append-to-body="false" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="selectType">
                 <el-option v-for="(item, index) in typeData" :key="index" :value="item.value" :disabled="item.disabled">
                   <div><i :class="item.icon"></i>&nbsp;&nbsp;<span>{{item.name}}</span></div>
@@ -92,7 +92,7 @@
                   <span class="datetime-header">{{$t('config.assetLabel.dateType')}}: </span>
                   <el-radio-group v-model="editAssetMeta.param.subType">
                     <el-radio :label="'date'">{{$t('config.assetLabel.date')}}</el-radio>
-                    <el-radio :label="'time'">{{$t('config.assetLabel.time')}}</el-radio>
+                    <el-radio :label="'time'">{{$t('overall.time')}}</el-radio>
                     <el-radio :label="'datetime'">{{$t('config.assetLabel.datetimes')}}</el-radio>
                   </el-radio-group>
                 </el-row>
@@ -112,7 +112,7 @@
               </div>
             </el-form-item>
             <el-form-item :label='$t("overall.remark")' prop="remark">
-              <el-input placeholder="" maxlength="256" type="textarea" show-word-limit v-model="editAssetMeta.remark" size="small" id="editAssetMeta-box-input-remark"></el-input>
+              <el-input placeholder="" maxlength="256" type="textarea" show-word-limit v-model="editAssetMeta.remark" size="small" :rows="2" id="editAssetMeta-box-input-remark"></el-input>
             </el-form-item>
 <!--            <el-form-item :label='$t("config.assetLabel.example")'>-->
 <!--              <assetTagEx :param="editAssetMeta.param" :type="editAssetMeta.type.toUpperCase()"/>-->

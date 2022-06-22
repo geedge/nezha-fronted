@@ -90,7 +90,7 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('config.menus.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           minWidth: 150,
@@ -102,13 +102,13 @@ export default {
           minWidth: 150,
           sortable: 'custom'
         }, {
-          label: this.$t('config.menus.lang'),
+          label: this.$t('config.user.language'),
           prop: 'lang',
           show: true,
           minWidth: 150,
           sortable: 'custom'
         }, {
-          label: this.$t('config.menus.value'),
+          label: this.$t('overall.labels'),
           prop: 'value',
           minWidth: 150,
           show: true

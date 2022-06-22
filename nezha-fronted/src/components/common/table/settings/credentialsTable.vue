@@ -125,7 +125,7 @@ export default {
         minWidth: 160,
         sortable: 'custom'
       }, {
-        label: this.$t('config.mib.credential.port'),
+        label: this.$t('asset.port'),
         prop: 'port',
         show: true
       }, {

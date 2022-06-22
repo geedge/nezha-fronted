@@ -46,6 +46,7 @@ router.beforeEach((to, from, next) => {
               next({ path: '/setup' })
             } else {
               if (localStorage.getItem('nz-token')) {
+                store.commit('i18nReady', false)
                 post('/sys/user/permissions', { token: localStorage.getItem('nz-token') }).then(res => {
                   if (res.code === 200) {
                     const menuList = sortByOrderNum(res.data.menus)
@@ -91,29 +92,33 @@ router.beforeEach((to, from, next) => {
                   }
                 })
               } else {
+                const langList = localStorage.getItem('nz-language-list')
+                if (langList) {
+                  store.commit('setLangList', JSON.parse(langList))
+                }
+                if (!store.getters.i18nIsReady) {
+                  get(config.body.baseUrl + 'sys/i18n/lang').then(res => {
+                    if (res.code === 200) {
+                      loadI18n(res.data)
+                      store.commit('i18nReady', true)
+                    }
+                  })
+                }
                 next()
               }
             }
           }
         })
-        if (!store.getters.i18nIsReady) {
-          get(config.body.baseUrl + 'sys/i18n/lang').then(res => {
-            if (res.code === 200) {
-              loadI18n(res.data)
-              store.commit('i18nReady', true)
-            }
-          })
-        }
       })
     })
   } else if (localStorage.getItem('nz-token')) {
     const i18nRequest = new Promise(resolve => {
       // 从localStorage加载i18n
+      const langList = localStorage.getItem('nz-language-list')
+      if (langList) {
+        store.commit('setLangList', JSON.parse(langList))
+      }
       if (!store.getters.i18nIsReady) {
-        const langList = localStorage.getItem('nz-language-list')
-        if (langList) {
-          store.commit('setLangList', JSON.parse(langList))
-        }
         Vue.http.get(configUrl).then(config => {
           get(config.body.baseUrl + 'sys/i18n/lang').then(response => {
             if (response.code === 200) {

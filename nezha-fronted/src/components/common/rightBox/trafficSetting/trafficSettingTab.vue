@@ -22,7 +22,7 @@
           <div class="mib-browser-ad-search">
             <el-row class="mib-browser-ad-search-item" style="font-weight: bold">{{$t('config.dc.traffic.snmpSetting')}}</el-row>
             <el-row class="mib-browser-ad-search-item">
-              <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t("project.endpoint.port")}}</div></el-col>
+              <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t("asset.port")}}</div></el-col>
               <el-col :span="17">
                 <el-input class="input-x-mini-24" v-model.number="assetSetting.port" id="traffic-setting-port"></el-input>
               </el-col>
@@ -34,7 +34,7 @@
               </el-col>
             </el-row>
             <el-row class="mib-browser-ad-search-item">
-              <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t('project.module.version')}}</div></el-col>
+              <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t('overall.version')}}</div></el-col>
               <el-col :span="17">
                 <el-radio-group v-model.number="assetSetting.version" id="traffic-setting-version">
                   <el-radio-button :label="2"></el-radio-button>
@@ -77,7 +77,7 @@
 
               <el-row class="mib-browser-ad-search-item same-label-width" v-if="assetSetting.auth.securityLevel == 'authNoPriv' || assetSetting.auth.securityLevel == 'authPriv'">
                 <el-col :span="6">
-                  <div class="mib-browser-ad-search-label">{{$t('project.module.authProtocol')}}</div>
+                  <div class="mib-browser-ad-search-label">{{$t('asset.authProtocol')}}</div>
                 </el-col>
                 <el-col :span="17">
                   <el-radio-group v-model="assetSetting.auth.authProtocol" id="traffic-setting-authProtocol">
@@ -264,7 +264,7 @@ export default {
           errRows: []
         },
         {
-          label: this.$t('config.dc.traffic.tags'),
+          label: this.$t('overall.tag'),
           prop: 'tags',
           required: false,
           errRows: []

@@ -161,6 +161,7 @@ export default {
             self.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
             self.getTableData()
+            bus.$emit('delTableRow', [row.id])
           } else {
             this.$message.error(response.msg)
           }
@@ -313,7 +314,7 @@ export default {
       chartInfo.type = 'topologyLink'
       chartInfo.linkType = type
       chartInfo.datasource = 'topology'
-      chartInfo.name = '关系图'
+      chartInfo.name = this.$t('overall.topology')
       this.$store.dispatch('showTopology', chartInfo)
     },
     closeDialog () {
@@ -354,6 +355,8 @@ export default {
     }
     if (this.$route.query.orderBy && !this.isSubList) {
       this.orderBy = this.$route.query.orderBy
+    } else if (this.isSubList) {
+      return
     }
     let searchKeys = {}
     if (path === 'dc') {

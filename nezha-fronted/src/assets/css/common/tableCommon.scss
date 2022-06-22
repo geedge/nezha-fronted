@@ -49,12 +49,10 @@
       .nz-icon-xingzhuang{
         color: $--color-text-regular;
         cursor: pointer;
-        transform:translateY(2px)
       }
       .nz-icon-a-xingzhuang2{
         color:#FF9219 !important;
         cursor: pointer;
-        transform:translateY(2px) scale(1.2);
       }
     }
   }
@@ -209,7 +207,7 @@
       color: $--color-primary;
     }
   }
-  .mt-10.table-container.nz-table2 {
+  .mt-10.table-container.nz-table-list {
     .el-table:not(.chart-table) {
       .gutter {
         position: fixed;
@@ -222,7 +220,7 @@
     }
   }
   /* 上滑resize工具条--end */
-  .nz-table2 {
+  .nz-table-list {
     position: relative;
     padding: 0 20px;
     width: 100%;
@@ -234,7 +232,10 @@
       width: 100%;
       border: 1px solid $--border-color-light;
       border-bottom: none;
-
+      .el-checkbox.is-disabled{
+        line-height: 1;
+        height: 16px;
+      }
       .caret-wrapper {
         height: 23px;
         .sort-caret.ascending {
@@ -349,7 +350,7 @@
   .el-table__body-wrapper .is-hidden, .el-table__header-wrapper .is-hidden {
     visibility: hidden;
   }
-  .nz-table2 {
+  .nz-table-list {
     .el-table--border td {
       border-right: none !important;
     }
@@ -397,7 +398,7 @@
   .main-container {
    padding: 0;
   }
-  .list-page .nz-table2 .el-table:not(.chart-table) .gutter {
+  .list-page .nz-table-list .el-table:not(.chart-table) .gutter {
     position: fixed;
     right: 31px;
     height: 42px;
@@ -551,7 +552,7 @@
   height: 100%;
 }
 .list-page.detail-view .nz-detail-view-right{
-  .nz-table2 .el-table--border {
+  .nz-table-list .el-table--border {
     height: calc(100% - 45px) !important;
     .gutter {
       position: fixed;

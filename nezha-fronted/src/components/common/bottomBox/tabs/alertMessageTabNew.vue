@@ -158,9 +158,11 @@ export default {
       immediate: true,
       handler (n) {
         if (n) {
+          this.searchLabel = {}
           if (this.from === fromRoute.alertSilence) {
             this.state = '2'
           }
+          this.searchLabel = {}
           this.getTableData()
         }
       }
@@ -201,7 +203,7 @@ export default {
         searchLabelList: [
           {
             id: 26,
-            name: this.$t('alert.list.id'),
+            name: this.$t('asset.id'),
             type: 'input',
             label: 'ids',
             disabled: false

@@ -73,6 +73,28 @@ const newen = {
     verifyPlaceholder: 'verify code',
     bindFail: 'Binding failure'
   },
+  asset: {
+    host: 'Host',
+    port: 'Port',
+    talon: {
+      enable: 'Enable'
+    }
+  },
+  validate: {
+    required: 'Required',
+    host: 'Invalid Host',
+    number: 'Numberic',
+    port: 'Invalid port',
+    special: 'Cannot contain special characters',
+    unavailable: 'Unavailable'
+  },
+  profile: {
+    username: 'User name'
+  },
+  overall: {
+    system: 'System',
+    back: 'Back'
+  },
   ...enLocale
 }
 

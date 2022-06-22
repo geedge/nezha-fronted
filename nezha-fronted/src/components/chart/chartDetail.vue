@@ -17,7 +17,7 @@
             <div class="basic-info-table-value">{{chartDetail? chartDetail.name : '--' }}</div>
           </div>
           <div class="basic-info-table-list">
-            <div class="basic-info-table-title">{{$t('overall.manageIp')}}</div>
+            <div class="basic-info-table-title">{{$t('asset.manageIp')}}</div>
             <div class="basic-info-table-value">{{chartDetail ? chartDetail.manageIp : '--'}}</div>
           </div>
           <div class="basic-info-table-list">
@@ -40,15 +40,15 @@
             <div class="basic-info-table-value">{{chartDetail.dc ? chartDetail.dc.name : '--'}}</div>
           </div>
           <div class="basic-info-table-list">
-            <div class="basic-info-table-title">{{$t('overall.cabinet')}}</div>
+            <div class="basic-info-table-title">{{$t('asset.cabinet')}}</div>
             <div class="basic-info-table-value">{{chartDetail.cabinet ? chartDetail.cabinet.name : '--'}}</div>
           </div>
           <div class="basic-info-table-list">
-            <div class="basic-info-table-title">{{$t('overall.brand')}}</div>
+            <div class="basic-info-table-title">{{$t('asset.brand')}}</div>
             <div class="basic-info-table-value">{{chartDetail.brand ? chartDetail.brand.name : '--'}}</div>
           </div>
           <div class="basic-info-table-list">
-            <div class="basic-info-table-title">{{$t('overall.model')}}</div>
+            <div class="basic-info-table-title">{{$t('asset.model')}}</div>
             <div class="basic-info-table-value">{{chartDetail.model ? chartDetail.model.name : '--'}}</div>
           </div>
           <div class="basic-info-table-list">
@@ -68,7 +68,7 @@
             <div class="basic-info-table-value" v-if="chartDetail">
               <i :class="chartDetail.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
               <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
-                <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
+                <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
                 <div class="severity-info" style='justify-content: space-between'>
                   <div class="severity-name">{{$t('overall.result.total')}}</div>
                   <div class="severity-value">{{chartDetail.alertNum}}</div>
@@ -118,7 +118,7 @@
             <div class="basic-info-table-value" v-if="chartDetail">
               <i :class="chartDetail.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
               <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
-                <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
+                <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
                 <div class="severity-info" style='justify-content: space-between'>
                   <div class="severity-name">{{$t('overall.result.total')}}</div>
                   <div class="severity-value">{{chartDetail.alertNum}}</div>
@@ -131,7 +131,7 @@
             <div class="basic-info-table-title">{{$t('overall.state')}}</div>
             <div class="basic-info-table-value">
               <span style="width: auto">
-              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('project.endpoint.metrics')}} </span>
+              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('overall.metric')}} </span>
               <span v-if="chartDetail && chartDetail.configs[0].state === 0">
                 <span class="active-icon red-bg inline-block"></span>
               </span>
@@ -143,7 +143,7 @@
               </span>
             </span>
               <span style="width: auto">
-                <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs active" /> {{$t('project.endpoint.logs')}} </span>
+                <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs active" /> {{$t('overall.logs')}} </span>
                 <span v-if="chartDetail && chartDetail.configs[1].state === 0">
                   <span class="active-icon red-bg inline-block"></span>
                 </span>
@@ -210,6 +210,7 @@ export default {
       this.showBasicInfo = !this.showBasicInfo
     },
     init () {
+      if (window.dataJson) { return }
       this.loading = true
       const weekDays = this.getWeeksTime()
       if (this.trendTimer) {

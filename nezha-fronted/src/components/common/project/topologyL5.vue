@@ -103,7 +103,7 @@
           <button @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light"
                   style="margin-right: 20px"
           >
-             {{$t('project.topology.preview')}}
+             {{$t('overall.preview')}}
            </button>
             <button v-if="isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="previewExit"
                     style="margin-right: 20px"
@@ -114,7 +114,7 @@
                    :disabled="prevent_opt.save"
                    :class="{'nz-btn-disabled':prevent_opt.save}"
                    style="margin-right: 20px">
-             {{$t('project.topology.save')}}
+             {{$t('overall.save')}}
            </button>
            <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-right: 20px" @click="cancelTopology">
              {{$t('project.topology.exit')}}
@@ -134,14 +134,14 @@
               class="pickTime margin-r-10">
             </pick-time>
             <button v-has="'project_edit'" class="top-tool-btn margin-r-10" type="button" @click="editTopology">
-              <i :title="$t('project.topology.edit')" class="nz-icon nz-icon-edit"></i>
+              <i :title="$t('overall.edit')" class="nz-icon nz-icon-edit"></i>
             </button>
             <button class="top-tool-btn" type="button" @click="changeScreen">
               <i :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'" class="nz-icon"></i>
             </button>
           </div>
         </div>
-        <div class="nz-table2">
+        <div class="nz-table-list">
           <!--悬浮network部分-->
           <div class="network-info">
             <div v-if="popDataShow.main">
@@ -326,7 +326,7 @@
               <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="imgUpload" :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
                       style="margin-right: 20px">
-             {{$t('project.topology.save')}}
+             {{$t('overall.save')}}
            </button>
             </span>
       </div>
@@ -351,7 +351,7 @@ import {
   myCubec,
   myCubeAnchors
 } from './L5/services/canvas.js'
-import { getTopology, setTopology, getTopologyImg, setTopologyImg } from '../js/common'
+import { getTopology, setTopology } from '../js/common'
 import CanvasProps from './L5/CanvasProps'
 import topologyTopTool from './L5//topologyTopTool'
 import CanvasContextMenu from './L5/CanvasContextMenu'
@@ -373,13 +373,14 @@ const canvasOptions = {
   disableEmptyLine: true,
   autoExpandDistance: 0,
   minScale: 0.2,
-  scaleKey: -1
+  scaleKey: -1,
+  keydown: 1
 }
 export default {
   name: 'topologyL5',
   data () {
     return {
-      title: this.$t('overall.customPicture'),
+      title: this.$t('overall.uploadCustomPicture'),
       objChange: false, // project 变化 用于判断 init是否执行完成 执行完成 才可以执行下次变化
       chartDataInfo: {},
       topoPrevData: {}, // 预览数据
@@ -444,17 +445,17 @@ export default {
       notModuleIDArr: [],
       popData: [
         {
-          top: '-40px',
-          left: '-21px',
+          top: '-41px',
+          left: '-23px',
           className: 'nz-icon-endpoint',
           id: 'endpoint',
           title: this.$t('project.topology.endpoint')
         },
-        { top: '-40px', left: '19px', className: 'nz-icon-asset', id: 'asset', title: this.$t('project.topology.asset') },
-        { top: '-4px', left: '40px', className: '', id: 'other', title: '' },
-        { top: '30px', left: '19px', className: '', id: 'other', title: '' },
-        { top: '30px', left: '-21px', className: 'nz-icon-info-normal', id: 'info', title: this.$t('project.topology.info') },
-        { top: '-4px', left: '-40px', className: 'nz-icon-gaojing', id: 'alert', title: this.$t('project.topology.alert') }
+        { top: '-41px', left: '22px', className: 'nz-icon-asset', id: 'asset', title: this.$t('asset.asset') },
+        { top: '-2px', left: '45px', className: '', id: 'other', title: '' },
+        { top: '37px', left: '22px', className: '', id: 'other', title: '' },
+        { top: '37px', left: '-23px', className: 'nz-icon-info-normal', id: 'info', title: this.$t('project.topology.info') },
+        { top: '-2px', left: '-45px', className: 'nz-icon-gaojing', id: 'alert', title: this.$t('project.topology.alert') }
       ],
       popDataShow: {
         endpoint: false,
@@ -1744,26 +1745,13 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-            if (nowImage && nowImage.data) {
-              promiseArr.push(nowImage)
-            } else {
-              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
-            }
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index].data
-              const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-              if (!nowImage || (nowImage && !nowImage.data)) {
-                setTopologyImg(item.id, JSON.stringify({
-                  data: res2[index].data,
-                  width: res2[index].width,
-                  height: res2[index].height
-                }))
-              }
               const group = this.tools.find(tool => tool.group === item.unit)
               if (group) {
                 group.children.push({
@@ -1816,12 +1804,7 @@ export default {
           }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
-              const nowImage = getTopologyImg(item.data.imageId) ? JSON.parse(getTopologyImg(item.data.imageId)) : ''
-              if (nowImage && nowImage.data) {
-                promiseArr.push(nowImage)
-              } else {
-                promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
-              }
+              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
             } else if (item.data.imageId) {
               promiseArr.push(imgDefault)
             } else {
@@ -1837,14 +1820,6 @@ export default {
             this.iconArray.forEach((item, index) => {
               if (item.id) {
                 item.image = res2[index].data
-                const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-                if (!nowImage || (nowImage && !nowImage.image)) {
-                  setTopologyImg(item.id, JSON.stringify({
-                    data: res2[index].data,
-                    width: res2[index].width,
-                    height: res2[index].height
-                  }))
-                }
               }
             })
             this.imgInit = true

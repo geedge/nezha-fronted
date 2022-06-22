@@ -29,20 +29,20 @@
           </el-switch>
         </el-form-item>
         <!--monitor-->
-        <el-form-item :label="$t('config.assetState.monitor')">
+        <el-form-item :label="$t('config.system.monitor.monitor')">
           <el-switch :active-value="1" :inactive-value="0" id="asset-state-monitor-status"
                      v-model="editAssetState.monitor">
           </el-switch>
         </el-form-item>
         <!--alert-->
-        <el-form-item :label="$t('config.assetState.alert')">
+        <el-form-item :label="$t('overall.alert')">
           <el-switch :active-value="1" :inactive-value="0" id="asset-state-alert-status"
                      v-model="editAssetState.alert">
           </el-switch>
         </el-form-item>
         <!--descrption-->
         <el-form-item :label="$t('overall.remark')" prop="remark">
-          <el-input id="asset-state-input-description" placeholder="" size="small" type="textarea" v-model="editAssetState.remark"></el-input>
+          <el-input id="asset-state-input-description" placeholder="" size="small" :rows="2" type="textarea" show-word-limit maxlength="256" v-model="editAssetState.remark"></el-input>
         </el-form-item>
       </el-form>
     </div>

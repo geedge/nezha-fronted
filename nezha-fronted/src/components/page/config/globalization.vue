@@ -84,13 +84,13 @@ export default {
             disabled: false
           },
           {
-            name: this.$t('config.menus.lang'),
+            name: this.$t('config.user.language'),
             type: 'input',
             label: 'lang',
             disabled: false
           },
           {
-            name: this.$t('config.menus.value'),
+            name: this.$t('overall.labels'),
             type: 'input',
             label: 'value',
             disabled: false

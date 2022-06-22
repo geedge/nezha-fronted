@@ -69,7 +69,7 @@
            <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
-              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
+              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
               <div class="severity-info" style='justify-content: space-between'>
                 <div class="severity-name">{{$t('overall.result.total')}}</div>
                 <div class="severity-value">{{scope.row.alertNum}}</div>
@@ -160,29 +160,29 @@ export default {
           prop: 'location',
           show: true
         }, {
-          label: this.$t('config.dc.cabinetNum'),
+          label: this.$t('asset.cabinet'),
           prop: 'cabinetNum',
           show: true,
           minWidth: 110,
           sortable: 'custom'
         }, {
-          label: this.$t('config.dc.assets'),
+          label: this.$t('asset.asset'),
           prop: 'assetNum',
           show: true,
           minWidth: 90,
           sortable: 'custom'
         }, {
-          label: this.$t('config.dc.alert'),
+          label: this.$t('overall.alert'),
           prop: 'alertNum',
           width: 120,
           show: true
         }, {
-          label: this.$t('asset.tel'),
+          label: this.$t('config.dc.tel'),
           prop: 'tel',
           show: false,
           minWidth: 100
         }, {
-          label: this.$t('asset.principal'),
+          label: this.$t('config.dc.principal'),
           prop: 'principal',
           show: false,
           minWidth: 120
@@ -197,7 +197,7 @@ export default {
           show: false,
           minWidth: 100
         }, {
-          label: this.$t('config.dc.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           minWidth: 100,

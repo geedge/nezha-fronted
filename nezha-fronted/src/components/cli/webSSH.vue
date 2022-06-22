@@ -95,7 +95,7 @@
           <div class="footer" slot="footer">
             <div class="el-message-box__btns" style="text-align: right;margin-top: 20px;">
               <button  @click="upload"  class="el-button el-button--default el-button--small">
-                <span>{{$t('webshell.uploadButtonTitle')}}</span>
+                <span>{{$t('overall.upload')}}</span>
               </button>
               <button @click="closeDialog"  class="el-button el-button--default el-button--small" >
                 <span>{{$t('overall.cancel')}}</span>
@@ -119,7 +119,7 @@
           <div class="footer" slot="footer">
             <div class="el-message-box__btns" style="text-align: right;margin-top: 20px;">
               <button @click="download"  class="el-button el-button--default el-button--small">
-                <span>{{$t('webshell.downloadButtonTitle')}}</span>
+                <span>{{$t('overall.download')}}</span>
               </button>
               <button  @click="closeDownloadDialog"  class="el-button el-button--default el-button--small">
                 <span>{{$t('overall.cancel')}}</span>
@@ -198,28 +198,28 @@
                 <el-option v-for="item in authProtocol" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("webshell.authType")' prop="authType"  @change="authTypeChange" >
+            <el-form-item :label='$t("asset.authType")' prop="authType"  @change="authTypeChange" >
               <el-select value-key="id" popper-class="config-dropdown w260 right-box-select-top right-public-box-dropdown-top" v-model="customConnect.authType" :disabled="customConnect.authProtocol === 2" placeholder="" size="small" id="webshell-box-input-protocol">
                 <el-option v-for="item in authType" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("webshell.host")' prop="host">
+            <el-form-item :label='$t("asset.host")' prop="host">
               <el-input v-model="customConnect.host" size="small"/>
             </el-form-item>
-            <el-form-item :label='$t("webshell.port")' prop="port">
+            <el-form-item :label='$t("asset.port")' prop="port">
               <el-input v-model="customConnect.port" size="small"/>
             </el-form-item>
-            <el-form-item :label='$t("webshell.authUsername")' prop="authUsername">
+            <el-form-item :label='$t("profile.username")' prop="authUsername">
               <el-input v-model="customConnect.authUsername" size="small" autocomplete="new-password"/>
             </el-form-item>
             <el-form-item
               v-if="customConnect.authType === 2"
-              :label='$t("webshell.authPriKey")'
+              :label='$t("asset.talon.token")'
               prop="authPriKey"
             >
               <el-input v-model="customConnect.authPriKey" size="small" autocomplete="new-password"/>
             </el-form-item>
-            <el-form-item :label='$t("webshell.authPin")' prop="authPin"
+            <el-form-item :label='$t("login.pin")' prop="authPin"
                           :rules="[
                   { required: customConnect.authType ===1, message:$t('validate.required'), trigger: 'change'},
                 ]">
@@ -227,13 +227,13 @@
             </el-form-item>
             <el-form-item
               v-if="customConnect.authProtocol === 2"
-              :label='$t("webshell.authUserTip")'
+              :label='$t("asset.usernamePrompt")'
               prop="authUserTip">
               <el-input v-model="customConnect.authUserTip" size="small"/>
             </el-form-item>
             <el-form-item
               v-if="customConnect.authProtocol === 2"
-              :label='$t("webshell.authPinTip")'
+              :label='$t("asset.pinPrompt")'
               prop="authPinTip"
             >
               <el-input v-model="customConnect.authPinTip" size="small"/>
@@ -318,11 +318,11 @@ export default {
       // upoload-download
 
       currentUuid: '',
-      uploadBox: { showUpload: false, title: this.$t('webshell.uploadTitle') },
+      uploadBox: { showUpload: false, title: this.$t('overall.upload') },
       uploadFile: { file: '', path: '', uuid: '' },
       uploadFileList: [],
       uploadResult: null,
-      downloadBox: { showDownload: false, title: this.$t('webshell.downloadTitle') },
+      downloadBox: { showDownload: false, title: this.$t('overall.download') },
       downloadFile: { path: '', uuid: '' },
       downloadFileList: [],
       downloadResult: null,

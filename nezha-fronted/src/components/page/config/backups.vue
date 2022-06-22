@@ -59,6 +59,7 @@
 import nzDataList from '@/components/common/table/nzDataList'
 import backupsTable from '@/components/common/table/settings/backupsTable'
 import backupsBox from '@/components/common/rightBox/administration/backupsBox'
+import bus from '@/libs/bus'
 
 export default {
   name: 'backups',
@@ -69,15 +70,15 @@ export default {
 
       url: '/sys/backup',
       customTableTitle: [
-        { label: this.$t('backup.schedule'), prop: 'schedule' },
+        { label: this.$t('alert.config.schedEnable'), prop: 'schedule' },
         { label: this.$t('backup.backupRetention'), prop: 'retention' },
-        { label: this.$t('backup.Enable'), prop: 'state' }
+        { label: this.$t('overall.enable'), prop: 'state' }
       ],
       customTableTitle2: [
-        { label: this.$t('backup.Date'), prop: 'time', minwidth: 228 },
+        { label: this.$t('config.assetLabel.date'), prop: 'time', minwidth: 228 },
         { label: this.$t('backup.File'), prop: 'fileName', minwidth: 363 },
         { label: this.$t('backup.size'), prop: 'size', minwidth: 306 },
-        { label: this.$t('backup.Description'), prop: 'Description', minwidth: 569 }
+        { label: this.$t('overall.remark'), prop: 'Description', minwidth: 569 }
       ],
       tableData: [
         {
@@ -87,11 +88,11 @@ export default {
         }
       ],
       tableData2: [
-        {
-          list: {
+        // {
+        //   list: {
 
-          }
-        }
+        //   }
+        // }
       ],
       rightBoxshow: false,
       isRefresh: ''
@@ -106,6 +107,9 @@ export default {
 
   mounted () {
     this.getTableData()
+    bus.$on('backupNow', () => {
+      this.getTableData()
+    })
   },
 
   methods: {
@@ -123,7 +127,7 @@ export default {
             }
           }
         })
-        this.$post('/sys/backup/list').then((res) => {
+        this.$get('/sys/backup/list').then((res) => {
           if (res.code === 200) {
             if (res.data) {
               this.tableData2 = res.data
@@ -143,7 +147,7 @@ export default {
           }
         })
 
-        this.$post('/sys/backup/list').then((res) => {
+        this.$get('/sys/backup/list').then((res) => {
           if (res.code === 200) {
             if (res.data) {
               this.tableData2 = res.data
@@ -151,10 +155,12 @@ export default {
           }
         })
       } else if (item == 'recent') {
-        this.$post('/sys/backup/list').then((res) => {
+        this.$get('/sys/backup/list').then((res) => {
           if (res.code === 200) {
             if (res.data) {
               this.tableData2 = res.data
+            } else {
+              this.tableData2 = []
             }
           }
         })

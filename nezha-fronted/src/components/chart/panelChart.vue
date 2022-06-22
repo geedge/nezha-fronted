@@ -435,10 +435,16 @@ export default {
             break
           }
           case 'system': {
+            this.chartInfo.elements = this.chartInfo.param.datasource
             this.chartData = []
+            if (this.chartInfo.type === 'assetInfo' || this.chartInfo.type === 'endpointInfo') {
+              this.chartData = this.dataJson[this.chartInfo.id + '_' + 0].data
+              this.loading = false
+              break
+            }
             this.chartData.push(this.dataJson[this.chartInfo.id + '_' + 0].result)
-          }
             break
+          }
           case 'misc': {
             this.loading = false
             setTimeout(() => {
@@ -576,6 +582,9 @@ export default {
       this.$emit('showFullscreen', show, this.chartInfo)
     },
     groupShow (flag) {
+      if (this.chartInfo.type === 'group' && !flag) {
+        this.chartData = lodash.get(this, 'chartInfo.children', [])
+      }
       this.chartInfo.param.collapse = flag
       this.groupInit()
       bus.$emit('groupMove', '', '', true)

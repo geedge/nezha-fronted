@@ -87,12 +87,12 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('config.exprTemp.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           sortable: 'custom'
         }, {
-          label: this.$t('config.exprTemp.gname'),
+          label: this.$t('dashboard.panel.chartForm.group'),
           prop: 'gname',
           show: true,
           sortable: 'custom'

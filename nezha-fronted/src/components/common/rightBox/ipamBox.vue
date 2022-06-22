@@ -12,7 +12,7 @@
       <div class="container__form">
         <el-form :model="editipam" label-position = "top" label-width="120px" :rules="rules" ref="ipamForm">
           <el-form-item :label="$t('overall.name')" prop="name">
-            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipam.name" size="small"></el-input>
+            <el-input maxlength="64" rows="4" show-word-limit placeholder="" v-model="editipam.name" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.type')" prop="type">
             <el-select id="account-input-language"
@@ -61,7 +61,7 @@
             <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipam.vlan" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')" prop="remark">
-            <el-input maxlength="256" rows="4" show-word-limit type="textarea" placeholder="" v-model="editipam.remark" size="small" id="mib-box-input-remark"></el-input>
+            <el-input maxlength="256" rows="2" show-word-limit type="textarea" placeholder="" v-model="editipam.remark" size="small" id="mib-box-input-remark"></el-input>
           </el-form-item>
         </el-form>
       </div>

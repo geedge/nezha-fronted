@@ -59,7 +59,7 @@
            <span style="cursor: pointer" @click="jumpAlertMessage(scope.row)">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
-              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
+              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
               <div class="severity-info" style='justify-content: space-between'>
                 <div class="severity-name">{{$t('overall.result.total')}}</div>
                 <div class="severity-value">{{scope.row.alertNum}}</div>
@@ -128,7 +128,7 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('project.project.project'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           sortable: 'custom',
@@ -146,7 +146,7 @@ export default {
           width: 120,
           sortable: 'custom'
         }, {
-          label: this.$t('project.endpoint.alerts'),
+          label: this.$t('overall.alert'),
           prop: 'alertNum',
           show: true,
           width: 120,

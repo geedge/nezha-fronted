@@ -65,7 +65,7 @@
               </div>
               <div class="input-hint">{{inputError}}</div>
             </div>
-            <div class="content-title">{{$t('dashboard.panel.chartForm.valMapping.to')}}</div>
+            <div class="content-title">{{$t('dashboard.panel.to')}}</div>
             <div tabindex="2" class="content-input" :class="oldSearchTimeError[1] ? 'input-error' : ''">
               <el-input  @focus="searchTimeValue = oldSearchTime[1]" v-model="oldSearchTime[1]" @change="dateInputChange('end',oldSearchTime[1])" size="mini"> </el-input>
               <div  @click="myDatePickerShow()" class="nz-icon-box">
@@ -92,9 +92,9 @@
                 class="date-range-history-item"
                 @click="historyChange(item)"
               >
-                {{ timeFormate(item.start) }}
+                {{ momentTz(item.start) }}
                 {{ $t("dashboard.panel.to") }}
-                {{ timeFormate(item.end) }}
+                {{ momentTz(item.end) }}
               </div>
             </div>
           </el-col>
@@ -340,8 +340,8 @@ export default {
       }
       this.isCustom = true
       this.rangeHistory.unshift({
-        start: item[0],
-        end: item[1]
+        start: this.momentStrToTimestamp(item[0]),
+        end: this.momentStrToTimestamp(item[1])
       })
       localStorage.setItem(
         'date-range-history' + this.sign,

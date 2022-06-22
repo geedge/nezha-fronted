@@ -157,7 +157,7 @@ export const asset = {
   editTypeOptions: [
     { value: 1, label: i18n.t('overall.account') },
     { value: 2, label: i18n.t('overall.labels') },
-    { value: 3, label: i18n.t('asset.state') },
+    { value: 3, label: i18n.t('overall.state') },
     { value: 4, label: i18n.t('asset.snmpCredential') }
   ],
   editTypeData: {
@@ -198,8 +198,8 @@ export const alertMessage = {
     { value: 'P3', label: i18n.t('alert.config.P3') }
   ],
   typeData: [
-    { value: 1, label: i18n.t('alert.config.typeOption.project') },
-    { value: 2, label: i18n.t('alert.config.typeOption.module') },
+    { value: 1, label: i18n.t('project.project.projectName') },
+    { value: 2, label: i18n.t('overall.module') },
     { value: 3, label: i18n.t('alert.config.typeOption.asset') }
   ],
   levels: [
@@ -216,19 +216,19 @@ export const alertMessage = {
 }
 
 export const statisticsList = [
-  { value: 'min', label: i18n.t('dashboard.panel.chartForm.statisticsVal.min') },
-  { value: 'max', label: i18n.t('dashboard.panel.chartForm.statisticsVal.max') },
+  { value: 'min', label: i18n.t('dashboard.panel.chartForm.min') },
+  { value: 'max', label: i18n.t('dashboard.panel.chartForm.max') },
   { value: 'avg', label: i18n.t('dashboard.panel.chartForm.statisticsVal.average') },
-  { value: 'total', label: i18n.t('dashboard.panel.chartForm.statisticsVal.total') },
+  { value: 'total', label: i18n.t('dashboard.panel.chartTotal') },
   { value: 'first', label: i18n.t('dashboard.panel.chartForm.statisticsVal.first') },
   { value: 'last', label: i18n.t('dashboard.panel.chartForm.statisticsVal.last') },
-  { value: 'range', label: i18n.t('dashboard.panel.chartForm.statisticsVal.range') },
+  { value: 'range', label: i18n.t('dashboard.panel.chartForm.valMapping.range') },
   { value: 'different', label: i18n.t('dashboard.panel.chartForm.statisticsVal.different') }
 ]
 
 export const alignList = [
-  { value: 'left', label: i18n.t('dashboard.panel.chartForm.alignList.left') },
-  { value: 'center', label: i18n.t('dashboard.panel.chartForm.alignList.center') },
+  { value: 'left', label: i18n.t('project.topology.left') },
+  { value: 'center', label: i18n.t('project.topology.center') },
   { value: 'right', label: i18n.t('dashboard.panel.chartForm.alignList.right') }
 ]
 
@@ -277,15 +277,15 @@ export const chart = {
     },
     {
       value: 'url',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.url.label')
+      label: i18n.t('dashboard.panel.chartForm.url')
     },
     {
       value: 'group',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.group.label')
+      label: i18n.t('dashboard.panel.chartForm.group')
     },
     {
       value: 'logs',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.logs.label')
+      label: i18n.t('overall.logs')
     },
     {
       value: 'diagram',
@@ -295,7 +295,7 @@ export const chart = {
 }
 
 export const intervalList = [
-  { value: -1, label: i18n.t('dashboard.panel.refreshInterval.never') },
+  { value: -1, label: i18n.t('dashboard.panel.chartForm.lockList.off') },
   { value: 30, label: '30s' },
   { value: 60, label: '1m' },
   { value: 300, label: '5m' },
@@ -306,7 +306,7 @@ export const intervalList = [
 export const setting = {
   DcState: [
     { value: 'ON', label: i18n.t('config.dc.usable') },
-    { value: 'OFF', label: i18n.t('config.dc.suspended') }
+    { value: 'OFF', label: i18n.t('asset.suspended') }
   ]
 }
 export const snmpProtocolTypes = [

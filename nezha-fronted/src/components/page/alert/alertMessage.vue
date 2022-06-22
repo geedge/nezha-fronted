@@ -19,7 +19,7 @@
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
         <pick-time v-model="searchTime" sign="message" :default-pick="10" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
-        <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcelLower')" class="top-tool-btn margin-r-10"
+        <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcel')" class="top-tool-btn margin-r-10"
                 type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
         </button>
@@ -96,7 +96,7 @@
         <div slot="footer" class="footer">
           <div class="el-message-box__btns">
             <button :id="'-xlsx-import-export'" v-has="'alertMessage_expired'" class="nz-btn nz-btn-size-normal nz-btn-style-normal-new" @click="exportData">
-              <span style="text-transform:Capitalize">{{$t('config.operationlog.operations.export')}}</span>
+              <span style="text-transform:Capitalize">{{$t('overall.exportExcel')}}</span>
             </button>
             <button :id="'-xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
               <span>{{$t('overall.close')}}</span>
@@ -244,7 +244,7 @@ export default {
         searchLabelList: [
           {
             id: 26,
-            name: this.$t('alert.list.id'),
+            name: this.$t('asset.id'),
             type: 'id',
             label: 'ids',
             disabled: false
@@ -290,7 +290,7 @@ export default {
       resultType: '',
       titleSearchList: {
         project: {
-          label: this.$t('dashboard.overview.project.project'),
+          label: this.$t('project.project.projectName'),
           key: 'projectIds',
           type: 'checkBox',
           children: [],
@@ -300,7 +300,7 @@ export default {
           index: -1
         },
         module: {
-          label: this.$t('dashboard.overview.project.module'),
+          label: this.$t('overall.module'),
           key: 'moduleIds',
           type: 'checkBox',
           children: [],
@@ -339,7 +339,7 @@ export default {
       },
       detailSearchList: {
         project: {
-          label: this.$t('dashboard.overview.project.project'),
+          label: this.$t('project.project.projectName'),
           key: 'projectIds',
           type: 'checkBox',
           children: [],
@@ -349,7 +349,7 @@ export default {
           index: -1
         },
         module: {
-          label: this.$t('dashboard.overview.project.module'),
+          label: this.$t('overall.module'),
           key: 'moduleIds',
           type: 'checkBox',
           children: [],

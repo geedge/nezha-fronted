@@ -21,7 +21,7 @@
       </el-row>
     </div>
     <div v-else-if="type==='textarea'">
-      <el-input v-model="inputValue" size="small" type="textarea" maxlength="512" :autosize="{ minRows: 2, maxRows: 4}"/>
+      <el-input v-model="inputValue" size="small" type="textarea" show-word-limit maxlength="512" :rows="2"/>
     </div>
     <div v-else-if="type==='radio'">
       <el-radio-group v-model="optionValue" >
@@ -51,8 +51,8 @@
           :type="param.interval?'daterange':'date'"
           :range-separator="$t('dashboard.panel.to')"
           :placeholder="$t('alert.silence.selectTime')"
-          :start-placeholder="$t('dashboard.panel.startTime')"
-          :end-placeholder="$t('dashboard.panel.endTime')"
+          :start-placeholder="$t('overall.startTime')"
+          :end-placeholder="$t('overall.endTime')"
           :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
           :format="timeFormatStrToDatePickFormat(timeFormatMain)"
         >
@@ -64,8 +64,8 @@
           :is-range="param.interval"
           :range-separator="$t('dashboard.panel.to')"
           :placeholder="$t('alert.silence.selectTime')"
-          :start-placeholder="$t('dashboard.panel.startTime')"
-          :end-placeholder="$t('dashboard.panel.endTime')"
+          :start-placeholder="$t('overall.startTime')"
+          :end-placeholder="$t('overall.endTime')"
         >
         </el-time-picker>
       </div>
@@ -75,8 +75,8 @@
           :type="param.interval?'datetimerange':'datetime'"
           :range-separator="$t('dashboard.panel.to')"
           :placeholder="$t('alert.silence.selectTime')"
-          :start-placeholder="$t('dashboard.panel.startTime')"
-          :end-placeholder="$t('dashboard.panel.endTime')"
+          :start-placeholder="$t('overall.startTime')"
+          :end-placeholder="$t('overall.endTime')"
           :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
           :format="timeFormatStrToDatePickFormat(timeFormatMain)">
         </my-date-picker>

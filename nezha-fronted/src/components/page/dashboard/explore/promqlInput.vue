@@ -77,7 +77,7 @@
           @click="dropDownVisible = false"
         >
         <div
-          :id="'editor'+index"
+          :id="pqid + 'editor'+index"
           v-if="type !== 'log'"
           class="not-fixed-height no-resize no-close"
         >
@@ -90,9 +90,10 @@
              v-if="type == 'log'"
             :id="inputId"
             v-model="expressionList[index]"
-            :autosize="{ minRows: 1, maxRows: 6 }"
+            size="small" :rows="2"
             class="not-fixed-height no-resize"
             type="textarea"
+            show-word-limit maxlength="256"
             @input="metricKeyDown"
             @keyup.enter.native="expressionChange"
             ref="elInput"
@@ -238,8 +239,8 @@
               :id="pqid + 'editor'+index"
               v-if="type !== 'log'"
               class="not-fixed-height no-resize no-close"
-        >
-        </div>
+            >
+            </div>
             <!-- <div id="editor"
             class="not-fixed-height no-resize no-close"
                 ref="elInput"
@@ -252,7 +253,7 @@
                 type="textarea"
                 :maxlength="styleType === 3 ? 512 : 4096"
                 show-word-limit
-                :autosize="{ minRows: 1, maxRows: 6 }"
+                size="small" :rows="2"
                 class="not-fixed-height no-resize"
                 ref="elInput"
               ></el-input>
@@ -438,7 +439,7 @@ export default {
     pqid: {
       type: String, default: ''
     },
-    expressionList: {},
+    expressionList: { type: Array },
     plugins: { type: Array },
     styleType: Number,
     historyParam: { type: Object },
@@ -463,6 +464,10 @@ export default {
     },
     type: {
       type: String // metric和log两种，为空时视为metric
+    },
+    isTopo: {
+      type: Boolean,
+      default: false
     }
     // metricOptions: {type: Array},
     // metricStore: {type: Array}
@@ -882,7 +887,7 @@ export default {
             }
           })
         }
-      } else if (data.children && !data.children.length && this.type !== 'log') {
+      } else if (data.children && (!data.children.length || data.children.length > 100) && this.type !== 'log') {
         this.metricOptions.forEach(item => {
           if (!item.temp && item.children && item.value != data.value) {
             item.children = []
@@ -894,19 +899,20 @@ export default {
             resolve(children)
           }).then((children) => {
             const childrenCopy = JSON.parse(JSON.stringify(children))
-            this.metricOptions.find(item => item.label === data.label).children = childrenCopy
-            // if (childrenCopy.length > 100) {
-            //   childrenCopy.splice(100, children.length)
-            //   childrenCopy.push({
-            //     label: 'More',
-            //     value: false,
-            //     parent: data.label,
-            //     more: true
-            //   })
-            //   this.metricOptions.find(item => item.label === data.label).children = childrenCopy
-            // } else {
-            //   this.metricOptions.find(item => item.label === data.label).children = childrenCopy
-            // }
+            const findChild = this.metricOptions.find(item => item.label === data.label)
+
+            if (childrenCopy.length > 100) {
+              childrenCopy.splice(100, childrenCopy.length)
+              childrenCopy.push({
+                label: 'More',
+                value: false,
+                parent: data.label,
+                more: true
+              })
+              findChild.children = childrenCopy
+            } else {
+              findChild.children = childrenCopy
+            }
           })
         })
       } else if (data.more) {
@@ -915,7 +921,25 @@ export default {
             const children = this.$store.state.metricsList.find(item => item.label === data.parent).children
             resolve(children)
           }).then((children) => {
-            this.metricOptions.find(item => item.label === data.parent).children = children
+            let childrenCopy = JSON.parse(JSON.stringify(children))
+            const findChild = this.metricOptions.find(item => item.label === data.parent)
+            if (childrenCopy.length > 100) {
+              childrenCopy = childrenCopy.splice(findChild.children.length, findChild.children.length + 101)
+              findChild.children.splice(findChild.children.length - 1, 1)
+              findChild.children.push(...childrenCopy)
+              if (findChild.children.length < children.length - 1) {
+                findChild.children.push({
+                  label: 'More',
+                  value: false,
+                  parent: data.parent,
+                  more: true
+                })
+              } else {
+                findChild.children.splice(findChild.children.length - 1, 1)
+              }
+            } else {
+              findChild.children = childrenCopy
+            }
           })
         })
       }
@@ -1096,16 +1120,17 @@ export default {
       deep: true,
       immediate: true,
       handler (n, o) {
-        // console.log(n, n[this.index])
         this.codeMirrorValue[this.index] = n[this.index]
-        setTimeout(() => {
-          const text = this.newView.state.doc.toString()
-          this.newView.dispatch(
-            this.newView.state.update({
-              changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
-            })
-          )
-        }, 200)
+        if (this.isTopo) {
+          setTimeout(() => {
+            const text = this.newView.state.doc.toString()
+            this.newView.dispatch(
+              this.newView.state.update({
+                changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
+              })
+            )
+          }, 200)
+        }
       }
     },
 

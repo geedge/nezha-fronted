@@ -10,7 +10,7 @@
       <div class="container__form">
         <!-- Edit type -->
         <el-form ref="assetEditForm" :model="editData" :rules="rules" label-position="top" label-width="120px">
-          <el-form-item :label="$t('overall.editType')" prop="editType">
+          <el-form-item :label="$t('overall.type')" prop="editType">
             <el-select v-model="editData.editType" @change="assetBatch" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
               <el-option v-for="type in assetConstants.editTypeOptions" :key="type.value" :label="$t(type.label)" :value="type.value"/>
             </el-select>
@@ -31,7 +31,7 @@
                 </el-select>
               </el-form-item>
               <!--     第三级：Auth type = username | key -->
-              <el-form-item :label="$t('asset.userName')" prop="authUsername">
+              <el-form-item :label="$t('profile.username')" prop="authUsername">
                 <el-input v-model="editData.authUsername" size="small"/>
               </el-form-item>
               <template v-if="editData.authType === assetConstants.authTypeData.key">
@@ -40,7 +40,7 @@
                   <el-input v-model="editData.authPriKey" size="small" type="password" autocomplete="new-password"/>
                 </el-form-item>
               </template>
-              <el-form-item :label="$t('asset.pin')" prop="authPin">
+              <el-form-item :label="$t('login.pin')" prop="authPin">
                 <el-input v-model="editData.authPin" size="small"  type="password" autocomplete="new-password"/>
               </el-form-item>
               <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
@@ -51,10 +51,10 @@
             <!--   第二级：Protocol type = TELNET -->
             <template v-if="editData.authProtocol === assetConstants.authProtocolData.telnet">
               <div class="form__sub-title">TELNET</div>
-              <el-form-item :label="$t('asset.userName')" prop="authUsername">
+              <el-form-item :label="$t('profile.username')" prop="authUsername">
                 <el-input v-model="editData.authUsername" size="small"/>
               </el-form-item>
-              <el-form-item :label="$t('asset.pin')" prop="authPin">
+              <el-form-item :label="$t('login.pin')" prop="authPin">
                 <el-input v-model="editData.authPin" size="small"/>
               </el-form-item>
               <el-form-item :label="$t('asset.usernamePrompt')" prop="authUserTip">
@@ -92,7 +92,7 @@
                     </div>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA">
-                    <el-input v-model="label.value" :maxlength="4096" size="small" type="textarea"/>
+                    <el-input v-model="label.value" :maxlength="4096" size="small" :rows="2" show-word-limit type="textarea"/>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.RADIO">
                     <el-radio v-for="item in JSON.parse(label.param).items" :key="item.name" v-model="label.value" :label="item.name">{{item.name}}</el-radio>
@@ -175,7 +175,7 @@
 
           <!-- 第一级：Edit type = state -->
           <template v-if="editData.editType === assetConstants.editTypeData.state">
-            <el-form-item :label="$t('asset.state')" prop="stateId">
+            <el-form-item :label="$t('overall.state')" prop="stateId">
               <el-select v-model="editData.stateId" class="right-box__select" :placeholder="$t('overall.select')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="state in stateData" :key="state.id" :label="state.name" :value="state.id"></el-option>
               </el-select>
@@ -302,7 +302,7 @@ export default {
             id: 'sn',
             disabled: false
           }, {
-            name: this.$t('dashboard.overview.dataCenter.dataCenter'),
+            name: this.$t('overall.dc'),
             type: 'dc',
             label: 'dcIds',
             readonly: true,
@@ -314,9 +314,9 @@ export default {
             id: 'manageIp',
             disabled: false
           }, {
-            name: this.$t('asset.state'),
+            name: this.$t('overall.state'),
             type: 'assetState',
-            label: 'stateIds',
+            label: 'assetState',
             id: 'stateIds',
             readonly: true,
             disabled: false

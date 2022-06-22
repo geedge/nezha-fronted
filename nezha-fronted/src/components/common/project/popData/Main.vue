@@ -115,19 +115,19 @@ export default {
         const assetOption = chartConfig.getOption('topoPie')
         endpointOption.series[0].label.formatter = this.moduleInfo.endpointStat.down + this.moduleInfo.endpointStat.up + ''
         endpointOption.series[0].data = [
-          { name: this.$t('dashboard.overview.asset.pingUp'), value: this.moduleInfo.endpointStat.up ? this.moduleInfo.endpointStat.up : 0 },
-          { name: this.$t('dashboard.overview.asset.pingDown'), value: this.moduleInfo.endpointStat.down ? this.moduleInfo.endpointStat.down : 0 },
+          { name: this.$t('config.agent.up'), value: this.moduleInfo.endpointStat.up ? this.moduleInfo.endpointStat.up : 0 },
+          { name: this.$t('asset.down'), value: this.moduleInfo.endpointStat.down ? this.moduleInfo.endpointStat.down : 0 },
           { name: this.$t('asset.suspended'), value: this.moduleInfo.endpointStat.suspended ? this.moduleInfo.endpointStat.suspended : 0 }
         ]
         endpointOption.title.show = false
-        endpointOption.legend.data = [this.$t('dashboard.overview.asset.pingUp'), this.$t('dashboard.overview.asset.pingDown'), this.$t('asset.suspended')]
+        endpointOption.legend.data = [this.$t('config.agent.up'), this.$t('asset.down'), this.$t('asset.suspended')]
         assetOption.series[0].label.formatter = this.moduleInfo.assetStat.up + this.moduleInfo.assetStat.down + ''
         assetOption.series[0].data = [
-          { name: this.$t('dashboard.overview.asset.pingUp'), value: this.moduleInfo.assetStat.up ? this.moduleInfo.assetStat.up : 0 },
-          { name: this.$t('dashboard.overview.asset.pingDown'), value: this.moduleInfo.assetStat.down ? this.moduleInfo.assetStat.down : 0 }
+          { name: this.$t('config.agent.up'), value: this.moduleInfo.assetStat.up ? this.moduleInfo.assetStat.up : 0 },
+          { name: this.$t('asset.down'), value: this.moduleInfo.assetStat.down ? this.moduleInfo.assetStat.down : 0 }
         ]
         assetOption.title.show = false
-        assetOption.legend.data = [this.$t('dashboard.overview.asset.pingUp'), this.$t('dashboard.overview.asset.pingDown')]
+        assetOption.legend.data = [this.$t('config.agent.up'), this.$t('asset.down')]
         endpointChart.setOption(endpointOption, true)
         assetChart.setOption(assetOption, true)
       })

@@ -53,7 +53,7 @@
           </el-form-item>
         </el-form>
 
-        <div class="right-box-sub-title">{{ $t("overall.configEndpoint") }}</div>
+        <div class="right-box-sub-title">{{ $t("project.module.configs") }}</div>
         <div class="right-box-line"></div>
 
         <el-table
@@ -185,7 +185,7 @@ export default {
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
         {
-          title: this.$t('config.model.titleName'),
+          title: this.$t('overall.name'),
           data: function (row) {
             if (row.name.length > 15) {
               return row.name.substring(0, 12) + '...'
@@ -220,7 +220,7 @@ export default {
       columns: [
         { title: 'id', data: 'id' },
         {
-          title: this.$t('config.model.titleName'),
+          title: this.$t('overall.name'),
           data: function (row) {
             if (row.name.length > 15) {
               return row.name.substring(0, 12) + '...'
@@ -239,7 +239,7 @@ export default {
           orjinNME: 'type'
         },
         {
-          title: this.$t('overall.model'),
+          title: this.$t('asset.model'),
           data: (row) => {
             return row.model ? row.model.name : ''
           },
@@ -268,11 +268,11 @@ export default {
       tempEndpoint: {},
       tempEndpoint2: {},
       assetLoading: true,
-      rightBox: { show: false, title: this.$t('project.endpoint.createEndpoint'), isEdit: false },
+      rightBox: { show: false, title: this.$t('overall.createEndpoint'), isEdit: false },
       optionType: 'batchAdd',
       endpointTableTitle: [ // 原始table列
         {
-          label: this.$t('project.endpoint.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true
         },
@@ -287,12 +287,12 @@ export default {
           show: true
         },
         {
-          label: this.$t('project.endpoint.asset'),
+          label: this.$t('asset.asset'),
           prop: 'asset',
           show: true
         },
         {
-          label: this.$t('project.endpoint.configs'),
+          label: this.$t('project.module.configs'),
           prop: 'configs',
           show: true,
           width: 150

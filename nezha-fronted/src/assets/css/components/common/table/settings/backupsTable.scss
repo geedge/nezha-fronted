@@ -1,5 +1,5 @@
 .backups-table{
-  .nz-table2 {
+  .nz-table-list {
       .el-table__row{
         td:last-of-type{
           // border-bottom: 1px solid $--border-color-light !important;
@@ -33,7 +33,7 @@
           }
         }
         .table-operation-button {
-            border: none;
+          border: none;
           background-color: $--color-primary;
           color: $--button-primary-color;
           display: flex;
@@ -55,5 +55,19 @@
 
     .nz-icon-shujubeifenhuifu::before{
       font-size: 12px;
+    }
+    .el-table--border td:first-child .cell{
+      padding-left: 20px !important;
+    }
+
+
+
+    .el-table__empty-block{
+      .el-table__empty-text{
+        .table-no-data{
+          height: 200px;
+          padding-top: 70px;
+        }
+      }
     }
 }

@@ -2,7 +2,7 @@
   <div class="right-box right-box-module" v-clickoutside="{obj:editModule,func:clickOutside}">
     <div class="right-box__header">
       <!-- begin--标题-->
-      <div class="header__title">{{editModule.id ? $t("project.module.editModule") : $t("project.module.createModule")}}</div>
+      <div class="header__title">{{editModule.id ? $t("project.module.editModule") : $t("overall.createModule")}}</div>
       <!-- end--标题-->
       <div class="header__operation">
         <span v-cancel="{obj: editModule, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
@@ -14,7 +14,7 @@
       <div class="container__form">
         <el-form ref="moduleForm" :model="editModule" :rules="rules" label-position="top" label-width="120px">
           <!--name-->
-          <el-form-item :label='$t("project.module.moduleName")' label-width="125px" prop="name">
+          <el-form-item :label='$t("overall.name")' label-width="125px" prop="name">
             <el-input id="module-box-input-name" v-model="editModule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--project-->
@@ -28,12 +28,11 @@
             <el-input
               id="module-box-input-remark"
               v-model="editModule.remark"
-              :autosize="{ minRows: 1, maxRows: 6}"
               class="not-fixed-height no-resize"
               maxlength="256"
               show-word-limit
               placeholder=""
-              size="small"
+              size="small" :rows="2"
               type="textarea"></el-input>
           </el-form-item>
           <!--Enpoint template-->
@@ -62,7 +61,7 @@
             ></el-autocomplete>
           </el-form-item>
           <!-- ChartTemplate  -->
-          <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
+          <el-form-item :label="$t('overall.chartTemp')" prop="ChartTemplate">
             <v-selectpage
               :data="chartTempList"
               :tb-columns="ChartSearchShowFields"
@@ -84,7 +83,7 @@
           <div class="endpoint-title">
             <span class="endpoint-title-content">
               <i class="nz-icon nz-icon-arrow-down" :class="metricsShow?'':'is-active'" @click="metricsShow = !metricsShow"></i>
-              {{$t('project.endpoint.metrics')}}
+              {{$t('overall.metric')}}
             </span>
             <el-switch v-model="editModule.configs[0].enable" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
@@ -92,21 +91,21 @@
             <el-tabs v-model="activeName" v-show="metricsShow" v-if="editModule.configs[0].enable">
             <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
               <!--type-->
-              <el-form-item :label='$t("project.endpoint.protocol")' class="half-form-item" prop="type">
+              <el-form-item :label='$t("webshell.protocol")' class="half-form-item" prop="type">
                 <el-select id="module-box-input-type" v-model="editModule.configs[0].config.protocol" :disabled="!!editModule.id && editModule.configs[0].config.protocol === 'snmp'" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id" @change="changeBasicType">
                   <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value" :disabled="item.disabled && !!editModule.id"></el-option>
                 </el-select>
               </el-form-item>
               <!--host-->
-              <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+              <el-form-item :label='$t("asset.host")' class="half-form-item" prop="configs.0.config.host" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-host" v-model="editModule.configs[0].config.host" placeholder="" size="small"></el-input>
               </el-form-item>
               <!--path-->
-              <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path" :disabled="editModule.configs[0].config.protocol === 'snmp'">
+              <el-form-item :label='$t("config.terminallog.path")' class="half-form-item" prop="configs.metrics_path" :disabled="editModule.configs[0].config.protocol === 'snmp'">
                 <el-input id="module-box-input-path" v-model="editModule.configs[0].config.metrics_path" placeholder="" size="small" :disabled="editModule.configs[0].config.protocol === 'snmp'"></el-input>
               </el-form-item>
               <!--port-->
-              <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs.0.config.port" :rules="[
+              <el-form-item :label='$t("asset.port")' class="half-form-item" prop="configs.0.config.port" :rules="[
                 { validator: port, trigger: 'blur' },
                 { required: true, message: $t('validate.required'), trigger: 'blur' }
               ]">
@@ -154,7 +153,7 @@
                 <div v-show="showAllBasicOption" >
                   <!--scrape_interval-->
                   <el-form-item :label='$t("project.endpoint.scrape_interval")' class="half-form-item" prop="configs.0.config.scrape_interval">
-                    <el-input id="module-box-input-scrape_interval" v-model.number="editModule.configs[0].config.scrape_interval" :placeholder='$t("project.endpoint.scrape_interval_placeholder")' size="small">
+                    <el-input id="module-box-input-scrape_interval" v-model.number="editModule.configs[0].config.scrape_interval" :placeholder='$t("alert.config.inrPlaceholder")' size="small">
                      <template slot="append">s</template>
                     </el-input>
                   </el-form-item>
@@ -174,7 +173,7 @@
                 </span>
               </div>
             </el-tab-pane>
-            <el-tab-pane :label="$t('project.endpoint.parameter')" name="Parameter">
+            <el-tab-pane :label="$t('config.assetLabel.params')" name="Parameter">
               <div id="module-box-params" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                 <div v-for="(item, index) in editModule.paramObj" :key="index" class="param-box-row">
                   <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key">
@@ -296,25 +295,25 @@
                  </span>
                 </div>
               </el-tab-pane>
-            <el-tab-pane v-if="editModule.configs[0].config.protocol !== 'snmp'" :label="$t('project.endpoint.auth')" name="Auth">
+            <el-tab-pane v-if="editModule.configs[0].config.protocol !== 'snmp'" :label="$t('config.mib.credential.auth')" name="Auth">
               <!--authtype-->
-              <el-form-item :label='$t("project.endpoint.type")' prop="authtype">
+              <el-form-item :label='$t("overall.type")' prop="authtype">
                 <el-select id="module-box-input-auth-type" v-model="authType" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
                   <el-option v-for="item in authTypeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
 
               <!--authtype 1-->
-              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="configs.0.config.basic_auth.username" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+              <el-form-item v-if="authType === 1" :label='$t("asset.username")' class="half-form-item" prop="configs.0.config.basic_auth.username" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-uername" v-model="editModule.configs[0].config.basic_auth.username" placeholder='' size="small"></el-input>
               </el-form-item>
 
-              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+              <el-form-item v-if="authType === 1" :label='$t("login.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-password" v-model="editModule.configs[0].config.basic_auth.pin" type="password" autocomplete="new-password" placeholder='' size="small"></el-input>
               </el-form-item>
 
               <!--authtype 2-->
-              <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="configs.0.config.bearer_token" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+              <el-form-item v-if="authType === 2" :label='$t("project.endpoint.authTypeToken")' prop="configs.0.config.bearer_token" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-bearer_token" v-model="editModule.configs[0].config.bearer_token" placeholder='' size="small"></el-input>
               </el-form-item>
 
@@ -324,7 +323,7 @@
           <div class="endpoint-title" style="margin-top: 10px">
             <span class="endpoint-title-content">
                <i class="nz-icon nz-icon-arrow-down" :class="logsShow?'':'is-active'" @click="logsShow = !logsShow"></i>
-              {{$t('project.endpoint.logs')}}
+              {{$t('overall.logs')}}
             </span>
             <el-switch v-model="editModule.configs[1].enable" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
@@ -334,14 +333,14 @@
               <el-tabs v-model="activeNameLogs[index]" class="special-tabs" @tab-click="()=>{tabClick(index)}" :ref="'logsTabs' + index">
                 <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
                   <!--type-->
-                  <el-form-item :label='$t("project.endpoint.type")' class="half-form-item">
+                  <el-form-item :label='$t("overall.type")' class="half-form-item">
                     <el-select id="module-box-input-type" v-model="item.type" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
                       <el-option v-for="item in logsBasicList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
                   <el-form-item
                     v-if='item.type === "file"'
-                    :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                    :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.panel.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
                     :prop="'configs.1.config.'+ index +'.fileName'"
                     :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                   >
@@ -349,7 +348,7 @@
                   </el-form-item>
                   <el-form-item
                     v-if='item.type === "journal"'
-                    :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                    :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.panel.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
                     :prop="'configs.1.config.'+ index +'.unit'"
                     :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                   >
@@ -357,7 +356,7 @@
                   </el-form-item>
                   <el-form-item
                     v-if='item.type === "syslog"'
-                    :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                    :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.panel.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
                     :prop="'configs.1.config.'+ index +'.listenAddress'"
                     :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                   >
@@ -599,7 +598,7 @@ export default {
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
         {
-          title: this.$t('config.model.titleName'),
+          title: this.$t('overall.name'),
           data: function (row) {
             if (row.name.length > 15) {
               return row.name.substring(0, 12) + '...'
@@ -608,7 +607,7 @@ export default {
           },
           key: 'name'
         },
-        { title: this.$t('config.model.titleType'), data: 'type', key: 'type' },
+        { title: this.$t('overall.type'), data: 'type', key: 'type' },
         {
           title: this.$t('overall.remark'),
           data: function (row) {
@@ -686,7 +685,7 @@ export default {
       ],
       authType: 0,
       authTypeList: [
-        { name: this.$t('project.endpoint.authTypeNull'), value: 0 },
+        { name: this.$t('project.topology.none'), value: 0 },
         { name: this.$t('project.endpoint.authTypeWord'), value: 1 },
         { name: this.$t('project.endpoint.authTypeToken'), value: 2 }
       ],
@@ -935,7 +934,8 @@ export default {
             if (this.editModule.id) {
               this.$put('monitor/module', params).then(response => {
                 if (response.code === 200) {
-                  this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                  // this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                  this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { projectId: this.editModule.projectId, moduleId: response.data.id }, false, 'guide.addEndpoint')
                   this.$store.commit('setReloadFacade')
                   this.esc(true)
                 } else {
@@ -946,7 +946,7 @@ export default {
             } else {
               this.$post('monitor/module', params).then(response => {
                 if (response.code === 200) {
-                  this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                  this.messageShow(this.$t('tip.saveSuccess'), '/endpoint', { projectId: this.editModule.projectId, moduleId: response.data.id }, true, 'guide.addEndpoint')
                   this.$store.commit('setReloadFacade')
                   this.esc(true)
                 } else {

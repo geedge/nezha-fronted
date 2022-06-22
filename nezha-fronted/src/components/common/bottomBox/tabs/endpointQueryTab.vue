@@ -22,7 +22,7 @@
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{currentEndpoint ? currentEndpoint.id : ''}}</div><div
         class="sub-list-tab" @click="changeTab('panel')" id="endpoint-query-changepanel">{{$t("overall.detail")}}</div>
-        <div class="sub-list-tab" @click="changeTab('alertMessage')" id="endpoint-query-alertMessage">{{$t("asset.alerts")}}</div>
+        <div class="sub-list-tab" @click="changeTab('alertMessage')" id="endpoint-query-alertMessage">{{$t("alert.alertMessage")}}</div>
         <div class="sub-list-tab sub-list-tab-active">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">
@@ -64,7 +64,7 @@
       </div>
     </div>
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
-     <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
+     <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('overall.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
                :pagination-show="false" class="nz-table endpoint-query-table" ref="endpointQueryTable" style="width: 100%;" v-my-loading="loading"
                v-if="tableShow && plTableSHow" id="endpoint-list-table" :tooltip-effect="'light'" @selection-change="selectChange">
       <pl-table-column
@@ -80,7 +80,7 @@
         :min-width="1000"
         column-key="element"
         :show-overflow-tooltip="true"
-        :label="$t('project.endpoint.element')">
+        :label="$t('dashboard.panel.chartForm.element')">
         <template v-slot="scope">
           <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
             <div>
@@ -100,7 +100,7 @@
         :resizable="false"
         prop="value"
         column-key="value"
-        :label="$t('project.endpoint.value')"
+        :label="$t('overall.value')"
         min-width="180">
       </pl-table-column>
     </pl-table>
@@ -705,6 +705,7 @@ export default {
       deep: true,
       handler (n) {
         if (n) {
+          this.searchLabel = {}
           this.currentEndpoint = JSON.parse(JSON.stringify(n))
           this.queryEndpoint()
         }

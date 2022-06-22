@@ -159,12 +159,11 @@
     color: #e2f3ef;
     font-size: 44px;
     position: absolute;
-    top: 1px;
+    top: 0px;
     left: 2px;
-    transform: scale(0.95);
-    z-index: 0;
+    // transform: scale(1.1);
+    z-index: -1;
   }
-
   .network-pop .error-model-stat .nz-icon-liubianxing {
     color: #FADED7;
   }
@@ -490,14 +489,14 @@
   padding:0 !important;
   width: calc(100% - 2px);
   height: calc(100% - 2px) !important;
-  .nz-table2{
+  .nz-table-list{
     padding: 0 !important;
     height: 100%;
   }
 }
 .from-project{
   padding: 0px 10px 0 0 !important;
-  .nz-table2{
+  .nz-table-list{
     padding: 0;
     box-sizing: content-box;
     height: calc(100% - 50px);

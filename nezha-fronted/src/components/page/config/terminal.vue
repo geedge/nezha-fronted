@@ -1,11 +1,11 @@
 <template>
   <div class="system">
     <div class="system-config-form terminal">
-      <div class="system-title">{{$t('config.system.basic.title')}}</div>
+      <div class="system-title">{{$t('overall.basicInfo')}}</div>
       <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
-        <!--            <el-form-item :label="$t('config.system.terminal.timeout')" prop="terminal_timeout">-->
+        <!--            <el-form-item :label="$t('config.system.ldap.timeout')" prop="terminal_timeout">-->
         <!--              <el-input v-model="terminal.terminal_timeout" controls-position="right" :min="1"  id="system-terminal-max_terminal_num">-->
-        <!--                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>-->
+        <!--                <template slot="append"><span >{{$t('alert.config.second')}}</span></template>-->
         <!--              </el-input>-->
         <!--            </el-form-item>-->
         <el-form-item :label="$t('config.system.terminal.userTip')" prop="terminal_telnet_user_tip">
@@ -20,7 +20,7 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <button v-has="'system_terminal_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('terminal','terminalForm')">{{$t('overall.submit')}}</button>
+          <button v-has="'system_terminal_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('terminal','terminalForm')">{{$t('overall.save')}}</button>
         </el-form-item>
       </el-form>
     </div>

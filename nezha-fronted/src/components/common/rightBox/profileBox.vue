@@ -9,13 +9,13 @@
     <div class="right-box__container">
       <div class="container__form">
         <el-form ref="profileForm" :model="editProfile" :rules="rules" label-position="top" label-width="120px">
-          <el-form-item :label="$t('profile.name')" prop="name">
+          <el-form-item :label="$t('overall.name')" prop="name">
             <el-input maxlength="64" show-word-limit v-model="editProfile.name" size="small" type="text"></el-input>
           </el-form-item>
           <el-form-item :label="$t('profile.username')" prop="username">
             <el-input maxlength="64" show-word-limit v-model="editProfile.username" disabled size="small" type="text"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('profile.email')" prop="email">
+          <el-form-item :label="$t('config.system.email.email')" prop="email">
             <el-input maxlength="64" show-word-limit v-model="editProfile.email" size="small" type="text"></el-input>
           </el-form-item>
           <el-form-item :label="$t('profile.mobile')" prop="mobile">

@@ -3,8 +3,8 @@
     <div class="sub-top-tools">
       <div class="sub-list-tabs" v-if="from===fromRoute.module">
         <div class="sub-list-tab-title">{{obj.name}}</div>
-        <div @click="changeTab('endpoint')" class="sub-list-tab" id="endpoint-tab-change-endpoint">{{$t("asset.modules")}}</div>
-        <div class="sub-list-tab sub-list-tab-active" >{{$t("asset.alerts")}}</div>
+        <div @click="changeTab('endpoint')" class="sub-list-tab" id="endpoint-tab-change-endpoint">{{$t("asset.endpoint")}}</div>
+        <div class="sub-list-tab sub-list-tab-active" >{{$t("alert.alertMessage")}}</div>
       </div>
       <div class="sub-list-tabs" v-else>
         <div class="sub-list-tab-title">
@@ -13,8 +13,8 @@
           <template v-if="from == $CONSTANTS.fromRoute.endpoint"><div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{obj ? obj.id : ''}}</div></template>
         </div><div :id="from+'-change-panelordetail'"
         @click="changeTab(from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.endpoint? 'panel' : 'detail')" class="sub-list-tab">{{$t("overall.detail")}}</div><div
-        class="sub-list-tab sub-list-tab-active">{{$t("asset.alerts")}}</div><div v-if="from == $CONSTANTS.fromRoute.asset" :id="from+'-change-modules'"
-        @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'">{{$t("asset.modules")}}</div>
+        class="sub-list-tab sub-list-tab-active">{{$t("alert.alertMessage")}}</div><div v-if="from == $CONSTANTS.fromRoute.asset" :id="from+'-change-modules'"
+        @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'">{{$t("asset.endpoint")}}</div>
         <div @click="changeTab('endpointQuery')" class="sub-list-tab" v-has="'project_endpoint_query_chart_view'" v-if="from == $CONSTANTS.fromRoute.endpoint" :id="from+'-change-endpoint'">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">
@@ -22,7 +22,7 @@
         <div class="top-tool-search">
           <search-input :default-item="'alertMessageState'" :default-value="defaultSearchValue" :searchMsg="searchMsg" @search="search" position="alert-bottom"></search-input>
         </div>
-        <button :title="$t('overall.exportExcelLower')" @click="importBox.show = true" type="button" v-has="['rule_alerts_export', 'project_endpoint_alerts_export', 'asset_alerts_export']"
+        <button :title="$t('overall.exportExcel')" @click="importBox.show = true" type="button" v-has="['rule_alerts_export', 'project_endpoint_alerts_export', 'asset_alerts_export']"
             class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
           <i class="nz-icon nz-icon-download1"></i>
         </button>
@@ -49,7 +49,7 @@
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="importBox.show = false" class="nz-dialog">
         <div class="upload-body">
           <button @click="exportCur" class="el-button el-button--default el-button--small">
-            <span>{{$t('overall.exportCur')}}</span>
+            <span>{{$t('overall.current')}}</span>
           </button>
           <button @click="exportAll" class="el-button el-button--default el-button--small">
             <span>{{$t('overall.exportAll')}}</span>
@@ -168,16 +168,16 @@ export default {
           prop: 'description',
           show: true
         }, {
-          label: this.$t('alert.list.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           width: 100
         }, {
-          label: this.$t('alert.startAt'),
+          label: this.$t('overall.startTime'),
           prop: 'startAt',
           show: true
         }, {
-          label: this.$t('alert.endAt'),
+          label: this.$t('overall.endTime'),
           prop: 'endAt',
           show: true
         }, {
@@ -231,14 +231,14 @@ export default {
           disabled: false
         }, {
           id: 12,
-          name: this.$t('alert.list.state'),
+          name: this.$t('overall.state'),
           type: 'select',
           label: 'alertMessageState',
           disabled: false
         },
         {
           id: 26,
-          name: this.$t('alert.list.id'),
+          name: this.$t('asset.id'),
           type: 'id',
           label: 'id',
           disabled: false
@@ -696,6 +696,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        this.searchLabel = {}
         if (this.from === fromRoute.module) {
           this.searchLabel.moduleIds = n.id
         } else {

@@ -18,7 +18,7 @@
         <detailViewTopSearch :selectValue.sync="selectValue" :detailSearchList="detailSearchList" @reload="reloadTable" />
       </template>
       <template v-slot:top-tool-right>
-        <button id="asset-create-asset" v-has="'monitor_endpoint_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
+        <button id="asset-create-asset" v-has="'monitor_endpoint_add'" :title="$t('asset.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
        <top-tool-more-options
@@ -893,6 +893,14 @@ export default {
       this.object = {
         ...this.newObject(),
         assetId: JSON.stringify(this.$route.query.assetId)
+      }
+      this.rightBox.show = true
+    }
+    if (this.$route.query && this.$route.query.moduleId) {
+      this.object = {
+        ...this.newObject(),
+        moduleId: Number(this.$route.query.moduleId),
+        projectId: Number(this.$route.query.projectId)
       }
       this.rightBox.show = true
     }

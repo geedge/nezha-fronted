@@ -85,7 +85,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item
-                    :label="$t('dashboard.panel.chartForm.limit')"
+                    :label="$t('overall.limit')"
                     class="form-item--half-width"
                     prop="param.limit"
                   >
@@ -133,7 +133,7 @@
       <div class="form-items--half-width-group">
         <!-- type -->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.type')"
+          :label="$t('overall.type')"
           class="form-item--half-width"
           prop="type"
         >
@@ -290,7 +290,7 @@
       <div class="form-items--half-width-group">
         <!-- text -->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.display')"
+          :label="$t('config.assetLabel.display')"
           class="form-item--half-width"
           prop="param.nullType"
           v-if="isShowText(chartConfig.type)"
@@ -326,7 +326,7 @@
       <div v-if="isShowLegend(chartConfig.type)">
         <!--legendConfig-->
         <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.chartForm.legendConfig')}}</span>
+          <span>{{$t('dashboard.panel.chartForm.legend')}}</span>
           <el-switch v-model="chartConfig.param.enable.legend" size="small" @change="change"></el-switch>
         </div>
         <transition name="el-zoom-in-top">
@@ -385,7 +385,7 @@
 
         <!--thresholdConfig-->
         <div class="form__sub-title" v-if="isThresholdConfig(chartConfig.type)">
-          <span>{{$t('dashboard.panel.chartForm.threshold')}}</span>
+          <span>{{$t('alert.config.threshold')}}</span>
           <el-switch
             v-model="chartConfig.param.enable.thresholds"
             size="small"
@@ -479,7 +479,7 @@
             </el-row>
             <el-row class="thresholds-item" v-show="item.show" :key="2">
               <div>
-                <div class='mapping-display'>{{$t('dashboard.panel.chartForm.display')}}</div>
+                <div class='mapping-display'>{{$t('config.assetLabel.display')}}</div>
               </div>
               <el-form-item :prop="'param.columns.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                 <el-input v-model="item.display"  style="margin-right: 10px" size="small"  @change="change('columns',index)"/>
@@ -628,7 +628,7 @@
                     <el-input v-model="item.column"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.column')" size="small" @change="change('valueMapping', index)"/>
                   </el-form-item>
                   <div>
-                    <div class='mapping-display'>{{$t('dashboard.panel.chartForm.display')}}</div>
+                    <div class='mapping-display'>{{$t('config.assetLabel.display')}}</div>
                   </div>
                   <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.display" style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)" class="mapping-display-input">

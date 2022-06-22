@@ -1,7 +1,7 @@
 <template>
   <div class="system">
     <div class="system-config-form">
-      <div class="system-title">{{$t('config.system.basic.title')}}</div>
+      <div class="system-title">{{$t('overall.basicInfo')}}</div>
       <el-form :model="ldap"  label-width="180px" size="small" ref="ldapForm" :rules="ldap.ldap_enable == 'on'?ldapRules:{}" :validate-on-rule-change="false">
         <el-form-item :label="$t('config.system.ldap.active')" prop="ldap_enable">
           <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off' @change="switchChange('ldapForm')" id="system-ldap-ldap_enable"></el-checkbox>
@@ -12,7 +12,7 @@
         <el-form-item :label="$t('config.system.ldap.dn')" prop="ldap_dn">
           <el-input v-model="ldap.ldap_dn" id="system-ldap-ldap_dn"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('config.system.ldap.pin')" prop="ldap_password">
+        <el-form-item :label="$t('login.pin')" prop="ldap_password">
           <el-input id="system-ldap-ldap_password" v-model="ldap.ldap_password" type="password"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.system.ldap.ou')" class="has-tip" prop="ldap_ou">
@@ -30,13 +30,13 @@
         </el-form-item>
         <el-form-item :label="$t('config.system.ldap.timeout')" prop="ldap_timeout">
           <el-input v-model.number="ldap.ldap_timeout" >
-            <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+            <template slot="append"><span >{{$t('alert.config.second')}}</span></template>
           </el-input>
         </el-form-item>
         <el-form-item>
           <!--              <button id='system-ldap-reset' @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light" type="button">{{$t('overall.reset')}}</button>-->
           <button id='system-ldap-test' :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button" @click="testSetInfo('ldap','ldapForm')">{{$t('config.system.email.testConnection')}}</button>
-          <button id='system-ldap-save' v-has="'system_ldap_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('ldap','ldapForm')">{{$t('overall.submit')}}</button>
+          <button id='system-ldap-save' v-has="'system_ldap_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('ldap','ldapForm')">{{$t('overall.save')}}</button>
         </el-form-item>
       </el-form>
     </div>

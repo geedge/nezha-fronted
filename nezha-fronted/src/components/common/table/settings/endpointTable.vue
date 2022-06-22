@@ -76,7 +76,7 @@
           <span style="cursor: pointer"  @click="showBottomBox('endpointAlertMessage', scope.row)">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
-              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
+              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
               <div class="severity-info" style='justify-content: space-between'>
                 <div class="severity-name">{{$t('overall.result.total')}}</div>
                 <div class="severity-value">{{scope.row.alertNum}}</div>
@@ -108,7 +108,7 @@
                   @mouseenter="labelHoverConfigs(scope.row, 0, true, $event)"
                   @mouseleave="labelHoverConfigs(scope.row, 0, false, $event)"
             >
-            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
+            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('overall.metric')}} </span>
             <span v-if="scope.row.configs[0].state===0 || !scope.row.configs[0].state">
               <span class="active-icon red-bg inline-block"></span>
             </span>
@@ -128,7 +128,7 @@
             <span style="width: auto;display: inline-block;cursor: pointer"
                   @mouseenter="labelHoverConfigs(scope.row, 1, true, $event)"
                   @mouseleave="labelHoverConfigs(scope.row, 1, false, $event)">
-           <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
+           <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('overall.logs')}} </span>
            <span v-if="scope.row.configs[1].state===0 || !scope.row.configs[1].state">
              <span class="active-icon red-bg inline-block"></span>
            </span>
@@ -146,8 +146,8 @@
             </nz-tooltip>
           </template>
           <template v-else-if="item.prop === 'enabled'">
-            <span v-if="scope.row[item.prop] === 1">{{$t('project.endpoint.enable')}}</span>
-            <span v-else>{{$t('project.endpoint.disable')}}</span>
+            <span v-if="scope.row[item.prop] === 1">{{$t('overall.enable')}}</span>
+            <span v-else>{{$t('profile.close')}}</span>
           </template>
           <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
           <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
@@ -228,7 +228,7 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('project.endpoint.name'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           minWidth: 200,
@@ -241,7 +241,7 @@ export default {
           sortable: 'custom'
         },
         {
-          label: this.$t('project.endpoint.asset'),
+          label: this.$t('asset.asset'),
           prop: 'asset',
           show: true,
           minWidth: 90,
@@ -253,20 +253,20 @@ export default {
           show: true
         },
         {
-          label: this.$t('project.endpoint.configs'),
+          label: this.$t('project.module.configs'),
           prop: 'configs',
           minWidth: 150,
           show: false
         },
         {
-          label: this.$t('project.endpoint.alerts'),
+          label: this.$t('overall.alert'),
           prop: 'alerts',
           show: true,
           Width: 120,
           sortable: 'custom'
         },
         {
-          label: this.$t('project.endpoint.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           minWidth: 200

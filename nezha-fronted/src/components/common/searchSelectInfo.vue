@@ -28,11 +28,11 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   alertType: [ // 告警类型
     {
       value: 1,
-      label: i18n.t('alert.config.typeOption.project')
+      label: i18n.t('project.project.projectName')
     },
     {
       value: 2,
-      label: i18n.t('alert.config.typeOption.module')
+      label: i18n.t('overall.module')
     },
     {
       value: 3,
@@ -57,10 +57,10 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: i18n.t('config.agent.up')
     }, {
       value: 0,
-      label: i18n.t('config.agent.down')
+      label: i18n.t('asset.down')
     }, {
       value: 2,
-      label: i18n.t('cconfig.dc.suspended')
+      label: i18n.t('asset.suspended')
     }
   ],
   promState: [
@@ -69,17 +69,17 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: i18n.t('config.agent.up')
     }, {
       value: '0,-1',
-      label: i18n.t('config.agent.down')
+      label: i18n.t('asset.down')
     }
   ],
   pingStatus: [
     {
       value: '0',
-      label: i18n.t('asset.pingInactive')
+      label: i18n.t('license.inactive')
     },
     {
       value: '1',
-      label: i18n.t('asset.pingActive')
+      label: i18n.t('overall.active')
     }
   ],
   credentialType: [
@@ -94,31 +94,31 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   operation: [
     {
       value: 'add',
-      label: i18n.t('config.operationlog.operations.add')
+      label: i18n.t('buttons.add')
     },
     {
       value: 'update',
-      label: i18n.t('config.operationlog.operations.update')
+      label: i18n.t('profile.update')
     },
     {
       value: 'query',
-      label: i18n.t('config.operationlog.operations.query')
+      label: i18n.t('overall.query')
     },
     {
       value: 'import',
-      label: i18n.t('config.operationlog.operations.import')
+      label: i18n.t('overall.importExcel')
     },
     {
       value: 'export',
-      label: i18n.t('config.operationlog.operations.export')
+      label: i18n.t('overall.exportExcel')
     },
     {
       value: 'delete',
-      label: i18n.t('config.operationlog.operations.delete')
+      label: i18n.t('overall.delete')
     },
     {
       value: 'reset',
-      label: i18n.t('config.operationlog.operations.reset')
+      label: i18n.t('overall.reset')
     },
     {
       value: 'unknown',
@@ -126,11 +126,11 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     },
     {
       value: 'login',
-      label: i18n.t('config.operationlog.operations.login')
+      label: i18n.t('login.login')
     },
     {
       value: 'logout',
-      label: i18n.t('config.operationlog.operations.logout')
+      label: i18n.t('overall.signOut')
     }
   ],
   alertMessageState: [
@@ -150,7 +150,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     },
     {
       value: 'TELNET',
-      label: i18n.t('config.terminallog.TELNET')
+      label: i18n.t('asset.telnetProtocol')
     }
   ],
   state: [
@@ -176,11 +176,11 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   ack: [
     {
       value: '1',
-      label: i18n.t('config.system.reset.yes')
+      label: i18n.t('tip.yes')
     },
     {
       value: '0',
-      label: i18n.t('config.system.reset.no')
+      label: i18n.t('tip.no')
     }
   ],
   varType: [
@@ -222,11 +222,11 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     },
     {
       value: 'url',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.url.label')
+      label: i18n.t('dashboard.panel.chartForm.url')
     },
     {
       value: 'group',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.group.label')
+      label: i18n.t('dashboard.panel.chartForm.group')
     }
   ],
   terminalStatus: [
@@ -250,7 +250,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   searchMetrics: [
     {
       id: 1,
-      name: i18n.t('project.metrics.metrics'),
+      name: i18n.t('overall.metric'),
       searchType: 'alertTypes'
     },
     {

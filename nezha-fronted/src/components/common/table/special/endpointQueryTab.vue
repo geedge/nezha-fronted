@@ -22,7 +22,7 @@
         :min-width="1000"
         column-key="element"
         :show-overflow-tooltip="true"
-        :label="$t('project.endpoint.element')">
+        :label="$t('dashboard.panel.chartForm.element')">
         <template v-slot="scope">
           <el-popover trigger="hover" placement="right">
             <meta-data :metaDataList="metaDataList" :metaName="scope.row.metricTip.metric" />
@@ -35,7 +35,7 @@
         :resizable="false"
         prop="value"
         column-key="value"
-        :label="$t('project.endpoint.value')"
+        :label="$t('overall.value')"
         min-width="180">
       </el-table-column>
       <template  slot="empty">

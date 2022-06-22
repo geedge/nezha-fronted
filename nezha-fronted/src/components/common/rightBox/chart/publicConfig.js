@@ -277,7 +277,7 @@ export default {
       ],
       textList: [
         {
-          label: this.$t('config.assetLabel.all'),
+          label: this.$t('overall.exportAll'),
           value: 'all'
         }, {
           label: this.$t('overall.value'),

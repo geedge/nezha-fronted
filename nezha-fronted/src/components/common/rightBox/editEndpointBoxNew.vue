@@ -10,10 +10,10 @@
          {{ $t("project.module.batchEndpoint")}}
         </span>
           <span v-if="optionType === 'add'">
-         {{ $t("project.module.createEndpoint")}}
+         {{ $t("overall.createEndpoint")}}
         </span>
         <span v-if="optionType === 'batchAdd'">
-         {{ $t("project.module.createEndpoint")}}
+         {{ $t("overall.createEndpoint")}}
         </span>
       </div>
       <!-- end--标题-->
@@ -39,7 +39,7 @@
             </el-select>
           </el-form-item>
           <!--asset-->
-          <el-form-item :label='$t("project.module.asset")' label-width="125px" prop="assetId" v-if="!disabled">
+          <el-form-item :label='$t("asset.asset")' label-width="125px" prop="assetId" v-if="!disabled">
 <!--            <el-select id="module-box-input-asset"  @change="renderEndpoint" v-model="editEndpoint.assetId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">-->
 <!--              <el-option v-for="item in assetList" :id="'asset-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
 <!--            </el-select>-->
@@ -62,15 +62,15 @@
               :result-format="resultFormat"
             ></v-selectpage>
           </el-form-item>
-          <el-form-item :label='$t("project.module.asset")' label-width="125px" prop="assetName" v-if="disabled">
+          <el-form-item :label='$t("asset.asset")' label-width="125px" prop="assetName" v-if="disabled">
             <el-input id="module-box-input-assetName" v-model="editEndpoint.assetName" :disabled="disabled"   placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--name-->
-          <el-form-item v-if="optionType!=='batch'" :label='$t("project.module.name")' label-width="125px" prop="name">
+          <el-form-item v-if="optionType!=='batch'" :label='$t("overall.name")' label-width="125px" prop="name">
             <el-input id="module-box-input-name" v-model="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--Enpoint template-->
-          <div class="right-box-sub-title">{{ $t("overall.configEndpoint") }}
+          <div class="right-box-sub-title">{{ $t("project.module.configs") }}
 <!--            <el-tooltip effect="light" placement="top">-->
 <!--              <div slot="content">-->
 <!--                {{$t('project.module.tip.defaultEndpointSet')}}-->
@@ -82,7 +82,7 @@
           </div>
           <div class="right-box-line"></div>
           <!-- ChartTemplate  -->
-<!--          <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">-->
+<!--          <el-form-item :label="$t('overall.chartTemp')" prop="ChartTemplate">-->
 <!--            <v-selectpage-->
 <!--              v-model="editEndpoint.chartIds"-->
 <!--              :data="chartTempList"-->
@@ -103,7 +103,7 @@
           <div class="endpoint-title">
             <span class="endpoint-title-content">
               <i class="nz-icon nz-icon-arrow-down" :class="metricsShow?'':'is-active'" @click="metricsShow = !metricsShow"></i>
-             {{$t('project.endpoint.metrics')}}
+             {{$t('overall.metric')}}
             </span>
             <el-switch v-model="editEndpoint.configs[0].enable" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
@@ -111,21 +111,21 @@
             <el-tabs v-model="activeName" v-show="metricsShow" v-if="editEndpoint.configs[0].enable">
               <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
                 <!--type-->
-                <el-form-item :label='$t("project.endpoint.protocol")' class="half-form-item" prop="type">
+                <el-form-item :label='$t("webshell.protocol")' class="half-form-item" prop="type">
                   <el-select id="module-box-input-type" v-model="editEndpoint.configs[0].config.protocol" :disabled="!!editEndpoint.id && editEndpoint.configs[0].config.protocol === 'snmp'" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
                     <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value" :disabled="item.disabled && !!editEndpoint.id"></el-option>
                   </el-select>
                 </el-form-item>
                 <!--host-->
-                <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host">
+                <el-form-item :label='$t("asset.host")' class="half-form-item" prop="configs.0.config.host">
                   <el-input id="module-box-input-host" v-model="editEndpoint.configs[0].config.host" placeholder="" size="small"></el-input>
                 </el-form-item>
                 <!--path-->
-                <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
+                <el-form-item :label='$t("config.terminallog.path")' class="half-form-item" prop="configs.metrics_path">
                   <el-input id="module-box-input-path" v-model="editEndpoint.configs[0].config.metrics_path" placeholder="" size="small" :disabled="editEndpoint.configs[0].config.protocol === 'snmp'"></el-input>
                 </el-form-item>
                 <!--port-->
-                <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs.0.config.port" :rules="[
+                <el-form-item :label='$t("asset.port")' class="half-form-item" prop="configs.0.config.port" :rules="[
                 { validator: port, trigger: 'blur' },
                 { required: true, message: $t('validate.required'), trigger: 'blur' }
               ]">
@@ -173,7 +173,7 @@
                   <div v-show="showAllBasicOption" >
                     <!--scrape_interval-->
                     <el-form-item :label='$t("project.endpoint.scrape_interval")' class="half-form-item" prop="scrape_interval">
-                      <el-input id="module-box-input-scrape_interval" v-model.number="editEndpoint.configs[0].config.scrape_interval" :placeholder='$t("project.endpoint.scrape_interval_placeholder")' size="small">
+                      <el-input id="module-box-input-scrape_interval" v-model.number="editEndpoint.configs[0].config.scrape_interval" :placeholder='$t("alert.config.inrPlaceholder")' size="small">
                         <template slot="append">s</template>
                       </el-input>
                     </el-form-item>
@@ -193,7 +193,7 @@
                 </span>
                 </div>
               </el-tab-pane>
-              <el-tab-pane :label="$t('project.endpoint.parameter')" name="Parameter" class="el-tab-pane-height">
+              <el-tab-pane :label="$t('config.assetLabel.params')" name="Parameter" class="el-tab-pane-height">
                 <div id="module-box-params" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                   <div v-for="(item, index) in editEndpoint.paramObj" :key="index" class="param-box-row">
                     <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key" :rules="[{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('overall.ASCIIKey') ,trigger: 'blur'}]">
@@ -316,25 +316,25 @@
                  </span>
                 </div>
               </el-tab-pane>
-              <el-tab-pane v-if="editEndpoint.configs[0].config.protocol !== 'snmp'" :label="$t('project.endpoint.auth')" name="Auth">
+              <el-tab-pane v-if="editEndpoint.configs[0].config.protocol !== 'snmp'" :label="$t('config.mib.credential.auth')" name="Auth">
                 <!--authtype-->
-                <el-form-item :label='$t("project.endpoint.type")' prop="authtype">
+                <el-form-item :label='$t("overall.type")' prop="authtype">
                   <el-select id="module-box-input-auth-type" v-model="authType" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
                     <el-option v-for="item in authTypeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                   </el-select>
                 </el-form-item>
 
                 <!--authtype 1-->
-                <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="configs.0.config.basic_auth.username" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+                <el-form-item v-if="authType === 1" :label='$t("asset.username")' class="half-form-item" prop="configs.0.config.basic_auth.username" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                   <el-input id="module-box-input-uername" v-model="editEndpoint.configs[0].config.basic_auth.username" placeholder='' size="small"></el-input>
                 </el-form-item>
 
-                <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+                <el-form-item v-if="authType === 1" :label='$t("login.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                   <el-input id="module-box-input-password" v-model="editEndpoint.configs[0].config.basic_auth.pin" type="password" autocomplete="new-password" placeholder='' size="small"></el-input>
                 </el-form-item>
 
                 <!--authtype 2-->
-                <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="configs.0.config.bearer_token" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+                <el-form-item v-if="authType === 2" :label='$t("project.endpoint.authTypeToken")' prop="configs.0.config.bearer_token" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                   <el-input id="module-box-input-bearer_token" v-model="editEndpoint.configs[0].config.bearer_token" placeholder='' size="small"></el-input>
                 </el-form-item>
 
@@ -344,7 +344,7 @@
           <div class="endpoint-title" style="margin-top: 10px">
             <span class="endpoint-title-content">
                <i class="nz-icon nz-icon-arrow-down" :class="logsShow?'':'is-active'" @click="logsShow = !logsShow"></i>
-             {{$t('project.endpoint.logs')}}
+             {{$t('overall.logs')}}
             </span>
             <el-switch v-model="editEndpoint.configs[1].enable" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
@@ -354,14 +354,14 @@
                 <el-tabs v-model="activeNameLogs[index]" class="special-tabs" @tab-click="()=>{tabClick(index)}">
                   <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
                     <!--type-->
-                    <el-form-item :label='$t("project.endpoint.type")' class="half-form-item">
+                    <el-form-item :label='$t("overall.type")' class="half-form-item">
                       <el-select id="module-box-input-type" v-model="item.type" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
                         <el-option v-for="item in logsBasicList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                       </el-select>
                     </el-form-item>
                     <el-form-item
                       v-if='item.type === "file"'
-                      :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.panel.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
                       :prop="'configs.1.config.'+ index +'.fileName'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                     >
@@ -369,7 +369,7 @@
                     </el-form-item>
                     <el-form-item
                       v-if='item.type === "journal"'
-                      :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.panel.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
                       :prop="'configs.1.config.'+ index +'.unit'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                     >
@@ -377,7 +377,7 @@
                     </el-form-item>
                     <el-form-item
                       v-if='item.type === "syslog"'
-                      :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.panel.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
                       :prop="'configs.1.config.'+ index +'.listenAddress'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                     >
@@ -631,7 +631,7 @@ export default {
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
         {
-          title: this.$t('config.model.titleName'),
+          title: this.$t('overall.name'),
           data: function (row) {
             if (row.name.length > 15) {
               return row.name.substring(0, 12) + '...'
@@ -639,7 +639,7 @@ export default {
             return row.name
           }
         },
-        { title: this.$t('config.model.titleType'), data: 'type' },
+        { title: this.$t('overall.type'), data: 'type' },
         {
           title: this.$t('overall.remark'),
           data: function (row) {
@@ -654,7 +654,8 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' },
-          { validator: this.optionType === 'batch' ? '' : noSpecialChar, trigger: 'change' }
+          { validator: this.optionType === 'batch' ? '' : noSpecialChar, trigger: 'change' },
+          { max: 64, message: this.$t('config.system.link.nameMaxLength'), trigger: 'blur' }
         ],
         assetId: [
           { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'change' }
@@ -709,13 +710,13 @@ export default {
       ],
       authType: 0,
       authTypeList: [
-        { name: this.$t('project.endpoint.authTypeNull'), value: 0 },
+        { name: this.$t('project.topology.none'), value: 0 },
         { name: this.$t('project.endpoint.authTypeWord'), value: 1 },
         { name: this.$t('project.endpoint.authTypeToken'), value: 2 }
       ],
       endpointStateList: [
-        { name: this.$t('project.endpoint.enable'), value: 1 },
-        { name: this.$t('project.endpoint.disable'), value: 0 }
+        { name: this.$t('overall.enable'), value: 1 },
+        { name: this.$t('profile.close'), value: 0 }
       ],
       configsCopyValue: '',
       pipelineOption: [

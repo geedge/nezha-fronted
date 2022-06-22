@@ -42,7 +42,7 @@
       <div v-if="importBox.type == 2">
         <div class="upload-body">
           <button @click="exportCur"  class="el-button el-button--default el-button--small" :id="id+'-xlsx-export-current'">
-            <span>{{$t('overall.exportCur')}}</span>
+            <span>{{$t('overall.current')}}</span>
           </button>
           <button  @click="exportAll"  class="el-button el-button--default el-button--small" :id="id+'-xlsx-export-all'">
             <span>{{$t('overall.exportAll')}}</span>

@@ -8,7 +8,7 @@
       :class="popperClass">
       <div class="el-time-range-picker__content">
         <div class="el-time-range-picker__cell">
-          <div class="el-time-range-picker__header">{{ t('el.datepicker.startTime') }}</div>
+          <div class="el-time-range-picker__header">{{ t('overall.startTime') }}</div>
           <div
             :class="{ 'has-seconds': showSeconds, 'is-arrow': arrowControl }"
             class="el-time-range-picker__body el-time-panel__content">
@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="el-time-range-picker__cell">
-          <div class="el-time-range-picker__header">{{ t('el.datepicker.endTime') }}</div>
+          <div class="el-time-range-picker__header">{{ t('overall.endTime') }}</div>
           <div
             :class="{ 'has-seconds': showSeconds, 'is-arrow': arrowControl }"
             class="el-time-range-picker__body el-time-panel__content">
@@ -46,7 +46,7 @@
         <button
           type="button"
           class="el-time-panel__btn cancel"
-          @click="handleCancel()">{{ t('el.datepicker.cancel') }}</button>
+          @click="handleCancel()">{{ t('overall.cancel') }}</button>
         <button
           type="button"
           class="el-time-panel__btn confirm"

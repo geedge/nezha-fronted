@@ -19,21 +19,21 @@
       <template v-if="activeIndex === 0">
         <div class="desc-text">{{$t('guide.dcTip')}}</div>
         <div class="guide__btn-group">
-          <button :class="{'guide__btn--disabled': !hasButton('dc_add')}" class="guide__btn" type="button" @click="jumpAndOpen('dc')">{{$t('guide.addDc')}}</button>
-          <button :class="{'guide__btn--disabled': !hasButton('dc_add')}" class="guide__btn" type="button" @click="jumpAndOpen('cabinet')">{{$t('guide.addCabinet')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('dc_add')}" class="guide__btn" type="button" @click="jumpAndOpen('dc')">{{$t('overall.createDatacenter')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('dc_add')}" class="guide__btn" type="button" @click="jumpAndOpen('cabinet')">{{$t('overall.createCabinet')}}</button>
         </div>
       </template>
       <template v-if="activeIndex === 1">
         <div class="desc-text">{{$t('guide.agentTip')}}</div>
         <div class="guide__btn-group">
-          <button :class="{'guide__btn--disabled': !hasButton('agent_add')}" class="guide__btn" type="button" @click="jumpAndOpen('agent')">{{$t('guide.addAgent')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('agent_add')}" class="guide__btn" type="button" @click="jumpAndOpen('agent')">{{$t('overall.createPrometheusServer')}}</button>
           <button :class="{'guide__btn--disabled': !hasButton('agent_add')}" class="guide__btn" type="button" @click="downloadAgent">{{$t('guide.downloadAgent')}}</button>
         </div>
       </template>
       <template v-if="activeIndex === 2">
         <div class="desc-text">{{$t('guide.assetTip')}}</div>
         <div class="guide__btn-group">
-          <button :class="{'guide__btn--disabled': !hasButton('asset_add')}" class="guide__btn" type="button" @click="jumpAndOpen('asset')">{{$t('guide.addAsset')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('asset_add')}" class="guide__btn" type="button" @click="jumpAndOpen('asset')">{{$t('asset.createAsset')}}</button>
           <button :class="{'guide__btn--disabled': !hasButton('asset_add')}" class="guide__btn" type="button" @click="jumpAndOpen('importAsset')">{{$t('guide.importAsset')}}</button>
           <button :class="{'guide__btn--disabled': !hasButton('asset_add')}" class="guide__btn" type="button" @click="openTerminal">{{$t('guide.webTerminal')}}</button>
         </div>
@@ -41,8 +41,8 @@
       <template v-if="activeIndex === 3">
         <div class="desc-text">{{$t('guide.monitorTip')}}</div>
         <div class="guide__btn-group">
-          <button :class="{'guide__btn--disabled': !hasButton('project_add')}" class="guide__btn" type="button" @click="jumpAndOpen('project')">{{$t('guide.addProject')}}</button>
-          <button :class="{'guide__btn--disabled': !hasButton('monitor_module_add')}" class="guide__btn" type="button" @click="jumpAndOpen('module')">{{$t('guide.addModule')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('project_add')}" class="guide__btn" type="button" @click="jumpAndOpen('project')">{{$t('overall.createProject')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('monitor_module_add')}" class="guide__btn" type="button" @click="jumpAndOpen('module')">{{$t('overall.createModule')}}</button>
           <button :class="{'guide__btn--disabled': !hasButton('monitor_endpoint_add')}" class="guide__btn" type="button" @click="jumpAndOpen('endpoint')">{{$t('guide.addEndpoint')}}</button>
           <button :class="{'guide__btn--disabled': !hasButton('monitor_endpoint_add')}" class="guide__btn" type="button" @click="jumpAndOpen('importEndpoint')">{{$t('guide.importEndpoint')}}</button>
         </div>
@@ -50,14 +50,14 @@
       <template v-if="activeIndex === 4">
         <div class="desc-text">{{$t('guide.visualizationTip')}}</div>
         <div class="guide__btn-group">
-          <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('panel')">{{$t('guide.addPanel')}}</button>
-          <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('chart')">{{$t('guide.addChart')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('panel')">{{$t('dashboard.panel.createPanelTitleSec')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('chart')">{{$t('overall.createChart')}}</button>
         </div>
       </template>
       <template v-if="activeIndex === 5">
         <div class="desc-text">{{$t('guide.alertTip')}}</div>
         <div class="guide__btn-group">
-          <button :class="{'guide__btn--disabled': !hasButton('alertRule_add')}" class="guide__btn" type="button" @click="jumpAndOpen('alertRule')">{{$t('guide.addAlertRule')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('alertRule_add')}" class="guide__btn" type="button" @click="jumpAndOpen('alertRule')">{{$t('config.user.language')}}</button>
         </div>
       </template>
     </div>
@@ -80,7 +80,7 @@ export default {
       guideList: [
         {
           route: '/dc',
-          title: this.$t('guide.dc'),
+          title: this.$t('overall.dc'),
           icon: 'nz-icon nz-icon-datacenter1',
           tip: this.$t('guide.dcTip'),
           permissionCode: 'dc_view'
@@ -94,7 +94,7 @@ export default {
         },
         {
           route: '/asset',
-          title: this.$t('guide.asset'),
+          title: this.$t('asset.asset'),
           icon: 'nz-icon nz-icon-menu-assets',
           tip: this.$t('guide.assetTip'),
           permissionCode: 'asset_view'
@@ -115,7 +115,7 @@ export default {
         },
         {
           route: '/alertRule',
-          title: this.$t('guide.alert'),
+          title: this.$t('overall.alert'),
           icon: 'nz-icon nz-icon-menu-alert',
           tip: this.$t('guide.alertTip'),
           permissionCode: 'alertRule_view'

@@ -34,7 +34,7 @@
                   <span v-if="assetData > 1000 " class="over-num">+</span>
                 </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("dashboard.overview.asset.title")}}</div>
+              <div class="content-col-content-title">{{$t("asset.asset")}}</div>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
                   <span v-if="projectData.total > 1000 " class="over-num">+</span>
                 </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("dashboard.overview.project.project")}}</div>
+              <div class="content-col-content-title">{{$t("project.project.projectName")}}</div>
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@
                   <span v-if="moduleData.total > 1000 " class="over-num">+</span>
                 </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("dashboard.overview.module.module")}}</div>
+              <div class="content-col-content-title">{{$t("overall.module")}}</div>
             </div>
           </div>
         </div>
@@ -79,7 +79,7 @@
                   <span v-if="endpointData.num > 1000 " class="over-num">+</span>
                 </div>
               </el-tooltip>
-              <div class="content-col-content-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
+              <div class="content-col-content-title">{{$t("asset.endpoint")}}</div>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@
       <div class="content-row-box">
         <div class="content-col-box">
           <div class="content-col-title">
-            <span>{{$t("dashboard.overview.projectTopoLogy")}}</span>
+            <span>{{$t("dashboard.panel.chartForm.typeVal.topology.label")}}</span>
           </div>
           <div v-my-loading="topologyLoading"  class="content-col-content">
             <transition name = "el-zoom-in-center">
@@ -126,7 +126,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-title">{{$t("dashboard.overview.dataCenter.dataCenter")}}</div>
+          <div class="content-col-title">{{$t("overall.dc")}}</div>
           <div class="content-col-content">
             <div id="map" style="height: 100%; width: 100%"></div>
           </div>
@@ -137,7 +137,7 @@
         <!--第一个图-->
         <div class="content-col-box">
           <div class="content-col-title">
-            <span>{{$t("dashboard.overview.asset.assetState")}}</span>
+            <span>{{$t("dashboard.overview.overall.state")}}</span>
           </div>
           <div class="content-col-content">
             <chart-box ref="assetTypePie" :show-toolbox="false" :tooltip-formatter="assetStateFormatter" chart-type="pie" name="assetTypePie" @is-loading="(isLoading)=>{this.assetTypeLoading = isLoading}"></chart-box>
@@ -641,19 +641,19 @@ export default {
         const prometheusOption = chartConfig.getOption('tooltipPie')
         endpointOption.series[0].label.formatter = data.asset.total + ''
         endpointOption.series[0].data = [
-          { name: vm.$t('dashboard.overview.asset.ok'), value: data.asset.ok ? data.asset.ok : 0 },
+          { name: vm.$t('el.datepicker.confirm'), value: data.asset.ok ? data.asset.ok : 0 },
           { name: vm.$t('dashboard.overview.asset.alarm'), value: data.asset.alarm ? data.asset.alarm : 0 }
           // { name: vm.$t('dashboard.overview.asset.total'), value: data.asset.total ? data.asset.total : 0 }
         ]
         endpointOption.title.text = vm.$t('asset.asset')
-        endpointOption.legend.data = [vm.$t('dashboard.overview.asset.ok'), vm.$t('dashboard.overview.asset.alarm')]
+        endpointOption.legend.data = [vm.$t('el.datepicker.confirm'), vm.$t('dashboard.overview.asset.alarm')]
         prometheusOption.series[0].label.formatter = data.agent.up + ''
         prometheusOption.series[0].data = [
           { name: vm.$t('config.agent.up'), value: data.agent.up ? data.agent.up : 0 },
-          { name: vm.$t('config.agent.down'), value: data.agent.down ? data.agent.down : 0 }
+          { name: vm.$t('asset.down'), value: data.agent.down ? data.agent.down : 0 }
         ]
-        prometheusOption.title.text = vm.$t('config.agent.agent.agent')
-        prometheusOption.legend.data = [vm.$t('config.agent.up'), vm.$t('config.agent.down')]
+        prometheusOption.title.text = vm.$t('guide.agent')
+        prometheusOption.legend.data = [vm.$t('config.agent.up'), vm.$t('asset.down')]
         tooltipEndpointChart && tooltipEndpointChart.setOption(endpointOption, true)
         tooltipPrometheusChart && tooltipPrometheusChart.setOption(prometheusOption, true)
       }, 100)

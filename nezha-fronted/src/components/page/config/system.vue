@@ -4,7 +4,7 @@
       <el-tab-pane v-if="systemHasTab('system_basic_view')" :label="$t('config.system.basic.basic')" name="basic">
         <div class="system-config-form basicForm" v-if="switchTab === 'basic'">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
-            <div class="system-title">{{$t('config.system.basic.title')}}</div>
+            <div class="system-title">{{$t('overall.basicInfo')}}</div>
             <el-form-item :label="$t('config.system.basic.language')" prop="language">
               <el-select id="account-input-language"
                          class="right-box__select"
@@ -56,7 +56,7 @@
             <el-form-item :label="$t('config.system.basic.mapConfig')" class="basic-lnglat" prop="lnglat">
               <div style="display: flex">
                 <el-input v-model="basic.lnglat" maxlength="256" placeholder="" style="width: calc(100% - 50px); padding-right: 50px;">
-                  <template slot="prepend">{{$t('config.system.basic.lnglat')}}</template>
+                  <template slot="prepend">{{$t('config.dc.lnglat')}}</template>
                 </el-input>
                 <latlng-picker ref="latlngPicker" :init-data="basic.lnglat" :show-zoom="true" @lnglatChange="lnglatChange"></latlng-picker>
               </div>
@@ -112,31 +112,31 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-              <button id="system-basic-save" v-has="'system_basic_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-top: 8px;"  type="button" @click="saveSetInfo('basic','basicForm')">{{$t('overall.submit')}}</button>
+              <button id="system-basic-save" v-has="'system_basic_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-top: 8px;"  type="button" @click="saveSetInfo('basic','basicForm')">{{$t('overall.save')}}</button>
             </el-form-item>
           </el-form>
         </div >
       </el-tab-pane>
       <el-tab-pane v-if="systemHasTab('system_monitor_view')" :label="$t('config.system.monitor.monitor')" name="monitor">
         <div class="system-config-form basicForm" v-if="switchTab === 'monitor'">
-          <div class="system-title">{{$t('config.system.basic.title')}}</div>
+          <div class="system-title">{{$t('overall.basicInfo')}}</div>
           <el-form :model="monitor"  label-width="180px" size="small" ref="monitorForm" :rules="monitorRules" :validate-on-rule-change="false">
-            <el-form-item :label="$t('config.system.monitor.prometheusFederation')" prop="prometheus_federation_enabled">
+            <el-form-item :label="$t('setup.system.federation')" prop="prometheus_federation_enabled">
               <el-checkbox v-model="monitor.prometheus_federation_enabled" true-label="1" false-label="0"  id="system-monitor-prometheus_federation_enabled"></el-checkbox>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="default_scrape_interval">
+            <el-form-item :label="$t('project.endpoint.scrape_interval')" prop="default_scrape_interval">
               <el-input v-model.number="monitor.default_scrape_interval" >
-                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+                <template slot="append"><span >{{$t('alert.config.second')}}</span></template>
               </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.scrapeTimeout')" prop="default_scrape_timeout">
               <el-input v-model.number="monitor.default_scrape_timeout" >
-                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+                <template slot="append"><span >{{$t('alert.config.second')}}</span></template>
               </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
               <el-input v-model.number="monitor.asset_ping_interval" >
-                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+                <template slot="append"><span >{{$t('alert.config.second')}}</span></template>
               </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.monitor.asset_ping_from')" prop="asset_ping_from">
@@ -160,7 +160,7 @@
             </el-form-item>
             <transition name="el-zoom-in-top">
               <div v-show="monitor.metrics_storage_type == 2">
-                <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_endpoint')" prop="metrics_storage_s3_endpoint" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+                <el-form-item :label="$t('asset.endpoint')" prop="metrics_storage_s3_endpoint" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
                   <el-input v-model="monitor.metrics_storage_s3_endpoint" id="monitor-metrics_storage_s3_endpoint">
                   </el-input>
                 </el-form-item>
@@ -172,7 +172,7 @@
                   <el-input v-model="monitor.metrics_storage_s3_access_key" id="monitor-metrics_storage_s3_access_key">
                   </el-input>
                 </el-form-item>
-                <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_secret_access_key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+                <el-form-item :label="$t('config.terminallog.key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
                   <el-input v-model="monitor.metrics_storage_s3_secret_access_key" id="monitor-metrics_storage_s3_secret_access_key">
                   </el-input>
                 </el-form-item>
@@ -184,7 +184,7 @@
 
             <!--logs-->
             <div class="system-title system-title-border">{{$t('config.system.monitor.logsTitle')}}</div>
-            <el-form-item :label="$t('config.system.monitor.logs_storage_retention')" prop="logs_storage_retention">
+            <el-form-item :label="$t('config.system.monitor.metrics_storage_retention')" prop="logs_storage_retention">
               <el-input v-model.number="monitor.logs_storage_retention" id="monitor-logs_storage_retention">
                 <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
               </el-input>
@@ -197,19 +197,19 @@
             </el-form-item>
             <transition name="el-zoom-in-top">
               <div v-show="monitor.logs_storage_type == 2">
-                <el-form-item :label="$t('config.system.monitor.logs_storage_s3_endpoint')" prop="logs_storage_s3_endpoint" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+                <el-form-item :label="$t('asset.endpoint')" prop="logs_storage_s3_endpoint" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
                   <el-input v-model="monitor.logs_storage_s3_endpoint" id="monitor-logs_storage_s3_endpoint">
                   </el-input>
                 </el-form-item>
-                <el-form-item :label="$t('config.system.monitor.logs_storage_s3_bucket')" prop="logs_storage_s3_bucket" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+                <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_bucket')" prop="logs_storage_s3_bucket" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
                   <el-input v-model="monitor.logs_storage_s3_bucket" id="monitor-logs_storage_s3_bucket">
                   </el-input>
                 </el-form-item>
-                <el-form-item :label="$t('config.system.monitor.logs_storage_s3_access_key')" prop="logs_storage_s3_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+                <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_access_key')" prop="logs_storage_s3_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
                   <el-input v-model="monitor.logs_storage_s3_access_key" id="monitor-logs_storage_s3_access_key">
                   </el-input>
                 </el-form-item>
-                <el-form-item :label="$t('config.system.monitor.logs_storage_s3_secret_access_key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+                <el-form-item :label="$t('config.terminallog.key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
                   <el-input v-model="monitor.logs_storage_s3_secret_access_key" id="monitor-logs_storage_s3_secret_access_key">
                   </el-input>
                 </el-form-item>
@@ -224,14 +224,14 @@
               <!--                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light" type="button" id="system-basic-reset"-->
               <!--                :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"-->
               <!--              >{{$t('overall.reset')}}</button>-->
-              <button id="system-monitor-save" v-has="'system_basic_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="saveSetInfo('monitor','monitorForm')">{{$t('overall.submit')}}</button>
+              <button id="system-monitor-save" v-has="'system_basic_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="saveSetInfo('monitor','monitorForm')">{{$t('overall.save')}}</button>
             </el-form-item>
           </el-form>
         </div>
       </el-tab-pane>
       <el-tab-pane v-if="systemHasTab('system_email_view')" :label="$t('config.system.email.email')" name="email" >
         <div class="system-config-form" v-if="switchTab === 'email'">
-          <div class="system-title">{{$t('config.system.basic.title')}}</div>
+          <div class="system-title">{{$t('overall.basicInfo')}}</div>
           <el-form :model="email"  label-width="180px" size="small" ref="emailForm" :rules="email.email_enable=='on'?emailRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.email.enable')" prop="email_enable">
               <el-checkbox v-model="email.email_enable" true-label="on" false-label="off"  @change="switchChange('emailForm')" id="system-email-email_enable"></el-checkbox>
@@ -242,9 +242,9 @@
             <el-form-item :label="$t('config.system.email.smtpPort')" prop="email_port">
               <el-input v-model.number="email.email_port" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_port"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.timeout')" prop="email_timeout">
+            <el-form-item :label="$t('config.system.ldap.timeout')" prop="email_timeout">
               <el-input v-model.number="email.email_timeout" >
-                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+                <template slot="append"><span >{{$t('alert.config.second')}}</span></template>
               </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.smtpAccount')" prop="email_auth_account">
@@ -272,18 +272,18 @@
             <el-form-item style="padding-top: 20px;">
 <!--              <button id="system-email-reset" @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light" type="button">{{$t('overall.reset')}}</button>-->
               <button id="system-email-test" :class="{'nz-btn-disabled':email.email_enable == 'off','nz-btn-disabled':prevent_opt.save}" :disabled="email.email_enable == 'off' || prevent_opt.save" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button">{{$t('config.system.email.testConnection')}}</button>
-              <button id="system-email-save" v-has="'system_email_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('email','emailForm')">{{$t('overall.submit')}}</button>
+              <button id="system-email-save" v-has="'system_email_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('email','emailForm')">{{$t('overall.save')}}</button>
             </el-form-item>
           </el-form>
         </div>
       </el-tab-pane>
       <el-tab-pane v-if="systemHasTab('system_terminal_view')" :label="$t('config.system.terminal.terminal')" name="terminal">
         <div class="system-config-form terminal" v-if="switchTab === 'terminal'">
-          <div class="system-title">{{$t('config.system.basic.title')}}</div>
+          <div class="system-title">{{$t('overall.basicInfo')}}</div>
           <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
-<!--            <el-form-item :label="$t('config.system.terminal.timeout')" prop="terminal_timeout">-->
+<!--            <el-form-item :label="$t('config.system.ldap.timeout')" prop="terminal_timeout">-->
 <!--              <el-input v-model="terminal.terminal_timeout" controls-position="right" :min="1"  id="system-terminal-max_terminal_num">-->
-<!--                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>-->
+<!--                <template slot="append"><span >{{$t('alert.config.second')}}</span></template>-->
 <!--              </el-input>-->
 <!--            </el-form-item>-->
             <el-form-item :label="$t('config.system.terminal.userTip')" prop="terminal_telnet_user_tip">
@@ -298,14 +298,14 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-              <button v-has="'system_terminal_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('terminal','terminalForm')">{{$t('overall.submit')}}</button>
+              <button v-has="'system_terminal_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('terminal','terminalForm')">{{$t('overall.save')}}</button>
             </el-form-item>
           </el-form>
         </div>
       </el-tab-pane>
       <el-tab-pane v-if="systemHasTab('system_ldap_view')" :label="$t('config.system.ldap.ldap')" name="ldap">
         <div class="system-config-form" v-if="switchTab === 'ldap'">
-          <div class="system-title">{{$t('config.system.basic.title')}}</div>
+          <div class="system-title">{{$t('overall.basicInfo')}}</div>
           <el-form :model="ldap"  label-width="180px" size="small" ref="ldapForm" :rules="ldap.ldap_enable == 'on'?ldapRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.ldap.active')" prop="ldap_enable">
               <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off' @change="switchChange('ldapForm')" id="system-ldap-ldap_enable"></el-checkbox>
@@ -316,7 +316,7 @@
             <el-form-item :label="$t('config.system.ldap.dn')" prop="ldap_dn">
               <el-input v-model="ldap.ldap_dn" id="system-ldap-ldap_dn"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.ldap.pin')" prop="ldap_password">
+            <el-form-item :label="$t('login.pin')" prop="ldap_password">
               <el-input id="system-ldap-ldap_password" v-model="ldap.ldap_password" type="password"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.ou')" class="has-tip" prop="ldap_ou">
@@ -334,38 +334,38 @@
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.timeout')" prop="ldap_timeout">
               <el-input v-model.number="ldap.ldap_timeout" >
-                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+                <template slot="append"><span >{{$t('alert.config.second')}}</span></template>
               </el-input>
             </el-form-item>
             <el-form-item>
 <!--              <button id='system-ldap-reset' @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light" type="button">{{$t('overall.reset')}}</button>-->
               <button id='system-ldap-test' :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button" @click="testSetInfo('ldap','ldapForm')">{{$t('config.system.email.testConnection')}}</button>
-              <button id='system-ldap-save' v-has="'system_ldap_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('ldap','ldapForm')">{{$t('overall.submit')}}</button>
+              <button id='system-ldap-save' v-has="'system_ldap_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('ldap','ldapForm')">{{$t('overall.save')}}</button>
             </el-form-item>
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane v-if="systemHasTab('system_notification_view')" :label="$t('config.system.notification.notification')" name="notification" style="height: 100%;"><!--$t('config.system.reset.reset')-->
+      <el-tab-pane v-if="systemHasTab('system_notification_view')" :label="$t('config.system.notification.notification')" name="notification" style="height: 100%;"><!--$t('config.overall.reset')-->
         <notify-method v-if="switchTab === 'notification'" :switch-tab="switchTab"></notify-method>
       </el-tab-pane>
-      <el-tab-pane v-if="systemHasTab('system_link_view')" :label="$t('config.system.link.link')" name="link" style="height: 100%;"><!--$t('config.system.reset.reset')-->
+      <el-tab-pane v-if="systemHasTab('system_link_view')" :label="$t('config.system.link.link')" name="link" style="height: 100%;"><!--$t('config.overall.reset')-->
         <link-tab v-if="switchTab === 'link'" :switch-tab="switchTab"></link-tab>
       </el-tab-pane>
-      <el-tab-pane v-if="systemHasTab('system_apiKey_view')" :label="$t('config.system.apiKey.apiKey')" name="apiKey" style="height: 100%;"><!--$t('config.system.reset.reset')-->
+      <el-tab-pane v-if="systemHasTab('system_apiKey_view')" :label="$t('config.system.apiKey.apiKey')" name="apiKey" style="height: 100%;"><!--$t('config.overall.reset')-->
         <api-key-tab v-if="switchTab === 'apiKey'" :switch-tab="switchTab"></api-key-tab>
       </el-tab-pane>
-      <el-tab-pane v-if="systemHasTab('system_reset_view')" :label="$t('config.system.reset.reset')" name="reset">
+      <el-tab-pane v-if="systemHasTab('system_reset_view')" :label="$t('config.overall.reset')" name="reset">
         <div class="system-config-form" v-if="switchTab === 'reset'">
-          <div class="system-title">{{$t('config.system.basic.title')}}</div>
+          <div class="system-title">{{$t('overall.basicInfo')}}</div>
           <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
-            <el-form-item  prop="type" :label="$t('config.system.reset.type')">
+            <el-form-item  prop="type" :label="$t('overall.type')">
               <el-select v-model="reset.type" :placeholder="$t('el.select.placeholder')" multiple popper-class="right-box-select-top right-public-box-dropdown-top">
                 <template v-for="item in resetOptions" >
                   <el-option :label="item.label" :value="item.value" :key="item.label"></el-option>
                 </template>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('config.system.reset.pin')" prop="pin">
+            <el-form-item :label="$t('login.pin')" prop="pin">
               <el-input id="system-reset-pin" v-model="reset.pin" type="password"></el-input>
             </el-form-item>
             <el-form-item>
@@ -569,11 +569,11 @@ export default {
       },
       resetOptions: [
         {
-          label: this.$t('config.system.reset.metric'),
+          label: this.$t('overall.metric'),
           value: 'metric'
         },
         {
-          label: this.$t('config.system.reset.alert'),
+          label: this.$t('overall.alert'),
           value: 'alert'
         },
         {

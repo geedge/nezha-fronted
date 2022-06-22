@@ -35,7 +35,7 @@
           </div>
           <div class="asset-name">
             <span>{{item.severity?item.severity.name:'-'}} /
-              <span v-if="item.type === 1">{{ $t('project.metrics.metrics') }}</span>
+              <span v-if="item.type === 1">{{ $t('overall.metric') }}</span>
               <span v-else-if="item.type === 2">{{ $t('overall.logs') }}</span>
               <span v-else-if="item.type === 3">SNMP trap</span>
               <span v-else>-</span>
@@ -148,7 +148,7 @@ export default {
           show: false,
           minWidth: 100
         }, {
-          label: this.$t('config.dc.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           minWidth: 100,

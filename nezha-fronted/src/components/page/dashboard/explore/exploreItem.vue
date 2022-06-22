@@ -61,6 +61,7 @@
               :metricOptionsParent="metricOptions"
               v-for="index of promqlKeys.length"
               :id="promqlKeys[index-1]"
+              :pqid="tabIndex.toString()"
               :key="promqlKeys[index-1]"
               :ref="'promql-'+(index-1)"
               :expression-list="expressions"
@@ -78,6 +79,7 @@
             <promql-input
               v-for="index of promqlKeys.length"
               :id="promqlKeys[index-1]"
+              :pqid="tabIndex.toString()"
               :key="promqlKeys[index-1]"
               :ref="'promql-'+(index-1)"
               :expression-list="expressions"
@@ -125,7 +127,7 @@
                   </transition>
                 </div>
                 <!-- 自定义table列 -->
-                <div class="nz-table2 explore-table">
+                <div class="nz-table-list explore-table">
                   <el-table ref="exploreTable"
                             v-my-loading="tools.loading"
                             class="metric-table"
@@ -373,7 +375,7 @@ export default {
       searchMetrics: [
         {
           value: 'Metrics',
-          label: this.$t('project.metrics.metrics'),
+          label: this.$t('overall.metric'),
           icon: 'nz-icon nz-icon-Metrics'
         },
         {
@@ -382,7 +384,7 @@ export default {
           icon: 'nz-icon nz-icon-logs'
         }
       ],
-      selectValue: this.$t('project.metrics.metrics'),
+      selectValue: this.$t('overall.metric'),
       selectIcon: 'nz-icon nz-icon-Metrics',
       showMetrics: true,
       promqlCount: 1,
@@ -786,7 +788,7 @@ export default {
                 })
                 tLabels = tLabels.filter(label => label.prop !== 'time')
                 tLabels.unshift({
-                  label: this.$t('dashboard.panel.chartTableColumn.time'),
+                  label: this.$t('overall.time'),
                   prop: 'time',
                   show: true
                 })

@@ -5,7 +5,7 @@
     </transition>
 
     <div class="right-box__header">
-      <div class="header__title" v-if="from !== 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("dashboard.panel.createChartTitle")}}</div>
+      <div class="header__title" v-if="from !== 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("overall.createChart")}}</div>
       <div class="header__title" v-if="from === 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTempTitle") : $t("dashboard.panel.createChartTempTitle")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editChart, func: clickOutside}"><i class="nz-icon nz-icon-close"></i></span>
@@ -15,7 +15,7 @@
     <!-- begin--表单-->
     <div class="right-box-form-box right-box__container chart-right-box">
       <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px">
-        <el-form-item :label='$t("dashboard.panel.chartForm.name")' prop="name">
+        <el-form-item :label='$t("overall.name")' prop="name">
           <div style="display:flex;align-items:center">
             <el-input style="flex:1;margin-right:10px" maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
             <!-- 显示头部 -->
@@ -67,11 +67,11 @@
         </div>
         <!--remark-->
         <el-form-item :label="$t('overall.remark')">
-          <el-input  maxlength="256" show-word-limit v-model="editChart.remark" :autosize="{ minRows: 1, maxRows: 6}" type="textarea"/>
+          <el-input  maxlength="256" show-word-limit v-model="editChart.remark" size="small" :rows="2" type="textarea"/>
         </el-form-item>
         <!--remark-->
         <el-form-item :label="$t('overall.link')" v-if="editChart.param">
-          <el-input  maxlength="256" show-word-limit v-model="editChart.param.link" :autosize="{ minRows: 1, maxRows: 6}" type="textarea"/>
+          <el-input  maxlength="256" show-word-limit v-model="editChart.param.link" size="small" :rows="2" type="textarea"/>
         </el-form-item>
 
         <!--title-->
@@ -79,7 +79,7 @@
           <span>{{$t('dashboard.panel.chartForm.dataConfig')}}</span>
         </div>
         <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange" type="card">
-          <el-tab-pane :label="$t('project.metrics.metrics')" name="metrics">
+          <el-tab-pane :label="$t('overall.metric')" name="metrics">
             <chart-config  ref="childrenFrommetrics" :type="'metrics'" v-if="editChart.datasource == 'metrics'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane :label="$t('overall.logs')" name="logs">

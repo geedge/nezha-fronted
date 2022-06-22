@@ -45,13 +45,11 @@ export function setTopology (key, value) {
 // const topologyImgList = localStorage.getItem('nz-imgList') ? JSON.parse(localStorage.getItem('nz-imgList')) : {}
 
 export function getTopologyImg (key) {
-  // console.log(topologyCache, 'topologyCache')
-  // console.log(localStorage.getItem('nz-img-' + key), !localStorage.getItem('nz-img-' + key))
-  return localStorage.getItem('nz-img-' + key)
+  return false
 }
 
 export function setTopologyImg (key, img) {
-  localStorage.setItem('nz-img-' + key, img)
+  // localStorage.setItem('nz-topologyImg-' + key, img)
 }
 
 export function setHexagon (key, value) {

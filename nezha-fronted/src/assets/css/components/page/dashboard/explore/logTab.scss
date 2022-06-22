@@ -15,7 +15,7 @@
       text-align: center;
     }
   }
-  .log-table .nz-table2 {
+  .log-table .nz-table-list {
     padding: 10px 0 0 0;
     position: relative;
     background-color: $--background-color-empty;
@@ -133,11 +133,11 @@
 .chart-log.log-detail {
   height: 100%;
   .log-table {
-    .nz-table2::before{
+    .nz-table-list::before{
       display: none;
       height: 0px;
     }
-    .nz-table2 {
+    .nz-table-list {
       padding: 10px;
       box-sizing: border-box;
       .el-table__body-wrapper {

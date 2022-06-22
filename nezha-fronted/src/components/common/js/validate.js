@@ -154,7 +154,7 @@ export function uSize (rule, value, callback) {
     } else {
       const num = Number(value)
       if (num < 0 || num > 47) {
-        callback(new Error(vm.$t('validate.usize')))
+        callback(new Error(vm.$t('validate.uSize')))
       } else {
         callback()
       }

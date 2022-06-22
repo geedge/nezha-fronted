@@ -28,6 +28,7 @@
         :min-h="headerH"
         :max-h="12"
         :static="item.static"
+        :isGroup="isGroup"
         :class="{
           'group-hide-header':item.type === 'group' && item.param.collapse,
           'opacityItem': item.static
@@ -358,7 +359,10 @@ export default {
           this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].groupShow(item.param.collapse)
           this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].$refs.chartList.resize()
         }
-        this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].resize()
+        try {
+          this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].resize()
+        } catch (error) {
+        }
       })
     },
     refreshPanel () {
@@ -444,6 +448,15 @@ export default {
     window.removeEventListener('resize', this.resize)
   },
   watch: {
+    // 监听查看模式变化
+    '$store.state.panel.mode': {
+      immediate: true,
+      handler (val) {
+        setTimeout(() => {
+          this.resize()
+        }, 100)
+      }
+    },
     dataList: {
       immediate: true,
       deep: true,

@@ -50,11 +50,11 @@
                       <span>{{n.name}}</span>
                     </div>
                     <div>
-                      <span>{{$t('config.mib.vendor')}}:</span>
+                      <span>{{$t('asset.vendor')}}:</span>
                       <span>{{n.vendor}}</span>
                     </div>
                     <div>
-                      <span>{{$t('config.mib.type')}}:</span>
+                      <span>{{$t('overall.type')}}:</span>
                       <span>{{n.type}}</span>
                     </div>
                   </div>
@@ -132,7 +132,7 @@ export default {
           show: true,
           minWidth: 100
         }, {
-          label: this.$t('config.mib.models'),
+          label: this.$t('asset.model'),
           prop: 'modelsDetail',
           show: true
         }, {
@@ -146,7 +146,7 @@ export default {
           show: false,
           minWidth: 120
         }, {
-          label: this.$t('config.mib.updateAt'),
+          label: this.$t('alert.silence.upTime'),
           prop: 'updateAt',
           show: false,
           minWidth: 150

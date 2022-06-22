@@ -21,7 +21,7 @@
         <el-form-item :label="$t('config.menus.parent')" prop="parentId">
           <tree-select :multiple="false" :options="menus" label="id" noChildrenText="" noOptionsText="" placeholder="" v-model="editMenu.parentId" id="menu-box-input-parent"></tree-select>
         </el-form-item>
-        <el-form-item :label="$t('config.menus.type')" prop="type">
+        <el-form-item :label="$t('overall.type')" prop="type">
           <el-radio-group v-model="editMenu.type" id="menu-box-input-type">
             <el-radio :label="1">{{$t('config.menus.menu')}}</el-radio>
             <el-radio :label="2">{{$t('config.menus.button')}}</el-radio>
@@ -29,7 +29,7 @@
           </el-radio-group>
         </el-form-item>
         <!--name-->
-        <el-form-item :label="$t('config.menus.name')" prop="name">
+        <el-form-item :label="$t('overall.name')" prop="name">
           <el-input  placeholder="" type="text" v-model="editMenu.name" id="menu-box-input-name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.menus.code')" prop="code">

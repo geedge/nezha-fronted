@@ -3,9 +3,10 @@
 import 'xterm/dist/xterm.css'
 import '@/assets/css/main.scss'
 import '@/assets/css/font/iconfont.js'
+import 'intro.js/introjs.css'
 import ElementUI from 'element-ui'
 import i18n from '@/components/common/i18n'
-
+import VueIntro from 'vue-introjs'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import store from '@/store/index'
@@ -18,7 +19,6 @@ import loadsh from 'lodash'
 import plTable from 'pl-table'
 import VueClipboard from 'vue-clipboard2'
 import 'pl-table/themes/index.css'
-
 import { post, get, put, del } from '@/http.js'
 import { clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet, cancelWithChange, myLoading } from '@/components/common/js/tools.js'
 import * as tools from '@/components/common/js/tools.js'
@@ -37,7 +37,8 @@ import vSelectPage from '@/components/common/v-selectpagenew'
 import nzDataList from '@/components/common/table/nzDataList'
 import htmlToPdf from '@/components/common/js/htmlToPdf'
 import mainMixin from '@/components/common/mixin/mainMixinFun'
-
+import introJS from 'intro.js'
+Vue.use(VueIntro)
 Vue.use(htmlToPdf)
 Vue.use(vSelectPage, {
   dataLoad: function (vue, url, params) {
@@ -74,6 +75,7 @@ Vue.prototype.$stringTimeParseToUnix = stringTimeParseToUnix // 处理string类�
 Vue.prototype.$unixTimeParseToString = unixTimeParseToString
 Vue.prototype.$chartResizeTool = chartResizeTool
 Vue.prototype.$tableSet = tableSet
+Vue.prototype.$intro = introJS
 Vue.prototype.$tableHeight = { // 列表页表格的高度
   normal: 'calc(100% - 48px)', // 常规高度，特例在下方定义
   assetList: 'calc(100% - 57px)',
@@ -159,7 +161,6 @@ localStorage.setItem = function (key, value) {
   window.dispatchEvent(setItemEvent)
   orignalSetItem.apply(this, arguments)
 }
-
 /* 重写组件内容 */
 /* const elUi = require("element-ui");
 const pl = require("pl-table");

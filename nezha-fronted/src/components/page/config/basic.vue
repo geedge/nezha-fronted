@@ -2,7 +2,7 @@
   <div class="system">
     <div class="system-config-form basicForm">
       <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
-        <div class="system-title">{{$t('config.system.basic.title')}}</div>
+        <div class="system-title">{{$t('overall.basicInfo')}}</div>
         <el-form-item :label="$t('config.system.basic.systemName')" prop="system_name">
           <el-input v-model="basic.system_name"></el-input>
         </el-form-item>
@@ -60,7 +60,7 @@
         <el-form-item :label="$t('config.system.basic.mapConfig')" class="basic-lnglat" prop="lnglat">
           <div style="display: flex">
             <el-input v-model="basic.lnglat" maxlength="256" placeholder="" style="width: calc(100% - 50px); padding-right: 50px;">
-              <template slot="prepend">{{$t('config.system.basic.lnglat')}}</template>
+              <template slot="prepend">{{$t('config.dc.lnglat')}}</template>
             </el-input>
             <latlng-picker ref="latlngPicker" :init-data="basic.lnglat" :show-zoom="true" @lnglatChange="lnglatChange"></latlng-picker>
           </div>
@@ -116,7 +116,7 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <button id="system-basic-save" v-has="'system_basic_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-top: 8px;"  type="button" @click="saveSetInfo('basic','basicForm')">{{$t('overall.submit')}}</button>
+          <button id="system-basic-save" v-has="'system_basic_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-top: 8px;"  type="button" @click="saveSetInfo('basic','basicForm')">{{$t('overall.save')}}</button>
         </el-form-item>
       </el-form>
     </div >

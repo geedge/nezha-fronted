@@ -52,7 +52,7 @@ export default {
         { key: 'summary', label: this.$t('alert.summary') },
         { key: 'description', label: this.$t('overall.remark') },
         { key: 'labels', label: this.$t('alert.list.labels') },
-        { key: 'startAt', label: this.$t('alert.startAt') }
+        { key: 'startAt', label: this.$t('overall.startTime') }
       ]
     }
   }

@@ -2,7 +2,7 @@
   <div v-clickoutside="{obj:editPromServer,func:clickOutside}" class="right-box right-box-prom">
     <!-- begin--标题-->
     <div class="right-box__header">
-      <div class="header__title">{{editPromServer.id ? ($t("config.agent.editProm")) : $t("config.agent.createProm")}}</div>
+      <div class="header__title">{{editPromServer.id ? ($t("config.agent.editProm")) : $t("overall.createPrometheusServer")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editPromServer, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -27,15 +27,15 @@
             </div>
           </el-form-item>
           <!--host-->
-          <el-form-item :label="$t('config.agent.host')" prop="host">
+          <el-form-item :label="$t('asset.host')" prop="host">
             <el-input id="prom-box-input-host" maxlength="64" show-word-limit v-model="editPromServer.host" placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--Port-->
-          <el-form-item :label="$t('config.agent.port')" prop="port">
+          <el-form-item :label="$t('asset.port')" prop="port">
             <el-input id="prom-box-input-port" maxlength="10" show-word-limit v-model.number="editPromServer.port" placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--type-->
-          <el-form-item :label="$t('config.agent.type')" prop="type">
+          <el-form-item :label="$t('overall.type')" prop="type">
   <!--          <el-cascader-->
   <!--            id="prom-box-input-type"-->
   <!--            style="width: 100%"-->
@@ -62,7 +62,7 @@
 <!--              <i slot="suffix" class="nz-icon nz-icon-refresh" @click="refreshToken"></i>-->
             </el-input>
           </el-form-item>
-          <el-form-item :label="$t('config.agent.protocol')" prop="protocol">
+          <el-form-item :label="$t('webshell.protocol')" prop="protocol">
             <el-select  v-model="editPromServer.protocol" placeholder="" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
               <el-option v-for="item in agent2.protocol" :key="item.value" :label="item.label" :value="item.value">
                 <span class="panel-dropdown-label-txt" >{{item.label}}</span>

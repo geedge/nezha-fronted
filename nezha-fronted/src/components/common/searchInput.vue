@@ -344,7 +344,7 @@ export default {
                   }
                 })
                 this.select_list.push({
-                  name: this.$t('alert.list.state'),
+                  name: this.$t('overall.state'),
                   type: 'select',
                   label: 'state',
                   disabled: false,
@@ -893,7 +893,7 @@ export default {
             if (val.label === 'alertType' || val.label === 'promType' || val.label === 'ipamType') {
               objectInfo.type = val.valnum
             } else if (val.label === 'assetState') {
-              objectInfo.state = val.valnum
+              objectInfo.stateIds = val.valnum
             } else if (val.label === 'assetType') {
               objectInfo.typeIds = val.valnum
             } else if (val.label === 'credentialType') {
@@ -930,7 +930,7 @@ export default {
           } else if (val.type === 'project') {
             objectInfo.projectIds = val.valnum
           } else if (val.label === 'assetState') {
-            objectInfo.state = val.valnum
+            objectInfo.stateIds = val.valnum
           } else if (val.label === 'assetType') {
             objectInfo.typeIds = val.valnum
           } else if (val.type === 'brand') {

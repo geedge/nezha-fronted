@@ -135,7 +135,7 @@ export default {
           prop: 'token',
           show: true
         }, {
-          label: this.$t('config.system.apiKey.role'),
+          label: this.$t('profile.role'),
           prop: 'role',
           show: true
         }, {

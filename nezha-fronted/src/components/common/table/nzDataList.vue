@@ -40,7 +40,7 @@
         <div v-if="showLayout.indexOf('clickSearch') > -1" class="search-box">
           <slot name="search"></slot>
         </div>
-        <div v-show="bottomBox.mainResizeShow" :style="{ height: nzTableHeight }" class="nz-table2">
+        <div v-show="bottomBox.mainResizeShow" :style="{ height: nzTableHeight }" class="nz-table-list">
           <slot v-bind:mainResizeShow="bottomBox.mainResizeShow"></slot>
         </div>
         <div v-show="bottomBox.mainResizeShow" v-if="showLayout.indexOf('pagination') > -1" class="pagination-bottom">
@@ -104,6 +104,7 @@ import { fromRoute } from '@/components/common/js/constants'
 import bottomBox from '@/components/common/bottomBox/bottomBox'
 import { bottomBoxWindow } from '@/components/common/js/tools'
 import panelChart from '@/components/chart/panelChart'
+import bus from '@/libs/bus'
 export default {
   name: 'nzDataList',
   components: {
@@ -154,7 +155,7 @@ export default {
   },
   data () {
     return {
-      sign:'',
+      sign: '',
       fromRoute: fromRoute,
       /* 二级页面相关 */
       bottomBox: {
@@ -175,7 +176,23 @@ export default {
       timeRange: [new Date(), new Date()]
     }
   },
+  mounted () {
+    bus.$on('delTableRow', this.delTableRow)
+  },
   methods: {
+    delTableRow (ids) { // 接收一个 删除的id数组 判断当前底部弹窗id 是否包含 包含则关闭当前弹窗
+      if (ids.indexOf(this.bottomBox.object.id) !== -1) {
+        this.bottomBox = {
+          object: {},
+          mainResizeShow: true, // dom高度改变时是否展示|隐藏
+          subResizeShow: true,
+          isFullScreen: false, // 全屏状态
+          showSubList: false, // 是否显示二级列表
+          targetTab: '', // 显示二级列表中的哪个页签
+          inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
+        }
+      }
+    },
     updateCustomTableTitle (custom) {
       this.$emit('update:customTableTitle', custom)
     },
@@ -225,6 +242,9 @@ export default {
         this.showLayout = [...n]
       }
     }
+  },
+  beforeDestroy () {
+    bus.$off('delTableRow', this.delTableRow)
   }
 }
 </script>

@@ -14,7 +14,7 @@
       <div class="form-items--half-width-group">
         <!-- type -->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.type')"
+          :label="$t('overall.type')"
           class="form-item--half-width"
           prop="type"
         >
@@ -133,7 +133,7 @@
       </div>
       <!--url-->
       <el-form-item v-if="isUrl(chartConfig.type)" :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url">
-        <el-input id="chart-box-url" v-model="chartConfig.param.url" maxlength="1024" show-word-limit size="small" type="textarea" @change="change"></el-input>
+        <el-input id="chart-box-url" v-model="chartConfig.param.url" maxlength="1024" show-word-limit size="small" :rows="2" type="textarea" @change="change"></el-input>
       </el-form-item>
       <!--topoData-->
       <el-form-item v-if="isDiagram(chartConfig.type)" >
@@ -179,7 +179,7 @@ export default {
       chartTypeList: [
         {
           id: 'url',
-          name: this.$t('dashboard.panel.chartForm.typeVal.url.label')
+          name: this.$t('dashboard.panel.chartForm.url')
         },
         {
           id: 'text',
@@ -191,7 +191,7 @@ export default {
         },
         {
           id: 'group',
-          name: this.$t('dashboard.panel.chartForm.typeVal.group.label')
+          name: this.$t('dashboard.panel.chartForm.group')
         },
         {
           id: 'map',

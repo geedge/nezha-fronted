@@ -4,7 +4,7 @@
     <el-breadcrumb class="nz-breakcrumb" separator="/">
       <el-breadcrumb-item v-for="crumb in breadcrumb" :key="crumb.code">{{$t(crumb.i18n)}}</el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="header-menu">
+    <div class="header-menu" id="step_2">
       <el-dropdown trigger="click">
         <el-dropdown-menu></el-dropdown-menu>
         <div id="header-open-global-search" @click="openGlobalSearch">
@@ -38,7 +38,7 @@
       </el-dropdown>
     </div>
     <!--个人操作-->
-    <div class="personal">
+    <div class="personal" id="personal">
       <el-dropdown trigger="click">
         <div class="header-menu--item">
           <i class="nz-icon nz-icon-language-change"></i>
@@ -113,13 +113,25 @@ export default {
           permission: 'header_add_asset'
         },
         {
-          label: this.$t('alert.config.alertConfig'),
+          label: this.$t('alert.rule'),
           url: 'alertConfig',
           type: 5,
           permission: 'header_add_rule'
         }
       ],
-      showGuide: false
+      showGuide: false,
+      steps: [
+        {
+          element: '#personal',
+          intro: '步骤1：对应class为.step_1的元素进⾏选择提⽰! 󰀀',
+          position: 'right'
+        },
+        {
+          element: '#step_2',
+          intro: '步骤2：对应Id为#step_2的元素进⾏选择提⽰! 󰀀',
+          position: 'right'
+        }
+      ]
       // fontData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ' ', '@', '$', '-']
     }
   },
@@ -216,6 +228,32 @@ export default {
       this.getLinkData()
     }
     window.addEventListener('visibilitychange', this.testUser)
+    // setTimeout(() => {
+    //   this.$intro()
+    //     .setOptions({
+    //       // 我给看的效果图是英⽂的（默认英⽂），这⾥是更换成中⽂
+    //       prevLabel: '上⼀步',
+    //       nextLabel: '下⼀步',
+    //       skipLabel: '跳过',
+    //       doneLabel: '完成',
+    //       // steps步骤，可以写个⼯具类保存起来
+    //       steps: this.steps,
+    //       dontShowAgain: true
+    //     })
+    //     .oncomplete(() => {
+    //       // 需要注意的是，这⾥⽤了箭头函数
+    //       // 点击结束按钮后执⾏的事件
+    //     })
+    //     .onexit(() => {
+    //       // 点击跳过按钮后执⾏的事件
+    //     })
+    //     .onbeforeexit(() => {
+    //       // 确认完毕之后执⾏的事件
+    //       // return confirm('Are you sure?')
+    //     })
+    //   // this.$intro('#personal').start() // start the guide
+    //   // this.$intro('#personal').showHints() // show hints
+    // }, 1000)
   },
   computed: {
     linkData () {

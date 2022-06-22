@@ -82,18 +82,7 @@ export default {
     }
   },
   watch: {
-    valueArr: {
-      handler (n) {
-        if (!this.isTopo) {
-          this.keyName = this.valueArr[0].name
-          this.colors = this.valueArr[0].value || randomcolor() + 'FF'
-        } else {
-          this.keyName = this.valueArr[0].name
-          this.colors = this.valueArr[0].value
-        }
-      },
-      deep: true
-    }
+
   },
   data () {
     return {
@@ -156,8 +145,13 @@ export default {
       //
     },
     colorTabChange (item) {
-      this.keyName = item.name
-      this.colors = this.colorVal[item.name] || randomcolor() + 'FF'
+      if (!this.isTopo) {
+        this.keyName = item.name
+        this.colors = this.colorVal[item.name] || randomcolor() + 'FF'
+      } else {
+        this.keyName = item.name
+        this.colors = this.colorVal[item.name]
+      }
     },
     exitColor () {
       this.showColorPicker = false

@@ -29,7 +29,7 @@ const newcn = {
     system: {
       configTitle: '系统配置',
       configTip: '请输入管理员的用户名和密码，并设置Nezha WEB模块的安装信息，如IP:port',
-      federation: '联邦',
+      federation: '集群',
       federationEnable: '可用',
       federationDisable: '不可用'
     },
@@ -64,6 +64,28 @@ const newcn = {
     verifyContent: '在您的移动设备上输入来自双因子应用程序的代码。 如果您丢失了设备，您可以输入您的恢复代码之一。',
     verifyPlaceholder: '验证码',
     bindFail: '绑定失败'
+  },
+  asset: {
+    host: 'Host',
+    port: '端口',
+    talon: {
+      enable: '启用'
+    }
+  },
+  validate: {
+    required: '必填项',
+    host: '不合法的IP',
+    number: '必须是数字',
+    port: '不合法的端口',
+    special: '不能包含特殊字符',
+    unavailable: '不可用'
+  },
+  profile: {
+    username: '用户名'
+  },
+  overall: {
+    system: '系统',
+    back: '返回'
   },
   ...zhLocale
 }

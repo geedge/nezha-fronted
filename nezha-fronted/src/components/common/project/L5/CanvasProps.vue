@@ -22,7 +22,7 @@
 
           <!--value mapping-->
           <el-row class="form-row-title">
-            {{ $t('dashboard.panel.chartForm.thresholds') }}
+            {{ $t('alert.config.threshold') }}
             <span v-if="selection.pen.data.valueMappingSort !=='desc'" class="title__label"
                   >（0:Ok > … >{{
                 selection.pen.data.valueMapping.length
@@ -46,12 +46,14 @@
                       style="">
                 <promql-input
                   :from-father-data="true"
+                  :isTopo="true"
                   :metricOptionsParent="metricOptions"
                   :id="index"
                   :key="index"
                   :ref="'promql-'+'-1'"
                   :expression-list="selection.pen.data.expressArr"
                   :index="index"
+                  type="metric"
                   :plugins="['metric-selector', 'metric-input', 'remove']"
                   :showRemove="false"
                   :styleType="2"
@@ -80,7 +82,7 @@
               <div style="width: 100%;margin: 10px 0; box-sizing: border-box; padding: 0 10px;">
                 <div class="thresholds-box">
                   <el-row class="thresholds-title">
-                    <el-col :span="4" class="thresholds-cell">{{ $t('project.topology.level') }}
+                    <el-col :span="4" class="thresholds-cell">{{ $t('alert.severity') }}
                       <span @click="changeValueMappingSort">
                     <i
                       :class="['nz-icon','nz-icon-arrow-up1',selection.pen.data.valueMappingSort==='desc'?'is-arrow-active':'']"></i>
@@ -89,7 +91,7 @@
                   </span>
                     </el-col>
                     <el-col :span="4" class="thresholds-cell">{{ $t('project.topology.color') }}</el-col>
-                    <el-col :span="6" class="thresholds-cell">{{ $t('project.topology.value') }}</el-col>
+                    <el-col :span="6" class="thresholds-cell">{{ $t('overall.value') }}</el-col>
                     <el-col :span="8" class="thresholds-cell">{{ $t('project.topology.animation') }}</el-col>
                     <el-col :span="2" class="thresholds-cell"></el-col>
                   </el-row>
@@ -188,8 +190,8 @@
               </el-form-item>
               <!--remark-->
               <el-form-item :label="$t('overall.remark')" class="full-form-item" prop="remark">
-                <el-input v-model="selection.pen.data.remark" :autosize="{ minRows: 2, maxRows: 6}" maxlength="256"
-                          show-word-limit type="textarea"/>
+                <el-input v-model="selection.pen.data.remark" maxlength="256"
+                          show-word-limit type="textarea" size="small" :rows="2"/>
               </el-form-item>
               <!--chart unit-->
               <el-form-item v-show="selection.pen.data.type !='text'" :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item"
@@ -205,7 +207,7 @@
                 >
                 </el-cascader>
               </el-form-item>
-              <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item half-form-item--end"
+              <el-form-item :label="$t('overall.type')" class="half-form-item half-form-item--end"
                             prop="type">
                 <el-select v-model="selection.pen.data.type" :placeholder="$t('el.select.placeholder')"
                            :popper-append-to-body="true" class="right-box-row-with-btn"
@@ -222,6 +224,7 @@
                       style="width: 100%; border-radius: 2px; padding-right: 60px;">
                 <promql-input
                   :from-father-data="true"
+                  :isTopo="true"
                   :metricOptionsParent="metricOptions"
                   :id="index"
                   :pqid="'vm'"
@@ -320,7 +323,7 @@
               </div>
 
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
-                <div>{{ $t('project.topology.width') }}</div>
+                <div>{{ $t('dashboard.panel.chartForm.width') }}</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -341,7 +344,7 @@
               </div>
 
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
-                <div>{{ $t('project.topology.height') }}</div>
+                <div>{{ $t('dashboard.panel.chartForm.high') }}</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -834,7 +837,7 @@
         <!--        <div class="project-content-box" style="width: 100%">-->
 
         <!--          <div class="project-content-item">-->
-        <!--            <label>{{$t('project.topology.name')}}</label>-->
+        <!--            <label>{{$t('overall.name')}}</label>-->
         <!--            <div class="full pr10">-->
         <!--              <el-input class="input" size="small" v-model="topologyData.data.name" :placeholder="$t('el.select.placeholder')"-->
         <!--                        @change="changeTopologyOpt"></el-input>-->
@@ -903,7 +906,7 @@
 
         <!--        <div class="project-content-title">-->
         <!--          Appearance-->
-        <!--          &lt;!&ndash;{{$t('project.topology.name')}}&ndash;&gt;-->
+        <!--          &lt;!&ndash;{{$t('overall.name')}}&ndash;&gt;-->
         <!--        </div>-->
 
         <div class="project-content-box" style="width: 100%">
@@ -1071,7 +1074,7 @@
 
         <!--        </div>-->
 
-        <!--        <div class="project-content-title">{{$t('project.topology.link')}}</div>-->
+        <!--        <div class="project-content-title">{{$t('overall.link')}}</div>-->
 
         <!--        <div class="project-content-box" style="width: 100%">-->
 
@@ -1196,10 +1199,10 @@ export default {
       nodesAlign: [// 对齐方式
         {
           value: 'left',
-          desc: this.$t('project.topology.left')
+          desc: this.$t('ashboard.panel.chartForm.alignList.left')
         }, {
           value: 'right',
-          desc: this.$t('project.topology.right')
+          desc: this.$t('dashboard.panel.chartForm.alignList.right')
         }, {
           value: 'top',
           desc: this.$t('project.topology.topOffsetY')
@@ -1360,7 +1363,7 @@ export default {
       textAlignOptions: [
         {
           id: 'left',
-          name: this.$t('project.topology.left')
+          name: this.$t('ashboard.panel.chartForm.alignList.left')
         },
         {
           id: 'center',
@@ -1368,7 +1371,7 @@ export default {
         },
         {
           id: 'right',
-          name: this.$t('project.topology.right')
+          name: this.$t('dashboard.panel.chartForm.alignList.right')
         }
       ],
       textBaselineOptions: [
@@ -1479,6 +1482,16 @@ export default {
     // this.topologyData.data.rule= !!dataOption.rule;
     // this.topologyData.data.projectInfo= !!dataOption.projectInfo;
     // this.topologyData.data.alertInfo= !!dataOption.alertInfo;
+    // window.addEventListener('keydown', (e) => {
+    //   if (e.target.className === 'cm-content cm-lineWrapping' && e.keyCode === 8) {
+    //     if (e & e.stopPropagation) {
+    //       e.stopPropagation() // iie 6, 7, 8
+    //     } else {
+    //       window.event.cancleBubble = true
+    //     }
+    //     return false
+    //   }
+    // })
   },
   updated (n, o) {
     if (!this.selection.pen) { // 没选中node line返回
@@ -1498,43 +1511,6 @@ export default {
     }
   },
   methods: {
-    queryMetrics () {
-      this.metricOptions = []
-      this.$get('prom/api/v1/label/__name__/values').then(response => {
-        if (response.status == 'success') {
-          const metrics = response.data.sort()
-          const metricMap = new Map()
-          metrics.forEach((item) => {
-            let key = ''
-            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
-              key = item.split('_')[0]
-            } else if (/^_\w*/.test(item)) {
-              key = '      '
-            } else {
-              key = item
-            }
-            if (metricMap.get(key)) {
-              const values = metricMap.get(key)
-              values.push({ label: item, value: item })
-            } else {
-              const values = [{ label: item, value: item }]
-              metricMap.set(key, values)
-            }
-            // this.metricStore.push({label:item,value:item,insertText:item})
-          })
-          for (const key of metricMap.keys()) {
-            const option = {
-              label: key,
-              value: key
-            }
-            if (metricMap.get(key) && metricMap.get(key).length > 1) {
-              option.children = metricMap.get(key)
-            }
-            this.metricOptions.push(option)
-          }
-        }
-      })
-    },
     tabClick (n) {
     },
     moduleIdChange (n) {

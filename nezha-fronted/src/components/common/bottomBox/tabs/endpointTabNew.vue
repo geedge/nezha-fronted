@@ -33,6 +33,7 @@
           @orderBy="tableDataSort"
           @addSilence="addSilence"
           @reload="getTableData"
+          @topology="topology"
           @selectionChange="selectionChange"
         ></endpoint-table>
       </template>
@@ -74,6 +75,7 @@ export default {
       immediate: true,
       handler (n) {
         if (n) {
+          this.searchLabel = {}
           this.getTableData()
         }
       }

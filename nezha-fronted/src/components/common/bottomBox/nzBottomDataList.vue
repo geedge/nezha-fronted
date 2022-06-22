@@ -100,14 +100,14 @@ export default {
       const className = []
       switch (this.targetTab) {
         case 'panelTab':
-          className.push('nz-table2 bottom-panel')
+          className.push('nz-table-list bottom-panel')
           break
         case 'log': {
           className.push('bottom-log')
           break
         }
         default: {
-          className.push('nz-table2')
+          className.push('nz-table-list')
           break
         }
       }

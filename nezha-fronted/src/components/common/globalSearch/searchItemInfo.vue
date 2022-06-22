@@ -12,7 +12,7 @@
         <el-skeleton-item class="search-item-name" search-item-path variant="h3" style="width: 30%" />
         <div v-for="item in skeletonArr" :key="item" class="search-item-info">
           <el-skeleton-item class="search-item-key"/>
-          <el-skeleton-item class="search-item-value-box" style="margin-left: 20px"/>
+          <el-skeleton-item class="search-item-value-box" style="margin-left: 20px;height: 13px"/>
         </div>
       </div>
     </template>
@@ -29,7 +29,7 @@
           </div>
           <div class="search-item-value-box" v-if="obj.type === 'endpoint'&&item.key==='state'&&alertLabelData && alertLabelData.configs">
             <span style="width: auto">
-            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('project.endpoint.metrics')}} </span>
+            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('overall.metric')}} </span>
             <span v-if="alertLabelData && alertLabelData.configs[0].state === 0">
               <span class="active-icon red-bg inline-block"></span>
             </span>
@@ -41,7 +41,7 @@
             </span>
           </span>
             <span style="width: auto">
-            <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs active" /> {{$t('project.endpoint.logs')}} </span>
+            <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs active" /> {{$t('overall.logs')}} </span>
             <span v-if="alertLabelData && alertLabelData.configs[1].state === 0">
               <span class="active-icon red-bg inline-block"></span>
             </span>
@@ -66,7 +66,7 @@
           <div style="cursor: pointer" v-else-if="item.key === 'alertNum'">
             <i :class="Number(getPathContent(item.key)) ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
             <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
-              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('asset.pingActive')}})</div>
+              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
               <div class="severity-info" style='justify-content: space-between'>
                 <div class="severity-name">{{$t('overall.result.total')}}</div>
                 <div class="severity-value">{{getPathContent(item.key)}}</div>
@@ -136,7 +136,7 @@ export default {
             label: this.$t('overall.name')
           }, {
             key: 'manageIp',
-            label: this.$t('overall.manageIp')
+            label: this.$t('asset.manageIp')
           }, {
             key: 'type.name',
             label: this.$t('overall.type')
@@ -152,13 +152,13 @@ export default {
             label: this.$t('overall.dc')
           }, {
             key: 'cabinet.name',
-            label: this.$t('overall.cabinet')
+            label: this.$t('asset.cabinet')
           }, {
             key: 'brand.name',
-            label: this.$t('overall.brand')
+            label: this.$t('asset.brand')
           }, {
             key: 'model.name',
-            label: this.$t('overall.model')
+            label: this.$t('asset.model')
           }, {
             key: 'alertNum',
             icon: 'nz-icon-overview-alert',
@@ -174,11 +174,11 @@ export default {
             label: this.$t('overall.name')
           }, {
             key: 'location',
-            label: this.$t('overall.location')
+            label: this.$t('asset.location')
           }, {
             key: 'cabinetNum',
             icon: 'nz-icon-cabinet  monitorColor',
-            label: this.$t('overall.cabinet')
+            label: this.$t('asset.cabinet')
           }, {
             key: 'assetNum',
             icon: 'nz-icon-overview-project monitorColor',
@@ -279,10 +279,10 @@ export default {
             label: 'Id'
           }, {
             key: 'name',
-            label: this.$t('alert.name')
+            label: this.$t('overall.name')
           }, {
             key: 'type',
-            label: this.$t('alert.type')
+            label: this.$t('overall.type')
           }, {
             key: 'severityId',
             label: this.$t('alert.severity'),
@@ -457,7 +457,7 @@ export default {
       return style
     },
     alertruleStr () {
-      const arr = [this.$t('project.metrics.metrics'), this.$t('overall.logs'), 'SNMP trap']
+      const arr = [this.$t('overall.metric'), this.$t('overall.logs'), 'SNMP trap']
       if (this.alertLabelData.type) {
         return arr[this.alertLabelData.type - 1]
       } else {
@@ -505,10 +505,10 @@ export default {
       switch (item.type) {
         case 'asset' : str += `<span>${this.$t('overall.asset')}</span> <span>/</span> <span>${this.$t('overall.asset')}</span>`; break
         case 'datacenter' : str += `<span>${this.$t('config.config')}</span> <span>/</span> <span>${this.$t('overall.dc')}</span>`; break
-        case 'project' : str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('dashboard.overview.project.project')}</span>`; break
+        case 'project' : str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('project.project.projectName')}</span>`; break
         case 'module' :str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('overall.module')}</span>`; break
         case 'endpoint' : str += `<span>${this.$t('config.system.monitor.monitor')}</span> <span>/</span> <span>${this.$t('asset.endpoint')}</span>`; break
-        case 'alertrule' : str += `<span>${this.$t('overall.alert')}</span> <span>/</span> <span>${this.$t('dashboard.overview.alert.alertRule')}</span>`; break
+        case 'alertrule' : str += `<span>${this.$t('overall.alert')}</span> <span>/</span> <span>${this.$t('alert.rule')}</span>`; break
       }
       return str
     },

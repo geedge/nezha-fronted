@@ -47,7 +47,7 @@
         <template v-else-if="item.prop === 'duration'">
           <el-tooltip :disabled="!scope.row.etts" effect="light" placement="right">
             <div slot="content">
-              {{$t('config.terminallog.endTime')}}<br/>
+              {{$t('overall.endTime')}}<br/>
               {{utcTimeToTimezoneStr(scope.row.etts)}}
             </div>
             <span>{{getDuration(scope.row)}}</span>
@@ -86,7 +86,7 @@ export default {
     return {
       tableTitle: [
         {
-          label: this.$t('config.dc.state'),
+          label: this.$t('overall.state'),
           prop: 'state',
           show: true,
           minWidth: 100
@@ -96,7 +96,7 @@ export default {
           show: true,
           minWidth: 100
         }, {
-          label: this.$t('alert.silence.startTime'),
+          label: this.$t('overall.startTime'),
           prop: 'stts',
           show: true,
           minWidth: 300

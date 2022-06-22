@@ -9,7 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
-
+const intro = require('intro.js')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 const devStart = process.env.npm_lifecycle_event
@@ -49,6 +49,9 @@ devWebpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      introJs: ['intro.js']
+    }),
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env')
     }),

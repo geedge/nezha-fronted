@@ -77,7 +77,7 @@
   display: flex;
   justify-content: space-between;
   .panel-select-left{
-    width: 170px;
+    width: 180px;
     height: 100%;
     box-sizing: border-box;
     border-right:1px solid $--border-color-base;
@@ -98,26 +98,26 @@
         height: 36px;
         cursor: pointer;
         i{
-          margin-left: 20px;
-          margin-right: 6px;
-          width: 22px;
+          margin-left: 12px;
+          margin-right: 5px;
+          width: 20px;
           display: flex;
           justify-content: center;
           color: $--color-text-regular;
         }
       }
       .panel-select-item:hover{
-        color: #FA901C; 
+        color: $--color-primary; 
         background: $--background-color-base;
         i{
-          color: #FA901C;
+          color: $--color-primary;
         }
       }
       .panel-select-item.active{
-        color: #FA901C;  
+        color: $--color-primary;  
         background: $--background-color-base;
         i{
-          color: #FA901C;
+          color: $--color-primary;
         }
       }
     }
@@ -145,7 +145,7 @@
   }
   .pop-item-wider{
     flex: 1;
-    width: calc(100% - 170px);
+    width: calc(100% - 180px);
     padding-top: 0;
     .panel-select-header{
       margin-top: 12px;
@@ -155,9 +155,14 @@
   .nz-icon-xingzhuang{
     color: $--color-text-regular;
     font-weight: normal;
+    cursor: pointer ;
   }
   .nz-icon-a-xingzhuang2{
     color:#FF9219 !important;
-    transform: scale(1.2);
+    cursor: pointer ;
+  }
+  .highlight-keyword{
+    color:$--color-primary;
+    background: none;
   }
 }

@@ -111,7 +111,7 @@ export default {
           show: true,
           width: 110
         }, {
-          label: this.$t('asset.alertNum'),
+          label: this.$t('overall.alert'),
           prop: 'alertNum',
           show: true,
           width: 120
@@ -233,7 +233,7 @@ export default {
       this.esc(false)
     },
     messageStyle (e) {
-      if (e.column.label == 'Alerts' || e.column.label == this.$t('asset.alerts')) {
+      if (e.column.label == 'Alerts' || e.column.label == this.$t('overall.alert')) {
         if (e.row.alertNum > 0) {
           return 'danger'
         } else {

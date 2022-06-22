@@ -1,7 +1,7 @@
 <template>
   <div v-clickoutside="{obj: editCabinet, func: esc}" class="right-box right-setting-box-cabinet">
     <div class="right-box__header">
-      <div class="header__title">{{editCabinet.id ? $t('config.cabinet.editCabinet') : $t('config.cabinet.createCabinet')}}</div>
+      <div class="header__title">{{editCabinet.id ? $t('config.dc.editCabinet') : $t('overall.createCabinet')}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editCabinet, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -15,11 +15,11 @@
           <el-form-item :label="$t('config.dc.dc')" prop="idcId">
             <el-input size='mini' v-model="currentDc.name" disabled id="cabinet-box-input-dc"/>
           </el-form-item>
-          <el-form-item :label="$t('asset.uSize')" prop="uSize">
+          <el-form-item :label="$t('config.cab.uSize')" prop="uSize">
             <el-input v-model.number="editCabinet.uSize" :max="47" id="cabinet-box-input-uSize" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')">
-            <el-input size='mini' maxlength="256" show-word-limit v-model="editCabinet.remark" type="textarea" :rows="2" id="cabinet-box-input-remark"/>
+            <el-input size="small" :rows="2" maxlength="256" show-word-limit v-model="editCabinet.remark" type="textarea"  id="cabinet-box-input-remark"/>
           </el-form-item>
         </el-form>
       </div>

@@ -10,12 +10,12 @@
          </div>
           <div>{{$t('license.nzTitleValue')}}</div>
         </div>
-        <div v-if="active === 0">{{$t('license.active')}}</div>
+        <div v-if="active === 0">{{$t('overall.active')}}</div>
         <div v-else>{{$t('license.inactive')}}</div>
       </div>
       <div class="license-left-body">
         <div>
-          <div class="license-left-boyd-title" style="margin-top: 25px">{{$t('license.type')}}</div>
+          <div class="license-left-boyd-title" style="margin-top: 25px">{{$t('overall.type')}}</div>
           <div class="license-left-boyd-value">{{ licenseMark.type ? licenseMark.type : '-'}}</div>
         </div>
         <div>
@@ -77,7 +77,7 @@
               </template>
               <template v-else-if="item.prop === 'status'">
                 <div v-if="scope.row.status === 0">
-                  <div class="active-icon green-bg inline-block"></div> {{ $t('license.active') }}
+                  <div class="active-icon green-bg inline-block"></div> {{ $t('overall.active') }}
                 </div>
                 <div v-else-if="scope.row.status !== 0">
                   <div class="active-icon red-bg inline-block"></div> {{ $t('license.inactive') }}
@@ -104,11 +104,11 @@ export default {
       tableData: [],
       tableTitle: [
         {
-          label: this.$t('license.devicesName'),
+          label: this.$t('asset.host'),
           prop: 'devicesName'
         },
         {
-          label: this.$t('license.status'),
+          label: this.$t('overall.state'),
           prop: 'status'
         }
       ],
