@@ -183,7 +183,7 @@
             </el-form-item>
           </el-row>
           <transition name="el-zoom-in-top">
-            <div v-show="selection.pen.data.tooltipShow" class="tooltip-box sub-box">
+            <div v-show="selection.pen.data.tooltipShow" class="sub-box">
               <!--title-->
               <el-form-item :label="$t('project.topology.title')" class="full-form-item" prop="type">
                 <el-input v-model="selection.pen.data.chartTitle" class="input" size="small"></el-input>
@@ -468,7 +468,7 @@
                     <div slot="prefix">
                       <div class="icon-item">
                         <svg>
-                          <g fill="none" stroke="black" stroke-width="1">
+                          <g fill="none" :stroke="theme === 'light' ? 'black' : '#BEBEBE'" stroke-width="1">
                             <path
                               :d="penDash.find((item,i)=>i==(selection.pen.dash?selection.pen.dash:0)).d"
                               :stroke-dasharray="penDash.find((item,i)=>i==(selection.pen.dash?selection.pen.dash:0))['stroke-dasharray']">
@@ -480,7 +480,7 @@
                     <el-option v-for="(item,index) in penDash" :value="index" :key="index">
                       <div class="icon-item">
                         <svg>
-                          <g fill="none" :stroke="(selection.pen.dash==index)?'#ee9d3f':'black'" stroke-width="1">
+                          <g fill="none" :stroke="(selection.pen.dash==index)?'#ee9d3f':item.strokeColor" stroke-width="1">
                             <path :d="item.d" :stroke-dasharray="item['stroke-dasharray']"></path>
                           </g>
                         </svg>
@@ -498,7 +498,7 @@
                     <div slot="prefix">
                       <div class="icon-item">
                         <svg>
-                          <g fill="none" stroke="black" stroke-width="1">
+                          <g fill="none" :stroke="theme === 'light' ? 'black' : '#BEBEBE'" stroke-width="1">
                             <path
                               :d="penLineType.find((item,i)=>item.name==selection.pen.name).d"
                             >
@@ -510,7 +510,7 @@
                     <el-option v-for="(item,index) in penLineType" :value="item.name" :key="index">
                       <div class="icon-item">
                         <svg>
-                          <g fill="none" :stroke="(selection.pen.name==item.name)?'#ee9d3f':'black'" stroke-width="1">
+                          <g fill="none" :stroke="(selection.pen.name==item.name)?'#ee9d3f':item.strokeColor" stroke-width="1">
                             <path :d="item.d" :stroke-dasharray="item['stroke-dasharray']"></path>
                           </g>
                         </svg>
@@ -528,7 +528,7 @@
                     <div slot="prefix">
                       <div class="icon-item">
                         <svg>
-                          <g fill="none" stroke="black" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
+                          <g fill="none" :stroke="theme === 'light' ? 'black' : '#BEBEBE'" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
                              :key="index" v-if="selection.pen.fromArrow==item.name">
                             <path :d="item.d"></path>
                             <polygon v-if="item.points" :points="item.points" :fill="item.fill" :stroke="item.stroke"
@@ -542,7 +542,7 @@
                     <el-option v-for="(item,index) in penLineFromTOArrow" :value="item.name" :key="index">
                       <div class="icon-item">
                         <svg>
-                          <g fill="none" :stroke="(selection.pen.fromArrow==item.name)?'#ee9d3f':'black'"
+                          <g fill="none" :stroke="(selection.pen.fromArrow==item.name)?'#ee9d3f':item.strokeColor"
                              stroke-width="1">
                             <path :d="item.d"></path>
                             <polygon
@@ -577,7 +577,7 @@
                     <div slot="prefix">
                       <div class="icon-item">
                         <svg>
-                          <g fill="none" stroke="black" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
+                          <g fill="none" :stroke="theme === 'light' ? 'black' : '#BEBEBE'" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
                              :key="index" v-if="selection.pen.toArrow==item.name">
                             <path :d="item.d"></path>
                             <polygon v-if="item.points" :points="item.points" :fill="item.fill" :stroke="item.stroke"
@@ -591,7 +591,7 @@
                     <el-option v-for="(item,index) in penLineFromTOArrow" :value="item.name" :key="index">
                       <div class="icon-item">
                         <svg>
-                          <g fill="none" :stroke="(selection.pen.toArrow==item.name)?'#ee9d3f':'black'"
+                          <g fill="none" :stroke="(selection.pen.toArrow==item.name)?'#ee9d3f':item.strokeColor"
                              stroke-width="1">
                             <path :d="item.d"></path>
                             <polygon
@@ -1112,7 +1112,9 @@ const rz = {
 export default {
   // pen.type 0为node 1位line
   data () {
+    const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
     return {
+      theme: theme,
       expressions: [],
       chartTypeList: [
         {
@@ -1264,26 +1266,28 @@ export default {
         }
       ],
       penDash: [
-        { d: 'M5 14 l85 0', 'stroke-dasharray': '' },
-        { d: 'M5 14 l85 0', 'stroke-dasharray': '5,5' },
-        { d: 'M5 14 l85 0', 'stroke-dasharray': '10,10' },
-        { d: 'M5 14 l85 0', 'stroke-dasharray': '10,10,2,10' }
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '5,5', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '10,10', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '10,10,2,10', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' }
       ],
       penLineType: [
-        { d: 'M5 14 a100,50 0 0,1 85,0', 'stroke-dasharray': '', name: 'curve' },
-        { d: 'M5 8 l40 0 l0 12 l40 0', 'stroke-dasharray': '', name: 'polyline' },
-        { d: 'M5 14 l85 0', 'stroke-dasharray': '', name: 'line' }
+        { d: 'M5 14 a100,50 0 0,1 85,0', 'stroke-dasharray': '', name: 'curve', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },
+        { d: 'M5 8 l40 0 l0 12 l40 0', 'stroke-dasharray': '', name: 'polyline', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '', name: 'line', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' }
         // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
       ],
       penLineFromTOArrow: [
-        { d: 'M5 14 l85 0', points: '', fill: '', stroke: '', 'stroke-width': '', name: '' },
+        { d: 'M5 14 l85 0', points: '', fill: '', stroke: '', 'stroke-width': '', name: '', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },
         {
           d: 'M5 14 l85 0',
           points: '5 14,20 9,20 19',
           fill: '#000000',
           stroke: '',
           'stroke-width': '',
-          name: 'triangleSolid'
+          name: 'triangleSolid',
+          strokeColor: theme == 'light' ? 'black' : '#BEBEBE'
+
         },
         {
           d: 'M5 14 l85 0',
@@ -1291,7 +1295,8 @@ export default {
           fill: '#ffffff',
           stroke: '#000000',
           'stroke-width': '1',
-          name: 'triangle'
+          name: 'triangle',
+          strokeColor: theme == 'light' ? 'black' : '#BEBEBE'
         },
         {
           d: 'M5 14 l85 0',
@@ -1301,7 +1306,8 @@ export default {
           cx: '10',
           cy: '14',
           r: '5',
-          name: 'circleSolid'
+          name: 'circleSolid',
+          strokeColor: theme == 'light' ? 'black' : '#BEBEBE'
         },
         {
           d: 'M5 14 l85 0',
@@ -1311,7 +1317,8 @@ export default {
           cx: '10',
           cy: '14',
           r: '5',
-          name: 'circle'
+          name: 'circle',
+          strokeColor: theme == 'light' ? 'black' : '#BEBEBE'
         }
       ],
       lineAnimateOptions: [

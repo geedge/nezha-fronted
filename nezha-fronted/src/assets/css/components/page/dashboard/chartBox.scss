@@ -114,7 +114,7 @@
   top: 0px;
 }
 .topology-box{
-  width: 100%;
+  width: calc(100% - 2px);
   height: 242px;
   border: 1px solid $--border-color-light;
   border-radius: 2px;

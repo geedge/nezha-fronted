@@ -124,6 +124,7 @@
     width: 75%;
     border-left: 1px solid $--border-color-light;
     word-break: break-all;
+    color: $--color-text-secondary;
   }
   .mib-browser-detail-row:not(:last-of-type) {
     border-bottom: 1px solid $--border-color-light;

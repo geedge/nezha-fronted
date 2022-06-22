@@ -40,7 +40,7 @@ $--color-text-secondary: #999998;
 // 链接字色
 $--color-text-link: #3C92F1;
 // 禁用字色
-$--color-text-disabled: #FFFFFF;
+$--color-text-disabled: #c0c4cc;
 // 标签内白色
 $--color-text-label: #FFFFFF;
 
@@ -159,7 +159,7 @@ $--picker-page-background-color: $--background-color-empty;
 $--picker-page-border-color: $--select-page-border-color;
 $--picker-page-btn-color: $--color-primary;
 $--picker-page-btn-border-color: $--color-primary;
-$--picker-page-btn-background-color: $--color-text-disabled;
+$--picker-page-btn-background-color: $--color-text-label;
 
 // icon 字色
 $--nz-icon-color: $--color-primary; //icon
@@ -167,7 +167,7 @@ $--span-nz-icon-border-color: $--asset-label-btn-border-color;
 
 // value
 $--value-background-color: #5C6BC0;
-$--value-color: $--color-text-disabled;
+$--value-color: $--color-text-label;
 $--value-input-background-color: $--value-color;
 
 // time picker
@@ -218,26 +218,26 @@ $--export-span-background-color: $--background-color-base;
 $--switch-background-color: #dcdfe6;
 
 /* project */
-$--project-input-background-color: $--color-text-disabled;
+$--project-input-background-color: $--color-text-label;
 
 /* alert rule */
 $--alert-rule-background-color: #f5f5f5;
 $--alert-rule-color: $--overview-icon-color;
 
 /* webSSH */
-$--web-ssh-background-color: $--color-text-disabled;
+$--web-ssh-background-color: $--color-text-label;
 $--web-ssh-border-bottom-color: transparent;
 
 /* 图表弹框 */
 $--chart-background-color: #dde4ed;
-$--chart-border-color: $--color-text-disabled;
+$--chart-border-color: $--color-text-label;
 
 /* 13.panel */
 $--chart-title-hover-background-color: $--background-color-1;
 $--chart-box-border-color: $--border-color-light;
 
 /* 14.popover */
-$--popover-background-color: $--color-text-disabled;
+$--popover-background-color: $--color-text-label;
 
 /* 15.侧滑 */
 $--right-box-shadow: -3px 0 8px -3px #ccc;
