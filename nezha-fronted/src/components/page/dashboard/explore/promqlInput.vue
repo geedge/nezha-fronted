@@ -797,7 +797,7 @@ export default {
       this.codeMirrorValue[this.index] = value
       this.dropDownVisible = false
       this.$emit('change', value)
-      // this.initCodeMirror()
+      this.initCodeMirror()
       this.$forceUpdate()
       this.cascaderValue = ''
     },
