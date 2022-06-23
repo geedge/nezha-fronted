@@ -828,9 +828,11 @@ export default {
             this.projectAlertShow = true
             this.saveData = JSON.parse(JSON.stringify(data))
             this.topologyInfo.name = this.obj.name
+            data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
             resolve(data)
             data = null
           } else {
+            data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
             if (data.data) {
               this.topologyInfo = {
                 fontSize: data.data.fontSize,
