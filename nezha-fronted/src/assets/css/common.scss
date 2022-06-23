@@ -437,3 +437,6 @@ input, textarea {
 .is-disabled{
     color: $--color-text-disabled !important;
 }
+.ql-tooltip {
+   background: $--background-color-empty;
+}

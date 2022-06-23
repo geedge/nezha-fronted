@@ -797,7 +797,7 @@ export default {
       this.codeMirrorValue[this.index] = value
       this.dropDownVisible = false
       this.$emit('change', value)
-      this.initCodeMirror()
+      // this.initCodeMirror()
       this.$forceUpdate()
       this.cascaderValue = ''
     },
@@ -868,6 +868,7 @@ export default {
             if (res.code === 200) {
               if (!res.data.vars || !res.data.vars.length) {
                 this.metricChange(data.expression)
+                this.initCodeMirror()
                 return
               }
               res.data.vars.forEach(item => {
