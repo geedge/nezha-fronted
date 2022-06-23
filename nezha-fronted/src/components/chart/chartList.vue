@@ -454,7 +454,7 @@ export default {
       handler (val) {
         setTimeout(() => {
           this.resize()
-        }, 100)
+        })
       }
     },
     dataList: {

@@ -868,6 +868,7 @@ export default {
             if (res.code === 200) {
               if (!res.data.vars || !res.data.vars.length) {
                 this.metricChange(data.expression)
+                this.initCodeMirror()
                 return
               }
               res.data.vars.forEach(item => {

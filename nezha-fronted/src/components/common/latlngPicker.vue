@@ -14,7 +14,7 @@
       <div class="input-box-item" style="margin-right: unset !important;width: 30px !important;flex:unset;" @click="mapConfigVisible = true"><i class="nz-icon nz-icon-weizhi" style="color:rgb(238, 157, 63)"></i></div>
     </div>
     <el-dialog :visible.sync="mapConfigVisible" :title="$t('config.system.basic.mapTitle')" width="calc(50% - 10px)"  @close="mapClose" @opened="initMap" class=" nz-dialog map-config-dialog" :modal-append-to-body="appendToBody">
-      <div id="map" style="height: 100%; width: 100%"></div>
+      <div id="map" style="height: 100%; width: 100%" :style="theme=='dark'? 'filter: invert(1) hue-rotate(0.5turn);opacity: 0.75;': ''"></div>
     </el-dialog>
   </div>
 </template>
@@ -34,6 +34,7 @@ export default {
   },
   data () {
     return {
+      theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`),
       lnglat: '',
       oldlnglat: '',
       mapParam: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 },

@@ -5,7 +5,7 @@
 <template>
   <div class="project-box list-page" v-my-loading="topologyLoading">
     <div class="main-list" style="overflow: hidden">
-      <div class="main-container" :class="fromOverView?'from-overview':'from-project'" style="background: #fff">
+      <div class="main-container" :class="fromOverView?'from-overview':'from-project'">
         <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);display: inline-block">
           <!--工具栏-->
           <span v-if="!isPreview" class="project-topology-tool">

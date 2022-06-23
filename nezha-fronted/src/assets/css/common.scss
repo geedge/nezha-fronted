@@ -403,6 +403,9 @@ td .nz-icon-gear:before {
   content: "\e6ad";
 }
 .el-table__header-wrapper {
+  table{
+    background-color: $--background-color-empty !important;
+  }
   th {
     border-right-color: transparent !important;
   }
@@ -463,4 +466,10 @@ textarea {
   top: calc((100% - 20px)/2);
   right: 0;
   transform: scale(0.95);
+}
+.is-disabled{
+  color: $--color-text-disabled !important;
+}
+.ql-tooltip {
+  background: $--background-color-empty;
 }

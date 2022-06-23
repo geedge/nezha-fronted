@@ -83,6 +83,7 @@
       :visible.sync="topologyShow"
       :show-close="false"
       class="nz-dialog chart-fullscreen"
+      :close-on-click-modal="false"
       destroy-on-close
       fullscreen
       :modal-append-to-body="false"
