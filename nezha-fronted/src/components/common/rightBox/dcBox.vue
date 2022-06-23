@@ -27,7 +27,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('config.dc.lnglat')" prop="lnglat">
+            <el-form-item :label="$t('config.system.basic.lnglat')" prop="lnglat">
               <div style="display: flex">
                 <el-input v-model="editDc.lnglat" maxlength="256" placeholder="" size="small" style="width: calc(100% - 50px);margin-right: 20px;"></el-input>
                 <latlng-picker

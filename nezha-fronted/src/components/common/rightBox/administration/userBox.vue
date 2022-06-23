@@ -184,7 +184,7 @@ export default {
       roles: [],
       mfaLevelList: [
         { value: 0, label: this.$t('profile.close') },
-        { value: 1, label: this.$t('overall.enable') },
+        { value: 1, label: this.$t('overall.enabled') },
         { value: 2, label: this.$t('config.user.forceEnable') }
       ],
       languageList: [

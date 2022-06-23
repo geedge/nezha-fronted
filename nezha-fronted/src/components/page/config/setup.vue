@@ -149,7 +149,7 @@
                 </el-form-item>
                 <el-form-item :label="$t('setup.system.federation')" prop="prometheusFederationEnabled" key="sysprometheusFederationEnabled" >
                   <el-select v-model="system.prometheusFederationEnabled" :placeholder="$t('el.select.placeholder')" style="width: 100%" >
-                    <el-option :label="$t('overall.enable')" :value="1"></el-option>
+                    <el-option :label="$t('overall.enabled')" :value="1"></el-option>
                     <el-option :label="$t('overall.unavailable')"  :value="0"></el-option>
                   </el-select>
                 </el-form-item>

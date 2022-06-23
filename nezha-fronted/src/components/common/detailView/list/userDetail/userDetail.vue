@@ -109,7 +109,7 @@ export default {
           show: true,
           width: 150
         }, {
-          label: this.$t('overall.enable'),
+          label: this.$t('overall.enabled'),
           prop: 'status',
           show: true,
           width: 100
