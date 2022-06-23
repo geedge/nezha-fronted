@@ -243,7 +243,7 @@ export default {
           width: 120,
           sortable: 'custom'
         }, {
-          label: this.$t('alert.config.receiver'),
+          label: this.$t('alert.receiver'),
           prop: 'receivers',
           show: false,
           minWidth: 100

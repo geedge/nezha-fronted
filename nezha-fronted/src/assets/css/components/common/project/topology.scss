@@ -60,7 +60,7 @@
     }
   }
   .edit-topologyLine{
-    background: rgba(196,196,196,0.4) !important;
+    //background: rgba(196,196,196,0.4) !important;
     border-bottom: 1px solid $--explore-border-color-bottom;
   }
   .topology-scroll{
@@ -333,10 +333,9 @@
     margin-right: 10px;
   }
   .project-title {
-    height: 55px;
+    height: 36px;
     padding-bottom: 0;
   }
-
   .drag-header {
     cursor: move;
     background: #1a1a1a;
@@ -542,4 +541,13 @@
 .topo-page{
   overflow: hidden;
   box-sizing: border-box;
+}
+.full.pr10 {
+  .el-select.el-select--small,.el-input {
+    background-color: $--background-color-empty;
+    border: 1px solid $--background-color-empty;
+  }
+}
+.el-upload-dragger{
+  background-color: $--background-color-empty;
 }

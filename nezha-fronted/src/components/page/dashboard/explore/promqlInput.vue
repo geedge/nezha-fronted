@@ -23,7 +23,6 @@
               v-model="cascaderValue"
               v-clickoutside="closeDropdown"
               v-my-loading="tempBoxShowLoading"
-              :loading="loading"
               :options="metricOptions"
               v-if="type !== 'log'"
               :props="cascaderProps"
@@ -925,7 +924,7 @@ export default {
             let childrenCopy = JSON.parse(JSON.stringify(children))
             const findChild = this.metricOptions.find(item => item.label === data.parent)
             if (childrenCopy.length > 100) {
-              childrenCopy = childrenCopy.splice(findChild.children.length, findChild.children.length + 101)
+              childrenCopy = childrenCopy.splice(findChild.children.length, 100)
               findChild.children.splice(findChild.children.length - 1, 1)
               findChild.children.push(...childrenCopy)
               if (findChild.children.length < children.length - 1) {

@@ -125,7 +125,9 @@ export default {
     }
   },
   data () {
+    const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
     return {
+      theme,
       operations: {
         levels: [0, 1, 2, 3, 4, 5, 6],
         descending: true
@@ -262,8 +264,10 @@ export default {
             itemHeight: 4,
             borderRadius: 3,
             textStyle: {
-              padding: [0, 0, 0, 6]
-            }
+              padding: [0, 0, 0, 6],
+              color: this.theme == 'light' ? '#666666' : '#BEBEBE',
+            },
+            inactiveColor: this.theme == 'light' ? '#BEBEBE' : '#666666' // 字体颜色
           },
           series,
           xAxis: {
