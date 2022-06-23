@@ -638,7 +638,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.login.name") }}</div>
+        <div class="alert-label-title">{{ $t("profile.username") }}</div>
         <div class="alert-label-value">
           {{ alertLabelData && alertLabelData.username ? alertLabelData.username : "--" }}
         </div>
@@ -656,13 +656,13 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.soure") }}</div>
+        <div class="alert-label-title">{{ $t("profile.source") }}</div>
         <div class="alert-label-value">
           {{ alertLabelData && alertLabelData.source ? alertLabelData.source : "--" }}
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("config.operationlog.state") }}</div>
+        <div class="alert-label-title">{{ $t("overall.state") }}</div>
         <div class="alert-label-value">
           <div
             v-if="alertLabelData"
