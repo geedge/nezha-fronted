@@ -38,11 +38,12 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-          <div class="user-name-td" :class="{'margin-l-10': !scope.row.online}"
-           @mouseenter="labelHover(scope.row, 'user', true, false, $event)"
-           @mouseleave="labelHover(scope.row, 'user', false, false,)">
-            <i class="nz-icon nz-icon-user1 user-online" v-if="scope.row.online" :title="$t('overall.online')"/>
-            <div>
+          <div style="cursor:text" class="document-copy-block">
+            <div class="user-name-td document-copy-text" :class="{'margin-l-10': !scope.row.online}"
+             @mouseenter="labelHover(scope.row, 'user', true, false, $event)"
+             @mouseleave="labelHover(scope.row, 'user', false, false,)">
+              <i class="nz-icon nz-icon-user1 user-online" v-if="scope.row.online" :title="$t('overall.online')"/>
+              <div>
               <div class="flex-align-center">
                 <span class="user-name-top">{{scope.row[item.prop]}}</span>
                 <el-tag size="mini" v-if="mfaEnable == '1' || scope.row.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
@@ -51,6 +52,8 @@
                 @{{scope.row.username}}
               </div>
             </div>
+            </div>
+          <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)"></i>
           </div>
         </template>
         <template v-else-if="item.prop === 'roles'">
@@ -76,6 +79,12 @@
         <template v-else-if="item.prop === 'lang'">
           <span v-if="scope.row[item.prop] === 'en'">English</span>
           <span v-else-if="scope.row[item.prop] === 'zh'">简体中文</span>
+        </template>
+        <template v-else-if="item.prop === 'email'">
+          <div style="cursor:text" class="document-copy-block">
+              <span class="document-copy-text">{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop])"></i>
+            </div>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <span v-else>-</span>

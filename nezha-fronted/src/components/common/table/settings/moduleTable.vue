@@ -37,13 +37,19 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-          {{scope.row[item.prop]}}
+          <div style="cursor:text" class="document-copy-block">
+              <span class="document-copy-text">{{scope.row[item.prop]}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)"></i>
+          </div>
         </template>
         <template v-else-if="item.prop === 'type'">
           {{scope.row[item.prop]}}
         </template>
         <template v-else-if="item.prop === 'project'">
-          {{scope.row[item.prop].name}}
+          <div style="cursor:text" class="document-copy-block">
+              <span class="document-copy-text">{{scope.row[item.prop].name}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop].name)"></i>
+          </div>
         </template>
         <template v-else-if="item.prop === 'endpointNum'">
           <span class="endpoint-num"  @click="showBottomBox('endpoint', scope.row)">

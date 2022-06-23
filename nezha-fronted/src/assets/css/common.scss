@@ -451,16 +451,19 @@ textarea {
   }
 }
 .document-copy-block {
-  padding-right: 15px;
-  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: start;
+}
+.document-copy-text{
+  margin-right: 10px;
 }
 
-.document-copy-block:hover i {
-  display: block !important;
+.document-copy-block:hover i.nz-icon-override {
+  visibility: visible !important;
 }
-.document-copy-block i {
-  position: absolute;
-  top: calc((100% - 20px)/2);
-  right: 0;
+.document-copy-block i.nz-icon-override {
+  display: flex;
+  align-items: center;
   transform: scale(0.95);
 }

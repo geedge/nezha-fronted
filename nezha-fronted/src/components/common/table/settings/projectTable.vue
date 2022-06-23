@@ -38,9 +38,10 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-          <span class="">
-            {{scope.row[item.prop]}}
-          </span>
+          <div style="cursor:text" class="document-copy-block">
+              <span class="document-copy-text">{{scope.row[item.prop]}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)"></i>
+          </div>
         </template>
         <template v-else-if="item.prop === 'moduleNum'" >
           <span class="module-num" @click="jumpModule(scope.row)">

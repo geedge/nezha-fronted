@@ -37,10 +37,16 @@
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
           <template v-if="scope.row.i18n">
-            <span>{{$t(scope.row.i18n)}}</span>
+            <div style="cursor:text" class="document-copy-block">
+              <span class="document-copy-text">{{$t(scope.row.i18n)}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy($t(scope.row.i18n))"></i>
+            </div>
           </template>
           <template v-else-if="scope.row.name">
-            <span>{{scope.row.name}}</span>
+            <div style="cursor:text" class="document-copy-block">
+              <span class="document-copy-text">{{scope.row.name}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy($t(scope.row.name))"></i>
+            </div>
           </template>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>

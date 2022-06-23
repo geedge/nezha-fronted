@@ -38,39 +38,46 @@
         </template>
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop === 'name'">
-            {{scope.row[item.prop]}}
+            <div style="cursor:text" class="document-copy-block">
+              <span class="document-copy-text">{{scope.row[item.prop]}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)"></i>
+            </div>
           </template>
           <template v-else-if="item.prop === 'type'">
             {{scope.row.module.type}}
           </template>
           <template v-else-if="item.prop === 'project'">
-          <span
-            class="pointer"
-            @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
-            @mouseleave="labelHover(scope.row, item.prop, false,true)"
-          >
-            {{scope.row[item.prop].name}}
-          </span>
+            <div style="cursor:text" class="document-copy-block">
+              <span class="pointer document-copy-text"
+              @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
+              @mouseleave="labelHover(scope.row, item.prop, false,true)">
+              {{scope.row[item.prop].name}}
+              </span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop].name)"></i>
+            </div>
           </template>
           <template v-else-if="item.prop === 'module'">
-          <span
-            class="pointer"
-            @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
-            @mouseleave="labelHover(scope.row, item.prop, false,true)"
-          >
-            <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>
-          {{scope.row[item.prop].name}}
-          </span>
+            <div style="cursor:text" class="document-copy-block">
+               <span class="pointer document-copy-text"
+               @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
+               @mouseleave="labelHover(scope.row, item.prop, false,true)">
+              <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>
+              {{scope.row[item.prop].name}}
+              </span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop].name)"></i>
+            </div>
           </template>
           <template v-else-if="item.prop === 'asset'">
-          <span
-            class="pointer"
-            @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
-            @mouseleave="labelHover(scope.row, item.prop, false,true)"
-          >
-            <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
-            {{scope.row.asset.name}}
-          </span>
+           <div style="cursor:text" class="document-copy-block">
+              <span
+              class="pointer document-copy-text"
+              @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
+              @mouseleave="labelHover(scope.row, item.prop, false,true)">
+              <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
+              {{scope.row.asset.name}}
+             </span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.asset.name)"></i>
+            </div>
           </template>
           <template v-else-if="item.prop === 'alerts'">
           <span style="cursor: pointer"  @click="showBottomBox('endpointAlertMessage', scope.row)">

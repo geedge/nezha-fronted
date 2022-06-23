@@ -96,6 +96,12 @@
         <template v-else-if="item.prop === 'startAt'">
           {{ utcTimeToTimezoneStr(scope.row[item.prop]) }}
         </template>
+        <template v-else-if="item.prop === 'name'">
+           <div style="cursor:text" class="document-copy-block">
+              <span class="document-copy-text">{{scope.row.name ? scope.row.name : '-'}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)"></i>
+            </div>
+        </template>
         <span v-else-if="scope.row[item.prop]">{{
           scope.row[item.prop] || "-"
         }}</span>

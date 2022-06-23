@@ -40,14 +40,14 @@
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop === 'name'">
             <div style="cursor:text" class="document-copy-block">
-              {{scope.row.name ? scope.row.name : '-'}}
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;display:none" @click="onCopy(scope.row.name)"></i>
+              <span class="document-copy-text">{{scope.row.name ? scope.row.name : '-'}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)"></i>
             </div>
           </template>
            <template v-else-if="item.prop === 'manageIp'">
             <div style="cursor:text" class="document-copy-block">
-              {{scope.row.manageIp ? scope.row.manageIp : '-'}}
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;display:none" @click="onCopy(scope.row.manageIp)"></i>
+              <span class="document-copy-text">{{scope.row.manageIp ? scope.row.manageIp : '-'}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.manageIp)"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
@@ -105,8 +105,8 @@
           </template>
           <template v-else-if="item.prop === 'sn'">
             <div style="cursor:text" class="document-copy-block">
-              {{scope.row.sn ? scope.row.sn : '-'}}
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;display:none" @click="onCopy(scope.row.sn)"></i>
+              <span class="document-copy-text">{{scope.row.sn ? scope.row.sn : '-'}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.sn)"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'talon'">
@@ -185,7 +185,6 @@
 </template>
 
 <script>
-import mainMixinFun from '@/components/common/mixin/mainMixinFun'
 import table from '@/components/common/mixin/table'
 import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
 // import bus from '@/libs/bus'
@@ -194,7 +193,7 @@ import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
 import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'assetTable',
-  mixins: [table, alertLabelMixin, mainMixinFun],
+  mixins: [table, alertLabelMixin],
   components: {
     alertLabel: alertLabel,
     alertDaysInfo
