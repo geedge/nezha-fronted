@@ -2,7 +2,7 @@
   <div v-clickoutside="{obj:endpoint,func:clickOutside}" :class="{'right-box-add-endpoint-snmp': currentModule.type && currentModule.type.toLowerCase() == 'snmp'}" class="right-box right-box-add-endpoint">
     <div class="right-box__header">
       <!-- begin--标题-->
-      <div class="header__title">{{$t("overall.createEndpoint")}}</div>
+      <div class="header__title">{{$t("config.system.basic.lnglatll.createEndpoint")}}</div>
       <!-- end--标题-->
       <div class="header__operation">
         <span v-cancel="{obj: object, func: esc}"><i class="nz-icon nz-icon-close"></i></span>

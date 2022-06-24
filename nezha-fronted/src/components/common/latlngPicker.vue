@@ -3,7 +3,7 @@
     <div class="input-box">
       <div class="input-box-item" style="display: none;">
         <el-input v-model="lnglat" @blur="setLatlng" @change="setLatlng">
-          <template slot="prepend" v-if="showZoom">{{$t('config.dc.lnglat')}}</template>
+          <template slot="prepend" v-if="showZoom">{{$t('config.system.basic.lnglat')}}</template>
         </el-input>
       </div>
       <div class="input-box-item" v-if="showZoom">

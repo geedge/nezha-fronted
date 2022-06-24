@@ -153,7 +153,7 @@
             </nz-tooltip>
           </template>
           <template v-else-if="item.prop === 'enabled'">
-            <span v-if="scope.row[item.prop] === 1">{{$t('overall.enable')}}</span>
+            <span v-if="scope.row[item.prop] === 1">{{$t('overall.enabled')}}</span>
             <span v-else>{{$t('profile.close')}}</span>
           </template>
           <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>

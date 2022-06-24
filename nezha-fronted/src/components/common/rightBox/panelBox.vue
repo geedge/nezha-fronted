@@ -155,120 +155,121 @@
 
           <!--   Report  -->
           <div>
-            <div class="form__sub-title">
-              <span>{{$t('dashboard.panel.report')}}</span>
-              <el-switch v-model="editPanel.param.report.enable" size="small"></el-switch>
-            </div>
+            <el-form-item class="item-report">
+              <div class="form__sub-title">
+                <span>{{$t('dashboard.panel.report')}}</span>
+                <el-switch v-model="editPanel.param.report.enable" size="small"></el-switch>
+              </div>
+            </el-form-item>
             <div v-if="editPanel.param.report.enable">
               <transition name="el-zoom-in-top" >
                 <div class="form-items--half-width-group">
                   <el-form-item
-                  :label="$t('backup.start')"
-                  class="form-item--half-width"
-                  prop="param.report.schedule.stime"
+                    :label="$t('backup.start')"
+                    class="form-item--half-width"
+                    prop="param.report.schedule.stime"
                   >
-                  <my-date-picker align="right" class=" "
-                              v-model="editPanel.param.report.schedule.stime"
-                              :format="timeFormatStrToDatePickFormat(dateFormatStr)"
-                              popper-class="panel-time-picker-popper right-box-select-top"
-                              prefix-icon=" "
-                              size="mini"
-                              type="datetime">
-                      </my-date-picker>
-                    </el-form-item>
+                    <my-date-picker align="right" class=" "
+                      v-model="editPanel.param.report.schedule.stime"
+                      :format="timeFormatStrToDatePickFormat(dateFormatStr)"
+                      popper-class="panel-time-picker-popper right-box-select-top"
+                      prefix-icon=" "
+                      size="mini"
+                      type="datetime">
+                    </my-date-picker>
+                  </el-form-item>
                   <el-form-item
-                  :label="$t('dashboard.panel.endAt')"
-                  class="form-item--half-width"
-                  prop="param.report.schedule.etime"
-                  >
-                     <my-date-picker align="right" class=" "
-                            v-model="editPanel.param.report.schedule.etime"
-                            :format="timeFormatStrToDatePickFormat(dateFormatStr)"
-                            popper-class="panel-time-picker-popper right-box-select-top"
-                            prefix-icon=" "
-                            size="mini"
-                            type="datetime">
-                         </my-date-picker>
-                    </el-form-item>
+                    :label="$t('dashboard.panel.endAt')"
+                    class="form-item--half-width"
+                    prop="param.report.schedule.etime"
+                    >
+                    <my-date-picker align="right" class=" "
+                      v-model="editPanel.param.report.schedule.etime"
+                      :format="timeFormatStrToDatePickFormat(dateFormatStr)"
+                      popper-class="panel-time-picker-popper right-box-select-top"
+                      prefix-icon=" "
+                      size="mini"
+                      type="datetime">
+                    </my-date-picker>
+                  </el-form-item>
                   <el-form-item :label='$t("dashboard.panel.period")' class="range-time" prop="param.report.range.unit">
                     <el-radio-group v-model="editPanel.param.report.range.unit" size="small">
                       <el-radio-button label="day">{{ $t("dashboard.panel.prevDay") }}</el-radio-button>
                       <el-radio-button label="week">{{ $t("dashboard.panel.prevWeek") }}</el-radio-button>
                       <el-radio-button label="month">{{ $t("dashboard.panel.prevMonth") }}</el-radio-button>
                     </el-radio-group>
-                    </el-form-item>
-            <el-form-item
-            :label="$t('backup.schedule')"
-            prop="param.report.schedule.type"
-            class="form-tabs">
-            <el-tabs
-              v-model="editPanel.param.report.schedule.type"
-              type="card"
-              @tab-click="datasourceChange"
-              class="backups-info-tab"
-            >
-              <el-tab-pane :label="$t('backup.Daily')" name="2"></el-tab-pane>
-              <el-tab-pane :label="$t('backup.Weekly')" name="3"></el-tab-pane>
-              <el-tab-pane :label="$t('backup.Monthly')" name="4"></el-tab-pane>
-            </el-tabs>
-               </el-form-item>
-          <el-form-item
-            v-if="isShow === 2 || isShow === 3 ? true :false"
-            :label="$t('backup.RepeatEvery')"
-            prop="param.report.schedule.repeat"
-            class="form-day-week">
-            <el-input
-              size="small"
-              v-model="editPanel.param.report.schedule.repeat"
-              id="chart-box-title"
-              v-if="isShow === 3 ? true :false">
-              <template slot="append">{{ $t("backup.week") }}</template>
-            </el-input>
-            <el-input
-              size="small"
-              v-model="editPanel.param.report.schedule.repeat"
-              id="chart-box-title"
-              v-if="isShow === 2 ? true :false">
-              <template slot="append">{{ $t("backup.day") }}</template>
-            </el-input>
-                </el-form-item>
-         <el-form-item v-if="isShow === 3 ? true : false" :label='$t("backup.WeekOn")' class="range-time" prop="nums">
-            <el-checkbox-group
-              v-model="editPanel.param.report.schedule.nums">
-              <el-checkbox-button
-                v-for="(item,index) in week"
-                :label="index + 1"
-                :key="index"
-                >{{item}}</el-checkbox-button>
-            </el-checkbox-group>
-                    </el-form-item>
-           <el-form-item
-            v-show="isShow === 4 ? true : false"
-            :label="$t('backup.DayOfMonth')"
-            prop="nums"
-            class="check-month_box"
-            id="day-of-month"
-          >
-             <el-checkbox-group v-model="editPanel.param.report.schedule.nums">
-               <el-checkbox-button
-                v-for="(item, index) in month"
-                :label="index === 31 ? -1 : index + 1"
-                :key="item"
-                >{{ item }}</el-checkbox-button>
-             </el-checkbox-group>
-                </el-form-item>
-           <el-form-item :label="$t('dashboard.panel.receivers')" class="item-receivers" prop="param.report.receivers">
-             <el-select v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
-               <el-option v-for="item in userData" :key="item.id" :label="item.name" :value="item.id">
-               <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-               </el-option>
-            </el-select>
-                </el-form-item>
-          </div>
+                  </el-form-item>
+                  <el-form-item
+                    :label="$t('backup.schedule')"
+                    prop="param.report.schedule.type"
+                    class="form-tabs">
+                    <el-tabs
+                      v-model="editPanel.param.report.schedule.type"
+                      type="card"
+                      @tab-click="datasourceChange"
+                      class="backups-info-tab"
+                    >
+                      <el-tab-pane :label="$t('backup.Daily')" name="2"></el-tab-pane>
+                      <el-tab-pane :label="$t('backup.Weekly')" name="3"></el-tab-pane>
+                      <el-tab-pane :label="$t('backup.Monthly')" name="4"></el-tab-pane>
+                    </el-tabs>
+                  </el-form-item>
+                  <el-form-item
+                    v-if="isShow === 2 || isShow === 3 ? true :false"
+                    :label="$t('backup.RepeatEvery')"
+                    prop="param.report.schedule.repeat"
+                    class="form-day-week">
+                    <el-input
+                      size="small"
+                      v-model="editPanel.param.report.schedule.repeat"
+                      id="chart-box-title"
+                      v-if="isShow === 3 ? true :false">
+                      <template slot="append">{{ $t("backup.week") }}</template>
+                    </el-input>
+                    <el-input
+                      size="small"
+                      v-model="editPanel.param.report.schedule.repeat"
+                      id="chart-box-title"
+                      v-if="isShow === 2 ? true :false">
+                      <template slot="append">{{ $t("backup.day") }}</template>
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item v-if="isShow === 3 ? true : false" :label='$t("backup.WeekOn")' class="range-time" prop="nums">
+                    <el-checkbox-group
+                      v-model="editPanel.param.report.schedule.nums">
+                      <el-checkbox-button
+                        v-for="(item,index) in week"
+                        :label="index + 1"
+                        :key="index"
+                        >{{item}}</el-checkbox-button>
+                    </el-checkbox-group>
+                  </el-form-item>
+                  <el-form-item
+                    v-show="isShow === 4 ? true : false"
+                    :label="$t('backup.DayOfMonth')"
+                    prop="nums"
+                    class="check-month_box"
+                    id="day-of-month"
+                  >
+                    <el-checkbox-group v-model="editPanel.param.report.schedule.nums">
+                      <el-checkbox-button
+                      v-for="(item, index) in month"
+                      :label="index === 31 ? -1 : index + 1"
+                      :key="item"
+                      >{{ item }}</el-checkbox-button>
+                    </el-checkbox-group>
+                  </el-form-item>
+                  <el-form-item :label="$t('dashboard.panel.receivers')" class="item-receivers" prop="param.report.receivers">
+                    <el-select v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
+                      <el-option v-for="item in userData" :key="item.id" :label="item.name" :value="item.id">
+                      <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
               </transition>
             </div>
-      </div>
-
+          </div>
         </el-form>
       </div>
     </div>
@@ -377,17 +378,6 @@ export default {
     this.dateFormatStr = 'YYYY-MM-DD HH:mm:ss'
     if (this.editPanel.id) {
       this.isShow = Number(this.editPanel.param.report.schedule.type)
-      this.editPanel.param.report.schedule.type = this.editPanel.param.report.schedule.type + ''
-      if (this.editPanel.param.report.schedule.stime !== '') {
-        this.editPanel.param.report.schedule.stime = this.utcTimeToTimezoneStr(this.editPanel.param.report.schedule.stime)
-      } else {
-        this.editPanel.param.report.schedule.stime = ''
-      }
-      if (this.editPanel.param.report.schedule.etime !== '') {
-        this.editPanel.param.report.schedule.etime = this.utcTimeToTimezoneStr(this.editPanel.param.report.schedule.etime)
-      } else {
-        this.editPanel.param.report.schedule.etime = ''
-      }
     }
   },
   mounted () {
@@ -496,8 +486,8 @@ export default {
               type: Number(this.editPanel.param.report.schedule.type),
               repeat: this.editPanel.param.report.schedule.repeat ? this.editPanel.param.report.schedule.repeat : 1,
               nums: this.editPanel.param.report.schedule.nums,
-              stime: this.editPanel.param.report.schedule.stime !== '' ? this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.stime) : this.editPanel.param.report.schedule.stime,
-              etime: this.editPanel.param.report.schedule.etime !== '' ? this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.etime) : this.editPanel.param.report.schedule.etime
+              stime: this.editPanel.param.report.schedule.stime !== '' ? this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.stime, 'YYYY-MM-DD HH:mm:ss') : this.editPanel.param.report.schedule.stime,
+              etime: this.editPanel.param.report.schedule.etime !== '' ? this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.etime, 'YYYY-MM-DD HH:mm:ss') : this.editPanel.param.report.schedule.etime
             },
             receivers: this.editPanel.param.report.receivers
           },
@@ -584,15 +574,21 @@ export default {
     'editPanel.param.report.schedule.stime': {
       deep: true,
       handler (n) {
-        this.editPanel.param.report.schedule.stime = bus
-          .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = this.$loadsh.get(this.editPanel, 'param.report.schedule.stime', '')
+        if (startTime !== '') {
+          this.editPanel.param.report.schedule.stime = bus
+            .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
+        }
       }
     },
     'editPanel.param.report.schedule.etime': {
       deep: true,
       handler (n) {
-        this.editPanel.param.report.schedule.etime = bus
-          .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
+        const endTime = this.$loadsh.get(this.editPanel, 'param.report.schedule.etime', '')
+        if (endTime !== '') {
+          this.editPanel.param.report.schedule.etime = bus
+            .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
+        }
       }
     }
   }

@@ -638,7 +638,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.login.name") }}</div>
+        <div class="alert-label-title">{{ $t("profile.username") }}</div>
         <div class="alert-label-value">
           {{ alertLabelData && alertLabelData.username ? alertLabelData.username : "--" }}
         </div>
@@ -656,13 +656,13 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.soure") }}</div>
+        <div class="alert-label-title">{{ $t("profile.source") }}</div>
         <div class="alert-label-value">
           {{ alertLabelData && alertLabelData.source ? alertLabelData.source : "--" }}
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("config.operationlog.state") }}</div>
+        <div class="alert-label-title">{{ $t("overall.state") }}</div>
         <div class="alert-label-value">
           <div
             v-if="alertLabelData"
@@ -776,30 +776,14 @@ export default {
           topOffSetView = topOffSet
         }
         if (position.top > clientHeight / 2) {
-          if (this.type === 'user') {
-            labelPosition = {
-              // user info 距离
-              left: `${position.left + position.width / 3 + leftOffSet}px`,
-              top: `${position.top - this.heightList - topOffSetView}px`
-            }
-          } else {
-            labelPosition = {
-              left: `${position.left + position.width + leftOffSet}px`,
-              top: `${position.top - this.heightList - topOffSetView}px`
-            }
+          labelPosition = {
+            left: `${position.left + position.width + leftOffSet}px`,
+            top: `${position.top - this.heightList - topOffSetView}px`
           }
         } else {
-          if (this.type === 'user') {
-            // user info 距离
-            labelPosition = {
-              left: `${position.left + position.width / 3 + leftOffSet}px`,
-              top: `${position.top + topOffSet}px`
-            }
-          } else {
-            labelPosition = {
-              left: `${position.left + position.width + leftOffSet}px`,
-              top: `${position.top + topOffSet}px`
-            }
+          labelPosition = {
+            left: `${position.left + position.width + leftOffSet}px`,
+            top: `${position.top + topOffSet}px`
           }
         }
         if (position.left > clientWidth / 2) {

@@ -715,7 +715,7 @@ export default {
         { name: this.$t('project.endpoint.authTypeToken'), value: 2 }
       ],
       endpointStateList: [
-        { name: this.$t('overall.enable'), value: 1 },
+        { name: this.$t('overall.enabled'), value: 1 },
         { name: this.$t('profile.close'), value: 0 }
       ],
       configsCopyValue: '',
