@@ -40,7 +40,7 @@
             </el-form-item>
           <!--   Report  -->
           <div>
-            <el-form-item >
+            <el-form-item class="item-report">
             <div class="form__sub-title">
               <span>{{$t('dashboard.panel.report')}}</span>
               <el-switch v-model="editPanel.param.report.enable" size="small"></el-switch>
@@ -264,17 +264,6 @@ export default {
     this.dateFormatStr = 'YYYY-MM-DD HH:mm:ss'
     if (this.editPanel.id) {
       this.isShow = Number(this.editPanel.param.report.schedule.type)
-      this.editPanel.param.report.schedule.type = this.editPanel.param.report.schedule.type + ''
-      if (this.editPanel.param.report.schedule.stime !== '') {
-        this.editPanel.param.report.schedule.stime = this.utcTimeToTimezoneStr(this.editPanel.param.report.schedule.stime)
-      } else {
-        this.editPanel.param.report.schedule.stime = ''
-      }
-      if (this.editPanel.param.report.schedule.etime !== '') {
-        this.editPanel.param.report.schedule.etime = this.utcTimeToTimezoneStr(this.editPanel.param.report.schedule.etime)
-      } else {
-        this.editPanel.param.report.schedule.etime = ''
-      }
     }
   },
   mounted () {
@@ -327,8 +316,8 @@ export default {
               type: Number(this.editPanel.param.report.schedule.type),
               repeat: this.editPanel.param.report.schedule.repeat ? this.editPanel.param.report.schedule.repeat : 1,
               nums: this.editPanel.param.report.schedule.nums,
-              stime: this.editPanel.param.report.schedule.stime !== '' ? this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.stime) : this.editPanel.param.report.schedule.stime,
-              etime: this.editPanel.param.report.schedule.etime !== '' ? this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.etime) : this.editPanel.param.report.schedule.etime
+              stime: this.editPanel.param.report.schedule.stime !== '' ? this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.stime, 'YYYY-MM-DD HH:mm:ss') : this.editPanel.param.report.schedule.stime,
+              etime: this.editPanel.param.report.schedule.etime !== '' ? this.timezoneToUtcTimeStr(this.editPanel.param.report.schedule.etime, 'YYYY-MM-DD HH:mm:ss') : this.editPanel.param.report.schedule.etime
             },
             receivers: this.editPanel.param.report.receivers
           },
@@ -404,15 +393,21 @@ export default {
     'editPanel.param.report.schedule.stime': {
       deep: true,
       handler (n) {
-        this.editPanel.param.report.schedule.stime = bus
-          .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = this.$loadsh.get(this.editPanel, 'param.report.schedule.stime', '')
+        if (startTime !== '') {
+          this.editPanel.param.report.schedule.stime = bus
+            .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
+        }
       }
     },
     'editPanel.param.report.schedule.etime': {
       deep: true,
       handler (n) {
-        this.editPanel.param.report.schedule.etime = bus
-          .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
+        const endTime = this.$loadsh.get(this.editPanel, 'param.report.schedule.etime', '')
+        if (endTime !== '') {
+          this.editPanel.param.report.schedule.etime = bus
+            .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
+        }
       }
     }
   }

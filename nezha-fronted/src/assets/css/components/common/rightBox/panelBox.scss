@@ -1,10 +1,17 @@
 .right-box-panel{
+  .item-report{
+    .form__sub-title{
+      margin-bottom: 5px;
+    }
+  }
   .item-receivers{
     .el-select.el-select--small{
       width: 100%;
     }
     .item-receivers-text{
+      font-size: 12px;
       color: $--color-text-secondary;
+      padding-left: 5px;
     }
   }
     .el-input--suffix.el-date-editor--datetime .el-input__inner{
@@ -51,6 +58,9 @@
             }
           }
         }
+    .el-checkbox-button.is-checked{
+      border: 1px solid #fbb569 !important;
+    }
         
     .el-checkbox-button.is-checked .el-checkbox-button__inner {
       color: #fff;
@@ -64,8 +74,16 @@
           height: 41px;
           .el-radio-group{
             height: 100%;
-            border-left: 1px solid $--border-color-light;
+            .el-radio-button{
+              border: 1px solid $--border-color-light;
+              margin-right: -1px;
+            }
+            .el-radio-button.is-active{
+              border: 1px solid #fbb569 !important;
+              border-radius: 0;
+            }
             .el-radio-button__inner{
+              border: 0;
               height: 100%;
               line-height: 1.5;
               font-size: 14px;
@@ -76,6 +94,7 @@
             height: 100%;
             .el-checkbox-button{
               margin-right: -2px;
+              width: calc(100% / 6.9) !important;
               .el-checkbox-button__inner{
                 background-color: $--background-color-empty;
                 border:1px solid $--border-color-light;
@@ -101,6 +120,7 @@
       }
       .form-tabs{
         width: 100%;
+        margin-bottom: 0 !important;
         .el-tabs__nav{
           display: flex;
           .el-tabs__item{
@@ -126,7 +146,6 @@
  }
       
   .el-form-item__content{
-    text-align: unset !important;
     .el-checkbox-button{
       width: calc(100% / 7) !important;
       .el-checkbox-button__inner{
