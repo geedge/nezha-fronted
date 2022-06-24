@@ -60,7 +60,7 @@
         <el-form-item :label="$t('config.system.basic.mapConfig')" class="basic-lnglat" prop="lnglat">
           <div style="display: flex">
             <el-input v-model="basic.lnglat" maxlength="256" placeholder="" style="width: calc(100% - 50px); padding-right: 50px;">
-              <template slot="prepend">{{$t('config.dc.lnglat')}}</template>
+              <template slot="prepend">{{$t('config.system.basic.lnglat')}}</template>
             </el-input>
             <latlng-picker ref="latlngPicker" :init-data="basic.lnglat" :show-zoom="true" @lnglatChange="lnglatChange"></latlng-picker>
           </div>

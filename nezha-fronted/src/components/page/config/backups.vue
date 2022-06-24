@@ -72,7 +72,7 @@ export default {
       customTableTitle: [
         { label: this.$t('alert.config.schedEnable'), prop: 'schedule' },
         { label: this.$t('backup.backupRetention'), prop: 'retention' },
-        { label: this.$t('overall.enable'), prop: 'state' }
+        { label: this.$t('overall.enabled'), prop: 'state' }
       ],
       customTableTitle2: [
         { label: this.$t('config.assetLabel.date'), prop: 'time', minwidth: 228 },
