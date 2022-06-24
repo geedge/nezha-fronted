@@ -34,11 +34,11 @@
             </div>
 
             <div class="top-tool-right">
-<!--              <div class="top-tool-search margin-r-20">-->
-<!--                <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">-->
-<!--                  <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>-->
-<!--                </el-input>-->
-<!--              </div>-->
+             <!-- <div class="top-tool-search margin-r-20">
+               <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
+                 <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>
+               </el-input>
+             </div> -->
 
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id"></pick-time>
 
@@ -144,6 +144,7 @@
 </template>
 
 <script>
+import { chartCache } from '@/components/common/js/common'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
@@ -156,7 +157,8 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
-import FileSaver from 'file-saver'
+import * as echarts from 'echarts'
+// import FileSaver from 'file-saver'
 // import chartData from './testData'
 export default {
   name: 'panel',
@@ -189,7 +191,21 @@ export default {
       },
       panel: { // 新增panel
         id: '',
-        name: ''
+        name: '',
+        remark: '',
+        param: {
+          report: {
+            enable: false,
+            range: {
+              unit: ''
+            },
+            schedule: {
+              repeat: 0,
+              nums: [],
+              type: 0
+            }
+          }
+        }
       },
       chart: {},
       blankChart: {
@@ -376,6 +392,28 @@ export default {
     },
     edit (u) {
       this.panel = Object.assign({}, u)
+      if (!this.panel.param.report) {
+        this.panel = {
+          ...u,
+          param: {
+            report: {
+              enable: false,
+              range: {
+                unit: ''
+              },
+              schedule: {
+                type: '0',
+                repeat: 1,
+                nums: [],
+                stime: '',
+                etime: ''
+              },
+              receivers: []
+            },
+            chartShare: 'none'
+          }
+        }
+      }
       this.rightBox.panel.show = true
     },
     toAdd () {
@@ -386,7 +424,25 @@ export default {
       // this.$refs.panelBox.show(true)
       this.panel = {
         id: '',
-        name: ''
+        name: '',
+        remark: '',
+        param: {
+          report: {
+            enable: false,
+            range: {
+              unit: ''
+            },
+            schedule: {
+              stime: '',
+              etime: '',
+              nums: [],
+              type: 0 + '',
+              repeat: 1
+            }
+          },
+          chartShare: 'none',
+          variables: []
+        }
       }
       // this.$refs.panelBox.setTitle(this.$t('dashboard.panel.createPanelTitle'))
     },
@@ -999,6 +1055,30 @@ export default {
     }
   },
   watch: {
+    'showPanel.param.chartShare': {
+      handler (value) {
+        // 每次切换联动模式 tooltip设置显示
+        const option = {
+          tooltip: {
+            className: 'chart-time-series'
+          }
+        }
+        for (const key in chartCache) {
+          if (!chartCache[key] || chartCache[key].group !== 'timeSeriesGroup') {
+            continue
+          }
+          chartCache[key].setOption(option)
+        }
+        this.$store.commit('setCurrentMousemove', 0)
+        if (value && value !== 'none') {
+          this.$store.commit('setConnect', value)
+          echarts.connect('timeSeriesGroup')
+        } else {
+          this.$store.commit('setConnect', value)
+          echarts.disconnect('timeSeriesGroup')
+        }
+      }
+    },
     'filter.searchName': function (n, o) {
       const temp = this
       setTimeout(function () {
@@ -1063,6 +1143,11 @@ export default {
     if (!document.onmousemove) { // 添加鼠标移动事件监听
       document.onmousemove = null
     }
+
+    // 页面销毁 清除图表联动
+    this.$store.commit('setCurrentMousemove', 0)
+    this.$store.commit('setConnect', 'none')
+    echarts.disconnect('timeSeriesGroup')
   }
 }
 </script>

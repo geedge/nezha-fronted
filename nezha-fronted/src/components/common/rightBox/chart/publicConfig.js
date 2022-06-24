@@ -362,7 +362,7 @@ export default {
     showInput (index, flag) {
       this.expressionsShow[index].hideInput = flag
     },
-    transformNumToLetter (num) { // 相当于26进制 获取id
+    transformNumToLetter (num) { // 相当于26进制 获取idaddExpression
       const self = this
       let letter = ''
       const loopNum = parseInt(num / 26)

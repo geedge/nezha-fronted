@@ -476,3 +476,8 @@ textarea {
 .ql-tooltip {
   background: $--background-color-empty;
 }
+
+
+.chart-time-series.hide{
+  display: none !important;
+}

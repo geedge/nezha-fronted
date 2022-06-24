@@ -16,7 +16,7 @@ export function getUUID () {
   return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4())
 }
 
-const chartCache = {}
+export const chartCache = {}
 
 export function getChart (key) {
   return chartCache[`chart${key}`]
