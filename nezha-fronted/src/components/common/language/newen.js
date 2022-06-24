@@ -97,5 +97,4 @@ const newen = {
   },
   ...enLocale
 }
-
 export default newen

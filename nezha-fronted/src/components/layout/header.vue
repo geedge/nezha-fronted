@@ -66,6 +66,7 @@
       </el-dropdown>
     </div>
     <guide :show-dialog="showGuide" @dialogClosed="dialogClosed" @close="showGuide = false"></guide>
+    <intro></intro>
 <!--    <span v-for="item in fontData" :key="item">-->
 <!--      <span class="temp-dom" :class="`temp-dom&#45;&#45;${fontSzie}`" v-for="fontSzie in [12,13,14,15]" :key="fontSzie">{{item}}</span>-->
 <!--    </span>-->
@@ -76,16 +77,19 @@
 import bus from '../../libs/bus'
 import { mapActions } from 'vuex'
 import guide from '@/components/common/popBox/guide'
+import intro from '@/components/common/intro'
 export default {
   name: 'Header',
   components: {
-    guide
+    guide,
+    intro
   },
   data () {
     return {
       username: '',
       name: '',
       language: 'en',
+      showIntro: 'true',
       // 顶部菜单相关
       createMenu: [ // 新增按钮内容
         {
@@ -228,32 +232,6 @@ export default {
       this.getLinkData()
     }
     window.addEventListener('visibilitychange', this.testUser)
-    // setTimeout(() => {
-    //   this.$intro()
-    //     .setOptions({
-    //       // 我给看的效果图是英⽂的（默认英⽂），这⾥是更换成中⽂
-    //       prevLabel: '上⼀步',
-    //       nextLabel: '下⼀步',
-    //       skipLabel: '跳过',
-    //       doneLabel: '完成',
-    //       // steps步骤，可以写个⼯具类保存起来
-    //       steps: this.steps,
-    //       dontShowAgain: true
-    //     })
-    //     .oncomplete(() => {
-    //       // 需要注意的是，这⾥⽤了箭头函数
-    //       // 点击结束按钮后执⾏的事件
-    //     })
-    //     .onexit(() => {
-    //       // 点击跳过按钮后执⾏的事件
-    //     })
-    //     .onbeforeexit(() => {
-    //       // 确认完毕之后执⾏的事件
-    //       // return confirm('Are you sure?')
-    //     })
-    //   // this.$intro('#personal').start() // start the guide
-    //   // this.$intro('#personal').showHints() // show hints
-    // }, 1000)
   },
   computed: {
     linkData () {
