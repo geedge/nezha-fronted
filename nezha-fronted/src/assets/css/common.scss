@@ -453,6 +453,7 @@ textarea {
     font-weight: 600;
   }
 }
+
 .document-copy-block {
   display: flex;
   flex-wrap: nowrap;
@@ -483,4 +484,7 @@ textarea {
     background: $--background-color-empty;
     outline: none;
   }
+}
+.chart-time-series.hide{
+  display: none !important;
 }
