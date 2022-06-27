@@ -22,6 +22,7 @@
               v-model="editExprTemp.gname"
               :fetch-suggestions="querySearch"
               :placeholder="$t('overall.placeHolder')"
+              maxlength="64"
               class="inline-input"
               popper-class="right-box-select-top right-public-box-dropdown-top"
               size="small"
