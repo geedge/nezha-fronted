@@ -59,6 +59,7 @@
                               :format="timeFormatStrToDatePickFormat(dateFormatStr)"
                               popper-class="panel-time-picker-popper right-box-select-top"
                               prefix-icon=" "
+                              @change="changeData(true)"
                               size="mini"
                               type="datetime">
                       </my-date-picker>
@@ -73,6 +74,7 @@
                             :format="timeFormatStrToDatePickFormat(dateFormatStr)"
                             popper-class="panel-time-picker-popper right-box-select-top"
                             prefix-icon=" "
+                            @change="changeData(false)"
                             size="mini"
                             type="datetime">
                          </my-date-picker>
@@ -379,7 +381,24 @@ export default {
       }).catch(() => {
         this.prevent_opt.save = false
       })
-    }
+    },
+    changeData (flag) {
+	      if (flag) {
+	        if (this.editPanel.param.report.schedule.etime) {
+	          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
+	            this.editPanel.param.report.schedule.stime = ''
+            this.$message.error(this.$t('alert.silence.timeError'))
+	          }
+	        }
+	      } else {
+	        if (this.editPanel.param.report.schedule.stime) {
+	          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
+            this.editPanel.param.report.schedule.etime = ''
+	            this.$message.error(this.$t('alert.silence.timeError'))
+	          }
+	        }
+	      }
+	    }
   },
   watch: {
     obj: {
