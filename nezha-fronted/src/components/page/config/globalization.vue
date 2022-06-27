@@ -90,7 +90,7 @@ export default {
             disabled: false
           },
           {
-            name: this.$t('overall.labels'),
+            name: this.$t('overall.value'),
             type: 'input',
             label: 'value',
             disabled: false
