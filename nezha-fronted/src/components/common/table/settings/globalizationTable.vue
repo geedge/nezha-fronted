@@ -108,7 +108,7 @@ export default {
           minWidth: 150,
           sortable: 'custom'
         }, {
-          label: this.$t('overall.labels'),
+          label: this.$t('overall.value'),
           prop: 'value',
           minWidth: 150,
           show: true
