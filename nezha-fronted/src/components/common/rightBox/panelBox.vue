@@ -97,17 +97,37 @@
                       <el-option label="Custom" value="custom"></el-option>
                     </el-select>
                   </el-form-item>
-                  <!-- Custom values -->
-                  <el-form-item v-if="item.type==='custom'" :label="$t('dashboard.panel.customValues')" :prop="'param.variables.' + index + '.customOptions'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="customOptions" style="width: 100%;" >
-                    <el-input v-model="item.customOptions" placeholder="1,10,myKey:myValue" size="small"/>
-                  </el-form-item>
                   <!-- Query expression -->
-                  <el-form-item v-if="item.type==='query'" :label="$t('dashboard.panel.queryExpression')" :prop="'param.variables.' + index + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="expression" style="width: 100%;" >
+                  <el-form-item v-if="item.type==='query'" :prop="'param.variables.' + index + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="expression" style="width: 100%;" >
+                    <div slot="label">
+                      <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
+                        <table class="query-variable-table" width="640" cellspacing="5">
+                          <thead>
+                            <th>{{$t('overall.name')}}</th>
+                            <th>{{$t('overall.remark')}}</th>
+                          </thead>
+                          <tbody>
+                            <tr v-for="item in queryVariableList" :key="item.name">
+                              <td width="200">{{item.name}}</td>
+                              <td>{{item.description}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <span slot="reference">
+                          {{$t('dashboard.panel.queryExpression')}}
+                          <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                        </span>
+                      </el-popover>
+                    </div>
                     <el-input v-model="item.expression" placeholder="labels_names()" size="small"/>
                   </el-form-item>
                   <!-- Regex -->
                   <el-form-item v-if="item.type==='query'" :label="$t('dashboard.panel.regex')" :prop="'param.variables.' + index + '.regex'" key="regex" style="width: 100%;" >
                     <el-input v-model="item.regex" placeholder="/.*-(?<text>.*)-(?<value>.*)-.*/" size="small"/>
+                  </el-form-item>
+                  <!-- Custom values -->
+                  <el-form-item v-if="item.type==='custom'" :label="$t('dashboard.panel.customValues')" :prop="'param.variables.' + index + '.customOptions'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="customOptions" style="width: 100%;" >
+                    <el-input v-model="item.customOptions" placeholder="1,10,myKey:myValue" size="small"/>
                   </el-form-item>
                   <!-- Multi-value -->
                   <el-form-item class="form-item--half-width" :prop="'param.variables.' + index + '.multi'" style="margin-bottom: 0px">
@@ -371,7 +391,14 @@ export default {
       ],
       dateFormatStr: localStorage.getItem('nz-default-dateFormat')
         ? localStorage.getItem('nz-default-dateFormat')
-        : 'YYYY-MM-DD HH:ss:mm'
+        : 'YYYY-MM-DD HH:ss:mm',
+      queryVariableList: [
+        { name: 'label_names()', description: 'Returns a list of metric label names.' },
+        { name: 'label_values(label)', description: 'Returns a list of label values for the label in every metric.' },
+        { name: 'label_values(metric, label)', description: 'Returns a list of label values for the label in the specified metric.' },
+        { name: 'metrics(metric)', description: 'Returns a list of metrics matching the specified metric regex.' },
+        { name: 'query_result(query)', description: 'Returns a list of metric query result for the query.' }
+      ]
     }
   },
   created () {
@@ -418,7 +445,7 @@ export default {
     addVariable () {
       const temp = {
         show: true,
-        type: 'custom',
+        type: 'query',
         multi: false,
         allOption: false
       }
@@ -563,7 +590,7 @@ export default {
         if (!this.editPanel.param.variables || !this.editPanel.param.variables.length) {
           const temp = [{
             show: true,
-            type: 'custom',
+            type: 'query',
             multi: false,
             allOption: false
           }]
