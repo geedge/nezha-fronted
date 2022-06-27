@@ -39,7 +39,7 @@
                 <el-input slot="reference" maxlength="64" show-word-limit v-model="scope.row[item.prop]" size="small" ></el-input>
               </el-popover>
             </template>
-            <template v-if="item.prop == 'role'">
+            <!-- <template v-if="item.prop == 'role'">
               <el-popover :content="rules.roleId.message" placement="top" trigger="manual" v-model="rules.roleId.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.roleId)">
                 <el-select v-model="scope.row[item.prop]" size="small" :placeholder="$t('el.select.placeholder')" value-key="id" slot="reference" popper-class="api-select right-box-select-top right-public-box-dropdown-top role-system-table">
                   <template v-for="role in roles" >
@@ -47,7 +47,7 @@
                   </template>
                 </el-select>
               </el-popover>
-            </template>
+            </template> -->
             <template v-if="item.prop == 'expireAt'">
 <!--              <el-popover :content="rules.expireAt.message" placement="top" trigger="manual" v-model="rules.expireAt.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.expireAt)">-->
                 <my-date-picker
@@ -68,14 +68,20 @@
             <template v-if="item.prop == 'createUser'">
               {{scope.row[item.prop]?scope.row[item.prop].name:'-'}}
             </template>
-            <template v-else-if="item.prop == 'role'">
+            <!-- <template v-else-if="item.prop == 'role'">
               {{scope.row[item.prop]?scope.row[item.prop].name:'-'}}
-            </template>
+            </template> -->
             <template v-else-if="item.prop == 'expireAt'">
               {{scope.row[item.prop]?utcTimeToTimezoneStr(scope.row[item.prop]):$t('config.system.apiKey.noExpire')}}
             </template>
             <template v-else-if="item.prop == 'createAt'">
               {{scope.row[item.prop]?utcTimeToTimezoneStr(scope.row[item.prop]):$t('config.system.apiKey.noExpire')}}
+            </template>
+            <template v-else-if="item.prop == 'token'">
+              <div style="cursor:text" class="document-copy-block">
+              <span class="document-copy-text"> {{scope.row[item.prop].replace(/(?<=.{8})./g, '*')}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop])"></i>
+              </div>
             </template>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>
@@ -133,12 +139,14 @@ export default {
         }, {
           label: this.$t('apiKey.key'),
           prop: 'token',
-          show: true
-        }, {
-          label: this.$t('profile.role'),
-          prop: 'role',
-          show: true
-        }, {
+          show: false
+        },
+        //  {
+        //   label: this.$t('profile.role'),
+        //   prop: 'role',
+        //   show: true
+        // },
+        {
           label: this.$t('config.system.apiKey.expireAt'),
           prop: 'expireAt',
           show: true
@@ -203,7 +211,6 @@ export default {
     }
   },
   mounted () {
-
   }
 }
 </script>

@@ -40,7 +40,10 @@
                {{scope.row[item.prop]?scope.row[item.prop]:'-'}}
             </template>
              <template v-if="item.prop == 'token'">
-               {{scope.row[item.prop]?scope.row[item.prop]:'-'}}
+              <div style="cursor:text" class="document-copy-block">
+              <span class="document-copy-text">  {{scope.row[item.prop]?scope.row[item.prop].replace(/(?<=.{8})./g, '*'):'-'}}</span>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop])"></i>
+              </div>
             </template>
              <template v-if="item.prop == 'expireAt'">
               {{scope.row[item.prop]?utcTimeToTimezoneStr(scope.row[item.prop]):'-'}}
@@ -106,7 +109,7 @@ export default {
           label: this.$t('asset.talon.token'),
           prop: 'token',
           minWidth: 180,
-          show: true
+          show: false
         }, {
           label: this.$t('config.system.apiKey.expireAt'),
           prop: 'expireAt',
