@@ -41,7 +41,7 @@
             </template>
              <template v-if="item.prop == 'token'">
               <div style="cursor:text" class="document-copy-block">
-              <span class="document-copy-text">  {{scope.row[item.prop]?scope.row[item.prop].replace(/(?<=.{8})./g, '*'):'-'}}</span>
+              <span class="document-copy-text">  {{scope.row[item.prop]?scope.row[item.prop].replace(reg, '*'):'-'}}</span>
               <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop])"></i>
               </div>
             </template>
@@ -126,7 +126,8 @@ export default {
           minWidth: 100,
           show: true
         }
-      ]
+      ],
+      reg: new RegExp("(?<=.{8}).", 'g')
     }
   },
   methods: {

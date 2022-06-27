@@ -79,7 +79,7 @@
             </template>
             <template v-else-if="item.prop == 'token'">
               <div style="cursor:text" class="document-copy-block">
-              <span class="document-copy-text"> {{scope.row[item.prop].replace(/(?<=.{8})./g, '*')}}</span>
+              <span class="document-copy-text"> {{scope.row[item.prop].replace(reg, '*')}}</span>
               <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop])"></i>
               </div>
             </template>
@@ -172,7 +172,8 @@ export default {
         disabledDate (time) {
           return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
         }
-      }
+      },
+      reg: new RegExp("(?<=.{8}).", 'g')
     }
   },
   methods: {
