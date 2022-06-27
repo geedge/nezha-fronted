@@ -479,6 +479,9 @@ export default {
             // } catch (e) {
             //   console.info(e)
             // }
+            if (item.y < 0) {
+              item.y = 0
+            }
             height = (item.type === 'group' && item.param.collapse) ? this.headerH : item.height
             // param.showHeader = true
             if (param.valueMapping) {
