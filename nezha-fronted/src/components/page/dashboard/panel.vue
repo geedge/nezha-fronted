@@ -458,8 +458,7 @@ export default {
               repeat: 1
             }
           },
-          chartShare: 'none',
-          variables: []
+          chartShare: 'none'
         }
       }
       // this.$refs.panelBox.setTitle(this.$t('dashboard.panel.createPanelTitle'))
