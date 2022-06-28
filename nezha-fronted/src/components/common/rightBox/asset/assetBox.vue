@@ -195,7 +195,7 @@
             <div v-if="editAsset.showSSH">
               <el-form-item :label="$t('asset.authType')" prop="authType">
                 <el-select v-model="editAsset.authType" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value" clearable>
-                  <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
+                  <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="$t(type.label)" :value="type.value"/>
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('profile.username')" prop="authUsername">
