@@ -112,7 +112,7 @@
           </el-form-item>
           <!--inr-->
           <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.inr')" prop="inr"  class="half-form-item">
-            <el-input-number id="alert-box-input-inr" :controls="false" v-model="editAlertRule.inr" :placeholder="$t('alert.config.inrPlaceholder')" size="small" type="text" :disabled="!showSnmpTrap"></el-input-number>
+            <el-input-number :min="15" :max="86400" id="alert-box-input-inr" :controls="false" v-model="editAlertRule.inr" :placeholder="$t('alert.config.inrPlaceholder')" size="small" type="text" :disabled="!showSnmpTrap"></el-input-number>
           </el-form-item>
           <!--last-->
           <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.for')" prop="last"  class="half-form-item alert-box-duration" :rules=" [
@@ -378,6 +378,8 @@ export default {
       }
       if (value < 15) {
         callback(new Error(this.$t('alert.config.inrError')))
+      } else if (value > 86400) {
+        callback(new Error(this.$t('alert.config.inrErrorMax')))
       } else {
         callback()
       }

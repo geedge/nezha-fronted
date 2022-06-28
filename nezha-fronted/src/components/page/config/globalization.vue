@@ -11,7 +11,7 @@
       @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
-        <button id="dc-add" v-has="'dc_add'" :title="$t('overall.createDatacenter')" class="top-tool-btn margin-r-10"
+        <button id="dc-add" v-has="'dc_add'" class="top-tool-btn margin-r-10"
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>

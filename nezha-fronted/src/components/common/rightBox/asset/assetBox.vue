@@ -272,7 +272,7 @@
               </el-form-item> -->
               <div v-if="editAsset.clientEnable === 1" v-show="talonShowTow">
                 <el-form-item label="Token" prop="clientToken">
-                  <el-input v-model="editAsset.clientToken" size="small"/>
+                  <el-input v-model="editAsset.clientToken" size="small" maxlength="64"/>
                 </el-form-item>
                 <el-form-item :label="$t('asset.port')" prop="clientPort">
                   <el-input v-model="editAsset.clientPort" size="small"/>
