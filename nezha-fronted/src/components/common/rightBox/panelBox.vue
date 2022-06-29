@@ -189,29 +189,31 @@
                     class="form-item--half-width"
                     prop="param.report.schedule.stime"
                   >
-                    <my-date-picker align="right" class=" "
-                      v-model="editPanel.param.report.schedule.stime"
-                      :format="timeFormatStrToDatePickFormat(dateFormatStr)"
-                      popper-class="panel-time-picker-popper right-box-select-top"
-                      prefix-icon=" "
-                      size="mini"
-                      type="datetime">
-                    </my-date-picker>
-                  </el-form-item>
+                  <my-date-picker align="right" class=" "
+                              v-model="editPanel.param.report.schedule.stime"
+                              :format="timeFormatStrToDatePickFormat(dateFormatStr)"
+                              popper-class="panel-time-picker-popper right-box-select-top"
+                              prefix-icon=" "
+                              @change="changeData(true)"
+                              size="mini"
+                              type="datetime">
+                      </my-date-picker>
+                    </el-form-item>
                   <el-form-item
-                    :label="$t('dashboard.panel.endAt')"
-                    class="form-item--half-width"
-                    prop="param.report.schedule.etime"
-                    >
-                    <my-date-picker align="right" class=" "
-                      v-model="editPanel.param.report.schedule.etime"
-                      :format="timeFormatStrToDatePickFormat(dateFormatStr)"
-                      popper-class="panel-time-picker-popper right-box-select-top"
-                      prefix-icon=" "
-                      size="mini"
-                      type="datetime">
-                    </my-date-picker>
-                  </el-form-item>
+                  :label="$t('dashboard.panel.endAt')"
+                  class="form-item--half-width"
+                  prop="param.report.schedule.etime"
+                  >
+                     <my-date-picker align="right" class=" "
+                            v-model="editPanel.param.report.schedule.etime"
+                            :format="timeFormatStrToDatePickFormat(dateFormatStr)"
+                            popper-class="panel-time-picker-popper right-box-select-top"
+                            prefix-icon=" "
+                            @change="changeData(false)"
+                            size="mini"
+                            type="datetime">
+                         </my-date-picker>
+                    </el-form-item>
                   <el-form-item :label='$t("dashboard.panel.period")' class="range-time" prop="param.report.range.unit">
                     <el-radio-group v-model="editPanel.param.report.range.unit" size="small">
                       <el-radio-button label="day">{{ $t("dashboard.panel.prevDay") }}</el-radio-button>
@@ -577,7 +579,24 @@ export default {
       }).catch(() => {
         this.prevent_opt.save = false
       })
-    }
+    },
+    changeData (flag) {
+	      if (flag) {
+	        if (this.editPanel.param.report.schedule.etime) {
+	          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
+	            this.editPanel.param.report.schedule.stime = ''
+            this.$message.error(this.$t('alert.silence.timeError'))
+	          }
+	        }
+	      } else {
+	        if (this.editPanel.param.report.schedule.stime) {
+	          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
+            this.editPanel.param.report.schedule.etime = ''
+	            this.$message.error(this.$t('alert.silence.timeError'))
+	          }
+	        }
+	      }
+	    }
   },
   watch: {
     obj: {
