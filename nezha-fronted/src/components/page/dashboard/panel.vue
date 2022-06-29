@@ -92,6 +92,7 @@
         <div id="tableList" class="table-list" style='overflow-y: unset'>
           <div class="table-list-box">
             <div  id="dashboardScrollbar" class="box-content" v-my-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
+<!--              <panel-variables :arr="this.showPanel.variables"></panel-variables>-->
               <chart-list
                 ref="chartList"
                 name="panel"
@@ -777,6 +778,12 @@ export default {
           } else {
             this.$message.error(response)
           }
+        }
+        this.showPanel.param = {
+          report:
+          { enable: true, range: { type: 'previous', interval: 1, unit: 'day' }, schedule: { type: 2, repeat: 1, nums: [], stime: '2022-06-07 15:00:00', etime: '2022-06-19 15:00:00' }, receivers: [1] },
+          chartShare: 'none',
+          variables: [{ show: true, type: 'custom', multi: true, allOption: true, name: 'a', customOptions: 'z:1', expression: '', regex: '' }]
         }
       }).catch((error) => {
         // console.log('error................'+JSON.stringify(error));
