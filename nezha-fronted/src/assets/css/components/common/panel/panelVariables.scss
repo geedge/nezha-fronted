@@ -1,0 +1,43 @@
+.panel-variables-box{
+  display: flex;
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  .panel-variables-content{
+    display: flex;
+    margin-right: 15px;
+  }
+  .variable-key{
+    margin-right: 5px;
+    border: 1px solid $--border-color-base;
+    color: #33a2e5;
+    padding: 3px 5px;
+    border-radius: 4px;
+  }
+  .choose-box {
+    overflow: hidden;
+    width: calc(100% - 7px);
+    white-space: nowrap;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    height: 30px;
+    border: 1px solid $--border-color-light;
+    padding-left: 5px;
+    display: flex;
+    align-items: center;
+    .nz-icon-arrow-down6{
+      font-size: 12px;
+      color: $--color-text-secondary;
+    }
+  }
+  .choose-box-content{
+    flex: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: calc(100% - 24px);
+    overflow: hidden;
+    min-width: 24px;
+  }
+}

@@ -24,7 +24,8 @@ const panel = {
     // timeSeries类型图表联动
     isConnect: 'none',
     // 当前鼠标所在的图表id
-    currentMousemove: 0
+    currentMousemove: 0,
+    variablesArr: []
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -89,6 +90,9 @@ const panel = {
     // 设置当前鼠标所在的图表id (timeSeries类型图表联动)
     setCurrentMousemove (state, value) {
       state.currentMousemove = value
+    },
+    setVariablesArr (state, value) {
+      state.variablesArr = value
     }
   },
   getters: {
@@ -139,6 +143,9 @@ const panel = {
     },
     getAddCabinetBoxParams (state) {
       return state.addCabinetBoxParams
+    },
+    getVariablesArr (state) {
+      return state.variablesArr
     }
   },
   actions: {
@@ -177,6 +184,9 @@ const panel = {
     showTopology (store, chartInfo) {
       store.commit('setTopologyChartInfo', chartInfo)
       store.commit('setTopologyShow', true)
+    },
+    dispatchVariablesArr (store, variablesArr) {
+      store.commit('setVariablesArr', variablesArr)
     }
   }
 }

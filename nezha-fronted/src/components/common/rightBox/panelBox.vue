@@ -185,7 +185,7 @@
               <transition name="el-zoom-in-top" >
                 <div class="form-items--half-width-group">
                   <el-form-item
-                    :label="$t('backup.start')"
+                    :label="$t('overall.startTime')"
                     class="form-item--half-width"
                     prop="param.report.schedule.stime"
                   >
@@ -200,7 +200,7 @@
                       </my-date-picker>
                     </el-form-item>
                   <el-form-item
-                  :label="$t('dashboard.panel.endAt')"
+                  :label="$t('overall.endTime')"
                   class="form-item--half-width"
                   prop="param.report.schedule.etime"
                   >
@@ -218,7 +218,7 @@
                     <el-radio-group v-model="editPanel.param.report.range.unit" size="small">
                       <el-radio-button label="day">{{ $t("dashboard.panel.prevDay") }}</el-radio-button>
                       <el-radio-button label="week">{{ $t("dashboard.panel.prevWeek") }}</el-radio-button>
-                      <el-radio-button label="month">{{ $t("dashboard.panel.prevMonth") }}</el-radio-button>
+                      <el-radio-button label="month">{{ $t("config.menus.parent") }}</el-radio-button>
                     </el-radio-group>
                   </el-form-item>
                   <el-form-item
@@ -581,22 +581,22 @@ export default {
       })
     },
     changeData (flag) {
-	      if (flag) {
-	        if (this.editPanel.param.report.schedule.etime) {
-	          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
-	            this.editPanel.param.report.schedule.stime = ''
+      if (flag) {
+        if (this.editPanel.param.report.schedule.etime) {
+          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
+            this.editPanel.param.report.schedule.stime = ''
             this.$message.error(this.$t('alert.silence.timeError'))
-	          }
-	        }
-	      } else {
-	        if (this.editPanel.param.report.schedule.stime) {
-	          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
+          }
+        }
+      } else {
+        if (this.editPanel.param.report.schedule.stime) {
+          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
             this.editPanel.param.report.schedule.etime = ''
-	            this.$message.error(this.$t('alert.silence.timeError'))
-	          }
-	        }
-	      }
-	    }
+            this.$message.error(this.$t('alert.silence.timeError'))
+          }
+        }
+      }
+    }
   },
   watch: {
     obj: {
