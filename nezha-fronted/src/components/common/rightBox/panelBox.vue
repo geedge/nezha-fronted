@@ -100,6 +100,7 @@
                   <!-- Query expression -->
                   <el-form-item v-if="item.type==='query'" :prop="'param.variables.' + index + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="expression" style="width: 100%;" >
                     <div slot="label">
+                      <span>{{$t('dashboard.panel.queryExpression')}}</span>
                       <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
                         <table class="query-variable-table" width="640" cellspacing="5">
                           <thead>
@@ -114,7 +115,6 @@
                           </tbody>
                         </table>
                         <span slot="reference">
-                          {{$t('dashboard.panel.queryExpression')}}
                           <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                         </span>
                       </el-popover>
@@ -132,10 +132,10 @@
                   <!-- Multi-value -->
                   <el-form-item class="form-item--half-width" :prop="'param.variables.' + index + '.multi'" style="margin-bottom: 0px">
                     <div slot="label">
+                      <span>{{$t('dashboard.panel.multi')}}</span>
                       <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside multiTip">
                         <span>{{$t('dashboard.panel.multiTip')}}</span>
                         <span slot="reference">
-                          {{$t('dashboard.panel.multi')}}
                           <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                         </span>
                       </el-popover>
@@ -151,10 +151,10 @@
                   <!-- All option -->
                   <el-form-item class="form-item--half-width" :prop="'param.variables.' + index + '.allOption'" style="margin-bottom: 0px">
                     <div slot="label">
+                      <span>{{$t('dashboard.panel.allOption')}}</span>
                       <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside allOptionTip">
                         <span>{{$t('dashboard.panel.allOptionTip')}}</span>
                         <span slot="reference">
-                          {{$t('dashboard.panel.allOption')}}
                           <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                         </span>
                       </el-popover>
