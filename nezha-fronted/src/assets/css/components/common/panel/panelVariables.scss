@@ -24,7 +24,7 @@
     text-overflow: ellipsis;
     height: 30px;
     border: 1px solid $--border-color-light;
-    padding-left: 5px;
+    padding-left: 8px;
     display: flex;
     align-items: center;
     .nz-icon-arrow-down6{
@@ -39,5 +39,26 @@
     width: calc(100% - 24px);
     overflow: hidden;
     min-width: 24px;
+  }
+}
+
+.panel-variables{
+  .el-dropdown-menu__item {
+    padding: 0 5px 0 20px;
+    position: relative;
+    height: 36px;
+  }
+  .el-dropdown-menu__item .el-dropdown-menu__item-label{
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: calc(100% - 20px);
+    overflow: hidden;
+    min-width: 24px;
+  }
+  .nz-icon-check{
+    position: absolute;
+    right: 5px;
+    color: $--color-warning;
   }
 }

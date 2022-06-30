@@ -5,9 +5,10 @@
       <el-popover
         width="220"
         trigger="manual"
+        placement="bottom-start"
         v-model="item.visible"
         v-clickoutside="close"
-        popper-class="no-style-class ping-popover"
+        popper-class="no-style-class ping-popover panel-variables"
       >
         <ul class="pop-list-wrap">
           <li class="el-dropdown-menu__item" v-if="item.allOption">
@@ -21,7 +22,10 @@
             </el-checkbox-group>
             <div v-else>
               <li class="el-dropdown-menu__item" v-for="(value, j) in labelValue[item.name]" :key="j" @click="selectLabelValue(item,value)">
-                <span>{{value.label}} <i class="nz-icon nz-icon-check" v-if="value.value === item.checked[0]"/></span>
+                <div class="el-dropdown-menu__item-label">
+                  {{value.label}}
+                </div>
+                <i class="nz-icon nz-icon-check" v-if="value.value === item.checked[0] && !item.checkAll"/>
               </li>
             </div>
           </ul>
