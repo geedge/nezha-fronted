@@ -37,7 +37,7 @@
               <el-option v-for="item in langList" :key="item.value" :label="item.name" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="Theme" prop="theme">
+          <el-form-item :label="$t('config.user.Theme')" prop="theme">
             <el-select id="account-input-language"
                        class="right-box__select"
                        v-model="editProfile.theme"

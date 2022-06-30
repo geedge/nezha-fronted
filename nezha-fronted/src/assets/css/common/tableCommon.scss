@@ -567,3 +567,7 @@
     }
   }
 }
+.el-table__body-wrapper {
+  overflow: auto;
+  background-color: $--table-body-background-color;
+}
