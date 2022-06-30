@@ -133,7 +133,7 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <alert-rule-box v-if="rightBox.show" ref="alertConfigBox" :alert-rule="object" @close="closeRightBox"></alert-rule-box>
+      <alert-rule-box v-if="rightBox.show" ref="alertConfigBox" :severityData="severityData" :alert-rule="object" @close="closeRightBox"></alert-rule-box>
     </transition>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
     </transition>
@@ -186,12 +186,12 @@ export default {
         unit: 2,
         operator: '>',
         last: 60,
-        severityId: '',
+        // severityId: '',
         summary: '',
         description: '',
         method: [],
         name: '',
-        threshold: '',
+        // threshold: '',
         receiver: [],
         autoExpired: 1,
         schedEnable: 0,
@@ -201,7 +201,8 @@ export default {
         notifyActive: 0,
         notifyExpired: 0,
         timeout: 300,
-        trbShot: ''
+        trbShot: '',
+        condition: []
       },
       blankSilenceObject: {
         id: '',
@@ -221,33 +222,38 @@ export default {
       silenceBoxShow: false,
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
-        searchLabelList: [{
-          id: 1,
-          name: 'ID',
-          type: 'input',
-          label: 'ids',
-          disabled: false
-        }, {
-          id: 2,
-          name: this.$t('alert.alertName'),
-          type: 'input',
-          label: 'name',
-          disabled: false
-        }, {
-          id: 4,
-          name: this.$t('alert.severity'),
-          type: 'severity',
-          label: 'severityIds',
-          readonly: true,
-          disabled: false
-        }, {
-          id: 5,
-          name: this.$t('overall.type'),
-          type: 'alertTypes',
-          label: 'type',
-          readonly: true,
-          disabled: false
-        }]
+        searchLabelList: [
+          {
+            id: 1,
+            name: 'ID',
+            type: 'input',
+            label: 'ids',
+            disabled: false
+          },
+          {
+            id: 2,
+            name: this.$t('alert.alertName'),
+            type: 'input',
+            label: 'name',
+            disabled: false
+          },
+          // {
+          //   id: 4,
+          //   name: this.$t('alert.severity'),
+          //   type: 'severity',
+          //   label: 'severityIds',
+          //   readonly: true,
+          //   disabled: false
+          // },
+          {
+            id: 5,
+            name: this.$t('overall.type'),
+            type: 'alertTypes',
+            label: 'type',
+            readonly: true,
+            disabled: false
+          }
+        ]
       },
       searchTime: bus.getTimezontDateRange(),
       needAlertDaysData: true,
@@ -367,6 +373,13 @@ export default {
     },
     copy (u) {
       this.edit(u, true)
+    },
+    getSeverityData () {
+      this.$get('alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          this.severityData = response.data.list
+        }
+      })
     }
   },
   created () {
@@ -391,25 +404,25 @@ export default {
         },
         jsonKey: 'val'
       },
-      severityIds: {
-        target: this.searchLabel,
-        isSearchInput: true,
-        propertyName: 'severityIds',
-        type: 'string',
-        defaultJson: {
-          disabled: false,
-          id: 4,
-          label: 'severityIds',
-          name: 'Priority',
-          readonly: true,
-          type: 'severity',
-          val: '',
-          valnum: '',
-          valString: '',
-          listStr: 'severitySelect'
-        },
-        jsonKey: 'valnum'
-      },
+      // severityIds: {
+      //   target: this.searchLabel,
+      //   isSearchInput: true,
+      //   propertyName: 'severityIds',
+      //   type: 'string',
+      //   defaultJson: {
+      //     disabled: false,
+      //     id: 4,
+      //     label: 'severityIds',
+      //     name: 'Priority',
+      //     readonly: true,
+      //     type: 'severity',
+      //     val: '',
+      //     valnum: '',
+      //     valString: '',
+      //     listStr: 'severitySelect'
+      //   },
+      //   jsonKey: 'valnum'
+      // },
       type: {
         target: this.searchLabel,
         isSearchInput: true,
@@ -445,6 +458,7 @@ export default {
       }
     }
     this.initQueryFromPath(searchKeys)
+    this.getSeverityData()
   },
   mounted () {
   },
