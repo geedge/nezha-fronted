@@ -133,7 +133,7 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <alert-rule-box v-if="rightBox.show" ref="alertConfigBox" :severityData="severityData" :alert-rule="object" @close="closeRightBox"></alert-rule-box>
+      <alert-rule-box v-if="rightBox.show" ref="alertConfigBox" :alert-rule="object" @close="closeRightBox"></alert-rule-box>
     </transition>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
     </transition>
@@ -193,7 +193,7 @@ export default {
         name: '',
         // threshold: '',
         receiver: [],
-        autoExpired: 1,
+        // autoExpired: 1,
         schedEnable: 0,
         schedDays: '',
         schedStime: '00:00',
@@ -373,13 +373,6 @@ export default {
     },
     copy (u) {
       this.edit(u, true)
-    },
-    getSeverityData () {
-      this.$get('alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
-        if (response.code == 200) {
-          this.severityData = response.data.list
-        }
-      })
     }
   },
   created () {
@@ -458,7 +451,6 @@ export default {
       }
     }
     this.initQueryFromPath(searchKeys)
-    this.getSeverityData()
   },
   mounted () {
   },

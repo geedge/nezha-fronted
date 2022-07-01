@@ -86,11 +86,11 @@
                     <div class="threshold-item-left" :style="{background:item.color}" >{{item.name}}</div>
                     <div class="threshold-item-center">
                       <span>{{$t('alert.config.when')}} Result</span>
-                      <el-select :value="item.operator" @change="operatorChange(item,index,$event)" class="hide-icon" popper-class="prevent-clickoutside" size="small">
+                      <el-select :disabled="!showSnmpTrap" :value="item.operator" @change="operatorChange(item,index,$event)" class="hide-icon" popper-class="prevent-clickoutside" size="small">
                         <el-option v-for="subItem in operators" :id="'operator-'+subItem.key" :key="subItem.value" :label="subItem.label" :value="subItem.value"></el-option>
                       </el-select>
                     </div>
-                    <el-input v-model="item.value" :placeholder="item.operator==='~='?$t('alert.config.enterRegular'):$t('alert.config.enterThreshold')" size="small" type="text" style="flex:1"/>
+                    <el-input v-model="item.value" :placeholder="item.operator==='=~'?$t('alert.config.enterRegular'):$t('alert.config.enterThreshold')" size="small" type="text" style="flex:1"/>
                   </div>
                 </el-form-item>
                 <el-form-item prop="timeout" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" style="margin-bottom:0;">
@@ -135,26 +135,6 @@
               style="width: 100%"
             >
             </el-cascader>
-          </el-form-item>
-          <!--autoExpired-->
-          <el-form-item :label="$t('alert.config.autoExpired')" prop="autoExpired" :class="{'half-form-item':showSnmpTrap}">
-            <el-select
-              id="alert-box-input-autoExpired"
-              v-model="editAlertRule.autoExpired"
-              class="right-box__select"
-              placeholder=""
-              popper-class="prevent-clickoutside right-box-select-top "
-              size="small"
-            >
-              <el-option
-                :label="$t('overall.enabled')"
-                :value="1">
-              </el-option>
-              <el-option
-                :label="$t('overall.disabled')"
-                :value="0">
-              </el-option>
-            </el-select>
           </el-form-item>
 
           <!-- notification -->
@@ -367,8 +347,7 @@ import promqlInputMixin from '@/components/common/mixin/promqlInput'
 export default {
   name: 'alertRuleBox',
   props: {
-    alertRule: Object,
-    severityData: Array
+    alertRule: Object
   },
   components: {
     'promql-input': promqlInput,
@@ -471,8 +450,8 @@ export default {
           value: '<='
         },
         {
-          label: '~=',
-          value: '~='
+          label: '=~',
+          value: '=~'
         }
       ],
       unitOptions: chartDataFormat.unitOptions(),
@@ -509,7 +488,7 @@ export default {
   methods: {
     nzNumber: nzNumber,
     thresholdValidator (rule, value, callback) {
-      if (rule.item.operator === '~=' || !value) {
+      if (rule.item.operator === '=~' || !value) {
         callback()
       } else if (isNaN(Number(value))) {
         callback(new Error(this.$t('validate.number')))
@@ -633,9 +612,6 @@ export default {
       }
     },
     selectAlertRuleMetric (val) {
-      if (!this.editAlertRule.operator) {
-        this.editAlertRule.operator = '>'
-      }
       if (val === 1) {
         this.showSnmpTrap = true // showSnmpTrap 为 true 时显示 expr,threshold,unit
         this.showMetrics = true
@@ -647,14 +623,15 @@ export default {
       } else if (val === 3) {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
         this.showMetrics = false
-        // this.editAlertRule.inr = ''
-        // this.editAlertRule.last = '15'
-        // this.editAlertRule.unit = 2
-        // this.editAlertRule.operator = '>'
-        // this.editAlertRule.threshold = ''
         if (!this.editAlertRule.last) {
           this.editAlertRule.last = 60
         }
+        // type为3时 只能输入正则
+        this.editAlertRule.condition.forEach((item, index) => {
+          item.operator = '=~'
+          item.value = ''
+          this.$refs.alertRuleForm.clearValidate('condition.' + index + '.value') // 移除from表单的 condition 验证
+        })
       }
     },
     afterInitRich () {
@@ -662,7 +639,7 @@ export default {
     },
     // 比较符号变化
     operatorChange (item, index, value) {
-      if (item.operator === '~=' || value === '~=') {
+      if (item.operator === '=~' || value === '=~') {
         item.value = ''
         this.$refs.alertRuleForm.clearValidate('condition.' + index + '.value') // 移除from表单的 condition 验证
       }
@@ -680,9 +657,11 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editAlertRule = JSON.parse(JSON.stringify(n))
+        // 获取缓存中的告警等级列表
+        const severityData = JSON.parse(localStorage.getItem('nz-severityDataWeight'))
         // 给condition赋值
         if (this.editAlertRule.condition && this.editAlertRule.condition.length) {
-          this.$set(this.editAlertRule, 'condition', this.severityData.map(item => {
+          this.$set(this.editAlertRule, 'condition', severityData.map(item => {
             item = {
               ...item,
               value: '',
@@ -700,7 +679,7 @@ export default {
             return item
           }))
         } else {
-          this.$set(this.editAlertRule, 'condition', this.severityData.map(item => {
+          this.$set(this.editAlertRule, 'condition', severityData.map(item => {
             return {
               ...item,
               value: '',
