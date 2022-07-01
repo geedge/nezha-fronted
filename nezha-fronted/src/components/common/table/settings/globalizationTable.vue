@@ -112,13 +112,13 @@ export default {
           prop: 'value',
           minWidth: 150,
           show: true
+        }, {
+          label: this.$t('overall.remark'),
+          prop: 'remark',
+          show: true,
+          minWidth: 150,
+          sortable: 'custom'
         }
-        // , {
-        //   label: this.$t('i18n.remark'),
-        //   prop: 'remark',
-        //   show: true,
-        //   sortable: 'custom'
-        // }
       ]
     }
   }
