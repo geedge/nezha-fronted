@@ -16,7 +16,7 @@
             <button v-show="isPlaying" id="terminal-replay-pause" :title="$t('config.terminallog.record.pause')" class="nz-btn nz-btn-style-light nz-btn-size-large" @click="pause"><i class="nz-icon nz-icon-suspend"></i></button>
             <button v-show="isFinish || !isPlaying" id="terminal-replay-play" :title="$t('config.terminallog.record.play')" class="nz-btn nz-btn-style-light nz-btn-size-large" @click="play"><i class="nz-icon nz-icon-play"></i></button>
             <button id="terminal-replay-restart" :title="$t('config.terminallog.record.replay')" class="nz-btn nz-btn-style-light nz-btn-size-large" @click="restart"><i class="nz-icon nz-icon-replay"></i></button>
-            <button id="terminal-replay-speed-change" class="nz-btn nz-btn-style-light nz-btn-size-large" @click="speedChange"><i class="nz-icon nz-icon-fast-forward"></i>&nbsp;{{speedTable[speedOffset].name}}</button>
+            <button id="terminal-replay-speed-change" :title="$t('config.terminallog.record.plays')" class="nz-btn nz-btn-style-light nz-btn-size-large" @click="speedChange"><i class="nz-icon nz-icon-fast-forward"></i>&nbsp;{{speedTable[speedOffset].name}}</button>
             <el-checkbox id="terminal-replay-skip" v-model="needSkip" class="operate-skip">{{$t("config.terminallog.record.skipTip")}}</el-checkbox>
             <el-tag class="time-box" color="#23bf9a" effect="dark" size="medium">{{parseCurrentTime}}&nbsp;s</el-tag>
           </div>

@@ -40,7 +40,7 @@
         <template v-if="item.prop === 'name'">
           <div style="cursor:text" class="document-copy-block">
               <span class="document-copy-text">{{scope.row[item.prop]}}</span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.duplicate')"></i>
           </div>
         </template>
         <template v-else-if="item.prop === 'moduleNum'" >
@@ -82,9 +82,9 @@
       :width="155">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" @click="changeProjectTopo(scope.row)" v-has="'project_view'"><i class="nz-icon nz-icon-view1"></i></button>
+        <button class="table-operation-item" @click="changeProjectTopo(scope.row)" v-has="'project_view'" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['project_edit','project_delete','alertSilence_add']" trigger="click" @command="tableOperation">
-          <div class="table-operation-item table-operation-item--more">
+          <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">

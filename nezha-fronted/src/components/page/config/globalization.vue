@@ -12,7 +12,7 @@
     >
       <template v-slot:top-tool-right>
         <button id="dc-add" v-has="'dc_add'" class="top-tool-btn margin-r-10"
-                type="button" @click="add">
+                type="button" @click="add" :title="$t('config.menus.createI18n')">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
       </template>

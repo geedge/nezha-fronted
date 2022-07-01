@@ -3,7 +3,7 @@
     <div class="right-box__header">
       <div class="header__title">{{$t('endpoint.batchEditendpoint')}}</div>
       <div class="header__operation">
-        <span @click="esc"><i class="nz-icon nz-icon-close"></i></span>
+        <span @click="esc"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
     <div class="right-box__container">
@@ -26,7 +26,7 @@
                     <span>{{$t('endpoint.labelKey')}}</span>
                     <div>
                       <el-checkbox v-model="item.action" :false-label="0" :label="$t('overall.delete')" :true-label="1" size="small" style="padding-right: 20px;"></el-checkbox>
-                      <span @click="removeLabels(index)"><i class="nz-icon nz-icon-minus"></i></span>
+                      <span @click="removeLabels(index)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-minus"></i></span>
                     </div>
                   </div>
                   <el-form-item :prop="'labels.' + index + '.key'" :rules="[{ required: true,message: $t('validate.required'),trigger: 'blur'},{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('overall.ASCIIKey') ,trigger: 'blur'}]">
@@ -46,7 +46,7 @@
             <div class="form__flex-container hide-casc-input">
               <div style="text-align: center">
                  <span id="module-add-param" class="right-box-form-add module-add-label" type="button" @click="addLabels">
-                <span><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
+                <span :title="$t('tip.add')"><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
               </span>
               </div>
             </div>

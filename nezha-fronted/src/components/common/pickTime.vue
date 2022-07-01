@@ -4,11 +4,11 @@
     <multipleTime v-if="showMultiple" ref="multipleTime" :stepSearchTime="searchTime" class="multiple-time margin-r-10" @change="dateChange(searchTime)"/>
     <chart-unit v-if="useChartUnit" v-model="unit" class="margin-r-10"></chart-unit>
     <div v-show="useRefresh" class="top-tool-btn-group">
-      <button :id="id+'-refresh'" class="top-tool-btn top-tool-btn--text" @click="antiShake">
+      <button :id="id+'-refresh'" class="top-tool-btn top-tool-btn--text" @click="antiShake" :title="id === 'explore' ? '': $t('dashboard.refresh')">
         <i class="global-active-color nz-icon nz-icon-refresh" style="font-size: 14px"></i>&nbsp;
         <span><slot name="added-text"></slot></span>
       </button>
-      <button id="browser-go" class="top-tool-btn top-tool-btn--dropdown" @click="dropdownHandler(dropdownShow)">
+      <button id="browser-go" class="top-tool-btn top-tool-btn--dropdown" @click="dropdownHandler(dropdownShow)" :title="$t('el.datepicker.selectTime')">
         <span class="select-refresh-time-label" v-if="interval !== -1">{{interLabel}}</span>
         <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px;"></i>
         <transition name="el-zoom-in-top">

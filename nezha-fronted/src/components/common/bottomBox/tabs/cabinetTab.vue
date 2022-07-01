@@ -34,7 +34,7 @@
         ></cabinet-table>
       </template>
       <template v-slot:top-tool-right>
-        <button id="asset-create-asset" v-has="'dc_add'" class="top-tool-btn margin-r-10 margin-l-10" @click.stop="add">
+        <button id="asset-create-asset" v-has="'dc_add'" class="top-tool-btn margin-r-10 margin-l-10" @click.stop="add" :title="$t('tip.add')">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
        <top-tool-more-options

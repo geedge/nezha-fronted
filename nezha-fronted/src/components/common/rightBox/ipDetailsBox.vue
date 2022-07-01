@@ -4,7 +4,7 @@
     <div class="right-box__header">
       <div class="header__title">{{editipDetails.id ? ($t("overall.ipamIp.edit")) : $t("overall.ipamIp.create")}}</div>
       <div class="header__operation">
-        <span v-cancel="{obj: editipDetails, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: editipDetails, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
     <!-- begin--表单-->

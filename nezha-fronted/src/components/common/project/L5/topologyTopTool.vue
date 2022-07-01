@@ -1,9 +1,9 @@
 <template>
   <div class="tool-top" id="tool-top">
-    <div id="undo" :class="['top-tool-item',]"  @click="undo"> <i class="nz-icon nz-icon-revoke" :title="'撤销'"/> </div>
-    <div id="redo" :class="['top-tool-item',]" @click="redo"> <i class="nz-icon nz-icon-revoke1"  :title="'重做'"/> </div>
+    <div id="undo" :class="['top-tool-item',]"  @click="undo"> <i class="nz-icon nz-icon-revoke" :title="$t('overall.revocation')"/> </div>
+    <div id="redo" :class="['top-tool-item',]" @click="redo"> <i class="nz-icon nz-icon-revoke1"  :title="$t('overall.redo')"/> </div>
     <!--<div> 保存为图片 </div>-->
-    <div class="top-tool-item" @click="del">  <i class="nz-icon nz-icon-delete"/> </div>
+    <div class="top-tool-item" @click="del" :title="$t('overall.delete')">  <i class="nz-icon nz-icon-delete"/> </div>
     <div class="top-tool-item top-tool-item-scale">
       <span class="scale-number">
           <span class="scale-number-minus scale-number-symbol" @click="changeScale(-25)">-</span>

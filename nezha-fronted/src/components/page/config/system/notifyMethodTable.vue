@@ -75,9 +75,9 @@
             <button :disabled="prevent_opt.save" class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancel(scope.row)"><span>{{$t('overall.cancel')}}</span></button>
           </template>
           <template v-else>
-            <button v-has="'system_notification_edit'" :class="{'table-operation-item--disable':isBuiltIn(scope.row)}" :disabled="isBuiltIn(scope.row)" class="table-operation-item" @click="toEdit(scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
+            <button v-has="'system_notification_edit'" :class="{'table-operation-item--disable':isBuiltIn(scope.row)}" :disabled="isBuiltIn(scope.row)" class="table-operation-item" @click="toEdit(scope.row)" :title="$t('overall.edit')"><i class="nz-icon nz-icon-edit"></i></button>
             <el-dropdown size="medium" trigger="click" v-has="['system_notification_delete']" @command="tableOperation">
-              <div class="table-operation-item table-operation-item--more">
+              <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
                 <i class="nz-icon nz-icon-more3"></i>
               </div>
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">

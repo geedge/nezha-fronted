@@ -109,12 +109,12 @@
               </el-row>
             </template>
           </div>
-          <button type="button" slot="reference"  class="nz-btn nz-btn-size-normal nz-btn-style-light" id="snmp-advanced">
+          <button type="button" slot="reference"  class="nz-btn nz-btn-size-normal nz-btn-style-light" id="snmp-advanced"  :title="$t('overall.more')">
             <i class="el-icon-more"></i>
           </button>
         </el-popover>
         </div>
-        <span @click="delSelf" class="asset-item--btn right-box-form-minus-box" id="traffic-setting-delself"><i class="nz-icon nz-icon-minus"></i></span>
+        <span @click="delSelf" class="asset-item--btn right-box-form-minus-box" id="traffic-setting-delself" :title="$t('overall.delete')"><i class="nz-icon nz-icon-minus"></i></span>
       </div>
       <div>
         <span style="color:#F56C6C;font-size: 12px;" v-if="hostRepeat">{{$t('validate.repeat')}}</span>
@@ -203,12 +203,12 @@
           </el-table-column>
           <el-table-column label="" :width="40" :show-overflow-tooltip="false">
             <template slot-scope="scope">
-              <span :disabled="assetSetting.host == null" @click.stop="delTabRow(scope.$index,scope.row)" class="right-box-form-delete" size="mini"><i class="nz-icon nz-icon-minus"></i></span>
+              <span :disabled="assetSetting.host == null" @click.stop="delTabRow(scope.$index,scope.row)" class="right-box-form-delete" size="mini" :title="$t('overall.delete')"><i class="nz-icon nz-icon-minus"></i></span>
             </template>
           </el-table-column>
         </el-table>
         <div class="add-btn" style="margin-top: 10px;">
-          <span @click="addTabRow" size="mini" class="right-box-form-add">
+          <span @click="addTabRow" size="mini" class="right-box-form-add" :title="$t('tip.add')">
             <i class="nz-icon nz-icon-plus"></i>
           </span>
         </div>

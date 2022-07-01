@@ -34,7 +34,7 @@
       <span v-show="chartInfo.param.collapse" class="collapse-content">({{chartData ? chartData.length : 0}} charts)</span>
     </div>
     <div class="chart-header__tools" v-if="chartInfo.type !== 'endpointInfo' && chartInfo.type !== 'assetInfo' && !isExportHtml">
-      <span v-if="chartInfo.param.link" class="chart-header__tool" @click="openUrl">
+      <span v-if="chartInfo.param.link" :title="$t('overall.link')" class="chart-header__tool" @click="openUrl">
        <i class="nz-icon nz-icon-more-app tool__icon"></i>
       </span>
       <span v-if="chartInfo.remark" class="chart-header__tool">
@@ -43,23 +43,23 @@
         </el-tooltip>
       </span>
       <span  v-if="chartInfo.type=='group'" class="chart-header__tool" @click="addChartGroup">
-        <el-tooltip :content="$t('button.add')" effect="light" placement="top">
+        <el-tooltip :content="$t('button.add')" effect="light" placement="top" :title="$t('tip.add')">
            <i class="nz-icon nz-icon-plus tool__icon"></i>
         </el-tooltip>
       </span>
       <span class="chart-header__tool" @click="refreshChart">
-        <el-tooltip :content="$t('dashboard.refresh')" effect="light" placement="top">
+        <div :title="$t('dashboard.refresh')" effect="light" placement="top">
            <i class="nz-icon nz-icon-replay tool__icon"></i>
-        </el-tooltip>
+        </div>
       </span>
       <span v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.type!=='group'" class="chart-header__tool" @click="showFullscreen">
-        <el-tooltip :content="$t('dashboard.screen')" effect="light" placement="top">
+        <div :title="$t('dashboard.screen')" effect="light" placement="top">
            <i class="nz-icon nz-icon-maxview tool__icon"></i>
-        </el-tooltip>
+        </div>
       </span>
       <span class="chart-header__tool">
         <el-dropdown v-clickoutside="clickos" v-has="['main_edit','main_delete','main_add']" trigger="click">
-          <i class="el-icon-more tool__icon" @click.stop="dropdownMenuShow = !dropdownMenuShow"></i>
+          <i class="el-icon-more tool__icon" @click.stop="dropdownMenuShow = !dropdownMenuShow" :title="$t('overall.more')"></i>
           <el-dropdown-menu style="display: none" class="temp-dropdown"></el-dropdown-menu>
           <ul v-show="dropdownMenuShow" slot="dropdown" class="el-dropdown-menu nz-chart-dropdown">
             <li class="el-dropdown-menu__item" v-has="'main_edit'" @click="editChart">

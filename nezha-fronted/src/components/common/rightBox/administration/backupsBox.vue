@@ -4,7 +4,7 @@
       <div class="header__title">{{ editBackup.name }}</div>
       <div class="header__operation">
         <span v-cancel="{ obj: editBackup, func: esc }"
-          ><i class="nz-icon nz-icon-close"></i
+          ><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i
         ></span>
       </div>
     </div>

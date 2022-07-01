@@ -35,7 +35,7 @@
         <span class="operation-length">{{tableData.length}}</span>
       </div>
       <div class="log-operation log-operation--right">
-        <button class="top-tool-btn" type="button" @click="exportLog"><i class="nz-icon nz-icon-download"></i></button>
+        <button class="top-tool-btn" style="cursor: pointer;z-index: 2;" type="button" @click="exportLog" :title="$t('overall.download')"><i class="nz-icon nz-icon-download"></i></button>
       </div>
     </div>
     <div class="log-table">

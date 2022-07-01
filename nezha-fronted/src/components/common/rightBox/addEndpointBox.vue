@@ -5,7 +5,7 @@
       <div class="header__title">{{$t("config.system.basic.lnglatll.createEndpoint")}}</div>
       <!-- end--标题-->
       <div class="header__operation">
-        <span v-cancel="{obj: object, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: object, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
 
@@ -110,7 +110,7 @@
                     <span class="jump-pages">/&nbsp{{pages.pages}}</span>
                   </template>
                 </el-pagination>
-                <span class="add-endpoint" @click="addEndpoint">
+                <span class="add-endpoint" @click="addEndpoint" :title="$t('overall.rightShift')">
                 <i class="nz-icon nz-icon-arrow-right"></i>
               </span>
               </div>
@@ -122,7 +122,7 @@
             <div class="right-box-endpoint-table"  :class="showError?'error' : ''">
               <div class="search-box" style="display: flex;justify-content: flex-end">
                 <el-button class="top-tool-btn" type="button" @click="showRightBox">
-                  <i class="nz-icon-gear nz-icon"></i>
+                  <i class="nz-icon-gear nz-icon" :title="$t('overall.selectColumns')"></i>
                 </el-button>
                 <el-button class="top-tool-btn" type="button" @click="editAllEndpoint">
                   <i class="nz-icon-batch-edit nz-icon"></i>
@@ -170,13 +170,13 @@
                 <el-table-column fixed="right" label=""  width="56">
                   <template slot-scope="scope" style="text-align: center">
                   <span @click="editEndpointRow(scope.row, scope.$index)">
-                    <i class="nz-icon-gear nz-icon"></i>
+                    <i class="nz-icon-gear nz-icon" :title="$t('overall.selectColumns')"></i>
                   </span>
                   </template>
                 </el-table-column>
               </el-table>
               <div class="table-bottom">
-              <span class="add-endpoint" @click="removeEndpoint" style="margin-left: 10px">
+              <span class="add-endpoint" @click="removeEndpoint" style="margin-left: 10px" :title="$t('overall.leftShift')">
                 <i class="nz-icon nz-icon-arrow-left"></i>
               </span>
               </div>

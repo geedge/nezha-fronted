@@ -13,7 +13,7 @@
 
       </template>
       <template v-slot:top-tool-right>
-        <button id="api-key-add" v-has="'system_apiKey_add'" class="top-tool-btn margin-r-10" type="button" @click="addApiKey">
+        <button id="api-key-add" v-has="'system_apiKey_add'" class="top-tool-btn margin-r-10" type="button" @click="addApiKey" :title="$t('profile.box.newApiKey')">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
       </template>

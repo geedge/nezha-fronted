@@ -15,7 +15,7 @@
             </div>
             <slot name="top-tool-right"></slot>
             <button v-if="showLayout.indexOf('elementSet') > -1"  class="top-tool-btn table-column-setting"
-                    type="button" @click="tools.showCustomTableTitle = true">
+                    type="button" @click="tools.showCustomTableTitle = true" :title="$t('overall.selectColumns')">
               <i class="nz-icon-gear nz-icon"></i>
             </button>
             <el-dropdown
@@ -25,7 +25,7 @@
               class="margin-l-5"
               @command="changeDetailType">
               <button class="top-tool-btn table-column-setting"
-                      type="button">
+                      type="button" :title="$t('overall.switchView')">
                 <i class="nz-icon nz-icon-list-view" />
               </button>
               <el-dropdown-menu slot="dropdown"  class="right-public-box-dropdown-top right-box-select-top">

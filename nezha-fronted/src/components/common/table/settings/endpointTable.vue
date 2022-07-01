@@ -40,7 +40,7 @@
           <template v-if="item.prop === 'name'">
             <div style="cursor:text" class="document-copy-block">
               <span class="document-copy-text">{{scope.row[item.prop]}}</span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.duplicate')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'type'">
@@ -53,7 +53,7 @@
               @mouseleave="labelHover(scope.row, item.prop, false,true)">
               {{scope.row[item.prop].name}}
               </span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop].name)"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.duplicate')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'module'">
@@ -64,7 +64,7 @@
               <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>
               {{scope.row[item.prop].name}}
               </span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop].name)"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.duplicate')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'asset'">
@@ -76,7 +76,7 @@
               <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
               {{scope.row.asset.name}}
              </span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.asset.name)"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.asset.name)" :title="$t('overall.duplicate')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'alerts'">
@@ -103,7 +103,7 @@
           </span>
             <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop">
               <div name="default">
-                <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row))"></i></span>
+                <span class="copy-value-content" :title="$t('overall.duplicate')"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row))"></i></span>
                 <pre class="copy-value-content__pre">{{JSON.stringify(clConfigs(scope.row),null,2)}}</pre>
               </div>
             </nz-tooltip>
@@ -167,10 +167,10 @@
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
-          <button v-if="endpointTab"  class="table-operation-item" v-has="'monitor_endpoint_edit'" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
-          <button v-else class="table-operation-item"  @click="$emit('showBottomBox', 'panelTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+          <button v-if="endpointTab"  class="table-operation-item" v-has="'monitor_endpoint_edit'" @click="$emit('edit', scope.row)" :title="$t('overall.edit')"><i class="nz-icon nz-icon-edit"></i></button>
+          <button v-else class="table-operation-item"  @click="$emit('showBottomBox', 'panelTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown size="medium" v-has="['monitor_endpoint_edit','monitor_endpoint_delete','alertSilence_add']" trigger="click" @command="tableOperation">
-            <div class="table-operation-item table-operation-item--more">
+            <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
             </div>
             <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">

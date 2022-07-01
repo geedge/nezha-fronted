@@ -22,7 +22,7 @@
             </el-input>
           </div>
           <div class="margin-r-20 nz-btn-group">
-            <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend" id="endpoint-query-changetime"><i class="el-icon-d-arrow-left"></i></button>
+            <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend" id="endpoint-query-changetime" :title="$t('overall.decreaseTime')"><i class="el-icon-d-arrow-left"></i></button>
             <my-date-picker
               v-model="formatTime"
               type="datetime"
@@ -35,10 +35,10 @@
               :format="timeFormatStrToDatePickFormat(timeFormatMain)"
           >
           </my-date-picker>
-            <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>
+            <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append" :title="$t('overall.increaseTime')"><i class="el-icon-d-arrow-right"></i></button>
           </div>
           <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light" style="height: 28px;">
-            <button class="nz-btn nz-btn-size-normal nz-btn-style-light" :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}" @click="viewGraph">
+            <button class="nz-btn nz-btn-size-normal nz-btn-style-light" :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}" @click="viewGraph" :title="$t('overall.showLineChart')">
               <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
             </button>
             <button @click="dropdownHandler(dropdownShow)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">

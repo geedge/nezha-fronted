@@ -26,9 +26,9 @@
                 @selectDashboard="panelChange">
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
-                  <span :title="showPanel.name  + ' (' + showPanel.chartNum +' charts）' " class="show-panel-name">{{showPanel.name}}</span>
-                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="nz-icon nz-icon-a-xingzhuang2"></i>
-                  <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang"></i>
+                  <span :title="showPanel.name  + ' (' + showPanel.chartNum +' charts)' " class="show-panel-name">{{showPanel.name}}</span>
+                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="nz-icon nz-icon-a-xingzhuang2" :title ="$t('overall.starred')"></i>
+                  <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang" :title ="$t('overall.unstarred')"></i>
                 </template>
               </select-dashboard>
             </div>
@@ -92,7 +92,7 @@
         <div id="tableList" class="table-list" style='overflow-y: unset'>
           <div class="table-list-box">
             <div  id="dashboardScrollbar" class="box-content" v-my-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
-<!--              <panel-variables :arr="this.showPanel.variables"></panel-variables>-->
+              <panel-variables :labelArrs="variables" :time-range="searchTime"></panel-variables>
               <chart-list
                 ref="chartList"
                 name="panel"
@@ -116,7 +116,7 @@
       </div>
     </div>
 
-    <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn" :title="$t('overall.backToTop')"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
       <chart-right-box
@@ -159,6 +159,7 @@ import routerPathParams from '@/components/common/mixin/routerPathParams'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
 import * as echarts from 'echarts'
+import panelVariables from '@/components/common/panel/panelVariables'
 // import FileSaver from 'file-saver'
 // import chartData from './testData'
 export default {
@@ -296,7 +297,8 @@ export default {
       // 导出html 以及 pdf的弹窗
       exportBoxShow: false,
       // 查看模式
-      mode: ''
+      mode: '',
+      variables: []
     }
   },
   components: {
@@ -305,7 +307,8 @@ export default {
     topToolMoreOptions,
     selectDashboard,
     chartTempBox,
-    chartRightBox
+    chartRightBox,
+    panelVariables
   },
   computed: {
     chartRightBoxShow () {
@@ -343,6 +346,17 @@ export default {
       this.filter.searchName = ''
       // this.$refs.searchInput.select();
       this.showPanel = val
+      this.showPanel.param = {
+        report:
+          { enable: true, range: { type: 'previous', interval: 1, unit: 'day' }, schedule: { type: 2, repeat: 1, nums: [], stime: '2022-06-07 15:00:00', etime: '2022-06-19 15:00:00' }, receivers: [1] },
+        chartShare: 'none',
+        variables: [
+          { show: true, type: 'custom', multi: true, allOption: true, name: 'mazy', customOptions: 'z:1, z:z:1, a', expression: '', regex: '' },
+          { show: true, type: 'custom', multi: true, allOption: false, name: 'mzy', customOptions: 'z:1, z:z:1, a', expression: '', regex: '' },
+          { show: true, type: 'custom', multi: false, allOption: false, name: 'zy', customOptions: 'z:1, z:z:1, a', expression: '', regex: '' },
+          { show: true, type: 'custom', multi: false, allOption: true, name: 'azy', customOptions: 'z:1, z:z:1, a', expression: '', regex: '' }
+        ]
+      }
       this.showPanel.type = 'dashboard'
       this.filter.panelId = this.showPanel.id
       this.panelId = this.showPanel.id
@@ -395,7 +409,7 @@ export default {
       this.$get('visual/panel?ids=' + u.id).then(res => {
         if (res.code === 200) {
           this.panel = res.data.list[0]
-          if (!this.panel.param.report) {
+          if (!this.$loadsh.get(this.panel, 'param.report', '')) {
             this.panel = {
               ...this.panel,
               param: {
@@ -783,8 +797,64 @@ export default {
           report:
           { enable: true, range: { type: 'previous', interval: 1, unit: 'day' }, schedule: { type: 2, repeat: 1, nums: [], stime: '2022-06-07 15:00:00', etime: '2022-06-19 15:00:00' }, receivers: [1] },
           chartShare: 'none',
-          variables: [{ show: true, type: 'custom', multi: true, allOption: true, name: 'a', customOptions: 'z:1', expression: '', regex: '' }]
+          variables: [
+            { show: true, type: 'custom', multi: true, allOption: true, name: 'mazy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
+            { show: true, type: 'custom', multi: true, allOption: false, name: 'mzy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
+            { show: true, type: 'custom', multi: false, allOption: false, name: 'zy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
+            { show: true, type: 'custom', multi: false, allOption: true, name: 'azy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' }
+          ]
         }
+        this.variables = [
+          { show: true, type: 'custom', multi: true, allOption: true, name: 'mazy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
+          { show: true, type: 'custom', multi: true, allOption: false, name: 'mzy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
+          { show: true, type: 'custom', multi: false, allOption: false, name: 'zy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
+          { show: true, type: 'custom', multi: false, allOption: true, name: 'azy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
+          {
+            name: 'bbb',
+            type: 'query',
+            multi: false,
+            allOption: true,
+            expression: 'label_names()',
+            regex: '/a\.*/',
+            show: true
+          },
+          {
+            name: 'ccc',
+            type: 'query',
+            multi: false,
+            allOption: true,
+            expression: 'label_values(up, asset)',
+            regex: '',
+            show: true
+          },
+          {
+            name: 'ddd',
+            type: 'query',
+            multi: true,
+            allOption: true,
+            expression: 'label_values(asset)',
+            regex: '',
+            show: true
+          },
+          {
+            name: 'eeee',
+            type: 'query',
+            multi: false,
+            allOption: true,
+            expression: 'label_values(up, endpoint)',
+            regex: '/.*-(?<text>.*)-(?<value>.*)-.*/',
+            show: true
+          },
+          {
+            name: 'fff',
+            type: 'query',
+            multi: false,
+            allOption: true,
+            expression: 'query_result(node_filefd_allocated{module="OLAP-Node-Exporter"})',
+            regex: '/asset="(?<text>[^"]+)\.*\asset_id="(?<value>[^"]+)/',
+            show: true
+          }
+        ]
       }).catch((error) => {
         // console.log('error................'+JSON.stringify(error));
         if (error) {

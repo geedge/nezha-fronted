@@ -80,7 +80,7 @@
             <template v-else-if="item.prop == 'token'">
               <div style="cursor:text" class="document-copy-block">
               <span class="document-copy-text"> {{scope.row[item.prop].replace(reg, '*')}}</span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop])"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.duplicate')"></i>
               </div>
             </template>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
@@ -99,7 +99,7 @@
             <button :disabled="prevent_opt.save" class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancel(scope.row)"><span>{{$t('overall.cancel')}}</span></button>
           </template>
           <template v-else>
-            <button class="table-operation-item" @click="$emit('del',scope.row)" v-has="'system_apiKey_delete'"><i class="nz-icon nz-icon-delete"></i></button>
+            <button class="table-operation-item" @click="$emit('del',scope.row)" v-has="'system_apiKey_delete'" :title="$t('overall.delete')"><i class="nz-icon nz-icon-delete"></i></button>
           </template>
         </div>
       </el-table-column>

@@ -99,7 +99,7 @@
         <template v-else-if="item.prop === 'name'">
            <div style="cursor:text" class="document-copy-block">
               <span class="document-copy-text">{{scope.row.name ? scope.row.name : '-'}}</span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.duplicate')"></i>
             </div>
         </template>
         <span v-else-if="scope.row[item.prop]">{{
@@ -116,6 +116,7 @@
         <!--        <button :class="{'table-operation-item&#45;&#45;disable': scope.row.state === 3}" class="table-operation-item" v-has="'alertSilence_edit'" @click="$emit('edit', scope.row)" :disabled="scope.row.state === 3"><i class="nz-icon nz-icon-edit"></i></button>-->
         <button
           class="table-operation-item"
+          :title="$t('overall.view')"
           @click="$emit('showBottomBox', 'alertMessageTab', scope.row)"
         >
           <i class="nz-icon nz-icon-view1"></i>
@@ -126,7 +127,7 @@
           trigger="click"
           @command="tableOperation"
         >
-          <div class="table-operation-item table-operation-item--more">
+          <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu

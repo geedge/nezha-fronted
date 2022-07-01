@@ -5,7 +5,7 @@
       <div class="header__title">{{$t("overall.batchEndpoint")}}</div>
       <!-- end--标题-->
       <div class="header__operation">
-        <span v-cancel="{obj: endpoint, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: endpoint, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
 
@@ -19,7 +19,7 @@
             <div class="search-box" style="display: flex;justify-content: space-between">
               <span>Config</span>
               <span>
-                <el-button @click="showRightBox" class="top-tool-btn" type="button">
+                <el-button @click="showRightBox" class="top-tool-btn" type="button" :title="$t('overall.selectColumns')">
                 <i class="nz-icon-gear nz-icon"></i>
               </el-button>
               <el-button @click="editAllEndpoint" class="top-tool-btn" type="button">
@@ -86,7 +86,7 @@
               </el-table-column>
               <el-table-column label="" width="56"  fixed="right">
                 <template slot-scope="scope" style="text-align: center">
-                  <span @click="editEndpointRow(scope.row, scope.$index)">
+                  <span @click="editEndpointRow(scope.row, scope.$index)" :title="$t('overall.selectColumns')">
                     <i class="nz-icon-gear nz-icon"></i>
                   </span>
                 </template>

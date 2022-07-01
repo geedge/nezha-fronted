@@ -16,7 +16,7 @@
         <div class="top-tool-right">
           <div style="margin-right: 15px;">
             <el-input size="small" ref="inputDate" v-model="inputDateSearch" @clear="clearInput" id="inputDate" class="input-with" @focus="focus" @blur="blur">
-              <el-button slot="append" icon="el-icon-search" @click="focus"></el-button>
+              <el-button slot="append" :title="$t('overall.search')" icon="el-icon-search" @click="focus"></el-button>
             </el-input>
           </div>
         </div>

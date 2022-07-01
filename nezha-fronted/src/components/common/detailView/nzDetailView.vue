@@ -20,7 +20,7 @@
               trigger="click"
               @command="changeDetailType">
               <button class="top-tool-btn table-column-setting"
-                      type="button">
+                      type="button" :title="$t('overall.switchView')">
                 <i class="nz-icon nz-icon-detail-view" />
               </button>
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">

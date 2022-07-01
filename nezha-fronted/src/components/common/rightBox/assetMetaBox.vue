@@ -6,7 +6,7 @@
         <div class="header__title">{{editAssetMeta.id ? $t("config.assetLabel.editMeta"): $t("overall.createLabel")}}
         </div>
         <div class="header__operation">
-          <span v-cancel="{obj: editAssetMeta, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+          <span v-cancel="{obj: editAssetMeta, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
         </div>
       </div>
       <!-- begin--表单-->
@@ -49,7 +49,7 @@
             <div class="right-box-sub-title" style="margin-bottom: 20px" v-if="showParam">
               <span>{{$t('config.assetLabel.params')}}</span>
               <span v-if="editAssetMeta.type.toUpperCase()!=='DATETIME'&&editAssetMeta.type.toUpperCase()!=='DOUBLE'" class="float-right" style="height: 19px;display: inline-block;line-height: 1;" @click="addParam">
-              <span class="create-square-box">
+              <span class="create-square-box" :title="$t('tip.add')">
                 <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
               </span>
             </span>
@@ -77,10 +77,10 @@
                   </el-col>
                   <el-col :span="6">
                     <div class="">
-                  <span class="nz-icon-minus-medium">
+                  <span class="nz-icon-minus-medium" :title="$t('overall.delete')">
                     <i @click="deleteParam(index)" class="nz-icon nz-icon-minus"></i>
                   </span>
-                      <span class="nz-icon-copy">
+                      <span class="nz-icon-copy" :title="$t('overall.duplicate')">
                     <i @click="copyParam(index)" class="nz-icon nz-icon-override"></i>
                   </span>
                     </div>

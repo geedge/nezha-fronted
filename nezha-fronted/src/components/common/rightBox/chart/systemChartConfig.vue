@@ -446,13 +446,13 @@
                   </span>
                 </span>
             <span>
-                  <span @click="addColumns('')">
+                  <span @click="addColumns('')" :title="$t('tip.add')">
                       <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
                   </span>
-                  <span style="margin-right: 5px">
+                  <span style="margin-right: 5px" :title="$t('overall.duplicate')">
                       <i @click="copyColumns(index)" class="nz-icon nz-icon-override"></i>
                   </span>
-                  <span class="nz-icon-minus-medium">
+                  <span class="nz-icon-minus-medium" :title="$t('overall.delete')">
                       <i @click="removeColumns(index)" class="nz-icon nz-icon-minus"></i>
                   </span>
                 </span>
@@ -533,13 +533,13 @@
                   </span>
                 </span>
                 <span>
-                  <span @click="addMapping('')" style="margin-right: 5px">
+                  <span @click="addMapping('')" style="margin-right: 5px" :title="$t('tip.add')">
                       <i class="nz-icon nz-icon-create-square"></i>
                   </span>
-                  <span @click="copyMapping(index)" style="margin-right: 5px">
+                  <span @click="copyMapping(index)" style="margin-right: 5px" :title="$t('overall.duplicate')">
                       <i  class="nz-icon nz-icon-override"></i>
                   </span>
-                  <span @click="removeMapping(index)" style="margin-right: 5px">
+                  <span @click="removeMapping(index)" style="margin-right: 5px" :title="$t('overall.delete')">
                       <i  class="nz-icon nz-icon-minus"></i>
                   </span>
                 </span>
@@ -647,7 +647,7 @@
                         </ul>
                         <div slot="reference" @click="chooseIcon(isChoose[index],index)">
                           <i v-if="item.icon" class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>
-                          <div v-else class="mapping-iconSelect">
+                          <div v-else class="mapping-iconSelect" :title="$t('tip.add')">
                             <i class="nz-icon nz-icon-create-square"></i>
                           </div>
                         </div>

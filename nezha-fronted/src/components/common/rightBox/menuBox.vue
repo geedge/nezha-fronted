@@ -53,7 +53,7 @@
 
         <div class="right-box-sub-title">{{$t('config.menus.perms')}}
           <button @click="addPermission" class="float-right" id="add-permission" type="button" >
-            <span><i class="nz-icon nz-icon-create-square"></i></span>
+            <span :title="$t('tip.add')"><i class="nz-icon nz-icon-create-square"></i></span>
           </button>
         </div>
 
@@ -61,7 +61,7 @@
         <div id="menu-box-permissions">
           <el-form-item :key="index" :label="index+1+''" v-for="(permission,index) in editMenu.permissions" >
             <el-input oninput="this.value = this.value.replace(/[,]/g,'')" placeholder="" style="width: calc(100% - 37px);" type="text" v-model="editMenu.permissions[index].value" ></el-input>
-            <span @click="removePermission(index)" style="padding-left: 5px;"><i class="nz-icon nz-icon-shanchu1"></i></span>
+            <span @click="removePermission(index)" style="padding-left: 5px;" :title="$t('overall.delete')"><i class="nz-icon nz-icon-shanchu1"></i></span>
           </el-form-item>
         </div>
       </el-form>

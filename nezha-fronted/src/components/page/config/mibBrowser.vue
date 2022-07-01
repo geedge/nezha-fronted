@@ -33,7 +33,7 @@
                 <el-option v-for="(item, index) in credentialData" :key="index" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </div>
-            <button id="browser-advanced" slot="reference" class="top-tool-btn" style="border-right: none;">
+            <button id="browser-advanced" slot="reference" class="top-tool-btn" style="border-right: none;"  :title="$t('overall.more')">
               <i class="el-icon-more"></i>
             </button>
           </el-popover>
@@ -47,7 +47,7 @@
             <div class="mib-browser-tree-title">
               <span>SNMP MIBs</span>
               <el-dropdown ref="modelDropdown" :hide-on-click="false" trigger="click" @command="selectModel">
-                <span class="mib-browser-table-op">{{$t("config.model.model") + " "}}<i class="nz-icon nz-icon-funnel"></i></span>
+                <span class="mib-browser-table-op">{{$t("config.model.model") + " "}}<i class="nz-icon nz-icon-funnel" :title="$t('dashboard.panel.chartForm.filter')"></i></span>
                 <el-dropdown-menu slot="dropdown" class="mib-browser-model-dropdown el-dropdown-multi right-box-select-top">
                   <el-dropdown-item v-for="(item, index) in modelData" :key="index" :class="{'dropdown-item-active': walkParam.models.indexOf(item.id) > -1}" :command="item">{{item.name}}</el-dropdown-item>
                 </el-dropdown-menu>
@@ -126,7 +126,7 @@
               <span>Result table</span>
               <span>
                 <span id="mib-browser-export" v-has="'snmp_browser_export'" :class="{'mib-browser-table-op-light': resultData.length == 0}" :title="$t('overall.exportExcel')" class="mib-browser-table-op" @click="exportXlsx"><i class="nz-icon nz-icon-download1"></i></span>
-                <span id="mib-browser-clear" :title="$t('overall.clear')" class="mib-browser-table-op" @click="clearResult"><i class="nz-icon nz-icon-close"></i></span>
+                <span id="mib-browser-clear" :title="$t('overall.clear')" class="mib-browser-table-op" @click="clearResult"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
               </span>
             </div>
             <pl-table v-if="showTable" ref="resultTable" v-my-loading="loading" :datas="resultData" :empty-text="$t('overall.noData')" :pagination-show="false" :row-height="28"

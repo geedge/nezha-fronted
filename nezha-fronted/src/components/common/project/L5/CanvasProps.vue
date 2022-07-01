@@ -159,13 +159,13 @@
                     </el-col>
                     <el-col :span="2" class="thresholds-cell" style="text-align: center">
                       <i v-if="item.level!==0" class="nz-icon nz-icon-minus"
-                         @click="valueMappingDel(index, item)">
+                         @click="valueMappingDel(index, item)" :title="$t('overall.delete')">
                       </i>
                     </el-col>
                   </el-row>
                 </div>
               </div>
-              <div class="value-mapping-add" style="text-align: center;margin: 0 10px;" @click="valueMappingAdd()">
+              <div class="value-mapping-add" style="text-align: center;margin: 0 10px;" @click="valueMappingAdd()" :title="$t('tip.add')">
                 <i class="nz-icon nz-icon-plus"></i>
               </div>
             </div>
@@ -254,15 +254,15 @@
                   </template>
                 </el-row>
                 <div class="nz-icon-minus-position" style="box-sizing: border-box; padding: 10px;">
-                  <span class="nz-icon-minus-medium">
+                  <span class="nz-icon-minus-medium" :title="$t('overall.delete')">
                     <i class="nz-icon nz-icon-minus" @click="removeExpression(index)"></i>
                   </span>
-                  <span class="nz-icon-copy">
+                  <span class="nz-icon-copy" :title="$t('overall.duplicate')">
                     <i class="nz-icon nz-icon-override" @click="copyExpression(index)"></i>
                   </span>
                 </div>
               </el-row>
-              <div class="value-mapping-add" style="text-align: center" @click="addExpression()">
+              <div class="value-mapping-add" style="text-align: center" @click="addExpression()" :title="$t('tip.add')">
                 <i class="nz-icon nz-icon-plus"></i>
               </div>
             </div>

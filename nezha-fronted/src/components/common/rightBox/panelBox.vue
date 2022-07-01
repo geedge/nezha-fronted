@@ -4,7 +4,7 @@
     <div class="right-box__header">
       <div class="header__title">{{editPanel.id ? ($t("dashboard.panel.editPanelTitle")) : $t("dashboard.panel.createPanelTitle")}}</div>
       <div class="header__operation">
-        <span v-cancel="{obj: editPanel, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: editPanel, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
     <!-- begin--表单-->
@@ -59,16 +59,16 @@
                 </span>
                 <span style="display:flex;align-items:center">
                   <span @click="showVariable(index,item)" class="nz-icon-minus-medium" style="margin-right: 6px;padding-left: 10px">
-                    <i v-if="item.show" class="nz-icon nz-icon-mimakejian"></i>
-                    <i v-else class="nz-icon nz-icon-mimabukejian"></i>
+                    <i v-if="item.show" class="nz-icon nz-icon-mimakejian" :title="$t('overall.visible')"></i>
+                    <i v-else class="nz-icon nz-icon-mimabukejian" :title="$t('overall.invisible')"></i>
                   </span>
-                  <span @click="addVariable()" style="margin-right: 6px">
+                  <span @click="addVariable()" style="margin-right: 6px" :title="$t('tip.add')">
                     <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
                   </span>
-                  <span @click="copyVariable(item)" style="margin-right: 6px">
+                  <span @click="copyVariable(item)" style="margin-right: 6px" :title="$t('overall.duplicate')">
                     <i  class="nz-icon nz-icon-override"></i>
                   </span>
-                  <span @click="removeVariable(index)" class="nz-icon-minus-medium" style="margin-right: 6px">
+                  <span @click="removeVariable(index)" class="nz-icon-minus-medium" style="margin-right: 6px" :title="$t('overall.delete')">
                     <i  class="nz-icon nz-icon-minus"></i>
                   </span>
                 </span>
@@ -185,7 +185,7 @@
               <transition name="el-zoom-in-top" >
                 <div class="form-items--half-width-group">
                   <el-form-item
-                    :label="$t('backup.start')"
+                    :label="$t('overall.startTime')"
                     class="form-item--half-width"
                     prop="param.report.schedule.stime"
                   >
@@ -200,7 +200,7 @@
                       </my-date-picker>
                     </el-form-item>
                   <el-form-item
-                  :label="$t('dashboard.panel.endAt')"
+                  :label="$t('overall.endTime')"
                   class="form-item--half-width"
                   prop="param.report.schedule.etime"
                   >
@@ -218,7 +218,7 @@
                     <el-radio-group v-model="editPanel.param.report.range.unit" size="small">
                       <el-radio-button label="day">{{ $t("dashboard.panel.prevDay") }}</el-radio-button>
                       <el-radio-button label="week">{{ $t("dashboard.panel.prevWeek") }}</el-radio-button>
-                      <el-radio-button label="month">{{ $t("dashboard.panel.prevMonth") }}</el-radio-button>
+                      <el-radio-button label="month">{{ $t("config.menus.parent") }}</el-radio-button>
                     </el-radio-group>
                   </el-form-item>
                   <el-form-item
@@ -331,7 +331,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         'param.report.range.unit': [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         'param.report.schedule.type': [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
@@ -344,8 +344,8 @@ export default {
           message: this.$t('validate.required')
         }, { validator: datePicker, trigger: 'blur' }],
         'param.report.receivers': [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' },
-          { validator: arrLength }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: arrLength, trigger: 'blur' }
         ]
       },
       week: [
@@ -581,22 +581,22 @@ export default {
       })
     },
     changeData (flag) {
-	      if (flag) {
-	        if (this.editPanel.param.report.schedule.etime) {
-	          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
-	            this.editPanel.param.report.schedule.stime = ''
+      if (flag) {
+        if (this.editPanel.param.report.schedule.etime) {
+          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
+            this.editPanel.param.report.schedule.stime = ''
             this.$message.error(this.$t('alert.silence.timeError'))
-	          }
-	        }
-	      } else {
-	        if (this.editPanel.param.report.schedule.stime) {
-	          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
+          }
+        }
+      } else {
+        if (this.editPanel.param.report.schedule.stime) {
+          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
             this.editPanel.param.report.schedule.etime = ''
-	            this.$message.error(this.$t('alert.silence.timeError'))
-	          }
-	        }
-	      }
-	    }
+            this.$message.error(this.$t('alert.silence.timeError'))
+          }
+        }
+      }
+    }
   },
   watch: {
     obj: {

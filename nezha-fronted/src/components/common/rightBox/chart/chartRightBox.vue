@@ -8,7 +8,7 @@
       <div class="header__title" v-if="from !== 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("overall.createChart")}}</div>
       <div class="header__title" v-if="from === 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTempTitle") : $t("dashboard.panel.createChartTempTitle")}}</div>
       <div class="header__operation">
-        <span v-cancel="{obj: editChart, func: clickOutside}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: editChart, func: clickOutside}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
 
@@ -19,11 +19,11 @@
           <div style="display:flex;align-items:center">
             <el-input style="flex:1;margin-right:10px" maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
             <!-- 显示头部 -->
-            <div class="choose-header-btn" v-if="editChart.param&&editChart.param.showHeader!==0" @click="switchHeader(0)">
+            <div class="choose-header-btn" v-if="editChart.param&&editChart.param.showHeader!==0" @click="switchHeader(0)" :title="$t('overall.visible')">
               <i class="nz-icon nz-icon-mimakejian"></i>
             </div>
             <!-- 隐藏头部 -->
-            <div class="choose-header-btn" v-else @click="switchHeader(1)">
+            <div class="choose-header-btn" v-else @click="switchHeader(1)" :title="$t('overall.invisible')">
               <i class="nz-icon nz-icon-mimabukejian"></i>
             </div>
           </div>

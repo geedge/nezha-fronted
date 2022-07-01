@@ -7,13 +7,13 @@
       <el-row v-for="(item, index) in inputArr" :key="index" style="margin-bottom: 10px">
         <el-col :span="20"><el-input v-model="item.value"  size="small" maxlength="128"/></el-col>
         <el-col :span="2" style="text-align: center">
-        <span class="nz-icon-minus-medium">
+        <span class="nz-icon-minus-medium" :title="$t('overall.delete')">
           <i @click="deleteInput(index)" class="nz-icon nz-icon-minus"></i>
         </span>
         </el-col>
         <el-col :span="2" style="text-align: center">
           <span v-if=" index=== inputArr.length-1" @click="addInput" style="display: inline-block;">
-      <span class="create-square-box">
+      <span class="create-square-box" :title="$t('tip.add')">
         <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
       </span>
     </span>

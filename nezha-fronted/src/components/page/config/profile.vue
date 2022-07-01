@@ -121,7 +121,7 @@
               {{item}}
             </div>
           </div>
-          <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
+          <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue" :title="$t('overall.duplicate')"></i></span>
         </div>
       </div>
       <div slot="footer" class="footer">

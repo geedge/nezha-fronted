@@ -7,13 +7,13 @@
             <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key" @input="validateInput(item.key,index)" :class="{'input-error':inputKeyErr[index]}"></el-input>
             <span class="param-box-row-eq">=</span>
             <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
-            <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeTags(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
+            <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeTags(index)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-shanchu1"></i></span>
             <span style="color: #F56C6C;font-size: 12px;" v-if="inputKeyErr[index]">{{$t('overall.ASCIIKey')}}</span>
           </div>
         </div>
       </div>
       <div class="add-btn">
-        <el-button @click="addTags" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-plus"></i></el-button>
+        <el-button @click="addTags" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini" :title="$t('tip.add')"><i class="nz-icon nz-icon-plus"></i></el-button>
         <el-button @click="showEditTagsBox(false)"  style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-check"></i></el-button>
       </div>
     </div>

@@ -21,7 +21,7 @@
                   <el-collapse-item :title="item.group" :name="item.group">
                     <template slot="title">
                       <div style="display: flex;width: 100%;">
-                        <i class="nz-icon nz-icon-arrow-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)"></i>
+                        <i class="nz-icon nz-icon-arrow-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)" :title="$t('overall.delete')"></i>
                       </div>
                     </template>
                     <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons">
@@ -133,10 +133,10 @@
               :use-chart-unit="false"
               class="pickTime margin-r-10">
             </pick-time>
-            <button v-has="'project_edit'" class="top-tool-btn margin-r-10" type="button" @click="editTopology">
-              <i :title="$t('overall.edit')" class="nz-icon nz-icon-edit"></i>
+            <button v-has="'project_edit'" class="top-tool-btn margin-r-10" type="button" @click="editTopology" :title="$t('overall.edit')">
+              <i class="nz-icon nz-icon-edit"></i>
             </button>
-            <button class="top-tool-btn" type="button" @click="changeScreen">
+            <button class="top-tool-btn" type="button" @click="changeScreen" :title="topoScreen? $t('dashboard.screen.exit') : $t('dashboard.screen')">
               <i :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'" class="nz-icon"></i>
             </button>
           </div>
@@ -242,8 +242,8 @@
             </endpointTable>
           </transition>
           <div v-if="!fromOverView&&!editTopologyFlag&&!fromPrev" class="right-bottom-zoom">
-            <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
-            <div class="zoom-option" @click="zoomMap(-0.25)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
+            <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)" :title="$t('overall.enlargement')"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
+            <div class="zoom-option" @click="zoomMap(-0.25)" :title="$t('overall.shrink')"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
           </div>
         </div>
       </div>

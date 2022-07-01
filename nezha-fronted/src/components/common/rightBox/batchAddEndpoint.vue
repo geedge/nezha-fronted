@@ -5,7 +5,7 @@
       <div class="header__title">{{$t("overall.batchAddEndpoint")}}</div>
       <!-- end--标题-->
       <div class="header__operation">
-        <span v-cancel="{obj: endpoint, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: endpoint, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
 
@@ -119,8 +119,8 @@
             fixed="right">
             <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
             <div slot-scope="scope" class="table-operation-items">
-              <span class="table-operation-item" v-has="'model_edit'" @click="del(scope.$index)"><i class="nz-icon nz-icon-minus"></i></span>
-              <span class="table-operation-item"  @click="edit(scope.row, scope.$index)"><i class="nz-icon nz-icon-edit"></i></span>
+              <span class="table-operation-item" v-has="'model_edit'" @click="del(scope.$index)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-minus"></i></span>
+              <span class="table-operation-item"  @click="edit(scope.row, scope.$index)" :title="$t('overall.edit')"><i class="nz-icon nz-icon-edit"></i></span>
             </div>
           </el-table-column>
         </el-table>

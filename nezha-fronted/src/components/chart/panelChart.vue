@@ -109,7 +109,8 @@ export default {
       showAllData: false, // 是否显示所有legend
       allDataLength: 0,
       severityData: this.$store.getters.severityData, // 告警级别的数据
-      severityDataWeight: this.$store.getters.severityDataWeight
+      severityDataWeight: this.$store.getters.severityDataWeight,
+      myVariables: []
       // isExportData: false
     }
   },
@@ -119,6 +120,9 @@ export default {
     },
     headerHPadding () { // 50px header + padding 主要用于展开的空group
       return this.$store.getters.getHeaderHPadding
+    },
+    variablesArr () {
+      return this.$store.getters.getVariablesArr
     }
   },
   methods: {
@@ -144,6 +148,8 @@ export default {
     },
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh, params) { // 获取chart的数据前的准备 主要用于处理时间参数
+      this.chartData = []
+      this.myVariables = []
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
@@ -223,7 +229,8 @@ export default {
               // if (isChartPie(this.chartInfo.type)) {
               //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
               // }
-              query += `&query=${encodeURIComponent(element.expression)}`
+              this.myVariables.push(this.variablesReplace(element.expression))
+              query += `&query=${encodeURIComponent(this.variablesReplace(element.expression))}`
               return this.$get(query)
             })
             if (this.multipleTime) {
@@ -519,6 +526,16 @@ export default {
         this.loading = false
       }
     },
+    variablesReplace (expression) {
+      let str = expression
+      this.variablesArr.forEach(item => {
+        const reg = new RegExp('\\$' + item.name, 'g') // 后续需要考虑 item,name 使用特殊字符的问题
+        if (reg.test(expression)) {
+          str = str.replace(reg, item.checked.map(label => label.replace(/\"/g, '\\"').replace(/\'/g, "\\'")).join('|'))
+        }
+      })
+      return str
+    },
     getHexagonFigureData () {
       return new Promise(resolve => {
         this.$get('stat/alertMessage/topN', { size: 48, dimension: 'module' }).then(response => {
@@ -704,6 +721,23 @@ export default {
       deep: true,
       handler (n) {
         // console.log(n)
+      }
+    },
+    variablesArr: {
+      handler (n) {
+        const elements = this.chartInfo.elements || []
+        const variables = elements.map((element) => {
+          return this.variablesReplace(element.expression)
+        })
+        let flag = false
+        this.myVariables.forEach((item, index) => {
+          if (item !== variables[index]) {
+            flag = true
+          }
+        })
+        if (flag) {
+          this.chartInfo.loaded && this.getChartData(true)
+        }
       }
     }
   },

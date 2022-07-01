@@ -88,7 +88,7 @@
             fixed="right">
             <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
             <div slot-scope="scope" class="table-operation-items">
-              <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLog', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+              <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLog', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
               <el-dropdown size="medium" trigger="click" @command="tableOperation">
                 <div class="table-operation-item table-operation-item--more">
                   <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
@@ -102,7 +102,7 @@
           </el-table-column>
         </el-table>
         <!-- 回到table顶部的按钮 -->
-        <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="role-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)"><i class="nz-icon nz-icon-top"></i></button>
+        <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="role-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)" :title="$t('overall.backToTop')"><i class="nz-icon nz-icon-top"></i></button>
       </template>
       <!-- 分页组件 -->
       <template v-slot:pagination>

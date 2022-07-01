@@ -132,12 +132,12 @@
       </el-table-column>
       <el-table-column width="28" :resizable="false">
         <template slot="header">
-          <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
+          <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear" :title="$t('overall.selectColumns')">
             <i class="nz-icon nz-icon-gear"></i>
           </span>
         </template>
         <template v-slot="scope">
-          <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+          <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn" @click="$toTop('ps', 1)" :title="$t('overall.backToTop')"><i class="nz-icon nz-icon-top"></i></button>
         </template>
       </el-table-column>
     </el-table>
