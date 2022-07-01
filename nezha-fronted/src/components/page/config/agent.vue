@@ -14,7 +14,7 @@
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <button id="load-agent" class="top-tool-btn margin-r-10" type="button" @click="toDownloadAgent" v-has="'agent_edit'">
+        <button id="load-agent" class="top-tool-btn margin-r-10" type="button" @click="toDownloadAgent" v-has="'agent_edit'" :title="$t('overall.download')">
           <i class="nz-icon-download nz-icon"></i>
         </button>
         <delete-button id="promserver-list-batch-delete" v-has="'agent_delete'" :delete-objs="batchDeleteObjs" api="agent" @after="getTableData" @before="delFlag=true"></delete-button>
@@ -80,14 +80,14 @@
           <el-form-item label="cURL"  v-if="loadFinish" class="download-url">
             <el-input id="download-url-curl" :disabled="true" v-model="curlUrl">
               <el-popover :content="$t('overall.search')" placement="top" trigger="manual" v-model="curlVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('curl')"  style="cursor: pointer">
-                <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-curl')"></i>
+                <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-curl')" :title="$t('overall.duplicate')"></i>
               </el-popover>
             </el-input>
           </el-form-item>
           <el-form-item label="Wget"  v-if="loadFinish" class="download-url">
             <el-input id="download-url-wget" :disabled="true" v-model="wgetUrl" >
               <el-popover :content="$t('overall.search')" placement="top" trigger="manual" v-model="wgetVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('wget')" style="cursor: pointer">
-                <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-wget')"></i>
+                <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-wget')" :title="$t('overall.duplicate')"></i>
               </el-popover>
             </el-input>
           </el-form-item>

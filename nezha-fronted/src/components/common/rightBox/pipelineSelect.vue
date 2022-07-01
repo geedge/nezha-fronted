@@ -22,7 +22,7 @@
         </el-option>
       </el-option-group>
     </el-select>
-    <i class="nz-icon nz-icon-plus" @click="addPipelineShow"></i>
+    <i class="nz-icon nz-icon-plus" @click="addPipelineShow" :title="$t('tip.add')"></i>
   </span>
 </template>
 

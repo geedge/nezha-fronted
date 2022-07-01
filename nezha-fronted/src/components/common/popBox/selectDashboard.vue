@@ -49,8 +49,8 @@
                     </el-dropdown-menu>
                   </el-dropdown>
                   <template>
-                    <i v-if="data.starred" class="nz-icon nz-icon-a-xingzhuang2" @click.stop="delStarred(data)"></i>
-                    <i v-else class="nz-icon nz-icon-xingzhuang" @click.stop="addStarred(data)"></i>
+                    <i v-if="data.starred" class="nz-icon nz-icon-a-xingzhuang2" @click.stop="delStarred(data)" :title ="$t('overall.starred')"></i>
+                    <i v-else class="nz-icon nz-icon-xingzhuang" @click.stop="addStarred(data)" :title ="$t('overall.unstarred')"></i>
                   </template>
                 </el-col>
               </el-row>

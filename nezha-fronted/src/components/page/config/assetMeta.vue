@@ -56,7 +56,7 @@
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"
         ></asset-meta-table>
         <!-- 回到table顶部的按钮 -->
-        <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="role-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)"><i class="nz-icon nz-icon-top"></i></button>
+        <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="role-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)" :title="$t('overall.backToTop')"><i class="nz-icon nz-icon-top"></i></button>
       </template>
       <!-- 分页组件 -->
       <template v-slot:pagination>

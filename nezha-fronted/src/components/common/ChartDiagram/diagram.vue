@@ -21,7 +21,7 @@
                   <el-collapse-item :title="item.group" :name="item.group">
                     <template slot="title">
                       <div style="display: flex;width: 100%;">
-                        <i class="nz-icon nz-icon-caret-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)"></i>
+                        <i class="nz-icon nz-icon-caret-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)" :title="$t('overall.delete')"></i>
                       </div>
                     </template>
                     <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons"  :title="btn.data.text">
@@ -37,7 +37,7 @@
                         <i v-else-if="btn.data.iconName" f :class="`nz-icon ${btn.data.iconName}`"></i>
                         <i v-else :class="`iconfont ${btn.icon}`"></i>
                       </a>
-                      <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click="tooltipDelete(btn)"></i>
+                      <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click="tooltipDelete(btn)"  :title="$t('overall.delete')"></i>
                     </div>
                   </el-collapse-item>
                 </el-collapse>
@@ -216,8 +216,8 @@
             </endpointTable>
           </transition>
           <div v-if="!fromOverView&&!editTopologyFlag&&!fromPrev&&!fromChartBox" class="right-bottom-zoom">
-            <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
-            <div class="zoom-option" @click="zoomMap(-0.25)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
+            <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)" :title="$t('overall.enlargement')"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
+            <div class="zoom-option" @click="zoomMap(-0.25)" :title="$t('overall.shrink')"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
           </div>
         </div>
       </div>

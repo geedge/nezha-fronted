@@ -32,7 +32,7 @@
           </el-input>
         </div>
         <div class="margin-r-20 nz-btn-group nz-btn-group-size-small nz-btn-group-light">
-          <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend" id="endpoint-query-changetime"><i class="el-icon-d-arrow-left"></i></button>
+          <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend" id="endpoint-query-changetime" :title="$t('overall.decreaseTime')"><i class="el-icon-d-arrow-left"></i></button>
           <my-date-picker
             v-model="formatTime"
             type="datetime"
@@ -46,10 +46,10 @@
             @change="pickTime"
         >
           </my-date-picker>
-          <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>
+          <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append" :title="$t('overall.increaseTime')"><i class="el-icon-d-arrow-right"></i></button>
         </div>
         <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light" style="height: 24px;">
-          <button class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="viewGraph">
+          <button class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="viewGraph" :title="$t('overall.showLineChart')">
             <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
           </button><button @mouseenter="dropdownHandler(true)" @mouseleave="dropdownHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
             <i class="nz-icon nz-icon-arrow-down"></i>
@@ -63,7 +63,7 @@
         </div>
       </div>
     </div>
-    <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
+    <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}" :title="$t('overall.close')"></i></span></div>
      <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('overall.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
                :pagination-show="false" class="nz-table endpoint-query-table" ref="endpointQueryTable" style="width: 100%;" v-my-loading="loading"
                v-if="tableShow && plTableSHow" id="endpoint-list-table" :tooltip-effect="'light'" @selection-change="selectChange">
@@ -104,7 +104,7 @@
         min-width="180">
       </pl-table-column>
     </pl-table>
-    <button :class="{'to-top-is-hover': tools.tableHover}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn" id="endpoint-list-totop"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tools.tableHover}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn" id="endpoint-list-totop" :title="$t('overall.backToTop')"><i class="nz-icon nz-icon-top"></i></button>
 
     <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
                :title="$t('project.endpoint.dialogTitle')"

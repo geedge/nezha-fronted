@@ -1,6 +1,6 @@
 <template>
   <div class="multiple-time-box">
-    <div :class="showDropdown?'compare-box':''"><i class="nz-icon nz-icon-compare" @click="changeShowDropdown" /></div>
+    <div :class="showDropdown?'compare-box':''" :title="$t('dashboard.panel.customTimeRange')"><i class="nz-icon nz-icon-compare" @click="changeShowDropdown" /></div>
     <transition>
       <div v-show="showDropdown" id="panel-calender" class="calendar">
         <my-date-picker prefix-icon=" " size="mini" ref="calendar"

@@ -109,6 +109,7 @@
           <button
             v-if="plugins.indexOf('add') > -1"
             class="top-tool-btn"
+            :title="$t('tip.add')"
             @click="addExpression"
           >
             <i class="nz-icon nz-icon-plus"></i>
@@ -117,6 +118,7 @@
             v-if="plugins.indexOf('copy') > -1"
             class="top-tool-btn"
             @click="copyExpression"
+            :title="$t('overall.duplicate')"
           >
             <i class="nz-icon nz-icon-override"></i>
           </button>
@@ -124,6 +126,7 @@
             v-if="plugins.indexOf('remove') > -1"
             class="top-tool-btn"
             @click="removeExpression"
+            :title="$t('overall.delete')"
           >
             <i class="nz-icon nz-icon-minus"></i>
           </button>
@@ -271,6 +274,7 @@
       <div
         class="option"
         @click="addExpression"
+        :title="$t('tip.add')"
         v-if="plugins.indexOf('add') > -1"
       >
         <i class="nz-icon nz-icon-plus"></i>
@@ -279,6 +283,7 @@
         class="option"
         style="margin-left: 5px; line-height: 32px"
         @click="removeExpression"
+        :title="$t('overall.delete')"
         v-if="plugins.indexOf('remove') > -1"
       >
         <i class="nz-icon nz-icon-minus"></i>

@@ -102,9 +102,9 @@
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
-          <button v-if="scope.row.alertRule" class="table-operation-item" @click="$emit('messageDetail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+          <button v-if="scope.row.alertRule" class="table-operation-item" @click="$emit('messageDetail', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown v-has="['alertMessage_expired', 'alertSilence_add']" size="medium" trigger="click" @command="tableOperation">
-            <div class="table-operation-item table-operation-item--more">
+            <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
             </div>
             <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">

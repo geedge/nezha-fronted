@@ -4,7 +4,7 @@
     <div class="right-box__header">
       <div class="header__title">{{editAlertSilence.id ? $t("alert.silence.edit") : $t("overall.createAlertSilence")}}</div>
       <div class="header__operation">
-        <span v-cancel="{obj: editAlertSilence, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: editAlertSilence, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
     <!-- end--标题-->
@@ -83,10 +83,10 @@
                 <el-input v-model="item.value" class="silence-matchers-value" placeholder="value"  size="mini"></el-input>
                 <el-checkbox v-model="item.regex" :false-label="0" :true-label="1" class="silence-matchers-regex" >Regex</el-checkbox>
               </el-form-item>
-              <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removematchers(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
+              <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removematchers(index)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-shanchu1"></i></span>
             </div>
             <div class="" style="text-align: center;">
-               <span id="module-add-label" type="button" @click="addmatchers" class="right-box-form-add module-add-label right-box-form-minus-box module-add-label" style="">
+               <span id="module-add-label" type="button" @click="addmatchers" class="right-box-form-add module-add-label right-box-form-minus-box module-add-label" style=""  :title="$t('tip.add')">
               <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
             </span>
             </div>

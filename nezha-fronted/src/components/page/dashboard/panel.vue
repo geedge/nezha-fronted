@@ -26,9 +26,9 @@
                 @selectDashboard="panelChange">
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
-                  <span :title="showPanel.name  + ' (' + showPanel.chartNum +' charts）' " class="show-panel-name">{{showPanel.name}}</span>
-                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="nz-icon nz-icon-a-xingzhuang2"></i>
-                  <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang"></i>
+                  <span :title="showPanel.name  + ' (' + showPanel.chartNum +' charts)' " class="show-panel-name">{{showPanel.name}}</span>
+                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="nz-icon nz-icon-a-xingzhuang2" :title ="$t('overall.starred')"></i>
+                  <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang" :title ="$t('overall.unstarred')"></i>
                 </template>
               </select-dashboard>
             </div>
@@ -116,7 +116,7 @@
       </div>
     </div>
 
-    <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn" :title="$t('overall.backToTop')"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
       <chart-right-box

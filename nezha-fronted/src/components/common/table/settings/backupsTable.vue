@@ -42,19 +42,19 @@
         class="table-operation-items"
         v-if="isConfigurations"
       >
-        <button class="table-operation-button" @click="backupNow(scope.row)">
+        <button class="table-operation-button" @click="backupNow(scope.row)" :title="$t('config.backup')">
          <i class="nz-icon-beifen nz-icon"></i>
         </button>
-        <button class="table-operation-edit" @click="edit(scope.row)">
+        <button class="table-operation-edit" @click="edit(scope.row)" :title="$t('backup.edit')">
          <i class="nz-icon-gear nz-icon"></i>
         </button>
       </div>
 
       <div slot-scope="scope" v-else class="table-operation-items">
-        <button class="table-operation-button" @click="Restore(scope.row)" v-if="scope.row">
+        <button class="table-operation-button" @click="Restore(scope.row)" v-if="scope.row" :title="$t('backup.RestoreNow')">
          <i class="nz-icon-shujubeifenhuifu nz-icon"></i>
         </button>
-        <button class="table-operation-edit" @click="del(scope.row)" v-if="scope.row">
+        <button class="table-operation-edit" @click="del(scope.row)" v-if="scope.row" :title="$t('overall.delete')">
           <i class="nz-icon nz-icon-delete" style="font-size='12px'"></i>
         </button>
       </div>

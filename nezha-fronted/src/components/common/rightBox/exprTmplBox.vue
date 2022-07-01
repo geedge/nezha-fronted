@@ -6,7 +6,7 @@
       $t("config.exprTemp.create")}}
     </div>
       <div class="header__operation">
-        <span v-cancel="{obj: editExprTemp, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: editExprTemp, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
     <!-- begin--表单-->

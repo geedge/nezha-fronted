@@ -3,7 +3,7 @@
     <div class="right-box__header">
       <div class="header__title">{{editAsset.id ? $t('asset.editAsset') : $t('asset.createAsset')}}</div>
       <div class="header__operation">
-        <span v-cancel="{obj: editAsset, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: editAsset, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
     <div class="right-box__container">
@@ -90,7 +90,7 @@
                 <div class="form__labels-label">
                   <span>{{label.name}}</span>
                   <div>
-                    <span @click="removeLabel(label)" class="form__labels-label__span"><i class="nz-icon nz-icon-minus"></i></span>
+                    <span @click="removeLabel(label)" class="form__labels-label__span" :title="$t('overall.delete')"><i class="nz-icon nz-icon-minus"></i></span>
                   </div>
                 </div>
               </template>
@@ -101,8 +101,8 @@
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.MULTITEXT">
                   <div v-for="(value, i) in label.value" :key="i" class="label__multi-text">
                     <el-input v-model="label.value[i]" size="small"/>
-                    <span @click="addMultiTextRow(label)" style="margin: 0 5px"><i class="nz-icon nz-icon-plus"></i></span>
-                    <span @click="removeMultiTextRow(label, i)"><i class="nz-icon nz-icon-minus"></i></span>
+                    <span @click="addMultiTextRow(label)" style="margin: 0 5px" :title="$t('tip.add')"><i class="nz-icon nz-icon-plus"></i></span>
+                    <span @click="removeMultiTextRow(label, i)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-minus"></i></span>
                   </div>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA">
@@ -174,12 +174,13 @@
           </div>
           <!-- label的新增按钮 -->
           <div class="form__flex-container hide-casc-input">
-            <button class="form__create-btn" type="button" @click.stop><i class="nz-icon nz-icon-create-square"></i></button>
+            <button class="form__create-btn" type="button" @click.stop :title="$t('tip.add')"><i class="nz-icon nz-icon-create-square"></i></button>
             <el-cascader
               v-if="labelCascShow"
               :options="options.fieldGroupOptions"
               :props="labelCascProp"
               class="hide-input"
+              :title="$t('tip.add')"
               popper-class="prevent-clickoutside right-box-select-top limit-height"
               size="small"
               @change="addLabel"

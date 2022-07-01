@@ -13,7 +13,7 @@
         </div>
         <slot name="top-tool-right"></slot>
         <button v-if="layout.indexOf('elementSet') > -1" id="account-column-setting" class="top-tool-btn margin-r-20"
-                type="button" @click="tools.showCustomTableTitle = true">
+                type="button" @click="tools.showCustomTableTitle = true" :title="$t('overall.selectColumns')">
           <i class="nz-icon-gear nz-icon"></i>
         </button>
       </div>

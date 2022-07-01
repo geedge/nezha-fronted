@@ -3,7 +3,7 @@
     <div class="right-box__header">
       <div class="header__title">{{$t('asset.batchEditAsset')}}</div>
       <div class="header__operation">
-        <span @click="esc"><i class="nz-icon nz-icon-close"></i></span>
+        <span @click="esc" :title="$t('overall.close')"><i class="nz-icon nz-icon-close"></i></span>
       </div>
     </div>
     <div class="right-box__container">
@@ -76,8 +76,8 @@
                     <span>{{label.name}}</span>
                     <div>
                       <el-checkbox v-model="label.action" :false-label="0" :label="$t('overall.delete')" :true-label="1" size="small" style="padding-right: 20px;"></el-checkbox>
-                      <span v-if="label.type.toUpperCase() === assetConstants.labelTypeData.MULTITEXT" @click="addMultiTextRow(label)"><i class="nz-icon nz-icon-create-square"></i></span>
-                      <span @click="removeLabel(label)"><i class="nz-icon nz-icon-minus"></i></span>
+                      <span v-if="label.type.toUpperCase() === assetConstants.labelTypeData.MULTITEXT" :title="$t('tip.add')" @click="addMultiTextRow(label)"><i class="nz-icon nz-icon-create-square"></i></span>
+                      <span @click="removeLabel(label)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-minus"></i></span>
                     </div>
                   </div>
                 </template>
@@ -88,7 +88,7 @@
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.MULTITEXT">
                     <div v-for="(value, i) in label.value" :key="i" class="label__multi-text">
                       <el-input v-model="label.value[i]" size="small" style="margin-right: 15px;"/>
-                      <span :style="{'opacity': label.value.length > 1 ? 1 : 0.5}" @click="label.value.length > 1 ? label.value.splice(i, 1) : ''"><i class="nz-icon nz-icon-minus"></i></span>
+                      <span :style="{'opacity': label.value.length > 1 ? 1 : 0.5}" @click="label.value.length > 1 ? label.value.splice(i, 1) : ''" :title="$t('overall.delete')"><i class="nz-icon nz-icon-minus"></i></span>
                     </div>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA">
@@ -160,7 +160,7 @@
             </div>
             <!-- label的新增按钮 -->
             <div class="form__flex-container hide-casc-input">
-              <button class="form__create-btn" type="button" @click.stop><i class="nz-icon nz-icon-create-square"></i></button>
+              <button class="form__create-btn" type="button" @click.stop :title="$t('tip.add')"><i class="nz-icon nz-icon-create-square"></i></button>
               <el-cascader
                 v-if="labelCascShow"
                 :options="fieldGroupData"

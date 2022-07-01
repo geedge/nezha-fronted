@@ -58,7 +58,7 @@
                     <div v-if="checkAll" style="flex: 1">All</div>
                     <div v-else style="width: 100%;flex: 1">
                     <span class="choose" v-for="item in dataCenter" :key="item.id" v-if="checked.indexOf(item.id) !== -1">
-                      <span> {{item.name}} <i class="nz-icon nz-icon-close" @click="removeCheckedItem(item.id)"/></span>
+                      <span> {{item.name}} <i class="nz-icon nz-icon-close" @click="removeCheckedItem(item.id)" :title="$t('overall.close')"/></span>
                     </span>
                     </div>
                     <i class="nz-icon nz-icon-arrow-down6"/>

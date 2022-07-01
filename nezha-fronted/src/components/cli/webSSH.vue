@@ -59,10 +59,10 @@
         </el-tab-pane>
       </el-tabs>
       <div class="console-icon">
-        <i @click="minScreen" class="nz-icon nz-icon-minus console-title-icon" style='right: 76px;'></i>
-        <i @click="fullScreen" class="el-icon-full-screen console-title-icon" style='right: 46px;' v-if="!isFullScreen"></i>
-        <i @click="exitFullScreen" class="nz-icon nz-icon-exit-full-screen console-title-icon" style='right: 46px;' v-else></i>
-        <i @click="closeConsole" class="nz-icon nz-icon-close console-title-icon" style='right: 16px;'></i>
+        <i @click="minScreen" class="nz-icon nz-icon-minus console-title-icon" style='right: 76px;' :title="$t('overall.shrink')"></i>
+        <i @click="fullScreen" class="el-icon-full-screen console-title-icon" style='right: 46px;' v-if="!isFullScreen" :title="$t('dashboard.screen')"></i>
+        <i @click="exitFullScreen" class="nz-icon nz-icon-exit-full-screen console-title-icon" style='right: 46px;' v-else :title="$t('dashboard.screen.exit')"></i>
+        <i @click="closeConsole" class="nz-icon nz-icon-close console-title-icon" style='right: 16px;' :title="$t('overall.close')"></i>
       </div>
     </div>
 

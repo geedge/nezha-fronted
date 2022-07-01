@@ -38,7 +38,7 @@
                  <span  @click="showAllScreen"  v-if="from !== 'chartTemp'" class="" :title="$t('dashboard.screen')">
                   <i class="nz-icon nz-icon-maxview"></i>
                  </span>
-                <span><i class="el-icon-more" @click.stop="dropdownMenuShow=!dropdownMenuShow"></i></span>
+                <span  :title="$t('overall.more')"><i class="el-icon-more" @click.stop="dropdownMenuShow=!dropdownMenuShow"></i></span>
               </span>
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="" >

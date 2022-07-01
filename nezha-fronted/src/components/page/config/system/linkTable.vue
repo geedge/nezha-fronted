@@ -65,9 +65,9 @@
             <button :disabled="prevent_opt.save" class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancel(scope.row)"><span>{{$t('overall.cancel')}}</span></button>
           </template>
           <template v-else>
-            <button class="table-operation-item" v-has="'system_link_edit'" @click="toEdit(scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
+            <button class="table-operation-item" v-has="'system_link_edit'" @click="toEdit(scope.row)" :title="$t('overall.edit')"><i class="nz-icon nz-icon-edit"></i></button>
             <el-dropdown size="medium" v-has="['system_link_delete']" trigger="click" @command="tableOperation">
-              <div class="table-operation-item table-operation-item--more">
+              <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
                 <i class="nz-icon nz-icon-more3"></i>
               </div>
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">

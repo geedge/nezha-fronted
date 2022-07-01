@@ -6,7 +6,7 @@
         <div class="header__title">{{editMetaGroup.id ? $t("config.assetMeta.editGroup") : $t("config.assetMeta.addGroup")}}
         </div>
         <div class="header__operation">
-          <span v-cancel="{obj: editMetaGroup, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+          <span v-cancel="{obj: editMetaGroup, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
         </div>
       </div>
       <!-- begin--表单-->

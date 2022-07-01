@@ -3,11 +3,11 @@
         <div class="search-input-all input-position" @click="stop_click">
 <!--            历史记录-->
             <div class="search-history" v-if="showHistory">
-                <i class="nz-icon nz-icon-time" style="cursor: pointer" @click="look_history" id="search-view-history"></i>
+                <i class="nz-icon nz-icon-time" style="cursor: pointer" @click="look_history" id="search-view-history" :title="$t('search.recentSearch')"></i>
                 <div :class="localStorage_display?'localStorage_list_box none':'localStorage_list_box'">
                     <div class="list_box_title" style="cursor: pointer">
                         <span>{{$t('search.recentSearch')}}</span>
-                        <i class="nz-icon nz-icon-close" @click="localStorage_display=!localStorage_display" id="search-close-history"></i>
+                        <i class="nz-icon nz-icon-close" @click="localStorage_display=!localStorage_display" id="search-close-history" :title="$t('overall.close')"></i>
                     </div>
                     <div class="list_box_content" v-if="history_once.length>0">
                         <ul>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="select_content" v-if="typeof val.val !='undefined' && val.val != null && ind!=sreach_num">
                             <span>{{$t(val.valString ? val.valString : val.val)}}</span>
-                            <i class="nz-icon nz-icon-close" style="cursor: pointer" @click="close_selcet_list(ind,$event)"></i>
+                            <i class="nz-icon nz-icon-close" style="cursor: pointer" @click="close_selcet_list(ind,$event)" :title="$t('overall.close')"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
                             <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" :readonly="val.readonly" @keydown="enter(val, $event)" @click="stop_click">
@@ -258,7 +258,7 @@
                 </ul>
             </div>
         </div>
-        <button id="search-input-search" class="search-btn float-right" type="button" @click="select" v-if="showSearch"><i class="nz-icon nz-icon-search"></i></button>
+        <button id="search-input-search" class="search-btn float-right" type="button" @click="select" v-if="showSearch" :title="$t('overall.search')"><i class="nz-icon nz-icon-search"></i></button>
         <!--<div class="new-search-btn" @click="select">
             <i class="nz-icon nz-icon-search"></i>
         </div>-->

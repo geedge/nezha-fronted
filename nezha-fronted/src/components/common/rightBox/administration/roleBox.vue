@@ -3,7 +3,7 @@
     <div class="right-box__header">
       <div class="header__title">{{editRole.id ? $t('config.roles.editRole') : $t('overall.createRole')}}</div>
       <div class="header__operation">
-        <span v-cancel="{obj: editRole, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: editRole, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
     <div class="right-box__container right-box-container__left">

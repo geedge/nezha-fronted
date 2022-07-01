@@ -5,7 +5,7 @@
       <div class="header__title">{{editModule.id ? $t("project.module.editModule") : $t("overall.createModule")}}</div>
       <!-- end--标题-->
       <div class="header__operation">
-        <span v-cancel="{obj: editModule, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: editModule, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
 
@@ -129,7 +129,7 @@
                               <div ref="walkScrollbar" style="height: 100%; overflow: auto;">
                                 <span v-for="(item, index) in editModule.configs[0].config.walk" :key="index" class="el-tag el-tag--info el-tag--small el-tag--light">
                                   <span v-html="mibName(item)"></span>
-                                  <div class="walk-close-box" @click.stop="removeWalk(item)">
+                                  <div class="walk-close-box" @click.stop="removeWalk(item)" :title="$t('overall.close')">
                                     <i class="el-tag__close nz-icon nz-icon-close walk-close"></i>
                                   </div>
                                 </span>
@@ -189,12 +189,12 @@
                       @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
                     />
                   </el-form-item>
-                  <span :id="'moduel-remove-param-'+index" class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
+                  <span :id="'moduel-remove-param-'+index" class="param-box-row-symbol" @click="removeParam(index)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-shanchu1"></i></span>
                 </div>
               </div>
               <div style="text-align: center">
                  <span id="module-add-param" class="right-box-form-add module-add-label" type="button" @click="addParam">
-                <span><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
+                <span :title="$t('tip.add')"><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
               </span>
               </div>
             </el-tab-pane>
@@ -208,12 +208,12 @@
                   <el-form-item :prop="'labelModule.' + index + '.value'" class="param-box-row-value">
                     <el-input v-model="item.value" placeholder="value" size="mini"></el-input>
                   </el-form-item>
-                  <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
+                  <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removeLabel(index)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-shanchu1"></i></span>
                 </div>
               </div>
               <div style="text-align: center">
                  <span id="module-add-label" class="right-box-form-add module-add-label" type="button" @click="addLabel">
-                <span><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
+                <span :title="$t('tip.add')"><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
               </span>
               </div>
             </el-tab-pane>
@@ -222,7 +222,7 @@
                   <div v-for="(item, index) in  this.editModule.configs[0].config.relabel_config" :key="index" class="">
                     <div class="pipeline-box">
                       <span class="pipeline-title">{{$t('project.endpoint.item') + index}}</span>
-                      <span class="pipeline-option">
+                      <span class="pipeline-option" :title="$t('overall.delete')">
                       <i class="nz-icon nz-icon-shanchu1" @click="removeRelabel(index)"></i>
                     </span>
                     </div>
@@ -291,7 +291,7 @@
                 </div>
                 <div style="text-align: center">
                  <span id="module-add-relabel" class="right-box-form-add module-add-label margin-t-10" type="button" @click="addRelabel">
-                   <span><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
+                   <span :title="$t('tip.add')"><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
                  </span>
                 </div>
               </el-tab-pane>
@@ -382,12 +382,12 @@
                       <el-form-item class="param-box-row-value">
                         <el-input v-model="item1.value" placeholder="value" size="mini"></el-input>
                       </el-form-item>
-                      <span :id="'moduel-remove-label-'+i" class="param-box-row-symbol" @click="removeLogsLabel(index, i)"><i class="nz-icon nz-icon-shanchu1"></i></span>
+                      <span :id="'moduel-remove-label-'+i" class="param-box-row-symbol" @click="removeLogsLabel(index, i)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-shanchu1"></i></span>
                     </div>
                   </div>
                   <div style="text-align: center">
                  <span id="module-add-logs-label" class="right-box-form-add module-add-label" type="button" @click="addLogsLabel(index)">
-                <span><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
+                <span :title="$t('tip.add')"><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
               </span>
                   </div>
                 </el-tab-pane>
@@ -397,7 +397,7 @@
                       <span class="pipeline-title">{{item2.type}}</span>
                       <span class="pipeline-option">
                       <pipelineSelect :index="index2" :father-pipeline="item.pipeline" @addPipeline="(pipelineIndex,obj)=>{addPipeline(obj,index,pipelineIndex,'splice')}" :type="'splice'"/>
-                      <i class="nz-icon nz-icon-shanchu1" @click="delPipeline(index,index2)"></i>
+                      <i class="nz-icon nz-icon-shanchu1" @click="delPipeline(index,index2)" :title="$t('overall.delete')"></i>
                     </span>
                     </div>
                     <div v-if="item2.type === 'regex'">
@@ -434,8 +434,8 @@
                         >
                           <el-input v-model="item2.expressions[eindex].value" placeholder="value" size="mini" ></el-input>
                         </el-form-item>
-                        <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)"></i>
-                        <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))"></i>
+                        <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)" :title="$t('tip.add')"></i>
+                        <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))" :title="$t('overall.delete')"></i>
                       </div>
                       <el-form-item
                         :label="'Source'"
@@ -497,8 +497,8 @@
                         >
                           <el-input v-model="item2.labels[eindex].value" placeholder="value" size="mini" ></el-input>
                         </el-form-item>
-                        <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)"></i>
-                        <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))"></i>
+                        <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)" :title="$t('tip.add')"></i>
+                        <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))" :title="$t('overall.delete')"></i>
                       </div>
                     </div>
                     <div v-if="item2.type === 'output'">
@@ -524,11 +524,11 @@
 <!--                  </div>-->
 <!--                </el-tab-pane>-->
               </el-tabs>
-              <span class="nz-icon-minus-medium">
+              <span class="nz-icon-minus-medium" :title="$t('overall.delete')">
               <i class="nz-icon nz-icon-minus" @click="removeLogsArr(index)"></i>
           </span>
             </div>
-            <div class="value-mapping-add" style="text-align: center;margin: 10px 144px 10px 144px;" @click="logsLogsArrAdd()">
+            <div class="value-mapping-add" style="text-align: center;margin: 10px 144px 10px 144px;" @click="logsLogsArrAdd()" :title="$t('tip.add')">
               <i class="nz-icon nz-icon-plus"></i>
             </div>
           </div>
@@ -540,7 +540,7 @@
           </div>
           <div class="right-box-line"></div>
           <div id="module-box-preview" ref="previewBoxScrollbar"  class="configs-copy-value"  style="overflow: auto;">
-            <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
+            <span class="copy-value-content" :title="$t('overall.duplicate')"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
             <pre>{{configsCopyValue}}</pre>
           </div>
         </el-form>

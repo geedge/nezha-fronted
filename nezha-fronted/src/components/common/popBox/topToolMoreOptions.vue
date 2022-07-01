@@ -1,6 +1,6 @@
 <template>
   <el-dropdown trigger="click" :size="size">
-    <button id="more" :class="triggerButtonClass" title="more...">
+    <button id="more" :class="triggerButtonClass" :title="$t('overall.more')">
       <i class="nz-icon nz-icon-more2"></i>
     </button>
     <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">

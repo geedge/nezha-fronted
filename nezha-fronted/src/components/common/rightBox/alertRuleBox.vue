@@ -5,7 +5,7 @@
       <div class="header__title">{{alertRule.id ? $t("alert.config.editAlertConfig") : $t("overall.createAlertRule")}}</div>
       <!-- end--标题-->
       <div class="header__operation">
-        <span v-cancel="{obj: editAlertRule, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: editAlertRule, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
 

@@ -54,6 +54,7 @@
         <button :class="{'top-tool-btn--disabled': selectableSelection.length === 0}"
                 class="top-tool-btn"
                 type="button"
+                :title="$t('overall.rightShift')"
                 @click="leftToRight">
           <i class="nz-icon nz-icon-arrow-right"></i>
         </button>
@@ -92,6 +93,7 @@
                 :disabled="selectedSelection.length === 0"
                 class="top-tool-btn"
                 type="button"
+                :title="$t('overall.leftShift')"
                 @click="rightToLeft">
           <i class="nz-icon nz-icon-arrow-left"></i>
         </button>

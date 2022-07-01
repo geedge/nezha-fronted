@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="left-menu--pin" :class="!isShrink?'left-menu--pin-normal':'left-menu--pin-reverse'" @click="shrink"><i :class="{'icon-reverse': isShrink,}" class="el-icon-s-fold"></i></div>
+    <div class="left-menu--pin" :class="!isShrink?'left-menu--pin-normal':'left-menu--pin-reverse'" @click="shrink"><i :class="{'icon-reverse': isShrink,}" class="el-icon-s-fold" :title="isShrink ? $t('overall.expandMenu') : $t('overall.collapseMenu')"></i></div>
     <el-breadcrumb class="nz-breakcrumb" separator="/">
       <el-breadcrumb-item v-for="crumb in breadcrumb" :key="crumb.code">{{$t(crumb.i18n)}}</el-breadcrumb-item>
     </el-breadcrumb>
@@ -8,14 +8,14 @@
       <el-dropdown trigger="click">
         <el-dropdown-menu></el-dropdown-menu>
         <div id="header-open-global-search" @click="openGlobalSearch">
-          <div class="header-menu__item"><i class="nz-icon nz-icon-search"></i></div>
+          <div class="header-menu__item" :title="$t('globalSearch.placeholder')"><i class="nz-icon nz-icon-search"></i></div>
         </div>
       </el-dropdown>
       <el-dropdown trigger="click">
-        <div class="header-menu__item"><i class="nz-icon nz-icon-more-app"></i></div>
+        <div class="header-menu__item" :title="$t('config.system.link.link')"><i class="nz-icon nz-icon-more-app"></i></div>
         <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top el-dropdown-menu-link">
           <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index" v-if="linkData.length">
-            <a :href='item.url' rel="noopener noreferrer" :title="item.name" target="_blank" class="link-title nz-  a">
+            <a :href='item.url' rel="noopener noreferrer" target="_blank" class="link-title nz-  a">
               <i class="nz-icon nz-icon-link"></i>
               <span class="nz-  a">{{item.name}}</span>
             </a>
@@ -28,20 +28,20 @@
       <el-dropdown trigger="click">
         <el-dropdown-menu></el-dropdown-menu>
         <div id="header-open-cli" @click="cli">
-          <div class="header-menu__item"><i class="nz-icon nz-icon-terminal"></i></div>
+          <div class="header-menu__item"><i class="nz-icon nz-icon-terminal" :title="$t('guide.webTerminal')"></i></div>
           <span v-show="$store.state.consoleCount>0" class="right-tip">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</span>
         </div>
       </el-dropdown>
       <el-dropdown trigger="click">
         <el-dropdown-menu></el-dropdown-menu>
-        <div class="header-menu__item" @click="showGuide = true"><i class="nz-icon nz-icon-guide"></i></div>
+        <div class="header-menu__item" @click="showGuide = true"><i class="nz-icon nz-icon-guide" :title="$t('guide.getStarted')"></i></div>
       </el-dropdown>
     </div>
     <!--个人操作-->
     <div class="personal" id="personal">
       <el-dropdown trigger="click">
         <div class="header-menu--item">
-          <i class="nz-icon nz-icon-language-change"></i>
+          <i class="nz-icon nz-icon-language-change" :title="$t('config.user.language')"></i>
         </div>
         <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
           <el-dropdown-item v-for="lang in langList" :key="lang.value">

@@ -53,7 +53,7 @@
       <span class="chart-header__tool" v-if="showSaveBtn(from)">
             <button id="endpoint-query-full-chart-save" v-has="'main_add'" class="nz-btn nz-btn-size-large nz-btn-style-normal" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
       </span>
-      <span class="chart-header__tool" @click="closeDialog">
+      <span class="chart-header__tool" @click="closeDialog"  :title="$t('overall.close')">
         <i class="nz-icon nz-icon-close" style="font-size: 16px;"></i>
       </span>
     </div>

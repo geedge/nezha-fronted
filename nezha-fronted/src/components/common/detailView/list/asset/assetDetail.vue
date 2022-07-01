@@ -12,8 +12,8 @@
         </el-option>
       </el-select>
       <button @click="orderTypeChange" size="small" class="detail-button top-tool-btn table-column-setting margin-l-10">
-        <i class="nz-icon nz-icon-arrow-up1" v-if="orderType=='ascending'" />
-        <i class="nz-icon nz-icon-arrow-down2" v-if="orderType=='descending'" />
+        <i class="nz-icon nz-icon-arrow-up1" v-if="orderType=='ascending'" :title="$t('dashboard.explore.ascending')" />
+        <i class="nz-icon nz-icon-arrow-down2" v-if="orderType=='descending'"  :title="$t('dashboard.explore.descending')"/>
       </button>
     </div>
     <ul class="detail-row-box" ref="dataTable">

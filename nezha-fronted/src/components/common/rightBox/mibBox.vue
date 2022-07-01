@@ -4,7 +4,7 @@
    <div class="right-box__header">
       <div class="header__title">{{editMib.id ? ($t("config.mib.editMib")) : $t("overall.createMib")}}</div>
       <div class="header__operation">
-        <span v-cancel="{obj: editMib, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: editMib, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
     <!-- begin--表单-->

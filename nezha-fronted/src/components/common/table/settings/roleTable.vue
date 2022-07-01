@@ -39,13 +39,13 @@
           <template v-if="scope.row.i18n">
             <div style="cursor:text" class="document-copy-block">
               <span class="document-copy-text">{{$t(scope.row.i18n)}}</span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy($t(scope.row.i18n))"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy($t(scope.row.i18n))" :title="$t('overall.duplicate')"></i>
             </div>
           </template>
           <template v-else-if="scope.row.name">
             <div style="cursor:text" class="document-copy-block">
               <span class="document-copy-text">{{scope.row.name}}</span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy($t(scope.row.name))"></i>
+              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy($t(scope.row.name))" :title="$t('overall.duplicate')"></i>
             </div>
           </template>
         </template>
@@ -59,9 +59,9 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" v-has="'role_edit'" @click="tableOperation(['edit', scope.row])"><i class="nz-icon nz-icon-edit"></i></button>
+        <button class="table-operation-item" v-has="'role_edit'" @click="tableOperation(['edit', scope.row])" :title="$t('overall.edit')"><i class="nz-icon nz-icon-edit"></i></button>
         <el-dropdown size="medium" v-has="['role_delete','role_edit']" trigger="click" @command="tableOperation">
-          <div class="table-operation-item table-operation-item--more">
+          <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">

@@ -4,7 +4,7 @@
       <div class="main-container explore-split-box">
         <!-- 关闭按钮 -->
         <div v-if="closable" class="explore-close">
-          <span @click="split"><i class="nz-icon nz-icon-close"></i></span>
+          <span @click="split"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
         </div>
         <!-- 顶部工具栏 -->
         <div class="top-tools" style="z-index: 1">
@@ -110,6 +110,7 @@
                     class="nz-icon-gear nz-icon"
                     style="position: absolute;right: 10px;top: 8px"
                     @click.stop="tools.showCustomTableTitle = true"
+                    :title="$t('overall.selectColumns')"
                   ></i>
                   <!-- 自定义table列 -->
                   <transition name="el-zoom-in-top">
@@ -181,7 +182,7 @@
           <div v-if="showMetrics" v-show="showIntroduce" class="introduce-view">
             <div class="info-room">
               <div class="col-md-9 doc-content">
-                <h1 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;"></i></a></h1>
+                <h1 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
                 <div class="content-divider"></div>
                 <h2 >
                   Simple time series selection

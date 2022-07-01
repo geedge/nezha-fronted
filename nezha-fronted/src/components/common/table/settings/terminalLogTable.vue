@@ -83,7 +83,7 @@
         <template v-if="scope.row.status == 0">
           <button :title="$t('config.terminallog.monitor.monitor')" v-has="'terminal_monitor'" class="table-operation-item" @click="showBottomBox('monitorTab', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
           <el-dropdown size="medium" trigger="click" @command="tableOperation">
-            <div class="table-operation-item table-operation-item--more">
+            <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
             </div>
             <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
@@ -92,9 +92,9 @@
           </el-dropdown>
         </template>
         <template v-else>
-          <button class="table-operation-item" @click="showBottomBox('cmdTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+          <button class="table-operation-item" @click="showBottomBox('cmdTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown size="medium" trigger="click" v-has="['terminal_edit']" @command="tableOperation">
-            <div class="table-operation-item table-operation-item--more">
+            <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
             </div>
             <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">

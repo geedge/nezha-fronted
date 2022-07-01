@@ -4,7 +4,7 @@
     <div class="right-box__header">
       <div class="header__title">{{editGlobalization.id ? ($t("config.menus.editI18n")) : $t("config.menus.createI18n")}}</div>
       <div class="header__operation">
-        <span v-cancel="{obj: editGlobalization, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: editGlobalization, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
     <!-- begin--表单-->

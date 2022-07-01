@@ -3,7 +3,7 @@
     <div class="right-box__header">
       <div class="header__title">{{$t('profile.box.newApiKey')}}</div>
       <div class="header__operation">
-        <span v-cancel="{obj: apiKeyBox, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        <span v-cancel="{obj: apiKeyBox, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
     <div class="right-box__container">
