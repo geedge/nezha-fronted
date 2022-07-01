@@ -362,7 +362,7 @@ export default {
           type: 'line',
           min: 0,
           max: 100,
-          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
           param: {
             stack: 0,
             nullType: 'null',
@@ -389,7 +389,7 @@ export default {
             legend: true,
             valueMapping: false
           },
-          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
+          elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
           param: {
             limit: 100,
             showHeader: this.editChart.param.showHeader

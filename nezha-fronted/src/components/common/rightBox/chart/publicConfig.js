@@ -329,12 +329,20 @@ export default {
       if (this.expressions.length) {
         this.chartConfig.elements = []
         this.expressions.forEach((expr, i) => {
-          this.chartConfig.elements.push({ id: this.expressionsShow[i].elementId, expression: expr, type: 'expert', legend: this.expressionsShow[i].legend, name: this.expressionName[i] })
+          this.chartConfig.elements.push({ id: this.expressionsShow[i].elementId, expression: expr, type: 'expert', legend: this.expressionsShow[i].legend, name: this.expressionName[i], state: this.expressionsShow[i].state })
         })
       } else {
         this.chartConfig.elements = []
       }
       this.change()
+    },
+    switchExpression (index, flag) {
+      if (flag === 1) {
+        this.$set(this.expressionsShow[index], 'state', 0)
+      } else {
+        this.$set(this.expressionsShow[index], 'state', 1)
+      }
+      this.expressionChange()
     },
     expressionNameChange (index) {
       if (this.expressionsShow[index].error) {
@@ -383,7 +391,8 @@ export default {
           oldName: expressionName,
           error: '',
           legend: '',
-          elementId: ''
+          elementId: '',
+          state: 1
         })
         this.expressionChange()
       } else {
@@ -396,7 +405,8 @@ export default {
             oldName: item.name,
             error: '',
             elementId: item.id,
-            legend: item.legend
+            legend: item.legend,
+            state: item.state
           }
         )
       }

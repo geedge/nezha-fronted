@@ -52,7 +52,14 @@
               <div v-if="expressionsShow[index-1].error"  class="el-form-item__error" style="top: 10px;left: 164px"> {{expressionsShow[index-1].error}}</div>
             </span>
             <span>
-              <span @click="()=>{addExpression()}" style="margin-right: 5px;padding-left: 10px" :title="$t('tip.add')">
+              <!-- 显示隐藏 -->
+              <span v-if="expressionsShow[index-1].state === 1" @click="()=>{switchExpression(index - 1,1)}" :title="$t('overall.visible')" style="margin-right: 5px;padding-left: 10px">
+                  <i class="nz-icon nz-icon-mimakejian"></i>
+              </span>
+              <span v-else @click="()=>{switchExpression(index - 1,0)}" :title="$t('overall.invisible')" style="margin-right: 5px;padding-left: 10px">
+                  <i class="nz-icon nz-icon-mimabukejian"></i>
+              </span>
+              <span @click="()=>{addExpression()}" style="margin-right: 5px" :title="$t('tip.add')">
                   <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
               </span>
               <span @click="copyExpression(index - 1)" style="margin-right: 5px" :title="$t('overall.duplicate')">
