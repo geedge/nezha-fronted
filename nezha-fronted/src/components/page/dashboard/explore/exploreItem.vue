@@ -29,27 +29,27 @@
             <button v-if="!closable" class="top-tool-btn top-tool-btn--text margin-r-10" style="cursor: pointer;" type="button" @click="split">
               {{$t('overall.split')}}</button>
             <pick-time id="explore" ref="pickTime" v-model="filterTime" :class="{'margin-r-10': showMetrics}" :refresh-data-func="expressionChange" @unitChange="chartUnitChange">
-<!--              <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>-->
+             <!-- <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template> -->
               <template slot="added-text">{{$t('overall.query')}}</template>
             </pick-time>
             <button v-if="showMetrics"
-                    id="explore-save-chart"
-                    v-has="'main_add'"
-                    :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}"
-                    :disabled="saveDisabled"
-                    class="top-tool-btn top-tool-btn--text"
-                    type="button"
-                    @click="saveChart">
+              id="explore-save-chart"
+              v-has="'main_add'"
+              :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}"
+              :disabled="saveDisabled"
+              class="top-tool-btn top-tool-btn--text"
+              type="button"
+              @click="saveChart">
               {{$t('dashboard.metric.saveChart')}}
             </button>
             <button v-else
-                    id="explore-save-chart-logs"
-                    v-has="'main_add'"
-                    :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}"
-                    :disabled="saveDisabled"
-                    class="top-tool-btn top-tool-btn--text"
-                    type="button"
-                    @click="saveChartLogs">
+              id="explore-save-chart-logs"
+              v-has="'main_add'"
+              :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}"
+              :disabled="saveDisabled"
+              class="top-tool-btn top-tool-btn--text"
+              type="button"
+              @click="saveChartLogs">
               {{$t('dashboard.metric.saveChart')}}
             </button>
           </div>
@@ -60,15 +60,17 @@
               :from-father-data="true"
               :metricOptionsParent="metricOptions"
               v-for="index of promqlKeys.length"
-              :id="promqlKeys[index-1]"
+              :id="promqlKeys[index-1].id"
               :pqid="tabIndex.toString()"
-              :key="promqlKeys[index-1]"
+              :key="promqlKeys[index-1].id"
               :ref="'promql-'+(index-1)"
               :expression-list="expressions"
+              :enable="promqlKeys[index-1].enable"
               :index="index-1"
-              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy']"
+              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable']"
               :styleType="1"
               type="metric"
+              @enableExpression="enableExpression"
               @addExpression="addExpression"
               @copyExpression="copyExpression"
               @removeExpression="removeExpression"
@@ -78,15 +80,17 @@
           <template v-else>
             <promql-input
               v-for="index of promqlKeys.length"
-              :id="promqlKeys[index-1]"
+              :id="promqlKeys[index-1].id"
               :pqid="tabIndex.toString()"
-              :key="promqlKeys[index-1]"
+              :key="promqlKeys[index-1].id"
               :ref="'promql-'+(index-1)"
               :expression-list="expressions"
+              :enable="promqlKeys[index-1].enable"
               :index="index-1"
-              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy']"
+              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable']"
               :styleType="1"
               type="log"
+              @enableExpression="enableExpression"
               @addExpression="addExpression"
               @copyExpression="copyExpression"
               @removeExpression="removeExpression"
@@ -129,12 +133,12 @@
                 <!-- 自定义table列 -->
                 <div class="nz-table-list explore-table">
                   <el-table ref="exploreTable"
-                            v-my-loading="tools.loading"
-                            class="metric-table"
-                            :data="tableData"
-                            border
-                            :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
-                            tooltip-effect="light">
+                    v-my-loading="tools.loading"
+                    class="metric-table"
+                    :data="tableData"
+                    border
+                    :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
+                    tooltip-effect="light">
                     <el-table-column
                       v-for="(item, index) in tools.customTableTitle"
                       v-if="item.show"
@@ -425,7 +429,10 @@ export default {
   },
   created () {
     this.getPanelData()
-    this.promqlKeys.push(getUUID())
+    this.promqlKeys.push({
+      id: getUUID(),
+      enable: true
+    })
     this.selectMetricsLogs()
   },
   methods: {
@@ -509,8 +516,9 @@ export default {
       this.$refs.logDetail && this.$refs.logDetail.resetOperation()
       if (this.expressions.length > 0) {
         const requestArr = []
+        // 过滤掉enable为false的元素
         this.expressions.forEach((item, index) => {
-          if (item != '') {
+          if (item != '' && this.promqlKeys[index].enable) {
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&limit=' + limit))
           }
         })
@@ -644,178 +652,176 @@ export default {
     },
     queryChartData () {
       this.$refs.exploreChart.startLoading()
-      setTimeout(() => {
-        if (this.expressions.length > 0) {
-          const requestArr = []
-          const promqlInputIndexs = []
-          const queryExpression = []
-          this.expressions.forEach((item, index) => {
-            if (item != '') {
-              const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
-              promqlInputIndexs.push(index)
-              queryExpression.push(item)
-              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&step=' + step + '&nullType=null'))
-            }
-          })
-          if (requestArr.length > 0) {
-            this.showIntroduce = false
-            this.saveDisabled = false
+      if (this.expressions.length > 0) {
+        const requestArr = []
+        const promqlInputIndexs = []
+        const queryExpression = []
+        // 过滤掉enable为false的元素
+        this.expressions.forEach((item, index) => {
+          if (item != '' && this.promqlKeys[index].enable) {
+            const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
+            promqlInputIndexs.push(index)
+            queryExpression.push(item)
+            requestArr.push(this.$get('/prom/api/v1/query_range?query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&step=' + step + '&nullType=null'))
           }
-          axios.all(requestArr).then(res => {
-            let series = []
-            const legend = []
-            if (res.length > 0) {
-              res.forEach((response, index) => {
-                const promqlIndex = promqlInputIndexs[index]
-                if (response.data && response.status == 'success') {
-                  const data = response.data.result
-                  if ((!data || data.length < 1) && response.message) {
-                    this.$refs['promql-' + promqlIndex][0].setError(response.message)
-                    return
-                  }
-                  data.forEach((result, i) => {
-                    const seriesItem = {
-                      name: '',
-                      symbol: 'emptyCircle', // 去掉点
-                      symbolSize: [2, 2],
-                      showSymbol: false,
-                      smooth: 0.2, // 曲线变平滑
-                      data: [],
-                      lineStyle: {
-                        width: 1,
-                        opacity: 0.9
-                      },
-                      type: 'line'
-                    }
-                    let legendName = ''
-                    seriesItem.data = result.values.map((item) => {
-                      return [item[0] * 1000, item[1]]
-                    })
-                    if (result.metric && Object.keys(result.metric).length > 0) {
-                      const metric = Object.assign({}, result.metric)
-                      seriesItem.name += metric.__name__ ? metric.__name__ : ''
-                      seriesItem.name += '{'
-                      delete metric.__name__
-                      for (const key in metric) {
-                        seriesItem.name += key + '=' + '"' + metric[key] + '",'
-                      }
-                      legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
-                      legendName += '}'
-                    } else {
-                      legendName = queryExpression[index]
-                    }
-                    seriesItem.name = legendName + '-' + index
-                    series.push(seriesItem)
-                    legend.push({ name: seriesItem.name, alias: legendName, isGray: false })
-                  })
-
-                  this.$refs['promql-' + promqlIndex][0].setError('')
-                } else {
-                  if (response.error) {
-                    this.$refs['promql-' + promqlIndex][0].setError(response.error)
-                  } else {
-                    this.$refs['promql-' + promqlIndex][0].setError(response)
-                  }
-                }
-              })
-
-              this.$refs.exploreChart.setLegend(legend)
-              this.$refs.exploreChart.setRandomColors(series.length)
-              if (!series.length) {
-                series = ''
-              }
-              this.$refs.exploreChart.setSeries(series)
-              this.defaultChartVisible = true
-            }
-            this.$refs.exploreChart.endLoading()
-          })
+        })
+        if (requestArr.length > 0) {
+          this.showIntroduce = false
+          this.saveDisabled = false
         }
-      }, 200)
+        axios.all(requestArr).then(res => {
+          let series = []
+          const legend = []
+          if (res.length > 0) {
+            res.forEach((response, index) => {
+              const promqlIndex = promqlInputIndexs[index]
+              if (response.data && response.status == 'success') {
+                const data = response.data.result
+                if ((!data || data.length < 1) && response.message) {
+                  this.$refs['promql-' + promqlIndex][0].setError(response.message)
+                  return
+                }
+                data.forEach((result, i) => {
+                  const seriesItem = {
+                    name: '',
+                    symbol: 'emptyCircle', // 去掉点
+                    symbolSize: [2, 2],
+                    showSymbol: false,
+                    smooth: 0.2, // 曲线变平滑
+                    data: [],
+                    lineStyle: {
+                      width: 1,
+                      opacity: 0.9
+                    },
+                    type: 'line'
+                  }
+                  let legendName = ''
+                  seriesItem.data = result.values.map((item) => {
+                    return [item[0] * 1000, item[1]]
+                  })
+                  if (result.metric && Object.keys(result.metric).length > 0) {
+                    const metric = Object.assign({}, result.metric)
+                    seriesItem.name += metric.__name__ ? metric.__name__ : ''
+                    seriesItem.name += '{'
+                    delete metric.__name__
+                    for (const key in metric) {
+                      seriesItem.name += key + '=' + '"' + metric[key] + '",'
+                    }
+                    legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
+                    legendName += '}'
+                  } else {
+                    legendName = queryExpression[index]
+                  }
+                  seriesItem.name = legendName + '-' + index
+                  series.push(seriesItem)
+                  legend.push({ name: seriesItem.name, alias: legendName, isGray: false })
+                })
+
+                this.$refs['promql-' + promqlIndex][0].setError('')
+              } else {
+                if (response.error) {
+                  this.$refs['promql-' + promqlIndex][0].setError(response.error)
+                } else {
+                  this.$refs['promql-' + promqlIndex][0].setError(response)
+                }
+              }
+            })
+
+            this.$refs.exploreChart.setLegend(legend)
+            this.$refs.exploreChart.setRandomColors(series.length)
+            if (!series.length) {
+              series = ''
+            }
+            this.$refs.exploreChart.setSeries(series)
+            this.defaultChartVisible = true
+          }
+          this.$refs.exploreChart.endLoading()
+        })
+      }
     },
     queryTableData () {
       this.tools.loading = true
-      setTimeout(() => {
-        if (this.expressions.length > 0) {
-          const requestArr = []
-          this.expressions.forEach((item, index) => {
-            if (item !== '') {
-              requestArr.push(this.$get('/prom/api/v1/query?query=' + encodeURIComponent(item)))
-            }
-          })
-          if (requestArr.length > 0) {
-            this.showIntroduce = false
+      if (this.expressions.length > 0) {
+        const requestArr = []
+        this.expressions.forEach((item, index) => {
+          // 过滤掉enable为false的元素
+          if (item !== '' && this.promqlKeys[index].enable) {
+            requestArr.push(this.$get('/prom/api/v1/query?query=' + encodeURIComponent(item)))
           }
-          axios.all(requestArr).then(res => {
-            const tData = []
-            let tLabels = []
-            if (res.length > 0) {
-              this.tableData = []
-              this.tableTitle = []
-              res.forEach((response, index) => {
-                if (response.data && response.status === 'success') {
-                  const data = response.data.result
-                  if (data) {
-                    data.forEach((result, i) => {
-                      const metrics = Object.assign({}, result.metric)
-                      if (!Array.isArray(result.value)) {
-                        const val = result
-                        result = {
-                          value: ['', val]
-                        }
-                      }
-                      this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.value[1], null, 2))
-
-                      this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000)))
-                      for (const key in metrics) {
-                        const label = {
-                          label: key,
-                          prop: key,
-                          show: true
-                        }
-                        const temp = tLabels.find((item, index) => {
-                          return item.prop == label.prop
-                        })
-                        if (!temp) {
-                          tLabels.push(label)
-                        }
-                      }
-                      tData.push(metrics)
-                    })
-                  }
-                }
-                tLabels.sort((a, b) => {
-                  return a.prop.charCodeAt(0) - b.prop.charCodeAt(0)
-                })
-                tLabels = tLabels.filter(label => label.prop !== 'time')
-                tLabels.unshift({
-                  label: this.$t('overall.time'),
-                  prop: 'time',
-                  show: true
-                })
-                const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type', 'asset_id', 'endpoint_id', 'project_id', 'datacenter_id', 'module_id', 'nz_agent_id', 'parent_asset_id']
-                tLabels.forEach(tLabel => {
-                  if (filterArr.indexOf(tLabel.prop) !== -1) {
-                    tLabel.show = false
-                  }
-                })
-              })
-              if (tData.length > 0) {
-                this.storedTableData = Object.assign([], tData)
-                this.pageObj.total = this.storedTableData.length
-                this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
-                this.tableTitle = Object.assign([], tLabels)
-                this.tools.customTableTitle = Object.assign([], tLabels)
-                this.defaultTableVisible = true
-              } else {
-                // this.defaultTableVisible = false;
-                this.pageObj.total = 0
-                this.pageObj.pageNo = 1
-              }
-            }
-            this.tools.loading = false
-          })
+        })
+        if (requestArr.length > 0) {
+          this.showIntroduce = false
         }
-      }, 200)
+        axios.all(requestArr).then(res => {
+          const tData = []
+          let tLabels = []
+          if (res.length > 0) {
+            this.tableData = []
+            this.tableTitle = []
+            res.forEach((response, index) => {
+              if (response.data && response.status === 'success') {
+                const data = response.data.result
+                if (data) {
+                  data.forEach((result, i) => {
+                    const metrics = Object.assign({}, result.metric)
+                    if (!Array.isArray(result.value)) {
+                      const val = result
+                      result = {
+                        value: ['', val]
+                      }
+                    }
+                    this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.value[1], null, 2))
+
+                    this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000)))
+                    for (const key in metrics) {
+                      const label = {
+                        label: key,
+                        prop: key,
+                        show: true
+                      }
+                      const temp = tLabels.find((item, index) => {
+                        return item.prop == label.prop
+                      })
+                      if (!temp) {
+                        tLabels.push(label)
+                      }
+                    }
+                    tData.push(metrics)
+                  })
+                }
+              }
+              tLabels.sort((a, b) => {
+                return a.prop.charCodeAt(0) - b.prop.charCodeAt(0)
+              })
+              tLabels = tLabels.filter(label => label.prop !== 'time')
+              tLabels.unshift({
+                label: this.$t('overall.time'),
+                prop: 'time',
+                show: true
+              })
+              const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type', 'asset_id', 'endpoint_id', 'project_id', 'datacenter_id', 'module_id', 'nz_agent_id', 'parent_asset_id']
+              tLabels.forEach(tLabel => {
+                if (filterArr.indexOf(tLabel.prop) !== -1) {
+                  tLabel.show = false
+                }
+              })
+            })
+            if (tData.length > 0) {
+              this.storedTableData = Object.assign([], tData)
+              this.pageObj.total = this.storedTableData.length
+              this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
+              this.tableTitle = Object.assign([], tLabels)
+              this.tools.customTableTitle = Object.assign([], tLabels)
+              this.defaultTableVisible = true
+            } else {
+              // this.defaultTableVisible = false;
+              this.pageObj.total = 0
+              this.pageObj.pageNo = 1
+            }
+          }
+          this.tools.loading = false
+        })
+      }
     },
     expressionChange () {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
@@ -858,8 +864,9 @@ export default {
     storeHistory () {
       const expire = 24
       const historyJson = localStorage.getItem(this.historyParam.key)
-      const expressions = this.expressions.filter(item => {
-        return item && item != ''
+      // 过滤掉enable为false的元素
+      const expressions = this.expressions.filter((item, index) => {
+        return item && item != '' && this.promqlKeys[index].enable
       })
       const username = localStorage.getItem('nz-username')
       if (historyJson && historyJson != 'undefined' && historyJson != '') {
@@ -933,14 +940,31 @@ export default {
         }
       }
     },
+    // 禁用启用表达式
+    enableExpression (index) {
+      this.promqlKeys[index].enable = !this.promqlKeys[index].enable
+      const temp = this.expressions.some((item, index) => {
+        return item != '' && this.promqlKeys[index].enable
+      })
+      if (!temp) {
+        this.showIntroduce = true
+      }
+      this.expressionChange()
+    },
     addExpression (index) {
       this.expressions.splice(index + 1, 0, '')
-      this.promqlKeys.splice(index + 1, 0, getUUID())
+      this.promqlKeys.splice(index + 1, 0, {
+        id: getUUID(),
+        enable: true
+      })
       this.promqlCount++
     },
     copyExpression (index) {
       this.expressions.push(this.expressions[index])
-      this.promqlKeys.push(getUUID())
+      this.promqlKeys.push({
+        id: getUUID(),
+        enable: true
+      })
       this.promqlCount++
     },
     removeExpression (index) {
@@ -952,7 +976,10 @@ export default {
     },
     resetExpression () {
       this.expressions = ['']
-      this.promqlKeys = [getUUID()]
+      this.promqlKeys = [{
+        id: getUUID(),
+        enable: true
+      }]
       this.promqlCount = 1
     },
     changeChartVisible () {
@@ -1092,19 +1119,25 @@ export default {
     expressions: {
       immediate: true,
       handler (n, o) {
-        if (n.length == 1 && (!n[0] || n[0] == '')) {
+        // if (n.length == 1 && (!n[0] || n[0] == '')) {
+        //   this.showIntroduce = true
+        // } else if (n.length > 1) {
+        //   const temp = n.find((item, index) => {
+        //     return item != ''
+        //   })
+        //   if (!temp) {
+        //     this.showIntroduce = true
+        //   } else {
+        //     // this.showIntroduce = false
+        //   }
+        // } else {
+        //   // this.showIntroduce = false
+        // }
+        const temp = n.some((item, index) => {
+          return item != '' && this.promqlKeys[index].enable
+        })
+        if (!temp) {
           this.showIntroduce = true
-        } else if (n.length > 1) {
-          const temp = n.find((item, index) => {
-            return item != ''
-          })
-          if (!temp) {
-            this.showIntroduce = true
-          } else {
-            // this.showIntroduce = false
-          }
-        } else {
-          // this.showIntroduce = false
         }
       }
     }
