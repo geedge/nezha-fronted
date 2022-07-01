@@ -252,7 +252,6 @@ export default {
       return this.regNum.test(val)
     },
     addCabinet (params) {
-      console.log('addCabinet')
       if (params) {
         this.cabinet.idcId = params.dcid
       }
@@ -270,7 +269,6 @@ export default {
       })
     },
     closeRightBox (refresh) {
-      console.log('closeRightBox')
       this.rightBox.show = false
       this.cabinetBoxShow = false
       this.$store.dispatch('addCabinet', { dcid: '', cabinetBoxShow: false })

@@ -100,6 +100,7 @@
                   <!-- Query expression -->
                   <el-form-item v-if="item.type==='query'" :prop="'param.variables.' + index + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="expression" style="width: 100%;" >
                     <div slot="label">
+                      <span>{{$t('dashboard.panel.queryExpression')}}</span>
                       <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
                         <table class="query-variable-table" width="640" cellspacing="5">
                           <thead>
@@ -114,7 +115,6 @@
                           </tbody>
                         </table>
                         <span slot="reference">
-                          {{$t('dashboard.panel.queryExpression')}}
                           <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                         </span>
                       </el-popover>
@@ -132,10 +132,10 @@
                   <!-- Multi-value -->
                   <el-form-item class="form-item--half-width" :prop="'param.variables.' + index + '.multi'" style="margin-bottom: 0px">
                     <div slot="label">
+                      <span>{{$t('dashboard.panel.multi')}}</span>
                       <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside multiTip">
                         <span>{{$t('dashboard.panel.multiTip')}}</span>
                         <span slot="reference">
-                          {{$t('dashboard.panel.multi')}}
                           <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                         </span>
                       </el-popover>
@@ -151,10 +151,10 @@
                   <!-- All option -->
                   <el-form-item class="form-item--half-width" :prop="'param.variables.' + index + '.allOption'" style="margin-bottom: 0px">
                     <div slot="label">
+                      <span>{{$t('dashboard.panel.allOption')}}</span>
                       <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside allOptionTip">
                         <span>{{$t('dashboard.panel.allOptionTip')}}</span>
                         <span slot="reference">
-                          {{$t('dashboard.panel.allOption')}}
                           <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                         </span>
                       </el-popover>
@@ -185,7 +185,7 @@
               <transition name="el-zoom-in-top" >
                 <div class="form-items--half-width-group">
                   <el-form-item
-                    :label="$t('backup.start')"
+                    :label="$t('overall.startTime')"
                     class="form-item--half-width"
                     prop="param.report.schedule.stime"
                   >
@@ -200,7 +200,7 @@
                       </my-date-picker>
                     </el-form-item>
                   <el-form-item
-                  :label="$t('dashboard.panel.endAt')"
+                  :label="$t('overall.endTime')"
                   class="form-item--half-width"
                   prop="param.report.schedule.etime"
                   >
@@ -218,7 +218,7 @@
                     <el-radio-group v-model="editPanel.param.report.range.unit" size="small">
                       <el-radio-button label="day">{{ $t("dashboard.panel.prevDay") }}</el-radio-button>
                       <el-radio-button label="week">{{ $t("dashboard.panel.prevWeek") }}</el-radio-button>
-                      <el-radio-button label="month">{{ $t("dashboard.panel.prevMonth") }}</el-radio-button>
+                      <el-radio-button label="month">{{ $t("config.menus.parent") }}</el-radio-button>
                     </el-radio-group>
                   </el-form-item>
                   <el-form-item
@@ -581,22 +581,22 @@ export default {
       })
     },
     changeData (flag) {
-	      if (flag) {
-	        if (this.editPanel.param.report.schedule.etime) {
-	          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
-	            this.editPanel.param.report.schedule.stime = ''
+      if (flag) {
+        if (this.editPanel.param.report.schedule.etime) {
+          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
+            this.editPanel.param.report.schedule.stime = ''
             this.$message.error(this.$t('alert.silence.timeError'))
-	          }
-	        }
-	      } else {
-	        if (this.editPanel.param.report.schedule.stime) {
-	          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
+          }
+        }
+      } else {
+        if (this.editPanel.param.report.schedule.stime) {
+          if (this.editPanel.param.report.schedule.stime > this.editPanel.param.report.schedule.etime) {
             this.editPanel.param.report.schedule.etime = ''
-	            this.$message.error(this.$t('alert.silence.timeError'))
-	          }
-	        }
-	      }
-	    }
+            this.$message.error(this.$t('alert.silence.timeError'))
+          }
+        }
+      }
+    }
   },
   watch: {
     obj: {
