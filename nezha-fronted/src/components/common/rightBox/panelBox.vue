@@ -457,9 +457,10 @@ export default {
     copyVariable (item) {
       const temp = JSON.parse(JSON.stringify(item))
       temp.name = temp.name ? temp.name + '_copy' : ''
+      temp.collapse = false
       this.editPanel.param.variables.push(temp)
     },
-    // 删除复制变量
+    // 删除变量
     removeVariable (index) {
       this.editPanel.param.variables.splice(index, 1)
     },
