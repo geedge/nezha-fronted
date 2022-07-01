@@ -114,7 +114,7 @@
             class="top-tool-btn"
             @click="enableExpression"
           >
-            <i  v-if="enable" class="nz-icon nz-icon-mimakejian"></i>
+            <i  v-if="state" class="nz-icon nz-icon-mimakejian"></i>
             <i v-else class="nz-icon nz-icon-mimabukejian" style="fontSize:16px"></i>
           </button>
           <button
@@ -455,7 +455,7 @@ export default {
       type: String, default: ''
     },
     expressionList: { type: Array },
-    enable: { type: Boolean },
+    state: { type: Number },
     plugins: { type: Array },
     styleType: Number,
     historyParam: { type: Object },

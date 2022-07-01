@@ -65,7 +65,7 @@
               :key="promqlKeys[index-1].id"
               :ref="'promql-'+(index-1)"
               :expression-list="expressions"
-              :enable="promqlKeys[index-1].enable"
+              :state="promqlKeys[index-1].state"
               :index="index-1"
               :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable']"
               :styleType="1"
@@ -85,7 +85,7 @@
               :key="promqlKeys[index-1].id"
               :ref="'promql-'+(index-1)"
               :expression-list="expressions"
-              :enable="promqlKeys[index-1].enable"
+              :state="promqlKeys[index-1].state"
               :index="index-1"
               :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy','enable']"
               :styleType="1"
@@ -432,7 +432,7 @@ export default {
     this.getPanelData()
     this.promqlKeys.push({
       id: getUUID(),
-      enable: true
+      state: 1
     })
     this.selectMetricsLogs()
   },
@@ -517,9 +517,9 @@ export default {
       this.$refs.logDetail && this.$refs.logDetail.resetOperation()
       if (this.expressions.length > 0) {
         const requestArr = []
-        // 过滤掉enable为false的元素
+        // 过滤掉state为0的元素
         this.expressions.forEach((item, index) => {
-          if (item != '' && this.promqlKeys[index].enable) {
+          if (item != '' && this.promqlKeys[index].state) {
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&limit=' + limit))
           }
         })
@@ -657,9 +657,9 @@ export default {
         const requestArr = []
         const promqlInputIndexs = []
         const queryExpression = []
-        // 过滤掉enable为false的元素
+        // 过滤掉state为0的元素
         this.expressions.forEach((item, index) => {
-          if (item != '' && this.promqlKeys[index].enable) {
+          if (item != '' && this.promqlKeys[index].state) {
             const step = bus.getStep(bus.formateTimeToTime(this.filterTime[0]), bus.formateTimeToTime(this.filterTime[1]))
             promqlInputIndexs.push(index)
             queryExpression.push(item)
@@ -745,8 +745,8 @@ export default {
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {
-          // 过滤掉enable为false的元素
-          if (item !== '' && this.promqlKeys[index].enable) {
+          // 过滤掉state为0的元素
+          if (item !== '' && this.promqlKeys[index].state) {
             requestArr.push(this.$get('/prom/api/v1/query?query=' + encodeURIComponent(item)))
           }
         })
@@ -865,9 +865,9 @@ export default {
     storeHistory () {
       const expire = 24
       const historyJson = localStorage.getItem(this.historyParam.key)
-      // 过滤掉enable为false的元素
+      // 过滤掉state为0的元素
       const expressions = this.expressions.filter((item, index) => {
-        return item && item != '' && this.promqlKeys[index].enable
+        return item && item != '' && this.promqlKeys[index].state
       })
       const username = localStorage.getItem('nz-username')
       if (historyJson && historyJson != 'undefined' && historyJson != '') {
@@ -943,9 +943,9 @@ export default {
     },
     // 禁用启用表达式
     enableExpression (index) {
-      this.promqlKeys[index].enable = !this.promqlKeys[index].enable
+      this.promqlKeys[index].state = this.promqlKeys[index].state ? 0 : 1
       const temp = this.expressions.some((item, index) => {
-        return item != '' && this.promqlKeys[index].enable
+        return item != '' && this.promqlKeys[index].state
       })
       if (!temp) {
         this.showIntroduce = true
@@ -956,7 +956,7 @@ export default {
       this.expressions.splice(index + 1, 0, '')
       this.promqlKeys.splice(index + 1, 0, {
         id: getUUID(),
-        enable: true
+        state: 1
       })
       this.promqlCount++
     },
@@ -964,7 +964,7 @@ export default {
       this.expressions.push(this.expressions[index])
       this.promqlKeys.push({
         id: getUUID(),
-        enable: true
+        state: 1
       })
       this.promqlCount++
     },
@@ -979,7 +979,7 @@ export default {
       this.expressions = ['']
       this.promqlKeys = [{
         id: getUUID(),
-        enable: true
+        state: 1
       }]
       this.promqlCount = 1
     },
@@ -1016,7 +1016,7 @@ export default {
         groupId: -1
       }
       this.expressions.forEach((exp, index) => {
-        chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
+        chart.elements.push({ state: this.promqlKeys[index].state, expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
       })
       this.chartData = chart
       this.rightBox.show = true
@@ -1053,7 +1053,7 @@ export default {
         remark: ''
       }
       this.expressions.forEach((exp, index) => {
-        chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
+        chart.elements.push({ state: this.promqlKeys[index].state, expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
       })
       this.chartData = chart
       this.rightBox.show = true
@@ -1135,7 +1135,7 @@ export default {
         //   // this.showIntroduce = false
         // }
         const temp = n.some((item, index) => {
-          return item != '' && this.promqlKeys[index].enable
+          return item != '' && this.promqlKeys[index].state
         })
         if (!temp) {
           this.showIntroduce = true
