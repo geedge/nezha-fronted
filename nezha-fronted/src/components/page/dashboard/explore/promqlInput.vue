@@ -70,23 +70,24 @@
             </el-cascader-panel>
           </el-dropdown>
         </div>
+
         <div
           v-if="plugins.indexOf('metric-input') > -1"
           class="input-box"
           @click="dropDownVisible = false"
         >
-        <div
-          :id="pqid + 'editor'+index"
-          v-if="type !== 'log'"
+          <div
+            :id="pqid + 'editor'+index"
+            v-if="type !== 'log'"
+            class="not-fixed-height no-resize no-close"
+          >
+          </div>
+          <!-- <div id='editor'
           class="not-fixed-height no-resize no-close"
-        >
-        </div>
-        <!-- <div id='editor'
-        class="not-fixed-height no-resize no-close"
-        >
-        </div> -->
-           <el-input
-             v-if="type == 'log'"
+          >
+          </div> -->
+          <el-input
+            v-if="type == 'log'"
             :id="inputId"
             v-model="expressionList[index]"
             size="small" :rows="2"
@@ -96,7 +97,8 @@
             @input="metricKeyDown"
             @keyup.enter.native="expressionChange"
             ref="elInput"
-          ></el-input>
+          >
+          </el-input>
 
           <div v-if="errorMsg" class="append-msg error">
             <span>{{ errorMsg }}</span>
@@ -105,7 +107,16 @@
             <span>{{ appendMsg }}</span>
           </div>
         </div>
+
         <div class="top-tool-btn-group">
+          <button
+            v-if="plugins.indexOf('enable') > -1"
+            class="top-tool-btn"
+            @click="enableExpression"
+          >
+            <i  v-if="enable" class="nz-icon nz-icon-mimakejian"></i>
+            <i v-else class="nz-icon nz-icon-mimabukejian" style="fontSize:16px"></i>
+          </button>
           <button
             v-if="plugins.indexOf('add') > -1"
             class="top-tool-btn"
@@ -444,6 +455,7 @@ export default {
       type: String, default: ''
     },
     expressionList: { type: Array },
+    enable: { type: Boolean },
     plugins: { type: Array },
     styleType: Number,
     historyParam: { type: Object },
@@ -684,17 +696,17 @@ export default {
       }
     },
     newChange (val) {
-      // console.log('newchange', val)
       if (val) {
         this.oldcCodeLength = val.length
-        // console.log(this.oldcCodeLength)
         this.codeMirrorValue[this.index] = val
-        this.expressionList[this.index] = val
-        // console.log(this.codeMirrorValue)
+        // this.expressionList[this.index] = val
+        this.$set(this.expressionList, this.index, val)
         this.metricKeyDown(val)
       } else {
         this.oldcCodeLength = 0
         this.codeMirrorValue[this.index] = ''
+        // this.expressionList[this.index] = ''
+        this.$set(this.expressionList, this.index, '')
       }
     },
     newDoc (val) {
@@ -730,6 +742,9 @@ export default {
     clearExpression: function () {
       this.expressionChange()
       this.cascaderValue = ''
+    },
+    enableExpression: function () {
+      this.$emit('enableExpression', this.index)
     },
     addExpression: function () {
       this.$emit('addExpression', this.index)
