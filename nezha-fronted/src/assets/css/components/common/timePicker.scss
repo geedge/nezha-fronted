@@ -311,6 +311,13 @@
 }
 .el-date-range-picker.el-picker-panel__body__only {
   width: 324px;
+  .el-date-range-picker__header{
+    .el-picker-panel__icon-btn.el-icon-arrow-right{
+      font-size: 12px;
+      color: $--button-icon-color;
+      transform: scale(0.8);
+    }
+  }
 }
 .el-date-range-picker__content.el-date-range-picker__content__only{
   width: 100%;
