@@ -182,7 +182,7 @@ export default {
           thresholdShow: true,
           thresholds: [{ value: undefined, color: randomcolor() }]
         },
-        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A' }],
+        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
         panel: '',
         sync: 0,
         remark: '',

@@ -989,7 +989,7 @@ export default {
         groupId: -1
       }
       this.expressions.forEach((exp, index) => {
-        chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
+        chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '', name: 'A', state: 1 })
       })
       this.chartData = chart
       this.rightBox.show = true
@@ -1026,7 +1026,7 @@ export default {
         remark: ''
       }
       this.expressions.forEach((exp, index) => {
-        chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
+        chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '', name: 'A', state: 1 })
       })
       this.chartData = chart
       this.rightBox.show = true
