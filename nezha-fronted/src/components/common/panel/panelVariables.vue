@@ -1,6 +1,6 @@
 <template>
   <div style="" class="panel-variables-box">
-    <div v-for="(item,index) in labelArr" :key="index" v-if="item.show" class="panel-variables-content" style="display: flex">
+    <div v-for="(item,index) in labelArr" :key="index" v-if="item.show && labelValue[item.name].length" class="panel-variables-content" style="display: flex">
       <div class="variable-key">{{item.name}}</div>
       <el-popover
         width="220"
@@ -174,7 +174,7 @@ export default {
               arr.filter(item => item.value)
               response = arr
             }
-            this.labelValue[this.labelArr[index].name] = response
+            this.labelValue[this.labelArr[index].name] = response.filter(item => item.value)
           }
         })
         this.setLabelArrDefault()
@@ -189,6 +189,10 @@ export default {
       const url = '/prom/api/v1/labels'
       return new Promise(resolve => {
         this.$get(url, params).then(res => {
+          if (res.status === 'error') {
+            resolve([])
+            return
+          }
           let arr = res.data.map(item => {
             return {
               value: item,
@@ -214,6 +218,10 @@ export default {
         url = `/prom/api/v1/label/${label}/values`
         return new Promise(resolve => {
           this.$get(url, params).then(res => {
+            if (res.status === 'error') {
+              resolve([])
+              return
+            }
             let arr = res.data.map(item => {
               return {
                 value: item,
@@ -221,7 +229,7 @@ export default {
               }
             })
             arr = this.$loadsh.uniqBy(arr, 'value')
-            arr.filter(item => item.value)
+            arr = arr.filter(item => item.value)
             resolve(arr)
           })
         })
@@ -234,6 +242,10 @@ export default {
         url = '/prom/api/v1/series'
         return new Promise(resolve => {
           this.$get(url, params).then(res => {
+            if (res.status === 'error') {
+              resolve([])
+              return
+            }
             let arr = res.data.map(item => {
               return {
                 value: item[label],
@@ -257,6 +269,10 @@ export default {
       const url = '/prom/api/v1/label/__name__/values'
       return new Promise(resolve => {
         this.$get(url, params).then(res => {
+          if (res.status === 'error') {
+            resolve([])
+            return
+          }
           let arr = res.data
           arr.filter((metricName) => {
             const r = new RegExp(metricFilterPattern)
@@ -282,6 +298,10 @@ export default {
           query: encodeURIComponent(query)
         }
         this.$get(url, params).then(res => {
+          if (res.status === 'error') {
+            resolve([])
+            return
+          }
           const arr = res.data.result.map((metricData) => {
             let text = metricData.metric.__name__ || ''
             delete metricData.metric.__name__
@@ -314,6 +334,10 @@ export default {
       const url = '/prom/api/v1/series'
       return new Promise(resolve => {
         this.$get(url, params).then(res => {
+          if (res.status === 'error') {
+            resolve([])
+            return
+          }
           const arr = res.data.map(metric => {
             return {
               label: this.getOriginalMetricName(metric),

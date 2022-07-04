@@ -348,68 +348,6 @@ export default {
       this.filter.searchName = ''
       // this.$refs.searchInput.select();
       this.showPanel = val
-      this.showPanel.param = {
-        report:
-          { enable: true, range: { type: 'previous', interval: 1, unit: 'day' }, schedule: { type: 2, repeat: 1, nums: [], stime: '2022-06-07 15:00:00', etime: '2022-06-19 15:00:00' }, receivers: [1] },
-        chartShare: 'none',
-        variables: [
-          { show: true, type: 'custom', multi: true, allOption: true, name: 'mazy', customOptions: 'z:1, z:z:1, a', expression: '', regex: '' },
-          { show: true, type: 'custom', multi: true, allOption: false, name: 'mzy', customOptions: 'z:1, z:z:1, a', expression: '', regex: '' },
-          { show: true, type: 'custom', multi: false, allOption: false, name: 'zy', customOptions: 'z:1, z:z:1, a', expression: '', regex: '' },
-          { show: true, type: 'custom', multi: false, allOption: true, name: 'azy', customOptions: 'z:1, z:z:1, a', expression: '', regex: '' }
-        ]
-      }
-      this.showPanel.param.variables = [
-        { show: true, type: 'custom', multi: true, allOption: true, name: 'mazy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
-        { show: true, type: 'custom', multi: true, allOption: false, name: 'mzy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
-        { show: true, type: 'custom', multi: false, allOption: false, name: 'zy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
-        { show: true, type: 'custom', multi: false, allOption: true, name: 'azy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
-        {
-          name: 'bbb',
-          type: 'query',
-          multi: false,
-          allOption: true,
-          expression: 'label_names()',
-          regex: '/a\.*/',
-          show: true
-        },
-        {
-          name: 'ccc',
-          type: 'query',
-          multi: false,
-          allOption: true,
-          expression: 'label_values(up, asset)',
-          regex: '',
-          show: true
-        },
-        {
-          name: 'ddd',
-          type: 'query',
-          multi: true,
-          allOption: true,
-          expression: 'label_values(asset)',
-          regex: '',
-          show: true
-        },
-        {
-          name: 'eeee',
-          type: 'query',
-          multi: false,
-          allOption: true,
-          expression: 'label_values(up, endpoint)',
-          regex: '/.*-(?<text>.*)-(?<value>.*)-.*/',
-          show: true
-        },
-        {
-          name: 'fff',
-          type: 'query',
-          multi: false,
-          allOption: true,
-          expression: 'query_result(node_filefd_allocated{module="OLAP-Node-Exporter"})',
-          regex: '/asset="(?<text>[^"]+)\.*\asset_id="(?<value>[^"]+)/',
-          show: true
-        }
-      ]
       this.variables = this.showPanel.param.variables
       this.showPanel.type = 'dashboard'
       this.filter.panelId = this.showPanel.id
@@ -847,68 +785,6 @@ export default {
             this.$message.error(response)
           }
         }
-        this.showPanel.param = {
-          report:
-          { enable: true, range: { type: 'previous', interval: 1, unit: 'day' }, schedule: { type: 2, repeat: 1, nums: [], stime: '2022-06-07 15:00:00', etime: '2022-06-19 15:00:00' }, receivers: [1] },
-          chartShare: 'none',
-          variables: [
-            { show: true, type: 'custom', multi: true, allOption: true, name: 'mazy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
-            { show: true, type: 'custom', multi: true, allOption: false, name: 'mzy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
-            { show: true, type: 'custom', multi: false, allOption: false, name: 'zy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
-            { show: true, type: 'custom', multi: false, allOption: true, name: 'azy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' }
-          ]
-        }
-        this.showPanel.param.variables = [
-          { show: true, type: 'custom', multi: true, allOption: true, name: 'mazy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
-          { show: true, type: 'custom', multi: true, allOption: false, name: 'mzy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
-          { show: true, type: 'custom', multi: false, allOption: false, name: 'zy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
-          { show: true, type: 'custom', multi: false, allOption: true, name: 'azy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
-          {
-            name: 'bbb',
-            type: 'query',
-            multi: false,
-            allOption: true,
-            expression: 'label_names()',
-            regex: '/a\.*/',
-            show: true
-          },
-          {
-            name: 'ccc',
-            type: 'query',
-            multi: false,
-            allOption: true,
-            expression: 'label_values(up, asset)',
-            regex: '',
-            show: true
-          },
-          {
-            name: 'ddd',
-            type: 'query',
-            multi: true,
-            allOption: true,
-            expression: 'label_values(asset)',
-            regex: '',
-            show: true
-          },
-          {
-            name: 'eeee',
-            type: 'query',
-            multi: false,
-            allOption: true,
-            expression: 'label_values(up, endpoint)',
-            regex: '/.*-(?<text>.*)-(?<value>.*)-.*/',
-            show: true
-          },
-          {
-            name: 'fff',
-            type: 'query',
-            multi: false,
-            allOption: true,
-            expression: 'query_result(node_filefd_allocated{module="OLAP-Node-Exporter"})',
-            regex: '/asset="(?<text>[^"]+)\.*\asset_id="(?<value>[^"]+)/',
-            show: true
-          }
-        ]
         this.variables = this.showPanel.param.variables
       }).catch((error) => {
         // console.log('error................'+JSON.stringify(error));
