@@ -85,7 +85,9 @@ const newcn = {
   },
   overall: {
     system: '系统',
-    back: '返回'
+    back: '返回',
+    enabled: '启用',
+    disabled: '已禁用'
   },
   ...zhLocale
 }
