@@ -112,6 +112,7 @@
           <button
             v-if="plugins.indexOf('enable') > -1"
             class="top-tool-btn"
+            :title="state?$t('overall.enabled'):$t('profile.close')"
             @click="enableExpression"
           >
             <i  v-if="state" class="nz-icon nz-icon-mimakejian"></i>
