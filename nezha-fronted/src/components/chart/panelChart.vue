@@ -110,7 +110,7 @@ export default {
       allDataLength: 0,
       severityData: this.$store.getters.severityData, // 告警级别的数据
       severityDataWeight: this.$store.getters.severityDataWeight,
-      myVariables: []
+      myVariables: [] // 添加当前使用的变量 用于判断是否需要重新加载
       // isExportData: false
     }
   },
@@ -172,6 +172,17 @@ export default {
       const step = bus.getStep(startTime, endTime)
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
+      if (!this.chartInfo.oldElements) {
+        this.chartInfo.oldElements = this.chartInfo.elements || []
+      }
+      this.chartInfo.elements = this.chartInfo.oldElements.map(item => {
+        const variables = this.variablesReplace(item.expression)
+        this.myVariables.push(variables)
+        return {
+          ...item,
+          expression: variables
+        }
+      })
       const elements = this.chartInfo.elements || []
       if (this.isExportHtml) {
         this.chartInfo.loaded && this.queryData(elements, startTime, endTime, step, params)
@@ -229,7 +240,6 @@ export default {
               // if (isChartPie(this.chartInfo.type)) {
               //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
               // }
-              this.myVariables.push(this.variablesReplace(element.expression))
               query += `&query=${encodeURIComponent(this.variablesReplace(element.expression))}`
               return this.$get(query)
             })
@@ -725,7 +735,7 @@ export default {
     },
     variablesArr: {
       handler (n) {
-        const elements = this.chartInfo.elements || []
+        const elements = this.chartInfo.oldElements || []
         const variables = elements.map((element) => {
           return this.variablesReplace(element.expression)
         })

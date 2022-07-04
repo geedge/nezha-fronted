@@ -85,7 +85,7 @@ export default {
     }
   },
   methods: {
-    getLabelData () {
+    getLabelData () { // 获取所有变量组合的可选择的值
       const isRegExp = (v) => {
         let isReg
         try {
@@ -97,7 +97,7 @@ export default {
       }
       const arrPromise = []
       this.labelValue = {}
-      this.labelArr.forEach((item, index) => {
+      this.labelArr.forEach((item, index) => {  // 根据变量的type类型 以及 expression 对应的值 查询不同的接口
         this.labelValue[item.name] = []
         if (item.type === 'custom') {
           arrPromise.push('')
@@ -134,7 +134,6 @@ export default {
             }
           }
           match = item.expression.match(this.specialKey[2].reg)
-          console.log(match)
           if (match) {
             arrPromise.push(this.metricNameQuery(match[1]))
             return
@@ -148,7 +147,6 @@ export default {
         }
       })
       Promise.all(arrPromise).then((res) => {
-        console.log(res)
         res.forEach((response, index) => {
           if (response) {
             if (this.labelArr[index].regex) {
@@ -284,7 +282,6 @@ export default {
           query: encodeURIComponent(query)
         }
         this.$get(url, params).then(res => {
-          console.log(res)
           const arr = res.data.result.map((metricData) => {
             let text = metricData.metric.__name__ || ''
             delete metricData.metric.__name__
@@ -336,14 +333,14 @@ export default {
         .join(',')
       return `${metricName}{${labelPart}}`
     },
-    setLabelArrDefault () {
+    setLabelArrDefault () { // 设置变量默认值 默认第一个
       this.labelArr.forEach((item, index) => {
         item.checked = this.labelValue[item.name][0] ? [this.labelValue[item.name][0].value] : []
       })
-      this.$store.dispatch('dispatchVariablesArr', this.labelArr)
+      this.$emit('getPanelData') // 同步加载chart 拿不到使用的变量值
+      this.$store.dispatch('dispatchVariablesArr', this.labelArr) // 通过vuex 管理变量值
     },
     checkAllChange (item) {
-      console.log(item)
       const allValue = this.labelValue[item.name].map(value => {
         return value.value
       })

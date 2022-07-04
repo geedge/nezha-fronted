@@ -92,7 +92,7 @@
         <div id="tableList" class="table-list" style='overflow-y: unset'>
           <div class="table-list-box">
             <div  id="dashboardScrollbar" class="box-content" v-my-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
-              <panel-variables :labelArrs="variables" :time-range="searchTime"></panel-variables>
+              <panel-variables :labelArrs="variables" :time-range="searchTime" @getPanelData="getPanelData"></panel-variables>
               <chart-list
                 ref="chartList"
                 name="panel"
@@ -298,7 +298,8 @@ export default {
       exportBoxShow: false,
       // 查看模式
       mode: '',
-      variables: []
+      variables: [],
+      variablesInit: false // 判断variables 是否加载完成
     }
   },
   components: {
@@ -308,7 +309,7 @@ export default {
     selectDashboard,
     chartTempBox,
     chartRightBox,
-    panelVariables
+    panelVariables // 处理panel变量的组件
   },
   computed: {
     chartRightBoxShow () {
@@ -343,6 +344,7 @@ export default {
       if (!val) {
         return false
       }
+      this.variablesInit = false
       this.filter.searchName = ''
       // this.$refs.searchInput.select();
       this.showPanel = val
@@ -357,6 +359,58 @@ export default {
           { show: true, type: 'custom', multi: false, allOption: true, name: 'azy', customOptions: 'z:1, z:z:1, a', expression: '', regex: '' }
         ]
       }
+      this.showPanel.param.variables = [
+        { show: true, type: 'custom', multi: true, allOption: true, name: 'mazy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
+        { show: true, type: 'custom', multi: true, allOption: false, name: 'mzy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
+        { show: true, type: 'custom', multi: false, allOption: false, name: 'zy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
+        { show: true, type: 'custom', multi: false, allOption: true, name: 'azy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
+        {
+          name: 'bbb',
+          type: 'query',
+          multi: false,
+          allOption: true,
+          expression: 'label_names()',
+          regex: '/a\.*/',
+          show: true
+        },
+        {
+          name: 'ccc',
+          type: 'query',
+          multi: false,
+          allOption: true,
+          expression: 'label_values(up, asset)',
+          regex: '',
+          show: true
+        },
+        {
+          name: 'ddd',
+          type: 'query',
+          multi: true,
+          allOption: true,
+          expression: 'label_values(asset)',
+          regex: '',
+          show: true
+        },
+        {
+          name: 'eeee',
+          type: 'query',
+          multi: false,
+          allOption: true,
+          expression: 'label_values(up, endpoint)',
+          regex: '/.*-(?<text>.*)-(?<value>.*)-.*/',
+          show: true
+        },
+        {
+          name: 'fff',
+          type: 'query',
+          multi: false,
+          allOption: true,
+          expression: 'query_result(node_filefd_allocated{module="OLAP-Node-Exporter"})',
+          regex: '/asset="(?<text>[^"]+)\.*\asset_id="(?<value>[^"]+)/',
+          show: true
+        }
+      ]
+      this.variables = this.showPanel.param.variables
       this.showPanel.type = 'dashboard'
       this.filter.panelId = this.showPanel.id
       this.panelId = this.showPanel.id
@@ -685,7 +739,7 @@ export default {
       this.filter.value = this.searchTime[2]
       this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       // this.getTableData()
-      this.getData(this.filter)
+      this.variablesInit && this.getData(this.filter)
       const param = {
         panelId: this.panelId,
         nowTimeType: JSON.stringify(this.nowTimeType),
@@ -765,7 +819,7 @@ export default {
             if (!this.showPanel.id) {
               this.showPanel = response.data.list[0]
               this.filter.panelId = this.showPanel.id
-              this.getData(this.filter)
+              this.variablesInit && this.getData(this.filter)
               isInitData = true
             } else {
               handler(response.data.list)
@@ -779,7 +833,7 @@ export default {
           }
           this.pageObj.total = response.data.total
           if (!isInitData && (this.panel.id === '' || this.panel.id === this.showPanel.id)) {
-            this.getData(this.filter)
+            this.variablesInit && this.getData(this.filter)
           }
           this.$store.state.showPanel.id = 0
           this.$store.state.showPanel.name = ''
@@ -804,7 +858,7 @@ export default {
             { show: true, type: 'custom', multi: false, allOption: true, name: 'azy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' }
           ]
         }
-        this.variables = [
+        this.showPanel.param.variables = [
           { show: true, type: 'custom', multi: true, allOption: true, name: 'mazy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
           { show: true, type: 'custom', multi: true, allOption: false, name: 'mzy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
           { show: true, type: 'custom', multi: false, allOption: false, name: 'zy', customOptions: 'z:1, b:z:1, a,c:123', expression: '', regex: '' },
@@ -855,6 +909,7 @@ export default {
             show: true
           }
         ]
+        this.variables = this.showPanel.param.variables
       }).catch((error) => {
         // console.log('error................'+JSON.stringify(error));
         if (error) {
@@ -1099,6 +1154,10 @@ export default {
         const path = this.fromRoute.panel
         this.updatePath(param, path)
       }
+    },
+    getPanelData () {
+      this.variablesInit = true
+      this.getData(this.filter)
     }
   },
   created () {
