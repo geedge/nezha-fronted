@@ -114,8 +114,8 @@
             class="top-tool-btn"
             @click="enableExpression"
           >
-            <i  v-if="state" class="nz-icon nz-icon-mimakejian"></i>
-            <i v-else class="nz-icon nz-icon-mimabukejian" style="fontSize:16px"></i>
+            <i  v-if="state" class="nz-icon nz-icon-mimakejian" :title="$t('overall.visible')"></i>
+            <i v-else class="nz-icon nz-icon-mimabukejian" style="fontSize:16px" :title="$t('overall.invisible')"></i>
           </button>
           <button
             v-if="plugins.indexOf('add') > -1"
