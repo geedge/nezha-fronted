@@ -57,7 +57,7 @@
     margin-left: 1px;
   }
   .el-cascader-menu {
-    width: 200px;
+    width: 300px;
     height: 100%;
   }
   .metric-btn:hover, .metric-btn:focus {
@@ -66,7 +66,7 @@
   }
 
   .metric-selector .el-cascader-panel {
-    height: 300px;
+    height: 500px;
     position: absolute;
     z-index: 2100;
     background-color: $--background-color-empty;

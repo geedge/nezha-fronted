@@ -129,7 +129,7 @@
               display: flex;
               justify-content: center;
               align-items: center;
-              width: 90px;
+              width: calc(100% / 7.1) !important;
               height: 34px;
               border: 1px solid $--border-color-light;
               margin-right: -1px;
@@ -164,7 +164,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 90px;
+            width: calc(100% / 7.1) !important;
             height: 35px;
             border: 1px solid $--border-color-light;
             margin-right: -1px;
