@@ -193,8 +193,8 @@ export default {
       })
       const timeSorted = this.$loadsh.sortBy(datas, function (o) { return o[0] })
       const valueSorted = datas.sort((a, b) => {
-        const a1 = isNaN(a[1]) && !a[1] ? 0 : Number(a[1])
-        const b1 = isNaN(b[1]) && !b[1] ? 0 : Number(b[1])
+        const a1 = isNaN(a[1]) || !a[1] ? 0 : Number(a[1])
+        const b1 = isNaN(b[1]) || !b[1] ? 0 : Number(b[1])
         return a1 - b1
       })
       minTime = timeSorted.length ? timeSorted[0][0] : ''
@@ -207,6 +207,11 @@ export default {
         maxValue = Number(maxValue)
       } else {
         maxValue = 0
+      }
+      if (!isNaN(minValue)) {
+        minValue = Number(minValue)
+      } else {
+        minValue = 0
       }
       if (maxValue < 0) {
         maxValue = Math.abs(maxValue)
