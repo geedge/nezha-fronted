@@ -3,7 +3,6 @@
     <div v-for="(item,index) in labelArr" :key="index" v-if="item.show && labelValue[item.name].length" class="panel-variables-content" style="display: flex">
       <div class="variable-key">{{item.name}}</div>
       <el-popover
-        width="220"
         trigger="manual"
         placement="bottom-start"
         v-model="item.visible"
@@ -22,10 +21,9 @@
             </el-checkbox-group>
             <div v-else>
               <li class="el-dropdown-menu__item" v-for="(value, j) in labelValue[item.name]" :key="j" @click="selectLabelValue(item,value)">
-                <div class="el-dropdown-menu__item-label">
+                <div class="el-dropdown-menu__item-label" :class="value.value === item.checked[0] && !item.checkAll ? 'checked': ''">
                   {{value.label}}
                 </div>
-                <i class="nz-icon nz-icon-check" v-if="value.value === item.checked[0] && !item.checkAll"/>
               </li>
             </div>
           </ul>
