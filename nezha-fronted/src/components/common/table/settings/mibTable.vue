@@ -37,15 +37,15 @@
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
         <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
-          <div style="cursor:text" class="document-copy-block">
+          <div class="document-copy-block">
               <span class="link document-copy-text" @click="downloadMib(scope.row)">{{scope.row[item.prop]}}</span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.duplicate')"></i>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.copyText')"></i>
             </div>
         </template>
         <template v-else-if="item.prop === 'name'">
-            <div style="cursor:text" class="document-copy-block">
+            <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row.name ? scope.row.name : '-'}}</span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.duplicate')"></i>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
         <template v-else-if="item.prop === 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >

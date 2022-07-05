@@ -42,9 +42,9 @@
           <template v-else>-</template>
         </template>
         <template v-if="item.prop === 'name'">
-          <div style="cursor:text" class="document-copy-block">
+          <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row.name ? scope.row.name : '-'}}</span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.duplicate')"></i>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
             </div>
         </template>
         <template v-if="item.prop === 'type'">
