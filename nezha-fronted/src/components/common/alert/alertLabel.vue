@@ -778,12 +778,14 @@ export default {
         if (position.top > clientHeight / 2) {
           labelPosition = {
             left: `${position.left + position.width + leftOffSet}px`,
-            top: `${position.top - this.heightList - topOffSetView}px`
+            // top: `${position.top - this.heightList - topOffSetView}px`
+            top: `${position.top - this.heightList - topOffSetView + position.height / 2}px`
           }
         } else {
           labelPosition = {
             left: `${position.left + position.width + leftOffSet}px`,
-            top: `${position.top + topOffSet}px`
+            // top: `${position.top + topOffSet}px`
+            top: `${position.top + position.height / 2}px`
           }
         }
         if (position.left > clientWidth / 2) {

@@ -38,7 +38,7 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-          <div style="cursor:text" class="document-copy-block">
+          <div class="document-copy-block">
             <div class="user-name-td document-copy-text" :class="{'margin-l-10': !scope.row.online}">
               <i class="nz-icon nz-icon-user1 user-online" v-if="scope.row.online" :title="$t('overall.online')"/>
               <div>
@@ -51,7 +51,7 @@
               </div>
             </div>
             </div>
-          <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.duplicate')"></i>
+          <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
           </div>
         </template>
         <template v-else-if="item.prop === 'roles'">
@@ -79,9 +79,9 @@
           <span v-else-if="scope.row[item.prop] === 'zh'">简体中文</span>
         </template>
         <template v-else-if="item.prop === 'email'">
-          <div style="cursor:text" class="document-copy-block">
+          <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.duplicate')"></i>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.copyText')"></i>
             </div>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>

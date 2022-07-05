@@ -51,7 +51,7 @@
       :id="alertLabelId"
       :that="alertLabelObj"
       :type="alertLabelType"
-      :detailList = true
+      :detail-list="true"
     ></alertLabel>
   </div>
 </template>

@@ -38,37 +38,37 @@
         </template>
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop === 'name'">
-            <div style="cursor:text" class="document-copy-block">
+            <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row[item.prop]}}</span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.duplicate')"></i>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'type'">
             {{scope.row.module.type}}
           </template>
           <template v-else-if="item.prop === 'project'">
-            <div style="cursor:text" class="document-copy-block">
+            <div class="document-copy-block">
               <span class="pointer document-copy-text"
               @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
               @mouseleave="labelHover(scope.row, item.prop, false,true)">
               {{scope.row[item.prop].name}}
               </span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.duplicate')"></i>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'module'">
-            <div style="cursor:text" class="document-copy-block">
+            <div class="document-copy-block">
                <span class="pointer document-copy-text"
                @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
                @mouseleave="labelHover(scope.row, item.prop, false,true)">
               <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>
               {{scope.row[item.prop].name}}
               </span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.duplicate')"></i>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'asset'">
-           <div style="cursor:text" class="document-copy-block">
+           <div class="document-copy-block">
               <span
               class="pointer document-copy-text"
               @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
@@ -76,7 +76,7 @@
               <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
               {{scope.row.asset.name}}
              </span>
-              <i  class="nz-icon nz-icon-override" style="cursor: pointer;visibility: hidden" @click="onCopy(scope.row.asset.name)" :title="$t('overall.duplicate')"></i>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.asset.name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'alerts'">

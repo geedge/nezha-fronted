@@ -10,11 +10,11 @@
     margin-right: 15px;
   }
   .variable-key{
-    margin-right: 5px;
-    border: 1px solid $--border-color-base;
-    color: #33a2e5;
-    padding: 3px 5px;
-    border-radius: 4px;
+    border: 1px solid $--border-color-light;
+    color: $--color-text-regular;
+    background: $--background-color-2;
+    padding: 3px 10px;
+    border-radius: 4px 0 0 4px;
   }
   .choose-box {
     overflow: hidden;
@@ -22,8 +22,10 @@
     white-space: nowrap;
     max-width: 200px;
     text-overflow: ellipsis;
+    padding-right: 5px;
     height: 30px;
     border: 1px solid $--border-color-light;
+    border-left: none;
     padding-left: 8px;
     display: flex;
     align-items: center;
@@ -39,12 +41,17 @@
     width: calc(100% - 24px);
     overflow: hidden;
     min-width: 24px;
+    color: $--color-text-primary;
   }
 }
 
 .panel-variables{
+  min-width: 180px;
+  max-width: 220px;
   .el-dropdown-menu__item {
     padding: 0 5px 0 20px;
+    width: 100%;
+    box-sizing: border-box;
     position: relative;
     height: 36px;
   }
@@ -55,6 +62,10 @@
     width: calc(100% - 20px);
     overflow: hidden;
     min-width: 24px;
+    color: $--color-text-regular;
+  }
+  .el-dropdown-menu__item .el-dropdown-menu__item-label.checked {
+    color: $--color-warning;
   }
   .nz-icon-check{
     position: absolute;
