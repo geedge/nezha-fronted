@@ -20,14 +20,13 @@
                 :placement="'bottom-start'"
                 :show-panel="showPanel"
                 style="display: inline-block;padding: 0"
-                @updateWeight="updateWeight"
                 @deletePanel="del"
                 @editPanel="edit"
                 @selectDashboard="panelChange">
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
                   <span :title="showPanel.name  + ' (' + showPanel.chartNum +' charts)' " class="show-panel-name">{{showPanel.name}}</span>
-                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred" class="nz-icon nz-icon-a-xingzhuang2" :title ="$t('overall.starred')"></i>
+                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred===1" class="nz-icon nz-icon-a-xingzhuang2" :title ="$t('overall.starred')"></i>
                   <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang" :title ="$t('overall.unstarred')"></i>
                 </template>
               </select-dashboard>
@@ -323,10 +322,6 @@ export default {
     }
   },
   methods: {
-    // 更新Weight
-    updateWeight (value) {
-      this.panelData = JSON.parse(JSON.stringify(value))
-    },
     // 新增收藏
     addStarred (data) {
       this.$refs.selectDashboard.addStarred(data)
@@ -398,9 +393,9 @@ export default {
       })
     },
     edit (u) {
-      this.$get('visual/panel?ids=' + u.id).then(res => {
+      this.$get('visual/panel/' + u.id).then(res => {
         if (res.code === 200) {
-          this.panel = res.data.list[0]
+          this.panel = res.data
           if (!this.$loadsh.get(this.panel, 'param.report', '')) {
             this.panel = {
               ...this.panel,
@@ -446,7 +441,8 @@ export default {
         return
       }
       this.rightBox.panel.show = true
-      // this.$refs.panelBox.show(true)
+      // 关闭selectDashboard弹框
+      this.$refs.selectDashboard && this.$refs.selectDashboard.esc()
       this.panel = {
         id: '',
         name: '',

@@ -499,10 +499,10 @@ export default {
         return temp
       })
       const params = {
+        ...this.editPanel,
         id: this.editPanel.id ? this.editPanel.id : '',
         name: this.editPanel.name,
         type: 'dashboard',
-        pid: 0,
         remark: this.editPanel.remark,
         param: {
           report: {

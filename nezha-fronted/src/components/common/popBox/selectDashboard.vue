@@ -18,10 +18,11 @@
         <div class="panel-select-header">
           <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="small" style="width:316px"></el-input>
         </div>
-        <div :class="{'movable': !panelLock&&currentTab==='all'}" class="select-panel-tree">
+        <!-- 全部仪表盘 数据 -->
+        <div :class="{'movable': !panelLock}" class="select-panel-tree" v-if="currentTab==='all'">
           <el-tree
-            :data="treeData"
-            :draggable="!panelLock&&currentTab==='all'"
+            :data="panelData"
+            :draggable="!panelLock"
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
             :props="{label: 'name', children: 'children'}"
@@ -49,7 +50,46 @@
                     </el-dropdown-menu>
                   </el-dropdown>
                   <template>
-                    <i v-if="data.starred" class="nz-icon nz-icon-a-xingzhuang2" @click.stop="delStarred(data)" :title ="$t('overall.starred')"></i>
+                    <i v-if="data.starred===1" class="nz-icon nz-icon-a-xingzhuang2" @click.stop="delStarred(data)" :title ="$t('overall.starred')"></i>
+                    <i v-else class="nz-icon nz-icon-xingzhuang" @click.stop="addStarred(data)" :title ="$t('overall.unstarred')"></i>
+                  </template>
+                </el-col>
+              </el-row>
+            </div>
+          </el-tree>
+        </div>
+        <!-- 我的收藏、我的创建、最近浏览数据 -->
+        <div class="select-panel-tree" v-else>
+          <el-tree
+            :data="otherData"
+            :expand-on-click-node="false"
+            :filter-node-method="filterNode"
+            :props="{label: 'name', children: 'children'}"
+            @node-click="selectDashboard"
+            @node-drop="nodeDrop"
+            check-on-click-node
+            check-strictly
+            default-expand-all
+            :highlight-current="true"
+            node-key="id"
+            ref="otherTree">
+            <div class="tree--node" slot-scope="{ node, data }">
+              <HighlightText :queries="filterPanel" :highlightClass="'highlight-keyword'" style="vertical-align: middle" :title="node.label + ' (' + data.chartNum +' charts）' ">{{node.label}}</HighlightText>
+              <el-row class="block-col-2" style="margin-left:10px;margin-right:8px">
+                <el-col>
+                  <el-dropdown v-if="!panelLock"  placement="bottom-end" trigger="click" style="margin-right:10px">
+                    <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
+                    <el-dropdown-menu class="right-box-select-top" slot="dropdown"  v-has="['main_edit', 'main_delete']">
+                      <el-dropdown-item>
+                        <div @click="editPanel(data)" v-has="'main_edit'"><i  class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</div>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <div @click="deletePanel(data)" v-has="'main_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</div>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                  <template>
+                    <i v-if="data.starred===1" class="nz-icon nz-icon-a-xingzhuang2" @click.stop="delStarred(data)" :title ="$t('overall.starred')"></i>
                     <i v-else class="nz-icon nz-icon-xingzhuang" @click.stop="addStarred(data)" :title ="$t('overall.unstarred')"></i>
                   </template>
                 </el-col>
@@ -82,7 +122,11 @@ export default {
   watch: {
     filterPanel: {
       handler (n) {
-        this.$refs.panelTree && this.$refs.panelTree.filter(n)
+        if (this.currentTab === 'all') {
+          this.$refs.panelTree && this.$refs.panelTree.filter(n)
+        } else {
+          this.$refs.otherTree && this.$refs.otherTree.filter(n)
+        }
       }
     },
     showPanel: {
@@ -97,8 +141,9 @@ export default {
     },
     panelData: {
       immediate: true,
-      async handler (n) {
-        await this.getStarred()
+      async handler () {
+        // 获取收藏列表
+        this.getStarred()
         this.setData()
       }
     }
@@ -116,8 +161,8 @@ export default {
       currentTab: 'all',
       // 过滤值
       filterPanel: '',
-      // 树形控件数据
-      treeData: [],
+      // 其他tab的数据（我的收藏、我的创建、最近浏览数据）
+      otherData: [],
       // 收藏列表
       starredList: [],
       // 用户id
@@ -131,9 +176,7 @@ export default {
     // 新增仪表盘
     toAdd () {
       this.$parent.toAdd()
-      this.esc()
     },
-
     // 左侧tab点击
     tabChange (value) {
       if (this.currentTab !== value) {
@@ -144,13 +187,11 @@ export default {
     },
     // 设置树形菜单数据
     setData (type = this.currentTab) {
-      if (type === 'all') { // 全部
-        this.treeData = JSON.parse(JSON.stringify(this.panelData))
-      } else if (type === 'starred') { // 我的收藏
-        this.treeData = JSON.parse(JSON.stringify(this.starredList))
+      if (type === 'starred') { // 我的收藏
+        this.otherData = JSON.parse(JSON.stringify(this.starredList))
       } else if (type === 'create') { // 我的创建
         const flatArr = this.flatten(this.panelData)
-        this.treeData = flatArr.filter(item => item.createBy == this.userId)
+        this.otherData = flatArr.filter(item => item.createBy == this.userId)
       } else if (type === 'browse') { // 最近浏览
         const browseArr = JSON.parse(localStorage.getItem(`nz-view-dashboard-${this.userId}`) || '[]')
         const flatArr = this.flatten(this.panelData)
@@ -163,48 +204,26 @@ export default {
             }
           })
         })
-        this.treeData = JSON.parse(JSON.stringify(tempArr))
+        this.otherData = JSON.parse(JSON.stringify(tempArr))
       }
+      // 设置当前面板高亮 以及保持搜索状态
       this.$nextTick(() => {
-        this.$refs.panelTree.setCurrentKey(this.showPanel)
-        this.$refs.panelTree.filter(this.filterPanel)
-        // 更新父组件面板收藏状态
-        this.$set(this.$parent.showPanel, 'starred', this.starredList.some(item => item.id === this.showPanel.id))
+        if (this.currentTab === 'all') {
+          this.$refs.panelTree && this.$refs.panelTree.setCurrentKey(this.showPanel)
+          this.$refs.panelTree && this.$refs.panelTree.filter(this.filterPanel)
+        } else {
+          this.$refs.otherTree && this.$refs.otherTree.setCurrentKey(this.showPanel)
+          this.$refs.otherTree && this.$refs.otherTree.filter(this.filterPanel)
+        }
       })
     },
     // 获取收藏的列表
-    async getStarred (type) {
-      const params = {
-        type: 'panel'
-      }
-      const response = await this.$get('/sys/user/starred', params)
-      this.starredList = []
-      this.recursionStarred(this.panelData, response.data ? response.data.list : [])
-    },
-    // 比对收藏的列表和全部列表 设置starred状态
-    recursionStarred (allList, starredList) {
-      const that = this
-      function handler (allList, starredList) {
-        allList.forEach((item) => {
-          item.starred = false
-          starredList.forEach((subItem) => {
-            // 判断全部列表每一项的id和收藏列表每一项的id是否相等
-            if (item.id === subItem.tid) {
-              if (that.starredList.every(val => val.id !== item.id)) {
-                item.starred = true
-                that.starredList.push({
-                  ...item,
-                  children: []
-                })
-              }
-            }
-          })
-          if (item.children && item.children.length) {
-            handler(item.children, starredList)
-          }
-        })
-      }
-      handler(allList, starredList)
+    async getStarred () {
+      // 1: 已收藏 0：未收藏
+      const flatArr = this.flatten(this.panelData) // 数组对象扁平化
+      this.starredList = flatArr.filter(item => {
+        return item.starred === 1
+      })
     },
     // 数组对象扁平化
     flatten (arr) {
@@ -223,7 +242,7 @@ export default {
       }
       return handler(tempArr)
     },
-    // 设置最近浏览的面板
+    // 存储最近浏览的面板
     setBrowse () {
       // 获取最近浏览id数组
       let browseArr = JSON.parse(localStorage.getItem(`nz-view-dashboard-${this.userId}`) || '[]')
@@ -257,25 +276,22 @@ export default {
       }
       this.$post('/sys/user/starred', params).then(async response => {
         if (response.code === 200) {
-          await this.getStarred()
-          data.starred = true
-          // 不每次使用this.setData() 是因为会刷新树形图展开收起状态
-          if (this.currentTab === 'starred') {
-            this.setData()
-          } else {
-            handler(this.treeData)
-            function handler (list) {
-              list.forEach(item => {
-                if (item.id === data.id) {
-                  item.starred = true
-                } else if (item.children && item.children.length > 0) {
-                  handler(item.children)
-                }
-              })
-            }
-            // 更新父组件面板收藏状态
-            this.$set(this.$parent.showPanel, 'starred', this.starredList.some(item => item.id === this.showPanel.id))
+          data.starred = 1
+          // 更新panelData收藏状态
+          handler(this.panelData)
+          function handler (list) {
+            list.forEach(item => {
+              if (item.id === data.id) {
+                item.starred = 1
+              } else if (item.children && item.children.length > 0) {
+                handler(item.children)
+              }
+            })
           }
+          this.getStarred()
+          this.setData()
+          // 更新父组件面板收藏状态
+          this.$set(this.$parent.showPanel, 'starred', this.starredList.some(item => item.id === this.showPanel.id) ? 1 : 0)
         }
       })
     },
@@ -284,35 +300,32 @@ export default {
     delStarred: bus.debounceFn(function (data) {
       this.$delete('/sys/user/starred?type=panel&tid=' + data.id).then(async response => {
         if (response.code === 200) {
-          await this.getStarred()
-          data.starred = false
-          // 不每次使用this.setData() 是因为会刷新树形图展开收起状态
-          if (this.currentTab === 'starred') {
-            this.setData()
-          } else {
-            handler(this.treeData)
-            function handler (list) {
-              list.forEach(item => {
-                if (item.id === data.id) {
-                  item.starred = false
-                } else if (item.children && item.children.length > 0) {
-                  handler(item.children)
-                }
-              })
-            }
-            // 更新父组件面板收藏状态
-            this.$set(this.$parent.showPanel, 'starred', this.starredList.some(item => item.id === this.showPanel.id))
+          data.starred = 0
+          // 更新panelData收藏状态
+          handler(this.panelData)
+          function handler (list) {
+            list.forEach(item => {
+              if (item.id === data.id) {
+                item.starred = 0
+              } else if (item.children && item.children.length > 0) {
+                handler(item.children)
+              }
+            })
           }
+          this.getStarred()
+          this.setData()
+          // 更新父组件面板收藏状态
+          this.$set(this.$parent.showPanel, 'starred', this.starredList.some(item => item.id === this.showPanel.id) ? 1 : 0)
         }
       })
     },
     300, true),
 
     /*
-        * node: 被拖的节点
-        * relative: 发生关系的节点
-        * position: ['before', 'after', 'inner'] 与relative节点的关系
-        * */
+      * node: 被拖的节点
+      * relative: 发生关系的节点
+      * position: ['before', 'after', 'inner'] 与relative节点的关系
+      * */
     nodeDrop (node, relative, position, event) {
       if (position === 'inner') {
         node.data.pid = relative.data.id
@@ -330,7 +343,7 @@ export default {
       const toUpdate = []
       let count = 0
 
-      handler(this.treeData)
+      handler(this.panelData)
       function handler (panelData) {
         panelData.forEach(panel => {
           panel.weight = count++
@@ -341,14 +354,13 @@ export default {
         })
       }
       this.$put('visual/panel/tree', toUpdate)
-      // 更新父组件Weight
-      this.$emit('updateWeight', this.treeData)
     },
     deletePanel (data) {
       this.$emit('deletePanel', data)
     },
     editPanel (data) {
       this.$emit('editPanel', data)
+      this.esc()
     },
     esc () {
       this.popBox.show = false
@@ -356,7 +368,11 @@ export default {
     // 确认选择某个节点，与父组件交互
     selectDashboard (data, checked, child) {
       this.$emit('selectDashboard', data)
-      this.$refs.panelTree.setCurrentKey(data)
+      if (this.currentTab === 'all') {
+        this.$refs.panelTree && this.$refs.panelTree.setCurrentKey(data)
+      } else {
+        this.$refs.otherTree && this.$refs.otherTree.setCurrentKey(data)
+      }
       this.esc()
     }
   }
