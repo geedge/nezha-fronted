@@ -172,10 +172,11 @@ export default {
       const step = bus.getStep(startTime, endTime)
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
-      if (!this.chartInfo.oldElements) {
-        this.chartInfo.oldElements = this.chartInfo.elements || []
+      if (!this.chartInfo.oldElements) { // 创建一个备份 用于判断变量替换 能拿到原本变量的位置
+        this.chartInfo.oldElements = this.chartInfo.elements ? JSON.parse(JSON.stringify(this.chartInfo.elements)) : []
       }
-      this.chartInfo.elements = this.chartInfo.oldElements.map(item => {
+      this.chartInfo.elements = this.chartInfo.oldElements.filter(item => item.state) // 处理不显示的表达式
+      this.chartInfo.elements = this.chartInfo.elements.map(item => { // 处理表达式的变量
         const variables = this.variablesReplace(item.expression)
         this.myVariables.push(variables)
         return {
