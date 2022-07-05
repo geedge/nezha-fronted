@@ -90,13 +90,13 @@
         </div>
         <div id="tableList" class="table-list" style='overflow-y: unset'>
           <div class="table-list-box">
-            <div  id="dashboardScrollbar" class="box-content" v-my-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto'>
+            <div  id="dashboardScrollbar" class="box-content" v-my-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto;display: flex;flex-direction: column'>
               <panel-variables :labelArrs="variables" :time-range="searchTime" @getPanelData="getPanelData"></panel-variables>
               <chart-list
                 ref="chartList"
                 name="panel"
                 :panelId="showPanel.id"
-                :class="{'show-top':showTopBtn}"
+                :class="{'show-top':showTopBtn, 'is-dashboard': true}"
                 :data-list="dataList"
                 :is-export-html="false"
                 :nowTimeType="nowTimeType"

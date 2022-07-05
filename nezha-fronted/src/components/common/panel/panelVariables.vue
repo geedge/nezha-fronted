@@ -272,7 +272,7 @@ export default {
             return
           }
           let arr = res.data
-          arr.filter((metricName) => {
+          arr = arr.filter((metricName) => {
             const r = new RegExp(metricFilterPattern)
             return r.test(metricName)
           })
