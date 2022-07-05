@@ -27,14 +27,18 @@
       >
         <div class="detail-row-info">
           <div class="asset-manageIp">
-            <span class="flex-align-center">
-              <span v-if="item.status" >
-                <span :class="{'active-icon green-bg':item.status == 1,'active-icon gray-bg':item.status == 0}"></span>
-              </span>
-              <span v-else style="display: inline-block;width: 13px"></span>
-              <span class="user-name-top">{{item.name}}</span>
-              <el-tag size="mini" v-if="mfaEnable == '1' || item.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
-            </span>
+             <div class="user-name-td"
+             @mouseenter="labelHover(item, 'user', true, false, $event)"
+             @mouseleave="labelHover(item, 'user', false, false,)">
+               <span class="flex-align-center">
+                 <span v-if="item.status" >
+                   <span :class="{'active-icon green-bg':item.status == 1,'active-icon gray-bg':item.status == 0}"></span>
+                 </span>
+                 <span v-else style="display: inline-block;width: 13px"></span>
+                 <span class="user-name-top">{{item.name}}</span>
+                 <el-tag size="mini" v-if="mfaEnable == '1' || item.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
+               </span>
+             </div>
           </div>
           <div class="asset-name">
             <span>@{{item.username}}</span>
@@ -42,6 +46,13 @@
         </div>
       </li>
     </ul>
+     <alertLabel
+      v-if="alertLabelShow"
+      :id="alertLabelId"
+      :that="alertLabelObj"
+      :type="alertLabelType"
+      :detailList = true
+    ></alertLabel>
   </div>
 </template>
 
@@ -50,9 +61,10 @@
 import detailViewLeftMixin from '@/components/common/mixin/detailViewLeftMixin'
 import alertLabel from '@/components/common/alert/alertLabel'
 import { terminalLog } from '@/components/common/js/constants'
+import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'userDetail',
-  mixins: [detailViewLeftMixin],
+  mixins: [detailViewLeftMixin, alertLabelMixin],
   components: {
     alertLabel
   },
@@ -120,15 +132,15 @@ export default {
   },
   methods: {
     // label 鼠标划入
-    labelHover (item, type, loading, e) {
-      if (e) {
-        const dom = e.currentTarget
-        const position = dom.getBoundingClientRect()
-        this.$set(item, 'position', position)
-      }
-      this.$set(item, 'loading', loading)
-      // this.$set(this.tableData,index,item);// 调用父组件
-    },
+    // labelHover (item, type, loading, e) {
+    //   if (e) {
+    //     const dom = e.currentTarget
+    //     const position = dom.getBoundingClientRect()
+    //     this.$set(item, 'position', position)
+    //   }
+    //   this.$set(item, 'loading', loading)
+    //   // this.$set(this.tableData,index,item);// 调用父组件
+    // },
     getStatusText () {
       return function (status) {
         return terminalLog.status[status]

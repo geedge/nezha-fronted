@@ -39,9 +39,7 @@
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
           <div style="cursor:text" class="document-copy-block">
-            <div class="user-name-td document-copy-text" :class="{'margin-l-10': !scope.row.online}"
-             @mouseenter="labelHover(scope.row, 'user', true, false, $event)"
-             @mouseleave="labelHover(scope.row, 'user', false, false,)">
+            <div class="user-name-td document-copy-text" :class="{'margin-l-10': !scope.row.online}">
               <i class="nz-icon nz-icon-user1 user-online" v-if="scope.row.online" :title="$t('overall.online')"/>
               <div>
               <div class="flex-align-center">
@@ -120,21 +118,14 @@
       <div v-else>&nbsp;</div>
     </template>
   </el-table>
-  <alertLabel
-      v-if="alertLabelShow"
-      :id="alertLabelId"
-      :that="alertLabelObj"
-      :type="alertLabelType"
-    ></alertLabel>
   </div>
 </template>
 
 <script>
 import table from '@/components/common/mixin/table'
-import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'userTable',
-  mixins: [table, alertLabelMixin],
+  mixins: [table],
   props: {
     loading: Boolean
   },
