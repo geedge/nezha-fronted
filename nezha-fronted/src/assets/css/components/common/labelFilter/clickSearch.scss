@@ -73,9 +73,12 @@
   padding-left: 15px;
   padding-right: 80px;
   background: $--background-color-empty;
+  div.el-skeleton{
+    display: flex !important;
+    align-items: center !important;
+  }
   &.search-items--checkbox .el-skeleton {
-    height: 28px;
-    line-height: 40px;
+    height: 40px;
   }
   &.search-items--dropdown .el-skeleton {
     height: 28px;
