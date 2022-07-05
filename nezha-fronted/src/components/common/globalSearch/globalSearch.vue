@@ -151,11 +151,11 @@ export default {
         }, {
           type: 'asset',
           isSelect: true,
-          title: this.$t('overall.asset')
+          title: this.$t('asset.asset')
         }, {
           type: 'project',
           isSelect: true,
-          title: this.$t('overall.project')
+          title: this.$t('project.project.projectName')
         }, {
           type: 'module',
           isSelect: true,
@@ -167,7 +167,7 @@ export default {
         }, {
           type: 'alertrule',
           isSelect: true,
-          title: this.$t('alert.alertRule')
+          title: this.$t('alert.rule')
         }
       ],
       skeletonArr: 20,
