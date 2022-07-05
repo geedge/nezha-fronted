@@ -75,13 +75,13 @@ export default {
       }],
       sysArr: [{
         key: 'alertRule',
-        label: this.$t('alert.alertRule')
+        label: this.$t('alert.rule')
       }, {
         key: 'dc',
         label: this.$t('overall.dc')
       }, {
         key: 'asset',
-        label: this.$t('overall.asset')
+        label: this.$t('asset.asset')
       }, {
         key: 'endpoint',
         label: this.$t('asset.endpoint')
@@ -90,7 +90,7 @@ export default {
         label: this.$t('overall.module')
       }, {
         key: 'project',
-        label: this.$t('overall.project')
+        label: this.$t('project.project.projectName')
       }]
     }
   },
