@@ -124,12 +124,14 @@ export default {
         if (position.top > windowHeight / 2) {
           return {
             left: `${position.left + position.width + leftOffSetView}px`,
-            top: `${position.top - boxHeight}px`
+            // top: `${position.top - boxHeight}px`
+            top: `${position.top + (position.height / 2) - boxHeight}px`
           }
         } else {
           return {
             left: `${position.left + position.width + leftOffSetView}px`,
-            top: `${position.top}px`
+            // top: `${position.top}px`
+            top: `${position.top + position.height / 2}px`
           }
         }
       }
