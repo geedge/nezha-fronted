@@ -256,7 +256,7 @@
                       <template slot="append">{{ $t("backup.day") }}</template>
                     </el-input>
                   </el-form-item>
-                  <el-form-item v-if="isShow === 3 ? true : false" :label='$t("backup.WeekOn")' class="range-time" prop="nums">
+                  <el-form-item v-if="isShow === 3 ? true : false" :label='$t("backup.WeekOn")' class="range-time" prop="param.report.schedule.nums">
                     <el-checkbox-group
                       v-model="editPanel.param.report.schedule.nums">
                       <el-checkbox-button
@@ -269,7 +269,7 @@
                   <el-form-item
                     v-show="isShow === 4 ? true : false"
                     :label="$t('backup.DayOfMonth')"
-                    prop="nums"
+                    prop="param.report.schedule.nums"
                     class="check-month_box"
                     id="day-of-month"
                   >
@@ -347,9 +347,9 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: arrLength, trigger: 'blur' }
         ],
-        nums: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: arrLength, trigger: 'blur' }
+        'param.report.schedule.nums': [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          { validator: arrLength, trigger: 'change' }
         ]
       },
       week: [
