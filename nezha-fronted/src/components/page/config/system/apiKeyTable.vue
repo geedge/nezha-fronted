@@ -131,7 +131,7 @@ export default {
           prop: 'name',
           show: true
         }, {
-          label: 'Token',
+          label: this.$t('apiKey.key'),
           prop: 'token',
           show: true
         }, {

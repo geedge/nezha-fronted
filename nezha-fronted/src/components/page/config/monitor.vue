@@ -70,7 +70,7 @@
             <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
           </el-input>
         </el-form-item>
-        <el-form-item :label="$t('config.system.monitor.logs_storage_type')" prop="logs_storage_type">
+        <el-form-item :label="$t('config.system.monitor.metrics_storage_type')" prop="logs_storage_type">
           <el-select v-model="monitor.logs_storage_type" popper-class="right-box-select-top right-public-box-dropdown-top">
             <el-option :label="$t('config.system.monitor.local')" value="1"></el-option>
             <el-option :label="$t('config.system.monitor.s3')" value="2"></el-option>

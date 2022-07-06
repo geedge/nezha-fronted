@@ -93,9 +93,10 @@ const newen = {
   },
   overall: {
     system: 'System',
-    back: 'Back'
+    back: 'Back',
+    enabled: 'Enabled',
+    disabled: 'Disabled'
   },
   ...enLocale
 }
-
 export default newen

@@ -127,7 +127,7 @@
           </el-form-item>
 
           <el-form-item
-            :label="$t('overall.enable')"
+            :label="$t('overall.enabled')"
             prop="status"
             class="form-item__switch"
           >

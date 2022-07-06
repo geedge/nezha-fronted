@@ -38,12 +38,12 @@
     }
     .metrics-input-box{
       .input-box .el-textarea .el-textarea__inner {
-        width: calc(100% + 42px);
+        width: 100%;
       }
       .metric-selector-input-box{
         line-height: 32px;
         .el-input__count{
-          right: -38px !important;
+          right: 18px !important;
         }
       }
       .el-col-24{

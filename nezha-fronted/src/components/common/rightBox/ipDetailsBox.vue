@@ -21,7 +21,16 @@
             <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.mac" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.state')" prop="state">
-            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.state" size="small"></el-input>
+<!--            <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.state" size="small"></el-input>-->
+            <el-select
+              v-model="editipDetails.state"
+              class="right-box__select"
+              popper-class="right-box-select-top prevent-clickoutside"
+              size="small"
+              :placeholder="$t('el.select.placeholder')"
+              value-key="id">
+              <el-option v-for="p in options.ipDetailsState" :key="p.value" :label="p.label" :value="p.value"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')" prop="remark">
             <el-input maxlength="256" rows="2" show-word-limit type="textarea" placeholder="" v-model="editipDetails.remark" size="small" id="mib-box-input-remark"></el-input>
@@ -66,6 +75,22 @@ export default {
     }
     return {
       editipDetails: {},
+      options: {
+        ipDetailsState: [
+          {
+            label: 'Available',
+            value: 1
+          },
+          {
+            label: 'Transient',
+            value: 2
+          },
+          {
+            label: 'Used',
+            value: 3
+          }
+        ]
+      },
       rules: {
         addr: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },

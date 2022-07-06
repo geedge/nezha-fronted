@@ -57,7 +57,7 @@
       <template v-if="activeIndex === 5">
         <div class="desc-text">{{$t('guide.alertTip')}}</div>
         <div class="guide__btn-group">
-          <button :class="{'guide__btn--disabled': !hasButton('alertRule_add')}" class="guide__btn" type="button" @click="jumpAndOpen('alertRule')">{{$t('config.user.language')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('alertRule_add')}" class="guide__btn" type="button" @click="jumpAndOpen('alertRule')">{{$t('overall.createAlertRule')}}</button>
         </div>
       </template>
     </div>

@@ -1,0 +1,46 @@
+.is-intro.el-dialog{
+  max-height: unset;
+  max-width: unset;
+  height: 100%;
+  .el-dialog__header{
+    display: none;
+  }
+  .el-dialog__body{
+    height: 100%;
+    padding: 0;
+    > div{
+      height: 100%;
+    }
+  }
+}
+.dc-img{
+  width: 100%;
+  height: 100%;
+  background: url("~@/assets/img/jj.png") no-repeat;
+  background-size:cover;
+}
+.dc-img1{
+  width: 100%;
+  height: 100%;
+  background: url("~@/assets/img/jj1.png") no-repeat;
+  background-size:cover;
+}
+.dc-img2{
+  width: 100%;
+  height: 100%;
+  background: url("~@/assets/img/jj3.png") no-repeat;
+  background-size:cover;
+}
+.dc-img3{
+  width: 100%;
+  height: 100%;
+  background: url("~@/assets/img/dc3.png") no-repeat;
+  background-size:cover;
+}
+.intro-bottom{
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}

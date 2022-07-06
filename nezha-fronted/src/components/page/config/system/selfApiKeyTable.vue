@@ -103,7 +103,7 @@ export default {
           minWidth: 100,
           show: true
         }, {
-          label: this.$t('asset.talon.token'),
+          label: this.$t('apiKey.key'),
           prop: 'token',
           minWidth: 180,
           show: true

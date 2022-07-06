@@ -61,7 +61,7 @@
                <div slot="prefix">
                 <div class="icon-item" style="width: 100%;padding: 0">
                   <svg>
-                    <g fill="none" stroke="black" stroke-width="1">
+                    <g fill="none" :stroke="theme === 'light' ? 'black' : '#BEBEBE'" stroke-width="1">
                       <path
                         :d="penLineType.find((item,i)=>item.id==lineName).d"
                       >
@@ -74,7 +74,7 @@
                 <el-option v-for="(item,index) in penLineType" :value="item.id" :key="index">
                   <div class="icon-item" style="position: relative;width: 100%;padding: 0">
                     <svg>
-                    <g fill="none" :stroke="(lineName==item.name)?'#ee9d3f':'black'" stroke-width="1">
+                    <g fill="none" :stroke="(lineName==item.name)?'#ee9d3f': item.strokeColor " stroke-width="1">
                     <path :d="item.d" :stroke-dasharray="item['stroke-dasharray']"></path>
                     </g>
                     </svg>
@@ -327,7 +327,7 @@ import {
   myCubec,
   myCubeAnchors
 } from '../project/L5/services/canvas.js'
-import {getTopology, setTopology} from '../js/common'
+import {getTopology, setTopology, dealImg} from '../js/common'
 import CanvasProps from '../project/L5/CanvasProps'
 import topologyTopTool from '../project/L5/topologyTopTool'
 import popDataMain from '../project/popData/Main'
@@ -354,7 +354,9 @@ const canvasOptions = {
 export default {
   name: 'diagram',
   data () {
+    const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
     return {
+      theme,
       title: this.$t('overall.uploadCustomPicture'),
       objChange: false, // project 变化 用于判断 init是否执行完成 执行完成 才可以执行下次变化
       chartDataInfo: {},
@@ -517,10 +519,10 @@ export default {
       chartData: {},
       chartGetData: [],
       penLineType: [
-        { d: 'M5 19 a50,100 0 0,1 40,0', 'stroke-dasharray': '', name: this.$t('project.topology.curve'), id: 'curve' },
-        { d: 'M5 8 l20 0 l0 12 l20 0', 'stroke-dasharray': '', name: this.$t('project.topology.polyline'), id: 'polyline' },
-        { d: 'M5 14 l40 0', 'stroke-dasharray': '', name: this.$t('project.topology.line'), id: 'line' }
-        // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
+        { d: 'M5 19 a50,100 0 0,1 40,0', 'stroke-dasharray': '', name: this.$t('project.topology.curve'), id: 'curve' , strokeColor: theme == 'light' ? 'black' : '#BEBEBE'},
+        { d: 'M5 8 l20 0 l0 12 l20 0', 'stroke-dasharray': '', name: this.$t('project.topology.polyline'), id: 'polyline' , strokeColor: theme == 'light' ? 'black' : '#BEBEBE'},
+        { d: 'M5 14 l40 0', 'stroke-dasharray': '', name: this.$t('project.topology.line'), id: 'line' , strokeColor: theme == 'light' ? 'black' : '#BEBEBE'}
+        // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind', strokeColor: theme == 'light' ? 'black' : '#BEBEBE'},
       ],
       lineName: 'curve',
       cachesIndex: 0,
@@ -831,8 +833,10 @@ export default {
           this.projectAlertShow = true
           this.saveData = { ...data }
           this.topologyInfo.name = ''
+          data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
           resolve(data)
         } else {
+          data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
           if (data.data) {
             this.topologyInfo = {
               fontSize: data.data.fontSize,
@@ -1592,7 +1596,7 @@ export default {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
           this.$get('monitor/project/topo/icon', { id: res.data.id }).then(iconInfo => {
-            this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
+            dealImg(`monitor/project/topo/icon/${res.data.id}/1`, res.data.id).then((data, header) => {
               const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
               this.iconArray.push({
                 ...iconInfo.data.list[0],
@@ -1748,7 +1752,7 @@ export default {
             if (nowImage && nowImage.data) {
               promiseArr.push(nowImage)
             } else {
-              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
+              promiseArr.push(dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
             }
             imgArr.push({ ...item })
           })
@@ -1810,7 +1814,7 @@ export default {
               if (nowImage && nowImage.data) {
                 promiseArr.push(nowImage)
               } else {
-                promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
+                promiseArr.push(dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`, item.data.imageId))
               }
             } else if (item.data.imageId) {
               promiseArr.push(imgDefault)

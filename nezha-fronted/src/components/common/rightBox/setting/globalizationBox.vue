@@ -29,7 +29,7 @@
               </template>
             </el-select>
           </el-form-item>
-          <el-form-item :label='$t("overall.labels")' prop="value">
+          <el-form-item :label='$t("overall.value")' prop="value">
             <el-input placeholder="" maxlength="128" show-word-limit v-model="editGlobalization.value" size="small" id="dc-box-input-value"></el-input>
           </el-form-item>
 <!--          <el-form-item :label='$t("i18n.remark")' prop="remark">-->

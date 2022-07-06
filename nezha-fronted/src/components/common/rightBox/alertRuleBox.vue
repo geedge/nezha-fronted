@@ -100,7 +100,7 @@
             </el-input>
           </el-form-item>
           <!--unit-->
-          <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
+          <el-form-item v-if="showSnmpTrap" :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
                          placeholder=""
                          popper-class="no-style-class dc-dropdown  unit-popper-class"
@@ -112,7 +112,7 @@
           </el-form-item>
           <!--inr-->
           <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.inr')" prop="inr"  class="half-form-item">
-            <el-input-number id="alert-box-input-inr" :controls="false" v-model="editAlertRule.inr" :placeholder="$t('alert.config.inrPlaceholder')" size="small" type="text" :disabled="!showSnmpTrap"></el-input-number>
+            <el-input-number :min="15" :max="86400" id="alert-box-input-inr" :controls="false" v-model="editAlertRule.inr" :placeholder="$t('alert.config.inrPlaceholder')" size="small" type="text" :disabled="!showSnmpTrap"></el-input-number>
           </el-form-item>
           <!--last-->
           <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.for')" prop="last"  class="half-form-item alert-box-duration" :rules=" [
@@ -290,7 +290,7 @@
             </el-select>
           </el-form-item>
           <!--receiver-->
-          <el-form-item :label="$t('alert.config.receiver')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
+          <el-form-item :label="$t('alert.receiver')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-select
               id="alert-box-input-receiver"
               v-model.trim="editAlertRule.receiverShow"
@@ -378,6 +378,8 @@ export default {
       }
       if (value < 15) {
         callback(new Error(this.$t('alert.config.inrError')))
+      } else if (value > 86400) {
+        callback(new Error(this.$t('alert.config.inrErrorMax')))
       } else {
         callback()
       }
