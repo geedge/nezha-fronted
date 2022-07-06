@@ -98,7 +98,7 @@
                     </el-select>
                   </el-form-item>
                   <!-- Query expression -->
-                  <el-form-item v-if="item.type==='query'" :prop="'param.variables.' + index + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="expression" style="width: 100%;" >
+                  <el-form-item class="query-expression" v-if="item.type==='query'" :prop="'param.variables.' + index + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="expression" style="width: 100%;" >
                     <div slot="label">
                       <span>{{$t('dashboard.panel.queryExpression')}}</span>
                       <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
@@ -256,7 +256,7 @@
                       <template slot="append">{{ $t("backup.day") }}</template>
                     </el-input>
                   </el-form-item>
-                  <el-form-item v-if="isShow === 3 ? true : false" :label='$t("backup.WeekOn")' class="range-time" prop="nums">
+                  <el-form-item v-if="isShow === 3 ? true : false" :label='$t("backup.WeekOn")' class="range-time" prop="param.report.schedule.nums">
                     <el-checkbox-group
                       v-model="editPanel.param.report.schedule.nums">
                       <el-checkbox-button
@@ -269,7 +269,7 @@
                   <el-form-item
                     v-show="isShow === 4 ? true : false"
                     :label="$t('backup.DayOfMonth')"
-                    prop="nums"
+                    prop="param.report.schedule.nums"
                     class="check-month_box"
                     id="day-of-month"
                   >
@@ -331,7 +331,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         'param.report.range.unit': [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         'param.report.schedule.type': [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
@@ -344,6 +344,10 @@ export default {
           message: this.$t('validate.required')
         }, { validator: datePicker, trigger: 'blur' }],
         'param.report.receivers': [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: arrLength, trigger: 'blur' }
+        ],
+        'param.report.schedule.nums': [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: arrLength, trigger: 'blur' }
         ]

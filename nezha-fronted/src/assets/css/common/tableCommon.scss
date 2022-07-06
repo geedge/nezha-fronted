@@ -571,3 +571,11 @@
   overflow: auto;
   background-color: $--table-body-background-color;
 }
+.el-checkbox.is-disabled{
+  line-height: 1;
+  height: 16px;
+}
+.el-checkbox__input.is-disabled{
+  line-height: 1;
+  height: 16px;
+}

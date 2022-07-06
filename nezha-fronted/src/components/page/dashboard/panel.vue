@@ -403,10 +403,10 @@ export default {
                 report: {
                   enable: false,
                   range: {
-                    unit: ''
+                    unit: 'day'
                   },
                   schedule: {
-                    type: '0',
+                    type: '2',
                     repeat: 1,
                     nums: [],
                     stime: '',
@@ -451,13 +451,13 @@ export default {
           report: {
             enable: false,
             range: {
-              unit: ''
+              unit: 'day'
             },
             schedule: {
               stime: '',
               etime: '',
               nums: [],
-              type: 0 + '',
+              type: 2 + '',
               repeat: 1
             }
           },

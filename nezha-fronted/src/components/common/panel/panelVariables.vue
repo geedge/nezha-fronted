@@ -1,7 +1,7 @@
 <template>
   <div style="" class="panel-variables-box">
     <div v-for="(item,index) in labelArr" :key="index" v-if="item.show" class="panel-variables-content" style="display: flex">
-      <div class="variable-key">{{item.name}}</div>
+      <div class="variable-key" :title="item.name">{{item.name}}</div>
       <el-popover
         trigger="manual"
         placement="bottom-start"
@@ -15,12 +15,12 @@
           </li>
           <ul class="pop-list">
             <el-checkbox-group v-model="item.checked" @change="(value)=>{checkedChange(item,value)}" v-if="item.multi">
-              <li class="el-dropdown-menu__item" v-for="value in labelValue[item.name]" :key="value.value">
+              <li class="el-dropdown-menu__item" v-for="value in labelValue[item.name]" :key="value.value" :title="value.value">
                 <el-checkbox :label="value.value" >{{value.label}}</el-checkbox>
               </li>
             </el-checkbox-group>
             <div v-else>
-              <li class="el-dropdown-menu__item" v-for="(value, j) in labelValue[item.name]" :key="j" @click="selectLabelValue(item,value)">
+              <li class="el-dropdown-menu__item" v-for="(value, j) in labelValue[item.name]" :key="j" @click="selectLabelValue(item,value)" :title="value.value">
                 <div class="el-dropdown-menu__item-label" :class="value.value === item.checked[0] && !item.checkAll ? 'checked': ''">
                   {{value.label}}
                 </div>
@@ -29,10 +29,12 @@
           </ul>
         </ul>
         <div slot="reference" class="choose-box"  @click="triggerVisible(item)">
-          <div class="choose-box-content">
-            {{item.checked.map(value=> labelValue[item.name].find(labelObj=>labelObj.value === value).label).join(' + ')}}
+          <div class="no-select" :class="item.visible? 'is-select': ''">
+            <div class="choose-box-content" :title="item.checked.map(value=> labelValue[item.name].find(labelObj=>labelObj.value === value).label).join(' + ')">
+              {{item.checked.map(value=> labelValue[item.name].find(labelObj=>labelObj.value === value).label).join(' + ')}}
+            </div>
+            <i class="nz-icon nz-icon-arrow-down6"/>
           </div>
-          <i class="nz-icon nz-icon-arrow-down6"/>
         </div>
       </el-popover>
     </div>
@@ -95,7 +97,7 @@ export default {
       }
       const arrPromise = []
       this.labelValue = {}
-      this.labelArr.forEach((item, index) => {  // 根据变量的type类型 以及 expression 对应的值 查询不同的接口
+      this.labelArr.forEach((item, index) => { // 根据变量的type类型 以及 expression 对应的值 查询不同的接口
         this.labelValue[item.name] = []
         if (item.type === 'custom') {
           arrPromise.push('')
@@ -151,7 +153,6 @@ export default {
               const reg = isRegExp(this.labelArr[index].regex) ? eval(this.labelArr[index].regex) : new RegExp(this.labelArr[index].regex, 'g')
               let arr = []
               response.forEach(label => {
-                // console.log(reg.test(label.label))
                 if (reg.test(label.label)) {
                   const str = label.label.match(reg)
                   if (str.groups) {
