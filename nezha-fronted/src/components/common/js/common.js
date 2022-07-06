@@ -48,6 +48,48 @@ export function getTopologyImg (key) {
   return false
 }
 
+const topologyImg = {}
+
+export function dealImg (url, id) {
+  if (url) {
+    return new Promise((resolve, reject) => {
+      if (topologyImg['img' + id]) {
+        resolve(topologyImg['img' + id])
+        return
+      }
+      vm.$axios
+        .get(url)
+        .then((res) => {
+          const imageInfo = {
+            data: ('data:image/jpeg;base64,' + res.data),
+            // width: res.headers.width === -1 ? 100 : (res.headers.width > 900 ? 900 : res.headers.width),
+            // height: res.headers.height === -1 ? 100 : (res.headers.height > 900 ? 900 : res.headers.height)
+            width: res.headers.width === -1 ? 100 : Number(res.headers.width),
+            height: res.headers.height === -1 ? 100 : Number(res.headers.height)
+          }
+          if (imageInfo.width > 900 || imageInfo.height > 900) {
+            if (imageInfo.height > imageInfo.width) {
+              imageInfo.width = imageInfo.width * 900 / imageInfo.height
+              imageInfo.height = 900
+            } else if (imageInfo.height < imageInfo.width) {
+              imageInfo.height = imageInfo.height * 900 / imageInfo.width
+              imageInfo.width = 900
+            } else {
+              imageInfo.height = 900
+              imageInfo.width = 900
+            }
+          }
+          topologyImg['img' + id] = imageInfo
+          resolve(topologyImg['img' + id])
+        })
+    })
+  } else {
+    return new Promise(resolve => {
+      resolve({})
+    })
+  }
+}
+
 export function setTopologyImg (key, img) {
   // localStorage.setItem('nz-topologyImg-' + key, img)
 }
