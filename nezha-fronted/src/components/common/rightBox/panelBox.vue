@@ -98,7 +98,7 @@
                     </el-select>
                   </el-form-item>
                   <!-- Query expression -->
-                  <el-form-item v-if="item.type==='query'" :prop="'param.variables.' + index + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="expression" style="width: 100%;" >
+                  <el-form-item class="query-expression" v-if="item.type==='query'" :prop="'param.variables.' + index + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="expression" style="width: 100%;" >
                     <div slot="label">
                       <span>{{$t('dashboard.panel.queryExpression')}}</span>
                       <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
@@ -344,6 +344,10 @@ export default {
           message: this.$t('validate.required')
         }, { validator: datePicker, trigger: 'blur' }],
         'param.report.receivers': [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: arrLength, trigger: 'blur' }
+        ],
+        nums: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: arrLength, trigger: 'blur' }
         ]

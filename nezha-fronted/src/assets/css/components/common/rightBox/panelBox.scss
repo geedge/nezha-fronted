@@ -1,4 +1,11 @@
 .right-box-panel{
+  .form-items--half-width-group{
+    .query-expression{
+      .el-form-item__label{
+        display: flex;
+      }
+    }
+  }
   .item-report{
     .form__sub-title{
       margin-bottom: 5px;
@@ -66,6 +73,12 @@
         color: #fff;
         border-radius: 0;
         background-color: $--color-primary !important;
+      }
+
+      .el-form-item__content{
+        .el-form-item__error{
+          top: 102%;
+        }
       }
     }
     .range-time{
