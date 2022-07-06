@@ -331,7 +331,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         'param.report.range.unit': [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         'param.report.schedule.type': [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
