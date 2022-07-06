@@ -374,3 +374,13 @@
 .meta-option-box {
   color: $--color-text-regular;
 }
+.el-range-input{
+  background: $--background-color-empty;
+}
+.ql-toolbar {
+  line-height: 22px;
+  .ql-picker-options{
+    background-color: $--background-color-empty;
+    color: $--color-text-primary;
+  }
+}

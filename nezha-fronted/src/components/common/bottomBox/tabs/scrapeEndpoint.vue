@@ -150,7 +150,7 @@ export default {
           } else {
             detailViewRightObj = this.tableData[0]
           }
-          this.detailViewRightObj = detailViewRightObj
+          this.detailViewRightObj = this.$loadsh.cloneDeep(detailViewRightObj)
           this.inputDateQuery = this.handlerTableData(this.tableData)
           this.pageObj.total = this.tableData.length
           if (!this.scrollbarWrap) {
