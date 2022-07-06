@@ -98,7 +98,7 @@
       <!--图表-->
       <div id="tableList" class="table-list" style="padding-top: 0;overflow: hidden">
         <div id="dashboardScrollbar" class="table-list-box">
-          <div class="box-content"  ref="dashboardScrollbar" v-my-loading="chartListLoading" style="overflow-y: auto">
+          <div class="box-content"  ref="dashboardScrollbar" v-my-loading="chartListLoading" style="overflow-y: auto;display: flex;flex-direction: column">
             <chart-list
               ref="chartList"
               name="panel"

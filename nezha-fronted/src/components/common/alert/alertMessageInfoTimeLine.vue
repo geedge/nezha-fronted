@@ -110,22 +110,22 @@
 </template>
 
 <script>
-import { alertMessage as alertMessageConstant } from "@/components/common/js/constants";
-import alertMessageLabelMixin from "@/components/common/alert/alertMessageLabelMixin";
-import alertLabelMixin from "@/components/common/mixin/alertLabelMixin";
+import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
+import alertMessageLabelMixin from '@/components/common/alert/alertMessageLabelMixin'
+import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 import { calcDurationByStringTimeB } from '@/components/common/js/tools.js'
 export default {
-  name: "alertMessageInfoTimeLine",
+  name: 'alertMessageInfoTimeLine',
   props: {
     infoData: {
-      type: Object,
+      type: Object
     },
-    time: {},
+    time: {}
   },
   mixins: [alertMessageLabelMixin, alertLabelMixin],
   computed: {
-    severityData() {
-      return this.$store.getters.severityData;
+    severityData () {
+      return this.$store.getters.severityData
     },
     getDuration () {
       return function (record) {
@@ -140,194 +140,194 @@ export default {
     time: {
       immediate: true,
       deep: true,
-      handler(n) {
+      handler (n) {
         if (n && n.length) {
-          this.pageNo = 1;
+          this.pageNo = 1
           this.lastDataTime = ''
-          this.getTimeLineData();
+          this.getTimeLineData()
         }
-      },
-    },
+      }
+    }
   },
-  data() {
+  data () {
     return {
       pageNo: 1,
       pageSize: 20,
       scope: [
-        "asset",
-        "datacenter",
-        "project",
-        "module",
-        "endpoint",
-        "alertrule",
-        "hash",
+        'asset',
+        'datacenter',
+        'project',
+        'module',
+        'endpoint',
+        'alertrule',
+        'hash'
       ],
       timeLineData: [],
-      lastDataTime: "",
+      lastDataTime: '',
       loading: false,
-      dateFormatStr: localStorage.getItem("nz-default-dateFormat")
-        ? localStorage.getItem("nz-default-dateFormat")
-        : "YYYY-MM-DD HH:ss:mm",
+      dateFormatStr: localStorage.getItem('nz-default-dateFormat')
+        ? localStorage.getItem('nz-default-dateFormat')
+        : 'YYYY-MM-DD HH:ss:mm',
       noData: false,
       stateOptions: alertMessageConstant.states,
       scopeList: [
         {
-          key: "asset",
+          key: 'asset',
           isSelect: true,
-          label: this.$t("overall.asset"),
+          label: this.$t('asset.asset')
         },
         {
-          key: "datacenter",
+          key: 'datacenter',
           isSelect: true,
-          label: this.$t("overall.dc"),
+          label: this.$t('overall.dc')
         },
         {
-          key: "project",
+          key: 'project',
           isSelect: true,
-          label: this.$t("overall.project"),
+          label: this.$t('project.project.projectName')
         },
         {
-          key: "module",
+          key: 'module',
           isSelect: true,
-          label: this.$t("overall.module"),
+          label: this.$t('overall.module')
         },
         {
-          key: "endpoint",
+          key: 'endpoint',
           isSelect: true,
-          label: this.$t("asset.endpoint"),
+          label: this.$t('asset.endpoint')
         },
         {
-          key: "alertrule",
+          key: 'alertrule',
           isSelect: true,
-          label: this.$t("alert.alertRule"),
+          label: this.$t('alert.rule')
         },
         {
-          key: "hash",
+          key: 'hash',
           isSelect: true,
-          label: this.$t("overall.hash"),
-        },
+          label: this.$t('overall.hash')
+        }
       ],
       total: 20,
-      scopeChangeTimer: null,
-    };
+      scopeChangeTimer: null
+    }
   },
-  mounted() {
+  mounted () {
     // this.getTimeLineData(1)
-    const dateFormatStr = localStorage.getItem("nz-default-dateFormat");
+    const dateFormatStr = localStorage.getItem('nz-default-dateFormat')
     if (dateFormatStr) {
-      this.dateFormatStr = dateFormatStr.split(" ")[0];
+      this.dateFormatStr = dateFormatStr.split(' ')[0]
     } else {
-      this.dateFormatStr = "YYYY-MM-DD";
+      this.dateFormatStr = 'YYYY-MM-DD'
     }
   },
   methods: {
-    getTimeLineData() {
-      this.noData = false;
-      this.loading = true;
+    getTimeLineData () {
+      this.noData = false
+      this.loading = true
       const params = {
         pageNo: this.pageNo,
         pageSize: this.pageSize,
         scope: this.scopeList
           .filter((item) => item.isSelect)
           .map((item) => item.key)
-          .join(","),
+          .join(','),
         id: this.infoData.id,
-        state: "",
+        state: '',
         startAt: this.timezoneToUtcTimeStr(
           this.time[0] * 1000,
-          "YYYY-MM-DD HH:mm:ss"
+          'YYYY-MM-DD HH:mm:ss'
         ),
         endAt: this.timezoneToUtcTimeStr(
           this.time[1] * 1000,
-          "YYYY-MM-DD HH:mm:ss"
+          'YYYY-MM-DD HH:mm:ss'
         ),
-        orderBy: "-startAt",
-      };
-      this.$get("/alert/message/rel", params)
+        orderBy: '-startAt'
+      }
+      this.$get('/alert/message/rel', params)
         .then((res) => {
-          this.loading = false;
+          this.loading = false
           if (res.code === 200) {
-            this.total = res.data.total;
+            this.total = res.data.total
             if (this.pageNo == 1) {
-              this.timeLineData = res.data.list;
+              this.timeLineData = res.data.list
             } else {
-              this.timeLineData.push(...res.data.list);
+              this.timeLineData.push(...res.data.list)
             }
-            this.disposeTime(this.pageNo);
-            this.noData = false;
-            this.pageNo++;
+            this.disposeTime(this.pageNo)
+            this.noData = false
+            this.pageNo++
           } else {
-            this.noData = true;
+            this.noData = true
           }
         })
         .catch(() => {
-          this.loading = false;
-          this.noData = true;
-        });
+          this.loading = false
+          this.noData = true
+        })
     },
-    disposeTime(pageNo) {
-      let i = (pageNo - 1) * this.pageSize;
+    disposeTime (pageNo) {
+      let i = (pageNo - 1) * this.pageSize
       for (i; i < this.timeLineData.length; i++) {
         const lastDataTime = this.utcTimeToTimezoneStr(
           this.timeLineData[i].startAt,
           this.dateFormatStr
-        );
-        this.timeLineData[i].color = "#fa8";
-        this.timeLineData[i].startTime = this.timeLineData[i].startAt;
+        )
+        this.timeLineData[i].color = '#fa8'
+        this.timeLineData[i].startTime = this.timeLineData[i].startAt
         if (this.lastDataTime !== lastDataTime) {
-          this.lastDataTime = lastDataTime;
-          this.timeLineData[i].startAt = lastDataTime;
+          this.lastDataTime = lastDataTime
+          this.timeLineData[i].startAt = lastDataTime
         } else {
-          this.timeLineData[i].startAt = "";
+          this.timeLineData[i].startAt = ''
         }
       }
     },
-    selectIcon(item) {
+    selectIcon (item) {
       switch (item.key) {
-        case "asset":
-          return "nz-icon-overview-project";
-        case "datacenter":
-          return "nz-icon-Datacenter2";
-        case "project":
-          return "nz-icon-project";
-        case "module":
-          return "nz-icon-overview-module";
-        case "endpoint":
-          return "nz-icon-overview-endpoint";
-        case "alertrule":
-          return "nz-icon-Alertrule";
-        case "hash":
-          return "nz-icon-module5";
+        case 'asset':
+          return 'nz-icon-overview-project'
+        case 'datacenter':
+          return 'nz-icon-Datacenter2'
+        case 'project':
+          return 'nz-icon-project'
+        case 'module':
+          return 'nz-icon-overview-module'
+        case 'endpoint':
+          return 'nz-icon-overview-endpoint'
+        case 'alertrule':
+          return 'nz-icon-Alertrule'
+        case 'hash':
+          return 'nz-icon-module5'
       }
-      return "nz-icon-module5";
+      return 'nz-icon-module5'
     },
-    scopeChange(scope) {
+    scopeChange (scope) {
       if (this.scopeChangeTimer) {
-        clearInterval(this.scopeChangeTimer);
-        this.scopeChangeTimer = null;
+        clearInterval(this.scopeChangeTimer)
+        this.scopeChangeTimer = null
       }
-      this.loading = true;
-      const isSelectArr = this.scopeList.filter((item) => item.isSelect);
+      this.loading = true
+      const isSelectArr = this.scopeList.filter((item) => item.isSelect)
       if (isSelectArr.length === this.scopeList.length) {
         this.scopeList.forEach((item) => {
-          item.isSelect = false;
-        });
-        scope.isSelect = !scope.isSelect;
+          item.isSelect = false
+        })
+        scope.isSelect = !scope.isSelect
       } else if (isSelectArr.length === 1 && isSelectArr[0].key === scope.key) {
         this.scopeList.forEach((item) => {
-          item.isSelect = true;
-        });
+          item.isSelect = true
+        })
       } else {
-        scope.isSelect = !scope.isSelect;
+        scope.isSelect = !scope.isSelect
       }
       this.scopeChangeTimer = setTimeout(() => {
-        this.pageNo = 1;
+        this.pageNo = 1
         this.lastDataTime = ''
-        this.getTimeLineData();
-      }, 100);
-    },
-  },
-};
+        this.getTimeLineData()
+      }, 100)
+    }
+  }
+}
 </script>
 
 <style scoped>

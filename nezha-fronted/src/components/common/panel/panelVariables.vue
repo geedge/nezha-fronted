@@ -1,6 +1,6 @@
 <template>
   <div style="" class="panel-variables-box">
-    <div v-for="(item,index) in labelArr" :key="index" v-if="item.show && labelValue[item.name].length" class="panel-variables-content" style="display: flex">
+    <div v-for="(item,index) in labelArr" :key="index" v-if="item.show" class="panel-variables-content" style="display: flex">
       <div class="variable-key">{{item.name}}</div>
       <el-popover
         trigger="manual"
@@ -272,7 +272,7 @@ export default {
             return
           }
           let arr = res.data
-          arr.filter((metricName) => {
+          arr = arr.filter((metricName) => {
             const r = new RegExp(metricFilterPattern)
             return r.test(metricName)
           })

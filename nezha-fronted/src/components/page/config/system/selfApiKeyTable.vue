@@ -106,7 +106,7 @@ export default {
           minWidth: 100,
           show: true
         }, {
-          label: this.$t('asset.key'),
+          label: this.$t('apiKey.key'),
           prop: 'token',
           minWidth: 180,
           show: false
