@@ -132,7 +132,12 @@
             <pl-table v-if="showTable" ref="resultTable" v-my-loading="loading" :datas="resultData" :empty-text="$t('overall.noData')" :pagination-show="false" :row-height="28"
                       border class="mib-browser-table" size="small" style="width: 100%; height: 100%" use-virtual>
               <pl-table-column v-slot="{row}" label="Name/OID">
-                <div class="too-long-split" @click="searchParam.oid = row.oid">{{row.name ? row.name : row.oid}}</div>
+                <div class="document-copy-block">
+                  <div class="document-copy-text">
+                    <div class="too-long-split" @click="searchParam.oid = row.oid">{{row.name ? row.name : row.oid}}</div>
+                  </div>
+                  <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(row.name ? row.name : row.oid)" :title="$t('overall.copyText')"></i>
+               </div>
               </pl-table-column>
               <pl-table-column v-slot="{row}" label="Value">
                 <template><div @click="searchParam.oid = row.oid">{{row.value}}</div></template>

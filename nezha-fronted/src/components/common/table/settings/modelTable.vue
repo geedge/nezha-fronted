@@ -42,11 +42,23 @@
             <span>-</span>
           </template>
         </template>
+        <template v-else-if="item.prop === 'name'">
+            <div class="document-copy-block">
+              <span class="document-copy-text">{{scope.row.name ? scope.row.name : '-'}}</span>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
+            </div>
+          </template>
          <template v-else-if="item.prop === 'brand'">
-           {{scope.row.brand.name}}
+          <div class="document-copy-block">
+              <span class="document-copy-text">{{scope.row.brand.name}}</span>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.brand.name)" :title="$t('overall.copyText')"></i>
+            </div>
          </template>
         <template v-else-if="item.prop === 'type'">
-          {{scope.row.type ? scope.row.type.name : '-'}}
+          <div class="document-copy-block">
+              <span class="document-copy-text">{{scope.row.type ? scope.row.type.name : '-'}}</span>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.type.name)" :title="$t('overall.copyText')"></i>
+            </div>
          </template>
         <span v-else-if="item.prop === 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <template v-else-if="item.prop === 'assetNum'">
