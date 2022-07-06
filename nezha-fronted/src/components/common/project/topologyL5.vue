@@ -351,7 +351,7 @@ import {
   myCubec,
   myCubeAnchors
 } from './L5/services/canvas.js'
-import { getTopology, setTopology } from '../js/common'
+import { getTopology, setTopology, dealImg } from '../js/common'
 import CanvasProps from './L5/CanvasProps'
 import topologyTopTool from './L5//topologyTopTool'
 import CanvasContextMenu from './L5/CanvasContextMenu'
@@ -1653,7 +1653,7 @@ export default {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
           this.$get('monitor/project/topo/icon', { id: res.data.id }).then(iconInfo => {
-            this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
+            dealImg(`monitor/project/topo/icon/${res.data.id}/1`, res.data.id).then((data, header) => {
               const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
               this.iconArray.push({
                 ...iconInfo.data.list[0],
@@ -1749,7 +1749,7 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
+            promiseArr.push(dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
@@ -1808,7 +1808,7 @@ export default {
           }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
-              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
+              promiseArr.push(dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`, item.data.imageId))
             } else if (item.data.imageId) {
               promiseArr.push(imgDefault)
             } else {
@@ -2280,10 +2280,6 @@ export default {
       this.timer4 = null
     }
     if (getTopology(this.topologyIndex)) {
-      window.topology = null
-      window.Le5leTopologyPoint = null
-      window.topologyPoint = null
-      window.topologyRect = null
       getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
       getTopology(this.topologyIndex).destroy()
       Object.keys(getTopology(this.topologyIndex)).forEach(key => {

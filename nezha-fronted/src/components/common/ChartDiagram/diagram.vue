@@ -327,7 +327,7 @@ import {
   myCubec,
   myCubeAnchors
 } from '../project/L5/services/canvas.js'
-import {getTopology, setTopology} from '../js/common'
+import {getTopology, setTopology, dealImg} from '../js/common'
 import CanvasProps from '../project/L5/CanvasProps'
 import topologyTopTool from '../project/L5/topologyTopTool'
 import popDataMain from '../project/popData/Main'
@@ -1596,7 +1596,7 @@ export default {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
           this.$get('monitor/project/topo/icon', { id: res.data.id }).then(iconInfo => {
-            this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
+            dealImg(`monitor/project/topo/icon/${res.data.id}/1`, res.data.id).then((data, header) => {
               const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
               this.iconArray.push({
                 ...iconInfo.data.list[0],
@@ -1752,7 +1752,7 @@ export default {
             if (nowImage && nowImage.data) {
               promiseArr.push(nowImage)
             } else {
-              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
+              promiseArr.push(dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
             }
             imgArr.push({ ...item })
           })
@@ -1814,7 +1814,7 @@ export default {
               if (nowImage && nowImage.data) {
                 promiseArr.push(nowImage)
               } else {
-                promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
+                promiseArr.push(dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`, item.data.imageId))
               }
             } else if (item.data.imageId) {
               promiseArr.push(imgDefault)
