@@ -66,6 +66,9 @@
 
 .panel-variables{
    width: 200px;
+  .pop-list {
+    max-height: 360px;
+  }
   .el-dropdown-menu__item {
     padding: 0 5px 0 20px;
     width: 100%;
