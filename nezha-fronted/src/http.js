@@ -1,22 +1,40 @@
+import { getUUID } from './components/common/js/common'
 import axios from 'axios'
 const CancelToken = axios.CancelToken // 申明CancelToken
-
 export const requestsArr = []
-axios.interceptors.request.use(config => {
-  const source = CancelToken.source() // 申明CancelToken,也可new CancelToken.source()实例一个
-  config.cancelToken = source.token // 讲实例对象的token赋予该请求
-  requestsArr.push(source) // 将该实例添加到队列中
-  const token = localStorage.getItem('nz-token')
-  if (token) {
-    config.headers.Authorization = token // 请求头token
+// 清除掉请求完成的实例 防止占用内存
+const removePending = (config) => {
+  if (!config) {
+    return false
   }
-  const lang = localStorage.getItem('nz-language')
-  if (lang) {
-    config.headers.Language = lang // 请求头token
+  for (const i in requestsArr) {
+    if (requestsArr[i].id === config.id) {
+      requestsArr.splice(i, 1)
+    }
   }
-  return config
-},
-err => Promise.reject(err)
+}
+axios.interceptors.request.use(
+  config => {
+    const source = CancelToken.source() // 申明CancelToken,也可new CancelToken.source()实例一个
+    config.cancelToken = source.token // 将实例对象的token赋予该请求
+    const id = getUUID() // 添加唯一识别id 在请求完成时清除requestsArr
+    config.id = id
+    requestsArr.push({
+      id,
+      cancel: source.cancel
+    }) // 将该实例添加到队列中
+    const token = localStorage.getItem('nz-token')
+    if (token) {
+      config.headers.Authorization = token // 请求头token
+    }
+    const lang = localStorage.getItem('nz-language')
+    if (lang) {
+      config.headers.Language = lang // 请求头token
+    }
+    return config
+  }, err => {
+    Promise.reject(err)
+  }
 )
 const accountErrorCode = [518003, 518004, 518005, 518006, 518007, 518008] // 账号锁定等
 const licenceErrorCode = [711001]
@@ -66,9 +84,13 @@ axios.interceptors.response.use(
     } else {
       return response
     }
+    // 请求完成在数组中移除
+    removePending(response.config)
     return response
   },
   error => {
+    // 请求完成在数组中移除
+    removePending(error.config)
     return Promise.reject(error)
   }
 )
