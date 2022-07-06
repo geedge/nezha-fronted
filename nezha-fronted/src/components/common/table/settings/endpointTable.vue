@@ -139,7 +139,7 @@
              <span class="active-icon gray-bg inline-block"></span>
            </span>
          </span>
-            <nz-tooltip :that="scope.row.configs[1]"  v-if="scope.row.configs[1] && scope.row.configs[1].loading && scope.row.configs[1].state > 1" :type="'configs[1]'">
+            <nz-tooltip :that="scope.row.configs[1]"  v-if="scope.row.configs[1] && scope.row.configs[1].loading && scope.row.configs[1].state > 1" :type="'configs[1]'" :isTopoInfo="isTopoInfo">
               <div name="default">
                 <div v-html="suspendedStr(scope.row.configs[1].state)"></div>
               </div>
@@ -212,6 +212,10 @@ export default {
     showOption: {
       type: Boolean,
       default: true
+    },
+    isTopoInfo: {
+      type: Boolean,
+      default: false
     },
     endpointTab: Boolean,
     loading: Boolean

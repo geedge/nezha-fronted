@@ -215,14 +215,14 @@
       font-weight: 600;
       text-transform: Capitalize;
     }
-    .pipeline-option {
-      i {
-        color: $--color-text-regular;
-      }
-    }
   }
   .el-input-group__append {
     background-color: $--border-color-light;
+  }
+}
+.pipeline-option {
+  i {
+    color: $--color-text-regular;
   }
 }
 .sub-label {

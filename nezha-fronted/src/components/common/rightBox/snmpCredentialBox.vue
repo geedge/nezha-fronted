@@ -153,11 +153,11 @@ export default {
         if (valid) {
           if (this.editCredential.type === 3) {
             if (this.editCredential.config.authProtocol && !this.editCredential.config.privProtocol) {
-              this.editCredential.securityLevel = 'authNoPriv'
+              this.editCredential.config.securityLevel = 'authNoPriv'
             } else if (this.editCredential.config.authProtocol && this.editCredential.config.privProtocol) {
-              this.editCredential.securityLevel = 'authPriv'
+              this.editCredential.config.securityLevel = 'authPriv'
             } else {
-              this.editCredential.securityLevel = 'noAuthNoPriv'
+              this.editCredential.config.securityLevel = 'noAuthNoPriv'
             }
           }
           const param = JSON.parse(JSON.stringify(this.editCredential))
