@@ -348,8 +348,8 @@ export default {
           { validator: arrLength, trigger: 'blur' }
         ],
         'param.report.schedule.nums': [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' },
-          { validator: arrLength, trigger: 'change' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: arrLength, trigger: 'blur' }
         ]
       },
       week: [
