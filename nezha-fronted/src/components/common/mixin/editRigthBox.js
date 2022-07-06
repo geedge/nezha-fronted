@@ -1,3 +1,5 @@
+import i18n from '@/components/common/i18n'
+import { getUUID } from '../js/common'
 export default {
   data () {
     return {
@@ -7,7 +9,8 @@ export default {
         params: {},
         emit: ''
       },
-      closeMessage: ''
+      closeMessage: null,
+      uuid: getUUID()
     }
   },
   mounted () {
@@ -18,25 +21,55 @@ export default {
     }
   },
   methods: {
-    messageShow (msg, route, params, showNext = false, nextText = 'setup.next', emit) {
+    // 开启计时器 对message赋值
+    coutTime (msg, showNext, nextText, second) {
+      if (!this.closeMessage) {
+        return false
+      }
+      this.closeMessage.message =
+      `<div class="custom-message">
+        <div class="message-left">${msg}</div>
+        <div class="message-right ${showNext ? '' : 'hidden'}">
+          <span>，${i18n.t('tip.clickNext')}${i18n.t(nextText)}</span>
+          <span id="assetAdd${this.uuid}" class="message-next">${i18n.t('tip.next')}
+            <span>(${second}s)</span>
+          </span>
+        </div>
+      </div>`
+      this.$nextTick(() => {
+        const assetAdd = document.getElementById(`assetAdd${this.uuid}`)
+        assetAdd.addEventListener('click', this.saveNext)
+      })
+      setTimeout(() => {
+        --second
+        if (second === 0) {
+          this.closeMessage.close()
+        } else {
+          this.coutTime(msg, showNext, nextText, second)
+        }
+      }, 1000)
+    },
+    messageShow (msg, route, params, showNext = false, nextText = '', emit) {
+      // 如果存在弹框 则先清理掉
       this.messageParams.route = route
       this.messageParams.params = params
       this.messageParams.emit = emit
       this.closeMessage = this.$message({
-        duration: showNext ? 5000 : 2000,
+        duration: showNext ? 30000 : 3000,
         dangerouslyUseHTMLString: true,
         type: 'success',
-        message: `<div>${msg} <span class="message-next ${showNext ? '' : 'hidden'}"><span class="message-next-continue">${this.$t('overall.continue')}</span> <span id="assetAdd" class="message-next-content">${this.$t(nextText)}</span></span></div>`,
+        message: '',
         onClose: () => {
-          const assetAdd = document.getElementById('assetAdd')
+          const assetAdd = document.getElementById(`assetAdd${this.uuid}`)
           assetAdd.removeEventListener('click', this.saveNext)
-          this.closeMessage = ''
+          this.closeMessage = null
         }
       })
-      const assetAdd = document.getElementById('assetAdd')
-      assetAdd.addEventListener('click', this.saveNext)
+      // 对message赋值
+      this.coutTime(msg, showNext, nextText, 30)
     },
     saveNext () {
+      this.closeMessage.close()
       if (!this.messageParams.route) {
         this.$store.dispatch(this.messageParams.emit, this.messageParams.params)
         return
@@ -45,7 +78,6 @@ export default {
         path: this.messageParams.route,
         query: this.messageParams.params
       })
-      this.closeMessage.close()
     }
   },
   destroyed () {
