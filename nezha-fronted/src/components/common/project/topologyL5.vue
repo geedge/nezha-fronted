@@ -479,9 +479,9 @@ export default {
       chartData: {},
       chartGetData: [],
       penLineType: [
-        { d: 'M5 19 a50,100 0 0,1 40,0', 'stroke-dasharray': '', name: this.$t('project.topology.curve'), id: 'curve' , strokeColor: theme == 'light' ? 'black' : '#BEBEBE'},
-        { d: 'M5 8 l20 0 l0 12 l20 0', 'stroke-dasharray': '', name: this.$t('project.topology.polyline'), id: 'polyline' , strokeColor: theme == 'light' ? 'black' : '#BEBEBE'},
-        { d: 'M5 14 l40 0', 'stroke-dasharray': '', name: this.$t('project.topology.line'), id: 'line' , strokeColor: theme == 'light' ? 'black' : '#BEBEBE'}
+        { d: 'M5 19 a50,100 0 0,1 40,0', 'stroke-dasharray': '', name: this.$t('project.topology.curve'), id: 'curve', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },
+        { d: 'M5 8 l20 0 l0 12 l20 0', 'stroke-dasharray': '', name: this.$t('project.topology.polyline'), id: 'polyline', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },
+        { d: 'M5 14 l40 0', 'stroke-dasharray': '', name: this.$t('project.topology.line'), id: 'line', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' }
         // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind', strokeColor: theme == 'light' ? 'black' : '#BEBEBE'},
       ],
       lineName: 'curve',
@@ -617,11 +617,12 @@ export default {
       // getTopology(this.topologyIndex).fitView(30)
     },
     shrink (n) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         getTopology(this.topologyIndex).resize()
         getTopology(this.topologyIndex).centerView()
+        clearTimeout(timer)
       }, 500)
     }
   },
@@ -722,16 +723,18 @@ export default {
         getTopology(this.topologyIndex).resize()
         getTopology(this.topologyIndex).centerView()
         this.penToolTipScale = getTopology(this.topologyIndex).data.scale
-        setTimeout(() => {
+        const timer = setTimeout(() => {
           getTopology(this.topologyIndex) && getTopology(this.topologyIndex).data.pens.forEach(item => {
             if (item.animatePlay) {
               item.stopAnimate()
-              setTimeout(() => {
+              const timer1 = setTimeout(() => {
                 item.startAnimate()
+                clearTimeout(timer1)
               })
             }
-          }, 100)
-        })
+          })
+          clearTimeout(timer)
+        }, 100)
         // if(this.fromPrev){
         //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
         // }
@@ -777,6 +780,7 @@ export default {
         if (!document.getElementById('topology-canvas' + this.topologyIndexF)) {
           return
         }
+        data = this.$loadsh.cloneDeep(data)
         if (!getTopology(this.topologyIndex)) {
           let canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
           canvas.open(data)
@@ -1133,8 +1137,9 @@ export default {
         this.popDataShowUpdate('', false, node)
         return
       }
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         this.popDataShowUpdate(tool.id, false, node)
+        clearTimeout(timer)
       }, 100)
     },
 
@@ -1166,8 +1171,9 @@ export default {
     /* topology 方法 */
     onDrag (event, node) {
       this.dragFlag = false
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         this.dragFlag = true
+        clearTimeout(timer)
       }, 100)
       event.dataTransfer.setData('Text', JSON.stringify({ ...node.data, data: { imageId: node.data.imageId } }))
     },
@@ -1182,8 +1188,9 @@ export default {
           },
           data: { imageId: node.data.imageId }
         })
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         this.dragFlag = true
+        clearTimeout(timer)
       }, 100)
     },
 
@@ -1305,7 +1312,7 @@ export default {
           }
           this.chartData = { ...data.data, ...this.chartGetData.find(item => item.id === data.id) }
           this.tooltipPosition.show = false
-          setTimeout(() => {
+         const timer = setTimeout(() => {
             this.tooltipPosition.show = true
             let ePosition = window.ePosition
             let boxWidth = document.getElementsByClassName('page')[0].offsetWidth
@@ -1329,6 +1336,7 @@ export default {
               boxWidth = null
               boxHeight = null
             })
+            clearTimeout(timer)
           }, 100)
           break
         case 'moveOutNode':
@@ -1350,7 +1358,7 @@ export default {
           break
       }
       // 右侧输入框编辑状态时点击编辑区域其他元素，onMessage执行后才执行onUpdateProps方法，通过setTimeout让onUpdateProps先执行
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         switch (event) {
           case 'node':
           case 'addNode':
@@ -1534,6 +1542,7 @@ export default {
             // }
             break
         }
+        clearTimeout(timer)
       }, 0)
     },
 
@@ -1892,7 +1901,7 @@ export default {
       this.showNoData = false
       this.topoScreenState = JSON.parse(JSON.stringify(this.topoScreen))
       this.$store.commit('setShowTopoScreen', true)
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         getTopology(this.topologyIndex).lock(0)
         getTopology(this.topologyIndex).data.pens.forEach((item, index) => { // 停止动画 以及赋值默认data
           if (item.animatePlay) {
@@ -1939,6 +1948,7 @@ export default {
         const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
         const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
+        clearTimeout(timer)
       })
     },
 
@@ -2143,7 +2153,7 @@ export default {
     /* tools 方法 */
 
     winResize () {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         let domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
@@ -2168,6 +2178,7 @@ export default {
         getTopology(this.topologyIndex).centerView()
         this.getNodesArr()
         domRect = null
+        clearTimeout(timer)
       }, 500)
     },
     contextmenuNone () {
