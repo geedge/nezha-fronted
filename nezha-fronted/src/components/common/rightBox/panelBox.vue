@@ -246,7 +246,7 @@
                       v-model="editPanel.param.report.schedule.repeat"
                       id="chart-box-title"
                       v-if="isShow === 3 ? true :false">
-                      <template slot="append">{{ $t("backup.week") }}</template>
+                      <template slot="append">{{ $t("el.datepicker.week") }}</template>
                     </el-input>
                     <el-input
                       size="small"
