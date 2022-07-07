@@ -822,7 +822,6 @@ export default {
         this.htmlTitle = this.showPanel.name
         this.scrollbarWrap.scrollTop = this.scrollbarWrap.scrollHeight
         this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
-        console.log(dom.children)
         // const div = document.createElement('div')
         // div.setAttribute('class', 'el-loading-spinner')
         // div.innerText = '12321312312312321'
@@ -848,7 +847,6 @@ export default {
               document.getElementsByClassName('left-menu')[0].style.height = '100vh'
               // document.getElementsByTagName('html')[0].style.overflow = 'visible'
               const position = dom.getBoundingClientRect()
-              console.log(position)
               this.getPdf(dom, -1 * position.left, -1 * position.top, this.searchTime)
               // this.getPdf(dom, 0, 0)
             }, 2000)

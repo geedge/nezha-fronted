@@ -42,6 +42,16 @@
                     @click="saveChart">
               {{$t('dashboard.metric.saveChart')}}
             </button>
+            <button v-else
+                    id="explore-save-chart-logs"
+                    v-has="'main_add'"
+                    :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}"
+                    :disabled="saveDisabled"
+                    class="top-tool-btn top-tool-btn--text"
+                    type="button"
+                    @click="saveChartLogs">
+              {{$t('dashboard.metric.saveChart')}}
+            </button>
           </div>
         </div>
         <div id="explore-promql-box" class="top-tools" style="padding-top: 0; flex-wrap: wrap">
@@ -974,6 +984,43 @@ export default {
         sync: 0,
         remark: '',
         groupId: -1
+      }
+      this.expressions.forEach((exp, index) => {
+        chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
+      })
+      this.chartData = chart
+      this.rightBox.show = true
+    },
+    saveChartLogs () {
+      const chart = {
+        id: '',
+        name: '',
+        panelName: '',
+        span: 4,
+        height: 4,
+        unit: 2,
+        groupId: -1,
+        updateBy: 1,
+        updateAt: '2022-05-18 07:51:45',
+        type: 'log',
+        weight: 6,
+        param: { limit: 100 },
+        pid: null,
+        buildIn: 0,
+        seq: null,
+        x: 0,
+        y: 1.93,
+        elements: [],
+        children: null,
+        chartNums: null,
+        asset: null,
+        varType: null,
+        varId: null,
+        varName: null,
+        datasource: 'logs',
+        enable: { thresholds: false, legend: true, valueMapping: false },
+        sync: 0,
+        remark: ''
       }
       this.expressions.forEach((exp, index) => {
         chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
