@@ -1,133 +1,145 @@
 <template>
-  <el-dropdown trigger="click" :size="size">
-    <button id="more" :class="triggerButtonClass" :title="$t('overall.more')">
-      <i class="nz-icon nz-icon-more2"></i>
-    </button>
-    <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
-      <el-dropdown-item  v-if="showLock">
-        <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t("overall.locked") : $t("overall.unlocked")}}</div>
-      </el-dropdown-item>
-      <!-- import、export之前的内容 -->
-      <slot name="before"></slot>
-      <el-dropdown-item v-has="permissions.import" v-if="importUrl">
-        <div id="chart-import" @click="showImportBox(1)"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</div>
-      </el-dropdown-item>
-      <el-dropdown-item v-has="permissions.export" v-if="exportUrl">
-        <div id="chart-export" @click="showImportBox(2)"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</div>
-      </el-dropdown-item>
-      <!-- import、export之后的内容 -->
-      <slot name="after"></slot>
-    </el-dropdown-menu>
+  <div>
+    <el-dropdown trigger="click" :size="size">
+      <button id="more" :class="triggerButtonClass" :title="$t('overall.more')">
+        <i class="nz-icon nz-icon-more2"></i>
+      </button>
+      <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
+        <el-dropdown-item  v-if="showLock">
+          <div @click="editPanel" id="edit-bottom-panel"><i class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</div>
+        </el-dropdown-item>
+        <el-dropdown-item  v-if="showLock">
+          <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t("overall.locked") : $t("overall.unlocked")}}</div>
+        </el-dropdown-item>
+        <!-- import、export之前的内容 -->
+        <slot name="before"></slot>
+        <el-dropdown-item v-has="permissions.import" v-if="importUrl">
+          <div id="chart-import" @click="showImportBox(1)"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</div>
+        </el-dropdown-item>
+        <el-dropdown-item v-has="permissions.export" v-if="exportUrl">
+          <div id="chart-export" @click="showImportBox(2)"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</div>
+        </el-dropdown-item>
+        <!-- import、export之后的内容 -->
+        <slot name="after"></slot>
+      </el-dropdown-menu>
 
-    <el-dialog :close-on-click-modal="importBox.type!=3" destroy-on-close :show-close="true" :title="importBox.title" :visible.sync="importBox.show" :width="importBox.width" append-to-body class="nz-dialog" @close="closeDialog">
-      <div v-if="importBox.type == 1">
-        <div class="upload-body">
-          <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls"  action="" class="upload-demo" drag>
-            <div slot="tip" class="el-upload__tip" >{{$t('overall.importTip')}}</div>
-            <i class="nz-icon nz-icon-upload"></i>
-            <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
-          </el-upload>
-        </div>
-        <div slot="footer" class="footer">
-          <div class="el-message-box__btns" style="text-align: right;">
-            <button :id="id+'-xlsx-import-template'" class="el-button el-button--default el-button--small" @click="downloadTemplate">
-              <span>{{$t('overall.template')}}</span>
-            </button>
-            <button  :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
-              <span>{{$t('overall.importExcel')}}</span>
-            </button>
-            <button :id="id+'-xlsx-import-esc'" class="el-button el-button--default el-button--small" @click="closeDialog">
-              <span>{{$t('overall.cancel')}}</span>
-            </button>
+      <el-dialog :close-on-click-modal="importBox.type!=3" destroy-on-close :show-close="true" :title="importBox.title" :visible.sync="importBox.show" :width="importBox.width" append-to-body class="nz-dialog" @close="closeDialog">
+        <div v-if="importBox.type == 1">
+          <div class="upload-body">
+            <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls"  action="" class="upload-demo" drag>
+              <div slot="tip" class="el-upload__tip" >{{$t('overall.importTip')}}</div>
+              <i class="nz-icon nz-icon-upload"></i>
+              <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
+            </el-upload>
           </div>
-        </div>
-      </div>
-      <div v-if="importBox.type == 2">
-        <div class="upload-body" style="height: 200px">
-          <div class="export-box">
-            <span class="export-title">Records</span>
-            <el-radio-group v-model="importBox.record"  size="small">
-              <el-radio-button :label="item.value" v-for="(item,index) in recordArr" :key="index" :disabled="item.value==='records'&&!deleteObjs.length">{{item.name}}</el-radio-button>
-            </el-radio-group>
-          </div>
-          <div class="export-box">
-            <span class="export-title">File format</span>
-            <el-radio-group v-model="importBox.format"  size="small">
-              <el-radio-button :label="item.value" v-for="(item,index) in formatArr" :key="index">{{item.name}}</el-radio-button>
-            </el-radio-group>
-          </div>
-        </div>
-        <div slot="footer" class="footer">
-          <div class="el-message-box__btns">
-            <button :id="id+'-xlsx-import-export'"  class="nz-btn nz-btn-size-normal nz-btn-style-normal-new" @click="exportData">
-              <span style="text-transform:Capitalize">{{$t('overall.exportExcel')}}</span>
-            </button>
-            <button :id="id+'-xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
-              <span>{{$t('overall.close')}}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div v-if="importBox.type==3">
-        <div class="upload-body result-body">
-          <div v-if="importResult&&importResult.failNum">
-            <div class="result-title-top">
-              <div class="">
-                <i class="nz-icon nz-icon-import-success"/>
-                 <span>{{$t('overall.result.successNum',{successNum:importResult.successNum})}}</span><br/>
-              </div>
-              <div class="">
-                 <i class="nz-icon nz-icon-import-failed"/>
-                 <span>{{$t('overall.result.failedNum',{failedNum:importResult.failNum,total:importResult.totalNum})}}</span>
-              </div>
+          <div slot="footer" class="footer">
+            <div class="el-message-box__btns" style="text-align: right;">
+              <button :id="id+'-xlsx-import-template'" class="el-button el-button--default el-button--small" @click="downloadTemplate">
+                <span>{{$t('overall.template')}}</span>
+              </button>
+              <button  :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
+                <span>{{$t('overall.importExcel')}}</span>
+              </button>
+              <button :id="id+'-xlsx-import-esc'" class="el-button el-button--default el-button--small" @click="closeDialog">
+                <span>{{$t('overall.cancel')}}</span>
+              </button>
             </div>
-            <div>
-              <div v-if="importResult&&importResult.failDetail" class="result-detail">
-                <div style="height: 100%; overflow: auto">
-                  <template v-for="(item, index) in importResult.failDetail">
-                    <div :key="index" class="import-result-block">
-                      <div class="import-result-item">
-                        <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
-                        <div class="line-content" :title="item.errorMsg">{{item.errorMsg}}</div>
+          </div>
+        </div>
+        <div v-if="importBox.type == 2">
+          <div class="upload-body" style="height: 200px">
+            <div class="export-box">
+              <span class="export-title">Records</span>
+              <el-radio-group v-model="importBox.record"  size="small">
+                <el-radio-button :label="item.value" v-for="(item,index) in recordArr" :key="index" :disabled="item.value==='records'&&!deleteObjs.length">{{item.name}}</el-radio-button>
+              </el-radio-group>
+            </div>
+            <div class="export-box">
+              <span class="export-title">File format</span>
+              <el-radio-group v-model="importBox.format"  size="small">
+                <el-radio-button :label="item.value" v-for="(item,index) in formatArr" :key="index">{{item.name}}</el-radio-button>
+              </el-radio-group>
+            </div>
+          </div>
+          <div slot="footer" class="footer">
+            <div class="el-message-box__btns">
+              <button :id="id+'-xlsx-import-export'"  class="nz-btn nz-btn-size-normal nz-btn-style-normal-new" @click="exportData">
+                <span style="text-transform:Capitalize">{{$t('overall.exportExcel')}}</span>
+              </button>
+              <button :id="id+'-xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
+                <span>{{$t('overall.close')}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-if="importBox.type==3">
+          <div class="upload-body result-body">
+            <div v-if="importResult&&importResult.failNum">
+              <div class="result-title-top">
+                <div class="">
+                  <i class="nz-icon nz-icon-import-success"/>
+                  <span>{{$t('overall.result.successNum',{successNum:importResult.successNum})}}</span><br/>
+                </div>
+                <div class="">
+                  <i class="nz-icon nz-icon-import-failed"/>
+                  <span>{{$t('overall.result.failedNum',{failedNum:importResult.failNum,total:importResult.totalNum})}}</span>
+                </div>
+              </div>
+              <div>
+                <div v-if="importResult&&importResult.failDetail" class="result-detail">
+                  <div style="height: 100%; overflow: auto">
+                    <template v-for="(item, index) in importResult.failDetail">
+                      <div :key="index" class="import-result-block">
+                        <div class="import-result-item">
+                          <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
+                          <div class="line-content" :title="item.errorMsg">{{item.errorMsg}}</div>
+                        </div>
                       </div>
-                    </div>
-                  </template>
+                    </template>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div v-else class="result-success-box">
-            <div>
-              <i class="nz-icon nz-icon-import-success"/>
+            <div v-else class="result-success-box">
+              <div>
+                <i class="nz-icon nz-icon-import-success"/>
+              </div>
+              <div class="result-success-txt">{{$t('overall.result.successfully')}}</div>
+              <div class="result-success-txt">
+                {{$t('overall.result.imported')}}
+                <span style="color: #333333" v-if="importResult">{{importResult.successNum}}</span>
+                {{$t('overall.result.records')}}
+              </div>
             </div>
-            <div class="result-success-txt">{{$t('overall.result.successfully')}}</div>
-            <div class="result-success-txt">
-              {{$t('overall.result.imported')}}
-              <span style="color: #333333" v-if="importResult">{{importResult.successNum}}</span>
-              {{$t('overall.result.records')}}
+          </div>
+          <div slot="footer" class="footer">
+            <div class="el-message-box__btns">
+              <button :id="id+'-xlsx-import-rollback'"  class="nz-btn nz-btn-size-normal nz-btn-style-error" @click="rollbackImport">
+                <span>{{$t('overall.rollbackImport')}}</span>
+              </button>
+              <button :id="id+'-xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
+                <span>{{$t('overall.close')}}</span>
+              </button>
             </div>
           </div>
         </div>
-        <div slot="footer" class="footer">
-          <div class="el-message-box__btns">
-            <button :id="id+'-xlsx-import-rollback'"  class="nz-btn nz-btn-size-normal nz-btn-style-error" @click="rollbackImport">
-              <span>{{$t('overall.rollbackImport')}}</span>
-            </button>
-            <button :id="id+'-xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
-              <span>{{$t('overall.close')}}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </el-dialog>
-  </el-dropdown>
+      </el-dialog>
+    </el-dropdown>
+    <transition name="right-box">
+      <panel-box v-if="rightBox.panel.show" ref="panelBox" :obj="panel" @close="closePanelBox" :isBottom="true" :panelType="params.from"></panel-box>
+    </transition>
+  </div>
 </template>
 
 <script>
 import axios from 'axios'
+import panelBox from '@/components/common/rightBox/panelBox'
 let timeout
 export default {
   name: 'topToolMoreOptions',
+  components: {
+    panelBox
+  },
   props: {
     size: {
       type: String,
@@ -179,7 +191,12 @@ export default {
         { name: 'CSV', value: 2 },
         { name: 'JSON', value: 3 }
       ],
-      suffix: '.xlsx'
+      suffix: '.xlsx',
+      panel: {},
+      rightBox: { // 面板弹出框相关
+        panel: { show: false },
+        loading: false
+      }
     }
   },
   mounted () {
@@ -528,7 +545,57 @@ export default {
     },
     formatNum (num) {
       return num > 9 ? num : '0' + num
-    }
+    },
+    editPanel () {
+      this.$get('visual/panel/' + this.params.panelId).then(res => {
+        if (res.code === 200) {
+          this.panel = res.data
+          if (!this.$loadsh.get(this.panel, 'param.report', '')) {
+            this.panel = {
+              ...this.panel,
+              param: {
+                report: {
+                  enable: false,
+                  range: {
+                    unit: 'day'
+                  },
+                  schedule: {
+                    type: '2',
+                    repeat: 1,
+                    nums: [],
+                    stime: '',
+                    etime: ''
+                  },
+                  receivers: []
+                },
+                chartShare: 'none'
+              }
+            }
+          }
+          this.panel.param.report.schedule.type = this.panel.param.report.schedule.type + ''
+          const startTime = this.$loadsh.get(this.panel, 'param.report.schedule.stime', '')
+          if (startTime !== '') {
+            this.panel.param.report.schedule.stime = this.utcTimeToTimezoneStr(this.panel.param.report.schedule.stime, 'YYYY-MM-DD HH:mm:ss')
+          } else {
+            this.panel.param.report.schedule.stime = ''
+          }
+          const endTime = this.$loadsh.get(this.panel, 'param.report.schedule.etime', '')
+          if (endTime !== '') {
+            this.panel.param.report.schedule.etime = this.utcTimeToTimezoneStr(this.panel.param.report.schedule.etime, 'YYYY-MM-DD HH:mm:ss')
+          } else {
+            this.panel.param.report.schedule.etime = ''
+          }
+          this.rightBox.panel.show = true
+        }
+      })
+      // this.panel = Object.assign({}, u)panelType
+    },
+    closePanelBox (refresh) {
+      this.rightBox.panel.show = false
+      if (refresh) {
+        this.$emit('afterImport')
+      }
+    },
   },
   watch: {
     panelLock: {

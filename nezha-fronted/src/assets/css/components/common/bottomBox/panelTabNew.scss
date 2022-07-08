@@ -92,7 +92,7 @@
     color: #60BEFF;
     font-size: 13px
   }
-  
+
   .panel-dropdown-btn:hover {
     color: #409EFF;
   }
@@ -149,6 +149,15 @@
 
     button:hover {
       background: $--background-color-empty;
+    }
+    .footer__btn {
+      background-color: $--color-primary;
+      border: none;
+    }
+    .footer__btn.footer__btn--light {
+      background-color: $--button-light-hover-background-color;
+      border: 1px solid $--button-light-border-color;
+      color: $--button-light-color;
     }
   }
   .date-range-panel{

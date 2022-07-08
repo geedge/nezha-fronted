@@ -99,6 +99,7 @@
       <div id="tableList" class="table-list" style="padding-top: 0;overflow: hidden">
         <div id="dashboardScrollbar" class="table-list-box">
           <div class="box-content"  ref="dashboardScrollbar" v-my-loading="chartListLoading" style="overflow-y: auto;display: flex;flex-direction: column">
+            <panel-variables :labelArrs="variables" :time-range="searchTime" @getPanelData="getPanelData"></panel-variables>
             <chart-list
               ref="chartList"
               name="panel"
@@ -113,6 +114,7 @@
               @on-remove-chart="delChart"
               @on-add-group-item-chart="addGroupItem"
               @refreshPanel="refreshPanel"
+              :variablesInit="variablesInit"
               :loading="chartListLoading"
               :chart-detail-info="chartDetailInfo"
             ></chart-list>
@@ -158,6 +160,7 @@ import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
+import panelVariables from "@/components/common/panel/panelVariables";
 export default {
   name: 'panelTabNew',
   mixins: [subDataListMixin, detailViewRightMixin, htmlToPdfMixin, exportHtmlMixin],
@@ -275,7 +278,9 @@ export default {
       panelDataList: [],
       batchDeleteObjs: [],
       nowTimeType: {},
-      chartDetailInfo: {}
+      chartDetailInfo: {},
+      variables: [],
+      variablesInit: false
     }
   },
   components: {
@@ -283,7 +288,8 @@ export default {
     chartList,
     nzBottomDataList,
     topToolMoreOptions,
-    chartTempBox
+    chartTempBox,
+    panelVariables // 处理panel变量的组件
   },
   methods: {
     // 刷新
@@ -544,10 +550,13 @@ export default {
     },
     // 公用操作
     getTableData (linkId) {
+      this.variablesInit = false
       if (this.from === this.fromRoute.alertRule) {
+        this.variablesInit = true
         this.getData(this.filter)
       } else {
         if (this.from === this.fromRoute.chartTemp) {
+          this.variablesInit = true
           if (this.obj.type === 'group') {
             this.$get('/visual/panel/chart', { ids: this.obj.id }).then(res => {
               this.panelDataList = res.data.list
@@ -564,11 +573,13 @@ export default {
             this.getData(this.filter)
           }
         } else {
-          this.$get('visual/panel', { type: this.from, link: linkId }).then(response => {
+          this.$get('visual/panel', { type: this.from, link: linkId || this.obj.id }).then(response => {
+            console.log(response)
             if (response.code === 200) {
               this.panelData = response.data.list
               if (this.panelData.length > 0) {
                 this.showPanel.id = this.filter.panelId = this.panelData[0].id
+                this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
                 this.getData(this.filter)
               }
             } else {
@@ -787,6 +798,10 @@ export default {
       } else {
         this.exportToHtml(this.obj.name)
       }
+    },
+    getPanelData () {
+      this.variablesInit = true
+      this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
     }
   },
   mounted () {
