@@ -313,8 +313,8 @@ export default {
       }
     },
     historyChange (item) {
-      this.searchTime[0] = item.start
-      this.searchTime[1] = item.end
+      this.oldSearchTime[0] = this.momentTz(item.start)
+      this.oldSearchTime[1] = this.momentTz(item.end)
       this.isCustom = true
       this.showDropdown()
       this.$emit('change', this.searchTime)
