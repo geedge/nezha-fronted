@@ -69,6 +69,17 @@
     color: $--color-text-primary;
     letter-spacing: 0;
     line-height: 23px;
+    padding-right: 5px;
+    .nz-icon-guzhangshuju {
+      color: $--color-primary;
+      vertical-align: middle;
+    }
+    .nz-icon-overview-alert{
+      vertical-align: middle;
+    }
+    .alert-days-info{
+      vertical-align: middle;
+    }
   }
   .danger{
     background-color: $--color-danger;
