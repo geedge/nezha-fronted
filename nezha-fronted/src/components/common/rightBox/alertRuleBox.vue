@@ -290,7 +290,7 @@
             </el-select>
           </el-form-item>
           <!--receiver-->
-          <el-form-item :label="$t('alert.receiver')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
+          <el-form-item :label="$t('dashboard.panel.receivers')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-select
               id="alert-box-input-receiver"
               v-model.trim="editAlertRule.receiverShow"

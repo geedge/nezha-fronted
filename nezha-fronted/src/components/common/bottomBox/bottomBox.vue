@@ -177,31 +177,31 @@ export default {
             { prop: 'panelTab', name: this.$t('overall.detail'), active: true },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
             { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
-            { prop: 'log', name: this.$t('overall.logs'), active: false }
+            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label'), active: false }
           ],
           alertMessage: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true },
             { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
-            { prop: 'log', name: this.$t('overall.logs'), active: false }
+            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label'), active: false }
           ],
           endpoint: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
             { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: true },
-            { prop: 'log', name: this.$t('overall.logs'), active: false }
+            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label'), active: false }
           ],
           log: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
             { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
-            { prop: 'log', name: this.$t('overall.logs'), active: true }
+            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label'), active: true }
           ],
           alertMessageSub: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
             { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
-            { prop: 'log', name: this.$t('overall.logs'), active: false },
+            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label'), active: false },
             { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: true }
           ]
         },
@@ -217,7 +217,7 @@ export default {
             { prop: 'panelTab', name: this.$t('overall.detail') },
             { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
             { prop: 'Metrics', name: this.$t('overall.metric') },
-            { prop: 'log', name: this.$t('overall.logs') }
+            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label') }
           ]
         },
         chartTemp: {
@@ -277,7 +277,7 @@ export default {
         { prop: 'Metrics', name: this.$t('overall.metric') }
       ]
       if (hasLog) {
-        tabs.push({ prop: 'log', name: this.$t('overall.logs') })
+        tabs.push({ prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label') })
       }
       return tabs
     }

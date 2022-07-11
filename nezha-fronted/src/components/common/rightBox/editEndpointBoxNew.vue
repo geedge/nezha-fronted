@@ -33,7 +33,7 @@
             </el-select>
           </el-form-item>
           <!--module-->
-          <el-form-item :label='$t("project.module.module")' prop="moduleId">
+          <el-form-item :label='$t("overall.module")' prop="moduleId">
             <el-select @change="renderEndpoint" id="module-box-input-module" v-model="editEndpoint.moduleId" :disabled="!editEndpoint.projectId || disabled " class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
               <el-option v-for="item in moduleList" :id="'module-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
@@ -82,7 +82,7 @@
           </div>
           <div class="right-box-line"></div>
           <!-- ChartTemplate  -->
-<!--          <el-form-item :label="$t('overall.chartTemp')" prop="ChartTemplate">-->
+<!--          <el-form-item :label="$t('overall.chartTemps')" prop="ChartTemplate">-->
 <!--            <v-selectpage-->
 <!--              v-model="editEndpoint.chartIds"-->
 <!--              :data="chartTempList"-->
@@ -209,7 +209,7 @@
                         @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
                       />
                     </el-form-item>
-                    <span :id="'moduel-remove-param-'+index" class="param-box-row-symbol" @click="removeParam(index)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-shanchu1""></i></span>
+                    <span :id="'moduel-remove-param-'+index" class="param-box-row-symbol" @click="removeParam(index)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-shanchu1"></i></span>
                   </div>
                 </div>
                 <div style="text-align: center">
@@ -1500,6 +1500,13 @@ export default {
     language () { return this.$store.getters.getLanguage }
   },
   watch: {
+    'this.editEndpoint.moduleId': {
+      immediate: true,
+      deep: true,
+      handler (n, o) {
+        console.log('11111')
+      }
+    },
     module: {
       immediate: true,
       deep: true,

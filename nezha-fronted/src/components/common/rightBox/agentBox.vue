@@ -17,7 +17,7 @@
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editPromServer.name" size="small" id="agent-box-input-name"></el-input>
           </el-form-item>
           <!--DC-->
-          <el-form-item :label="$t('config.dc.dc')" prop="dc.name">
+          <el-form-item :label="$t('overall.dc')" prop="dc.name">
             <div class="right-box-form-content">
               <el-select id="prom-box-input-dc" v-model="editPromServer.dc" placeholder="" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="item in dcData" :id="'prom-edit-dc-op-'+item.id" :key="item.id" :label="item.name" :value="item">

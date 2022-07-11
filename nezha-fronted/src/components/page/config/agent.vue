@@ -63,7 +63,7 @@
           <div class="right-box-sub-title">{{$t('config.agent.agent.autoScript')}}</div>
           <div style="margin-bottom: 20px;width: 100%"></div>
 
-          <el-form-item :label="$t('config.dc.dc')" class="half-form-item" prop="dc">
+          <el-form-item :label="$t('overall.dc')" class="half-form-item" prop="dc">
             <el-select v-model="agentParam.dc" class="right-box-row-with-btn" popper-class="right-box-select-top right-public-box-dropdown-top agent-select" placeholder="">
               <el-option v-for="item in allDc" :key="item.id" :label="item.name" :value="item.id">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
@@ -77,7 +77,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="cURL"  v-if="loadFinish" class="download-url">
+          <el-form-item label="CURL"  v-if="loadFinish" class="download-url">
             <el-input id="download-url-curl" :disabled="true" v-model="curlUrl">
               <el-popover :content="$t('overall.search')" placement="top" trigger="manual" v-model="curlVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('curl')"  style="cursor: pointer">
                 <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-curl')" :title="$t('overall.duplicate')"></i>

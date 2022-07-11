@@ -357,7 +357,7 @@
       </div>
       <div class="form-items--half-width-group" v-if="isShowDecimals(chartConfig.type)">
         <!--decimals-->
-        <el-form-item :label="$t('config.assetLabel.decimals')" class="form-item--half-width">
+        <el-form-item :label="$t('overall.decimal')" class="form-item--half-width">
           <el-input-number
             size="small"
             style="margin-top: 2px"
@@ -430,7 +430,7 @@
 
         <!--thresholdConfig-->
         <div class="form__sub-title" v-if="isThresholdConfig(chartConfig.type)">
-          <span>{{$t('alert.config.threshold')}}</span>
+          <span>{{$t('dashboard.panel.chartForm.thresholds')}}</span>
           <el-switch
             v-model="chartConfig.param.enable.thresholds"
             size="small"

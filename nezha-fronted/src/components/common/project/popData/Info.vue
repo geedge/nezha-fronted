@@ -12,7 +12,7 @@
           <span class="content-text">{{moduleInfo.name ? moduleInfo.name : '--'}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title">{{ $t('overall.project') }}</span>
+          <span class="content-title">{{ $t('project.project.projectName') }}</span>
           <span class="content-text">{{moduleInfo.project ? moduleInfo.project.name : '--'}}</span>
         </div>
         <div class="content-box">
@@ -23,7 +23,7 @@
           </span>
         </div>
         <div class="content-box">
-          <span class="content-title">{{ $t('overall.asset') }}</span>
+          <span class="content-title">{{ $t('asset.asset') }}</span>
           <span class="content-text">
              <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"/>&nbsp;
               <span>{{ moduleInfo.assetNum ? moduleInfo.assetNum: 0}}</span>

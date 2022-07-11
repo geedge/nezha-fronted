@@ -16,7 +16,7 @@
         <el-form-item :label="$t('overall.name')" prop="name">
           <el-input size='mini' maxlength="64" show-word-limit v-model="editCabinet.name" id="cabinet-box-input-name"/>
         </el-form-item>
-        <el-form-item :label="$t('config.dc.dc')" prop="idcId">
+        <el-form-item :label="$t('overall.dc')" prop="idcId">
           <el-input v-if="dcDisabled" size='mini' v-model="currentDc.name" disabled id="cabinet-box-input-dc"/>
           <el-select v-if="!dcDisabled" size='mini' v-model="editCabinet.idcId" :placeholder="$t('overall.select')" id="cabinet-box-input-dc" :popper-class="'no-style-class'">
             <el-option v-for="dc in dcData" :key="dc.id" :value="dc.id" :label="dc.name"></el-option>

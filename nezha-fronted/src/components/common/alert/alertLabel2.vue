@@ -86,7 +86,7 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.project')}}</div>
+        <div class="alert-label-title">{{$t('project.project.projectName')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.project && alertLabelData.project.name ?alertLabelData.project.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
@@ -96,7 +96,7 @@
           <span>{{alertLabelData && alertLabelData.endpointNum ? alertLabelData.endpointNum : 0}}</span></div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.asset')}}</div>
+        <div class="alert-label-title">{{$t('asset.asset')}}</div>
         <div class="alert-label-value">
           <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"/>&nbsp;
           <span>{{alertLabelData && alertLabelData.assetNum ? alertLabelData.assetNum: 0}}</span>
@@ -147,7 +147,7 @@
           <span>{{alertLabelData && alertLabelData.endpointNum ? alertLabelData.endpointNum : 0}}</span></div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.asset')}}</div>
+        <div class="alert-label-title">{{$t('asset.asset')}}</div>
         <div class="alert-label-value">
           <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"/>
           <span>{{alertLabelData && alertLabelData.assetNum ? alertLabelData.assetNum: 0}}</span>
@@ -186,7 +186,7 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.project')}}</div>
+        <div class="alert-label-title">{{$t('project.project.projectName')}}</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.project && alertLabelData.project.name ? alertLabelData.project.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
@@ -197,7 +197,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.asset')}}</div>
+        <div class="alert-label-title">{{$t('asset.asset')}}</div>
         <div class="alert-label-value">
           <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>&nbsp;
           <span>{{alertLabelData && alertLabelData.asset.name ? alertLabelData.asset.name : '--'}}</span>
@@ -271,7 +271,7 @@
           <span>{{alertLabelData && alertLabelData.cabinetNum ? alertLabelData.cabinetNum : 0}}</span></div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('overall.asset')}}</div>
+        <div class="alert-label-title">{{$t('asset.asset')}}</div>
         <div class="alert-label-value">
           <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"/>&nbsp;
           <span>{{alertLabelData && alertLabelData.assetNum && alertLabelData.assetNum ? alertLabelData.assetNum: 0}}</span>

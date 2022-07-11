@@ -194,7 +194,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.project") }}</div>
+        <div class="alert-label-title">{{ $t("project.project.projectName") }}</div>
         <div class="alert-label-value">
           {{
             alertLabelData &&
@@ -217,7 +217,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.asset") }}</div>
+        <div class="alert-label-title">{{ $t("asset.asset") }}</div>
         <div class="alert-label-value">
           <i
             class="nz-icon nz-icon-overview-project monitorColor color23BF9A"
@@ -312,7 +312,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.asset") }}</div>
+        <div class="alert-label-title">{{ $t("asset.asset") }}</div>
         <div class="alert-label-value">
           <i
             class="nz-icon nz-icon-overview-project monitorColor color23BF9A"
@@ -382,7 +382,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.project") }}</div>
+        <div class="alert-label-title">{{ $t("project.project.projectName") }}</div>
         <div class="alert-label-value">
           {{
             alertLabelData &&
@@ -410,7 +410,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.asset") }}</div>
+        <div class="alert-label-title">{{ $t("asset.asset") }}</div>
         <div class="alert-label-value">
           <i
             class="nz-icon nz-icon-overview-project monitorColor color23BF9A"
@@ -543,7 +543,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.asset") }}</div>
+        <div class="alert-label-title">{{ $t("asset.asset") }}</div>
         <div class="alert-label-value">
           <i
             class="nz-icon nz-icon-overview-project monitorColor color23BF9A"

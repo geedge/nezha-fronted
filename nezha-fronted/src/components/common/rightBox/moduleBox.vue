@@ -61,7 +61,7 @@
             ></el-autocomplete>
           </el-form-item>
           <!-- ChartTemplate  -->
-          <el-form-item :label="$t('overall.chartTemp')" prop="ChartTemplate">
+          <el-form-item :label="$t('overall.chartTemps')" prop="ChartTemplate">
             <v-selectpage
               :data="chartTempList"
               :tb-columns="ChartSearchShowFields"
