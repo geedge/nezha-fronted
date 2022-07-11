@@ -25,11 +25,10 @@
         :class="item.id === detailViewRightObj.id ? 'selected' : ''"
         @click="detailViewRightShow(item)"
       >
-        <div class="detail-row-info">
-          <div class="asset-manageIp">
-             <div class="user-name-td"
-             @mouseenter="labelHover(item, 'user', true, false, $event)"
+        <div class="detail-row-info" @mouseenter="labelHover(item, 'user', true, false, $event)"
              @mouseleave="labelHover(item, 'user', false, false,)">
+          <div class="asset-manageIp">
+             <div class="user-name-td">
                <span class="flex-align-center">
                  <span v-if="item.status" >
                    <span :class="{'active-icon green-bg':item.status == 1,'active-icon gray-bg':item.status == 0}"></span>
