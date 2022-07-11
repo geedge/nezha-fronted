@@ -570,7 +570,7 @@ export default {
         {
           completeStrategy: query(newCompleteStrategy({
             remote: {
-              url: 'http://192.168.40.42:8080/prom',
+              url: this.$axios.defaults.baseURL + '/prom',
               fetchFn: this.fetchFn
             }
           }))

@@ -316,6 +316,7 @@ export const bottomBoxWindow = {
 
     // 副列表
     document.querySelector('.sub-list').style.height = vm.bottomBox.mainListHeight ? contentRightHeight - vm.bottomBox.mainListHeight - 9 + 'px' : 'calc(50% - 4px)'
+    document.querySelector('.sub-list').style.top = 9 + 'px'
     setTimeout(() => {
       if (document.querySelector('.main-list-with-sub').offsetHeight >= 100) {
         vm.bottomBox.mainResizeShow = true
@@ -334,7 +335,7 @@ export const bottomBoxWindow = {
   fullScreen (vm) {
     window.resizing = true
     const contentRightDom = document.querySelector('.list-page') // 右侧内容区
-    const contentRightHeight = contentRightDom.offsetHeight - 9// 可视高度
+    const contentRightHeight = contentRightDom.offsetHeight // 可视高度
     vm.bottomBox.isFullScreen = true
     // 主列表
     vm.bottomBox.mainListHeight = document.querySelector('.main-list-with-sub').offsetHeight // 记录全屏前主列表的高度
@@ -342,6 +343,7 @@ export const bottomBoxWindow = {
     vm.bottomBox.mainResizeShow = false
     // 副列表
     document.querySelector('.sub-list').style.height = contentRightHeight + 'px'
+    document.querySelector('.sub-list').style.top = 0 + 'px'
     window.resizing = false
   },
   showSubListWatch (vm, n) {
