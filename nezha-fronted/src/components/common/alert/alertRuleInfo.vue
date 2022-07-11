@@ -9,22 +9,22 @@
           {{alertRuleData && alertRuleData.name ? alertRuleData.name : '--'}}
         </div>
       </div>
-      <div class="alert-rule-nfo" >
-        <div class="alert-rule-box">
-          <div class="alert-rule-title">ID</div>
-          <div class="alert-rule-value">{{alertRuleData.id ? alertRuleData.id : '--'}}</div>
+      <div class="alert-label-nfo" >
+        <div class="alert-label-box">
+          <div class="alert-label-title">ID</div>
+          <div class="alert-label-value">{{alertRuleData.id ? alertRuleData.id : '--'}}</div>
         </div>
-        <div class="alert-rule-box name-labe">
-          <div class="alert-rule-title">{{$t('overall.name')}}</div>
-          <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
+        <div class="alert-label-box name-labe">
+          <div class="alert-label-title">{{$t('overall.name')}}</div>
+          <div class="alert-label-value">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
         </div>
-        <!--      <div class="alert-rule-box">-->
-        <!--        <div class="alert-rule-title">{{$t('overall.name')}}</div>-->
-        <!--        <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : '&#45;&#45;'}}</div>-->
+        <!--      <div class="alert-label-box">-->
+        <!--        <div class="alert-label-title">{{$t('overall.name')}}</div>-->
+        <!--        <div class="alert-label-value">{{alertRuleData.name ? alertRuleData.name : '&#45;&#45;'}}</div>-->
         <!--      </div>-->
-        <div class="alert-rule-box">
-          <div class="alert-rule-title">{{$t('overall.type')}}</div>
-          <div class="alert-rule-value">
+        <div class="alert-label-box">
+          <div class="alert-label-title">{{$t('overall.type')}}</div>
+          <div class="alert-label-value">
           <span v-if="alertRuleData.type === 1">
             {{$t('overall.metric')}}
           </span>
@@ -35,17 +35,17 @@
             <span v-else>--</span>
           </div>
         </div>
-        <div class="alert-rule-box">
-          <div class="alert-rule-title">{{$t('alert.severity')}}</div>
-          <div class="alert-rule-value"><i class="nz-icon nz-icon-circle" :style="{color:severityColor,'font-size':'12px','margin-right':'5px'}"></i>{{alertRuleData.severityId ? severityData.find(s => alertRuleData.severityId === s.id).name : '--'}}</div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">{{$t('alert.severity')}}</div>
+          <div class="alert-label-value"><i class="nz-icon nz-icon-circle" :style="{color:severityColor,'font-size':'12px','margin-right':'5px'}"></i>{{alertRuleData.severityId ? severityData.find(s => alertRuleData.severityId === s.id).name : '--'}}</div>
         </div>
-        <div class="alert-rule-box">
-          <div class="alert-rule-title">{{$t('alert.config.expr')}}</div>
-          <div class="alert-rule-value">{{alertRuleData.expr ? (alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)) : '--'}}</div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">{{$t('alert.config.expr')}}</div>
+          <div class="alert-label-value">{{alertRuleData.expr ? (alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)) : '--'}}</div>
         </div>
-        <div class="alert-rule-box">
-          <div class="alert-rule-title">{{$t('alert.alertNum')}}</div>
-          <div class="alert-rule-value" v-if="alertRuleData">
+        <div class="alert-label-box">
+          <div class="alert-label-title">{{$t('alert.alertNum')}}</div>
+          <div class="alert-label-value" v-if="alertRuleData">
             <i :class="alertRuleData.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
             <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
               <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
@@ -60,13 +60,13 @@
             />
           </div>
         </div>
-        <div class="alert-rule-box">
-          <div class="alert-rule-title">{{$t('alert.config.trbShot')}}</div>
-          <div class="alert-rule-value" @click="trbShotShow"><i class="nz-icon nz-icon-guzhangshuju"></i></div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">{{$t('alert.config.trbShot')}}</div>
+          <div class="alert-label-value" @click="trbShotShow"><i class="nz-icon nz-icon-guzhangshuju"></i></div>
         </div>
-        <div class="alert-rule-box">
-          <div class="alert-rule-title">{{$t('overall.state')}}</div>
-          <div class="alert-rule-value" style="margin-left: 3px">
+        <div class="alert-label-box">
+          <div class="alert-label-title">{{$t('overall.state')}}</div>
+          <div class="alert-label-value" style="margin-left: 3px">
             <div v-if="alertRuleData.state === 1">
               <i class="active-icon green-bg inline-block"></i>
               {{ $t('overall.enabled') }}
