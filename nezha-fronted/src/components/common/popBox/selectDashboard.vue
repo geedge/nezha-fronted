@@ -38,7 +38,7 @@
               <HighlightText :queries="filterPanel" :highlightClass="'highlight-keyword'" style="vertical-align: middle" :title="node.label + ' (' + data.chartNum +' charts）' ">{{node.label}}</HighlightText>
               <el-row class="block-col-2" style="margin-left:10px;margin-right:8px">
                 <el-col>
-                  <el-dropdown v-if="!panelLock"  placement="bottom-end" trigger="click" style="margin-right:10px">
+                  <el-dropdown  placement="bottom-end" trigger="click" style="margin-right:10px">
                     <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
                     <el-dropdown-menu class="right-box-select-top" slot="dropdown"  v-has="['main_edit', 'main_delete']">
                       <el-dropdown-item>
@@ -77,7 +77,7 @@
               <HighlightText :queries="filterPanel" :highlightClass="'highlight-keyword'" style="vertical-align: middle" :title="node.label + ' (' + data.chartNum +' charts）' ">{{node.label}}</HighlightText>
               <el-row class="block-col-2" style="margin-left:10px;margin-right:8px">
                 <el-col>
-                  <el-dropdown v-if="!panelLock"  placement="bottom-end" trigger="click" style="margin-right:10px">
+                  <el-dropdown  placement="bottom-end" trigger="click" style="margin-right:10px">
                     <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
                     <el-dropdown-menu class="right-box-select-top" slot="dropdown"  v-has="['main_edit', 'main_delete']">
                       <el-dropdown-item>

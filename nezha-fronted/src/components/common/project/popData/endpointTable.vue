@@ -15,6 +15,7 @@
         <template  v-slot:default="slotProps">
           <endpoint-table
             style="height: 100%"
+            :isTopoInfo="true"
             ref="dataTable"
             :orderByFa="orderBy"
             v-my-loading="tools.loading"

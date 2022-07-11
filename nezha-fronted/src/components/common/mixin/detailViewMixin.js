@@ -85,7 +85,7 @@ export default {
       }, 100)
     },
     detailViewRightShow (item) {
-      this.detailViewRightObj = item
+      this.detailViewRightObj = this.$loadsh.cloneDeep(item)
     },
     orderDetail (order, orderType) {
       if (orderType === 'ascending') {

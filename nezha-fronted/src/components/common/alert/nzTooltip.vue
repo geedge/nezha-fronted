@@ -15,7 +15,8 @@ export default {
     // labelLoading:{},
     that: {},
     detailList: Boolean,
-    alertTableDialog: Boolean
+    alertTableDialog: Boolean,
+    isTopoInfo: Boolean
   },
   data () {
     return {
@@ -31,9 +32,10 @@ export default {
         const leftOffSetView = this.detailList ? -80 : 10
         const leftOffSet = this.detailList ? -80 : 10
         const topOffSet = this.detailList ? 60 : 22
+        const topoOffset = this.isTopoInfo ? 155 : 0
         if (position.top + this.heightList > clientHeight) {
           return {
-            left: `${position.left + position.width + leftOffSet}px`,
+            left: `${position.left + position.width + leftOffSet - topoOffset}px`,
             top: `${position.top - this.heightList + topOffSet}px`
           }
         } else if (this.alertTableDialog) {
@@ -47,7 +49,7 @@ export default {
           }
         } else {
           return {
-            left: `${position.left + position.width + leftOffSetView}px`,
+            left: `${position.left + position.width + leftOffSetView - topoOffset}px`,
             top: `${position.top}px`
           }
         }

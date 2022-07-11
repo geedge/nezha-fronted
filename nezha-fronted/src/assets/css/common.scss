@@ -439,20 +439,36 @@ input,
 textarea {
   font-family: Inter-Regular !important;
 }
-.message-next {
-  vertical-align: bottom;
-  float: unset;
-  font-size: 10px;
-  margin-left: 190px;
-  .message-next-continue {
-    color: $--color-text-primary;
-    font-weight: 400;
+.custom-message{
+  display: flex;
+  align-items: center;
+  .message-right {
+    padding-right: 128px;
+    position: relative;
   }
-  .message-next-content {
-    color: $--color-text-link;
-    font-weight: 600;
+  .message-right.hidden{
+    display: none;
+  }
+  .message-next {
+    width: 86px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border:1px solid $--message-success-font-color;
+    border-radius: 4px;
+    position: absolute;
+    right: 10px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    cursor: pointer;
+    font-size: 14px;
+    span{
+      font-size: 12px;
+    }
   }
 }
+
 .document-copy-block {
   display: flex;
   flex-wrap: nowrap;

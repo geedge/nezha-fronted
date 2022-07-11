@@ -94,6 +94,7 @@
               <panel-variables :labelArrs="variables" :time-range="searchTime" @getPanelData="getPanelData"></panel-variables>
               <chart-list
                 ref="chartList"
+                :variablesInit="variablesInit"
                 name="panel"
                 :panelId="showPanel.id"
                 :class="{'show-top':showTopBtn, 'is-dashboard': true}"
@@ -673,7 +674,7 @@ export default {
       this.filter.value = this.searchTime[2]
       this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       // this.getTableData()
-      this.variablesInit && this.getData(this.filter)
+      this.getData(this.filter)
       const param = {
         panelId: this.panelId,
         nowTimeType: JSON.stringify(this.nowTimeType),
@@ -753,7 +754,7 @@ export default {
             if (!this.showPanel.id) {
               this.showPanel = response.data.list[0]
               this.filter.panelId = this.showPanel.id
-              this.variablesInit && this.getData(this.filter)
+              this.getData(this.filter)
               isInitData = true
             } else {
               handler(response.data.list)
@@ -767,7 +768,7 @@ export default {
           }
           this.pageObj.total = response.data.total
           if (!isInitData && (this.panel.id === '' || this.panel.id === this.showPanel.id)) {
-            this.variablesInit && this.getData(this.filter)
+            this.getData(this.filter)
           }
           this.$store.state.showPanel.id = 0
           this.$store.state.showPanel.name = ''
@@ -1029,7 +1030,7 @@ export default {
     },
     getPanelData () {
       this.variablesInit = true
-      this.getData(this.filter)
+      this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
     }
   },
   created () {

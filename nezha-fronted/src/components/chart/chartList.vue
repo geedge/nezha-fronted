@@ -78,6 +78,7 @@
       <panel-chart
         :ref="'chart-fullscreen' + fullscreen.chartInfo.id"
         :chart-info="fullscreen.chartInfo"
+        :variablesInit="variablesInit"
         :from="from"
         :filter="filter"
         :is-fullscreen="true"
@@ -121,6 +122,10 @@ export default {
       default: () => {
         return {}
       }
+    },
+    variablesInit: {
+      type: Boolean,
+      default: true
     }
   },
   components: {
