@@ -178,7 +178,7 @@ export default {
           labelModule: [],
           basic_auth: {
             username: '',
-            pin: ''
+            password: ''
           },
           bearer_token: ''
         },
