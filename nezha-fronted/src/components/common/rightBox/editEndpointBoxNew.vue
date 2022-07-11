@@ -325,12 +325,12 @@
                 </el-form-item>
 
                 <!--authtype 1-->
-                <el-form-item v-if="authType === 1" :label='$t("asset.username")' class="half-form-item" prop="configs.0.config.basic_auth.username" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+                <el-form-item v-if="authType === 1" :label='$t("profile.username")' class="half-form-item" prop="configs.0.config.basic_auth.username" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                   <el-input id="module-box-input-uername" v-model="editEndpoint.configs[0].config.basic_auth.username" placeholder='' size="small"></el-input>
                 </el-form-item>
 
-                <el-form-item v-if="authType === 1" :label='$t("login.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
-                  <el-input id="module-box-input-password" v-model="editEndpoint.configs[0].config.basic_auth.pin" type="password" autocomplete="new-password" placeholder='' size="small"></el-input>
+                <el-form-item v-if="authType === 1" :label='$t("login.pin")' class="half-form-item" prop="configs.0.config.basic_auth.password" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+                  <el-input id="module-box-input-password" v-model="editEndpoint.configs[0].config.basic_auth.password" type="password" autocomplete="new-password" placeholder='' size="small"></el-input>
                 </el-form-item>
 
                 <!--authtype 2-->
@@ -1213,7 +1213,7 @@ export default {
       this.editEndpoint.configs.bearer_token = ''
       this.editEndpoint.configs.basic_auth = {
         username: '',
-        pin: ''
+        password: ''
       }
     },
     copyValue () {
@@ -1544,7 +1544,7 @@ export default {
           if (params[0].config.basic_auth && !params[0].config.basic_auth.username) {
             delete params[0].config.basic_auth
           }
-          if (params[0].config.basic_auth && !params[0].config.basic_auth.pin) {
+          if (params[0].config.basic_auth && !params[0].config.basic_auth.password) {
             delete params[0].config.basic_auth
           }
           if (params[0].config.param && !Object.keys(params[0].config.param).length) {
