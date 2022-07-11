@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-table
     id="roleTable"
     ref="dataTable"
@@ -43,12 +44,13 @@
         <span v-else-if="item.prop === 'checkTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <span v-else-if="item.prop === 'ts'">{{scope.row[item.prop]?momentTz(scope.row[item.prop]):'-'}}</span>
         <span v-else-if="item.prop === 'status'">
-          <el-popover :content="$t('asset.assetStatPre')+(scope.row.checkTime?utcTimeToTimezoneStr(scope.row.checkTime):$t('asset.assetStatDown'))" placement="right" trigger="hover" width="200">
-            <div slot="reference" style="width: 60px">
+          <!-- <el-popover :content="$t('asset.assetStatPre')+(scope.row.checkTime?utcTimeToTimezoneStr(scope.row.checkTime):$t('asset.assetStatDown'))" placement="right" trigger="hover" width="200"> -->
+            <div slot="reference" style="width: 60px" @mouseenter="labelHover(JSON.parse(scope.row.statusInfo), 'agent', true, $event)"
+             @mouseleave="labelHover(JSON.parse(scope.row.statusInfo), 'agent', false)">
               <span :class="{'active-icon green-bg':scope.row[item.prop] == '1','active-icon red-bg':scope.row[item.prop] == '0' || scope.row[item.prop] == '-1' || scope.row[item.prop] == '-2'}"></span>
               <span>{{scope.row[item.prop] == '1' ? 'UP' : 'Down'}}</span>
             </div>
-          </el-popover>
+          <!-- </el-popover> -->
         </span>
         <template v-else-if="item.prop === 'name'">
             <div class="document-copy-block">
@@ -96,21 +98,34 @@
       <div v-else>&nbsp;</div>
     </template>
   </el-table>
+   <alertStateInfo
+      v-if="alertLabelShow"
+      :that="alertLabelObj"
+      :type="agent"
+      :detail-list="true"
+    ></alertStateInfo>
+  </div>
 </template>
 
 <script>
 import bus from '@/libs/bus'
 import table from '@/components/common/mixin/table'
 import { agent } from '@/components/common/js/constants'
+import alertStateInfo from '@/components/common/alert/alertStateInfo'
 export default {
   name: 'agentTable',
   props: {
     loading: Boolean
   },
   mixins: [table],
+  components: {
+    alertStateInfo
+  },
   data () {
     return {
       agent: agent,
+      alertLabelShow: false,
+      alertLabelObj: {},
       tableTitle: [
         {
           label: 'ID',
@@ -184,6 +199,18 @@ export default {
     },
     computeTimezoneTime (time) {
       return bus.computeTimezoneTime(time)
+    },
+    // label 鼠标划入
+    labelHover (item, type, loading, e) {
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.$set(item, 'position', position)
+        this.$set(item, 'type', type)
+        this.alertLabelObj = item
+      }
+      this.$set(item, 'loading', loading)
+      this.alertLabelShow = loading
     }
   }
 }
