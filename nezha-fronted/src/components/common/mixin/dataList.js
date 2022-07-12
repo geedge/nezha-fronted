@@ -289,8 +289,8 @@ export default {
           { name: type + '_id', value: row.id, regex: 0 }
         ]
       } else if (type === 'alertMessage') {
-        if (typeof row.labels === 'string') row.labels = JSON.parse(row.labels)
-        const labels = JSON.parse(JSON.stringify(row.labels))
+        let labels = this.$loadsh.cloneDeep(row.labels)
+        if (typeof labels === 'string') labels = JSON.parse(labels)
         this.objectSilence.matchers = []
         const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type']
         Object.keys(labels).forEach((key, i) => {

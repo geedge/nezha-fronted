@@ -336,6 +336,8 @@
 </template>
 
 <script>
+// import { Topology, registerNode } from '@/components/common/@topology/core/index.js'
+import { Store as le5leStore } from 'le5le-store'
 import { Topology, registerNode } from '@topology/core'
 import imgDefault from '@/components/common/project/L5/services/img'
 import {
@@ -363,6 +365,7 @@ import endpointTable from './popData/endpointTable'
 import topoTooltip from './L5/topoTooltip'
 import { getMetricTypeValue, dealLegendAlias } from '../js/tools'
 import bus from '../../../libs/bus'
+
 // 注册到画布
 registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
 registerNode('myCube', myCubec, myCubeAnchors, null, null)
@@ -2291,8 +2294,21 @@ export default {
       this.timer4 = null
     }
     if (getTopology(this.topologyIndex)) {
+      getTopology(this.topologyIndex).open({ pens: [] })
       getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
       getTopology(this.topologyIndex).destroy()
+      const StoreData = le5leStore.get()
+      const arr = []
+      Object.keys(StoreData).forEach(key => {
+        const id = key.split('-')[0]
+        arr.push(id)
+        if (getTopology(this.topologyIndex).id == id) {
+          le5leStore.set(key, null)
+          delete StoreData[key]
+        }
+      })
+      console.log(this.$loadsh.uniq(arr))
+      console.log(le5leStore.get())
       Object.keys(getTopology(this.topologyIndex)).forEach(key => {
         getTopology(this.topologyIndex)[key] = null
       })
@@ -2303,6 +2319,9 @@ export default {
     }
     window.removeEventListener('resize', this.winResize)
     window.removeEventListener('click', this.contextmenuNone)
+  },
+  destroyed () {
+
   }
 }
 </script>
