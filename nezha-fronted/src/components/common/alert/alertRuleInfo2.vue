@@ -1,5 +1,5 @@
 <template>
-  <div :style="calcPosition(that.position,that)" class="alert-label__border alert-label" v-my-loading="loading" ref="alertLabels">
+  <div :style="calcPosition(that.position,that)" class="alert-label__border alert-label alert-rule-info-two" v-my-loading="loading" ref="alertLabels">
     <div class="alert-label-header-title3">
       <div class="alert-label-header-circle" :style="`background: ${alertColor}`">
         <i  class="nz-icon nz-icon-Alertrule"></i>
@@ -13,7 +13,7 @@
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">{{alertRuleData.id ? alertRuleData.id : '--'}}</div>
       </div>
-      <div class="alert-label-box name-labe">
+      <div class="alert-label-box name-labe" style="display:flex">
         <div class="alert-label-title">{{$t('overall.name')}}</div>
         <div class="alert-label-value">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
       </div>
