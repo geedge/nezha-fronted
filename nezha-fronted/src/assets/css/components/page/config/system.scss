@@ -39,6 +39,13 @@
 
     }
   }
+  #system-basic{
+    display: flex;
+    align-items: center;
+    .el-form-item__content{
+      margin-left: 0px !important;
+    }
+  }
 }
 .system-config-form{
   width: 61.8% !important;

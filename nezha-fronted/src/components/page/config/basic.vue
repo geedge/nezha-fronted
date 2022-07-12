@@ -91,7 +91,7 @@
           </el-switch>
           <div class="el-form-item__tip" style="margin: 0">{{$t('config.system.basic.pinPolicyValue')}}</div>
         </el-form-item>
-        <el-form-item :label="$t('config.system.basic.length')" prop="length">
+        <el-form-item :label="$t('config.system.basic.length')" prop="length" id="system-basic">
           <el-input v-model.number="basic.pin_policy.length" id="system-basic-length"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.system.basic.passContain')" prop="">
