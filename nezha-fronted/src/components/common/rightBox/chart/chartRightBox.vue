@@ -34,7 +34,7 @@
         <el-form-item
           class="form-item--half-width"
           v-if="showPanel.type !== fromRoute.project && showPanel.type !== fromRoute.asset && showPanel.type !== fromRoute.endpoint && showPanel.type !== fromRoute.model && from!=='chartTemp'"
-          :label="$t('dashboard.panel.title')"
+          :label="$t('overall.dashboard')"
           prop="panelName"
         >
           <select-panel ref="selectPanel" :disabled="showPanel.type === 'dashboard'" :filter-panel="filterPanel" :chart-box="true" :panel-lock="true" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel">
