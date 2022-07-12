@@ -401,7 +401,8 @@ export default {
             width: 50
           },
           loading: true,
-          id: ''
+          id: '',
+          type: 'chartTopology'
         }
         if (self.timer) {
           clearTimeout(self.timer)
