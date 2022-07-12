@@ -820,26 +820,28 @@ export default {
     },
     getModelData () {
       return new Promise(resolve => {
-        this.$get('asset/model?pageSize=-1&typeIds=' + this.editAsset.typeId).then(response => {
-          if (response.code === 200) {
-            this.options.modelOptions = response.data.list
-            const titleSearchData = {}
-            this.options.modelOptions.forEach(m => {
-              if (titleSearchData[m.brand.name]) {
-                titleSearchData[m.brand.name].children.push(m)
+        if (this.editAsset.typeId) {
+          this.$get('asset/model?pageSize=-1&typeIds=' + this.editAsset.typeId).then(response => {
+            if (response.code === 200) {
+              this.options.modelOptions = response.data.list
+              const titleSearchData = {}
+              this.options.modelOptions.forEach(m => {
+                if (titleSearchData[m.brand.name]) {
+                  titleSearchData[m.brand.name].children.push(m)
+                } else {
+                  titleSearchData[m.brand.name] = { ...m.brand, children: [m] }
+                }
+              })
+              this.options.brandAndModelOptions = Object.keys(titleSearchData).map(b => titleSearchData[b])
+              if (!this.editAsset.type.name) {
+                this.judgeTypes = true
               } else {
-                titleSearchData[m.brand.name] = { ...m.brand, children: [m] }
+                this.judgeTypes = false
               }
-            })
-            this.options.brandAndModelOptions = Object.keys(titleSearchData).map(b => titleSearchData[b])
-            if (!this.editAsset.type.name) {
-              this.judgeTypes = true
-            } else {
-              this.judgeTypes = false
             }
-          }
-          resolve()
-        })
+            resolve()
+          })
+        }
       })
     },
     checkLocation  (rule, value, callback) {
