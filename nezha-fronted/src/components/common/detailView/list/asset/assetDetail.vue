@@ -145,7 +145,7 @@ export default {
           show: true,
           minWidth: 110
         }, {
-          label: 'Talon',
+          label: this.$t('asset.talon'),
           prop: 'talon',
           show: true,
           sortable: 'custom',

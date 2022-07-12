@@ -35,7 +35,7 @@
           <div slot="footer" class="footer">
             <div class="el-message-box__btns" style="text-align: right;">
               <button :id="id+'-xlsx-import-template'" class="el-button el-button--default el-button--small" @click="downloadTemplate">
-                <span>{{$t('overall.template')}}</span>
+                <span>{{$t('upload.template')}}</span>
               </button>
               <button  :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
                 <span>{{$t('overall.importExcel')}}</span>
@@ -49,13 +49,13 @@
         <div v-if="importBox.type == 2">
           <div class="upload-body" style="height: 200px">
             <div class="export-box">
-              <span class="export-title">Records</span>
+              <span class="export-title">{{$t('export.records')}}</span>
               <el-radio-group v-model="importBox.record"  size="small">
                 <el-radio-button :label="item.value" v-for="(item,index) in recordArr" :key="index" :disabled="item.value==='records'&&!deleteObjs.length">{{item.name}}</el-radio-button>
               </el-radio-group>
             </div>
             <div class="export-box">
-              <span class="export-title">File format</span>
+              <span class="export-title">{{$t('export.fileFormat')}}</span>
               <el-radio-group v-model="importBox.format"  size="small">
                 <el-radio-button :label="item.value" v-for="(item,index) in formatArr" :key="index">{{item.name}}</el-radio-button>
               </el-radio-group>

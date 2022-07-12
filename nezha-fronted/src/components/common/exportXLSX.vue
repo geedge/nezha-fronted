@@ -28,7 +28,7 @@
         <div slot="footer" class="footer">
           <div class="el-message-box__btns" style="text-align: right;">
             <button :id="id+'-xlsx-import-template'" class="el-button el-button--default el-button--small" @click="downloadTemplate">
-              <span>{{$t('overall.template')}}</span>
+              <span>{{$t('upload.template')}}</span>
             </button>
             <button  :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
               <span>{{$t('overall.importExcel')}}</span>
