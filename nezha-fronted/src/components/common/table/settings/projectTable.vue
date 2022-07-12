@@ -135,13 +135,13 @@ export default {
           sortable: 'custom',
           minWidth: 80
         }, {
-          label: this.$t('project.module.module'),
+          label: this.$t('overall.module'),
           prop: 'moduleNum',
           show: true,
           width: 120,
           sortable: 'custom'
         }, {
-          label: this.$t('project.endpoint.endpoint'),
+          label: this.$t('asset.endpoint'),
           prop: 'endpointNum',
           show: true,
           width: 120,

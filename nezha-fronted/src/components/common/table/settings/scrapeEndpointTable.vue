@@ -115,7 +115,7 @@ export default {
           prop: 'endpoint',
           show: true
         }, {
-          label: this.$t('alert.list.labels'),
+          label: this.$t('project.endpoint.labels2'),
           prop: 'labels',
           NotSet: true,
           show: true

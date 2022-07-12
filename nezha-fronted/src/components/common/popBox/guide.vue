@@ -24,7 +24,7 @@
         </div>
       </template>
       <template v-if="activeIndex === 1">
-        <div class="desc-text">{{$t('guide.agentTip')}}</div>
+        <div class="desc-text">{{$t('overall.agentTip')}}</div>
         <div class="guide__btn-group">
           <button :class="{'guide__btn--disabled': !hasButton('agent_add')}" class="guide__btn" type="button" @click="jumpAndOpen('agent')">{{$t('overall.createPrometheusServer')}}</button>
           <button :class="{'guide__btn--disabled': !hasButton('agent_add')}" class="guide__btn" type="button" @click="downloadAgent">{{$t('guide.downloadAgent')}}</button>
@@ -87,9 +87,9 @@ export default {
         },
         {
           route: '/agent',
-          title: this.$t('guide.agent'),
+          title: this.$t('overall.agent'),
           icon: 'nz-icon nz-icon-agent',
-          tip: this.$t('guide.agentTip'),
+          tip: this.$t('overall.agentTip'),
           permissionCode: 'agent_view'
         },
         {

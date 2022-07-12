@@ -70,7 +70,7 @@
             <el-input id="module-box-input-name" v-model="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--Enpoint template-->
-          <div class="right-box-sub-title">{{ $t("project.module.configs") }}
+          <div class="right-box-sub-title">{{ $t("overall.config") }}
 <!--            <el-tooltip effect="light" placement="top">-->
 <!--              <div slot="content">-->
 <!--                {{$t('project.module.tip.defaultEndpointSet')}}-->
@@ -82,7 +82,7 @@
           </div>
           <div class="right-box-line"></div>
           <!-- ChartTemplate  -->
-<!--          <el-form-item :label="$t('overall.chartTemps')" prop="ChartTemplate">-->
+<!--          <el-form-item :label="$t('overall.chartTemplate')" prop="ChartTemplate">-->
 <!--            <v-selectpage-->
 <!--              v-model="editEndpoint.chartIds"-->
 <!--              :data="chartTempList"-->
@@ -103,7 +103,7 @@
           <div class="endpoint-title">
             <span class="endpoint-title-content">
               <i class="nz-icon nz-icon-arrow-down" :class="metricsShow?'':'is-active'" @click="metricsShow = !metricsShow"></i>
-             {{$t('overall.metric')}}
+             {{$t('overall.metrics')}}
             </span>
             <el-switch v-model="editEndpoint.configs[0].enable" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
@@ -247,14 +247,14 @@
                     </span>
                     </div>
                     <div>
-                      <el-form-item :prop="'configs.0.config.relabel_config.' + index + '.action'" class="" :label="'Action'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]">
+                      <el-form-item :prop="'configs.0.config.relabel_config.' + index + '.action'" class="" :label="$t('project.endpoint.action')" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]">
                         <el-select v-model="item.action" :id="'action' + index " class="right-box__select " placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="actionChange(index)" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]">
                           <el-option v-for="item2 in actionList" :id="'module-action-'+item2.label" :key="item2.label" :label="item2.label" :value="item2.value"></el-option>
                         </el-select>
                       </el-form-item>
                       <el-form-item
                         :prop="'configs.0.config.relabel_config.' + index + '.source_labels'"
-                        class="half-form-item" :label="'Source labels'"
+                        class="half-form-item" :label="$t('overall.sourceLabels')"
                         :rules="[
                                        { required: item.action === 'replace' || item.action === 'keep' || item.action === 'drop', message: $t('validate.required'), trigger: 'change' },
                                        { validator: item.action === 'replace' || item.action === 'keep' || item.action === 'drop'? arrLength : requirdRelabel, trigger: 'change' }
@@ -273,7 +273,7 @@
                       </el-form-item>
                       <el-form-item
                         :prop="'configs.0.config.relabel_config.' + index + '.target_label'"
-                        class="half-form-item" :label="'Target label'"
+                        class="half-form-item" :label="$t('overall.targetLabel')"
                         :rules="[
                                      { required: item.action === 'replace', message: $t('validate.required'), trigger: 'blur' },
                                      { pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('overall.ASCIIKey') ,trigger: 'blur'}]"
@@ -286,7 +286,7 @@
                       <div v-show="item.showAllRelabelOption" >
                         <!--Regex-->
                         <el-form-item
-                          :label='"Regex"'
+                          :label="$t('dashboard.panel.regex')"
                           class="half-form-item"
                           :prop="'configs.0.config.relabel_config.' + index + '.regex'"
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]">
@@ -294,7 +294,7 @@
                         </el-form-item>
                         <!--replacement-->
                         <el-form-item
-                          :label='"Replacement"'
+                          :label='$t("overall.replacement")'
                           class="half-form-item"
                           :prop="'configs.0.config.relabel_config.' + index + '.replacement'"
                           :rules="[{ required: item.action === 'replace' || item.action === 'labelmap', message: $t('validate.required'), trigger: 'change' }]">

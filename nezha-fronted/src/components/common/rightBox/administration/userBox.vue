@@ -45,7 +45,7 @@
             </el-select>
           </el-form-item>
           <!--email-->
-          <el-form-item label="E-mail" prop="email">
+          <el-form-item :label="$t('config.system.email.email')" prop="email">
             <el-input id="account-input-email" v-model="editUser.email" maxlength="64" show-word-limit placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--mobile-->

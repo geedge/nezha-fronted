@@ -17,7 +17,7 @@
         </span>
       </div>
       <!-- body -->
-      <div class="alert-label-box" v-if="that.auth">
+      <div class="alert-label-box">
         <span :class="that.auth ? 'green-bg' : 'red-bg'" class="active-icon"></span>
         <span class="alert-label-value">{{$t('overall.auth')}}</span>
       </div>

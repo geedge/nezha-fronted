@@ -198,7 +198,7 @@ export default {
           width: 180,
           sortable: 'custom'
         }, {
-          label: this.$t('alert.list.labels'),
+          label: this.$t('project.endpoint.labels2'),
           prop: 'labels',
           show: true,
           NotSet: true,
@@ -500,7 +500,7 @@ export default {
       return num > 9 ? num : '0' + num
     },
     labelsClassName (row) {
-      if (row.column.label == this.$t('alert.list.labels')) {
+      if (row.column.label == this.$t('project.endpoint.labels2')) {
         return 'alert-message-list-labels'
       } else if (row.column.label == this.$t('overall.state')) {
         if (row.row.state == 1) {

@@ -53,7 +53,7 @@
           </el-form-item>
         </el-form>
 
-        <div class="right-box-sub-title">{{ $t("project.module.configs") }}</div>
+        <div class="right-box-sub-title">{{ $t("overall.config") }}</div>
         <div class="right-box-line"></div>
 
         <el-table
@@ -292,7 +292,7 @@ export default {
           show: true
         },
         {
-          label: this.$t('project.module.configs'),
+          label: this.$t('overall.config'),
           prop: 'configs',
           show: true,
           width: 150

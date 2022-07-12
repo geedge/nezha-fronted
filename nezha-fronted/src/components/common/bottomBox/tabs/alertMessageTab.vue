@@ -151,7 +151,7 @@ export default {
           show: true,
           width: 180
         }, {
-          label: this.$t('alert.list.labels'),
+          label: this.$t('project.endpoint.labels2'),
           prop: 'labels',
           show: true
         }, {
@@ -638,7 +638,7 @@ export default {
       this.getAlertList()
     },
     labelsClassName (row) {
-      if (row.column.label === this.$t('alert.list.labels')) {
+      if (row.column.label === this.$t('project.endpoint.labels2')) {
         return 'alert-message-list-labels'
       } else {
         return ''

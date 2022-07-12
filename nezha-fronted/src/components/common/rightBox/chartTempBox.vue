@@ -26,7 +26,7 @@
             </el-select>
           </el-form-item>
           <!--chartTemp list-->
-          <el-form-item :label="$t('overall.chartTemp')" prop="pid">
+          <el-form-item :label="$t('overall.chartTemplate')" prop="pid">
             <el-select id="chart-box-group"
                        v-model="editChartTemp.pid"
                        class="right-box__select" clearable
@@ -42,7 +42,7 @@
 
           <!-- 选择资产，穿梭框 -->
           <template v-if="showTransfer">
-            <div class="form__sub-title">{{editChartTemp.varType === 1 ? 'Asset' : 'Endpoint'}}</div>
+            <div class="form__sub-title">{{editChartTemp.varType === 1 ? $t('overall.asset') : $t('project.endpoint.endpoint')}}</div>
             <nz-transfer ref="transfer"
                          :from="from"
                          :page-obj="transfer.pageObj"
@@ -54,7 +54,7 @@
                          @leftToRight="addAsset"
                          @rightToLeft="removeAsset"
                          @search="search">
-              <template v-slot:title>Selected</template>
+              <template v-slot:title>{{$t('overall.selected')}}</template>
             </nz-transfer>
           </template>
         </el-form>

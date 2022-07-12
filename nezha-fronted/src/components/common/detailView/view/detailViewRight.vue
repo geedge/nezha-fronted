@@ -147,11 +147,11 @@ export default {
         },
         user: {
           operationLog: [
-            { prop: 'operationLogTab', name: this.$t('config.operationlog.operationlog'), active: true },
+            { prop: 'operationLogTab', name: this.$t('profile.operationRecord'), active: true },
             { prop: 'terminalLogTab', name: this.$t('config.terminallog.terminallog'), active: false }
           ],
           terminalLog: [
-            { prop: 'operationLogTab', name: this.$t('config.operationlog.operationlog'), active: false },
+            { prop: 'operationLogTab', name: this.$t('profile.operationRecord'), active: false },
             { prop: 'terminalLogTab', name: this.$t('config.terminallog.terminallog'), active: true }
           ]
           // module tab
@@ -250,10 +250,10 @@ export default {
       const tabs = [
         { prop: 'panelTab', name: this.$t('overall.detail') },
         { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
-        { prop: 'endpointQuery', name: 'Metrics' }
+        { prop: 'endpointQuery', name: this.$t('overall.metrics') }
       ]
       if (hasLog) {
-        tabs.push({ prop: 'log', name: 'Log' })
+        tabs.push({ prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label') })
       }
       return tabs
     }

@@ -26,7 +26,7 @@
             </el-select>
           </el-form-item>
           <!-- ChartTemplate -->
-          <el-form-item :label="$t('overall.chartTemps')" prop="ChartTemplate">
+          <el-form-item :label="$t('overall.chartTemp')" prop="ChartTemplate">
             <v-selectpage
             :data="chartlList"
             :tb-columns="ChartSearchShowFields"

@@ -11,7 +11,7 @@
       :search-msg="searchMsg">
       <template v-slot:top-tool-left>
         <div class="profile-right__tabs-title">
-          <div class="profile-right__tabs-active" :class="{'is-active': profileShowLabel === 1}" @click="tabsActive">{{$t('profile.operationRecord')}}</div>
+          <div class="profile-right__tabs-active" :class="{'is-active': profileShowLabel === 1}" @click="tabsActive">{{$t('config.operationlog.operationlog')}}</div>
           <div class="profile-right__tabs-active" style="margin-left: 10px" :class="{'is-active': profileShowLabel === 3}" @click="tabsActiveThree">{{$t('system.apikey.apiKey')}}</div>
           <div class="profile-right__tabs-active" style="margin-left: 10px" :class="{'is-active': profileShowLabel === 2}" @click="tabsActiveTow">{{$t('profile.changePassword')}}</div>
         </div>

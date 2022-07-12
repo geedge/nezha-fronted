@@ -61,7 +61,7 @@
             ></el-autocomplete>
           </el-form-item>
           <!-- ChartTemplate  -->
-          <el-form-item :label="$t('overall.chartTemps')" prop="ChartTemplate">
+          <el-form-item :label="$t('overall.chartTemplate')" prop="ChartTemplate">
             <v-selectpage
               :data="chartTempList"
               :tb-columns="ChartSearchShowFields"
@@ -83,7 +83,7 @@
           <div class="endpoint-title">
             <span class="endpoint-title-content">
               <i class="nz-icon nz-icon-arrow-down" :class="metricsShow?'':'is-active'" @click="metricsShow = !metricsShow"></i>
-              {{$t('overall.metric')}}
+              {{$t('overall.metrics')}}
             </span>
             <el-switch v-model="editModule.configs[0].enable" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>

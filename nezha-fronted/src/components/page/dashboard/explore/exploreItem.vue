@@ -385,7 +385,7 @@ export default {
         },
         {
           value: 'Logs',
-          label: this.$t('overall.logs'),
+          label: this.$t('dashboard.panel.chartForm.typeVal.log.label'),
           icon: 'nz-icon nz-icon-logs'
         }
       ],

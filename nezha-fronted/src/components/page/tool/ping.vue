@@ -98,7 +98,7 @@
             </el-button>
           </div>
         </div>
-        <div class="tools-header-title">{{$t('project.module.configs')}}</div>
+        <div class="tools-header-title">{{$t('overall.config')}}</div>
       </div>
     </template>
 

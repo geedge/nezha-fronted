@@ -92,7 +92,7 @@ export default {
           show: true
         },
         {
-          label: this.$t('project.module.configs'),
+          label: this.$t('overall.config'),
           prop: 'configs',
           minWidth: 150,
           show: false
