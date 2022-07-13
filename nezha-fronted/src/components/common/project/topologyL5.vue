@@ -103,7 +103,7 @@
           <button @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light"
                   style="margin-right: 20px"
           >
-             {{$t('project.topology.preview')}}
+             {{$t('overall.preview')}}
            </button>
             <button v-if="isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="previewExit"
                     style="margin-right: 20px"
@@ -114,7 +114,7 @@
                    :disabled="prevent_opt.save"
                    :class="{'nz-btn-disabled':prevent_opt.save}"
                    style="margin-right: 20px">
-             {{$t('project.topology.save')}}
+             {{$t('overall.save')}}
            </button>
            <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-right: 20px" @click="cancelTopology">
              {{$t('project.topology.exit')}}
@@ -134,7 +134,7 @@
               class="pickTime margin-r-10">
             </pick-time>
             <button v-has="'project_edit'" class="top-tool-btn margin-r-10" type="button" @click="editTopology">
-              <i :title="$t('project.topology.edit')" class="nz-icon nz-icon-edit"></i>
+              <i :title="$t('overall.edit')" class="nz-icon nz-icon-edit"></i>
             </button>
             <button class="top-tool-btn" type="button" @click="changeScreen">
               <i :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'" class="nz-icon"></i>
@@ -326,7 +326,7 @@
               <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="imgUpload" :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
                       style="margin-right: 20px">
-             {{$t('project.topology.save')}}
+             {{$t('overall.save')}}
            </button>
             </span>
       </div>
@@ -336,8 +336,9 @@
 </template>
 
 <script>
-// import { Topology, registerNode } from '@topology/core'
 import { Topology, registerNode } from '@/components/common/@topology/core/index.js'
+import { Store as le5leStore } from 'le5le-store'
+// import { Topology, registerNode } from '@topology/core'
 import imgDefault from '@/components/common/project/L5/services/img'
 import {
   Tools,
@@ -352,7 +353,7 @@ import {
   myCubec,
   myCubeAnchors
 } from './L5/services/canvas.js'
-import { getTopology, setTopology, getTopologyImg, setTopologyImg } from '../js/common'
+import { getTopology, setTopology, dealImg, topologyImg } from '../js/common'
 import CanvasProps from './L5/CanvasProps'
 import topologyTopTool from './L5//topologyTopTool'
 import CanvasContextMenu from './L5/CanvasContextMenu'
@@ -364,6 +365,7 @@ import endpointTable from './popData/endpointTable'
 import topoTooltip from './L5/topoTooltip'
 import { getMetricTypeValue, dealLegendAlias } from '../js/tools'
 import bus from '../../../libs/bus'
+
 // 注册到画布
 registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
 registerNode('myCube', myCubec, myCubeAnchors, null, null)
@@ -374,13 +376,16 @@ const canvasOptions = {
   disableEmptyLine: true,
   autoExpandDistance: 0,
   minScale: 0.2,
-  scaleKey: -1
+  scaleKey: -1,
+  keydown: 1
 }
 export default {
   name: 'topologyL5',
   data () {
+    const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
     return {
-      title: this.$t('overall.customPicture'),
+      theme,
+      title: this.$t('overall.uploadCustomPicture'),
       objChange: false, // project 变化 用于判断 init是否执行完成 执行完成 才可以执行下次变化
       chartDataInfo: {},
       topoPrevData: {}, // 预览数据
@@ -445,17 +450,17 @@ export default {
       notModuleIDArr: [],
       popData: [
         {
-          top: '-40px',
-          left: '-21px',
+          top: '-41px',
+          left: '-23px',
           className: 'nz-icon-endpoint',
           id: 'endpoint',
           title: this.$t('project.topology.endpoint')
         },
-        { top: '-40px', left: '19px', className: 'nz-icon-asset', id: 'asset', title: this.$t('project.topology.asset') },
-        { top: '-4px', left: '40px', className: '', id: 'other', title: '' },
-        { top: '30px', left: '19px', className: '', id: 'other', title: '' },
-        { top: '30px', left: '-21px', className: 'nz-icon-info-normal', id: 'info', title: this.$t('project.topology.info') },
-        { top: '-4px', left: '-40px', className: 'nz-icon-gaojing', id: 'alert', title: this.$t('project.topology.alert') }
+        { top: '-41px', left: '22px', className: 'nz-icon-asset', id: 'asset', title: this.$t('asset.asset') },
+        { top: '-2px', left: '45px', className: '', id: 'other', title: '' },
+        { top: '37px', left: '22px', className: '', id: 'other', title: '' },
+        { top: '37px', left: '-23px', className: 'nz-icon-info-normal', id: 'info', title: this.$t('project.topology.info') },
+        { top: '-2px', left: '-45px', className: 'nz-icon-gaojing', id: 'alert', title: this.$t('project.topology.alert') }
       ],
       popDataShow: {
         endpoint: false,
@@ -477,10 +482,10 @@ export default {
       chartData: {},
       chartGetData: [],
       penLineType: [
-        { d: 'M5 19 a50,100 0 0,1 40,0', 'stroke-dasharray': '', name: this.$t('project.topology.curve'), id: 'curve' },
-        { d: 'M5 8 l20 0 l0 12 l20 0', 'stroke-dasharray': '', name: this.$t('project.topology.polyline'), id: 'polyline' },
-        { d: 'M5 14 l40 0', 'stroke-dasharray': '', name: this.$t('project.topology.line'), id: 'line' }
-        // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
+        { d: 'M5 19 a50,100 0 0,1 40,0', 'stroke-dasharray': '', name: this.$t('project.topology.curve'), id: 'curve', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },
+        { d: 'M5 8 l20 0 l0 12 l20 0', 'stroke-dasharray': '', name: this.$t('project.topology.polyline'), id: 'polyline', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },
+        { d: 'M5 14 l40 0', 'stroke-dasharray': '', name: this.$t('project.topology.line'), id: 'line', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' }
+        // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind', strokeColor: theme == 'light' ? 'black' : '#BEBEBE'},
       ],
       lineName: 'curve',
       cachesIndex: 0,
@@ -777,11 +782,11 @@ export default {
         }
         if (!getTopology(this.topologyIndex)) {
           let canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
-          canvas.open(data)
+          // canvas.open(data)
           setTopology(this.topologyIndex, canvas)
           canvas = null
         } else {
-          getTopology(this.topologyIndex).open(data)
+          // getTopology(this.topologyIndex).open(data)
         }
         this.topologyLoading = false
         if (!getTopology(this.topologyIndex).data.name) {
@@ -826,9 +831,11 @@ export default {
             this.projectAlertShow = true
             this.saveData = JSON.parse(JSON.stringify(data))
             this.topologyInfo.name = this.obj.name
+            data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
             resolve(data)
             data = null
           } else {
+            data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
             if (data.data) {
               this.topologyInfo = {
                 fontSize: data.data.fontSize,
@@ -1202,6 +1209,9 @@ export default {
       }
       if (!Array.isArray(data) && data) { // 判断不是数组 提前个data配置好节点属性
         if (data.type === 0 && !data.data.moduleId) {
+          if (!data.fillStyle) {
+            data.fillStyle = '#FFFFFF00'
+          }
           data.data = {
             ...data.data,
             moduleId: '',
@@ -1209,8 +1219,8 @@ export default {
             show: false,
             error: false,
             animatePlay: false,
-            fillStyle: data.fillStyle,
-            strokeStyle: data.strokeStyle,
+            fillStyle: data.fillStyle || '#ffffff',
+            strokeStyle: data.strokeStyle || '#ffffff',
             gradientColor: '#bae7ff',
             gradientType: 0,
             lineWidth: this.nodeDefaultWidth(data.name),
@@ -1646,7 +1656,7 @@ export default {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
           this.$get('monitor/project/topo/icon', { id: res.data.id }).then(iconInfo => {
-            this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
+            dealImg(`monitor/project/topo/icon/${res.data.id}/1`, res.data.id).then((data, header) => {
               const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
               this.iconArray.push({
                 ...iconInfo.data.list[0],
@@ -1742,28 +1752,13 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-            if (nowImage && nowImage.data) {
-              console.log(nowImage)
-              promiseArr.push(nowImage)
-            } else {
-              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
-            }
+            promiseArr.push(topologyImg['img' + item.id]|| dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
-            console.log(res2, 'Promise')
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index].data
-              const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-              if (!nowImage || (nowImage && !nowImage.data)) {
-                setTopologyImg(item.id, JSON.stringify({
-                  data: res2[index].data,
-                  width: res2[index].width,
-                  height: res2[index].height
-                }))
-              }
               const group = this.tools.find(tool => tool.group === item.unit)
               if (group) {
                 group.children.push({
@@ -1816,12 +1811,7 @@ export default {
           }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
-              const nowImage = getTopologyImg(item.data.imageId) ? JSON.parse(getTopologyImg(item.data.imageId)) : ''
-              if (nowImage && nowImage.data) {
-                promiseArr.push(nowImage)
-              } else {
-                promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
-              }
+              promiseArr.push(topologyImg['img' + item.data.imageId] || dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`, item.data.imageId))
             } else if (item.data.imageId) {
               promiseArr.push(imgDefault)
             } else {
@@ -1837,14 +1827,6 @@ export default {
             this.iconArray.forEach((item, index) => {
               if (item.id) {
                 item.image = res2[index].data
-                const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-                if (!nowImage || (nowImage && !nowImage.image)) {
-                  setTopologyImg(item.id, JSON.stringify({
-                    data: res2[index].data,
-                    width: res2[index].width,
-                    height: res2[index].height
-                  }))
-                }
               }
             })
             this.imgInit = true
@@ -2301,10 +2283,7 @@ export default {
       this.timer4 = null
     }
     if (getTopology(this.topologyIndex)) {
-      window.topology = null
-      window.Le5leTopologyPoint = null
-      window.topologyPoint = null
-      window.topologyRect = null
+      // getTopology(this.topologyIndex).open({ pens: [] })
       getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
       getTopology(this.topologyIndex).data.pens.forEach(item => {
         item.img = null
@@ -2363,6 +2342,17 @@ export default {
         // item.state.img = null
       })
       getTopology(this.topologyIndex).destroy()
+      const StoreData = le5leStore.get()
+      const arr = []
+      Object.keys(StoreData).forEach(key => {
+        const id = key.split('-')[0]
+        arr.push(id)
+        if (getTopology(this.topologyIndex).id == id) {
+          le5leStore.set(key, null)
+          delete StoreData[key]
+        }
+      })
+      console.log(le5leStore.get())
       Object.keys(getTopology(this.topologyIndex)).forEach(key => {
         getTopology(this.topologyIndex)[key] = null
       })
@@ -2373,6 +2363,9 @@ export default {
     }
     window.removeEventListener('resize', this.winResize)
     window.removeEventListener('click', this.contextmenuNone)
+  },
+  destroyed () {
+
   }
 }
 </script>

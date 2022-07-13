@@ -16,7 +16,7 @@ export function getUUID () {
   return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4())
 }
 
-const chartCache = {}
+export const chartCache = {}
 
 export function getChart (key) {
   return chartCache[`chart${key}`]
@@ -31,7 +31,7 @@ export function getHexagon (key) {
   return hexagonCache[`hexagon${key}`]
 }
 
-const topologyCache = {}
+export let topologyCache = {}
 
 export function getTopology (key) {
   // console.log(topologyCache, 'topologyCache')
@@ -42,16 +42,59 @@ export function setTopology (key, value) {
   topologyCache[`topology${key}`] = value
 }
 
+export function clearTopologyCache () {
+  topologyCache = {}
+}
 // const topologyImgList = localStorage.getItem('nz-imgList') ? JSON.parse(localStorage.getItem('nz-imgList')) : {}
 
 export function getTopologyImg (key) {
-  // console.log(topologyCache, 'topologyCache')
-  // console.log(localStorage.getItem('nz-img-' + key), !localStorage.getItem('nz-img-' + key))
-  return localStorage.getItem('nz-img-' + key)
+  return false
+}
+
+export const topologyImg = {}
+
+export function dealImg (url, id) {
+  if (url) {
+    return new Promise((resolve, reject) => {
+      if (topologyImg['img' + id]) {
+        resolve(topologyImg['img' + id])
+        return
+      }
+      vm.$axios
+        .get(url)
+        .then((res) => {
+          const imageInfo = {
+            data: ('data:image/jpeg;base64,' + res.data),
+            // width: res.headers.width === -1 ? 100 : (res.headers.width > 900 ? 900 : res.headers.width),
+            // height: res.headers.height === -1 ? 100 : (res.headers.height > 900 ? 900 : res.headers.height)
+            width: res.headers.width === -1 ? 100 : Number(res.headers.width),
+            height: res.headers.height === -1 ? 100 : Number(res.headers.height)
+          }
+          if (imageInfo.width > 900 || imageInfo.height > 900) {
+            if (imageInfo.height > imageInfo.width) {
+              imageInfo.width = imageInfo.width * 900 / imageInfo.height
+              imageInfo.height = 900
+            } else if (imageInfo.height < imageInfo.width) {
+              imageInfo.height = imageInfo.height * 900 / imageInfo.width
+              imageInfo.width = 900
+            } else {
+              imageInfo.height = 900
+              imageInfo.width = 900
+            }
+          }
+          topologyImg['img' + id] = imageInfo
+          resolve(topologyImg['img' + id])
+        })
+    })
+  } else {
+    return new Promise(resolve => {
+      resolve({})
+    })
+  }
 }
 
 export function setTopologyImg (key, img) {
-  localStorage.setItem('nz-img-' + key, img)
+  // localStorage.setItem('nz-topologyImg-' + key, img)
 }
 
 export function setHexagon (key, value) {
