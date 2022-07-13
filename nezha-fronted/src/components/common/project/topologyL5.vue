@@ -337,7 +337,7 @@
 
 <script>
 // import { Topology, registerNode } from '@topology/core'
-import { Topology, registerNode } from '@/components/common/@topology/core'
+import { Topology, registerNode } from '@/components/common/@topology/core/index.js'
 import imgDefault from '@/components/common/project/L5/services/img'
 import {
   Tools,

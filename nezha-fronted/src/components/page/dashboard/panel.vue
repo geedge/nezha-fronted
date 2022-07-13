@@ -136,6 +136,7 @@
 </template>
 
 <script>
+import { data as le5leData, observers as le5leObservers } from 'le5le-store/store/data.js'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
@@ -528,6 +529,7 @@ export default {
       if (!this.hasButton('panel_view')) {
         return
       }
+      this.dataList = []
       this.chartListLoading = true
       if (params.start_time === '' || params.end_time === '') {
         const now = bus.getTimezontDateRange()
@@ -535,6 +537,18 @@ export default {
         const startTimeTmp = bus.timeFormate(now[0].getTime(), this.panelDateFormatTime)
         params.start_time = startTimeTmp
         params.end_time = endTimeTmp
+      }
+      if (le5leData) {
+        Object.keys(le5leData).forEach(key => {
+          le5leData[key] = null
+          delete le5leData[key]
+        })
+      }
+      if (le5leObservers) {
+        Object.keys(le5leObservers).forEach(key => {
+          le5leObservers[key] = null
+          delete le5leObservers[key]
+        })
       }
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
