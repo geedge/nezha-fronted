@@ -336,7 +336,8 @@
 </template>
 
 <script>
-import { Topology, registerNode } from '@topology/core'
+// import { Topology, registerNode } from '@topology/core'
+import { Topology, registerNode } from '@/components/common/@topology/core'
 import imgDefault from '@/components/common/project/L5/services/img'
 import {
   Tools,
@@ -2305,6 +2306,62 @@ export default {
       window.topologyPoint = null
       window.topologyRect = null
       getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
+      getTopology(this.topologyIndex).data.pens.forEach(item => {
+        item.img = null
+        item.image = null
+        item.lastImage = null
+        // item.initState.img = null
+        // item.state.img = null
+      })
+      getTopology(this.topologyIndex).activeLayer.data.pens.forEach(item => {
+        item.img = null
+        item.image = null
+        item.lastImage = null
+        // item.initState.img = null
+        // item.state.img = null
+      })
+      getTopology(this.topologyIndex).animateLayer.data.pens.forEach(item => {
+        item.img = null
+        item.image = null
+        item.lastImage = null
+        // item.initState.img = null
+        // item.state.img = null
+      })
+      getTopology(this.topologyIndex).caches.list.forEach((cache) => {
+        cache.pens.forEach(item => {
+          item.img = null
+          item.image = null
+          item.lastImage = null
+        })
+      })
+      getTopology(this.topologyIndex).animateLayer.data.pens.forEach(item => {
+        item.img = null
+        item.image = null
+        item.lastImage = null
+        // item.initState.img = null
+        // item.state.img = null
+      })
+      getTopology(this.topologyIndex).canvas.data.pens.forEach(item => {
+        item.img = null
+        item.image = null
+        item.lastImage = null
+        // item.initState.img = null
+        // item.state.img = null
+      })
+      getTopology(this.topologyIndex).divLayer.data.pens.forEach(item => {
+        item.img = null
+        item.image = null
+        item.lastImage = null
+        // item.initState.img = null
+        // item.state.img = null
+      })
+      getTopology(this.topologyIndex).hoverLayer.data.pens.forEach(item => {
+        item.img = null
+        item.image = null
+        item.lastImage = null
+        // item.initState.img = null
+        // item.state.img = null
+      })
       getTopology(this.topologyIndex).destroy()
       Object.keys(getTopology(this.topologyIndex)).forEach(key => {
         getTopology(this.topologyIndex)[key] = null
