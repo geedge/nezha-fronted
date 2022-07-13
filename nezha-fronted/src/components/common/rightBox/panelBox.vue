@@ -218,7 +218,7 @@
                     <el-radio-group v-model="editPanel.param.report.range.unit" size="small">
                       <el-radio-button label="day">{{ $t("dashboard.panel.prevDay") }}</el-radio-button>
                       <el-radio-button label="week">{{ $t("dashboard.panel.prevWeek") }}</el-radio-button>
-                      <el-radio-button label="month">{{ $t("dashboard.panel.lastMonth") }}</el-radio-button>
+                      <el-radio-button label="month">{{ $t("dashboard.panel.prevMonth") }}</el-radio-button>
                     </el-radio-group>
                   </el-form-item>
                   <el-form-item

@@ -622,7 +622,7 @@
                 </el-row>
                 <el-row v-show="item.show" :key="2" class="thresholds-item">
                   <div v-if="isTable(chartConfig.type)">
-                    <div class='mapping-display'>{{$t('dashboard.panel.chartForm.columns')}}</div>
+                    <div class='mapping-display'>{{$t('placeholder.chart.column')}}</div>
                   </div>
                   <el-form-item v-if="isTable(chartConfig.type)" :prop="'param.valueMapping.' + index + '.column'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.column"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.column')" size="small" @change="change('valueMapping', index)"/>
