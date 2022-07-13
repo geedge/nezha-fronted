@@ -175,6 +175,7 @@ export default {
       }
       this.object.name = this.$t('backup.edit')
       if (this.object.schedule) {
+        this.object.schedule.stime = this.utcTimeToTimezoneStr(this.object.schedule.stime, 'YYYY-MM-DD HH:mm:ss') || ''
         for (const i in this.object.schedule) {
           this.object[i] = this.object.schedule[i]
         }

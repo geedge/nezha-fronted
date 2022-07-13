@@ -360,7 +360,7 @@ export default {
             state: Number(this.editBackup.state),
             schedule: {
               type: Number(this.editBackup.type),
-              stime: this.editBackup.stime,
+              stime: this.timezoneToUtcTimeStr(this.editBackup.stime, 'YYYY-MM-DD HH:mm:ss') || '',
               repeat: Number(this.editBackup.repeat),
               nums: this.editBackup.nums
             },
