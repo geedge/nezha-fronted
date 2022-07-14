@@ -31,7 +31,7 @@ export function getHexagon (key) {
   return hexagonCache[`hexagon${key}`]
 }
 
-const topologyCache = {}
+export let topologyCache = {}
 
 export function getTopology (key) {
   // console.log(topologyCache, 'topologyCache')
@@ -42,13 +42,16 @@ export function setTopology (key, value) {
   topologyCache[`topology${key}`] = value
 }
 
+export function clearTopologyCache () {
+  topologyCache = {}
+}
 // const topologyImgList = localStorage.getItem('nz-imgList') ? JSON.parse(localStorage.getItem('nz-imgList')) : {}
 
 export function getTopologyImg (key) {
   return false
 }
 
-const topologyImg = {}
+export const topologyImg = {}
 
 export function dealImg (url, id) {
   if (url) {
