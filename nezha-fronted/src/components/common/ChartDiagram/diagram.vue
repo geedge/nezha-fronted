@@ -312,7 +312,8 @@
 </template>
 
 <script>
-import { Topology, registerNode } from '@topology/core'
+import { Topology, registerNode } from '@/components/common/@topology/core/index.js'
+import { Store as le5leStore } from 'le5le-store'
 import imgDefault from '@/components/common/project/L5/services/img'
 import {
   Tools,
@@ -327,7 +328,7 @@ import {
   myCubec,
   myCubeAnchors
 } from '../project/L5/services/canvas.js'
-import { getTopology, getTopologyImg, setTopology, setTopologyImg } from '../js/common'
+import { getTopology, setTopology, dealImg, topologyImg } from '../js/common'
 import CanvasProps from '../project/L5/CanvasProps'
 import topologyTopTool from '../project/L5/topologyTopTool'
 import popDataMain from '../project/popData/Main'
@@ -1592,7 +1593,7 @@ export default {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
           this.$get('monitor/project/topo/icon', { id: res.data.id }).then(iconInfo => {
-            this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
+            dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
               const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
               this.iconArray.push({
                 ...iconInfo.data.list[0],
@@ -1744,27 +1745,13 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-            if (nowImage && nowImage.data) {
-              console.log(nowImage)
-              promiseArr.push(nowImage)
-            } else {
-              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
-            }
+            promiseArr.push(topologyImg['img' + item.id] || dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index].data
-              const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-              if (!nowImage || (nowImage && !nowImage.data)) {
-                setTopologyImg(item.id, JSON.stringify({
-                  data: res2[index].data,
-                  width: res2[index].width,
-                  height: res2[index].height
-                }))
-              }
               const group = this.tools.find(tool => tool.group === item.unit)
               if (group) {
                 group.children.push({
@@ -1815,12 +1802,7 @@ export default {
           }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
-              const nowImage = getTopologyImg(item.data.imageId) ? JSON.parse(getTopologyImg(item.data.imageId)) : ''
-              if (nowImage && nowImage.data) {
-                promiseArr.push(nowImage)
-              } else {
-                promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
-              }
+              promiseArr.push(topologyImg['img' + item.data.imageId] || dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`, item.data.imageId))
             } else if (item.data.imageId) {
               promiseArr.push(imgDefault)
             } else {
@@ -1836,59 +1818,11 @@ export default {
             this.iconArray.forEach((item, index) => {
               if (item.id) {
                 item.image = res2[index].data
-                const nowImage = getTopologyImg(item.id) ? JSON.parse(getTopologyImg(item.id)) : ''
-                if (!nowImage || (nowImage && !nowImage.image)) {
-                  setTopologyImg(item.id, JSON.stringify({
-                    data: res2[index].data,
-                    width: res2[index].width,
-                    height: res2[index].height
-                  }))
-                }
               }
             })
             this.imgInit = true
             this.imgageLoading = false
           })
-        })
-      }
-    },
-
-    dealImg (url) {
-      // 处理后端传过来的图片流乱码问题
-      if (url) {
-        return new Promise((resolve, reject) => {
-          this.$axios
-            .get(url)
-            .then((res) => {
-              const imageInfo = {
-                data: ('data:image/jpeg;base64,' + res.data),
-                // width: res.headers.width === -1 ? 100 : (res.headers.width > 900 ? 900 : res.headers.width),
-                // height: res.headers.height === -1 ? 100 : (res.headers.height > 900 ? 900 : res.headers.height)
-                width: (res.headers.width === -1 || res.headers.width === 0) ? 100 : Number(res.headers.width),
-                height: (res.headers.height === -1 || res.headers.height === 0) ? 100 : Number(res.headers.height)
-              }
-              if (imageInfo.width > 900 || imageInfo.height > 900) {
-                if (imageInfo.height > imageInfo.width) {
-                  imageInfo.width = imageInfo.width * 900 / imageInfo.height
-                  imageInfo.height = 900
-                } else if (imageInfo.height < imageInfo.width) {
-                  imageInfo.height = imageInfo.height * 900 / imageInfo.width
-                  imageInfo.width = 900
-                } else {
-                  imageInfo.height = 900
-                  imageInfo.width = 900
-                }
-              }
-              return imageInfo
-            })
-            .then(data => {
-              resolve(data)
-              // changeImage(data,(img)=>{
-              //   resolve(img)
-              // })
-            })
-            .catch(err => {
-            })
         })
       }
     },
@@ -2249,16 +2183,35 @@ export default {
       }
     }
   },
-  destroyed () {
+  beforeDestroy () {
+    if (this.timer) {
+      clearInterval(this.timer)
+      this.timer = null
+    }
+    if (this.timer4) {
+      clearInterval(this.timer4)
+      this.timer4 = null
+    }
     if (getTopology(this.topologyIndex)) {
       getTopology(this.topologyIndex).destroy()
+      const StoreData = le5leStore.get()
+      Object.keys(StoreData).forEach(key => {
+        const id = key.split('-')[0]
+        if (getTopology(this.topologyIndex).id == id) {
+          le5leStore.set(key, null)
+          delete StoreData[key]
+        }
+      })
+      Object.keys(getTopology(this.topologyIndex)).forEach(key => {
+        getTopology(this.topologyIndex)[key] = null
+      })
       setTopology(this.topologyIndex, null)
     }
     if (document.getElementById('topology-canvas' + this.topologyIndexF)) {
       document.getElementById('topology-canvas' + this.topologyIndexF).removeEventListener('mousemove', this.canvasMove)
     }
     window.removeEventListener('resize', this.winResize)
-    window.removeEventListener('resize', this.contextmenuNone)
+    window.removeEventListener('click', this.contextmenuNone)
   }
 }
 </script>

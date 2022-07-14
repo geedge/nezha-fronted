@@ -24,7 +24,7 @@ const RenderLayer = /** @class */ (function (_super) {
     _this.options = options
     _this.render = function () {
       if (_this.data && _this.data.bkImage && !_this.bkImg) {
-        _this.loadBkImg(_this)
+        _this.loadBkImg(_this.render)
         return
       }
       if (!_this.width || !_this.height || !_this.offscreen) {
@@ -46,6 +46,7 @@ const RenderLayer = /** @class */ (function (_super) {
         _this.rule()
       }
       ctx.drawImage(_this.offscreen, 0, 0, _this.width, _this.height)
+      return _this
     }
     _this.offscreen = Store.get(_this.generateStoreKey('LT:offscreen'))
     _this.parentElem.appendChild(_this.canvas)

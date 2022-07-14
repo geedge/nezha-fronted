@@ -820,17 +820,17 @@ const Topology = /** @class */ (function () {
     Store.set(this.generateStoreKey('LT:fontColor'), this.options.fontColor || '#222222')
     this.setupDom(parent)
     this.setupSubscribe()
-    // this.setupMouseEvent()
+    this.setupMouseEvent()
     // Wait for parent dom load
-    // setTimeout(function () {
-    //   _this.canvasPos = _this.divLayer.canvas.getBoundingClientRect()
-    // }, 500)
-    // setTimeout(function () {
-    //   _this.canvasPos = _this.divLayer.canvas.getBoundingClientRect()
-    // }, 1000)
-    // this.cache()
+    setTimeout(function () {
+      _this.canvasPos = _this.divLayer.canvas.getBoundingClientRect()
+    }, 500)
+    setTimeout(function () {
+      _this.canvasPos = _this.divLayer.canvas.getBoundingClientRect()
+    }, 1000)
+    this.cache()
     window.topology = this
-    // this.dispatch('loaded')
+    this.dispatch('loaded')
   }
   Object.defineProperty(Topology.prototype, 'ramCaches', {
     // 内存中的 caches 数量
@@ -2959,12 +2959,6 @@ const Topology = /** @class */ (function () {
     this.subcribeAnimateMoved.unsubscribe()
     this.subcribeMediaEnd.unsubscribe()
     this.subcribeEmit.unsubscribe()
-    this.animateLayer.destroy()
-    this.divLayer.destroy()
-    this.canvas.destroy()
-    this.activeLayer.destroy()
-    this.hoverLayer.destroy()
-    this.offscreen.destroy()
     // document.body.removeChild(this.tipMarkdown)
     window.removeEventListener('resize', this.winResize)
     this.parentElem.removeEventListener('scroll', this.onScroll)
@@ -2975,9 +2969,15 @@ const Topology = /** @class */ (function () {
         document.removeEventListener('keydown', this.onkeydown)
         break
       case KeydownType.Canvas:
-        this.divLayer.canvas.removeEventListener('keydown', this.onkeydown)
+        this.divLayer.canvas && this.divLayer.canvas.removeEventListener('keydown', this.onkeydown)
         break
     }
+    this.animateLayer.destroy()
+    this.divLayer.destroy()
+    this.canvas.destroy()
+    this.activeLayer.destroy()
+    this.hoverLayer.destroy()
+    this.offscreen.destroy()
     this.closeSocket()
     this.closeMqtt()
     if (this.socketFn) {
@@ -2987,6 +2987,7 @@ const Topology = /** @class */ (function () {
     this.cache = null
     this.data = null
     console.log(this.options)
+    this.options.on = null
     window.topology = null
     this.activeLayer = null
     this.hoverLayer = null

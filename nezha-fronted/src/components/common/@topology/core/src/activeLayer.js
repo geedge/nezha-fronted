@@ -43,7 +43,7 @@ const ActiveLayer = /** @class */ (function (_super) {
     _this.dockWatchers = []
     _this.rotating = false
     Store.set(_this.generateStoreKey('LT:ActiveLayer'), _this)
-    // return _this
+    return _this
   }
   ActiveLayer.prototype.calcControlPoints = function () {
     if (this.pens.length === 1 && this.pens[0] instanceof Node) {
