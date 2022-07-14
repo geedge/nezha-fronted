@@ -830,7 +830,7 @@ export default {
       this.panelReloadOnlyPanel()
     },
     htmlToPdf () {
-      let dom = document.getElementsByClassName(this.pdfId)[0]
+      const dom = document.getElementsByClassName(this.pdfId)[0]
       if (dom) {
         // dom = dom.getElementsByClassName('vue-grid-layout')[0]
         this.htmlTitle = this.showPanel.name

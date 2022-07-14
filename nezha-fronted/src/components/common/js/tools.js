@@ -7,7 +7,7 @@ import moment from 'moment-timezone'
 const exceptClassName = ['prevent-clickoutside', 'config-dropdown', 'nz-pop', 'el-picker', 'chart-box-dropdown', 'metric-dropdown', 'el-cascader__dropdown', 'no-style-class', 'el-message-box', 'nz-dashboard-dropdown', 'el-autocomplete-suggestion', 'nz-temp-box', 'el-time-panel', 'el-dropdown-menu', 'el-select-dropdown'] // clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
 export const clickoutside = {
   // 初始化指令
-  bind(el, binding, vnode) {
+  bind (el, binding, vnode) {
     if (!binding.expression) return
     const unsavedChange = localStorage.getItem('nz-unnsaved-change')
     let oldValue
@@ -17,7 +17,7 @@ export const clickoutside = {
     } catch (e) {
 
     }
-    function documentHandler(e) {
+    function documentHandler (e) {
       if (el.contains(e.target)) {
         return false
       } else {
@@ -67,16 +67,16 @@ export const clickoutside = {
     el.__vueClickOutside__ = documentHandler
     document.addEventListener('mousedown', documentHandler)
   },
-  update(el, binding, vnode) {
+  update (el, binding, vnode) {
     el.__newValue__ = binding.value.obj
   },
-  unbind(el, binding) {
+  unbind (el, binding) {
     // 解除事件监听
     document.removeEventListener('mousedown', el.__vueClickOutside__)
     delete el.__vueClickOutside__
   }
 }
-function isEqual(o1, o2) {
+function isEqual (o1, o2) {
   var isEqualForInner = function (obj1, obj2) {
     const o1 = obj1 instanceof Object
     const o2 = obj2 instanceof Object
@@ -113,8 +113,8 @@ export const myLoading = {
     }
   }
 }
-function myLoadingFunction(el, binding, vnode) {
-  let className = binding.arg || 'el-loading-mask' 
+function myLoadingFunction (el, binding, vnode) {
+  const className = binding.arg || 'el-loading-mask'
   const ds = el.getElementsByClassName(className)[0]
   if (binding.value) {
     if (ds) {
@@ -149,7 +149,7 @@ function myLoadingFunction(el, binding, vnode) {
     //  div内部加入内容
     // div.innerHTML = '加载中...'
     //  el 元素设置相对定位   div设置绝对定位
-    el.setAttribute('class',elClassName +  ' elrelative')
+    el.setAttribute('class', elClassName + ' elrelative')
     // el.setAttribute('class',className)
     //  设置绝对定位
     div.setAttribute('class', className)
@@ -166,7 +166,7 @@ export const cancelWithChange = {
     const unsavedChange = localStorage.getItem('nz-unnsaved-change')
     const oldValue = JSON.parse(JSON.stringify(binding.value.obj))
     el.__newValue__ = oldValue
-    function domClick(e) {
+    function domClick (e) {
       if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__)) {
         MessageBox.confirm(i18n.t('tip.confirmCancel'), {
           confirmButtonText: i18n.t('tip.yes'),
@@ -184,7 +184,7 @@ export const cancelWithChange = {
     el.__vueDomClick__ = domClick
     el.addEventListener('click', domClick)
   },
-  update(el, binding, vnode) {
+  update (el, binding, vnode) {
     el.__newValue__ = binding.value.obj
   },
   unbind: function (el, binding) {
@@ -196,7 +196,7 @@ export const cancelWithChange = {
 // 底部上滑框窗口控制
 export const bottomBoxWindow = {
   // 鼠标拖动二级列表
-  listResize(vm, e) {
+  listResize (vm, e) {
     window.resizing = true
     const mainListDom = document.querySelector('.main-list') // 主列表
     const subBoxDom = document.querySelector('.sub-box') // 副列表
@@ -269,7 +269,7 @@ export const bottomBoxWindow = {
       document.onmouseup = null
     }
   },
-  exitFullScreen(vm) {
+  exitFullScreen (vm) {
     window.resizing = true
     const contentRightDom = document.querySelector('.list-page') // 右侧内容区
     const contentRightHeight = contentRightDom.offsetHeight// 可视高度
@@ -293,7 +293,7 @@ export const bottomBoxWindow = {
       })
     }, 210)
   },
-  fullScreen(vm) {
+  fullScreen (vm) {
     window.resizing = true
     const contentRightDom = document.querySelector('.list-page') // 右侧内容区
     const contentRightHeight = contentRightDom.offsetHeight - 9// 可视高度
@@ -306,7 +306,7 @@ export const bottomBoxWindow = {
     document.querySelector('.sub-list').style.height = contentRightHeight + 'px'
     window.resizing = false
   },
-  showSubListWatch(vm, n) {
+  showSubListWatch (vm, n) {
     vm.bottomBox.inTransform = n
     if (!n) {
       vm.mainTableHeight = vm.$tableHeight.normal // 重置table的高度
@@ -350,7 +350,7 @@ export const bottomBoxWindow = {
     }
   }
 }
-export function stringTimeParseToUnix(stringTime) {
+export function stringTimeParseToUnix (stringTime) {
   let time = new Date(stringTime).getTime()
   let offset = localStorage.getItem('nz-sys-timezone')
   offset = moment.tz(offset).format('Z')
@@ -359,7 +359,7 @@ export function stringTimeParseToUnix(stringTime) {
   time = time + localOffset - offset * 60 * 60 * 1000
   return parseInt(time / 1000)
 }
-export function stringTimeParseToUnixMs(stringTime) {
+export function stringTimeParseToUnixMs (stringTime) {
   let time = new Date(stringTime).getTime()
   let offset = localStorage.getItem('nz-sys-timezone')
   offset = moment.tz(offset).format('Z')
@@ -368,7 +368,7 @@ export function stringTimeParseToUnixMs(stringTime) {
   time = time + localOffset - offset * 60 * 60 * 1000
   return parseInt(time)
 }
-export function getTime(size, unit) { // 计算时间
+export function getTime (size, unit) { // 计算时间
   const now = new Date(bus.computeTimezone(new Date().getTime()))
   if (unit) {
     switch (unit) {
@@ -409,7 +409,7 @@ export function getTime(size, unit) { // 计算时间
   second = second < 10 ? '0' + second : second
   return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
 }
-export function calcDurationByStringTime(startTime, endTime) {
+export function calcDurationByStringTime (startTime, endTime) {
   const durationSecond = stringTimeParseToUnix(endTime) - stringTimeParseToUnix(startTime)
   let result = `${durationSecond % 60}s`
   if (durationSecond > 60) {
@@ -420,7 +420,7 @@ export function calcDurationByStringTime(startTime, endTime) {
   }
   return result
 }
-export function calcDurationByStringTimeB(startTime, endTime) {
+export function calcDurationByStringTimeB (startTime, endTime) {
   const durationSecond = stringTimeParseToUnix(endTime) - stringTimeParseToUnix(startTime)
   let result = `${durationSecond % 60}s`
   if (durationSecond >= 60 * 60 * 24) {
@@ -435,7 +435,7 @@ export function calcDurationByStringTimeB(startTime, endTime) {
 
   return result
 }
-export function calcDurationByStringTimeMs(startTime, endTime) {
+export function calcDurationByStringTimeMs (startTime, endTime) {
   let durationSecond = stringTimeParseToUnixMs(endTime) - stringTimeParseToUnixMs(startTime)
   let result = ''
   if (durationSecond < 1000) {
@@ -457,7 +457,7 @@ export function calcDurationByStringTimeMs(startTime, endTime) {
 
   return result
 }
-export function unixTimeParseToString(unixTime, fmt = 'YYYY-MM-DD HH:mm:ss') {
+export function unixTimeParseToString (unixTime, fmt = 'YYYY-MM-DD HH:mm:ss') {
   const date = new Date(unixTime * 1000)
   const o = {
     'M+': date.getMonth() + 1, // 月份
@@ -484,10 +484,10 @@ export const chartResizeTool = {
   containerBlankWidth: 30, // 容器空白占位宽度（#listContainer的padding）
   titleHeight: 40, // 标题dom高度
   timeouter: null,
-  stepWidth(containerWidth) { // 单元宽度，参数为容器总宽度
+  stepWidth (containerWidth) { // 单元宽度，参数为容器总宽度
     return Math.floor((containerWidth - this.containerBlankWidth) / 12)
   },
-  start(vm, originalData, event, chartIndexs) {
+  start (vm, originalData, event, chartIndexs) {
     const $self = this
     const data = JSON.parse(JSON.stringify(originalData)) // 将初始对象复制，后续操作使用复制对象
     const shadow = vm.$refs.resizeShadow ? vm.$refs.resizeShadow : vm.$refs[0].resizeShadow // 缩放时底部阴影dom
@@ -511,7 +511,7 @@ export const chartResizeTool = {
     // 3.鼠标松开，将resize-box宽高改为resize-shadow宽高，结束
     document.addEventListener('mouseup', mouseupListener)
 
-    function moveListener(e) {
+    function moveListener (e) {
       const mouseX = e.clientX
       const mouseY = e.clientY
       const w = `${Math.floor(originalWidth + (mouseX - mouseOriginalX) - chartBlankWidth)}px`
@@ -526,7 +526,7 @@ export const chartResizeTool = {
       const remainderHeight = (box.offsetHeight + chartBlankHeight - shadowNewHeight) % step // 高的余数
       boxStepHandler(remainderWidth, remainderHeight)
     }
-    function mouseupListener(e) {
+    function mouseupListener (e) {
       data.span = Math.round((shadow.offsetWidth + chartBlankWidth) / step)
       data.height = Math.round((shadow.offsetHeight + chartBlankHeight) / step)
       box.style.width = `${Math.floor(data.span * step) - chartBlankWidth}px`
@@ -543,7 +543,7 @@ export const chartResizeTool = {
       document.removeEventListener('mousemove', moveListener)
       document.removeEventListener('mouseup', mouseupListener)
     }
-    function boxStepHandler(width, height, chartIndex) { // param: 宽高变化量，大于0放大，小于0缩小
+    function boxStepHandler (width, height, chartIndex) { // param: 宽高变化量，大于0放大，小于0缩小
       let widthChange = false
       let heightChange = false
       if (width > step / 2) { // 放大shadow宽
@@ -600,7 +600,7 @@ export const chartResizeTool = {
 // table 方法
 export const tableSet = {
   // 是否需要排序
-  sortableShow(prop, from) {
+  sortableShow (prop, from) {
     switch (prop) {
       case 'state': {
         if (from === 'operationlog' || from === 'alertSilence') {
@@ -657,7 +657,7 @@ export const tableSet = {
     }
   },
   // prop字段
-  propTitle(prop, from) {
+  propTitle (prop, from) {
     switch (from) {
       case 'asset':
         switch (prop) {
@@ -781,7 +781,7 @@ export const tableSet = {
     }
   },
   // 本地正序
-  asce(prop) {
+  asce (prop) {
     return function (obj1, obj2) {
       let val1 = obj1[prop]
       let val2 = obj2[prop]
@@ -819,7 +819,7 @@ export const tableSet = {
     }
   },
   // 本地倒序
-  desc(prop) {
+  desc (prop) {
     return function (obj1, obj2) {
       let val1 = obj1[prop]
       let val2 = obj2[prop]
@@ -857,7 +857,7 @@ export const tableSet = {
     }
   },
   // 转化时间字符串为时间戳
-  strTodate(str) {
+  strTodate (str) {
     let date = str.trim()
     date = date.substring(0, 19)
     date = date.replace(/-/g, '/') // 必须把日期'-'转为'/'
@@ -865,7 +865,7 @@ export const tableSet = {
   }
 }
 
-export function getMetricTypeValue(queryItem, type) {
+export function getMetricTypeValue (queryItem, type) {
   let copy = JSON.parse(JSON.stringify(queryItem))
   switch (type) {
     case 'min': {
@@ -942,31 +942,31 @@ export function getMetricTypeValue(queryItem, type) {
   }
 }
 
-export function blankPromise() {
+export function blankPromise () {
   return new Promise(resolve => { resolve() })
 }
 
-export function clickLegend(echart, legendName, index) {
+export function clickLegend (echart, legendName, index) {
   if (echart) {
     //
   }
 }
 
-export function showTableTooltip(content, show = true, e) {
+export function showTableTooltip (content, show = true, e) {
   if (show) {
     const dom = document.querySelector('.table-tooltip')
     dom.innerHTML = content
     dom.setAttribute('style', `visibility: visible; top: ${e.clientY - e.offsetY + e.target.offsetHeight * 0.5 - dom.offsetHeight * 0.5}px; left: ${e.clientX - e.offsetX + e.target.offsetWidth}px`)
   }
 }
-export function hideTableTooltip() {
+export function hideTableTooltip () {
   const dom = document.querySelector('.table-tooltip')
   dom.setAttribute('style', 'visibility: hidden;')
   dom.innerHTML = ''
 }
 
 /* 数字转换保留小数，数字很小时转为科学计数法, dot为保留几位小数 */
-export function formatScientificNotation(value, dot = 2) {
+export function formatScientificNotation (value, dot = 2) {
   let val = value ? parseFloat(Number(value).toFixed(dot)) : 0
   if (val === 0) {
     val = Number(value).toPrecision(dot + 1)
@@ -982,7 +982,7 @@ export function formatScientificNotation(value, dot = 2) {
   }
 } */
 /* 处理legend的别名 */
-export function dealLegendAlias(legend, expression) {
+export function dealLegendAlias (legend, expression) {
   if (/\{\{.+\}\}/.test(expression)) {
     const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
       const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)

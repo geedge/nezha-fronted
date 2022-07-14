@@ -86,6 +86,7 @@ const Topology = /** @class */ (function () {
       }
       timer = setTimeout(function () {
         _this.resize()
+        timer = null
       }, 100)
     }
     this.calibrateMouse = function (pt) {
@@ -819,17 +820,17 @@ const Topology = /** @class */ (function () {
     Store.set(this.generateStoreKey('LT:fontColor'), this.options.fontColor || '#222222')
     this.setupDom(parent)
     this.setupSubscribe()
-    this.setupMouseEvent()
+    // this.setupMouseEvent()
     // Wait for parent dom load
-    setTimeout(function () {
-      _this.canvasPos = _this.divLayer.canvas.getBoundingClientRect()
-    }, 500)
-    setTimeout(function () {
-      _this.canvasPos = _this.divLayer.canvas.getBoundingClientRect()
-    }, 1000)
-    this.cache()
+    // setTimeout(function () {
+    //   _this.canvasPos = _this.divLayer.canvas.getBoundingClientRect()
+    // }, 500)
+    // setTimeout(function () {
+    //   _this.canvasPos = _this.divLayer.canvas.getBoundingClientRect()
+    // }, 1000)
+    // this.cache()
     window.topology = this
-    this.dispatch('loaded')
+    // this.dispatch('loaded')
   }
   Object.defineProperty(Topology.prototype, 'ramCaches', {
     // 内存中的 caches 数量
@@ -1917,7 +1918,7 @@ const Topology = /** @class */ (function () {
     return offset
   }
   Topology.prototype.cache = function () {
-    if (this.options.cacheLen == 0 || this.data.locked) { return }
+    if (this.options.cacheLen == 0 || this.data && this.data.locked) { return }
     if (this.caches.index < this.caches.list.length - 1) {
       this.caches.list.splice(this.caches.index + 1, this.caches.list.length - this.caches.index - 1)
       // 删除 indexDB 的值
@@ -2964,7 +2965,7 @@ const Topology = /** @class */ (function () {
     this.activeLayer.destroy()
     this.hoverLayer.destroy()
     this.offscreen.destroy()
-    document.body.removeChild(this.tipMarkdown)
+    // document.body.removeChild(this.tipMarkdown)
     window.removeEventListener('resize', this.winResize)
     this.parentElem.removeEventListener('scroll', this.onScroll)
     window.removeEventListener('scroll', this.onScroll)
@@ -2987,9 +2988,6 @@ const Topology = /** @class */ (function () {
     this.data = null
     console.log(this.options)
     window.topology = null
-    createCacheTable()
-    this.divLayer.clear()
-    this.activeLayer = null
     this.activeLayer = null
     this.hoverLayer = null
     this.animateLayer = null
@@ -3001,11 +2999,18 @@ const Topology = /** @class */ (function () {
     this.subcribeAnimateMoved = null
     this.subcribeEmit = null
     this.offscreen = null
+    this.parentElem.onresize = null
     this.parentElem = null
+    this.input = null
     this.data = null
     this.caches = null
     this.clipboard = null
-    this.gifs = {}
+    this.gifs = null
+    this.tipMarkdown = null
+    this.tipMarkdownContent = null
+    this.tipMarkdownArrowUp = null
+    this.tipMarkdownArrowDown = null
+    delete this
   }
   return Topology
 }())

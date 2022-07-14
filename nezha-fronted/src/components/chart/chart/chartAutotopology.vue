@@ -60,10 +60,10 @@ export default {
           if (res2.length == 0) {
             this.topologyLoading = false
           }
-          // res2.forEach(item => {
-          //   temp.push(item)
-          // })
-          temp.push(res2[2])
+          res2.forEach(item => {
+            temp.push(item)
+          })
+          // temp.push(res2[2])
           this.allProject = JSON.parse(JSON.stringify(temp))
           temp = null
           axiosAll = null
@@ -101,6 +101,9 @@ export default {
   },
   mounted () {
     this.queryAllProjectData()
+  },
+  beforeDestroy () {
+    this.allProject = []
   }
 }
 </script>

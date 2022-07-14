@@ -93,7 +93,7 @@ export default {
         default: return false
       }
     },
-    isThresholdConfig(type) {
+    isThresholdConfig (type) {
       switch (type) {
         case 'line':
         case 'area':

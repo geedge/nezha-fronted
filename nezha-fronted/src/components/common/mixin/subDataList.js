@@ -5,7 +5,7 @@ export default {
       type: Array
     },
     targetTab: String,
-    from: String,
+    from: String
   },
   data () {
     return {

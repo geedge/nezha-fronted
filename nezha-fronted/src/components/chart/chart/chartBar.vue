@@ -28,7 +28,7 @@ import { formatScientificNotation, getMetricTypeValue } from '@/components/commo
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import { initColor } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
-import bus from "@/libs/bus";
+import bus from '@/libs/bus'
 
 export default {
   name: 'chart-bar',

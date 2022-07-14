@@ -327,7 +327,7 @@ import {
   myCubec,
   myCubeAnchors
 } from '../project/L5/services/canvas.js'
-import {getTopology, getTopologyImg, setTopology, setTopologyImg} from '../js/common'
+import { getTopology, getTopologyImg, setTopology, setTopologyImg } from '../js/common'
 import CanvasProps from '../project/L5/CanvasProps'
 import topologyTopTool from '../project/L5/topologyTopTool'
 import popDataMain from '../project/popData/Main'

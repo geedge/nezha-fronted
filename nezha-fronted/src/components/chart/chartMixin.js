@@ -293,7 +293,6 @@ export default {
     }
   },
   mounted () {
-
     this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
   },
   beforeDestroy () {

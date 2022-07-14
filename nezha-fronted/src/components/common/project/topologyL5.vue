@@ -782,7 +782,7 @@ export default {
           return
         }
         if (!getTopology(this.topologyIndex)) {
-          let canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
+          let canvas = new Topology('topology-canvas' + this.topologyIndexF)
           // canvas.open(data)
           setTopology(this.topologyIndex, canvas)
           canvas = null
@@ -794,7 +794,7 @@ export default {
           getTopology(this.topologyIndex).data.name = this.obj.name
         }
         getTopology(this.topologyIndex).data.projectId = this.obj.id
-        getTopology(this.topologyIndex).lock(1)
+        // getTopology(this.topologyIndex).lock(1)
 
         this.getModule()// 获取module
         resolve()
@@ -1753,7 +1753,7 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            promiseArr.push(topologyImg['img' + item.id]|| dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
+            promiseArr.push(topologyImg['img' + item.id] || dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
@@ -2286,49 +2286,49 @@ export default {
     if (getTopology(this.topologyIndex)) {
       console.log(getTopology(this.topologyIndex))
       // getTopology(this.topologyIndex).open({ pens: [] })
-      getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
-      getTopology(this.topologyIndex).data.pens.forEach(item => {
-        item.img = null
-        item.image = null
-        item.lastImage = null
-      })
-      getTopology(this.topologyIndex).activeLayer.data.pens.forEach(item => {
-        item.img = null
-        item.image = null
-        item.lastImage = null
-      })
-      getTopology(this.topologyIndex).animateLayer.data.pens.forEach(item => {
-        item.img = null
-        item.image = null
-        item.lastImage = null
-      })
-      getTopology(this.topologyIndex).caches.list.forEach((cache) => {
-        cache.pens.forEach(item => {
-          item.img = null
-          item.image = null
-          item.lastImage = null
-        })
-      })
-      getTopology(this.topologyIndex).animateLayer.data.pens.forEach(item => {
-        item.img = null
-        item.image = null
-        item.lastImage = null
-      })
-      getTopology(this.topologyIndex).canvas.data.pens.forEach(item => {
-        item.img = null
-        item.image = null
-        item.lastImage = null
-      })
-      getTopology(this.topologyIndex).divLayer.data.pens.forEach(item => {
-        item.img = null
-        item.image = null
-        item.lastImage = null
-      })
-      getTopology(this.topologyIndex).hoverLayer.data.pens.forEach(item => {
-        item.img = null
-        item.image = null
-        item.lastImage = null
-      })
+      // getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
+      // getTopology(this.topologyIndex).data.pens.forEach(item => {
+      //   item.img = null
+      //   item.image = null
+      //   item.lastImage = null
+      // })
+      // getTopology(this.topologyIndex).activeLayer.data.pens.forEach(item => {
+      //   item.img = null
+      //   item.image = null
+      //   item.lastImage = null
+      // })
+      // getTopology(this.topologyIndex).animateLayer.data.pens.forEach(item => {
+      //   item.img = null
+      //   item.image = null
+      //   item.lastImage = null
+      // })
+      // getTopology(this.topologyIndex).caches.list.forEach((cache) => {
+      //   cache.pens.forEach(item => {
+      //     item.img = null
+      //     item.image = null
+      //     item.lastImage = null
+      //   })
+      // })
+      // getTopology(this.topologyIndex).animateLayer.data.pens.forEach(item => {
+      //   item.img = null
+      //   item.image = null
+      //   item.lastImage = null
+      // })
+      // getTopology(this.topologyIndex).canvas.data.pens.forEach(item => {
+      //   item.img = null
+      //   item.image = null
+      //   item.lastImage = null
+      // })
+      // getTopology(this.topologyIndex).divLayer.data.pens.forEach(item => {
+      //   item.img = null
+      //   item.image = null
+      //   item.lastImage = null
+      // })
+      // getTopology(this.topologyIndex).hoverLayer.data.pens.forEach(item => {
+      //   item.img = null
+      //   item.image = null
+      //   item.lastImage = null
+      // })
       getTopology(this.topologyIndex).destroy()
       const StoreData = le5leStore.get()
       // const arr = []

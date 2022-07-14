@@ -1,4 +1,4 @@
-export function isMobile() {
-    return /Android|webOS|iPad|iPhone|iPod|BlackBerry/i.test(navigator.userAgent);
+export function isMobile () {
+  return /Android|webOS|iPad|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)
 }
-//# sourceMappingURL=browser.js.map
+// # sourceMappingURL=browser.js.map
