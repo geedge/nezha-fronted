@@ -57,8 +57,11 @@ export default {
       this.dropdownMenuShow = false
     },
     duplicate () {
+      const obj = this.$loadsh.cloneDeep(this.chartInfo)
+      obj.elements = obj.oldElements
+      delete obj.oldElements
       this.$store.dispatch('dispatchEditChart', {
-        chart: this.chartInfo,
+        chart: obj,
         type: 'duplicate'
       })
       this.dropdownMenuShow = false
