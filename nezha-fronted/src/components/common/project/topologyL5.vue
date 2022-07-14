@@ -642,7 +642,6 @@ export default {
     canvasRegister()
   },
   mounted () {
-    console.log('mounted')
     if (!this.fromOverView) { // 从overview来的 加载相应图片 优化首页加载速度
       this.addNodeInit()
     }
@@ -2310,8 +2309,6 @@ export default {
           delete StoreData[key]
         }
       })
-      console.log(this.$loadsh.uniq(arr))
-      console.log(le5leStore.get())
       Object.keys(getTopology(this.topologyIndex)).forEach(key => {
         getTopology(this.topologyIndex)[key] = null
 // =======
@@ -2393,7 +2390,6 @@ export default {
 //         }
 // >>>>>>> 73b71d578f55a77256af95f635a651575e8cebf9
       })
-      console.log(le5leStore.get())
       // Object.keys(getTopology(this.topologyIndex)).forEach(key => {
       //   getTopology(this.topologyIndex)[key] = null
       // })
