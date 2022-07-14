@@ -312,8 +312,8 @@
 </template>
 
 <script>
+import { Topology, registerNode } from '@/components/common/@topology/core/index.js'
 import { Store as le5leStore } from 'le5le-store'
-import { Topology, registerNode } from '@topology/core'
 import imgDefault from '@/components/common/project/L5/services/img'
 import {
   Tools,
@@ -328,7 +328,7 @@ import {
   myCubec,
   myCubeAnchors
 } from '../project/L5/services/canvas.js'
-import {getTopology, setTopology, dealImg} from '../js/common'
+import { getTopology, setTopology, dealImg, topologyImg } from '../js/common'
 import CanvasProps from '../project/L5/CanvasProps'
 import topologyTopTool from '../project/L5/topologyTopTool'
 import popDataMain from '../project/popData/Main'
@@ -1749,12 +1749,7 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            const nowImage = ''
-            if (nowImage && nowImage.data) {
-              promiseArr.push(nowImage)
-            } else {
-              promiseArr.push(dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
-            }
+            promiseArr.push(topologyImg['img' + item.id] || dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
@@ -1811,12 +1806,7 @@ export default {
           }
           imgidList.forEach((item, index) => {
             if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
-              const nowImage = ''
-              if (nowImage && nowImage.data) {
-                promiseArr.push(nowImage)
-              } else {
-                promiseArr.push(dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`, item.data.imageId))
-              }
+              promiseArr.push(topologyImg['img' + item.data.imageId] || dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`, item.data.imageId))
             } else if (item.data.imageId) {
               promiseArr.push(imgDefault)
             } else {
@@ -1837,46 +1827,6 @@ export default {
             this.imgInit = true
             this.imgageLoading = false
           })
-        })
-      }
-    },
-
-    dealImg (url) {
-      // 处理后端传过来的图片流乱码问题
-      if (url) {
-        return new Promise((resolve, reject) => {
-          this.$axios
-            .get(url)
-            .then((res) => {
-              const imageInfo = {
-                data: ('data:image/jpeg;base64,' + res.data),
-                // width: res.headers.width === -1 ? 100 : (res.headers.width > 900 ? 900 : res.headers.width),
-                // height: res.headers.height === -1 ? 100 : (res.headers.height > 900 ? 900 : res.headers.height)
-                width: (res.headers.width === -1 || res.headers.width === 0) ? 100 : Number(res.headers.width),
-                height: (res.headers.height === -1 || res.headers.height === 0) ? 100 : Number(res.headers.height)
-              }
-              if (imageInfo.width > 900 || imageInfo.height > 900) {
-                if (imageInfo.height > imageInfo.width) {
-                  imageInfo.width = imageInfo.width * 900 / imageInfo.height
-                  imageInfo.height = 900
-                } else if (imageInfo.height < imageInfo.width) {
-                  imageInfo.height = imageInfo.height * 900 / imageInfo.width
-                  imageInfo.width = 900
-                } else {
-                  imageInfo.height = 900
-                  imageInfo.width = 900
-                }
-              }
-              return imageInfo
-            })
-            .then(data => {
-              resolve(data)
-              // changeImage(data,(img)=>{
-              //   resolve(img)
-              // })
-            })
-            .catch(err => {
-            })
         })
       }
     },
@@ -2247,21 +2197,15 @@ export default {
       this.timer4 = null
     }
     if (getTopology(this.topologyIndex)) {
-      getTopology(this.topologyIndex).open({ pens: [] })
-      getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
       getTopology(this.topologyIndex).destroy()
       const StoreData = le5leStore.get()
-      const arr = []
       Object.keys(StoreData).forEach(key => {
         const id = key.split('-')[0]
-        arr.push(id)
         if (getTopology(this.topologyIndex).id == id) {
           le5leStore.set(key, null)
           delete StoreData[key]
         }
       })
-      console.log(this.$loadsh.uniq(arr))
-      console.log(le5leStore.get())
       Object.keys(getTopology(this.topologyIndex)).forEach(key => {
         getTopology(this.topologyIndex)[key] = null
       })
@@ -2272,17 +2216,6 @@ export default {
     }
     window.removeEventListener('resize', this.winResize)
     window.removeEventListener('click', this.contextmenuNone)
-  },
-  destroyed () {
-    if (getTopology(this.topologyIndex)) {
-      getTopology(this.topologyIndex).destroy()
-      setTopology(this.topologyIndex, null)
-    }
-    if (document.getElementById('topology-canvas' + this.topologyIndexF)) {
-      document.getElementById('topology-canvas' + this.topologyIndexF).removeEventListener('mousemove', this.canvasMove)
-    }
-    window.removeEventListener('resize', this.winResize)
-    window.removeEventListener('resize', this.contextmenuNone)
   }
 }
 </script>
