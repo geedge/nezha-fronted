@@ -22,7 +22,7 @@
 
           <!--value mapping-->
           <el-row class="form-row-title">
-            {{ $t('alert.config.threshold') }}
+            {{ $t('dashboard.panel.chartForm.thresholds') }}
             <span v-if="selection.pen.data.valueMappingSort !=='desc'" class="title__label"
                   >（0:Ok > … >{{
                 selection.pen.data.valueMapping.length
