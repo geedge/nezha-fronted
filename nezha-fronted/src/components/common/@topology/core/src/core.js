@@ -2986,7 +2986,6 @@ const Topology = /** @class */ (function () {
     }
     this.cache = null
     this.data = null
-    console.log(this.options)
     this.options.on = null
     window.topology = null
     this.activeLayer = null

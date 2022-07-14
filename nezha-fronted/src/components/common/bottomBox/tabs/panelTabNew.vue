@@ -574,7 +574,6 @@ export default {
           }
         } else {
           this.$get('visual/panel', { type: this.from, link: linkId || this.obj.id }).then(response => {
-            console.log(response)
             if (response.code === 200) {
               this.panelData = response.data.list
               if (this.panelData.length > 0) {
