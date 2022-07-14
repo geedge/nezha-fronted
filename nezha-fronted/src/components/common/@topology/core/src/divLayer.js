@@ -82,7 +82,7 @@ const DivLayer = /** @class */ (function (_super) {
             _this.setElemPosition(node, _this.gifs[node.id])
           } else {
             _this.addGif(node)
-            _this.setElemPosition(node, node.id)
+            _this.setElemPosition(node, node.img)
           }
         }
       }

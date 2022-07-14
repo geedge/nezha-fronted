@@ -354,6 +354,7 @@ import {
   myCubeAnchors
 } from './L5/services/canvas.js'
 import { getTopology, setTopology, dealImg, topologyImg } from '../js/common'
+
 import CanvasProps from './L5/CanvasProps'
 import topologyTopTool from './L5//topologyTopTool'
 import CanvasContextMenu from './L5/CanvasContextMenu'
@@ -782,7 +783,7 @@ export default {
           return
         }
         if (!getTopology(this.topologyIndex)) {
-          let canvas = new Topology('topology-canvas' + this.topologyIndexF)
+          let canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
           // canvas.open(data)
           setTopology(this.topologyIndex, canvas)
           canvas = null
