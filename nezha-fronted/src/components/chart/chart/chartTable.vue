@@ -212,7 +212,23 @@ export default {
                 value = chartDataFormat.getUnit(column.unit ? column.unit : 2).compute(value, null, -1, 2)
               }
               if (!((typeof value) == 'string' && value.constructor == String)) {
-                value = JSON.stringify(lodash.get(params, label))
+                let legend = ''
+                if (value.__name__) {
+                  legend += `${value.__name__}{`
+                } else {
+                  legend += '{'
+                }
+                const tagKeysArr = Object.keys(value)
+                tagKeysArr.forEach(tagKey => {
+                  if (tagKey !== '__name__') {
+                    legend += `${tagKey}="${value[tagKey]}",`
+                  }
+                })
+                if (legend.endsWith(',')) {
+                  legend = legend.substr(0, legend.length - 1)
+                }
+                legend += '}'
+                value = legend
               }
             }
             return value || ''
@@ -242,7 +258,23 @@ export default {
           if (lodash.get(params, label)) {
             value = lodash.get(params, label)
             if (!((typeof value) == 'string' && value.constructor == String)) {
-              value = JSON.stringify(lodash.get(params, label))
+              let legend = ''
+              if (value.__name__) {
+                legend += `${value.__name__}{`
+              } else {
+                legend += '{'
+              }
+              const tagKeysArr = Object.keys(value)
+              tagKeysArr.forEach(tagKey => {
+                if (tagKey !== '__name__') {
+                  legend += `${tagKey}="${value[tagKey]}",`
+                }
+              })
+              if (legend.endsWith(',')) {
+                legend = legend.substr(0, legend.length - 1)
+              }
+              legend += '}'
+              value = legend
             }
           }
           return value || label
