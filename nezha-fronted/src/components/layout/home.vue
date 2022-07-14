@@ -14,6 +14,7 @@
     <!-- 临时文本dom，用来计算文本长度 -->
     <span class="temp-dom"></span>
     <span class="temp-dom--12"></span>
+    <span class="temp-dom--14"></span>
   </div>
 </template>
 

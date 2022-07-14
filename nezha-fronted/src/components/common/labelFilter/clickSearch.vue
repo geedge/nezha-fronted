@@ -274,7 +274,7 @@ export default {
           item.inputWidth = this.widthConstant.dropdownCheckBox.inputOriginalWidth
         } else {
           const showTag = item.children.find(c => c.id == value[0]) // 展示的tag
-          const { tagWidth, inputWidth, width } = this.computeCascWidth(this.computeDistance(showTag.name, 14), item.labelWidth)
+          const { tagWidth, inputWidth, width } = this.computeCascWidth(this.computeDistance(showTag.name, 16), item.labelWidth)
           item.width = width
           item.inputWidth = inputWidth
         }
@@ -293,7 +293,7 @@ export default {
           item.inputWidth = this.widthConstant.dropdownCheckBox.inputOriginalWidth
         } else {
           const showTag = item.children.find(c => c.id == value[0]) // 展示的tag
-          const { tagWidth, inputWidth, width } = this.computeCascWidth(this.computeDistance(showTag.name, 14), item.labelWidth)
+          const { tagWidth, inputWidth, width } = this.computeCascWidth(this.computeDistance(showTag.name, 16), item.labelWidth)
           item.width = width
           item.inputWidth = inputWidth
         }
@@ -301,14 +301,14 @@ export default {
         Object.keys(this.titleSearchListCopy).forEach(type => {
           this.titleSearchListCopy[type].children.forEach(c => {
             if (this.titleSearchListCopy[type].type === 'dropdownCheckBox') {
-              const labelWidth = this.computeDistance(c.name + ':', 14) + this.widthConstant.dropdownCheckBox.labelPadding // cascader-label总宽度
+              const labelWidth = this.computeDistance(c.name + ':', 16) + this.widthConstant.dropdownCheckBox.labelPadding // cascader-label总宽度
               const width = labelWidth + this.widthConstant.dropdownCheckBox.inputOriginalWidth + this.widthConstant.dropdownCheckBox.boxMargin
               this.$set(c, 'width', width) // 总宽
               this.$set(c, 'originalWidth', width) // 初始总宽
               this.$set(c, 'labelWidth', labelWidth) // label区域宽
               this.$set(c, 'inputWidth', this.widthConstant.dropdownCheckBox.inputOriginalWidth) // 内容区域宽
             } else if (this.titleSearchListCopy[type].type === 'checkBox') {
-              const width = this.computeDistance(c.name + ' (' + c.num + ')', 14) + this.widthConstant.checkBox.tagBlankTotal + this.widthConstant.checkBox.boxMargin
+              const width = this.computeDistance(c.name + ' (' + c.num + ')', 16) + this.widthConstant.checkBox.tagBlankTotal + this.widthConstant.checkBox.boxMargin
               this.$set(c, 'width', width) // 总宽
             }
           })
