@@ -47,7 +47,6 @@ const Point = /** @class */ (function () {
   return Point
 }())
 export { Point }
-console.log(132123132123)
 window.topologyPoint = Point
 window.Le5leTopologyPoint = Point
 // # sourceMappingURL=point.js.map
