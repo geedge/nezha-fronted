@@ -715,6 +715,105 @@
           </el-row>
         </transition>
       </div>
+
+      <!-- visibility -->
+      <div>
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.panel.showHidden')}}</span>
+          <el-switch
+            v-model="chartConfig.param.enable.visibility"
+            size="small"
+            @change="change"
+          ></el-switch>
+        </div>
+        <transition name="el-zoom-in-top">
+          <div
+            v-if="chartConfig.param.enable.visibility"
+            class="form-items--half-width-group"
+          >
+            <!-- Variable name -->
+            <el-form-item
+              :label="$t('dashboard.panel.variableName')"
+              class="form-item--half-width"
+              prop="param.visibility.varName"
+              :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+            >
+              <el-select
+                v-model="chartConfig.param.visibility.varName"
+                :placeholder="$t('el.select.placeholder')"
+                popper-class="right-box-select-top prevent-clickoutside"
+                size="small"
+                @change="change"
+                filterable
+                allow-create
+                default-first-option
+              >
+                <el-option
+                  v-for="item in variables"
+                  :key="item.name"
+                  :label="$t(item.name)"
+                  :value="item.name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <!-- Operator -->
+            <el-form-item
+              :label="$t('alert.config.operator')"
+              class="form-item--half-width"
+              prop="param.visibility.operator"
+              :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+            >
+              <el-select
+                v-model="chartConfig.param.visibility.operator"
+                :placeholder="$t('el.select.placeholder')"
+                popper-class="right-box-select-top prevent-clickoutside"
+                size="small"
+                @change="change"
+              >
+                <el-option
+                  v-for="item in operatorList"
+                  :key="item.value"
+                  :label="$t(item.label)"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <!-- Value -->
+            <el-form-item
+              :label="$t('overall.value')"
+              class="form-item--half-width"
+              prop="param.visibility.varValue"
+              :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+            >
+              <el-input
+                :placeholder="$t('overall.placeHolder')"
+                size="small"
+                v-model="chartConfig.param.visibility.varValue"
+                @change="change">
+              </el-input>
+            </el-form-item>
+            <!-- Result -->
+            <el-form-item
+              :label="$t('dashboard.panel.chartForm.result')"
+              class="form-item--half-width"
+              prop="param.visibility.result"
+              :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+            >
+              <el-select
+                v-model="chartConfig.param.visibility.result"
+                :placeholder="$t('el.select.placeholder')"
+                popper-class="right-box-select-top prevent-clickoutside"
+                size="small"
+                @change="change"
+              >
+                <el-option label="Show" value="show"></el-option>
+                <el-option label="Hidden" value="hidden"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </transition>
+      </div>
+
     </el-form>
   </div>
 </template>
@@ -850,7 +949,15 @@ export default {
             enable: {
               legend: true,
               valueMapping: false,
-              thresholds: false
+              thresholds: false,
+              visibility: false
+            },
+            showHeader: this.chartConfig.param.showHeader,
+            visibility: {
+              varName: '',
+              operator: '',
+              varValue: '',
+              result: ''
             }
           }
           this.$nextTick(() => {
@@ -874,7 +981,15 @@ export default {
             enable: {
               legend: true,
               valueMapping: false,
-              thresholds: false
+              thresholds: false,
+              visibility: false
+            },
+            showHeader: this.chartConfig.param.showHeader,
+            visibility: {
+              varName: '',
+              operator: '',
+              varValue: '',
+              result: ''
             }
           }
           break
@@ -896,7 +1011,15 @@ export default {
             enable: {
               legend: true,
               valueMapping: false,
-              thresholds: false
+              thresholds: false,
+              visibility: false
+            },
+            showHeader: this.chartConfig.param.showHeader,
+            visibility: {
+              varName: '',
+              operator: '',
+              varValue: '',
+              result: ''
             }
           }
           break
@@ -915,7 +1038,15 @@ export default {
             enable: {
               legend: true,
               valueMapping: false,
-              thresholds: false
+              thresholds: false,
+              visibility: false
+            },
+            showHeader: this.chartConfig.param.showHeader,
+            visibility: {
+              varName: '',
+              operator: '',
+              varValue: '',
+              result: ''
             }
           }
           break
@@ -925,7 +1056,20 @@ export default {
           }
           this.chartConfig.param = {
             link: this.chartConfig.param.link,
-            limit: 100
+            limit: 100,
+            enable: {
+              legend: true,
+              valueMapping: false,
+              thresholds: false,
+              visibility: false
+            },
+            showHeader: this.chartConfig.param.showHeader,
+            visibility: {
+              varName: '',
+              operator: '',
+              varValue: '',
+              result: ''
+            }
           }
           break
       }

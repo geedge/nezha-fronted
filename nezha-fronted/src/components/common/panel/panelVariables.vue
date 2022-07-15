@@ -69,7 +69,6 @@ export default {
   },
   watch: {
     labelArrs: {
-      immediate: true,
       handler (n) {
         this.labelArr = this.labelArrs.map(item => {
           return {

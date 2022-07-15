@@ -223,6 +223,10 @@
   }
 }
 .chart__canvas {
+  div{
+    width: 100% !important;
+    height: 100% !important;
+  }
   .nz-chart__tooltip {
     .row__label,.row__value {
       color: $--color-text-regular;
@@ -585,4 +589,10 @@
       margin-left: 5px;
     }
   }
+}
+.opacityItem{
+  opacity: 0;
+}
+.hiddenItem{
+  box-shadow: $--chart-shadow;
 }

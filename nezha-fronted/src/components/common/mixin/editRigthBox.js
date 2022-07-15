@@ -50,7 +50,6 @@ export default {
       }, 1000)
     },
     messageShow (msg, route, params, showNext = false, nextText = '', emit) {
-      // 如果存在弹框 则先清理掉
       this.messageParams.route = route
       this.messageParams.params = params
       this.messageParams.emit = emit
