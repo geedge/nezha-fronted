@@ -56,7 +56,6 @@
           :chart-detail-info="chartDetailInfo"
           @refreshPanel="refreshPanel"
           @showFullscreen="showFullscreen"
-          :showHidden="showHidden"
         ></panel-chart>
       </grid-item>
     </grid-layout>
