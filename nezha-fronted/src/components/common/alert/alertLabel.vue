@@ -70,7 +70,7 @@
               : "--"
           }}
         </div>
-        <i  class="nz-icon nz-icon-override asset-manageIp" style="visibility: hidden" @click="onCopy(alertLabelData.manageIp)" :title="$t('overall.copyText')"></i>
+        <i  class="nz-icon nz-icon-override asset-manage-ip" style="visibility: hidden" @click="onCopy(alertLabelData.manageIp)" :title="$t('overall.copyText')"></i>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("overall.type") }}</div>
