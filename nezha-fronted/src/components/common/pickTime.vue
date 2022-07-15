@@ -97,7 +97,7 @@ export default {
         this.intervalTimer = setInterval(() => {
           this.$emit('change', this.searchTime)
           this.refreshDataFunc()
-        }, val.value * 200)
+        }, val.value * 1000)
         return
       }
       if (val && val.value != -1) {
@@ -109,7 +109,7 @@ export default {
         }
         this.intervalTimer = setInterval(() => {
           this.getIntervalData(this.interval.value)
-        }, val.value * 200)
+        }, val.value * 1000)
       }
     },
     dropdownHandler (show) {
