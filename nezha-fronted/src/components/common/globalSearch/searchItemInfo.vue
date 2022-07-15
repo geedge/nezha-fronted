@@ -77,11 +77,114 @@
               :alertDaysData="alertDaysData"
             />
           </div>
+          <!-- asset -->
+          <div class="search-item-value-box" v-else-if="obj.type === 'asset'">
+            <i v-if="(item.icon && getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
+            <!-- item.key === name -->
+            <div class="document-copy-block" v-if="item.key === 'name'">
+              <span class="search-item-value document-copy-text" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+              {{getPathContent(item.key)}}
+             </span>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(getPathContent(item.key))" :title="$t('overall.copyText')"></i>
+            </div>
+            <!-- item.key === manageIp -->
+            <div class="document-copy-block" v-else-if="item.key === 'manageIp'">
+              <span class="search-item-value document-copy-text" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+              {{getPathContent(item.key)}}
+             </span>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(getPathContent(item.key))" :title="$t('overall.copyText')"></i>
+            </div>
+            <div v-else>
+               <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+                {{getPathContent(item.key)}}
+               </span>
+            </div>
+          </div>
+           <!-- endpoint -->
+          <div class="search-item-value-box" v-else-if="obj.type === 'endpoint'">
+            <i v-if="(item.icon && getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
+            <!-- item.key === name -->
+            <div class="document-copy-block" v-if="item.key === 'name'">
+              <span class="search-item-value document-copy-text" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+              {{getPathContent(item.key)}}
+             </span>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(getPathContent(item.key))" :title="$t('overall.copyText')"></i>
+            </div>
+            <div v-else>
+               <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+                {{getPathContent(item.key)}}
+               </span>
+            </div>
+          </div>
+          <!-- project -->
+          <div class="search-item-value-box" v-else-if="obj.type === 'project'">
+            <i v-if="(item.icon && getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
+            <!-- item.key === name -->
+            <div class="document-copy-block" v-if="item.key === 'name'">
+              <span class="search-item-value document-copy-text" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+              {{getPathContent(item.key)}}
+             </span>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(getPathContent(item.key))" :title="$t('overall.copyText')"></i>
+            </div>
+            <div v-else>
+               <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+                {{getPathContent(item.key)}}
+               </span>
+            </div>
+          </div>
+           <!-- module -->
+          <div class="search-item-value-box" v-else-if="obj.type === 'module'">
+            <i v-if="(item.icon && getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
+            <!-- item.key === name -->
+            <div class="document-copy-block" v-if="item.key === 'name'">
+              <span class="search-item-value document-copy-text" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+              {{getPathContent(item.key)}}
+             </span>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(getPathContent(item.key))" :title="$t('overall.copyText')"></i>
+            </div>
+            <div v-else>
+               <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+                {{getPathContent(item.key)}}
+               </span>
+            </div>
+          </div>
+           <!-- datacenter -->
+          <div class="search-item-value-box" v-else-if="obj.type === 'datacenter'">
+            <i v-if="(item.icon && getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
+            <!-- item.key === name -->
+            <div class="document-copy-block" v-if="item.key === 'name'">
+              <span class="search-item-value document-copy-text" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+              {{getPathContent(item.key)}}
+             </span>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(getPathContent(item.key))" :title="$t('overall.copyText')"></i>
+            </div>
+            <div v-else>
+               <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+                {{getPathContent(item.key)}}
+               </span>
+            </div>
+          </div>
+           <!-- alertrule -->
+          <div class="search-item-value-box" v-else-if="obj.type === 'alertrule'">
+            <i v-if="(item.icon && getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
+            <!-- item.key === name -->
+            <div class="document-copy-block" v-if="item.key === 'name'">
+              <span class="search-item-value document-copy-text" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+              {{getPathContent(item.key)}}
+             </span>
+              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(getPathContent(item.key))" :title="$t('overall.copyText')"></i>
+            </div>
+            <div v-else>
+               <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+                {{getPathContent(item.key)}}
+               </span>
+            </div>
+          </div>
           <div class="search-item-value-box" v-else>
             <i v-if="(item.icon && getPathContent(item.key)!=='--') || item.key === 'pingInfo.rtt'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>
-            <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
-              {{getPathContent(item.key)}}
-            </span>
+               <span class="search-item-value" v-if="item.key !== 'pingInfo.rtt' || (item.key === 'pingInfo.rtt'&& alertLabelData.pingInfo&&alertLabelData.pingInfo.status == 1)">
+                {{getPathContent(item.key)}}
+               </span>
           </div>
         </div>
       </div>

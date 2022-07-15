@@ -43,9 +43,9 @@
         </el-tooltip>
       </span>
       <span  v-if="chartInfo.type=='group'" class="chart-header__tool" @click="addChartGroup">
-        <el-tooltip :content="$t('button.add')" effect="light" placement="top" :title="$t('tip.add')">
-           <i class="nz-icon nz-icon-plus tool__icon"></i>
-        </el-tooltip>
+        <!-- <el-tooltip :content="$t('button.add')" effect="light" placement="top" > -->
+           <i class="nz-icon nz-icon-plus tool__icon" :title="$t('tip.add')"></i>
+        <!-- </el-tooltip> -->
       </span>
       <span class="chart-header__tool" @click="refreshChart">
         <div :title="$t('dashboard.refresh')" effect="light" placement="top">

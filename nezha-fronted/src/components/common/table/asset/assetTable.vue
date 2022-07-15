@@ -180,6 +180,7 @@
       :id="alertLabelId"
       :that="alertLabelObj"
       :type="alertLabelType"
+      @tipHover='tipHover'
     ></alertLabel>
   </div>
 </template>

@@ -46,7 +46,7 @@ export default {
       this.isInit = false
       this.$get('monitor/project', { pageSize: -1 }).then(res => {
         this.topologyLoading = true
-        const axiosAll = []
+        let axiosAll = []
         let temp = []
         if (res.data.list.length === 0) {
           this.topologyLoading = false
@@ -65,8 +65,10 @@ export default {
           res2.forEach(item => {
             temp.push(item)
           })
+          // temp.push(res2[2])
           this.allProject = JSON.parse(JSON.stringify(temp))
           temp = null
+          axiosAll = null
           this.topologyLoading = false
         })
       })
@@ -100,7 +102,10 @@ export default {
     }
   },
   mounted () {
-
+    this.queryAllProjectData()
+  },
+  beforeDestroy () {
+    this.allProject = []
   }
 }
 </script>

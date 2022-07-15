@@ -8,12 +8,15 @@ export default {
       alertLabelShow: false,
       alertLabelId: '',
       alertLabelObj: {},
-      alertLabelType: ''
+      alertLabelType: '',
+      timer: null,
+      flag: null
     }
   },
   methods: {
     // label 鼠标划入
     labelHover (item, type, loading, isUseType = true, e) {
+      clearTimeout(this.timer)
       if (this.labelToolTipDis(type)) {
         return
       }
@@ -36,9 +39,18 @@ export default {
           this.alertLabelObj = item
           this.alertLabelType = type
         }
-        this.$set(item, 'loading', loading)
+        this.$set(item[type], 'loading', loading)
       }
-      this.alertLabelShow = loading
+      this.timer = setTimeout(() => {
+        this.alertLabelShow = loading
+      }, 500)
+      this.flag = loading
+    },
+    tipHover (tipLoading) {
+      clearTimeout(this.timer)
+      if (this.flag === false) {
+        this.alertLabelShow = tipLoading
+      }
     },
     // label tooltip是否显示
     labelToolTipDis (labelType) {

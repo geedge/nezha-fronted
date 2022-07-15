@@ -291,6 +291,9 @@
       #alert .name-labe {
         display: none;
       }
+      #alert .asset-manage-ip{
+        visibility: hidden !important;
+      }
       .el-timeline {
         .el-timeline-item {
           .el-timeline-item__wrapper {

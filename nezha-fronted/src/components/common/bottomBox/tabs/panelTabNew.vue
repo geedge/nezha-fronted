@@ -574,7 +574,6 @@ export default {
           }
         } else {
           this.$get('visual/panel', { type: this.from, link: linkId || this.obj.id }).then(response => {
-            console.log(response)
             if (response.code === 200) {
               this.panelData = response.data.list
               if (this.panelData.length > 0) {
@@ -782,7 +781,7 @@ export default {
               document.body.style.height = 'auto'
               // document.getElementsByTagName('html')[0].style.overflow = 'visible'
               const position = dom.getBoundingClientRect()
-              this.getPdf(dom, -1 * position.left, -1 * position.top,this.searchTime)
+              this.getPdf(dom, -1 * position.left, -1 * position.top, this.searchTime)
               // this.getPdf(dom, 0, 0)
             }, 2000)
           }
