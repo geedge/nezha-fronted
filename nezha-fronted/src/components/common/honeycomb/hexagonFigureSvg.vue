@@ -292,7 +292,7 @@ export default {
           }, 500)
         })
       }).catch((res) => {
-        console.info(res)
+        // console.info(res)
       })
     },
     getLayout () {

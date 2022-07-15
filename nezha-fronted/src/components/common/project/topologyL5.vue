@@ -641,7 +641,6 @@ export default {
     canvasRegister()
   },
   mounted () {
-    console.log('mounted')
     if (!this.fromOverView) { // 从overview来的 加载相应图片 优化首页加载速度
       this.addNodeInit()
     }
@@ -2285,9 +2284,6 @@ export default {
       this.timer4 = null
     }
     if (getTopology(this.topologyIndex)) {
-// <<<<<<< HEAD
-      getTopology(this.topologyIndex).open({ pens: [] })
-      getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
       getTopology(this.topologyIndex).destroy()
       const StoreData = le5leStore.get()
       const arr = []
@@ -2303,89 +2299,7 @@ export default {
       console.log(le5leStore.get())
       Object.keys(getTopology(this.topologyIndex)).forEach(key => {
         getTopology(this.topologyIndex)[key] = null
-// =======
-//       console.log(getTopology(this.topologyIndex))
-//       // getTopology(this.topologyIndex).open({ pens: [] })
-//       // getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
-//       // getTopology(this.topologyIndex).data.pens.forEach(item => {
-//       //   item.img = null
-//       //   item.image = null
-//       //   item.lastImage = null
-//       // })
-//       // getTopology(this.topologyIndex).activeLayer.data.pens.forEach(item => {
-//       //   item.img = null
-//       //   item.image = null
-//       //   item.lastImage = null
-//       // })
-//       // getTopology(this.topologyIndex).animateLayer.data.pens.forEach(item => {
-//       //   item.img = null
-//       //   item.image = null
-//       //   item.lastImage = null
-//       // })
-//       // getTopology(this.topologyIndex).caches.list.forEach((cache) => {
-//       //   cache.pens.forEach(item => {
-//       //     item.img = null
-//       //     item.image = null
-//       //     item.lastImage = null
-//       //   })
-//       // })
-//       // getTopology(this.topologyIndex).animateLayer.data.pens.forEach(item => {
-//       //   item.img = null
-//       //   item.image = null
-//       //   item.lastImage = null
-//       // })
-//       // getTopology(this.topologyIndex).canvas.data.pens.forEach(item => {
-//       //   item.img = null
-//       //   item.image = null
-//       //   item.lastImage = null
-//       // })
-//       // getTopology(this.topologyIndex).divLayer.data.pens.forEach(item => {
-//       //   item.img = null
-//       //   item.image = null
-//       //   item.lastImage = null
-//       // })
-//       // getTopology(this.topologyIndex).hoverLayer.data.pens.forEach(item => {
-//       //   item.img = null
-//       //   item.image = null
-//       //   item.lastImage = null
-//       // })
-//       getTopology(this.topologyIndex).destroy()
-//       const StoreData = le5leStore.get()
-//       // const arr = []
-//       Object.keys(StoreData).forEach(key => {
-//         const id = key.split('-')[0]
-//         // arr.push(id)
-//         if (getTopology(this.topologyIndex).id == id) {
-//           if (StoreData[key][0] && StoreData[key][0].img) {
-//             StoreData[key].forEach(item => {
-//               item.img = null
-//               item.image = null
-//               item.lastImage = null
-//             })
-//           }
-//           if (StoreData[key] && StoreData[key].pens) {
-//             StoreData[key].pens.forEach(item => {
-//               item.img = null
-//               item.image = null
-//               item.lastImage = null
-//             })
-//           }
-//           if (StoreData[key] && StoreData[key].data && StoreData[key].data.pens) {
-//             StoreData[key].data.pens.forEach(item => {
-//               item.img = null
-//               item.image = null
-//               item.lastImage = null
-//             })
-//           }
-//           le5leStore.set(key, null)
-//           delete StoreData[key]
-//         }
-// >>>>>>> 73b71d578f55a77256af95f635a651575e8cebf9
       })
-      console.log(le5leStore.get())
-      // Object.keys(getTopology(this.topologyIndex)).forEach(key => {
-      //   getTopology(this.topologyIndex)[key] = null
-      // })
       setTopology(this.topologyIndex, null)
     }
     if (document.getElementById('topology-canvas' + this.topologyIndexF)) {
