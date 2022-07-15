@@ -641,7 +641,6 @@ export default {
     canvasRegister()
   },
   mounted () {
-    console.log('mounted')
     if (!this.fromOverView) { // 从overview来的 加载相应图片 优化首页加载速度
       this.addNodeInit()
     }
@@ -2285,7 +2284,6 @@ export default {
       this.timer4 = null
     }
     if (getTopology(this.topologyIndex)) {
-      console.log(getTopology(this.topologyIndex))
       // getTopology(this.topologyIndex).open({ pens: [] })
       // getTopology(this.topologyIndex).off('contextmenu', this.onContextMenu)
       // getTopology(this.topologyIndex).data.pens.forEach(item => {
@@ -2362,7 +2360,6 @@ export default {
           delete StoreData[key]
         }
       })
-      console.log(le5leStore.get())
       // Object.keys(getTopology(this.topologyIndex)).forEach(key => {
       //   getTopology(this.topologyIndex)[key] = null
       // })
