@@ -1,5 +1,6 @@
 <template>
-  <div :style="calcPosition(that.position,that)" class="alert-label__border alert-label" ref="alertLabels">
+  <div :style="calcPosition(that.position,that)" class="alert-label__border alert-label" ref="alertLabels" @mouseenter="tipHoverRule(true)"
+    @mouseleave="tipHoverRule(false)">
     <div v-my-loading="loading">
       <div class="alert-label-header-title">
         <div class="alert-label-header-circle" :style="`background: ${alertColor}`">
@@ -15,8 +16,12 @@
           <div class="alert-label-value">{{alertRuleData.id ? alertRuleData.id : '--'}}</div>
         </div>
         <div class="alert-label-box name-labe">
-          <div class="alert-label-title">{{$t('overall.name')}}</div>
-          <div class="alert-label-value">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
+          <div class="document-copy-block">
+           <div class="alert-label-title">{{$t('overall.name')}}</div>
+          <div class="alert-label-value document-copy-text">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
+           <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(alertRuleData.name)" :title="$t('overall.copyText')"></i>
+         </div>
+
         </div>
         <!--      <div class="alert-label-box">-->
         <!--        <div class="alert-label-title">{{$t('overall.name')}}</div>-->
@@ -173,6 +178,9 @@ export default {
         }
         return color
       }
+    },
+    tipHoverRule (tipLoading) {
+      this.$emit('tipHoverRule', tipLoading)
     }
   },
   mounted () {

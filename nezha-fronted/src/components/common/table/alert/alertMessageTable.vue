@@ -129,13 +129,14 @@
         <div v-else>&nbsp;</div>
       </template>
     </el-table>
-    <alertRuleInfo v-if="alertRuleShow" :id="alertRuleId" :severity-data="severityData" :that="alertRuleObj.alertRule" @showText="$emit('showText',alertRuleObj)"></alertRuleInfo>
+    <alertRuleInfo @tipHoverRule='tipHoverRule' v-if="alertRuleShow" :id="alertRuleId" :severity-data="severityData" :that="alertRuleObj.alertRule" @showText="$emit('showText',alertRuleObj)"></alertRuleInfo>
     <alertLabel
       v-if="alertLabelShow"
       :id="alertLabelId"
       :that="alertLabelObj"
       :type="alertLabelType"
       :alert-table-dialog="chartAlertList"
+      @tipHover='tipHover'
     ></alertLabel>
   </div>
 </template>
@@ -520,6 +521,7 @@ export default {
     },
     // alertName鼠标划入
     alertMessageHover (item, loading, e) {
+      clearTimeout(this.timer)
       if (e) {
         const dom = e.currentTarget
         const position = dom.getBoundingClientRect()
@@ -528,7 +530,16 @@ export default {
         this.alertRuleObj = item
       }
       this.$set(item.alertRule, 'loading', loading)
-      this.alertRuleShow = loading
+      this.timer = setTimeout(() => {
+        this.alertRuleShow = loading
+      }, 500)
+      this.flag = loading
+    },
+    tipHoverRule (tipLoading) {
+      clearTimeout(this.timer)
+      if (this.flag === false) {
+        this.alertRuleShow = tipLoading
+      }
     },
     // Severity Label
     returnSeverityLabel (key) {

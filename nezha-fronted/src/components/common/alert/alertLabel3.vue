@@ -28,8 +28,11 @@
         </div>
       </div>
       <div class="alert-label-box name-labe">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
+        <div class="document-copy-block">
+          <div class="alert-label-title">{{$t('overall.name')}}</div>
+          <div class="alert-label-value document-copy-text">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
+          <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
+         </div>
       </div>
        <!-- <div class="alert-label-box name-labe">
         <div class="alert-label-title">Name</div>
@@ -37,15 +40,16 @@
           {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
         </div>
       </div> -->
-      <div class="alert-label-box">
+     <div class="alert-label-box document-copy-block">
         <div class="alert-label-title">{{ $t("asset.manageIp") }}</div>
-        <div class="alert-label-value">
+        <div class="alert-label-value document-copy-text">
           {{
             alertLabelData && alertLabelData.manageIp
               ? alertLabelData.manageIp
               : "--"
           }}
         </div>
+        <i  class="nz-icon nz-icon-override asset-manageIp" style="visibility: hidden" @click="onCopy(alertLabelData.manageIp)" :title="$t('overall.copyText')"></i>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("overall.type") }}</div>
@@ -188,10 +192,13 @@
         </div>
       </div>
       <div class="alert-label-box name-labe">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.Name ? alertLabelData.Name : "--" }}
-        </div>
+         <div class="document-copy-block">
+           <div class="alert-label-title">{{$t('overall.name')}}</div>
+           <div class="alert-label-value document-copy-text">
+             {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
+           </div>
+           <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
+         </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("project.project.projectName") }}</div>
@@ -281,10 +288,13 @@
         </div>
       </div>
        <div class="alert-label-box name-labe">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
-        </div>
+        <div class="document-copy-block">
+           <div class="alert-label-title">{{$t('overall.name')}}</div>
+           <div class="alert-label-value document-copy-text">
+             {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
+           </div>
+           <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
+         </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("overall.module") }}</div>
@@ -376,10 +386,13 @@
         </div>
       </div>
       <div class="alert-label-box name-labe">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
-        </div>
+        <div class="document-copy-block">
+           <div class="alert-label-title">{{$t('overall.name')}}</div>
+            <div class="alert-label-value document-copy-text">
+              {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
+            </div>
+           <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
+         </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("project.project.projectName") }}</div>
@@ -508,10 +521,13 @@
         </div>
       </div>
        <div class="alert-label-box name-labe">
-        <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
-        </div>
+         <div class="document-copy-block">
+           <div class="alert-label-title">{{$t('overall.name')}}</div>
+           <div class="alert-label-value  document-copy-text">
+              {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
+          </div>
+           <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
+         </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("asset.location") }}</div>
