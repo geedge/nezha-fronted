@@ -127,6 +127,7 @@
         :from="fromRoute.panel"
         :panel-data="panelData"
         :show-panel="showPanel"
+        :variables="variables"
         @close="closeChartBox"
         @reload="panelReload"
         @reloadOnlyPanel="panelReloadOnlyPanel"
@@ -225,11 +226,18 @@ export default {
           enable: {
             legend: true,
             valueMapping: false,
-            thresholds: false
+            thresholds: false,
+            visibility: false
           },
           thresholdShow: true,
           thresholds: [{ value: undefined, color: randomcolor() }],
-          showHeader: 1
+          showHeader: 1,
+          visibility: {
+            varName: '',
+            operator: '',
+            varValue: '',
+            result: ''
+          }
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
         panel: '',

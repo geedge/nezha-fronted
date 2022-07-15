@@ -31,7 +31,8 @@
         :isGroup="isGroup"
         :class="{
           'group-hide-header':item.type === 'group' && item.param.collapse,
-          'opacityItem': item.static
+          'opacityItem': item.static,
+          'hiddenItem': showHidden[item.id]==='hidden'
         }"
         :ref="'grid-item' + item.id"
         :isResizable = "item.type === 'group' ? false: null"
@@ -44,6 +45,7 @@
         @container-resized="containerResizedEvent"
       >
         <panel-chart
+          v-show="showHidden[item.id]!=='hidden'"
           :ref="'chart' + item.id"
           @edit-chart="$emit('edit-chart', item)"
           :chart-info="item"
@@ -55,6 +57,7 @@
           :chart-detail-info="chartDetailInfo"
           @refreshPanel="refreshPanel"
           @showFullscreen="showFullscreen"
+          :showHidden="showHidden"
         ></panel-chart>
       </grid-item>
     </grid-layout>
@@ -148,6 +151,9 @@ export default {
     },
     panelLock () {
       return this.$store.getters.getPanelLock
+    },
+    variablesArr () {
+      return this.$store.state.panel.variablesArr
     }
   },
   data () {
@@ -170,7 +176,9 @@ export default {
         chartInfo: {}
       },
       scrollTop: 0,
-      scrollTopTimer: null
+      scrollTopTimer: null,
+      // 变量比较结果 图表是否显示/隐藏
+      showHidden: {}
     }
   },
   methods: {
@@ -431,6 +439,76 @@ export default {
           }
         })
       }
+    },
+    // 比较变量 图表是否显示/隐藏
+    compareVariables () {
+      if (!this.panelLock) {
+        return false
+      }
+      const isRegExp = (v) => {
+        let isReg
+        try {
+          isReg = eval(v) instanceof RegExp
+        } catch (e) {
+          isReg = false
+        }
+        return isReg
+      }
+      this.showHidden = {}
+      this.dataList.forEach(item => {
+        const visibility = this.$loadsh.get(item, 'param.enable.visibility', false)
+        const varName = this.$loadsh.get(item, 'param.visibility.varName')
+        const operator = this.$loadsh.get(item, 'param.visibility.operator')
+        const varValue = this.$loadsh.get(item, 'param.visibility.varValue')
+        const result = this.$loadsh.get(item, 'param.visibility.result')
+        // 相反结果 若result为show则contraryResult为hidden
+        const contraryResult = result === 'show' ? 'hidden' : 'show'
+        // 是否启用显示隐藏功能
+        if (visibility) {
+          this.variablesArr.forEach(subItem => {
+            // 判断当前图表的变量
+            if (subItem.name === varName) {
+              let flag = false
+              switch (operator) {
+                case 'equal': {
+                  flag = subItem.checked.some(value => {
+                    return value == varValue
+                  })
+                  break
+                }
+                case 'notEqual': {
+                  flag = subItem.checked.some(value => {
+                    return value != varValue
+                  })
+                  // 判断选中的值是否为空
+                  if (!subItem.checked.length) {
+                    flag = true
+                  }
+                  break
+                }
+                case 'match': {
+                  flag = subItem.checked.some(value => {
+                    const reg = isRegExp(varValue) ? eval(varValue) : new RegExp(varValue)
+                    return value.match(eval(reg))
+                  })
+                  break
+                }
+                case 'contains': {
+                  flag = subItem.checked.some(value => {
+                    return value.includes(varValue)
+                  })
+                  break
+                }
+              }
+              if (flag === true) {
+                this.showHidden[item.id] = result
+              } else {
+                this.showHidden[item.id] = contraryResult
+              }
+            }
+          })
+        }
+      })
     }
   },
   created () {
@@ -456,10 +534,27 @@ export default {
     // 监听查看模式变化
     '$store.state.panel.mode': {
       immediate: true,
-      handler (val) {
+      handler () {
         setTimeout(() => {
           this.resize()
         })
+      }
+    },
+    // 监听变量数组
+    variablesArr: {
+      handler () {
+        // 比较变量 图表是否显示/隐藏
+        this.compareVariables()
+      }
+    },
+    panelLock: {
+      handler (flag) {
+        if (!flag) {
+          this.showHidden = {}
+        } else {
+          // 比较变量 图表是否显示/隐藏
+          this.compareVariables()
+        }
       }
     },
     dataList: {
@@ -526,6 +621,8 @@ export default {
         }
         this.$nextTick(() => {
           this.copyDataList = JSON.parse(JSON.stringify(tempList))
+          // 比较变量 图表是否显示/隐藏
+          this.compareVariables()
           tempList = null
           setTimeout(() => {
             this.gridLayoutShow = true

@@ -80,16 +80,16 @@
         </div>
         <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange" type="card">
           <el-tab-pane :label="$t('overall.metrics')" name="metrics">
-            <chart-config  ref="childrenFrommetrics" :type="'metrics'" v-if="editChart.datasource == 'metrics'" :params.sync="editChart" @change="editChartChange"/>
+            <chart-config :variables="variables" ref="childrenFrommetrics" :type="'metrics'" v-if="editChart.datasource == 'metrics'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane :label="$t('overall.logs')" name="logs">
-            <chart-config ref="childrenFromlogs" :type="'log'" v-if="editChart.datasource == 'logs'" :params.sync="editChart" @change="editChartChange"/>
+            <chart-config :variables="variables" ref="childrenFromlogs" :type="'log'" v-if="editChart.datasource == 'logs'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane :label="$t('overall.system')" name="system">
-            <system-chart-config ref="childrenFromsystem" v-if="editChart.datasource == 'system'" :params.sync="editChart" @change="editChartChange"/>
+            <system-chart-config :variables="variables" ref="childrenFromsystem" v-if="editChart.datasource == 'system'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane :label="$t('overall.misc')" name="misc">
-            <other-chart-config ref="childrenFrommisc" v-if="editChart.datasource == 'misc'" :params.sync="editChart" @change="editChartChange"/>
+            <other-chart-config :variables="variables" ref="childrenFrommisc" v-if="editChart.datasource == 'misc'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -162,6 +162,12 @@ export default {
     fromEndpoint: {
       type: Boolean,
       default: false
+    },
+    variables: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
   mixins: [rz, editRigthBox],
@@ -370,10 +376,17 @@ export default {
             enable: {
               thresholds: false,
               legend: true,
-              valueMapping: false
+              valueMapping: false,
+              visibility: false
             },
             thresholds: [{ value: undefined, color: '#eeeeeeff' }],
-            showHeader: this.editChart.param.showHeader
+            showHeader: this.editChart.param.showHeader,
+            visibility: {
+              varName: '',
+              operator: '',
+              varValue: '',
+              result: ''
+            }
           }
         }
       }
@@ -384,15 +397,22 @@ export default {
           height: 4,
           unit: 2,
           type: 'log',
-          enable: {
-            thresholds: false,
-            legend: true,
-            valueMapping: false
-          },
           elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
           param: {
+            enable: {
+              thresholds: false,
+              legend: true,
+              valueMapping: false,
+              visibility: false
+            },
             limit: 100,
-            showHeader: this.editChart.param.showHeader
+            showHeader: this.editChart.param.showHeader,
+            visibility: {
+              varName: '',
+              operator: '',
+              varValue: '',
+              result: ''
+            }
           }
         }
       }
@@ -413,7 +433,8 @@ export default {
             enable: {
               thresholds: false,
               legend: true,
-              valueMapping: false
+              valueMapping: false,
+              visibility: false
             },
             datasource: [{
               name: 'System',
@@ -428,7 +449,13 @@ export default {
             }
             ],
             valueMapping: [],
-            showHeader: this.editChart.param.showHeader
+            showHeader: this.editChart.param.showHeader,
+            visibility: {
+              varName: '',
+              operator: '',
+              varValue: '',
+              result: ''
+            }
           }
         }
         delete this.editChart.elements
@@ -439,14 +466,21 @@ export default {
           span: 4,
           height: 4,
           type: 'url',
-          enable: {
-            thresholds: false,
-            legend: true,
-            valueMapping: false
-          },
           param: {
+            enable: {
+              thresholds: false,
+              legend: true,
+              valueMapping: false,
+              visibility: false
+            },
             url: '',
-            showHeader: this.editChart.param.showHeader
+            showHeader: this.editChart.param.showHeader,
+            visibility: {
+              varName: '',
+              operator: '',
+              varValue: '',
+              result: ''
+            }
           }
         }
         delete this.editChart.elements
@@ -524,7 +558,16 @@ export default {
             obj.param.enable = {
               thresholds: false,
               legend: false,
-              valueMapping: false
+              valueMapping: false,
+              visibility: false
+            }
+          }
+          if (!obj.param.visibility) {
+            obj.param.visibility = {
+              varName: '',
+              operator: '',
+              varValue: '',
+              result: ''
             }
           }
           // this.editChart.varType = 1

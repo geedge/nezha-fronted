@@ -12,7 +12,13 @@ const rz = {
 }
 export default {
   props: {
-    params: {}
+    params: {},
+    variables: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    }
   },
   data () {
     return {
@@ -34,6 +40,21 @@ export default {
         value: 'zero'
       }],
       statisticsList: this.$CONSTANTS.statisticsList,
+      operatorList: [
+        {
+          label: 'equal',
+          value: 'equal'
+        }, {
+          label: 'not equal',
+          value: 'notEqual'
+        }, {
+          label: 'match',
+          value: 'match'
+        }, {
+          label: 'contains',
+          value: 'contains'
+        }
+      ],
       legendPositionList: [
         {
           label: this.$t('overall.bottom'),
@@ -610,6 +631,14 @@ export default {
       }
       this.chartConfig.param[key][index].error = false
       this.$forceUpdate()
+    }
+  },
+  watch: {
+    params: {
+      deep: true,
+      handler (n) {
+        this.chartConfig.param.showHeader = n.param.showHeader
+      }
     }
   }
 }
