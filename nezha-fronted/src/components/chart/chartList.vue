@@ -32,7 +32,6 @@
         :class="{
           'group-hide-header':item.type === 'group' && item.param.collapse,
           'opacityItem': item.static,
-          'hiddenItem': showHidden[item.id]==='hidden'
         }"
         :ref="'grid-item' + item.id"
         :isResizable = "item.type === 'group' ? false: null"
