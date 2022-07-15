@@ -46,8 +46,8 @@
     width: 100%;
     border-bottom: 1px solid $--border-color-light;
     display: flex;
-    min-height: 47px;
-    max-height: 200px;
+    // min-height: 47px;
+    // max-height: 200px;
     align-items: center;
     .search-item-key{
       width: 120px;
@@ -58,11 +58,24 @@
       font-weight: 400;
     }
     .search-item-value-box{
-      line-height: 47px;
-      height: 100%;
       width: calc(100% - 120px);
       display: flex;
       align-items: center;
+      >div{
+        width: 100%;
+      }
+      .document-copy-block{
+        position: relative;
+        .document-copy-text{
+          margin-right: 0px !important;
+        }
+        .nz-icon.nz-icon-override{
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);                       
+          right: -10px;
+        }
+      }
       .nz-icon{
         display: inline-block;
         line-height: 47px;
@@ -72,14 +85,13 @@
         color: $--color-primary;
       }
       .search-item-value{
-        width: calc(100% - 30px);
+        display: inline-block;
+        padding: 5px 0;
+        width: 94%;
         font-size: 14px;
-        height: 100%;
-        overflow-y: auto;
         color: $--color-text-primary;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        line-height: 47px;
+        word-break: break-all;
+        white-space: normal;
         .ql-container.ql-snow{
           border: none;
           .ql-editor{
