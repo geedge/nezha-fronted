@@ -316,7 +316,7 @@ export default {
                 this.logChartDataFormat()
               }
             }).catch(res => {
-              console.info(res)
+              // console.info(res)
             }).finally(() => {
               this.loading = false
             })
