@@ -765,16 +765,6 @@ export default {
           this.chartInfo.loaded && this.getChartData(true)
         }
       }
-    },
-    // 监听图表显示 重新请求数据渲染图表
-    showHidden: {
-      handler (n, o) {
-        const newVal = n[this.chartInfo.id]
-        const oldVal = o[this.chartInfo.id]
-        if ((newVal === 'show' || newVal === undefined) && oldVal === 'hidden') {
-          this.getChartData(true)
-        }
-      }
     }
   },
   mounted () {
