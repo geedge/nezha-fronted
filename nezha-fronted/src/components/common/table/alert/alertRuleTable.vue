@@ -263,26 +263,26 @@ export default {
       ],
       weekList: [
         {
-          value: 1,
-          label: this.$t('week.Sun')
-        }, {
           value: 2,
-          label: this.$t('week.Mon')
+          label: this.$t('week.MonAbbreviation')
         }, {
           value: 3,
-          label: this.$t('week.Tue')
+          label: this.$t('week.TueAbbreviation')
         }, {
           value: 4,
-          label: this.$t('week.Wed')
+          label: this.$t('week.WedAbbreviation')
         }, {
           value: 5,
-          label: this.$t('week.Thu')
+          label: this.$t('week.ThuAbbreviation')
         }, {
           value: 6,
-          label: this.$t('week.Fri')
+          label: this.$t('week.FriAbbreviation')
         }, {
           value: 7,
-          label: this.$t('week.Sat')
+          label: this.$t('week.SatAbbreviation')
+        }, {
+          value: 1,
+          label: this.$t('week.SunAbbreviation')
         }
       ]
     }
