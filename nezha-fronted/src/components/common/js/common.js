@@ -40,6 +40,9 @@ export function getTopology (key) {
 
 export function setTopology (key, value) {
   topologyCache[`topology${key}`] = value
+  if (!value) {
+    delete topologyCache[`topology${key}`]
+  }
 }
 
 export function clearTopologyCache () {

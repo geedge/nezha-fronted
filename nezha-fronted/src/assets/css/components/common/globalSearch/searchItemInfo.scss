@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  padding: 60px 75px 0 75px;
+  padding: 60px 45px 0 75px;
   overflow-y: auto;
   .el-skeleton{
     height: 100%;
@@ -43,11 +43,9 @@
     margin-bottom: 30px;
   }
   .search-item-info{
+    position: relative;
     width: 100%;
-    border-bottom: 1px solid $--border-color-light;
     display: flex;
-    min-height: 47px;
-    max-height: 200px;
     align-items: center;
     .search-item-key{
       width: 120px;
@@ -58,11 +56,19 @@
       font-weight: 400;
     }
     .search-item-value-box{
-      line-height: 47px;
-      height: 100%;
       width: calc(100% - 120px);
       display: flex;
       align-items: center;
+      >div{
+        width: calc(100% - 30px);
+      }
+      .document-copy-block{
+        width: 100% !important;
+        .nz-icon.nz-icon-override{
+          display: flex;
+          align-items: center;
+        }
+      }
       .nz-icon{
         display: inline-block;
         line-height: 47px;
@@ -72,14 +78,13 @@
         color: $--color-primary;
       }
       .search-item-value{
-        width: calc(100% - 30px);
+        padding: 5px 0;
+        display: flex;
+        align-items: center;
         font-size: 14px;
-        height: 100%;
-        overflow-y: auto;
         color: $--color-text-primary;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        line-height: 47px;
+        word-break: break-all;
+        white-space: normal;
         .ql-container.ql-snow{
           border: none;
           .ql-editor{
@@ -89,6 +94,14 @@
         }
       }
     }
+  }
+  .search-item-info::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    width: calc(100% - 30px);
+    border-bottom: 1px solid $--border-color-light;
   }
   .search-item-info:last-child{
     border-bottom: none;

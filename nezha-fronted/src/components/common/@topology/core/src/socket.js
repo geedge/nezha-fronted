@@ -10,7 +10,7 @@ const Socket = /** @class */ (function () {
     this.socket = new WebSocket(this.url)
     this.socket.onmessage = this.cb
     this.socket.onclose = function () {
-      console.info('Canvas websocket closed and reconneting...')
+      // console.info('Canvas websocket closed and reconneting...')
       _this.init()
     }
   }

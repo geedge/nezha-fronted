@@ -101,10 +101,6 @@ export default {
     variablesInit: {
       type: Boolean,
       default: true
-    },
-    // 变量比较结果 图表是否显示/隐藏
-    showHidden: {
-      type: Object
     }
   },
   data () {
@@ -156,10 +152,6 @@ export default {
     },
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh, params) { // 获取chart的数据前的准备 主要用于处理时间参数
-      // 如果图表被隐藏了 则不请求数据
-      if (this.showHidden && this.showHidden[this.chartInfo.id] === 'hidden') {
-        return
-      }
       if (!this.variablesInit) { // 变量未加载完成 不请求数据
         return
       }
@@ -316,7 +308,7 @@ export default {
                 this.logChartDataFormat()
               }
             }).catch(res => {
-              console.info(res)
+              // console.info(res)
             }).finally(() => {
               this.loading = false
             })
@@ -763,16 +755,6 @@ export default {
         })
         if (flag) {
           this.chartInfo.loaded && this.getChartData(true)
-        }
-      }
-    },
-    // 监听图表显示 重新请求数据渲染图表
-    showHidden: {
-      handler (n, o) {
-        const newVal = n[this.chartInfo.id]
-        const oldVal = o[this.chartInfo.id]
-        if ((newVal === 'show' || newVal === undefined) && oldVal === 'hidden') {
-          this.getChartData(true)
         }
       }
     }

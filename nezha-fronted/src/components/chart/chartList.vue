@@ -44,7 +44,7 @@
         @container-resized="containerResizedEvent"
       >
         <panel-chart
-          v-show="showHidden[item.id]!=='hidden'"
+          v-if="showHidden[item.id]!=='hidden'"
           :ref="'chart' + item.id"
           @edit-chart="$emit('edit-chart', item)"
           :chart-info="item"
@@ -56,7 +56,6 @@
           :chart-detail-info="chartDetailInfo"
           @refreshPanel="refreshPanel"
           @showFullscreen="showFullscreen"
-          :showHidden="showHidden"
         ></panel-chart>
       </grid-item>
     </grid-layout>
@@ -358,7 +357,7 @@ export default {
             // console.log(this.$refs['chart' + item.id][0].$el.offsetHeight, scrollTop,'scrollTop',windowHeight,mainOffsetTop + mainHeight / 4,(windowScrollTop + windowHeight))
             if ((mainOffsetTop + mainHeight / 4) < (windowScrollTop + windowHeight)) {
               item.loaded = true
-              this.$refs['chart' + item.id][0].getChartData()
+              this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].getChartData()
             }
           }
         })
