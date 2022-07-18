@@ -383,9 +383,9 @@ export default {
             showHeader: this.editChart.param.showHeader,
             visibility: {
               varName: '',
-              operator: '',
+              operator: 'equal',
               varValue: '',
-              result: ''
+              result: 'show'
             }
           }
         }
@@ -409,9 +409,9 @@ export default {
             showHeader: this.editChart.param.showHeader,
             visibility: {
               varName: '',
-              operator: '',
+              operator: 'equal',
               varValue: '',
-              result: ''
+              result: 'show'
             }
           }
         }
@@ -452,9 +452,9 @@ export default {
             showHeader: this.editChart.param.showHeader,
             visibility: {
               varName: '',
-              operator: '',
+              operator: 'equal',
               varValue: '',
-              result: ''
+              result: 'show'
             }
           }
         }
@@ -477,9 +477,9 @@ export default {
             showHeader: this.editChart.param.showHeader,
             visibility: {
               varName: '',
-              operator: '',
+              operator: 'equal',
               varValue: '',
-              result: ''
+              result: 'show'
             }
           }
         }

@@ -235,9 +235,9 @@ export default {
           showHeader: 1,
           visibility: {
             varName: '',
-            operator: '',
+            operator: 'equal',
             varValue: '',
-            result: ''
+            result: 'show'
           }
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
