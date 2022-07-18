@@ -26,11 +26,11 @@
         <span class="alert-label-value">{{$t('dashboard.overview.mapTooltip.prometheus')}}</span>
       </div>
        <div class="alert-label-box" v-if="that.cortex">
-        <span :class="{'green-bg': that.cortex == 'UP','red-bg': that.cortex == 'DOWN'}" class="active-icon"></span>
+        <span :class="{'green-bg': that.cortex == 'UP','red-bg': that.cortex == 'DOWN', 'gray-bg': that.cortex == 'UNAVAILABLE'}" class="active-icon"></span>
         <span class="alert-label-value">{{$t('overall.cortex')}}</span>
       </div>
        <div class="alert-label-box" v-if="that.loki">
-        <span :class="{'green-bg': that.loki == 'UP','red-bg': that.loki == 'DOWN'}" class="active-icon"></span>
+        <span :class="{'green-bg': that.loki == 'UP','red-bg': that.loki == 'DOWN','gray-bg': that.loki == 'UNAVAILABLE'}" class="active-icon"></span>
         <span class="alert-label-value">{{$t('overall.loki')}}</span>
       </div>
       <div class="alert-label-box" v-if="that.snmp_exporter">
