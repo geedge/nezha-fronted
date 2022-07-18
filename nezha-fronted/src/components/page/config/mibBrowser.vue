@@ -86,15 +86,24 @@
             <div ref="detailScrollbar" class="mib-browser-detail">
               <div class="mib-browser-detail-row">
                 <div>Name</div>
-                <div>{{currentWalk.name}}</div>
+                <div class="document-copy-block">
+                <div class="document-copy-text">{{currentWalk.name}}</div>
+                <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(currentWalk.name)" :title="$t('overall.copyText')"></i>
+                </div> 
               </div>
               <div class="mib-browser-detail-row">
                 <div>OID</div>
-                <div>{{currentWalk.objectID}}</div>
+                <div class="document-copy-block">
+                <div class="document-copy-text">{{currentWalk.objectID}}</div>
+                <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(currentWalk.objectID)" :title="$t('overall.copyText')"></i>
+                </div>
               </div>
               <div class="mib-browser-detail-row">
                 <div>MIB</div>
-                <div>{{mibName(currentWalk.objectID)}}</div>
+                <div class="document-copy-block">
+                <div class="document-copy-text">{{currentWalk.objectID}}</div>
+                <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(currentWalk.objectID)" :title="$t('overall.copyText')"></i>
+                </div>
               </div>
               <div class="mib-browser-detail-row">
                 <div>Syntax</div>
