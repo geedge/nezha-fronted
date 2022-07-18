@@ -515,17 +515,30 @@
                 <div class='mapping-display'>{{$t('dashboard.panel.chartForm.unit')}}</div>
               </div>
               <el-cascader :id="'columns-unit' + index" v-model="item.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
-                           placeholder=""
-                           popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
-                           size="small"
-                           style="flex: 1"
-                           @change="unitSelected"
+                placeholder=""
+                popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
+                size="small"
+                style="flex: 1"
+                @change="unitSelected"
               >
               </el-cascader>
             </el-row>
             <el-row class="thresholds-item" v-show="item.show" :key="2">
               <div>
-                <div class='mapping-display'>{{$t('config.assetLabel.display')}}</div>
+                <div class='mapping-display'>
+                  <span>{{$t('config.assetLabel.display')}}</span>
+                  <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
+                    <div class="columns-dispaly-pop" style="width:396px">
+                      <div class="columns-dispaly-title" v-pre>{{&lt;expression name&gt;.$labels.&lt;label name&gt;}}</div>
+                      <div class="columns-dispaly-msg">{{$t('tip.expressionLabel')}}{{$t('tip.$labels')}}</div>
+                      <div class="columns-dispaly-title" v-pre>{{&lt;expression name&gt;.$value}}</div>
+                      <div class="columns-dispaly-msg">{{$t('tip.expressionValue')}}</div>
+                    </div>
+                    <span slot="reference">
+                      <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                    </span>
+                  </el-popover>
+                </div>
               </div>
               <el-form-item :prop="'param.columns.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                 <el-input v-model="item.display"  style="margin-right: 10px" size="small"  @change="change('columns',index)"/>
