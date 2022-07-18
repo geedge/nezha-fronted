@@ -101,8 +101,7 @@
     left: 0;
     bottom: 0px;
     width: calc(100% - 30px);
-    height: 1px;
-    background-color: $--border-color-light;
+    border-bottom: 1px solid $--border-color-light;
   }
   .search-item-info:last-child{
     border-bottom: none;
