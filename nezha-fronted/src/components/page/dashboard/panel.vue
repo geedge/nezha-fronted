@@ -90,7 +90,7 @@
         </div>
         <div id="tableList" class="table-list" style='overflow-y: unset'>
           <div class="table-list-box">
-            <div  id="dashboardScrollbar" class="box-content" v-my-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto;display: flex;flex-direction: column'>
+            <div  id="dashboardScrollbar" class="box-content" v-my-loading="chartListLoading"  ref="dashboardScrollbar" style='overflow-y: auto;display: flex;flex-direction: column;overflow-x: hidden'>
               <panel-variables :labelArrs="variables" :time-range="searchTime" @getPanelData="getPanelData"></panel-variables>
               <chart-list
                 ref="chartList"
@@ -235,9 +235,9 @@ export default {
           showHeader: 1,
           visibility: {
             varName: '',
-            operator: '',
+            operator: 'equal',
             varValue: '',
-            result: ''
+            result: 'show'
           }
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],

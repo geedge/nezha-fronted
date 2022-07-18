@@ -968,9 +968,9 @@ export default {
             showHeader: this.chartConfig.param.showHeader,
             visibility: {
               varName: '',
-              operator: '',
+              operator: 'equal',
               varValue: '',
-              result: ''
+              result: 'show'
             }
           }
           this.$nextTick(() => {
@@ -1000,9 +1000,9 @@ export default {
             showHeader: this.chartConfig.param.showHeader,
             visibility: {
               varName: '',
-              operator: '',
+              operator: 'equal',
               varValue: '',
-              result: ''
+              result: 'show'
             }
           }
           break
@@ -1030,9 +1030,9 @@ export default {
             showHeader: this.chartConfig.param.showHeader,
             visibility: {
               varName: '',
-              operator: '',
+              operator: 'equal',
               varValue: '',
-              result: ''
+              result: 'show'
             }
           }
           break
@@ -1057,9 +1057,9 @@ export default {
             showHeader: this.chartConfig.param.showHeader,
             visibility: {
               varName: '',
-              operator: '',
+              operator: 'equal',
               varValue: '',
-              result: ''
+              result: 'show'
             }
           }
           break
@@ -1079,9 +1079,9 @@ export default {
             showHeader: this.chartConfig.param.showHeader,
             visibility: {
               varName: '',
-              operator: '',
+              operator: 'equal',
               varValue: '',
-              result: ''
+              result: 'show'
             }
           }
           break
