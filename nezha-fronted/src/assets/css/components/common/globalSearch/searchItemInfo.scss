@@ -45,9 +45,6 @@
   .search-item-info{
     position: relative;
     width: 100%;
-    // border-bottom: 1px solid $--border-color-light;
-    // min-height: 47px;
-    // max-height: 200px;
     display: flex;
     align-items: center;
     .search-item-key{
@@ -81,9 +78,9 @@
         color: $--color-primary;
       }
       .search-item-value{
-        // display: inline-block;
         padding: 5px 0;
-        width: 100%;
+        display: flex;
+        align-items: center;
         font-size: 14px;
         color: $--color-text-primary;
         word-break: break-all;
