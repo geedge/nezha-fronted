@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  padding: 60px 75px 0 75px;
+  padding: 60px 45px 0 75px;
   overflow-y: auto;
   .el-skeleton{
     height: 100%;
@@ -43,11 +43,12 @@
     margin-bottom: 30px;
   }
   .search-item-info{
+    position: relative;
     width: 100%;
-    border-bottom: 1px solid $--border-color-light;
-    display: flex;
+    // border-bottom: 1px solid $--border-color-light;
     // min-height: 47px;
     // max-height: 200px;
+    display: flex;
     align-items: center;
     .search-item-key{
       width: 120px;
@@ -62,18 +63,13 @@
       display: flex;
       align-items: center;
       >div{
-        width: 100%;
+        width: calc(100% - 30px);
       }
       .document-copy-block{
-        position: relative;
-        .document-copy-text{
-          margin-right: 0px !important;
-        }
+        width: 100% !important;
         .nz-icon.nz-icon-override{
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);                       
-          right: -10px;
+          display: flex;
+          align-items: center;
         }
       }
       .nz-icon{
@@ -85,9 +81,9 @@
         color: $--color-primary;
       }
       .search-item-value{
-        display: inline-block;
+        // display: inline-block;
         padding: 5px 0;
-        width: 94%;
+        width: 100%;
         font-size: 14px;
         color: $--color-text-primary;
         word-break: break-all;
@@ -101,6 +97,15 @@
         }
       }
     }
+  }
+  .search-item-info::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    width: calc(100% - 30px);
+    height: 1px;
+    background-color: $--border-color-light;
   }
   .search-item-info:last-child{
     border-bottom: none;
