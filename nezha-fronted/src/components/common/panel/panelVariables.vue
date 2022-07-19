@@ -368,16 +368,19 @@ export default {
       })
       item.checked = item.checkAll ? allValue : []
       item.isIndeterminate = false
-      this.$store.dispatch('dispatchVariablesArr', [...this.labelArr])
+      if (!item.multi) {
+        this.close()
+        this.$store.dispatch('dispatchVariablesArr', [...this.labelArr])
+      }
     },
     checkedChange (item, value) {
       const checkedCount = value.length
       item.checkAll = checkedCount === this.labelValue[item.name].length
       item.isIndeterminate = checkedCount > 0 && checkedCount < this.labelValue[item.name].length
-      this.$store.dispatch('dispatchVariablesArr', [...this.labelArr])
     },
     selectLabelValue (item, value) {
       item.checked = [value.value]
+      this.close()
       this.$store.dispatch('dispatchVariablesArr', [...this.labelArr])
     },
     triggerVisible (item) {
@@ -387,6 +390,9 @@ export default {
     },
     close () {
       this.labelArr.forEach((item) => {
+        if (item.visible && item.multi) {
+          this.$store.dispatch('dispatchVariablesArr', [...this.labelArr])
+        }
         item.visible = false
       })
     }
