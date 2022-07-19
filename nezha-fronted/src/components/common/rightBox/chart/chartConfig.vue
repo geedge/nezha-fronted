@@ -814,8 +814,12 @@
                 size="small"
                 @change="change"
               >
-                <el-option label="Show" value="show"></el-option>
-                <el-option label="Hidden" value="hidden"></el-option>
+                <el-option
+                v-for="item in showHidden"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">{{item.name}}</el-option>
+                <!-- <el-option value="hidden">{{$t('overall.hidden')}}</el-option> -->
               </el-select>
             </el-form-item>
           </div>
@@ -868,6 +872,15 @@ export default {
       oldType: '',
       tag: '',
       promqlType: 'log',
+      showHidden: [
+        {
+          id: 'show',
+          name: this.$t('overall.show')
+        }, {
+          id: 'hidden',
+          name: this.$t('overall.hidden')
+        }
+      ],
       chartTypeList: [
         {
           id: 'line',
