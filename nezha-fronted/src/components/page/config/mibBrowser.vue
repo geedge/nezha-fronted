@@ -149,7 +149,12 @@
                </div>
               </pl-table-column>
               <pl-table-column v-slot="{row}" label="Value">
-                <template><div @click="searchParam.oid = row.oid">{{row.value}}</div></template>
+                 <div class="document-copy-block">
+                  <div class="document-copy-text">
+                    <div @click="searchParam.oid = row.oid">{{row.value}}</div>
+                  </div>
+                  <i v-if="row.value"  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(row.value)" :title="$t('overall.copyText')"></i>
+               </div>
               </pl-table-column>
               <pl-table-column v-slot="{row}" label="Type">
                 <template><div @click="searchParam.oid = row.oid">{{row.type}}</div></template>
