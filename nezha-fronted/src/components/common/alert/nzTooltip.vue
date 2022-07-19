@@ -1,5 +1,5 @@
 <template>
-  <div :class="calcHeight(that.position,that)" :style="calcPosition(that.position,that)" class="alert-label__border" ref="alertLabels"
+  <div style="padding:15px" :class="calcHeight(that.position,that)" :style="calcPosition(that.position,that)" class="alert-label__border" ref="alertLabels"
        @mouseenter="tooltipHover(true)"
        @mouseleave="tooltipHover(false)">
     <slot name="default"/>
