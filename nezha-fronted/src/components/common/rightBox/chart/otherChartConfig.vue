@@ -239,8 +239,8 @@
                 size="small"
                 @change="change"
               >
-                <el-option label="Show" value="show"></el-option>
-                <el-option label="Hidden" value="hidden"></el-option>
+                <el-option :label="$t('overall.show')" value="show">{{$t('overall.show')}}</el-option>
+                <el-option :label="$t('overall.hidden')" value="hidden">{{$t('overall.hidden')}}</el-option>
               </el-select>
             </el-form-item>
           </div>
