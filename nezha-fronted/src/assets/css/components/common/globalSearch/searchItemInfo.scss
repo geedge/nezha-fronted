@@ -59,6 +59,10 @@
       width: calc(100% - 120px);
       display: flex;
       align-items: center;
+      div.active-icon.green-bg{
+        width: 8px !important;
+        margin-top: 0 !important;
+      }
       >div{
         width: calc(100% - 30px);
       }
