@@ -176,7 +176,8 @@ export default {
       scrollTop: 0,
       scrollTopTimer: null,
       // 变量比较结果 图表是否显示/隐藏
-      showHidden: {}
+      showHidden: {},
+      tempList: []
     }
   },
   methods: {
@@ -440,6 +441,7 @@ export default {
     },
     // 比较变量 图表是否显示/隐藏
     compareVariables () {
+      console.log(123123123123)
       if (!this.panelLock) {
         return false
       }
@@ -507,6 +509,24 @@ export default {
           })
         }
       })
+      // this.copyDataList.forEach((item, index) => {
+      //   if (!this.showHidden[item.id] && item.id !== -2) {
+      //     delete this.copyDataList[index]
+      //   }
+      // })
+      for (let i = 0; i < this.copyDataList.length; i++) {
+        const item = this.copyDataList[i]
+        if ((this.showHidden[item.id] && this.showHidden[item.id] === 'hidden') && item.id !== -2) {
+          this.copyDataList.splice(i, 1)
+          i--
+        }
+      }
+      this.tempList.forEach(item => {
+        if ((!this.showHidden[item.id] || this.showHidden[item.id] === 'show') && item.id !== -2 && !this.copyDataList.find(chart => chart.id === item.id)) {
+          this.copyDataList.push(item)
+        }
+      })
+      this.onScroll(this.scrollTop)
     }
   },
   created () {
@@ -549,6 +569,12 @@ export default {
       handler (flag) {
         if (!flag) {
           this.showHidden = {}
+          this.tempList.forEach(item => {
+            if (!this.copyDataList.find(chart => chart.id === item.id)) {
+              this.copyDataList.push(item)
+            }
+          })
+          this.onScroll(this.scrollTop)
         } else {
           // 比较变量 图表是否显示/隐藏
           this.compareVariables()
@@ -618,6 +644,7 @@ export default {
           })
         }
         this.$nextTick(() => {
+          this.tempList = JSON.parse(JSON.stringify(tempList))
           this.copyDataList = JSON.parse(JSON.stringify(tempList))
           // 比较变量 图表是否显示/隐藏
           this.compareVariables()
