@@ -77,7 +77,7 @@ export default {
     batchHandler (state) {
       for (let index = 0; index < this.custom.length; index++) {
         if (this.custom[index].type != 'title') {
-          if ((index == 0 || index == 1 || this.custom[index].NotSet)) {
+          if ((index == 0 || index == 1 || this.custom[index].NotSet || this.custom[index].visibility=='disabled')) {
             this.custom[index].show = true
           } else {
             this.custom[index].show = state
