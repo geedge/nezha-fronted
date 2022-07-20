@@ -1214,7 +1214,6 @@ export default {
             data.fillStyle = '#FFFFFF00'
           }
           data.data = {
-            ...data.data,
             moduleId: '',
             moduleName: '',
             show: false,
@@ -1251,7 +1250,8 @@ export default {
             displayChart: true,
             aggregation: 'last',
             title: '',
-            url: ''
+            url: '',
+            ...data.data
           }
         } else if (data.type == 1 && !data.data) {
           // 连线是否自动计算锚点
@@ -2295,8 +2295,6 @@ export default {
           delete StoreData[key]
         }
       })
-      console.log(this.$loadsh.uniq(arr))
-      console.log(le5leStore.get())
       Object.keys(getTopology(this.topologyIndex)).forEach(key => {
         getTopology(this.topologyIndex)[key] = null
       })
