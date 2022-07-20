@@ -20,15 +20,14 @@
     <div class="time-line">
       <div class="time-line-title">{{$t('about.releaseNotes')}}</div>
       <div class="time-line-body">
-        <el-timeline v-my-loading="loading">
-          <!-- v-if="!noData && timeLineData.length" -->
+        <el-timeline>
           <el-timeline-item
            v-for="(item) in activities"
            :key="item.id"
            :timestamp="item.timestamp ? item.timestamp : ''"
             placement="top"
             >
-              <div class="about-summary" v-for="(val) in item.content" :key="val.chinese">
+              <div class="about-summary" v-for="(val) in item.content" :key="val.id">
                 <span class="dot"></span>
                 <div class="about-summary-text">{{language === "en" ? val.english :val.chinese}}</div>
               </div>
@@ -45,7 +44,7 @@ export default {
     return {
       noData: false,
       timeLineData: [],
-      language: '',
+      // language: '',
       version: {
         nezha: { name: '', version: '' },
         components: [{ name: '', version: '' }]
@@ -215,7 +214,9 @@ export default {
   },
   mounted () {
     this.getVersion()
-    this.language = localStorage.getItem('nz-language') || 'en'
+  },
+  computed: {
+    language () { return this.$store.getters.getLanguage }
   }
 }
 </script>
