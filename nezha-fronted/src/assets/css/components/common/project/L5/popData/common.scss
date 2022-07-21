@@ -4,17 +4,22 @@
   }
   .right-box-project-endpoint,.right-box-project-asset {
     padding-right: 10px;
+    padding-left: 10px;
   }
   .right-box-project-alert {
     width: 850px;
     padding-right: 10px;
+    padding-left: 10px;
   }
 
   .right-box-title {
     font-weight: bold;
     padding-left: 20px;
+    padding-top: 20px;
     position: absolute;
     z-index: 1;
+    display: flex;
+    align-items: center;
   }
 
   .mc {

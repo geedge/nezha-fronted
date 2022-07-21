@@ -139,3 +139,27 @@
 .el-collapse-item__header {
   border-bottom: 1px solid $--border-color-light;
 }
+
+.main-list--project.main-list{
+  .project.projectTopo{
+    .project-box.list-page{
+      .mc{
+        .right-box{
+          td{
+            .cell{
+              padding-right: 11px !important;
+            }
+          }
+          .cell{
+            padding: 0 10px !important;
+            .el-checkbox__inner{
+              box-sizing: border-box;
+              width: 15px;
+              height: 15px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

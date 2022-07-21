@@ -546,12 +546,23 @@ export default {
     },
     variablesReplace (expression) {
       let str = expression
+      let confirmReg = ''
+      let confirmRegItem = ''
       this.variablesArr.forEach(item => {
-        const reg = new RegExp('\\$' + item.name, 'g') // 后续需要考虑 item,name 使用特殊字符的问题
-        if (reg.test(expression)) {
-          str = str.replace(reg, item.checked.map(label => label.replace(/\"/g, '\\"').replace(/\'/g, "\\'")).join('|'))
+        const reg = '$' + item.name // 后续需要考虑 item,name 使用特殊字符的问题
+        const index = expression.indexOf(reg)
+        if (index !== -1) {
+          if (reg.length > confirmReg.length) {
+            confirmReg = reg
+            confirmRegItem = item
+          }
         }
       })
+      if (confirmReg) {
+        const index = expression.indexOf(confirmReg)
+        const replaceStr = confirmRegItem.checked.map(label => label.replace(/\"/g, '\\"').replace(/\'/g, "\\'")).join('|')
+        str = str.substring(0, index) + replaceStr + str.substring(index + confirmReg.length)
+      }
       return str
     },
     getHexagonFigureData () {

@@ -645,26 +645,21 @@
                   </div>
                   <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.display" style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)" class="mapping-display-input">
-                      <el-popover
-                        slot="prefix"
-                        placement="top-start"
-                        trigger="manual"
-                        popper-class="mapping-iconPop no-style-class"
-                        v-clickoutside="()=>{closeChoose(index)}"
-                        v-model="isChoose[index]"
-                        >
-                        <ul class="mapping-iconList">
-                          <li class="mapping-iconItem" :class="{active:item.icon===subItem.value}" v-for="subItem in mappingIconList" @click="iconActive(item,subItem,index)" :key="subItem.value">
-                            <i :class="subItem.value"></i>
-                          </li>
-                        </ul>
-                        <div slot="reference" @click="chooseIcon(isChoose[index],index)">
+                      <el-dropdown trigger="click" slot="prefix" placement="top-start">
+                        <div class="el-dropdown-link">
                           <i v-if="item.icon" class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>
                           <div v-else class="mapping-iconSelect" :title="$t('tip.add')">
                             <i class="nz-icon nz-icon-create-square"></i>
                           </div>
                         </div>
-                      </el-popover>
+                        <el-dropdown-menu slot="dropdown" class="mapping-iconPop">
+                          <ul class="mapping-iconList">
+                            <li class="mapping-iconItem" :class="{active:item.icon===subItem.value}" v-for="subItem in mappingIconList" @click="iconActive(item,subItem,index)" :key="subItem.value">
+                              <i :class="subItem.value"></i>
+                            </li>
+                          </ul>
+                        </el-dropdown-menu>
+                      </el-dropdown>
                     </el-input>
                   </el-form-item>
                   <nezhaColor
@@ -774,8 +769,8 @@
                 size="small"
                 @change="change"
               >
-                <el-option label="Show" value="show"></el-option>
-                <el-option label="Hidden" value="hidden"></el-option>
+                <el-option :label="$t('overall.show')" value="show">{{$t('overall.show')}}</el-option>
+                <el-option :label="$t('overall.hidden')" value="hidden">{{$t('overall.hidden')}}</el-option>
               </el-select>
             </el-form-item>
           </div>

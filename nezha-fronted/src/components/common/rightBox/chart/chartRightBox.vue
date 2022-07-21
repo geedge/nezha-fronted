@@ -600,6 +600,12 @@ export default {
       handler (n) {
         if (n === 'group') {
           this.editChart.groupId = ''
+        } else {
+          this.editChart.param.enable.visibility = false
+          this.editChart.param.visibility.varName = ''
+          this.editChart.param.visibility.operator = ''
+          this.editChart.param.visibility.varValue = ''
+          this.editChart.param.visibility.result = ''
         }
       }
     },

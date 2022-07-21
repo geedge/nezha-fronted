@@ -201,7 +201,7 @@ export default {
         const reg = new RegExp(item.regex)
         if (!reg.test(meta.value)) {
           meta.value = ''
-          this.$message.error(this.$t(item.tip))
+          this.$message.error(this.$t('FILTER_PROJECT_IS_NULL'))
           break
         }
       }

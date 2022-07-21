@@ -33,7 +33,7 @@
             <el-form-item :label='$t("config.mib.credential.writeCommunity")' prop="writeCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
               <el-input placeholder="" autocomplete="new-password" maxlength="64" show-word-limit v-model="editCredential.config.writeCommunity" size="small" id="credential-box-input-writeCommunity" type="password" show-password></el-input>
             </el-form-item>
-            <el-form-item :label='$t("profile.username")' prop="username" v-if="editCredential.type === 3">
+            <el-form-item :label='$t("profile.username")' prop="config.username" v-if="editCredential.type === 3">
               <el-input placeholder="" maxlength="64" show-word-limit v-model="editCredential.config.username" size="small" id="credential-box-input-username"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.contextName")' prop="contextname"  v-if="editCredential.type === 3">
@@ -50,7 +50,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("login.pin")' prop="authPin" v-if="editCredential.type === 3">
+            <el-form-item :label='$t("login.pin")' prop="authPin" v-if="editCredential.type === 3" :rules="[ { required: editCredential.config.authProtocol, message: this.$t('validate.required'), trigger: 'blur' }]">
               <el-input placeholder=""  autocomplete="new-password"  v-model="editCredential.config.authPin" size="small" id="credential-box-input-authPin" type="password" show-password></el-input>
             </el-form-item>
 
@@ -64,7 +64,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("login.pin")' prop="privPin"  v-if="editCredential.type === 3">
+            <el-form-item :label='$t("login.pin")' prop="privPin"  v-if="editCredential.type === 3" :rules="[ { required: editCredential.config.privProtocol, message: this.$t('validate.required'), trigger: 'blur' }]">
               <el-input placeholder=""  autocomplete="new-password"  v-model="editCredential.config.privPin" size="small" id="credential-box-input-privPin" :disabled="!editCredential.config.authProtocol || editCredential.config.authProtocol === ''" type="password" show-password></el-input>
             </el-form-item>
           </el-form>
@@ -100,6 +100,9 @@ export default {
 
       rules: {
         name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        'config.username': [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         remark: [

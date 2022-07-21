@@ -95,7 +95,8 @@
                 <el-col class="legend-title">
                   <span class="legend-title__span">{{$t('dashboard.panel.chartForm.legend')}}&nbsp;</span>
                   <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
-                    <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
+                    <div style="word-break:break-all; white-space: normal">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
+                    <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.panel.chartForm.legendTip')}}</div> -->
                     <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                   </el-popover>
                 </el-col>
@@ -691,26 +692,21 @@
                   </div>
                   <el-form-item :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
                     <el-input v-model="item.display" style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)" class="mapping-display-input">
-                      <el-popover
-                        slot="prefix"
-                        placement="top-start"
-                        trigger="manual"
-                        popper-class="mapping-iconPop no-style-class"
-                        v-clickoutside="()=>{closeChoose(index)}"
-                        v-model="isChoose[index]"
-                        >
-                        <ul class="mapping-iconList">
-                          <li class="mapping-iconItem" :class="{active:item.icon===subItem.value}" v-for="subItem in mappingIconList" @click="iconActive(item,subItem,index)" :key="subItem.value">
-                            <i :class="subItem.value"></i>
-                          </li>
-                        </ul>
-                        <div slot="reference" @click="chooseIcon(isChoose[index],index)">
+                      <el-dropdown trigger="click" slot="prefix" placement="top-start">
+                        <div class="el-dropdown-link">
                           <i v-if="item.icon" class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>
                           <div v-else class="mapping-iconSelect" :title="$t('tip.add')">
                             <i class="nz-icon nz-icon-create-square"></i>
                           </div>
                         </div>
-                      </el-popover>
+                        <el-dropdown-menu slot="dropdown" class="mapping-iconPop">
+                            <ul class="mapping-iconList">
+                              <li class="mapping-iconItem" :class="{active:item.icon===subItem.value}" v-for="subItem in mappingIconList" @click="iconActive(item,subItem,index)" :key="subItem.value">
+                                <i :class="subItem.value"></i>
+                              </li>
+                            </ul>
+                        </el-dropdown-menu>
+                      </el-dropdown>
                     </el-input>
                   </el-form-item>
                   <nezhaColor
@@ -730,7 +726,7 @@
       </div>
 
       <!-- visibility -->
-      <div>
+      <div v-if="params.type === 'group'">
         <div class="form__sub-title">
           <span>{{$t('dashboard.panel.showHidden')}}</span>
           <el-switch
@@ -819,8 +815,12 @@
                 size="small"
                 @change="change"
               >
-                <el-option label="Show" value="show"></el-option>
-                <el-option label="Hidden" value="hidden"></el-option>
+                <el-option
+                v-for="item in showHidden"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">{{item.name}}</el-option>
+                <!-- <el-option value="hidden">{{$t('overall.hidden')}}</el-option> -->
               </el-select>
             </el-form-item>
           </div>
@@ -873,6 +873,15 @@ export default {
       oldType: '',
       tag: '',
       promqlType: 'log',
+      showHidden: [
+        {
+          id: 'show',
+          name: this.$t('overall.show')
+        }, {
+          id: 'hidden',
+          name: this.$t('overall.hidden')
+        }
+      ],
       chartTypeList: [
         {
           id: 'line',

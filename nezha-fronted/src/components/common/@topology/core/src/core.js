@@ -823,9 +823,11 @@ const Topology = /** @class */ (function () {
     this.setupMouseEvent()
     // Wait for parent dom load
     setTimeout(function () {
+      if (!_this.divLayer) return
       _this.canvasPos = _this.divLayer.canvas.getBoundingClientRect()
     }, 500)
     setTimeout(function () {
+      if (!_this.divLayer) return
       _this.canvasPos = _this.divLayer.canvas.getBoundingClientRect()
     }, 1000)
     this.cache()
@@ -1300,6 +1302,9 @@ const Topology = /** @class */ (function () {
       return this
     }
     this.rendering = true
+    if (!this.offscreen ) {
+      return
+    }
     // 获取 ctx 对象
     const ctx = this.offscreen.canvas.getContext('2d')
     ctx.clearRect(0, 0, this.offscreen.canvas.width, this.offscreen.canvas.height)
@@ -2510,6 +2515,7 @@ const Topology = /** @class */ (function () {
     }
     this.cacheTimer = setTimeout(function () {
       let _a
+      if (!this.animateLayer) return
       _this.animateLayer.readyPlay(undefined, true)
       _this.animateLayer.animate();
       (_a = _this.cache) === null || _a === void 0 ? void 0 : _a.call(_this)

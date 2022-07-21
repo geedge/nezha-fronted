@@ -252,7 +252,7 @@ export default {
             this.$refs.emailForm.clearValidate()
           }
           if (type == 'monitor') {
-
+            localStorage.setItem('nz-prometheus-federation-enabled', this.monitor.prometheus_federation_enabled)
           }
           this[type + 'Copy'] = Object.assign({}, this[type])
         }
