@@ -10,7 +10,7 @@
       <!-- title -->
       <div class="alert-label-header-title">
         <span>
-            {{$t('overall.version')}} :
+            Version :
         </span>
         <span class="alert-label-header-text">
             {{ that && that.version ? that.version : "--" }}
@@ -19,27 +19,27 @@
       <!-- body -->
       <div class="alert-label-box">
         <span :class="that.auth ? 'green-bg' : 'red-bg'" class="active-icon"></span>
-        <span class="alert-label-value">{{$t('overall.auth')}}</span>
+        <span class="alert-label-value">Auth</span>
       </div>
        <div class="alert-label-box" v-if="that.prometheus">
         <span :class="{'green-bg': that.prometheus == 'UP','red-bg': that.prometheus == 'DOWN'}" class="active-icon"></span>
-        <span class="alert-label-value">{{$t('dashboard.overview.mapTooltip.prometheus')}}</span>
+        <span class="alert-label-value">Prometheus</span>
       </div>
        <div class="alert-label-box" v-if="that.cortex">
         <span :class="{'green-bg': that.cortex == 'UP','red-bg': that.cortex == 'DOWN', 'gray-bg': that.cortex == 'UNAVAILABLE'}" class="active-icon"></span>
-        <span class="alert-label-value">{{$t('overall.cortex')}}</span>
+        <span class="alert-label-value">Cortex</span>
       </div>
        <div class="alert-label-box" v-if="that.loki">
         <span :class="{'green-bg': that.loki == 'UP','red-bg': that.loki == 'DOWN','gray-bg': that.loki == 'UNAVAILABLE'}" class="active-icon"></span>
-        <span class="alert-label-value">{{$t('overall.loki')}}</span>
+        <span class="alert-label-value">Loki</span>
       </div>
       <div class="alert-label-box" v-if="that.snmp_exporter">
         <span :class="{'green-bg': that.snmp_exporter == 'UP','red-bg': that.snmp_exporter == 'DOWN'}" class="active-icon"></span>
-        <span class="alert-label-value">{{$t('overall.snmp_exporter')}}</span>
+        <span class="alert-label-value">SNMP exporter</span>
       </div>
       <div class="alert-label-box" v-if="that.blackbox_exporter">
         <span :class="{'green-bg': that.blackbox_exporter == 'UP','red-bg': that.blackbox_exporter == 'DOWN'}" class="active-icon"></span>
-        <span class="alert-label-value">{{$t('overall.blackbox_exporter')}}</span>
+        <span class="alert-label-value">Blackbox exporter</span>
       </div>
   </div>
   </div>
@@ -124,7 +124,7 @@ export default {
           delete labelPosition.left
 
           labelPosition.right =
-            clientWidth - position.left - leftOffSetView - position.width * 3.5 + 'px'
+            clientWidth - position.left - leftOffSetView - position.width * 4 + 'px'
         }
         return labelPosition
       }
