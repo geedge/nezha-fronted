@@ -554,9 +554,11 @@ export default {
           confirmReg.push(item)
         }
       })
-      confirmReg = this.$loadsh.sortBy(confirmReg, function (item) { // 根据 匹配的name的长度排序 避免匹配的 $a 没匹配 $asset的问题
+      confirmReg = this.$loadsh.orderBy(confirmReg, function (item) { // 根据 匹配的name的长度排序 避免匹配的 $a 没匹配 $asset的问题
+        console.log(item.name.length)
         return item.name.length
-      })
+      }, 'desc')
+      console.log(confirmReg)
       if (confirmReg.length) {
         confirmReg.forEach(item => {
           const reg = new RegExp('\\$' + item.name, 'g') // 后续需要考虑 item,name 使用特殊字符的问题
