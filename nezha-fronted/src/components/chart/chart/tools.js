@@ -1,6 +1,7 @@
 import { chartType } from '@/components/common/js/constants'
 import chartBarOption from './options/chartBar'
 import chartPieOption from './options/chartPie'
+import chartBubbleOption from './options/chartBubble'
 import lodash from 'lodash'
 import {
   chartTimeSeriesLineOption,
@@ -39,6 +40,10 @@ export function getOption (type) {
       chartOption = lodash.cloneDeep(chartPieOption)
       break
     }
+    case chartType.bubble: {
+      chartOption = lodash.cloneDeep(chartBubbleOption)
+      break
+    }
     case chartType.treemap: {
       chartOption = lodash.cloneDeep(chartTreemapOption)
       break
@@ -67,6 +72,9 @@ export function isHexagon (type) {
 }
 export function isChartPie (type) {
   return type === chartType.pie
+}
+export function isChartBubble (type) {
+  return type === chartType.bubble
 }
 export function isChartBar (type) {
   return type === chartType.bar

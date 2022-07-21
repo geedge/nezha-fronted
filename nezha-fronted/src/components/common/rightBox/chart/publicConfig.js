@@ -244,6 +244,10 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.pie.label')
         },
         {
+          id: 'bubble',
+          name: this.$t('dashboard.panel.chartForm.typeVal.bubble.label')
+        },
+        {
           id: 'table',
           name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
         }
@@ -285,6 +289,10 @@ export default {
         {
           id: 'pie',
           name: this.$t('dashboard.panel.chartForm.typeVal.pie.label')
+        },
+        {
+          id: 'bubble',
+          name: this.$t('dashboard.panel.chartForm.typeVal.bubble.label')
         },
         {
           id: 'log',
