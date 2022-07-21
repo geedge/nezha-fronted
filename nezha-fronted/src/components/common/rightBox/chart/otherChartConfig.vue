@@ -150,7 +150,7 @@
       </el-form-item>
 
       <!-- visibility -->
-      <div>
+      <div v-if="params.type === 'group'">
         <div class="form__sub-title">
           <span>{{$t('dashboard.panel.showHidden')}}</span>
           <el-switch
