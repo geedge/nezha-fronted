@@ -1,7 +1,6 @@
 import { chartType } from '@/components/common/js/constants'
 import chartBarOption from './options/chartBar'
 import chartPieOption from './options/chartPie'
-import chartBubbleOption from './options/chartBubble'
 import lodash from 'lodash'
 import {
   chartTimeSeriesLineOption,
@@ -38,10 +37,6 @@ export function getOption (type) {
     }
     case chartType.pie: {
       chartOption = lodash.cloneDeep(chartPieOption)
-      break
-    }
-    case chartType.bubble: {
-      chartOption = lodash.cloneDeep(chartBubbleOption)
       break
     }
     case chartType.treemap: {
