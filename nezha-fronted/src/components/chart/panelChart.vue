@@ -546,22 +546,24 @@ export default {
     },
     variablesReplace (expression) {
       let str = expression
-      let confirmReg = ''
-      let confirmRegItem = ''
+      let confirmReg = []
       this.variablesArr.forEach(item => {
         const reg = '$' + item.name // 后续需要考虑 item,name 使用特殊字符的问题
         const index = expression.indexOf(reg)
         if (index !== -1) {
-          if (reg.length > confirmReg.length) {
-            confirmReg = reg
-            confirmRegItem = item
-          }
+          confirmReg.push(item)
         }
       })
-      if (confirmReg) {
-        const index = expression.indexOf(confirmReg)
-        const replaceStr = confirmRegItem.checked.map(label => label.replace(/\"/g, '\\"').replace(/\'/g, "\\'")).join('|')
-        str = str.substring(0, index) + replaceStr + str.substring(index + confirmReg.length)
+      confirmReg = this.$loadsh.orderBy(confirmReg, function (item) { // 根据 匹配的name的长度排序 避免匹配的 $a 没匹配 $asset的问题
+        console.log(item.name.length)
+        return item.name.length
+      }, 'desc')
+      console.log(confirmReg)
+      if (confirmReg.length) {
+        confirmReg.forEach(item => {
+          const reg = new RegExp('\\$' + item.name, 'g') // 后续需要考虑 item,name 使用特殊字符的问题
+          str = str.replace(reg, item.checked.map(label => label.replace(/\"/g, '\\"').replace(/\'/g, "\\'")).join('|'))
+        })
       }
       return str
     },

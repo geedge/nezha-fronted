@@ -23,7 +23,7 @@
           />
         </div>
         <div v-else-if="item.key === 'trbShot' && activeName === 'trbShot'">
-          <div v-html="infoData.alertRule.trbShot">
+          <div v-html="infoData.alertRule.trbShot" v-if="infoData.alertRule.trbShot">
           </div>
         </div>
       </el-tab-pane>
@@ -108,7 +108,7 @@ export default {
               this.cardNames.push(item)
             }
           })
-          if (n.alertRule && n.alertRule.trbShot) {
+          if (n.alertRule && n.alertRule.trbShot && n.alertRule.trbShot != '<div  class="editor-core ql-container ql-snow"><div class="ql-editor"><p><br></p></div></div>') {
             this.cardNames.push({
               key: 'trbShot',
               label: this.$t('alert.config.trbShot')

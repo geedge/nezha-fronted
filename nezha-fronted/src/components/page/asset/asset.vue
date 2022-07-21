@@ -338,7 +338,7 @@ export default {
             { key: 'Down', value: 0, name: 'Down' },
             { key: 'Up', value: 1, name: 'Up' }
           ],
-          show: true,
+          show: false,
           showMore: false,
           width: 0,
           index: -1
@@ -404,7 +404,7 @@ export default {
             { key: 'Down', id: 0, name: 'Down' },
             { key: 'Up', id: 1, name: 'Up' }
           ],
-          show: true,
+          show: false,
           showMore: false,
           dropShow: false,
           width: 0,
