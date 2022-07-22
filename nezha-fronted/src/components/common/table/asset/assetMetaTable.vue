@@ -38,19 +38,19 @@
         <div v-if="item.prop === 'group'">
            <div class="document-copy-block">
               <span class="document-copy-text"> {{scope.row[item.prop] ? scope.row[item.prop].name : '-'}}</span>
-              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.copyText')"></i>
+              <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.copyText')"></i>
             </div>
         </div>
         <div v-else-if="item.prop === 'name'">
             <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row.name ? scope.row.name : '-'}}</span>
-              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
+              <i v-if="scope.row.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
             </div>
           </div>
         <div v-else-if="item.prop === 'metaKey'">
             <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row[item.prop] || '-'}}</span>
-              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.copyText')"></i>
+              <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.copyText')"></i>
             </div>
           </div>
         <div v-else-if=" item.prop === 'display' ">
