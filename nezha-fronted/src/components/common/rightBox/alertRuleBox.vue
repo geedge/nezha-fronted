@@ -507,6 +507,9 @@ export default {
         method: this.editAlertRule.method.join(','),
         type: this.editAlertRule.type
       }
+      if (this.editAlertRule.trbShot && this.editAlertRule.trbShot == '<div  class="editor-core ql-container ql-snow"><div class="ql-editor"><p><br></p></div></div>') {
+        this.editAlertRule.trbShot = ''
+      }
       this.$refs.alertRuleForm.validate((valid) => {
         if (valid) {
           params.receiver = this.editAlertRule.receiverShow.join(',')

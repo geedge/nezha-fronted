@@ -441,7 +441,6 @@ export default {
     },
     // 比较变量 图表是否显示/隐藏
     compareVariables () {
-      console.log(123123123123)
       if (!this.panelLock) {
         return false
       }

@@ -13,6 +13,7 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 // const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 const fileManagerPlugin = require('filemanager-webpack-plugin')
 const WebpackZipPlugin = require('webpack-zip-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 // const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const GenerateAssetPlugin = require('generate-asset-webpack-plugin')
 const WebpackShellPlugin = require('webpack-shell-plugin')
@@ -63,19 +64,18 @@ if (arg === 'html') {
       new webpack.DefinePlugin({
         'process.env': env
       }),
-      // new ParallelUglifyPlugin({
-      //   cacheDir: '.cache/',
-      //   uglifyJS: {
-      //     output: {
-      //       comments: false
-      //     },
-      //     warnings: false,
-      //     compress: {
-      //       drop_debugger: true,
-      //       drop_console: true
-      //     }
-      //   }
-      // }),
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          compress: {
+            warnings: false,
+            drop_console: true,
+            pure_funcs: ['console.log']
+          }
+        },
+        exclude: /manifest.+js/,
+        sourceMap: config.build.productionSourceMap,
+        parallel: true
+      }),
       // extract css into its own file
       new ExtractTextPlugin({
         filename: utils.assetsPath('css/[name].[contenthash].css'),
@@ -207,19 +207,18 @@ if (arg === 'html') {
       new webpack.DefinePlugin({
         'process.env': env
       }),
-      // new ParallelUglifyPlugin({
-      //   cacheDir: '.cache/',
-      //   uglifyJS: {
-      //     output: {
-      //       comments: false
-      //     },
-      //     warnings: false,
-      //     compress: {
-      //       drop_debugger: true,
-      //       drop_console: true
-      //     }
-      //   }
-      // }),
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          compress: {
+            warnings: false,
+            drop_console: true,
+            pure_funcs: ['console.log']
+          }
+        },
+        exclude: /manifest.+js/,
+        sourceMap: config.build.productionSourceMap,
+        parallel: true
+      }),
       // extract css into its own file
       new ExtractTextPlugin({
         filename: utils.assetsPath('css/[name].[contenthash].css'),
