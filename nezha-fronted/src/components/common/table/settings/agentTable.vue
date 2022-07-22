@@ -45,7 +45,7 @@
         <span v-else-if="item.prop === 'ts'">{{scope.row[item.prop]?momentTz(scope.row[item.prop]):'-'}}</span>
         <span v-else-if="item.prop === 'status'">
           <!-- <el-popover :content="$t('asset.assetStatPre')+(scope.row.checkTime?utcTimeToTimezoneStr(scope.row.checkTime):$t('asset.assetStatDown'))" placement="right" trigger="hover" width="200"> -->
-            <div slot="reference" style="width: 60px" @mouseenter="labelHover(JSON.parse(scope.row.statusInfo), 'agent', true, $event)"
+            <div slot="reference" style="width: 80px" @mouseenter="labelHover(JSON.parse(scope.row.statusInfo), 'agent', true, $event)"
              @mouseleave="labelHover(JSON.parse(scope.row.statusInfo), 'agent', false)">
               <span :class="{'active-icon green-bg':scope.row[item.prop] == '1','active-icon red-bg':scope.row[item.prop] == '0' || scope.row[item.prop] == '-1' || scope.row[item.prop] == '-2'}"></span>
               <span>{{scope.row[item.prop] == '1' ? 'UP' : 'Down'}}</span>
