@@ -130,6 +130,7 @@ export default {
       }
     },
     showPanel: {
+      immediate: true,
       handler (n) {
         if (n) {
           this.panel = JSON.parse(JSON.stringify(n))
@@ -164,13 +165,8 @@ export default {
       // 其他tab的数据（我的收藏、我的创建、最近浏览数据）
       otherData: [],
       // 收藏列表
-      starredList: [],
-      // 用户id
-      userId: ''
+      starredList: []
     }
-  },
-  created () {
-    this.userId = localStorage.getItem('nz-user-id')
   },
   methods: {
     // 新增仪表盘
@@ -187,13 +183,14 @@ export default {
     },
     // 设置树形菜单数据
     setData (type = this.currentTab) {
+      const userId = localStorage.getItem('nz-user-id')
       if (type === 'starred') { // 我的收藏
         this.otherData = JSON.parse(JSON.stringify(this.starredList))
       } else if (type === 'create') { // 我的创建
         const flatArr = this.flatten(this.panelData)
-        this.otherData = flatArr.filter(item => item.createBy == this.userId)
+        this.otherData = flatArr.filter(item => item.createBy == userId)
       } else if (type === 'browse') { // 最近浏览
-        const browseArr = JSON.parse(localStorage.getItem(`nz-view-dashboard-${this.userId}`) || '[]')
+        const browseArr = JSON.parse(localStorage.getItem(`nz-view-dashboard-${userId}`) || '[]')
         const flatArr = this.flatten(this.panelData)
         const tempArr = []
         // 比对id获取最近浏览的数据
@@ -244,8 +241,9 @@ export default {
     },
     // 存储最近浏览的面板
     setBrowse () {
+      const userId = localStorage.getItem('nz-user-id')
       // 获取最近浏览id数组
-      let browseArr = JSON.parse(localStorage.getItem(`nz-view-dashboard-${this.userId}`) || '[]')
+      let browseArr = JSON.parse(localStorage.getItem(`nz-view-dashboard-${userId}`) || '[]')
       const flatArr = this.flatten(this.panelData)
       // 若最近浏览的数据已被删除 则截取掉
       for (let i = 0; i < browseArr.length; i++) {
@@ -266,7 +264,7 @@ export default {
       browseArr.unshift({ id: this.panel.id })
       // 如果数组长度大于10则截取
       browseArr.splice(10)
-      localStorage.setItem(`nz-view-dashboard-${this.userId}`, JSON.stringify(browseArr))
+      localStorage.setItem(`nz-view-dashboard-${userId}`, JSON.stringify(browseArr))
     },
     // 新增收藏
     addStarred: bus.debounceFn(function (data) {
