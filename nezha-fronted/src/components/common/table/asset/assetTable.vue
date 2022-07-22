@@ -41,13 +41,13 @@
           <template v-if="item.prop === 'name'">
             <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row.name ? scope.row.name : '-'}}</span>
-              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
+              <i v-if="scope.row.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
            <template v-else-if="item.prop === 'manageIp'">
             <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row.manageIp ? scope.row.manageIp : '-'}}</span>
-              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.manageIp)" :title="$t('overall.copyText')"></i>
+              <i v-if="scope.row.manageIp" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.manageIp)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
@@ -106,7 +106,7 @@
           <template v-else-if="item.prop === 'sn'">
             <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row.sn ? scope.row.sn : '-'}}</span>
-              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.sn)" :title="$t('overall.copyText')"></i>
+              <i v-if="scope.row.sn" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.sn)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'talon'">

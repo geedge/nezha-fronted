@@ -42,7 +42,7 @@
              <template v-if="item.prop == 'token'">
               <div class="document-copy-block">
               <span class="document-copy-text">  {{scope.row[item.prop]?scope.row[item.prop].replace(reg, '*'):'-'}}</span>
-              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.copyText')"></i>
+              <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.copyText')"></i>
               </div>
             </template>
              <template v-if="item.prop == 'expireAt'">

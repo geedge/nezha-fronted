@@ -39,13 +39,13 @@
           <template v-if="scope.row.i18n">
             <div class="document-copy-block">
               <span class="document-copy-text">{{$t(scope.row.i18n)}}</span>
-              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy($t(scope.row.i18n))" :title="$t('overall.copyText')"></i>
+              <i v-if="$t(scope.row.i18n)" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy($t(scope.row.i18n))" :title="$t('overall.copyText')"></i>
             </div>
           </template>
           <template v-else-if="scope.row.name">
             <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row.name}}</span>
-              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy($t(scope.row.name))" :title="$t('overall.copyText')"></i>
+              <i v-if="$t(scope.row.name)" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy($t(scope.row.name))" :title="$t('overall.copyText')"></i>
             </div>
           </template>
         </template>

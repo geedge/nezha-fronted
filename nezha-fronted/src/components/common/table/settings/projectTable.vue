@@ -40,7 +40,7 @@
         <template v-if="item.prop === 'name'">
           <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row[item.prop]}}</span>
-              <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
+              <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
           </div>
         </template>
         <template v-else-if="item.prop === 'moduleNum'" >
