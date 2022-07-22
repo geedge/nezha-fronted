@@ -36,7 +36,7 @@
             {{showValueMapping(scope.row,col.title)}}
           </div>
           <div class="value-mapping-table" v-else>
-            {{scope.row.display[col.title + 'display']}}
+            {{scope.row.display[col.title + 'display'].display}}
           </div>
         </template>
       </el-table-column>
@@ -172,7 +172,7 @@ export default {
           if (this.chartInfo.param.enable && this.chartInfo.param.enable.valueMapping) {
             valueMapping[column.title].forEach(item => {
               // const rowValue = row.display[column.title + 'display']
-              const rowValue = row.display[column.title + 'display']
+              const rowValue = row.display[column.title + 'display'].oldValue
               if (item.type === 'value') {
                 if (rowValue == item.value) {
                   obj[column.title + 'mapping'] = item
@@ -201,7 +201,10 @@ export default {
         ...row
       }
       this.columns.forEach((column) => {
-        obj[column.title + 'display'] = ''
+        obj[column.title + 'display'] = {
+          display: '',
+          oldValue: ''
+        }
         if (/\{\{.+\}\}/.test(column.display)) {
           const labelValue = column.display.replace(/(\{\{.+?\}\})/g, function (i) {
             const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
@@ -233,9 +236,42 @@ export default {
             }
             return value || ''
           })
-          obj[column.title + 'display'] = labelValue
+          const oldLabelValue = column.display.replace(/(\{\{.+?\}\})/g, function (i) {
+            const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
+            let value = null
+            if (lodash.get(params, label)) {
+              value = lodash.get(params, label)
+              if (!((typeof value) == 'string' && value.constructor == String)) {
+                let legend = ''
+                if (value.__name__) {
+                  legend += `${value.__name__}{`
+                } else {
+                  legend += '{'
+                }
+                const tagKeysArr = Object.keys(value)
+                tagKeysArr.forEach(tagKey => {
+                  if (tagKey !== '__name__') {
+                    legend += `${tagKey}="${value[tagKey]}",`
+                  }
+                })
+                if (legend.endsWith(',')) {
+                  legend = legend.substr(0, legend.length - 1)
+                }
+                legend += '}'
+                value = legend
+              }
+            }
+            return value || ''
+          })
+          obj[column.title + 'display'] = {
+            display: labelValue,
+            oldValue: oldLabelValue
+          }
         } else {
-          obj[column.title + 'display'] = column.display
+          obj[column.title + 'display'] = {
+            display: column.display,
+            oldValue: column.display
+          }
         }
       })
       return obj
@@ -291,8 +327,8 @@ export default {
     // 本地正序
     asce (prop) {
       return function (obj1, obj2) {
-        const val1 = obj1.display[prop + 'display'].replace(/\s*/g, '')
-        const val2 = obj2.display[prop + 'display'].replace(/\s*/g, '')
+        const val1 = obj1.display[prop + 'display'].display.replace(/\s*/g, '')
+        const val2 = obj2.display[prop + 'display'].display.replace(/\s*/g, '')
         if (val1 < val2) {
           return -1
         } else if (val1 > val2) {
@@ -305,8 +341,8 @@ export default {
     // 本地倒序
     desc (prop) {
       return function (obj1, obj2) {
-        const val1 = obj1.display[prop + 'display'].replace(/\s*/g, '')
-        const val2 = obj2.display[prop + 'display'].replace(/\s*/g, '')
+        const val1 = obj1.display[prop + 'display'].display.replace(/\s*/g, '')
+        const val2 = obj2.display[prop + 'display'].display.replace(/\s*/g, '')
         if (val1 < val2) {
           return -1
         } else if (val1 > val2) {

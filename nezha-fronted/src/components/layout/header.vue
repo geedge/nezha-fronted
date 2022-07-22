@@ -14,8 +14,8 @@
       <el-dropdown trigger="click">
         <div class="header-menu__item" :title="$t('config.system.link.link')"><i class="nz-icon nz-icon-more-app"></i></div>
         <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top el-dropdown-menu-link">
-          <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index" v-if="linkData.length">
-            <a :href='item.url' rel="noopener noreferrer" target="_blank" class="link-title nz-  a">
+          <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index" v-if="linkData.length" class="el-dropdown-menu-link-item">
+            <a :href='item.url' rel="noopener noreferrer" target="_blank" class="link-title nz-a">
               <i class="nz-icon nz-icon-link"></i>
               <span class="nz-  a">{{item.name}}</span>
             </a>

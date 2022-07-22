@@ -24,7 +24,7 @@
         </div>
       </template>
       <template v-if="activeIndex === 1">
-        <div class="desc-text">{{$t('overall.agentTip')}}</div>
+        <div class="desc-text">{{$t('guide.agentTip')}}</div>
         <div class="guide__btn-group">
           <button :class="{'guide__btn--disabled': !hasButton('agent_add')}" class="guide__btn" type="button" @click="jumpAndOpen('agent')">{{$t('overall.createPrometheusServer')}}</button>
           <button :class="{'guide__btn--disabled': !hasButton('agent_add')}" class="guide__btn" type="button" @click="downloadAgent">{{$t('guide.downloadAgent')}}</button>
