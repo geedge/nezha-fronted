@@ -1221,7 +1221,6 @@ export default {
             data.fillStyle = '#FFFFFF00'
           }
           data.data = {
-            ...data.data,
             moduleId: '',
             moduleName: '',
             show: false,
@@ -1258,7 +1257,8 @@ export default {
             displayChart: true,
             aggregation: 'last',
             title: '',
-            url: ''
+            url: '',
+            ...data.data
           }
         } else if (data.type == 1 && !data.data) {
           // 连线是否自动计算锚点

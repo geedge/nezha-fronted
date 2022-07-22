@@ -123,10 +123,12 @@ export default {
         }, {
           label: this.$t('webshell.filePath'),
           prop: 'filePath',
+          visibility: 'disabled',
           show: true
         }, {
           label: this.$t('config.system.notification.account'),
           prop: 'account',
+          visibility: 'disabled',
           show: true
         }, {
           label: this.$t('overall.state'),
