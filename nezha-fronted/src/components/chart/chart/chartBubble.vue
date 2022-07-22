@@ -64,6 +64,7 @@ export default {
   },
   methods: {
     initChart () {
+      this.legends = []
       this.initBubbleData(this.chartInfo, this.chartData)
       if (this.isNoData) {
         return
@@ -120,11 +121,11 @@ export default {
           .padding(6)
         // 如果数据全为0 则设置默认值（否则图表不显示）
         let bubbleData = lodash.cloneDeep(this.bubbleData)
-        if (bubbleData.every(item => !item.value || item.value == 0)) {
+        if (bubbleData.every(item => item.value == 0)) {
           bubbleData = bubbleData.map(item => {
             return {
               ...item,
-              value: 100
+              value: 100 // 目的是显示气泡 与值大小无关
             }
           })
         }

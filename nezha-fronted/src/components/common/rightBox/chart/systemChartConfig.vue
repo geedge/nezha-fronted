@@ -637,8 +637,23 @@
                   <div v-if="isTable(chartConfig.type)">
                     <div class='mapping-display'>{{$t('placeholder.chart.column')}}</div>
                   </div>
-                  <el-form-item v-if="isTable(chartConfig.type)" :prop="'param.valueMapping.' + index + '.column'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
-                    <el-input v-model="item.column"  style="margin-right: 10px" :placeholder="$t('placeholder.chart.column')" size="small" @change="change('valueMapping', index)"/>
+                  <el-form-item v-if="isTable(chartConfig.type)" :prop="'param.valueMapping.' + index + '.column'" :rules="{ required: true, message: $t('validate.required'), change: 'blur'}" class="thresholds-from-item">
+                    <el-select
+                      v-model="item.column"
+                      size="small"
+                      :placeholder="$t('placeholder.chart.column')"
+                      style="margin-right: 10px"
+                      @change="change('valueMapping', index)"
+                      filterable
+                      allow-create
+                      default-first-option
+                    >
+                    <el-option
+                      v-for="item in chartConfig.param.columns.filter(item=> item.title)"
+                      :value="item.title"
+                      :label="item.title"
+                      :key="item.title"/>
+                    </el-select>
                   </el-form-item>
                   <div>
                     <div class='mapping-display'>{{$t('config.assetLabel.display')}}</div>
