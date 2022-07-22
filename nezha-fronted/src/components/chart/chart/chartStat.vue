@@ -11,10 +11,11 @@
         background:item.mapping ? item.mapping.color.bac : (statData.length===1 ? '' : colorList[index]),
         height:item.height+'px',
         width:item.width + 'px',
-        fontSize: setFontSize(item)
+        fontSize: item.fontSize,
       }"
     >
-      <span v-if="chartInfo.param.text==='all'">
+      <div>
+        <span v-if="chartInfo.param.text==='all'">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
           {{item.legend}}<br/>
           <template v-if="item.mapping && item.mapping.icon">
@@ -24,7 +25,7 @@
         </span>
         <span v-else>{{item.legend}}<br/><span>{{item.showValue}}</span></span>
       </span>
-      <span v-if="chartInfo.param.text==='legend'">
+        <span v-if="chartInfo.param.text==='legend'">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
           {{item.legend}}<br/>
           <template v-if="item.mapping && item.mapping.icon">
@@ -34,7 +35,7 @@
         </span>
         <span v-else>{{item.legend}}</span>
       </span>
-      <span v-if="chartInfo.param.text==='value'|| !chartInfo.param.text">
+        <span v-if="chartInfo.param.text==='value'|| !chartInfo.param.text">
         <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
           <template v-if="item.mapping && item.mapping.icon">
             <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
@@ -43,7 +44,8 @@
         </span>
         <span v-else>{{item.showValue}}</span>
       </span>
-      <span v-if="chartInfo.param.text==='none'"></span>
+        <span v-if="chartInfo.param.text==='none'"></span>
+      </div>
     </div>
     <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
       <div class="chart-canvas-tooltip-title tooltip-title">
@@ -59,6 +61,7 @@
         </div>
       </div>
     </div>
+    <span class="temp-dom--12" ref="temp-dom"></span>
   </div>
 </template>
 
@@ -90,6 +93,7 @@ export default {
         show: false
       },
       fontSize: 12,
+      customFontSize: '',
       minFontSzie: 12,
       defaultUnit: 60 // 根据stat的长宽取 需要的字体 = (取最短的边 / defaultUnit) * fontSize 因为 需要的字体/fontSize = 实际宽 / defaultUnit
     }
@@ -164,9 +168,9 @@ export default {
       }
     },
     statMouseEnter (that, e) {
-      this.tooltip.title = that.legend
-      this.tooltip.value = that.showValue
-      this.tooltip.mapping = that.mapping
+      this.tooltip.title = this.$loadsh.cloneDeep(that.legend)
+      this.tooltip.value = this.$loadsh.cloneDeep(that.showValue)
+      this.tooltip.mapping = this.$loadsh.cloneDeep(that.mapping)
       this.tooltip.show = true
       this.$nextTick(() => {
         const windowWidth = window.innerWidth// 窗口宽度
@@ -229,6 +233,7 @@ export default {
       })
     },
     renderStat (layout) {
+      let isDouble = false
       const width = this.boxWidth / layout.col
       const height = this.boxHeight / layout.row
       const integer = Math.floor(this.statData.length / layout.col)
@@ -242,6 +247,82 @@ export default {
         } else {
           item.width = width
         }
+        let font = '' // 获取显示的字体
+        let display = ''
+        if (item.mapping) {
+          display = this.handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })
+        }
+        switch (this.chartInfo.param.text) {
+          case 'all':
+            if (item.mapping) {
+              isDouble = true
+              if (item.legend.length > item.showValue.length + 2) {
+                font = item.legend
+              } else {
+                font = display
+                if (item.mapping.icon) {
+                  font += 'AA'
+                }
+              }
+            } else {
+              isDouble = true
+              if (item.legend.length > item.showValue.length) {
+                font = item.legend
+              } else {
+                font = item.showValue
+              }
+            }
+            break
+          case 'legend':
+            if (item.mapping) {
+              isDouble = true
+              if (item.legend.length > item.showValue.length + 2) {
+                font = item.legend
+              } else {
+                font = display
+                if (item.mapping.icon) {
+                  font += 'AA'
+                }
+              }
+            } else {
+              font = item.legend
+            }
+            break
+
+          case 'none':
+            font = ''
+            break
+          case 'value':
+          default:
+            if (item.mapping) {
+              font = display
+              if (item.mapping.icon) {
+                font += 'AA'
+              }
+            } else {
+              font = item.showValue
+            }
+            break
+        }
+        const el = this.$refs['temp-dom']
+        el.innerText = font
+        const elWidth = el.offsetWidth
+        const elHeight = el.offsetHeight
+        const dimension = Math.min(item.width, item.height * 1.3)
+        const fontScale = parseInt('80%', 10) / 100
+        let fontSize = Math.min(dimension / 5, 100) * fontScale
+        let scale = item.width / elWidth
+        if (scale * elHeight > item.height) {
+          scale = item.height / elHeight
+        }
+        if (isDouble) {
+          if (scale * elHeight * 2.5 > item.height) {
+            scale = item.height / elHeight * 2.5
+          }
+        }
+        item.scale = scale < 1 ? 1 : parseFloat(scale)
+        fontSize = fontSize > 12 ? fontSize : this.minFontSzie
+        item.fontSize = fontSize + 'px'
       })
       this.isInit = false
     },
@@ -257,9 +338,24 @@ export default {
       }, 50)
     },
     setFontSize (item) {
-      let fontSize = item.height > item.width ? (14 * (item.width / 60)) : (14 * (item.height / 60))
+      let fontSize = ''
+
+      fontSize = item.height > item.width ? (14 * (item.width / 60)) : (14 * (item.height / 60))
       fontSize = fontSize > 12 ? fontSize : this.minFontSzie
       return fontSize + 'px'
+    },
+    strlen (str) {
+      let len = 0
+      for (let i = 0; i < str.length; i++) {
+        const c = str.charCodeAt(i)
+        // 单字节加1
+        if ((c >= 0x0001 && c <= 0x007e) || (c >= 0xff60 && c <= 0xff9f)) {
+          len++
+        } else {
+          len += 2
+        }
+      }
+      return len
     }
   },
   mounted () {
