@@ -40,6 +40,7 @@
       }
     }
     .check-month_box{
+      width: 100%;
       .el-checkbox-group{
         display: flex;
         justify-content: start;
@@ -50,7 +51,7 @@
           justify-content: center;
           align-items: center;
           width: calc(100% / 7);
-          margin-right: -2px;
+          margin-right: -3px;
           margin-bottom: -1px;
           border: 1px solid $--border-color-light;
           .el-checkbox-button__inner{
