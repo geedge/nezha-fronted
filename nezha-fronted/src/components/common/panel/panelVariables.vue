@@ -396,6 +396,9 @@ export default {
         item.visible = false
       })
     }
+  },
+  beforeDestroy () {
+    this.$store.dispatch('dispatchVariablesArr', [])
   }
 }
 </script>

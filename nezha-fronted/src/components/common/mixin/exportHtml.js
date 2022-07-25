@@ -7,11 +7,18 @@ export default {
   },
   methods: {
     exportToHtml (name) {
+      const vars = this.$store.getters.getVariablesArr.map(item => {
+        return {
+          "name": item.name,
+          "value": item.checked.join('|')
+        }
+      })
       const params = {
         format: 'html',
         panelId: this.showPanel.id,
         start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[0])),
-        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[1]))
+        end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[1])),
+        vars: vars
       }
       this.$get('/visual/panel/snapshot', params, 'blob').then(res => {
         const self = this
