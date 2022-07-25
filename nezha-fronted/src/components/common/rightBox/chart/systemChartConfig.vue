@@ -437,25 +437,28 @@
         </div>
         <div v-for="(item,index) in chartConfig.param.columns" :key="index" :class="item.error? 'is-item-box-error' : ''">
           <div class="chart-title chart-title-config">
-                <span class="chart-title-content">
-                  <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showColumns(index)"></i>
-                  <span v-show="!item.show" class="title-content-left">
-                    <span>
-                      {{item.value}}
-                    </span>
-                  </span>
+            <span class="chart-title-content">
+              <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showColumns(index)"></i>
+              <span v-show="!item.show" class="title-content-left">
+                <span>
+                  {{item.value}}
                 </span>
+              </span>
+            </span>
             <span>
-                  <span @click="addColumns('')" :title="$t('tip.add')">
-                      <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
-                  </span>
-                  <span style="margin-right: 5px" :title="$t('overall.duplicate')">
-                      <i @click="copyColumns(index)" class="nz-icon nz-icon-override"></i>
-                  </span>
-                  <span class="nz-icon-minus-medium" :title="$t('overall.delete')">
-                      <i @click="removeColumns(index)" class="nz-icon nz-icon-minus"></i>
-                  </span>
-                </span>
+              <span @click="addColumns('')" :title="$t('tip.add')">
+                <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
+              </span>
+              <span style="margin-right: 5px" :title="$t('overall.duplicate')">
+                <i @click="copyColumns(index)" class="nz-icon nz-icon-override"></i>
+              </span>
+              <span style="margin-right: 5px" class="nz-icon-minus-medium" :title="$t('overall.delete')">
+                <i @click="removeColumns(index)" class="nz-icon nz-icon-minus"></i>
+              </span>
+              <span style="margin-right: 5px;fontSize:17px;cursor: pointer;" class="draggable-sort" :title="$t('dashboard.panel.chartForm.sort')">
+                <i class="el-icon-sort"></i>
+              </span>
+            </span>
           </div>
           <transition-group appear tag="div" name="el-zoom-in-top">
             <el-row class="thresholds-item" v-show="item.show" :key="1">
@@ -469,11 +472,11 @@
                 <div class='mapping-display'>{{$t('dashboard.panel.chartForm.unit')}}</div>
               </div>
               <el-cascader :id="'columns-unit' + index" v-model="item.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
-                           placeholder=""
-                           popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
-                           size="small"
-                           style="flex: 1"
-                           @change="unitSelected"
+                placeholder=""
+                popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
+                size="small"
+                style="flex: 1"
+                @change="unitSelected"
               >
               </el-cascader>
             </el-row>
@@ -495,7 +498,7 @@
                 </div>
               </div>
               <el-form-item :prop="'param.columns.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
-                <el-input v-model="item.display"  style="margin-right: 10px" size="small"  @change="change('columns',index)"/>
+                <el-input v-model="item.display" size="small"  @change="change('columns',index)"/>
               </el-form-item>
             </el-row>
           </transition-group>
