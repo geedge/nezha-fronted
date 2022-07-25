@@ -124,7 +124,7 @@ export default {
           delete labelPosition.left
 
           labelPosition.right =
-            clientWidth - position.left - leftOffSetView - position.width * 4 + 'px'
+            clientWidth - position.left - leftOffSetView - position.width * 3.3 + 'px'
         }
         return labelPosition
       }

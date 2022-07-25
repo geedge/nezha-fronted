@@ -127,6 +127,7 @@ export default {
           ...item,
           x: colIndex,
           y: rowIndex,
+          metrics: item.label,
           label: item.legend
         }
       })
@@ -250,10 +251,10 @@ export default {
       const textColor = point.mapping ? point.mapping.color.text : this.invertColor(color)
       if (this.chartInfo.param.text === 'all') {
         str += point.alias
-        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.labels, value: point.showValue }) : point.showValue
+        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.metrics, value: point.showValue }) : point.showValue
       }
       if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
-        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.labels, value: point.showValue }) : point.showValue
+        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.metrics, value: point.showValue }) : point.showValue
       }
       if (this.chartInfo.param.text === 'legend') {
         str += point.alias

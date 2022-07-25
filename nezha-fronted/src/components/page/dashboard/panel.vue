@@ -200,6 +200,7 @@ export default {
         param: {
           report: {
             enable: false,
+            receivers: [],
             range: {
               unit: ''
             },
@@ -460,6 +461,7 @@ export default {
         param: {
           report: {
             enable: false,
+            receivers: [],
             range: {
               unit: 'day'
             },

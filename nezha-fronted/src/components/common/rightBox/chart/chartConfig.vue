@@ -575,6 +575,7 @@
               <div class="chart-title chart-title-config">
                 <span class="chart-title-content">
                   <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showMapping(index)"></i>
+                  <span v-if="item.column && !item.show">{{item.column}}:</span>
                   <span v-show="!item.show" class="title-content-left">
                     <span v-if="item.type === 'value'">
                       {{item.value}}

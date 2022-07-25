@@ -1152,7 +1152,6 @@ export default {
       if (!Array.isArray(data) && data) { // 判断不是数组 提前个data配置好节点属性
         if (data.type == 0 && !data.data.valueMapping) {
           data.data = {
-            ...data.data,
             moduleId: '',
             moduleName: '',
             show: false,
@@ -1190,7 +1189,8 @@ export default {
             displayChart: true,
             aggregation: 'last',
             title: '',
-            url: ''
+            url: '',
+            ...data.data
           }
           if (data.iconFamily) {
             data.data.fillStyle = 'transparent'

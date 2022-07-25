@@ -21,5 +21,18 @@
     .top-tool-btn.top-tool-btn--disabled:hover {
       background-color: $--asset-bactch-btn-background-color;
     }
+    .top-tool-btn {
+      cursor: pointer;
+      border: 1px solid $--button-icon-border-color;
+      outline: none;
+      border-radius: $--button-border-radius;
+      background-color: $--background-color-empty;
+      transition:all .2s;
+      color: $--button-icon-color;
+      i {
+        font-size: 14px;
+        color: $--button-icon-color;
+      }
+    }
   }
 }

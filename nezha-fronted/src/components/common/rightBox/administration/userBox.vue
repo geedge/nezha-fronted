@@ -137,7 +137,7 @@ export default {
       if (value === '' && this.editUser.pin) {
         callback(new Error(this.$t('config.user.reinputPin')))
       } else if (value !== this.editUser.pin) {
-        callback(new Error(this.$t('profile.confirmPasswordErr')))
+        callback(new Error(this.$t('profile.confirmPasswordError')))
       } else {
         callback()
       }

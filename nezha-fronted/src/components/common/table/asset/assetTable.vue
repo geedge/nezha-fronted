@@ -142,7 +142,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        :resizable="false"
         v-if="showOption"
         :width="operationWidth"
         fixed="right">
