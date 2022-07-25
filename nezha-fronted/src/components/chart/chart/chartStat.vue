@@ -309,7 +309,7 @@ export default {
         const elWidth = el.offsetWidth
         const elHeight = el.offsetHeight
         const dimension = Math.min(item.width, item.height * 1.3)
-        const fontScale = parseInt('80%', 10) / 100
+        const fontScale = parseInt('70%', 10) / 100
         let fontSize = Math.min(dimension / 5, 100) * fontScale
         let scale = item.width / elWidth
         if (scale * elHeight > item.height) {
