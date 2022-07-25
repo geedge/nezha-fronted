@@ -252,11 +252,14 @@
                       size="small"
                       v-model="editPanel.param.report.schedule.repeat"
                       id="chart-box-title"
-                      v-if="isShow === 2 ? true :false">
+                      v-if="isShow === 2 ? true :false" key="2">
                       <template slot="append">{{ $t("backup.day") }}</template>
                     </el-input>
                   </el-form-item>
-                  <el-form-item v-if="isShow === 3 ? true : false" :label='$t("backup.WeekOn")' class="range-time" prop="param.report.schedule.nums">
+                  <el-form-item v-if="isShow === 3 ? true : false"
+                  :rules="isShow === 3 ? [
+                    { required: true, message: $t('validate.required'), trigger: 'change'}] :[{ required: false}]"
+                  :label='$t("backup.WeekOn")' class="range-time" prop="param.report.schedule.nums" key="3">
                     <el-checkbox-group
                       v-model="editPanel.param.report.schedule.nums">
                       <el-checkbox-button
@@ -267,11 +270,13 @@
                     </el-checkbox-group>
                   </el-form-item>
                   <el-form-item
-                    v-show="isShow === 4 ? true : false"
+                    v-if="isShow === 4 ? true : false"
+                   :rules="isShow === 4 ? [
+                    { required: true, message: $t('validate.required'), trigger: 'change'}] :[{ required: false}]"
                     :label="$t('backup.DayOfMonth')"
                     prop="param.report.schedule.nums"
                     class="check-month_box"
-                    id="day-of-month"
+                    id="day-of-month" key="4"
                   >
                     <el-checkbox-group v-model="editPanel.param.report.schedule.nums">
                       <el-checkbox-button
@@ -352,13 +357,13 @@ export default {
           message: this.$t('validate.required')
         }, { validator: datePicker, trigger: 'blur' }],
         'param.report.receivers': [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: arrLength, trigger: 'blur' }
-        ],
-        'param.report.schedule.nums': [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
           { validator: arrLength, trigger: 'blur' }
         ]
+        // 'param.report.schedule.nums': [
+        //   { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+        //   { validator: arrLength, trigger: 'blur' }
+        // ]
       },
       week: [
         this.$t('week.Mon'),
