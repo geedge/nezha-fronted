@@ -175,6 +175,7 @@ export default {
           .style('font-size', function (d) {
             return d.r / 3 > 10 ? d.r / 3 : 0
           })
+          .style('border-radius', '50%')
           .html((d) => {
             return this.bubbleFormatterLabel(d)
           })
@@ -237,19 +238,19 @@ export default {
         this.drawBubbleChart()
       }, 50)
     },
-    bubbleEnter (e, node) { // 移入六边形
+    bubbleEnter (e, node) { // 移入气泡
       this.tooltip.title = node.data.alias
       this.tooltip.value = node.data.showValue
       this.tooltip.mapping = node.data.mapping
       this.tooltip.show = true
       this.setPosition(e)
     },
-    bubbleMove (e) { // 六边形内移动
+    bubbleMove (e) { // 气泡内移动
       if (this.tooltip.show) {
         this.setPosition(e)
       }
     },
-    bubbleLeave () {
+    bubbleLeave () { // 移出气泡
       this.tooltip.show = false
     },
     setPosition (e) {

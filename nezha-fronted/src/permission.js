@@ -142,8 +142,10 @@ router.beforeEach((to, from, next) => {
               returnMenuCode(res.data.menus, arr)
               store.commit('setButtonList', arr)
               store.commit('setRoleList', res.data.roles)
-              const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
-              document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + theme)
+              if (localStorage.getItem('nz-user-id')) {
+                const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
+                document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + theme)
+              }
               resolve()
             } else {
               localStorage.removeItem('nz-token')
@@ -152,8 +154,10 @@ router.beforeEach((to, from, next) => {
           })
         })
       } else {
-        const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
-        document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + theme)
+        if (localStorage.getItem('nz-user-id')) {
+          const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
+          document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + theme)
+        }
         resolve()
       }
     })
