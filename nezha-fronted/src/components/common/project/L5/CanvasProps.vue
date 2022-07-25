@@ -82,7 +82,7 @@
               <div style="width: 100%;margin: 10px 0; box-sizing: border-box; padding: 0 10px;">
                 <div class="thresholds-box">
                   <el-row class="thresholds-title">
-                    <el-col :span="4" class="thresholds-cell">{{ $t('alert.severity') }}
+                    <el-col :span="5" class="thresholds-cell">{{ $t('alert.severity') }}
                       <span @click="changeValueMappingSort">
                     <i
                       :class="['nz-icon','nz-icon-arrow-up1',selection.pen.data.valueMappingSort==='desc'?'is-arrow-active':'']"></i>
@@ -92,12 +92,12 @@
                     </el-col>
                     <el-col :span="4" class="thresholds-cell">{{ $t('project.topology.color') }}</el-col>
                     <el-col :span="6" class="thresholds-cell">{{ $t('overall.value') }}</el-col>
-                    <el-col :span="8" class="thresholds-cell">{{ $t('project.topology.animation') }}</el-col>
+                    <el-col :span="7" class="thresholds-cell">{{ $t('project.topology.animation') }}</el-col>
                     <el-col :span="2" class="thresholds-cell"></el-col>
                   </el-row>
 
                   <el-row v-for="(item,index) in selection.pen.data.valueMapping" :key="index">
-                    <el-col :span="4" class="thresholds-cell">
+                    <el-col :span="5" class="thresholds-cell">
                       <span v-if="selection.pen.data.valueMappingSort==='desc'">
                          {{ index === 0 ? selection.pen.data.valueMapping.length - 1 : (item.level - 1) }}
                       </span>
@@ -127,7 +127,7 @@
                       </el-input>
                       <span v-else>base</span>
                     </el-col>
-                    <el-col :span="8" class="thresholds-cell">
+                    <el-col :span="7" class="thresholds-cell">
                       <!--线-->
                       <el-select v-if="selection.pen&&selection.pen.type&&item.level!==0"
                                  v-model="item.animateType"
@@ -242,7 +242,7 @@
                   <template>
                     <el-col class="legend-title">
                       {{ $t('dashboard.panel.chartForm.legend') }}&nbsp;
-                      <el-popover placement="top" trigger="hover" width="211">
+                      <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
                         <div style="word-break:keep-all;">{{ $t('dashboard.panel.chartForm.legendTip') }}</div>
                         <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"
                            @mouseover="rz"></i>
@@ -257,7 +257,7 @@
                   <span class="nz-icon-minus-medium" :title="$t('overall.delete')">
                     <i class="nz-icon nz-icon-minus" @click="removeExpression(index)"></i>
                   </span>
-                  <span class="nz-icon-copy" :title="$t('overall.duplicate')">
+                  <span class="nz-icon-copy" :title="$t('overall.duplicate')" style="padding: 2px 6px">
                     <i class="nz-icon nz-icon-override" @click="copyExpression(index)"></i>
                   </span>
                 </div>
@@ -422,6 +422,7 @@
                 <div>{{ $t('project.topology.gradient') }}</div>
                 <div class="p10 pl0 gradient-to">
                   <el-select :popper-append-to-body="true" v-model="selection.pen.gradientType" size="small"
+                             :placeholder="''"
                              class="color-before-select" popper-class="color-before-select right-box-select-top right-public-box-dropdown-top" @change="bkTypeChange">
                     <div slot="prefix">
                       <i
@@ -1201,7 +1202,7 @@ export default {
       nodesAlign: [// 对齐方式
         {
           value: 'left',
-          desc: this.$t('ashboard.panel.chartForm.alignList.left')
+          desc: this.$t('overall.left')
         }, {
           value: 'right',
           desc: this.$t('dashboard.panel.chartForm.alignList.right')
@@ -1370,7 +1371,7 @@ export default {
       textAlignOptions: [
         {
           id: 'left',
-          name: this.$t('ashboard.panel.chartForm.alignList.left')
+          name: this.$t('overall.left')
         },
         {
           id: 'center',
