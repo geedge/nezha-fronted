@@ -337,12 +337,12 @@
   }
   /* start--覆盖el-table边框、gutter等样式 */
   .el-table__body-wrapper {
-    overflow: auto;
+    //overflow: auto;
     background-color: $--table-body-background-color;
-    height: calc(100% - 42px) !important;
+    //height: calc(100% - 42px) !important;
   }
   .el-table__fixed-body-wrapper {
-    top: 42px !important;
+    //top: 42px !important;
   }
   .el-table__body-wrapper, .el-table__fixed-body-wrapper {
     box-shadow: 1px 0 $--border-color-light;
