@@ -86,7 +86,7 @@ export default {
             ? document.body.clientWidth
             : document.documentElement.clientWidth
         let leftOffSetView = 0
-        let leftOffSet = this.detailList ? -80 : 10
+        let leftOffSet = this.detailList ? -60 : 20
         let topOffSet = this.detailList ? 60 : 22
         let topOffSetView = 0
         let labelPosition = {
@@ -122,9 +122,8 @@ export default {
         }
         if (position.left > clientWidth / 2) {
           delete labelPosition.left
-
           labelPosition.right =
-            clientWidth - position.left - leftOffSetView - position.width * 3.3 + 'px'
+            clientWidth - position.left - leftOffSetView + 'px'
         }
         return labelPosition
       }

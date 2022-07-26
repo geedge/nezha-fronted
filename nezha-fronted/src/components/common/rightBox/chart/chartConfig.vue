@@ -488,7 +488,7 @@
               <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showColumns(index)"></i>
               <span v-show="!item.show" class="title-content-left">
                 <span>
-                  {{item.value}}
+                  {{item.title}}
                 </span>
               </span>
             </span>
