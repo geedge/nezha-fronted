@@ -67,19 +67,19 @@
                 </div>
               </el-popover>
             </el-form-item>
-            <!-- Timeout -->
-            <el-form-item prop="timeout" style="margin-bottom:12px" :label="$t('ping.timeout')">
-              <div class="wrap" style="height:32px">
-                <el-input v-model.number="ruleForm.timeout" placeholder="" >
-                  <template slot="append">{{$t('alert.config.second')}}</template>
-                </el-input>
-              </div>
-            </el-form-item>
             <!-- Package size -->
             <el-form-item prop="packageSize" style="margin-bottom:12px" :label="$t('ping.packageSize')">
               <div class="wrap" style="height:32px">
                 <el-input v-model.number="ruleForm.packageSize" placeholder="">
                   <template slot="append">{{$t('ping.bytes')}}</template>
+                </el-input>
+              </div>
+            </el-form-item>
+            <!-- Timeout -->
+            <el-form-item prop="timeout" style="margin-bottom:12px" :label="$t('ping.timeout')">
+              <div class="wrap" style="height:32px">
+                <el-input v-model.number="ruleForm.timeout" placeholder="" >
+                  <template slot="append">{{$t('alert.config.second')}}</template>
                 </el-input>
               </div>
             </el-form-item>
