@@ -6,6 +6,76 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "30875641",
+      "name": "正方形",
+      "font_class": "zhengfangxing",
+      "unicode": "e796",
+      "unicode_decimal": 59286
+    },
+    {
+      "icon_id": "30875648",
+      "name": "sort",
+      "font_class": "sort",
+      "unicode": "e797",
+      "unicode_decimal": 59287
+    },
+    {
+      "icon_id": "30874541",
+      "name": "密码可见",
+      "font_class": "mimakejian1",
+      "unicode": "e794",
+      "unicode_decimal": 59284
+    },
+    {
+      "icon_id": "30874542",
+      "name": "不可见",
+      "font_class": "bukejian",
+      "unicode": "e795",
+      "unicode_decimal": 59285
+    },
+    {
+      "icon_id": "30874378",
+      "name": "直线",
+      "font_class": "zhixian",
+      "unicode": "e793",
+      "unicode_decimal": 59283
+    },
+    {
+      "icon_id": "30871091",
+      "name": "三角形",
+      "font_class": "sanjiaoxing",
+      "unicode": "e790",
+      "unicode_decimal": 59280
+    },
+    {
+      "icon_id": "30871092",
+      "name": "星形",
+      "font_class": "xingxing",
+      "unicode": "e792",
+      "unicode_decimal": 59282
+    },
+    {
+      "icon_id": "30871089",
+      "name": "多边形",
+      "font_class": "duobianxing",
+      "unicode": "e78f",
+      "unicode_decimal": 59279
+    },
+    {
+      "icon_id": "30664219",
+      "name": "diagnosis",
+      "font_class": "diagnosis",
+      "unicode": "e78a",
+      "unicode_decimal": 59274
+    },
+    {
+      "icon_id": "30664220",
+      "name": "升级",
+      "font_class": "shengji",
+      "unicode": "e78b",
+      "unicode_decimal": 59275
+    },
+    {
       "icon_id": "30102525",
       "name": "模式切换",
       "font_class": "moshiqiehuan",

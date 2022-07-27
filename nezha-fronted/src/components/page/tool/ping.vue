@@ -24,7 +24,8 @@
 
         <div  class="tools-header-center">
           <el-form size="small" ref="ruleForm" :model="ruleForm" :rules="formRules" label-position="right" label-width="150px">
-            <el-form-item style="margin-bottom:10px" :label="$t('config.dc.dc')">
+            <!-- Data centers -->
+            <el-form-item style="margin-bottom:12px" :label="$t('config.dc.dc')">
 <!--            <el-select v-model="checked" multiple @change="checkedChange"  >-->
 <!--              <el-option-->
 <!--                :key="item.id"-->
@@ -55,7 +56,7 @@
                     </ul>
                   </ul>
                 </el-form-item>
-                <div slot="reference" class="choose-box"  @click="triggerVisible">
+                <div slot="reference" class="choose-box"  @click.stop="triggerVisible">
                   <div v-if="checkAll" style="flex: 1">All</div>
                   <div v-else style="flex: 1">
                     <span class="choose" v-for="item in dataCenter" :key="item.id" v-if="checked.indexOf(item.id) !== -1">
@@ -66,10 +67,19 @@
                 </div>
               </el-popover>
             </el-form-item>
-            <el-form-item prop="timeout" style="margin-bottom:10px" :label="$t('ping.timeout')">
+            <!-- Timeout -->
+            <el-form-item prop="timeout" style="margin-bottom:12px" :label="$t('ping.timeout')">
               <div class="wrap" style="height:32px">
                 <el-input v-model.number="ruleForm.timeout" placeholder="" >
                   <template slot="append">{{$t('alert.config.second')}}</template>
+                </el-input>
+              </div>
+            </el-form-item>
+            <!-- Package size -->
+            <el-form-item prop="packageSize" style="margin-bottom:12px" :label="$t('ping.packageSize')">
+              <div class="wrap" style="height:32px">
+                <el-input v-model.number="ruleForm.packageSize" placeholder="">
+                  <template slot="append">{{$t('ping.bytes')}}</template>
                 </el-input>
               </div>
             </el-form-item>
@@ -103,17 +113,17 @@
     </template>
 
     <template v-slot:default>
-      <!-- 初始展示的内容 ip输入框聚焦后消失 -->
+      <!-- 初始展示的内容 -->
       <div class="empty" v-if="tid===undefined">
         <el-steps align-center>
           <el-step>
             <span class="nz-icon nz-icon-edit" slot="icon"></span>
             <p class="txt" slot="title">{{$t('overall.placeHolder')}} IP</p>
           </el-step>
-<!--          <el-step>-->
-<!--            <span class="el-icon-more" slot="icon"></span>-->
-<!--            <p class="txt" slot="title">{{$t('ping.filter')}}</p>-->
-<!--          </el-step>-->
+         <!-- <el-step>
+           <span class="el-icon-more" slot="icon"></span>
+           <p class="txt" slot="title">{{$t('ping.filter')}}</p>
+         </el-step> -->
           <el-step>
             <span class="msg" slot="icon">Ping</span>
             <p class="txt" slot="title">Ping {{$t('config.terminallog.cmd.cmd')}}</p>
@@ -187,10 +197,13 @@ export default {
       tableData: [],
       ruleForm: {
         // 超时时间
-        timeout: 30
+        timeout: 30,
+        // 包大小
+        packageSize: 64
       },
       formRules: {
-        timeout: [{ validator: positiveInteger, trigger: 'blur' }]
+        timeout: [{ validator: positiveInteger, trigger: 'blur' }],
+        packageSize: [{ validator: positiveInteger, trigger: 'blur' }]
       }
     }
   },
@@ -235,11 +248,7 @@ export default {
       return this.validateDuplicate()
     },
     close () {
-      this.$refs.ruleForm.validate((valid) => {
-        if (valid) {
-          this.visible = false
-        }
-      })
+      this.visible = false
     },
     // 切换弹框显示隐藏
     triggerVisible () {
@@ -291,8 +300,13 @@ export default {
         } else if (!this.tags.length) {
           return this.validateHost()
         }
-        this.flag = false
-        this.getId()
+        // 表单校验输入内容是否合法
+        this.$refs.ruleForm.validate((valid) => {
+          if (valid) {
+            this.flag = false
+            this.getId()
+          }
+        })
       })
     },
     // 请求dataCenter
@@ -312,7 +326,8 @@ export default {
       const params = {
         ips: ipArr.join(','),
         dcIds: this.checked.join(','),
-        timeout: this.ruleForm.timeout
+        timeout: this.ruleForm.timeout,
+        packageSize: this.ruleForm.packageSize
       }
       this.$get('/tool/ping', params).then(response => {
         // 清空上一次任务的数据

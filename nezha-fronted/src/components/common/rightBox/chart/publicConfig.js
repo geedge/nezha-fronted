@@ -198,6 +198,18 @@ export default {
           value: 'el-icon-sort-down'
         }, {
           value: 'el-icon-rank'
+        }, {
+          value: 'nz-icon nz-icon-zhengfangxing'
+        }, {
+          value: 'nz-icon nz-icon-zhixian'
+        }, {
+          value: 'nz-icon nz-icon-sanjiaoxing'
+        }, {
+          value: 'nz-icon nz-icon-xingxing'
+        }, {
+          value: 'nz-icon nz-icon-duobianxing'
+        }, {
+          value: 'nz-icon nz-icon-circle'
         }
       ], // 获取icon列表
       letter: [

@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('iconfont.woff2?t=1654482769343') format('woff2'),
-       url('iconfont.woff?t=1654482769343') format('woff'),
-       url('iconfont.ttf?t=1654482769343') format('truetype');
+  src: url('iconfont.woff2?t=1658889956430') format('woff2'),
+       url('iconfont.woff?t=1658889956430') format('woff'),
+       url('iconfont.ttf?t=1658889956430') format('truetype');
 }
 
 .nz-icon {
@@ -11,6 +11,46 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nz-icon-zhengfangxing:before {
+  content: "\e796";
+}
+
+.nz-icon-sort:before {
+  content: "\e797";
+}
+
+.nz-icon-mimakejian1:before {
+  content: "\e794";
+}
+
+.nz-icon-bukejian:before {
+  content: "\e795";
+}
+
+.nz-icon-zhixian:before {
+  content: "\e793";
+}
+
+.nz-icon-sanjiaoxing:before {
+  content: "\e790";
+}
+
+.nz-icon-xingxing:before {
+  content: "\e792";
+}
+
+.nz-icon-duobianxing:before {
+  content: "\e78f";
+}
+
+.nz-icon-diagnosis:before {
+  content: "\e78a";
+}
+
+.nz-icon-shengji:before {
+  content: "\e78b";
 }
 
 .nz-icon-moshiqiehuan:before {

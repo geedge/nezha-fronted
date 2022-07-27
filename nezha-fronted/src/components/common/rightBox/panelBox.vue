@@ -144,8 +144,8 @@
                       v-model="item.multi"
                       size="small"
                       >
-                      <el-option label="Enabled" :value="true"></el-option>
-                      <el-option label="Disabled" :value="false"></el-option>
+                      <el-option :label="$t('overall.enabled')" :value="true"></el-option>
+                      <el-option :label="$t('overall.disabled')" :value="false"></el-option>
                     </el-select>
                   </el-form-item>
                   <!-- All option -->
@@ -163,8 +163,8 @@
                       v-model="item.allOption"
                       size="small"
                       >
-                      <el-option label="Enabled" :value="true"></el-option>
-                      <el-option label="Disabled" :value="false"></el-option>
+                      <el-option :label="$t('overall.enabled')" :value="true"></el-option>
+                      <el-option :label="$t('overall.disabled')" :value="false"></el-option>
                     </el-select>
                   </el-form-item>
                 </div>
@@ -412,11 +412,11 @@ export default {
         ? localStorage.getItem('nz-default-dateFormat')
         : 'YYYY-MM-DD HH:ss:mm',
       queryVariableList: [
-        { name: 'label_names()', description: 'Returns a list of metric label names.' },
-        { name: 'label_values(label)', description: 'Returns a list of label values for the label in every metric.' },
-        { name: 'label_values(metric, label)', description: 'Returns a list of label values for the label in the specified metric.' },
-        { name: 'metrics(metric)', description: 'Returns a list of metrics matching the specified metric regex.' },
-        { name: 'query_result(query)', description: 'Returns a list of metric query result for the query.' }
+        { name: 'label_names()', description: this.$t('dashboard.panel.label_names()') },
+        { name: 'label_values(label)', description: this.$t('dashboard.panel.label_values(label)') },
+        { name: 'label_values(metric, label)', description: this.$t('dashboard.label_values(metric, label)') },
+        { name: 'metrics(metric)', description: this.$t('dashboard.panel.metrics(metric)') },
+        { name: 'query_result(query)', description: this.$t('dashboard.panel.query_result(query)') }
       ]
     }
   },

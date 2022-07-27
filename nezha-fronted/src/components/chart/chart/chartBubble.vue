@@ -203,11 +203,11 @@ export default {
       }
       if (str && valueStr) {
         return `
-              <div style="width:100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;cursor: pointer;">
-                <p style="width: 80%;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:center">
+              <div style="width:100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;cursor: pointer;color:#000000">
+                <p style="width: 80%;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:center;color: ${node.data.mapping && node.data.mapping.color && node.data.mapping.color.text};">
                   <span>${str}</span>
                 </p>
-                <p style="width: 80%;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:center">
+                <p style="width: 80%;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:center;color: ${node.data.mapping && node.data.mapping.color && node.data.mapping.color.text};">
                   <i class="${node.data.mapping && node.data.mapping.icon}" style="color: ${node.data.mapping && node.data.mapping.color && node.data.mapping.color.icon};font-size:1em;"></i>
                   <span>${valueStr}</span>
                 </p>
@@ -215,8 +215,8 @@ export default {
             `
       } else if (str) {
         return `
-              <div style="width:100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;cursor: pointer;">
-                <p style="width: 80%;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:center">
+              <div style="width:100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;cursor: pointer;color:#000000">
+                <p style="width: 80%;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:center;color: ${node.data.mapping && node.data.mapping.color && node.data.mapping.color.text};">
                   <i class="${node.data.mapping && node.data.mapping.icon}" style="color: ${node.data.mapping && node.data.mapping.color && node.data.mapping.color.icon};font-size:1em;"></i>
                   <span>${str}</span>
                 </p>
@@ -224,8 +224,8 @@ export default {
             `
       } else if (valueStr) {
         return `
-              <div style="width:100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;cursor: pointer;">
-                <p style="width: 80%;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:center">
+              <div style="width:100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;cursor: pointer;color:#000000">
+                <p style="width: 80%;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:center;color: ${node.data.mapping && node.data.mapping.color && node.data.mapping.color.text};">
                   <i class="${node.data.mapping && node.data.mapping.icon}" style="color: ${node.data.mapping && node.data.mapping.color && node.data.mapping.color.icon};font-size:1em;"></i>
                   <span>${valueStr}</span>
                 </p>

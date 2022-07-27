@@ -517,8 +517,8 @@
                 <span style="margin-right: 5px" class="nz-icon-minus-medium" :title="$t('overall.delete')">
                   <i @click="removeColumns(index)" class="nz-icon nz-icon-minus"></i>
                 </span>
-                <span style="margin-right: 5px;fontSize:17px;cursor: pointer;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
-                  <i class="el-icon-sort"></i>
+                <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
+                  <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
                 </span>
               </span>
             </div>
@@ -637,8 +637,8 @@
                     <span @click="removeMapping(index)" style="margin-right: 5px" :title="$t('overall.delete')">
                       <i  class="nz-icon nz-icon-minus"></i>
                     </span>
-                    <span style="margin-right: 5px;fontSize:17px;cursor: pointer;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
-                      <i class="el-icon-sort"></i>
+                    <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
+                      <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
                     </span>
                   </span>
                 </div>
