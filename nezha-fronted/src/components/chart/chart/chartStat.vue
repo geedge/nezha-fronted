@@ -134,6 +134,7 @@ export default {
             stat.value = getMetricTypeValue(data.values, chartInfo.param.statistics)
             stat.label = data.metric
             stat.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
+            stat.label.legend = stat.legend
             stat.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
             stat.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(stat.value, null, -1, decimals)
             stat.mapping = this.selectMapping(stat.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)

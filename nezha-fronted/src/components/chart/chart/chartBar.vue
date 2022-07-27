@@ -150,7 +150,10 @@ export default {
               showValue: showValue,
               name: legend.name,
               alias: legend.alias,
-              labels: data.metric,
+              labels: {
+                ...data.metric,
+                legend: legend.alias
+              },
               seriesIndex: expressionIndex,
               dataIndex: dataIndex,
               mapping: mapping,

@@ -30,14 +30,20 @@ export default {
       return str
     },
     handleDisplay (display, params) {
+      const self = this
+      const myParams = JSON.parse(JSON.stringify(params))
+      myParams.$labels = JSON.parse(JSON.stringify(params))
+      myParams.$value = myParams.value
+      myParams.$legend = myParams.legend
       if (/\{\{.+\}\}/.test(display)) {
         const labelValue = display.replace(/(\{\{.+?\}\})/g, function (i) {
           const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
           let value = null
-          if (params[label]) {
-            value = params[label]
+          if (self.$loadsh.get(myParams, label)) {
+            value = self.$loadsh.get(myParams, label)
           }
-          return value || label
+          // return value || label
+          return value || ''
         })
         return labelValue
       } else {
