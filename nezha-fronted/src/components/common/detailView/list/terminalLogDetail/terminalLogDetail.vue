@@ -29,7 +29,7 @@
           <div class="asset-manageIp">
             <el-tooltip effect="light" placement="right">
               <div slot="content">
-                {{getStatusText(item.status)}}
+                {{$t(getStatusText(item.status))}}
               </div>
               <span><i class="nz-icon" :class="statusClass(item.status)"/></span>
             </el-tooltip>
