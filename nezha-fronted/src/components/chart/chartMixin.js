@@ -150,7 +150,7 @@ export default {
       // 处理legend别名
       if (chartInfo.elements) {
         if (chartInfo.elements[expressionIndex]) {
-          alias = alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend)
+          alias = alias + this.handleLegendAlias(legend, chartInfo.elements[expressionIndex].legend, tagKeysArr)
         }
         if (!alias) {
           alias = chartInfo.elements[expressionIndex].expression || ''
@@ -181,18 +181,27 @@ export default {
         alias
       }
     },
-    handleLegendAlias (legend, aliasExpression) {
+    handleLegendAlias (legend, aliasExpression, params) {
+      const self = this
+      const myParams = JSON.parse(JSON.stringify(params))
+      myParams.$labels = JSON.parse(JSON.stringify(params))
+      myParams.$value = myParams.value
       if (/\{\{.+\}\}/.test(aliasExpression)) {
         const labelValue = aliasExpression.replace(/(\{\{.+?\}\})/g, function (i) {
           const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
           if (!legend) {
             return label
           }
-          const reg = new RegExp(label + '=".+?"')
           let value = null
-          if (reg.test(legend)) {
-            const find = legend.match(reg)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
+          if (params && self.$loadsh.get(myParams, label)) {
+            value = self.$loadsh.get(myParams, label)
+          }
+          if (label) {
+            const reg = new RegExp(label + '=".+?"')
+            if (reg.test(legend)) {
+              const find = legend.match(reg)[0]
+              value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
+            }
           }
           return value || ''
         })

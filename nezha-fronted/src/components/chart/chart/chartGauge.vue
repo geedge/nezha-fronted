@@ -89,6 +89,7 @@ export default {
             }
             gauge.label = data.metric
             gauge.legend = legend.alias
+            gauge.label.legend = gauge.legend
             gauge.name = legend.name
             gauge.alias = legend.alias
             gauge.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(gauge.value, null, -1, decimals)

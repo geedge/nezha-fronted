@@ -49,7 +49,7 @@ export default {
         components: [{ name: '', version: '' }]
       },
       activities: [{
-        timestamp: 'Release 22.08 - Aug 2022',
+        timestamp: 'Release 22.07 - Aug 2022',
         content: [{
           id: 1,
           chinese: '[FEATURE] 仪表盘增加快照导出功能',

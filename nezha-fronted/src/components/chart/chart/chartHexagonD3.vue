@@ -100,6 +100,7 @@ export default {
             }
             Hexagon.label = data.metric
             Hexagon.legend = legend.alias
+            Hexagon.label.legend = Hexagon.legend
             Hexagon.name = legend.name
             Hexagon.alias = legend.alias
             Hexagon.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(Hexagon.value, null, -1, decimals)
@@ -251,10 +252,10 @@ export default {
       const textColor = point.mapping ? point.mapping.color.text : this.invertColor(color)
       if (this.chartInfo.param.text === 'all') {
         str += point.alias
-        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.metrics, value: point.showValue }) : point.showValue
+        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.metrics, legend: point.alias, value: point.showValue }) : point.showValue
       }
       if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
-        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.metrics, value: point.showValue }) : point.showValue
+        valueStr = point.mapping && point.mapping.display ? self.handleDisplay(point.mapping.display, { ...point.metrics, legend: point.alias, value: point.showValue }) : point.showValue
       }
       if (this.chartInfo.param.text === 'legend') {
         str += point.alias
