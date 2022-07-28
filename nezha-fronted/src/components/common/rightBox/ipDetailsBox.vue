@@ -78,15 +78,15 @@ export default {
       options: {
         ipDetailsState: [
           {
-            label: 'Available',
+            label: this.$t('overall.ipam.available'),
             value: 1
           },
           {
-            label: 'Transient',
+            label: this.$t('overall.ipam.transient'),
             value: 2
           },
           {
-            label: 'Used',
+            label: this.$t('overall.ipam.used'),
             value: 3
           }
         ]

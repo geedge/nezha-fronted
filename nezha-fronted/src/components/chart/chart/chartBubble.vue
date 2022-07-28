@@ -110,14 +110,9 @@ export default {
     drawBubbleChart () {
       this.$nextTick(() => {
         d3.select(`#bubble-svg-${this.chartId}`).selectAll('g').remove()// 清空作图区域
-        let width
-        let height
-        try {
-          const chartWrap = document.getElementById(`chart-canvas-${this.chartId}`)
-          width = chartWrap.clientWidth
-          height = chartWrap.clientHeight
-        } catch (error) {
-        }
+        const svg = document.getElementById(`bubble-svg-${this.chartId}`)
+        const width = svg.getBoundingClientRect().width
+        const height = svg.getBoundingClientRect().height
         // 定义布局方式
         const pack = d3.pack()
           .size([width, height])
