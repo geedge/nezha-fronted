@@ -24,7 +24,7 @@
           <div  class="tools-header-center">
             <el-form size="small" ref="ruleForm" :model="ruleForm" :rules="formRules" label-position="right" label-width="150px">
               <!-- Data centers -->
-              <el-form-item style="margin-bottom:12px" :label="$t('config.dc.dc')">
+              <el-form-item style="margin-bottom:14px" :label="$t('config.dc.dc')">
                 <!--            <el-select v-model="checked" multiple @change="checkedChange"  >-->
                 <!--              <el-option-->
                 <!--                :key="item.id"-->
@@ -67,16 +67,16 @@
                 </el-popover>
               </el-form-item>
               <!-- Maximum hops -->
-              <el-form-item prop="maxHops" style="margin-bottom:12px" :label="$t('trace.maxHops')">
+              <el-form-item prop="maxHops" style="margin-bottom:14px" :label="$t('trace.maxHops')">
                 <div class="wrap" style="height:32px">
                   <el-input v-model.number="ruleForm.maxHops" placeholder=""></el-input>
                 </div>
               </el-form-item>
               <!-- Timeout -->
-              <el-form-item prop="timeout" style="margin-bottom:12px" :label="$t('ping.timeout')">
+              <el-form-item prop="timeout" style="margin-bottom:14px" :label="$t('ping.timeout')">
                 <div class="wrap" style="height:32px">
                   <el-input v-model.number="ruleForm.timeout" placeholder="">
-                    <template slot="append">{{$t('alert.config.second')}}</template>
+                    <template slot="append">{{$t('overall.ms')}}</template>
                   </el-input>
                 </div>
               </el-form-item>
@@ -146,7 +146,7 @@ import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import traceTable from '@/components/common/table/tool/traceTable'
 import VueTagsInput from '@johmun/vue-tags-input'
-import { positiveInteger } from '../../common/js/validate'
+import { timeoutValidator, maxHopsValidator } from '../../common/js/validate'
 const ipv4 = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\:\d{0,5})?$/
 const ipv6 = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/
 export default {
@@ -190,11 +190,11 @@ export default {
         // 最大跃点数
         maxHops: 30,
         // 超时时间
-        timeout: 30
+        timeout: 100
       },
       formRules: {
-        timeout: [{ validator: positiveInteger, trigger: 'blur' }],
-        maxHops: [{ validator: positiveInteger, trigger: 'blur' }]
+        timeout: [{ validator: timeoutValidator, trigger: 'blur' }],
+        maxHops: [{ validator: maxHopsValidator, trigger: 'blur' }]
       }
     }
   },

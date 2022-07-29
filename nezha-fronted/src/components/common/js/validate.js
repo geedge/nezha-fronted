@@ -127,7 +127,7 @@ export function positiveInteger (rule, value, callback) {
     if (isNaN(Number(value))) {
       callback(new Error(vm.$t('validate.number')))
     } else {
-      if (Number(value) >= 0 && (parseInt(value) == parseFloat(value))) {
+      if (Number(value) >= 0) {
         callback()
       } else {
         callback(new Error(vm.$t('validate.positiveInteger')))
@@ -226,4 +226,70 @@ export function dataValidate () {
   // const YMD = '/((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))'
   // const DMY = '/((^(3[01]|[12][0-9]|0[1-9])(\\/)(10|12|0[13578])(\\/)((1[8-9]\\d{2})|([2-9]\\d{3}))$)|(^(30|[12][0-9]|0[1-9])(\\/)(11|0[469])(\\/)((1[8-9]\\d{2})|([2-9]\\d{3}))$)|(^(2[0-8]|1[0-9]|0[1-9])(\\/)(02)(\\/)((1[8-9]\\d{2})|([2-9]\\d{3}))$)|(^(29)(\\/)(02)(\\/)([2468][048]00)$)|(^(29)(\\/)(02)(\\/)([3579][26]00)$)|(^(29)(\\/)(02)(\\/)([1][89][0][48])$)|(^(29)(\\/)(02)(\\/)([2-9][0-9][0][48])$)|(^(29)(\\/)(02)(\\/)([1][89][2468][048])$)|(^(29)(\\/)(02)(\\/)([2-9][0-9][2468][048])$)|(^(29)(\\/)(02)(\\/)([1][89][13579][26])$)|(^(29)(\\/)(02)(\\/)([2-9][0-9][13579][26])$))/'
   // const MDY =
+}
+
+// 验证timeout
+export function timeoutValidator (rule, value, callback) {
+  setTimeout(() => {
+    // 判断是否是数字
+    if (isNaN(Number(value))) {
+      callback(new Error(vm.$t('validate.number')))
+    } else {
+      // 判断是否是正整数
+      if (Number(value) >= 0 && (String(value).indexOf('.') == -1)) {
+        // 判断范围
+        if (value >= 1 && value <= 60000) {
+          callback()
+        } else {
+          callback(new Error(vm.$t('validate.timeout')))
+        }
+      } else {
+        callback(new Error(vm.$t('validate.positiveInteger')))
+      }
+    }
+  }, 100)
+}
+
+// 验证packageSize
+export function packageSizeValidator (rule, value, callback) {
+  setTimeout(() => {
+    // 判断是否是数字
+    if (isNaN(Number(value))) {
+      callback(new Error(vm.$t('validate.number')))
+    } else {
+      // 判断是否是正整数
+      if (Number(value) >= 0 && (String(value).indexOf('.') == -1)) {
+        // 判断范围
+        if (value >= 1 && value <= 4096) {
+          callback()
+        } else {
+          callback(new Error(vm.$t('validate.packageSize')))
+        }
+      } else {
+        callback(new Error(vm.$t('validate.positiveInteger')))
+      }
+    }
+  }, 100)
+}
+
+// 验证maxHops
+export function maxHopsValidator (rule, value, callback) {
+  setTimeout(() => {
+    // 判断是否是数字
+    if (isNaN(Number(value))) {
+      callback(new Error(vm.$t('validate.number')))
+    } else {
+      // 判断是否是正整数
+      if (Number(value) >= 0 && (String(value).indexOf('.') == -1)) {
+        // 判断范围
+        if (value >= 1 && value <= 1000) {
+          callback()
+        } else {
+          callback(new Error(vm.$t('validate.maxHops')))
+        }
+      } else {
+        callback(new Error(vm.$t('validate.positiveInteger')))
+      }
+    }
+  }, 100)
 }
