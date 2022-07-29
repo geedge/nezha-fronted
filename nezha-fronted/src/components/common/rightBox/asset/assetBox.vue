@@ -47,7 +47,7 @@
           <el-form-item :label="$t('asset.sn')" prop="sn">
             <el-input  maxlength="128" show-word-limit v-model="editAsset.sn" size="small"/>
           </el-form-item>
-          <el-form-item :label="$t('asset.number')" prop="number">
+          <el-form-item :label="$t('config.system.basic.num')" prop="number">
             <el-input  maxlength="128" show-word-limit v-model="editAsset.number" size="small"/>
           </el-form-item>
           <el-form-item :label="$t('asset.brandAndModel')" class="placeholder-emphasize" prop="brandAndModel">
