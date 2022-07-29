@@ -422,9 +422,10 @@ export default {
   },
   created () {
     this.dateFormatStr = 'YYYY-MM-DD HH:mm:ss'
-    if (this.editPanel.id) {
-      this.isShow = Number(this.editPanel.param.report.schedule.type)
-    }
+    this.isShow = Number(this.editPanel.param.report.schedule.type)
+    // if (this.editPanel.id) {
+    //   this.isShow = Number(this.editPanel.param.report.schedule.type)
+    // }
   },
   mounted () {
     this.getUserData()
