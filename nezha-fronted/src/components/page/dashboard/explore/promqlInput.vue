@@ -90,7 +90,7 @@
             v-if="type == 'log'"
             :id="inputId"
             v-model="expressionList[index]"
-            size="small" :rows="2"
+            size="small" :rows="1"
             class="not-fixed-height no-resize"
             type="textarea"
             show-word-limit maxlength="256"
@@ -267,7 +267,7 @@
                 type="textarea"
                 :maxlength="styleType === 3 ? 512 : 4096"
                 show-word-limit
-                size="small" :rows="2"
+                size="small" :rows="1"
                 class="not-fixed-height no-resize"
                 ref="elInput"
               ></el-input>
