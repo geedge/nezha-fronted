@@ -713,6 +713,14 @@ export default {
     newDoc (val) {
       // console.log('doc', val)
     },
+    promqlInputCahnge (val) {
+      const text = this.newView.state.doc.toString()
+      this.newView.dispatch(
+        this.newView.state.update({
+          changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
+        })
+      )
+    },
     fetchFn (a, b) {
       const params = {}
       if (b) {
