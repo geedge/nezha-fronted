@@ -68,9 +68,12 @@
   .mib-browser-left {
     height: 100%;
     width: 28%;
+    min-width: 260px;
+    display: flex;
+    flex-direction: column;
   }
   .mib-browser-tree {
-    height: calc(69% - 40px);
+    flex: 1;
     background-color: $--background-color-empty;
     border-radius: 4px 0 0 0;
     font-size: 14px;
@@ -80,6 +83,7 @@
   }
   .mib-browser-detail {
     height: 31%;
+    min-height: 260px;
     width: 100%;
   }
   .el-scrollbar__wrap .el-scrollbar__view, .el-scrollbar__wrap, .el-tree {
@@ -140,7 +144,7 @@
     padding: 0 14px 0 0;
   }
   .mib-browser-right {
-    width: calc(72% - 4px);
+   flex: 1;
     height: 100%;
     .plTableBox.mib-browser-table {
       .el-table__body-wrapper {
