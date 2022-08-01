@@ -497,17 +497,19 @@ export default {
       }
     },
     preview (show) {
+      this.previewShow = show
       if (show) {
-        const start = new Date().setHours(new Date().getHours() - 1)
-        const end = new Date()
-        this.timeRange = [bus.computeTimezoneTime(start), bus.computeTimezoneTime(end)]
-        this.prevChart = lodash.cloneDeep(this.editChart)
-        this.prevChart.loaded = true
-        this.prevChart.param.showHeader = true
+        this.$nextTick(() => {
+          const start = new Date().setHours(new Date().getHours() - 1)
+          const end = new Date()
+          this.timeRange = [bus.computeTimezoneTime(start), bus.computeTimezoneTime(end)]
+          setTimeout(() => {
+            this.prevChart = lodash.cloneDeep(this.editChart)
+            this.prevChart.loaded = true
+            this.prevChart.param.showHeader = true
+          })
+        })
       }
-      this.$nextTick(() => {
-        this.previewShow = show
-      })
     }
   },
   created () {
