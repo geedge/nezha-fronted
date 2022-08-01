@@ -332,7 +332,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">Endpoint</div>
+        <div class="alert-label-title">{{$t('asset.endpoint')}}</div>
         <div class="alert-label-value">
           <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;
           <span>{{
