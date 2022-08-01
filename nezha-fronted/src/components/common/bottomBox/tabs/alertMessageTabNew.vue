@@ -219,7 +219,7 @@ export default {
             label: 'assetName',
             disabled: false
           }, {
-            name: 'Endpoint',
+            name: this.$t('asset.endpoint'),
             type: 'input',
             label: 'endpointName',
             disabled: false

@@ -69,7 +69,7 @@
         </div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">Endpoint</div>
+        <div class="alert-label-title">{{$t('asset.endpoint')}}</div>
         <div class="alert-label-value">
           <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;
           <span>{{alertLabelData && alertLabelData.endpointNum ? alertLabelData.endpointNum : 0}}</span></div>
@@ -90,7 +90,7 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.project && alertLabelData.project.name ?alertLabelData.project.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">Endpoint</div>
+        <div class="alert-label-title">{{$t('asset.endpoint')}}</div>
         <div class="alert-label-value">
           <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;
           <span>{{alertLabelData && alertLabelData.endpointNum ? alertLabelData.endpointNum : 0}}</span></div>
@@ -141,7 +141,7 @@
           <span>{{alertLabelData && alertLabelData.module && alertLabelData.module.name ? alertLabelData.module.name : '--'}}</span></div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">Endpoint</div>
+        <div class="alert-label-title">{{$t('asset.endpoint')}}</div>
         <div class="alert-label-value">
           <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;
           <span>{{alertLabelData && alertLabelData.endpointNum ? alertLabelData.endpointNum : 0}}</span></div>

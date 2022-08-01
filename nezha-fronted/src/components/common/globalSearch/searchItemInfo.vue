@@ -309,7 +309,7 @@ export default {
           }, {
             key: 'endpointNum',
             icon: 'nz-icon-overview-endpoint monitorColor',
-            label: 'Endpoint'
+            label: this.$t('asset.endpoint')
           }, {
             key: 'assetNum',
             icon: 'nz-icon-overview-project monitorColor color23BF9A',
@@ -336,7 +336,7 @@ export default {
           }, {
             key: 'endpointNum',
             icon: 'nz-icon nz-icon-overview-endpoint monitorColor',
-            label: 'Endpoint'
+            label: this.$t('asset.endpoint')
           }, {
             key: 'assetNum',
             icon: 'nz-icon nz-icon-overview-project monitorColor',
