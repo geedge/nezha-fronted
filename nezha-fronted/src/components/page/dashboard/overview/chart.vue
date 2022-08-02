@@ -389,7 +389,7 @@ export default {
       const hour = tData.getHours() > 9 ? tData.getHours() : '0' + tData.getHours()
       const minute = tData.getMinutes() > 9 ? tData.getMinutes() : '0' + tData.getMinutes()
       const dateFormatStr = this.timeFormatMain.split(' ')[0]
-      const diffSec = (this.timezoneToUtcTime(this.timeRange[1]) - this.timezoneToUtcTime(this.timeRange[0]))
+      const diffSec = (this.momentStrToTimestamp(this.timeRange[1]) - this.momentStrToTimestamp(this.timeRange[0]))
       const secOneDay = 24 * 60 * 60 * 1000// 1天的毫秒数
       let str = ''
       if (dateFormatStr === 'DD/MM/YYYY') {
