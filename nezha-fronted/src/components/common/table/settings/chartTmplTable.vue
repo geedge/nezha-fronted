@@ -166,6 +166,9 @@ export default {
         case 'logs':
           str += 'nz-icon-logs'
           break
+        case 'bubble':
+          str += 'nz-icon-bubble'
+          break
         default :
           str += 'nz-icon-table1'
           break

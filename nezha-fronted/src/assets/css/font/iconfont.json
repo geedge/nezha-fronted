@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "25495310",
+      "name": "气泡图",
+      "font_class": "bubble",
+      "unicode": "e761",
+      "unicode_decimal": 59233
+    },
+    {
       "icon_id": "30875641",
       "name": "正方形",
       "font_class": "zhengfangxing",
