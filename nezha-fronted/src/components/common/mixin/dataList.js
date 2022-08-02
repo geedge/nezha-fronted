@@ -898,6 +898,21 @@ export default {
           },
           jsonKey: 'val'
         },
+        state: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'state',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'ipamState',
+            name: 'State',
+            readonly: true,
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
         name: {
           target: this.searchLabel,
           isSearchInput: true,

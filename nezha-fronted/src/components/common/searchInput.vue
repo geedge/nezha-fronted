@@ -900,6 +900,8 @@ export default {
               objectInfo.types = val.valnum
             } else if (val.label === 'promState') {
               objectInfo.statuses = val.valnum
+            } else if (val.label === 'ipamState') {
+              objectInfo.state = val.valnum
             } else if (typeof (val.valnum) === 'undefined' || val.valnum == '') {
               this.selectInfoList[val.label].forEach(item => {
                 if (item.label === val.val) {
