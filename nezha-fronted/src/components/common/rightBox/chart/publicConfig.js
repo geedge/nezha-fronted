@@ -472,6 +472,7 @@ export default {
           this.expressions.forEach((ex, index) => {
             if (ex) {
               this.$refs[`promql-${index}`][0].metricChange(ex)
+              this.$refs[`promql-${index}`][0].promqlInputCahnge(ex)
             }
           })
         })
@@ -496,6 +497,7 @@ export default {
         this.expressions.forEach((ex, index) => {
           if (ex) {
             this.$refs[`promql-${index}`][0].metricChange(ex)
+            this.$refs[`promql-${index}`][0].promqlInputCahnge(ex)
           }
         })
       })
