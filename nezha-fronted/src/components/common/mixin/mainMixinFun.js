@@ -63,7 +63,7 @@ export default {
     translation (key) {
       return i18n.t(key)
     },
-    timeFormatStrToDatePickFormat (str, flag) {
+    timeFormatStrToDatePickFormat (str = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss', flag) {
       if (flag) {
         const reg = /Y/g
         str = str.replace(reg, 'y')

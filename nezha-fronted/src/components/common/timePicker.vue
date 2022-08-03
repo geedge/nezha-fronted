@@ -45,8 +45,8 @@
               class="panel-time-picker-hidden"
               size="mini"
               ref="calendar"
-              :format="timeFormatStrToDatePickFormat(timeFormatMain)"
-              :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
+              :format="timeFormatStrToDatePickFormat()"
+              :value-format="timeFormatStrToDatePickFormat()"
               @change="dateChange"
               :default-time="['00:00:00', '23:59:59']"
               v-model="oldSearchTime"
@@ -274,8 +274,24 @@ export default {
     const timeTemp = this.$loadsh.cloneDeep(this.searchTime)
     this.oldSearchTime[0] = timeTemp[0]
     this.oldSearchTime[1] = timeTemp[1]
+    // 监听dateFormat变化 改变日期格式
+    window.addEventListener('storage', this.watchDateFormat)
   },
   methods: {
+    // 监听localStorage日期格式
+    watchDateFormat (e) {
+      if (e.key === 'nz-default-dateFormat') {
+        // 先用之前vuex的日期格式获取到正确时间
+        const timeStart = this.momentStrToTimestamp(this.oldSearchTime[0], this.timeFormatMain)
+        const timeEnd = this.momentStrToTimestamp(this.oldSearchTime[1], this.timeFormatMain)
+        this.$set(this.oldSearchTime, 0, this.momentTz(timeStart))
+        this.$set(this.oldSearchTime, 1, this.momentTz(timeEnd))
+        this.searchTime = this.$loadsh.cloneDeep(this.oldSearchTime)
+        this.$emit('change', this.searchTime)
+        // 更新vuex日期格式
+        this.$store.commit('setTimeFormatMain', localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
+      }
+    },
     changeDropdownFlag () {
       if (this.dropdownFlag) {
         this.dropdownFlag = false
@@ -340,8 +356,8 @@ export default {
       }
       this.isCustom = true
       this.rangeHistory.unshift({
-        start: this.momentStrToTimestamp(item[0]),
-        end: this.momentStrToTimestamp(item[1])
+        start: this.momentStrToTimestamp(this.searchTime[0]),
+        end: this.momentStrToTimestamp(this.searchTime[1])
       })
       localStorage.setItem(
         'date-range-history' + this.sign,
@@ -362,8 +378,9 @@ export default {
       this.dropdownFlag = !this.dropdownFlag
     },
     dateInputChange (type, v) {
+      const timeFormatMain = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
       if (type == 'start') {
-        const dateValidate = moment(this.oldSearchTime[0], this.timeFormatMain).isValid()
+        const dateValidate = moment(this.oldSearchTime[0], timeFormatMain).isValid()
         if (!dateValidate) {
           this.inputError = this.$t('date.formatError')
           this.oldSearchTimeError[0] = true
@@ -372,7 +389,7 @@ export default {
           this.oldSearchTime[0] = bus.timeFormate(this.oldSearchTime[0])
         }
       } else if (type == 'end') {
-        const dateValidate = moment(this.oldSearchTime[1], this.timeFormatMain).isValid()
+        const dateValidate = moment(this.oldSearchTime[1], timeFormatMain).isValid()
         if (!dateValidate) {
           this.oldSearchTimeError[1] = true
         } else {
@@ -381,8 +398,8 @@ export default {
           this.oldSearchTime[1] = bus.timeFormate(this.oldSearchTime[1])
         }
       }
-      console.log(moment(this.oldSearchTime[0], this.timeFormatMain).isValid(), moment(this.oldSearchTime[1], this.timeFormatMain).isValid(), !moment(this.oldSearchTime[0]).isBefore(this.oldSearchTime[1]))
-      if (moment(this.oldSearchTime[0], this.timeFormatMain).isValid() && moment(this.oldSearchTime[1], this.timeFormatMain).isValid() && !moment(this.oldSearchTime[0]).isBefore(this.oldSearchTime[1])) {
+      // console.log(moment(this.oldSearchTime[0], timeFormatMain).isValid(), moment(this.oldSearchTime[1], timeFormatMain).isValid(), !moment(this.oldSearchTime[0]).isBefore(this.oldSearchTime[1]))
+      if (moment(this.oldSearchTime[0], timeFormatMain).isValid() && moment(this.oldSearchTime[1], timeFormatMain).isValid() && !moment(this.oldSearchTime[0]).isBefore(this.oldSearchTime[1])) {
         this.oldSearchTimeError[0] = true
         this.inputError = this.$t('date.fromGreaterTo')
       }
@@ -588,6 +605,9 @@ export default {
           : []
       }
     }
+  },
+  beforeDestroy () {
+    window.removeEventListener('storage', this.watchDateFormat)
   }
 }
 </script>

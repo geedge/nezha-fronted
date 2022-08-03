@@ -238,6 +238,7 @@ export default {
             localStorage.setItem('nz-sys-logo', this.basic.system_logo)
             localStorage.setItem('nz-sys-default-cabinet-usize', this.basic.default_cabinet_usize)
             localStorage.setItem('nz-unsaved-change', this.basic.unsaved_change)
+            this.$store.commit('setTimeFormatMain', this.basic.date_format)
             this.basic.map_center_config = JSON.parse(this.basic.map_center_config)
             this.basic.pin_policy = JSON.parse(this.basic.pin_policy)
             this.basic.lnglat = `${this.basic.map_center_config.longitude},${this.basic.map_center_config.latitude}`
@@ -301,7 +302,7 @@ export default {
     dateFormatTimer () {
       const date = new Date()
       const milli = date.getTime()
-      this.dateFormatList.map(e => {
+      this.dateFormatList.forEach(e => {
         if (e.label === 'DD/MM/YYYY HH:mm:ss') {
           e.time = bus.timeFormate(bus.computeTimezone(milli), e.label)
         } else if (e.label === 'MM/DD/YYYY HH:mm:ss') {
