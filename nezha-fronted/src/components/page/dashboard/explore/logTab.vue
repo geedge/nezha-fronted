@@ -60,7 +60,8 @@
           prop="date"
           width="160"
         >
-          <template slot-scope="{ row }">{{utcTimeToTimezoneStr(row.date)}}</template>
+          <!-- <template slot-scope="{ row }">{{utcTimeToTimezoneStr(row.date)}}</template> -->
+          <template slot-scope="{ row }">{{momentTz(row.date)}}</template>
         </el-table-column>
         <el-table-column
           v-if="!showSwitch"
@@ -117,7 +118,8 @@ export default {
     },
     loadingBottom: Boolean,
     exploreLogTable: Boolean,
-    exploreItem: Boolean
+    exploreItem: Boolean,
+    timeRange: {}
   },
   computed: {
     tableTimeFormat () {
@@ -265,7 +267,7 @@ export default {
             borderRadius: 3,
             textStyle: {
               padding: [0, 0, 0, 6],
-              color: this.theme == 'light' ? '#666666' : '#BEBEBE',
+              color: this.theme == 'light' ? '#666666' : '#BEBEBE'
             },
             inactiveColor: this.theme == 'light' ? '#BEBEBE' : '#666666' // 字体颜色
           },
@@ -278,7 +280,7 @@ export default {
               rotate: 0,
               fontSize: 13 * window.devicePixelRatio,
               formatter (value) {
-                return vm.utcTimeToTimezoneStr(vm.$unixTimeParseToString(vm.toMillisecondTime(parseInt(value)) / 1000, 'yyyy-MM-dd hh:mm:ss'), 'hh:mm')
+                return vm.defaultXAxisFormatter(vm.toMillisecondTime(parseInt(value)))
               }
             },
             boundaryGap: [0, '1%']
@@ -499,12 +501,36 @@ export default {
       }
       return alias
     },
+    defaultXAxisFormatter: function (value) {
+      value = bus.UTCTimeToConfigTimezone(value)
+      const tData = new Date(value)
+      const month = tData.getMonth() + 1 > 9 ? tData.getMonth() + 1 : '0' + (tData.getMonth() + 1)
+      const day = tData.getDate() > 9 ? tData.getDate() : '0' + tData.getDate()
+      const hour = tData.getHours() > 9 ? tData.getHours() : '0' + tData.getHours()
+      const minute = tData.getMinutes() > 9 ? tData.getMinutes() : '0' + tData.getMinutes()
+      const dateFormatStr = this.timeFormatMain.split(' ')[0]
+      const diffSec = (this.momentStrToTimestamp(this.timeRange[1]) - this.momentStrToTimestamp(this.timeRange[0]))
+      const secOneDay = 24 * 60 * 60 * 1000// 1天的毫秒数
+      let str = ''
+      if (dateFormatStr === 'DD/MM/YYYY') {
+        str += [day, month].join('/')
+      } else if (dateFormatStr === 'MM/DD/YYYY') {
+        str += [month, day].join('/')
+      } else {
+        str += [month, day].join('-')
+      }
+      if (diffSec <= secOneDay) { // 同一天
+        return [hour, minute].join(':')
+      } else { // 大于1天，小于30天
+        return str + '\n' + [hour, minute].join(':')
+      }
+    },
     tooltipFormatter (params, a, b) {
       const vm = this
       let str = `
            <div style="margin: 0px 0 0;line-height:1;">
             <div style="margin: 0px 0 0;line-height:1;">
-                <div style="font-size:14px;color:#666;font-weight:400;line-height:1;">${vm.utcTimeToTimezoneStr(vm.$unixTimeParseToString(vm.toMillisecondTime(parseInt(params[0].axisValue)) / 1000, 'yyyy-MM-dd hh:mm:ss'), 'hh:mm')}</div>
+                <div style="font-size:14px;color:#666;font-weight:400;line-height:1;">${vm.utcTimeToTimezoneStr(vm.toMillisecondTime(parseInt(params[0].axisValue)))}</div>
                 <div style="margin: 10px 0 0;line-height:1;">
                     <div style="margin: 0px 0 0;line-height:1;">`
       params.forEach(item => {
