@@ -180,7 +180,7 @@ export default {
           english: '[ENHANCEMENT] Optimize chart layout'
         }]
       }, {
-        timestamp: 'Release 21.07 - Jul 2022',
+        timestamp: 'Release 21.07 - Jul 2021',
         content: [{
           id: 30,
           chinese: '[FEATURE] 系统初始化配置功能，方便用户首次部署配置',
