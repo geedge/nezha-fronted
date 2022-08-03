@@ -930,6 +930,9 @@ export default {
       }
     }
   },
+  beforeDestroy () {
+    clearTimeout(this.timer)
+  },
   destroyed () {
     localStorage.removeItem('endpointProjectId')
   }

@@ -16,7 +16,7 @@ router.beforeEach((to, from, next) => {
     return
   }
   if (store.getters.getNowPath !== to.path && store.getters.getNowPath !== '/login') {
-    requestsArr.forEach(xhr => xhr.cancel())
+    requestsArr.forEach(xhr => xhr.cancel('cancel'))
   }
   store.commit('setNowPath', to.path)
   const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()

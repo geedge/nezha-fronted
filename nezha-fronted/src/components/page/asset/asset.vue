@@ -910,6 +910,9 @@ export default {
     this.getSnmpCredentialData()
     this.getFieldGroupData()
   },
+  beforeDestroy () {
+    clearTimeout(this.timer)
+  },
   watch: {
     $route: {
       immediate: true,

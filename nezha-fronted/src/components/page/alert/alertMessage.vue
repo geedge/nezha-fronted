@@ -1224,6 +1224,9 @@ export default {
       this.graphShow = show
     }
   },
+  beforeDestroy () {
+    clearTimeout(this.timer)
+  },
   destroyed () {
     localStorage.removeItem('alertMessageProjectId')
   }
