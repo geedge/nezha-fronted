@@ -122,8 +122,9 @@ export default {
           disabled: false
         }, {
           name: this.$t('overall.state'),
-          type: 'input',
-          label: 'state',
+          type: 'select',
+          label: 'ipamState',
+          readonly: true,
           disabled: false
         }]
       }

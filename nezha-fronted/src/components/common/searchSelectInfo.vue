@@ -72,6 +72,19 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: i18n.t('asset.down')
     }
   ],
+  ipamState: [
+    {
+      value: 1,
+      label: i18n.t('overall.ipam.available')
+    }, {
+      value: 2,
+      label: i18n.t('overall.ipam.transient')
+    }, {
+      value: 3,
+      label: i18n.t('overall.ipam.used')
+    }
+
+  ],
   pingStatus: [
     {
       value: '0',
