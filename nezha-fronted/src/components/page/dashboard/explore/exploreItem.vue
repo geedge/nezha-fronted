@@ -179,7 +179,7 @@
                 </div>
               </el-collapse-item>
               <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-                <log-tab ref="logDetail" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData" v-my-loading="chartLoading"></log-tab>
+                <log-tab ref="logDetail" :timeRange="filterTime" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData" v-my-loading="chartLoading"></log-tab>
               </el-collapse-item>
             </template>
           </el-collapse>
