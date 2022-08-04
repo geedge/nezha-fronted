@@ -27,6 +27,10 @@ export default {
     showAllData: {
       type: Boolean,
       default: false
+    },
+    dialogPadding: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
@@ -133,7 +137,7 @@ export default {
       }
       const tagKeysArr = Object.keys(data.metric)
       tagKeysArr.forEach(tagKey => {
-        if (tagKey !== '__name__') {
+        if (tagKey !== '__name__' && tagKey !== 'legend' && tagKey !== 'values' && tagKey !== '$value') {
           legend += `${tagKey}="${data.metric[tagKey]}",`
         }
       })
@@ -333,9 +337,7 @@ export default {
       deep: true,
       handler (n) {
         if (n) {
-          this.$nextTick(() => {
-            this.initChart && this.initChart(this.chartOption)
-          })
+          this.initChart && this.initChart(this.chartOption)
         }
       }
     }
