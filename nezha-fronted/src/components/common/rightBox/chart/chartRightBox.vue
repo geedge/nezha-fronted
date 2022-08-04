@@ -120,6 +120,8 @@
       :modal-append-to-body="false"
     >
       <panel-chart
+        v-if="prevChart"
+        style="height: 100%;width: 100%"
         :ref="'chart-fullscreen-previewShow'"
         :chart-info="prevChart"
         :from="from"
@@ -197,7 +199,7 @@ export default {
         name: ''
       },
       timeRange: [],
-      prevChart: {},
+      prevChart: '',
       filterPanel: '',
       groupArr: [],
       varTypeArr: [
@@ -497,19 +499,20 @@ export default {
       }
     },
     preview (show) {
-      this.previewShow = show
       if (show) {
-        this.$nextTick(() => {
+        this.prevChart = ''
+        setTimeout(()=>{
           const start = new Date().setHours(new Date().getHours() - 1)
           const end = new Date()
           this.timeRange = [bus.computeTimezoneTime(start), bus.computeTimezoneTime(end)]
-          setTimeout(() => {
-            this.prevChart = lodash.cloneDeep(this.editChart)
-            this.prevChart.loaded = true
-            this.prevChart.param.showHeader = true
-          })
-        })
+          this.prevChart = {
+            ...lodash.cloneDeep(this.editChart),
+            loaded: true
+          }
+          this.prevChart.param.showHeader = true
+        }, 200)
       }
+      this.previewShow = show
     }
   },
   created () {

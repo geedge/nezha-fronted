@@ -333,7 +333,9 @@ export default {
       deep: true,
       handler (n) {
         if (n) {
-          this.initChart && this.initChart(this.chartOption)
+          this.$nextTick(() => {
+            this.initChart && this.initChart(this.chartOption)
+          })
         }
       }
     }
