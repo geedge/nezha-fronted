@@ -804,7 +804,10 @@ export default {
             response.data.purchaseDate += ' 00:00:00'
             response.data.purchaseDate = new Date(response.data.purchaseDate)
           }
-          this.object = response.data
+          this.object = {
+            ...response.data,
+            brandAndModel: ''
+          }
           this.rightBox.show = true
         }
       })
