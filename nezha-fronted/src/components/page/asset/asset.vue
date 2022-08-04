@@ -450,7 +450,7 @@ export default {
     duplicate (row) {
       this.$get(`${this.url}/${row.id}`).then(response => {
         if (response.code === 200) {
-          this.object = { ...response.data, id: '', name: `${row.name}-copy` }
+          this.object = { ...response.data, id: '', name: `${row.name}-copy`, brandAndModel: '' }
           if (this.object.name.length > 64) {
             const length = this.object.name.length - 64
             this.object.name = row.name.substring(0, row.name.length - length) + '-copy'
