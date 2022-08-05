@@ -336,22 +336,37 @@
 </template>
 
 <script>
-import { Topology, registerNode } from '@/components/common/@topology/core/index.js'
+import { Topology } from '@topology/core'
 import { Store as le5leStore } from 'le5le-store'
+import {
+  flowPens
+} from '@topology/flow-diagram'
+import {
+  activityDiagram
+} from '@topology/activity-diagram'
+import {
+  classPens
+} from '@topology/class-diagram'
+import {
+  sequencePens,
+  sequencePensbyCtx
+} from '@topology/sequence-diagram'
+import { formPens } from '@topology/form-diagram'
 // import { Topology, registerNode } from '@topology/core'
 import imgDefault from '@/components/common/project/L5/services/img'
 import {
   Tools,
-  canvasRegister,
   imageTemp,
-  myShape,
-  myAnchors,
-  myIconRect,
-  myTextRect,
-  onChangeAnimate,
-  onChangeAnimateLine,
-  myCubec,
-  myCubeAnchors
+  rectangleImg,
+  rectangleImgAnchors
+  // myShape,
+  // myAnchors,
+  // myIconRect,
+  // myTextRect,
+  // onChangeAnimate,
+  // onChangeAnimateLine,
+  // myCubec,
+  // myCubeAnchors
 } from './L5/services/canvas.js'
 import { getTopology, setTopology, dealImg, topologyImg } from '../js/common'
 
@@ -368,8 +383,9 @@ import { getMetricTypeValue, dealLegendAlias } from '../js/tools'
 import bus from '../../../libs/bus'
 
 // 注册到画布
-registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
-registerNode('myCube', myCubec, myCubeAnchors, null, null)
+
+// registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
+// registerNode('myCube', myCubec, myCubeAnchors, null, null)
 
 const canvasOptions = {
   rotateCursor: '/img/rotate.cur',
@@ -639,7 +655,7 @@ export default {
     }
   },
   created () {
-    canvasRegister()
+    // canvasRegister()
   },
   mounted () {
     if (!this.fromOverView) { // 从overview来的 加载相应图片 优化首页加载速度
@@ -704,6 +720,11 @@ export default {
         if (!getTopology(this.topologyIndex)) {
           return
         }
+        le5leStore.set('file', this.data)
+        le5leStore.set('lineName', data.lineName)
+        le5leStore.set('fromArrow', data.fromArrow)
+        le5leStore.set('toArrow', data.toArrow)
+        getTopology(this.topologyIndex).open()
         getTopology(this.topologyIndex).open(data)
         getTopology(this.topologyIndex).lock(1)
         this.objChange = false
@@ -712,8 +733,8 @@ export default {
           x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
           y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
         }
-        this.oldScale = getTopology(this.topologyIndex).data.scale
-        getTopology(this.topologyIndex).data.pens.forEach(item => {
+        this.oldScale = getTopology(this.topologyIndex).data().scale
+        getTopology(this.topologyIndex).data().pens.forEach(item => {
           if (flag) {
             return
           }
@@ -726,9 +747,9 @@ export default {
         })
         getTopology(this.topologyIndex).resize()
         getTopology(this.topologyIndex).centerView()
-        this.penToolTipScale = getTopology(this.topologyIndex).data.scale
+        this.penToolTipScale = getTopology(this.topologyIndex).data().scale
         const timer = setTimeout(() => {
-          getTopology(this.topologyIndex) && getTopology(this.topologyIndex).data.pens.forEach(item => {
+          getTopology(this.topologyIndex) && getTopology(this.topologyIndex).data().pens.forEach(item => {
             if (item.animatePlay) {
               item.stopAnimate()
               const timer1 = setTimeout(() => {
@@ -743,7 +764,7 @@ export default {
         //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
         // }
         // getTopology(this.topologyIndex).fitView();
-        this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
+        this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data())
         this.getNodesArr()
         pensPromise = null
       })
@@ -786,7 +807,7 @@ export default {
         }
         data = this.$loadsh.cloneDeep(data)
         if (!getTopology(this.topologyIndex)) {
-          let canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
+          let canvas = new Topology('topology-canvas' + this.topologyIndexF)
           // canvas.open(data)
           setTopology(this.topologyIndex, canvas)
           canvas = null
@@ -794,12 +815,19 @@ export default {
           // getTopology(this.topologyIndex).open(data)
         }
         this.topologyLoading = false
-        if (!getTopology(this.topologyIndex).data.name) {
-          getTopology(this.topologyIndex).data.name = this.obj.name
+        if (!getTopology(this.topologyIndex).data().name) {
+          // getTopology(this.topologyIndex).data().name = this.obj.name
         }
-        getTopology(this.topologyIndex).data.projectId = this.obj.id
+        // getTopology(this.topologyIndex).data().projectId = this.obj.id
         // getTopology(this.topologyIndex).lock(1)
-
+        getTopology(this.topologyIndex).register(flowPens())
+        getTopology(this.topologyIndex).register(activityDiagram())
+        getTopology(this.topologyIndex).register(classPens())
+        getTopology(this.topologyIndex).register(sequencePens())
+        getTopology(this.topologyIndex).registerCanvasDraw(sequencePensbyCtx())
+        getTopology(this.topologyIndex).registerCanvasDraw(formPens())
+        getTopology(this.topologyIndex).registerCanvasDraw({ rectangleImg })
+        getTopology(this.topologyIndex).registerAnchors({ rectangleImg: rectangleImgAnchors })
         this.getModule()// 获取module
         resolve()
       })
@@ -895,7 +923,99 @@ export default {
                   item.data.state.alert = false
                 }
               })
+              data.pens = data.pens.map(item => {
+                if (item.type === 0) {
+                  item = {
+                    ...item,
+                    ...item.rect
+                  }
+                } else {
+                  // promiseArr.push({ type: 1 })
+                  console.log(item)
+                  item = {
+                    data: item.data,
+                    rect: item.rect,
+                    ...item.rect,
+                    id: item.id,
+                    tags: [
 
+                    ],
+                    name: 'line',
+                    type: 1,
+                    fromArrow: '',
+                    toArrow: 'triangleSolid',
+                    anchors: [
+                      {
+                        id: 'd3b9bb5',
+                        penId: 'fdde44f',
+                        x: 0,
+                        y: 1,
+                        prev: {
+                          penId: 'fdde44f',
+                          x: -0.28768449363179044,
+                          y: 1
+                        },
+                        next: {
+                          penId: 'fdde44f',
+                          x: 0.28768449363179044,
+                          y: 1
+                        }
+                      },
+                      {
+                        id: '5c7f698f',
+                        penId: 'fdde44f',
+                        connectTo: 'f10e596',
+                        x: 1,
+                        y: 0,
+                        prev: {
+                          penId: 'fdde44f',
+                          connectTo: 'f10e596',
+                          x: 0.7123155063682084,
+                          y: 0
+                        },
+                        next: {
+                          penId: 'fdde44f',
+                          connectTo: 'f10e596',
+                          x: 1.2876844936317902,
+                          y: 0
+                        }
+                      }
+                    ],
+                    color: '#000000',
+                    lineWidth: 2.4390243902439024,
+                    borderColor: '#000000',
+                    borderWidth: 0,
+                    rotate: 0,
+                    visible: true,
+                    background: '',
+                    lineHeight: 1.5,
+                    fontSize: 12,
+                    fontFamily: '"Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial',
+                    fontStyle: 'normal',
+                    fontWeight: 'normal',
+                    textColor: '#000000',
+                    textAlign: 'center',
+                    textBaseline: 'middle',
+                    textBackground: '#ffffff',
+                    animateSpan: 1,
+                    animateColor: '#ffffff',
+                    animateCycle: null,
+                    lineAnimateType: 1,
+                    animateDotSize: 3,
+                    animateType: 'beads',
+                    frames: [
+
+                    ],
+                    autoPlay: false,
+                    globalAlpha: 1,
+                    events: [
+
+                    ]
+                  }
+                }
+                return item
+              })
+              console.log(data.pens)
               if (!data.data) {
                 this.projectInfoShow = true
                 this.projectAlertShow = true
@@ -930,6 +1050,7 @@ export default {
                   }
                 })
                 this.saveData = JSON.parse(JSON.stringify(data))
+                console.log(JSON.stringify(data))
                 resolve(data)
                 clearInterval(this.timer4)
                 this.timer4 = null
@@ -976,7 +1097,7 @@ export default {
             pen.strokeStyle = selLevel.color.line
             pen.bkType = 0
           }
-          onChangeAnimate(pen, selLevel.animateType, selLevel.color.fill, selLevel.color.line)
+          // onChangeAnimate(pen, selLevel.animateType, selLevel.color.fill, selLevel.color.line)
         } else if (pen.type === 1) { // 判断valueMapping 给相应的状态
           const selLevel = pen.data.valueMapping.find(item => item.level === maxLevel)
           if (selLevel) {
@@ -985,13 +1106,13 @@ export default {
             pen.animateType = selLevel.animateType
             pen.fontColor = selLevel.color.text
           }
-          onChangeAnimateLine(pen, pen.animateType)
+          // onChangeAnimateLine(pen, pen.animateType)
         }
       } else {
         if (pen.type === 0 && pen.animatePlay) { // 判断valueMapping 给相应的状态
-          onChangeAnimate(pen, pen.animateType)
+          // onChangeAnimate(pen, pen.animateType)
         } else if (pen.type === 1 && pen.animatePlay) { // 判断valueMapping 给相应的状态
-          onChangeAnimateLine(pen, pen.animateType)
+          // onChangeAnimateLine(pen, pen.animateType)
         }
       }
     },
@@ -1081,9 +1202,9 @@ export default {
     getNodesArr () {
       if (!getTopology(this.topologyIndex)) return
       let arr = []
-      this.offsetX = getTopology(this.topologyIndex).data.x
-      this.offsetY = getTopology(this.topologyIndex).data.y
-      arr = getTopology(this.topologyIndex).data.pens.filter(item => {
+      this.offsetX = getTopology(this.topologyIndex).data().x
+      this.offsetY = getTopology(this.topologyIndex).data().y
+      arr = getTopology(this.topologyIndex).data().pens.filter(item => {
         if (!item.data) {
           item.data = {
             moduleId: '',
@@ -1114,8 +1235,8 @@ export default {
     // 摘除已选择的module
     modulesDiff (data) {
       this.modules = this.allModules
-      if (getTopology(this.topologyIndex) && getTopology(this.topologyIndex).data.pens) {
-        getTopology(this.topologyIndex).data.pens.forEach(item => {
+      if (getTopology(this.topologyIndex) && getTopology(this.topologyIndex).data().pens) {
+        getTopology(this.topologyIndex).data().pens.forEach(item => {
           if (item.type == 0) {
             this.modules = this.modules.filter(item1 => item.data.moduleId !== item1.id)
           }
@@ -1316,7 +1437,7 @@ export default {
           }
           this.chartData = { ...data.data, ...this.chartGetData.find(item => item.id === data.id) }
           this.tooltipPosition.show = false
-         const timer = setTimeout(() => {
+          const timer = setTimeout(() => {
             this.tooltipPosition.show = true
             let ePosition = window.ePosition
             let boxWidth = document.getElementsByClassName('page')[0].offsetWidth
@@ -1907,7 +2028,7 @@ export default {
       this.$store.commit('setShowTopoScreen', true)
       const timer = setTimeout(() => {
         getTopology(this.topologyIndex).lock(0)
-        getTopology(this.topologyIndex).data.pens.forEach((item, index) => { // 停止动画 以及赋值默认data
+        getTopology(this.topologyIndex).data().pens.forEach((item, index) => { // 停止动画 以及赋值默认data
           if (item.animatePlay) {
             item.stopAnimate()
           }
@@ -1947,7 +2068,7 @@ export default {
         })
         getTopology(this.topologyIndex).caches = {
           index: 0,
-          list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
+          list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data()))]
         }
         const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
         const domRect = dom ? dom.getBoundingClientRect() : {}
@@ -1973,7 +2094,7 @@ export default {
       // this.topologyData.data[key]=this.colorRGBtoHex(val);
       // getTopology(this.index).data[key]=val;
       // getTopology(this.index).render();
-      const dataOption = getTopology(this.topologyIndex).data
+      const dataOption = getTopology(this.topologyIndex).data()
       dataOption[key] = this.lineName
       getTopology(this.topologyIndex).render()
     },
@@ -2040,8 +2161,8 @@ export default {
             }
           })
         })
-        if (this.penToolTipScale == getTopology(this.topologyIndex).data.scale) {
-          getTopology(this.topologyIndex).data.scale = this.oldScale
+        if (this.penToolTipScale == getTopology(this.topologyIndex).data().scale) {
+          getTopology(this.topologyIndex).data().scale = this.oldScale
         }
         this.$put('monitor/project/topo', { topo: JSON.stringify(topologyData), projectId: this.projectInfo.id }).then(res => {
           this.prevent_opt.save = false
@@ -2125,8 +2246,8 @@ export default {
           }
         })
       })
-      if (this.penToolTipScale == getTopology(this.topologyIndex).data.scale) {
-        getTopology(this.topologyIndex).data.scale = this.oldScale
+      if (this.penToolTipScale == getTopology(this.topologyIndex).data().scale) {
+        getTopology(this.topologyIndex).data().scale = this.oldScale
       }
       this.$nextTick(() => {
         this.previewData = topologyData
@@ -2145,7 +2266,7 @@ export default {
 
     // 联动 project
     changeProjectTitle () {
-      const data = getTopology(this.topologyIndex).data
+      const data = getTopology(this.topologyIndex).data()
       this.topologyInfo = {
         fontSize: data.data.fontSize,
         align: data.data.align,
@@ -2169,7 +2290,7 @@ export default {
           x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
           y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
         }
-        getTopology(this.topologyIndex).data.pens.forEach(item => {
+        getTopology(this.topologyIndex).data().pens.forEach(item => {
           if (flag) {
             return
           }
@@ -2260,7 +2381,7 @@ export default {
       this.uploadPicShow = true
     },
     zoomMap (num) {
-      getTopology(this.topologyIndex).scaleTo(getTopology(this.topologyIndex).data.scale + num)
+      getTopology(this.topologyIndex).scaleTo(getTopology(this.topologyIndex).data().scale + num)
     },
     penToBottom () {
       getTopology(this.topologyIndex).bottom()

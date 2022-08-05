@@ -1096,7 +1096,7 @@
 </template>
 
 <script>
-import { alignNodes, spaceBetween, layout } from '@topology/layout'
+// import { alignNodes, spaceBetween, layout } from '@topology/layout'
 import { getTopology, resetZIndex } from '../../js/common'
 import chartDataFormat from '../../../chart/chartDataFormat'
 import promqlInput from '../../../page/dashboard/explore/promqlInput'
@@ -1559,15 +1559,15 @@ export default {
 
     // 组件事件
     onNodesAlign (align) { // 对齐node
-      alignNodes(getTopology(this.index).activeLayer.pens, getTopology(this.index).activeLayer.rect, align)
+      // alignNodes(getTopology(this.index).activeLayer.pens, getTopology(this.index).activeLayer.rect, align)
       getTopology(this.index).updateProps()
     },
     onSpaceBetween () {
-      spaceBetween(getTopology(this.index).activeLayer.pens, getTopology(this.index).activeLayer.rect.width)
+      // spaceBetween(getTopology(this.index).activeLayer.pens, getTopology(this.index).activeLayer.rect.width)
       getTopology(this.index).updateProps()
     },
     onLayout () { // 改变布局
-      layout(getTopology(this.index).activeLayer.pens, this.layout)
+      // layout(getTopology(this.index).activeLayer.pens, this.layout)
       getTopology(this.index).updateProps()
     },
     onClickDash (number) { // 改变线型

@@ -312,21 +312,20 @@
 </template>
 
 <script>
-import { Topology, registerNode } from '@/components/common/@topology/core/index.js'
+import { Topology } from '@/components/common/@topology/core/index.js'
 import { Store as le5leStore } from 'le5le-store'
 import imgDefault from '@/components/common/project/L5/services/img'
 import {
   Tools,
-  canvasRegister,
   imageTemp2,
-  myShape,
-  myAnchors,
-  myIconRect2,
-  myTextRect2,
-  onChangeAnimate,
-  onChangeAnimateLine,
-  myCubec,
-  myCubeAnchors
+  // myShape,
+  // myAnchors,
+  // myIconRect2,
+  // myTextRect2,
+  // onChangeAnimate,
+  // onChangeAnimateLine,
+  // myCubec,
+  // myCubeAnchors
 } from '../project/L5/services/canvas.js'
 import { getTopology, setTopology, dealImg, topologyImg } from '../js/common'
 import CanvasProps from '../project/L5/CanvasProps'
@@ -341,8 +340,10 @@ import { getMetricTypeValue, dealLegendAlias } from '../js/tools'
 import bus from '../../../libs/bus'
 import CanvasContextMenu from '@/components/common/project/L5/CanvasContextMenu'
 // 注册到画布
-registerNode('rectangleImg2', myShape, myAnchors, myIconRect2, myTextRect2)
-registerNode('myCube', myCubec, myCubeAnchors, null, null)
+// Topology.register({ triangle });
+// Topology.registerAnchors({ triangle: triangleAnchors });
+// registerNode('rectangleImg2', myShape, myAnchors, myIconRect2, myTextRect2)
+// registerNode('myCube', myCubec, myCubeAnchors, null, null)
 
 const canvasOptions = {
   rotateCursor: '/img/rotate.cur',
@@ -620,7 +621,6 @@ export default {
   computed: {
   },
   created () {
-    canvasRegister()
     if (process.client) {
       document.onclick = event => {
         this.contextmenu = {
@@ -950,7 +950,7 @@ export default {
             pen.strokeStyle = selLevel.color.line
             pen.bkType = 0
           }
-          onChangeAnimate(pen, selLevel.animateType, selLevel.color.fill, selLevel.color.line)
+          // onChangeAnimate(pen, selLevel.animateType, selLevel.color.fill, selLevel.color.line)
         } else if (pen.type === 1) { // 判断valueMapping 给相应的状态
           const selLevel = pen.data.valueMapping.find(item => item.level === maxLevel)
           if (selLevel) {
@@ -959,13 +959,13 @@ export default {
             pen.animateType = selLevel.animateType
             pen.fontColor = selLevel.color.text
           }
-          onChangeAnimateLine(pen, pen.animateType)
+          // onChangeAnimateLine(pen, pen.animateType)
         }
       } else {
         if (pen.type === 0 && pen.animatePlay) { // 判断valueMapping 给相应的状态
-          onChangeAnimate(pen, pen.animateType)
+          // onChangeAnimate(pen, pen.animateType)
         } else if (pen.type === 1 && pen.animatePlay) { // 判断valueMapping 给相应的状态
-          onChangeAnimateLine(pen, pen.animateType)
+          // onChangeAnimateLine(pen, pen.animateType)
         }
       }
     },

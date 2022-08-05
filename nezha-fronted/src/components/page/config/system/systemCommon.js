@@ -1,4 +1,3 @@
-import { file } from '@topology/core/src/middles/nodes/file'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export const tableCommon = {
