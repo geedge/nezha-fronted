@@ -12,22 +12,23 @@
         v-if="chartConfig.elements"
         class="metrics-input-box"
       >
-        <draggable v-model="chartConfig.elements"
-                   :move="move"
-                   @end="end"
-                   @start="start"
-                   :scroll-sensitivity="150"
-                   :options="{
-                 dragClass:'drag-chart-class',
-                 fallbackClass:'fallback-class',
-                 forceFallback:true,
-                 ghostClass:'chart-ghost',
-                 chosenClass:'choose-class',
-                 scroll:true,
-                 filter: '.drag-disabled',
-                 animation: 150,
-                 handle: '.chart-title-content'
-               }"  >
+        <draggable
+          v-model="chartConfig.elements"
+          :move="move"
+          @end="end"
+          @start="start"
+          :scroll-sensitivity="150"
+          :options="{
+            dragClass:'drag-chart-class',
+            fallbackClass:'fallback-class',
+            forceFallback:true,
+            ghostClass:'chart-ghost',
+            chosenClass:'choose-class',
+            scroll:true,
+            filter: '.drag-disabled',
+            animation: 150,
+            handle: '.drag-sort'
+          }">
         <el-row
           :key="index"
           class="element-item form-row-item thresholds-from-item"
@@ -54,19 +55,22 @@
             <span>
               <!-- 显示隐藏 -->
               <span v-if="expressionsShow[index-1].state === 1" @click="()=>{switchExpression(index - 1,1)}" :title="$t('overall.visible')" style="margin-right: 5px;padding-left: 10px">
-                  <i class="nz-icon nz-icon-mimakejian"></i>
+                <i class="nz-icon nz-icon-mimakejian"></i>
               </span>
               <span v-else @click="()=>{switchExpression(index - 1,0)}" :title="$t('overall.invisible')" style="margin-right: 5px;padding-left: 10px">
-                  <i class="nz-icon nz-icon-mimabukejian"></i>
+                <i class="nz-icon nz-icon-mimabukejian"></i>
               </span>
               <span @click="()=>{addExpression()}" style="margin-right: 5px" :title="$t('tip.add')">
-                  <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
+                <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
               </span>
               <span @click="copyExpression(index - 1)" style="margin-right: 5px" :title="$t('overall.duplicate')">
-                  <i  class="nz-icon nz-icon-override"></i>
+                <i class="nz-icon nz-icon-override"></i>
               </span>
               <span @click="removeExpression(index - 1)" class="nz-icon-minus-medium" style="margin-right: 5px" :title="$t('overall.delete')">
-                  <i  class="nz-icon nz-icon-minus"></i>
+                <i class="nz-icon nz-icon-minus"></i>
+              </span>
+              <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
+                <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
               </span>
             </span>
           </div>
@@ -150,15 +154,15 @@
           prop="unit"
         >
           <el-cascader id="chart-box-unit"
-                       v-model="chartConfig.unit"
-                       :options="unitOptions"
-                       :props="{ expandTrigger: 'hover',emitPath:false }"
-                       :show-all-levels="false" filterable
-                       placeholder=""
-                       popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
-                       size="small"
-                       style="width: 100%"
-                       @change="unitSelected"
+            v-model="chartConfig.unit"
+            :options="unitOptions"
+            :props="{ expandTrigger: 'hover',emitPath:false }"
+            :show-all-levels="false" filterable
+            placeholder=""
+            popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
+            size="small"
+            style="width: 100%"
+            @change="unitSelected"
           >
           </el-cascader>
         </el-form-item>
@@ -1005,6 +1009,8 @@ export default {
       if (!this.chartConfig.elements.length) {
         this.addExpression()
       } else {
+        // 根据orderNum排序
+        this.chartConfig.elements = this.chartConfig.elements.sort((a, b) => a.orderNum - b.orderNum)
         this.chartConfig.elements.forEach(item => {
           this.addExpression(item)
         })
@@ -1198,9 +1204,22 @@ export default {
       if (!this.chartConfig.elements.length) {
         this.addExpression()
       } else {
-        this.chartConfig.elements.forEach(item => {
+        const expressionsShow = this.$loadsh.cloneDeep(this.expressionsShow)
+        this.chartConfig.elements.forEach((item, index) => {
           this.expressions.push(item.expression)
           this.expressionName.push(item.name)
+          // 更新promqlInput视图
+          this.$nextTick(() => {
+            this.$refs[`promql-${index}`][0].promqlInputChange(item)
+          })
+          // 设置orderNum排序
+          item.orderNum = index
+          // expressionsShow调整顺序
+          expressionsShow.forEach((subItem) => {
+            if (item.name == subItem.oldName) {
+              this.$set(this.expressionsShow, index, this.$loadsh.cloneDeep(subItem))
+            }
+          })
         })
       }
       this.change()

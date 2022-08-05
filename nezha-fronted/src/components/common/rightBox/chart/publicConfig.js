@@ -370,7 +370,15 @@ export default {
       if (this.expressions.length) {
         this.chartConfig.elements = []
         this.expressions.forEach((expr, i) => {
-          this.chartConfig.elements.push({ id: this.expressionsShow[i].elementId, expression: expr, type: 'expert', legend: this.expressionsShow[i].legend, name: this.expressionName[i], state: this.expressionsShow[i].state })
+          this.chartConfig.elements.push({
+            id: this.expressionsShow[i].elementId,
+            expression: expr,
+            type: 'expert',
+            legend: this.expressionsShow[i].legend,
+            name: this.expressionName[i],
+            state: this.expressionsShow[i].state,
+            orderNum: i
+          })
         })
       } else {
         this.chartConfig.elements = []
@@ -421,6 +429,16 @@ export default {
       letter += self.letter[num % 26]
       return letter
     },
+    getExpressionName () {
+      let name = ''
+      for (let i = 0; i <= this.expressionName.length; i++) {
+        name = this.transformNumToLetter(i)
+        if (this.expressionName.indexOf(name) === -1) { // 判断当前id是否存在 必须走了break 返回的id才是对的
+          break
+        }
+      }
+      return name
+    },
     addExpression (item) {
       if (!item) {
         this.expressions.push('')
@@ -452,16 +470,29 @@ export default {
         )
       }
     },
-
-    getExpressionName () {
-      let name = ''
-      for (let i = 0; i <= this.expressionName.length; i++) {
-        name = this.transformNumToLetter(i)
-        if (this.expressionName.indexOf(name) === -1) { // 判断当前id是否存在 必须走了break 返回的id才是对的
-          break
+    copyExpression (index) {
+      this.expressions.push(this.expressions[index])
+      const expressionName = this.getExpressionName()
+      this.expressionName.push(expressionName)
+      this.expressionsShow.push(
+        {
+          ...this.expressionsShow[index],
+          show: true,
+          hideInput: true,
+          oldName: expressionName,
+          error: '',
+          elementId: ''
         }
-      }
-      return name
+      )
+      this.$nextTick(() => {
+        this.expressions.forEach((ex, index) => {
+          if (ex) {
+            this.$refs[`promql-${index}`][0].metricChange(ex)
+            this.$refs[`promql-${index}`][0].promqlInputChange(ex)
+          }
+        })
+      })
+      this.expressionChange()
     },
     removeExpression (index) {
       if (this.expressionsShow.length > 1) {
@@ -472,36 +503,12 @@ export default {
           this.expressions.forEach((ex, index) => {
             if (ex) {
               this.$refs[`promql-${index}`][0].metricChange(ex)
-              this.$refs[`promql-${index}`][0].promqlInputCahnge(ex)
+              this.$refs[`promql-${index}`][0].promqlInputChange(ex)
             }
           })
         })
         this.expressionChange()
       }
-    },
-    copyExpression (index) {
-      this.expressions.push(this.expressions[index])
-      const expressionName = this.getExpressionName()
-      this.expressionName.push(expressionName)
-      this.expressionsShow.push(
-        {
-          ...this.expressionsShow[index],
-          show: true,
-          hideInput: true,
-          oldName: this.expressionName[index],
-          error: '',
-          elementId: ''
-        }
-      )
-      this.$nextTick(() => {
-        this.expressions.forEach((ex, index) => {
-          if (ex) {
-            this.$refs[`promql-${index}`][0].metricChange(ex)
-            this.$refs[`promql-${index}`][0].promqlInputCahnge(ex)
-          }
-        })
-      })
-      this.expressionChange()
     },
     showExpression (index) {
       this.expressionsShow[index - 1].show = !this.expressionsShow[index - 1].show
