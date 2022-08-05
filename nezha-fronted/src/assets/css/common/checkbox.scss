@@ -7,14 +7,17 @@
 .el-checkbox__input.is-checked .el-checkbox__inner {
   background-color: $--color-primary !important;
 }
-.el-checkbox__input.is-checked.is-disabled .el-checkbox__inner{
-  background-color: $--background-color-empty !important;
-  border-color: $--border-color-base !important;
+.el-table .el-table__header-wrapper{
+  .el-checkbox__input.is-checked.is-disabled .el-checkbox__inner{
+    background-color: $--background-color-empty !important;
+    border-color: $--border-color-base !important;
+  }
+  .el-checkbox__input.is-disabled .el-checkbox__inner{
+    background-color: $--background-color-empty !important;
+    border-color: $--border-color-base !important;
+  }
 }
-.el-checkbox__input.is-disabled .el-checkbox__inner{
-  background-color: $--background-color-empty !important;
-  border-color: $--border-color-base !important;
-}
+
 .el-checkbox__input.is-checked.is-disabled .el-checkbox__inner:hover{
   border-color: $--border-color-base !important;
 }
