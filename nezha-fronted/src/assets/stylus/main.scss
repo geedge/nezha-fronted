@@ -1222,6 +1222,45 @@ li {
 .result-title{
   font-weight: bold;
 }
+.import-upload{
+  width: 96%;
+  margin: 0 auto;
+  .el-upload,.el-upload-dragger{
+    width: 100%;
+  }
+  .el-upload-list__item{
+    line-height: 2.4;
+    margin-top: 8px;
+    text-align: left;
+    .el-icon-close{
+      top: 0;
+      bottom: 0;
+      line-height: 2.4;
+    }
+  }
+}
+.import-select{
+  width: 96%;
+  margin: 10px auto;
+  .exists{
+    display: flex;
+    align-items: center;
+    padding-bottom: 4px;
+    &>span{
+      margin-right: 12px;
+    }
+  }
+  .import-select-list{
+    .import-select-item{
+      margin-top: 6px;
+    }
+  }
+}
+.exists-select{
+  z-index: 2100 !important;
+}
+
+
 /**dialog 在视图中居中显示start*/
 .el-dialog{
   display: flex;

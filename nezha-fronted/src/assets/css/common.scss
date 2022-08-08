@@ -312,7 +312,7 @@ td .nz-icon-gear:before {
     .el-button:hover {
       border: 1px solid $--color-primary;
     }
-    .el-button:nth-of-type(3) {
+    .el-button:nth-child(3) {
       margin-left: 10px;
     }
     .nz-btn.nz-btn-size-normal {
@@ -322,6 +322,14 @@ td .nz-icon-gear:before {
     }
     .nz-btn.nz-btn-size-normal:hover {
       background-color: #fe9f37;
+    }
+    .nz-btn.nz-btn-style-error {
+      background: $--color-danger;
+      color: $--button-primary-color;
+      border: 1px solid $--color-danger;
+    }
+    .nz-btn.nz-btn-style-error:hover {
+      background-color: #F38b73;
     }
   }
 }
