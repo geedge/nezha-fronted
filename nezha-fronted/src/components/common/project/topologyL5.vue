@@ -382,7 +382,7 @@ import endpointTable from './popData/endpointTable'
 import topoTooltip from './L5/topoTooltip'
 import { getMetricTypeValue, dealLegendAlias } from '../js/tools'
 import bus from '../../../libs/bus'
-
+import topologyMixin from '@/components/common/project/topologyMixin'
 // 注册到画布
 
 // registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
@@ -395,10 +395,12 @@ const canvasOptions = {
   autoExpandDistance: 0,
   minScale: 0.2,
   scaleKey: -1,
-  keydown: 1
+  keydown: 1,
+  autoPolyline: true
 }
 export default {
   name: 'topologyL5',
+  mixins: [topologyMixin],
   data () {
     const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
     return {
@@ -726,9 +728,9 @@ export default {
         le5leStore.set('fromArrow', data.fromArrow)
         le5leStore.set('toArrow', data.toArrow)
         getTopology(this.topologyIndex).open(data)
-        // getTopology(this.topologyIndex).lock(1)
+        getTopology(this.topologyIndex).lock(1)
         this.objChange = false
-        const flag = false
+        let flag = false
         const position = {
           x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
           y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
@@ -736,17 +738,19 @@ export default {
         this.oldScale = getTopology(this.topologyIndex).data().scale
         getTopology(this.topologyIndex).data().pens.forEach(item => {
           if (flag) {
-
+            return
           }
-          // if (item.ex > position.x || item.ey > position.y) {
-          //   if (this.fromOverView) {
-          //     getTopology(this.topologyIndex).fitView(20)
-          //   }
-          //   flag = true
-          // }
+          if (item.x + item.width > position.x || item.y + item.height > position.y) {
+            if (this.fromOverView) {
+              getTopology(this.topologyIndex).fitView(20)
+            }
+            flag = true
+          }
         })
+        if (!flag) {
+          getTopology(this.topologyIndex).centerView()
+        }
         getTopology(this.topologyIndex).resize()
-        getTopology(this.topologyIndex).centerView()
         this.penToolTipScale = getTopology(this.topologyIndex).data().scale
         const timer = setTimeout(() => {
           getTopology(this.topologyIndex) && getTopology(this.topologyIndex).data().pens.forEach(item => {
@@ -760,10 +764,6 @@ export default {
           })
           clearTimeout(timer)
         }, 100)
-        // if(this.fromPrev){
-        //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
-        // }
-        // getTopology(this.topologyIndex).fitView();
         this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data())
         this.getNodesArr()
         pensPromise = null
@@ -828,6 +828,12 @@ export default {
         getTopology(this.topologyIndex).registerCanvasDraw(formPens())
         getTopology(this.topologyIndex).registerCanvasDraw({ rectangleImg: rectangleImg })
         getTopology(this.topologyIndex).registerAnchors({ rectangleImg: rectangleImgAnchors })
+        getTopology(this.topologyIndex).on('translate', this.topTranslate) // 平移·
+        getTopology(this.topologyIndex).on('active', this.pensActive) // 选中·
+        getTopology(this.topologyIndex).on('scale', () => {}) // 缩放·
+        getTopology(this.topologyIndex).on('translatePens', () => {}) // 移动画笔结束·
+        getTopology(this.topologyIndex).on('translatingPens', () => {}) // 移动画笔进行中·
+        getTopology(this.topologyIndex).on('add', () => {}) // 添加新画笔·
         this.getModule()// 获取module
         resolve()
       })
@@ -1646,7 +1652,7 @@ export default {
     onUpdateProps (node) {
       // 如果是node属性改变，需要传入node，重新计算node相关属性值
       // 如果是line属性改变，无需传参
-      getTopology(this.topologyIndex).updateProps(true, [node])
+      getTopology(this.topologyIndex).setValue(node)
     },
 
     handleAvatarSuccess () {

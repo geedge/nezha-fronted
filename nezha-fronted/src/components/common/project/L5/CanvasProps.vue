@@ -292,7 +292,7 @@
                     size="small"
                     name="x"
                     class="input"
-                    v-model.number="selection.pen.rect.x"
+                    v-model.number="selection.pen.x"
                     :readonly="readonly"
                     required
                     @change="onChange()"
@@ -313,7 +313,7 @@
                     size="small"
                     name="x"
                     class="input"
-                    v-model.number="selection.pen.rect.y"
+                    v-model.number="selection.pen.y"
                     :readonly="readonly"
                     required
                     @change="onChange()">
@@ -333,7 +333,7 @@
                     size="small"
                     name="x"
                     class="input"
-                    v-model.number="selection.pen.rect.width"
+                    v-model.number="selection.pen.width"
                     :readonly="readonly"
                     required
                     @change="onChange()"
@@ -354,7 +354,7 @@
                     size="small"
                     name="x"
                     class="input"
-                    v-model.number="selection.pen.rect.height"
+                    v-model.number="selection.pen.height"
                     :readonly="readonly"
                     required
                     @change="onChange()"
