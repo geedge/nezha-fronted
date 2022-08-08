@@ -97,7 +97,7 @@ export default {
   mixins: [dataListMixin, routerPathParams],
   data () {
     return {
-      url: 'alert/silence',
+      url: 'record/rule',
       tableId: 'recordRuleTable',
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [
@@ -116,7 +116,7 @@ export default {
         type: '',
         expr: '',
         inr: '',
-        labels: [],
+        labels: [{ label: '', value: '' }],
         remark: '',
         state: ''
       }
@@ -125,6 +125,23 @@ export default {
   mounted () {
   },
   methods: {
+    edit (u) {
+      this.$get(`${this.url}/${u.id}`).then(response => {
+        if (response.code === 200) {
+          this.object = response.data
+          this.object.labels = this.labelsSort(response.data.labels)
+          this.rightBox.show = true
+        }
+      })
+    },
+    labelsSort (obj) {
+      const labels = this.$lodash.cloneDeep(obj)
+      const result = []
+      for (const key in labels) {
+        result.push({ label: key, value: labels[key] })
+      }
+      return result
+    }
   },
   created () {
   }
