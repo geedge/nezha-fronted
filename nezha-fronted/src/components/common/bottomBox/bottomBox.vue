@@ -62,6 +62,8 @@
         <scrape-endpoint v-if="from === fromRoute.agent && targetTab === 'agent'" :from="from" :obj="obj" :tabs="tabs.agent" @changeTab="changeTab" :targetTab.sync="targetTab"></scrape-endpoint>
         <!-- ipam -->
         <ip-details v-if="from === fromRoute.ipam && targetTab === 'ipam'" :from="from" :obj="obj" :tabs="tabs.ipam" @changeTab="changeTab" :targetTab.sync="targetTab"></ip-details>
+        <!-- recordRule  下滑-->
+        <record-rule-eval-log v-if="from === fromRoute.recordRule && targetTab === 'recordRule'" :from="from" :obj="obj" :tabs="tabs.recordRule" @changeTab="changeTab" :targetTab.sync="targetTab"></record-rule-eval-log>
         <!--alertRule Tab-->
         <alertMessageTabNew v-if="from === fromRoute.alertSilence && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
       </div>
@@ -89,6 +91,7 @@ import { fromRoute } from '@/components/common/js/constants'
 import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
 import scrapeEndpoint from '@/components/common/bottomBox/tabs/scrapeEndpoint'
 import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
+import recordRuleEvalLog from '@/components/common/bottomBox/tabs/recordRuleEvalLog'
 
 export default {
   name: 'bottomBox',
@@ -110,7 +113,8 @@ export default {
     assetTab,
     assetSubTab,
     alertRuleEvalLog,
-    IpDetails
+    IpDetails,
+    recordRuleEvalLog
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -119,7 +123,7 @@ export default {
     from: String, // 来自哪个页面
     tabList: Array, // 动态页签列表
     targetTab: String, // 展示哪个页签
-    sign:[Number,String], //pickTime历史记录的唯一标识
+    sign: [Number, String] // pickTime历史记录的唯一标识
   },
   watch: {
     obj: {
@@ -256,6 +260,9 @@ export default {
         ],
         ipam: [
           { prop: 'ipam', name: this.$t('ipam.subnet.ipDetails'), active: true }
+        ],
+        recordRule: [
+          { prop: 'recordRule', name: this.$t('overall.alertRuleEvalLog'), active: true }
         ],
         alertSilence: [
           { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }

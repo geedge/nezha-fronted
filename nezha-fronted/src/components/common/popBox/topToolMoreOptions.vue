@@ -335,6 +335,8 @@ export default {
         url = '/ipam/subnet/template'
       } else if (this.importUrl.indexOf('ipam/ip') > -1) {
         url = '/ipam/ip/template'
+      } else if (this.importUrl.indexOf('record/rule') > -1) {
+        url = '/record/rule/template'
       }
       if (!url) {
         console.error('no interface support')
