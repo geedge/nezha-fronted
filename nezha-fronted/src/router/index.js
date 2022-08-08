@@ -65,6 +65,10 @@ export default new Router({
           component: resolve => require(['@/components/page/config/agent'], resolve)
         },
         {
+          path: '/recordRule',
+          component: resolve => require(['@/components/page/config/recordRule'], resolve)
+        },
+        {
           path: '/assetType',
           component: resolve => require(['@/components/page/config/assetType'], resolve)
         },
