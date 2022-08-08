@@ -240,8 +240,20 @@ export function rectangleImg (ctx, pen) {
   }
   // 必须判空再填充
   (pen.fillStyle || pen.bkType) && ctx.fill()
-  pen.iconHeight = pen.height - 30
-  console.log(pen)
+  console.log(pen, pen.calculative.worldIconRect)
+  pen.calculative.worldIconRect = {
+    height: pen.height - 10 - 20,
+    rotate: 0,
+    width: pen.width - 10,
+    x: pen.x + 5,
+    y: pen.y + 5
+  }
+  pen.calculative.worldTextRect = {
+    height: 20,
+    width: pen.width - 10,
+    x: pen.x + 5,
+    y: pen.y + pen.height - 5 - 20
+  }
   // pen.iconRect = new Rect(pen.x + pen.paddingLeft, pen.y + pen.paddingTop, pen.width - (pen.paddingLeft + pen.paddingRight), pen.height - 20 - (pen.paddingTop + pen.paddingBottom))
   // pen.fullIconRect = { width: 80, height: 90, center: { x: 972, y: 456 }, ex: 1012, ey: 496 }
   ctx.stroke()
@@ -253,7 +265,7 @@ export function rectangleImgAnchors (pen) {
     id: '0',
     penId: pen.id,
     x: pen.x,
-    y: pen.y + pen.height / 4
+    y: pen.y + pen.height / 2
   })
   anchors.push({
     id: '1',
@@ -272,6 +284,12 @@ export function rectangleImgAnchors (pen) {
     penId: pen.id,
     x: pen.x + pen.width / 2,
     y: pen.y + pen.height
+  })
+  anchors.push({
+    id: '4',
+    penId: pen.id,
+    x: pen.x,
+    y: pen.y + pen.height / 8
   })
   return anchors
   // pen.anchors.push(new Point(pen.x, pen.y + pen.height / 2, Direction.Left))
@@ -369,34 +387,9 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
       connectedLines: pen.connectedLines || [],
       image: pen.image
     }
-    console.log(pen.connectedLines)
   } else {
-    const anchors = [s16(), s16()]
     const width = pen.from.x - pen.to.x
     const height = pen.from.y - pen.to.y
-    // if (pen.from) {
-    //   console.log('from')
-    //   const find = allPen.find(item => item.id == pen.from.id)
-    //   if (!find.connectedLines) {
-    //     find.connectedLines = []
-    //   }
-    //   find.connectedLines.push({
-    //     anchor: pen.from.anchorIndex,
-    //     lineAnchor: pen.id + '-0',
-    //     lineId: pen.id
-    //   })
-    // }
-    // if (pen.to) {
-    //   const find = allPen.find(item => item.id == pen.to.id)
-    //   if (!find.connectedLines) {
-    //     find.connectedLines = []
-    //   }
-    //   find.connectedLines.push({
-    //     anchor: pen.to.anchorIndex,
-    //     lineAnchor: pen.id + '-1',
-    //     lineId: pen.id
-    //   })
-    // }
     obj = {
       id: pen.id,
       tags: [

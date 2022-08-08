@@ -1424,7 +1424,7 @@ export default {
     // 'topologyData.data':{
     //   handler(n){
     //     setTimeout(()=>{
-    //       let dataOption=getTopology(this.index).data;
+    //       let dataOption=getTopology(this.index).data();
     //       Object.keys(this.topologyData.data).forEach((key)=>{
     //         dataOption[key]=this.topologyData.data[key];
     //       });
@@ -1472,7 +1472,7 @@ export default {
     }
   },
   created () {
-    const dataOption = this.index == -2 ? getTopology(-1).data : getTopology(this.index).data
+    const dataOption = this.index == -2 ? getTopology(-1).data : getTopology(this.index).data()
     if (!dataOption.data) {
       dataOption.data = {}
     }
@@ -1686,7 +1686,7 @@ export default {
     },
     changeTopologyOpt (val, key, isColor) {
       //
-      // getTopology(this.index).data[key]=val;
+      // getTopology(this.index).data()[key]=val;
       // getTopology(this.index).render();
       if (isColor) {
         this.topologyData.data[key] = this.colorRGBtoHex(val)
@@ -1695,9 +1695,9 @@ export default {
       }
       Object.keys(this.topologyData.data).forEach((key1) => {
         if (key1 === 'projectInfo' || key1 === 'alertInfo' || key1 === 'fontSize' || key1 === 'align' || key1 === 'fontColor' || key1 === 'opacity') {
-          getTopology(this.index).data.data[key1] = this.topologyData.data[key1]
+          getTopology(this.index).data().data[key1] = this.topologyData.data[key1]
         } else {
-          getTopology(this.index).data[key1] = this.topologyData.data[key1]
+          getTopology(this.index).data()[key1] = this.topologyData.data[key1]
         }
       })
       getTopology(this.index).render()

@@ -728,7 +728,7 @@ export default {
         getTopology(this.topologyIndex).open(data)
         // getTopology(this.topologyIndex).lock(1)
         this.objChange = false
-        let flag = false
+        const flag = false
         const position = {
           x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
           y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
@@ -736,7 +736,7 @@ export default {
         this.oldScale = getTopology(this.topologyIndex).data().scale
         getTopology(this.topologyIndex).data().pens.forEach(item => {
           if (flag) {
-            return
+
           }
           // if (item.ex > position.x || item.ey > position.y) {
           //   if (this.fromOverView) {
@@ -826,7 +826,7 @@ export default {
         getTopology(this.topologyIndex).register(sequencePens())
         getTopology(this.topologyIndex).registerCanvasDraw(sequencePensbyCtx())
         getTopology(this.topologyIndex).registerCanvasDraw(formPens())
-        getTopology(this.topologyIndex).registerCanvasDraw({ rectangleImg })
+        getTopology(this.topologyIndex).registerCanvasDraw({ rectangleImg: rectangleImg })
         getTopology(this.topologyIndex).registerAnchors({ rectangleImg: rectangleImgAnchors })
         this.getModule()// 获取module
         resolve()
@@ -840,7 +840,7 @@ export default {
         }
         this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
           console.log(JSON.stringify(res.data.topo))
-          
+          res.data.topo.oldData = 1
           if (!res.data) {
             return
           }
@@ -1152,6 +1152,7 @@ export default {
       let arr = []
       this.offsetX = getTopology(this.topologyIndex).data().x
       this.offsetY = getTopology(this.topologyIndex).data().y
+      console.log(this.offsetX, this.offsetY)
       arr = getTopology(this.topologyIndex).data().pens.filter(item => {
         if (!item.data) {
           item.data = {
@@ -1169,8 +1170,8 @@ export default {
       // 打开动画 是否更新顶部图标
       this.nodesArr = arr.map(item => {
         return {
-          x:item.x,
-          y:item.y,
+          x: item.x,
+          y: item.y,
           width: item.width,
           data: item.data
         }
@@ -1250,17 +1251,16 @@ export default {
         this.dragFlag = true
         clearTimeout(timer)
       }, 100)
-      event.dataTransfer.setData('Text', JSON.stringify({ ...node.data, data: { imageId: node.data.imageId } }))
+      console.log(node)
+      event.dataTransfer.setData('Text', JSON.stringify({ ...node.data, ...node.data.rect, data: { imageId: node.data.imageId } }))
     },
     dragFlagChange (node) {
-      getTopology(this.topologyIndex).addNode(
+      getTopology(this.topologyIndex).addPen(
         {
           ...node.data,
-          rect: {
-            ...node.data.rect,
-            x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth / 2 - 50,
-            y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight / 2 - 50
-          },
+          ...node.data.rect,
+          x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth / 2 - 50,
+          y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight / 2 - 50,
           data: { imageId: node.data.imageId }
         })
       const timer = setTimeout(() => {
