@@ -176,8 +176,8 @@
             <!--所有节点上的小图标-->
             <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&!fromPrev"
                  :key="index"
-                 v-show="(item.rect.y + offsetY  - (48*(fromOverView?penToolTipScale:1)) > -10) && (item.rect.center.x + offsetX - (24*(fromOverView?penToolTipScale:1)) > - 10)"
-                 :style="{position: 'absolute',top:item.rect.y + offsetY  - (48*(fromOverView?penToolTipScale:1))+'px',left:item.rect.center.x + offsetX - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
+                 v-show="(item.y + offsetY  - (48*(fromOverView?penToolTipScale:1)) > -10) && (item.x + item.width/2 + offsetX - (24*(fromOverView?penToolTipScale:1)) > - 10)"
+                 :style="{position: 'absolute',top:item.y + offsetY  - (48*(fromOverView?penToolTipScale:1))+'px',left:item.x + item.width/2 + offsetX - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
                  class="network-pop"
             >
 
@@ -209,15 +209,15 @@
                  :key="index"
                  :style="{
              position: 'absolute',
-             top:item.rect.y + offsetY - 10 +'px',
-             left:item.rect.x + offsetX - 10+'px',
+             top:item.y + offsetY - 10 +'px',
+             left:item.x + offsetX - 10+'px',
              transform:'scale('+(fromOverView?penToolTipScale:1)+')',
            }"
             >
-              <div :style="{top:0,left:0,width:item.rect.width+15+'px',height:0}" class="module-rect-top"></div>
-              <div :style="{top:0,left:item.rect.width+15+'px',width:0,height:item.rect.height+15+'px'}" class="module-rect-right"></div>
-              <div :style="{top:item.rect.height+15 +'px',left:0,width:item.rect.width+15+'px',height:0}" class="module-rect-bottom"></div>
-              <div :style="{top:0,left:0,width:0,height:item.rect.height+15+'px'}" class="module-rect-left"></div>
+              <div :style="{top:0,left:0,width:item.width+15+'px',height:0}" class="module-rect-top"></div>
+              <div :style="{top:0,left:item.width+15+'px',width:0,height:item.height+15+'px'}" class="module-rect-right"></div>
+              <div :style="{top:item.height+15 +'px',left:0,width:item.width+15+'px',height:0}" class="module-rect-bottom"></div>
+              <div :style="{top:0,left:0,width:0,height:item.height+15+'px'}" class="module-rect-left"></div>
             </div>
             <!--节点连线相关的 tooltip-->
             <div v-if="tooltipPosition.show&&!editTopologyFlag"
@@ -358,7 +358,8 @@ import {
   Tools,
   imageTemp,
   rectangleImg,
-  rectangleImgAnchors
+  rectangleImgAnchors,
+  disposeTopoOldData
   // myShape,
   // myAnchors,
   // myIconRect,
@@ -724,9 +725,8 @@ export default {
         le5leStore.set('lineName', data.lineName)
         le5leStore.set('fromArrow', data.fromArrow)
         le5leStore.set('toArrow', data.toArrow)
-        getTopology(this.topologyIndex).open()
         getTopology(this.topologyIndex).open(data)
-        getTopology(this.topologyIndex).lock(1)
+        // getTopology(this.topologyIndex).lock(1)
         this.objChange = false
         let flag = false
         const position = {
@@ -738,12 +738,12 @@ export default {
           if (flag) {
             return
           }
-          if (item.rect.ex > position.x || item.rect.ey > position.y) {
-            if (this.fromOverView) {
-              getTopology(this.topologyIndex).fitView(20)
-            }
-            flag = true
-          }
+          // if (item.ex > position.x || item.ey > position.y) {
+          //   if (this.fromOverView) {
+          //     getTopology(this.topologyIndex).fitView(20)
+          //   }
+          //   flag = true
+          // }
         })
         getTopology(this.topologyIndex).resize()
         getTopology(this.topologyIndex).centerView()
@@ -839,6 +839,8 @@ export default {
           resolve(this.topoPrevDataS)
         }
         this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
+          console.log(JSON.stringify(res.data.topo))
+          
           if (!res.data) {
             return
           }
@@ -923,98 +925,44 @@ export default {
                   item.data.state.alert = false
                 }
               })
-              data.pens = data.pens.map(item => {
-                if (item.type === 0) {
-                  item = {
-                    ...item,
-                    ...item.rect
-                  }
-                } else {
-                  // promiseArr.push({ type: 1 })
-                  console.log(item)
-                  item = {
-                    data: item.data,
-                    rect: item.rect,
-                    ...item.rect,
-                    id: item.id,
-                    tags: [
-
-                    ],
-                    name: 'line',
-                    type: 1,
-                    fromArrow: '',
-                    toArrow: 'triangleSolid',
-                    anchors: [
-                      {
-                        id: 'd3b9bb5',
-                        penId: 'fdde44f',
-                        x: 0,
-                        y: 1,
-                        prev: {
-                          penId: 'fdde44f',
-                          x: -0.28768449363179044,
-                          y: 1
-                        },
-                        next: {
-                          penId: 'fdde44f',
-                          x: 0.28768449363179044,
-                          y: 1
-                        }
-                      },
-                      {
-                        id: '5c7f698f',
-                        penId: 'fdde44f',
-                        connectTo: 'f10e596',
-                        x: 1,
-                        y: 0,
-                        prev: {
-                          penId: 'fdde44f',
-                          connectTo: 'f10e596',
-                          x: 0.7123155063682084,
-                          y: 0
-                        },
-                        next: {
-                          penId: 'fdde44f',
-                          connectTo: 'f10e596',
-                          x: 1.2876844936317902,
-                          y: 0
-                        }
+              if (res.data.topo.oldData == 1) {
+                data.pens = this.$loadsh.orderBy(data.pens, 'type', 'desc') // 先处理线 再处理点 因为新版本 将连线开始结束放在的 点上控制
+                console.log(data.pens[0])
+                data.pens = data.pens.map(item => {
+                  if (item.type === 0) {
+                    item = disposeTopoOldData(item, data.pens)
+                  } else {
+                    // promiseArr.push({ type: 1 })
+                    if (item.from) {
+                      console.log('from')
+                      const find = data.pens.find(item1 => item1.id == item.from.id)
+                      if (!find.connectedLines) {
+                        find.connectedLines = []
                       }
-                    ],
-                    color: '#000000',
-                    lineWidth: 2.4390243902439024,
-                    borderColor: '#000000',
-                    borderWidth: 0,
-                    rotate: 0,
-                    visible: true,
-                    background: '',
-                    lineHeight: 1.5,
-                    fontSize: 12,
-                    fontFamily: '"Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial',
-                    fontStyle: 'normal',
-                    fontWeight: 'normal',
-                    textColor: '#000000',
-                    textAlign: 'center',
-                    textBaseline: 'middle',
-                    textBackground: '#ffffff',
-                    animateSpan: 1,
-                    animateColor: '#ffffff',
-                    animateCycle: null,
-                    lineAnimateType: 1,
-                    animateDotSize: 3,
-                    animateType: 'beads',
-                    frames: [
-
-                    ],
-                    autoPlay: false,
-                    globalAlpha: 1,
-                    events: [
-
-                    ]
+                      find.connectedLines.push({
+                        anchor: item.from.anchorIndex + '',
+                        lineAnchor: item.id + '-0',
+                        lineId: item.id
+                      })
+                    }
+                    if (item.to) {
+                      console.log('from')
+                      const find = data.pens.find(item1 => item1.id == item.to.id)
+                      if (!find.connectedLines) {
+                        find.connectedLines = []
+                      }
+                      find.connectedLines.push({
+                        anchor: item.to.anchorIndex + '',
+                        lineAnchor: item.id + '-1',
+                        lineId: item.id
+                      })
+                    }
+                    item = disposeTopoOldData(item, data.pens)
                   }
-                }
-                return item
-              })
+                  return item
+                })
+                data.pens = this.$loadsh.orderBy(data.pens, 'type', 'asc')
+              }
               console.log(data.pens)
               if (!data.data) {
                 this.projectInfoShow = true
@@ -2294,7 +2242,7 @@ export default {
           if (flag) {
             return
           }
-          if (item.rect.ex > position.x || item.rect.ey > position.y) {
+          if (item.ex > position.x || item.ey > position.y) {
             // getTopology(this.topologyIndex).fitView(20)
             flag = true
           }

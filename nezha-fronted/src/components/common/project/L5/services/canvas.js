@@ -1,4 +1,4 @@
-import { rectInRect } from '@topology/core'
+import { s16 } from '@topology/core'
 export let canvas
 
 export const Tools = [
@@ -278,6 +278,250 @@ export function rectangleImgAnchors (pen) {
   // pen.anchors.push(new Point(pen.x + pen.width / 2, pen.y, Direction.Up))
   // pen.anchors.push(new Point(pen.x + pen.width, pen.y + pen.height / 2, Direction.Right))
   // pen.anchors.push(new Point(pen.x + pen.width / 2, pen.y + pen.height, Direction.Bottom))
+}
+export function disposeTopoOldData (pen, allPen) { // 处理旧数据
+  let obj = {}
+  if (pen.type === 0) {
+    obj = {
+      id: pen.id,
+      data: pen.data,
+      valueMapping: pen.valueMapping,
+      tags: [
+
+      ],
+      type: 0,
+      name: pen.name,
+      icon: pen.icon,
+      iconSize: null,
+      x: pen.rect.x,
+      y: pen.rect.y,
+      ex: pen.rect.ex,
+      ey: pen.rect.ey,
+      width: pen.rect.width,
+      height: pen.rect.height,
+      paddingLeft: pen.paddingLeft,
+      paddingRight: pen.paddingRight,
+      paddingTop: pen.paddingTop,
+      paddingBottom: pen.paddingBottom,
+      color: pen.strokeStyle,
+      lineWidth: pen.lineWidth,
+      borderWidth: null,
+      rotate: pen.rotate,
+      visible: true,
+      background: pen.fillStyle,
+      lineHeight: pen.lineHeight,
+      fontSize: pen.fontSize,
+      fontFamily: pen.fontFamily,
+      fontStyle: pen.fontStyle,
+      fontWeight: pen.fontWeight,
+      text: pen.text,
+      textColor: pen.fontColor,
+      textAlign: pen.textAlign,
+      textBaseline: pen.textBaseline,
+      textBackground: pen.textBackground,
+      lineAnimateType: 0,
+      animateType: '',
+      frames: [
+
+      ],
+      autoPlay: pen.autoPlay,
+      globalAlpha: pen.globalAlpha,
+      bkType: pen.bkType,
+      gradientAngle: pen.gradientAngle,
+      gradientRadius: pen.gradientRadius,
+      borderRadius: pen.borderRadius,
+      events: [
+
+      ],
+      anchors: [
+        {
+          id: '0',
+          penId: pen.id,
+          x: 0,
+          y: 0.5
+        },
+        {
+          id: '1',
+          penId: pen.id,
+          x: 0.5,
+          y: 0
+        },
+        {
+          id: '2',
+          penId: pen.id,
+          x: 1,
+          y: 0.5
+        },
+        {
+          id: '3',
+          penId: pen.id,
+          x: 0.5,
+          y: 1
+        }
+      ],
+      // connectedLines: [
+      //   {
+      //     anchor: '1',
+      //     lineAnchor: '9a5fccf',
+      //     lineId: '3e3a3d'
+      //   }
+      // ]
+      connectedLines: pen.connectedLines || [],
+      image: pen.image
+    }
+    console.log(pen.connectedLines)
+  } else {
+    const anchors = [s16(), s16()]
+    const width = pen.from.x - pen.to.x
+    const height = pen.from.y - pen.to.y
+    // if (pen.from) {
+    //   console.log('from')
+    //   const find = allPen.find(item => item.id == pen.from.id)
+    //   if (!find.connectedLines) {
+    //     find.connectedLines = []
+    //   }
+    //   find.connectedLines.push({
+    //     anchor: pen.from.anchorIndex,
+    //     lineAnchor: pen.id + '-0',
+    //     lineId: pen.id
+    //   })
+    // }
+    // if (pen.to) {
+    //   const find = allPen.find(item => item.id == pen.to.id)
+    //   if (!find.connectedLines) {
+    //     find.connectedLines = []
+    //   }
+    //   find.connectedLines.push({
+    //     anchor: pen.to.anchorIndex,
+    //     lineAnchor: pen.id + '-1',
+    //     lineId: pen.id
+    //   })
+    // }
+    obj = {
+      id: pen.id,
+      tags: [
+
+      ],
+      name: 'line',
+      type: pen.type,
+      fromArrow: pen.fromArrow,
+      toArrow: pen.toArrow,
+      x: width > 0 ? pen.to.x : pen.from.x,
+      y: height > 0 ? pen.to.y : pen.from.y,
+      width: Math.abs(pen.to.x - pen.from.x),
+      height: Math.abs(pen.to.y - pen.from.y),
+      data: pen.data,
+      valueMapping: pen.valueMapping,
+      anchors: [
+        {
+          anchorId: pen.id + '-0',
+          id: pen.id + '-0',
+          penId: pen.id,
+          connectTo: pen.from.id,
+          x: 0,
+          y: 0,
+          prev: {
+            penId: pen.id,
+            connectTo: pen.from.id,
+            x: -0.2,
+            y: 0
+          },
+          next: {
+            penId: pen.id,
+            connectTo: pen.from.id,
+            x: 0.2,
+            y: 0
+          }
+        },
+        {
+          anchorId: pen.id + '-1',
+          id: pen.id + '-1',
+          penId: pen.id,
+          connectTo: pen.to.id,
+          x: 1,
+          y: 1,
+          prev: {
+            penId: pen.id,
+            connectTo: pen.to.id,
+            x: 0.8,
+            y: 1
+          },
+          next: {
+            penId: pen.id,
+            connectTo: pen.to.id,
+            x: 1.2,
+            y: 1
+          }
+        }
+      ],
+      color: '#222222',
+      lineWidth: 1,
+      lineDash: [
+        5,
+        5
+      ],
+      borderColor: '#000000',
+      borderWidth: 0,
+      rotate: 0,
+      visible: true,
+      background: '',
+      lineHeight: 1.5,
+      fontSize: 12,
+      fontFamily: '"Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      textColor: '',
+      textAlign: 'center',
+      textBaseline: 'middle',
+      textBackground: '#ffffff',
+      animateSpan: 1,
+      animateColor: '#FA901C',
+      lineAnimateType: 0,
+      animateDotSize: 3,
+      frames: [
+
+      ],
+      autoPlay: false,
+      globalAlpha: 1,
+      events: [
+
+      ]
+    }
+    if (width > 0 && height > 0) {
+      obj.anchors[0].x = 1
+      obj.anchors[0].y = 1
+      obj.anchors[1].x = 0
+      obj.anchors[1].y = 0
+    } else if (width > 0 && height < 0) {
+      obj.anchors[0].x = 1
+      obj.anchors[0].y = 0
+      obj.anchors[1].x = 0
+      obj.anchors[1].y = 1
+    } else if (width < 0 && height > 0) {
+      obj.anchors[0].x = 0
+      obj.anchors[0].y = 1
+      obj.anchors[1].x = 1
+      obj.anchors[1].y = 0
+    } else if (width < 0 && height < 0) {
+      obj.anchors[0].x = 0
+      obj.anchors[0].y = 0
+      obj.anchors[1].x = 1
+      obj.anchors[1].y = 1
+    }
+    obj.anchors.forEach(item => {
+      item.prev = {
+        ...item.prev,
+        x: item.x - 0.3,
+        y: item.y
+      }
+      item.next = {
+        ...item.prev,
+        x: item.x + 0.3,
+        y: item.y
+      }
+    })
+  }
+  return obj
 }
 /* 自定义图片组件 */
 // export function myShape (ctx, node) { // 自定义图片组件
