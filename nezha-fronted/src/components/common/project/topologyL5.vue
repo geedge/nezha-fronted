@@ -807,7 +807,7 @@ export default {
         }
         data = this.$loadsh.cloneDeep(data)
         if (!getTopology(this.topologyIndex)) {
-          let canvas = new Topology('topology-canvas' + this.topologyIndexF)
+          let canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
           // canvas.open(data)
           setTopology(this.topologyIndex, canvas)
           canvas = null
@@ -1169,7 +1169,9 @@ export default {
       // 打开动画 是否更新顶部图标
       this.nodesArr = arr.map(item => {
         return {
-          rect: item.rect,
+          x:item.x,
+          y:item.y,
+          width: item.width,
           data: item.data
         }
       })

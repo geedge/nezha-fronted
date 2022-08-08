@@ -403,6 +403,7 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
 
       ],
       name: 'line',
+      lineName: pen.name,
       type: pen.type,
       fromArrow: pen.fromArrow,
       toArrow: pen.toArrow,
@@ -508,18 +509,20 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
       obj.anchors[1].x = 1
       obj.anchors[1].y = 1
     }
-    obj.anchors.forEach(item => {
-      item.prev = {
-        ...item.prev,
-        x: item.x - 0.3,
-        y: item.y
-      }
-      item.next = {
-        ...item.prev,
-        x: item.x + 0.3,
-        y: item.y
-      }
-    })
+    if (pen.name === 'polyline') {
+      obj.anchors.splice(1, 0, {
+        id: pen.id + '-0.33',
+        penId: pen.id,
+        x: obj.anchors[0].x + 0.3,
+        y: obj.anchors[0].y
+      },
+      {
+        id: pen.id + '-0.66',
+        penId: pen.id,
+        x: obj.anchors[1].x - 0.3,
+        y: obj.anchors[1].y
+      })
+    }
   }
   return obj
 }
