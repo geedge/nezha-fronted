@@ -39,7 +39,7 @@ export default {
           this.alertLabelObj = item
           this.alertLabelType = type
         }
-        this.$set(item[type], 'loading', loading)
+        this.$set(item, 'loading', loading)
       }
       this.timer = setTimeout(() => {
         this.alertLabelShow = loading
@@ -61,6 +61,7 @@ export default {
         case 'project':
         case 'dc':
         case 'user':
+        case 'recordRule':
           return false
         default: return true
       }

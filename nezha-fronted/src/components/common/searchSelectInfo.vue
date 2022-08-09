@@ -186,6 +186,46 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: i18n.t('overall.disabled')
     }
   ],
+  recordState: [
+    {
+      value: 1,
+      label: i18n.t('overall.enabled')
+    },
+    {
+      value: 0,
+      label: i18n.t('overall.disabled')
+    }
+  ],
+  starrd: [
+    {
+      value: 1,
+      label: i18n.t('overall.starred')
+    },
+    {
+      value: 0,
+      label: i18n.t('overall.unstarred')
+    }
+  ],
+  recordType: [
+    {
+      value: 1,
+      label: i18n.t('overall.metric')
+    },
+    {
+      value: 2,
+      label: i18n.t('overall.logs')
+    }
+  ],
+  buildIn: [
+    {
+      value: 1,
+      label: i18n.t('overall.buildIn')
+    },
+    {
+      value: 0,
+      label: i18n.t('overall.unbuildIn')
+    }
+  ],
   ack: [
     {
       value: '1',

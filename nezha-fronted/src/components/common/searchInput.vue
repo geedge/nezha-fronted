@@ -902,6 +902,14 @@ export default {
               objectInfo.statuses = val.valnum
             } else if (val.label === 'ipamState') {
               objectInfo.state = val.valnum
+            } else if (val.label === 'recordState') {
+              objectInfo.state = val.valnum
+            } else if (val.label === 'starrd') {
+              objectInfo.starrd = val.valnum
+            } else if (val.label === 'recordType') {
+              objectInfo.type = val.valnum
+            } else if (val.label === 'buildIn') {
+              objectInfo.buildIn = val.valnum
             } else if (typeof (val.valnum) === 'undefined' || val.valnum == '') {
               this.selectInfoList[val.label].forEach(item => {
                 if (item.label === val.val) {

@@ -69,7 +69,7 @@
             </el-form-item>
           <!-- inr -->
           <el-form-item :label='$t("config.assetLabel.interval")' prop="inr">
-            <el-input v-model="editRecordRule.inr" :placeholder="''" size="small"></el-input>
+            <el-input v-model="editRecordRule.inr" maxlength="10" show-word-limit :placeholder="''" size="small"></el-input>
           </el-form-item>
           <!--state-->
           <el-form-item :label="$t('overall.state')" prop="state" >
@@ -195,8 +195,15 @@ export default {
         this.editRecordRule.labels.forEach(item => {
           obj[item.label] = item.value
         })
-        this.editRecordRule.labels = JSON.stringify(obj)
-        const params = { ...this.editRecordRule }
+
+        const params = {
+          ...this.editRecordRule,
+          state: Number(this.editRecordRule.state),
+          type: Number(this.editRecordRule.type),
+          inr: Number(this.editRecordRule.inr),
+          labels: this.editRecordRule.labels[0].label != '' ? JSON.stringify(obj) : {}
+        }
+
         // 处理exp
         if (!this.expressions[0]) {
           this.prevent_opt.save = false
@@ -205,7 +212,6 @@ export default {
         }
         if (valid) {
           this.prevent_opt.save = true
-          console.log(params)
           if (this.editRecordRule.id) {
             this.$put('/record/rule', params).then(response => {
               this.prevent_opt.save = false
@@ -246,15 +252,15 @@ export default {
     },
     metricChange (val) {
       this.editRecordRule.expr = val
+    },
+    labelsSort (obj) {
+      const labels = JSON.parse(JSON.parse(JSON.stringify(obj)))
+      const result = []
+      for (const key in labels) {
+        result.push({ label: key, value: labels[key] })
+      }
+      return result
     }
-    // labelsSort (obj) {
-    //   const labels = this.$lodash.cloneDeep(obj)
-    //   const result = []
-    //   for (const key in labels) {
-    //     result.push({ label: key, value: labels[key] })
-    //   }
-    //   return result
-    // }
   },
   watch: {
     recordRule: {
@@ -262,7 +268,13 @@ export default {
       immediate: true,
       handler (n, o) {
         this.isEdit = true
-        const obj = this.$lodash.cloneDeep(n)
+        this.editRecordRule = {
+          ...n,
+          type: n.type + '',
+          inr: n.inr + '',
+          labels: this.labelsSort(n.labels),
+          state: n.state + ''
+        }
         // expression
         if (this.editRecordRule.id || this.editRecordRule.name) {
           this.expressions = [this.editRecordRule.expr]
@@ -274,7 +286,13 @@ export default {
             })
           })
         }
-        this.editRecordRule = Object.assign(this.editRecordRule, obj)
+      }
+    },
+    'editRecordRule.type': {
+      deep: true,
+      immediate: true,
+      handler (n, o) {
+        if (n == 2) { this.showMetrics = false } else { this.showMetrics = true }
       }
     }
   }

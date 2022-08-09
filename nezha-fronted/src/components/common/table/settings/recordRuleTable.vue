@@ -43,12 +43,12 @@
               <i v-if="scope.row.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
             </div>
         </template>
-        <!-- <template v-else-if="item.prop === 'type'">
+        <template v-else-if="item.prop === 'type'">
           <template v-if="scope.row[item.prop]">
             <template v-if="scope.row[item.prop] === 1">{{$t('overall.metrics')}}</template>
             <template v-if="scope.row[item.prop] === 2">{{$t('overall.logs')}}</template>
           </template>
-          <template v-if="scope.row[item.prop]">{{"-"}}</template>
+          <template v-else>{{"-"}}</template>
         </template>
         <template v-else-if="item.prop === 'expr'">
           <div class="document-copy-block">
@@ -62,13 +62,13 @@
         <template v-else-if="item.prop === 'labels'">
           <span v-for="(item1, i) in labelsSort(scope.row.labels)" :key="i">
             <span
-            @mouseenter="labelHover(scope.row, item.label, true, true, $event)"
-              @mouseleave="labelHover(scope.row, item.label, false, true,)">
+             @mouseenter="labelHover(scope.row, 'recordRule', true, false, $event)"
+             @mouseleave="labelHover(scope.row, 'recordRule', false, false,)">
               <nz-alert-tag
                 :key="i"
-                :cursor-point="tagType(item1.name) !== 'info'"
-                :label="item1.name"
-                :type="tagType(item1.name)"
+                :cursor-point="tagType(item1.label) !== 'info'"
+                :label="item1.label"
+                :type="tagType(item1.label)"
                 :regex="item1.regex"
                 style="margin: 5px 0 5px 5px">
                 {{ item1.value }}
@@ -80,12 +80,16 @@
           <template>{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</template>
         </template>
         <template v-else-if="item.prop === 'state'">
-          <span v-if="scope.row.state === 0" class="silence-active">active</span>
-          <span v-if="scope.row.state === 1" class="silence-pending">pending</span>
-        </template> -->
-        <span v-else-if="scope.row[item.prop]">{{
-          scope.row[item.prop] || "-"
-        }}</span>
+           <div v-if="scope.row[item.prop] == '1'">
+            <div class="active-icon green-bg inline-block"></div>
+            {{ $t('overall.enabled') }}
+          </div>
+          <div v-else-if="scope.row[item.prop] == '0'">
+            <div class="active-icon gray-bg inline-block"></div>
+            {{ $t('overall.disabled') }}
+          </div>
+        </template>
+        <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
         <template v-else>-</template>
       </template>
     </el-table-column>
@@ -122,9 +126,9 @@
       :id="alertLabelId"
       :that="alertLabelObj"
       :type="alertLabelType"
-      :alert-table-dialog="chartAlertList"
       @tipHover='tipHover'
     ></alertLabel>
+
   </div>
 </template>
 
@@ -132,8 +136,6 @@
 import table from '@/components/common/mixin/table'
 import nzAlertTag from '../../../page/alert/nzAlertTag'
 import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
-// import { calcDurationByStringTimeB } from '@/components/common/js/tools'
-// import { sameLabels } from '@/components/common/js/constants'
 export default {
   name: 'recordRuleTable',
   components: {
@@ -158,23 +160,25 @@ export default {
           label: this.$t('overall.name'),
           prop: 'name',
           show: true,
-          minWidth: 150
+          minWidth: 150,
+          sortable: 'custom'
         },
         {
           label: this.$t('overall.type'),
           prop: 'type',
           show: true,
-          minWidth: 150
+          minWidth: 150,
+          sortable: 'custom'
         },
         {
           label: this.$t('config.exprTemp.expression'),
-          prop: 'expression',
+          prop: 'expr',
           show: true,
           width: 300
         },
         {
           label: this.$t('config.assetLabel.interval'),
-          prop: 'interval',
+          prop: 'inr',
           show: true,
           width: 300
         },
@@ -195,14 +199,32 @@ export default {
           label: this.$t('overall.state'),
           prop: 'state',
           show: true,
-          width: 150
+          width: 150,
+          sortable: 'custom'
         }
       ]
     }
   },
   computed: {
+    tagType () {
+      return (key) => {
+        if (key == 'asset' || key == 'module' || key == 'project' || key == 'dc' || key == 'endpoint') {
+          return 'normal'
+        } else {
+          return 'info'
+        }
+      }
+    }
   },
   methods: {
+    labelsSort (obj) {
+      const labels = JSON.parse(JSON.parse(JSON.stringify(obj)))
+      const result = []
+      for (const key in labels) {
+        result.push({ label: key, value: labels[key] })
+      }
+      return result
+    }
   }
 }
 </script>
