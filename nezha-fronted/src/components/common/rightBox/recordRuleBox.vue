@@ -254,7 +254,7 @@ export default {
       this.editRecordRule.expr = val
     },
     labelsSort (obj) {
-      if (typeof labels != 'object') {
+      if (typeof obj != 'object') {
         const labels = JSON.parse(lodash.cloneDeep(obj))
         const result = []
         for (const key in labels) {
