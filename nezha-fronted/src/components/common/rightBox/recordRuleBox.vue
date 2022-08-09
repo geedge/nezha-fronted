@@ -129,7 +129,7 @@
 </template>
 
 <script>
-import bus from '@/libs/bus'
+import lodash from 'lodash'
 import editRigthBox from '../mixin/editRigthBox'
 import { arrLength } from '@/components/common/js/validate'
 import promqlInput from '../../page/dashboard/explore/promqlInput'
@@ -254,12 +254,15 @@ export default {
       this.editRecordRule.expr = val
     },
     labelsSort (obj) {
-      const labels = JSON.parse(JSON.parse(JSON.stringify(obj)))
-      const result = []
-      for (const key in labels) {
-        result.push({ label: key, value: labels[key] })
+      if (typeof labels != 'object') {
+        const labels = JSON.parse(lodash.cloneDeep(obj))
+        const result = []
+        for (const key in labels) {
+          result.push({ label: key, value: labels[key] })
+        }
+        return result
       }
-      return result
+      return obj
     }
   },
   watch: {
