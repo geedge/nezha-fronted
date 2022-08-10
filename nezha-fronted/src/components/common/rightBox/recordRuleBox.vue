@@ -247,6 +247,7 @@ export default {
     removeLabels (index) {
       if (this.editRecordRule.labels.length === 1) {
         this.editRecordRule.labels = [{ label: '', value: '' }]
+        return
       }
       this.editRecordRule.labels.splice(index, 1)
     },
@@ -271,12 +272,13 @@ export default {
       immediate: true,
       handler (n, o) {
         this.isEdit = true
+        const editObj = lodash.cloneDeep(n)
         this.editRecordRule = {
-          ...n,
-          type: n.type + '',
-          inr: n.inr + '',
-          labels: this.labelsSort(n.labels),
-          state: n.state + ''
+          ...editObj,
+          type: editObj.type + '',
+          inr: editObj.inr + '',
+          labels: typeof editObj.labels != 'object' ? this.labelsSort(editObj.labels) : editObj.labels,
+          state: editObj.state + ''
         }
         // expression
         if (this.editRecordRule.id || this.editRecordRule.name) {

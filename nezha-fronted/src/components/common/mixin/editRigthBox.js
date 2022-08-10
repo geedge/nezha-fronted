@@ -21,34 +21,6 @@ export default {
     }
   },
   methods: {
-    // 开启计时器 对message赋值
-    coutTime (msg, showNext, nextText, second) {
-      if (!this.closeMessage) {
-        return false
-      }
-      this.closeMessage.message =
-      `<div class="custom-message">
-        <div class="message-left">${msg}</div>
-        <div class="message-right ${showNext ? '' : 'hidden'}">
-          <span>，${i18n.t('tip.clickNext')}${i18n.t(nextText)}</span>
-          <span id="assetAdd${this.uuid}" class="message-next">${i18n.t('tip.next')}
-            <span>(${second}s)</span>
-          </span>
-        </div>
-      </div>`
-      this.$nextTick(() => {
-        const assetAdd = document.getElementById(`assetAdd${this.uuid}`)
-        assetAdd.addEventListener('click', this.saveNext)
-      })
-      setTimeout(() => {
-        --second
-        if (second === 0) {
-          this.closeMessage.close()
-        } else {
-          this.coutTime(msg, showNext, nextText, second)
-        }
-      }, 1000)
-    },
     messageShow (msg, route, params, showNext = false, nextText = '', emit) {
       this.messageParams.route = route
       this.messageParams.params = params
@@ -57,18 +29,24 @@ export default {
         duration: showNext ? 30000 : 3000,
         dangerouslyUseHTMLString: true,
         type: 'success',
-        message: '',
+        message: `<div class="custom-message">
+                    <div class="message-left">${msg}</div>
+                    <div class="message-right ${showNext ? '' : 'hidden'}">
+                      <span>，${this.$t('tip.clickNext')}${this.$t(nextText)}</span>
+                      <span id="assetAdd${this.uuid}" class="message-next">${this.$t('tip.next')}</span>
+                    </div>
+                  </div>`,
         onClose: () => {
           const assetAdd = document.getElementById(`assetAdd${this.uuid}`)
           assetAdd.removeEventListener('click', this.saveNext)
-          this.closeMessage = null
         }
       })
-      // 对message赋值
-      this.coutTime(msg, showNext, nextText, 30)
+      const assetAdd = document.getElementById(`assetAdd${this.uuid}`)
+      assetAdd.addEventListener('click', this.saveNext)
     },
     saveNext () {
       this.closeMessage.close()
+      this.closeMessage = null
       if (!this.messageParams.route) {
         this.$store.dispatch(this.messageParams.emit, this.messageParams.params)
         return
