@@ -454,14 +454,14 @@ textarea {
   display: flex;
   align-items: center;
   .message-right {
-    padding-right: 128px;
+    padding-right: 100px;
     position: relative;
   }
   .message-right.hidden{
     display: none;
   }
   .message-next {
-    width: 86px;
+    padding: 0 12px;
     height: 24px;
     line-height: 24px;
     text-align: center;

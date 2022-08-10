@@ -30,6 +30,9 @@ import elementSet from '@/components/common/elementSet' // 自定义表头组件
 import MyElSelect from '@/components/common/elSelect/MyElSelect'
 import chartList from '@/components/chart/chartList.vue' // 全局引入 chartList 组件 防止 chart-group爆粗
 
+// 二次封装message 显示自动关闭进度条
+import Message from '@/components/common/message/index'
+
 import loading from '@/components/common/loading'
 import pickTime from '@/components/common/pickTime'
 import myDatePicker from '@/components/common/myDatePicker'
@@ -38,6 +41,7 @@ import nzDataList from '@/components/common/table/nzDataList'
 import htmlToPdf from '@/components/common/js/htmlToPdf'
 import mainMixin from '@/components/common/mixin/mainMixinFun'
 import introJS from 'intro.js'
+
 Vue.use(VueIntro)
 Vue.use(htmlToPdf)
 Vue.use(vSelectPage, {
@@ -62,6 +66,16 @@ Vue.component('myDatePicker', myDatePicker)
 Vue.component('nzDataList', nzDataList) // 公用表格父组件
 Vue.component('chartList', chartList)
 
+Vue.config.productionTip = false
+Vue.use(ElementUI)
+Vue.use(Vuex)
+Vue.use(VueResource)
+Vue.use(VueClipboard)
+Vue.use(plTable)
+Vue.component('el-select', MyElSelect)
+Vue.use(hasPermission)
+
+Vue.prototype.$message = Message
 Vue.prototype.$axios = axios
 Vue.prototype.$post = post
 Vue.prototype.$get = get
@@ -124,15 +138,6 @@ Vue.mixin({
     ...mainMixin.methods
   }
 })
-
-Vue.config.productionTip = false
-Vue.use(ElementUI)
-Vue.use(Vuex)
-Vue.use(VueResource)
-Vue.use(VueClipboard)
-Vue.use(plTable)
-Vue.component('el-select', MyElSelect)
-Vue.use(hasPermission)
 
 /* 指令 */
 Vue.directive('cancel', cancelWithChange)
