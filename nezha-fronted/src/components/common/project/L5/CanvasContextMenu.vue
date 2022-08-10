@@ -1,14 +1,14 @@
 <template>
   <div class="menus">
     <div>
-      <a :class="{disabled:!props.node && !props.nodes}" @click="onTop()">{{$t('project.topology.top')}}</a>
+      <a :class="{disabled:!props.pen && !props.pens}" @click="onTop()">{{$t('project.topology.top')}}</a>
     </div>
     <div>
-      <a :class="{disabled:!props.node && !props.nodes}" @click="onBottom()">{{$t('project.topology.bottom')}}</a>
+      <a :class="{disabled:!props.pen && !props.pens}" @click="onBottom()">{{$t('project.topology.bottom')}}</a>
     </div>
     <div class="line"></div>
     <div>
-      <a :class="{disabled:!props.node && !props.nodes && !props.line}" @click="onDel()">{{$t('overall.delete')}}</a>
+      <a :class="{disabled:!props.pen && !props.pens && !props.line}" @click="onDel()">{{$t('overall.delete')}}</a>
     </div>
     <div class="line"></div>
     <div>
@@ -49,58 +49,54 @@ export default {
   },
   methods: {
     onTop () {
-      if (this.props.node) {
-        getTopology(this.index).top(this.props.node)
-      }
-
-      if (this.props.nodes) {
-        for (const item of this.props.nodes) {
+      if (this.props.pens) {
+        for (const item of this.props.pens) {
           getTopology(this.index).top(item)
         }
+      } else if (this.props.pen) {
+        getTopology(this.index).top(this.props.pen)
       }
 
       getTopology(this.index).render()
     },
 
     onBottom () {
-      if (this.props.node) {
-        getTopology(this.index).bottom(this.props.node)
-      }
-
-      if (this.props.nodes) {
-        for (const item of this.props.nodes) {
+      if (this.props.pens) {
+        for (const item of this.props.pens) {
           getTopology(this.index).bottom(item)
         }
+      } else if (this.props.pen) {
+        getTopology(this.index).bottom(this.props.pen)
       }
 
       getTopology(this.index).render()
     },
 
     onCombine (stand) {
-      if (!this.props.nodes) {
+      if (!this.props.pens) {
         return
       }
-      getTopology(this.index).combine(this.props.nodes, stand)
+      getTopology(this.index).combine(this.props.pens, stand)
       getTopology(this.index).render()
     },
 
     onUncombine () {
-      if (!this.props.node) {
+      if (!this.props.pen) {
         return
       }
-      getTopology(this.index).uncombine(this.props.node)
+      getTopology(this.index).uncombine(this.props.pen)
       getTopology(this.index).render()
     },
 
     onLock () {
       // eslint-disable-next-line vue/no-mutating-props
       this.props.locked = !this.props.locked
-      if (this.props.node) {
+      if (this.props.pen) {
         // eslint-disable-next-line vue/no-mutating-props
-        this.props.node.locked = this.props.locked
+        this.props.pen.locked = this.props.locked
       }
-      if (this.props.nodes) {
-        for (const item of this.props.nodes) {
+      if (this.props.pens) {
+        for (const item of this.props.pens) {
           item.locked = this.props.locked
         }
       }
@@ -113,13 +109,13 @@ export default {
     },
 
     onDel () {
-      getTopology(this.index).delete()
+      getTopology(this.index).delete(this.props.pens || [this.props.pen])
     },
     canvascut () {
-      getTopology(this.index).cut()
+      getTopology(this.index).cut(this.props.pens || [this.props.pen])
     },
     canvascopy () {
-      getTopology(this.index).copy()
+      getTopology(this.index).copy(this.props.pens || [this.props.pen])
     },
     canvaspaste () {
       getTopology(this.index).paste()

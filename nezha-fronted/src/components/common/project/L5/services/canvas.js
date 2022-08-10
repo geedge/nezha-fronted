@@ -1,4 +1,4 @@
-import { s16 } from '@topology/core'
+import { s16, s8 } from '@topology/core'
 export let canvas
 
 export const Tools = [
@@ -235,12 +235,13 @@ export function rectangleImg (ctx, pen) {
   ctx.beginPath()
 
   ctx.rect(pen.x, pen.y, pen.width, pen.height)
-  if (pen.data && pen.data.lineWidth <= 0) {
-    ctx.strokeStyle = 'rgba(0,0,0,0)'
+  if (pen.data && !pen.data.animateNeedLine) {
+    if (pen.data && pen.data.lineWidth <= 0) {
+      ctx.strokeStyle = 'rgba(0,0,0,0)'
+    }
   }
   // 必须判空再填充
-  (pen.fillStyle || pen.bkType) && ctx.fill()
-  console.log(pen, pen.calculative.worldIconRect)
+  (pen.background || pen.bkType) && ctx.fill()
   pen.calculative.worldIconRect = {
     height: pen.height - 10 - 20,
     rotate: 0,
@@ -324,6 +325,7 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
       color: pen.strokeStyle,
       lineWidth: pen.lineWidth,
       borderWidth: null,
+      borderColor: pen.strokeStyle,
       rotate: pen.rotate,
       visible: true,
       background: pen.fillStyle,
@@ -337,7 +339,9 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
       textAlign: pen.textAlign,
       textBaseline: pen.textBaseline,
       textBackground: pen.textBackground,
-      lineAnimateType: 0,
+      lineAnimateType: pen.lineAnimateType,
+      textLeft: pen.textOffsetX,
+      textTop: pen.textOffsetY,
       animateType: '',
       frames: [
 
@@ -398,6 +402,7 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
       name: 'line',
       lineName: pen.name,
       type: pen.type,
+      autoPolyline: true,
       fromArrow: pen.fromArrow,
       toArrow: pen.toArrow,
       x: width > 0 ? pen.to.x : pen.from.x,
@@ -408,10 +413,11 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
       valueMapping: pen.valueMapping,
       anchors: [
         {
-          anchorId: pen.id + '-0',
+          anchorId: pen.from.anchorIndex + '',
           id: pen.id + '-0',
           penId: pen.id,
           connectTo: pen.from.id,
+          prevNextType: undefined,
           x: 0,
           y: 0,
           prev: {
@@ -428,10 +434,12 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
           }
         },
         {
-          anchorId: pen.id + '-1',
+          anchorId: pen.to.anchorIndex + '',
           id: pen.id + '-1',
           penId: pen.id,
           connectTo: pen.to.id,
+          prevNextType: undefined,
+          hidden: undefined,
           x: 1,
           y: 1,
           prev: {
@@ -448,30 +456,30 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
           }
         }
       ],
-      color: '#222222',
-      lineWidth: 1,
-      lineDash: [
-        5,
-        5
-      ],
-      borderColor: '#000000',
-      borderWidth: 0,
-      rotate: 0,
+      color: pen.strokeStyle,
+      lineWidth: pen.lineWidth,
+      lineDashOffset: pen.lineDashOffset,
+      lineDash: pen.dash ? (pen.dash == 1 ? [5, 5] : ((pen.dash == 2 ? [10, 10] : [10, 10, 2, 10]))) : [],
+      borderColor: pen.borderColor,
+      borderWidth: pen.borderWidth,
+      rotate: pen.rotate,
       visible: true,
       background: '',
-      lineHeight: 1.5,
-      fontSize: 12,
-      fontFamily: '"Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial',
-      fontStyle: 'normal',
-      fontWeight: 'normal',
+      lineHeight: pen.lineHeight,
+      fontSize: pen.fontSize,
+      fontFamily: pen.fontFamily,
+      fontStyle: pen.fontStyle,
+      fontWeight: pen.fontWeight,
       textColor: '',
-      textAlign: 'center',
-      textBaseline: 'middle',
-      textBackground: '#ffffff',
-      animateSpan: 1,
-      animateColor: '#FA901C',
+      textAlign: pen.textAlign,
+      textBaseline: pen.textBaseline,
+      textBackground: pen.textBackground,
+      textLeft: pen.textOffsetX,
+      textTop: pen.textOffsetY,
+      animateSpan: pen.animateSpan,
+      animateColor: pen.animateColor,
       lineAnimateType: 0,
-      animateDotSize: 3,
+      animateDotSize: pen.animateDotSize,
       frames: [
 
       ],
@@ -504,18 +512,37 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
     }
     if (pen.name === 'polyline') {
       obj.anchors.splice(1, 0, {
-        id: pen.id + '-0.33',
+        id: s8(),
         penId: pen.id,
-        x: obj.anchors[0].x + 0.3,
-        y: obj.anchors[0].y
+        x: 0.1,
+        y: 0
+      }, {
+        id: s8(),
+        penId: pen.id,
+        x: 0.5,
+        y: 0
       },
       {
-        id: pen.id + '-0.66',
+        id: s8(),
         penId: pen.id,
-        x: obj.anchors[1].x - 0.3,
-        y: obj.anchors[1].y
-      })
+        x: 0.5,
+        y: 1
+      },
+      {
+        id: s8(),
+        penId: pen.id,
+        x: 0.9,
+        y: 1
+      }
+      )
     }
+    pen.data.valueMapping.forEach(item => {
+      if (item.animateType == 1) {
+        item.animateType = 'flow'
+      } else if (item.animateType == 'comet') {
+        item.animateType = 'dot'
+      }
+    })
   }
   return obj
 }
@@ -620,231 +647,186 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
 // }
 // /* 自定义立方体 */
 //
-// export function onChangeAnimate (node, animateType, fillStyle, strokeStyle) {
-//   pen.animateType = animateType
-//   if (pen.animateType === 'custom') {
-//     return
-//   }
-//
-//   pen.animateFrames = []
-//   const state = Node.cloneState(node)
-//   switch (animateType) {
-//     case 'upDown':
-//       state.rect.y -= 10
-//       state.rect.ey -= 10
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state
-//       })
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state: Node.cloneState(node)
-//       })
-//       pen.animateFrames.push({
-//         duration: 200,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       break
-//     case 'leftRight':
-//       state.rect.x -= 10
-//       state.rect.ex -= 10
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       state.rect.x += 20
-//       state.rect.ex += 20
-//       pen.animateFrames.push({
-//         duration: 80,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       state.rect.x -= 20
-//       state.rect.ex -= 20
-//       pen.animateFrames.push({
-//         duration: 50,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       state.rect.x += 20
-//       state.rect.ex += 20
-//       pen.animateFrames.push({
-//         duration: 30,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       pen.animateFrames.push({
-//         duration: 300,
-//         linear: true,
-//         state: Node.cloneState(node)
-//       })
-//       break
-//     case 'heart':
-//       state.rect.x -= 5
-//       state.rect.ex += 5
-//       state.rect.y -= 5
-//       state.rect.ey += 5
-//       state.rect.width += 5
-//       state.rect.height += 10
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state
-//       })
-//       pen.animateFrames.push({
-//         duration: 400,
-//         linear: true,
-//         state: Node.cloneState(node)
-//       })
-//       break
-//     case 'success':
-//       state.strokeStyle = strokeStyle || '#237804'
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state
-//       })
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state: Node.cloneState(node)
-//       })
-//       state.strokeStyle = '#237804'
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state
-//       })
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state: Node.cloneState(node)
-//       })
-//       state.strokeStyle = strokeStyle || '#237804'
-//       state.fillStyle = fillStyle || '#389e0d22'
-//       pen.animateFrames.push({
-//         duration: 3000,
-//         linear: true,
-//         state
-//       })
-//       break
-//     case 'warning':
-//       state.strokeStyle = strokeStyle || '#fa8c16'
-//       state.fillStyle = fillStyle || '#fa8c16'
-//       state.lineWidth = 5
-//       state.dash = 2
-//       pen.animateFrames.push({
-//         duration: 500,
-//         linear: true,
-//         state
-//       })
-//       state.strokeStyle = strokeStyle || '#fa8c16'
-//       state.dash = 0
-//       state.lineWidth = 1
-//       state.fillStyle = '#ffffff'
-//       pen.animateFrames.push({
-//         duration: 500,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       state.strokeStyle = strokeStyle || '#fa8c16'
-//       state.dash = 2
-//       state.lineWidth = 5
-//       state.fillStyle = fillStyle || '#fa8c16'
-//       pen.animateFrames.push({
-//         duration: 300,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       break
-//     case 'error':
-//       state.strokeStyle = strokeStyle || '#cf1322'
-//       state.fillStyle = fillStyle || '#cf132222'
-//       state.lineWidth = 5
-//       state.dash = 2
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state
-//       })
-//       state.strokeStyle = strokeStyle || '#cf1322'
-//       state.fillStyle = '#ffffff'
-//       state.dash = 0
-//       state.lineWidth = 1
-//       pen.animateFrames.push({
-//         duration: 500,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       state.strokeStyle = strokeStyle || '#cf1322'
-//       state.fillStyle = fillStyle || '#cf132222'
-//       state.dash = 2
-//       state.lineWidth = 5
-//       pen.animateFrames.push({
-//         duration: 300,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       break
-//     case 'show':
-//       state.strokeStyle = strokeStyle || '#fa541c'
-//       state.rotate = -5
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       state.rotate = 5
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       state.rotate = 0
-//       pen.animateFrames.push({
-//         duration: 100,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       break
-//     case 'fade':
-//       state.strokeStyle = strokeStyle || '#fa541c'
-//       state.globalAlpha = 0.3
-//       pen.animateFrames.push({
-//         duration: 300,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       state.globalAlpha = 0.5
-//       pen.animateFrames.push({
-//         duration: 300,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       state.globalAlpha = 0.8
-//       pen.animateFrames.push({
-//         duration: 300,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       state.globalAlpha = 1
-//       pen.animateFrames.push({
-//         duration: 300,
-//         linear: true,
-//         state: Node.cloneState(state)
-//       })
-//       break
-//   }
-//   pen.animatePlay = true
-// }
-// export function onChangeAnimateLine (line, type) {
-//   line.animateType = type
-//   line.animatePlay = true
-// }
+export function onChangeAnimate (pen, animateType, fillStyle, strokeStyle) {
+  pen.animateType = animateType
+  if (pen.animateType === 'custom') {
+    return
+  }
+
+  pen.animateFrames = []
+  // const state = Node.cloneState(pen)
+  const state = {}
+  switch (animateType) {
+    case 'upDown':
+      pen.frames = [
+        {
+          duration: 200,
+          y: 20
+        },
+        {
+          duration: 200,
+          y: 0
+        },
+        {
+          duration: 200,
+          y: -20
+        }
+      ]
+      break
+    case 'leftRight':
+      pen.frames = [
+        {
+          duration: 200,
+          x: 20
+        },
+        {
+          duration: 200,
+          x: 0
+        },
+        {
+          duration: 200,
+          x: -20
+        }
+      ]
+      break
+    case 'heart':
+      pen.frames = [
+        {
+          duration: 300,
+          scale: 1.2
+        },
+        // {
+        //   duration: 300,
+        //   x: 0,
+        //   y: 0,
+        //   width: 0,
+        //   height: 0
+        // },
+        {
+          duration: 300,
+          scale: 0.8
+        },
+        {
+          duration: 300,
+          scale: 1
+        }
+      ]
+      break
+    case 'success':
+      pen.frames = [
+        {
+          duration: 200,
+          color: strokeStyle || '#237804'
+        },
+        {
+          duration: 200,
+          color: strokeStyle || '#237804',
+          backGround: fillStyle || '#389e0d22'
+        }
+      ]
+      break
+    case 'warning':
+      pen.data.animateNeedLine = true
+      pen.frames = [
+        {
+          duration: 500,
+          color: strokeStyle || '#fa8c16',
+          background: fillStyle || '#fa8c16',
+          lineWidth: 5,
+          lineDash: [5, 5]
+        },
+        {
+          duration: 500,
+          color: strokeStyle || '#fa8c16',
+          background: '#ffffff',
+          lineWidth: 1,
+          lineDash: []
+        }
+      ]
+      break
+    case 'error':
+      state.strokeStyle = strokeStyle || '#cf1322'
+      state.fillStyle = fillStyle || '#cf132222'
+      state.lineWidth = 5
+      state.dash = 2
+      pen.animateFrames.push({
+        duration: 100,
+        linear: true,
+        state
+      })
+      state.strokeStyle = strokeStyle || '#cf1322'
+      state.fillStyle = '#ffffff'
+      state.dash = 0
+      state.lineWidth = 1
+      pen.animateFrames.push({
+        duration: 500,
+        linear: true,
+        state: Node.cloneState(state)
+      })
+      state.strokeStyle = strokeStyle || '#cf1322'
+      state.fillStyle = fillStyle || '#cf132222'
+      state.dash = 2
+      state.lineWidth = 5
+      pen.animateFrames.push({
+        duration: 300,
+        linear: true,
+        state: Node.cloneState(state)
+      })
+      break
+    case 'show':
+      pen.frames = [
+        {
+          duration: 100,
+          rotate: -5
+        },
+        {
+          duration: 100,
+          rotate: 0
+        },
+        {
+          duration: 100,
+          rotate: 5
+        },
+        {
+          duration: 100,
+          rotate: 0
+        }
+      ]
+      break
+    case 'fade':
+      state.globalAlpha = 0.3
+      pen.frames = [
+        {
+          duration: 500,
+          globalAlpha: 0.3
+        },
+        {
+          duration: 500,
+          globalAlpha: 1
+        }
+      ]
+      break
+  }
+  pen.animatePlay = true
+}
+export function onChangeAnimateLine (line, type, isOldData) {
+  // { id: 'flow', name: this.$t('project.topology.flow') },
+  // { id: 'beads', name: this.$t('project.topology.beads') },
+  // { id: 'dot', name: this.$t('project.topology.dot') },
+  let animateType = type
+  if (type === 'dot') {
+    animateType = 2
+  }
+  if (type === 'beads') {
+    animateType = 1
+  }
+  if (type === 'custom') {
+    delete line.lineAnimateType
+    return
+  }
+  line.lineAnimateType = animateType
+  line.animatePlay = true
+}
 // export function changeImage (dataImg, callback) {
 //   // const base64Img = document.createElement('base64Img')
 //   const canvas = document.createElement('canvas')

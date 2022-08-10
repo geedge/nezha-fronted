@@ -405,7 +405,7 @@
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type&&!selection.pen.iconFamily">
                 <div>{{ $t('project.topology.bac') }}</div>
                 <div class="p10 pl0">
-                  <nezhaColor :isTopo="true" :value-arr="[{name:'fillStyle',value:selection.pen.fillStyle}]"
+                  <nezhaColor :isTopo="true" :value-arr="[{name:'background',value:selection.pen.background}]"
                               @colorChange="colorChange"/>
                 </div>
               </div>
@@ -465,7 +465,7 @@
                 <div>{{ $t('project.topology.lineDash') }}</div>
                 <div class="p10 pl0">
                   <el-select :popper-append-to-body="true" v-model="selection.pen.dash" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
-                             @change="onChange">
+                             @change="(val)=>{onChange('lineDash', val)}">
                     <div slot="prefix">
                       <div class="icon-item">
                         <svg>
@@ -494,14 +494,14 @@
               <div class="props-pen-item special-select" v-if="selection.pen&&selection.pen.type">
                 <div>{{ $t('project.topology.lineType') }}</div>
                 <div class="p10 pl0">
-                  <el-select :popper-append-to-body="true" v-model="selection.pen.name" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
+                  <el-select :popper-append-to-body="true" v-model="selection.pen.lineName" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
                              @change="onClickName">
                     <div slot="prefix">
                       <div class="icon-item">
                         <svg>
                           <g fill="none" :stroke="theme === 'light' ? 'black' : '#BEBEBE'" stroke-width="1">
                             <path
-                              :d="penLineType.find((item,i)=>item.name==selection.pen.name).d"
+                              :d="penLineType.find((item,i)=>item.name==selection.pen.lineName).d"
                             >
                             </path>
                           </g>
@@ -511,7 +511,7 @@
                     <el-option v-for="(item,index) in penLineType" :value="item.name" :key="index">
                       <div class="icon-item">
                         <svg>
-                          <g fill="none" :stroke="(selection.pen.name==item.name)?'#ee9d3f':item.strokeColor" stroke-width="1">
+                          <g fill="none" :stroke="(selection.pen.lineName==item.name)?'#ee9d3f':item.strokeColor" stroke-width="1">
                             <path :d="item.d" :stroke-dasharray="item['stroke-dasharray']"></path>
                           </g>
                         </svg>
@@ -641,7 +641,7 @@
               <div class="props-pen-item">
                 <div>{{ $t('project.topology.lineColor') }}</div>
                 <div class="p10 pl0">
-                  <nezhaColor :isTopo="true" :value-arr="[{name:'strokeStyle',value:selection.pen.strokeStyle}]"
+                  <nezhaColor :isTopo="true" :value-arr="[{name:'color',value:selection.pen.color}]"
                               @colorChange="colorChange"/>
                 </div>
               </div>
@@ -683,7 +683,7 @@
               <div class="props-pen-item">
                 <div>{{ $t('project.topology.fontColor') }}</div>
                 <div class="p10 pl0">
-                  <nezhaColor :isTopo="true" :value-arr="[{name:'fontColor',value:selection.pen.fontColor}]"
+                  <nezhaColor :isTopo="true" :value-arr="[{name:'textColor',value:selection.pen.textColor}]"
                               @colorChange="colorChange"/>
                 </div>
               </div>
@@ -716,39 +716,39 @@
                 </div>
               </div>
 
-              <div class="props-pen-item">
-                <div>{{ $t('project.topology.textOffsetX') }}</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="0"
-                    controls-position="right"
-                    size="small" name="x"
-                    class="input"
-                    v-model.number="selection.pen.textOffsetX"
-                    :readonly="readonly"
-                    required
-                    @change="onChange()"></el-input-number>
-                </div>
-              </div>
+<!--              <div class="props-pen-item">-->
+<!--                <div>{{ $t('project.topology.textOffsetX') }}</div>-->
+<!--                <div class="p10 pl0">-->
+<!--                  <el-input-number-->
+<!--                    @focus="inputFocus"-->
+<!--                    @blur="inputBlur"-->
+<!--                    :precision="0"-->
+<!--                    controls-position="right"-->
+<!--                    size="small" name="x"-->
+<!--                    class="input"-->
+<!--                    v-model.number="selection.pen.textLeft"-->
+<!--                    :readonly="readonly"-->
+<!--                    required-->
+<!--                    @change="onChange()"></el-input-number>-->
+<!--                </div>-->
+<!--              </div>-->
 
-              <div class="props-pen-item">
-                <div>{{ $t('project.topology.textOffsetY') }}</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="0"
-                    controls-position="right"
-                    size="small" name="x"
-                    class="input"
-                    v-model.number="selection.pen.textOffsetY"
-                    :readonly="readonly"
-                    required
-                    @change="onChange()"></el-input-number>
-                </div>
-              </div>
+<!--              <div class="props-pen-item">-->
+<!--                <div>{{ $t('project.topology.textOffsetY') }}</div>-->
+<!--                <div class="p10 pl0">-->
+<!--                  <el-input-number-->
+<!--                    @focus="inputFocus"-->
+<!--                    @blur="inputBlur"-->
+<!--                    :precision="0"-->
+<!--                    controls-position="right"-->
+<!--                    size="small" name="x"-->
+<!--                    class="input"-->
+<!--                    v-model.number="selection.pen.textTop"-->
+<!--                    :readonly="readonly"-->
+<!--                    required-->
+<!--                    @change="onChange()"></el-input-number>-->
+<!--                </div>-->
+<!--              </div>-->
 
             </div>
           </el-collapse-item>
@@ -865,9 +865,9 @@
         <!--          </div>-->
 
         <!--          <div class="project-content-item half">-->
-        <!--            <label>{{$t('project.topology.fontColor')}}</label>-->
+        <!--            <label>{{$t('project.topology.textColor')}}</label>-->
         <!--            <div class="full pr10 h32">-->
-        <!--              <nezhaColor :isTopo=true :value-arr="[{name:'fontColor',value:topologyData.data.fontColor}]" @colorChange="(val,key)=>{-->
+        <!--              <nezhaColor :isTopo=true :value-arr="[{name:'textColor',value:topologyData.data.textColor}]" @colorChange="(val,key)=>{-->
         <!--                changeTopologyOpt(val,key,true)-->
         <!--                }"/>-->
         <!--            </div>-->
@@ -1102,6 +1102,7 @@ import chartDataFormat from '../../../chart/chartDataFormat'
 import promqlInput from '../../../page/dashboard/explore/promqlInput'
 import nezhaColor from '../../nezhaColor'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
+import { s8 } from '@topology/core'
 
 const rz = {
   methods: {
@@ -1184,7 +1185,7 @@ export default {
           url: '',
           fontSize: 14,
           align: 'left',
-          fontColor: '#000000',
+          textColor: '#000000',
           opacity: 1
         }
       },
@@ -1192,10 +1193,10 @@ export default {
         dash: '',
         font: '',
         lineWidth: '',
-        strokeStyle: '',
+        color: '',
         textMaxLine: '',
-        textOffsetX: '',
-        textOffsetY: '',
+        textLeft: '',
+        textTop: '',
         globalAlpha: ''
       },
       penNumber: '',
@@ -1323,10 +1324,10 @@ export default {
         }
       ],
       lineAnimateOptions: [
-        { id: 1, name: this.$t('project.topology.flow') },
+        { id: 'flow', name: this.$t('project.topology.flow') },
         { id: 'beads', name: this.$t('project.topology.beads') },
         { id: 'dot', name: this.$t('project.topology.dot') },
-        { id: 'comet', name: this.$t('project.topology.comet') },
+        // { id: 'comet', name: this.$t('project.topology.comet') },
         { id: 'custom', name: this.$t('project.topology.none') }
       ],
       nodeAnimateOptions: [
@@ -1446,9 +1447,9 @@ export default {
       immediate: true
     },
     'selection.pen.data': {
-      handler (n) {
+      handler (n, o) {
         // this.loading = false
-        if (this.selection.pen && JSON.stringify(this.selection.pen.type)) {
+        if (this.selection.pen && JSON.stringify(this.selection.pen.type) && (JSON.stringify(n) !== JSON.stringify(o)) && o) {
           this.$emit('change', this.selection.pen)
         }
       }
@@ -1477,7 +1478,7 @@ export default {
       dataOption.data = {}
     }
     Object.keys(this.topologyData.data).forEach((key) => {
-      if (key === 'projectInfo' || key === 'alertInfo' || key === 'fontSize' || key === 'align' || key === 'fontColor' || key === 'opacity') {
+      if (key === 'projectInfo' || key === 'alertInfo' || key === 'fontSize' || key === 'align' || key === 'textColor' || key === 'opacity') {
         this.topologyData.data[key] = (JSON.stringify(dataOption.data[key]) ? dataOption.data[key] : this.topologyData.data[key])
       } else {
         this.topologyData.data[key] = (JSON.stringify(dataOption[key]) ? dataOption[key] : this.topologyData.data[key])
@@ -1539,9 +1540,12 @@ export default {
       }
       this.onChange()
     },
-    onChange (value) {
+    onChange (value, val) {
       if (value === 'lineWidth') {
         this.selection.pen.lineWidth = this.selection.pen.data.lineWidth
+      }
+      if (value === 'lineDash') {
+        this.selection.pen.lineDash = val ? (val == 1 ? [5, 5] : ((val == 2 ? [10, 10] : [10, 10, 2, 10]))) : []
       }
       this.$emit('change', this.selection.pen)
       // if(!this.selection.pen.type||this.selection.pens){
@@ -1580,13 +1584,18 @@ export default {
       this.onChange()
     },
     onClickName (name) {
-      this.pen.name = name
-      this.selection.pen.calcControlPoints()
+      this.pen.lineName = name
+      // this.selection.pen.calcControlPoints()
       this.drowdown = 0
       if (this.selection.pen) {
-        this.selection.pen.name = name
+        this.selection.pen.lineName = name
+        this.selection.pen.anchors = [
+          this.selection.pen.anchors[0],
+          this.selection.pen.anchors[this.selection.pen.anchors.length - 1]
+        ]
+        getTopology(this.index).updateLineType(this.selection.pen, name)
+        this.onChange()
       }
-      this.onChange()
     },
     bkTypeChange (val) {
       this.selection.pen.data.gradientType = val
@@ -1606,11 +1615,11 @@ export default {
 
       if (val === 1 || val === 2) {
         this.selection.pen.gradientToColor = this.selection.pen.data.gradientColor
-        this.selection.pen.gradientFromColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+        this.selection.pen.gradientFromColor = this.selection.pen.background ? this.selection.pen.background : '#fff'
       }
       if (val === 3 || val === 4) {
         this.selection.pen.gradientFromColor = this.selection.pen.data.gradientColor
-        this.selection.pen.gradientToColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+        this.selection.pen.gradientToColor = this.selection.pen.background ? this.selection.pen.background : '#fff'
       }
       this.onChange()
     },
@@ -1639,25 +1648,25 @@ export default {
         this.selection.pen.data.gradientColor = this.colorRGBtoHex(val)
         if (bktype === 1 || bktype === 2) {
           this.selection.pen.gradientToColor = this.selection.pen.data.gradientColor
-          this.selection.pen.gradientFromColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+          this.selection.pen.gradientFromColor = this.selection.pen.background ? this.selection.pen.background : '#fff'
         }
         if (bktype === 3 || bktype === 4) {
           this.selection.pen.gradientFromColor = this.selection.pen.data.gradientColor
-          this.selection.pen.gradientToColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+          this.selection.pen.gradientToColor = this.selection.pen.background ? this.selection.pen.background : '#fff'
         }
       }
 
-      if (name === 'fillStyle') {
+      if (name === 'background') {
         if (bktype === 1 || bktype === 2) {
           this.selection.pen.gradientToColor = this.selection.pen.data.gradientColor
-          this.selection.pen.gradientFromColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+          this.selection.pen.gradientFromColor = this.selection.pen.background ? this.selection.pen.background : '#fff'
         }
         if (bktype === 3 || bktype === 4) {
           this.selection.pen.gradientFromColor = this.selection.pen.data.gradientColor
-          this.selection.pen.gradientToColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+          this.selection.pen.gradientToColor = this.selection.pen.background ? this.selection.pen.background : '#fff'
         }
       }
-      if (name === 'fontColor') {
+      if (name === 'textColor') {
         // this.selection.pen.font.color = this.colorRGBtoHex(val)
       }
       this.selection.pen.data[name] = this.colorRGBtoHex(val)
@@ -1694,7 +1703,7 @@ export default {
         this.topologyData.data[key] = val
       }
       Object.keys(this.topologyData.data).forEach((key1) => {
-        if (key1 === 'projectInfo' || key1 === 'alertInfo' || key1 === 'fontSize' || key1 === 'align' || key1 === 'fontColor' || key1 === 'opacity') {
+        if (key1 === 'projectInfo' || key1 === 'alertInfo' || key1 === 'fontSize' || key1 === 'align' || key1 === 'textColor' || key1 === 'opacity') {
           getTopology(this.index).data().data[key1] = this.topologyData.data[key1]
         } else {
           getTopology(this.index).data()[key1] = this.topologyData.data[key1]

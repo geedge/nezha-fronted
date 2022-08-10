@@ -109,7 +109,15 @@ export default {
   },
   methods: {
     changeOption (key) {
-      getTopology(this.index).data[key] = this.option[key]
+      // getTopology(this.index).data[key] = this.option[key]
+      const obj = {}
+      obj[key] = this.option[key]
+      console.log(obj)
+      if (key === 'grid') {
+        getTopology(this.index).setGrid(obj)
+      } else {
+        getTopology(this.index).setRule(obj)
+      }
       getTopology(this.index).render()
     },
     undo () { // 撤销
@@ -139,7 +147,7 @@ export default {
       getTopology(this.index).scaleTo(val / 100)
     },
     del () {
-      const delObj = this.selection.pen ? this.selection.pen.id : this.selection.pens
+      const delObj = this.selection.pen ? [this.selection.pen] : this.selection.pens
       this.$emit('del', delObj)
     },
     clear () {

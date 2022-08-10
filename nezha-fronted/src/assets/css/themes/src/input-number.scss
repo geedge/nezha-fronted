@@ -19,7 +19,32 @@
     }
   }
 
-  @include e((increase, decrease)) {
+  @include e(increase) {
+    position: absolute;
+    z-index: 1;
+    top: 1px;
+    width: $--input-height;
+    height: auto;
+    text-align: center;
+    background: $--background-color-base;
+    color: $--color-text-regular;
+    cursor: pointer;
+    font-size: 13px;
+
+    &:hover {
+      color: $--color-primary;
+
+      &:not(.is-disabled) ~ .el-input .el-input__inner:not(.is-disabled) {
+        border-color: $--input-focus-border;
+      }
+    }
+
+    &.is-disabled {
+      color: $--disabled-color-base;
+      cursor: not-allowed;
+    }
+  }
+  @include e(decrease) {
     position: absolute;
     z-index: 1;
     top: 1px;
@@ -58,7 +83,16 @@
   }
 
   @include when(disabled) {
-    @include e((increase, decrease)) {
+    @include e(increase) {
+      border-color: $--disabled-border-base;
+      color: $--disabled-border-base;
+
+      &:hover {
+        color: $--disabled-border-base;
+        cursor: not-allowed;
+      }
+    }
+    @include e(decrease) {
       border-color: $--disabled-border-base;
       color: $--disabled-border-base;
 

@@ -170,7 +170,7 @@
                             @notModuleIDArrChange="notModuleIDArrChange">
               </canvas-props>
             </div>
-            <div class="context-menu" v-if="contextmenu.left && editTopologyFlag && 0 && !fromOverView" :style="this.contextmenu">
+            <div class="context-menu" v-if="contextmenu.left && editTopologyFlag && !fromOverView" :style="this.contextmenu">
               <CanvasContextMenu :index="topologyIndexF" :props.sync="props"></CanvasContextMenu>
             </div>
             <!--所有节点上的小图标-->
@@ -359,13 +359,13 @@ import {
   imageTemp,
   rectangleImg,
   rectangleImgAnchors,
-  disposeTopoOldData
+  disposeTopoOldData,
   // myShape,
   // myAnchors,
   // myIconRect,
   // myTextRect,
-  // onChangeAnimate,
-  // onChangeAnimateLine,
+  onChangeAnimate,
+  onChangeAnimateLine,
   // myCubec,
   // myCubeAnchors
 } from './L5/services/canvas.js'
@@ -388,16 +388,6 @@ import topologyMixin from '@/components/common/project/topologyMixin'
 // registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
 // registerNode('myCube', myCubec, myCubeAnchors, null, null)
 
-const canvasOptions = {
-  rotateCursor: '/img/rotate.cur',
-  translateKey: 'None',
-  disableEmptyLine: true,
-  autoExpandDistance: 0,
-  minScale: 0.2,
-  scaleKey: -1,
-  keydown: 1,
-  autoPolyline: true
-}
 export default {
   name: 'topologyL5',
   mixins: [topologyMixin],
@@ -670,7 +660,7 @@ export default {
   },
   methods: {
     init () {
-      canvasOptions.on = this.onMessage
+      // canvasOptions.on = this.onMessage
       this.reload()
     },
 
@@ -692,7 +682,7 @@ export default {
         return new Promise((resolve, reject) => {
           Promise.all(arr).then((res) => {
             this.chartGetData[index].res = JSON.parse(JSON.stringify(this.computeData(res, pen.data.aggregation, pen)))
-            this.setAnimation(pen, this.chartGetData[index].res)
+            this.setAnimation(pen, this.chartGetData[index].res, data.oldData)
             resolve()
           })
         })
@@ -723,10 +713,7 @@ export default {
         if (!getTopology(this.topologyIndex)) {
           return
         }
-        le5leStore.set('file', this.data)
-        le5leStore.set('lineName', data.lineName)
-        le5leStore.set('fromArrow', data.fromArrow)
-        le5leStore.set('toArrow', data.toArrow)
+        console.log(data)
         getTopology(this.topologyIndex).open(data)
         getTopology(this.topologyIndex).lock(1)
         this.objChange = false
@@ -755,9 +742,9 @@ export default {
         const timer = setTimeout(() => {
           getTopology(this.topologyIndex) && getTopology(this.topologyIndex).data().pens.forEach(item => {
             if (item.animatePlay) {
-              item.stopAnimate()
+              getTopology(this.topologyIndex).stopAnimate(item.id)
               const timer1 = setTimeout(() => {
-                item.startAnimate()
+                getTopology(this.topologyIndex).startAnimate(item.id)
                 clearTimeout(timer1)
               })
             }
@@ -806,6 +793,18 @@ export default {
           return
         }
         data = this.$loadsh.cloneDeep(data)
+        console.log(Option)
+        const canvasOptions = {
+          rotateCursor: '/static/roteCursor.cur',
+          disableEmptyLine: true,
+          autoExpandDistance: 0,
+          minScale: 0.2,
+          scaleKey: -1,
+          keydown: 1,
+          gridSize: 40
+        }
+        canvasOptions.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#f6f6f6'
+        canvasOptions.gridColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
         if (!getTopology(this.topologyIndex)) {
           let canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
           // canvas.open(data)
@@ -815,25 +814,23 @@ export default {
           // getTopology(this.topologyIndex).open(data)
         }
         this.topologyLoading = false
-        if (!getTopology(this.topologyIndex).data().name) {
-          // getTopology(this.topologyIndex).data().name = this.obj.name
-        }
-        // getTopology(this.topologyIndex).data().projectId = this.obj.id
-        // getTopology(this.topologyIndex).lock(1)
-        getTopology(this.topologyIndex).register(flowPens())
-        getTopology(this.topologyIndex).register(activityDiagram())
-        getTopology(this.topologyIndex).register(classPens())
-        getTopology(this.topologyIndex).register(sequencePens())
-        getTopology(this.topologyIndex).registerCanvasDraw(sequencePensbyCtx())
-        getTopology(this.topologyIndex).registerCanvasDraw(formPens())
+        // getTopology(this.topologyIndex).register(flowPens())
+        // getTopology(this.topologyIndex).register(activityDiagram())
+        // getTopology(this.topologyIndex).register(classPens())
+        // getTopology(this.topologyIndex).register(sequencePens())
+        // getTopology(this.topologyIndex).registerCanvasDraw(sequencePensbyCtx())
+        // getTopology(this.topologyIndex).registerCanvasDraw(formPens())
         getTopology(this.topologyIndex).registerCanvasDraw({ rectangleImg: rectangleImg })
-        getTopology(this.topologyIndex).registerAnchors({ rectangleImg: rectangleImgAnchors })
+        // getTopology(this.topologyIndex).registerAnchors({ rectangleImg: rectangleImgAnchors })
         getTopology(this.topologyIndex).on('translate', this.topTranslate) // 平移·
         getTopology(this.topologyIndex).on('active', this.pensActive) // 选中·
         getTopology(this.topologyIndex).on('scale', () => {}) // 缩放·
         getTopology(this.topologyIndex).on('translatePens', () => {}) // 移动画笔结束·
         getTopology(this.topologyIndex).on('translatingPens', () => {}) // 移动画笔进行中·
-        getTopology(this.topologyIndex).on('add', () => {}) // 添加新画笔·
+        getTopology(this.topologyIndex).on('add', this.appPen) // 添加新画笔·
+        getTopology(this.topologyIndex).on('click', this.topoClick) // click画笔·
+        getTopology(this.topologyIndex).store.options.autoAnchor = true
+        // getTopology(this.topologyIndex).on('contextmenu', this.onContextMenu) // 添加新画笔·
         this.getModule()// 获取module
         resolve()
       })
@@ -846,10 +843,10 @@ export default {
         }
         this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
           console.log(JSON.stringify(res.data.topo))
-          res.data.topo.oldData = 1
           if (!res.data) {
             return
           }
+          res.data.topo && (res.data.topo.oldData = 0)
           let data = JSON.parse(JSON.stringify(res.data.topo))
           if (!res.data.topo || !res.data.topo.pens.length) {
             this.showNoData = true
@@ -872,11 +869,17 @@ export default {
             this.projectAlertShow = true
             this.saveData = JSON.parse(JSON.stringify(data))
             this.topologyInfo.name = this.obj.name
-            data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
+            data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#f9f9f9'
+            data.gridColor = this.theme == 'light' ? '#ededed' : '#090909'
+            data.grid = false
+            data.rule = false
             resolve(data)
             data = null
           } else {
-            data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
+            data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#f9f9f9'
+            data.gridColor = this.theme == 'light' ? '#ededed' : '#090909'
+            data.grid = false
+            data.rule = false
             if (data.data) {
               this.topologyInfo = {
                 fontSize: data.data.fontSize,
@@ -906,10 +909,10 @@ export default {
               for (let i = 0; i < data.pens.length; i++) {
                 const line = data.pens[i]
                 if (line.type === 1) {
-                  if (!data.pens.find(item => item.id === line.from.id) || !data.pens.find(item => item.id === line.to.id)) {
-                    data.pens.splice(i, 1)
-                    i--
-                  }
+                  // if (!data.pens.find(item => item.id === line.from.id) || !data.pens.find(item => item.id === line.to.id)) {
+                  //   data.pens.splice(i, 1)
+                  //   i--
+                  // }
                 }
               }
               data.pens.forEach(item => {
@@ -1020,7 +1023,7 @@ export default {
       })
     },
     // 赋值动画
-    setAnimation (pen, res) { // 根据所有res的状态 赋值动画
+    setAnimation (pen, res, isOldData) { // 根据所有res的状态 赋值动画
       let maxLevel = 0
       if (res.length > 0) {
         res.forEach((response, innerPos) => {
@@ -1046,27 +1049,27 @@ export default {
         if (pen.type === 0) { // 判断valueMapping 给相应的状态
           const selLevel = pen.data.valueMapping.find(item => item.level === maxLevel)
           if (selLevel) {
-            pen.fontColor = selLevel.color.text
-            pen.fillStyle = selLevel.color.fill
-            pen.strokeStyle = selLevel.color.line
+            pen.textColor = selLevel.color.text
+            pen.background = selLevel.color.fill
+            pen.color = selLevel.color.line
             pen.bkType = 0
           }
-          // onChangeAnimate(pen, selLevel.animateType, selLevel.color.fill, selLevel.color.line)
+          onChangeAnimate(pen, selLevel.animateType, selLevel.color.fill, selLevel.color.line, selLevel.color.text)
         } else if (pen.type === 1) { // 判断valueMapping 给相应的状态
           const selLevel = pen.data.valueMapping.find(item => item.level === maxLevel)
           if (selLevel) {
             pen.animateColor = selLevel.color.fill
-            pen.strokeStyle = selLevel.color.line
-            pen.animateType = selLevel.animateType
+            pen.color = selLevel.color.line
+            pen.lineAnimateType = selLevel.animateType
             pen.fontColor = selLevel.color.text
           }
-          // onChangeAnimateLine(pen, pen.animateType)
+          onChangeAnimateLine(pen, selLevel.animateType, isOldData)
         }
       } else {
         if (pen.type === 0 && pen.animatePlay) { // 判断valueMapping 给相应的状态
-          // onChangeAnimate(pen, pen.animateType)
+          onChangeAnimate(pen, pen.animateType)
         } else if (pen.type === 1 && pen.animatePlay) { // 判断valueMapping 给相应的状态
-          // onChangeAnimateLine(pen, pen.animateType)
+          onChangeAnimateLine(pen, pen.animateType, isOldData)
         }
       }
     },
@@ -1650,8 +1653,7 @@ export default {
     },
 
     onUpdateProps (node) {
-      // 如果是node属性改变，需要传入node，重新计算node相关属性值
-      // 如果是line属性改变，无需传参
+      console.log(node)
       getTopology(this.topologyIndex).setValue(node)
     },
 
@@ -1984,9 +1986,9 @@ export default {
       this.$store.commit('setShowTopoScreen', true)
       const timer = setTimeout(() => {
         getTopology(this.topologyIndex).lock(0)
-        getTopology(this.topologyIndex).data().pens.forEach((item, index) => { // 停止动画 以及赋值默认data
+        getTopology(this.topologyIndex).store.data.pens.forEach((item, index) => { // 停止动画 以及赋值默认data
           if (item.animatePlay) {
-            item.stopAnimate()
+            getTopology(this.topologyIndex).stopAnimate(item.id)
           }
           if (!item.data.expressArr.length) {
             item.data.expressArr = ['']
@@ -1998,8 +2000,8 @@ export default {
           }
           item.animateType = item.data.animateType
           if (item.type === 0) {
-            item.fillStyle = item.data.fillStyle
-            item.strokeStyle = item.data.strokeStyle
+            item.background = item.data.background || item.data.fillStyle
+            item.color = item.data.color || item.data.strokeStyle
             item.animatePlay = false
             item.fontColor = item.data.fontColor || '#222222'
             item.gradientType = item.data.gradientType ? item.data.gradientType : 0
@@ -2012,20 +2014,23 @@ export default {
             } else {
               item.bkType = 1
             }
+            item.data.animateNeedLine = false
           } else if (item.type === 1) {
             item.animateColor = item.data.animateColor
-            item.strokeStyle = item.data.strokeStyle
+            item.color = item.data.color || item.data.strokeStyle
             item.arrowColor = item.data.arrowColor
             item.fromArrowColor = item.data.arrowColor
             item.toArrowColor = item.data.arrowColor
             item.animatePlay = false
             item.fontColor = item.data.fontColor || '#222222'
           }
+          getTopology(this.topologyIndex)._setValue(item)
         })
         getTopology(this.topologyIndex).caches = {
           index: 0,
           list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data()))]
         }
+        getTopology(this.topologyIndex).render()
         const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
         const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
@@ -2050,9 +2055,7 @@ export default {
       // this.topologyData.data[key]=this.colorRGBtoHex(val);
       // getTopology(this.index).data[key]=val;
       // getTopology(this.index).render();
-      const dataOption = getTopology(this.topologyIndex).data()
-      dataOption[key] = this.lineName
-      getTopology(this.topologyIndex).render()
+      getTopology(this.topologyIndex).setOptions({ drawingLineName: val })
     },
     notModuleIDArrChange (id) {
       this.notModuleIDArr = this.notModuleIDArr.filter(item => item.id !== id)
@@ -2063,7 +2066,8 @@ export default {
       this.isPreview = false
       this.editTopologyFlag = true
       this.showNoData = false
-      const topologyData = getTopology(this.topologyIndex).pureData()
+      const topologyData = getTopology(this.topologyIndex).data()
+      topologyData.oldData = 0
       let flag = true
       const arr = []
       this.notModuleIDArr = []
