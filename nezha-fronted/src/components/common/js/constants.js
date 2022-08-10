@@ -360,6 +360,7 @@ export const fromRoute = {
   expressionTemplate: 'expressionTemplate',
   user: 'user',
   agent: 'agent',
+  recordRule: 'recordRule',
   dc: 'dc',
   role: 'role',
   project: 'project',

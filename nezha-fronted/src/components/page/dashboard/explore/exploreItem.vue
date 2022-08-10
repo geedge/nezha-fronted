@@ -425,7 +425,13 @@ export default {
       chartData: {},
       collapseValue: ['1', '2'],
       showTab: ['1', '2'],
-      logData: []
+      logData: [],
+      letter: [
+        'A', 'B', 'C', 'D', 'E', 'F', 'G',
+        'H', 'I', 'J', 'K', 'L', 'M', 'N',
+        'O', 'P', 'Q', 'R', 'S', 'T',
+        'U', 'V', 'W', 'X', 'Y', 'Z'
+      ]
     }
   },
   created () {
@@ -1016,7 +1022,7 @@ export default {
         groupId: -1
       }
       this.expressions.forEach((exp, index) => {
-        chart.elements.push({ state: this.promqlKeys[index].state, expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
+        chart.elements.push({ state: this.promqlKeys[index].state, expression: exp, legend: '', type: 'expert', id: '', name: this.transformNumToLetter(index) })
       })
       this.chartData = chart
       this.rightBox.show = true
@@ -1053,7 +1059,7 @@ export default {
         remark: ''
       }
       this.expressions.forEach((exp, index) => {
-        chart.elements.push({ state: this.promqlKeys[index].state, expression: exp, legend: '', type: 'expert', id: '', name: 'A' })
+        chart.elements.push({ state: this.promqlKeys[index].state, expression: exp, legend: '', type: 'expert', id: '', name: this.transformNumToLetter(index) })
       })
       this.chartData = chart
       this.rightBox.show = true
@@ -1106,6 +1112,16 @@ export default {
     updateCustomTableTitle (custom) {
       this.tools.customTableTitle = custom
       this.$refs.exploreTable.doLayout()
+    },
+    transformNumToLetter (num) { // 相当于26进制 获取idaddExpression
+      const self = this
+      let letter = ''
+      const loopNum = parseInt(num / 26)
+      if (loopNum > 0) {
+        letter += this.transformNumToLetter(loopNum - 1)
+      }
+      letter += self.letter[num % 26]
+      return letter
     }
   },
   watch: {

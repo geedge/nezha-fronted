@@ -28,9 +28,9 @@
           :params="searchLabel"
           :params2="searchCheckBox"
           :permissions="{
-                  import: 'asset_add',
-                  export: 'asset_edit'
-                }"
+            import: 'asset_add',
+            export: 'asset_edit'
+          }"
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="asset"
           export-url="/asset/asset/export"
@@ -100,9 +100,9 @@
           :params="searchLabel"
           :params2="searchCheckBox"
           :permissions="{
-                  import: 'asset_add',
-                  export: 'asset_edit'
-                }"
+            import: 'asset_add',
+            export: 'asset_edit'
+          }"
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="asset"
           export-url="/asset/asset/export"
@@ -152,24 +152,27 @@
     </nz-data-list>
     <transition name="right-box">
       <asset-box v-if="rightBox.show"
-                 ref="assetBox"
-                 :dc-data="dcData"
-                 :field-group-data="fieldGroupData"
-                 :from="fromRoute.asset"
-                 :obj="object"
-                 :snmp-credential-data="snmpCredentialData"
-                 :state-data="stateData"
-                 :type-data="typeData"
-                 @close="closeRightBox"
-                 @refresh="getTableData"></asset-box>
+        ref="assetBox"
+        :dc-data="dcData"
+        :field-group-data="fieldGroupData"
+        :from="fromRoute.asset"
+        :obj="object"
+        :snmp-credential-data="snmpCredentialData"
+        :state-data="stateData"
+        :type-data="typeData"
+        @close="closeRightBox"
+        @refresh="getTableData">
+      </asset-box>
     </transition>
     <transition name="right-box">
-      <asset-batch-edit-box v-if="rightBox.batchShow"
-                            :field-group-data="fieldGroupData"
-                            :snmp-credential-data="snmpCredentialData"
-                            :state-data="stateData"
-                            @close="closeRightBox"
-                            @refresh="getTableData"></asset-batch-edit-box>
+      <asset-batch-edit-box
+        v-if="rightBox.batchShow"
+        :field-group-data="fieldGroupData"
+        :snmp-credential-data="snmpCredentialData"
+        :state-data="stateData"
+        @close="closeRightBox"
+        @refresh="getTableData">
+      </asset-batch-edit-box>
     </transition>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
     </transition>

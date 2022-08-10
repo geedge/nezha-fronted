@@ -1002,6 +1002,115 @@ export default {
           jsonKey: 'valnum'
         }
       }
+    } else if (path === 'recordRule') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        state: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'state',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'recordState',
+            name: 'State',
+            readonly: true,
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        name: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        type: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'type',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'recordType',
+            name: 'Type',
+            readonly: true,
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        expr: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'expr',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'expr',
+            name: 'Expression',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        starrd: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'starrd',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'starrd',
+            name: 'Starrd',
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        buildIn: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'buildIn',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'buildIn',
+            name: 'buildIn',
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
     }
     this.initQueryFromPath(searchKeys)
   },
