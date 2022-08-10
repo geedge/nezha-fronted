@@ -133,6 +133,7 @@
 </template>
 
 <script>
+import lodash from 'lodash'
 import table from '@/components/common/mixin/table'
 import nzAlertTag from '../../../page/alert/nzAlertTag'
 import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
@@ -218,12 +219,15 @@ export default {
   },
   methods: {
     labelsSort (obj) {
-      const labels = JSON.parse(JSON.parse(JSON.stringify(obj)))
-      const result = []
-      for (const key in labels) {
-        result.push({ label: key, value: labels[key] })
+      if (typeof obj != 'object') {
+        const labels = JSON.parse(lodash.cloneDeep(obj))
+        const result = []
+        for (const key in labels) {
+          result.push({ label: key, value: labels[key] })
+        }
+        return result
       }
-      return result
+      return obj
     }
   }
 }
