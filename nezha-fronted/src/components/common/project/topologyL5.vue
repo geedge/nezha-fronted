@@ -2118,9 +2118,7 @@ export default {
             this.$store.commit('setShowTopoScreen', this.topoScreenState)
             this.$nextTick(() => {
               getTopology(this.topologyIndex).lock(1)
-              const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-              const domRect = dom ? dom.getBoundingClientRect() : {}
-              getTopology(this.topologyIndex).canvasPos = domRect
+              getTopology(this.topologyIndex).resize()
               this.reload()
             })
           }
@@ -2146,18 +2144,15 @@ export default {
       this.editTopologyFlag = false
       this.$nextTick(() => {
         getTopology(this.topologyIndex).lock(1)
-        let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-        let domRect = dom ? dom.getBoundingClientRect() : {}
-        getTopology(this.topologyIndex).canvasPos = domRect
+        getTopology(this.topologyIndex).resize()
+        getTopology(this.topologyIndex).centerView()
         this.$store.commit('setShowTopoScreen', this.topoScreenState)
-        dom = null
-        domRect = null
       })
       this.reload()
     },
     // 预览
     previewTopology () {
-      const topologyData = getTopology(this.topologyIndex).pureData()
+      const topologyData = getTopology(this.topologyIndex).data()
       this.previewData = topologyData
       this.isPreview = true
       this.editTopologyFlag = false
@@ -2196,9 +2191,8 @@ export default {
       this.$nextTick(() => {
         this.previewData = topologyData
         getTopology(this.topologyIndex).lock(1)
-        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-        const domRect = dom ? dom.getBoundingClientRect() : {}
-        getTopology(this.topologyIndex).canvasPos = domRect
+        getTopology(this.topologyIndex).resize()
+        getTopology(this.topologyIndex).centerView()
         this.initPens(topologyData)
         // this.reload()
       })

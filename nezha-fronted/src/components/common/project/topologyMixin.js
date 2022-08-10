@@ -119,7 +119,15 @@ export default {
       if (!pens.length) return
       this.$nextTick(() => {
         if (pens.length == 1) {
-          this.modulesDiff(pens[0])
+          this.modulesDiff && this.modulesDiff(pens[0])
+          if (pens[0].data.expressArr.length === 0) {
+            pens[0].data.expressArr.push('')
+            pens[0].data.legends.push('')
+          }
+          if (pens[0].data.expressAllArr.length === 0) {
+            pens[0].data.expressAllArr.push('')
+            pens[0].data.legendsAll.push('')
+          }
           this.props = {
             line: null,
             multi: false,
