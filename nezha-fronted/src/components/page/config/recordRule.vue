@@ -106,6 +106,42 @@ export default {
             type: 'input',
             label: 'ids',
             disabled: false
+          },
+          {
+            name: 'Name',
+            type: 'input',
+            label: 'name',
+            disabled: false
+          },
+          {
+            name: 'Type',
+            type: 'select',
+            label: 'recordType',
+            disabled: false
+          },
+          {
+            name: 'Expression',
+            type: 'input',
+            label: 'expr',
+            disabled: false
+          },
+          {
+            name: 'State',
+            type: 'select',
+            label: 'recordState',
+            disabled: false
+          },
+          {
+            name: 'Starrd',
+            type: 'select',
+            label: 'starrd',
+            disabled: false
+          },
+          {
+            name: 'Build_in',
+            type: 'select',
+            label: 'buildIn',
+            disabled: false
           }
         ]
       },
@@ -125,23 +161,6 @@ export default {
   mounted () {
   },
   methods: {
-    edit (u) {
-      this.$get(`${this.url}/${u.id}`).then(response => {
-        if (response.code === 200) {
-          this.object = response.data
-          this.object.labels = this.labelsSort(response.data.labels)
-          this.rightBox.show = true
-        }
-      })
-    },
-    labelsSort (obj) {
-      const labels = this.$lodash.cloneDeep(obj)
-      const result = []
-      for (const key in labels) {
-        result.push({ label: key, value: labels[key] })
-      }
-      return result
-    }
   },
   created () {
   }

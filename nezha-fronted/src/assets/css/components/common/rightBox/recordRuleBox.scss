@@ -7,15 +7,18 @@
                 width: 100%;
                 height: 100%;
             }
+            .el-textarea .el-input__count{
+                right: 5px !important;
+            }
         }
     }
     .promqlInput{
-        .metric-selector-title{
-            width: 80px;
-        }
-        .metric-selector-input-box{
-            width: calc(100% - 92px) !important;
-        }
+        // .metric-selector-title{
+        //     width: 80px;
+        // }
+        // .metric-selector-input-box{
+        //     width: calc(100% - 92px) !important;
+        // }
         .cm-editor.ͼ1.ͼ2.ͼo.cm-focused{
             height: 100%;
         }
