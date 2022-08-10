@@ -365,7 +365,7 @@ import {
   // myIconRect,
   // myTextRect,
   onChangeAnimate,
-  onChangeAnimateLine,
+  onChangeAnimateLine
   // myCubec,
   // myCubeAnchors
 } from './L5/services/canvas.js'
@@ -682,7 +682,7 @@ export default {
         return new Promise((resolve, reject) => {
           Promise.all(arr).then((res) => {
             this.chartGetData[index].res = JSON.parse(JSON.stringify(this.computeData(res, pen.data.aggregation, pen)))
-            this.setAnimation(pen, this.chartGetData[index].res, data.oldData)
+            this.setAnimation(pen, this.chartGetData[index].res, !data.newData)
             resolve()
           })
         })
@@ -713,7 +713,6 @@ export default {
         if (!getTopology(this.topologyIndex)) {
           return
         }
-        console.log(data)
         getTopology(this.topologyIndex).open(data)
         getTopology(this.topologyIndex).lock(1)
         this.objChange = false
@@ -730,12 +729,17 @@ export default {
           if (item.x + item.width > position.x || item.y + item.height > position.y) {
             if (this.fromOverView) {
               getTopology(this.topologyIndex).fitView(20)
+              getTopology(this.topologyIndex).centerView()
+            } else {
+              getTopology(this.topologyIndex).centerView()
             }
             flag = true
           }
         })
         if (!flag) {
-          getTopology(this.topologyIndex).centerView()
+          setTimeout(() => {
+            getTopology(this.topologyIndex).centerView()
+          })
         }
         getTopology(this.topologyIndex).resize()
         this.penToolTipScale = getTopology(this.topologyIndex).data().scale
@@ -793,7 +797,6 @@ export default {
           return
         }
         data = this.$loadsh.cloneDeep(data)
-        console.log(Option)
         const canvasOptions = {
           rotateCursor: '/static/roteCursor.cur',
           disableEmptyLine: true,
@@ -814,23 +817,22 @@ export default {
           // getTopology(this.topologyIndex).open(data)
         }
         this.topologyLoading = false
-        // getTopology(this.topologyIndex).register(flowPens())
-        // getTopology(this.topologyIndex).register(activityDiagram())
-        // getTopology(this.topologyIndex).register(classPens())
-        // getTopology(this.topologyIndex).register(sequencePens())
-        // getTopology(this.topologyIndex).registerCanvasDraw(sequencePensbyCtx())
-        // getTopology(this.topologyIndex).registerCanvasDraw(formPens())
+        getTopology(this.topologyIndex).register(flowPens())
+        getTopology(this.topologyIndex).register(activityDiagram())
+        getTopology(this.topologyIndex).register(classPens())
+        getTopology(this.topologyIndex).register(sequencePens())
+        getTopology(this.topologyIndex).registerCanvasDraw(sequencePensbyCtx())
+        getTopology(this.topologyIndex).registerCanvasDraw(formPens())
         getTopology(this.topologyIndex).registerCanvasDraw({ rectangleImg: rectangleImg })
-        // getTopology(this.topologyIndex).registerAnchors({ rectangleImg: rectangleImgAnchors })
+        getTopology(this.topologyIndex).registerAnchors({ rectangleImg: rectangleImgAnchors })
         getTopology(this.topologyIndex).on('translate', this.topTranslate) // 平移·
         getTopology(this.topologyIndex).on('active', this.pensActive) // 选中·
-        getTopology(this.topologyIndex).on('scale', () => {}) // 缩放·
+        getTopology(this.topologyIndex).on('scale', this.topoScale) // 缩放·
         getTopology(this.topologyIndex).on('translatePens', () => {}) // 移动画笔结束·
         getTopology(this.topologyIndex).on('translatingPens', () => {}) // 移动画笔进行中·
         getTopology(this.topologyIndex).on('add', this.appPen) // 添加新画笔·
         getTopology(this.topologyIndex).on('click', this.topoClick) // click画笔·
         getTopology(this.topologyIndex).store.options.autoAnchor = true
-        // getTopology(this.topologyIndex).on('contextmenu', this.onContextMenu) // 添加新画笔·
         this.getModule()// 获取module
         resolve()
       })
@@ -842,11 +844,9 @@ export default {
           resolve(this.topoPrevDataS)
         }
         this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
-          console.log(JSON.stringify(res.data.topo))
           if (!res.data) {
             return
           }
-          res.data.topo && (res.data.topo.oldData = 0)
           let data = JSON.parse(JSON.stringify(res.data.topo))
           if (!res.data.topo || !res.data.topo.pens.length) {
             this.showNoData = true
@@ -934,16 +934,14 @@ export default {
                   item.data.state.alert = false
                 }
               })
-              if (res.data.topo.oldData == 1) {
+              if (!res.data.topo.newData) {
                 data.pens = this.$loadsh.orderBy(data.pens, 'type', 'desc') // 先处理线 再处理点 因为新版本 将连线开始结束放在的 点上控制
-                console.log(data.pens[0])
                 data.pens = data.pens.map(item => {
                   if (item.type === 0) {
                     item = disposeTopoOldData(item, data.pens)
                   } else {
                     // promiseArr.push({ type: 1 })
                     if (item.from) {
-                      console.log('from')
                       const find = data.pens.find(item1 => item1.id == item.from.id)
                       if (!find.connectedLines) {
                         find.connectedLines = []
@@ -955,7 +953,6 @@ export default {
                       })
                     }
                     if (item.to) {
-                      console.log('from')
                       const find = data.pens.find(item1 => item1.id == item.to.id)
                       if (!find.connectedLines) {
                         find.connectedLines = []
@@ -972,7 +969,6 @@ export default {
                 })
                 data.pens = this.$loadsh.orderBy(data.pens, 'type', 'asc')
               }
-              console.log(data.pens)
               if (!data.data) {
                 this.projectInfoShow = true
                 this.projectAlertShow = true
@@ -1007,7 +1003,6 @@ export default {
                   }
                 })
                 this.saveData = JSON.parse(JSON.stringify(data))
-                console.log(JSON.stringify(data))
                 resolve(data)
                 clearInterval(this.timer4)
                 this.timer4 = null
@@ -1161,7 +1156,6 @@ export default {
       let arr = []
       this.offsetX = getTopology(this.topologyIndex).data().x
       this.offsetY = getTopology(this.topologyIndex).data().y
-      console.log(this.offsetX, this.offsetY)
       arr = getTopology(this.topologyIndex).data().pens.filter(item => {
         if (!item.data) {
           item.data = {
@@ -1260,7 +1254,6 @@ export default {
         this.dragFlag = true
         clearTimeout(timer)
       }, 100)
-      console.log(node)
       event.dataTransfer.setData('Text', JSON.stringify({ ...node.data, ...node.data.rect, data: { imageId: node.data.imageId } }))
     },
     dragFlagChange (node) {
@@ -1556,9 +1549,7 @@ export default {
             break
           }
           case 'scale': {
-            if (this.$refs.topTool) {
-              this.$refs.topTool.scaleNum = parseInt(data * 100)
-            }
+
             let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
             let domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
@@ -1652,8 +1643,7 @@ export default {
       return locked
     },
 
-    onUpdateProps (node) {
-      console.log(node)
+    onUpdateProps (node) { // 更新pen
       getTopology(this.topologyIndex).setValue(node)
     },
 
@@ -2026,14 +2016,8 @@ export default {
           }
           getTopology(this.topologyIndex)._setValue(item)
         })
-        getTopology(this.topologyIndex).caches = {
-          index: 0,
-          list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data()))]
-        }
-        getTopology(this.topologyIndex).render()
-        const dom = document.getElementById('topology-canvas' + this.topologyIndexF)
-        const domRect = dom ? dom.getBoundingClientRect() : {}
-        getTopology(this.topologyIndex).canvasPos = domRect
+        getTopology(this.topologyIndex).render(true)
+        getTopology(this.topologyIndex).centerView()
         clearTimeout(timer)
       })
     },
@@ -2067,7 +2051,7 @@ export default {
       this.editTopologyFlag = true
       this.showNoData = false
       const topologyData = getTopology(this.topologyIndex).data()
-      topologyData.oldData = 0
+      topologyData.newData = 1
       let flag = true
       const arr = []
       this.notModuleIDArr = []
@@ -2341,7 +2325,7 @@ export default {
       this.uploadPicShow = true
     },
     zoomMap (num) {
-      getTopology(this.topologyIndex).scaleTo(getTopology(this.topologyIndex).data().scale + num)
+      getTopology(this.topologyIndex).scale(getTopology(this.topologyIndex).data().scale + num)
     },
     penToBottom () {
       getTopology(this.topologyIndex).bottom()

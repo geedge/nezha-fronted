@@ -100,11 +100,11 @@ export default {
     if (!this.isTopo) {
       this.keyName = this.valueArr[0].name
       this.colors = this.valueArr[0].value || randomcolor() + 'FF'
+      this.$emit('colorChange', this.colors, this.keyName)
     } else {
       this.keyName = this.valueArr[0].name
       this.colors = this.valueArr[0].value
     }
-    this.$emit('colorChange', this.colors, this.keyName)
   },
   methods: {
     updateValue (color) {

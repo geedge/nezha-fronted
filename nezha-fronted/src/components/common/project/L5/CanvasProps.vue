@@ -1448,7 +1448,6 @@ export default {
     },
     'selection.pen.data': {
       handler (n, o) {
-        // this.loading = false
         if (this.selection.pen && JSON.stringify(this.selection.pen.type) && (JSON.stringify(n) !== JSON.stringify(o)) && o) {
           this.$emit('change', this.selection.pen)
         }

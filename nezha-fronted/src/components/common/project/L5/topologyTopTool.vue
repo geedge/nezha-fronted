@@ -98,7 +98,7 @@ export default {
     }
   },
   mounted () {
-    const dataOption = getTopology(this.index).data
+    const dataOption = getTopology(this.index).store.data
     Object.keys(this.option).forEach(key => {
       if (key === 'scale') {
         this.scaleNum = (JSON.stringify(dataOption[key]) ? parseInt(dataOption[key] * 100) : this.scaleNum)
@@ -112,7 +112,6 @@ export default {
       // getTopology(this.index).data[key] = this.option[key]
       const obj = {}
       obj[key] = this.option[key]
-      console.log(obj)
       if (key === 'grid') {
         getTopology(this.index).setGrid(obj)
       } else {
@@ -144,7 +143,7 @@ export default {
     },
     scale (val) {
       this.scaleNum = val
-      getTopology(this.index).scaleTo(val / 100)
+      getTopology(this.index).scale(val / 100)
     },
     del () {
       const delObj = this.selection.pen ? [this.selection.pen] : this.selection.pens

@@ -5,23 +5,23 @@ export const Tools = [
   {
     group: 'General',
     children: [
-      {
-        name: 'rectangle',
-        icon: 'icon-cube',
-        data: {
-          rect: {
-            width: 100,
-            height: 100
-          },
-          is3D: true,
-          z: 20,
-          zRotate: 15,
-          name: 'myCube',
-          iconFamily: 'topology',
-          iconColor: '#777',
-          iconSize: 30
-        }
-      },
+      // {
+      //   name: 'rectangle',
+      //   icon: 'icon-cube',
+      //   data: {
+      //     rect: {
+      //       width: 100,
+      //       height: 100
+      //     },
+      //     is3D: true,
+      //     z: 20,
+      //     zRotate: 15,
+      //     name: 'myCube',
+      //     iconFamily: 'topology',
+      //     iconColor: '#777',
+      //     iconSize: 30
+      //   }
+      // },
       {
         name: 'rectangle',
         icon: 'icon-rect',
@@ -142,19 +142,18 @@ export const imageTemp = {
   icon: 'icon-image',
   data: {
     type: 0,
-    rect: {
-      x: 922,
-      y: 406,
-      width: 100,
-      height: 100
-    },
+    x: 922,
+    y: 406,
+    width: 100,
+    height: 100,
     imageRatio: false,
     lineWidth: 0,
     rotate: 0,
     offsetRotate: 0,
     globalAlpha: 1,
-    dash: 0,
-    strokeStyle: '#000000',
+    lineDash: [],
+    color: '#000000',
+    background: '#ffffff00',
     animatePos: 0,
     name: 'rectangleImg',
     lineDashOffset: 0,
@@ -200,8 +199,9 @@ export const imageTemp2 = {
     rotate: 0,
     offsetRotate: 0,
     globalAlpha: 1,
-    dash: 0,
-    strokeStyle: '#000000',
+    lineDash: [],
+    color: '#000000',
+    background: '#ffffff00',
     animatePos: 0,
     name: 'rectangleImg2',
     lineDashOffset: 0,
@@ -261,7 +261,6 @@ export function rectangleImg (ctx, pen) {
 }
 export function rectangleImgAnchors (pen) {
   const anchors = []
-  // console.log(pen)
   anchors.push({
     id: '0',
     penId: pen.id,
@@ -304,6 +303,8 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
     obj = {
       id: pen.id,
       data: pen.data,
+      keepDecimal: 2,
+      scale: 1,
       valueMapping: pen.valueMapping,
       tags: [
 
@@ -396,10 +397,12 @@ export function disposeTopoOldData (pen, allPen) { // 处理旧数据
     const height = pen.from.y - pen.to.y
     obj = {
       id: pen.id,
+      keepDecimal: 2,
       tags: [
 
       ],
       name: 'line',
+      scale: 1,
       lineName: pen.name,
       type: pen.type,
       autoPolyline: true,

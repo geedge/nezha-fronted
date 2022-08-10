@@ -6,6 +6,7 @@ export default {
   },
   methods: {
     appPen (pen) {
+      this.modulesDiff()
       const data = pen[0]
       if (data.type === 0 && !data.data.moduleId) {
         data.background = '#FFFFFF00'
@@ -105,29 +106,41 @@ export default {
       }
     },
     pensActive (pens) {
-      console.log(pens)
-      if (!pens.length) return
-      if (pens.length == 1) {
-        this.props = {
-          line: null,
-          multi: false,
-          expand: this.props.expand,
-          nodes: null,
-          locked: pens[0].locked,
-          pen: pens[0],
-          pens: pens
-        }
-      } else {
-        this.props = {
-          line: null,
-          multi: false,
-          expand: this.props.expand,
-          nodes: null,
-          locked: false,
-          pen: null,
-          pens: pens
-        }
+      this.props = {
+        node: null,
+        line: null,
+        multi: false,
+        expand: null,
+        nodes: null,
+        locked: null,
+        pen: null,
+        pens: null
       }
+      if (!pens.length) return
+      this.$nextTick(() => {
+        if (pens.length == 1) {
+          this.modulesDiff(pens[0])
+          this.props = {
+            line: null,
+            multi: false,
+            expand: this.props.expand,
+            nodes: null,
+            locked: pens[0].locked,
+            pen: pens[0],
+            pens: pens
+          }
+        } else {
+          this.props = {
+            line: null,
+            multi: false,
+            expand: this.props.expand,
+            nodes: null,
+            locked: false,
+            pen: null,
+            pens: pens
+          }
+        }
+      })
       return pens
     },
     topTranslate () {
@@ -136,6 +149,19 @@ export default {
       this.popDataShowUpdate('', false)
       if (!this.editTopologyFlag) {
         getTopology(this.topologyIndex)
+      }
+      this.getNodesArr()
+    },
+    topoScale (num) {
+      this.moduleId = ''
+      getTopology(this.topologyIndex).centerView()
+      this.showNodeTools('')
+      this.popDataShowUpdate('', false)
+      if (!this.editTopologyFlag) {
+        getTopology(this.topologyIndex)
+      }
+      if (this.$refs.topTool) {
+        this.$refs.topTool.scaleNum = parseInt(num * 100)
       }
       this.getNodesArr()
     },
@@ -153,7 +179,6 @@ export default {
           pens: null
         }
       }
-      console.log(pointAndPen, 'click')
     },
     toCenter () {
       if (getTopology(this.topologyIndex)) {
