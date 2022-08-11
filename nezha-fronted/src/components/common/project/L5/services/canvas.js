@@ -27,10 +27,8 @@ export const Tools = [
         icon: 'icon-rect',
         data: {
           text: 'rect',
-          rect: {
-            width: 100,
-            height: 100
-          },
+          width: 100,
+          height: 100,
           paddingLeft: 10,
           paddingRight: 10,
           paddingTop: 10,
@@ -43,10 +41,8 @@ export const Tools = [
         icon: 'icon-rectangle',
         data: {
           text: 'rectangle',
-          rect: {
-            width: 200,
-            height: 50
-          },
+          width: 200,
+          height: 50,
           paddingLeft: 10,
           paddingRight: 10,
           paddingTop: 10,
@@ -63,10 +59,8 @@ export const Tools = [
         icon: 'icon-circle',
         data: {
           text: 'circle',
-          rect: {
-            width: 100,
-            height: 100
-          },
+          width: 100,
+          height: 100,
           name: 'circle',
           textMaxLine: 1
         }
@@ -76,10 +70,8 @@ export const Tools = [
         icon: 'icon-triangle',
         data: {
           text: 'triangle',
-          rect: {
-            width: 100,
-            height: 100
-          },
+          width: 100,
+          height: 100,
           name: 'triangle'
         }
       },
@@ -88,10 +80,8 @@ export const Tools = [
         icon: 'icon-diamond',
         data: {
           text: 'diamond',
-          rect: {
-            width: 100,
-            height: 100
-          },
+          width: 100,
+          height: 100,
           name: 'diamond'
         }
       },
@@ -100,10 +90,8 @@ export const Tools = [
         icon: 'icon-pentagon',
         data: {
           text: 'pentagon',
-          rect: {
-            width: 100,
-            height: 100
-          },
+          width: 100,
+          height: 100,
           name: 'pentagon'
         }
       },
@@ -112,10 +100,8 @@ export const Tools = [
         icon: 'icon-hexagon',
         data: {
           text: 'hexagon',
-          rect: {
-            width: 100,
-            height: 100
-          },
+          width: 100,
+          height: 100,
           paddingTop: 10,
           paddingBottom: 10,
           name: 'hexagon'
@@ -126,10 +112,8 @@ export const Tools = [
         icon: 'icon-pentagram',
         data: {
           text: 'pentagram',
-          rect: {
-            width: 100,
-            height: 100
-          },
+          width: 100,
+          height: 100,
           name: 'pentagram'
         }
       }
@@ -184,16 +168,14 @@ export const imageTemp = {
   }
 }
 export const imageTemp2 = {
-  name: 'rectangleImg2',
+  name: 'rectangleImg',
   icon: 'icon-image',
   data: {
     type: 0,
-    rect: {
-      x: 922,
-      y: 406,
-      width: 100,
-      height: 100
-    },
+    x: 922,
+    y: 406,
+    width: 100,
+    height: 100,
     imageRatio: false,
     lineWidth: 0,
     rotate: 0,
@@ -203,7 +185,7 @@ export const imageTemp2 = {
     color: '#000000',
     background: '#ffffff00',
     animatePos: 0,
-    name: 'rectangleImg2',
+    name: 'rectangleImg',
     lineDashOffset: 0,
     text: '',
     textOffsetX: 0,
@@ -260,6 +242,72 @@ export function rectangleImg (ctx, pen) {
   ctx.stroke()
 }
 export function rectangleImgAnchors (pen) {
+  const anchors = []
+  anchors.push({
+    id: '0',
+    penId: pen.id,
+    x: pen.x,
+    y: pen.y + pen.height / 2
+  })
+  anchors.push({
+    id: '1',
+    penId: pen.id,
+    x: pen.x + pen.width / 2,
+    y: pen.y
+  })
+  anchors.push({
+    id: '2',
+    penId: pen.id,
+    x: pen.x + pen.width,
+    y: pen.y + pen.height / 2
+  })
+  anchors.push({
+    id: '3',
+    penId: pen.id,
+    x: pen.x + pen.width / 2,
+    y: pen.y + pen.height
+  })
+  anchors.push({
+    id: '4',
+    penId: pen.id,
+    x: pen.x,
+    y: pen.y + pen.height / 8
+  })
+  return anchors
+  // pen.anchors.push(new Point(pen.x, pen.y + pen.height / 2, Direction.Left))
+  // pen.anchors.push(new Point(pen.x + pen.width / 2, pen.y, Direction.Up))
+  // pen.anchors.push(new Point(pen.x + pen.width, pen.y + pen.height / 2, Direction.Right))
+  // pen.anchors.push(new Point(pen.x + pen.width / 2, pen.y + pen.height, Direction.Bottom))
+}
+export function rectangleImg2 (ctx, pen) {
+  ctx.beginPath()
+
+  ctx.rect(pen.x, pen.y, pen.width, pen.height)
+  if (pen.data && !pen.data.animateNeedLine) {
+    if (pen.data && pen.data.lineWidth <= 0) {
+      ctx.strokeStyle = 'rgba(0,0,0,0)'
+    }
+  }
+  // 必须判空再填充
+  (pen.background || pen.bkType) && ctx.fill()
+  pen.calculative.worldIconRect = {
+    height: pen.height - 10,
+    rotate: 0,
+    width: pen.width - 10,
+    x: pen.x + 5,
+    y: pen.y + 5
+  }
+  pen.calculative.worldTextRect = {
+    height: 20,
+    width: pen.width - 10,
+    x: pen.x + 5,
+    y: pen.y + pen.height
+  }
+  // pen.iconRect = new Rect(pen.x + pen.paddingLeft, pen.y + pen.paddingTop, pen.width - (pen.paddingLeft + pen.paddingRight), pen.height - 20 - (pen.paddingTop + pen.paddingBottom))
+  // pen.fullIconRect = { width: 80, height: 90, center: { x: 972, y: 456 }, ex: 1012, ey: 496 }
+  ctx.stroke()
+}
+export function rectangleImgAnchors2 (pen) {
   const anchors = []
   anchors.push({
     id: '0',

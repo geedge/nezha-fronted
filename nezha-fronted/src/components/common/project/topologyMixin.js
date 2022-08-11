@@ -6,6 +6,7 @@ export default {
   },
   methods: {
     appPen (pen) {
+      console.log(pen)
       this.modulesDiff()
       const data = pen[0]
       if (data.type === 0 && !data.data.moduleId) {
@@ -104,8 +105,10 @@ export default {
       if (data.type === 0 || data.type === 1) {
         data.lineWidth = data.data.lineWidth
       }
+      getTopology(this.topologyIndex).setValue(data)
     },
     pensActive (pens) {
+      console.log(pens)
       this.props = {
         node: null,
         line: null,
