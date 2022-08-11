@@ -16,7 +16,8 @@ import axios from 'axios'
 import icon from 'leaflet/dist/images/marker-icon.png'
 import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 import 'leaflet/dist/leaflet.css'
-
+import maplibregl from 'maplibre-gl'
+import mapStyle from './mapStyle'
 const regNum = /^[0-9]+.?[0-9]*/
 export default {
   name: 'chartMap',
@@ -47,9 +48,9 @@ export default {
       this.timer = setTimeout(() => {
         let loadPromise
         this.loadMapConfig().then((mapConfig) => {
-          if (mapConfig && this.map) {
-            loadPromise = this.loadDataCenterMapData()
-          }
+          // if (mapConfig && this.map) {
+          //   loadPromise = this.loadDataCenterMapData()
+          // }
         })
         this.isInit = false
         return loadPromise
@@ -66,45 +67,52 @@ export default {
         this.$get('sysConfig', param).then(response => {
           if (response.code == 200) {
             const mapConfig = JSON.parse(response.data.paramKey.map_center_config)
+            mapStyle.center = [Number(mapConfig.longitude), Number(mapConfig.latitude)]
             if (this.map) {
               this.map.remove()
               this.map = null
             }
             const mapId = this.isFullscreen ? document.getElementById('map-screen-' + this.chartInfo.id) : document.getElementById('map' + this.chartInfo.id)
-            const map = L.map(mapId, {
-              minZoom: mapConfig.minZoom,
-              maxZoom: mapConfig.maxZoom,
-              attributionControl: false,
-              zoomControl: false,
-              maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180))
-            }).setView([mapConfig.latitude, mapConfig.longitude], mapConfig.zoom)
-            map.createPane('myPane', document.querySelector('.my-pane-' + this.chartId))
-            // map.on('tooltipopen', function (param) {
-            //   // setTimeout(() => {
-            //   //   vm.initTooltipChart(param)
-            //   // }, 100)
-            // })
-            // map.on('tooltipclose', function (param) {
-            // })
-            this.map = map
-
-            L.tileLayer(
-              '/static/Tiles/{z}/{x}/{y}.png',
-              { noWrap: true }
-            ).addTo(map)
-
-            const attribution = L.control.attribution({ position: 'bottomright', prefix: '' })
-            attribution.addAttribution(' © OpenStreetMap contributors')
-            attribution.addTo(map)
-
-            L.control.zoom({
-              position: 'bottomright',
-              zoomInText: '<i class="nz-icon nz-icon-enlarge"></i>',
-              zoomOutText: '<i class="nz-icon nz-icon-narrow"></i>',
-              zoomInTitle: '',
-              zoomOutTitle: ''
-            }).addTo(map)
-
+            this.map = new maplibregl.Map({
+              container: mapId,
+              style: mapStyle,
+              maxZoom: 7,
+              minZoom: 0,
+              renderWorldCopies: false,
+              hash: false,
+              transformRequest: function (url, resourceType) {
+                console.log(url, resourceType)
+                if (resourceType === 'Tile' && url.indexOf('https://api.maptiler.com/tiles/v3') > -1) {
+                  const urlParams = url.split('.pbf')[0].split('/')
+                  const z = urlParams[urlParams.length - 3]
+                  const x = urlParams[urlParams.length - 2]
+                  const y = urlParams[urlParams.length - 1]
+                  const newUrl1 = `nzMap://static/maplibreTitles/${z}/${x}/${y}.pbf`
+                  return {
+                    url: newUrl1,
+                    credentials: 'include',
+                    method: 'GET'
+                    // Include cookies for cross-origin requests
+                  }
+                }
+              }
+            })
+            maplibregl.addProtocol('nzMap', (params, callback) => { // 切片显示接口 防止跨域的问题
+              fetch(`${params.url.split('://')[1]}`)
+                .then(t => {
+                  if (t.status == 200) {
+                    t.arrayBuffer().then(arr => {
+                      callback(null, arr, null, null)
+                    })
+                  } else {
+                    callback(new Error(`Tile fetch error: ${t.statusText}`))
+                  }
+                })
+                .catch(e => {
+                  callback(new Error(e))
+                })
+              return { cancel: () => { } }
+            })
             resolve(mapConfig)
           }
         })
