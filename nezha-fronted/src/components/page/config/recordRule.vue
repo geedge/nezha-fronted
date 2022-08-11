@@ -108,37 +108,37 @@ export default {
             disabled: false
           },
           {
-            name: 'Name',
+            name: this.$t('overall.name'),
             type: 'input',
             label: 'name',
             disabled: false
           },
           {
-            name: 'Type',
+            name: this.$t('overall.type'),
             type: 'select',
             label: 'recordType',
             disabled: false
           },
           {
-            name: 'Expression',
+            name: this.$t('config.exprTemp.expression'),
             type: 'input',
             label: 'expr',
             disabled: false
           },
           {
-            name: 'State',
+            name: this.$t('overall.state'),
             type: 'select',
             label: 'recordState',
             disabled: false
           },
           {
-            name: 'Starrd',
+            name: this.$t('overall.starred'),
             type: 'select',
             label: 'starrd',
             disabled: false
           },
           {
-            name: 'Build_in',
+            name: this.$t('overall.buildIn'),
             type: 'select',
             label: 'buildIn',
             disabled: false
