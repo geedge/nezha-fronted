@@ -825,6 +825,8 @@ export default {
         getTopology(this.topologyIndex).on('scale', this.topoScale) // 缩放·
         getTopology(this.topologyIndex).on('translatePens', () => {}) // 移动画笔结束·
         getTopology(this.topologyIndex).on('translatingPens', () => {}) // 移动画笔进行中·
+        getTopology(this.topologyIndex).on('enter', this.penEnter) // 移入画笔·
+        getTopology(this.topologyIndex).on('leave', this.penLeave) // 移出画笔·
         getTopology(this.topologyIndex).on('add', this.appPen) // 添加新画笔·
         getTopology(this.topologyIndex).on('click', this.topoClick) // click画笔·
         getTopology(this.topologyIndex).store.options.autoAnchor = true
