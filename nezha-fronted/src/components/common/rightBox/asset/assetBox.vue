@@ -516,8 +516,17 @@ export default {
                   if (!asset.cabinet) {
                     asset.cabinet = {}
                   }
-                  this.lockModelInputValue = `${asset.brand.name} / ${asset.model.name}`
-                  this.lockLocationInputValue = `${asset.dc.name} / ${asset.cabinet.name} / ${asset.cabinetStart}-${asset.cabinetEnd}`
+                  this.lockModelInputValue = `${asset.brand.name} `
+                  if (asset.model.name) {
+                    this.lockModelInputValue += `/ ${asset.model.name}`
+                  }
+                  this.lockLocationInputValue = `${asset.dc.name}  `
+                  if (asset.cabinet.name) {
+                    this.lockLocationInputValue += `/ ${asset.cabinet.name}`
+                  }
+                  if (asset.cabinetStart) {
+                    this.lockLocationInputValue += `/ ${asset.cabinetStart}-${asset.cabinetEnd}`
+                  }
                 }
               })
             } else {
@@ -534,8 +543,17 @@ export default {
                 if (!asset.cabinet) {
                   asset.cabinet = {}
                 }
-                this.lockModelInputValue = `${asset.brand.name} / ${asset.model.name}`
-                this.lockLocationInputValue = `${asset.dc.name} / ${asset.cabinet.name} / ${asset.cabinetStart}-${asset.cabinetEnd}`
+                this.lockModelInputValue = `${asset.brand.name} `
+                if (asset.model.name) {
+                  this.lockModelInputValue += `/ ${asset.model.name}`
+                }
+                this.lockLocationInputValue = `${asset.dc.name}  `
+                if (asset.cabinet.name) {
+                  this.lockLocationInputValue += `/ ${asset.cabinet.name}`
+                }
+                if (asset.cabinetStart) {
+                  this.lockLocationInputValue += `/ ${asset.cabinetStart}-${asset.cabinetEnd}`
+                }
               }
             }
           }
