@@ -598,3 +598,21 @@
 .hiddenItem{
   box-shadow: $--chart-shadow;
 }
+.mapboxgl-control-container{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  summary{
+    display: none;
+  }
+  .mapboxgl-ctrl-attrib-inner{
+    color: hsla(0,0%,69.8%,.77) !important;
+    background: unset;
+    a {
+      color: hsla(0,0%,69.8%,.77) !important;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+
+}
