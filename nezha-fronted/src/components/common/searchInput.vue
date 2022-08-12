@@ -110,6 +110,26 @@
                               <li v-for="(item,key) in assetTypeTree" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                             </ul>
                           </div>
+                          <div v-if="val.type === 'issueType'" :style="'top:' + selectDom.top +'; left:'+selectDom.left" class="select_info_list">
+                            <el-scrollbar v-if="issueTypeSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                              <ul>
+                                <li v-for="(item,key) in issueTypeSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
+                              </ul>
+                            </el-scrollbar>
+                            <ul v-else>
+                              <li v-for="(item,key) in issueTypeSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
+                            </ul>
+                          </div>
+                          <div v-if="val.type === 'issue'" :style="'top:' + selectDom.top +'; left:'+selectDom.left" class="select_info_list">
+                            <el-scrollbar v-if="issueData.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                              <ul>
+                                <li v-for="(item,key) in issueData" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.username)}}</li>
+                              </ul>
+                            </el-scrollbar>
+                            <ul v-else>
+                              <li v-for="(item,key) in issueData" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.username)}}</li>
+                            </ul>
+                          </div>
                             <div v-if="val.type === 'brand'" :style="'top:' + selectDom.top +'; left:'+selectDom.left" class="select_info_list">
                               <el-scrollbar v-if="brandSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
@@ -286,6 +306,8 @@ export default {
       dcSelect: [], // 数据中心
       assetSelect: [], // 资产
       assetStateSelect: [],
+      issueTypeSelect: [], // issue type
+      issueData: [], // issue
       brandSelect: [],
       groupSelect: [],
       projectSelect: [],
@@ -540,6 +562,14 @@ export default {
           val.val = selectItem.name
           val.valnum = selectItem.id
           val.valString = ''
+        } else if (val.type === 'issue' && selectItem.searchType === 'issue') {
+          val.val = selectItem.name
+          val.valnum = selectItem.id
+          val.valString = ''
+        } else if (val.type === 'issueType') {
+          val.val = selectItem.name
+          val.valnum = selectItem.id
+          val.valString = ''
         }
       }
       // this.select_list.push({type: 'dc', val: selectItem.name, valnum: selectItem.id});
@@ -634,6 +664,29 @@ export default {
           this.assetTypeTree = response.data.list
           this.assetTypeTree.forEach((item, index) => {
             this.$set(item, 'searchType', 'assetType')
+          })
+        }
+      })
+    },
+    getIssueTypeData () {
+      this.$get('issue/type').then(response => {
+        if (response.code === 200) {
+          this.issueTypeSelect = response.data.map((item, index) => {
+            return {
+              value: item,
+              name: item,
+              id: index
+            }
+          })
+        }
+      })
+    },
+    getUserList () {
+      this.$get('sys/user', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          this.issueData = response.data.list
+          this.issueData.forEach((item, index) => {
+            this.$set(item, 'searchType', 'issue')
           })
         }
       })
@@ -910,6 +963,10 @@ export default {
               objectInfo.type = val.valnum
             } else if (val.label === 'buildIn') {
               objectInfo.buildIn = val.valnum
+            } else if (val.label === 'issueState') {
+              objectInfo.state = val.valnum
+            } else if (val.label === 'priority') {
+              objectInfo.priority = val.valnum
             } else if (typeof (val.valnum) === 'undefined' || val.valnum == '') {
               this.selectInfoList[val.label].forEach(item => {
                 if (item.label === val.val) {
@@ -947,6 +1004,18 @@ export default {
             objectInfo.brandIds = val.valnum
           } else if (val.type === 'group') {
             objectInfo.groupIds = val.valnum
+          } else if (val.type === 'issueType') {
+            objectInfo.type = val.val
+          } else if (val.type === 'issue') {
+            if (val.label === 'cid') {
+              objectInfo.cid = val.valnum
+            } else if (val.label === 'uid') {
+              objectInfo.uid = val.valnum
+            } else if (val.label === 'rid') {
+              objectInfo.rid = val.valnum
+            } else if (val.label === 'aid') {
+              objectInfo.aid = val.valnum
+            }
           } else if (val.type === 'selectString') {
             if (val.label === 'dcState') {
               objectInfo.state = val.val
@@ -1529,6 +1598,10 @@ export default {
       }
       if (this.$route.path === '/exprTemp') {
         this.getGnameList()
+      }
+      if (this.$route.path === '/issue') {
+        this.getIssueTypeData()
+        this.getUserList()
       }
       this.searchLabelList = this.searchLabelList.filter(item => !this.select_list.find(select => select.label === item.label))
       setTimeout(() => {

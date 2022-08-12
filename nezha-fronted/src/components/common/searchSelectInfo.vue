@@ -320,7 +320,41 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   ipamType: [
     { label: 'IPV4', value: 4 },
     { label: 'IPV6', value: 6 }
-  ]
+  ],
+  issueState: [
+    {
+      value: 1,
+      label: i18n.t('issue.open')
+    }, {
+      value: 2,
+      label: i18n.t('issue.hasBeenAssigned')
+    }, {
+      value: 3,
+      label: i18n.t('issue.beingProcessed')
+    }, {
+      value: 4,
+      label: i18n.t('issue.hangUp')
+    }, {
+      value: 5,
+      label: i18n.t('issue.resolved')
+    }, {
+      value: 6,
+      label: i18n.t('overall.close')
+    }, {
+      value: 7,
+      label: i18n.t('overall.cancel')
+    }
+  ],
+  priority: [{
+    value: 1,
+    label: i18n.t('dashboard.panel.chartForm.high')
+  }, {
+    value: 2,
+    label: i18n.t('issue.middle')
+  }, {
+    value: 3,
+    label: i18n.t('issue.low')
+  }]
 }
 export default searchSelectInfo
 </script>

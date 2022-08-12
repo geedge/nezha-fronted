@@ -1111,6 +1111,185 @@ export default {
           jsonKey: 'val'
         }
       }
+    } else if (path === 'issue') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        name: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        type: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'type',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'issueType',
+            name: 'Type',
+            readonly: true,
+            type: 'issueType',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        state: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'state',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'issueState',
+            name: 'State',
+            readonly: true,
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        priority: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'priority',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'priority',
+            name: 'Priority',
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        assetsId: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'assetsId',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'assetsId',
+            name: 'Assets id',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        assetName: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'assetName',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'assetName',
+            name: 'Assets name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        cid: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'cid',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'cid',
+            name: 'Create user',
+            type: 'issue',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        uid: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'uid',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'uid',
+            name: 'Update user',
+            type: 'issue',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        rid: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'rid',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'rid',
+            name: 'Reporter',
+            type: 'issue',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        aid: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'aid',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'aid',
+            name: 'Assignee',
+            type: 'issue',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        starrd: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'starrd',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'starrd',
+            name: 'Starrd',
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
     }
     this.initQueryFromPath(searchKeys)
   },

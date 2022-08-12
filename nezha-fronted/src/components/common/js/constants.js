@@ -361,6 +361,7 @@ export const fromRoute = {
   user: 'user',
   agent: 'agent',
   recordRule: 'recordRule',
+  issue: 'issue',
   dc: 'dc',
   role: 'role',
   project: 'project',
