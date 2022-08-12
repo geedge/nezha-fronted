@@ -6,6 +6,7 @@ export default {
   },
   methods: {
     appPen (pen) {
+      console.log(pen)
       this.modulesDiff()
       const data = pen[0]
       if (data.type === 0 && !data.data.moduleId) {
@@ -104,8 +105,10 @@ export default {
       if (data.type === 0 || data.type === 1) {
         data.lineWidth = data.data.lineWidth
       }
+      getTopology(this.topologyIndex).setValue(data)
     },
     pensActive (pens) {
+      console.log(pens)
       this.props = {
         node: null,
         line: null,
@@ -175,6 +178,7 @@ export default {
     },
     topoClick (pointAndPen) {
       this.showNodeTools('')
+      this.tooltipPosition.show = false
       if (!pointAndPen.pen) {
         this.props = {
           node: null,
@@ -186,6 +190,53 @@ export default {
           pen: null,
           pens: null
         }
+      }
+    },
+    penEnter (pen) {
+      if (this.timer3) {
+        clearTimeout(this.timer3)
+        this.timer3 = null
+      }
+      this.chartData = { ...pen.data, ...this.chartGetData.find(item => item.id === pen.id) }
+      this.tooltipPosition.show = false
+      const timer = setTimeout(() => {
+        this.tooltipPosition.show = true
+        let ePosition = window.ePosition
+        let boxWidth = document.getElementsByClassName('page')[0].offsetWidth
+        let boxHeight = document.getElementsByClassName('page')[0].offsetHeight
+        this.tooltipPosition.left = ePosition.layerX + 20
+        this.tooltipPosition.top = ePosition.layerY
+        this.$nextTick(() => {
+          if (this.$refs.topoTooltip) {
+            if ((boxWidth / 2) > ePosition.layerX) {
+              this.tooltipPosition.left = ePosition.layerX + 20
+            } else {
+              this.tooltipPosition.left = ePosition.layerX - 20 - this.$refs.topoTooltip.offsetWidth
+            }
+            if (boxHeight > (ePosition.layerY + this.$refs.topoTooltip.offsetHeight)) {
+              this.tooltipPosition.top = ePosition.layerY
+            } else {
+              this.tooltipPosition.top = ePosition.layerY - this.$refs.topoTooltip.offsetHeight
+            }
+          }
+          ePosition = null
+          boxWidth = null
+          boxHeight = null
+        })
+        clearTimeout(timer)
+      }, 100)
+    },
+    penLeave (pen) {
+      if (!this.timer3) {
+        this.timer3 = setTimeout(() => {
+          this.tooltipPosition.show = false
+          this.timer3 = null
+        }, 50)
+      } else {
+        this.timer3 = setTimeout(() => {
+          this.tooltipPosition.show = false
+          this.timer3 = null
+        }, 50)
       }
     },
     toCenter () {

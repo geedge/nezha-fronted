@@ -830,6 +830,8 @@ export default {
         getTopology(this.topologyIndex).on('scale', this.topoScale) // 缩放·
         getTopology(this.topologyIndex).on('translatePens', () => {}) // 移动画笔结束·
         getTopology(this.topologyIndex).on('translatingPens', () => {}) // 移动画笔进行中·
+        getTopology(this.topologyIndex).on('enter', this.penEnter) // 移入画笔·
+        getTopology(this.topologyIndex).on('leave', this.penLeave) // 移出画笔·
         getTopology(this.topologyIndex).on('add', this.appPen) // 添加新画笔·
         getTopology(this.topologyIndex).on('click', this.topoClick) // click画笔·
         getTopology(this.topologyIndex).store.options.autoAnchor = true
@@ -2354,6 +2356,15 @@ export default {
       this.timer4 = null
     }
     if (getTopology(this.topologyIndex)) {
+      getTopology(this.topologyIndex).off('translate', this.topTranslate) // 平移·
+      getTopology(this.topologyIndex).off('active', this.pensActive) // 选中·
+      getTopology(this.topologyIndex).off('scale', this.topoScale) // 缩放·
+      getTopology(this.topologyIndex).off('translatePens', () => {}) // 移动画笔结束·
+      getTopology(this.topologyIndex).off('translatingPens', () => {}) // 移动画笔进行中·
+      getTopology(this.topologyIndex).off('enter', this.penEnter) // 移入画笔·
+      getTopology(this.topologyIndex).off('leave', this.penLeave) // 移出画笔·
+      getTopology(this.topologyIndex).off('add', this.appPen) // 添加新画笔·
+      getTopology(this.topologyIndex).off('click', this.topoClick) // click画笔·
       getTopology(this.topologyIndex).destroy()
       const StoreData = le5leStore.get()
       const arr = []

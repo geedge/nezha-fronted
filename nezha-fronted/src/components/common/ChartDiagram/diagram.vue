@@ -333,17 +333,11 @@ import imgDefault from '@/components/common/project/L5/services/img'
 import {
   Tools,
   imageTemp2,
-  rectangleImg,
-  rectangleImgAnchors,
+  rectangleImg2,
+  rectangleImgAnchors2,
   disposeTopoOldData,
-  // myShape,
-  // myAnchors,
-  // myIconRect,
-  // myTextRect,
   onChangeAnimate,
   onChangeAnimateLine
-  // myCubec,
-  // myCubeAnchors
 } from '@/components/common/project/L5/services/canvas.js'
 import { getTopology, setTopology, dealImg, topologyImg } from '../js/common'
 
@@ -360,14 +354,6 @@ import { getMetricTypeValue, dealLegendAlias } from '../js/tools'
 import bus from '../../../libs/bus'
 import topologyMixin from '@/components/common/project/topologyMixin'
 
-const canvasOptions = {
-  rotateCursor: '/img/rotate.cur',
-  translateKey: 'None',
-  disableEmptyLine: true,
-  autoExpandDistance: 0,
-  minScale: 0.2
-  // scaleKey: -1
-}
 export default {
   name: 'diagram',
   mixins: [topologyMixin],
@@ -388,7 +374,7 @@ export default {
           group: 'Diagram',
           children: [
             {
-              name: 'rectangle2',
+              name: 'rectangleImg2',
               icon: 'icon-rect',
               data: {
                 text: 'rect',
@@ -408,7 +394,7 @@ export default {
               }
             },
             {
-              name: 'rectangle2',
+              name: 'rectangleImg2',
               icon: 'icon-rect',
               data: {
                 text: 'rect',
@@ -428,7 +414,7 @@ export default {
               }
             },
             {
-              name: 'rectangle2',
+              name: 'rectangleImg2',
               icon: 'icon-rect',
               data: {
                 text: 'rect',
@@ -832,13 +818,15 @@ export default {
         getTopology(this.topologyIndex).register(sequencePens())
         getTopology(this.topologyIndex).registerCanvasDraw(sequencePensbyCtx())
         getTopology(this.topologyIndex).registerCanvasDraw(formPens())
-        getTopology(this.topologyIndex).registerCanvasDraw({ rectangleImg: rectangleImg })
-        getTopology(this.topologyIndex).registerAnchors({ rectangleImg: rectangleImgAnchors })
+        getTopology(this.topologyIndex).registerCanvasDraw({ rectangleImg2: rectangleImg2 })
+        getTopology(this.topologyIndex).registerAnchors({ rectangleImg2: rectangleImgAnchors2 })
         getTopology(this.topologyIndex).on('translate', this.topTranslate) // 平移·
         getTopology(this.topologyIndex).on('active', this.pensActive) // 选中·
         getTopology(this.topologyIndex).on('scale', this.topoScale) // 缩放·
         getTopology(this.topologyIndex).on('translatePens', () => {}) // 移动画笔结束·
         getTopology(this.topologyIndex).on('translatingPens', () => {}) // 移动画笔进行中·
+        getTopology(this.topologyIndex).on('enter', this.penEnter) // 移入画笔·
+        getTopology(this.topologyIndex).on('leave', this.penLeave) // 移出画笔·
         getTopology(this.topologyIndex).on('add', this.appPen) // 添加新画笔·
         getTopology(this.topologyIndex).on('click', this.topoClick) // click画笔·
         getTopology(this.topologyIndex).store.options.autoAnchor = true
@@ -1175,27 +1163,29 @@ export default {
     },
 
     /* topology 方法 */
+    /* topology 方法 */
     onDrag (event, node) {
+      console.log(event, node)
       this.dragFlag = false
-      node.data.text = ''
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         this.dragFlag = true
+        clearTimeout(timer)
       }, 100)
       event.dataTransfer.setData('Text', JSON.stringify({ ...node.data, data: { imageId: node.data.imageId } }))
     },
     dragFlagChange (node) {
-      getTopology(this.topologyIndex).addNode(
+      console.log(node)
+      getTopology(this.topologyIndex).addPen(
         {
           ...node.data,
-          rect: {
-            ...node.data.rect,
-            x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth / 2 - 50,
-            y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight / 2 - 50
-          },
+          ...node.data.rect,
+          x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth / 2 - 50,
+          y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight / 2 - 50,
           data: { imageId: node.data.imageId }
         })
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         this.dragFlag = true
+        clearTimeout(timer)
       }, 100)
     },
     getLocked (data) {
@@ -1398,14 +1388,13 @@ export default {
             group: 'Diagram',
             children: [
               {
-                name: 'rectangle2',
+                name: 'rectangleImg2',
                 icon: 'icon-rect',
                 data: {
                   text: 'rect',
-                  rect: {
-                    width: 30,
-                    height: 20
-                  },
+                  width: 30,
+                  height: 20,
+                  type: 0,
                   paddingLeft: 10,
                   paddingRight: 10,
                   paddingTop: 10,
@@ -1418,14 +1407,13 @@ export default {
                 }
               },
               {
-                name: 'rectangle2',
+                name: 'rectangleImg2',
                 icon: 'icon-rect',
                 data: {
                   text: 'rect',
-                  rect: {
-                    width: 30,
-                    height: 30
-                  },
+                  width: 30,
+                  height: 30,
+                  type: 0,
                   paddingLeft: 10,
                   paddingRight: 10,
                   paddingTop: 10,
@@ -1438,14 +1426,13 @@ export default {
                 }
               },
               {
-                name: 'rectangle2',
+                name: 'rectangleImg2',
                 icon: 'icon-rect',
                 data: {
                   text: 'rect',
-                  rect: {
-                    width: 100,
-                    height: 100
-                  },
+                  width: 100,
+                  height: 100,
+                  type: 0,
                   paddingLeft: 10,
                   paddingRight: 10,
                   paddingTop: 10,
@@ -1911,6 +1898,15 @@ export default {
       this.timer4 = null
     }
     if (getTopology(this.topologyIndex)) {
+      getTopology(this.topologyIndex).off('translate', this.topTranslate) // 平移·
+      getTopology(this.topologyIndex).off('active', this.pensActive) // 选中·
+      getTopology(this.topologyIndex).off('scale', this.topoScale) // 缩放·
+      getTopology(this.topologyIndex).off('translatePens', () => {}) // 移动画笔结束·
+      getTopology(this.topologyIndex).off('translatingPens', () => {}) // 移动画笔进行中·
+      getTopology(this.topologyIndex).off('enter', this.penEnter) // 移入画笔·
+      getTopology(this.topologyIndex).off('leave', this.penLeave) // 移出画笔·
+      getTopology(this.topologyIndex).off('add', this.appPen) // 添加新画笔·
+      getTopology(this.topologyIndex).off('click', this.topoClick) // click画笔·
       getTopology(this.topologyIndex).destroy()
       const StoreData = le5leStore.get()
       Object.keys(StoreData).forEach(key => {
