@@ -516,8 +516,17 @@ export default {
                   if (!asset.cabinet) {
                     asset.cabinet = {}
                   }
-                  this.lockModelInputValue = `${asset.brand.name} / ${asset.model.name}`
-                  this.lockLocationInputValue = `${asset.dc.name} / ${asset.cabinet.name} / ${asset.cabinetStart}-${asset.cabinetEnd}`
+                  this.lockModelInputValue = `${asset.brand.name} `
+                  if (asset.model.name) {
+                    this.lockModelInputValue += `/ ${asset.model.name}`
+                  }
+                  this.lockLocationInputValue = `${asset.dc.name}  `
+                  if (asset.cabinet.name) {
+                    this.lockLocationInputValue += `/ ${asset.cabinet.name}`
+                  }
+                  if (asset.cabinetStart) {
+                    this.lockLocationInputValue += `/ ${asset.cabinetStart}-${asset.cabinetEnd}`
+                  }
                 }
               })
             } else {
@@ -534,8 +543,17 @@ export default {
                 if (!asset.cabinet) {
                   asset.cabinet = {}
                 }
-                this.lockModelInputValue = `${asset.brand.name} / ${asset.model.name}`
-                this.lockLocationInputValue = `${asset.dc.name} / ${asset.cabinet.name} / ${asset.cabinetStart}-${asset.cabinetEnd}`
+                this.lockModelInputValue = `${asset.brand.name} `
+                if (asset.model.name) {
+                  this.lockModelInputValue += `/ ${asset.model.name}`
+                }
+                this.lockLocationInputValue = `${asset.dc.name}  `
+                if (asset.cabinet.name) {
+                  this.lockLocationInputValue += `/ ${asset.cabinet.name}`
+                }
+                if (asset.cabinetStart) {
+                  this.lockLocationInputValue += `/ ${asset.cabinetStart}-${asset.cabinetEnd}`
+                }
               }
             }
           }
@@ -638,7 +656,7 @@ export default {
       return new Promise(resolve => {
         this.$get(this.url, { pageSize: -1, vmh: 1 }).then(response => {
           if (response.code === 200) {
-            this.options.parentAssetOptions = response.data.list
+            this.options.parentAssetOptions = response.data.list.filter(item => item.id !== this.editAsset.id)
           }
           resolve()
         })

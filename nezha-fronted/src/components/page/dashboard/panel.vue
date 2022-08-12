@@ -116,7 +116,7 @@
       </div>
     </div>
 
-    <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn" :title="$t('overall.backToTop')"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: -10px;" v-show="showTopBtn" :title="$t('overall.backToTop')"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
       <chart-right-box
