@@ -638,7 +638,7 @@ export default {
       return new Promise(resolve => {
         this.$get(this.url, { pageSize: -1, vmh: 1 }).then(response => {
           if (response.code === 200) {
-            this.options.parentAssetOptions = response.data.list
+            this.options.parentAssetOptions = response.data.list.filter(item => item.id !== this.editAsset.id)
           }
           resolve()
         })
