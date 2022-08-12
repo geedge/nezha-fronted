@@ -329,12 +329,17 @@ export default {
       }
     },
     historyChange (item) {
-      this.oldSearchTime[0] = this.momentTz(item.start)
-      this.oldSearchTime[1] = this.momentTz(item.end)
       this.isCustom = true
+      this.searchTime[0] = this.momentTz(item.start)
+      this.searchTime[1] = this.momentTz(item.end)
+      this.showTime = this.nowTimeType = {
+        id: 0,
+        text: this.searchTime[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + this.searchTime[1],
+        value: -1
+      }
       this.showDropdown()
-      this.$emit('change', this.searchTime)
       this.setSearchTime('', '', this.searchTime)
+      this.$emit('change', this.searchTime)
     },
     getRangeHistoryArr () {
       const arr = this.rangeHistory.slice(0, 3)
