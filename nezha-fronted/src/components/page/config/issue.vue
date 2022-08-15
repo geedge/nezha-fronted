@@ -49,13 +49,13 @@
         ></Pagination>
       </template>
     </nz-data-list>
-     <!-- <transition name="right-box">
+     <transition name="right-box">
       <issue-box
         v-if="rightBox.show"
-        :record-rule="object"
+        :issue="object"
         @close="closeRightBox"
       ></issue-box>
-    </transition> -->
+    </transition>
   </div>
 </template>
 
@@ -64,14 +64,14 @@ import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import issueTable from '@/components/common/table/settings/issueTable'
-// import issueBox from '@/components/common/rightBox/issueBox'
+import issueBox from '@/components/common/rightBox/issueBox'
 
 export default {
   name: 'issue',
   components: {
     issueTable,
     nzDataList,
-    // issueBox
+    issueBox
   },
   mixins: [dataListMixin, routerPathParams],
   data () {
@@ -159,12 +159,12 @@ export default {
       blankObject: {
         id: '',
         name: '',
-        type: '',
+        type: 'default',
         content: '',
         state: '',
-        priority: '',
+        priority: 2,
         rid: '',
-        aid: -1,
+        aid: '',
         assetIds: ''
       }
     }

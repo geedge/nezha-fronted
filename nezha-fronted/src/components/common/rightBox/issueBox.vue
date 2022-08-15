@@ -20,6 +20,7 @@
               v-model="editIssue.name" :placeholder="''"
               maxlength="64"
               show-word-limit
+              ref="issueName"
               size="small">
             </el-input>
           </el-form-item>
@@ -27,7 +28,8 @@
           <el-form-item prop="type" :label='$t("overall.type")' :rules="{ required: true, message: $t('validate.required'), change: 'blur'}">
                       <el-select
                         v-model="editIssue.type"
-                        :placeholder="issueTypeSelect[0]"
+                        class="type-select"
+                        :placeholder="editIssue.type"
                         style="margin-right: 10px"
                         filterable
                         allow-create
@@ -41,13 +43,17 @@
                       </el-select>
           </el-form-item>
           <!--priority-->
-          <el-form-item :label='$t("alert.severity")' prop="priority">
-             <el-input v-model="editIssue.priority" :placeholder="'High'" size="small"></el-input>
-         </el-form-item>
+         <el-form-item :label="$t('alert.severity')" prop="priority">
+          <el-select v-model="editIssue.priority" clearable :placeholder="$t('issue.middle')" size="small" value-key="state" class="type-select">
+            <el-option v-for="item in priorityData" :key="item.id" :label="item.value" :value="item.id">
+              {{item.value}}
+            </el-option>
+          </el-select>
+          </el-form-item>
           <!--state-->
           <el-form-item :label="$t('overall.state')" prop="state">
-          <el-select v-model="editIssue.state" clearable :placeholder="$t('issue.open')" size="small" value-key="state">
-            <el-option v-for="item in stateData" :key="item.id" :label="item.value" :value="item.value">
+          <el-select v-model="editIssue.state" clearable size="small" value-key="state" class="type-select">
+            <el-option v-for="item in stateData" :key="item.id" :label="item.value" :value="item.id">
               {{item.value}}
             </el-option>
           </el-select>
@@ -68,6 +74,7 @@
                 :language="language"
                 :placeholder="$t('dashboard.panel.chartForm.selectAsset')"
                 id="box-input-asset-id"
+                multiple
                 :result-format="resultFormat"></v-selectpage>
           </el-form-item>
           <!-- Reporter -->
@@ -77,7 +84,6 @@
               v-model.trim="editIssue.rid"
               class="right-box__select"
               filterable
-              multiple
               placeholder=""
               popper-class="prevent-clickoutside right-box-select-top"
               size="small"
@@ -100,7 +106,6 @@
               v-model.trim="editIssue.aid"
               class="right-box__select"
               filterable
-              multiple
               placeholder=""
               popper-class="prevent-clickoutside right-box-select-top"
               size="small"
@@ -141,6 +146,7 @@
 </template>
 
 <script>
+import lodash from 'lodash'
 import editRigthBox from '../mixin/editRigthBox'
 import richTextEditor from '@/components/chart/richTextEditor'
 export default {
@@ -160,10 +166,10 @@ export default {
       editIssue: {
         id: '',
         name: '',
-        type: '',
+        type: 'default',
         content: '',
         state: '',
-        priority: '',
+        priority: 2,
         rid: '',
         aid: '',
         assetIds: ''
@@ -186,6 +192,7 @@ export default {
         //   { required: true, message: this.$t('validate.required'), trigger: 'change' }
         // ]
       },
+      // 下拉选择框（表格）
       columns: [
         { title: 'ID', data: 'id' },
         {
@@ -240,6 +247,18 @@ export default {
           id: 7,
           value: this.$t('overall.cancel')
         }
+      ],
+      priorityData: [
+        {
+          id: 1,
+          value: this.$t('dashboard.panel.chartForm.high')
+        }, {
+          id: 2,
+          value: this.$t('issue.middle')
+        }, {
+          id: 3,
+          value: this.$t('issue.low')
+        }
       ]
     }
   },
@@ -278,28 +297,22 @@ export default {
       this.$emit('close', refresh)
     },
     afterInitRich () {
-      this.$refs.alertName.focus()
+      this.$refs.issueName.focus()
     },
     save () {
-      this.editIssue.expr = this.expressions[0]
       this.$refs.issueForm.validate((valid) => {
-        // 处理labels数据
-        const obj = {}
-        this.editIssue.labels.forEach(item => {
-          obj[item.label] = item.value
+        const assetIdsArr = this.editIssue.assetIds.split(',').map((item) => {
+          return Number(item)
         })
-
         const params = {
           ...this.editIssue,
-          state: Number(this.editIssue.state),
-          type: Number(this.editIssue.type),
-          inr: Number(this.editIssue.inr),
-          labels: this.editIssue.labels[0].label != '' ? JSON.stringify(obj) : {}
+          assetIds: assetIdsArr,
+          content: this.$refs.richTextEditor.getContent()
         }
         if (valid) {
           this.prevent_opt.save = true
           if (this.editIssue.id) {
-            this.$put('/record/rule', params).then(response => {
+            this.$put('/issue', params).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -310,7 +323,7 @@ export default {
               this.prevent_opt.save = false
             })
           } else {
-            this.$post('record/rule', params).then(response => {
+            this.$post('issue', params).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
@@ -330,21 +343,33 @@ export default {
     language () { return this.$store.getters.getLanguage }
   },
   watch: {
-    // issue: {
-    //   deep: true,
-    //   immediate: true,
-    //   handler (n, o) {
-    //     this.isEdit = true
-    //     const editObj = lodash.cloneDeep(n)
-    //     this.editIssue = {
-    //       ...editObj,
-    //       type: editObj.type + '',
-    //       inr: editObj.inr + '',
-    //       labels: typeof editObj.labels != 'object' ? this.labelsSort(editObj.labels) : editObj.labels,
-    //       state: editObj.state + ''
-    //     }
-    //   }
-    // }
+    issue: {
+      deep: true,
+      immediate: true,
+      handler (n, o) {
+        this.isEdit = true
+        const editObj = lodash.cloneDeep(n)
+        console.log(editObj)
+        const assetIdData = editObj.assets.map(item => {
+          return item.id
+        })
+        console.log(assetIdData.join())
+        this.editIssue = {
+          ...editObj,
+          assetIds: '546,547'
+        }
+        // this.$set(this.editIssue, 'assetIds', '546,547')
+        // this.editIssue.assetIds = '546,547'
+        console.log(this.editIssue)
+      }
+    },
+    editIssue: {
+      deep: true,
+      immediate: true,
+      handler (n, o) {
+        console.log(this.editIssue)
+      }
+    }
   }
 }
 </script>
