@@ -286,15 +286,16 @@
 </template>
 
 <script>
-import searchSelectInfo from './searchSelectInfo' // 搜索框组件--下拉框内容
+import searchSelectMixin from './searchSelectInfo' // 搜索框组件--下拉框内容
 export default {
   name: 'searchInput',
+  mixins: [searchSelectMixin],
   data () {
     return {
       selectDom: { top: '', left: '', tempTop: '', show: true }, // 选择弹框的位置
       clearSearchShow: false,
       select_conditionsName: '',
-      selectInfoList: searchSelectInfo,
+      selectInfoList: [],
       select_title: '',
       other: '',
       localStorage_display: true,
@@ -312,7 +313,7 @@ export default {
       groupSelect: [],
       projectSelect: [],
       severitySelect: [],
-      alertTypesSelect: searchSelectInfo.searchMetrics,
+      alertTypesSelect: [],
       moduleSelect: [],
       modelSelect: [],
       gnameList: [],
@@ -351,6 +352,10 @@ export default {
       where: this.$route.path,
       assetTypeTree: []
     }
+  },
+  created () {
+    this.selectInfoList = this.searchSelectInfo
+    this.alertTypesSelect = this.searchSelectInfo.searchMetrics
   },
   watch: {
     defaultValue: {
