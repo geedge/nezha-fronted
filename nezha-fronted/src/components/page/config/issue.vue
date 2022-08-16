@@ -172,19 +172,6 @@ export default {
   mounted () {
   },
   methods: {
-    edit (u) {
-      this.$nextTick(() => {
-        this.$get(`${this.url}/${u.id}`).then(response => {
-          if (response.code === 200) {
-            this.object = {
-              ...response.data,
-              assetIds: response.data.assetIds.join(',')
-            }
-            this.rightBox.show = true
-          }
-        })
-      })
-    }
   },
   created () {
   }

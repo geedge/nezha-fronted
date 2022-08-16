@@ -365,7 +365,8 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editIssue = {
-          ...n
+          ...n,
+          assetIds: n.assetIds.join(',')
         }
       }
     }
