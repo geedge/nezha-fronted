@@ -322,6 +322,42 @@ export default {
         ipamType: [
           { label: 'IPV4', value: 4 },
           { label: 'IPV6', value: 6 }
+        ],
+        issueState: [
+          {
+            value: 1,
+            label: this.$t('issue.open')
+          }, {
+            value: 2,
+            label: this.$t('issue.hasBeenAssigned')
+          }, {
+            value: 3,
+            label: this.$t('issue.beingProcessed')
+          }, {
+            value: 4,
+            label: this.$t('issue.hangUp')
+          }, {
+            value: 5,
+            label: this.$t('issue.resolved')
+          }, {
+            value: 6,
+            label: this.$t('overall.close')
+          }, {
+            value: 7,
+            label: this.$t('overall.cancel')
+          }
+        ],
+        priority: [
+          {
+            value: 1,
+            label: this.$t('dashboard.panel.chartForm.high')
+          }, {
+            value: 2,
+            label: this.$t('issue.middle')
+          }, {
+            value: 3,
+            label: this.$t('issue.low')
+          }
         ]
       }
 

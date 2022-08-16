@@ -364,9 +364,18 @@ export default {
       immediate: true,
       handler (n, o) {
         this.isEdit = true
-        this.editIssue = {
-          ...n,
-          assetIds: n.assetIds.join(',')
+        if (n.assets.length >= 1 && n.assets[0] != null) {
+          const assetIdData = n.assets.map(item => {
+            return item.id
+          })
+          this.editIssue = {
+            ...n,
+            assetIds: assetIdData.join(',')
+          }
+        } else {
+          this.editIssue = {
+            ...n
+          }
         }
       }
     }
