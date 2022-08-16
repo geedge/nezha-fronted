@@ -60,23 +60,24 @@
           </el-form-item>
            <!-- Relate Assets -->
           <el-form-item :label="$t('issue.relateAssets')" prop="assetIds">
-           <v-selectpage
+                <v-selectpage
                 ref="selectPage"
-                style="flex: 1"
-                data="asset/asset"
-                :params="selectPageParams"
+                :data="assetList"
                 :tb-columns="columns"
-                key-field="id"
-                show-field="manageIp"
-                search-field="manageIp"
-                v-model="editIssue.assetIds"
-                @values="(data) => {editIssue.assetIds = data.map(d => d.id).join(',')}"
-                size="small"
-                :language="languages"
-                :placeholder="$t('dashboard.panel.chartForm.selectAsset')"
-                id="box-input-asset-id"
+                :params="{
+                  varType: 1, panelId: 0,
+                   returnChildren:0,groupId:0,
+                }"
                 :multiple="true"
-                :result-format="resultFormat"></v-selectpage>
+                :language="languages"
+                key-field="id"
+                :width="640"
+                v-model="editIssue.assetIds"
+                show-field="manageIp"
+                class="form-control"
+                @values="(data) => {editIssue.assetIds = data.map(d => d.id).join(',')}"
+                :result-format="resultFormat"
+            ></v-selectpage>
           </el-form-item>
           <!-- Reporter -->
            <el-form-item :label='$t("issue.reporter")' prop="rid">
@@ -147,7 +148,6 @@
 </template>
 
 <script>
-import lodash from 'lodash'
 import editRigthBox from '../mixin/editRigthBox'
 import richTextEditor from '@/components/chart/richTextEditor'
 import { noSpecialChar } from '@/components/common/js/validate'
@@ -163,7 +163,8 @@ export default {
   },
   data () {
     return {
-      selectPageParams: {},
+      // selectPageParams: {},
+      assetList: [], // asset 列表数据
       issueTypeSelect: [],
       userData: [],
       editIssue: {
@@ -271,8 +272,15 @@ export default {
   mounted () {
     this.getTypeData()
     this.getUserList()
+    this.assetTemplateList()
   },
   methods: {
+    /* 获取asset列表数据 */
+    assetTemplateList () {
+      this.$get('asset/asset', { pageSize: -1, varType: 1, panelId: 0, groupId: 0 }).then(res => {
+        this.assetList = res.data.list
+      })
+    },
     textChange (val) {
       const html = `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${val}</div></div>`
       this.editIssue.content = html
@@ -356,18 +364,8 @@ export default {
       immediate: true,
       handler (n, o) {
         this.isEdit = true
-        const editObj = lodash.cloneDeep(n)
-        if (editObj.assets && editObj.assets[0] != null) {
-          const assetIdData = editObj.assets.map(item => {
-            return item.id
-          })
-          this.editIssue = {
-            ...editObj,
-            assetIds: assetIdData.join('')
-          }
-        }
         this.editIssue = {
-          ...editObj
+          ...n
         }
       }
     }
