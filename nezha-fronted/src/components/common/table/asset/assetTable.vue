@@ -39,16 +39,22 @@
         </template>
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop === 'name'">
-            <div class="document-copy-block">
+            <!-- <div class="document-copy-block">
               <span class="document-copy-text">{{scope.row.name ? scope.row.name : '-'}}</span>
               <i v-if="scope.row.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
-            </div>
+            </div> -->
+            <copy :copyData='scope.row.name'>
+              <template slot="copy-text">
+                 {{scope.row.name ? scope.row.name : '-'}}
+              </template>
+            </copy>
           </template>
            <template v-else-if="item.prop === 'manageIp'">
-            <div class="document-copy-block">
-              <span class="document-copy-text">{{scope.row.manageIp ? scope.row.manageIp : '-'}}</span>
-              <i v-if="scope.row.manageIp" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.manageIp)" :title="$t('overall.copyText')"></i>
-            </div>
+            <copy :copyData='scope.row.manageIp'>
+              <template slot="copy-text">
+                 {{scope.row.manageIp ? scope.row.manageIp : '-'}}
+              </template>
+            </copy>
           </template>
           <template v-else-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
           <template v-else-if="item.prop === 'state'">{{scope.row.state ? scope.row.state.name : '-'}}</template>
@@ -188,6 +194,7 @@
 import table from '@/components/common/mixin/table'
 import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
 // import bus from '@/libs/bus'
+import copy from '@/components/common/copy'
 import alertLabel from '@/components/common/alert/alertLabel'
 import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
 import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
@@ -196,7 +203,8 @@ export default {
   mixins: [table, alertLabelMixin],
   components: {
     alertLabel: alertLabel,
-    alertDaysInfo
+    alertDaysInfo,
+    copy
   },
   props: {
     showOption: {
