@@ -4,7 +4,54 @@
       <div :id="'map' + (isFullscreen ? '-screen-' : '' ) + chartInfo.id " style="height: 100%; width: 100%" :style="theme=='dark'? 'filter: invert(1) hue-rotate(0.5turn);opacity: 0.75;': ''"></div>
     </div>
     <!--自定义地图鼠标悬浮提示dom，避免被overflow：hidden裁剪-->
-    <div :style="{'left': `${tooltip.x}px`, 'top': `${tooltip.y}px`}" class="my-pane" :class="'my-pane-' + chartId"></div>
+    <div :style="{'left': `${tooltip.x}px`, 'top': `${tooltip.y}px`}" class="my-pane" :class="'my-pane-' + chartId" v-if="tooltip.show">
+      <div class="leaflet-pane leaflet-my-pane">
+        <div class="leaflet-tooltip leaflet-zoom-animated leaflet-tooltip-left" style="opacity: 0.9; transform: translate3d(251px, 196px, 0px);">
+          <div class="nz-tooltip-bac tooltip-map" style="z-index: 11111;width: 175px">
+            <div class="tooltip--title">{{dcStat.name}}</div>
+            <div class="tooltip--row">
+              <div class="legend-value legend-value-asset">
+                <div class="map-asset">
+                  <div class="progress-title">{{$t('panel.assetOk')}}</div>
+                  <div class="success-progress progress-box">
+                    <div class="top-progress" :style="{width: (dcStat.asset.ok / dcStat.asset.total) * 100 + '%' }"></div>
+                    <div style="width: 100%" class="bottom-progress"></div>
+                  </div>
+                  <div class="success-progress progress-content">{{dcStat.asset.ok}}</div>
+                </div>
+                <div class="map-asset">
+                  <div class="progress-title">{{$t('panel.assetAlarm')}}</div>
+                  <div class="error-progress progress-box">
+                    <div class="top-progress" :style="{width: (dcStat.asset.alarm / dcStat.asset.total) * 100 + '%'}"></div>
+                    <div style="width: 100%" class="bottom-progress"></div>
+                  </div>
+                  <div class="error-progress progress-content">{{dcStat.asset.alarm}}</div>
+                </div>
+              </div>
+              <div class="partition"></div>
+              <div class="legend-value legend-value-agent">
+                <div class="map-asset">
+                  <div class="progress-title">{{$t('overall.agent')}} {{$t('config.agent.up')}}}</div>
+                  <div class="success-progress progress-box">
+                    <div class="top-progress" :style="{width: (dcStat.agent.up / (dcStat.agent.up + dcStat.agent.down)) * 100 + '%'}"></div>
+                    <div style="width: 100%" class="bottom-progress"></div>
+                  </div>
+                  <div class="success-progress progress-content">{{dcStat.agent.up}}</div>
+                </div>
+                <div class="map-asset">
+                  <div class="progress-title">{{$t('overall.agent')}} {{$t('asset.down')}}</div>
+                  <div class="error-progress progress-box">
+                    <div class="top-progress" :style="{width: (dcStat.agent.down / (dcStat.agent.up + dcStat.agent.down)) * 100 + '%'}"></div>
+                    <div style="width: 100%" class="bottom-progress"></div>
+                  </div>
+                  <div class="error-progress progress-content">{{dcStat.agent.down}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -27,10 +74,13 @@ export default {
       map: null,
       tooltip: {
         x: 0,
-        y: 0
+        y: 0,
+        show: false
       },
+      dcStat: {},
       theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`),
-      timer: null
+      timer: null,
+      requestAnimationFrame: ''
     }
   },
   mounted () {
@@ -48,15 +98,14 @@ export default {
       this.timer = setTimeout(() => {
         let loadPromise
         this.loadMapConfig().then((mapConfig) => {
-          // if (mapConfig && this.map) {
-          //   loadPromise = this.loadDataCenterMapData()
-          // }
+
         })
         this.isInit = false
         return loadPromise
       }, 500)
     },
     loadMapConfig () {
+      const self = this
       return new Promise(resolve => {
         const DefaultIcon = L.icon({
           iconUrl: icon,
@@ -78,10 +127,10 @@ export default {
               style: mapStyle,
               maxZoom: 7,
               minZoom: 0,
-              renderWorldCopies: false,
+              // renderWorldCopies: false,
               hash: false,
               transformRequest: function (url, resourceType) {
-                console.log(url, resourceType)
+                console.log(resourceType)
                 if (resourceType === 'Tile' && url.indexOf('https://api.maptiler.com/tiles/v3') > -1) {
                   const urlParams = url.split('.pbf')[0].split('/')
                   const z = urlParams[urlParams.length - 3]
@@ -96,6 +145,9 @@ export default {
                   }
                 }
               }
+            })
+            this.map.on('load', function () {
+              self.loadDataCenterMapData()
             })
             maplibregl.addProtocol('nzMap', (params, callback) => { // 切片显示接口 防止跨域的问题
               fetch(`${params.url.split('://')[1]}`)
@@ -119,6 +171,7 @@ export default {
       })
     },
     loadDataCenterMapData () {
+      const self = this
       return new Promise(resolve => {
         const requests = [axios.get('dc?pageSize=-1'), axios.get('/stat/overview/map')]
         axios.all(requests).then(result => {
@@ -131,9 +184,9 @@ export default {
             const dc = dcInfos.find(i => i.name === s.name)
             dc && (s = { ...s, latitude: dc.latitude, longitude: dc.longitude })
           })
-          const bigScatter = 10
-          const mediumScatter = 8
-          const smallScatter = 6
+          const bigScatter = 18
+          const mediumScatter = 13
+          const smallScatter = 10
           const maxAssetTotal = dcInfos[0] ? dcInfos[0].assetNum : '' // 获取asset数量最大值
           const bigBoundary = Number.parseInt(maxAssetTotal / 3 * 2) // 根据最大值定下大图标、中图标的阈值
           const mediumBoundary = Number.parseInt(maxAssetTotal / 3)
@@ -147,85 +200,104 @@ export default {
               } else {
                 symbolSize = smallScatter
               }
-              let shadowMarker
-              let marker
-              if (dcStat.color === 1) {
-                shadowMarker = L.circleMarker([dcStat.latitude, dcStat.longitude], { opacity: 0, fillOpacity: 0, radius: symbolSize + 10 })
-                marker = L.circleMarker([dcStat.latitude, dcStat.longitude], { interactive: false, color: '#23BF9A', opacity: 0.42, fillColor: '#23BF9A', fillOpacity: 0.5, radius: symbolSize, className: 'real-marker' })
-              } else if (dcStat.color === 2) {
-                shadowMarker = L.circleMarker([dcStat.latitude, dcStat.longitude], { opacity: 0, fillOpacity: 0, radius: symbolSize + 10 })
-                marker = L.circleMarker([dcStat.latitude, dcStat.longitude], { interactive: false, color: '#EC7F66', opacity: 0.42, fillColor: '#EC7F66', fillOpacity: 0.5, radius: symbolSize, className: 'real-marker error-item' })
-              } else if (dcStat.color === 3) {
-                shadowMarker = L.circleMarker([dcStat.latitude, dcStat.longitude], { opacity: 0, fillOpacity: 0, radius: symbolSize + 10 })
-                marker = L.circleMarker([dcStat.latitude, dcStat.longitude], { interactive: false, color: '#9e9c98', opacity: 0.42, fillColor: '#9e9c98', fillOpacity: 0.5, radius: symbolSize, className: 'real-marker' })
-              }
-              shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), { sticky: false, pane: 'myPane', direction: 'left', data: dcStat })
-              shadowMarker.on('mouseover', (param) => {
-                const point = param.containerPoint
-                const event = param.originalEvent
-                const boxWidth = window.innerWidth / 2
-                this.tooltip.x = event.clientX + point.x - event.layerX - 5
-                this.tooltip.y = event.clientY + point.y - event.layerY
-                if (boxWidth > this.tooltip.x) {
-                  this.tooltip.x = this.tooltip.x + 175 + 10
-                }
-              })
-              shadowMarker.addTo(this.map)
-              marker.addTo(this.map)
+              dcStat.symbolSize = symbolSize
             }
           })
+          this.renderPoint(dcStats)
+          self.map.on('mouseenter', 'pointLayer', function (param) {
+            console.log('mouseenter', param)
+            const point = param.point
+            const event = param.originalEvent
+            const boxWidth = window.innerWidth / 2
+            const boxHeight = window.innerHeight / 2
+            self.tooltip.x = event.clientX + point.x - event.layerX + 15
+            self.tooltip.y = event.clientY + point.y - event.layerY + 15
+            if (self.tooltip.x > boxWidth) {
+              self.tooltip.x = self.tooltip.x - 200 - 15
+            }
+            if (self.tooltip.y > boxHeight) {
+              self.tooltip.y = self.tooltip.y - 160 - 15
+            }
+            self.dcStat = {
+              ...param.features[0].properties,
+              asset: JSON.parse(param.features[0].properties.asset),
+              agent: JSON.parse(param.features[0].properties.agent)
+            }
+            self.tooltip.show = true
+          })
+
+          self.map.on('mouseleave', 'pointLayer', function () {
+            console.log('mouseleave')
+            self.tooltip.show = false
+            self.dcStat = ''
+          })
+          self.pointAnimation(0)
         })
       })
     },
-    mapTooltipFormatter (dcStat) {
-      const self = this
-      return `<div class="nz-tooltip-bac tooltip-map" style="z-index: 11111;width: 175px">
-          <div class="tooltip--title">${dcStat.name}</div>
-          <div class="tooltip--row">
-            <div class="legend-value legend-value-asset">
-             <div class="map-asset">
-                <div class="progress-title">${self.$t('panel.assetOk')}</div>
-                <div class="success-progress progress-box">
-                    <div class="top-progress" style="width: ${(dcStat.asset.ok / dcStat.asset.total) * 100}%"></div>
-                    <div style="width: 100%" class="bottom-progress"></div>
-                </div>
-                <div class="success-progress progress-content">${dcStat.asset.ok}</div>
-              </div>
-             <div class="map-asset">
-                <div class="progress-title">${self.$t('panel.assetAlarm')}</div>
-                <div class="error-progress progress-box">
-                    <div class="top-progress" style="width: ${(dcStat.asset.alarm / dcStat.asset.total) * 100}%"></div>
-                    <div style="width: 100%" class="bottom-progress"></div>
-                </div>
-                <div class="error-progress progress-content">${dcStat.asset.alarm}</div>
-              </div>
-            </div>
-            <div class="partition"></div>
-            <div class="legend-value legend-value-agent">
-            <div class="map-asset">
-                <div class="progress-title">${self.$t('overall.agent')} ${self.$t('config.agent.up')}</div>
-                <div class="success-progress progress-box">
-                    <div class="top-progress" style="width: ${(dcStat.agent.up / (dcStat.agent.up + dcStat.agent.down)) * 100}%"></div>
-                    <div style="width: 100%" class="bottom-progress"></div>
-                </div>
-                <div class="success-progress progress-content">${dcStat.agent.up}</div>
-             </div>
-             <div class="map-asset">
-                <div class="progress-title">${self.$t('overall.agent')} ${self.$t('asset.down')}</div>
-                <div class="error-progress progress-box">
-                    <div class="top-progress" style="width: ${(dcStat.agent.down / (dcStat.agent.up + dcStat.agent.down)) * 100}%"></div>
-                    <div style="width: 100%" class="bottom-progress"></div>
-                </div>
-                <div class="error-progress progress-content">${dcStat.agent.down}</div>
-             </div>
-            </div>
-          </div>
-        </div>`
-
-      // return tooltip;
+    renderPoint (dcStats) {
+      const arr = []
+      dcStats.forEach(dcStat => {
+        arr.push({
+          type: 'Feature',
+          properties: {
+            ...dcStat
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [dcStat.longitude, dcStat.latitude]
+          }
+        })
+      })
+      this.map.addSource('pointData', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: arr
+        }
+      })
+      this.map.addLayer({
+        id: 'pointLayer',
+        type: 'circle',
+        source: 'pointData',
+        paint: {
+          'circle-radius': [
+            'step',
+            ['get', 'symbolSize'],
+            10,
+            13,
+            13,
+            18,
+            18
+          ],
+          'circle-color': [
+            'step',
+            ['get', 'color'],
+            '#23BF9A',
+            2,
+            '#EC7F66',
+            3,
+            '#9e9c98'
+          ],
+          'circle-opacity': 0.5
+        }
+      })
+    },
+    pointAnimation (timeStep) {
+      const opacity = 0.5 + (timeStep % 1000) / 1000 / 2
+      this.map.setPaintProperty('pointLayer', 'circle-opacity', [
+        'step',
+        ['get', 'color'],
+        0.5,
+        2,
+        opacity,
+        3,
+        0.5
+      ])
+      requestAnimationFrame(this.pointAnimation)
     },
     resize () {
-      this.initMap()
+      this.map.resize()
     }
   },
   beforeDestroy () {
