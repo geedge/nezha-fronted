@@ -41,7 +41,7 @@ export default {
       marker: null,
       mapConfigVisible: false,
       changeZoom: false,
-      zoom: 4
+      zoom: null
     }
   },
   watch: {
