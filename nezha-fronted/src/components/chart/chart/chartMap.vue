@@ -80,11 +80,19 @@ export default {
       dcStat: {},
       theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`),
       timer: null,
-      requestAnimationFrame: ''
+      requestAnimationFrame: '',
+      pbfUrl: {
+        m: [],
+        c: []
+      }
     }
   },
   mounted () {
     this.chartInfo.loaded && this.initChart()
+    // for (let i = 0; i < 65535; i += 1) {
+    //   const url = 'https://api.maptiler.com/fonts/Roboto Medium,Noto Sans Regular/' + i + '-' + (i + 255) + '.pbf?key=rB2y2a2rG8i9SEjOXQXl'
+    //   window.open(url)
+    // }
   },
   methods: {
     initChart () {
@@ -107,16 +115,12 @@ export default {
     loadMapConfig () {
       const self = this
       return new Promise(resolve => {
-        const DefaultIcon = L.icon({
-          iconUrl: icon,
-          shadowUrl: iconShadow
-        })
-        L.Marker.prototype.options.icon = DefaultIcon
         const param = { paramKey: 'map_center_config' }
         this.$get('sysConfig', param).then(response => {
           if (response.code == 200) {
             const mapConfig = JSON.parse(response.data.paramKey.map_center_config)
             mapStyle.center = [Number(mapConfig.longitude), Number(mapConfig.latitude)]
+            mapStyle.zoom = Number(mapConfig.zoom)
             if (this.map) {
               this.map.remove()
               this.map = null
@@ -130,7 +134,6 @@ export default {
               // renderWorldCopies: false,
               hash: false,
               transformRequest: function (url, resourceType) {
-                console.log(resourceType)
                 if (resourceType === 'Tile' && url.indexOf('https://api.maptiler.com/tiles/v3') > -1) {
                   const urlParams = url.split('.pbf')[0].split('/')
                   const z = urlParams[urlParams.length - 3]
@@ -143,6 +146,19 @@ export default {
                     method: 'GET'
                     // Include cookies for cross-origin requests
                   }
+                }
+                if (resourceType === 'Glyphs') {
+                  // // console.log(url)
+                  // window.open(url)
+                  // const str = url.split('Roboto')[1]
+                  // console.log(str[1])
+                  // if (str[0] == 'M') {
+                  //   self.pbfUrl.m.push(url)
+                  // } else {
+                  //   self.pbfUrl.c.push(url)
+                  // }
+                  // console.log(self.pbfUrl)
+                  // // window.open(url)
                 }
               }
             })

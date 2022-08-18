@@ -1165,7 +1165,6 @@ export default {
     /* topology 方法 */
     /* topology 方法 */
     onDrag (event, node) {
-      console.log(event, node)
       this.dragFlag = false
       const timer = setTimeout(() => {
         this.dragFlag = true
@@ -1174,7 +1173,6 @@ export default {
       event.dataTransfer.setData('Text', JSON.stringify({ ...node.data, data: { imageId: node.data.imageId } }))
     },
     dragFlagChange (node) {
-      console.log(node)
       getTopology(this.topologyIndex).addPen(
         {
           ...node.data,
