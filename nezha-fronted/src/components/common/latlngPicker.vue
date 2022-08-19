@@ -55,6 +55,16 @@ export default {
     }
   },
   mounted () {
+    const arr = []
+    mapStyle.layers.forEach(item => {
+      if (item.layout['text-font']) {
+        const font = item.layout['text-font'].join(',')
+        if (arr.indexOf(font) === -1) {
+          arr.push(font)
+        }
+      }
+    })
+    console.log(arr)
   },
   methods: {
     initMap () {

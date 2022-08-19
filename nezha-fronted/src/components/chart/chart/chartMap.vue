@@ -147,18 +147,21 @@ export default {
                     // Include cookies for cross-origin requests
                   }
                 }
-                if (resourceType === 'Glyphs') {
-                  // // console.log(url)
-                  // window.open(url)
-                  // const str = url.split('Roboto')[1]
-                  // console.log(str[1])
-                  // if (str[0] == 'M') {
-                  //   self.pbfUrl.m.push(url)
-                  // } else {
-                  //   self.pbfUrl.c.push(url)
-                  // }
-                  // console.log(self.pbfUrl)
-                  // // window.open(url)
+                if (resourceType === 'SpriteJSON') {
+                  return {
+                    url: 'nzMap://static/Titles/sprite.json',
+                    credentials: 'include',
+                    method: 'GET'
+                    // Include cookies for cross-origin requests
+                  }
+                }
+                if (resourceType === 'SpriteImage') {
+                  return {
+                    url: 'nzMap://static/Titles/sprite.png',
+                    credentials: 'include',
+                    method: 'GET'
+                    // Include cookies for cross-origin requests
+                  }
                 }
               }
             })

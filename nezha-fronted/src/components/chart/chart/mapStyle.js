@@ -1461,8 +1461,8 @@ const mapStyle = {
       paint: { 'text-color': 'hsla(60, 83%, 60%, 0.69)' }
     }],
   metadata: { 'maptiler:copyright': 'This style was generated on MapTiler Cloud. Usage outside of MapTiler Cloud or MapTiler Server requires valid MapTiler Data package: https://www.maptiler.com/data/ -- please contact us.' },
-  glyphs: 'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=rB2y2a2rG8i9SEjOXQXl',
-  sprite: 'https://api.maptiler.com/maps/13a5a9a7-498d-45dd-9e80-5cbefb010836/sprite',
+  glyphs: 'static/Titles/fonts/{fontstack}/{range}.pbf?key=rB2y2a2rG8i9SEjOXQXl',
+  sprite: 'https://www.maptiler.com/static/Titles/sprite',
   bearing: 0,
   pitch: 0,
   center: [130, -20],
