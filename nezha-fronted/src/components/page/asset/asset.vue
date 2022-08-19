@@ -114,8 +114,12 @@
               <el-dropdown-item>
                 <div id="asset-batch-asset" v-has="'asset_edit'" @click="batchEdit"><i class="nz-icon nz-icon-batch-edit"></i>{{$t('overall.batchEdit')}}</div>
               </el-dropdown-item>
+                  <!-- 批量删除 -->
               <el-dropdown-item>
-                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="asset-list-batch-delete" v-has="'asset_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+                <div id="asset-list-batch-delete" v-has="'asset_delete'" >
+                  <el-button type="text" :disabled="isDisabled" @click="BatchDelete"><i class="nz-icon nz-icon-batch-edit"></i>{{$t('overall.batchDel')}}</el-button>
+                </div>
+                <!-- <delete-button :type="'link'" :title="$t('overall.batchDel')" id="asset-list-batch-delete" v-has="'asset_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" @click="deletesBtn"></delete-button> -->
               </el-dropdown-item>
             </div>
           </template>
@@ -176,6 +180,81 @@
     </transition>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
     </transition>
+
+    <template>
+         <!-- 批量删除 -->
+      <el-dialog
+        ref="dialogData"
+        id="dialogID"
+        title="Hint"
+        v-if="dialogVisible"
+        :visible.sync="dialogVisible"
+        @close='handleClose'
+        width="20%"
+        :modal-append-to-body="true"
+        :append-to-body="true"
+        >
+                  <!--  -->
+                <div class="dialog-header1" style="vertical-align:top;"  v-if="showOne">
+                <i class="nz-icon nz-icon-jinggao" style="color:#ff000078;"></i>
+                <span>Are you sure to delete these {{ this.batchDeleteObjs.length }} Pleaces data?</span>
+                </div>
+                <!--  -->
+                <div class="dialog-header2" style="vertical-align:top;" v-if="showTwo">
+                <i class="nz-icon nz-icon-import-failed1" style="color:#ff000078;"></i>
+                <span>These Assets cannot be deleted.If you want to continue to delete,please check the "Force delete" action.</span>
+                </div>
+                <!--  -->
+                 <div class="dialog-header3" style="vertical-align:top;" v-if="showThree">
+                <i class="nz-icon nz-icon-import-success1" style="color:rgb(20 191 25 / 97%);"></i>
+                <span>These Assets delete complete.</span>
+                </div>
+                      <el-table
+                      class="branchTable"
+                        ref="batchDeleteData"
+                        :data="batchDeleteObjs"
+                        tooltip-effect="dark"
+                        style="width: 100%"
+                        :row-key="(row) => {return row.id}"
+                        @selection-change="batchDeleteselectionChange"
+                        @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"
+                        @topology="topology"
+                        @row-dblclick="(row)=>{$emit('showBottomBox', 'panelTab', row)}"
+                        >
+                        <el-table-column
+                          :resizable="false"
+                          type="selection"
+                          :reserve-selection="true"
+                          width="55">
+                        </el-table-column>
+                        <el-table-column
+                          v-if="idShow"
+                          label="ID"
+                          width="120"
+                          >
+                          <template slot-scope="scope">{{ scope.row.id }}</template>
+                        </el-table-column>
+                        <el-table-column
+                          label="name"
+                          width="120">
+                          <template slot-scope="scope"
+                          >
+                           <i class="nz-icon nz-icon-overview-project monitorColor"></i>
+                          <!-- <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> -->
+                          {{ scope.row.name }}</template>
+                        </el-table-column>
+                      </el-table>
+                  <!-- 底部按钮 -->
+                <span slot="footer" class="dialog-footer" v-if="dialogFooterShow">
+                  <div class="footerBox1">
+                    <el-checkbox v-model="ForceDeleteShow" text-color="black" @change="this.ForceDeleteShow=!this.ForceDeleteShow" name="type"></el-checkbox>
+                  <span class="checkTitle">Force delete</span>
+                  </div>
+                  <el-button @click="dialogVisible = false">No</el-button>
+                  <el-button type="primary" @click="BatchDeleteYes">Yes</el-button>
+                </span>
+      </el-dialog>
+    </template>
   </div>
 </template>
 
@@ -949,4 +1028,37 @@ export default {
   /deep/ .nz-table-list{
     flex: 1;
   }
+ /* del 样式 */
+ /* .theme-light  #dialogID .el-dialog .el-dialog__title {
+    font-size: 12px;
+} */
+.el-dialog__footer {
+  position: relative;
+}
+.el-dialog__footer .dialog-footer .el-checkbox{
+  position: absolute;
+  bottom: 30px;
+  left: 20px;
+
+}
+.checkTitle{
+  position: absolute;
+  bottom: 30px;
+  left: 40px;
+  color: #878181;
+}
+.footerBox1{
+  line-height: initial;
+}
+.theme-light .el-button.is-disabled, .theme-light .el-button.is-disabled:hover, .theme-light .el-button.is-disabled:focus{
+  color: #C0C4CC !important;
+
+}
+.theme-light .el-button--text, #asset-list-batch-delete, .theme-light .el-button--text:focus, .theme-light .el-button--text:hover, .theme-light .el-cascader-node.in-active-path, .theme-light .el-cascader-node.is-active, .theme-light .el-cascader-node.is-selectable.in-checked-path, .theme-light .el-select-dropdown.is-multiple .el-select-dropdown__item.selected, .theme-light .el-select-dropdown__item.selected{
+ color: #666 !important;
+}
+.theme-light .el-button--text:hover{
+ color: #FA901C !important;
+}
+
 </style>
