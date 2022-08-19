@@ -14,7 +14,7 @@
       <div class="input-box-item" style="margin-right: unset !important;width: 30px !important;flex:unset;" @click="mapConfigVisible = true"><i class="nz-icon nz-icon-weizhi" style="color:rgb(238, 157, 63)"></i></div>
     </div>
     <el-dialog :visible.sync="mapConfigVisible" :title="$t('config.system.basic.mapTitle')" width="calc(50% - 10px)"  @close="mapClose" @opened="initMap" class=" nz-dialog map-config-dialog" :modal-append-to-body="appendToBody">
-      <div id="map" style="height: 100%; width: 100%" :style="theme=='dark'? 'filter: invert(1) hue-rotate(0.5turn);opacity: 0.75;': ''"></div>
+      <div id="map" style="height: 100%; width: 100%"></div>
     </el-dialog>
   </div>
 </template>
@@ -22,9 +22,8 @@
 <script>
 // 引入Leaflet对象 挂载到Vue上，便于全局使用，也可以单独页面中单独引用
 import 'leaflet/dist/leaflet.css'
-import * as L from 'leaflet'
-import icon from 'leaflet/dist/images/marker-icon.png'
-import iconShadow from 'leaflet/dist/images/marker-shadow.png'
+import maplibregl from 'maplibre-gl'
+import mapStyle from '@/components/chart/chart/mapStyle'
 export default {
   name: 'latlngPicker',
   props: {
@@ -37,7 +36,7 @@ export default {
       theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`),
       lnglat: '',
       oldlnglat: '',
-      mapParam: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 },
+      mapParam: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 7 },
       map: null,
       marker: null,
       mapConfigVisible: false,
@@ -64,53 +63,112 @@ export default {
         this.map = null
       }
       this.setLatlng()
-      const DefaultIcon = L.icon({
-        iconUrl: icon,
-        iconSize: [26, 40],
-        iconAnchor: [13, 40],
-        shadowUrl: iconShadow
+      mapStyle.center = [Number(this.mapParam.longitude), Number(this.mapParam.latitude)]
+      mapStyle.zoom = Number(this.zoom)
+      const mapId = document.getElementById('map')
+      this.map = new maplibregl.Map({
+        container: mapId,
+        style: mapStyle,
+        maxZoom: 7,
+        minZoom: 1,
+        // renderWorldCopies: false,
+        hash: false,
+        transformRequest: function (url, resourceType) {
+          console.log(resourceType)
+          if (resourceType === 'Tile' && url.indexOf('https://api.maptiler.com/tiles/v3') > -1) {
+            const urlParams = url.split('.pbf')[0].split('/')
+            const z = urlParams[urlParams.length - 3]
+            const x = urlParams[urlParams.length - 2]
+            const y = urlParams[urlParams.length - 1]
+            const newUrl1 = `nzMap://static/Titles/${z}/${x}/${y}.pbf`
+            return {
+              url: newUrl1,
+              credentials: 'include',
+              method: 'GET'
+              // Include cookies for cross-origin requests
+            }
+          }
+          if (resourceType === 'SpriteJSON') {
+            return {
+              url: 'nzMap://static/Titles/sprite.json',
+              credentials: 'include',
+              method: 'GET'
+              // Include cookies for cross-origin requests
+            }
+          }
+          if (resourceType === 'SpriteImage') {
+            return {
+              url: 'nzMap://static/Titles/sprite.png',
+              credentials: 'include',
+              method: 'GET'
+              // Include cookies for cross-origin requests
+            }
+          }
+        }
       })
-      L.Marker.prototype.options.icon = DefaultIcon
-      const map = L.map('map', {
-        minZoom: this.mapParam.minZoom,
-        maxZoom: this.mapParam.maxZoom,
-        attributionControl: false,
-        zoomControl: false,
-        maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180))
-      }).setView([this.mapParam.latitude, this.mapParam.longitude], this.mapParam.zoom)
-
-      L.tileLayer(
-        '/static/Tiles/{z}/{x}/{y}.png',
-        { noWrap: true }
-      ).addTo(map)
-
-      const attribution = L.control.attribution({ position: 'bottomright', prefix: '' })
-      attribution.addAttribution(' © OpenStreetMap contributors')
-      attribution.addTo(map)
-
-      L.control.zoom({
-        position: 'bottomright',
-        zoomInText: '<i class="nz-icon nz-icon-enlarge"></i>',
-        zoomOutText: '<i class="nz-icon nz-icon-narrow"></i>',
-        zoomInTitle: '',
-        zoomOutTitle: ''
-      }).addTo(map)
-
-      const marker = L.marker([this.mapParam.latitude, this.mapParam.longitude]).addTo(map)
-      map.on('click', function (e) {
-        const latitude = e.latlng.lat
-        const longitude = e.latlng.lng
-        marker.setLatLng([latitude, longitude])
+      maplibregl.addProtocol('nzMap', (params, callback) => { // 切片显示接口 防止跨域的问题
+        fetch(`${params.url.split('://')[1]}`)
+          .then(t => {
+            if (t.status == 200) {
+              t.arrayBuffer().then(arr => {
+                callback(null, arr, null, null)
+              })
+            } else {
+              callback(new Error(`Tile fetch error: ${t.statusText}`))
+            }
+          })
+          .catch(e => {
+            callback(new Error(e))
+          })
+        return { cancel: () => { } }
       })
-      this.map = map
-      this.marker = marker
+      const marker = ''
+      const self = this
+      const geoJSON = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'Point',
+              coordinates: [Number(self.mapParam.longitude), Number(self.mapParam.latitude)]
+            }
+          }
+        ]
+      }
+      this.map.on('load', function () {
+        self.map.addSource('centerMarker',
+          {
+            type: 'geojson',
+            data: geoJSON
+          })
+        self.map.addLayer({
+          id: 'centerMarkerLayer',
+          type: 'circle',
+          source: 'centerMarker',
+          paint: {
+            'circle-radius': 8,
+            'circle-color': '#23BF9A',
+            'circle-opacity': 1
+          }
+        })
+      })
+      // const marker = L.marker([this.mapParam.latitude, this.mapParam.longitude]).addTo(map)
+      this.map.on('click', function (e) {
+        console.log(e, e.lngLat)
+        const coords = e.lngLat
+        geoJSON.features[0].geometry.coordinates = [coords.lng, coords.lat]
+        self.map.getSource('centerMarker').setData(geoJSON)
+      })
+      // this.marker = marker
     },
     mapClose () {
       this.changZoom = true
       this.mapConfigVisible = false
-      const latlng = this.marker.getLatLng()
-      this.mapParam.longitude = latlng.lng.toFixed(7)
-      this.mapParam.latitude = latlng.lat.toFixed(7)
+      const latlng = this.map.getSource('centerMarker')._data.features[0].geometry.coordinates
+      this.mapParam.longitude = latlng[0].toFixed(7)
+      this.mapParam.latitude = latlng[1].toFixed(7)
       this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
       this.zoom = this.map.getZoom()
       this.setLatlng()
@@ -135,20 +193,6 @@ export default {
         this.mapParam.latitude = lat
         this.mapParam.longitude = lng
         this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
-      }
-    },
-    changeLnglat () {
-      const lnglat = this.lnglat.split(',')
-      if (lnglat.length !== 2) {
-        this.$message.error(this.$t('tip.lnglatError'))
-        return false
-      }
-      const lngReg = /^[\-\+]?(0?\d{1,2}\.\d{1,7}|1[0-7]?\d{1}\.\d{1,7}|180\.0{1,7}|0?\d{1,2}|1[0-7]?\d{1}|180)$/ // 经度正则验证
-      const latReg = /^[\-\+]?([1-8]?\d{1}\.\d{1,7}|90\.0{1,7}|[1-8]?\d{1}|90)$/ // 纬度正则验证
-      if (!lngReg.test(lnglat[0]) || !latReg.test(lnglat[1])) {
-        // this.lnglat = this.oldlnglat
-        this.$message.error(this.$t('tip.lnglatError'))
-        return false
       }
     },
     queryDefaultMapConfig (data) {

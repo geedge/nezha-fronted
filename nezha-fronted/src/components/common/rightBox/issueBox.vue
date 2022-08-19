@@ -52,7 +52,7 @@
           </el-form-item>
           <!--state-->
           <el-form-item :label="$t('overall.state')" prop="state">
-          <el-select v-model="editIssue.state" clearable size="small" value-key="state" class="type-select">
+          <el-select v-model="editIssue.state" placeholder='' clearable size="small" value-key="state" class="type-select">
             <el-option v-for="item in stateData" :key="item.id" :label="item.value" :value="item.id">
               {{item.value}}
             </el-option>
@@ -60,22 +60,24 @@
           </el-form-item>
            <!-- Relate Assets -->
           <el-form-item :label="$t('issue.relateAssets')" prop="assetIds">
-           <v-selectpage
+                <v-selectpage
                 ref="selectPage"
-                style="flex: 1"
-                data="asset/asset"
-                :params="selectPageParams"
+                :data="assetList"
                 :tb-columns="columns"
+                :params="{
+                  varType: 1, panelId: 0,
+                   returnChildren:0,groupId:0,
+                }"
+                :multiple="true"
+                :language="languages"
                 key-field="id"
-                show-field="manageIp"
-                search-field="manageIp"
+                :width="640"
                 v-model="editIssue.assetIds"
-                size="small"
-                :language="language"
-                :placeholder="$t('dashboard.panel.chartForm.selectAsset')"
-                id="box-input-asset-id"
-                multiple
-                :result-format="resultFormat"></v-selectpage>
+                show-field="manageIp"
+                class="form-control"
+                @values="(data) => {editIssue.assetIds = data.map(d => d.id).join(',')}"
+                :result-format="resultFormat"
+            ></v-selectpage>
           </el-form-item>
           <!-- Reporter -->
            <el-form-item :label='$t("issue.reporter")' prop="rid">
@@ -123,7 +125,7 @@
           </el-form-item>
            <!-- remark -->
           <el-form-item :label='$t("overall.remark")' prop="content">
-            <rich-text-editor ref="richTextEditor" :edit-data="editIssue.content" @after-init="afterInitRich"></rich-text-editor>
+            <rich-text-editor ref="richTextEditor" :edit-data="editIssue.content" @textChange="textChange"></rich-text-editor>
           </el-form-item>
         </el-form>
       </div>
@@ -146,22 +148,24 @@
 </template>
 
 <script>
-import lodash from 'lodash'
 import editRigthBox from '../mixin/editRigthBox'
 import richTextEditor from '@/components/chart/richTextEditor'
+import { noSpecialChar } from '@/components/common/js/validate'
+import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 export default {
   name: 'issueBox',
   components: {
     richTextEditor
   },
-  mixins: [editRigthBox],
+  mixins: [editRigthBox, publicConfig],
   props: {
     issue: Object
   },
   data () {
     return {
+      // selectPageParams: {},
+      assetList: [], // asset 列表数据
       issueTypeSelect: [],
-      selectPageParams: { pageNumber: 1 },
       userData: [],
       editIssue: {
         id: '',
@@ -176,21 +180,24 @@ export default {
       },
       rules: {
         name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: noSpecialChar, trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        content: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        rid: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        aid: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        state: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ]
-        // type: [
-        //   { required: true, message: this.$t('validate.required'), trigger: 'change' }
-        // ],
-        // expr: [
-        //   { required: true, message: this.$t('validate.required'), trigger: 'change' }
-        // ],
-        // labels: [
-        //   { required: true, message: this.$t('validate.required'), trigger: 'change' },
-        //   { validator: arrLength, trigger: 'change' }
-        // ],
-        // state: [
-        //   { required: true, message: this.$t('validate.required'), trigger: 'change' }
-        // ]
       },
       // 下拉选择框（表格）
       columns: [
@@ -265,8 +272,20 @@ export default {
   mounted () {
     this.getTypeData()
     this.getUserList()
+    this.assetTemplateList()
   },
   methods: {
+    /* 获取asset列表数据 */
+    assetTemplateList () {
+      this.$get('asset/asset', { pageSize: -1, varType: 1, panelId: 0, groupId: 0 }).then(res => {
+        this.assetList = res.data.list
+      })
+    },
+    textChange (val) {
+      const html = `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${val}</div></div>`
+      this.editIssue.content = html
+      this.change()
+    },
     getTypeData () {
       this.$get('issue/type').then(response => {
         if (response.code === 200) {
@@ -295,9 +314,6 @@ export default {
     esc (refresh) {
       this.prevent_opt.save = false
       this.$emit('close', refresh)
-    },
-    afterInitRich () {
-      this.$refs.issueName.focus()
     },
     save () {
       this.$refs.issueForm.validate((valid) => {
@@ -340,7 +356,7 @@ export default {
     }
   },
   computed: {
-    language () { return this.$store.getters.getLanguage }
+    languages () { return this.$store.getters.getLanguage }
   },
   watch: {
     issue: {
@@ -348,26 +364,19 @@ export default {
       immediate: true,
       handler (n, o) {
         this.isEdit = true
-        const editObj = lodash.cloneDeep(n)
-        console.log(editObj)
-        const assetIdData = editObj.assets.map(item => {
-          return item.id
-        })
-        console.log(assetIdData.join())
-        this.editIssue = {
-          ...editObj,
-          assetIds: '546,547'
+        if (n.assets.length >= 1 && n.assets[0] != null) {
+          const assetIdData = n.assets.map(item => {
+            return item.id
+          })
+          this.editIssue = {
+            ...n,
+            assetIds: assetIdData.join(',')
+          }
+        } else {
+          this.editIssue = {
+            ...n
+          }
         }
-        // this.$set(this.editIssue, 'assetIds', '546,547')
-        // this.editIssue.assetIds = '546,547'
-        console.log(this.editIssue)
-      }
-    },
-    editIssue: {
-      deep: true,
-      immediate: true,
-      handler (n, o) {
-        console.log(this.editIssue)
       }
     }
   }
