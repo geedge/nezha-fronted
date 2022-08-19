@@ -340,6 +340,7 @@
           </el-select>
         </el-form-item>
       </div>
+
       <div class="form-items--half-width-group" v-if="isGauge(chartConfig.type)">
         <!--min-->
         <el-form-item :label="$t('dashboard.panel.chartForm.min')" class="form-item--half-width">
@@ -360,6 +361,40 @@
             show-word-limit v-model="chartConfig.param.max"/>
         </el-form-item>
       </div>
+
+      <div class="form-items--half-width-group" v-if="isSankey(chartConfig.type)" key="sankey">
+        <!--Source label-->
+        <el-form-item class="form-item--half-width" :label="$t('dashboard.panel.chartForm.sourceLabel')" prop="param.sourceLabel"
+          :rules="[
+            { required: true, message: $t('validate.required'), trigger: 'blur'},
+            { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.panel.matchRegex'), trigger: 'blur'},
+            { validator: labelValidator,trigger: 'blur'},
+          ]"
+        >
+          <el-input
+            size="small"
+            style="margin-top: 2px"
+            :placeholder="$t('overall.placeHolder')"
+            @change="change"
+            v-model="chartConfig.param.sourceLabel"/>
+        </el-form-item>
+        <!--Target label-->
+        <el-form-item class="form-item--half-width" :label="$t('dashboard.panel.chartForm.targetLabel')" prop="param.targetLabel"
+          :rules="[
+            { required: true, message: $t('validate.required'), trigger: 'blur'},
+            { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.panel.matchRegex'), trigger: 'blur'},
+            { validator: labelValidator,trigger: 'blur'},
+          ]"
+        >
+          <el-input
+            size="small"
+            style="margin-top: 2px"
+            :placeholder="$t('overall.placeHolder')"
+            @change="change"
+            v-model="chartConfig.param.targetLabel"/>
+        </el-form-item>
+      </div>
+
       <div class="form-items--half-width-group" v-if="isShowDecimals(chartConfig.type)">
         <!--decimals-->
         <el-form-item :label="$t('overall.decimal')" class="form-item--half-width">
@@ -898,7 +933,7 @@ import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import VueTagsInput from '@johmun/vue-tags-input'
 import draggable from 'vuedraggable'
 import { randomcolor, ColorReverse } from '@/components/common/js/radomcolor/randomcolor'
-import { isGauge } from '@/components/chart/chart/tools'
+import { isGauge, isSankey } from '@/components/chart/chart/tools'
 
 export default {
   name: 'chartConfig',
@@ -970,6 +1005,10 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
         },
         {
+          id: 'sankey',
+          name: this.$t('dashboard.panel.chartForm.typeVal.sankey.label')
+        },
+        {
           id: 'treemap',
           name: this.$t('dashboard.panel.chartForm.typeVal.treemap.label')
         },
@@ -995,6 +1034,7 @@ export default {
   },
   methods: {
     isGauge,
+    isSankey,
     beforeInit () {
       this.promqlType = this.type
       this.chartTypeList = this[this.type + 'ChartTypeList']
@@ -1016,6 +1056,18 @@ export default {
         })
         this.expressionChange()
       }
+    },
+    // 变量名校验 防止重复
+    labelValidator (rule, value, callback) {
+      const sourceLabel = this.chartConfig.param.sourceLabel
+      const targetLabel = this.chartConfig.param.targetLabel
+      setTimeout(() => {
+        if (sourceLabel === targetLabel) {
+          callback(new Error(this.$t('error.labelEqual')))
+        } else {
+          callback()
+        }
+      }, 100)
     },
     chartTypeChange (type) {
       switch (type) {
@@ -1053,8 +1105,9 @@ export default {
         case 'stat':
         case 'hexagon':
         case 'gauge':
+        case 'sankey':
         case 'bubble':
-          if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'hexagon' || this.oldType === 'bubble') {
+          if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'sankey' || this.oldType === 'hexagon' || this.oldType === 'bubble') {
             break
           }
           this.chartConfig.param = {

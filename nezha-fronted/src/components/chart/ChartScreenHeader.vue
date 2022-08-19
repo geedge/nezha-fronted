@@ -134,7 +134,9 @@ export default {
         case 'table' :
         case 'stat' :
         case 'gauge' :
+        case 'sankey' :
         case 'pie' :
+        case 'bubble' :
         case 'treemap' :
         case 'log' :
         case 'hexagon' :

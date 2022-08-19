@@ -108,6 +108,15 @@
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
       ></chart-gauge>
+      <chart-sankey
+        :ref="'chart' + chartInfo.id"
+        v-if="isSankey(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
+      ></chart-sankey>
       <chart-diagram
         :ref="'chart' + chartInfo.id"
         v-if="isDiagram(chartInfo.type)"
@@ -205,6 +214,7 @@ import chartClock from './chart/chartClock'
 import chartDiagram from './chart/chartDiagram'
 import chartEndpointInfo from './chart/chartEndpointInfo'
 import chartGauge from './chart/chartGauge'
+import chartSankey from './chart/chartSankey'
 import chartGroup from './chart/chartGroup'
 import chartLog from './chart/chartLog'
 import chartNoData from './chart/chartNoData'
@@ -220,7 +230,7 @@ import chartValue from './chart/chartValue'
 import chartHexagonD3 from './chart/chartHexagonD3'
 import chartMap from './chart/chartMap'
 import chartTopology from './chart/chartTopology'
-import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBubble, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable, isGauge, isClock, isTopology } from './chart/tools'
+import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBubble, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable, isGauge, isSankey, isClock, isTopology } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -234,6 +244,7 @@ export default {
     chartDiagram,
     chartEndpointInfo,
     chartGauge,
+    chartSankey,
     chartGroup,
     chartLog,
     chartNoData,
@@ -321,6 +332,7 @@ export default {
     isMap,
     isTable,
     isGauge,
+    isSankey,
     isClock,
     isTopology,
     chartIsNoData (flag) {
