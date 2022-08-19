@@ -48,7 +48,6 @@ export default {
   data () {
     return {
       colorList: [],
-      chartDot: 2,
       isInit: true, // 是否是初始化，初始化时为true，图表初始化结束后设为false
       chartId: '',
       bubbleData: [],
@@ -276,11 +275,7 @@ export default {
   },
   mounted () {
     this.colorList = initColor(20)
-    this.chartInfo.loaded && this.initChart(this.chartOption)
+    this.chartInfo.loaded && this.initChart()
   }
 }
 </script>
-
-<style scoped>
-
-</style>

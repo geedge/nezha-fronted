@@ -114,6 +114,9 @@ export function isTable (type) {
 export function isGauge (type) {
   return type === chartType.gauge
 }
+export function isSankey (type) {
+  return type === chartType.sankey
+}
 export function isClock (type) {
   return type === chartType.clock
 }

@@ -1,6 +1,9 @@
 <template>
-  <div class="login" id="login-bgimg">
+  <div class="login"  id="login-bgimg">
     <div class="model"></div>
+    <div class="stars-wrapper" id="stars-wrapper" v-if="!this.bgImg">
+      <img src="../../assets/img/starCloud1.svg">
+    </div>
     <div class="login-main">
       <div class="logo"><img src="../../assets/img/logo-big.png"></div>
       <div class='login-box'>
@@ -116,6 +119,8 @@
 import { mapActions } from 'vuex'
 import QRCode from 'qrcodejs2'
 import bus from '@/libs/bus.js'
+import { SVG } from '@svgdotjs/svg.js'
+import svgCloud1 from '@/assets/img/starCloud1.svg'
 import { get } from '@/http'
 export default {
   name: 'login',
@@ -371,6 +376,26 @@ export default {
       bus.$on('profile-dialog', () => {
         this.authBindShow = true
       })
+    },
+    initStar () {
+      document.getElementById('login-bgimg').style['background-image'] = 'url()'
+      const box = document.getElementById('stars-wrapper')
+      for (let i = 0; i < 3; i++) {
+        const svg = SVG().addTo(box).size('100%', '100%')
+        svg.attr('class', 'stars' + i)
+        svg.attr('width', '100%')
+        svg.attr('height', '100%')
+        svg.attr('preserveAspectRatio', 'none')
+        for (let j = 0; j < 100; j++) {
+          const circle = svg.circle(r(0.5, 3))
+          circle.attr('class', 'star')
+          circle.attr('cx', r(0, 100) + '%')
+          circle.attr('cy', r(0, 100) + '%')
+        }
+      }
+      function r (m, n) {
+        return (Math.random() * (n - m) + m).toFixed(2)
+      }
     }
   },
   watch: {
@@ -386,6 +411,8 @@ export default {
     this.bgImg = localStorage.getItem('nz-sys-bgImg')
     if (this.bgImg) {
       document.getElementById('login-bgimg').style['background-image'] = `url(${this.bgImg})`
+    } else {
+      this.initStar()
     }
   }
 }
@@ -405,5 +432,66 @@ export default {
 <style>
   .license-upload .el-upload-list{
     display: none;
+  }
+  :root {
+    --twinkle-duration: 4s;
+  }
+  .stars-wrapper {
+    position: absolute;
+    pointer-events: none;
+    width: 100vw;
+    height: 100vh;
+    background: -webkit-gradient(linear, left top, left bottom, from(#16161d), color-stop(#080430), to(#0D0635));
+    background: linear-gradient(#16161d, #080430, #0D0635);
+    overflow: hidden;
+    z-index: 1;
+  }
+  .stars0,
+  .stars1,
+  .stars2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+    animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+  }
+  .stars0 {
+    -webkit-animation-delay: calc(var(--twinkle-duration) * -0.22);
+    animation-delay: calc(var(--twinkle-duration) * -0.22);
+  }
+  .stars1 {
+    -webkit-animation-delay: calc(var(--twinkle-duration) * -0.44);
+    animation-delay: calc(var(--twinkle-duration) * -0.44);
+  }
+  .stars2 {
+    -webkit-animation-delay: calc(var(--twinkle-duration) * -0.66);
+    animation-delay: calc(var(--twinkle-duration) * -0.66);
+  }
+  @-webkit-keyframes twinkle {
+    25% {
+      opacity: 0;
+    }
+  }
+  @keyframes twinkle {
+    25% {
+      opacity: 0;
+    }
+  }
+  .star {
+    fill: white;
+  }
+  .star:nth-child(3n) {
+    opacity: 0.8;
+  }
+  .star:nth-child(7n) {
+    opacity: 0.6;
+  }
+  .star:nth-child(13n) {
+    opacity: 0.4;
+  }
+  .star:nth-child(19n) {
+    opacity: 0.2;
   }
 </style>

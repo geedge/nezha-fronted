@@ -248,6 +248,10 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
         },
         {
+          id: 'sankey',
+          name: this.$t('dashboard.panel.chartForm.typeVal.sankey.label')
+        },
+        {
           id: 'treemap',
           name: this.$t('dashboard.panel.chartForm.typeVal.treemap.label')
         },
@@ -293,6 +297,10 @@ export default {
         {
           id: 'gauge',
           name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
+        },
+        {
+          id: 'sankey',
+          name: this.$t('dashboard.panel.chartForm.typeVal.sankey.label')
         },
         {
           id: 'treemap',

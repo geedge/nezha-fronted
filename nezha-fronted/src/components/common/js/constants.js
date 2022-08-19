@@ -408,6 +408,7 @@ export const chartType = {
   table: 'table',
   stat: 'stat',
   gauge: 'gauge',
+  sankey: 'sankey',
   pie: 'pie',
   bubble: 'bubble',
   treemap: 'treemap',

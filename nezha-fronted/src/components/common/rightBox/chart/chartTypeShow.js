@@ -74,6 +74,7 @@ export default {
         case 'gauge':
         case 'pie':
         case 'bubble':
+        case 'sankey':
           return true
         default: return false
       }
@@ -91,6 +92,7 @@ export default {
         case 'stat':
         case 'hexagon':
         case 'gauge':
+        case 'sankey':
         case 'bubble':
           return false
         default: return false
@@ -106,6 +108,7 @@ export default {
         case 'stat':
         case 'hexagon':
         case 'gauge':
+        case 'sankey':
         case 'treemap':
         case 'pie':
         case 'bubble':
@@ -134,6 +137,7 @@ export default {
         case 'hexagon':
         case 'bar':
         case 'gauge':
+        case 'sankey':
         case 'treemap':
         case 'pie':
         case 'bubble':
@@ -151,6 +155,7 @@ export default {
         case 'stat':
         case 'hexagon':
         case 'gauge':
+        case 'sankey':
           return false
         case 'line':
         case 'area':
@@ -169,6 +174,7 @@ export default {
         case 'stat':
         case 'hexagon':
         case 'gauge':
+        case 'sankey':
           return true
         case 'line':
         case 'area':
@@ -201,6 +207,7 @@ export default {
         case 'stat':
         case 'hexagon':
         case 'gauge':
+        case 'sankey':
           return true
         default: return false
       }

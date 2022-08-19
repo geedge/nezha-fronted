@@ -37,16 +37,18 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-           <div class="document-copy-block">
-              <span class="document-copy-text">{{scope.row.name ? scope.row.name : '-'}}</span>
-              <i v-if="scope.row.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
-            </div>
+          <copy :copyData='scope.row.name'>
+              <template slot="copy-text">
+                 {{scope.row.name ? scope.row.name : '-'}}
+              </template>
+            </copy>
         </template>
         <template v-else-if="item.prop === 'type'">
-           <div class="document-copy-block">
-              <span class="document-copy-text">{{scope.row.type ? scope.row.type : '-'}}</span>
-              <i v-if="scope.row.type" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.type)" :title="$t('overall.copyText')"></i>
-            </div>
+          <copy :copyData='scope.row.type'>
+              <template slot="copy-text">
+                 {{scope.row.type ? scope.row.type : '-'}}
+              </template>
+            </copy>
         </template>
         <template v-else-if="item.prop === 'reporter'">
           <template>{{scope.row[item.prop] ? scope.row[item.prop].name : '-'}}</template>
@@ -120,9 +122,14 @@
 
 <script>
 import table from '@/components/common/mixin/table'
+import copy from '@/components/common/copy'
 export default {
   name: 'issueTable',
   mixins: [table],
+  components: {
+    copy
+  },
+
   props: {
     loading: Boolean
   },
