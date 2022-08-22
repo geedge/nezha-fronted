@@ -33,7 +33,7 @@
             <template v-if="scope.row.valueMapping && scope.row.valueMapping[col.title + 'mapping']">
               <i :class="scope.row.valueMapping[col.title + 'mapping'].icon" :style="{color: scope.row.valueMapping[col.title + 'mapping'].color.icon}"></i>
             </template>
-            {{showValueMapping(scope.row,col.title)}}
+            {{showValueMapping(scope.row,col.title, col)}}
           </div>
           <div class="value-mapping-table" v-else>
             {{scope.row.display[col.title + 'display'].display}}
@@ -276,7 +276,7 @@ export default {
       })
       return obj
     },
-    showValueMapping (row, column) {
+    showValueMapping (row, column, col) {
       const obj = lodash.cloneDeep(row)
       lodash.keys(obj).forEach(key => {
         if (obj[key].$value) {
@@ -293,6 +293,9 @@ export default {
           let value = null
           if (lodash.get(params, label)) {
             value = lodash.get(params, label)
+            if (label.indexOf('$value') !== -1) {
+              value = chartDataFormat.getUnit(col.unit ? col.unit : 2).compute(value, null, -1, 2)
+            }
             if (!((typeof value) == 'string' && value.constructor == String)) {
               let legend = ''
               if (value.__name__) {
