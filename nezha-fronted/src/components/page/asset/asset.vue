@@ -215,6 +215,7 @@
                         :data="batchDeleteObjs"
                         tooltip-effect="dark"
                         style="width: 100%"
+                        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
                         :row-key="(row) => {return row.id}"
                         @selection-change="batchDeleteselectionChange"
                         @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"
@@ -230,13 +231,13 @@
                         <el-table-column
                           v-if="idShow"
                           label="ID"
-                          width="120"
+                          width="100"
                           >
                           <template slot-scope="scope">{{ scope.row.id }}</template>
                         </el-table-column>
                         <el-table-column
                           label="name"
-                          width="120">
+                          width="150">
                           <template slot-scope="scope"
                           >
                            <i class="nz-icon nz-icon-overview-project monitorColor"></i>
@@ -1060,5 +1061,10 @@ export default {
 .theme-light .el-button--text:hover{
  color: #FA901C !important;
 }
-
+.theme-light .el-table{
+  width: 100% !important;
+}
+.theme-light .el-table thead .el-table__row{
+   width: 100% !important;
+}
 </style>
