@@ -5,7 +5,7 @@
     <chart-screen-header
       v-if="isFullscreen"
       :is-group="isGroup(chartInfo.type)"
-      :isError="isError"
+      :isError="isError && chartInfo.alertRule.type !== 3"
       :from="from"
       :chartData="chartData"
       :chart-info="chartInfo"
