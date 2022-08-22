@@ -30,6 +30,7 @@ module.exports = {
     '@interactjs': '<rootDir>/test/unit/__mocks__/fileMock.js',
     'pl-table': '<rootDir>/test/unit/__mocks__/fileMock.js',
     '/htmlToPdf': '<rootDir>/test/unit/__mocks__/fileMock.js',
+    'maplibre-gl': '<rootDir>/test/unit/__mocks__/fileMock.js',
     '\/*\/http': '<rootDir>/test/unit/__mocks__/axios.js',
     // '\/*\/permission': '<rootDir>/test/unit/__mocks__/fileMock.js',
     '/i18n': '<rootDir>/test/unit/__mocks__/i18nMock.js',
@@ -41,7 +42,8 @@ module.exports = {
   testMatch: [ // 匹配测试用例的文件
     '<rootDir>/test/unit/specs/*.spec.js',
     '<rootDir>/test/unit/specs/lib/*.spec.js',
-    '<rootDir>/test/unit/specs/components/*.spec.js'
+    '<rootDir>/test/unit/specs/components/*.spec.js',
+    '<rootDir>/test/unit/specs/components/chart/*.spec.js'
   ],
   moduleDirectories: [
     'node_modules'
@@ -57,6 +59,7 @@ module.exports = {
     'src/components/common/js/example.js',
     'src/libs/bus.js',
     'src/components/common/mixin/*.js',
+    'src/components/chart/chart.vue',
     // 'src/components/common/js/tools.js',
     // '!src/*.(js)',
     '!src/http.js',

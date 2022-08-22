@@ -2,7 +2,30 @@
   <div class="login"  id="login-bgimg">
     <div class="model"></div>
     <div class="stars-wrapper" id="stars-wrapper" v-if="!this.bgImg">
-      <img src="../../assets/img/starCloud1.svg">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 358.52 351.84" class="star-cloud star-cloud1">
+        <g id="Layer_2" data-name="Layer 2">
+          <g id="Layer_1-2" data-name="Layer 1">
+            <path class="cls-1" d="M79.83,335.09c33.16-34,60.94-32.19,107.59-41.09,6.37-1.22,13.19-2.6,17.72-7.24,8.86-9.07,4.05-24,5.16-36.64,1.86-21.09,20.94-36.07,39.18-46.81a395,395,0,0,1,62.72-29.84c6.13-2.28,12.5-4.5,17.37-8.87,11.86-10.6,10.78-29.42,6.5-44.74s-10.84-31.23-6.74-46.6C332.4,61.78,341,52.73,348,43.13s12.93-21.62,9.59-33c-1.19-4.06-3.81-8-7.79-9.44-2.9-1-6.1-.66-9.11,0-24.6,5.3-42.89,25.57-57.87,45.78s-29.31,42.29-51.34,54.44c-19.76,10.9-44,12.73-62.16,26.16-20.21,15-28.35,40.75-38.3,63.84s-25.94,49.95-51.07,50.85c-50.74,1.81-76.38,9-79.67,47.84S26.45,378.46,79.83,335.09Z"/>
+            <path class="cls-2" d="M142,210.5c9.94-19.16,22.64-38.16,41.83-48,9.31-4.79,19.68-7.18,29.08-11.76a68.68,68.68,0,0,0,23.51-18.81c5.75-7.19,10-15.46,15.26-23s11.95-14.61,20.62-17.74,19.6-1.3,25,6.17c3,4.19,4,9.59,3.67,14.75-.94,16.29-13.16,29.81-26.63,39s-28.83,15.62-41.46,26c-18.83,15.42-29.9,38.07-43.9,58s-34,38.73-58.31,39.33c-14.23.35-28.68-11.68-17.93-25.72,4-5.2,10.56-8.43,14.8-13.65C133.49,227.63,137.62,218.89,142,210.5Z"/>
+          </g>
+        </g>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 356.14 220.95" class="star-cloud star-cloud2">
+        <g id="Layer_2" data-name="Layer 2">
+          <g id="Layer_1-2" data-name="Layer 1">
+            <path class="cls-1" d="M127,56.49c21-.45,41.34-6.92,62-10.69a244,244,0,0,1,46.26-3.93c9.68.11,19.72.89,28.19,5.57,15.33,8.46,22.15,27.6,37.13,36.65C312.92,91.51,328.84,91,341,98.69c15.33,9.78,20,32.94,9.65,47.89-11.09,16-34.24,20.51-44.5,37.06-4.38,7.06-6.08,15.88-12,21.66-5,4.85-12.08,6.68-18.85,8.27-31.3,7.32-65.71,12.8-94.37-1.76-20.14-10.24-34.79-29.25-55-39.35-20.06-10-44.27-10.6-63-22.93A58.63,58.63,0,0,1,38.42,115c-2.16-8.73-2.32-18-6.13-26.19-3.16-6.74-8.57-12.11-13.5-17.68C10.46,61.75,3,51,.68,38.61S2,12.14,12.32,4.9c9.51-6.7,22.89-6.17,33.11-.61,14,7.64,18.81,22.58,29.49,33.35C88.55,51.38,108.07,56.91,127,56.49Z"/>
+            <path class="cls-2" d="M246.9,98c9,5.42,16.79,13.2,26.69,16.84,3.4,1.26,7.05,2,10.09,4,7.16,4.67,8.7,14.67,7.19,23.08a47.29,47.29,0,0,1-25.44,33.6c-9.26,4.49-19.79,5.8-30.08,5.58-9.28-.19-18.63-1.6-27.18-5.21-11.8-5-21.44-13.85-31.89-21.25-21.47-15.2-46.71-24.44-68.14-39.7-16.53-11.76-30.53-26.8-43.8-42-3.08-3.53-7.33-6.11-4.27-10.55,2.41-3.5,9.28-2.77,12.65-1.93,8.72,2.18,16.37,9.87,24,14.37,24.95,14.65,56.39,12,84.36,12C203.36,86.76,227.13,86.23,246.9,98Z"/>
+          </g>
+        </g>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 351.44 371.77" class="star-cloud star-cloud3">
+        <g id="Layer_2" data-name="Layer 2">
+          <g id="Layer_1-2" data-name="Layer 1">
+            <path class="cls-1" d="M12.39,255.31c1.09,6.23,4,12.1,4.39,18.41,1,15.91-13.4,28.73-16.32,44.4C-3,336.53,13.35,356,32.08,355.76c10.54-.12,21.57-5.35,31.17-1,6.5,2.94,10.54,9.6,16.59,13.38,7.77,4.85,17.81,4.27,26.6,1.7s17-6.92,25.85-9.27c14.76-3.93,30.43-2.13,45.51-4.49s31.19-11,34.35-25.93c2.37-11.23-3.25-22.9-1.38-34.23,2.8-16.91,20.57-26.62,36.8-32.16s34.52-10.55,43.64-25.06c17.51-27.85-12.18-65.72-.32-96.41,8.17-21.11,34.4-33.52,36.49-56.05.73-7.9-1.77-16.08.55-23.67,2.38-7.8,9.27-13.18,14.94-19.06s10.59-14.2,7.74-21.85c-1.3-3.48-4-6.2-6.68-8.8C336,5.1,325.12-3.2,315,1.25c-5,2.2-8.31,7.1-10.86,12-5.61,10.71-9.07,22.44-14.79,33.09S274.89,66.88,263.21,70c-9.67,2.55-19.84.08-29.8-.84s-21.3.33-27.63,8.07c-3,3.61-4.41,8.18-5.85,12.61q-5.94,18.42-12.81,36.53c-7.3,19.26-15.91,39-31.71,52.19-10.41,8.69-23.21,13.91-35.78,19-25.14,10.17-48.76,17.68-75.78,19.9C24.73,219,8.69,234.2,12.39,255.31Z"/>
+            <path class="cls-2" d="M45.15,264.26c-5.9,9.7-5.35,23.85,3.47,31,5.75,4.66,13.55,5.55,20.71,7.42,20.43,5.32,39,19.81,60,18.47,2.71-.18,5.54-.68,7.67-2.37,3-2.39,3.89-6.51,5.11-10.16A40.51,40.51,0,0,1,163.4,285c6.11-2.81,13-4.09,18.54-7.84,9.57-6.44,13.42-19.57,10.45-30.72s-11.88-20.15-22.36-25c-21-9.72-40.63,13-61.37,17.23C87,243,58.11,242.92,45.15,264.26Z"/>
+          </g>
+        </g>
+      </svg>
     </div>
     <div class="login-main">
       <div class="logo"><img src="../../assets/img/logo-big.png"></div>
@@ -120,7 +143,7 @@ import { mapActions } from 'vuex'
 import QRCode from 'qrcodejs2'
 import bus from '@/libs/bus.js'
 import { SVG } from '@svgdotjs/svg.js'
-import svgCloud1 from '@/assets/img/starCloud1.svg'
+import { coordinatePoint } from '@/components/common/js/common'
 import { get } from '@/http'
 export default {
   name: 'login',
@@ -153,6 +176,10 @@ export default {
       fileContent: '',
       recoveryCode: [],
       userInfo: {},
+      zoom: 0.75,
+      circleStar: [],
+      starTimer: '',
+      starTimerIndex: 0,
       bgImg: '' // 背景图
     }
   },
@@ -378,21 +405,62 @@ export default {
       })
     },
     initStar () {
+      this.circleStar = [[], [], [], []]
       document.getElementById('login-bgimg').style['background-image'] = 'url()'
       const box = document.getElementById('stars-wrapper')
       for (let i = 0; i < 3; i++) {
         const svg = SVG().addTo(box).size('100%', '100%')
-        svg.attr('class', 'stars' + i)
+        svg.attr('class', 'stars' + (i + 1))
         svg.attr('width', '100%')
         svg.attr('height', '100%')
         svg.attr('preserveAspectRatio', 'none')
-        for (let j = 0; j < 100; j++) {
-          const circle = svg.circle(r(0.5, 3))
+        for (let j = 0; j < 50; j++) {
+          const circle = svg.circle(r(0.5, 2))
           circle.attr('class', 'star')
           circle.attr('cx', r(0, 100) + '%')
           circle.attr('cy', r(0, 100) + '%')
+          this.circleStar[i].push(circle)
         }
       }
+      Object.keys(coordinatePoint).forEach((key, index) => {
+        const group = SVG().addTo(box).attr('id', key).size('255', '305')
+        group.attr('width', '265')
+        group.attr('height', '305')
+        group.attr('style', `left: ${coordinatePoint[key].offsetX};top:${coordinatePoint[key].offsetY};transform:scale(${this.zoom}) translate(0, -50px)`)
+        group.attr('class', 'constellation')
+        const polyline = group.polyline(coordinatePoint[key].point.map(item => [item.x, item.y])) // 先将所有点 用直线链接
+        polyline.fill('none')
+        polyline.stroke({ color: '#868096', width: 4, linecap: 'round', linejoin: 'round' })
+        if (coordinatePoint[key].dot && coordinatePoint[key].dot.length) { // 再用虚线 覆盖原本直线
+          coordinatePoint[key].dot.forEach(point => {
+            group.line(point).fill('none').stroke({ color: '#07011D', width: 4, linecap: 'round', linejoin: 'round', dasharray: coordinatePoint[key].dasharray || '10 15' })
+          })
+          // const polyline1 = group.polyline([[165, 210], [250, 240]])
+          // polyline1.fill('none')
+          // polyline1.stroke({ color: '#07011D', width: 3, linecap: 'round', linejoin: 'round', dasharray: '8 8' })
+        }
+        coordinatePoint[key].point.forEach(item => { // 最后添加所有点
+          if (item.disabled) return
+          group.circle(14)
+            .fill('#868096')
+            .attr('cx', item.x)
+            .attr('cy', item.y)
+        })
+      })
+      this.starTimer = setInterval(() => {
+        this.starTimerIndex++
+        let index = 0
+        if (this.starTimerIndex === 1) return
+        if (this.starTimerIndex === 2) index = 2
+        if (this.starTimerIndex === 3) index = 1
+        if (this.starTimerIndex === 0) index = 0
+        this.starTimerIndex = this.starTimerIndex === 3 ? -1 : this.starTimerIndex
+        this.circleStar[index] && this.circleStar[index].forEach(circle => {
+          circle.radius(r(0.5, 2))
+          circle.attr('cx', r(0, 100) + '%')
+          circle.attr('cy', r(0, 100) + '%')
+        })
+      }, 1000)
       function r (m, n) {
         return (Math.random() * (n - m) + m).toFixed(2)
       }
@@ -414,6 +482,10 @@ export default {
     } else {
       this.initStar()
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.starTimer)
+    this.starTimer = null
   }
 }
 </script>
@@ -433,6 +505,38 @@ export default {
   .license-upload .el-upload-list{
     display: none;
   }
+  .cls-1{
+    fill: #150F29;
+  }
+  .cls-2{
+    fill: #201B33;
+  }
+  .star-cloud{
+    width: 70%;
+    height: 70%;
+    position: absolute;
+    opacity: 0.9;
+  }
+  .star-cloud1{
+    right: 0;
+    top: 0;
+    transform: translate(40%, -50%);
+  }
+  .star-cloud2{
+    left: 5%;
+    bottom: 0;
+    transform: translate(-60%, -10%);
+    width: 60%;
+    height: 60%;
+  }
+  .star-cloud3{
+    right: 0;
+    bottom: 0;
+    transform: translate(50%, 15%);
+  }
+  .constellation{
+    position: absolute;
+  }
   :root {
     --twinkle-duration: 4s;
   }
@@ -441,14 +545,15 @@ export default {
     pointer-events: none;
     width: 100vw;
     height: 100vh;
-    background: -webkit-gradient(linear, left top, left bottom, from(#16161d), color-stop(#080430), to(#0D0635));
-    background: linear-gradient(#16161d, #080430, #0D0635);
+    /*background: -webkit-gradient(linear, left top, left bottom, from(#16161d), to(#07011D));*/
+    background: #07011D;
     overflow: hidden;
     z-index: 1;
   }
   .stars0,
   .stars1,
-  .stars2 {
+  .stars2,
+  .stars3{
     position: absolute;
     top: 0;
     left: 0;
@@ -457,17 +562,17 @@ export default {
     -webkit-animation: twinkle var(--twinkle-duration) ease-in-out infinite;
     animation: twinkle var(--twinkle-duration) ease-in-out infinite;
   }
-  .stars0 {
-    -webkit-animation-delay: calc(var(--twinkle-duration) * -0.22);
-    animation-delay: calc(var(--twinkle-duration) * -0.22);
-  }
   .stars1 {
-    -webkit-animation-delay: calc(var(--twinkle-duration) * -0.44);
-    animation-delay: calc(var(--twinkle-duration) * -0.44);
+    -webkit-animation-delay: -1s;
+    animation-delay: -1s;
   }
   .stars2 {
-    -webkit-animation-delay: calc(var(--twinkle-duration) * -0.66);
-    animation-delay: calc(var(--twinkle-duration) * -0.66);
+    -webkit-animation-delay: -2s;
+    animation-delay: -2s;
+  }
+  .stars3 {
+    -webkit-animation-delay: -3s;
+    animation-delay: -3s;
   }
   @-webkit-keyframes twinkle {
     25% {
