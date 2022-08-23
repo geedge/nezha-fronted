@@ -522,6 +522,7 @@
   white-space: nowrap;
 }
 .overview {
+  overflow: hidden;
   .tooltip--row {
     //display: flex;
     justify-content: space-between;

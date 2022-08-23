@@ -58,10 +58,7 @@
 <script>
 import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
-import * as L from 'leaflet'
 import axios from 'axios'
-import icon from 'leaflet/dist/images/marker-icon.png'
-import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 import 'leaflet/dist/leaflet.css'
 import maplibregl from 'maplibre-gl'
 import mapAllStyle from './mapStyle'
@@ -90,10 +87,6 @@ export default {
   },
   mounted () {
     this.chartInfo.loaded && this.initChart()
-    // for (let i = 0; i < 65535; i += 1) {
-    //   const url = 'https://api.maptiler.com/fonts/Roboto Medium,Noto Sans Regular/' + i + '-' + (i + 255) + '.pbf?key=rB2y2a2rG8i9SEjOXQXl'
-    //   window.open(url)
-    // }
   },
   methods: {
     initChart () {
@@ -169,6 +162,9 @@ export default {
             })
             this.map.on('load', function () {
               self.loadDataCenterMapData()
+              self.map.addControl(new maplibregl.NavigationControl(), 'bottom-right')
+              const mapboxglInner = document.getElementsByClassName('mapboxgl-ctrl-attrib-inner')
+              mapboxglInner[0].innerHTML = '<span>&copy; MapTiler</span> <span>&copy; OpenStreetMap contributors</span>'
             })
             maplibregl.addProtocol('nzMap', (params, callback) => { // 切片显示接口 防止跨域的问题
               fetch(`${params.url.split('://')[1]}`)

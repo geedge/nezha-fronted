@@ -63,7 +63,7 @@ export default {
         this.map = null
       }
       this.setLatlng()
-      let mapStyle = mapAllStyle[this.theme]
+      const mapStyle = mapAllStyle[this.theme]
       mapStyle.center = [Number(this.mapParam.longitude), Number(this.mapParam.latitude)]
       mapStyle.zoom = Number(this.zoom)
       const mapId = document.getElementById('map')
@@ -154,6 +154,9 @@ export default {
             'circle-opacity': 1
           }
         })
+        self.map.addControl(new maplibregl.NavigationControl(), 'bottom-right')
+        const mapboxglInner = document.getElementsByClassName('mapboxgl-ctrl-attrib-inner')
+        mapboxglInner[0].innerHTML = '<span>&copy; MapTiler</span> <span>&copy; OpenStreetMap contributors</span>'
       })
       // const marker = L.marker([this.mapParam.latitude, this.mapParam.longitude]).addTo(map)
       this.map.on('click', function (e) {
