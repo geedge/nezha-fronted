@@ -222,7 +222,6 @@ export default {
           })
           this.renderPoint(dcStats)
           self.map.on('mouseenter', 'pointLayer', function (param) {
-            console.log('mouseenter', param)
             const point = param.point
             const event = param.originalEvent
             const boxWidth = window.innerWidth / 2
@@ -244,7 +243,6 @@ export default {
           })
 
           self.map.on('mouseleave', 'pointLayer', function () {
-            console.log('mouseleave')
             self.tooltip.show = false
             self.dcStat = ''
           })
