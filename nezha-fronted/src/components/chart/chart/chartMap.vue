@@ -1,7 +1,7 @@
 <template>
   <div class="overview">
     <div class="content-col-content" style="padding:0">
-      <div :id="'map' + (isFullscreen ? '-screen-' : '' ) + chartInfo.id " style="height: 100%; width: 100%" :style="theme=='dark'? 'filter: invert(1) hue-rotate(0.5turn);opacity: 0.75;': ''"></div>
+      <div :id="'map' + (isFullscreen ? '-screen-' : '' ) + chartInfo.id " style="height: 100%; width: 100%"></div>
     </div>
     <!--自定义地图鼠标悬浮提示dom，避免被overflow：hidden裁剪-->
     <div :style="{'left': `${tooltip.x}px`, 'top': `${tooltip.y}px`}" class="my-pane" :class="'my-pane-' + chartId" v-if="tooltip.show">
@@ -64,12 +64,13 @@ import icon from 'leaflet/dist/images/marker-icon.png'
 import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 import 'leaflet/dist/leaflet.css'
 import maplibregl from 'maplibre-gl'
-import mapStyle from './mapStyle'
+import mapAllStyle from './mapStyle'
 const regNum = /^[0-9]+.?[0-9]*/
 export default {
   name: 'chartMap',
   mixins: [chartMixin, chartFormat],
   data () {
+    const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
     return {
       map: null,
       tooltip: {
@@ -78,7 +79,7 @@ export default {
         show: false
       },
       dcStat: {},
-      theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`),
+      theme,
       timer: null,
       requestAnimationFrame: '',
       pbfUrl: {
@@ -118,6 +119,7 @@ export default {
         const param = { paramKey: 'map_center_config' }
         this.$get('sysConfig', param).then(response => {
           if (response.code == 200) {
+            const mapStyle = mapAllStyle[this.theme]
             const mapConfig = JSON.parse(response.data.paramKey.map_center_config)
             mapStyle.center = [Number(mapConfig.longitude), Number(mapConfig.latitude)]
             mapStyle.zoom = Number(mapConfig.zoom)

@@ -426,7 +426,7 @@ export default {
         const group = SVG().addTo(box).attr('id', key).size('255', '305')
         group.attr('width', '265')
         group.attr('height', '305')
-        group.attr('style', `left: ${coordinatePoint[key].offsetX};top:${coordinatePoint[key].offsetY};transform:scale(${this.zoom}) translate(0, -50px)`)
+        group.attr('style', `left: ${coordinatePoint[key].offsetX};top:${coordinatePoint[key].offsetY};transform:scale(${this.zoom}) translate(0, -50px);animation-delay:${r(-12,-1)}s`)
         group.attr('class', 'constellation')
         const polyline = group.polyline(coordinatePoint[key].point.map(item => [item.x, item.y])) // 先将所有点 用直线链接
         polyline.fill('none')
@@ -536,6 +536,8 @@ export default {
   }
   .constellation{
     position: absolute;
+    /*-webkit-animation: constellationAnimat var(--twinkle-duration) ease-in-out infinite;*/
+    /*animation: constellationAnimat var(--twinkle-duration) ease-in-out infinite;*/
   }
   :root {
     --twinkle-duration: 4s;
@@ -583,6 +585,25 @@ export default {
     25% {
       opacity: 0;
     }
+  }
+  @-webkit-keyframes constellationAnimat {
+    25% {
+      opacity: 0.5;
+    }
+  }
+  @keyframes constellationAnimat {
+    25%{
+      opacity: 0.7;
+    }
+    /*50%{*/
+    /*  opacity: 1;*/
+    /*}*/
+    /*75%{*/
+    /*  opacity: 0.5;*/
+    /*}*/
+    /*100%{*/
+    /*  opacity: 1;*/
+    /*}*/
   }
   .star {
     fill: white;

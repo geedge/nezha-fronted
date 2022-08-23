@@ -23,7 +23,7 @@
 // 引入Leaflet对象 挂载到Vue上，便于全局使用，也可以单独页面中单独引用
 import 'leaflet/dist/leaflet.css'
 import maplibregl from 'maplibre-gl'
-import mapStyle from '@/components/chart/chart/mapStyle'
+import mapAllStyle from '@/components/chart/chart/mapStyle'
 export default {
   name: 'latlngPicker',
   props: {
@@ -33,7 +33,7 @@ export default {
   },
   data () {
     return {
-      theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`),
+      theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light',
       lnglat: '',
       oldlnglat: '',
       mapParam: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 7 },
@@ -55,16 +55,6 @@ export default {
     }
   },
   mounted () {
-    const arr = []
-    mapStyle.layers.forEach(item => {
-      if (item.layout['text-font']) {
-        const font = item.layout['text-font'].join(',')
-        if (arr.indexOf(font) === -1) {
-          arr.push(font)
-        }
-      }
-    })
-    console.log(arr)
   },
   methods: {
     initMap () {
@@ -73,6 +63,7 @@ export default {
         this.map = null
       }
       this.setLatlng()
+      let mapStyle = mapAllStyle[this.theme]
       mapStyle.center = [Number(this.mapParam.longitude), Number(this.mapParam.latitude)]
       mapStyle.zoom = Number(this.zoom)
       const mapId = document.getElementById('map')
