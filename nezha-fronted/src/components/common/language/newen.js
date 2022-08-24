@@ -95,7 +95,8 @@ const newen = {
     system: 'System',
     back: 'Back',
     enabled: 'Enabled',
-    disabled: 'Disabled'
+    disabled: 'Disabled',
+    unavailable: 'Unavailable'
   },
   ...enLocale
 }

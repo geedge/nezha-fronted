@@ -499,10 +499,32 @@ export default {
       for (let i = 0; i < this.constellation.length; i++) { // 循环遍历 判断碰撞
         for (let j = i + 1; j < this.constellation.length; j++) {
           if (this.impact(this.constellation[i], this.constellation[j])) {
-            const iSpeedX = this.constellation[i].data('speedX')
-            const iSpeedY = this.constellation[i].data('speedY')
-            this.constellation[i].data('speedX', this.constellation[j].data('speedX'))
-            this.constellation[i].data('speedY', this.constellation[j].data('speedY'))
+            let iSpeedX = this.constellation[i].data('speedX')
+            let iSpeedY = this.constellation[i].data('speedY')
+            let jSpeedX = this.constellation[j].data('speedX')
+            let jSpeedY = this.constellation[j].data('speedY')
+            if (iSpeedX > 0) {
+              iSpeedX = this.r(0, 1, 0.3)
+            } else {
+              iSpeedX = this.r(-1, 0, 0.3)
+            }
+            if (iSpeedY > 0) {
+              iSpeedY = this.r(0, 1, 0.3)
+            } else {
+              iSpeedY = this.r(-1, 0, 0.3)
+            }
+            if (jSpeedX > 0) {
+              jSpeedX = this.r(0, 1, 0.3)
+            } else {
+              jSpeedX = this.r(-1, 0, 0.3)
+            }
+            if (jSpeedY > 0) {
+              jSpeedY = this.r(0, 1, 0.3)
+            } else {
+              jSpeedY = this.r(-1, 0, 0.3)
+            }
+            this.constellation[i].data('speedX', jSpeedX)
+            this.constellation[i].data('speedY', jSpeedY)
             this.constellation[j].data('speedX', iSpeedX)
             this.constellation[j].data('speedY', iSpeedY)
           }
@@ -543,15 +565,15 @@ export default {
     impact (obj, dobj) {
       const position = obj.node.getBoundingClientRect()
       const o = {
-        x: position.left,
-        y: position.top,
+        x: position.left - 10,
+        y: position.top - 10,
         w: obj.data('width'),
         h: obj.data('height')
       }
       const position2 = dobj.node.getBoundingClientRect()
       const d = {
-        x: position2.left,
-        y: position2.top,
+        x: position2.left - 10,
+        y: position2.top - 10,
         w: dobj.data('width'),
         h: dobj.data('height')
       }

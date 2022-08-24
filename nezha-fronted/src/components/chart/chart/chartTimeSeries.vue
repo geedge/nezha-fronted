@@ -380,20 +380,6 @@ export default {
       const self = this
       return function (val, index) {
         const value = formatScientificNotation(val, 6)
-        // let chartUnit = self.chartInfo.unit
-        // chartUnit = chartUnit || 2
-        // const unit = chartDataFormat.getUnit(chartUnit)
-        // // dot是判断最大值是否 小于1 大于1 默认是2 小于1 需要判断最大值是小数点后面几位
-        // if (chartDataFormat.Interval(maxValue, copies, unit.type, 'min') < 1 && dot < 2) { // 当其小于1 且 dot < 2 默认給2 如 0.9 dot为1
-        //   dot = 2
-        // }
-        // if (!dot) { //  默认是2
-        //   dot = 2
-        // }
-        // dot = bus.countDecimals(value)
-        // if (dot < self.chartDot) { // 根据具体值计算
-        //   dot = self.chartDot
-        // }
         return unit.compute(value, index, -1, dot)
       }
     },
