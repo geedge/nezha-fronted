@@ -180,7 +180,10 @@ export default {
       circleStar: [],
       starTimer: '',
       starTimerIndex: 0,
-      bgImg: '' // 背景图
+      bgImg: '', // 背景图
+      constellation: [],
+      requestAnimationFrame: '',
+      speed: [-1.3, -1, -0.6, -0.3, 0.3, 0.6, 1, 1.3]
     }
   },
   methods: {
@@ -405,6 +408,7 @@ export default {
       })
     },
     initStar () {
+      const self = this
       this.circleStar = [[], [], [], []]
       document.getElementById('login-bgimg').style['background-image'] = 'url()'
       const box = document.getElementById('stars-wrapper')
@@ -415,10 +419,10 @@ export default {
         svg.attr('height', '100%')
         svg.attr('preserveAspectRatio', 'none')
         for (let j = 0; j < 50; j++) {
-          const circle = svg.circle(r(0.5, 2))
+          const circle = svg.circle(self.r(0.5, 2))
           circle.attr('class', 'star')
-          circle.attr('cx', r(0, 100) + '%')
-          circle.attr('cy', r(0, 100) + '%')
+          circle.attr('cx', self.r(0, 100) + '%')
+          circle.attr('cy', self.r(0, 100) + '%')
           this.circleStar[i].push(circle)
         }
       }
@@ -426,8 +430,13 @@ export default {
         const group = SVG().addTo(box).attr('id', key).size('255', '305')
         group.attr('width', '265')
         group.attr('height', '305')
-        group.attr('style', `left: ${coordinatePoint[key].offsetX};top:${coordinatePoint[key].offsetY};transform:scale(${this.zoom}) translate(0, -50px);animation-delay:${r(-12,-1)}s`)
+        group.attr('style', `left: ${coordinatePoint[key].offsetX};top:${coordinatePoint[key].offsetY};transform:scale(${this.zoom});`)
         group.attr('class', 'constellation')
+        group.data({
+          id: key,
+          speedX: self.r(-1, 1, 0.3),
+          speedY: self.r(-1, 1, 0.3)
+        })
         const polyline = group.polyline(coordinatePoint[key].point.map(item => [item.x, item.y])) // 先将所有点 用直线链接
         polyline.fill('none')
         polyline.stroke({ color: '#868096', width: 4, linecap: 'round', linejoin: 'round' })
@@ -440,29 +449,121 @@ export default {
           // polyline1.stroke({ color: '#07011D', width: 3, linecap: 'round', linejoin: 'round', dasharray: '8 8' })
         }
         coordinatePoint[key].point.forEach(item => { // 最后添加所有点
+          const width = group.data('width') || item.x
+          const height = group.data('height') || item.y
+          group.data('width', (width >= item.x ? width : item.x))
+          group.data('height', (height >= item.y ? height : item.y))
           if (item.disabled) return
           group.circle(14)
             .fill('#868096')
             .attr('cx', item.x)
             .attr('cy', item.y)
         })
+        group.data('width', group.data('width') - 50)
+        group.data('height', group.data('height') - 50)
+        this.constellation.push(group)
       })
       this.starTimer = setInterval(() => {
         this.starTimerIndex++
         let index = 0
         if (this.starTimerIndex === 1) return
         if (this.starTimerIndex === 2) index = 2
-        if (this.starTimerIndex === 3) index = 1
+        if (this.starTimerIndex === 3) {
+          index = 1
+          clearInterval(this.starTimer)
+        }
         if (this.starTimerIndex === 0) index = 0
         this.starTimerIndex = this.starTimerIndex === 3 ? -1 : this.starTimerIndex
         this.circleStar[index] && this.circleStar[index].forEach(circle => {
-          circle.radius(r(0.5, 2))
-          circle.attr('cx', r(0, 100) + '%')
-          circle.attr('cy', r(0, 100) + '%')
+          circle.radius(self.r(0.5, 2))
+          circle.attr('cx', self.r(0, 100) + '%')
+          circle.attr('cy', self.r(0, 100) + '%')
         })
       }, 1000)
-      function r (m, n) {
+      this.requestAnimationFrame = requestAnimationFrame(this.constellationAnimation)
+    },
+    r (m, n, minSpeed) {
+      if (!minSpeed) {
         return (Math.random() * (n - m) + m).toFixed(2)
+      } else {
+        let random = (Math.random() * (n - m) + m)
+        if (random > 0) {
+          random += minSpeed * 1
+        } else if (random < 0) {
+          random += minSpeed * -1
+        }
+        return random.toFixed(2)
+      }
+    },
+    constellationAnimation () {
+      for (let i = 0; i < this.constellation.length; i++) { // 循环遍历 判断碰撞
+        for (let j = i + 1; j < this.constellation.length; j++) {
+          if (this.impact(this.constellation[i], this.constellation[j])) {
+            const iSpeedX = this.constellation[i].data('speedX')
+            const iSpeedY = this.constellation[i].data('speedY')
+            this.constellation[i].data('speedX', this.constellation[j].data('speedX'))
+            this.constellation[i].data('speedY', this.constellation[j].data('speedY'))
+            this.constellation[j].data('speedX', iSpeedX)
+            this.constellation[j].data('speedY', iSpeedY)
+          }
+        }
+      }
+      this.constellation.forEach(item => {
+        // console.log(item.data('id'))
+        const position = item.node.getBoundingClientRect()
+        if (item.data('speedX') === 0) {
+          item.data('speedX', this.r(-1, 1, 0.3))
+        }
+        if (item.data('speedY') === 0) {
+          item.data('speedY', this.r(-1, 1, 0.3))
+        }
+        // 变速运动
+        // item.data('speedX', item.data('speedX') > 0 ? this.r(0, 1) : this.r(-1, 0))
+        // item.data('speedY', item.data('speedY') > 0 ? this.r(0, 1) : this.r(-1, 0))
+        // 处理边界问题
+        if (position.left + item.data('width') >= window.innerWidth) { // 向右移動 改为向左
+          item.data('speedX', this.r(-1, 0, 0.3))
+        }
+        if (position.left + item.data('speedX') < 0) { // 向左移動 改为向右
+          item.data('speedX', this.r(0, 1, 0.3))
+        }
+
+        if (position.top + item.data('height') >= window.innerHeight) { // 向下移動 改为向上
+          item.data('speedY', this.r(-1, 0, 0.3))
+        }
+        if (position.top + item.data('speedY') < 0) { // 向上移動 改为向下
+          item.data('speedY', this.r(0, 1, 0.3))
+        }
+        const left = position.left + item.data('speedX')
+        const top = position.top + item.data('speedY')
+        item.attr('style', `left: ${left}px;top:${top}px;transform:scale(${this.zoom});`)
+      })
+      this.requestAnimationFrame = requestAnimationFrame(this.constellationAnimation)
+    },
+    impact (obj, dobj) {
+      const position = obj.node.getBoundingClientRect()
+      const o = {
+        x: position.left,
+        y: position.top,
+        w: obj.data('width'),
+        h: obj.data('height')
+      }
+      const position2 = dobj.node.getBoundingClientRect()
+      const d = {
+        x: position2.left,
+        y: position2.top,
+        w: dobj.data('width'),
+        h: dobj.data('height')
+      }
+
+      const px = o.x <= d.x ? d.x : o.x
+      const py = o.y <= d.y ? d.y : o.y
+
+      // 判断点是否都在两个对象中
+      if (px >= o.x && px <= o.x + o.w && py >= o.y && py <= o.y + o.h && px >= d.x && px <= d.x + d.w && py >= d.y && py <= d.y + d.h) {
+        return true
+      } else {
+        return false
       }
     }
   },
@@ -484,6 +585,7 @@ export default {
     }
   },
   beforeDestroy () {
+    cancelAnimationFrame(this.constellationAnimation)
     clearInterval(this.starTimer)
     this.starTimer = null
   }
@@ -536,6 +638,8 @@ export default {
   }
   .constellation{
     position: absolute;
+    transform-origin: 0 0;
+    /*transition: all 0.95s linear;*/
     /*-webkit-animation: constellationAnimat var(--twinkle-duration) ease-in-out infinite;*/
     /*animation: constellationAnimat var(--twinkle-duration) ease-in-out infinite;*/
   }

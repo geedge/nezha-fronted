@@ -16,10 +16,10 @@
   display: flex;
   position: relative;
   flex-direction: column;
-  &:hover .chart-header--float{
+  &:hover .chart-header.chart-header--float{
     background-color: $--chart-title-hover-background-color;
-    height: 39px !important;
-    opacity: 1 !important;
+    height: 39px;
+    opacity: 1;
   }
   .chart-header {
     &.chart-header--float {

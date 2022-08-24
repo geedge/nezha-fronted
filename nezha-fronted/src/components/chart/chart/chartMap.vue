@@ -125,8 +125,9 @@ export default {
               container: mapId,
               style: mapStyle,
               maxZoom: 7,
-              minZoom: 0,
-              // renderWorldCopies: false,
+              minZoom: 1,
+              renderWorldCopies: false,
+              maxBounds: [[-179, -85], [179, 85]],
               hash: false,
               transformRequest: function (url, resourceType) {
                 if (resourceType === 'Tile' && url.indexOf('https://api.maptiler.com/tiles/v3') > -1) {

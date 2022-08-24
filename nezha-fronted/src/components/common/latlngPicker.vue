@@ -72,7 +72,8 @@ export default {
         style: mapStyle,
         maxZoom: 7,
         minZoom: 1,
-        // renderWorldCopies: false,
+        renderWorldCopies: false,
+        maxBounds: [[-179, -85], [179, 85]],
         hash: false,
         transformRequest: function (url, resourceType) {
           console.log(resourceType)
