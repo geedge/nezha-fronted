@@ -345,6 +345,8 @@ function asciiCompute (num, ascii, units, dot = 2) {
     return ''
   }
   num = Number(num)
+  const SIGN = num > 0 ? 1 : -1
+  num = Math.abs(num)
   let carry = 0
   if (num > 1) {
     const log = Math.log(num) / Math.log(ascii)
@@ -352,9 +354,9 @@ function asciiCompute (num, ascii, units, dot = 2) {
     num = num / Math.pow(ascii, carry)
   }
   if (Number.isInteger(num)) {
-    return num + ' ' + units[carry]
+    return num * SIGN + ' ' + units[carry]
   } else {
-    return num.toFixed(dot) + ' ' + units[carry]
+    return num.toFixed(dot) * SIGN + ' ' + units[carry]
   }
 }
 // eslint-disable-next-line no-unused-vars

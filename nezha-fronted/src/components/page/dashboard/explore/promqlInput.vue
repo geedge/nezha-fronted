@@ -1183,6 +1183,9 @@ export default {
         }
       }
     }
+  },
+  beforeDestroy () {
+    this.newView = null
   }
 }
 </script>

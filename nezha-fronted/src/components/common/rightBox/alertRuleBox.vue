@@ -50,9 +50,10 @@
               <template v-if="showMetrics">
                 <el-row style="line-height: 32px;">
                   <promql-input
+                    v-if="showMetrics"
                     :from-father-data="true"
                     :metricOptionsParent="metricOptions"
-                    id="alert-box-input-promql"
+                    id="alert-box-input-promql-metrics"
                     ref="promql"
                     :expression-list.sync="expressions"
                     :index="0"
@@ -67,7 +68,8 @@
               <template v-else>
                 <el-row style="line-height: 32px;">
                   <promql-input
-                    id="alert-box-input-promql"
+                    v-if="!showMetrics"
+                    id="alert-box-input-promql-logs"
                     ref="promql"
                     :expression-list.sync="expressions"
                     :index="0"
@@ -79,7 +81,7 @@
                   ></promql-input>
                 </el-row>
               </template>
-            </el-form-item>
+           </el-form-item>
           <el-form-item label="OID" prop="expr" v-if="!showSnmpTrap">
             <el-input id="alert-box-input-oid" v-model="editAlertRule.expr" size="small" type="text"></el-input>
           </el-form-item>
@@ -612,12 +614,21 @@ export default {
         this.editAlertRule.operator = '>'
       }
       if (val === 1) {
-        this.showSnmpTrap = true // showSnmpTrap 为 true 时显示 expr,threshold,unit
+        this.showSnmpTrap = false // showSnmpTrap 为 true 时显示 expr,threshold,unit
         this.showMetrics = true
+        this.expressions = ['']
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
+        this.$nextTick(()=>{
+          this.showSnmpTrap = true
+        })
       } else if (val === 2) {
-        this.showMetrics = false // showMetrics 为 false 时,展示 Logs label
-        this.showSnmpTrap = true // showSnmpTrap 为 true 时显示 expr,threshold,unit
+        this.showMetrics = false
+        this.expressions = ['']
+        // showMetrics 为 false 时,展示 Logs label
+        this.showSnmpTrap = false // showSnmpTrap 为 true 时显示 expr,threshold,unit
+        this.$nextTick(()=>{
+          this.showSnmpTrap = true
+        })
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
       } else if (val === 3) {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
@@ -650,7 +661,7 @@ export default {
         this.editAlertRule = JSON.parse(JSON.stringify(n))
         if (this.editAlertRule.id || this.editAlertRule.name) {
           this.expressions = [this.editAlertRule.expr]
-          this.showTypeSelect = true // 当 edit 时禁用 type下拉框
+          this.showTypeSelect = !!this.editAlertRule.id // 当 edit 时禁用 type下拉框
           if (n.type === 1) {
             this.editAlertRule.type = 1
           } else if (n.type === 2) {
