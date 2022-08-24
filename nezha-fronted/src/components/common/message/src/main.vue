@@ -82,7 +82,7 @@ export default {
         error: '#FBBAAF'
       },
       // 进度条宽度
-      messageWidth: 0
+      messageWidth: 100
     }
   },
 
@@ -129,8 +129,8 @@ export default {
         // 开启进度条定时器
         const part = 100 / (this.duration / 10)
         this.worker = createWorker(() => {
-          this.messageWidth += part
-          if (this.messageWidth > 100) {
+          this.messageWidth -= part
+          if (this.messageWidth <= 0) {
             this.clearTimer()
             if (!this.closed) {
               this.close()

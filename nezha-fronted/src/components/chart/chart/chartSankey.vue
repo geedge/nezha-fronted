@@ -343,11 +343,11 @@ export default {
       }
       if (str && valueStr) {
         return `
-              <div style="width:auto;height: 100%;display: flex;justify-content: center;flex-direction: column;color:#000000">
-                <p style="cursor:pointer;white-space: nowrap;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+              <div style="width:auto;height: 100%;display: flex;justify-content: center;flex-direction: column;">
+                <p class="chart-label" style="cursor:pointer;white-space: nowrap;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                   <span>${str}</span>
                 </p>
-                <p style="cursor:pointer;white-space: nowrap;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+                <p class="chart-label" style="cursor:pointer;white-space: nowrap;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                   <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                   <span>${valueStr}</span>
                 </p>
@@ -355,8 +355,8 @@ export default {
             `
       } else if (str) {
         return `
-              <div style="width:auto;height: 100%;display: flex;justify-content: center;flex-direction: column;color:#000000">
-                <p style="cursor:pointer;white-space: nowrap;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+              <div style="width:auto;height: 100%;display: flex;justify-content: center;flex-direction: column;">
+                <p class="chart-label" style="cursor:pointer;white-space: nowrap;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                   <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                   <span>${str}</span>
                 </p>
@@ -364,8 +364,8 @@ export default {
             `
       } else if (valueStr) {
         return `
-              <div style="width:auto;height: 100%;display: flex;justify-content: center;flex-direction: column;color:#000000">
-                <p style="cursor:pointer;white-space: nowrap;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+              <div style="width:auto;height: 100%;display: flex;justify-content: center;flex-direction: column;">
+                <p class="chart-label" style="cursor:pointer;white-space: nowrap;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                   <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                   <span>${valueStr}</span>
                 </p>
