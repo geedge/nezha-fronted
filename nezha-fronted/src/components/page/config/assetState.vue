@@ -15,7 +15,17 @@
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button id="asset-state-list-batch-delete" v-has="'assetState_delete'" :delete-objs="batchDeleteObjs" api="/asset/stateConf" @after="getTableData" @before="delFlag=true"></delete-button>
+        <delete-button
+          ref="deleteButton"
+          :from="'assetState'"
+          :forceDeleteShow="false"
+          id="asset-state-list-batch-delete"
+          v-has="'assetState_delete'"
+          :delete-objs="batchDeleteObjs"
+          api="/asset/stateConf"
+          @after="getTableData"
+          @before="delFlag=true"
+        ></delete-button>
       </template>
       <template v-slot:default="slotProps">
         <el-table

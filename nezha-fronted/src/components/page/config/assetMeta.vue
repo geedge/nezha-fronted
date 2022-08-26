@@ -34,8 +34,16 @@
                 type="button" @click="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
-        <delete-button :delete-objs="batchDeleteObjs" @after="getTableData"
-                       id="meta-msg-batch-delete" v-has="'asset_label_delete'" :api="url"></delete-button>
+        <delete-button
+          ref="deleteButton"
+          :from="'assetMeta'"
+          :forceDeleteShow="false"
+          :delete-objs="batchDeleteObjs"
+          @after="getTableData"
+          id="meta-msg-batch-delete"
+          v-has="'asset_label_delete'"
+          :api="url"
+        ></delete-button>
       </template>
       <template v-slot:default="slotProps">
         <asset-meta-table

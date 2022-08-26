@@ -100,7 +100,19 @@
           <template v-slot:before>
             <div>
               <el-dropdown-item>
-                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="alert-rule-batch-delete" v-has="'alertRule_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+                <delete-button
+                  ref="deleteButton"
+                  :from="'alertRule'"
+                  :forceDeleteShow="false"
+                  :type="'link'"
+                  :title="$t('overall.batchDel')"
+                  id="alert-rule-batch-delete"
+                  v-has="'alertRule_delete'"
+                  :api="url"
+                  :delete-objs="batchDeleteObjs"
+                  @after="getTableData"
+                  @before="delFlag=true"
+                ></delete-button>
               </el-dropdown-item>
             </div>
           </template>

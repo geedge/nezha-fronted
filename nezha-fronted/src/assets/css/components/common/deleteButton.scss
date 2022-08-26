@@ -1,0 +1,93 @@
+.batch-delete-footer{
+  box-shadow: none !important;
+  height: auto !important;
+  display: flex;
+  justify-content: space-between !important;
+}
+.batch-delete-dialog{
+  transition: all 0.3s;
+  .dialog-header {
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    span{
+      word-break: break-word;
+    }
+  }
+  .nz-icon-jinggao{
+    color: $--color-danger;
+  }
+  .nz-icon-import-failed1{
+    color: $--color-danger;
+  }
+  .nz-icon-import-success1{
+    color: $--color-success;
+  }
+  .el-dialog__body {
+    padding: 0 20px;
+  }
+  .tree-header{
+    background: #F6F6F6;
+    padding: 7px 10px 7px 0px;
+    font-weight: 600;
+    .batch-delete-item-id, .batch-delete-item-name{
+      font-weight: 600;
+    }
+  }
+  .tree-body{
+    //min-height: 160px;
+    //max-height: 220px;
+    height: 160px;
+    overflow-y: auto;
+  }
+  .tree-body-item{
+    display: flex;
+    width: 100%;
+    font-size: 14px;
+    color: $--color-text-primary;
+    font-weight: 400;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    box-sizing: border-box;
+    .nz-icon{
+      vertical-align: middle;
+    }
+    .batch-delete-item-id{
+      margin-left: 28px;
+      margin-right: 28px;
+      width: 100px;
+      transition: all 0.3s;
+    }
+    .batch-delete-item-name{
+      margin-left: 14px;
+      flex: 1;
+      .tree-body-children:nth-of-type(1){
+        margin-top: 10px;
+      }
+      transition: all 0.3s;
+    }
+  }
+  .tree-body-children{
+    padding-left: 25px;
+  }
+  .batch-delete-item-text{
+    display: inline-block;
+    width: calc(100% - 40px);
+    vertical-align: middle;
+  }
+  .el-checkbox-group{
+    font-size: 14px;
+    .el-checkbox__label{
+      display: none;
+    }
+  }
+  .nz-icon-caret-right{
+    display:inline-block;
+    transition: all 0.3s;
+    color: $--border-color-base-focus;
+  }
+  .rotate90 {
+    display:inline-block;
+    transform: rotate(90deg);
+    transition: all 0.3s;
+  }
+}

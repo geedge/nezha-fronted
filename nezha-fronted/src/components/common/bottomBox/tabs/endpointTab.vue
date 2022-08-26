@@ -32,7 +32,15 @@
             </button>
           </template>
         </export-excel>
-        <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="endpoint" v-has="'asset_endpoint_delete'" id="endpoint-tab-batch-delete"></delete-button>
+        <delete-button
+          ref="deleteButton"
+          :from="'endpoint'"
+          :forceDeleteShow="false"
+          :delete-objs="batchDeleteObjs"
+          @after="getTableData"
+          api="endpoint"
+          v-has="'asset_endpoint_delete'"
+          id="endpoint-tab-batch-delete"></delete-button>
       </div>
     </div>
     <!-- 自定义table列 -->

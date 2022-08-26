@@ -21,6 +21,9 @@
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
         <delete-button
+          ref="deleteButton"
+          :from="'alertSilence'"
+          :forceDeleteShow="false"
           id="role-list-batch-delete"
           v-has="'alertSilence_expire'"
           :api="url"

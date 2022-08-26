@@ -14,7 +14,17 @@
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button id="role-list-batch-delete" v-has="'role_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        <delete-button
+          ref="deleteButton"
+          :from="'roles'"
+          :forceDeleteShow="true"
+          id="role-list-batch-delete"
+          v-has="'role_delete'"
+          :api="url"
+          :delete-objs="batchDeleteObjs"
+          @after="getTableData"
+          @before="delFlag=true"
+        ></delete-button>
       </template>
       <template v-slot:default="slotProps">
         <role-table

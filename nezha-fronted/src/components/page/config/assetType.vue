@@ -14,7 +14,17 @@
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button id="account-list-batch-delete" v-has="'user_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        <delete-button
+          ref="deleteButton"
+          :from="'assetType'"
+          :forceDeleteShow="false"
+          id="account-list-batch-delete"
+          v-has="'user_delete'"
+          :api="url"
+          :delete-objs="batchDeleteObjs"
+          @after="getTableData"
+          @before="delFlag=true"
+        ></delete-button>
       </template>
       <template v-slot="slotProps">
         <asset-type-table
