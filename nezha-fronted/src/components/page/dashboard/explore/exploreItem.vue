@@ -300,7 +300,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                   <h1 class="page-header" id="log-queries">Log queries</h1>
                   <p>All LogQL queries contain a <b>log stream selector.</b></p>
                   <div class="img-hidden"><img src="https://grafana.com/docs/loki/latest/logql/query_components.png" alt=""></div>
-                  <p>Optionally, the log stream selector can be followed by a log pipeline. A log pipeline is a set of stage expressions that are chained together and applied to the selected log streams. Each expression can filter out, parse, or mutate log lines and their respective labels.</p>
+                  <p>Optionally, the log stream selector can be followed by <b>a log pipeline</b>. A log pipeline is a set of stage expressions that are chained together and applied to the selected log streams. Each expression can filter out, parse, or mutate log lines and their respective labels.</p>
                   <p>The following example shows a full log query in action:</p>
                   <p><code class="fillbox">{container="query-frontend",namespace="loki-dev"} |= "metrics.go" | logfmt | duration > 10s and throughput_mb < 500</code></p>
                   <p>The query is composed of:</p>
@@ -315,12 +315,12 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                   <h2 id="log-stream-selector">Log stream selector</h2>
                   <div class="introduce-view__content-label">
                     <p>The stream selector determines which log streams to include in a query’s results. A log stream is a unique source of log content, such as a file. A more granular log stream selector then reduces the number of searched streams to a manageable volume. This means that the labels passed to the log stream selector will affect the relative performance of the query’s execution.</p>
-                    <p>The log stream selector is specified by one or more comma-separated key-value pairs. Each key is a log label and each value is that label’s value. Curly braces ({ and }) delimit the stream selector.</p>
+                    <p>The log stream selector is specified by one or more comma-separated key-value pairs. Each key is a log label and each value is that label’s value. Curly braces (<code>{</code> and <code>}</code>) delimit the stream selector.</p>
                     <p>Consider this stream selector:</p>
                     <p><code class="fillbox">{app="mysql",name="mysql-backup"}</code></p>
                     <p>All log streams that have both a label of <code>app</code> whose value is <code>mysql</code> and a label of <code>name</code> whose value is <code>mysql-backup</code> will be included in the query results. A stream may contain other pairs of labels and values, but only the specified pairs within the stream selector are used to determine which streams will be included within the query results.</p>
                     <p>The same rules that apply for Prometheus Label Selectors apply for Grafana Loki log stream selectors.</p>
-                    <p>The<code> = </code>operator after the label name is a <b>label matching operator</b>. The following label matching operators are supported:</p>
+                    <p>The <code>=</code> operator after the label name is a <b>label matching operator</b>. The following label matching operators are supported:</p>
                     <ul>
                       <li><code>=</code>: exactly equal</li>
                       <li><code>!=</code>: not equal</li>
@@ -355,7 +355,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 <div class="introduce-view__content">
                   <h2 id="line-filter-expressions">Line filter expression</h2>
                   <div class="introduce-view__content-label">
-                    <p>The line filter expression does a distributed grep over the aggregated logs from the matching log streams. It searches the contents of the log line, discarding those lines that do not match the case sensitive expression.</p>
+                    <p>The line filter expression does a distributed <code>grep</code> over the aggregated logs from the matching log streams. It searches the contents of the log line, discarding those lines that do not match the case sensitive expression.</p>
                     <p>Each line filter expression has a <b>filter operator</b> followed by text or a regular expression. These filter operators are supported:</p>
                     <ul>
                       <li><code>|=</code>: Log line contains string</li>
@@ -639,9 +639,9 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 <div class="introduce-view__content-label">
                  <p>The <code>| label_format</code> expression can rename, modify or add labels. It takes as parameter a comma separated list of equality operations, enabling multiple operations at once.</p>
                  <p>When both side are label identifiers, for example <code>dst=src</code>, the operation will rename the <code>src</code> label into <code>dst</code>.</p>
-                 <p>The right side can alternatively be a template string (double quoted or backtick), for example dst="<code v-pre>{{.status}} {{.query}}</code>", in which case the dst label value is replaced by the result of the text/template evaluation. This is the same template engine as the <code>| line_format</code> expression, which means labels are available as variables and you can use the same list of functions.</p>
+                 <p>The right side can alternatively be a template string (double quoted or backtick), for example dst="<code v-pre>{{.status}} {{.query}}</code>", in which case the <code>dst</code> label value is replaced by the result of the text/template evaluation. This is the same template engine as the <code>| line_format</code> expression, which means labels are available as variables and you can use the same list of functions.</p>
                  <p>In both cases, if the destination label doesn’t exist, then a new one is created.</p>
-                 <p>The renaming form <code>dst=src</code> will drop the <code>src</code> label after remapping it to the <code>dst</code> label. However, the template form will preserve the referenced labels, such that <code v-pre>dst="{{.src}}"</code> results in both dst and <code>src</code> having the same value.</p>
+                 <p>The renaming form <code>dst=src</code> will drop the <code>src</code> label after remapping it to the <code>dst</code> label. However, the template form will preserve the referenced labels, such that <code v-pre>dst="{{.src}}"</code> results in both <code>dst</code> and <code>src</code> having the same value.</p>
                  <pre>A single label name can only appear once per expression. This means <code>| label_format foo=bar,foo="new"</code> is not allowed but you can use two expressions for the desired effect: <code>| label_format foo=bar | label_format foo="new"</code></pre>
                 </div>
               </div>
@@ -663,7 +663,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                   <p><code v-pre class="fillbox">level=debug ts=2020-10-02T10:10:42.092268913Z caller=logging.go:66 traceID=a9d4d8a928d8db1 msg="POST /api/prom/api/v1/query_range (200) 1.5s"</code></p>
                   <p>You can use multiple parsers (logfmt and regexp) like this.</p>
                   <p><code v-pre class="fillbox">{job="loki-ops/query-frontend"} | logfmt | line_format "{{.msg}}" | regexp "(?P&lt;method&gt;\\w+) (?P&lt;path&gt;[\\w|/]+) \\((?P&lt;status&gt;\\d+?)\\) (?P&lt;duration&gt;.*)"</code></p>
-                  <p>This is possible because the <code>| line_format</code> reformats the log line to become <code>POST /api/prom/api/v1/query_range (200) 1.5s</code> which can then be parsed with the | <code>regexp ... parser</code>.</p>
+                  <p>This is possible because the <code>| line_format</code> reformats the log line to become <code>POST /api/prom/api/v1/query_range (200) 1.5s</code> which can then be parsed with the <code>| regexp ...</code> parser.</p>
                 </div>
               </div>
               <!-- Formatting -->
@@ -745,7 +745,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
                   </ul>
                   <p>Supported function for operating over unwrapped ranges are:</p>
                    <ul>
-                    <li><code> rate(unwrapped-range)</code>: calculates the number of entries per second</li>
+                    <li><code> rate(unwrapped-range)</code>: calculates per second rate of the sum of all values in the specified interval.</li>
                     <li><code> rate_counter(unwrapped-range)</code>: calculates per second rate of the values in the specified interval and treating them as “counter metric”</li>
                     <li><code> sum_over_time(unwrapped-range)</code>: the sum of all values in the specified interval.</li>
                     <li><code> avg_over_time(unwrapped-range)</code>: the average value of all points in the specified interval.</li>
@@ -801,7 +801,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
                     <li><code> bottomk</code>: Select smallest k elements by sample value</li>
                   </ul>
                   <p>The aggregation operators can either be used to aggregate over all label values or a set of distinct label values by including a <code>without</code> or a <code>by</code> clause:</p>
-                  <p><code>&lt;aggr-op&gt;([parameter,] &lt;vector expression&gt;) [without|by (&lt;label list&gt;)]</code></p>
+                  <p><code class="fillbox">&lt;aggr-op&gt;([parameter,] &lt;vector expression&gt;) [without|by (&lt;label list&gt;)]</code></p>
                   <p><code>parameter</code> is required when using <code>topk</code> and <code>bottomk</code>. <code>topk</code> and <code>bottomk</code> are different from other aggregators in that a subset of the input samples, including the original labels, are returned in the result vector.</p>
                   <p><code>by</code> and <code>without</code> are only used to group the input vector. The <code>without</code> clause removes the listed labels from the resulting vector, keeping all others. The <code>by</code> clause does the opposite, dropping labels that are not listed in the clause, even if their label values are identical between all elements of the vector.</p>
                 </div>
