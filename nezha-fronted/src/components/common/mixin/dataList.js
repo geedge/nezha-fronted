@@ -14,14 +14,6 @@ export default {
   },
   data () {
     return {
-      dialogFooterShow: true,
-      idShow: true,
-      showOne: true,
-      showTwo: false,
-      showThree: false,
-      isDisabled: true,
-      ForceDeleteShow: false,
-      dialogVisible: false,
       fromRoute: fromRoute,
       // 侧滑
       rightBox: {
@@ -50,10 +42,7 @@ export default {
       delFlag: false,
       fromBottom: false,
       operationWidth: '165', // 操作列宽
-      searchCheckBox: {},
-      dialogData: [],
-      multipleSelection: [],
-      idStr: []
+      searchCheckBox: {}
     }
   },
   methods: {
@@ -83,30 +72,8 @@ export default {
     isBuildIn (row) {
       return (row.buildIn && row.buildIn == 1) || (row.builtIn && row.builtIn == 1)
     },
-    batchDeleteselectionChange (obj) {
-      this.batchDeleteObjs = obj
-      const ids = []
-      this.batchDeleteObjs.forEach(function (value, index, obj) {
-        ids.push(obj[index].id)
-      })
-      this.idStr = ids.toString()
-      console.log(this.idStr, 1)
-    },
     selectionChange (objs) {
       this.batchDeleteObjs = objs
-      if (this.batchDeleteObjs.length > 0) {
-        this.isDisabled = false
-        console.log('批量删除按钮可用')
-      } else {
-        this.isDisabled = true
-        console.log('批量删除按钮不可用')
-      }
-      // const ids = []
-      // this.batchDeleteObjs.forEach(function (value, index, obj) {
-      //   ids.push(obj[index].id)
-      // })
-      // this.idStr = ids.toString()
-      // console.log(this.idStr, 1)
     },
     getTableData (params) {
       if (params && Object.keys(params).length > 0) {
@@ -182,94 +149,34 @@ export default {
         }
       })
     },
-    // 批量删除
-    BatchDelete () {
-      this.dialogVisible = true
-      this.$nextTick(() => {
-        // console.log(this.$refs.batchDeleteData, 2)
-        console.log(this.batchDeleteObjs, 3)
-        this.batchDeleteObjs.forEach((row) => {
-          this.$refs.batchDeleteData.toggleRowSelection(row, true)
-        })
-      })
-    },
-    // 批量删除-确定按钮
-    BatchDeleteYes (obj) {
-      if (this.ForceDeleteShow) {
-        this.showThree = true
-        this.showOne = false
-        this.showTwo = false
-        this.dialogFooterShow = false
-        // this.$delete(this.url + '?ids=' + this.idStr).then(response => {
-        //   if (response.code === 200) {
-        //     this.showThree = true
-        //     this.showOne = false
-        //     this.showTwo = false
-        //     this.dialogFooterShow = false
-        //     this.batchDeleteObjs = []
-        //     this.idStr = []
-        //     this.getTableData()
-        //   } else {
-        //     this.$message.error(response.msg)
-        //   }
-        // })
-      } else {
-        this.showThree = false
-        this.showOne = false
-        this.showTwo = true
-        this.dialogFooterShow = true
-      }
-    },
-    BatchDeleteToggleSelection (val) {
-      this.multipleSelection = val
-    },
-    // 强制删除按钮
-    ForceDeleteFun () {
-      this.ForceDeleteShow = true
-    },
-    // Dialog 关闭的回调
-    handleClose (row) {
-      // this.dialogVisible = false
-      // this.showOne = true
-      // this.showTwo = false
-      // this.showThree = false
-      // this.dialogFooterShow = true
-      // this.ForceDeleteShow = false
-      if (this.showThree) {
-        this.$delete(this.url + '?ids=' + this.idStr).then(response => {
-          if (response.code === 200) {
-            this.showThree = false
-            this.showOne = true
-            this.showTwo = false
-            this.dialogFooterShow = true
-            this.ForceDeleteShow = false
-            this.batchDeleteObjs = []
-            this.idStr = []
-            this.getTableData()
-            bus.$emit('delTableRow', [row.id])
-          } else {
-            this.$message.error(response.msg)
-          }
-        })
-      }
-    },
     del (row) {
       const self = this
       this.$confirm(this.$t('tip.confirmDelete'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
-      }).then(() => {
-        this.$delete(this.url + '?ids=' + row.id).then(response => {
-          if (response.code === 200) {
-            self.delFlag = true
-            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            self.getTableData()
-            bus.$emit('delTableRow', [row.id])
+        type: 'warning',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            this.$delete(this.url + '?ids=' + row.id).then(response => {
+              if (response.code === 200) {
+                self.delFlag = true
+                this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+                self.getTableData()
+                bus.$emit('delTableRow', [row.id])
+              } else if (response.data && response.data.list && response.code !== 200) {
+                self.delFlag = true
+                this.$refs.deleteButton && this.$refs.deleteButton.showProcess(response.data.list)
+              } else {
+                this.$message.error(response.msg)
+              }
+              done()
+            })
           } else {
-            this.$message.error(response.msg)
+            done()
           }
-        })
+        }
+      }).then(() => {
+
       })
     },
     newObject () {
@@ -430,20 +337,6 @@ export default {
     }
   },
   watch: {
-    batchDeleteObjs: {
-      deep: true,
-      handler (n) {
-        if (n.length === 0 && this.pageObj.pageNo > 1) {
-          this.pageNo(this.pageObj.pageNo - 1)
-        }
-
-        /* if (!this.delFlag) { // 不是删除时回到顶部
-          this.$refs.dataTable.bodyWrapper.scrollTop = 0
-        } else {
-          this.delFlag = false
-        } */
-      }
-    },
     tableData: {
       deep: true,
       handler (n) {
@@ -1016,6 +909,21 @@ export default {
           },
           jsonKey: 'val'
         },
+        state: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'state',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'ipamState',
+            name: 'State',
+            readonly: true,
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
         name: {
           target: this.searchLabel,
           isSearchInput: true,
@@ -1214,13 +1122,189 @@ export default {
           jsonKey: 'val'
         }
       }
+    } else if (path === 'issue') {
+      searchKeys = {
+        // key: path 键
+        // value: vue set 参数
+        pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
+        pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
+        orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
+        ids: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'ids',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'ids',
+            name: 'ID',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        name: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'name',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            id: 'name',
+            label: 'name',
+            name: 'Name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        type: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'type',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'issueType',
+            name: 'Type',
+            readonly: true,
+            type: 'issueType',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        state: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'state',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'issueState',
+            name: 'State',
+            readonly: true,
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        priority: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'priority',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'priority',
+            name: 'Priority',
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        assetsId: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'assetsId',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'assetsId',
+            name: 'Assets id',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        assetName: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'assetName',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'assetName',
+            name: 'Assets name',
+            type: 'input',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        cid: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'cid',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'cid',
+            name: 'Create user',
+            type: 'issue',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        uid: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'uid',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'uid',
+            name: 'Update user',
+            type: 'issue',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        rid: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'rid',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'rid',
+            name: 'Reporter',
+            type: 'issue',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        aid: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'aid',
+          type: 'string',
+          defaultJson: {
+            disabled: false,
+            label: 'aid',
+            name: 'Assignee',
+            type: 'issue',
+            val: ''
+          },
+          jsonKey: 'val'
+        },
+        starrd: {
+          target: this.searchLabel,
+          isSearchInput: true,
+          propertyName: 'starrd',
+          type: 'Number',
+          defaultJson: {
+            disabled: false,
+            label: 'starrd',
+            name: 'Starrd',
+            type: 'select',
+            val: ''
+          },
+          jsonKey: 'val'
+        }
+      }
     }
-
     this.initQueryFromPath(searchKeys)
   },
   mounted () {
-    this.$nextTick((row) => {
-    })
     const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
     if (pageSize && pageSize !== 'undefined') {
       this.pageObj.pageSize = pageSize

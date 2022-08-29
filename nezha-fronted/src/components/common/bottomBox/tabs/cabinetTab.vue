@@ -55,7 +55,19 @@
           <template v-slot:before>
             <div>
               <el-dropdown-item>
-                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="asset-model-batch-delete" v-has="'dc_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+                <delete-button
+                  ref="deleteButton"
+                  :from="'cabinetTab'"
+                  :forceDeleteShow="false"
+                  :type="'link'"
+                  :title="$t('overall.batchDel')"
+                  id="asset-model-batch-delete"
+                  v-has="'dc_delete'"
+                  :api="url"
+                  :delete-objs="batchDeleteObjs"
+                  @after="getTableData"
+                  @before="delFlag=true"
+                ></delete-button>
               </el-dropdown-item>
             </div>
           </template>
@@ -206,6 +218,9 @@ export default {
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
             self.getTableData()
             bus.$emit('cabinet-tab')
+          } else if (response.data && response.data.list && response.code !== 200) {
+            this.delFlag = true
+            this.$refs.deleteButton && this.$refs.deleteButton.showProcess(response.data.list)
           } else {
             this.$message.error(response.msg)
           }

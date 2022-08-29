@@ -17,7 +17,17 @@
         <button id="load-agent" class="top-tool-btn margin-r-10" type="button" @click="toDownloadAgent" v-has="'agent_edit'" :title="$t('overall.download')">
           <i class="nz-icon-download nz-icon"></i>
         </button>
-        <delete-button id="promserver-list-batch-delete" v-has="'agent_delete'" :delete-objs="batchDeleteObjs" api="agent" @after="getTableData" @before="delFlag=true"></delete-button>
+        <delete-button
+          ref="deleteButton"
+          :from="'agent'"
+          :forceDeleteShow="true"
+          id="promserver-list-batch-delete"
+          v-has="'agent_delete'"
+          :delete-objs="batchDeleteObjs"
+          api="agent"
+          @after="getTableData"
+          @before="delFlag=true"
+        ></delete-button>
       </template>
       <template v-slot:default="slotProps">
         <agent-table

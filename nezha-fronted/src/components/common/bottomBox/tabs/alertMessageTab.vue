@@ -26,7 +26,16 @@
             class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
           <i class="nz-icon nz-icon-download1"></i>
         </button>
-        <delete-button :clickFunction="openDelMessageBox" :delete-objs="batchDeleteObjs" @after="getAlertList" api="alert/message" v-has="['rule_alerts_delete', 'project_endpoint_alerts_delete', 'asset_alerts_delete']" :id="from+'-sub-batch-delete'"></delete-button>
+        <delete-button
+          ref="deleteButton"
+          :from="'alertMessageTab'"
+          :forceDeleteShow="false"
+          :clickFunction="openDelMessageBox"
+          :delete-objs="batchDeleteObjs"
+          @after="getAlertList"
+          api="alert/message"
+          v-has="['rule_alerts_delete', 'project_endpoint_alerts_delete', 'asset_alerts_delete']"
+          :id="from+'-sub-batch-delete'"></delete-button>
       </div>
     </div>
     <alertMessageTable
@@ -511,6 +520,9 @@ export default {
           if (response.code === 200) {
             this.$message({ type: 'success', message: this.$t('tip.deleteSuccess') })
             this.getAlertList()
+          } else if (response.data && response.data.list && response.code !== 200) {
+            this.delFlag = true
+            this.$refs.deleteButton && this.$refs.deleteButton.showProcess(response.data.list)
           } else {
             this.$message.error(response.msg)
           }

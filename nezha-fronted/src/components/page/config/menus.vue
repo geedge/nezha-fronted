@@ -12,7 +12,15 @@
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button id="menus-list-batch-delete" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        <delete-button
+          ref="deleteButton"
+          :from="'menus'"
+          :forceDeleteShow="false"
+          id="menus-list-batch-delete"
+          :api="url" :delete-objs="batchDeleteObjs"
+          @after="getTableData"
+          @before="delFlag=true"
+        ></delete-button>
       </template>
       <template v-slot="slotProps">
         <menu-table

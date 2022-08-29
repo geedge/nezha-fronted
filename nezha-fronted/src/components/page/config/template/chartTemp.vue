@@ -36,8 +36,17 @@
           <template v-slot:before>
             <div>
               <el-dropdown-item>
-                <delete-button :type="'link'" :title="$t('overall.batchDel')" :delete-objs="batchDeleteObjs" @after="getTableData"
-                               id="alert-msg-batch-delete" v-has="'expressionTemplate_delete'" :api="url"></delete-button>
+                <delete-button
+                  ref="deleteButton"
+                  :from="'chartTemp'"
+                  :forceDeleteShow="false"
+                  :type="'link'"
+                  :title="$t('overall.batchDel')"
+                  :delete-objs="batchDeleteObjs"
+                  @after="getTableData"
+                  id="alert-msg-batch-delete"
+                  v-has="'expressionTemplate_delete'"
+                  :api="url"></delete-button>
               </el-dropdown-item>
             </div>
           </template>

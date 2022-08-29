@@ -112,7 +112,19 @@
                 <div id="asset-batch-asset" v-has="'asset_edit'" @click="batchEdit"><i class="nz-icon nz-icon-batch-edit"></i>{{$t('overall.batchEdit')}}</div>
               </el-dropdown-item>
               <el-dropdown-item>
-                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="account-list-batch-delete" v-has="'monitor_endpoint_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+                <delete-button
+                  ref="deleteButton"
+                  :from="'endpoint'"
+                  :forceDeleteShow="false"
+                  :type="'link'"
+                  :title="$t('overall.batchDel')"
+                  id="account-list-batch-delete"
+                  v-has="'monitor_endpoint_delete'"
+                  :api="url"
+                  :delete-objs="batchDeleteObjs"
+                  @after="getTableData"
+                  @before="delFlag=true"
+                ></delete-button>
               </el-dropdown-item>
             </div>
           </template>

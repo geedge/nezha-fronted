@@ -36,7 +36,20 @@
           <template v-slot:before>
             <div>
               <el-dropdown-item>
-                <delete-button id="alert-msg-batch-delete" v-has="'alertMessage_expired'" :api="url" :clickFunction="batchDel" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" :title="$t('overall.batchDel')" :type="'link'"></delete-button>
+                <delete-button
+                  ref="deleteButton"
+                  :from="'alertMessage'"
+                  :forceDeleteShow="false"
+                  id="alert-msg-batch-delete"
+                  v-has="'alertMessage_expired'"
+                  :api="url"
+                  :clickFunction="batchDel"
+                  :delete-objs="batchDeleteObjs"
+                  @after="getTableData"
+                  @before="delFlag=true"
+                  :title="$t('overall.batchDel')"
+                  :type="'link'"
+                ></delete-button>
               </el-dropdown-item>
               <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <div id="alert-msg-batch-ack" v-has="'alertMessage_expired'" @click="batchAck"><i class="nz-icon nz-icon-queren"></i>{{$t('overall.batchAck')}}</div>
@@ -628,6 +641,9 @@ export default {
             this.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
             this.getTableData()
+          } else if (response.data && response.data.list && response.code !== 200) {
+            this.delFlag = true
+            this.$refs.deleteButton && this.$refs.deleteButton.showProcess(response.data.list)
           } else {
             this.$message.error(response.msg)
           }
