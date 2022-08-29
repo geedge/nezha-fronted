@@ -20,18 +20,18 @@
     >
       <!--  -->
       <div class="dialog-header" style="vertical-align:top;"  v-if="prepare">
-        <i class="nz-icon nz-icon-jinggao" style="color:#ff0000;"></i>
-        <span>Are you sure to delete these {{ this.deleteObjs.length }} Pleaces data?</span>
+        <i class="nz-icon nz-icon-jinggao"></i>
+        <span>{{$t('batch.prepare', { dataLength: deleteObjs.length })}}</span>
       </div>
       <!--  -->
       <div class="dialog-header" style="vertical-align:top;" v-if="process">
-        <i class="nz-icon nz-icon-import-failed1" style="color:#ff000078;"></i>
-        <span>These Assets cannot be deleted.If you want to continue to delete,please check the "Force delete" action.</span>
+        <i class="nz-icon nz-icon-import-failed1"></i>
+        <span>{{$t('batch.process', {title: $t(deleteTitle)})}}</span>
       </div>
       <!--  -->
       <div class="dialog-header" style="vertical-align:top;" v-if="finish">
         <i class="nz-icon nz-icon-import-success1"></i>
-        <span>These Assets delete complete.</span>
+        <span>{{$t('batch.finish', {title: $t(deleteTitle)})}}</span>
       </div>
       <div class="batch-delete-tree">
         <div class="tree-header tree-body-item">
@@ -68,13 +68,13 @@
       </div>
       <!-- 底部按钮 -->
       <span slot="footer" class="dialog-footer right-box__footer batch-delete-footer" v-if="!finish">
-        <div v-if="forceDeleteShow">
-          <el-checkbox v-model="forceDelete" text-color="black" name="type" :true-label="1" :false-label="0"></el-checkbox>
-          <span class="checkTitle">Force delete</span>
-        </div>
         <div>
           <button id="batch-delete-cancel" class="footer__btn footer__btn--light" style="margin-top: 8px;"  type="button" @click="dialogVisible = false">{{$t('tip.no')}}</button>
           <button id="batch-delete-next" class="footer__btn"  type="button" @click="batchDeleteYes">{{$t('tip.yes')}}</button>
+        </div>
+        <div v-if="forceDeleteShow">
+          <el-checkbox v-model="forceDelete" text-color="black" name="type" :true-label="1" :false-label="0"></el-checkbox>
+          <span class="checkTitle">{{$t('batch.forceDelete')}}</span>
         </div>
       </span>
     </el-dialog>
@@ -117,6 +117,10 @@ export default {
     },
     title: {
       type: String
+    },
+    deleteTitle: {
+      type: String,
+      default: 'project.topology.data'
     }
   },
   methods: {
@@ -216,7 +220,7 @@ export default {
         case 'endpoint' : return 'nz-icon monitorColor nz-icon-overview-endpoint'
         case 'alertrule' : return 'nz-icon monitorColor nz-icon-Alertrule'
       }
-      return 'nz-icon monitorColor nz-icon-module5'
+      return ' '
     }
   }
 }
