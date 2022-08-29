@@ -44,7 +44,6 @@
         @container-resized="containerResizedEvent"
       >
         <panel-chart
-          v-if="showHidden[item.id]!=='hidden'"
           :ref="'chart' + item.id"
           @edit-chart="$emit('edit-chart', item)"
           :chart-info="item"
@@ -54,6 +53,7 @@
           :isExportHtml="isExportHtml"
           :dataJson="dataJson"
           :chart-detail-info="chartDetailInfo"
+          :hiddenText="showHidden[item.id]&&showHidden[item.id].hiddenText"
           @refreshPanel="refreshPanel"
           @showFullscreen="showFullscreen"
         ></panel-chart>
@@ -441,9 +441,6 @@ export default {
     },
     // 比较变量 图表是否显示/隐藏
     compareVariables () {
-      if (!this.panelLock) {
-        return false
-      }
       const isRegExp = (v) => {
         let isReg
         try {
@@ -500,28 +497,32 @@ export default {
                 }
               }
               if (flag === true) {
-                this.showHidden[item.id] = result
+                this.$loadsh.set(this.showHidden, item.id + '.visibility', result)
               } else {
-                this.showHidden[item.id] = contraryResult
+                this.$loadsh.set(this.showHidden, item.id + '.visibility', contraryResult)
+              }
+
+              // 隐藏图表的悬浮文字赋值
+              if (this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'hidden') {
+                const hiddenText = `“${varName}=${varValue}”Hidden`
+                this.$loadsh.set(this.showHidden, item.id + '.hiddenText', hiddenText)
               }
             }
           })
         }
       })
-      // this.copyDataList.forEach((item, index) => {
-      //   if (!this.showHidden[item.id] && item.id !== -2) {
-      //     delete this.copyDataList[index]
-      //   }
-      // })
+      if (!this.panelLock) {
+        return false
+      }
       for (let i = 0; i < this.copyDataList.length; i++) {
         const item = this.copyDataList[i]
-        if ((this.showHidden[item.id] && this.showHidden[item.id] === 'hidden') && item.id !== -2) {
+        if ((this.$loadsh.get(this.showHidden[item.id], 'visibility') && this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'hidden') && item.id !== -2) {
           this.copyDataList.splice(i, 1)
           i--
         }
       }
       this.tempList.forEach(item => {
-        if ((!this.showHidden[item.id] || this.showHidden[item.id] === 'show') && item.id !== -2 && !this.copyDataList.find(chart => chart.id === item.id)) {
+        if ((!this.$loadsh.get(this.showHidden[item.id], 'visibility') || this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'show') && item.id !== -2 && !this.copyDataList.find(chart => chart.id === item.id)) {
           this.copyDataList.push(item)
         }
       })
@@ -567,7 +568,6 @@ export default {
     panelLock: {
       handler (flag) {
         if (!flag) {
-          this.showHidden = {}
           this.tempList.forEach(item => {
             if (!this.copyDataList.find(chart => chart.id === item.id)) {
               this.copyDataList.push(item)

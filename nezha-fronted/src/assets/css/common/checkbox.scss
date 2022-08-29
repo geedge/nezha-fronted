@@ -48,3 +48,7 @@
 .el-input__inner {
   border-color: $--border-color-light;
 }
+
+.el-checkbox__input.is-indeterminate .el-checkbox__inner{
+  background-color: $--color-primary !important;
+}

@@ -108,6 +108,7 @@
   height: 28px;
   z-index: 2;
   top: 0;
+  overflow: hidden;
 }
 .panel-info-corner--error {
   display: block;
@@ -198,6 +199,41 @@
     color: #fff;
   }
 }
+
+.chart-hidden-popper[x-placement^=top] .popper__arrow::after {
+  border-top-color: #748392 ;
+  bottom: 0;
+}
+.chart-hidden-popper[x-placement^=bottom] .popper__arrow::after {
+  border-bottom-color: #748392 ;
+}
+.chart-hidden-popper{
+  background-color:#748392 ;
+  color:#FFF;
+  word-wrap:break-word;
+  word-break:break-word;
+  max-width:280px;
+  border: 1px solid #748392 ;
+}
+.chart-header-error.hiddenTitle{
+  .panel-info-corner--error .panel-info-corner-inner {
+    border-left: 28px solid #748392 ;
+    border-right: none;
+    border-bottom: 28px solid transparent;
+  }
+  .panel-info-corner-inner {
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+  .nz-icon-yincang1:before {
+    color: #fff;
+    margin-left: 2px;
+  }
+}
+
 .nz-chart-resize {
   height: 100%;
   width: 100%;

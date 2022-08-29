@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "29172335",
+      "name": "隐藏",
+      "font_class": "yincang1",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
+      "icon_id": "30997611",
+      "name": "bubble chart",
+      "font_class": "a-bubblechart",
+      "unicode": "e799",
+      "unicode_decimal": 59289
+    },
+    {
+      "icon_id": "30996596",
+      "name": "repeat",
+      "font_class": "repeat",
+      "unicode": "e798",
+      "unicode_decimal": 59288
+    },
+    {
       "icon_id": "25495310",
       "name": "气泡图",
       "font_class": "bubble",

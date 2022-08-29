@@ -26,6 +26,9 @@ export default {
     isExportHtml: {
       type: Boolean,
       default: false
+    },
+    hiddenText: { // 隐藏图表的悬浮文字
+      type: String
     }
   },
   data () {

@@ -11,6 +11,7 @@
       :chart-info="chartInfo"
       :showAllData.sync="showAllData"
       :allDataLength="allDataLength"
+      :hiddenText="hiddenText"
       @unitChange="unitChange"
       @loadMore="loadMore"
       @edit-chart="$emit('edit-chart', chartInfo)"
@@ -101,6 +102,9 @@ export default {
     variablesInit: {
       type: Boolean,
       default: true
+    },
+    hiddenText: { // 隐藏图表的悬浮文字
+      type: String
     }
   },
   data () {

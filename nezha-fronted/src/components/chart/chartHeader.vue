@@ -7,12 +7,25 @@
        :close-delay=10
        trigger="hover"
        popper-class="chart-error-popper">
-            <div >{{errorText}}</div>
-            <span slot="reference" class="panel-info-corner panel-info-corner--error">
-              <i class="nz-icon nz-icon-warning fa"></i>
-              <span class="panel-info-corner-inner"></span>
-           </span>
-          </el-popover>
+        <div >{{errorText}}</div>
+        <span slot="reference" class="panel-info-corner panel-info-corner--error">
+          <i class="nz-icon nz-icon-warning fa"></i>
+          <span class="panel-info-corner-inner"></span>
+        </span>
+      </el-popover>
+    </span>
+    <span v-if="isGroup&&hiddenText" class="chart-header-error hiddenTitle">
+     <el-popover
+       placement="top-start"
+       :close-delay=10
+       trigger="hover"
+       popper-class="chart-hidden-popper">
+        <div >{{hiddenText}}</div>
+        <span slot="reference" class="panel-info-corner panel-info-corner--error">
+          <i class="nz-icon nz-icon-yincang1 fa"></i>
+          <span class="panel-info-corner-inner"></span>
+        </span>
+      </el-popover>
     </span>
     <span v-if="!isError&&!showAllData&&allDataLength>20" class="chart-header-error moreTitle">
      <el-popover
@@ -28,11 +41,12 @@
      </el-popover>
     </span>
     <div class="chart-header__title" v-if="!isGroup" :title="chartInfo.name">{{chartInfo.name}}</div>
-    <div class="chart-header__title" v-else >
+    <div class="chart-header__title groupTitle" v-else >
       <span @click="groupShow"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-right': 'nz-icon-arrow-down'"></i></span>
       {{chartInfo.name}}
       <span v-show="chartInfo.param.collapse" class="collapse-content">({{chartData ? chartData.length : 0}} charts)</span>
     </div>
+    <div class="temp"></div>
     <div class="chart-header__tools" v-if="chartInfo.type !== 'endpointInfo' && chartInfo.type !== 'assetInfo' && !isExportHtml">
       <span v-if="chartInfo.param.link" :title="$t('overall.link')" class="chart-header__tool" @click="openUrl">
        <i class="nz-icon nz-icon-more-app tool__icon"></i>
