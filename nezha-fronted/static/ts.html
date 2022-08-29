@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+function clacArr (arr, x, y) {
+  arr.forEach(item => {
+    item.x += x
+    item.y += y
+  })
+  return JSON.stringify(arr)
+}
+console.log(
+  clacArr([
+    { x: 80, y: 220 },
+    { x: 110, y: 210 },
+    { x: 120, y: 200 },
+    { x: 140, y: 160 },
+    { x: 180, y: 200 },
+    { x: 170, y: 260 },
+    { x: 130, y: 280 },
+    { x: 128, y: 300 },
+    { x: 130, y: 280 },
+    { x: 170, y: 260 },
+    { x: 140, y: 160 }],
+  -70, -150
+  )
+)
+</script>

@@ -3,6 +3,7 @@
   height: auto !important;
   display: flex;
   justify-content: space-between !important;
+  flex-direction: row-reverse;
 }
 .batch-delete-dialog{
   transition: all 0.3s;
