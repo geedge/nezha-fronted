@@ -25,6 +25,7 @@ export const Tools = [
       {
         name: 'rectangle',
         icon: 'icon-rect',
+        type: 0,
         data: {
           text: 'rect',
           width: 100,
@@ -39,6 +40,7 @@ export const Tools = [
       {
         name: 'rectangle',
         icon: 'icon-rectangle',
+        type: 0,
         data: {
           text: 'rectangle',
           width: 200,
@@ -57,6 +59,7 @@ export const Tools = [
       {
         name: 'circle',
         icon: 'icon-circle',
+        type: 0,
         data: {
           text: 'circle',
           width: 100,
@@ -68,6 +71,7 @@ export const Tools = [
       {
         name: 'triangle',
         icon: 'icon-triangle',
+        type: 0,
         data: {
           text: 'triangle',
           width: 100,
@@ -78,6 +82,7 @@ export const Tools = [
       {
         name: 'diamond',
         icon: 'icon-diamond',
+        type: 0,
         data: {
           text: 'diamond',
           width: 100,
@@ -88,6 +93,7 @@ export const Tools = [
       {
         name: 'pentagon',
         icon: 'icon-pentagon',
+        type: 0,
         data: {
           text: 'pentagon',
           width: 100,
@@ -98,6 +104,7 @@ export const Tools = [
       {
         name: 'hexagon',
         icon: 'icon-hexagon',
+        type: 0,
         data: {
           text: 'hexagon',
           width: 100,
@@ -110,6 +117,7 @@ export const Tools = [
       {
         name: 'pentagram',
         icon: 'icon-pentagram',
+        type: 0,
         data: {
           text: 'pentagram',
           width: 100,
