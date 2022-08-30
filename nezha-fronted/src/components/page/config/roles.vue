@@ -18,6 +18,7 @@
           ref="deleteButton"
           :from="'roles'"
           :forceDeleteShow="true"
+          :deleteTitle="'config.roles.roles'"
           id="role-list-batch-delete"
           v-has="'role_delete'"
           :api="url"

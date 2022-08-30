@@ -106,6 +106,7 @@
                   ref="deleteButton"
                   :from="'module'"
                   :forceDeleteShow="true"
+                  :deleteTitle="'project.module.module'"
                   :type="'link'"
                   :title="$t('overall.batchDel')"
                   id="account-list-batch-delete"

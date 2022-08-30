@@ -72,6 +72,7 @@
           ref="deleteButton"
           :from="'user'"
           :forceDeleteShow="false"
+          :deleteTitle="'config.user.user'"
           id="account-list-batch-delete"
           v-has="'user_delete'"
           :api="url" :delete-objs="batchDeleteObjs"

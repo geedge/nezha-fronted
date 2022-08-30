@@ -24,6 +24,7 @@
           ref="deleteButton"
           :from="'alertSilence'"
           :forceDeleteShow="false"
+          :deleteTitle="'overall.silence'"
           id="role-list-batch-delete"
           v-has="'alertSilence_expire'"
           :api="url"

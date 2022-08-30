@@ -19,6 +19,7 @@
           ref="deleteButton"
           :from="'project'"
           :forceDeleteShow="true"
+          :deleteTitle="'overall.project'"
           id="account-list-batch-delete"
           v-has="'project_delete'"
           :api="url"

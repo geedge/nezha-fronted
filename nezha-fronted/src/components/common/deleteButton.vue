@@ -219,6 +219,10 @@ export default {
         case 'module' : return 'nz-icon monitorColor nz-icon-overview-module'
         case 'endpoint' : return 'nz-icon monitorColor nz-icon-overview-endpoint'
         case 'alertrule' : return 'nz-icon monitorColor nz-icon-Alertrule'
+        case 'cabinetTab' : return 'nz-icon monitorColor nz-icon-Cabinet1'
+        case 'roles' : return 'nz-icon monitorColor nz-icon-role1'
+        case 'alertSilence' : return 'nz-icon monitorColor nz-icon-a-Silencealert'
+        case 'user' : return 'nz-icon monitorColor nz-icon-user1'
       }
       return ' '
     }

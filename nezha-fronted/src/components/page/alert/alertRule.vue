@@ -104,6 +104,7 @@
                   ref="deleteButton"
                   :from="'alertRule'"
                   :forceDeleteShow="false"
+                  :deleteTitle="'alert.alertRule'"
                   :type="'link'"
                   :title="$t('overall.batchDel')"
                   id="alert-rule-batch-delete"

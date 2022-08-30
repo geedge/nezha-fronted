@@ -40,6 +40,7 @@
                   ref="deleteButton"
                   :from="'alertMessage'"
                   :forceDeleteShow="false"
+                  :deleteTitle="'alert.alertMessage'"
                   id="alert-msg-batch-delete"
                   v-has="'alertMessage_expired'"
                   :api="url"

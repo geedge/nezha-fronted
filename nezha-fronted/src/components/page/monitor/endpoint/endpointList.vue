@@ -116,6 +116,7 @@
                   ref="deleteButton"
                   :from="'endpoint'"
                   :forceDeleteShow="false"
+                  :deleteTitle="'project.endpoint.endpoint'"
                   :type="'link'"
                   :title="$t('overall.batchDel')"
                   id="account-list-batch-delete"

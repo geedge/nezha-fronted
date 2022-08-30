@@ -119,6 +119,7 @@
                   ref="deleteButton"
                   :from="'asset'"
                   :forceDeleteShow="true"
+                  :deleteTitle="'overall.asset'"
                   :type="'link'"
                   :title="$t('overall.batchDel')"
                   id="asset-list-batch-delete"

@@ -110,6 +110,7 @@
                   ref="deleteButton"
                   :from="'datacenter'"
                   :forceDeleteShow="true"
+                  :deleteTitle="'overall.dc'"
                   :type="'link'"
                   :title="$t('overall.batchDel')"
                   id="account-list-batch-delete"
