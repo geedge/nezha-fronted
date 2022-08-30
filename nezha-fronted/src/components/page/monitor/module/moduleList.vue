@@ -101,7 +101,7 @@
         >
           <template v-slot:before>
             <div>
-              <el-dropdown-item>
+              <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <delete-button
                   ref="deleteButton"
                   :from="'module'"

@@ -169,3 +169,11 @@
 
   }
 }
+.topo-page {
+  .promqlInput {
+    .el-cascader-menu {
+      width: 200px;
+      height: 100%;
+    }
+  }
+}

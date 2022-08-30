@@ -139,6 +139,7 @@
   }
   .mib-browser-detail-row>div {
     padding-left: 5px;
+    box-sizing: border-box;
   }
   .mib-browser-detail-description {
     padding: 0 14px 0 0;
@@ -229,4 +230,10 @@
   color: unset;
   border-color: unset;
   background-color: unset;
+}
+.plTableBox.mib-browser-table{
+  .el-table:not(.chart-table) .gutter{
+    right: 53px !important;
+    height: 40px !important;
+  }
 }

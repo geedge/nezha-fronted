@@ -507,11 +507,14 @@ export default {
         this.expressions.splice(index, 1)
         this.expressionName.splice(index, 1)
         this.expressionsShow.splice(index, 1)
+        this.chartConfig.elements.forEach((item, index) => {
+          this.$refs.chartForm.validateField('elements.' + index + '.expression')
+        })
         this.$nextTick(() => {
           this.expressions.forEach((ex, index) => {
             if (ex) {
               this.$refs[`promql-${index}`][0].metricChange(ex)
-              this.$refs[`promql-${index}`][0].promqlInputChange(ex)
+              this.$refs[`promql-${index}`][0].promqlInputCahnge(ex)
             }
           })
         })
@@ -552,6 +555,14 @@ export default {
     },
     removeMapping (index) {
       this.chartConfig.param.valueMapping.splice(index, 1)
+      this.chartConfig.param.valueMapping.forEach((item, index) => {
+        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.value')
+        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.from')
+        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.to')
+        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.regx')
+        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.column')
+        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.display')
+      })
       this.change()
     },
     showMapping (index) {

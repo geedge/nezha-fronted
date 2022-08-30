@@ -1064,6 +1064,7 @@ export default {
       //   return
       // }
       this.editModule.configs[0].config.relabel_config.splice(index, 1)
+      this.$refs.moduleForm.clearValidate()
     },
     tagsChange (newTags, index) {
       this.editModule.paramObj[index].value = newTags.map(item => item.text)
@@ -1259,6 +1260,7 @@ export default {
     // 删除pipeline
     delPipeline (logsIndex, pipeLineIndex) {
       this.editModule.configs[1].config[logsIndex].pipeline.splice(pipeLineIndex, 1)
+      this.$refs.moduleForm.clearValidate()
     },
     // 添加pipelineItem
     addPipelineItem (logsIndex, pipelineIndex) {
@@ -1292,6 +1294,7 @@ export default {
       } else if (val === 'labels') {
         this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].labels.splice(itemIndex, 1)
       }
+      this.$refs.moduleForm.clearValidate()
     }
   },
   mounted () {
