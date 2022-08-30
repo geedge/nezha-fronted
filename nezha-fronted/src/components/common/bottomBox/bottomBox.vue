@@ -66,6 +66,8 @@
         <record-rule-eval-log v-if="from === fromRoute.recordRule && targetTab === 'recordRule'" :from="from" :obj="obj" :tabs="tabs.recordRule" @changeTab="changeTab" :targetTab.sync="targetTab"></record-rule-eval-log>
         <!--alertRule Tab-->
         <alertMessageTabNew v-if="from === fromRoute.alertSilence && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
+        <!--issue Tab-->
+        <issueTab v-if="from === fromRoute.issue && targetTab === 'issue'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></issueTab>
       </div>
     </div>
   </div>
@@ -75,6 +77,7 @@
 import cabinetTab from './tabs/cabinetTab'
 import alertMessageTab from './tabs/alertMessageTab'
 import alertMessageTabNew from './tabs/alertMessageTabNew'
+import issueTab from './tabs/issueTab'
 import alertRuleEvalLog from './tabs/alertRuleEvalLog'
 import assetSubTab from './tabs/assetSubTab'
 import endpointQuery from './tabs/endpointQuery'
@@ -114,7 +117,8 @@ export default {
     assetSubTab,
     alertRuleEvalLog,
     IpDetails,
-    recordRuleEvalLog
+    recordRuleEvalLog,
+    issueTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -266,6 +270,9 @@ export default {
         ],
         alertSilence: [
           { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
+        ],
+        issue: [
+          { prop: 'issue', name: this.$t('overall.issue'), active: true }
         ]
       }
     }
