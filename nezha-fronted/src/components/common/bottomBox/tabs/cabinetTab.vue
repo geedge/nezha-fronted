@@ -54,7 +54,7 @@
         >
           <template v-slot:before>
             <div>
-              <el-dropdown-item>
+              <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <delete-button :type="'link'" :title="$t('overall.batchDel')" id="asset-model-batch-delete" v-has="'dc_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
               </el-dropdown-item>
             </div>

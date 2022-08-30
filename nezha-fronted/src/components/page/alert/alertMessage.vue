@@ -35,7 +35,7 @@
         >
           <template v-slot:before>
             <div>
-              <el-dropdown-item>
+              <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <delete-button id="alert-msg-batch-delete" v-has="'alertMessage_expired'" :api="url" :clickFunction="batchDel" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" :title="$t('overall.batchDel')" :type="'link'"></delete-button>
               </el-dropdown-item>
               <el-dropdown-item :disabled="batchDeleteObjs.length==0">

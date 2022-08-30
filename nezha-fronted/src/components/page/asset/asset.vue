@@ -114,7 +114,7 @@
               <el-dropdown-item>
                 <div id="asset-batch-asset" v-has="'asset_edit'" @click="batchEdit"><i class="nz-icon nz-icon-batch-edit"></i>{{$t('overall.batchEdit')}}</div>
               </el-dropdown-item>
-              <el-dropdown-item>
+              <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <delete-button :type="'link'" :title="$t('overall.batchDel')" id="asset-list-batch-delete" v-has="'asset_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
               </el-dropdown-item>
             </div>
