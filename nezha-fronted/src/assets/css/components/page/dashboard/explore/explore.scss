@@ -207,6 +207,11 @@
       }
     }
   }
+  .top-tools {
+    .chart-unit .el-input__inner {
+      border-color: $--button-icon-border-color;
+    }
+  }
 }
 /*外部引用 样式start*/
 .doc-content {
