@@ -504,6 +504,7 @@ export default {
     // 删除变量
     removeVariable (index) {
       this.editPanel.param.variables.splice(index, 1)
+      this.$refs.form.clearValidate()
     },
     getUserData () {
       return new Promise(resolve => {
