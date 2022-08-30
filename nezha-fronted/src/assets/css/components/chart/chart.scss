@@ -307,13 +307,18 @@
         .basic-info-table-list {
           display: flex;
           .basic-info-table-title,.basic-info-table-value {
-            display: inline-block;
+            display: inline-flex;
             flex-wrap: wrap;
             width: 50%;
             line-height: 30px;
             padding-left: 10px;
             border-bottom: 1px solid $--border-color-light;
             border-right: 1px solid $--border-color-light;
+            .alert-days-info{
+              div {
+                vertical-align: middle;
+              }
+            }
           }
           .basic-info-table-value {
             border-right: none;
