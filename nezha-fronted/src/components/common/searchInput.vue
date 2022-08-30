@@ -676,7 +676,7 @@ export default {
     getIssueTypeData () {
       this.$get('issue/type').then(response => {
         if (response.code === 200) {
-          this.issueTypeSelect = response.data.map((item, index) => {
+          this.issueTypeSelect = response.data.list.map((item, index) => {
             return {
               value: item,
               name: item,

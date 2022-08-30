@@ -289,7 +289,7 @@ export default {
     getTypeData () {
       this.$get('issue/type').then(response => {
         if (response.code === 200) {
-          this.issueTypeSelect = response.data
+          this.issueTypeSelect = response.data.list
         }
       })
     },
@@ -364,7 +364,7 @@ export default {
       immediate: true,
       handler (n, o) {
         this.isEdit = true
-        if (n.assets.length >= 1 && n.assets[0] != null) {
+        if (n.assets && n.assets[0] != null) {
           const assetIdData = n.assets.map(item => {
             return item.id
           })
