@@ -1187,6 +1187,9 @@ export default {
         return
       }
       this.chartConfig.param.thresholds.splice(index, 1)
+      this.chartConfig.param.thresholds.forEach((item, index) => {
+        this.$refs.chartForm.validateField('param.thresholds.' + index + '.value')
+      })
       this.change()
     },
     move () {
