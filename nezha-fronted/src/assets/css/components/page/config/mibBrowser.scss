@@ -231,3 +231,9 @@
   border-color: unset;
   background-color: unset;
 }
+.plTableBox.mib-browser-table{
+  .el-table:not(.chart-table) .gutter{
+    right: 53px !important;
+    height: 40px !important;
+  }
+}
