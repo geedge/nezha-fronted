@@ -26,8 +26,12 @@ devWebpackConfig = merge(baseWebpackConfig, {
   devServer: {
     clientLogLevel: 'warning',
     historyApiFallback: {
+      index: indexHtml,
       rewrites: [
-        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, indexHtml) }
+        {
+          from: /.*/g,
+          to: '/ui/'
+        }
       ]
     },
     hot: true,
