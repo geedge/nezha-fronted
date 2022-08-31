@@ -1,0 +1,134 @@
+#menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+   }
+   #menu .menu-li {
+    display: flex;
+    flex-wrap: wrap;
+    width: 200px;
+    height: 90px;
+    margin-top: 40px;
+    position: relative;
+   }
+   #menu .menu-li .menu-i{
+      font-size: 40px;
+      margin-right: 10px;
+   }
+   #menu .menu-li .describe {
+      position: absolute;
+      bottom: 40px;
+      right: 100px;
+      width: 50px;
+      color: $--color-text-secondary;
+   }
+    /* #menu .menu-li .menu-i,div{
+    line-height: 100%;
+   } */
+   .issuetab-header{
+      height: 150px !important;
+      padding: 20px !important;
+      border-top: 1px solid $--border-color-light;
+      border-bottom: 1px solid $--border-color-light;
+      border-left:1px solid $--border-color-light;
+      .title{
+        color: $--color-text-primary;
+      }
+    }
+    .issuetab-aside{
+      position: relative;
+      height: 630px !important;
+      padding: 20px !important;
+      border: 1px solid $--border-color-light;
+      .add-comment-btn{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        border: 1px solid $--border-color-light;
+        width: 370px;
+        padding-left: 20px;
+        color: $--color-text-regular;
+      }
+    }
+    .issuetab-main {
+      height: 480px !important;
+       padding: 20px !important;
+       border-left: 1px solid $--border-color-light;
+       border-bottom:1px solid $--border-color-light;
+    }
+    .issuetab-eltabs {
+      margin-top: 20px !important;
+      height: 400px;
+       /* height:90%; */
+      overflow-y:auto;
+      overflow-x:hidden
+    }
+   /* .issuetab-eltabs .tab-pane{
+    } */
+    .textareas{
+      background: pink;
+      width: 390px;
+      position: absolute;
+      bottom: 35px;
+      left: 0;
+      border: 1px solid $--border-color-light;
+    }
+    .btn-box{
+      position: absolute;
+      /* bottom: -40px; */
+      right: 0;
+    }
+    .description{
+      position: relative;
+      line-height: 100%;
+    }
+   .description .fold, .open {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      cursor:pointer;/*鼠标变小手*/
+      border: 1px solid ;
+  }
+  .description-title {
+      margin-left: 20px;
+  }
+  .description-content {
+      margin-left: 20px;
+      margin-top: 12px;
+      white-space:pre-wrap;
+  }
+  .relate-assets-box {
+      margin-top: 20px;
+  }
+  .relate-assets{
+       position: relative;
+      line-height: 100%;
+  }
+  .relate-assets .fold, .open {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      cursor:pointer;/*鼠标变小手*/
+      border: 1px solid ;
+  }
+  .relate-assets-title {
+      margin-left: 20px;
+  }
+  .relate-assets-content {
+      margin-left: 20px;
+      margin-top: 12px;
+  }
+  .content-data{
+      margin-top: 10px;
+      margin-left: 20px;
+  }
+  .first-content{
+      border-bottom: 1px solid $--border-color-light;
+      border-top: 1px solid $--border-color-light;
+      margin-top: 20px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+  }
+
+  

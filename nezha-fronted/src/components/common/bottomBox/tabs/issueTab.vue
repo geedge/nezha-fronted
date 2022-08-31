@@ -1,42 +1,42 @@
 <template>
   <div>
  <el-container>
-  <el-container>
-    <el-header >
-        <span>this is a title</span>
+  <el-container class="issuetab-container">
+    <el-header class="issuetab-header">
+        <span class="title">this is a title</span>
         <div>
             <ul id="menu">
-                <li>
-                    <i class="nz-icon nz-icon-label"></i>
-                    <div>
+                <li class="menu-li">
+                    <i class="nz-icon nz-icon-label menu-i"></i>
+                    <div class="menu-div">
                         <span>{{ this.issuedetailsData.type }}</span>
                         <span class="describe">Type</span>
                     </div>
                 </li>
-                  <li>
-                    <i class="nz-icon nz-icon-label"></i>
-                    <div>
+                  <li class="menu-li">
+                    <i class="nz-icon nz-icon-label menu-i"></i>
+                    <div class="menu-div">
                         <span>{{ priorityEnums(issuedetailsData.priority) }}</span>
                         <span class="describe">Priority</span>
                     </div>
                 </li>
-                  <li>
-                    <i class="nz-icon nz-icon-label"></i>
-                    <div>
+                  <li class="menu-li">
+                    <i class="nz-icon nz-icon-label menu-i"></i>
+                    <div class="menu-div">
                         <span>{{ stateEnums(this.issuedetailsData.state) }}</span>
                         <span class="describe">state</span>
                     </div>
                 </li>
-                  <li>
-                    <i class="nz-icon nz-icon-user"></i>
-                    <div>
+                  <li class="menu-li">
+                    <i class="nz-icon nz-icon-user menu-i"></i>
+                    <div class="menu-div">
                         <span>{{ this.issuedetailsData.reporter.username }}</span>
                         <span class="describe" >Reporter</span>
                     </div>
                 </li>
-                  <li>
-                    <i class="nz-icon nz-icon-user"></i>
-                    <div>
+                  <li class="menu-li">
+                    <i class="nz-icon nz-icon-user menu-i"></i>
+                    <div class="menu-div">
                         <span>{{ this.issuedetailsData.assignee.username }}</span>
                         <span class="describe">Assignee</span>
                     </div>
@@ -44,7 +44,7 @@
             </ul>
         </div>
     </el-header>
-    <el-main>
+    <el-main class="issuetab-main">
            <div>
             <span class="description" >
                 <i class="nz-icon nz-icon-arrow-right fold" v-if="foldShow" @click="foldFun"></i>
@@ -67,11 +67,11 @@
     </el-main>
     <!-- <el-footer>Footer</el-footer> -->
   </el-container>
-    <el-aside width="400px" class="aside-box">
+    <el-aside width="400px" class="issuetab-aside">
         <span>动态</span>
         <template>
-                <el-tabs v-model="activeName" @tab-click="handleClick">
-                    <el-tab-pane label="全部" name="first">
+                <el-tabs v-model="activeName" @tab-click="handleClick" class="issuetab-eltabs">
+                    <el-tab-pane label="全部" name="first" class="tab-pane">
                         <div class="change ">
                             <i class="nz-icon nz-icon-edit"></i>
                             <span>老王 Created issue {{this.time}}</span>
@@ -83,14 +83,14 @@
                                <div class="content-data" v-for="(item, index) in contentData" :key="index" v-html="item.content" ></div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="评论" name="content">
+                    <el-tab-pane label="评论" name="content" class="tab-pane">
                         <div class="content">
                                <i class="nz-icon nz-icon-edit"></i>
                             <span>老王 Add comment {{this.time}}</span>
                             <div class="content-data" v-for="(item, index) in contentData" :key="index" v-html="item.content" ></div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="变更记录" name="change">
+                    <el-tab-pane label="变更记录" name="change" class="tab-pane">
                         <div class="change">
                             <i class="nz-icon nz-icon-edit"></i>
                             <span>老王 Created issue {{this.time}}</span>
@@ -99,12 +99,13 @@
                     </el-tab-pane>
                 </el-tabs>
         </template>
-         <el-footer class="footer-box">
-            <div class="add-comment-btn">
-            <el-button type="text" v-if="addcommentShow"  @click="addcommentBtn">Add comment</el-button>
+         <div class="add-comment-btn">
+              <el-button type="text" v-if="addcommentShow"  @click="addcommentBtn">Add comment</el-button>
+            </div>
 
              <div v-if="textareaShow" class="textareas">
                 <el-input
+                class="textareas-input"
                 type="textarea"
                 :autosize="{ minRows: 2, maxRows: 4}"
                 placeholder="多行输入"
@@ -115,8 +116,6 @@
                 <el-button size="mini" @click="cancelBtn">Cancel</el-button>
                </div>
              </div>
-        </div>
-        </el-footer>
     </el-aside>
 </el-container>
   </div>
@@ -256,150 +255,3 @@ export default {
   }
 }
 </script>
-
-<style>
- #menu {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
- }
- #menu li {
-  display: flex;
-  flex-wrap: wrap;
-  width: 200px;
-  height: 80px;
-  margin-top: 40px;
-  position: relative;
- }
- #menu li i{
-    font-size: 40px;
-    margin-right: 10px;
- }
- #menu li .describe {
-    position: absolute;
-    bottom: 40px;
-    right: 100px;
-    width: 50px;
-    /* color: $--color-text-regular; */
- }
-  #menu li i,div{
-  line-height: 100%;
- }
- .theme-light  .el-header{
-    height: 150px !important;
-    padding: 20px !important;
-  }
-
-  .theme-light  .el-aside {
-    height: 630px !important;
-     padding: 20px !important;
-  }
-
- .theme-light  .el-main {
-    height: 480px !important;
-     padding: 20px !important;
-  }
-  body > .el-container {
-    margin-bottom: 40px;
-  }
-
-  .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-    line-height: 260px;
-  }
-
-  .el-container:nth-child(7) .el-aside {
-    line-height: 320px;
-  }
-  .el-tabs {
-    margin-top: 20px !important;
-  }
-  .footer-box{
-    position: relative;
-    height: 130px !important;
-  }
-  .add-comment-btn{
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    /* border: rgba(180, 176, 176, 0.847) 1px solid; */
-    width: 395px;
-    height: 40px;
-    line-height: 100%;
-  }
-.theme-light .el-button--text{
-    margin-left: 15px !important;
-  }
-  .textareas{
-    width: 395px;
-    position: absolute;
-    bottom: 50px;
-    left: 0px;
-  }
-  .btn-box{
-    position: absolute;
-    /* bottom: -40px; */
-    right: 45px;
-  }
-  .description{
-    position: relative;
-    line-height: 100%;
-  }
- .description i {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    cursor:pointer;/*鼠标变小手*/
-    border: 1px solid;
-}
-.description-title {
-    margin-left: 20px;
-}
-.description-content {
-    margin-left: 20px;
-    margin-top: 12px;
-    white-space:pre-wrap;
-}
-.relate-assets-box {
-    margin-top: 20px;
-}
-.relate-assets{
-     position: relative;
-    line-height: 100%;
-}
-.relate-assets i {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    cursor:pointer;/*鼠标变小手*/
-    border: 1px solid;
-}
-.relate-assets-title {
-    margin-left: 20px;
-}
-.relate-assets-content {
-    margin-left: 20px;
-    margin-top: 12px;
-}
-.relate-assets-content div{
-    margin-top: 12px;
-}
-.content-data{
-    margin-top: 10px;
-    margin-left: 20px;
-}
-.first-content{
-    border-bottom: 1px solid;
-    border-top: 1px solid;
-    margin-top: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-.ql-container.ql-snow{
-    border: 0 !important;
-}
-.theme-light .el-textarea{
-    width: 350px !important;
-}
-</style>
