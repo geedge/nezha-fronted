@@ -297,7 +297,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 <!-- Log queries -->
                 <!-- start -->
                 <div class="introduce-view__content">
-                  <h1 class="page-header" id="log-queries">Log queries</h1>
+                  <h1 class="page-header" id="log-queries" style="margin-top:100px">Log queries<a class="header-anchor" href="https://grafana.com/docs/loki/latest/logql/log_queries/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
                   <p>All LogQL queries contain a <b>log stream selector.</b></p>
                   <div class="img-hidden"><img src="https://grafana.com/docs/loki/latest/logql/query_components.png" alt=""></div>
                   <p>Optionally, the log stream selector can be followed by <b>a log pipeline</b>. A log pipeline is a set of stage expressions that are chained together and applied to the selected log streams. Each expression can filter out, parse, or mutate log lines and their respective labels.</p>
@@ -646,7 +646,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 </div>
               </div>
               <!-- Log queries examples -->
-               <h1 class="page-header">Log queries examples</h1>
+               <h1 class="page-header-two">Log queries examples</h1>
                <!-- Multiple filtering -->
               <div class="introduce-view__content">
                 <h2>Multiple filtering</h2>
@@ -689,7 +689,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
 
                <!-- Metric queries -->
               <div class="introduce-view__content">
-                <h1 class="page-header" id="metric-queries">Multiple parsers</h1>
+                <h1 class="page-header" id="metric-queries" style="margin-top:100px">Multiple parsers<a class="header-anchor" href="https://grafana.com/docs/loki/latest/logql/metric_queries/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
                 <div class="introduce-view__content-label">
                   <p>Metric queries extend log queries by applying a function to log query results. This powerful feature creates metrics from logs.</p>
                   <p>Metric queries can be used to calculate the rate of error messages or the top N log sources with the greatest quantity of logs over the last 3 hours.</p>
@@ -698,7 +698,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
               </div>
               <!-- Range Vector aggregation -->
               <div class="introduce-view__content">
-                <h1 class="page-header">Range Vector aggregation</h1>
+                <h1 class="page-header-two">Range Vector aggregation</h1>
                 <div class="introduce-view__content-label">
                   <p>LogQL shares the range vector concept of Prometheus. In Grafana Loki, the selected range of samples is a range of selected log or label values.</p>
                   <p>The aggregation is applied over a time duration. Loki defines Time Durations with the same syntax as Prometheus.</p>
@@ -786,7 +786,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
               </div>
                <!-- Built-in aggregation operators -->
               <div class="introduce-view__content">
-                <h1 class="page-header">Built-in aggregation operators</h1>
+                <h1 class="page-header-two">Built-in aggregation operators</h1>
                 <div class="introduce-view__content-label">
                   <p>Like PromQL, LogQL supports a subset of built-in aggregation operators that can be used to aggregate the element of a single vector, resulting in a new vector of fewer elements but with aggregated values:</p>
                   <ul>

@@ -256,7 +256,8 @@
 }
 .doc-content > h1 {
   color: #e6522c;
-  font-size: 22px;
+  font-size: 26px;
+  // font-size: 22px;
 }
 
 .doc-content > h2 {
@@ -368,7 +369,8 @@ article {
     }
     > h1,.page-header {
       color: #e6522c;
-      font-size: 22px;
+      font-size: 26px;
+      // font-size: 22px;
       font-weight: 600;
       text-transform: uppercase;
       margin-top: 15px;
@@ -377,6 +379,13 @@ article {
         color: gray;
         text-decoration: none;
       }
+    }
+    > h1,.page-header-two {
+      color: #e6522c;
+      font-size: 22px;
+      font-weight: 600;
+      margin-top: 50px;
+      text-transform: none;
     }
     .title-heard__divider{
       margin: 5px 0 5px 0;
