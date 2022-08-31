@@ -256,8 +256,7 @@
 }
 .doc-content > h1 {
   color: #e6522c;
-  font-size: 26px;
-  // font-size: 22px;
+  font-size: 22px;
 }
 
 .doc-content > h2 {
@@ -344,6 +343,7 @@ article {
 /*外部引用 样式end*/
 
 .explore .introduce-view .title-heard.info-room{
+  position: relative;
   .logs-content {
     font-size: 16px;
     ul li{
@@ -369,8 +369,7 @@ article {
     }
     > h1,.page-header {
       color: #e6522c;
-      font-size: 26px;
-      // font-size: 22px;
+      font-size: 22px;
       font-weight: 600;
       text-transform: uppercase;
       margin-top: 15px;
@@ -382,9 +381,9 @@ article {
     }
     > h1,.page-header-two {
       color: #e6522c;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 600;
-      margin-top: 50px;
+      margin-top: 15px;
       text-transform: none;
     }
     .title-heard__divider{
@@ -423,6 +422,18 @@ article {
         filter: drop-shadow(-550px 0px $--color-text-primary);
         transform: translateX(570px);
       }
+    }
+  }
+  .catalog{
+    position: absolute;
+    top: 75px;
+    right: 25px;
+    background-color: $--background-color-empty;
+    padding: 15px 10px;
+    ul li{
+      margin: 3px 14px 3px 24px;
+      list-style: circle;
+      color: #3C92F1
     }
   }
 }
