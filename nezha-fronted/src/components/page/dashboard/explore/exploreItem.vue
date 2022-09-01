@@ -378,11 +378,11 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                         <p><code class="fillbox">{instance=~"kafka-[23]",name="kafka"} != "kafka.server:type=ReplicaManager"</code></p>
                       </li>
                       <li>
-                        <p>Keep log lines that contain a substring that starts with tsdb-ops and ends with io:2003. A complete query with a regular expression:</p>
+                        <p>Keep log lines that contain a substring that starts with <code>tsdb-ops</code> and ends with <code>io:2003</code>. A complete query with a regular expression:</p>
                         <p><code class="fillbox">{name="kafka"} |~ "tsdb-ops.*io:2003"</code></p>
                       </li>
                       <li>
-                        <p>Keep log lines that contain a substring that starts with error=, and is followed by 1 or more word characters. A complete query with a regular expression:</p>
+                        <p>Keep log lines that contain a substring that starts with <code>error=</code>, and is followed by 1 or more word characters. A complete query with a regular expression:</p>
                         <p><code class="fillbox">{name="cassandra"} |~  `error=\w+`</code></p>
                       </li>
                     </ul>
