@@ -19,7 +19,7 @@ router.beforeEach((to, from, next) => {
     requestsArr.forEach(xhr => xhr.cancel('cancel'))
   }
   store.commit('setNowPath', to.path)
-  const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
+  const configUrl = '/static/config.json?Timestamp=' + new Date().getTime()
   if (to.path === '/login') { // 拦截登录页面，现货区外观设置 再系统初始化检查
     Vue.http.get(configUrl).then(config => {
       const appearance = new Promise(resolve => {

@@ -75,6 +75,10 @@ axios.interceptors.request.use(
 )
 axios.interceptors.response.use(
   response => {
+    if (response.config.url.indexOf('ui') !== -1) {
+      removePending(response.config)
+      return response
+    }
     if (licenceErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.hash) == -1) {
       window.location.href = '/'
     } else if (response.status === 200) {
@@ -82,6 +86,7 @@ axios.interceptors.response.use(
         window.location.href = '/'
       }
     } else {
+      removePending(response.config)
       return response
     }
     // 请求完成在数组中移除
