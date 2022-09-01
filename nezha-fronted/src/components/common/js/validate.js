@@ -214,7 +214,7 @@ export function sysObjectIdInput (rule, value, callback) {
     if (sysId.test(value)) {
       callback()
     } else {
-      callback(new Error(vm.$t('validate.sysId')))
+      callback(new Error(vm.$t('overall.oid')))
     }
   }, 100)
 }
