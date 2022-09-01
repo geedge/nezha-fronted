@@ -141,8 +141,11 @@ export default {
 
         // 获取svg宽高 初始化画布
         const svgDom = document.getElementById(`sankey-svg-${this.chartId}`)
-        const width = svgDom && svgDom.getBoundingClientRect().width
-        const height = svgDom && svgDom.getBoundingClientRect().height
+        if (!svgDom) {
+          return false
+        }
+        const width = svgDom.getBoundingClientRect().width
+        const height = svgDom.getBoundingClientRect().height
         const margin1 = 100
         const margin2 = 50
         const svg = d3.select(`#sankey-svg-${this.chartId}`)
