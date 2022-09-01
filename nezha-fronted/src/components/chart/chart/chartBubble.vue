@@ -110,6 +110,9 @@ export default {
       this.$nextTick(() => {
         d3.select(`#bubble-svg-${this.chartId}`).selectAll('g').remove()// 清空作图区域
         const svg = document.getElementById(`bubble-svg-${this.chartId}`)
+        if (!svg) {
+          return false
+        }
         const width = svg.getBoundingClientRect().width
         const height = svg.getBoundingClientRect().height
         // 定义布局方式

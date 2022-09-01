@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <browser-window-zoom />
-    <keep-alive>
+    <keep-alive exclude="login">
       <router-view style="height: 100%"/>
     </keep-alive>
   </div>

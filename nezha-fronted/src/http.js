@@ -1,5 +1,7 @@
-import { getUUID } from './components/common/js/common'
+
+import router from './router'
 import axios from 'axios'
+import { getUUID } from './components/common/js/common'
 const CancelToken = axios.CancelToken // 申明CancelToken
 export const requestsArr = []
 // 清除掉请求完成的实例 防止占用内存
@@ -83,6 +85,7 @@ axios.interceptors.response.use(
       window.location.href = '/'
     } else if (response.status === 200) {
       if (accountErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.hash) == -1) {
+        sessionStorage.setItem('nz-previous-page', router.currentRoute.fullPath)
         window.location.href = '/'
       }
     } else {

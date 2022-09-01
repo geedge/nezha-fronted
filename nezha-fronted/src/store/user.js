@@ -142,12 +142,22 @@ const user = {
             }
           })
         }
-        router.push({
-          path: path[0],
-          query: {
-            t: +new Date()
-          }
-        })
+        // 登录成功后跳回到原来页面
+        if (sessionStorage.getItem('nz-previous-page')) {
+          const route = sessionStorage.getItem('nz-previous-page')
+          router.push({
+            path: route
+          }).then(() => {
+            sessionStorage.removeItem('nz-previous-page')
+          })
+        } else {
+          router.push({
+            path: path[0],
+            query: {
+              t: +new Date()
+            }
+          })
+        }
       })
       get('/sys/user/profile').then(response => {
         if (response.code === 200) {
