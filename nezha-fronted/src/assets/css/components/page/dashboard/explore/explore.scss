@@ -256,7 +256,7 @@
 }
 .doc-content > h1 {
   color: #e6522c;
-  font-size: 22px;
+  font-size: 24px;
 }
 
 .doc-content > h2 {
@@ -357,6 +357,10 @@ article {
       padding: 5px;
       background-color: $--background-color-empty;
     }
+    .log-link:hover{
+        cursor: pointer;
+        border-bottom: 1px solid #3C92F1;
+    }
     .fillbox{
       display: block;
       line-height: 25px;
@@ -369,7 +373,7 @@ article {
     }
     > h1,.page-header {
       color: #e6522c;
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 600;
       text-transform: uppercase;
       margin-top: 15px;
@@ -378,6 +382,13 @@ article {
         color: gray;
         text-decoration: none;
       }
+    }
+    > h1,.page-header-one {
+      color: #e6522c;
+      font-size: 22px;
+      font-weight: 600;
+      margin-top: 15px;
+      text-transform: none;
     }
     > h1,.page-header-two {
       color: #e6522c;
@@ -433,7 +444,11 @@ article {
     ul li{
       margin: 3px 14px 3px 24px;
       list-style: circle;
-      color: #3C92F1
+      color: #3C92F1;
+    }
+    span:hover{
+      cursor: pointer;
+      border-bottom: 1px solid #3C92F1;
     }
   }
 }
