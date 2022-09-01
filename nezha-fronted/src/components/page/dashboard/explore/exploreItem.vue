@@ -283,7 +283,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
             <div class="info-room title-heard">
               <div class="col-md-9 logs-content">
                 <!-- LogQL: Log query language -->
-                <h1 class="page-header" style="margin-Top:0px">LogQL: Log query language<a class="header-anchor" href="https://grafana.com/docs/loki/latest/logql/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
+                <h1 class="page-header" style="margin-Top:0px" id="log-query-language">LogQL: Log query language<a class="header-anchor" href="https://grafana.com/docs/loki/latest/logql/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
                 <div class="title-heard__divider"></div>
                 <div class="page-header-label">
                     <p>LogQL is Grafana Loki’s PromQL-inspired query language. Queries act as if they are a distributed grep to aggregate log sources. LogQL uses labels and operators for filtering.</p>
@@ -297,7 +297,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 <!-- Log queries -->
                 <!-- start -->
                 <div class="introduce-view__content">
-                  <h1 class="page-header" id="log-queries">Log queries</h1>
+                  <h1 class="page-header" id="log-queries">Log queries<a class="header-anchor" href="https://grafana.com/docs/loki/latest/logql/log_queries/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
                   <p>All LogQL queries contain a <b>log stream selector.</b></p>
                   <div class="img-hidden"><img src="https://grafana.com/docs/loki/latest/logql/query_components.png" alt=""></div>
                   <p>Optionally, the log stream selector can be followed by <b>a log pipeline</b>. A log pipeline is a set of stage expressions that are chained together and applied to the selected log streams. Each expression can filter out, parse, or mutate log lines and their respective labels.</p>
@@ -312,7 +312,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 </div>
                 <!-- Log stream selector -->
                 <div class="introduce-view__content">
-                  <h2 id="log-stream-selector">Log stream selector</h2>
+                  <h1 class="page-header-two" id="log-stream-selector">Log stream selector</h1>
                   <div class="introduce-view__content-label">
                     <p>The stream selector determines which log streams to include in a query’s results. A log stream is a unique source of log content, such as a file. A more granular log stream selector then reduces the number of searched streams to a manageable volume. This means that the labels passed to the log stream selector will affect the relative performance of the query’s execution.</p>
                     <p>The log stream selector is specified by one or more comma-separated key-value pairs. Each key is a log label and each value is that label’s value. Curly braces (<code>{</code> and <code>}</code>) delimit the stream selector.</p>
@@ -338,7 +338,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 </div>
                 <!-- Log pipeline -->
                 <div class="introduce-view__content">
-                  <h2>Log pipeline</h2>
+                  <h1 class="page-header-two" id="log-pipeline">Log pipeline</h1>
                   <div class="introduce-view__content-label">
                     <p>A log pipeline can be appended to a log stream selector to further process and filter log streams. It is composed of a set of expressions. Each expression is executed in left to right sequence for each log line. If an expression filters out a log line, the pipeline will stop processing the current log line and start processing the next log line.</p>
                     <p>Some expressions can mutate the log content and respective labels, which will be then be available for further filtering and processing in subsequent expressions. An example that mutates is the expression</p>
@@ -646,10 +646,10 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 </div>
               </div>
               <!-- Log queries examples -->
-               <h1 class="page-header">Log queries examples</h1>
+               <h1 class="page-header-two" id="log-queries-examples">Log queries examples</h1>
                <!-- Multiple filtering -->
               <div class="introduce-view__content">
-                <h2>Multiple filtering</h2>
+                <h2 id="multiple-filtering">Multiple filtering</h2>
                 <div class="introduce-view__content-label">
                   <p>Filtering should be done first using label matchers, then line filters (when possible) and finally using label filters. The following query demonstrate this.</p>
                   <p><code v-pre class="fillbox">{cluster="ops-tools1", namespace="loki-dev", job="loki-dev/query-frontend"} |= "metrics.go" !="out of order" | logfmt | duration > 30s or status_code!="200"</code></p>
@@ -668,15 +668,15 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
               </div>
               <!-- Formatting -->
               <div class="introduce-view__content">
-                <h2>Formatting</h2>
+                <h2 id="formatting">Formatting</h2>
                 <div class="introduce-view__content-label formatting-module">
                   <p>The following query shows how you can reformat a log line to make it easier to read on screen.</p>
                   <pre v-pre>{cluster="ops-tools1", name="querier", namespace="loki-dev"}
   |= "metrics.go" != "loki-canary"
   | logfmt
   | query != ""
-  | label_format query="{{ Replace .query \"\\n\" \"\" -1 }}"
-  | line_format "{{ .ts}}\t{{.duration}}\ttraceID = {{.traceID}}\t{{ printf \"%-100.100s\" .query }} "</pre>
+  | label_format query="{{ Replace .query &#92;"&#92;&#92;n&#92;" &#92;"&#92;" -1 }}"
+  | line_format "{{ .ts}}&#92;t{{.duration}}&#92;ttraceID = {{.traceID}}&#92;t{{ printf &#92;"%-100.100s&#92;" .query }} "</pre>
                   <p>Label formatting is used to sanitize the query while the line format reduce the amount of information and creates a tabular output.</p>
                   <p>For these given log lines:</p>
                   <pre class="box-overflow">level=info ts=2020-10-23T20:32:18.094668233Z caller=metrics.go:81 org_id=29 traceID=1980d41501b57b68 latency=fast query="{cluster=\"ops-tools1\", job=\"loki-ops/query-frontend\"} |= \"query_range\"" query_type=filter range_type=range length=15m0s step=7s duration=650.22401ms status=200 throughput_mb=1.529717 total_bytes_mb=0.994659
@@ -689,7 +689,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
 
                <!-- Metric queries -->
               <div class="introduce-view__content">
-                <h1 class="page-header" id="metric-queries">Multiple parsers</h1>
+                <h1 class="page-header" id="metric-queries">Multiple parsers<a class="header-anchor" href="https://grafana.com/docs/loki/latest/logql/metric_queries/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
                 <div class="introduce-view__content-label">
                   <p>Metric queries extend log queries by applying a function to log query results. This powerful feature creates metrics from logs.</p>
                   <p>Metric queries can be used to calculate the rate of error messages or the top N log sources with the greatest quantity of logs over the last 3 hours.</p>
@@ -698,7 +698,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
               </div>
               <!-- Range Vector aggregation -->
               <div class="introduce-view__content">
-                <h1 class="page-header">Range Vector aggregation</h1>
+                <h1 class="page-header-two" id="range-vector-aggregation">Range Vector aggregation</h1>
                 <div class="introduce-view__content-label">
                   <p>LogQL shares the range vector concept of Prometheus. In Grafana Loki, the selected range of samples is a range of selected log or label values.</p>
                   <p>The aggregation is applied over a time duration. Loki defines Time Durations with the same syntax as Prometheus.</p>
@@ -707,7 +707,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
               </div>
               <!-- Log range aggregations -->
               <div class="introduce-view__content">
-                <h2>Log range aggregations</h2>
+                <h2 id="log-range-aggregations">Log range aggregations</h2>
                 <div class="introduce-view__content-label">
                   <p>A log range aggregation is a query followed by a duration. A function is applied to aggregate the query over the duration. The duration can be placed after the log stream selector or at end of the log pipeline.</p>
                   <p>The functions:</p>
@@ -733,7 +733,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
               </div>
                <!-- Unwrapped range aggregations -->
               <div class="introduce-view__content">
-                <h2>Unwrapped range aggregations</h2>
+                <h2 id="unwrapped-range-aggregations">Unwrapped range aggregations</h2>
                 <div class="introduce-view__content-label">
                   <p>Unwrapped ranges uses extracted labels as sample values instead of log lines. However to select which label will be used within the aggregation, the log query must end with an unwrap expression and optionally a label filter expression to discard errors.</p>
                   <p>The unwrap expression is noted <code>| unwrap label_identifier</code> where the label identifier is the label name to use for extracting sample values.</p>
@@ -766,7 +766,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
               </div>
               <!-- Unwrapped examples -->
               <div class="introduce-view__content">
-                <h2>Unwrapped examples</h2>
+                <h2 id="unwrapped-examples">Unwrapped examples</h2>
                 <div class="introduce-view__content-label unwrapped-module">
                  <pre>quantile_over_time(0.99,
   {cluster="ops-tools1",container="ingress-nginx"}
@@ -786,7 +786,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
               </div>
                <!-- Built-in aggregation operators -->
               <div class="introduce-view__content">
-                <h1 class="page-header">Built-in aggregation operators</h1>
+                <h1 class="page-header-two" id="built-in-aggregation-operators">Built-in aggregation operators</h1>
                 <div class="introduce-view__content-label">
                   <p>Like PromQL, LogQL supports a subset of built-in aggregation operators that can be used to aggregate the element of a single vector, resulting in a new vector of fewer elements but with aggregated values:</p>
                   <ul>
@@ -808,7 +808,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
               </div>
                <!-- Vector aggregation examples -->
               <div class="introduce-view__content">
-                <h2>Vector aggregation examples</h2>
+                <h2 id="vector-aggregation-examples">Vector aggregation examples</h2>
                 <div class="introduce-view__content-label">
                  <p>Get the top 10 applications by the highest log throughput:</p>
                  <p><code class="fillbox">topk(10,sum(rate({region="us-east1"}[5m])) by (name))</code></p>
@@ -818,6 +818,57 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
                  <p><code class="fillbox">avg(rate(({job="nginx"} |= "GET" | json | path="/home")[10s])) by (region)</code></p>
                 </div>
               </div>
+              </div>
+              <div class="catalog">
+                <ul>
+                  <li style="list-style:square;" @click="jumpClick('#log-query-language')">LOGQL: LOG QUERY LANGUAGE</li>
+                  <li style="list-style:square;">
+                    <div @click="jumpClick('#log-queries')">LOG QUERIES</div>
+                    <ul>
+                      <li style="list-style:disc;" @click="jumpClick('#log-stream-selector')">Log stream selector</li>
+                      <li style="list-style:disc;">
+                        <div @click="jumpClick('#log-pipeline')">Log pipeline</div>
+                         <ul>
+                            <li @click="jumpClick('#line-filter-expressions')">Line filter expression</li>
+                            <li @click="jumpClick('#label-filter-expressions')">Label filter expression</li>
+                            <li @click="jumpClick('#parsing-expressions')">Parser expression</li>
+                            <li @click="jumpClick('#JSON')">JSON</li>
+                            <li @click="jumpClick('#logfmt')">logfmt</li>
+                            <li @click="jumpClick('#pattern')">Pattern</li>
+                            <li @click="jumpClick('#regexp')">Regular expression</li>
+                            <li @click="jumpClick('#unpack')">unpack</li>
+                            <li @click="jumpClick('#line-format-expressions')">Line format expression</li>
+                            <li @click="jumpClick('#label-format-expressions')">Labels format expression</li>
+                         </ul>
+                      </li>
+                      <li style="list-style:disc;">
+                        <div @click="jumpClick('#log-queries-examples')">Log queries examples</div>
+                         <ul>
+                            <li @click="jumpClick('#multiple-filtering')">Multiple filtering</li>
+                            <li @click="jumpClick('#multiple-parsers')">Multiple parsers</li>
+                            <li @click="jumpClick('#formatting')">Formatting</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <li style="list-style:square;">
+                    <div @click="jumpClick('#metric-queries')">MULTIPLE PARSERS</div>
+                    <ul>
+                      <li style="list-style:disc;">
+                        <div @click="jumpClick('#range-vector-aggregation')">Range Vector aggregation</div>
+                        <ul>
+                          <li @click="jumpClick('#log-range-aggregations')">Log range aggregations</li>
+                          <li @click="jumpClick('#unwrapped-range-aggregations')">Unwrapped range aggregations</li>
+                          <li @click="jumpClick('#unwrapped-examples')">Unwrapped examples</li>
+                        </ul>
+                      </li>
+                      <li style="list-style:disc;">
+                        <div @click="jumpClick('#built-in-aggregation-operators')">Built-in aggregation operators</div>
+                        <ul><li @click="jumpClick('#vector-aggregation-examples')">Vector aggregation examples</li></ul>
+                      </li>
+                    </ul>
+                  </li>
+                  </ul>
               </div>
             </div>
           </div>
