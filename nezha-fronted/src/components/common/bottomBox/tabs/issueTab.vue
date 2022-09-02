@@ -68,39 +68,50 @@
     <!-- <el-footer>Footer</el-footer> -->
   </el-container>
     <el-aside width="400px" class="issuetab-aside">
-        <span>动态</span>
+        <span>{{$t("issueTab.dynamic")}} </span>
         <template>
                 <el-tabs v-model="activeName" @tab-click="handleClick" class="issuetab-eltabs">
-                    <el-tab-pane label="全部" name="first" class="tab-pane">
+                    <el-tab-pane :label="$t('issueTab.whole')" name="first" class="tab-pane">
                         <div class="change ">
                             <i class="nz-icon nz-icon-edit"></i>
-                            <span>老王 Created issue {{this.time}}</span>
+                            <span>老王</span>
+                            <span>Created issue</span>
+                            <span>2022-09-02</span>
                              <!-- <div v-for="(item, index) in changeData" :key="index" v-html="item.content" ></div> -->
                         </div>
-                        <div class="content first-content">
-                               <i class="nz-icon nz-icon-edit"></i>
-                            <span>老王 Add comment {{this.time}}</span>
-                               <div class="content-data" v-for="(item, index) in contentData" :key="index" v-html="item.content" ></div>
+                        <div class="content first-content" >
+                               <div v-for="(item, index) in this.contentData" :key="index">
+                                <i class="nz-icon nz-icon-edit"></i>
+                                <span>{{item.createUser.name}}</span>
+                                <span>{{typeEnums(item.type)}}</span>
+                                <span>{{timezoneToUtcTimeStr(item.cts)}}</span>
+                                <div class="content-data" v-for="(item, index) in contentData" :key="index" v-html="item.content" ></div>
+                                </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="评论" name="content" class="tab-pane">
-                        <div class="content">
-                               <i class="nz-icon nz-icon-edit"></i>
-                            <span>老王 Add comment {{this.time}}</span>
-                            <div class="content-data" v-for="(item, index) in contentData" :key="index" v-html="item.content" ></div>
+                    <el-tab-pane :label="$t('issueTab.comment')"  name="content" class="tab-pane">
+                        <div class="content " >
+                               <div v-for="(item, index) in this.contentData" :key="index">
+                                <i class="nz-icon nz-icon-edit"></i>
+                                <span>{{item.createUser.name}}</span>
+                                <span>{{typeEnums(item.type)}}</span>
+                                <span>{{timezoneToUtcTimeStr(item.cts)}}</span>
+                                <div class="content-data" v-for="(item, index) in contentData" :key="index" v-html="item.content" ></div>
+                                </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="变更记录" name="change" class="tab-pane">
+                    <el-tab-pane :label="$t('issueTab.changeRecord')"  name="change" class="tab-pane">
                         <div class="change">
                             <i class="nz-icon nz-icon-edit"></i>
-                            <span>老王 Created issue {{this.time}}</span>
-                            <!-- <div  v-html="this.changeData" ></div> -->
+                            <span>老王</span>
+                            <span>Created issue</span>
+                            <span>2022-09-02</span>
                         </div>
                     </el-tab-pane>
                 </el-tabs>
         </template>
          <div class="add-comment-btn">
-              <el-button type="text" v-if="addcommentShow"  @click="addcommentBtn">Add comment</el-button>
+              <el-button type="text" v-if="addcommentShow"  @click="addcommentBtn">{{$t("issueTab.addComment")}}</el-button>
             </div>
 
              <div v-if="textareaShow" class="textareas">
@@ -112,8 +123,8 @@
                 v-model="textarea">
                 </el-input>
                <div class="btn-box">
-                 <el-button size="mini" @click="addFun">Add</el-button>
-                <el-button size="mini" @click="cancelBtn">Cancel</el-button>
+                 <el-button size="mini" @click="addFun">{{$t("issueTab.Add")}}</el-button>
+                <el-button size="mini" @click="cancelBtn">{{$t("issueTab.Cencel")}}</el-button>
                </div>
              </div>
     </el-aside>
@@ -122,8 +133,10 @@
 </template>
 
 <script>
+import mainMixinFun from '@/components/common/mixin/mainMixinFun'
 export default {
   name: 'issueTab',
+  mixins: [mainMixinFun],
   data () {
     return {
       url: '/issue',
@@ -140,6 +153,8 @@ export default {
       contentData: [], // 评论data
       assets: [],
       contents: [],
+      createUser: [],
+      updateUser: [],
       time: '',
       defaultProps: {
         children: 'children',
@@ -195,14 +210,14 @@ export default {
           this.changeData = response.data.list
           this.time = response.time
           console.log(response.time)
-        //   console.log(this.changeData, 1)
+          console.log(response.data, 1)
         //   console.log(response.data, 2)
         }
       })
       this.$get(`${this.url}/activity?issueId=1&type=2&pageSize=-1`).then(response => { // issue动态详情接口-评论
         if (response.code === 200) {
           this.contentData = response.data.list
-        //   console.log(this.contentData, 2)
+          this.time = response.time
         }
       })
     },
@@ -233,6 +248,15 @@ export default {
         data = '关闭'
       } else if (data == 7) {
         data = '取消'
+      }
+      return data
+    },
+    // type 处理
+    typeEnums (data) {
+      if (data == 1) {
+        data = 'changed issue'
+      } else if (data == 2) {
+        data = 'created issue'
       }
       return data
     },
