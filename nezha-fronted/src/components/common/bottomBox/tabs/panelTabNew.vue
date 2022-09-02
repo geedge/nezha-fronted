@@ -27,8 +27,8 @@
             :permissions="{import: 'main_add', export: 'main_edit'}"
             class="top-tool-export margin-r-10"
             export-file-name="asset-charts"
-            export-url="visual/panel/export"
-            import-url="visual/panel/import"
+            export-url="/visual/panel/export"
+            import-url="/visual/panel/import"
             @afterImport="getTableData"
             :link="obj"
             :showLock="from === fromRoute.asset"
@@ -65,8 +65,8 @@
             :showLock="from === fromRoute.endpoint"
             class="top-tool-export margin-r-10"
             export-file-name="endpoint-charts"
-            :export-url="'visual/panel/export'"
-            :import-url="'visual/panel/import'"
+            export-url="/visual/panel/export"
+            import-url="/visual/panel/import"
             @afterImport="getTableData"
             :exportBoxShow="true"
             @export="exportType"
@@ -160,7 +160,7 @@ import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
-import panelVariables from "@/components/common/panel/panelVariables";
+import panelVariables from '@/components/common/panel/panelVariables'
 export default {
   name: 'panelTabNew',
   mixins: [subDataListMixin, detailViewRightMixin, htmlToPdfMixin, exportHtmlMixin],
@@ -172,7 +172,7 @@ export default {
       type: String,
       default: 'dashboard'
     },
-    sign:[Number,String]
+    sign: [Number, String]
   },
   computed: {
     chartRightBoxShow () {

@@ -19,8 +19,8 @@
           :delete-objs="batchDeleteObjs"
           ref="export"
           id="expression-template-list"
-          export-url="visual/panel/export"
-          import-url="visual/panel/import"
+          export-url="/visual/panel/export"
+          import-url="/visual/panel/import"
           export-file-name="chart-temp"
           :params="searchLabel"
           :params2="{
