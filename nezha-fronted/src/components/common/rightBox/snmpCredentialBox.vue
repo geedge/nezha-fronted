@@ -50,7 +50,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("login.pin")' prop="authPin" v-if="editCredential.type === 3" :rules="[ { required: editCredential.config.authProtocol, message: this.$t('validate.required'), trigger: 'blur' }]">
+            <el-form-item :label='$t("login.pin")' prop="config.authPin" v-if="editCredential.type === 3" :rules="[ { required: editCredential.config.authProtocol, message: this.$t('validate.required'), trigger: 'blur' }]">
               <el-input placeholder=""  autocomplete="new-password"  v-model="editCredential.config.authPin" size="small" id="credential-box-input-authPin" type="password" show-password></el-input>
             </el-form-item>
 
@@ -64,7 +64,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("login.pin")' prop="privPin"  v-if="editCredential.type === 3" :rules="[ { required: editCredential.config.privProtocol, message: this.$t('validate.required'), trigger: 'blur' }]">
+            <el-form-item :label='$t("login.pin")' prop="config.privPin"  v-if="editCredential.type === 3" :rules="[ { required: editCredential.config.privProtocol, message: this.$t('validate.required'), trigger: 'blur' }]">
               <el-input placeholder=""  autocomplete="new-password"  v-model="editCredential.config.privPin" size="small" id="credential-box-input-privPin" :disabled="!editCredential.config.authProtocol || editCredential.config.authProtocol === ''" type="password" show-password></el-input>
             </el-form-item>
           </el-form>
