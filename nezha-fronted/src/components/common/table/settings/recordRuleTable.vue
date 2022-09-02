@@ -61,12 +61,11 @@
         <template v-else-if="item.prop === 'inr'">
           <template>{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</template>
         </template>
+
         <template v-else-if="item.prop === 'labels'">
           <span v-for="(item1, i) in labelsSort(scope.row.labels)" :key="i">
-            <span
-             @mouseenter="labelHover(scope.row, 'recordRule', true, false, $event)"
-             @mouseleave="labelHover(scope.row, 'recordRule', false, false,)">
-              <nz-alert-tag
+            <span>
+              <!-- <nz-alert-tag
                 :key="i"
                 :cursor-point="tagType(item1.label) !== 'info'"
                 :label="item1.label"
@@ -74,10 +73,20 @@
                 :regex="item1.regex"
                 style="margin: 5px 0 5px 5px">
                 {{ item1.value }}
+              </nz-alert-tag> -->
+              <nz-alert-tag
+                :key="i"
+                :cursor-point="false"
+                :type="'info'"
+                :label="item1.label"
+                :regex="item1.regex"
+                style="margin: 5px 0 5px 5px">
+                {{ item1.value }}
               </nz-alert-tag>
             </span>
           </span>
         </template>
+
         <template v-else-if="item.prop === 'remark'">
           <template>{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</template>
         </template>
@@ -123,14 +132,6 @@
       <div v-else>&nbsp;</div>
     </template>
   </el-table>
-  <alertLabel
-      v-if="alertLabelShow"
-      :id="alertLabelId"
-      :that="alertLabelObj"
-      :type="alertLabelType"
-      @tipHover='tipHover'
-    ></alertLabel>
-
   </div>
 </template>
 
@@ -139,14 +140,13 @@ import lodash from 'lodash'
 import copy from '@/components/common/copy'
 import table from '@/components/common/mixin/table'
 import nzAlertTag from '../../../page/alert/nzAlertTag'
-import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'recordRuleTable',
   components: {
     nzAlertTag,
     copy
   },
-  mixins: [table, alertLabelMixin],
+  mixins: [table],
   props: {
     loading: Boolean
   },
@@ -208,17 +208,6 @@ export default {
           sortable: 'custom'
         }
       ]
-    }
-  },
-  computed: {
-    tagType () {
-      return (key) => {
-        if (key == 'asset' || key == 'module' || key == 'project' || key == 'dc' || key == 'endpoint') {
-          return 'normal'
-        } else {
-          return 'info'
-        }
-      }
     }
   },
   methods: {
