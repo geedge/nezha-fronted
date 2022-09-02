@@ -712,56 +712,6 @@
         </div>
       </div>
     </div>
-
-     <!-- type === 'recordRule' -->
-    <div class="alert-label-info" v-if="type === 'recordRule'" v-my-loading="loading">
-      <div class="alert-label-box">
-        <div class="alert-label-title">ID</div>
-        <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.id ? alertLabelData.id : "--" }}
-        </div>
-      </div>
-       <div class="document-copy-block">
-          <div class="alert-label-title">{{$t('overall.name')}}</div>
-          <div class="alert-label-value document-copy-text">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
-          <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
-       </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.type") }}</div>
-        <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.type == "1" ? $t('overall.metric') : $t("overall.logs")}}
-        </div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("config.exprTemp.expression") }}</div>
-        <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.expr ? alertLabelData.expr : "--" }}
-        </div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("config.assetLabel.interval") }}</div>
-        <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.inr ? alertLabelData.inr : "--" }}
-        </div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.remark") }}</div>
-        <div class="alert-label-value">
-          {{ alertLabelData && alertLabelData.remark ? alertLabelData.remark : "--" }}
-        </div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">{{ $t("overall.state") }}</div>
-        <div class="alert-label-value">
-          <div
-            v-if="alertLabelData"
-            :style="alertLabelData.state == '1' ? `background: ${userColor}` : `background: ${unUserColor}`"
-            class="active-icon"
-          ></div>
-         {{ alertLabelData && alertLabelData.state == "1" ? $t("overall.enabled") : $t("overall.disabled")}}
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
