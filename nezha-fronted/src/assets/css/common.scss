@@ -524,3 +524,17 @@ textarea {
     }
   }
 }
+
+.template-pop{
+  .el-radio-button {
+    .el-radio-button__inner {
+      background-color: $--popover-background-color;
+      border-color: $--border-color-light;
+    }
+  }
+  .el-radio-button.is-active .el-radio-button__inner {
+    background-color: $--color-primary;
+    border-color: $--color-primary;
+  }
+}
+
