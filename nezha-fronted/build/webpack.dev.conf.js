@@ -28,10 +28,7 @@ devWebpackConfig = merge(baseWebpackConfig, {
     historyApiFallback: {
       index: indexHtml,
       rewrites: [
-        {
-          from: /.*/g,
-          to: '/ui/'
-        }
+        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, indexHtml) }
       ]
     },
     hot: true,
