@@ -713,7 +713,7 @@ export default {
         if (!getTopology(this.topologyIndex)) {
           return
         }
-        getTopology(this.topologyIndex).open(data)
+        getTopology(this.topologyIndex).open(data || {})
         getTopology(this.topologyIndex).lock(1)
         this.objChange = false
         let flag = false
@@ -1551,7 +1551,6 @@ export default {
             break
           }
           case 'scale': {
-
             let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
             let domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
@@ -2222,7 +2221,7 @@ export default {
         let domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
-          getTopology(this.topologyIndex).open(this.oldTopologyData)
+          getTopology(this.topologyIndex).open(this.oldTopologyData || {})
         }
         let flag = false
 

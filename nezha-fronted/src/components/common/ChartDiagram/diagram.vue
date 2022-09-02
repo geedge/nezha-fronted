@@ -154,10 +154,9 @@
               <CanvasContextMenu :index="topologyIndexF" :props.sync="props"></CanvasContextMenu>
             </div>
             <!--所有节点上的小图标-->
-            <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
+            <div v-for="(item,index) in nodesArr"
                  :key="index"
-                 v-show="(item.rect.y - (48*(fromOverView?penToolTipScale:1)) > -10) && (item.rect.center.x - (24*(fromOverView?penToolTipScale:1)) > - 10)"
-                 :style="{position: 'absolute',top:item.rect.y - (48*(fromOverView?penToolTipScale:1))+'px',left:item.rect.center.x - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
+                 v-if="false"
                  class="network-pop"
             >
 
@@ -696,7 +695,8 @@ export default {
       if (this.fromTopologyDialog && !this.isPreview) {
         setTimeout(() => {
           this.topologyLoading = false
-          getTopology(this.topologyIndex).open(data)
+          console.log(data)
+          getTopology(this.topologyIndex).open(data || {})
           getTopology(this.topologyIndex).centerView()
           getTopology(this.topologyIndex).resize()
           this.editTopology()
@@ -706,7 +706,7 @@ export default {
           if (!getTopology(this.topologyIndex)) {
             return
           }
-          getTopology(this.topologyIndex).open(data)
+          getTopology(this.topologyIndex).open(data || {})
           getTopology(this.topologyIndex).lock(1)
           this.objChange = false
           let flag = false
@@ -852,7 +852,8 @@ export default {
             gridSize: 10,
             gridColor: '#ededed',
             lineWidth: 1,
-            ruleColor: '#4e4e4e'
+            ruleColor: '#4e4e4e',
+            pens:[]
           }
           this.projectInfoShow = true
           this.projectAlertShow = true
@@ -1750,7 +1751,7 @@ export default {
         const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
-          getTopology(this.topologyIndex).open(this.oldTopologyData)
+          getTopology(this.topologyIndex).open(this.oldTopologyData  || {})
         }
         let flag = false
         const position = {

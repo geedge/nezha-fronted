@@ -176,7 +176,7 @@ export const imageTemp = {
   }
 }
 export const imageTemp2 = {
-  name: 'rectangleImg',
+  name: 'rectangleImg2',
   icon: 'icon-image',
   data: {
     type: 0,
@@ -193,7 +193,7 @@ export const imageTemp2 = {
     color: '#000000',
     background: '#ffffff00',
     animatePos: 0,
-    name: 'rectangleImg',
+    name: 'rectangleImg2',
     lineDashOffset: 0,
     text: '',
     textOffsetX: 0,
