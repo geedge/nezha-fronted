@@ -154,10 +154,9 @@
               <CanvasContextMenu :index="topologyIndexF" :props.sync="props"></CanvasContextMenu>
             </div>
             <!--所有节点上的小图标-->
-            <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
+            <div v-for="(item,index) in nodesArr"
                  :key="index"
-                 v-show="(item.rect.y - (48*(fromOverView?penToolTipScale:1)) > -10) && (item.rect.center.x - (24*(fromOverView?penToolTipScale:1)) > - 10)"
-                 :style="{position: 'absolute',top:item.rect.y - (48*(fromOverView?penToolTipScale:1))+'px',left:item.rect.center.x - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
+                 v-if="false"
                  class="network-pop"
             >
 
@@ -378,6 +377,7 @@ export default {
               icon: 'icon-rect',
               data: {
                 text: 'rect',
+                type: 0,
                 rect: {
                   width: 100,
                   height: 100
@@ -397,6 +397,7 @@ export default {
               name: 'rectangleImg2',
               icon: 'icon-rect',
               data: {
+                type: 0,
                 text: 'rect',
                 rect: {
                   width: 100,
@@ -417,6 +418,7 @@ export default {
               name: 'rectangleImg2',
               icon: 'icon-rect',
               data: {
+                type: 0,
                 text: 'rect',
                 rect: {
                   width: 100,
@@ -696,7 +698,8 @@ export default {
       if (this.fromTopologyDialog && !this.isPreview) {
         setTimeout(() => {
           this.topologyLoading = false
-          getTopology(this.topologyIndex).open(data)
+          console.log(data)
+          getTopology(this.topologyIndex).open(data || {})
           getTopology(this.topologyIndex).centerView()
           getTopology(this.topologyIndex).resize()
           this.editTopology()
@@ -706,7 +709,7 @@ export default {
           if (!getTopology(this.topologyIndex)) {
             return
           }
-          getTopology(this.topologyIndex).open(data)
+          getTopology(this.topologyIndex).open(data || {})
           getTopology(this.topologyIndex).lock(1)
           this.objChange = false
           let flag = false
@@ -848,11 +851,12 @@ export default {
         // data = JSON.parse(localStorage.getItem('topoData'))
         if (!res.data.topo || !data.pens) {
           data = {
-            bkColor: '#FFFFFF00',
+            background: '#FFFFFF00',
             gridSize: 10,
             gridColor: '#ededed',
             lineWidth: 1,
-            ruleColor: '#4e4e4e'
+            ruleColor: '#4e4e4e',
+            pens:[]
           }
           this.projectInfoShow = true
           this.projectAlertShow = true
@@ -929,8 +933,8 @@ export default {
             if (!data.bkImage) {
               data.bkImage = undefined
             }
-            if (data.bkColor === '#FFFFFF') {
-              data.bkColor = '#FFFFFF00'
+            if (data.background === '#FFFFFF') {
+              data.background = '#FFFFFF00'
             }
             if (!res.data.topo.newData) {
               data.pens = this.$loadsh.orderBy(data.pens, 'type', 'desc') // 先处理线 再处理点 因为新版本 将连线开始结束放在的 点上控制
@@ -1730,13 +1734,13 @@ export default {
     // 联动 project
     changeProjectTitle () {
       const data = getTopology(this.topologyIndex).data()
-      this.topologyInfo = {
-        fontSize: data.data.fontSize,
-        align: data.data.align,
-        fontColor: data.data.fontColor,
-        opacity: data.data.opacity,
-        name: data.name
-      }
+      // this.topologyInfo = {
+      //   fontSize: data.data.fontSize,
+      //   align: data.data.align,
+      //   fontColor: data.data.fontColor,
+      //   opacity: data.data.opacity,
+      //   name: data.name
+      // }
     },
     /* tools 方法 */
 
@@ -1750,7 +1754,7 @@ export default {
         const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
-          getTopology(this.topologyIndex).open(this.oldTopologyData)
+          getTopology(this.topologyIndex).open(this.oldTopologyData  || {})
         }
         let flag = false
         const position = {

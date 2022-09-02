@@ -56,10 +56,12 @@
                     <div v-for="(relate,i) in item.relates" :key = 'i' class="tree-body-item tree-body-children" @click="showChild(relate)">
                       <i class="nz-icon nz-icon-caret-right" :class="relate.showChildren ? 'rotate90': '' " v-if="relate.relates" />
                       <i :class="selectIcon(relate.type)"/>
-                      <span class="text-ellipsis batch-delete-item-text" :title="relate.name">{{relate.name}}</span>
-                      <div v-for="(cildren,j) in relate.relates" :key = 'j' class="tree-body-item tree-body-children" v-if="relate.showChildren">
-                        <i :class="selectIcon(cildren.type)"/>
-                        <span class="text-ellipsis batch-delete-item-text" :title="cildren.name">{{cildren.name}}</span>
+                      <span class="text-ellipsis batch-delete-item-text" :title="relate.name"> {{relate.name}}</span>
+                      <div class="text-ellipsis batch-delete-item-text" :title="relate.name">
+                        <div v-for="(cildren,j) in relate.relates" :key = 'j' class="tree-body-item tree-body-children" v-if="relate.showChildren">
+                          <i :class="selectIcon(cildren.type)"/>
+                          <span class="text-ellipsis batch-delete-item-text" :title="cildren.name">{{cildren.name}}</span>
+                        </div>
                       </div>
                     </div>
                   </div>

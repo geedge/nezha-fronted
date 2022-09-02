@@ -914,7 +914,7 @@
           <div class="project-content-item half">
             <label>{{ $t('project.topology.bac') }}</label>
             <div class="full pr10 h32">
-              <nezhaColor :isTopo="true" :value-arr="[{name:'bkColor',value:topologyData.data.bkColor}]" @colorChange="(val,key)=>{
+              <nezhaColor :isTopo="true" :value-arr="[{name:'background',value:topologyData.data.background}]" @colorChange="(val,key)=>{
                 changeTopologyOpt(val,key,true)
                 }"/>
             </div>
@@ -1174,7 +1174,7 @@ export default {
       topologyData: {
         data: {
           name: '',
-          bkColor: '#FFFFFF',
+          background: '#FFFFFF',
           bkImage: '',
           lineName: 'curve',
           lineWidth: 1,
@@ -1701,13 +1701,14 @@ export default {
       } else {
         this.topologyData.data[key] = val
       }
-      Object.keys(this.topologyData.data).forEach((key1) => {
-        if (key1 === 'projectInfo' || key1 === 'alertInfo' || key1 === 'fontSize' || key1 === 'align' || key1 === 'textColor' || key1 === 'opacity') {
-          getTopology(this.index).data().data[key1] = this.topologyData.data[key1]
-        } else {
-          getTopology(this.index).data()[key1] = this.topologyData.data[key1]
-        }
-      })
+      // Object.keys(this.topologyData.data).forEach((key1) => {
+      //   if (key1 === 'projectInfo' || key1 === 'alertInfo' || key1 === 'fontSize' || key1 === 'align' || key1 === 'textColor' || key1 === 'opacity') {
+      //     getTopology(this.index).data().data[key1] = this.topologyData.data[key1]
+      //   } else {
+      //     getTopology(this.index).data()[key1] = this.topologyData.data[key1]
+      //   }
+      // })
+      getTopology(this.index).setBackgroundColor(this.topologyData.data.background)
       getTopology(this.index).render()
       this.$emit('changeProjectTitle')
     },

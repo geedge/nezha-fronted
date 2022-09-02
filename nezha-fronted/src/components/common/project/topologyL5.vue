@@ -713,7 +713,7 @@ export default {
         if (!getTopology(this.topologyIndex)) {
           return
         }
-        getTopology(this.topologyIndex).open(data)
+        getTopology(this.topologyIndex).open(data || {})
         getTopology(this.topologyIndex).lock(1)
         this.objChange = false
         let flag = false
@@ -861,7 +861,7 @@ export default {
           // data = JSON.parse(localStorage.getItem('topoData'))
           if (!res.data.topo || !data.pens) {
             data = {
-              bkColor: '#FFFFFF00',
+              background: '#FFFFFF00',
               gridSize: 10,
               gridColor: '#ededed',
               lineWidth: 1,
@@ -984,8 +984,8 @@ export default {
               if (!data.bkImage) {
                 data.bkImage = undefined
               }
-              if (data.bkColor === '#FFFFFF') {
-                data.bkColor = '#FFFFFF00'
+              if (data.background === '#FFFFFF') {
+                data.background = '#FFFFFF00'
               }
               Promise.all(promiseArr).then(res => {
                 res[0].data.list.forEach((module, index) => {
@@ -1551,7 +1551,6 @@ export default {
             break
           }
           case 'scale': {
-
             let dom = document.getElementById('topology-canvas' + this.topologyIndexF)
             let domRect = dom ? dom.getBoundingClientRect() : {}
             if (getTopology(this.topologyIndex)) {
@@ -2207,13 +2206,13 @@ export default {
     // 联动 project
     changeProjectTitle () {
       const data = getTopology(this.topologyIndex).data()
-      this.topologyInfo = {
-        fontSize: data.data.fontSize,
-        align: data.data.align,
-        fontColor: data.data.fontColor,
-        opacity: data.data.opacity,
-        name: data.name
-      }
+      // this.topologyInfo = {
+      //   fontSize: data.data.fontSize,
+      //   align: data.data.align,
+      //   fontColor: data.data.fontColor,
+      //   opacity: data.data.opacity,
+      //   name: data.name
+      // }
     },
     /* tools 方法 */
 
@@ -2222,7 +2221,7 @@ export default {
         let domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
-          getTopology(this.topologyIndex).open(this.oldTopologyData)
+          getTopology(this.topologyIndex).open(this.oldTopologyData || {})
         }
         let flag = false
 
