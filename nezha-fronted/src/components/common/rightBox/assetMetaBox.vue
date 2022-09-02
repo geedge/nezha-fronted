@@ -490,10 +490,4 @@ export default {
   .meta-option-box{
 
   }
-  .datetime-header{
-    display: inline-block;
-    width: 80px;
-    margin-right: 10px;
-    text-align: right;
-  }
 </style>

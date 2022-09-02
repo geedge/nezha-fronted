@@ -25,7 +25,7 @@
           </el-form-item>
            <!--type-->
           <el-form-item :label="$t('overall.type')" prop="type" >
-            <el-select v-model="editRecordRule.type" class="right-box__select" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
+            <el-select v-model="editRecordRule.type" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
               <el-option :label="$t('overall.metrics')" value="1">{{$t('overall.metrics')}}</el-option>
               <el-option :label="$t('overall.logs')" value="2">{{$t('overall.logs')}}</el-option>
             </el-select>
@@ -73,7 +73,7 @@
           </el-form-item>
           <!--state-->
           <el-form-item :label="$t('overall.state')" prop="state" >
-            <el-select v-model="editRecordRule.state" class="right-box__select" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
+            <el-select v-model="editRecordRule.state" class="right-box__select"  placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
               <el-option :label="$t('overall.disabled')" value="0">{{$t('overall.disabled')}}</el-option>
               <el-option :label="$t('overall.enabled')" value="1">{{$t('overall.enabled')}}</el-option>
             </el-select>
