@@ -377,6 +377,7 @@ export default {
               icon: 'icon-rect',
               data: {
                 text: 'rect',
+                type: 0,
                 rect: {
                   width: 100,
                   height: 100
@@ -396,6 +397,7 @@ export default {
               name: 'rectangleImg2',
               icon: 'icon-rect',
               data: {
+                type: 0,
                 text: 'rect',
                 rect: {
                   width: 100,
@@ -416,6 +418,7 @@ export default {
               name: 'rectangleImg2',
               icon: 'icon-rect',
               data: {
+                type: 0,
                 text: 'rect',
                 rect: {
                   width: 100,
@@ -848,7 +851,7 @@ export default {
         // data = JSON.parse(localStorage.getItem('topoData'))
         if (!res.data.topo || !data.pens) {
           data = {
-            bkColor: '#FFFFFF00',
+            background: '#FFFFFF00',
             gridSize: 10,
             gridColor: '#ededed',
             lineWidth: 1,
@@ -930,8 +933,8 @@ export default {
             if (!data.bkImage) {
               data.bkImage = undefined
             }
-            if (data.bkColor === '#FFFFFF') {
-              data.bkColor = '#FFFFFF00'
+            if (data.background === '#FFFFFF') {
+              data.background = '#FFFFFF00'
             }
             if (!res.data.topo.newData) {
               data.pens = this.$loadsh.orderBy(data.pens, 'type', 'desc') // 先处理线 再处理点 因为新版本 将连线开始结束放在的 点上控制
@@ -1731,13 +1734,13 @@ export default {
     // 联动 project
     changeProjectTitle () {
       const data = getTopology(this.topologyIndex).data()
-      this.topologyInfo = {
-        fontSize: data.data.fontSize,
-        align: data.data.align,
-        fontColor: data.data.fontColor,
-        opacity: data.data.opacity,
-        name: data.name
-      }
+      // this.topologyInfo = {
+      //   fontSize: data.data.fontSize,
+      //   align: data.data.align,
+      //   fontColor: data.data.fontColor,
+      //   opacity: data.data.opacity,
+      //   name: data.name
+      // }
     },
     /* tools 方法 */
 
