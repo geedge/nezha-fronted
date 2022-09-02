@@ -78,6 +78,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     if (licenceErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.hash) == -1) {
+      sessionStorage.setItem('nz-previous-page', router.currentRoute.fullPath)
       window.location.href = '/'
     } else if (response.status === 200) {
       if (accountErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.hash) == -1) {
