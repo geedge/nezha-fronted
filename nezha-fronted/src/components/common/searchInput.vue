@@ -1612,7 +1612,12 @@ export default {
       setTimeout(() => {
         this.select_list.forEach(item => {
           if (item.listStr) {
-            item.val = this[item.listStr].find(r => r.id == item.valnum).name
+            if (item.listStr == 'issue') {
+              item.valnum = item.val
+              item.val = JSON.parse(localStorage.getItem('nz-history-' + this.where))[0][0].val
+            } else {
+              item.val = this[item.listStr].find(r => r.id == item.valnum).name
+            }
           }
         })
       }, 300)

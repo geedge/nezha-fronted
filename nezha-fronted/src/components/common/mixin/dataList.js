@@ -1045,9 +1045,11 @@ export default {
             name: 'State',
             readonly: true,
             type: 'select',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'issue'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         },
         name: {
           target: this.searchLabel,
@@ -1075,9 +1077,11 @@ export default {
             name: 'Type',
             readonly: true,
             type: 'select',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'issue'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         },
         expr: {
           target: this.searchLabel,
@@ -1103,9 +1107,11 @@ export default {
             label: 'starrd',
             name: 'Starrd',
             type: 'select',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'issue'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         },
         buildIn: {
           target: this.searchLabel,
@@ -1117,9 +1123,11 @@ export default {
             label: 'buildIn',
             name: 'buildIn',
             type: 'select',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'issue'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         }
       }
     } else if (path === 'issue') {
@@ -1177,16 +1185,18 @@ export default {
           target: this.searchLabel,
           isSearchInput: true,
           propertyName: 'state',
-          type: 'Number',
+          type: 'number',
           defaultJson: {
             disabled: false,
             label: 'issueState',
             name: 'State',
             readonly: true,
             type: 'select',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'issue'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         },
         priority: {
           target: this.searchLabel,
@@ -1198,9 +1208,11 @@ export default {
             label: 'priority',
             name: 'Priority',
             type: 'select',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'issue'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         },
         assetsId: {
           target: this.searchLabel,
@@ -1240,9 +1252,11 @@ export default {
             label: 'cid',
             name: 'Create user',
             type: 'issue',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'issue'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         },
         uid: {
           target: this.searchLabel,
@@ -1254,9 +1268,11 @@ export default {
             label: 'uid',
             name: 'Update user',
             type: 'issue',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'issue'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         },
         rid: {
           target: this.searchLabel,
@@ -1268,9 +1284,11 @@ export default {
             label: 'rid',
             name: 'Reporter',
             type: 'issue',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'issue'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         },
         aid: {
           target: this.searchLabel,
@@ -1282,9 +1300,11 @@ export default {
             label: 'aid',
             name: 'Assignee',
             type: 'issue',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'issue'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         },
         starrd: {
           target: this.searchLabel,
@@ -1296,9 +1316,11 @@ export default {
             label: 'starrd',
             name: 'Starrd',
             type: 'select',
-            val: ''
+            val: '',
+            valnum: '',
+            listStr: 'issue'
           },
-          jsonKey: 'val'
+          jsonKey: 'valnum'
         }
       }
     }
