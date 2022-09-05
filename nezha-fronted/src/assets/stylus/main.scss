@@ -1083,7 +1083,11 @@ li {
   width:0 !important;
   background-color: $--background-color-base;
 }
-.nz-table .el-table__fixed, .nz-table .el-table__fixed-right {
+// .nz-table .el-table__fixed, .nz-table .el-table__fixed-right {
+//   height: 100% !important;
+//   z-index: 1;
+// }
+.nz-table .el-table__fixed, .nz-table,.nz-table-list .el-table__fixed-right {
   height: 100% !important;
   z-index: 1;
 }
