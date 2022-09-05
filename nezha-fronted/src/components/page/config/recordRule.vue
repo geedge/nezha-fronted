@@ -130,18 +130,6 @@ export default {
             type: 'select',
             label: 'recordState',
             disabled: false
-          },
-          {
-            name: this.$t('overall.starred'),
-            type: 'select',
-            label: 'starrd',
-            disabled: false
-          },
-          {
-            name: this.$t('overall.buildIn'),
-            type: 'select',
-            label: 'buildIn',
-            disabled: false
           }
         ]
       },

@@ -966,8 +966,6 @@ export default {
               objectInfo.starrd = val.valnum
             } else if (val.label === 'recordType') {
               objectInfo.type = val.valnum
-            } else if (val.label === 'buildIn') {
-              objectInfo.buildIn = val.valnum
             } else if (val.label === 'issueState') {
               objectInfo.state = val.valnum
             } else if (val.label === 'priority') {

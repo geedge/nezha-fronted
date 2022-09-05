@@ -1096,38 +1096,6 @@ export default {
             val: ''
           },
           jsonKey: 'val'
-        },
-        starrd: {
-          target: this.searchLabel,
-          isSearchInput: true,
-          propertyName: 'starrd',
-          type: 'Number',
-          defaultJson: {
-            disabled: false,
-            label: 'starrd',
-            name: 'Starrd',
-            type: 'select',
-            val: '',
-            valnum: '',
-            listStr: 'issue'
-          },
-          jsonKey: 'valnum'
-        },
-        buildIn: {
-          target: this.searchLabel,
-          isSearchInput: true,
-          propertyName: 'buildIn',
-          type: 'Number',
-          defaultJson: {
-            disabled: false,
-            label: 'buildIn',
-            name: 'buildIn',
-            type: 'select',
-            val: '',
-            valnum: '',
-            listStr: 'issue'
-          },
-          jsonKey: 'valnum'
         }
       }
     } else if (path === 'issue') {
