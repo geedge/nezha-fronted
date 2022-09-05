@@ -1,5 +1,4 @@
 <template>
-<div>
   <el-table
     id="recordRuleTable"
     ref="dataTable"
@@ -132,7 +131,6 @@
       <div v-else>&nbsp;</div>
     </template>
   </el-table>
-  </div>
 </template>
 
 <script>
