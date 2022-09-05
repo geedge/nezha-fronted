@@ -107,9 +107,7 @@ export default {
 
   mounted () {
     this.getTableData()
-    bus.$on('backupNow', () => {
-      this.getTableData()
-    })
+    bus.$on('backupNow', this.getTableData)
   },
 
   methods: {
@@ -168,7 +166,7 @@ export default {
     },
     edit (row) {
       this.object = {
-        ...row,
+        ...this.$loadsh.cloneDeep(row),
         checkDay: '',
         checkDays: '',
         datepicker: ''
@@ -190,6 +188,9 @@ export default {
     }
   },
 
-  watch: {}
+  watch: {},
+  beforeDestroy () {
+    bus.$off('backupNow', this.getTableData)
+  }
 }
 </script>

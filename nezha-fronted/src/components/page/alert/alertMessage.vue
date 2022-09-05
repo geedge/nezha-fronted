@@ -109,10 +109,10 @@
         </div>
         <div slot="footer" class="footer">
           <div class="el-message-box__btns">
-            <button :id="'-xlsx-import-export'" v-has="'alertMessage_expired'" class="nz-btn nz-btn-size-normal nz-btn-style-normal-new" @click="exportData">
+            <button :id="'-xlsx-import-export'" v-has="'alertMessage_expired'" class="nz-btn el-button--small nz-btn-style-normal" @click="exportData">
               <span style="text-transform:Capitalize">{{$t('overall.exportExcel')}}</span>
             </button>
-            <button :id="'-xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
+            <button :id="'-xlsx-import-close'" class="nz-btn el-button el-button--small el-button--default" @click="closeDialog">
               <span>{{$t('overall.close')}}</span>
             </button>
           </div>

@@ -140,6 +140,11 @@
     }
   }
 }
+#alertRuleTable.el-table--border .gutter{
+  right: 33px;
+  height: 40px;
+  background-color: $--table-header-background-color;
+}
 .sub-list {
   height: calc(100% - 9px);
   position: absolute;

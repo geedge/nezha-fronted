@@ -52,7 +52,7 @@
           </el-form-item>
           <!--state-->
           <el-form-item :label="$t('overall.state')" prop="state">
-          <el-select v-model="editIssue.state" placeholder='' clearable size="small" value-key="state" class="type-select">
+          <el-select v-model="editIssue.state" placeholder='' size="small" value-key="state" class="type-select">
             <el-option v-for="item in stateData" :key="item.id" :label="item.value" :value="item.id">
               {{item.value}}
             </el-option>

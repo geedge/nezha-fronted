@@ -27,7 +27,7 @@
         <!-- 新版导入 -->
         <div v-if="importBox.type == 1&&importType">
           <div class="upload-body">
-            <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls" action="" class="import-upload" drag>
+            <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls,.csv,.json" action="" class="import-upload" drag>
               <i class="el-icon-upload"></i>
               <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
               <div class="el-upload__tip" >{{$t('overall.importSupport')}}</div>
@@ -198,7 +198,6 @@
 import axios from 'axios'
 import panelBox from '@/components/common/rightBox/panelBox'
 import bus from '@/libs/bus'
-import { Number } from '@svgdotjs/svg.js'
 let timeout
 export default {
   name: 'topToolMoreOptions',
@@ -239,24 +238,28 @@ export default {
     language () { return this.$store.getters.getLanguage },
     // 显示新版导入
     importType () {
-      const name = this.exportFileName
-      return name === 'asset'
+      const arr = ['/asset/asset/import']
+      return arr.some(item => item === this.importUrl)
     },
+    // 已存在的内容处理方式
     showEexisted () {
-      const name = this.exportFileName
-      return name === 'asset'
+      const arr = ['/asset/asset/import']
+      return arr.some(item => item === this.importUrl)
     },
+    // 遇到错误是否继续导入
     showIgnoreError () {
-      const name = this.exportFileName
-      return name === 'asset'
+      const arr = ['/asset/asset/import']
+      return arr.some(item => item === this.importUrl)
     },
+    // 是否同步更新关联的dashboard
     showSyncDashboard () {
-      const name = this.exportFileName
-      return name === 'asset'
+      const arr = ['/asset/asset/import']
+      return arr.some(item => item === this.importUrl)
     },
+    // 是否同步更新关联的endpoint
     showSyncEndpoint () {
-      const name = this.exportFileName
-      return name === 'asset'
+      const arr = ['/asset/asset/import']
+      return arr.some(item => item === this.importUrl)
     }
   },
   data () {
@@ -268,10 +271,10 @@ export default {
         record: 'all',
         format: 1,
         templateFormat: 1, // 模板格式
-        existed: 1, // 已存在的内容处理方式
-        ignoreError: Boolean(1), // 遇到错误是否继续导入
-        syncDashboard: Boolean(1), // 是否同步更新关联的dashboard
-        syncEndpoint: Boolean(1) // 是否同步更新关联的endpoint
+        existed: 0, // 已存在的内容处理方式
+        ignoreError: Boolean(0), // 遇到错误是否继续导入
+        syncDashboard: Boolean(0), // 是否同步更新关联的dashboard
+        syncEndpoint: Boolean(0) // 是否同步更新关联的endpoint
       },
       existedArr: [
         { name: this.$t('overall.error'), value: 0 },
@@ -364,16 +367,13 @@ export default {
           form.append('existed', this.importBox.existed)
         }
         if (this.showIgnoreError) {
-          const ignoreError = this.importBox.ignoreError ? 1 : 0
-          form.append('ignoreError', ignoreError)
+          form.append('ignoreError', Number(this.importBox.ignoreError))
         }
         if (this.showSyncDashboard) {
-          const syncDashboard = this.importBox.syncDashboard ? 1 : 0
-          form.append('syncDashboard', syncDashboard)
+          form.append('syncDashboard', Number(this.importBox.syncDashboard))
         }
         if (this.showSyncEndpoint) {
-          const syncEndpoint = this.importBox.syncEndpoint ? 1 : 0
-          form.append('syncEndpoint', syncEndpoint)
+          form.append('syncEndpoint', Number(this.importBox.syncEndpoint))
         }
         if (this.paramsType) {
           form.append('type', this.paramsType)
@@ -423,16 +423,25 @@ export default {
           this.importBox.record = 'all'
           this.importBox.format = 1
           this.importBox.templateFormat = 1 // 模板格式
-          this.importBox.existed = 1// 已存在的内容处理方式
-          this.importBox.ignoreError = Boolean(1) // 遇到错误是否继续导入
-          this.importBox.syncDashboard = Boolean(1) // 是否同步更新关联的dashboard
-          this.importBox.syncEndpoint = Boolean(1)// 是否同步更新关联的endpoint
+          this.importBox.existed = 0// 已存在的内容处理方式
+          this.importBox.ignoreError = Boolean(0) // 遇到错误是否继续导入
+          this.importBox.syncDashboard = Boolean(0) // 是否同步更新关联的dashboard
+          this.importBox.syncEndpoint = Boolean(0)// 是否同步更新关联的endpoint
         })
       }, 200)
     },
     downloadTemplate: bus.debounce(function (templateFormat) {
       const language = localStorage.getItem('nz-language') || 'en' // 初始未选择默认 en 英文
-      const fileName = this.exportFileName + '-' + this.$t('overall.template') + '-' + this.getTimeString() + '.xlsx'
+      // 导出模板后缀
+      let suffix = '.xlsx'
+      if (this.importBox.templateFormat == 1) {
+        suffix = '.xlsx'
+      } else if (this.importBox.templateFormat == 2) {
+        suffix = '.csv'
+      } else if (this.importBox.templateFormat == 3) {
+        suffix = '.json'
+      }
+      const fileName = this.exportFileName + '-' + this.$t('overall.template') + '-' + this.getTimeString() + suffix
       let url = null
       const param = { language: language, format: templateFormat }
       if (this.importUrl.indexOf('/asset/model') > -1) {

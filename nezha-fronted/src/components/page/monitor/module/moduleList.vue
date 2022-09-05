@@ -30,8 +30,8 @@
           :permissions="{import: 'monitor_endpoint_add', export: 'monitor_module_edit'}"
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="module"
-          export-url="monitor/module/export"
-          import-url="monitor/module/import"
+          export-url="/monitor/module/export"
+          import-url="/monitor/module/import"
           @afterImport="getTableData"
         >
         </top-tool-more-options>
@@ -95,8 +95,8 @@
           :permissions="{import: 'monitor_endpoint_add', export: 'monitor_module_edit'}"
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="module"
-          export-url="monitor/module/export"
-          import-url="monitor/module/import"
+          export-url="/monitor/module/export"
+          import-url="/monitor/module/import"
           @afterImport="getTableData"
         >
           <template v-slot:before>

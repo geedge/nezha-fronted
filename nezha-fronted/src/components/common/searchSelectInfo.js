@@ -218,16 +218,16 @@ export default {
             label: i18n.t('overall.logs')
           }
         ],
-        buildIn: [
-          {
-            value: 1,
-            label: i18n.t('overall.buildIn')
-          },
-          {
-            value: 0,
-            label: i18n.t('overall.unbuildIn')
-          }
-        ],
+        // buildIn: [
+        //   {
+        //     value: 1,
+        //     label: i18n.t('overall.buildIn')
+        //   },
+        //   {
+        //     value: 0,
+        //     label: i18n.t('overall.unbuildIn')
+        //   }
+        // ],
         ack: [
           {
             value: '1',
