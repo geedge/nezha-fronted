@@ -106,7 +106,7 @@ export default {
         this.tools.loading = false
         this.nowTime = this.utcTimeToTimezoneStr(response.time)
         if (response.code === 200) {
-          this.tableData = response.data
+          this.tableData = response.data.list
           if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
