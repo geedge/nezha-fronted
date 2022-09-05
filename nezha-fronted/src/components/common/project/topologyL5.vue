@@ -878,6 +878,7 @@ export default {
             resolve(data)
             data = null
           } else {
+            delete data.origin
             data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#f9f9f9'
             data.gridColor = this.theme == 'light' ? '#ededed' : '#090909'
             data.grid = false
@@ -1645,7 +1646,25 @@ export default {
     },
 
     onUpdateProps (node) { // 更新pen
-      getTopology(this.topologyIndex).setValue(node)
+      const obj = {
+        id: node.id,
+        x: node.x,
+        y: node.y,
+        data: node.data,
+        width: node.width,
+        height: node.height,
+        borderRadius: node.borderRadius,
+        rotate: node.rotate,
+        background: node.background,
+        iconColor: node.iconColor,
+        gradientType: node.gradientType,
+        gradientFromColor: node.gradientFromColor,
+        gradientToColor: node.gradientToColor,
+        globalAlpha: node.globalAlpha,
+        dash: node.dash,
+        strokeColor: node.strokeColor
+      }
+      getTopology(this.topologyIndex).setValue(obj)
     },
 
     handleAvatarSuccess () {

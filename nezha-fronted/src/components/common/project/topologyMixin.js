@@ -117,7 +117,7 @@ export default {
         pen: null,
         pens: null
       }
-      if (!pens.length) return
+      if (!pens.length || !this.editTopologyFlag) return
       this.$nextTick(() => {
         if (pens.length == 1) {
           this.modulesDiff && this.modulesDiff(pens[0])
