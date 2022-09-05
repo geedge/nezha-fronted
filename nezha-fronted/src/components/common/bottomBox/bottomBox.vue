@@ -95,9 +95,11 @@ import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
 import scrapeEndpoint from '@/components/common/bottomBox/tabs/scrapeEndpoint'
 import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
 import recordRuleEvalLog from '@/components/common/bottomBox/tabs/recordRuleEvalLog'
+import routerPathParams from '@/components/common/mixin/routerPathParams'
 
 export default {
   name: 'bottomBox',
+  mixins: [routerPathParams],
   components: {
     scrapeEndpoint,
     LogBottomTab,
@@ -314,6 +316,9 @@ export default {
     },
     changeTab (tab) {
       this.$emit('update:targetTab', tab)
+      this.$nextTick(() => {
+        this.updatePath(this.$route.query, this.$route.path, 'bottomBox')
+      })
     },
     afterResize () {
       if (this.from === this.fromRoute.endpoint && this.targetTab === 'endpointQuery') {

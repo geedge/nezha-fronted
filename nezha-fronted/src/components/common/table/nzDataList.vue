@@ -106,8 +106,11 @@ import bottomBox from '@/components/common/bottomBox/bottomBox'
 import { bottomBoxWindow } from '@/components/common/js/tools'
 import panelChart from '@/components/chart/panelChart'
 import bus from '@/libs/bus'
+import routerPathParams from "@/components/common/mixin/routerPathParams";
+import lodash from "lodash";
 export default {
   name: 'nzDataList',
+  mixins: [routerPathParams],
   components: {
     bottomBox,
     panelChart
@@ -217,6 +220,7 @@ export default {
       this.bottomBox.targetTab = targetTab
       this.bottomBox.object = JSON.parse(JSON.stringify(row))
       this.bottomBox.showSubList = true
+      this.updatePath(this.$route.query, this.$route.path, 'nzDatalist')
     },
     search (searchObj) {
       this.$emit('search', searchObj)

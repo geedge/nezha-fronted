@@ -76,7 +76,6 @@ export default {
         maxBounds: [[-179, -85], [179, 85]],
         hash: false,
         transformRequest: function (url, resourceType) {
-          console.log(resourceType)
           if (resourceType === 'Tile' && url.indexOf('https://api.maptiler.com/tiles/v3') > -1) {
             const urlParams = url.split('.pbf')[0].split('/')
             const z = urlParams[urlParams.length - 3]
@@ -161,7 +160,6 @@ export default {
       })
       // const marker = L.marker([this.mapParam.latitude, this.mapParam.longitude]).addTo(map)
       this.map.on('click', function (e) {
-        console.log(e, e.lngLat)
         const coords = e.lngLat
         geoJSON.features[0].geometry.coordinates = [coords.lng, coords.lat]
         self.map.getSource('centerMarker').setData(geoJSON)

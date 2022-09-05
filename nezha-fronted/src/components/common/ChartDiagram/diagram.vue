@@ -698,7 +698,6 @@ export default {
       if (this.fromTopologyDialog && !this.isPreview) {
         setTimeout(() => {
           this.topologyLoading = false
-          console.log(data)
           getTopology(this.topologyIndex).open(data || {})
           getTopology(this.topologyIndex).centerView()
           getTopology(this.topologyIndex).resize()

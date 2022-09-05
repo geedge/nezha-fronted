@@ -5,6 +5,7 @@ import { returnMenuCode, sortByOrderNum } from '@/permission'
 import moment from 'moment-timezone'
 import { theme } from '@/components/common/js/constants'
 
+const noJumpPath = ['/', '/login', '/ui/login']
 const user = {
   state: {
     menuList: [],
@@ -143,7 +144,7 @@ const user = {
           })
         }
         // 登录成功后跳回到原来页面
-        if (sessionStorage.getItem('nz-previous-page')) {
+        if (sessionStorage.getItem('nz-previous-page') && noJumpPath.indexOf(sessionStorage.getItem('nz-previous-page')) === -1) {
           const route = sessionStorage.getItem('nz-previous-page')
           router.push({
             path: route
@@ -151,6 +152,7 @@ const user = {
             sessionStorage.removeItem('nz-previous-page')
           })
         } else {
+          sessionStorage.removeItem('nz-previous-page')
           router.push({
             path: path[0],
             query: {
