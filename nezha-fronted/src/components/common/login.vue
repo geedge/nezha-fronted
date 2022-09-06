@@ -1,7 +1,7 @@
 <template>
   <div class="login"  id="login-bgimg">
     <div class="model"></div>
-    <div class="stars-wrapper" id="stars-wrapper" v-if="!this.bgImg">
+    <div class="stars-wrapper" id="stars-wrapper" v-if="false">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 358.52 351.84" class="star-cloud star-cloud1">
         <g id="Layer_2" data-name="Layer 2">
           <g id="Layer_1-2" data-name="Layer 1">
@@ -583,7 +583,7 @@ export default {
     if (this.bgImg) {
       document.getElementById('login-bgimg').style['background-image'] = `url(${this.bgImg})`
     } else {
-      this.initStar()
+      // this.initStar()
     }
   },
   beforeDestroy () {

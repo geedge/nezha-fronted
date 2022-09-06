@@ -28,7 +28,7 @@
     "@topology/activity-diagram": "^1.1.0",
     "@topology/chart-diagram": "^1.1.0",
     "@topology/class-diagram": "^1.1.0",
-    "@topology/core": "^1.1.32",
+    "@topology/core": "^1.1.34",
     "@topology/flow-diagram": "^1.1.1",
     "@topology/form-diagram": "^1.1.32",
     "@topology/sequence-diagram": "^1.1.0",

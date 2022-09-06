@@ -855,7 +855,7 @@ export default {
             gridColor: '#ededed',
             lineWidth: 1,
             ruleColor: '#4e4e4e',
-            pens:[]
+            pens: []
           }
           this.projectInfoShow = true
           this.projectAlertShow = true
@@ -864,6 +864,7 @@ export default {
           data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
           resolve(data)
         } else {
+          delete data.origin
           data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
           if (data.data) {
             this.topologyInfo = {

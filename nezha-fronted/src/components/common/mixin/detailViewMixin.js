@@ -30,7 +30,9 @@ export default {
       //   this.detailViewRightObj = ''
       // }
       this.detailType = flag
-      this.$router.replace({ query: { ...this.$route.query, detailType: flag } }).catch(err => {})
+      const query = { ...this.$route.query, detailType: flag }
+      query.bottomBox = this.detailType !== 'view'
+      this.$router.replace({ query: query }).catch(err => {})
       let dataList = ''
       localStorage.setItem('detail-view-' + this.tableId, this.detailType)
       if (this.detailType === 'view') {

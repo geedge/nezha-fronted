@@ -429,7 +429,7 @@
                         :class="['nz-icon',bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).label,bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).fontSize]"></i>
                     </div>
 
-                    <el-option v-for="(item,index) in bkTypeOption" :value="item.id" :key="index">
+                    <el-option v-for="(item,index) in bkTypeOption" :value="item.id" :label="''" :key="index">
                       <i :class="['nz-icon',item.label,item.fontSize]"></i>
                     </el-option>
                     <!--el-input__inner-->
@@ -1546,6 +1546,7 @@ export default {
       if (value === 'lineDash') {
         this.selection.pen.lineDash = val ? (val == 1 ? [5, 5] : ((val == 2 ? [10, 10] : [10, 10, 2, 10]))) : []
       }
+      console.log(this.selection.pen)
       this.$emit('change', this.selection.pen)
       // if(!this.selection.pen.type||this.selection.pens){
       //   this.$emit('change',this.selection.pen||this.selection.pens);
