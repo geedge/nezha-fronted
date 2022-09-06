@@ -347,6 +347,18 @@ export default {
             label: this.$t('overall.cancel')
           }
         ],
+        silenceState: [
+          {
+            value: 1,
+            label: this.$t('issue.open')
+          }, {
+            value: 2,
+            label: this.$t('issue.hasBeenAssigned')
+          }, {
+            value: 3,
+            label: this.$t('issue.beingProcessed')
+          }
+        ],
         priority: [
           {
             value: 1,
