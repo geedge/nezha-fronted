@@ -350,13 +350,13 @@ export default {
         silenceState: [
           {
             value: 1,
-            label: this.$t('issue.open')
+            label: this.$t('silence.active')
           }, {
             value: 2,
-            label: this.$t('issue.hasBeenAssigned')
+            label: this.$t('silence.pending')
           }, {
             value: 3,
-            label: this.$t('issue.beingProcessed')
+            label: this.$t('silence.expired')
           }
         ],
         priority: [
