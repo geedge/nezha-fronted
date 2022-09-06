@@ -53,20 +53,22 @@ export default {
         const detailType = this.detailType === 'list' ? 'dataList' : 'detailList'
         localStorage.setItem('detail-view-' + this.tableId, this.detailType)
         params.detailType = this.detailType
-        params.bottomBox = this.$refs[detailType].bottomBox.showSubList
-        if (this.detailType === 'list') {
+
+        if (this.detailType === 'list' && lodash.get(this, `this.$refs.${detailType}.bottomBox`)) {
+          params.bottomBox = this.$refs[detailType].bottomBox.showSubList
           params.targetTab = this.$refs[detailType].bottomBox.targetTab
         } else {
+          params.bottomBox = false
           params.targetTab = this.$route.query.targetTab
         }
-        if (this.detailType === 'list') {
+        if (this.detailType === 'list' && lodash.get(this, `this.$refs.${detailType}.bottomBox`)) {
           params.selectObj = JSON.stringify({
             id: this.$refs[detailType].bottomBox.object.id,
             name: this.$refs[detailType].bottomBox.object.name,
             config: this.$refs[detailType].bottomBox.object.config || '',
             childrenNum: this.$refs[detailType].bottomBox.object.childrenNum || ''
           })
-        } else {
+        } else if (lodash.get(this, `$refs.${detailType}.detailViewRightObj`)) {
           this.$nextTick(() => {
             params.selectObj = JSON.stringify({
               id: this.$refs[detailType].detailViewRightObj.id,
@@ -77,7 +79,7 @@ export default {
           })
         }
         this.$router.replace({ path: path, query: params }).catch(err => {})
-      } else if (from === 'nzDatalist') {
+      } else if (from === 'nzDatalist' && this.bottomBox) {
         params.bottomBox = this.bottomBox.showSubList
         params.targetTab = this.bottomBox.targetTab
         params.selectObj = JSON.stringify({
@@ -87,7 +89,7 @@ export default {
           childrenNum: this.bottomBox.object.childrenNum || ''
         })
         this.$router.replace({ path: path, query: params }).catch(err => {})
-      } else if (from === 'nzDetailList') {
+      } else if (from === 'nzDetailList' && this.detailViewRightObj) {
         params.targetTab = this.$route.query.targetTab
         params.selectObj = JSON.stringify({
           id: this.detailViewRightObj.id,
@@ -96,7 +98,7 @@ export default {
           childrenNum: this.detailViewRightObj.childrenNum || ''
         })
         this.$router.replace({ path: path, query: params }).catch(err => {})
-      } else if (from === 'bottomBox') {
+      } else if (from === 'bottomBox' && this.targetTab) {
         params.targetTab = this.targetTab
         this.$router.replace({ path: path, query: params }).catch(err => {})
       }
