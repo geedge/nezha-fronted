@@ -1213,7 +1213,15 @@ export default {
     },
 
     onUpdateProps (node) {
-      getTopology(this.topologyIndex).setValue(node)
+      let obj = this.$loadsh.cloneDeep(node)
+      delete obj.x
+      delete obj.y
+      delete obj.center
+      delete obj.ex
+      delete obj.ey
+      delete obj.width
+      delete obj.height
+      getTopology(this.topologyIndex).setValue(obj)
     },
 
     handleAvatarSuccess () {

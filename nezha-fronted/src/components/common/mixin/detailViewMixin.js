@@ -2,6 +2,7 @@ export default {
   props: {},
   watch: {
     detailViewRightObj: {
+      immediate: true,
       handler (n) {
         if (n) {
           this.updatePath(this.$route.query, this.$route.path, 'nzDetailList')

@@ -1646,24 +1646,15 @@ export default {
     },
 
     onUpdateProps (node) { // 更新pen
-      const obj = {
-        id: node.id,
-        x: node.x,
-        y: node.y,
-        data: node.data,
-        width: node.width,
-        height: node.height,
-        borderRadius: node.borderRadius,
-        rotate: node.rotate,
-        background: node.background,
-        iconColor: node.iconColor,
-        gradientType: node.gradientType,
-        gradientFromColor: node.gradientFromColor,
-        gradientToColor: node.gradientToColor,
-        globalAlpha: node.globalAlpha,
-        dash: node.dash,
-        strokeColor: node.strokeColor
-      }
+      let obj = this.$loadsh.cloneDeep(node)
+      console.log(obj)
+      delete obj.x
+      delete obj.y
+      delete obj.center
+      delete obj.ex
+      delete obj.ey
+      delete obj.width
+      delete obj.height
       getTopology(this.topologyIndex).setValue(obj)
     },
 
