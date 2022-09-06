@@ -199,10 +199,10 @@ export default {
         this.username = localStorage.getItem('nz-username')
         // this.refreshLang()
       })
-      if (window.history && window.history.pushState) {
-        history.pushState(null, null, document.URL)
-        window.addEventListener('popstate', this.cancel, false)
-      }
+      // if (window.history && window.history.pushState) {
+      //   history.pushState(null, null, document.URL)
+      //   window.addEventListener('popstate', this.cancel, false)
+      // }
       bus.$on('link-data-change', () => {
         this.getLinkData()
       })
