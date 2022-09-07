@@ -292,7 +292,7 @@ export default {
         let labels = this.$loadsh.cloneDeep(row.labels)
         if (typeof labels === 'string') labels = JSON.parse(labels)
         this.objectSilence.matchers = []
-        const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type']
+        const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type', 'nz_agent_id']
         Object.keys(labels).forEach((key, i) => {
           if (filterArr.indexOf(key) != -1) {
             return
