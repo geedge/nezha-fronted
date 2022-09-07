@@ -52,7 +52,7 @@ dev_build:
     - sed -i 's+</body>+<a style="position:fixed;bottom:20px;left:40px;z-index:999;color:white;" target="_blank" href="/static/git-log.html">更新记录</a>\n</body>+g' ./index.html;
     - echo "<html>" > ./static/git-log.html
     - echo "<head>" >> ./static/git-log.html
-    - echo "<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">" >> ./static/git-log.html
+    - echo '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">' >> ./static/git-log.html
     - echo "</head>" >> ./static/git-log.html
     - echo "<pre>" >> ./static/git-log.html
     - "git log -100 --pretty=format:'%ad : %s' >> ./static/git-log.html"
