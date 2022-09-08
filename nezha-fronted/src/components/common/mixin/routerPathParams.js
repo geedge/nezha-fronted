@@ -86,7 +86,8 @@ export default {
             id: this.bottomBox.object.id,
             name: this.bottomBox.object.name,
             configs: this.bottomBox.object.configs ? this.bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
-            childrenNum: this.bottomBox.object.childrenNum || ''
+            childrenNum: this.bottomBox.object.childrenNum || '',
+            clientState: this.bottomBox.object.clientState || ''
           })
           this.$router.replace({ path: path, query: params }).catch(err => {})
         } else if (from === 'nzDetailList' && this.detailViewRightObj) {
@@ -95,7 +96,8 @@ export default {
             id: this.detailViewRightObj.id,
             name: this.detailViewRightObj.name,
             configs: this.detailViewRightObj.configs ? this.detailViewRightObj.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
-            childrenNum: this.detailViewRightObj.childrenNum || ''
+            childrenNum: this.detailViewRightObj.childrenNum || '',
+            clientState: this.bottomBox.object.clientState || ''
           })
           this.$router.replace({ path: path, query: params }).catch(err => {})
         } else if (from === 'bottomBox' && this.targetTab) {
