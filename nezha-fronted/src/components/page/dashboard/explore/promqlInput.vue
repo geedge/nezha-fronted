@@ -514,7 +514,8 @@ export default {
       projectOption: [],
       filterSilence: '',
       tempBoxId: {},
-      loading: false
+      loading: false,
+      firstInit: true
     }
   },
   computed: {
@@ -697,6 +698,9 @@ export default {
       }
     },
     newChange (val) {
+      if (this.firstInit && this.isTopo) {
+        return
+      }
       if (val) {
         this.oldcCodeLength = val.length
         this.codeMirrorValue[this.index] = val
@@ -1154,7 +1158,7 @@ export default {
       immediate: true,
       handler (n, o) {
         this.codeMirrorValue[this.index] = n[this.index]
-        if (this.isTopo) {
+        if (this.isTopo && this.firstInit) {
           setTimeout(() => {
             const text = this.newView.state.doc.toString()
             this.newView.dispatch(
@@ -1162,6 +1166,7 @@ export default {
                 changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
               })
             )
+            this.firstInit = false
           }, 200)
         }
       }
