@@ -414,6 +414,10 @@ article {
     .box-overflow{
       overflow-x: scroll;
     }
+    pre.box-overflow{
+      overflow-x: scroll;
+      padding-bottom: 0;
+    }
     .logfmt-module,.json-module,.pattern-module,.regular-module,.unpack-module,.line-module,.formatting-module,.unwrapped-module{
       pre {
         border: 0;
