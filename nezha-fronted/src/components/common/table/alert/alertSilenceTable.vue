@@ -80,15 +80,15 @@
           </span>
         </template>
         <template v-else-if="item.prop === 'state'">
-          <span v-if="scope.row.state === 1" class="silence-active"
-            >{{$t('silence.active')}}</span
-          >
-          <span v-if="scope.row.state === 2" class="silence-pending"
-            >{{$t('silence.pending')}}</span
-          >
-          <span v-if="scope.row.state === 3" class="silence-expired"
-            >{{$t('silence.expired')}}</span
-          >
+          <span v-if="scope.row.state === 1">
+             <div class="active-icon green-bg inline-block"></div>
+            {{$t('silence.active')}}</span>
+          <span v-if="scope.row.state === 2">
+            <div class="active-icon green-bg inline-block"></div>
+            {{$t('silence.pending')}}</span>
+          <span v-if="scope.row.state === 3">
+            <div class="active-icon gray-bg inline-block"></div>
+            {{$t('silence.expired')}}</span>
         </template>
         <template v-else-if="item.prop === 'utime'">
           {{ utcTimeToTimezoneStr(scope.row[item.prop]) }}
