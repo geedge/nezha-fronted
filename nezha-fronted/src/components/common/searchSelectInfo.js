@@ -347,6 +347,18 @@ export default {
             label: this.$t('overall.cancel')
           }
         ],
+        silenceState: [
+          {
+            value: 1,
+            label: this.$t('silence.active')
+          }, {
+            value: 2,
+            label: this.$t('silence.pending')
+          }, {
+            value: 3,
+            label: this.$t('silence.expired')
+          }
+        ],
         priority: [
           {
             value: 1,

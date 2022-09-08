@@ -713,7 +713,10 @@ export default {
         if (!getTopology(this.topologyIndex)) {
           return
         }
-        getTopology(this.topologyIndex).open(data || {})
+        if (!data.pens) {
+          data.pens = []
+        }
+        getTopology(this.topologyIndex).open(data)
         getTopology(this.topologyIndex).lock(1)
         this.objChange = false
         let flag = false
@@ -1646,7 +1649,7 @@ export default {
     },
 
     onUpdateProps (node) { // 更新pen
-      let obj = this.$loadsh.cloneDeep(node)
+      const obj = this.$loadsh.cloneDeep(node)
       console.log(obj)
       delete obj.x
       delete obj.y
@@ -2231,7 +2234,10 @@ export default {
         let domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
-          getTopology(this.topologyIndex).open(this.oldTopologyData || {})
+          if (this.oldTopologyData && !this.oldTopologyData.pens) {
+            this.oldTopologyData.pens = []
+          }
+          getTopology(this.topologyIndex).open(this.oldTopologyData)
         }
         let flag = false
 

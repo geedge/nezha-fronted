@@ -1,5 +1,5 @@
 <template>
-<div height="100%">
+<div style="height: 100%">
   <el-table
     id="userTable"
     ref="dataTable"
@@ -118,7 +118,7 @@
       <div v-else>&nbsp;</div>
     </template>
   </el-table>
-  </div>
+</div>
 </template>
 
 <script>

@@ -220,7 +220,6 @@ export default {
       this.bottomBox.targetTab = targetTab
       this.bottomBox.object = JSON.parse(JSON.stringify(row))
       this.bottomBox.showSubList = true
-      this.updatePath(this.$route.query, this.$route.path, 'nzDatalist')
     },
     search (searchObj) {
       this.$emit('search', searchObj)
@@ -239,6 +238,7 @@ export default {
     'bottomBox.showSubList': function (n) {
       const vm = this
       bottomBoxWindow.showSubListWatch(vm, n)
+      this.updatePath(this.$route.query, this.$route.path, 'nzDatalist')
     },
     layout: {
       immediate: true,

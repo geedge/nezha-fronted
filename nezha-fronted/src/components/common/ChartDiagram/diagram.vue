@@ -698,6 +698,9 @@ export default {
       if (this.fromTopologyDialog && !this.isPreview) {
         setTimeout(() => {
           this.topologyLoading = false
+          if (!data.pens) {
+            data.pens = []
+          }
           getTopology(this.topologyIndex).open(data || {})
           getTopology(this.topologyIndex).centerView()
           getTopology(this.topologyIndex).resize()
@@ -707,6 +710,9 @@ export default {
         Promise.all(promiseArr).then((res) => {
           if (!getTopology(this.topologyIndex)) {
             return
+          }
+          if (!data.pens) {
+            data.pens = []
           }
           getTopology(this.topologyIndex).open(data || {})
           getTopology(this.topologyIndex).lock(1)
@@ -1213,7 +1219,7 @@ export default {
     },
 
     onUpdateProps (node) {
-      let obj = this.$loadsh.cloneDeep(node)
+      const obj = this.$loadsh.cloneDeep(node)
       delete obj.x
       delete obj.y
       delete obj.center
@@ -1762,7 +1768,10 @@ export default {
         const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
-          getTopology(this.topologyIndex).open(this.oldTopologyData  || {})
+          if (this.oldTopologyData && !this.oldTopologyData.pens) {
+            this.oldTopologyData.pens = []
+          }
+          getTopology(this.topologyIndex).open(this.oldTopologyData || {})
         }
         let flag = false
         const position = {

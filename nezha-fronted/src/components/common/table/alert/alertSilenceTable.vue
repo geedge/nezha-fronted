@@ -81,13 +81,13 @@
         </template>
         <template v-else-if="item.prop === 'state'">
           <span v-if="scope.row.state === 1" class="silence-active"
-            >active</span
+            >{{$t('silence.active')}}</span
           >
           <span v-if="scope.row.state === 2" class="silence-pending"
-            >pending</span
+            >{{$t('silence.pending')}}</span
           >
           <span v-if="scope.row.state === 3" class="silence-expired"
-            >expired</span
+            >{{$t('silence.expired')}}</span
           >
         </template>
         <template v-else-if="item.prop === 'utime'">
@@ -180,130 +180,130 @@
 </template>
 
 <script>
-import table from "@/components/common/mixin/table";
-import { calcDurationByStringTimeB } from "@/components/common/js/tools";
-import nzAlertTag from "../../../page/alert/nzAlertTag";
-import { sameLabels } from "@/components/common/js/constants";
+import table from '@/components/common/mixin/table'
+import { calcDurationByStringTimeB } from '@/components/common/js/tools'
+import nzAlertTag from '../../../page/alert/nzAlertTag'
+import { sameLabels } from '@/components/common/js/constants'
 export default {
-  name: "alertSilenceTable",
+  name: 'alertSilenceTable',
   components: {
-    nzAlertTag,
+    nzAlertTag
   },
   mixins: [table],
   props: {
     loading: Boolean,
-    nowTime: {},
+    nowTime: {}
   },
-  data() {
+  data () {
     return {
       /* 表格相关 */
       tableTitle: [
         {
-          label: "ID",
-          prop: "id",
+          label: 'ID',
+          prop: 'id',
           show: true,
           width: 80,
-          sortable: "custom",
+          sortable: 'custom'
         },
         {
-          label: this.$t("overall.name"),
-          prop: "name",
+          label: this.$t('overall.name'),
+          prop: 'name',
           show: true,
-          minWidth: 150,
+          minWidth: 150
         },
         {
-          label: this.$t("alert.silence.matchers"),
-          prop: "matchers",
+          label: this.$t('alert.silence.matchers'),
+          prop: 'matchers',
           show: true,
           minWidth: 200,
-          sortable: "custom",
+          sortable: 'custom'
         },
         {
-          label: this.$t("overall.startTime"),
-          prop: "startAt",
+          label: this.$t('overall.startTime'),
+          prop: 'startAt',
           show: true,
           width: 300,
-          sortable: "custom",
+          sortable: 'custom'
         },
         {
-          label: this.$t("config.terminallog.duration"),
-          prop: "duration",
+          label: this.$t('config.terminallog.duration'),
+          prop: 'duration',
           show: true,
-          width: 120,
+          width: 120
         },
         {
-          label: this.$t("overall.remark"),
-          prop: "remark",
+          label: this.$t('overall.remark'),
+          prop: 'remark',
           show: true,
-          width: 120,
+          width: 120
         },
         {
-          label: this.$t("alert.silence.upTime"),
-          prop: "utime",
+          label: this.$t('alert.silence.upTime'),
+          prop: 'utime',
           show: false,
-          width: 300,
+          width: 300
         },
         {
-          label: this.$t("alert.alert"),
-          prop: "alertNum",
+          label: this.$t('alert.alert'),
+          prop: 'alertNum',
           show: false,
           width: 120,
-          sortable: "custom",
+          sortable: 'custom'
         },
         {
-          label: this.$t("overall.state"),
-          prop: "state",
+          label: this.$t('overall.state'),
+          prop: 'state',
           show: true,
-          width: 120,
-        },
-      ],
-    };
+          width: 120
+        }
+      ]
+    }
   },
   computed: {
-    getDuration() {
+    getDuration () {
       return function (record) {
         if (record.endAt) {
-          return calcDurationByStringTimeB(record.startAt, record.endAt);
+          return calcDurationByStringTimeB(record.startAt, record.endAt)
         }
         return calcDurationByStringTimeB(
           record.startAt,
           this.utcTimeToTimezoneStr(this.nowTime)
-        );
-      };
+        )
+      }
     },
-    tagType() {
+    tagType () {
       return (key) => {
         if (sameLabels.find((item) => item === key)) {
-          return "normal";
+          return 'normal'
         } else {
-          return "info";
+          return 'info'
         }
-      };
-    },
+      }
+    }
   },
   methods: {
-    labelsSort(obj) {
-      obj = obj || [];
-      const buildIn = sameLabels;
-      if (typeof obj === "string") obj = JSON.parse(obj);
-      const labels = JSON.parse(JSON.stringify(obj));
-      const result = [];
-      const result2 = [];
+    labelsSort (obj) {
+      obj = obj || []
+      const buildIn = sameLabels
+      if (typeof obj === 'string') obj = JSON.parse(obj)
+      const labels = JSON.parse(JSON.stringify(obj))
+      const result = []
+      const result2 = []
       for (const key of buildIn) {
         labels.forEach((item) => {
           if (item.name === key) {
-            result.push(item);
+            result.push(item)
           }
-        });
+        })
       }
       labels.forEach((item) => {
         if (buildIn.indexOf(item.name) === -1) {
-          result2.push(item);
+          result2.push(item)
         }
-      });
+      })
       // console.log([...result, ...result2])
-      return [...result, ...result2];
-    },
-  },
-};
+      return [...result, ...result2]
+    }
+  }
+}
 </script>

@@ -67,7 +67,7 @@
         <!--alertRule Tab-->
         <alertMessageTabNew v-if="from === fromRoute.alertSilence && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
         <!--issue Tab-->
-        <issueTab v-if="from === fromRoute.issue && targetTab === 'issue'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></issueTab>
+<!--        <issueTab v-if="from === fromRoute.issue && targetTab === 'issue'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></issueTab>-->
       </div>
     </div>
   </div>
@@ -274,7 +274,7 @@ export default {
           { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
         ],
         issue: [
-          { prop: 'issue', name: this.$t('overall.issue'), active: true }
+          // { prop: 'issue', name: this.$t('overall.issue'), active: true }
         ]
       }
     }

@@ -43,65 +43,66 @@ export default {
     },
     // 更新path，包含请求参数
     updatePath (param, path, from) {
-      const params = lodash.cloneDeep(param)
-      Object.keys(params).forEach(key => {
-        if (!params[key]) {
-          delete params[key]
+      this.$nextTick(() => {
+        const params = lodash.cloneDeep(param)
+        Object.keys(params).forEach(key => {
+          if (!params[key]) {
+            delete params[key]
+          }
+        })
+        if (!from) {
+          const detailType = this.detailType === 'list' ? 'dataList' : 'detailList'
+          localStorage.setItem('detail-view-' + this.tableId, this.detailType)
+          params.detailType = this.detailType
+          if (this.detailType === 'list' && this.$refs[detailType]) {
+            params.bottomBox = this.$refs[detailType].bottomBox.showSubList
+            params.targetTab = this.$refs[detailType].bottomBox.targetTab
+          } else {
+            params.bottomBox = false
+            params.targetTab = this.$route.query.targetTab
+          }
+          if (this.detailType === 'list' && this.$refs[detailType]) {
+            params.selectObj = JSON.stringify({
+              id: this.$refs[detailType].bottomBox.object.id,
+              name: this.$refs[detailType].bottomBox.object.name,
+              configs: this.$refs[detailType].bottomBox.object.configs ? this.$refs[detailType].bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
+              childrenNum: this.$refs[detailType].bottomBox.object.childrenNum || ''
+            })
+          } else if (this.$refs[detailType] && this.$refs[detailType].detailViewRightObj) {
+            this.$nextTick(() => {
+              params.selectObj = JSON.stringify({
+                id: this.$refs[detailType].detailViewRightObj.id,
+                name: this.$refs[detailType].detailViewRightObj.name,
+                configs: this.$refs[detailType].detailViewRightObj.configs ? this.$refs[detailType].detailViewRightObj.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
+                childrenNum: this.$refs[detailType].detailViewRightObj.childrenNum || ''
+              })
+            })
+          }
+          this.$router.replace({ path: path, query: params }).catch(err => {})
+        } else if (from === 'nzDatalist' && this.bottomBox) {
+          params.bottomBox = this.bottomBox.showSubList
+          params.targetTab = this.bottomBox.targetTab
+          params.selectObj = JSON.stringify({
+            id: this.bottomBox.object.id,
+            name: this.bottomBox.object.name,
+            configs: this.bottomBox.object.configs ? this.bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
+            childrenNum: this.bottomBox.object.childrenNum || ''
+          })
+          this.$router.replace({ path: path, query: params }).catch(err => {})
+        } else if (from === 'nzDetailList' && this.detailViewRightObj) {
+          params.targetTab = this.$route.query.targetTab
+          params.selectObj = JSON.stringify({
+            id: this.detailViewRightObj.id,
+            name: this.detailViewRightObj.name,
+            configs: this.detailViewRightObj.configs ? this.detailViewRightObj.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
+            childrenNum: this.detailViewRightObj.childrenNum || ''
+          })
+          this.$router.replace({ path: path, query: params }).catch(err => {})
+        } else if (from === 'bottomBox' && this.targetTab) {
+          params.targetTab = this.targetTab
+          this.$router.replace({ path: path, query: params }).catch(err => {})
         }
       })
-      if (!from) {
-        const detailType = this.detailType === 'list' ? 'dataList' : 'detailList'
-        localStorage.setItem('detail-view-' + this.tableId, this.detailType)
-        params.detailType = this.detailType
-
-        if (this.detailType === 'list' && lodash.get(this, `this.$refs.${detailType}.bottomBox`)) {
-          params.bottomBox = this.$refs[detailType].bottomBox.showSubList
-          params.targetTab = this.$refs[detailType].bottomBox.targetTab
-        } else {
-          params.bottomBox = false
-          params.targetTab = this.$route.query.targetTab
-        }
-        if (this.detailType === 'list' && lodash.get(this, `this.$refs.${detailType}.bottomBox`)) {
-          params.selectObj = JSON.stringify({
-            id: this.$refs[detailType].bottomBox.object.id,
-            name: this.$refs[detailType].bottomBox.object.name,
-            config: this.$refs[detailType].bottomBox.object.config || '',
-            childrenNum: this.$refs[detailType].bottomBox.object.childrenNum || ''
-          })
-        } else if (lodash.get(this, `$refs.${detailType}.detailViewRightObj`)) {
-          this.$nextTick(() => {
-            params.selectObj = JSON.stringify({
-              id: this.$refs[detailType].detailViewRightObj.id,
-              name: this.$refs[detailType].detailViewRightObj.name,
-              config: this.$refs[detailType].detailViewRightObj.config || '',
-              childrenNum: this.$refs[detailType].detailViewRightObj.childrenNum || ''
-            })
-          })
-        }
-        this.$router.replace({ path: path, query: params }).catch(err => {})
-      } else if (from === 'nzDatalist' && this.bottomBox) {
-        params.bottomBox = this.bottomBox.showSubList
-        params.targetTab = this.bottomBox.targetTab
-        params.selectObj = JSON.stringify({
-          id: this.bottomBox.object.id,
-          name: this.bottomBox.object.name,
-          config: this.bottomBox.object.config || '',
-          childrenNum: this.bottomBox.object.childrenNum || ''
-        })
-        this.$router.replace({ path: path, query: params }).catch(err => {})
-      } else if (from === 'nzDetailList' && this.detailViewRightObj) {
-        params.targetTab = this.$route.query.targetTab
-        params.selectObj = JSON.stringify({
-          id: this.detailViewRightObj.id,
-          name: this.detailViewRightObj.name,
-          config: this.detailViewRightObj.config || '',
-          childrenNum: this.detailViewRightObj.childrenNum || ''
-        })
-        this.$router.replace({ path: path, query: params }).catch(err => {})
-      } else if (from === 'bottomBox' && this.targetTab) {
-        params.targetTab = this.targetTab
-        this.$router.replace({ path: path, query: params }).catch(err => {})
-      }
     },
     setSearchInput (val, qv) {
       let dataList = ''
