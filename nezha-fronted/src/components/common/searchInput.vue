@@ -27,7 +27,7 @@
                 </div>
             </div>
 <!--            搜索框-->
-            <div class="input-center-box" id="input-center-box">
+            <div class="input-center-box" id="input-center-box" ref="input-center-box">
               <el-scrollbar style="height: 100%;width: 100%; overflow-y: hidden" ref="searchScrollbar">
                 <ul class="sreach_fixe_left" id="search-ul">
                     <li class="selectinfo_box" v-if="select_list.length>0" v-for="(val,ind) in select_list" :key="ind" @click="update_sreach(ind,$event)">
@@ -522,6 +522,7 @@ export default {
     },
     clickout () {
       this.input_list = true
+      this.localStorage_display = true
     },
     selectObject (column, selectItem, e) {
       this.stop_click(e)
@@ -822,6 +823,7 @@ export default {
     look_history (e) {
       this.stop_click(e)
       this.localStorage_display = !this.localStorage_display
+      this.input_list = true
       this.restructure_historyDate()
     },
     backtime (t) {
@@ -1454,8 +1456,8 @@ export default {
       e.cancelBubble = true
       e.stopPropagation()
       this.getHeight()
-      this.input_list = !this.input_list
       this.getSelectPosition(e)
+      this.input_list = !this.input_list
     },
     // 点击选择 搜索类型
     select_name (val, ind, id, type, label, disabled, readonly, e) {
@@ -1522,11 +1524,14 @@ export default {
     },
     /* 计算select弹框的位置 */
     getSelectPosition (e) {
-      const inputListDom = this.getDomFromParents(e.target, 'input-center-box', 0)
+      // const inputListDom = this.getDomFromParents(e.target, 'input-center-box', 0)
+      const inputListDom = this.$refs['input-center-box']
       if (inputListDom) {
         this.$nextTick(() => {
           if (this.inTransform) {
-            // this.selectDom.top = "36px";
+            const position = inputListDom.getBoundingClientRect()
+            this.selectDom.top = position.top + 36 + 'px'
+            this.selectDom.left = position.left + 'px'
           } else {
             const position = inputListDom.getBoundingClientRect()
             this.selectDom.top = position.top + 36 + 'px'
@@ -1550,8 +1555,8 @@ export default {
     },
     // 判断输入框的高度
     getHeight () {
-      if (document.getElementById('search-ul').clientHeight < 24 || document.getElementById('input-center-box').clientHeight < 24) {
-        document.getElementById('input-center-box').style.height = 27 + 'px'
+      if (document.getElementById('search-ul').clientHeight < 24 ||  this.$refs['input-center-box'].clientHeight < 24) {
+        this.$refs['input-center-box'].style.height = 27 + 'px'
         document.getElementById('search-ul').style.height = 21 + 'px'
       }
     },
