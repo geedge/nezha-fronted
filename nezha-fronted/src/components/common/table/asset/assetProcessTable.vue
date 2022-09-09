@@ -37,17 +37,17 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-        <template v-if="item.prop === 'name'">
+        <template v-if="item.prop === 'commandLine'">
           <div style="height:100%;display: flex;align-items: center;">
-             <el-popover trigger="hover" placement="right-start" v-if="typeof scope.row.name != 'undefined' && scope.row.name != null">
+             <el-popover trigger="hover" placement="right-start" v-if="typeof scope.row.state != 'undefined' && scope.row.state != null">
                 <div>
                   <ul>
-                   <li><span class="metirc-tip-list">{{$t('overall.state')}}&nbsp;:&nbsp;&nbsp;</span><span>{{'{ '+ scope.row.state +' }'}}</span></li>
+                   <li><span class="metirc-tip-list">{{$t('overall.state')}}&nbsp;:&nbsp;&nbsp;</span><span>{{ scope.row.state }}</span></li>
                   </ul>
                 </div>
-                <div slot="reference"><div :class="{'bar active-icon green-bg':scope.row.state.toLowerCase() == 'running','bar active-icon red-bg':scope.row.state.toLowerCase() != 'running'}"></div></div>
+                <div slot="reference"><div class="bar active-icon " :style="{'background-color':comBgc[scope.row.state]}"></div></div>
              </el-popover>
-             <span>{{scope.row[item.prop]}}</span>
+             <span>{{scope.row[item.prop] || '-'}}</span>
           </div>
         </template>
         <template v-else-if="item.prop === 'startTime'">
@@ -56,13 +56,13 @@
         <template v-else-if="item.prop === 'cpuUsage'">
             <div style="height:100%;display: flex;align-items: center;">
                 <el-progress id="container" :show-text="false" :stroke-width="18" :color="'#00c398'" :percentage="scope.row[item.prop]"></el-progress>
-                <div class="percentage">{{scope.row[item.prop] + '%'}}</div>
+                <div class="percentage">{{scope.row[item.prop].toFixed(2) + '%'}}</div>
             </div>
         </template>
         <template v-else-if="item.prop === 'memUsage'">
             <div style="height:100%;display: flex;align-items: center;">
                 <el-progress id="container" :show-text="false" :stroke-width="18" :color="'#00c398'" :percentage="scope.row[item.prop]"></el-progress>
-                <div class="percentage">{{scope.row[item.prop] + '%'}}</div>
+                <div class="percentage">{{scope.row[item.prop].toFixed(2) + '%'}}</div>
             </div>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -94,10 +94,10 @@ export default {
     return {
       tableTitle: [
         {
-          label: this.$t('overall.process'),
-          prop: 'name',
+          label: this.$t('config.terminallog.cmd.cmd'),
+          prop: 'commandLine',
           show: true,
-          minWidth: 250,
+          minWidth: 300,
           sortable: 'custom'
         }, {
           label: this.$t('asset.process.PID'),
@@ -153,7 +153,18 @@ export default {
           minWidth: 150,
           sortable: 'custom'
         }
-      ]
+      ],
+      comBgc: {
+        NEW: '#23bf9a',
+        RUNNING: '#23bf9a',
+        SLEEPING: '#23bf9a',
+        ZOMBIE: '#ec7f66',
+        STOPPED: '#ec7f66',
+        INVALID: '#ec7f66',
+        SUSPENDED: '#ec7f66',
+        WAITING: '#246cd5',
+        OTHER: '#246cd5'
+      }
     }
   },
   computed: {

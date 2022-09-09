@@ -111,22 +111,21 @@ export default {
     }
   },
   methods: {
-    getTableData () {
+    async getTableData () {
       this.tableDataCopy = ''
-      this.$get('asset/oshi/process?id=' + this.obj.id).then(response => {
-        this.tools.loading = false
-        this.nowTime = this.utcTimeToTimezoneStr(response.time)
-        if (response.code === 200) {
-          this.tableData = response.data.list
-          this.tableDataCopy = JSON.stringify(this.tableData)
-          if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
-            this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
-              this.toTopBtnHandler(this.scrollbarWrap)
-            })
-          }
+      const response = await this.$get('asset/oshi/process?id=' + this.obj.id)
+      this.tools.loading = false
+      this.nowTime = this.utcTimeToTimezoneStr(response.time)
+      if (response.code === 200) {
+        this.tableData = response.data.list
+        this.tableDataCopy = JSON.stringify(this.tableData)
+        if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
+          this.$nextTick(() => {
+            this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
+            this.toTopBtnHandler(this.scrollbarWrap)
+          })
         }
-      })
+      }
     },
     // 搜索组件事件
     clearInput () {
@@ -151,19 +150,24 @@ export default {
     tableFilter () {
       const tableDatas = JSON.parse(this.tableDataCopy)
       this.tableData = tableDatas.filter((item) => {
-        const element = item.name
+        const element = item.commandLine
         return element.indexOf(this.queryExpression) !== -1
       })
     },
     // 刷新组件事件
-    dateChange () {
+    async dateChange () {
       this.searchTime = bus.getTimezontDateRange()
       this.filterTime[0] = bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
       this.filterTime[1] = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
-      this.tableFilter()
+      await this.getTableData()
+      if (this.queryExpression != '') {
+        this.tableFilter()
+      }
+      this.filterShowData(this.tableData, this.orderBy)
     },
     // 数据排序
     tableDataSort (item) {
+      this.orderBy = item
       this.filterShowData(this.tableData, item)
     },
     filterShowData (source, ord) {
