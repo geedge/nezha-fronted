@@ -5,7 +5,9 @@ export default {
       immediate: true,
       handler (n) {
         if (n) {
-          this.updatePath(this.$route.query, this.$route.path, 'nzDetailList')
+          if (this.detailType !== 'list') {
+            this.updatePath(this.$route.query, this.$route.path, 'nzDetailList')
+          }
         }
       }
     }

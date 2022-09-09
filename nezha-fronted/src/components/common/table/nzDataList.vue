@@ -240,6 +240,11 @@ export default {
       bottomBoxWindow.showSubListWatch(vm, n)
       this.updatePath(this.$route.query, this.$route.path, 'nzDatalist')
     },
+    'bottomBox.object': function (n) {
+      const vm = this
+      bottomBoxWindow.showSubListWatch(vm, n)
+      this.updatePath(this.$route.query, this.$route.path, 'nzDatalist')
+    },
     layout: {
       immediate: true,
       deep: true,
