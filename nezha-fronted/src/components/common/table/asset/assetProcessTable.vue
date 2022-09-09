@@ -159,6 +159,11 @@ export default {
   computed: {
   },
   methods: {
+    // 数据排序
+    tableDataSort (item) {
+      const orderBy = { order: item.order, prop: item.prop }
+      this.$emit('orderBy', orderBy)
+    }
   }
 }
 </script>
