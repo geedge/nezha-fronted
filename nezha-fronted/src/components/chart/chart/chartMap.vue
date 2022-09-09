@@ -135,7 +135,7 @@ export default {
                   const z = urlParams[urlParams.length - 3]
                   const x = urlParams[urlParams.length - 2]
                   const y = urlParams[urlParams.length - 1]
-                  const newUrl1 = `nzMap://static/Titles/${z}/${x}/${y}.pbf`
+                  const newUrl1 = `nzMap:///static/Titles/${z}/${x}/${y}.pbf`
                   return {
                     url: newUrl1,
                     credentials: 'include',
@@ -145,7 +145,7 @@ export default {
                 }
                 if (resourceType === 'SpriteJSON') {
                   return {
-                    url: 'nzMap://static/Titles/sprite.json',
+                    url: 'nzMap:///static/Titles/sprite.json',
                     credentials: 'include',
                     method: 'GET'
                     // Include cookies for cross-origin requests
@@ -153,7 +153,7 @@ export default {
                 }
                 if (resourceType === 'SpriteImage') {
                   return {
-                    url: 'nzMap://static/Titles/sprite.png',
+                    url: 'nzMap:///static/Titles/sprite.png',
                     credentials: 'include',
                     method: 'GET'
                     // Include cookies for cross-origin requests

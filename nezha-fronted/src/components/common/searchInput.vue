@@ -968,6 +968,8 @@ export default {
               objectInfo.type = val.valnum
             } else if (val.label === 'issueState') {
               objectInfo.state = val.valnum
+            } else if (val.label === 'silenceState') {
+              objectInfo.state = val.valnum
             } else if (val.label === 'priority') {
               objectInfo.priority = val.valnum
             } else if (typeof (val.valnum) === 'undefined' || val.valnum == '') {
@@ -1611,10 +1613,14 @@ export default {
         this.select_list.forEach(item => {
           if (item.listStr) {
             if (item.listStr == 'issue') {
-              item.valnum = item.val
+              item.valnum = JSON.parse(localStorage.getItem('nz-history-' + this.where))[0][0].valnum
               item.val = JSON.parse(localStorage.getItem('nz-history-' + this.where))[0][0].val
             } else {
-              item.val = this[item.listStr].find(r => r.id == item.valnum).name
+              if (this.selectInfoList[item.listStr]) {
+                item.val = this.selectInfoList[item.listStr].find(r => r.value == item.valnum).label
+              } else {
+                item.val = this[item.listStr].find(r => r.id == item.valnum).name
+              }
             }
           }
         })

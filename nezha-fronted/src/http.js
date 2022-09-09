@@ -40,7 +40,7 @@ axios.interceptors.request.use(
 )
 const accountErrorCode = [518003, 518004, 518005, 518006, 518007, 518008] // 账号锁定等
 const licenceErrorCode = [711001]
-const noJumpPath = ['#/', '#/login']
+const noJumpPath = ['/', '/login', '/ui/login']
 
 // 若get请求的url中带问号，则将url上的参数截取，改为对象形式传参
 axios.interceptors.request.use(
@@ -77,15 +77,20 @@ axios.interceptors.request.use(
 )
 axios.interceptors.response.use(
   response => {
-    if (licenceErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.hash) == -1) {
+    if (response.config.url.indexOf('ui') !== -1) {
+      removePending(response.config)
+      return response
+    }
+    if (licenceErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.pathname) == -1) {
       sessionStorage.setItem('nz-previous-page', router.currentRoute.fullPath)
       window.location.href = '/'
     } else if (response.status === 200) {
-      if (accountErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.hash) == -1) {
+      if (accountErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.pathname) == -1) {
         sessionStorage.setItem('nz-previous-page', router.currentRoute.fullPath)
         window.location.href = '/'
       }
     } else {
+      removePending(response.config)
       return response
     }
     // 请求完成在数组中移除

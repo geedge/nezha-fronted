@@ -64,9 +64,11 @@ import assetTab from '@/components/common/bottomBox/tabs/assetTab'
 import { fromRoute } from '@/components/common/js/constants'
 import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
 import detailRightTop from './detailRightTop/detailRightTop'
+import routerPathParams from "@/components/common/mixin/routerPathParams";
 
 export default {
   name: 'detailViewRight',
+  mixins: [routerPathParams],
   components: {
     LogBottomTab,
     cabinetTab,
@@ -101,7 +103,7 @@ export default {
     from: {
       immediate: true,
       handler (n) {
-        this.setTargetTab()
+        this.setTargetTab(true)
       }
     },
     obj: {
@@ -276,6 +278,9 @@ export default {
     },
     changeTab (tab) {
       this.targetTab = tab
+      this.$nextTick(() => {
+        this.updatePath(this.$route.query, this.$route.path, 'bottomBox')
+      })
     },
     afterResize () {
       if (this.from === this.fromRoute.endpoint && this.targetTab === 'endpointQuery') {
@@ -289,7 +294,13 @@ export default {
     getTableData () {
       this.$emit('getTableData')
     },
-    setTargetTab () {
+    setTargetTab (flag) {
+      if (this.$route.query.targetTab && flag) {
+        this.$nextTick(()=>{
+          this.targetTab = this.$route.query.targetTab
+        })
+        return
+      }
       if (this.from === fromRoute.asset) {
         this.targetTab = 'panelTab'
       } else if (this.from === fromRoute.endpoint) {

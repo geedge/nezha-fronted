@@ -713,7 +713,10 @@ export default {
         if (!getTopology(this.topologyIndex)) {
           return
         }
-        getTopology(this.topologyIndex).open(data || {})
+        if (!data.pens) {
+          data.pens = []
+        }
+        getTopology(this.topologyIndex).open(data)
         getTopology(this.topologyIndex).lock(1)
         this.objChange = false
         let flag = false
@@ -878,6 +881,7 @@ export default {
             resolve(data)
             data = null
           } else {
+            delete data.origin
             data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#f9f9f9'
             data.gridColor = this.theme == 'light' ? '#ededed' : '#090909'
             data.grid = false
@@ -1645,7 +1649,16 @@ export default {
     },
 
     onUpdateProps (node) { // 更新pen
-      getTopology(this.topologyIndex).setValue(node)
+      const obj = this.$loadsh.cloneDeep(node)
+      console.log(obj)
+      delete obj.x
+      delete obj.y
+      delete obj.center
+      delete obj.ex
+      delete obj.ey
+      delete obj.width
+      delete obj.height
+      getTopology(this.topologyIndex).setValue(obj)
     },
 
     handleAvatarSuccess () {
@@ -2221,7 +2234,10 @@ export default {
         let domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
-          getTopology(this.topologyIndex).open(this.oldTopologyData || {})
+          if (this.oldTopologyData && !this.oldTopologyData.pens) {
+            this.oldTopologyData.pens = []
+          }
+          getTopology(this.topologyIndex).open(this.oldTopologyData)
         }
         let flag = false
 

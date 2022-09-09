@@ -286,7 +286,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 <h1 class="page-header" style="margin-Top:0px" id="log-query-language">LogQL: Log query language<a class="header-anchor" href="https://grafana.com/docs/loki/latest/logql/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
                 <div class="title-heard__divider"></div>
                 <div class="page-header-label">
-                    <p>LogQL is Grafana Loki’s PromQL-inspired query language. Queries act as if they are a distributed grep to aggregate log sources. LogQL uses labels and operators for filtering.</p>
+                    <p style="width:calc(100% - 380px);">LogQL is Grafana Loki’s PromQL-inspired query language. Queries act as if they are a distributed grep to aggregate log sources. LogQL uses labels and operators for filtering.</p>
                     <p>There are two types of LogQL queries:</p>
                     <ul>
                      <li><b style="color: #3C92F1" @click="jumpClick('#log-queries')" class="log-link">Log queries </b>return the contents of log lines.</li>
@@ -308,7 +308,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                     <li>a log stream selector <code>{container="query-frontend",namespace="loki-dev"}</code> which targets the <code>query-frontend</code> container in the <code>loki-dev</code> namespace.</li>
                     <li>a log pipeline <code>|= "metrics.go" | logfmt | duration > 10s and throughput_mb < 500</code> which will filter out log that contains the word <code>metrics.go</code>, then parses each log line to extract more labels and filter with them.</li>
                   </ul>
-                  <pre>To avoid escaping special characters you can use the <code>`</code>(backtick) instead of<code> " </code>when quoting strings. For example <code>`\w+`</code> is the same as <code>"\\w+"</code>. This is specially useful when writing a regular expression which contains multiple <br/>backslashes that require escaping.</pre>
+                  <pre class="box-overflow">To avoid escaping special characters you can use the <code>`</code>(backtick) instead of<code> " </code>when quoting strings. For example <code>`\w+`</code> is the same as <code>"\\w+"</code>. This is specially useful when writing a regular expression which contains multiple <br/>backslashes that require escaping.</pre>
                 </div>
                 <!-- Log stream selector -->
                 <div class="introduce-view__content">
@@ -642,7 +642,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                  <p>The right side can alternatively be a template string (double quoted or backtick), for example dst="<code v-pre>{{.status}} {{.query}}</code>", in which case the <code>dst</code> label value is replaced by the result of the text/template evaluation. This is the same template engine as the <code>| line_format</code> expression, which means labels are available as variables and you can use the same list of functions.</p>
                  <p>In both cases, if the destination label doesn’t exist, then a new one is created.</p>
                  <p>The renaming form <code>dst=src</code> will drop the <code>src</code> label after remapping it to the <code>dst</code> label. However, the template form will preserve the referenced labels, such that <code v-pre>dst="{{.src}}"</code> results in both <code>dst</code> and <code>src</code> having the same value.</p>
-                 <pre>A single label name can only appear once per expression. This means <code>| label_format foo=bar,foo="new"</code> is not allowed but you can use two expressions for the desired effect: <code>| label_format foo=bar | label_format foo="new"</code></pre>
+                 <pre class="box-overflow">A single label name can only appear once per expression. This means <code>| label_format foo=bar,foo="new"</code> is not allowed but you can use two expressions for the desired effect: <code>| label_format foo=bar | label_format foo="new"</code></pre>
                 </div>
               </div>
               <!-- Log queries examples -->

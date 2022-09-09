@@ -3,7 +3,8 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
-
+const devStart = process.env.npm_lifecycle_event
+const indexHtml = devStart === 'dev' ? '/src/entrance/app/index.html' : '/src/entrance/exportHtml/exportHtml.html'
 module.exports = {
   dev: {
     // Paths

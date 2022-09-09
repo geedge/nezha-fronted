@@ -146,10 +146,10 @@ export default {
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
         const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartId}`)) : getChart(this.chartId)
-        myChart.clear()
         if (!myChart) {
           return
         }
+        myChart.clear()
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
 

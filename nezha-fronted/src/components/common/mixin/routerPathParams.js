@@ -27,16 +27,84 @@ export default {
         }, 200)
         qv && this.$set(val.target, val.propertyName, qv)
       })
+      if (q.bottomBox && JSON.parse(q.bottomBox)) {
+        this.$nextTick(() => {
+          this.detailType = q.detailType
+          const detailType = this.detailType === 'list' ? 'dataList' : 'detailList'
+          this.$refs[detailType].bottomBox.showSubList = JSON.parse(q.bottomBox)
+          this.$refs[detailType].bottomBox.targetTab = q.targetTab
+          this.$refs[detailType].bottomBox.object = JSON.parse(q.selectObj)
+        })
+      } else if (this.detailType === 'view') {
+        this.detailType = q.detailType
+        this.detailViewRightObj = JSON.parse(q.selectObj)
+        this.$store.commit('setGlobalSearchId', this.detailViewRightObj.id)
+      }
     },
     // 更新path，包含请求参数
-    updatePath (param, path) {
-      const params = lodash.cloneDeep(param)
-      Object.keys(params).forEach(key => {
-        if (!params[key]) {
-          delete params[key]
+    updatePath (param, path, from) {
+      this.$nextTick(() => {
+        const params = lodash.cloneDeep(param)
+        Object.keys(params).forEach(key => {
+          if (!params[key]) {
+            delete params[key]
+          }
+        })
+        if (!from) {
+          const detailType = this.detailType === 'list' ? 'dataList' : 'detailList'
+          localStorage.setItem('detail-view-' + this.tableId, this.detailType)
+          params.detailType = this.detailType
+          if (this.detailType === 'list' && this.$refs[detailType]) {
+            params.bottomBox = this.$refs[detailType].bottomBox.showSubList
+            params.targetTab = this.$refs[detailType].bottomBox.targetTab
+          } else {
+            params.bottomBox = false
+            params.targetTab = this.$route.query.targetTab
+          }
+          if (this.detailType === 'list' && this.$refs[detailType]) {
+            params.selectObj = JSON.stringify({
+              id: this.$refs[detailType].bottomBox.object.id,
+              name: this.$refs[detailType].bottomBox.object.name,
+              configs: this.$refs[detailType].bottomBox.object.configs ? this.$refs[detailType].bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
+              childrenNum: this.$refs[detailType].bottomBox.object.childrenNum || ''
+            })
+          } else if (this.$refs[detailType] && this.$refs[detailType].detailViewRightObj) {
+            this.$nextTick(() => {
+              params.selectObj = JSON.stringify({
+                id: this.$refs[detailType].detailViewRightObj.id,
+                name: this.$refs[detailType].detailViewRightObj.name,
+                configs: this.$refs[detailType].detailViewRightObj.configs ? this.$refs[detailType].detailViewRightObj.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
+                childrenNum: this.$refs[detailType].detailViewRightObj.childrenNum || ''
+              })
+            })
+          }
+          this.$router.replace({ path: path, query: params }).catch(err => {})
+        } else if (from === 'nzDatalist' && this.bottomBox) {
+          params.bottomBox = this.bottomBox.showSubList
+          params.targetTab = this.bottomBox.targetTab
+          params.selectObj = JSON.stringify({
+            id: this.bottomBox.object.id,
+            name: this.bottomBox.object.name,
+            configs: this.bottomBox.object.configs ? this.bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
+            childrenNum: this.bottomBox.object.childrenNum || '',
+            clientState: this.bottomBox.object.clientState || ''
+          })
+          this.$router.replace({ path: path, query: params }).catch(err => {})
+        } else if (from === 'nzDetailList' && this.detailViewRightObj) {
+          params.targetTab = this.$route.query.targetTab
+          params.selectObj = JSON.stringify({
+            id: this.detailViewRightObj.id,
+            name: this.detailViewRightObj.name,
+            configs: this.detailViewRightObj.configs ? this.detailViewRightObj.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
+            childrenNum: this.detailViewRightObj.childrenNum || '',
+            clientState: this.detailViewRightObj.clientState || ''
+          })
+          this.$router.replace({ path: path, query: params }).catch(err => {})
+        } else if (from === 'bottomBox' && this.targetTab) {
+          params.targetTab = this.targetTab
+          this.$router.replace({ path: path, query: params }).catch(err => {})
         }
       })
-      this.$router.replace({ path: path, query: params }).catch(err => {})
     },
     setSearchInput (val, qv) {
       let dataList = ''

@@ -1,5 +1,15 @@
 export default {
   props: {},
+  watch: {
+    detailViewRightObj: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+          this.updatePath(this.$route.query, this.$route.path, 'nzDetailList')
+        }
+      }
+    }
+  },
   data () {
     return {
       detailType: localStorage.getItem('detail-view-' + this.tableId) || 'list',
@@ -21,6 +31,9 @@ export default {
       //   this.detailViewRightObj = ''
       // }
       this.detailType = flag
+      const query = { ...this.$route.query, detailType: flag }
+      query.bottomBox = this.detailType !== 'view'
+      this.$router.replace({ query: query }).catch(err => {})
       let dataList = ''
       localStorage.setItem('detail-view-' + this.tableId, this.detailType)
       if (this.detailType === 'view') {

@@ -698,7 +698,9 @@ export default {
       if (this.fromTopologyDialog && !this.isPreview) {
         setTimeout(() => {
           this.topologyLoading = false
-          console.log(data)
+          if (!data.pens) {
+            data.pens = []
+          }
           getTopology(this.topologyIndex).open(data || {})
           getTopology(this.topologyIndex).centerView()
           getTopology(this.topologyIndex).resize()
@@ -708,6 +710,9 @@ export default {
         Promise.all(promiseArr).then((res) => {
           if (!getTopology(this.topologyIndex)) {
             return
+          }
+          if (!data.pens) {
+            data.pens = []
           }
           getTopology(this.topologyIndex).open(data || {})
           getTopology(this.topologyIndex).lock(1)
@@ -856,7 +861,7 @@ export default {
             gridColor: '#ededed',
             lineWidth: 1,
             ruleColor: '#4e4e4e',
-            pens:[]
+            pens: []
           }
           this.projectInfoShow = true
           this.projectAlertShow = true
@@ -865,6 +870,7 @@ export default {
           data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
           resolve(data)
         } else {
+          delete data.origin
           data.ruleColor = this.theme == 'light' ? '#4e4e4e' : '#BEBEBE'
           if (data.data) {
             this.topologyInfo = {
@@ -1213,7 +1219,15 @@ export default {
     },
 
     onUpdateProps (node) {
-      getTopology(this.topologyIndex).setValue(node)
+      const obj = this.$loadsh.cloneDeep(node)
+      delete obj.x
+      delete obj.y
+      delete obj.center
+      delete obj.ex
+      delete obj.ey
+      delete obj.width
+      delete obj.height
+      getTopology(this.topologyIndex).setValue(obj)
     },
 
     handleAvatarSuccess () {
@@ -1754,7 +1768,10 @@ export default {
         const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
-          getTopology(this.topologyIndex).open(this.oldTopologyData  || {})
+          if (this.oldTopologyData && !this.oldTopologyData.pens) {
+            this.oldTopologyData.pens = []
+          }
+          getTopology(this.topologyIndex).open(this.oldTopologyData || {})
         }
         let flag = false
         const position = {

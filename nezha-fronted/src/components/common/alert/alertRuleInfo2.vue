@@ -17,7 +17,7 @@
          <div class="document-copy-block" style="display:flex">
           <div class="alert-label-title">{{$t('overall.name')}}</div>
           <div class="alert-label-value document-copy-text">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
-          <i v-if="alertRuleData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(alertRuleData.name)" :title="$t('overall.copyText')"></i>
+          <i v-if="alertRuleData && alertRuleData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(alertRuleData.name)" :title="$t('overall.copyText')"></i>
          </div>
       </div>
 <!--      <div class="alert-label-box">-->

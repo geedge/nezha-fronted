@@ -110,6 +110,9 @@
 .color23bf9a {
   color: #23bf9a;
 }
+.bgFFECD9{
+  background: $--color-primary !important;
+}
 .timezone-area {
   display: inline-block;
   vertical-align: middle;
@@ -283,8 +286,16 @@ td .nz-icon-gear:before {
       border-color: $--border-color-light-hover;
     }
   }
+  #elementQuery{
+    border: 1px solid $--border-color-light;
+  }
   .el-input__inner:hover {
     border-color: $--border-color-light-hover;
+  }
+}
+.query-input-active.el-input{
+  #elementQuery{
+    border: 1px solid $--border-color-light !important;
   }
 }
 .sub-box.detail-view-sub-box {

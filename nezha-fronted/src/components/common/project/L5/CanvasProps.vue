@@ -1,8 +1,7 @@
 <template>
   <div class="props-box" :loading="loading">
     <!--所有属性-->
-    <keep-alive>
-      <el-tabs v-model="tab" type="card" v-if="selection.pen" @tab-click="tabClick">
+    <el-tabs v-model="tab" type="card" v-if="selection.pen" @tab-click="tabClick">
       <el-tab-pane :label="$t('project.topology.data')" name="1">
         <el-form v-model="selection.pen.data" class="pens-data" label-position="top">
           <!--module-->
@@ -24,11 +23,11 @@
           <el-row class="form-row-title">
             {{ $t('dashboard.panel.chartForm.thresholds') }}
             <span v-if="selection.pen.data.valueMappingSort !=='desc'" class="title__label"
-                  >（0:Ok > … >{{
+            >（0:Ok > … >{{
                 selection.pen.data.valueMapping.length
               }}:Critical）</span>
             <span v-if="selection.pen.data.valueMappingSort ==='desc'" class="title__label"
-                  >（{{
+            >（{{
                 selection.pen.data.valueMapping.length
               }}:Critical > … >0:Ok）</span>
             <el-form-item class="float-right" prop="type" style="height: 100%;">
@@ -45,6 +44,7 @@
               <el-row v-for="(item,index) in selection.pen.data.expressArr" :key="index" class="element-item form-row-item"
                       style="">
                 <promql-input
+                  v-if="selection.pen"
                   :from-father-data="true"
                   :isTopo="true"
                   :metricOptionsParent="metricOptions"
@@ -109,9 +109,9 @@
                       <span v-if="item.level!==0">
                         <div style="display: inline-block">
                           <nezhaColor :isTopo="true"
-                            :color-val="item.color"
-                            :presetColors="predefineColors" :single="false"
-                            :value-arr="[{name:'fill',value:item.color.fill,key:'bac'},{name:'line',value:item.color.line,key:'line'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChangeTable(item,val,key)}"/>
+                                      :color-val="item.color"
+                                      :presetColors="predefineColors" :single="false"
+                                      :value-arr="[{name:'fill',value:item.color.fill,key:'bac'},{name:'line',value:item.color.line,key:'line'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChangeTable(item,val,key)}"/>
                         </div>
                       </span>
                       <span v-else>base</span>
@@ -223,6 +223,7 @@
                       class="element-item form-row-item form-row-item-border"
                       style="width: 100%; border-radius: 2px; padding-right: 60px;">
                 <promql-input
+                  v-if="selection.pen"
                   :from-father-data="true"
                   :isTopo="true"
                   :metricOptionsParent="metricOptions"
@@ -429,7 +430,7 @@
                         :class="['nz-icon',bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).label,bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).fontSize]"></i>
                     </div>
 
-                    <el-option v-for="(item,index) in bkTypeOption" :value="item.id" :key="index">
+                    <el-option v-for="(item,index) in bkTypeOption" :value="item.id" :label="''" :key="index">
                       <i :class="['nz-icon',item.label,item.fontSize]"></i>
                     </el-option>
                     <!--el-input__inner-->
@@ -716,53 +717,52 @@
                 </div>
               </div>
 
-<!--              <div class="props-pen-item">-->
-<!--                <div>{{ $t('project.topology.textOffsetX') }}</div>-->
-<!--                <div class="p10 pl0">-->
-<!--                  <el-input-number-->
-<!--                    @focus="inputFocus"-->
-<!--                    @blur="inputBlur"-->
-<!--                    :precision="0"-->
-<!--                    controls-position="right"-->
-<!--                    size="small" name="x"-->
-<!--                    class="input"-->
-<!--                    v-model.number="selection.pen.textLeft"-->
-<!--                    :readonly="readonly"-->
-<!--                    required-->
-<!--                    @change="onChange()"></el-input-number>-->
-<!--                </div>-->
-<!--              </div>-->
+              <!--              <div class="props-pen-item">-->
+              <!--                <div>{{ $t('project.topology.textOffsetX') }}</div>-->
+              <!--                <div class="p10 pl0">-->
+              <!--                  <el-input-number-->
+              <!--                    @focus="inputFocus"-->
+              <!--                    @blur="inputBlur"-->
+              <!--                    :precision="0"-->
+              <!--                    controls-position="right"-->
+              <!--                    size="small" name="x"-->
+              <!--                    class="input"-->
+              <!--                    v-model.number="selection.pen.textLeft"-->
+              <!--                    :readonly="readonly"-->
+              <!--                    required-->
+              <!--                    @change="onChange()"></el-input-number>-->
+              <!--                </div>-->
+              <!--              </div>-->
 
-<!--              <div class="props-pen-item">-->
-<!--                <div>{{ $t('project.topology.textOffsetY') }}</div>-->
-<!--                <div class="p10 pl0">-->
-<!--                  <el-input-number-->
-<!--                    @focus="inputFocus"-->
-<!--                    @blur="inputBlur"-->
-<!--                    :precision="0"-->
-<!--                    controls-position="right"-->
-<!--                    size="small" name="x"-->
-<!--                    class="input"-->
-<!--                    v-model.number="selection.pen.textTop"-->
-<!--                    :readonly="readonly"-->
-<!--                    required-->
-<!--                    @change="onChange()"></el-input-number>-->
-<!--                </div>-->
-<!--              </div>-->
+              <!--              <div class="props-pen-item">-->
+              <!--                <div>{{ $t('project.topology.textOffsetY') }}</div>-->
+              <!--                <div class="p10 pl0">-->
+              <!--                  <el-input-number-->
+              <!--                    @focus="inputFocus"-->
+              <!--                    @blur="inputBlur"-->
+              <!--                    :precision="0"-->
+              <!--                    controls-position="right"-->
+              <!--                    size="small" name="x"-->
+              <!--                    class="input"-->
+              <!--                    v-model.number="selection.pen.textTop"-->
+              <!--                    :readonly="readonly"-->
+              <!--                    required-->
+              <!--                    @change="onChange()"></el-input-number>-->
+              <!--                </div>-->
+              <!--              </div>-->
 
             </div>
           </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
     </el-tabs>
-    </keep-alive>
     <!--选中多个-->
     <keep-alive>
       <div v-if="selection.pens" class="">
       <el-collapse v-model="activeNames">
         <!--对齐方式-->
         <el-collapse-item :title="$t('project.topology.align')" name="1" v-if="selection.pens">
-          <label class="hover pointer mr10 iconLabel" v-for="item in nodesAlign" :title="item.desc">
+          <label class="hover pointer mr10 iconLabel" v-for="item in nodesAlign" :title="item.desc" :key="item.value">
             <i :class="['iconfont','iconfontSize16',`icon-align-${item.value}`]"
                @click="onNodesAlign(item.value)"></i>
           </label>
@@ -1546,6 +1546,7 @@ export default {
       if (value === 'lineDash') {
         this.selection.pen.lineDash = val ? (val == 1 ? [5, 5] : ((val == 2 ? [10, 10] : [10, 10, 2, 10]))) : []
       }
+      console.log(this.selection.pen)
       this.$emit('change', this.selection.pen)
       // if(!this.selection.pen.type||this.selection.pens){
       //   this.$emit('change',this.selection.pen||this.selection.pens);
