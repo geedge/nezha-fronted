@@ -97,7 +97,7 @@ export default {
             name: this.detailViewRightObj.name,
             configs: this.detailViewRightObj.configs ? this.detailViewRightObj.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
             childrenNum: this.detailViewRightObj.childrenNum || '',
-            clientState: this.bottomBox.object.clientState || ''
+            clientState: this.detailViewRightObj.clientState || ''
           })
           this.$router.replace({ path: path, query: params }).catch(err => {})
         } else if (from === 'bottomBox' && this.targetTab) {

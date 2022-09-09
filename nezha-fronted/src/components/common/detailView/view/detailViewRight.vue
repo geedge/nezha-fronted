@@ -103,7 +103,7 @@ export default {
     from: {
       immediate: true,
       handler (n) {
-        this.setTargetTab()
+        this.setTargetTab(true)
       }
     },
     obj: {
@@ -294,9 +294,11 @@ export default {
     getTableData () {
       this.$emit('getTableData')
     },
-    setTargetTab () {
-      if (this.$route.query.targetTab) {
-        this.targetTab = this.$route.query.targetTab
+    setTargetTab (flag) {
+      if (this.$route.query.targetTab && flag) {
+        this.$nextTick(()=>{
+          this.targetTab = this.$route.query.targetTab
+        })
         return
       }
       if (this.from === fromRoute.asset) {
