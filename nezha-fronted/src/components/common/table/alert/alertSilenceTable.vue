@@ -84,7 +84,7 @@
              <div class="active-icon green-bg inline-block"></div>
             {{$t('silence.active')}}</span>
           <span v-if="scope.row.state === 2">
-            <div class="active-icon green-bg inline-block"></div>
+            <div class="active-icon bgFFECD9 inline-block"></div>
             {{$t('silence.pending')}}</span>
           <span v-if="scope.row.state === 3">
             <div class="active-icon gray-bg inline-block"></div>
