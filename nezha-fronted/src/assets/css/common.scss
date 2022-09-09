@@ -287,6 +287,7 @@ td .nz-icon-gear:before {
     }
   }
   #elementQuery{
+    height: 32px;
     border: 1px solid $--border-color-light;
   }
   .el-input__inner:hover {
@@ -295,6 +296,7 @@ td .nz-icon-gear:before {
 }
 .query-input-active.el-input{
   #elementQuery{
+    height: 32px;
     border: 1px solid $--border-color-light !important;
   }
 }

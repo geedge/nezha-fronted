@@ -20,11 +20,12 @@
       <operation-log-tab :showTitle="false" v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" :tabs="tabs.user.operationLog" @changeTab="changeTab" :targetTab="targetTab"></operation-log-tab>
       <terminal-log-tab :showTitle="false" v-if="from === fromRoute.user && targetTab === 'terminalLogTab'" :from="from" :obj="obj" :tabs="tabs.user.terminalLog" @changeTab="changeTab" :targetTab="targetTab"></terminal-log-tab>
       <!-- asset列表的3个 -->
-      <panel-tab-new @getTableData="getTableData" :paramsType="'asset'" :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.panel" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
-      <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessage" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
-      <endpointTabNew :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'endpointTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.endpoint" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
-      <log-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'log'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.log" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
-      <assetSubTab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'assetSubTab' && obj.childrenNum" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessageSub" :targetTab="targetTab" @changeTab="changeTab"></assetSubTab>
+      <panel-tab-new @getTableData="getTableData" :paramsType="'asset'" :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+      <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
+      <endpointTabNew :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'endpointTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
+      <log-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'log'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
+      <assetSubTab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'assetSubTab' && obj.childrenNum" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab="targetTab" @changeTab="changeTab"></assetSubTab>
+      <process-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'process' && obj.clientState == '1'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab="targetTab" @changeTab="changeTab"></process-bottom-tab>
       <!--module列表的tab-->
       <endpointTabNew :showTitle="false" v-if="from === fromRoute.module && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
       <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
@@ -63,6 +64,7 @@ import terminalLogTab from '@/components/common/bottomBox/tabs/terminalLogTab'
 import assetTab from '@/components/common/bottomBox/tabs/assetTab'
 import { fromRoute } from '@/components/common/js/constants'
 import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
+import processBottomTab from '@/components/common/bottomBox/tabs/processBottomTab'
 import detailRightTop from './detailRightTop/detailRightTop'
 import routerPathParams from "@/components/common/mixin/routerPathParams";
 
@@ -86,7 +88,8 @@ export default {
     assetTab,
     assetSubTab,
     'detail-right-top': detailRightTop,
-    alertRuleEvalLog
+    alertRuleEvalLog,
+    processBottomTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -110,22 +113,6 @@ export default {
       immediate: true,
       handler (n) {
         this.setTargetTab()
-        if ((this.from === fromRoute.asset) && n) {
-          const assetSub = { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: false }
-          if (n.childrenNum) {
-            if (!this.tabs.asset.panel.find(item => item.prop === assetSub.prop)) {
-              this.tabs.asset.panel.push(assetSub)
-              this.tabs.asset.alertMessage.push(assetSub)
-              this.tabs.asset.endpoint.push(assetSub)
-              this.tabs.asset.log.push(assetSub)
-            }
-          } else if (this.tabs.asset.panel.find(item => item.prop === assetSub.prop)) {
-            this.tabs.asset.panel = this.tabs.asset.panel.filter(item => item.prop !== assetSub.prop)
-            this.tabs.asset.alertMessage = this.tabs.asset.alertMessage.filter(item => item.prop !== assetSub.prop)
-            this.tabs.asset.endpoint = this.tabs.asset.endpoint.filter(item => item.prop !== assetSub.prop)
-            this.tabs.asset.log = this.tabs.asset.log.filter(item => item.prop !== assetSub.prop)
-          }
-        }
       }
     }
   },
@@ -159,36 +146,11 @@ export default {
           // module tab
         },
         asset: {
-          panel: [
-            { prop: 'panelTab', name: this.$t('overall.detail'), active: true },
-            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
-            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label'), active: false }
-          ],
-          alertMessage: [
-            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
-            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true },
-            { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
-            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label'), active: false }
-          ],
-          endpoint: [
-            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
-            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: true },
-            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label'), active: false }
-          ],
-          log: [
-            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
-            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
-            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label'), active: true }
-          ],
-          alertMessageSub: [
-            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
-            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: this.$t('asset.endpoint'), active: false },
-            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label'), active: false },
-            { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: true }
+          assetTabTitle: [
+            { prop: 'panelTab', name: this.$t('overall.dashboard') },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert') },
+            { prop: 'endpointTab', name: this.$t('asset.endpoint') },
+            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label') }
           ]
         },
         module: {
@@ -245,6 +207,23 @@ export default {
     hasLogConfig () {
       const config = this.obj.configs.find(c => c.type === 'logs')
       return config && config.enable === 1
+    },
+    assetTabs () {
+      const hasSub = this.obj && this.obj.childrenNum
+      const hasProcess = this.obj && this.obj.clientState == '1'
+      const tabs = [
+        { prop: 'panelTab', name: this.$t('overall.dashboard') },
+        { prop: 'alertMessageTab', name: this.$t('overall.alert') },
+        { prop: 'endpointTab', name: this.$t('asset.endpoint') },
+        { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label') }
+      ]
+      if (hasSub) {
+        tabs.push({ prop: 'assetSubTab', name: this.$t('overall.assetSubTab') })
+      }
+      if (hasProcess) {
+        tabs.push({ prop: 'process', name: this.$t('overall.process') })
+      }
+      return tabs
     },
     endpointTabs () {
       const config = this.obj.configs.find(c => c.type === 'logs')
