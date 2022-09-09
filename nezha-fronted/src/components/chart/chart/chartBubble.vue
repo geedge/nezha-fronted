@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="pie-chart-box"
+    ref="bubble-chart-box"
     class="nz-chart__component"
   >
     <div :id="`chart-canvas-${chartId}`" class="chart__canvas">

@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="pie-chart-box"
+    ref="sankey-chart-box"
     class="nz-chart__component nz-chart__component--time-series" @mouseenter="mouseEnterChart"
     @mouseleave="mouseLeaveChart"
     index="300"
@@ -95,9 +95,9 @@ export default {
       this.nodesData = []
       const sankeyData = []
       const decimals = this.chartInfo.param.decimals || 2
+      this.isNoData = true
       originalDatas.forEach((originalData) => {
         originalData.forEach((data, dataIndex) => {
-          this.isNoData = false
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
           const obj = {
             value: value,

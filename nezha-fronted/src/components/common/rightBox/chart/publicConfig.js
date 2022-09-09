@@ -264,6 +264,10 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.bubble.label')
         },
         {
+          id: 'rank',
+          name: this.$t('dashboard.panel.chartForm.typeVal.rank.label')
+        },
+        {
           id: 'table',
           name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
         }
@@ -313,6 +317,10 @@ export default {
         {
           id: 'bubble',
           name: this.$t('dashboard.panel.chartForm.typeVal.bubble.label')
+        },
+        {
+          id: 'rank',
+          name: this.$t('dashboard.panel.chartForm.typeVal.rank.label')
         },
         {
           id: 'log',

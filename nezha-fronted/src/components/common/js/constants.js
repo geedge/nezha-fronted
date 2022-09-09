@@ -411,6 +411,7 @@ export const chartType = {
   sankey: 'sankey',
   pie: 'pie',
   bubble: 'bubble',
+  rank: 'rank',
   treemap: 'treemap',
   log: 'log',
   text: 'text',

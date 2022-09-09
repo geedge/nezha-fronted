@@ -634,3 +634,13 @@
 .chart-label{
   color: $--color-text-primary;
 }
+.tickTest{
+  font-size: 12px;
+  color: $--color-text-primary;
+}
+.tickLine{
+  stroke: $--background-color-empty;
+}
+.tickLineFirst{
+  stroke: $--color-text-primary;;
+}

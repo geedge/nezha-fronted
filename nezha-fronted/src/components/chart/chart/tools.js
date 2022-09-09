@@ -71,6 +71,9 @@ export function isChartPie (type) {
 export function isChartBubble (type) {
   return type === chartType.bubble
 }
+export function isChartRank (type) {
+  return type === chartType.rank
+}
 export function isChartBar (type) {
   return type === chartType.bar
 }

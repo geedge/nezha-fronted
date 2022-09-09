@@ -889,6 +889,10 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.bubble.label')
         },
         {
+          id: 'rank',
+          name: this.$t('dashboard.panel.chartForm.typeVal.rank.label')
+        },
+        {
           id: 'gauge',
           name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
         },
@@ -954,7 +958,8 @@ export default {
         case 'hexagon':
         case 'gauge':
         case 'bubble':
-          if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'hexagon' || this.oldType === 'bubble') {
+        case 'rank':
+          if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'hexagon' || this.oldType === 'bubble' || this.oldType === 'rank') {
             break
           }
           this.chartConfig.param = {
