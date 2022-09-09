@@ -60,7 +60,7 @@
             </div>
         </template>
         <template v-else-if="item.prop === 'memUsage'">
-            <div style="height:100%;height:100%;display: flex;align-items: center;">
+            <div style="height:100%;display: flex;align-items: center;">
                 <el-progress id="container" :show-text="false" :stroke-width="18" :color="'#00c398'" :percentage="scope.row[item.prop]"></el-progress>
                 <div class="percentage">{{scope.row[item.prop] + '%'}}</div>
             </div>
