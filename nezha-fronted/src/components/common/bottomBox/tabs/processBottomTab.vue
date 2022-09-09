@@ -91,16 +91,18 @@ export default {
   },
   data () {
     return {
-      url: 'asset/oshi/process/1/',
+      url: 'asset/oshi/process/',
       tableId: 'assetProcessTable', // 需要分页的table的id，用于记录每页数量
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: []
       },
       searchLabel: { id: this.obj.id },
-      queryExpression: '',
       tableData: [],
+      // 搜索组件数据
+      queryExpression: '',
       tableDataCopy: '',
+      // 刷新组件数据
       searchTime: bus.getTimezontDateRange(),
       filterTime: [
         bus.timeFormate(bus.getOffsetTimezoneData(-1), 'YYYY-MM-DD HH:mm:ss'),
@@ -109,26 +111,9 @@ export default {
     }
   },
   methods: {
-    getTableData (params) {
-      if (params && Object.keys(params).length > 0) {
-        for (const key in params) {
-          this.$set(this.searchLabel, key, params[key])
-        }
-      }
-      if (this.orderBy) {
-        this.$set(this.searchLabel, 'orderBy', this.orderBy)
-      } else {
-        delete this.searchLabel.orderBy
-      }
-      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
-      this.$set(this.searchLabel, 'pageSize', -1)
-      this.tools.loading = true
-      if (this.obj) {
-        this.$set(this.searchLabel, 'id', this.obj.id)
-      }
+    getTableData () {
       this.tableDataCopy = ''
       this.$get('asset/oshi/process?id=' + this.obj.id).then(response => {
-      // this.$get('/mock/asset/oshi/process').then(response => {
         this.tools.loading = false
         this.nowTime = this.utcTimeToTimezoneStr(response.time)
         if (response.code === 200) {
@@ -143,6 +128,7 @@ export default {
         }
       })
     },
+    // 搜索组件事件
     clearInput () {
       this.$refs.elementQuery.focus()
     },
@@ -161,6 +147,7 @@ export default {
         }, 100)
       }
     },
+    // 搜索数据过滤
     tableFilter () {
       const tableDatas = JSON.parse(this.tableDataCopy)
       this.tableData = tableDatas.filter((item) => {
@@ -168,13 +155,33 @@ export default {
         return element.indexOf(this.queryExpression) !== -1
       })
     },
+    // 刷新组件事件
     dateChange () {
-      // const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-      // this.setSearchTime(nowTimeType.type, nowTimeType.value)
       this.searchTime = bus.getTimezontDateRange()
       this.filterTime[0] = bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
       this.filterTime[1] = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
       this.tableFilter()
+    },
+    // 数据排序
+    tableDataSort (item) {
+      this.filterShowData(this.tableData, item)
+    },
+    filterShowData (source, ord) {
+      let orderBy = null
+      let sourceData = null
+      orderBy = ord
+      sourceData = JSON.parse(this.tableDataCopy)
+      if (!orderBy || !orderBy.order) { // 没有排序 恢复默认值
+        source = Object.assign([], sourceData)
+      } else { // 排序之后的顺序
+        if (orderBy.order === 'ascending') {
+          source = source.sort(this.$tableSet.asce(orderBy.prop))
+        }
+        if (orderBy.order === 'descending') {
+          source = source.sort(this.$tableSet.desc(orderBy.prop))
+        }
+      }
+      return source
     }
   }
 }
