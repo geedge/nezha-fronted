@@ -88,7 +88,7 @@ export default {
           id: 1,
           name: 'ID',
           type: 'input',
-          label: 'id',
+          label: 'ids',
           disabled: false
         }, {
           id: 5,
