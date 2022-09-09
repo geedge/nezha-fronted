@@ -54,15 +54,15 @@
           {{utcTimeToTimezoneStr(scope.row[item.prop])}}
         </template>
         <template v-else-if="item.prop === 'cpuUsage'">
-            <div style="height:100%;">
-                <progress id="container" max="100" :value= scope.row[item.prop]></progress>
-                <div style="float:left">{{scope.row[item.prop] + '%'}}</div>
+            <div style="height:100%;display: flex;align-items: center;">
+                <el-progress id="container" :show-text="false" :stroke-width="18" :color="'#00c398'" :percentage="scope.row[item.prop]"></el-progress>
+                <div class="percentage">{{scope.row[item.prop] + '%'}}</div>
             </div>
         </template>
         <template v-else-if="item.prop === 'memUsage'">
-            <div style="height:100%;">
-                <progress id="container" max="100" :value= scope.row[item.prop]></progress>
-                <div style="float:left">{{scope.row[item.prop] + '%'}}</div>
+            <div style="height:100%;height:100%;display: flex;align-items: center;">
+                <el-progress id="container" :show-text="false" :stroke-width="18" :color="'#00c398'" :percentage="scope.row[item.prop]"></el-progress>
+                <div class="percentage">{{scope.row[item.prop] + '%'}}</div>
             </div>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -178,16 +178,22 @@ export default {
   border-radius: 0;
 }
 #container {
-  float:left;
   width: 120px;
+  min-width: 120px;
   height: 18px;
   margin-right: 15px;
+}
+.percentage{
+  flex-grow: 1;
+  word-wrap: break-word;
+}
+>>>.el-progress-bar__outer{
+  border-radius: 2px;
   background-color: #e6eaed;
 }
- /* 进度条被填充部分的背景颜色 */
-::-webkit-progress-value {
-     background-color: #00c398;
- }
+>>>.el-progress-bar__inner{
+  border-radius: 0;
+}
   /deep/ .active-icon {
     margin-left: 5px;
   }
