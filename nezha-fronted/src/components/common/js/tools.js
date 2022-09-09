@@ -38,17 +38,22 @@ export const clickoutside = {
         }
         if (oldValue) {
           // const newValue = JSON.parse(JSON.stringify(binding.value.obj))
-          if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__)) {
+          if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__) && !el.isShow) {
+            el.isShow = true
             MessageBox.confirm(i18n.t('tip.confirmCancel'), {
               confirmButtonText: i18n.t('tip.yes'),
               cancelButtonText: i18n.t('tip.no'),
               type: 'warning'
             }).then(() => {
+              el.isShow = false
               if (binding.value.func) {
                 binding.value.func()
               }
-            }).catch(err => err)
-          } else {
+            }).catch(err => {
+              el.isShow = false
+              console.log(err)
+            })
+          } else if (!el.isShow) {
             binding.value.func()
           }
         } else {
