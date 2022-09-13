@@ -55,13 +55,13 @@
         </template>
         <template v-else-if="item.prop === 'cpuUsage'">
             <div style="height:100%;display: flex;align-items: center;">
-                <el-progress id="container" :show-text="false" :stroke-width="18" :color="'#00c398'" :percentage="scope.row[item.prop]"></el-progress>
+                <el-progress v-if="!isNaN(parseInt(scope.row[item.prop]))" id="container" :show-text="false" :stroke-width="18" :color="'#00c398'" :percentage="scope.row[item.prop]"></el-progress>
                 <div class="percentage">{{scope.row[item.prop].toFixed(2) + '%'}}</div>
             </div>
         </template>
         <template v-else-if="item.prop === 'memUsage'">
             <div style="height:100%;display: flex;align-items: center;">
-                <el-progress id="container" :show-text="false" :stroke-width="18" :color="'#00c398'" :percentage="scope.row[item.prop]"></el-progress>
+                <el-progress v-if="!isNaN(parseInt(scope.row[item.prop]))" id="container" :show-text="false" :stroke-width="18" :color="'#00c398'" :percentage="scope.row[item.prop]"></el-progress>
                 <div class="percentage">{{scope.row[item.prop].toFixed(2) + '%'}}</div>
             </div>
         </template>
@@ -168,6 +168,8 @@ export default {
     }
   },
   computed: {
+  },
+  mounted () {
   },
   methods: {
     // 数据排序
