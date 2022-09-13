@@ -416,7 +416,7 @@ article {
     }
     pre.box-overflow{
       overflow-x: scroll;
-      padding-bottom: 0;
+      padding-bottom: 0 !important;
     }
     .logfmt-module,.json-module,.pattern-module,.regular-module,.unpack-module,.line-module,.formatting-module,.unwrapped-module{
       pre {

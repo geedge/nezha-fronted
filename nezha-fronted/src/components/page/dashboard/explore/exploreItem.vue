@@ -438,7 +438,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       </code></p>
                       <p>It will evaluate first <code>duration >= 20ms or method="GET"</code>. To evaluate first <code>method="GET" and size &lt;= 20KB</code>, make sure to use proper parenthesis as shown below.</p>
                       <p><code class="fillbox">| duration >= 20ms or (method="GET" and size &lt;= 20KB)</code></p>
-                      <pre>Label filter expressions are the only expression allowed after the unwrap expression. This is mainly to allow filtering errors from the metric extraction.</pre>
+                      <pre class="box-overflow">Label filter expressions are the only expression allowed after the unwrap expression. This is mainly to allow filtering errors from the metric extraction.</pre>
                       <p>Label filter expressions have support matching IP addresses. See Matching IP addresses for details.</p>
                   </div>
                 </div>
@@ -577,7 +577,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                   <p>Literals can be any sequence of UTF-8 characters, including whitespace characters.</p>
                   <p>By default, a pattern expression is anchored at the start of the log line. If the expression starts with literals, then the log line must also start with the same set of literals. Use <code>&lt;_&gt;</code> at the beginning of the expression if you don’t want to anchor the expression at the start.</p>
                   <p>Consider the log line</p>
-                  <pre>level=debug ts=2021-06-10T09:24:13.472094048Z caller=logging.go:66 traceID=0568b66ad2d9294c msg="POST /loki/api/v1/push (204) 16.652862ms"</pre>
+                  <pre class="box-overflow">level=debug ts=2021-06-10T09:24:13.472094048Z caller=logging.go:66 traceID=0568b66ad2d9294c msg="POST /loki/api/v1/push (204) 16.652862ms"</pre>
                   <p>To match <code>msg="</code>, use the expression:</p>
                   <pre>&lt;_&gt; msg="&lt;method&gt; &lt;path&gt; (&lt;status&gt;) &lt;latency&gt;"</pre>
                   <p>A pattern expression is invalid if</p>
@@ -682,7 +682,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                   <pre class="box-overflow">level=info ts=2020-10-23T20:32:18.094668233Z caller=metrics.go:81 org_id=29 traceID=1980d41501b57b68 latency=fast query="{cluster=\"ops-tools1\", job=\"loki-ops/query-frontend\"} |= \"query_range\"" query_type=filter range_type=range length=15m0s step=7s duration=650.22401ms status=200 throughput_mb=1.529717 total_bytes_mb=0.994659
 level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 traceID=1980d41501b57b68 latency=fast query="{cluster=\"ops-tools1\", job=\"loki-ops/query-frontend\"} |= \"query_range\"" query_type=filter range_type=range length=15m0s step=7s duration=624.008132ms status=200 throughput_mb=0.693449 total_bytes_mb=0.432718</pre>
                   <p>The result would be:</p>
-                  <pre>2020-10-23T20:32:18.094668233Z	650.22401ms	    traceID = 1980d41501b57b68	{cluster="ops-tools1", job="loki-ops/query-frontend"} |= "query_range"
+                  <pre class="box-overflow">2020-10-23T20:32:18.094668233Z	650.22401ms	    traceID = 1980d41501b57b68	{cluster="ops-tools1", job="loki-ops/query-frontend"} |= "query_range"
 2020-10-23T20:32:18.068866235Z	624.008132ms	traceID = 1980d41501b57b68	{cluster="ops-tools1", job="loki-ops/query-frontend"} |= "query_range"</pre>
                 </div>
               </div>
