@@ -189,12 +189,13 @@ export default {
   width: 3px;
   height: 14px;
   border-radius: 0;
+  margin-right: 6px;
 }
 #container {
   width: 120px;
   min-width: 120px;
   height: 18px;
-  margin-right: 15px;
+  margin-right: 20px;
 }
 .percentage{
   flex-grow: 1;
