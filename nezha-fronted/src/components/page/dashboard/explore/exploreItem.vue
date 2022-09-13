@@ -412,7 +412,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       <li><b>Bytes </b>is a sequence of decimal numbers, each with optional fraction and a unit suffix, such as “42MB”, “1.5Kib” or “20b”. Valid bytes units are “b”, “kib”, “kb”, “mib”, “mb”, “gib”, “gb”, “tib”, “tb”, “pib”, “pb”, “eib”, “eb”.</li>
                     </ul>
                     <p>String type work exactly like Prometheus label matchers use in <b style="color: #3C92F1" @click="jumpClick('#log-stream-selector')" class="log-link">log stream selector</b>. This means you can use the same operations (<code>=</code>,<code>!=</code>,<code>=~</code>,<code>!~</code>).</p>
-                    <pre>The string type is the only one that can filter out a log line with a label <code>__error__</code>.</pre>
+                    <pre class="box-overflow">The string type is the only one that can filter out a log line with a label <code>__error__</code>.</pre>
                     <p>Using Duration, Number and Bytes will convert the label value prior to comparision and support the following comparators:</p>
                     <ul>
                       <li><code>==</code> or <code>=</code> for equality.</li>
@@ -543,7 +543,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 <div class="introduce-view__content-label logfmt-module">
                   <p>The <b>logfmt</b> parser can be added using the <code>| logfmt</code> and will extract all keys and values from the logfmt formatted log line.</p>
                   <p>For example the following log line:</p>
-                  <pre>at=info method=GET path=/ host=grafana.net fwd="124.133.124.161" service=8ms status=200</pre>
+                  <pre class="box-overflow">at=info method=GET path=/ host=grafana.net fwd="124.133.124.161" service=8ms status=200</pre>
                   <p>will get those labels extracted:</p>
                   <pre>"at" => "info"
 "method" => "GET"
@@ -628,7 +628,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                  <p v-pre>You can use double quoted string for the template or backticks <code>`{{.label_name}}`</code> to avoid the need to escape special characters.</p>
                  <p><code>line_format</code> also supports <code>math</code> functions. Example:</p>
                  <p>If we have the following labels <code>ip=1.1.1.1</code>, <code>status=200</code> and <code>duration=3000(ms)</code>, we can divide the duration by <code>1000</code> to get the value in seconds.</p>
-                 <pre v-pre>{container="frontend"} | logfmt | line_format "{{.ip}} {{.status}} {{div .duration 1000}}"</pre>
+                 <pre class="box-overflow" v-pre>{container="frontend"} | logfmt | line_format "{{.ip}} {{.status}} {{div .duration 1000}}"</pre>
                  <p>The above query will give us the <code>line</code> as <code>1.1.1.1 200 3</code></p>
                  <p>See template functions to learn about available functions in the template format.</p>
                 </div>
@@ -671,7 +671,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 <h2 id="formatting">Formatting</h2>
                 <div class="introduce-view__content-label formatting-module">
                   <p>The following query shows how you can reformat a log line to make it easier to read on screen.</p>
-                  <pre v-pre>{cluster="ops-tools1", name="querier", namespace="loki-dev"}
+                  <pre class="box-overflow" v-pre>{cluster="ops-tools1", name="querier", namespace="loki-dev"}
   |= "metrics.go" != "loki-canary"
   | logfmt
   | query != ""
