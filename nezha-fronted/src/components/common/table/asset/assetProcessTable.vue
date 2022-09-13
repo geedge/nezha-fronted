@@ -41,13 +41,11 @@
           <div style="height:100%;display: flex;align-items: center;">
              <el-popover trigger="hover" placement="right-start" v-if="typeof scope.row.state != 'undefined' && scope.row.state != null">
                 <div>
-                  <ul>
-                   <li><span class="metirc-tip-list">{{$t('overall.state')}}&nbsp;:&nbsp;&nbsp;</span><span>{{ scope.row.state }}</span></li>
-                  </ul>
+                  <span class="metirc-tip-list">{{$t('overall.state')}}&nbsp;:&nbsp;&nbsp;</span><span>{{ scope.row.state }}</span>
                 </div>
                 <div slot="reference"><div class="bar active-icon " :style="{'background-color':comBgc[scope.row.state]}"></div></div>
              </el-popover>
-             <span>{{scope.row[item.prop] || '-'}}</span>
+             <span style="margin-left: 6px;line-height: 100%;">{{scope.row[item.prop] || '-'}}</span>
           </div>
         </template>
         <template v-else-if="item.prop === 'startTime'">
@@ -189,7 +187,8 @@ export default {
   width: 3px;
   height: 14px;
   border-radius: 0;
-  margin-right: 6px;
+  margin-right: 0px;
+  line-height: 100%;
 }
 #container {
   width: 120px;
