@@ -61,7 +61,7 @@
           width="160"
         >
           <!-- <template slot-scope="{ row }">{{utcTimeToTimezoneStr(row.date)}}</template> -->
-          <template slot-scope="{ row }">{{momentTz(row.date)}}</template>
+          <template slot-scope="{ row }">{{momentTz(row.secondTime * 1000)}}</template>
         </el-table-column>
         <el-table-column
           v-if="!showSwitch"
