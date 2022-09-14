@@ -39,7 +39,7 @@
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'commandLine'">
           <div style="height:24px;display: flex;align-items: center;">
-             <el-popover trigger="hover" placement="top" v-if="typeof scope.row.state != 'undefined' && scope.row.state != null">
+             <el-popover trigger="hover" placement="right" v-if="typeof scope.row.state != 'undefined' && scope.row.state != null">
                 <div>
                   <span class="metirc-tip-list">{{$t('overall.state')}}&nbsp;:&nbsp;&nbsp;</span><span>{{ scope.row.state }}</span>
                 </div>

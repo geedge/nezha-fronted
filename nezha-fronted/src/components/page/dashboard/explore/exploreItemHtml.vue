@@ -1,11 +1,21 @@
 <template>
-  <div  class="explore list-page">
-    <div>
-      <span>{{dataJson.type}}</span>
-      <span>{{dataJson.unit}}</span>
+  <div  class="explore list-page" style="background: #f9f9f9;padding: 10px 15px;">
+    <div style="display: flex;justify-content: space-between">
+      <span>{{dataJson.type == 1 ? 'Metric expression' : 'Log expression'}}</span>
+      <span>
+       <chart-unit v-model="chartUnit" class="margin-r-10"></chart-unit>
+      </span>
     </div>
-    <div v-for="(item, index) in dataJson.data" :key = 'index'>
-      {{item.expression}}
+    <div v-for="(item, index) in dataJson.data" :key = 'index' style="display: flex;margin-bottom: 10px">
+      <div style="flex: 1;margin-right: 10px;border: 1px solid #333;border-radius: 2px;">{{item.expression}}</div>
+      <button
+        class="top-tool-btn"
+        :title="item.state?$t('overall.enabled'):$t('profile.close')"
+        @click="stateChange(index)"
+      >
+        <i  v-if="item.state" class="nz-icon nz-icon-mimakejian"></i>
+        <i v-else class="nz-icon nz-icon-mimabukejian" style="fontSize:16px"></i>
+      </button>
     </div>
     <el-collapse v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
       <!--metric-->
@@ -99,14 +109,21 @@ import chartDataFormat from '@/components/chart/chartDataFormat'
 import bus from '@/libs/bus'
 import chart from '@/components/page/dashboard/overview/chart'
 import logTab from '@/components/page/dashboard/explore/logTab'
-import axios from "axios";
+import chartUnit from '@/components/common/chartUnit'
 
 const dataJson = window.dataJson || {}
 export default {
   name: 'exploreItemHtml',
+  props: {
+    triggerButtonClass: { // 触发下拉事件的按钮的class
+      type: String,
+      default: 'top-tool-btn'
+    }
+  },
   components: {
     chart,
-    logTab
+    logTab,
+    'chart-unit': chartUnit
   },
   data () {
     return {
@@ -125,6 +142,8 @@ export default {
         showCustomTableTitle: false, // 自定义列弹框是否显示
         customTableTitle: [] // 自定义列工具的数据
       },
+      tableId: 'explore',
+      tableTitle: [],
       tableData: [],
       historyParam: { useHistory: true, key: 'expore-history' },
       showTab: ['1', '2'],
@@ -134,6 +153,15 @@ export default {
     }
   },
   mounted () {
+    dataJson.data.forEach(item => {
+      item.state = true
+    })
+    if (this.dataJson.type == 1) {
+      this.showMetrics = true
+    } else {
+      this.showMetrics = false
+    }
+    this.chartUnit = this.dataJson.unit || 1
     this.expressionChange()
   },
   methods: {
@@ -157,6 +185,10 @@ export default {
     pageSize (val) {
       this.pageObj.pageSize = val
       this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
+    },
+    stateChange (index) {
+      this.dataJson.data[index].state = !this.dataJson.data[index].state
+      this.expressionChange()
     },
     expressionChange () {
       this.filterTime = [dataJson.start, dataJson.end]
@@ -182,6 +214,9 @@ export default {
         this.tableData = []
         this.tableTitle = []
         res.forEach((response, index) => {
+          if (!response.state) {
+            return
+          }
           if (response.data) {
             const data = response.data.result
             if (data) {
@@ -253,6 +288,9 @@ export default {
       const legend = []
       if (res.length > 0) {
         res.forEach((response, index) => {
+          if (!response.state) {
+            return
+          }
           const promqlIndex = promqlInputIndexs[index]
           console.log(response)
           if (response.data) {
@@ -401,74 +439,133 @@ export default {
     },
     queryLogData (limit) { // log的chart和table是一个请求
       this.chartLoading = true
-      if (!limit) {
-        limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
-      }
       this.$refs.logDetail && this.$refs.logDetail.resetOperation()
-      if (this.expressions.length > 0) {
-        const requestArr = []
-        // 过滤掉state为0的元素
-        this.expressions.forEach((item, index) => {
-          if (item != '' && this.promqlKeys[index].state) {
-            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(item) + '&start=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[0])) + '&end=' + this.$stringTimeParseToUnix(bus.formateTimeToTime(this.filterTime[1])) + '&limit=' + limit))
+      let res = this.dataJson.data
+      if (res.length > 0) {
+        this.chartLoading = false
+        const errorRowIndex = []
+        res.forEach((r, i) => {
+          if (!r.state) {
+            return
+          }
+          if (typeof r === 'string') {
+            errorRowIndex.push(i)
           }
         })
-        if (requestArr.length > 0) {
-          this.showIntroduce = false
-          this.saveDisabled = false
+        if (errorRowIndex.length > 0) {
+          this.$message.error(this.$t('tip.errorInRow') + ': ' + errorRowIndex.map(e => e + 1).join(' ,'))
+          res = res.filter((r, i) => errorRowIndex.indexOf(i) === -1)
         }
-        axios.all(requestArr).then(res => {
-          this.chartLoading = false
-          const errorRowIndex = []
-          res.forEach((r, i) => {
-            if (typeof r === 'string') {
-              errorRowIndex.push(i)
-            }
-          })
-          if (errorRowIndex.length > 0) {
-            this.$message.error(this.$t('tip.errorInRow') + ': ' + errorRowIndex.map(e => e + 1).join(' ,'))
-            res = res.filter((r, i) => errorRowIndex.indexOf(i) === -1)
+        res = res.filter((r, i) => r.state)
+        if (res.length > 0) {
+          const logData = res.map(r => r.data)
+          if (logData[0].result.length > 0) {
+            this.logTabNoData = false
+          } else {
+            this.logTabNoData = true
           }
-          if (res.length > 0) {
-            const logData = res.map(r => r.data)
-            if (logData[0].result.length > 0) {
-              this.logTabNoData = false
-            } else {
-              this.logTabNoData = true
+          const hasGraph = logData.some(d => d.resultType === 'matrix')
+          const hasLog = logData.some(d => d.resultType === 'streamsFormat')
+          const graphTabIndex = this.showTab.indexOf('1')
+          if (hasGraph) {
+            if (graphTabIndex === -1) {
+              this.showTab.push('1')
             }
-            const hasGraph = logData.some(d => d.resultType === 'matrix')
-            const hasLog = logData.some(d => d.resultType === 'streamsFormat')
-            const graphTabIndex = this.showTab.indexOf('1')
-            if (hasGraph) {
-              if (graphTabIndex === -1) {
-                this.showTab.push('1')
-              }
-            } else {
-              if (graphTabIndex > -1) {
-                this.showTab.splice(graphTabIndex, 1)
-              }
+          } else {
+            if (graphTabIndex > -1) {
+              this.showTab.splice(graphTabIndex, 1)
             }
-            const logTabIndex = this.showTab.indexOf('2')
-            if (hasLog) {
-              if (logTabIndex === -1) {
-                this.showTab.push('2')
-              }
-            } else {
-              if (logTabIndex > -1) {
-                this.showTab.splice(logTabIndex, 1)
-              }
+          }
+          const logTabIndex = this.showTab.indexOf('2')
+          if (hasLog) {
+            if (logTabIndex === -1) {
+              this.showTab.push('2')
             }
-            this.$nextTick(() => {
-              this.logData = logData
-              hasGraph && this.loadLogGraph()
+          } else {
+            if (logTabIndex > -1) {
+              this.showTab.splice(logTabIndex, 1)
+            }
+          }
+          this.$nextTick(() => {
+            this.logData = logData
+            hasGraph && this.loadLogGraph()
+          })
+        }
+      }
+    },
+    loadLogGraph () {
+      const graphData = this.logData.filter(l => l.resultType === 'matrix')
+      if (graphData && graphData.length > 0) {
+        this.$refs.logChart.startLoading()
+        const queryExpression = []
+        let series = []
+        const legend = []
+        this.logData.forEach((response, index) => {
+          if (response.resultType === 'matrix') {
+            const data = response.result
+            if (!data || data.length < 1) {
+              return
+            }
+            data.forEach((result, i) => {
+              const seriesItem = {
+                name: '',
+                symbol: 'emptyCircle', // 去掉点
+                symbolSize: [2, 2],
+                showSymbol: false,
+                smooth: 0.2, // 曲线变平滑
+                data: [],
+                lineStyle: {
+                  width: 1,
+                  opacity: 0.9
+                },
+                type: 'line'
+              }
+              let legendName = ''
+              seriesItem.data = result.values.map((item) => {
+                return [item[0] * 1000, item[1]]
+              })
+              if (result.metric && Object.keys(result.metric).length > 0) {
+                const metric = Object.assign({}, result.metric)
+                seriesItem.name += metric.__name__ ? metric.__name__ : ''
+                seriesItem.name += '{'
+                delete metric.__name__
+                for (const key in metric) {
+                  seriesItem.name += key + '=' + '"' + metric[key] + '",'
+                }
+                legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
+                legendName += '}'
+              } else {
+                legendName = queryExpression[index]
+              }
+              seriesItem.name = legendName + '-' + index
+              series.push(seriesItem)
+              legend.push({ name: seriesItem.name, alias: legendName, isGray: false })
             })
           }
-        }).catch(e => {
-          this.chartLoading = false
-          this.$message.error(this.$t('terminallog.statusItem.unknownError'))
+        })
+        this.defaultChartVisible = true
+        this.$nextTick(() => {
+          this.$refs.logChart.setLegend(legend)
+          this.$refs.logChart.setRandomColors(series.length)
+          if (!series.length) {
+            series = ''
+          }
+          this.$refs.logChart.setSeries(series)
+          this.$refs.logChart.endLoading()
         })
       }
     },
+    updateCustomTableTitle (custom) {
+      this.tools.customTableTitle = custom
+      this.$refs.exploreTable.doLayout()
+    }
+  },
+  watch: {
+    chartUnit: {
+      handler (n, o) {
+        this.expressionChange()
+      }
+    }
   }
 }
 </script>

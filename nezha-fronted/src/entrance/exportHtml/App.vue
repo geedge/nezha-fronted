@@ -13,12 +13,12 @@
 
             <div style="display: flex;flex-direction: column">
 <!--              <i class="nz-icon nz-icon-arrow-down"/>-->
-              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right" v-if="!dataJson.unit"> {{dataJson.panel.data.name}} </div>
-              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right" v-if="dataJson.unit"> Explore </div>
+              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right" v-if="!dataJson.type"> {{dataJson.panel.data.name}} </div>
+              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right" v-if="dataJson.type"> Explore </div>
               <span>  {{dateFormat(dataJson.start * 1000)}} - {{dateFormat(dataJson.end * 1000)}} ({{dataJson.timezone}})</span>
             </div>
           </div>
-          <div v-if="!dataJson.unit" id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow:hidden; overflow-y: auto;height: calc(100% - 60px);display: flex;flex-direction: column'>
+          <div v-if="!dataJson.type" id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow:hidden; overflow-y: auto;height: calc(100% - 60px);display: flex;flex-direction: column'>
             <chartList
               ref="chartList"
               name="panel"
@@ -38,7 +38,7 @@
               :loading="chartListLoading"
             />
           </div>
-          <div v-if="dataJson.unit" id="explore" class="explores">
+          <div v-if="dataJson.type" id="explore" class="explores">
             <exploreItem
               ref="exploreItem"
               :key="dataJson.type"
