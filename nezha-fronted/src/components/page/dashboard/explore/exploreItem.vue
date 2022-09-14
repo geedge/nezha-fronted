@@ -1684,7 +1684,7 @@ export default {
         start: this.momentStrToTimestamp(this.filterTime[0]) / 1000,
         end: this.momentStrToTimestamp(this.filterTime[1]) / 1000,
         unit: this.chartUnit,
-        expressions: [...this.expressions]
+        expressions: this.expressions.map(item => encodeURIComponent(item))
       }
       this.$get('/visual/explore/snapshot', params, 'blob').then(res => {
         const self = this
