@@ -38,14 +38,14 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'commandLine'">
-          <div style="height:100%;display: flex;align-items: center;">
-             <el-popover trigger="hover" placement="right-start" v-if="typeof scope.row.state != 'undefined' && scope.row.state != null">
+          <div style="height:24px;display: flex;align-items: center;">
+             <el-popover trigger="hover" placement="top" v-if="typeof scope.row.state != 'undefined' && scope.row.state != null">
                 <div>
                   <span class="metirc-tip-list">{{$t('overall.state')}}&nbsp;:&nbsp;&nbsp;</span><span>{{ scope.row.state }}</span>
                 </div>
                 <div slot="reference"><div class="bar active-icon " :style="{'background-color':comBgc[scope.row.state]}"></div></div>
              </el-popover>
-             <span style="margin-left: 6px;line-height: 100%;">{{scope.row[item.prop] || '-'}}</span>
+             <div class="process-name" :title="scope.row[item.prop] || scope.row.name">{{scope.row[item.prop] || scope.row.name}}</div>
           </div>
         </template>
         <template v-else-if="item.prop === 'startTime'">
@@ -92,7 +92,7 @@ export default {
     return {
       tableTitle: [
         {
-          label: this.$t('config.terminallog.cmd.cmd'),
+          label: this.$t('overall.process'),
           prop: 'commandLine',
           show: true,
           minWidth: 300,
@@ -116,13 +116,13 @@ export default {
           minWidth: 150,
           sortable: 'custom'
         }, {
-          label: '%' + this.$t('asset.process.cpu'),
+          label: this.$t('asset.process.cpu'),
           prop: 'cpuUsage',
           show: true,
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: '%' + this.$t('asset.process.mem'),
+          label: this.$t('asset.process.mem'),
           prop: 'memUsage',
           show: true,
           minWidth: 200,
@@ -189,6 +189,14 @@ export default {
   border-radius: 0;
   margin-right: 0px;
   line-height: 100%;
+}
+.process-name{
+  height: 100%;
+  margin-left: 6px;
+  line-height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #container {
   width: 120px;

@@ -150,7 +150,7 @@ export default {
     tableFilter () {
       const tableDatas = JSON.parse(this.tableDataCopy)
       this.tableData = tableDatas.filter((item) => {
-        const element = item.commandLine
+        const element = item.commandLine ? item.commandLine : item.name
         return element.indexOf(this.queryExpression) !== -1
       })
     },
