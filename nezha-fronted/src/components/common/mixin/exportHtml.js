@@ -9,8 +9,8 @@ export default {
     exportToHtml (name) {
       const vars = this.$store.getters.getVariablesArr.map(item => {
         return {
-          "name": item.name,
-          "value": item.checked.join('|')
+          name: item.name,
+          value: item.checked.join('|')
         }
       })
       const params = {
@@ -52,7 +52,7 @@ export default {
           window.URL.revokeObjectURL(href) // 释放blob对象
         }
         this.$refs.topTool.closeDialog()
-      }, error => {
+      }, () => {
         this.$message.error('123')
       })
     }

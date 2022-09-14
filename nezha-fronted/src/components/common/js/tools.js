@@ -393,6 +393,10 @@ export const bottomBoxWindow = {
         }
       }, 210) */
     }
+    vm.$nextTick(() => {
+      const table = vm.$refs.dataTable || vm.$parent.$refs.dataTable
+      table.$refs.dataTable.doLayout()
+    })
   }
 }
 export function stringTimeParseToUnix (stringTime) {

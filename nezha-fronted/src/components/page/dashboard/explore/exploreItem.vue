@@ -32,26 +32,41 @@
              <!-- <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template> -->
               <template slot="added-text">{{$t('overall.query')}}</template>
             </pick-time>
-            <button v-if="showMetrics"
-              id="explore-save-chart"
-              v-has="'main_add'"
-              :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}"
-              :disabled="saveDisabled"
-              class="top-tool-btn top-tool-btn--text"
-              type="button"
-              @click="saveChart">
-              {{$t('dashboard.metric.saveChart')}}
-            </button>
-            <button v-else
-              id="explore-save-chart-logs"
-              v-has="'main_add'"
-              :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}"
-              :disabled="saveDisabled"
-              class="top-tool-btn top-tool-btn--text"
-              type="button"
-              @click="saveChartLogs">
-              {{$t('dashboard.metric.saveChart')}}
-            </button>
+            <el-dropdown trigger="click" :size="'medium'">
+              <button id="more" class="top-tool-btn" :title="$t('overall.more')">
+                <i class="nz-icon nz-icon-more2"></i>
+              </button>
+              <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
+                <el-dropdown-item :disabled="saveDisabled">
+                  <div>
+                    <i class="nz-icon nz-icon-add" />
+                    <span v-if="showMetrics"
+                          id="explore-save-chart"
+                          v-has="'main_add'"
+                          :class="{'btn-disabled-cursor-not-allowed' : saveDisabled}"
+                          :disabled="saveDisabled"
+                          class="top-tool-btn top-tool-btn--text"
+                          type="button"
+                          @click="saveChart">
+                    {{$t('dashboard.metric.saveChart')}}
+                  </span>
+                    <span v-else
+                          id="explore-save-chart-logs"
+                          v-has="'main_add'"
+                          :class="{'btn-disabled-cursor-not-allowed' : saveDisabled}"
+                          :disabled="saveDisabled"
+                          class="top-tool-btn top-tool-btn--text"
+                          type="button"
+                          @click="saveChartLogs">
+                    {{$t('dashboard.metric.saveChart')}}
+                  </span>
+                  </div>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <div id="chart-export-html" @click="exportToHtml"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </div>
         <div id="explore-promql-box" class="top-tools" style="padding-top: 0; flex-wrap: wrap">
@@ -1662,6 +1677,50 @@ export default {
       }
       letter += self.letter[num % 26]
       return letter
+    },
+    exportToHtml (name) {
+      const params = {
+        type: this.showMetrics ? 1 : 2,
+        start: this.momentStrToTimestamp(this.filterTime[0]) / 1000,
+        end: this.momentStrToTimestamp(this.filterTime[1]) / 1000,
+        unit: this.chartUnit,
+        expressions: this.expressions.map(item => encodeURIComponent(item))
+      }
+      this.$get('/visual/explore/snapshot', params, 'blob').then(res => {
+        const self = this
+        let fileName = this.showMetrics ? 'Metrics explore' : 'Logs explore'
+        const resFileName = ''
+        if (resFileName) {
+          fileName = resFileName
+        }
+        if (res.type == 'application/json') {
+          const reader = new FileReader() // 创建一个FileReader实例
+          reader.readAsText(res, 'utf-8') // 读取文件,结果用字符串形式表示
+          reader.onload = function () { // 读取完成后,**获取reader.result**
+            const { msg } = JSON.parse(reader.result)
+            self.$message.error(msg) // 弹出错误提示
+          }
+          return
+        }
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          const blobObject = new Blob([res])
+          window.navigator.msSaveOrOpenBlob(blobObject, fileName + '.html')
+        } else {
+          const blob = new Blob([res])
+          const link = document.createElement('a')
+          const href = window.URL.createObjectURL(blob) // 下载链接
+          link.href = href
+          link.download = fileName + '.html' // 下载后文件名
+          document.body.appendChild(link)
+          link.click() // 点击下载
+          document.body.removeChild(link) // 下载完成移除元素
+          window.URL.revokeObjectURL(href) // 释放blob对象
+        }
+        this.$refs.topTool.closeDialog()
+      }, () => {
+        this.$message.error('123')
+      })
     }
   },
   watch: {

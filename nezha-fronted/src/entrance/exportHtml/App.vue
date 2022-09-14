@@ -13,11 +13,12 @@
 
             <div style="display: flex;flex-direction: column">
 <!--              <i class="nz-icon nz-icon-arrow-down"/>-->
-              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right"> {{dataJson.panel.data.name}} </div>
+              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right" v-if="!dataJson.type"> {{dataJson.panel.data.name}} </div>
+              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right" v-if="dataJson.type"> Explore </div>
               <span>  {{dateFormat(dataJson.start * 1000)}} - {{dateFormat(dataJson.end * 1000)}} ({{dataJson.timezone}})</span>
             </div>
           </div>
-          <div  id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow:hidden; overflow-y: auto;height: calc(100% - 60px);display: flex;flex-direction: column'>
+          <div v-if="!dataJson.type" id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow:hidden; overflow-y: auto;height: calc(100% - 60px);display: flex;flex-direction: column'>
             <chartList
               ref="chartList"
               name="panel"
@@ -37,6 +38,15 @@
               :loading="chartListLoading"
             />
           </div>
+          <div v-if="dataJson.type" id="explore" class="explores" style='overflow:hidden;background: #fffffe; overflow-y: auto;height: calc(100% - 60px);display: flex;flex-direction: column'>
+            <exploreItem
+              ref="exploreItem"
+              :key="dataJson.type"
+              :closable="false"
+              :tab-index="dataJson.type"
+            >
+            </exploreItem>
+          </div>
         </div>
       </div>
 
@@ -47,6 +57,7 @@
 
 <script>
 import chartList from '@/components/chart/chartList.vue'
+import exploreItem from '@/components/page/dashboard/explore/exploreItemHtml'
 import moment from 'moment-timezone'
 import { loadI18n } from '@/components/common/i18n'
 import i18nData from '@/entrance/exportHtml/i18nData'
@@ -61,7 +72,8 @@ export default {
     }
   },
   components: {
-    chartList: chartList
+    chartList: chartList,
+    exploreItem
   },
   created () {
     this.$i18n.locale = this.dataJson.language

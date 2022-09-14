@@ -117,7 +117,7 @@ if (arg === 'html' || devStart === 'dev:html') {
       resolve('src/components/common/rightBox'),
       resolve('src/components/common/table'),
       resolve('src/components/common/v-selectpagenew'),
-      resolve('src/components/page')
+      // resolve('src/components/page')
     ],
     loader: 'url-loader',
     options: {
