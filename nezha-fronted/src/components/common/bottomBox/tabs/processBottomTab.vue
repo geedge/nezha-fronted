@@ -156,6 +156,7 @@ export default {
     },
     // 刷新组件事件
     async dateChange () {
+      this.tools.loading = true
       this.searchTime = bus.getTimezontDateRange()
       this.filterTime[0] = bus.timeFormate(this.searchTime[0], 'YYYY-MM-DD HH:mm:ss')
       this.filterTime[1] = bus.timeFormate(this.searchTime[1], 'YYYY-MM-DD HH:mm:ss')
