@@ -11,8 +11,7 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'project_add'" :title="$t('overall.createProject')" class="top-tool-btn margin-r-10"
-                type="button" @click="add">
+        <button id="account-add" v-has="'project_add'" :title="$t('overall.createProject')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
         <delete-button
@@ -52,8 +51,7 @@
       </template>
       <template v-slot:pagination>
         <div class="project-page">
-          <Pagination ref="Pagination" :page-obj="pageObj" :table-id="tableId" @pageNo='pageNo'
-                      @pageSize='pageSize'></Pagination>
+          <Pagination ref="Pagination" :page-obj="pageObj" :table-id="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
         </div>
       </template>
     </nz-data-list>

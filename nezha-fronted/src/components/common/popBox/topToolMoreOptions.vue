@@ -24,6 +24,7 @@
       </el-dropdown-menu>
 
       <el-dialog :close-on-click-modal="importBox.type!=3" destroy-on-close :show-close="true" :title="importBox.title" :visible.sync="importBox.show" :width="importBox.width" append-to-body class="nz-dialog" @close="closeDialog">
+
         <!-- 新版导入 -->
         <div v-if="importBox.type == 1&&importType">
           <div class="upload-body">
@@ -57,7 +58,7 @@
               </li>
             </ul>
           </div>
-          <div slot="footer" class="footer">
+          <div class="footer">
             <div class="el-message-box__btns" style="text-align: right;">
               <el-popover
                 placement="bottom-start"
@@ -82,6 +83,7 @@
             </div>
           </div>
         </div>
+
         <!-- 导入 -->
         <div v-else-if="importBox.type == 1">
           <div class="upload-body">
@@ -170,7 +172,7 @@
               <div class="result-success-txt">{{$t('overall.result.successfully')}}</div>
               <div class="result-success-txt">
                 {{$t('overall.result.imported')}}
-                <span style="color: #333333" v-if="importResult">{{importResult.successNum}}</span>
+                <span v-if="importResult">{{importResult.successNum}}</span>
                 {{$t('overall.result.records')}}
               </div>
             </div>
@@ -238,26 +240,31 @@ export default {
     language () { return this.$store.getters.getLanguage },
     // 显示新版导入
     importType () {
-      const arr = ['/asset/asset/import', '/monitor/module/import']
+      // asset module endpoint
+      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import']
       return arr.some(item => item === this.importUrl)
     },
     // 已存在的内容处理方式
     showEexisted () {
-      const arr = ['/asset/asset/import', '/monitor/module/import']
+      // asset module endpoint
+      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import']
       return arr.some(item => item === this.importUrl)
     },
     // 遇到错误是否继续导入
     showIgnoreError () {
-      const arr = ['/asset/asset/import', '/monitor/module/import']
+      // asset module endpoint
+      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import']
       return arr.some(item => item === this.importUrl)
     },
     // 是否同步更新关联的dashboard
     showSyncDashboard () {
-      const arr = ['/asset/asset/import']
+      // asset endpoint
+      const arr = ['/asset/asset/import', '/monitor/endpoint/import']
       return arr.some(item => item === this.importUrl)
     },
     // 是否同步更新关联的endpoint
     showSyncEndpoint () {
+      // asset module
       const arr = ['/asset/asset/import', '/monitor/module/import']
       return arr.some(item => item === this.importUrl)
     }
@@ -673,15 +680,12 @@ export default {
       const split = '-'
       const date = new Date()
       const year = date.getFullYear()
-      const month = this.formatNum(date.getMonth() + 1)
-      const day = this.formatNum(date.getDate())
-      const hours = this.formatNum(date.getHours())
-      const minutes = this.formatNum(date.getMinutes())
-      const seconds = this.formatNum(date.getSeconds())
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      const hours = String(date.getHours()).padStart(2, '0')
+      const minutes = String(date.getMinutes()).padStart(2, '0')
+      const seconds = String(date.getSeconds()).padStart(2, '0')
       return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds
-    },
-    formatNum (num) {
-      return num > 9 ? num : '0' + num
     },
     editPanel () {
       this.$get('visual/panel/' + this.params.panelId).then(res => {
@@ -744,6 +748,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-
-</style>

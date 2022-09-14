@@ -86,8 +86,7 @@
         <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch" :title="$t('dashboard.panel.chartForm.filter')">
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
-        <button id="account-add" v-has="'monitor_endpoint_add'" :title="$t('overall.createEndpoint')" class="top-tool-btn"
-                type="button" @click="add">
+        <button id="account-add" v-has="'monitor_endpoint_add'" :title="$t('overall.createEndpoint')" class="top-tool-btn" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
        <top-tool-more-options
@@ -179,11 +178,15 @@
     <transition name="right-box">
       <batchAddEndpoint v-if="rightBox.batchAdd" @close="closeRightBatchAdd"></batchAddEndpoint>
     </transition>
-    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box></transition>
     <transition name="right-box">
-      <batchEditEndpoint    v-if="rightBox.batchShow"
-                            @close="closeRightBatchModify"
-                            @refresh="getTableData"></batchEditEndpoint>
+      <alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+    </transition>
+    <transition name="right-box">
+      <batchEditEndpoint
+        v-if="rightBox.batchShow"
+        @close="closeRightBatchModify"
+        @refresh="getTableData">
+      </batchEditEndpoint>
     </transition>
     <el-dialog :close-on-click-modal="false" :show-close="true" destroy-on-close :title='$t("overall.batchAddEndpoint")' :visible.sync="importBoxShow" :width="'600px'" append-to-body class="nz-dialog" @close="closeDialog">
       <div class="upload-body result-body">
