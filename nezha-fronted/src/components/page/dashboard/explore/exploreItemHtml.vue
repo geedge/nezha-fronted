@@ -1,13 +1,13 @@
 <template>
-  <div  class="explore list-page" style="background: #f9f9f9;padding: 10px 15px;">
-    <div style="display: flex;justify-content: space-between">
+  <div  class="explore list-page" style="background: #fffffe;padding: 10px 15px;">
+    <div style="display: flex;justify-content: space-between;align-items: center;margin-bottom: 10px;">
       <span>{{dataJson.type == 1 ? 'Metric expression' : 'Log expression'}}</span>
       <span>
        <chart-unit v-model="chartUnit" class="margin-r-10"></chart-unit>
       </span>
     </div>
     <div v-for="(item, index) in dataJson.data" :key = 'index' style="display: flex;margin-bottom: 10px">
-      <div style="flex: 1;margin-right: 10px;border: 1px solid #333;border-radius: 2px;">{{item.expression}}</div>
+      <div style="flex: 1;margin-right: 10px;border: 1px solid #ddd;border-radius: 2px;padding: 0 8px;line-height: 30px;width: calc(100% - 30px);word-break: break-word;">{{item.expression}}</div>
       <button
         class="top-tool-btn"
         :title="item.state?$t('overall.enabled'):$t('profile.close')"
