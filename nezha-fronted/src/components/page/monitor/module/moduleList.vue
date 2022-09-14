@@ -162,7 +162,6 @@ import moduleBox from '@/components/common/rightBox/moduleBox'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import moduleTable from '@/components/common/table/settings/moduleTable'
-import exportXLSX from '@/components/common/exportXLSX'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import nzDetailView from '@/components/common/detailView/nzDetailView'
@@ -178,7 +177,6 @@ export default {
     moduleBox,
     deleteButton,
     moduleTable,
-    'export-excel': exportXLSX,
     alertSilenceBox,
     topToolMoreOptions,
     nzDetailView,

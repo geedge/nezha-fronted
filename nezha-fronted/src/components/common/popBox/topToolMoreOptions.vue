@@ -238,17 +238,17 @@ export default {
     language () { return this.$store.getters.getLanguage },
     // 显示新版导入
     importType () {
-      const arr = ['/asset/asset/import']
+      const arr = ['/asset/asset/import', '/monitor/module/import']
       return arr.some(item => item === this.importUrl)
     },
     // 已存在的内容处理方式
     showEexisted () {
-      const arr = ['/asset/asset/import']
+      const arr = ['/asset/asset/import', '/monitor/module/import']
       return arr.some(item => item === this.importUrl)
     },
     // 遇到错误是否继续导入
     showIgnoreError () {
-      const arr = ['/asset/asset/import']
+      const arr = ['/asset/asset/import', '/monitor/module/import']
       return arr.some(item => item === this.importUrl)
     },
     // 是否同步更新关联的dashboard
@@ -258,7 +258,7 @@ export default {
     },
     // 是否同步更新关联的endpoint
     showSyncEndpoint () {
-      const arr = ['/asset/asset/import']
+      const arr = ['/asset/asset/import', '/monitor/module/import']
       return arr.some(item => item === this.importUrl)
     }
   },
@@ -272,9 +272,9 @@ export default {
         format: 1,
         templateFormat: 1, // 模板格式
         existed: 0, // 已存在的内容处理方式
-        ignoreError: Boolean(0), // 遇到错误是否继续导入
-        syncDashboard: Boolean(0), // 是否同步更新关联的dashboard
-        syncEndpoint: Boolean(0) // 是否同步更新关联的endpoint
+        ignoreError: 0, // 遇到错误是否继续导入
+        syncDashboard: 0, // 是否同步更新关联的dashboard
+        syncEndpoint: 0 // 是否同步更新关联的endpoint
       },
       existedArr: [
         { name: this.$t('overall.error'), value: 0 },
@@ -424,9 +424,9 @@ export default {
           this.importBox.format = 1
           this.importBox.templateFormat = 1 // 模板格式
           this.importBox.existed = 0// 已存在的内容处理方式
-          this.importBox.ignoreError = Boolean(0) // 遇到错误是否继续导入
-          this.importBox.syncDashboard = Boolean(0) // 是否同步更新关联的dashboard
-          this.importBox.syncEndpoint = Boolean(0)// 是否同步更新关联的endpoint
+          this.importBox.ignoreError = 0 // 遇到错误是否继续导入
+          this.importBox.syncDashboard = 0 // 是否同步更新关联的dashboard
+          this.importBox.syncEndpoint = 0 // 是否同步更新关联的endpoint
         })
       }, 200)
     },
