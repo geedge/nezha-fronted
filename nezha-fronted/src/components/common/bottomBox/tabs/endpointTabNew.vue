@@ -62,7 +62,7 @@ import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 
 export default {
-  name: 'terminalLogTab',
+  name: 'endpointTabNew',
   mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,

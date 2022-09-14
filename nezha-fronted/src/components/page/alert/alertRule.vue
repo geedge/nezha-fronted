@@ -154,7 +154,6 @@
 </template>
 <script>
 import bus from '@/libs/bus'
-import exportXLSX from '@/components/common/exportXLSX'
 import alertRuleBox from '@/components/common/rightBox/alertRuleBox'
 import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
@@ -175,7 +174,6 @@ export default {
     alertRuleBox,
     alertRuleTable,
     nzDataList,
-    'export-excel': exportXLSX,
     topToolMoreOptions,
     alertSilenceBox,
     nzDetailView,

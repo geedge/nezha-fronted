@@ -108,7 +108,6 @@
 </template>
 
 <script>
-import exportXLSX from '@/components/common/exportXLSX'
 import deleteButton from '@/components/common/deleteButton'
 import dataListMixin from '@/components/common/mixin/dataList'
 import chartTmplTable from '@/components/common/table/settings/chartTmplTable'
@@ -122,7 +121,6 @@ export default {
   components: {
     deleteButton,
     chartTmplTable,
-    'export-excel': exportXLSX,
     topToolMoreOptions,
     chartRightBox
   },
