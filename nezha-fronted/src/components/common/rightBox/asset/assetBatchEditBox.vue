@@ -304,6 +304,7 @@ export default {
           }, {
             name: this.$t('overall.dc'),
             type: 'dc',
+            id: 'dc',
             label: 'dcIds',
             readonly: true,
             disabled: false
