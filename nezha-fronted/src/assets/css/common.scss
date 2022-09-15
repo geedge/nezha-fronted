@@ -551,3 +551,13 @@ textarea {
   }
 }
 
+.left-menu{
+  .el-menu::-webkit-scrollbar-thumb {
+    background-color: $--scrollbar-left-menu-background-color;
+    border-radius: 3px;
+  }
+  .el-menu::-webkit-scrollbar-thumb:hover {
+    background-color: $--scrollbar-left-menu-background-color-hover;
+    border-radius: 3px;
+  }
+}
