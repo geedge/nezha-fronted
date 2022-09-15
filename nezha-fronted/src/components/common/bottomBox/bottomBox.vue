@@ -43,6 +43,7 @@
         <log-bottom-tab v-if="from === fromRoute.asset && targetTab === 'log'" v-show="subResizeShow" :sign="sign+'log'" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
         <process-bottom-tab v-if="from === fromRoute.asset && targetTab === 'process' && obj.clientState == '1'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></process-bottom-tab>
         <assetSubTab v-if="from === fromRoute.asset && targetTab === 'assetSubTab' && obj.childrenNum" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></assetSubTab>
+        <network-bottom-tab v-if="from === fromRoute.asset && targetTab === 'network'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></network-bottom-tab>
         <!--module列表的tab-->
         <endpointTabNew v-if="from === fromRoute.module && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
         <alertMessageTabNew v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
@@ -94,6 +95,7 @@ import assetTab from '@/components/common/bottomBox/tabs/assetTab'
 import { fromRoute } from '@/components/common/js/constants'
 import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
 import processBottomTab from '@/components/common/bottomBox/tabs/processBottomTab'
+import networkBottomTab from '@/components/common/bottomBox/tabs/networkBottomTab'
 import scrapeEndpoint from '@/components/common/bottomBox/tabs/scrapeEndpoint'
 import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
 import recordRuleEvalLog from '@/components/common/bottomBox/tabs/recordRuleEvalLog'
@@ -106,6 +108,7 @@ export default {
     scrapeEndpoint,
     LogBottomTab,
     processBottomTab,
+    networkBottomTab,
     cabinetTab,
     alertMessageTab,
     endpointTab,
@@ -261,6 +264,7 @@ export default {
       if (hasProcess) {
         tabs.push({ prop: 'process', name: this.$t('overall.process') })
       }
+      tabs.push({ prop: 'network', name: this.$t('overall.network') })
       return tabs
     },
     endpointTabs () {
