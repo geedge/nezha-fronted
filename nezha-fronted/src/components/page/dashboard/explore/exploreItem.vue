@@ -1686,6 +1686,9 @@ export default {
         unit: this.chartUnit,
         expressions: this.expressions.map(item => encodeURIComponent(item))
       }
+      if (!this.showMetrics) {
+        params.limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
+      }
       this.$get('/visual/explore/snapshot', params, 'blob').then(res => {
         const self = this
         let fileName = this.showMetrics ? 'Metrics explore' : 'Logs explore'

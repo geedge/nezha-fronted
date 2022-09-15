@@ -28,12 +28,12 @@
         <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
           <div slot="title" class="explore-table-title">
             {{$t('dashboard.panel.chartForm.typeVal.table.label')}}
-            <i
-              class="nz-icon-gear nz-icon"
-              style="position: absolute;right: 10px;top: 8px"
-              @click.stop="tools.showCustomTableTitle = true"
-              :title="$t('overall.selectColumns')"
-            ></i>
+<!--            <i-->
+<!--              class="nz-icon-gear nz-icon"-->
+<!--              style="position: absolute;right: 10px;top: 8px"-->
+<!--              @click.stop="tools.showCustomTableTitle = true"-->
+<!--              :title="$t('overall.selectColumns')"-->
+<!--            ></i>-->
             <!-- 自定义table列 -->
             <transition name="el-zoom-in-top">
               <element-set
