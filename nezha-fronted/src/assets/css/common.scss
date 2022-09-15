@@ -561,3 +561,17 @@ textarea {
     border-radius: 3px;
   }
 }
+.explore {
+  .el-icon-arrow-down{
+    font-family: nz-icon!important;
+  }
+  .el-icon-arrow-down::before{
+    content: '\e6b0';
+  }
+  .el-icon-check{
+    font-family: nz-icon!important;
+  }
+  .el-icon-check::before{
+    content: '\e689';
+  }
+}

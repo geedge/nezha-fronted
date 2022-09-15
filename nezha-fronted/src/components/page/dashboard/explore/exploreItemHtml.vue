@@ -445,9 +445,6 @@ export default {
         this.chartLoading = false
         const errorRowIndex = []
         res.forEach((r, i) => {
-          if (!r.state) {
-            return
-          }
           if (typeof r === 'string') {
             errorRowIndex.push(i)
           }
@@ -457,8 +454,8 @@ export default {
           res = res.filter((r, i) => errorRowIndex.indexOf(i) === -1)
         }
         res = res.filter((r, i) => r.state)
+        const logData = res.map(r => r.data)
         if (res.length > 0) {
-          const logData = res.map(r => r.data)
           if (logData[0].result.length > 0) {
             this.logTabNoData = false
           } else {
