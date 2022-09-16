@@ -38,7 +38,7 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'processCmd'">
-          <div :title="scope.row[item.prop] ? scope.row[item.prop] : scope.row.processName">{{scope.row[item.prop] ? scope.row[item.prop] : scope.row.processName}}</div>
+          <div class="process-name" :title="scope.row[item.prop] ? scope.row[item.prop] : scope.row.processName">{{scope.row[item.prop] ? scope.row[item.prop] : scope.row.processName}}</div>
         </template>
         <template v-else-if="item.prop === 'processId'">
           {{scope.row[item.prop]}}
@@ -145,5 +145,10 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
+.process-name{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>

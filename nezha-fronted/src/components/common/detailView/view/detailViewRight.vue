@@ -26,7 +26,7 @@
       <log-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'log'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
       <assetSubTab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'assetSubTab' && obj.childrenNum" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab="targetTab" @changeTab="changeTab"></assetSubTab>
       <process-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'process' && obj.clientState == '1'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab="targetTab" @changeTab="changeTab"></process-bottom-tab>
-      <network-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'network'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></network-bottom-tab>
+      <network-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'network' && obj.clientState == '1'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></network-bottom-tab>
       <!--module列表的tab-->
       <endpointTabNew :showTitle="false" v-if="from === fromRoute.module && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
       <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
@@ -224,9 +224,8 @@ export default {
         tabs.push({ prop: 'assetSubTab', name: this.$t('overall.assetSubTab') })
       }
       if (hasProcess) {
-        tabs.push({ prop: 'process', name: this.$t('overall.process') })
+        tabs.push({ prop: 'process', name: this.$t('overall.process') }, { prop: 'network', name: this.$t('overall.network') })
       }
-      tabs.push({ prop: 'network', name: this.$t('overall.network') })
       return tabs
     },
     endpointTabs () {
