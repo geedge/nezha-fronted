@@ -10,8 +10,7 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'model_add'" :title="$t('overall.createModel')" class="top-tool-btn margin-r-10"
-                type="button" @click="add">
+        <button id="account-add" v-has="'model_add'" :title="$t('overall.createModel')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
        <top-tool-more-options
@@ -20,9 +19,9 @@
           id="model"
           :params="searchLabel"
           :permissions="{
-                  import: 'model_add',
-                  export: 'model_edit'
-                }"
+            import: 'model_add',
+            export: 'model_edit'
+          }"
           class="top-tool-export margin-r-10"
           export-file-name="asset-model"
           export-url="/asset/model/export"

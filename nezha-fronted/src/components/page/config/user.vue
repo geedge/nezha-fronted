@@ -45,7 +45,7 @@
         >
           <template>
             <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getTableData" @keyup.enter.native="getTableData" size="mini"/>
-            <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
+            <span class="jump-pages">/&nbsp;{{pageObj.pages}}</span>
           </template>
         </el-pagination>
       </template>
@@ -64,8 +64,7 @@
       @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'user_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-r-10"
-                type="button" @click="add">
+        <button id="account-add" v-has="'user_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
         <delete-button
