@@ -44,10 +44,10 @@
           {{scope.row[item.prop]}}
         </template>
         <template v-else-if="item.prop === 'localAddress'">
-          {{scope.row[item.prop]}} : {{scope.row.localPort == 0 ? '*' : scope.row.localPort}}
+          {{scope.row[item.prop]}}:{{scope.row.localPort == 0 ? '*' : scope.row.localPort}}
         </template>
         <template v-else-if="item.prop === 'foreignAddress'">
-          {{scope.row[item.prop] + ':' + scope.row.foreignPort}}
+          {{scope.row[item.prop]}}:{{scope.row.foreignPort == 0 ? '*' : scope.row.foreignPort}}
         </template>
         <template v-else-if="item.prop === 'receiveQueue'">
           {{scope.row[item.prop]}}
