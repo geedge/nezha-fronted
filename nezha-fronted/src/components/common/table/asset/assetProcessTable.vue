@@ -11,12 +11,12 @@
     @selection-change="selectionChange"
     @row-dblclick="(row)=>{queryMessage(row)}"
   >
-    <el-table-column
+    <!-- <el-table-column
       :resizable="false"
       align="center"
       type="selection"
       width="55">
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column
       v-for="(item, index) in customTableTitle"
       v-if="item.show"
@@ -143,7 +143,8 @@ export default {
           label: this.$t('overall.state'),
           prop: 'state',
           show: false,
-          minWidth: 120
+          minWidth: 120,
+          sortable: 'custom'
         }, {
           label: this.$t('asset.process.threadCount'),
           prop: 'threadCount',

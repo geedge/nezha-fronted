@@ -11,12 +11,12 @@
     @selection-change="selectionChange"
     @row-dblclick="(row)=>{queryMessage(row)}"
   >
-    <el-table-column
+    <!-- <el-table-column
       :resizable="false"
       align="center"
       type="selection"
       width="55">
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column
       v-for="(item, index) in customTableTitle"
       v-if="item.show"
@@ -38,15 +38,21 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'processCmd'">
-          <div :title="scope.row[item.prop] || scope.row.processName">{{scope.row[item.prop] || scope.row.processName}}</div>
+          <div :title="scope.row[item.prop] ? scope.row[item.prop] : scope.row.processName">{{scope.row[item.prop] ? scope.row[item.prop] : scope.row.processName}}</div>
         </template>
         <template v-else-if="item.prop === 'processId'">
           {{scope.row[item.prop]}}
         </template>
-        <template v-else-if="item.prop === 'transmitQueue'">
+        <template v-else-if="item.prop === 'localAddress'">
+          {{scope.row[item.prop]}} : {{scope.row.localPort == 0 ? '*' : scope.row.localPort}}
+        </template>
+        <template v-else-if="item.prop === 'foreignAddress'">
+          {{scope.row[item.prop] + ':' + scope.row.foreignPort}}
+        </template>
+        <template v-else-if="item.prop === 'receiveQueue'">
           {{scope.row[item.prop]}}
         </template>
-         <template v-else-if="item.prop === 'receiveQueue'">
+        <template v-else-if="item.prop === 'transmitQueue'">
           {{scope.row[item.prop]}}
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -111,18 +117,20 @@ export default {
           label: this.$t('overall.state'),
           prop: 'state',
           show: true,
-          minWidth: 120
+          minWidth: 120,
+          sortable: 'custom'
+        },
+        {
+          label: this.$t('asset.network.receiveQueue'),
+          prop: 'receiveQueue',
+          show: true,
+          minWidth: 120,
+          sortable: 'custom'
         }, {
           label: this.$t('asset.network.transmitQueue'),
           prop: 'transmitQueue',
           show: true,
           minWidth: 200,
-          sortable: 'custom'
-        }, {
-          label: this.$t('asset.network.receiveQueue'),
-          prop: 'receiveQueue',
-          show: true,
-          minWidth: 120,
           sortable: 'custom'
         }
       ]
@@ -137,7 +145,5 @@ export default {
   }
 }
 </script>
-<style>
-</style>
 <style>
 </style>
