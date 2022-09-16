@@ -61,7 +61,7 @@ import table from '@/components/common/mixin/table'
 import Template from '../../../page/config/template'
 import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
 export default {
-  name: 'cabinet Table',
+  name: 'cabinetTable',
   components: { Template, alertDaysInfo },
   mixins: [table],
   props: {

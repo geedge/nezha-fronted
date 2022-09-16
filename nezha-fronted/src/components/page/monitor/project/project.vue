@@ -3,29 +3,40 @@
     <topologyL5 v-if="reloadFacade" ref="facade" :obj="currentProject" :topologyIndexF="topologyIndexF" targetTab.sync="panel" @changeTopologyIndexF="changeTopologyIndexF"/>
 
     <transition name="el-zoom-in-bottom">
-      <bottom-box v-if="bottomBox.showSubList"
-                  :sub-resize-show="bottomBox.subResizeShow"
-                  :is-full-screen="bottomBox.isFullScreen"
-                  :from="$CONSTANTS.fromRoute.endpoint"
-                  :target-tab.sync="bottomBox.targetTab"
-                  :detail="bottomBox.endpointDetail"
-                  :obj="endpoint"
-                  :detail-list="bottomBox.alertList"
-                  :asset-detail="bottomBox.assetDetail"
-                  @closeSubList="bottomBox.showSubList = false"
-                  @fullScreen="fullScreen"
-                  @exitFullScreen="exitFullScreen"
-                  @listResize="listResize"></bottom-box>
+      <bottom-box
+        v-if="bottomBox.showSubList"
+        :sub-resize-show="bottomBox.subResizeShow"
+        :is-full-screen="bottomBox.isFullScreen"
+        :from="$CONSTANTS.fromRoute.endpoint"
+        :target-tab.sync="bottomBox.targetTab"
+        :detail="bottomBox.endpointDetail"
+        :obj="endpoint"
+        :detail-list="bottomBox.alertList"
+        :asset-detail="bottomBox.assetDetail"
+        @closeSubList="bottomBox.showSubList = false"
+        @fullScreen="fullScreen"
+        @exitFullScreen="exitFullScreen"
+        @listResize="listResize">
+    </bottom-box>
     </transition>
     <transition name="right-box">
-      <add-endpoint-box v-if="rightBox.addEndpoint.show" :current-project="currentProject"
-                        :current-module="currentModule" @close="closeAddEndpointRightBox"
-                        ref="addEndpointBox"></add-endpoint-box>
+      <add-endpoint-box
+        v-if="rightBox.addEndpoint.show"
+        :current-project="currentProject"
+        :current-module="currentModule"
+        @close="closeAddEndpointRightBox"
+        ref="addEndpointBox">
+      </add-endpoint-box>
     </transition>
     <transition name="right-box">
-      <edit-endpoint-box v-if="rightBox.editEndpoint.show" :project="currentProject" :module="currentModule"
-                         :endpoint="endpoint" @close="closeEditEndpointRightBox"
-                         ref="editEndpointBox"></edit-endpoint-box>
+      <edit-endpoint-box
+        v-if="rightBox.editEndpoint.show"
+        :project="currentProject"
+        :module="currentModule"
+        :endpoint="endpoint"
+        @close="closeEditEndpointRightBox"
+        ref="editEndpointBox">
+      </edit-endpoint-box>
     </transition>
   </div>
 </template>

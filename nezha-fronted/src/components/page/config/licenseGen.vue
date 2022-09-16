@@ -10,11 +10,12 @@
         </el-form-item>
         <!-- type -->
         <el-form-item :label="$t('overall.type')" prop="type">
-          <el-select class="right-box__select"
-                     v-model="licenseGen.type"
-                     :placeholder="$t('overall.select')"
-                     popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
-                     size="small">
+          <el-select
+            class="right-box__select"
+            v-model="licenseGen.type"
+            :placeholder="$t('overall.select')"
+            popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+            size="small">
             <template v-for="item in typeList">
               <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
             </template>

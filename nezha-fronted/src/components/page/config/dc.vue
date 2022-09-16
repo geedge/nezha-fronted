@@ -28,9 +28,9 @@
           :params="searchLabel"
           :params2="searchCheckBox"
           :permissions="{
-                  import: 'dc_add',
-                  export: 'dc_edit'
-                }"
+            import: 'dc_add',
+            export: 'dc_edit'
+          }"
           class="top-tool-export margin-r-10 margin-l-10"
           export-file-name="datacenter"
           export-url="/dc/export"
@@ -65,7 +65,7 @@
         >
           <template>
             <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getTableData" @keyup.enter.native="getTableData" size="mini"/>
-            <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
+            <span class="jump-pages">/&nbsp;{{pageObj.pages}}</span>
           </template>
         </el-pagination>
       </template>
@@ -84,8 +84,7 @@
       @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
-        <button id="dc-add" v-has="'dc_add'" :title="$t('overall.createDatacenter')" class="top-tool-btn margin-r-10"
-                type="button" @click="add">
+        <button id="dc-add" v-has="'dc_add'" :title="$t('overall.createDatacenter')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
        <top-tool-more-options
@@ -94,9 +93,9 @@
           id="model"
           :params="searchLabel"
           :permissions="{
-                  import: 'dc_add',
-                  export: 'dc_edit'
-                }"
+            import: 'dc_add',
+            export: 'dc_edit'
+          }"
           class="top-tool-export margin-r-10"
           export-file-name="datacenter"
           export-url="/dc/export"
@@ -160,7 +159,7 @@
 <script>
 import dcBox from '@/components/common/rightBox/dcBox' // dc弹框
 import cabinetBox from '@/components/common/rightBox/cabinetBox' // dc弹框
-import trafficSettingBox from '@/components/common/rightBox/trafficSetting/trafficSettingBox'
+// import trafficSettingBox from '@/components/common/rightBox/trafficSetting/trafficSettingBox'
 import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
@@ -169,7 +168,7 @@ import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import nzDetailView from '@/components/common/detailView/nzDetailView'
 import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import dcDetail from '@/components/common/detailView/list/dc/dcDetail'
-import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
+// import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
 import bus from '@/libs/bus'
 
 export default {

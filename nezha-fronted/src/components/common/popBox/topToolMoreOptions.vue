@@ -240,20 +240,20 @@ export default {
     language () { return this.$store.getters.getLanguage },
     // 显示新版导入
     importType () {
-      // asset module endpoint
-      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import']
+      // asset module endpoint dc cabinet
+      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import', '/dc/import', '/dc/cabinet/import']
       return arr.some(item => item === this.importUrl)
     },
     // 已存在的内容处理方式
     showEexisted () {
-      // asset module endpoint
-      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import']
+      // asset module endpoint dc cabinet
+      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import', '/dc/import', '/dc/cabinet/import']
       return arr.some(item => item === this.importUrl)
     },
     // 遇到错误是否继续导入
     showIgnoreError () {
-      // asset module endpoint
-      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import']
+      // asset module endpoint dc cabinet
+      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import', '/dc/import', '/dc/cabinet/import']
       return arr.some(item => item === this.importUrl)
     },
     // 是否同步更新关联的dashboard
@@ -441,11 +441,11 @@ export default {
       const language = localStorage.getItem('nz-language') || 'en' // 初始未选择默认 en 英文
       // 导出模板后缀
       let suffix = '.xlsx'
-      if (this.importBox.templateFormat == 1) {
+      if (templateFormat == 1) {
         suffix = '.xlsx'
-      } else if (this.importBox.templateFormat == 2) {
+      } else if (templateFormat == 2) {
         suffix = '.csv'
-      } else if (this.importBox.templateFormat == 3) {
+      } else if (templateFormat == 3) {
         suffix = '.json'
       }
       const fileName = this.exportFileName + '-' + this.$t('overall.template') + '-' + this.getTimeString() + suffix
