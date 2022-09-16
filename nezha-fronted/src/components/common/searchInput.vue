@@ -486,6 +486,9 @@ export default {
             if (item.id === 27 && item.type === 'idc' && item.label === 'idcId') {
               this.getDcData()
             }
+            if (item.type === 'dc' && item.id === 'dc') {
+              this.getDcData()
+            }
           })
         }
       }

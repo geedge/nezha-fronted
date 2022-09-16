@@ -34,7 +34,7 @@
         <span class="operation-label">Result:</span>
         <span class="operation-length">{{tableData.length}}</span>
       </div>
-      <div class="log-operation log-operation--right">
+      <div class="log-operation log-operation--right" v-if=" dataJson && dataJson.type">
         <button class="top-tool-btn" style="cursor: pointer;z-index: 2;" type="button" @click="exportLog" :title="$t('overall.download')"><i class="nz-icon nz-icon-download"></i></button>
       </div>
     </div>
@@ -130,6 +130,7 @@ export default {
     const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
     return {
       theme,
+      dataJson: window.dataJson,
       operations: {
         levels: [0, 1, 2, 3, 4, 5, 6],
         descending: true

@@ -551,3 +551,31 @@ textarea {
   }
 }
 
+.left-menu{
+  .el-menu::-webkit-scrollbar-thumb {
+    background-color: $--scrollbar-left-menu-background-color;
+    border-radius: 3px;
+  }
+  .el-menu::-webkit-scrollbar-thumb:hover {
+    background-color: $--scrollbar-left-menu-background-color-hover;
+    border-radius: 3px;
+  }
+}
+.el-icon-arrow-down{
+  font-family: nz-icon!important;
+}
+.el-icon-arrow-down::before{
+  content: '\e6b0';
+}
+.el-icon-check{
+  font-family: nz-icon!important;
+}
+.el-icon-check::before{
+  content: '\e689';
+}
+.el-icon-arrow-left{
+  font-family: nz-icon!important;
+}
+.el-icon-check::before{
+  content: '\e778';
+}

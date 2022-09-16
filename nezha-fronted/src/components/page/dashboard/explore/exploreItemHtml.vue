@@ -28,12 +28,12 @@
         <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
           <div slot="title" class="explore-table-title">
             {{$t('dashboard.panel.chartForm.typeVal.table.label')}}
-            <i
-              class="nz-icon-gear nz-icon"
-              style="position: absolute;right: 10px;top: 8px"
-              @click.stop="tools.showCustomTableTitle = true"
-              :title="$t('overall.selectColumns')"
-            ></i>
+<!--            <i-->
+<!--              class="nz-icon-gear nz-icon"-->
+<!--              style="position: absolute;right: 10px;top: 8px"-->
+<!--              @click.stop="tools.showCustomTableTitle = true"-->
+<!--              :title="$t('overall.selectColumns')"-->
+<!--            ></i>-->
             <!-- 自定义table列 -->
             <transition name="el-zoom-in-top">
               <element-set
@@ -445,9 +445,6 @@ export default {
         this.chartLoading = false
         const errorRowIndex = []
         res.forEach((r, i) => {
-          if (!r.state) {
-            return
-          }
           if (typeof r === 'string') {
             errorRowIndex.push(i)
           }
@@ -457,8 +454,8 @@ export default {
           res = res.filter((r, i) => errorRowIndex.indexOf(i) === -1)
         }
         res = res.filter((r, i) => r.state)
+        const logData = res.map(r => r.data)
         if (res.length > 0) {
-          const logData = res.map(r => r.data)
           if (logData[0].result.length > 0) {
             this.logTabNoData = false
           } else {
