@@ -106,9 +106,7 @@
         </button>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="fileShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
-               :show-close="true" width="620px" class="nz-dialog" @closed="fileClosed">
-
+    <el-dialog :visible.sync="fileShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false' :show-close="true" width="620px" class="nz-dialog" @closed="fileClosed">
       <div>
         <div class="login-dialog-title">
           Should you ever lose your phone or access to your one time password secret, each of these recovery codes can be used one time each to regain access to your account.

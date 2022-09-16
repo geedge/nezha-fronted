@@ -240,26 +240,26 @@ export default {
     language () { return this.$store.getters.getLanguage },
     // 显示新版导入
     importType () {
-      // asset module endpoint dc cabinet
-      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import', '/dc/import', '/dc/cabinet/import']
+      // asset module endpoint dc cabinet model
+      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import', '/dc/import', '/dc/cabinet/import', '/asset/model/import']
       return arr.some(item => item === this.importUrl)
     },
     // 已存在的内容处理方式
     showEexisted () {
-      // asset module endpoint dc cabinet
-      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import', '/dc/import', '/dc/cabinet/import']
+      // asset module endpoint dc cabinet model
+      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import', '/dc/import', '/dc/cabinet/import', '/asset/model/import']
       return arr.some(item => item === this.importUrl)
     },
     // 遇到错误是否继续导入
     showIgnoreError () {
-      // asset module endpoint dc cabinet
-      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import', '/dc/import', '/dc/cabinet/import']
+      // asset module endpoint dc cabinet model
+      const arr = ['/asset/asset/import', '/monitor/module/import', '/monitor/endpoint/import', '/dc/import', '/dc/cabinet/import', '/asset/model/import']
       return arr.some(item => item === this.importUrl)
     },
     // 是否同步更新关联的dashboard
     showSyncDashboard () {
-      // asset endpoint
-      const arr = ['/asset/asset/import', '/monitor/endpoint/import']
+      // asset endpoint model
+      const arr = ['/asset/asset/import', '/monitor/endpoint/import', '/asset/model/import']
       return arr.some(item => item === this.importUrl)
     },
     // 是否同步更新关联的endpoint

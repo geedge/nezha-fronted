@@ -6,11 +6,12 @@
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
             <div class="system-title">{{$t('overall.basicInfo')}}</div>
             <el-form-item :label="$t('config.system.basic.language')" prop="language">
-              <el-select id="account-input-language"
-                         class="right-box__select"
-                         v-model="basic.language"
-                         popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
-                         size="small">
+              <el-select
+                id="account-input-language"
+                class="right-box__select"
+                v-model="basic.language"
+                popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                size="small">
                 <template v-for="item in languageList">f
                   <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </template>
@@ -28,21 +29,22 @@
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.defTheme')" prop="defTheme">
               <el-select id="account-input-language"
-                         class="right-box__select"
-                         v-model="basic.theme"
-                         popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
-                         size="small">
+                class="right-box__select"
+                v-model="basic.theme"
+                popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                size="small">
                 <template v-for="item in themeList">
                   <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </template>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.dataFormat')" prop="dataFormat">
-              <el-select id="account-input-language"
-                         class="right-box__select"
-                         v-model="basic.date_format"
-                         popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
-                         size="small">
+              <el-select
+                id="account-input-language"
+                class="right-box__select"
+                v-model="basic.date_format"
+                popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                size="small">
                 <template v-for="item in dateFormatList">
                   <el-option :key="item.value" :label="item.label" :value="item.value">
                     <div style="display: flex;justify-content: space-between;">
