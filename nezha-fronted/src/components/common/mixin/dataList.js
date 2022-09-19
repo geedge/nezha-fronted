@@ -96,7 +96,12 @@ export default {
       if (this.switchTab) {
         dataListParam.switchTab = this.switchTab
       }
-      const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
+      let path = this.$route.fullPath.match(/\/(\S*)\?/)
+      if (!path) {
+        path = ''
+      } else {
+        path = path[1]
+      }
       this.updatePath(dataListParam, path)
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false

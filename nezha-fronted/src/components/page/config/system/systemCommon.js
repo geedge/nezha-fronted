@@ -110,7 +110,12 @@ export const parentTableCommon = {
       // if (this.switchTab) {
       //   systemParam.switchTab = this.switchTab
       // }
-      const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
+      let path = this.$route.fullPath.match(/\/(\S*)\?/)
+      if (!path) {
+        path = ''
+      } else {
+        path = path[1]
+      }
       this.updatePath(systemParam, path)
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
@@ -128,7 +133,12 @@ export const parentTableCommon = {
     }
   },
   created () {
-    const path = this.$route.fullPath.match(/\/(\S*)\?/)[1]
+    let path = this.$route.fullPath.match(/\/(\S*)\?/)
+    if (!path) {
+      path = ''
+    } else {
+      path = path[1]
+    }
     let searchKeys = {}
     if (path === 'link') {
       searchKeys = {
