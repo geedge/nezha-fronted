@@ -35,7 +35,7 @@ export default {
           this.$refs[detailType].bottomBox.targetTab = q.targetTab
           this.$refs[detailType].bottomBox.object = JSON.parse(q.selectObj)
         })
-      } else if (this.detailType === 'view') {
+      } else if (this.detailType === 'view' && q.detailType && q.selectObj) {
         this.detailType = q.detailType
         this.detailViewRightObj = JSON.parse(q.selectObj)
         this.$store.commit('setGlobalSearchId', this.detailViewRightObj.id)
