@@ -13,16 +13,15 @@
   >
     <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
     <template v-slot>
-      <div class="textarea-box">
+      <div class="textarea-box" :style="{height: rowBox ?'122px':'33px'}">
           <el-input
           type="textarea"
-          :class="row"
+          :class="rowBox ? 'textarea-small' : 'textarea-big'"
           :placeholder="$t('overall.addComment') + '...'"
           v-model="editComment.content"
-          @focus="stageZoomIn"
-          style="margin-bottom:10px;">
+          @focus="stageZoomIn">
          </el-input>
-         <div class="textarea-button" v-if="textareaShow">
+         <div class="textarea-button" v-if="rowBox">
           <button class="nz-btn nz-btn-size-mini nz-btn-style-normal" style="margin-right: 10px" type="button"  @click="save(obj)"><span>{{$t('overall.save')}}</span></button>
           <button class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancel()"><span>{{$t('overall.cancel')}}</span></button>
          </div>
@@ -76,7 +75,7 @@ export default {
       deep: true,
       handler (n) {
         this.searchLabel = { id: n.id }
-        this.getTableData()
+        // this.getTableData()
       }
 
     }
@@ -88,8 +87,7 @@ export default {
       searchLabel: { id: this.obj.id },
       tableData: [],
       // 输入框参数
-      row: 'add-small',
-      textareaShow: false,
+      rowBox: false,
       // 修改数据
       editComment: {
         id: '',
@@ -117,17 +115,13 @@ export default {
     },
     // 输入框聚焦事件
     stageZoomIn () {
-      this.row = 'add-big'
-      setTimeout(() => {
-        this.textareaShow = true
-      })
+      this.rowBox = true
     },
     // 取消事件
     cancel () {
       this.editComment.content = ''
-      this.textareaShow = false
-      this.row = 'add-small'
       this.editComment.id = ''
+      this.rowBox = false
     },
     save (obj) {
       const params = {
@@ -193,7 +187,7 @@ export default {
 }
 .textarea-button{
   position: absolute;
-  bottom: 20px;
+  bottom: 10px;
   right: 10px;
   .nz-btn.nz-btn-size-mini{
     width: 74px;

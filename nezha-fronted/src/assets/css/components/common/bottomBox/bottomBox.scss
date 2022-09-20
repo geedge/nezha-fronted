@@ -260,23 +260,18 @@
 // commentsBottomTab
 #commentBottomTab{
   .textarea-box{
+    .textarea-small.el-textarea{
+      height: calc(100% - 40px) !important;
+    }
+    .textarea-big.el-textarea{
+      height: 100% !important;
+    }
     textarea.el-textarea__inner{
-      overflow: hidden;
-      border: 1px solid $--border-color-light;
+      height: 100% !important;
+      border-color: transparent;
     }
-    .add-small{
-      textarea.el-textarea__inner{
-        min-height: 32px !important;
-        height: 32px !important;
-        line-height: 22px !important;
-      }
-    }
-    .add-big{
-      textarea.el-textarea__inner{
-        height: 122px !important;
-      }
-    }
-
+    margin-bottom: 10px;
+    border: 1px solid $--border-color-light;
   }
   #assetCommentTable{
     .descriptions-info{

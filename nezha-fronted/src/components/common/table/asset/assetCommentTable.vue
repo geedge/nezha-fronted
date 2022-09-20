@@ -38,8 +38,8 @@
                 <span class="descriptions-name">{{scope.row.createUser.name}}</span>
                 <span class="descriptions-name-small">@{{scope.row.createUser.name}}</span>
                 <span class="descriptions-time">{{utcTimeToTimezoneStr(scope.row.cts)}}</span>
-                <i class="nz-icon nz-icon-edit descriptions-button" @click="$emit('edit', scope.row.id)" :title="$t('overall.edit')" style="margin-right: 18px;"></i>
-                <i :title="$t('overall.delete')" @click="$emit('del', scope.row)" class="nz-icon nz-icon-delete descriptions-button"></i>
+                <i class="nz-icon nz-icon-edit descriptions-button" @click="$emit('edit', scope.row.id)" :title="$t('overall.edit')" style="margin-right: 18px;cursor: pointer;"></i>
+                <i :title="$t('overall.delete')" @click="$emit('del', scope.row)" class="nz-icon nz-icon-delete descriptions-button" style="cursor: pointer;"></i>
             </div>
             <div class="descriptions-content">{{scope.row.content}}</div>
         </div>
