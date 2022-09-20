@@ -74,7 +74,6 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        console.log(n)
         this.searchLabel = { id: n.id }
         // this.getTableData()
       }
@@ -100,14 +99,14 @@ export default {
   },
   methods: {
     getTableData () {
-      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
-      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.$set(this.searchLabel, 'pageSize', '-1')
+      this.$set(this.searchLabel, 'assetId', this.obj.id)
       this.searchLabel.id = this.obj.id
       this.tools.loading = true
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
-          this.tableData = response.data.list.filter(item => item.asset.id == this.obj.id)
+          this.tableData = response.data.list
           this.pageObj.total = response.data.total
         } else {
           this.$message.error(response.msg)
