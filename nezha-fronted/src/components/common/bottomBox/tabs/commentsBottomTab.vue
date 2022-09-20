@@ -168,18 +168,16 @@ export default {
       })
     },
     // 修改
-    edit (id) {
-      this.$get(this.url + '/' + id).then(response => {
-        if (response.code === 200) {
-          this.editComment = {
-            id: response.data.id,
-            content: response.data.content,
-            assetId: response.data.assetId,
-            replyId: response.data.replyId
-          }
+    async edit (id) {
+      const response = await this.$get(this.url + '/' + id)
+      if (response.code === 200) {
+        this.editComment = {
+          id: response.data.id,
+          content: response.data.content,
+          assetId: response.data.assetId,
+          replyId: response.data.replyId
         }
-      })
-
+      }
       this.stageZoomIn()
     }
 
