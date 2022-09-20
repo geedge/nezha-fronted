@@ -240,7 +240,7 @@ export default {
     language () { return this.$store.getters.getLanguage },
     // 显示新版导入
     importType () {
-      // asset module endpoint dc cabinet model alertRule
+      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp
       const arr = [
         '/asset/asset/import',
         '/monitor/module/import',
@@ -248,13 +248,15 @@ export default {
         '/dc/import',
         '/dc/cabinet/import',
         '/asset/model/import',
-        '/alert/rule/import'
+        '/alert/rule/import',
+        '/ipam/subnet/import',
+        '/ipam/ip/import'
       ]
       return arr.some(item => item === this.importUrl)
     },
     // 已存在的内容处理方式
     showEexisted () {
-      // asset module endpoint dc cabinet model alertRule
+      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp
       const arr = [
         '/asset/asset/import',
         '/monitor/module/import',
@@ -262,13 +264,15 @@ export default {
         '/dc/import',
         '/dc/cabinet/import',
         '/asset/model/import',
-        '/alert/rule/import'
+        '/alert/rule/import',
+        '/ipam/subnet/import',
+        '/ipam/ip/import'
       ]
       return arr.some(item => item === this.importUrl)
     },
     // 遇到错误是否继续导入
     showIgnoreError () {
-      // asset module endpoint dc cabinet model alertRule
+      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp
       const arr = [
         '/asset/asset/import',
         '/monitor/module/import',
@@ -276,7 +280,9 @@ export default {
         '/dc/import',
         '/dc/cabinet/import',
         '/asset/model/import',
-        '/alert/rule/import'
+        '/alert/rule/import',
+        '/ipam/subnet/import',
+        '/ipam/ip/import'
       ]
       return arr.some(item => item === this.importUrl)
     },

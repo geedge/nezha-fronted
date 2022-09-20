@@ -15,8 +15,7 @@
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'ipam_add'" :title="$t('overall.createipamDetail')" class="top-tool-btn margin-r-10"
-                type="button" @click="add">
+        <button id="account-add" v-has="'ipam_add'" :title="$t('overall.createipamDetail')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
         <top-tool-more-options
@@ -25,9 +24,9 @@
           id="ipam-ip"
           :params="searchLabel"
           :permissions="{
-                  import: 'ipam_add',
-                  export: 'ipam_edit'
-                }"
+            import: 'ipam_add',
+            export: 'ipam_edit'
+          }"
           class="top-tool-export margin-r-10"
           export-file-name="ipam"
           export-url="/ipam/ip/export"
