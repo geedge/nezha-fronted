@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "31836711",
+      "name": "No Comment",
+      "font_class": "a-NoComment",
+      "unicode": "e79e",
+      "unicode_decimal": 59294
+    },
+    {
       "icon_id": "29172335",
       "name": "隐藏",
       "font_class": "yincang1",

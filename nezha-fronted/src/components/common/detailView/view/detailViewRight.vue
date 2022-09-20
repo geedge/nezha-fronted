@@ -27,6 +27,7 @@
       <assetSubTab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'assetSubTab' && obj.childrenNum" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab="targetTab" @changeTab="changeTab"></assetSubTab>
       <process-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'process' && obj.clientState == '1'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab="targetTab" @changeTab="changeTab"></process-bottom-tab>
       <network-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'network' && obj.clientState == '1'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></network-bottom-tab>
+      <comments-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'comments'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></comments-bottom-tab>
       <!--module列表的tab-->
       <endpointTabNew :showTitle="false" v-if="from === fromRoute.module && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
       <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
@@ -53,6 +54,7 @@ import alertMessageTab from '@/components/common/bottomBox/tabs/alertMessageTab'
 import alertMessageTabNew from '@/components/common/bottomBox/tabs/alertMessageTabNew'
 import alertRuleEvalLog from '@/components/common/bottomBox/tabs/alertRuleEvalLog'
 import assetSubTab from '@/components/common/bottomBox/tabs/assetSubTab'
+import commentsBottomTab from '@/components/common/bottomBox/tabs/commentsBottomTab'
 import endpointQuery from '@/components/common/bottomBox/tabs/endpointQuery'
 import endpointTab from '@/components/common/bottomBox/tabs/endpointTab'
 import endpointTabNew from '@/components/common/bottomBox/tabs/endpointTabNew'
@@ -92,7 +94,8 @@ export default {
     'detail-right-top': detailRightTop,
     alertRuleEvalLog,
     processBottomTab,
-    networkBottomTab
+    networkBottomTab,
+    commentsBottomTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -226,6 +229,7 @@ export default {
       if (hasProcess) {
         tabs.push({ prop: 'process', name: this.$t('overall.process') }, { prop: 'network', name: this.$t('overall.network') })
       }
+      tabs.push({ prop: 'comments', name: this.$t('overall.comments') })
       return tabs
     },
     endpointTabs () {

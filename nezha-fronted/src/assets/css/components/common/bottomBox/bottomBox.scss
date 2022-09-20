@@ -254,3 +254,60 @@
 .symbol-select .el-input__inner {
   padding-left: 8px;
 }
+
+
+
+// commentsBottomTab
+#commentBottomTab{
+  .textarea-box{
+    .textarea-small.el-textarea{
+      height: calc(100% - 40px) !important;
+    }
+    .textarea-big.el-textarea{
+      height: 100% !important;
+    }
+    textarea.el-textarea__inner{
+      height: 100% !important;
+      border-color: transparent;
+    }
+    margin-bottom: 10px;
+    border: 1px solid $--border-color-light;
+  }
+  #assetCommentTable{
+    .descriptions-info{
+      font-size: 14px;
+      font-family: Roboto-Regular;
+      color: $--color-text-regular;
+      .descriptions-name{
+          font-family: Roboto-Medium;
+          font-weight: 600;
+          margin-right: 5px;
+          line-height: 14px;
+          color: $--color-text-primary;
+      }
+      .descriptions-name-small{
+        margin-right: 10px;
+        color: $--color-text-secondary;
+        font-size: 14px;
+        line-height: 12px;
+    }
+      .descriptions-time{
+          margin-right: 20px;
+          color: $--color-text-secondary;
+      }
+      .descriptions-button{
+          display: none;
+      }
+      .descriptions-content{
+          line-height: 20px;
+          margin-top: 5px;
+          color: $--color-text-primary;
+      }
+  }
+  .descriptions-info:hover{
+      .descriptions-button{
+          display: inline-block;
+      }
+  }
+  }
+}
