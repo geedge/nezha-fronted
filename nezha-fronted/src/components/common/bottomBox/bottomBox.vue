@@ -44,6 +44,7 @@
         <process-bottom-tab v-if="from === fromRoute.asset && targetTab === 'process' && obj.clientState == '1'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></process-bottom-tab>
         <assetSubTab v-if="from === fromRoute.asset && targetTab === 'assetSubTab' && obj.childrenNum" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></assetSubTab>
         <network-bottom-tab v-if="from === fromRoute.asset && targetTab === 'network' && obj.clientState == '1'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></network-bottom-tab>
+        <comments-bottom-tab v-if="from === fromRoute.asset && targetTab === 'comments'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></comments-bottom-tab>
         <!--module列表的tab-->
         <endpointTabNew v-if="from === fromRoute.module && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
         <alertMessageTabNew v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
@@ -82,6 +83,7 @@ import alertMessageTabNew from './tabs/alertMessageTabNew'
 import issueTab from './tabs/issueTab'
 import alertRuleEvalLog from './tabs/alertRuleEvalLog'
 import assetSubTab from './tabs/assetSubTab'
+import commentsBottomTab from './tabs/commentsBottomTab'
 import endpointQuery from './tabs/endpointQuery'
 import endpointTab from './tabs/endpointTab'
 import endpointTabNew from './tabs/endpointTabNew'
@@ -126,7 +128,8 @@ export default {
     alertRuleEvalLog,
     IpDetails,
     recordRuleEvalLog,
-    issueTab
+    issueTab,
+    commentsBottomTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -264,6 +267,7 @@ export default {
       if (hasProcess) {
         tabs.push({ prop: 'process', name: this.$t('overall.process') }, { prop: 'network', name: this.$t('overall.network') })
       }
+      tabs.push({ prop: 'comments', name: this.$t('overall.comments') })
       return tabs
     },
     endpointTabs () {

@@ -254,3 +254,65 @@
 .symbol-select .el-input__inner {
   padding-left: 8px;
 }
+
+
+
+// commentsBottomTab
+#commentBottomTab{
+  .textarea-box{
+    textarea.el-textarea__inner{
+      overflow: hidden;
+      border: 1px solid $--border-color-light;
+    }
+    .add-small{
+      textarea.el-textarea__inner{
+        min-height: 32px !important;
+        height: 32px !important;
+        line-height: 22px !important;
+      }
+    }
+    .add-big{
+      textarea.el-textarea__inner{
+        height: 122px !important;
+      }
+    }
+
+  }
+  #assetCommentTable{
+    .descriptions-info{
+      font-size: 14px;
+      font-family: Roboto-Regular;
+      color: $--color-text-regular;
+      .descriptions-name{
+          font-family: Roboto-Medium;
+          font-weight: 600;
+          margin-right: 5px;
+          line-height: 14px;
+          color: $--color-text-primary;
+      }
+      .descriptions-name-small{
+        margin-right: 10px;
+        color: $--color-text-secondary;
+        font-size: 14px;
+        line-height: 12px;
+    }
+      .descriptions-time{
+          margin-right: 20px;
+          color: $--color-text-secondary;
+      }
+      .descriptions-button{
+          display: none;
+      }
+      .descriptions-content{
+          line-height: 20px;
+          margin-top: 5px;
+          color: $--color-text-primary;
+      }
+  }
+  .descriptions-info:hover{
+      .descriptions-button{
+          display: inline-block;
+      }
+  }
+  }
+}
