@@ -712,6 +712,7 @@ export default {
         this.codeMirrorValue[this.index] = ''
         // this.expressionList[this.index] = ''
         this.$set(this.expressionList, this.index, '')
+        this.$emit('change', '')
       }
     },
     newDoc (val) {

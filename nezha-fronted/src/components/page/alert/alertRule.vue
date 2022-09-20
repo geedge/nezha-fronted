@@ -63,7 +63,7 @@
         >
           <template>
             <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getTableData" @keyup.enter.native="getTableData" size="mini"/>
-            <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
+            <span class="jump-pages">/&nbsp;{{pageObj.pages}}</span>
           </template>
         </el-pagination>
       </template>
@@ -81,8 +81,7 @@
       @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
-        <button id="alert-add" v-has="'alertRule_add'" :title="$t('overall.createAlertRule')" class="top-tool-btn"
-                @click="add">
+        <button id="alert-add" v-has="'alertRule_add'" :title="$t('overall.createAlertRule')" class="top-tool-btn"  @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
         <top-tool-more-options

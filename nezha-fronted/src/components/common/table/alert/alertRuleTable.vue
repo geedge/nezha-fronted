@@ -39,7 +39,7 @@
       </template>
       <template slot-scope="scope" :column="item">
         <span v-if="item.prop === 'severity'&&scope.row[item.prop]" class="severity">
-            <i class="nz-icon nz-icon-circle" :style="{color:scope.row[item.prop].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row[item.prop].name}}
+          <i class="nz-icon nz-icon-circle" :style="{color:scope.row[item.prop].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row[item.prop].name}}
         </span>
         <template v-else-if="item.prop === 'alertNum'">
           <span style="cursor: pointer" @click="queryMessage(scope.row)">
@@ -157,7 +157,7 @@
       </div>
     </el-table-column>
     <template slot="empty">
-      <div  v-if="!loading"  class="table-no-data">
+      <div v-if="!loading" class="table-no-data">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#nz-icon-no-data-list"></use>
         </svg>
