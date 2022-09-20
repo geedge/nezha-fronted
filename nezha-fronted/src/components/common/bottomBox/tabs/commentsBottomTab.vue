@@ -74,6 +74,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        console.log(n)
         this.searchLabel = { id: n.id }
         // this.getTableData()
       }
@@ -106,7 +107,7 @@ export default {
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
-          this.tableData = response.data.list
+          this.tableData = response.data.list.filter(item => item.asset.id == this.obj.id)
           this.pageObj.total = response.data.total
         } else {
           this.$message.error(response.msg)
