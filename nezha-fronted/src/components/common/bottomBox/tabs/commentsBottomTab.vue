@@ -99,8 +99,8 @@ export default {
   },
   methods: {
     getTableData () {
-      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
-      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.$set(this.searchLabel, 'pageSize', '-1')
+      this.$set(this.searchLabel, 'assetId', this.obj.id)
       this.searchLabel.id = this.obj.id
       this.tools.loading = true
       this.$get(this.url, this.searchLabel).then(response => {
