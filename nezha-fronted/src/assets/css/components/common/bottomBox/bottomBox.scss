@@ -261,17 +261,18 @@
 #commentBottomTab{
   .textarea-box{
     .textarea-small.el-textarea{
-      height: calc(100% - 40px) !important;
+      height: 100% !important;
     }
     .textarea-big.el-textarea{
-      height: 100% !important;
+      height: calc(100% - 40px) !important;
     }
     textarea.el-textarea__inner{
-      height: 100% !important;
+      height: 100%;
       border-color: transparent;
     }
     margin-bottom: 10px;
     border: 1px solid $--border-color-light;
+    background-color: $--background-color-empty;
   }
   #assetCommentTable{
     .descriptions-info{

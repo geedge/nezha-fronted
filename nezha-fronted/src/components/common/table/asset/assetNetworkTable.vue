@@ -38,10 +38,11 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'processCmd'">
-          <div class="process-name" :title="scope.row[item.prop] ? scope.row[item.prop] : scope.row.processName">{{scope.row[item.prop] ? scope.row[item.prop] : scope.row.processName}}</div>
+          <div v-if="scope.row[item.prop] || scope.row.processName" class="process-name" :title="scope.row[item.prop] ? scope.row[item.prop] : scope.row.processName">{{scope.row[item.prop] ? scope.row[item.prop] : scope.row.processName}}</div>
+          <div v-else title="-">-</div>
         </template>
         <template v-else-if="item.prop === 'processId'">
-          {{scope.row[item.prop]}}
+          {{scope.row[item.prop] == -1 ? "-" : scope.row[item.prop]}}
         </template>
         <template v-else-if="item.prop === 'localAddress'">
           {{scope.row[item.prop]}}:{{scope.row.localPort == 0 ? '*' : scope.row.localPort}}
