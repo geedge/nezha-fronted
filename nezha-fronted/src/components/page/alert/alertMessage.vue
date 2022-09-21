@@ -19,8 +19,7 @@
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
         <pick-time v-model="searchTime" sign="message" :default-pick="10" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
-        <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcel')" class="top-tool-btn margin-r-10"
-                type="button" @click="showExportDialog">
+        <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcel')" class="top-tool-btn margin-r-10" type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
         </button>
          <top-tool-more-options
@@ -92,7 +91,7 @@
     </nz-data-list>
     <!--导出-->
     <div class="export-xlsx">
-      <el-dialog :modal-append-to-body='false' :show-close="true" :title="importBox.title" :visible.sync="importBox.show" class="nz-dialog" width="600px" @close="closeDialog">
+      <el-dialog :modal-append-to-body='false' :show-close="true" :title="importBox.title" :visible.sync="importBox.show" class="nz-dialog" width="580px" @close="closeDialog">
         <div class="upload-body" style="height: 170px">
           <div class="export-box">
             <span class="export-title">Records</span>
@@ -160,9 +159,7 @@
       ></alertMessageInfo>
     </el-dialog>
     <!--全屏-->
-    <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
-               :visible.sync="dialogShowText"
-               width="96%"  @close="dialogShowText = false" :modal-append-to-body="false">
+    <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')" :visible.sync="dialogShowText" width="96%"  @close="dialogShowText = false" :modal-append-to-body="false">
       <div slot="title">
         <span class="nz-dialog-title">{{$t('alert.config.trbShot')}}</span>
       </div>

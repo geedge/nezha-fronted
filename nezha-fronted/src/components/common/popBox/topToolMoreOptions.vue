@@ -23,10 +23,10 @@
         <slot name="after"></slot>
       </el-dropdown-menu>
 
-      <el-dialog :close-on-click-modal="importBox.type!=3" destroy-on-close :show-close="true" :title="importBox.title" :visible.sync="importBox.show" :width="importBox.width" append-to-body class="nz-dialog" @close="closeDialog">
+      <el-dialog :close-on-click-modal="importBox.type!=3" destroy-on-close :show-close="true" :title="importBox.title" :visible.sync="importBox.show" width="580px" append-to-body class="nz-dialog" @close="closeDialog">
 
         <!-- 新版导入 -->
-        <div v-if="importBox.type == 1&&importType">
+        <div v-if="importBox.type == 1&&importNew">
           <div class="upload-body">
             <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls,.csv,.json" action="" class="import-upload" drag>
               <i class="el-icon-upload"></i>
@@ -239,8 +239,8 @@ export default {
   computed: {
     language () { return this.$store.getters.getLanguage },
     // 显示新版导入
-    importType () {
-      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp
+    importNew () {
+      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp panel expression
       const arr = [
         '/asset/asset/import',
         '/monitor/module/import',
@@ -250,13 +250,15 @@ export default {
         '/asset/model/import',
         '/alert/rule/import',
         '/ipam/subnet/import',
-        '/ipam/ip/import'
+        '/ipam/ip/import',
+        '/visual/panel/import',
+        '/expression/tmpl/import'
       ]
       return arr.some(item => item === this.importUrl)
     },
     // 已存在的内容处理方式
     showEexisted () {
-      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp
+      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp panel expression
       const arr = [
         '/asset/asset/import',
         '/monitor/module/import',
@@ -266,13 +268,15 @@ export default {
         '/asset/model/import',
         '/alert/rule/import',
         '/ipam/subnet/import',
-        '/ipam/ip/import'
+        '/ipam/ip/import',
+        '/visual/panel/import',
+        '/expression/tmpl/import'
       ]
       return arr.some(item => item === this.importUrl)
     },
     // 遇到错误是否继续导入
     showIgnoreError () {
-      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp
+      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp panel expression
       const arr = [
         '/asset/asset/import',
         '/monitor/module/import',
@@ -282,7 +286,9 @@ export default {
         '/asset/model/import',
         '/alert/rule/import',
         '/ipam/subnet/import',
-        '/ipam/ip/import'
+        '/ipam/ip/import',
+        '/visual/panel/import',
+        '/expression/tmpl/import'
       ]
       return arr.some(item => item === this.importUrl)
     },
@@ -395,7 +401,7 @@ export default {
       if (this.importFile && this.importFile.raw) {
         this.prevent_opt.import = true
         const form = new FormData()
-        if (this.importType) {
+        if (this.importNew) {
           form.append('file', this.importFile.raw)
         } else {
           form.append('excelFile', this.importFile.raw)
@@ -428,7 +434,6 @@ export default {
             const linkId = this.link ? this.link.id : ''
             this.$emit('afterImport', linkId)
             this.importBox.type = 3
-            this.importBox.width = '600px'
             this.importBox.title = this.$t('overall.importResult')
           } else {
             this.$message.error(response.msg)
@@ -688,10 +693,8 @@ export default {
       }
       if (type == 1) { // import
         this.importBox.title = this.$t('overall.importExcel')
-        this.importBox.width = '600px'
       } else if (type == 2) { // export
         this.importBox.title = this.$t('overall.exportExcel')
-        this.importBox.width = '580px'
         // if (this.exportBoxShow) {
         //   this.formatArr = [
         //     { name: 'XLSX', value: 1 },

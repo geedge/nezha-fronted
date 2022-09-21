@@ -10,8 +10,7 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
-        <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn"
-                type="button" @click="add">
+        <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn" type="button" @click="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
        <top-tool-more-options
@@ -74,8 +73,7 @@
     </transition>
     <!--导出-->
     <div class="export-xlsx">
-      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false'
-                 :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
+      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
         <div class="upload-body">
           <button @click="exportCur" class="el-button el-button--default el-button--small" id="alert-msg-exportcur">
             <span>{{$t('overall.current')}}</span>

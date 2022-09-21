@@ -11,8 +11,7 @@
       @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
-        <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn margin-r-10"
-                type="button" @click="add">
+        <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
        <top-tool-more-options
