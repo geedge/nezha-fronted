@@ -70,21 +70,20 @@ export default {
     }
   },
   watch: {
-    obj: {
-      immediate: true,
-      deep: true,
-      handler (n) {
-        this.searchLabel = { id: n.id }
-        // this.getTableData()
-      }
-
-    }
+    // obj: {
+    //   immediate: true,
+    //   deep: true,
+    //   handler (n) {
+    //     this.searchLabel = { id: n.id }
+    //     // this.getTableData()
+    //   }
+    // }
   },
   data () {
     return {
       url: 'asset/comment',
       tableId: 'assetCommentTable', // 需要分页的table的id，用于记录每页数量
-      searchLabel: { id: this.obj.id },
+      searchLabel: {},
       tableData: [],
       // 输入框参数
       rowBox: false,
@@ -101,13 +100,11 @@ export default {
     getTableData () {
       this.$set(this.searchLabel, 'pageSize', '-1')
       this.$set(this.searchLabel, 'assetId', this.obj.id)
-      this.searchLabel.id = this.obj.id
       this.tools.loading = true
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           this.tableData = response.data.list
-          this.pageObj.total = response.data.total
         } else {
           this.$message.error(response.msg)
         }
