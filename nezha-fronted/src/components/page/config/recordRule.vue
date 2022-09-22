@@ -20,9 +20,9 @@
           id="record-rule"
           :params="searchLabel"
           :permissions="{
-                  import: 'record_rule_add',
-                  export: 'record_rule_edit'
-                }"
+            import: 'record_rule_add',
+            export: 'record_rule_edit'
+          }"
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="record-rule"
           export-url="/record/rule/export"
@@ -76,7 +76,6 @@
 </template>
 
 <script>
-import bus from '@/libs/bus'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import routerPathParams from '@/components/common/mixin/routerPathParams'

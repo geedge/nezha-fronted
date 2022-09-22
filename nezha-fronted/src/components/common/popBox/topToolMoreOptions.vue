@@ -74,7 +74,7 @@
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </button>
               </el-popover>
-              <button  :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
+              <button :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
                 <span>{{$t('overall.importExcel')}}</span>
               </button>
               <button :id="id+'-xlsx-import-esc'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
@@ -98,7 +98,7 @@
               <button :id="id+'-xlsx-import-template'" class="nz-btn el-button el-button--default el-button--small" @click="downloadTemplate()">
                 <span>{{$t('upload.template')}}</span>
               </button>
-              <button  :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
+              <button :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
                 <span>{{$t('overall.importExcel')}}</span>
               </button>
               <button :id="id+'-xlsx-import-esc'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
@@ -234,64 +234,22 @@ export default {
     deleteObjs: Array,
     exportBoxShow: {
       type: Boolean, default: false
+    },
+    // 显示新版导入
+    importNew: {
+      type: Boolean, default: true
+    },
+    // 已存在的内容处理方式
+    showEexisted: {
+      type: Boolean, default: true
+    },
+    // 遇到错误是否继续导入
+    showIgnoreError: {
+      type: Boolean, default: true
     }
   },
   computed: {
     language () { return this.$store.getters.getLanguage },
-    // 显示新版导入
-    importNew () {
-      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp panel expression
-      const arr = [
-        '/asset/asset/import',
-        '/monitor/module/import',
-        '/monitor/endpoint/import',
-        '/dc/import',
-        '/dc/cabinet/import',
-        '/asset/model/import',
-        '/alert/rule/import',
-        '/ipam/subnet/import',
-        '/ipam/ip/import',
-        '/visual/panel/import',
-        '/expression/tmpl/import'
-      ]
-      return arr.some(item => item === this.importUrl)
-    },
-    // 已存在的内容处理方式
-    showEexisted () {
-      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp panel expression
-      const arr = [
-        '/asset/asset/import',
-        '/monitor/module/import',
-        '/monitor/endpoint/import',
-        '/dc/import',
-        '/dc/cabinet/import',
-        '/asset/model/import',
-        '/alert/rule/import',
-        '/ipam/subnet/import',
-        '/ipam/ip/import',
-        '/visual/panel/import',
-        '/expression/tmpl/import'
-      ]
-      return arr.some(item => item === this.importUrl)
-    },
-    // 遇到错误是否继续导入
-    showIgnoreError () {
-      // asset module endpoint dc cabinet model alertRule ipamSubnet ipamIp panel expression
-      const arr = [
-        '/asset/asset/import',
-        '/monitor/module/import',
-        '/monitor/endpoint/import',
-        '/dc/import',
-        '/dc/cabinet/import',
-        '/asset/model/import',
-        '/alert/rule/import',
-        '/ipam/subnet/import',
-        '/ipam/ip/import',
-        '/visual/panel/import',
-        '/expression/tmpl/import'
-      ]
-      return arr.some(item => item === this.importUrl)
-    },
     // 是否同步更新关联的dashboard
     showSyncDashboard () {
       // asset endpoint model

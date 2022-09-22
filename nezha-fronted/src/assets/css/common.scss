@@ -322,8 +322,11 @@ td .nz-icon-gear:before {
       background-color: $--background-color-empty;
       border: 1px solid $--border-color-light;
     }
-    .el-button:hover {
+    .el-button:hover:not(.nz-btn-disabled) {
       border: 1px solid $--color-primary;
+    }
+    .el-button.nz-btn-disabled{
+      color: $--color-text-regular !important;
     }
     .el-button:nth-child(3) {
       margin-left: 10px;
