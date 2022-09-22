@@ -5,7 +5,8 @@ export default {
   },
   data () {
     return {
-      exclusiveLabels: ['_id', 'severity', '__name__']
+      exclusiveLabels: ['_id', 'severity', '__name__', 'rule'],
+      filterArr: ['alertname', 'severity_id', 'severity', 'rule_type', 'rule_id', 'rule_name']
     }
   },
   computed: {

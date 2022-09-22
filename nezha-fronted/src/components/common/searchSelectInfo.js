@@ -1,4 +1,4 @@
-import i18n from './i18n'
+import i18n from '@/components/common/i18n'
 export default {
   data () {
     return {
@@ -372,7 +372,6 @@ export default {
           }
         ]
       }
-
     }
   }
 }

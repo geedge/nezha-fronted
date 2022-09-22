@@ -179,6 +179,7 @@ export default {
       graphShow: false,
       chartDatas: [],
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'dc'],
+      filterArr: ['alertname', 'severity_id', 'severity', 'rule_type', 'rule_id', 'rule_name'],
       legend: [],
       searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
       currentMsg: {},
@@ -447,7 +448,7 @@ export default {
           let by = ' by ('
 
           for (const k in obj.labels) {
-            if (k != 'alertname' && k != 'severity') {
+            if (this.filterArr.indexOf(k) == -1) {
               intoLabels = true
               group += k
               group += '='

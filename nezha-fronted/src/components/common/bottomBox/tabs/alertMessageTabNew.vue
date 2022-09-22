@@ -430,7 +430,7 @@ export default {
     },
     promQueryParamLabels (labels) {
       const obj = JSON.parse(labels)
-      const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type']
+      const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type', 'rule_id', 'rule_name']
       filterArr.forEach(key => {
         delete obj[key]
       })
