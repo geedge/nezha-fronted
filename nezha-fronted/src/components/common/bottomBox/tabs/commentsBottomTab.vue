@@ -16,16 +16,17 @@
       <div class="textarea-box" :style="{height: rowBox ?'122px':'33px'}">
           <el-input
           type="textarea"
-          :class="rowBox ? 'textarea-small' : 'textarea-big'"
+          :class="rowBox ? 'textarea-big' : 'textarea-small'"
           :placeholder="$t('overall.addComment') + '...'"
           v-model="editComment.content"
           @focus="stageZoomIn">
          </el-input>
          <div class="textarea-button" v-if="rowBox">
-          <button class="nz-btn nz-btn-size-mini nz-btn-style-normal" style="margin-right: 10px" type="button"  @click="save(obj)"><span>{{$t('overall.save')}}</span></button>
+          <button class="nz-btn nz-btn-size-mini nz-btn-style-normal" style="margin-right: 10px" type="button"  @click="save(editComment,false)"><span>{{$t('overall.save')}}</span></button>
           <button class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancel()"><span>{{$t('overall.cancel')}}</span></button>
          </div>
       </div>
+      <div :style="{height: rowBox ?'calc(100% - 89px)':'100%'}">
       <assetCommentTable
         ref="dataTable"
         :orderByFa="'id'"
@@ -37,10 +38,11 @@
         :table-data="tableData"
         :terminaLogTab="true"
         @del="del"
-        @edit="edit"
+        @save="save"
         @orderBy="tableDataSort"
         @reload="getTableData"
         @selectionChange="selectionChange"></assetCommentTable>
+      </div>
     </template>
     <template v-slot:pagination>
       <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
@@ -70,21 +72,12 @@ export default {
     }
   },
   watch: {
-    obj: {
-      immediate: true,
-      deep: true,
-      handler (n) {
-        this.searchLabel = { id: n.id }
-        // this.getTableData()
-      }
-
-    }
   },
   data () {
     return {
       url: 'asset/comment',
       tableId: 'assetCommentTable', // 需要分页的table的id，用于记录每页数量
-      searchLabel: { id: this.obj.id },
+      searchLabel: {},
       tableData: [],
       // 输入框参数
       rowBox: false,
@@ -101,13 +94,11 @@ export default {
     getTableData () {
       this.$set(this.searchLabel, 'pageSize', '-1')
       this.$set(this.searchLabel, 'assetId', this.obj.id)
-      this.searchLabel.id = this.obj.id
       this.tools.loading = true
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           this.tableData = response.data.list
-          this.pageObj.total = response.data.total
         } else {
           this.$message.error(response.msg)
         }
@@ -123,16 +114,16 @@ export default {
       this.editComment.id = ''
       this.rowBox = false
     },
-    save (obj) {
+    save (data, flag) {
       const params = {
-        ...this.editComment,
-        assetId: obj.id
+        ...data,
+        assetId: this.obj.id
       }
-      if (this.editComment.id) {
+      if (flag) {
         this.$put(this.url, params).then(response => {
           if (response.code === 200) {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-            this.cancel()
+            this.$refs.dataTable.cancelEdit()
             this.getTableData()
           } else {
             this.$message.error(response.msg)
@@ -160,21 +151,7 @@ export default {
           this.$message.error(response.msg)
         }
       })
-    },
-    // 修改
-    async edit (id) {
-      const response = await this.$get(this.url + '/' + id)
-      if (response.code === 200) {
-        this.editComment = {
-          id: response.data.id,
-          content: response.data.content,
-          assetId: response.data.assetId,
-          replyId: response.data.replyId
-        }
-      }
-      this.stageZoomIn()
     }
-
   }
 }
 </script>
