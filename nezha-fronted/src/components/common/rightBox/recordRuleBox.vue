@@ -81,7 +81,7 @@
           <!-- labels -->
            <el-form-item :label='$t("project.endpoint.labels2")' class="matchers" prop="labels">
             <div v-for="(item, index) in editRecordRule.labels" :key="index" class="param-box-row">
-              <el-form-item :prop="'labels.' + index + '.label'" class="param-box-row-key">
+              <el-form-item :prop="'labels.' + index + '.label'" :rules="[{ message: $t('validate.required'), trigger: 'change' },{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('overall.ASCIIKey'), trigger: 'change' }]" class="param-box-row-key">
                 <el-input v-model="item.label" class="silence-matchers-name" placeholder=""  size="mini"></el-input>
               </el-form-item>
               <span class="param-box-row-eq" @click="li(item)">=</span>
@@ -197,7 +197,7 @@ export default {
           state: Number(this.editRecordRule.state),
           type: Number(this.editRecordRule.type),
           inr: Number(this.editRecordRule.inr),
-          labels: this.editRecordRule.labels[0].label != '' ? JSON.stringify(obj) : {}
+          labels: this.editRecordRule.labels[0].label != '' ? JSON.stringify(obj) : '{}'
         }
 
         // 处理exp
@@ -254,8 +254,12 @@ export default {
       if (typeof obj != 'object') {
         const labels = JSON.parse(lodash.cloneDeep(obj))
         const result = []
-        for (const key in labels) {
-          result.push({ label: key, value: labels[key] })
+        if (Object.keys(labels).length === 0) {
+          result.push({ label: '', value: '' })
+        } else {
+          for (const key in labels) {
+            result.push({ label: key, value: labels[key] })
+          }
         }
         return result
       }
