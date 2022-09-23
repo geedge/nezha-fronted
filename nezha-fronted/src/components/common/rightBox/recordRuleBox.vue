@@ -81,11 +81,11 @@
           <!-- labels -->
            <el-form-item :label='$t("project.endpoint.labels2")' class="matchers" prop="labels">
             <div v-for="(item, index) in editRecordRule.labels" :key="index" class="param-box-row">
-              <el-form-item :prop="'labels.' + index + '.label'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('overall.ASCIIKey'), trigger: 'change' }]" class="param-box-row-key">
+              <el-form-item :prop="'labels.' + index + '.label'" class="param-box-row-key">
                 <el-input v-model="item.label" class="silence-matchers-name" placeholder=""  size="mini"></el-input>
               </el-form-item>
               <span class="param-box-row-eq" @click="li(item)">=</span>
-              <el-form-item :prop="'labels.' + index + '.value'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" class="param-box-row-value" >
+              <el-form-item :prop="'labels.' + index + '.value'" class="param-box-row-value" >
                 <el-input v-model="item.value" class="silence-matchers-value" placeholder=""  size="mini"></el-input>
               </el-form-item>
               <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removeLabels(index)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-shanchu1"></i></span>
@@ -131,7 +131,6 @@
 <script>
 import lodash from 'lodash'
 import editRigthBox from '../mixin/editRigthBox'
-import { arrLength } from '@/components/common/js/validate'
 import promqlInput from '../../page/dashboard/explore/promqlInput'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
 export default {
@@ -150,7 +149,7 @@ export default {
       editRecordRule: {
         id: '',
         name: '',
-        type: '',
+        type: '1',
         expr: '',
         inr: '',
         labels: [{ label: '', value: '' }],
@@ -160,17 +159,13 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' },
-          { pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: this.$t('overall.ASCIIKey'), trigger: 'change' }
+          { pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: this.$t('overall.ASCIIKey'), trigger: 'change' }
         ],
         type: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         expr: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
-        ],
-        labels: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' },
-          { validator: arrLength, trigger: 'change' }
         ],
         state: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }

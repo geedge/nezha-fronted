@@ -136,7 +136,7 @@ export default {
       blankObject: {
         id: '',
         name: '',
-        type: '',
+        type: '1',
         expr: '',
         inr: '',
         labels: [{ label: '', value: '' }],
