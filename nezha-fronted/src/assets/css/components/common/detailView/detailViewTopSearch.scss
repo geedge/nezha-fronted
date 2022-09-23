@@ -9,7 +9,7 @@
     background: $--background-color-base;
   }
   .search-detail-box.select-dropdown{
-    background: #F9F9F9;
+    background-color: $--background-color-base;
   }
   .detail-dropdown{
     padding: 0 10px;
@@ -58,7 +58,10 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
+    .el-dropdown-menu__item.nz-dropdown-menu__item-hover{
+      flex-shrink: 0;
+    }
     .el-checkbox{
       width: calc(100% - 20px);
       height: 36px;
@@ -76,7 +79,8 @@
       background-color: $--background-color-base !important;
     }
     .children-title-name{
-      width: calc(100% - 20px);
+      min-width: 180px;
+      flex-shrink: 0;
       height: 36px;
       padding-right: 20px;
       font-size: 12px;
