@@ -176,6 +176,7 @@
       .global-search-footer-left{
         display: flex;
         align-items: center;
+        color: $--color-text-regular;
         .keyboard{
           background: $--background-color-2;
           border: 1px solid $--border-color-light;
@@ -199,10 +200,10 @@
         justify-content: space-around;
         .scope-box {
           cursor: pointer;
-          color: $--background-color-disabled;
+          color: $--color-text-disabled;
           .nz-icon {
             margin-right: 5px;
-            color: $--background-color-disabled ;
+            color: $--color-text-disabled ;
           }
         }
         .scope-box.is-select{
