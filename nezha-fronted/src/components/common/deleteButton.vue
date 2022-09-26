@@ -57,7 +57,7 @@
                       <i class="nz-icon nz-icon-caret-right" :class="relate.showChildren ? 'rotate90': '' " :style="relate.relates && relate.relates.length ? '' : 'opacity: 0'"/>
                       <i :class="selectIcon(relate.type)"/>
                       <span class="text-ellipsis batch-delete-item-text" :title="relate.name"> {{relate.name}}</span>
-                      <div class="text-ellipsis batch-delete-item-text" :title="relate.name" v-if="relate.showChildren && relate.relates.length">
+                      <div class="text-ellipsis batch-delete-item-text" :title="relate.name" v-if="relate.showChildren && relate.relates && relate.relates.length">
                         <div v-for="(cildren,j) in relate.relates" :key = 'j' class="tree-body-item tree-body-children" :style="j === relate.relates.length-1?'margin-bottom: 0':''">
                           <i :class="selectIcon(cildren.type)"/>
                           <span class="text-ellipsis batch-delete-item-text" :title="cildren.name">{{cildren.name}}</span>
