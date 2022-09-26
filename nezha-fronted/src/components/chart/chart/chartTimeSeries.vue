@@ -154,7 +154,7 @@ export default {
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
 
         this.$store.commit('setCurrentMousemove', 0)
-        if (this.isInit) {
+        if (this.isInit && !this.isFullscreen) {
           // timeSeries类型图表设置group 用于多表联动
           myChart.group = 'timeSeriesGroup'
           myChart.getZr().on('mousemove', params => {
