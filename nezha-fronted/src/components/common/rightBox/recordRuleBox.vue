@@ -74,8 +74,8 @@
           <!--state-->
           <el-form-item :label="$t('overall.state')" prop="state" >
             <el-select v-model="editRecordRule.state" class="right-box__select"  placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
-              <el-option :label="$t('overall.disabled')" value="0">{{$t('overall.disabled')}}</el-option>
               <el-option :label="$t('overall.enabled')" value="1">{{$t('overall.enabled')}}</el-option>
+              <el-option :label="$t('overall.disabled')" value="0">{{$t('overall.disabled')}}</el-option>
             </el-select>
           </el-form-item>
           <!-- labels -->
@@ -154,7 +154,7 @@ export default {
         inr: '',
         labels: [{ label: '', value: '' }],
         remark: '',
-        state: ''
+        state: '1'
       },
       rules: {
         name: [
