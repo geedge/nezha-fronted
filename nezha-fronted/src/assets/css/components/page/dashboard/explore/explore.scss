@@ -11,6 +11,8 @@
     background-color: $--background-color-empty;
     color: $--color-text-primary;
     padding: 15px;
+    overflow-x: scroll;
+    padding-bottom: 0 !important;
   }
 
   pre code {
@@ -205,167 +207,46 @@
       border-color: $--button-icon-border-color;
     }
   }
-  .binary-operator-precedence{
-    ul li{
+  .binary-operator-precedence {
+    ul li {
       list-style: decimal !important;
     }
   }
 }
-/*外部引用 样式start*/
-// .doc-content {
-//   font-size: 16px;
-// }
-
-// .doc-content p,
-// .doc-content.ul,
-// .doc-content .alert {
-//   margin: 15px 0 15px 0;
-//   line-height: 1.5;
-//   color: $--color-text-primary;
-// }
-
-// .doc-content .content-divider {
-//   height: 1px;
-//   width: 100%;
-//   border-bottom: 2px solid $--explore-border-color-bottom;
-//   margin: 5px 0;
-// }
-
-// .doc-content > h1 {
-//   color: #e6522c;
-//   font-size: 30px;
-//   text-transform: uppercase;
-// }
-
-// .doc-content > h1 a {
-//   color: #000 !important;
-// }
-
-// .doc-content.blog > h1 {
-//   text-transform: none;
-// }
-
-// .doc-content.blog .sponsor-logos > a > img {
-//   width: 250px;
-//   display: inline-block !important;
-//   margin: 15px 55px;
-// }
-// .doc-content > h1 {
-//   color: #e6522c;
-//   font-size: 24px;
-// }
-
-// .doc-content > h2 {
-//   color: #e6522c;
-//   font-size: 18px;
-// }
-
-// .doc-content > h2 code {
-//   color: #e6522c;
-//   background: none;
-// }
-
-// .doc-content > h3 {
-//   font-size: 20px;
-//   font-weight: bold;
-// }
-
-// .doc-content > h4 {
-//   font-weight: bold;
-//   font-size: 18px;
-//   margin-top: 20px;
-// }
-
-// .doc-content a.header-anchor {
-//   padding-left: 15px;
-//   color: gray;
-//   text-decoration: none;
-// }
-
-// .doc-content img {
-//   width: 90%;
-//   margin-left: auto;
-//   margin-right: auto;
-//   display: block;
-// }
-
-// .doc-content img.orig-size {
-//   width: auto;
-//   margin-left: 0;
-// }
-
-// .doc-content .open-source-notice {
-//   color: $--color-text-regular;
-//   background-color: $--background-color-base;
-//   text-align: center;
-//   padding: 0.8em;
-//   margin-top: 1.5em;
-// }
-
-// .toc {
-//   padding: 1em;
-//   background-color: $--background-color-base;
-// }
-// .toc-right {
-//   float: right;
-//   width: 40%;
-//   margin: 0 0 0.5em 0.5em;
-// }
-
-// .toc ul {
-//   padding: 0 0 0 1.5em;
-//   margin: 0;
-// }
-
-// .toc a code {
-//   color: #337ab7;
-//   background-color: transparent;
-// }
 
 code {
   color: $--color-text-primary;
 }
 
-aside {
-  color: $--color-text-secondary;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #aaa;
-}
+// aside {
+//   color: $--color-text-secondary;
+//   padding-bottom: 8px;
+//   border-bottom: 1px solid #aaa;
+// }
+// article {
+//   margin: 10px 0 60px 0;
+// }
 
-article {
-  margin: 10px 0 60px 0;
-}
 
-.explore .introduce-view .title-heard.info-room{
-  position: relative;
+
+// exploreItem
+.explore .introduce-view .title-heard.info-room {
   .logs-content {
     font-size: 16px;
-    ul li{
+    ul li {
       margin: 10px 0 10px 24px;
       list-style: disc;
     }
-    p{
+    p {
       margin: 15px 0;
     }
-    code{
+    code {
       padding: 5px;
       background-color: $--background-color-empty;
     }
-    .log-link:hover{
-        cursor: pointer;
-        border-bottom: 1px solid #3C92F1;
-    }
-    .fillbox{
-      display: block;
-      line-height: 25px;
-      padding: 10px;
-    }
-    h2{
-      color: #e6522c;
-      font-size: 18px;
-      font-weight: 600;
-    }
-    > h1,.page-header {
+
+    > h1,
+    .page-header {
       color: #e6522c;
       font-size: 24px;
       font-weight: 600;
@@ -377,42 +258,49 @@ article {
         text-decoration: none;
       }
     }
-    > h1,.page-header-one {
+    > h1,
+    .page-header-one {
       color: #e6522c;
       font-size: 22px;
       font-weight: 600;
       margin-top: 15px;
       text-transform: none;
     }
-    > h1,.page-header-two {
+    > h1,
+    .page-header-two {
       color: #e6522c;
       font-size: 20px;
       font-weight: 600;
       margin-top: 15px;
       text-transform: none;
     }
-    .title-heard__divider{
+    h2 {
+      color: #e6522c;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .title-heard__divider {
       margin: 5px 0 5px 0;
     }
-    .page-header-label{
+    .page-header-label {
       p {
-        width: 100%;
         font-size: 16px;
         color: $--color-text-primary;
         font-weight: 400;
       }
     }
-    .json-module{
-      padding-left: 20px;
+    // 链接
+    .log-link:hover {
+      cursor: pointer;
+      border-bottom: 1px solid #3c92f1;
     }
-    .box-overflow{
-      overflow-x: scroll;
+    // 阴影部分
+    .fillbox {
+      display: block;
+      line-height: 25px;
+      padding: 10px;
     }
-    pre.box-overflow{
-      overflow-x: scroll;
-      padding-bottom: 0 !important;
-    }
-    .logfmt-module,.json-module,.pattern-module,.regular-module,.unpack-module,.line-module,.formatting-module,.unwrapped-module{
+    .logfmt-module {
       pre {
         border: 0;
         border-left: 0;
@@ -424,39 +312,38 @@ article {
         line-height: 25px;
       }
     }
-    .img-hidden{
+    // 图片转文字
+    .img-hidden {
       width: 582px;
       overflow: hidden;
-      img{
+      img {
         filter: drop-shadow(-550px 0px $--color-text-primary);
         transform: translateX(570px);
       }
     }
   }
-  .catalog{
+  // 目录
+  .catalog {
     width: 360px;
-    position: absolute;
-    top: 75px;
-    right: 25px;
+    float: right;
+    margin-left: 8px;
+    margin-top: 5px;
     background-color: $--background-color-empty;
     padding: 15px 10px;
-    ul li{
+    ul li {
       margin: 3px 14px 3px 24px;
       list-style: circle;
-      color: #3C92F1;
+      color: #3c92f1;
     }
-    ul.catalog-square>li{
+    ul.catalog-square > li {
       list-style: square;
     }
-    ul.catalog-disc>li{
+    ul.catalog-disc > li {
       list-style: disc;
     }
-    span:hover{
+    span:hover {
       cursor: pointer;
-      border-bottom: 1px solid #3C92F1;
+      border-bottom: 1px solid #3c92f1;
     }
-  }
-  .box-w-auto{
-    width: calc(100% - 390px) !important;
   }
 }
