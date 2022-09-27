@@ -44,11 +44,39 @@ export default {
     return {
       noData: false,
       timeLineData: [],
+      language: '',
       version: {
         nezha: { name: '', version: '' },
         components: [{ name: '', version: '' }]
       },
       activities: [{
+        timestamp: 'Release 22.10 - Oct 2022',
+        content: [{
+          id: 1,
+          chinese: '[FEATURE] 新增TSG appliance vsys配置同步',
+          english: ''
+        }, {
+          id: 2,
+          chinese: '[FEATURE] 资产支持添加评论',
+          english: ''
+        }, {
+          id: 3,
+          chinese: '[FEATURE] 增加记录规则，便于用户预先计算经常使用或计算量大的表达式，并将其结果保存为一组新的时间序列',
+          english: ''
+        }, {
+          id: 4,
+          chinese: '[FEATURE] 新增图表类型：气泡图，桑基图，排行图',
+          english: ''
+        }, {
+          id: 5,
+          chinese: '[ENHANCEMENT] 优化页面加载动画效果',
+          english: ''
+        }, {
+          id: 6,
+          chinese: '[ENHANCEMENT] 优化地址栏显示，便于用户分享查询信息',
+          english: ''
+        }]
+      }, {
         timestamp: 'Release 22.07 - Aug 2022',
         content: [{
           id: 1,
@@ -246,15 +274,22 @@ export default {
   methods: {
     getVersion () {
       this.$get('/about').then(response => {
+        this.language = localStorage.getItem('nz-language') || 'en'
+        // Release 22.10 - Oct 2022 英文版暂不更新
+        if (this.language === 'en') {
+          this.activities.shift()
+        }
         this.version = response.data
       })
     }
   },
   mounted () {
     this.getVersion()
-  },
-  computed: {
-    language () { return this.$store.getters.getLanguage }
   }
+  // computed: {
+  //   language () {
+  //     return this.$store.getters.getLanguage
+  //   }
+  // }
 }
 </script>
