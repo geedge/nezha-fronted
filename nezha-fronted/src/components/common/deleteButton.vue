@@ -17,7 +17,7 @@
       v-if="dialogVisible"
       :visible.sync="dialogVisible"
       @close='handleClose'
-      width="460px"
+      width="660px"
       :modal-append-to-body="true"
       :append-to-body="true"
     >
@@ -39,7 +39,7 @@
       <div class="batch-delete-tree">
         <div class="tree-header tree-body-item">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="checkAllChange" v-if="!finish"></el-checkbox>
-          <div class="batch-delete-item-id" v-if="idShow">Id</div>
+          <div class="batch-delete-item-id" v-if="idShow">ID</div>
           <div class="batch-delete-item-name">{{$t('overall.name')}}</div>
         </div>
         <el-checkbox-group v-model="idStr" @change="checkedChange">
@@ -48,17 +48,17 @@
               <el-checkbox :key="item.id" :label="item.id"  v-if="!finish"></el-checkbox>
               <div class="batch-delete-item-id" v-if="idShow">{{item.id}}</div>
               <div class="batch-delete-item-name" @click="showChild(item)">
-                <i class="nz-icon nz-icon-caret-right" :class="item.showChildren ? 'rotate90': '' " v-if="item.relates" />
+                <i class="nz-icon nz-icon-caret-right" :class="item.showChildren ? 'rotate90': '' " :style="item.relates && item.relates.length ? '': 'opacity: 0'"/>
                 <i :class="selectIcon(item.type)"/>
                 <span class="text-ellipsis batch-delete-item-text" :title="item.name">{{item.name}}</span>
                 <el-collapse-transition>
-                  <div v-show="item.showChildren">
-                    <div v-for="(relate,i) in item.relates" :key = 'i' class="tree-body-item tree-body-children" @click="showChild(relate)">
-                      <i class="nz-icon nz-icon-caret-right" :class="relate.showChildren ? 'rotate90': '' " v-if="relate.relates" />
+                  <div v-show="item.showChildren && item.relates.length">
+                    <div v-for="(relate,i) in item.relates" :key = 'i' class="tree-body-item tree-body-children" @click="showChild(relate)" :style="i === item.relates.length-1?'margin-bottom: 0':''">
+                      <i class="nz-icon nz-icon-caret-right" :class="relate.showChildren ? 'rotate90': '' " :style="relate.relates && relate.relates.length ? '' : 'opacity: 0'"/>
                       <i :class="selectIcon(relate.type)"/>
                       <span class="text-ellipsis batch-delete-item-text" :title="relate.name"> {{relate.name}}</span>
-                      <div class="text-ellipsis batch-delete-item-text" :title="relate.name">
-                        <div v-for="(cildren,j) in relate.relates" :key = 'j' class="tree-body-item tree-body-children" v-if="relate.showChildren">
+                      <div class="text-ellipsis batch-delete-item-text" :title="relate.name" v-if="relate.showChildren && relate.relates && relate.relates.length">
+                        <div v-for="(cildren,j) in relate.relates" :key = 'j' class="tree-body-item tree-body-children" :style="j === relate.relates.length-1?'margin-bottom: 0':''">
                           <i :class="selectIcon(cildren.type)"/>
                           <span class="text-ellipsis batch-delete-item-text" :title="cildren.name">{{cildren.name}}</span>
                         </div>
@@ -214,6 +214,9 @@ export default {
     },
     showChild (item, e) {
       e && e.stopPropagation ? e.stopPropagation() : window.event.cancelBubble = true
+      if (item.relates && !item.relates.length) {
+        return
+      }
       item.showChildren = !item.showChildren
     },
     selectIcon (type) {

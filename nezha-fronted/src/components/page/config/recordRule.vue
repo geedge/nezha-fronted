@@ -141,7 +141,7 @@ export default {
         inr: '',
         labels: [{ label: '', value: '' }],
         remark: '',
-        state: ''
+        state: '1'
       }
     }
   },

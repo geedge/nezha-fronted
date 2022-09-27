@@ -57,10 +57,13 @@
       margin-right: 28px;
       width: 100px;
       transition: all 0.3s;
+      flex-shrink: 0;
     }
     .batch-delete-item-name{
       margin-left: 14px;
       flex: 1;
+      flex-shrink: 0;
+      width: calc(100% - 190px);
       .tree-body-children:nth-of-type(1){
         margin-top: 10px;
       }
@@ -73,7 +76,7 @@
   }
   .batch-delete-item-text{
     display: inline-block;
-    width: calc(100% - 40px);
+    width: calc(100% - 45px);
     vertical-align: middle;
   }
   .el-checkbox-group{
