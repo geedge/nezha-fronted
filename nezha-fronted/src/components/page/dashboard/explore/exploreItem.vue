@@ -198,110 +198,1050 @@
               </el-collapse-item>
             </template>
           </el-collapse>
+          <!-- Metric -->
           <div v-if="showMetrics" v-show="showIntroduce" class="introduce-view">
-            <div class="info-room">
-              <div class="col-md-9 doc-content">
-                <h1 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
-                <div class="content-divider"></div>
-                <h2 >
-                  Simple time series selection
-                </h2>
+             <div class="info-room title-heard">
+              <div class="col-md-9 logs-content">
+                <!-- promql -->
+                <h1 class="page-header" style="margin-Top:0px">promql<a class="header-anchor" href="https://grafana.com/docs/loki/latest/logql/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
+                <div class="title-heard__divider"></div>
 
-                <p>Return all time series with the metric <code>http_requests_total</code>:</p>
+                <!-- QUERYING PROMETHEUS -->
+                <!-- start -->
+                <div class="introduce-view__content box-w-auto">
+                  <h1 class="page-header-one" id="querying-prometheus">Querying prometheus</h1>
+                  <p>Prometheus provides a functional query language called PromQL (Prometheus Query Language) that lets the user select and aggregate time series data in real time. The result of an expression can either be shown as a graph, viewed as tabular data in Prometheus's expression browser, or consumed by external systems via the HTTP API.</p>
+                </div>
+                <!-- Examples -->
+                <div class="introduce-view__content box-w-auto">
+                  <h1 class="page-header-two" id="querying-prometheus-examples">Examples</h1>
+                  <p>This document is meant as a reference. For learning, it might be easier to start with a couple of <b style="color: #3C92F1" @click="jumpClick('#query-examples')" class="log-link">examples</b>.</p>
+                </div>
+                <!-- Expression language data types -->
+                <div >
+                  <h1 class="page-header-two" id="expression-language-data-types">Expression language data types</h1>
+                  <div class="introduce-view__content-label box-w-auto">
+                    <p>In Prometheus's expression language, an expression or sub-expression can evaluate to one of four types:</p>
+                    <ul>
+                      <li><b>Instant vector</b> - a set of time series containing a single sample for each time series, all sharing the same timestamp</li>
+                      <li><b>Range vector</b> - a set of time series containing a range of data points over time for each time series</li>
+                      <li><b>Scalar</b> - a simple numeric floating point value</li>
+                      <li><b>String</b> - a simple string value; currently unused</li>
+                    </ul>
+                    <p>Depending on the use-case (e.g. when graphing vs. displaying the output of an expression), only some of these types are legal as the result from a user-specified expression. For example, an expression that returns an instant vector is the only type that can be directly graphed.</p>
+                  </div>
+                </div>
+                <!-- Literals -->
+                <h1 class="page-header-two" id="literals">Literals</h1>
+                <div class="introduce-view__content">
+                  <h2 id="string-literals">String literals</h2>
+                  <div class="introduce-view__content-label box-w-auto">
+                    <p>Strings may be specified as literals in single quotes, double quotes or backticks.</p>
+                    <p>PromQL follows the same escaping rules as Go. In single or double quotes a backslash begins an escape sequence, which may be followed by <code>a</code>, <code>b</code>, <code>f</code>, <code>n</code>, <code>r</code>, <code>t</code>, <code>v</code> or <code>\</code>. Specific characters can be provided using octal (<code>\nnn</code>) or hexadecimal (<code>\xnn</code>, <code>\unnnn</code> and <code>\Unnnnnnnn</code>).</p>
+                    <p>No escaping is processed inside backticks. Unlike Go, Prometheus does not discard newlines inside backticks.</p>
+                    <p>Example:</p>
+                    <pre class="box-overflow">"this is a string"
+'these are unescaped: \n \\ \t'
+`these are not unescaped: \n ' " \t`</pre>
+                  </div>
+                </div>
+                <!-- Float literals -->
+                <div class="introduce-view__content box-w-auto">
+                  <h2 id="float-literals">Float literals</h2>
+                  <div class="introduce-view__content-label">
+                    <p>Scalar float values can be written as literal integer or floating-point numbers in the format (whitespace only included for better readability):</p>
+                    <pre class="box-overflow">[-+]?(
+      [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
+    | 0[xX][0-9a-fA-F]+
+    | [nN][aA][nN]
+    | [iI][nN][fF]
+)</pre>
+                    <p>Examples:</p>
+                    <pre>23
+-2.43
+3.4e-9
+0x8f
+-Inf
+NaN</pre>
+                  </div>
+                </div>
+                <!-- Time series Selectors -->
+                <h1 class="page-header-two" id="time-series-selectors">Time series Selectors</h1>
+                <div class="introduce-view__content">
+                  <h2 id="instant-vector-selectors">Instant vector selectors</h2>
+                  <div class="introduce-view__content-label">
+                    <div class="box-w-auto">
+                        <p>Instant vector selectors allow the selection of a set of time series and a single sample value for each at a given timestamp (instant): in the simplest form, only a metric name is specified. This results in an instant vector containing elements for all time series that have this metric name.</p>
+                        <p>This example selects all time series that have the <code>http_requests_total</code> metric name:</p>
+                        <pre>http_requests_total</pre>
+                        <p>It is possible to filter these time series further by appending a comma separated list of label matchers in curly braces (<code>{}</code>).</p>
+                        <p>This example selects only those time series with the <code>http_requests_total</code> metric name that also have the <code>job</code> label set to <code>prometheus</code> and their <code>group</code> label set to <code>canary</code>:</p>
+                        <pre>http_requests_total{job="prometheus",group="canary"}</pre>
+                        <p>It is also possible to negatively match a label value, or to match label values against regular expressions. The following label matching operators exist:</p>
+                        <ul>
+                          <li><code>=</code>: Select labels that are exactly equal to the provided string.</li>
+                          <li><code>!=</code>: Select labels that are not equal to the provided string.</li>
+                          <li><code>=~</code>: Select labels that regex-match the provided string.</li>
+                          <li><code>!~</code>: Select labels that do not regex-match the provided string.</li>
+                        </ul>
+                        <p>Regex matches are fully anchored. A match of <code>env=~"foo"</code> is treated as <code>env=~"^foo$"</code>.</p>
+                        <p>For example, this selects all <code>http_requests_total</code> time series for <code>staging</code>, <code>testing</code>, and <code>development</code> environments and HTTP methods other than <code>GET</code>.</p>
+                        <pre class="box-overflow">http_requests_total{environment=~"staging|testing|development",method!="GET"}</pre>
+                    </div>
+                    <p>Label matchers that match empty label values also select all time series that do not have the specific label set at all. It is possible to have multiple matchers for the same label name.</p>
+                    <p>Vector selectors must either specify a name or at least one label matcher that does not match the empty string. The following expression is illegal:</p>
+                    <pre>{job=~".*"} # Bad!</pre>
+                    <p>In contrast, these expressions are valid as they both have a selector that does not match empty label values.</p>
+                    <pre>{job=~".+"}              # Good!
+{job=~".*",method="get"} # Good!</pre>
+                    <p>Label matchers can also be applied to metric names by matching against the internal <code>__name__</code> label. For example, the expression <code>http_requests_total</code> is equivalent to <code>{__name__="http_requests_total"}</code>. Matchers other than <code>=</code> (<code>!=</code>, <code>=~</code>, <code>!~</code>) may also be used. The following expression selects all metrics that have a name starting with <code>job:</code>:</p>
+                    <pre>{__name__=~"job:.*"}</pre>
+                    <p>The metric name must not be one of the keywords <code>bool</code>, <code>on</code>, <code>ignoring</code>, <code>group_left</code> and <code>group_right</code>. The following expression is illegal:</p>
+                    <pre>on{} # Bad!</pre>
+                    <p>A workaround for this restriction is to use the <code>__name__</code> label:</p>
+                    <pre>{__name__="on"} # Good!</pre>
+                    <p>All regular expressions in Prometheus use RE2 syntax.</p>
+                  </div>
+                </div>
+                <!-- Range Vector Selectors -->
+                 <div class="introduce-view__content">
+                  <h2 id="range-vector-selectors">Range Vector Selectors</h2>
+                  <div class="introduce-view__content-label">
+                    <p>Range vector literals work like instant vector literals, except that they select a range of samples back from the current instant. Syntactically, a <b style="color: #3C92F1" @click="jumpClick('#time-durations')" class="log-link">time duration</b> is appended in square brackets (<code>[]</code>) at the end of a vector selector to specify how far back in time values should be fetched for each resulting range vector element.</p>
+                    <p>In this example, we select all the values we have recorded within the last 5 minutes for all time series that have the metric name <code>http_requests_total</code> and a <code>job</code> label set to <code>prometheus</code>:</p>
+                    <pre>http_requests_total{job="prometheus"}[5m]</pre>
+                  </div>
+                </div>
+                <!-- Time Durations -->
+                <div class="introduce-view__content">
+                  <h2 id="time-durations">Time Durations</h2>
+                  <div class="introduce-view__content-label">
+                    <p>Time durations are specified as a number, followed immediately by one of the following units:</p>
+                    <ul>
+                      <li><code>ms</code> - milliseconds</li>
+                      <li><code>s</code> - seconds</li>
+                      <li><code>m</code> - minutes</li>
+                      <li><code>h</code> - hours</li>
+                      <li><code>d</code> - days - assuming a day has always 24h</li>
+                      <li><code>w</code> - weeks - assuming a week has always 7d</li>
+                      <li><code>y</code> - years - assuming a year has always 365d</li>
+                    </ul>
+                    <p>Time durations can be combined, by concatenation. Units must be ordered from the longest to the shortest. A given unit must only appear once in a time duration.</p>
+                    <p>Here are some examples of valid time durations:</p>
+                    <pre>5h
+1h30m
+5m
+10s</pre>
+                  </div>
+                </div>
+                <!-- Offset modifier -->
+                 <div class="introduce-view__content">
+                  <h2 id="offset-modifier">Offset modifier</h2>
+                  <div class="introduce-view__content-label">
+                    <p>The <code>offset</code> modifier allows changing the time offset for individual instant and range vectors in a query.</p>
+                    <p>For example, the following expression returns the value of <code>http_requests_total</code> 5 minutes in the past relative to the current query evaluation time:</p>
+                    <pre>http_requests_total offset 5m</pre>
+                    <p>Note that the <code>offset</code> modifier always needs to follow the selector immediately, i.e. the following would be correct:</p>
+                    <pre>sum(http_requests_total{method="GET"} offset 5m) // GOOD.</pre>
+                    <p>While the following would be <i>incorrect</i>:</p>
+                    <pre>sum(http_requests_total{method="GET"}) offset 5m // INVALID.</pre>
+                    <p>The same works for range vectors. This returns the 5-minute rate that <code>http_requests_total</code> had a week ago:</p>
+                    <pre>rate(http_requests_total[5m] offset 1w)</pre>
+                    <p>For comparisons with temporal shifts forward in time, a negative offset can be specified:</p>
+                    <pre>rate(http_requests_total[5m] offset -1w)</pre>
+                    <p>Note that this allows a query to look ahead of its evaluation time.</p>
+                  </div>
+                </div>
+                <!-- @ modifier -->
+                 <div class="introduce-view__content">
+                  <h2 id="time-series-modifier">@ modifier</h2>
+                  <div class="introduce-view__content-label">
+                    <p>The <code>@</code> modifier allows changing the evaluation time for individual instant and range vectors in a query. The time supplied to the <code>@</code> modifier is a unix timestamp and described with a float literal.</p>
+                    <p>For example, the following expression returns the value of <code>http_requests_total</code> at <code>2021-01-04T07:40:00+00:00</code>:</p>
+                    <pre>http_requests_total @ 1609746000</pre>
+                    <p>Note that the <code>@</code> modifier always needs to follow the selector immediately, i.e. the following would be correct:</p>
+                    <pre>sum(http_requests_total{method="GET"} @ 1609746000) // GOOD.</pre>
+                    <p>While the following would be <i>incorrect</i>:</p>
+                    <pre>sum(http_requests_total{method="GET"}) @ 1609746000 // INVALID.</pre>
+                    <p>The same works for range vectors. This returns the 5-minute rate that <code>http_requests_total</code> had at <code>2021-01-04T07:40:00+00:00</code>:</p>
+                    <pre>rate(http_requests_total[5m] @ 1609746000)</pre>
+                    <p>The <code>@</code> modifier supports all representation of float literals described above within the limits of <code>int64</code>. It can also be used along with the <code>offset</code> modifier where the offset is applied relative to the <code>@</code> modifier time irrespective of which modifier is written first. These 2 queries will produce the same result.</p>
+                    <pre># offset after @
+http_requests_total @ 1609746000 offset 5m
+# offset before @
+http_requests_total offset 5m @ 1609746000</pre>
+                    <p>Additionally, <code>start()</code> and <code>end()</code> can also be used as values for the <code>@</code> modifier as special values.</p>
+                    <p>For a range query, they resolve to the start and end of the range query respectively and remain the same for all steps.</p>
+                    <p>For an instant query, <code>start()</code> and <code>end()</code> both resolve to the evaluation time.</p>
+                    <pre>http_requests_total @ start()
+rate(http_requests_total[5m] @ end())</pre>
+                    <p>Note that the <code>@</code> modifier allows a query to look ahead of its evaluation time.</p>
+                  </div>
+                </div>
+                <!-- Subquery -->
+                <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="querying-prometheus-subquery">Subquery</h1>
+                  <div class="introduce-view__content-label">
+                    <p>Subquery allows you to run an instant query for a given range and resolution. The result of a subquery is a range vector.</p>
+                    <p>Syntax: <code>&lt;instant_query&gt; '[' &lt;range&gt; ':' [&lt;resolution&gt;] ']' [ @ &lt;float_literal&gt; ] [ offset &lt;duration&gt; ]</code></p>
+                    <ul>
+                      <li><code>&lt;resolution&gt;</code> is optional. Default is the global evaluation interval.</li>
+                    </ul>
+                  </div>
+                </div>
+                <!-- Operators -->
+                <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="querying-prometheus-operators">Operators</h1>
+                  <div class="introduce-view__content-label">
+                    <p>Prometheus supports many binary and aggregation operators. These are described in detail in the <b style="color: #3C92F1" @click="jumpClick('#operators')" class="log-link">expression language operators</b> page.</p>
+                  </div>
+                </div>
+                <!-- Functions -->
+                <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="querying-prometheus-functions">Functions</h1>
+                  <div class="introduce-view__content-label">
+                    <p>Prometheus supports several functions to operate on data. These are described in detail in the <b style="color: #3C92F1" @click="jumpClick('#functions')" class="log-link">expression language functions</b> page.</p>
+                  </div>
+                </div>
+                <!-- Comments -->
+                <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="querying-prometheus-comments">Comments</h1>
+                  <div class="introduce-view__content-label">
+                    <p>PromQL supports line comments that start with <code>#</code>. Example:</p>
+                    <pre>    # This is a comment</pre>
+                  </div>
+                </div>
+                <!-- Gotchas -->
+                 <h1 class="page-header-two" id="querying-prometheus-gotchas">Gotchas</h1>
+                 <div class="introduce-view__content">
+                  <h2 id="gotchas-staleness">Staleness</h2>
+                  <div class="introduce-view__content-label">
+                    <p>When queries are run, timestamps at which to sample data are selected independently of the actual present time series data. This is mainly to support cases like aggregation (<code>sum</code>, <code>avg</code>, and so on), where multiple aggregated time series do not exactly align in time. Because of their independence, Prometheus needs to assign a value at those timestamps for each relevant time series. It does so by simply taking the newest sample before this timestamp.</p>
+                    <p>If a target scrape or rule evaluation no longer returns a sample for a time series that was previously present, that time series will be marked as stale. If a target is removed, its previously returned time series will be marked as stale soon afterwards.</p>
+                    <p>If a query is evaluated at a sampling timestamp after a time series is marked stale, then no value is returned for that time series. If new samples are subsequently ingested for that time series, they will be returned as normal.</p>
+                    <p>If no sample is found (by default) 5 minutes before a sampling timestamp, no value is returned for that time series at this point in time. This effectively means that time series "disappear" from graphs at times where their latest collected sample is older than 5 minutes or after they are marked stale.</p>
+                    <p>Staleness will not be marked for time series that have timestamps included in their scrapes. Only the 5 minute threshold will be applied in that case.</p>
+                  </div>
+                </div>
+                <!-- Avoiding slow queries and overloads -->
+                 <div class="introduce-view__content">
+                  <h2 id="avoiding-slow-queries-and-overloads">Avoiding slow queries and overloads</h2>
+                  <div class="introduce-view__content-label">
+                    <p>If a query needs to operate on a very large amount of data, graphing it might time out or overload the server or browser. Thus, when constructing queries over unknown data, always start building the query in the tabular view of Prometheus's expression browser until the result set seems reasonable (hundreds, not thousands, of time series at most). Only when you have filtered or aggregated your data sufficiently, switch to graph mode. If the expression still takes too long to graph ad-hoc, pre-record it via a recording rule.</p>
+                    <p>This is especially relevant for Prometheus's query language, where a bare metric name selector like <code>api_http_requests_total</code> could expand to thousands of time series with different labels. Also keep in mind that expressions which aggregate over many time series will generate load on the server even if the output is only a small number of time series. This is similar to how it would be slow to sum all values of a column in a relational database, even if the output value is only a single number.</p>
+                  </div>
+                </div>
+                <!-- OPERATORS -->
+                <h1 class="page-header-one" id="operators">Operators</h1>
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="binary-operators">Binary operators</h1>
+                  <p>Prometheus's query language supports basic logical and arithmetic operators. For operations between two instant vectors, the <b style="color: #3C92F1" @click="jumpClick('#vector-matching')" class="log-link">matching behavior</b> can be modified.</p>
+                </div>
+                <!-- Arithmetic binary operators -->
+                 <div class="introduce-view__content">
+                  <h2 id="arithmetic-binary-operators">Arithmetic binary operators</h2>
+                  <div class="introduce-view__content-label">
+                    <p>The following binary arithmetic operators exist in Prometheus:</p>
+                    <ul>
+                      <li><code>+</code> (addition)</li>
+                      <li><code>-</code> (subtraction)</li>
+                      <li><code>*</code> (multiplication)</li>
+                      <li><code>/</code> (division)</li>
+                      <li><code>%</code> (modulo)</li>
+                      <li><code>^</code> (power/exponentiation)</li>
+                    </ul>
+                    <p>Binary arithmetic operators are defined between scalar/scalar, vector/scalar, and vector/vector value pairs.</p>
+                    <p><b>Between two scalars</b>, the behavior is obvious: they evaluate to another scalar that is the result of the operator applied to both scalar operands.</p>
+                    <p><b>Between an instant vector and a scalar</b>, the operator is applied to the value of every data sample in the vector. E.g. if a time series instant vector is multiplied by 2, the result is another vector in which every sample value of the original vector is multiplied by 2. The metric name is dropped.</p>
+                    <p><b>Between two instant vectors</b>, a binary arithmetic operator is applied to each entry in the left-hand side vector and its matching element in the right-hand vector. The result is propagated into the result vector with the grouping labels becoming the output label set. The metric name is dropped. Entries for which no matching entry in the right-hand vector can be found are not part of the result.</p>
+                  </div>
+                </div>
+                <!-- Trigonometric binary operators -->
+                <div class="introduce-view__content">
+                  <h2 id="trigonometric-binary-operators">Trigonometric binary operators</h2>
+                  <div class="introduce-view__content-label">
+                    <p>The following trigonometric binary operators, which work in radians, exist in Prometheus:</p>
+                    <ul>
+                      <li><code>atan2</code> (based on https://pkg.go.dev/math#Atan2)</li>
+                    </ul>
+                    <p>Trigonometric operators allow trigonometric functions to be executed on two vectors using vector matching, which isn't available with normal functions. They act in the same manner as arithmetic operators.</p>
+                  </div>
+                </div>
+                <!-- Comparison binary operators -->
+                <div class="introduce-view__content">
+                  <h2 id="comparison-binary-operators">Comparison binary operators</h2>
+                  <div class="introduce-view__content-label">
+                    <p>The following binary comparison operators exist in Prometheus:</p>
+                    <ul>
+                      <li><code>==</code> (equal)</li>
+                      <li><code>!=</code> (not-equal)</li>
+                      <li><code>&gt;</code> (greater-than)</li>
+                      <li><code>&lt;</code> (less-than)</li>
+                      <li><code>&gt;=</code> (greater-or-equal)</li>
+                      <li><code>&lt;=</code> (less-or-equal)</li>
+                    </ul>
+                    <p>Comparison operators are defined between scalar/scalar, vector/scalar, and vector/vector value pairs. By default they filter. Their behavior can be modified by providing <code>bool</code> after the operator, which will return <code>0</code> or <code>1</code> for the value rather than filtering.</p>
+                    <p><b>Between two scalars</b>, the <code>bool</code> modifier must be provided and these operators result in another scalar that is either <code>0</code> (<code>false</code>) or <code>1</code> (<code>true</code>), depending on the comparison result.</p>
+                    <p><b>Between an instant vector and a scalar</b>, these operators are applied to the value of every data sample in the vector, and vector elements between which the comparison result is <code>false</code> get dropped from the result vector. If the <code>bool</code> modifier is provided, vector elements that would be dropped instead have the value <code>0</code> and vector elements that would be kept have the value <code>1</code>. The metric name is dropped if the <code>bool</code> modifier is provided.</p>
+                    <p><b>Between two instant vectors</b>, these operators behave as a filter by default, applied to matching entries. Vector elements for which the expression is not true or which do not find a match on the other side of the expression get dropped from the result, while the others are propagated into a result vector with the grouping labels becoming the output label set. If the <code>bool</code> modifier is provided, vector elements that would have been dropped instead have the value <code>0</code> and vector elements that would be kept have the value <code>1</code>, with the grouping labels again becoming the output label set. The metric name is dropped if the <code>bool</code> modifier is provided.</p>
+                  </div>
+                </div>
+                <!-- Logical/set binary operators -->
+                <div class="introduce-view__content">
+                  <h2 id="Logical-binary-operators">Logical/set binary operators</h2>
+                  <div class="introduce-view__content-label">
+                    <p>These logical/set binary operators are only defined between instant vectors:</p>
+                    <ul>
+                      <li><code>and</code> (intersection)</li>
+                      <li><code>or</code> (union)</li>
+                      <li><code>unless</code> (complement)</li>
+                    </ul>
+                    <p><code>vector1 and vector2</code> results in a vector consisting of the elements of <code>vector1</code> for which there are elements in <code>vector2</code> with exactly matching label sets. Other elements are dropped. The metric name and values are carried over from the left-hand side vector.</p>
+                    <p><code>vector1 or vector2</code> results in a vector that contains all original elements (label sets + values) of <code>vector1</code> and additionally all elements of <code>vector2</code> which do not have matching label sets in <code>vector1</code>.</p>
+                    <p><code>vector1 unless vector2</code> results in a vector consisting of the elements of <code>vector1</code> for which there are no elements in <code>vector2</code> with exactly matching label sets. All matching elements in both vectors are dropped.</p>
+                  </div>
+                </div>
+                <!-- Vector matching -->
+                <h1 class="page-header-two" id="vector-matching">Vector matching</h1>
+                 <div class="introduce-view__content">
+                  <div class="introduce-view__content-label">
+                    <p>Operations between vectors attempt to find a matching element in the right-hand side vector for each entry in the left-hand side. There are two basic types of matching behavior: One-to-one and many-to-one/one-to-many.</p>
+                  </div>
+                </div>
+                <!-- Vector matching keywords -->
+                 <div class="introduce-view__content">
+                  <h2 id="vector-matching-keywords">Vector matching keywords</h2>
+                  <div class="introduce-view__content-label">
+                    <p>These vector matching keywords allow for matching between series with different label sets providing:</p>
+                    <ul>
+                      <li><code>on</code></li>
+                      <li><code>ignoring</code></li>
+                    </ul>
+                    <p>Label lists provided to matching keywords will determine how vectors are combined. Examples can be found in <b style="color: #3C92F1" @click="jumpClick('#one-to-one-vector-matches')" class="log-link">One-to-one vector matches</b> and in <b style="color: #3C92F1" @click="jumpClick('#many-to-one')" class="log-link">Many-to-one and one-to-many vector matches</b></p>
+                  </div>
+                </div>
+                <!-- Group modifiers -->
+                 <div class="introduce-view__content">
+                  <h2 id="group-modifiers">Group modifiers</h2>
+                  <div class="introduce-view__content-label">
+                    <p>These group modifiers enable many-to-one/one-to-many vector matching:</p>
+                    <ul>
+                      <li><code>group_left</code></li>
+                      <li><code>group_right</code></li>
+                    </ul>
+                    <p>Label lists can be provided to the group modifier which contain labels from the "one"-side to be included in the result metrics.</p>
+                    <p style="font-style:italic;">Many-to-one and one-to-many matching are advanced use cases that should be carefully considered. Often a proper use of <code>ignoring(&lt;labels&gt;)</code> provides the desired outcome.</p>
+                    <p style="font-style:italic;">Grouping modifiers can only be used for <b style="color: #3C92F1" @click="jumpClick('#comparison-binary-operators')" class="log-link">comparison</b> and <b style="color: #3C92F1" @click="jumpClick('#arithmetic-binary-operators')" class="log-link">arithmetic</b>. Operations as <code>and</code>, <code>unless</code> and <code>or</code> operations match with all possible entries in the right vector by default.</p>
+                  </div>
+                </div>
+                <!-- One-to-one vector matches -->
+               <div class="introduce-view__content">
+                  <h2 id="one-to-one-vector-matches">One-to-one vector matches</h2>
+                  <div class="introduce-view__content-label">
+                    <p><b>One-to-one</b> finds a unique pair of entries from each side of the operation. In the default case, that is an operation following the format <code>vector1 &lt;operator&gt; vector2</code>. Two entries match if they have the exact same set of labels and corresponding values. The <code>ignoring</code> keyword allows ignoring certain labels when matching, while the <code>on</code> keyword allows reducing the set of considered labels to a provided list:</p>
+                    <pre>&lt;vector expr&gt; &lt;bin-op&gt; ignoring(&lt;label list&gt;) &lt;vector expr&gt;
+&lt;vector expr&gt; &lt;bin-op&gt; on(&lt;label list&gt;) &lt;vector expr&gt;</pre>
+                    <p>Example input:</p>
+                    <pre>method_code:http_errors:rate5m{method="get", code="500"}  24
+method_code:http_errors:rate5m{method="get", code="404"}  30
+method_code:http_errors:rate5m{method="put", code="501"}  3
+method_code:http_errors:rate5m{method="post", code="500"} 6
+method_code:http_errors:rate5m{method="post", code="404"} 21
 
-                <pre><code>http_requests_total</code></pre>
+method:http_requests:rate5m{method="get"}  600
+method:http_requests:rate5m{method="del"}  34
+method:http_requests:rate5m{method="post"} 120</pre>
+                    <p>Example query:</p>
+                    <pre class="box-overflow">method_code:http_errors:rate5m{code="500"} / ignoring(code) method:http_requests:rate5m</pre>
+                    <p>This returns a result vector containing the fraction of HTTP requests with status code of 500 for each method, as measured over the last 5 minutes. Without <code>ignoring(code)</code> there would have been no match as the metrics do not share the same set of labels. The entries with methods <code>put</code> and <code>del</code> have no match and will not show up in the result:</p>
+                    <pre>{method="get"}  0.04            //  24 / 600
+{method="post"} 0.05            //   6 / 120</pre>
+                  </div>
+                </div>
+                <!-- Many-to-one and one-to-many vector matches -->
+                 <div class="introduce-view__content">
+                  <h2 id="many-to-one">Many-to-one and one-to-many vector matches</h2>
+                  <div class="introduce-view__content-label">
+                    <p><b>Many-to-one</b> and <b>one-to-many</b> matchings refer to the case where each vector element on the "one"-side can match with multiple elements on the "many"-side. This has to be explicitly requested using the <code>group_left</code> or <code>group_right</code> modifiers, where left/right determines which vector has the higher cardinality.</p>
+                    <pre class="box-overflow">&lt;vector expr> &lt;bin-op&gt; ignoring(&lt;label list&gt;) group_left(&lt;label list&gt;) &lt;vector expr&gt;
+&lt;vector expr&gt; &lt;bin-op&gt; ignoring(&lt;label list&gt;) group_right(&lt;label list&gt;) &lt;vector expr&gt;
+&lt;vector expr&gt; &lt;bin-op&gt; on(&lt;label list&gt;) group_left(&lt;label list&gt;) &lt;vector expr&gt;
+&lt;vector expr&gt; &lt;bin-op&gt; on(&lt;label list&gt;) group_right(&lt;label list&gt;) &lt;vector expr&gt;</pre>
+                    <p>The label list provided with the group modifier contains additional labels from the "one"-side to be included in the result metrics. For <code>on</code> a label can only appear in one of the lists. Every time series of the result vector must be uniquely identifiable.</p>
+                    <p>Example query:</p>
+                    <pre class="box-overflow">method_code:http_errors:rate5m / ignoring(code) group_left method:http_requests:rate5m</pre>
+                    <p>In this case the left vector contains more than one entry per <code>method</code> label value. Thus, we indicate this using <code>group_left</code>. The elements from the right side are now matched with multiple elements with the same <code>method</code> label on the left:</p>
+                    <pre>{method="get", code="500"}  0.04            //  24 / 600
+{method="get", code="404"}  0.05            //  30 / 600
+{method="post", code="500"} 0.05            //   6 / 120
+{method="post", code="404"} 0.175           //  21 / 120</pre>
+                  </div>
+                </div>
+                <!-- Aggregation operators -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="aggregation-operators">Aggregation operators</h1>
+                  <div class="introduce-view__content-label">
+                    <p>Prometheus supports the following built-in aggregation operators that can be used to aggregate the elements of a single instant vector, resulting in a new vector of fewer elements with aggregated values:</p>
+                    <ul>
+                      <li><code>sum</code> (calculate sum over dimensions)</li>
+                      <li><code>min</code> (select minimum over dimensions)</li>
+                      <li><code>max</code> (select maximum over dimensions)</li>
+                      <li><code>avg</code> (calculate the average over dimensions)</li>
+                      <li><code>group</code> (all values in the resulting vector are 1)</li>
+                      <li><code>stddev</code> (calculate population standard deviation over dimensions)</li>
+                      <li><code>stdvar</code> (calculate population standard variance over dimensions)</li>
+                      <li><code>count</code> (count number of elements in the vector)</li>
+                      <li><code>count_values</code> (count number of elements with the same value)</li>
+                      <li><code>bottomk</code> (smallest k elements by sample value)</li>
+                      <li><code>topk</code> (largest k elements by sample value)</li>
+                      <li><code>quantile</code> (calculate φ-quantile (0 ≤ φ ≤ 1) over dimensions)</li>
+                    </ul>
+                    <p>These operators can either be used to aggregate over <b>all</b> label dimensions or preserve distinct dimensions by including a <code>without</code> or <code>by</code> clause. These clauses may be used before or after the expression.</p>
+                    <pre>&lt;aggr-op&gt; [without|by (&lt;label list&gt;)] ([parameter,] &lt;vector expression&gt;)</pre>
+                    <p>or</p>
+                    <pre>&lt;aggr-op&gt;([parameter,] &lt;vector expression&gt;) [without|by (&lt;label list&gt;)]</pre>
+                    <p><code>label list</code> is a list of unquoted labels that may include a trailing comma, i.e. both <code>(label1, label2)</code> and <code>(label1, label2,)</code> are valid syntax.</p>
+                    <p><code>without</code> removes the listed labels from the result vector, while all other labels are preserved in the output. <code>by</code> does the opposite and drops labels that are not listed in the <code>by</code> clause, even if their label values are identical between all elements of the vector.</p>
+                    <p><code>parameter</code> is only required for <code>count_values</code>, <code>quantile</code>, <code>topk</code> and <code>bottomk</code>.</p>
+                    <p><code>count_values</code> outputs one time series per unique sample value. Each series has an additional label. The name of that label is given by the aggregation parameter, and the label value is the unique sample value. The value of each time series is the number of times that sample value was present.</p>
+                    <p><code>topk</code> and <code>bottomk</code> are different from other aggregators in that a subset of the input samples, including the original labels, are returned in the result vector. <code>by</code> and <code>without</code> are only used to bucket the input vector.</p>
+                    <p><code>quantile</code> calculates the φ-quantile, the value that ranks at number φ*N among the N metric values of the dimensions aggregated over. φ is provided as the aggregation parameter. For example, <code>quantile(0.5, ...)</code> calculates the median, <code>quantile(0.95, ...)</code> the 95th percentile. For φ = <code>NaN</code>, <code>NaN</code> is returned. For φ &lt; 0, -Inf is returned. For φ > 1, <code>+Inf</code> is returned.</p>
+                    <p>Example:</p>
+                    <p>If the metric <code>http_requests_total</code> had time series that fan out by <code>application</code>, <code>instance</code>, and <code>group</code> labels, we could calculate the total number of seen HTTP requests per application and group over all instances via:</p>
+                    <pre>sum without (instance) (http_requests_total)</pre>
+                    <p>Which is equivalent to:</p>
+                    <pre> sum by (application, group) (http_requests_total)</pre>
+                    <p>If we are just interested in the total of HTTP requests we have seen in <b>all</b> applications, we could simply write:</p>
+                    <pre>sum(http_requests_total)</pre>
+                    <p>To count the number of binaries running each build version we could write:</p>
+                    <pre>count_values("version", build_version)</pre>
+                    <p>To get the 5 largest HTTP requests counts across all instances we could write:</p>
+                    <pre>topk(5, http_requests_total)</pre>
+                  </div>
+                </div>
+                <!-- Binary operator precedence -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="binary-operator-precedence">Binary operator precedence</h1>
+                  <div class="introduce-view__content-label binary-operator-precedence">
+                    <p>The following list shows the precedence of binary operators in Prometheus, from highest to lowest.</p>
+                    <ul>
+                      <li><code>^</code></li>
+                      <li><code>*</code>, <code>/</code>, <code>%</code>, <code>atan2</code></li>
+                      <li><code>+</code>, <code>-</code></li>
+                      <li><code>==</code>, <code>!=</code>, <code>&lt;=</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&gt;</code></li>
+                      <li><code>and</code>, <code>unless</code></li>
+                      <li><code>or</code></li>
+                    </ul>
+                    <p>Operators on the same precedence level are left-associative. For example, <code>2 * 3 % 2</code> is equivalent to <code>(2 * 3) % 2</code>. However <code>^</code> is right associative, so <code>2 ^ 3 ^ 2</code> is equivalent to <code>2 ^ (3 ^ 2)</code>.</p>
+                  </div>
+                </div>
+                <!-- FUNCTIONS -->
+                <h1 class="page-header-one" id="functions">Functions</h1>
+                 <div class="introduce-view__content">
+                  <div class="introduce-view__content-label">
+                    <p>Some functions have default arguments, e.g. <code>year(v=vector(time()) instant-vector)</code>. This means that there is one argument v which is an instant vector, which if not provided it will default to the value of the expression <code>vector(time())</code>.</p>
+                  </div>
+                </div>
+                <!-- abs() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-abs">abs()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>abs(v instant-vector)</code> returns the input vector with all sample values converted to their absolute value.</p>
+                  </div>
+                </div>
+                <!-- absent() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-absent">absent()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>absent(v instant-vector)</code> returns an empty vector if the vector passed to it has any elements and a 1-element vector with the value 1 if the vector passed to it has no elements.</p>
+                    <p>This is useful for alerting on when no time series exist for a given metric name and label combination.</p>
+                    <pre>absent(nonexistent{job="myjob"})
+# => {job="myjob"}
 
-                <p>Return all time series with the metric <code>http_requests_total</code> and the given<code>job</code> and <code>handler</code> labels:</p>
+absent(nonexistent{job="myjob",instance=~".*"})
+# => {job="myjob"}
 
-                <pre><code>http_requests_total{job="apiserver", handler="/api/comments"}</code></pre>
+absent(sum(nonexistent{job="myjob"}))
+# => {}</pre>
+                    <p>In the first two examples, <code>absent()</code> tries to be smart about deriving labels of the 1-element output vector from the input vector.</p>
+                  </div>
+                </div>
+                 <!-- absent_over_time() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-absent_over_time">absent_over_time()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>absent_over_time(v range-vector)</code> returns an empty vector if the range vector passed to it has any elements and a 1-element vector with the value 1 if the range vector passed to it has no elements.</p>
+                    <p>This is useful for alerting on when no time series exist for a given metric name and label combination for a certain amount of time.</p>
+                    <pre>absent_over_time(nonexistent{job="myjob"}[1h])
+# => {job="myjob"}
 
-                <p>Return a whole range of time (in this case 5 minutes) for the same vector,
-                  making it a range vector:</p>
+absent_over_time(nonexistent{job="myjob",instance=~".*"}[1h])
+# => {job="myjob"}
 
-                <pre><code>http_requests_total{job="apiserver", handler="/api/comments"}[5m]</code></pre>
-
-                <p>Note that an expression resulting in a range vector cannot be graphed directly,
-                  but viewed in the tabular ("Console") view of the expression browser.</p>
-
-                <p>Using regular expressions, you could select time series only for jobs whose
-                  name match a certain pattern, in this case, all jobs that end with <code>server</code>:</p>
-
-                <pre><code>http_requests_total{job=~".*server"}</code></pre>
-
-                <p>All regular expressions in Prometheus use RE2 syntax.</p>
-
-                <p>To select all HTTP status codes except 4xx ones, you could run:</p>
-
-                <pre><code>http_requests_total{status!~"4.."}</code></pre>
-
-                <h2 >
-                  Subquery
-                </h2>
-
-                <p>Return the 5-minute rate of the <code>http_requests_total</code> metric for the past 30 minutes, with a resolution of 1 minute.</p>
-
-                <pre><code>rate(http_requests_total[5m])[30m:1m]</code></pre>
-
-                <p>This is an example of a nested subquery. The subquery for the <code>deriv</code> function uses the default resolution. Note that using subqueries unnecessarily is unwise.</p>
-
-                <pre><code>max_over_time(deriv(rate(distance_covered_total[5s])[30s:5s])[10m:])</code></pre>
-
-                <h2 >
-                  Using functions, operators, etc.
-                </h2>
-
-                <p>Return the per-second rate for all time series with the <code>http_requests_total</code>
-                  metric name, as measured over the last 5 minutes:</p>
-
-                <pre><code>rate(http_requests_total[5m])</code></pre>
-
-                <p>Assuming that the <code>http_requests_total</code> time series all have the labels <code>job</code>
-                  (fanout by job name) and <code>instance</code> (fanout by instance of the job), we might
-                  want to sum over the rate of all instances, so we get fewer output time series,
-                  but still preserve the <code>job</code> dimension:</p>
-
-                <pre><code>sum by (job) (rate(http_requests_total[5m]))</code></pre>
-
-                <p>If we have two different metrics with the same dimensional labels, we can apply
-                  binary operators to them and elements on both sides with the same label set
-                  will get matched and propagated to the output. For example, this expression
-                  returns the unused memory in MiB for every instance (on a fictional cluster
-                  scheduler exposing these metrics about the instances it runs):</p>
-
-                <pre><code>(instance_memory_limit_bytes - instance_memory_usage_bytes) / 1024 / 1024</code></pre>
-
-                <p>The same expression, but summed by application, could be written like this:</p>
-
-                <pre><code>sum by (app, proc) (instance_memory_limit_bytes - instance_memory_usage_bytes) / 1024 / 1024</code></pre>
-
-                <p>If the same fictional cluster scheduler exposed CPU usage metrics like the following for every instance:</p>
-
-                <pre><code>instance_cpu_time_ns{app="lion", proc="web", rev="34d0f99", env="prod", job="cluster-manager"}
+absent_over_time(sum(nonexistent{job="myjob"})[1h:])
+# => {}</pre>
+                    <p>In the first two examples, <code>absent_over_time()</code> tries to be smart about deriving labels of the 1-element output vector from the input vector.</p>
+                  </div>
+                </div>
+                 <!-- ceil() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-ceil">ceil()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>ceil(v instant-vector)</code> rounds the sample values of all elements in <code>v</code> up to the nearest integer.</p>
+                  </div>
+                </div>
+                 <!-- changes() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-changes">changes()</h1>
+                  <div class="introduce-view__content-label">
+                    <p>For each input time series, <code>changes(v range-vector)</code> returns the number of times its value has changed within the provided time range as an instant vector.</p>
+                  </div>
+                </div>
+                 <!-- clamp() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-clamp">clamp()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>clamp(v instant-vector, min scalar, max scalar)</code> clamps the sample values of all elements in <code>v</code> to have a lower limit of <code>min</code> and an upper limit of <code>max</code>.</p>
+                    <p>Special cases: - Return an empty vector if <code>min > max</code> - Return <code>NaN</code> if <code>min</code> or <code>max</code> is <code>NaN</code></p>
+                  </div>
+                </div>
+                 <!-- clamp_max() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-clamp_max">clamp_max()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>clamp_max(v instant-vector, max scalar)</code> clamps the sample values of all elements in <code>v</code> to have an upper limit of <code>max</code>.</p>
+                  </div>
+                </div>
+                 <!-- clamp_min() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-clamp_min">clamp_min()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>clamp_min(v instant-vector, min scalar)</code> clamps the sample values of all elements in <code>v</code> to have a lower limit of <code>min</code>.</p>
+                  </div>
+                </div>
+                 <!-- day_of_month() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-day_of_month">day_of_month()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>day_of_month(v=vector(time()) instant-vector)</code> returns the day of the month for each of the given times in UTC. Returned values are from 1 to 31.</p>
+                  </div>
+                </div>
+                 <!-- day_of_week() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-day_of_week">day_of_week()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>day_of_week(v=vector(time()) instant-vector)</code> returns the day of the week for each of the given times in UTC. Returned values are from 0 to 6, where 0 means Sunday etc.</p>
+                  </div>
+                </div>
+                 <!-- day_of_year() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-day_of_year">day_of_year()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>day_of_year(v=vector(time()) instant-vector)</code> returns the day of the year for each of the given times in UTC. Returned values are from 1 to 365 for non-leap years, and 1 to 366 in leap years.</p>
+                  </div>
+                </div>
+                 <!-- days_in_month() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-days_in_month">days_in_month()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>days_in_month(v=vector(time()) instant-vector)</code> returns number of days in the month for each of the given times in UTC. Returned values are from 28 to 31.</p>
+                  </div>
+                </div>
+                 <!-- delta() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-delta">delta()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>delta(v range-vector)</code> calculates the difference between the first and last value of each time series element in a range vector <code>v</code>, returning an instant vector with the given deltas and equivalent labels. The delta is extrapolated to cover the full time range as specified in the range vector selector, so that it is possible to get a non-integer result even if the sample values are all integers.</p>
+                    <p>The following example expression returns the difference in CPU temperature between now and 2 hours ago:</p>
+                    <pre>delta(cpu_temp_celsius{host="zeus"}[2h])</pre>
+                    <p><code>delta</code> should only be used with gauges.</p>
+                  </div>
+                </div>
+                 <!-- deriv() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-deriv">deriv()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>deriv(v range-vector)</code> calculates the per-second derivative of the time series in a range vector <code>v</code>, using simple linear regression. The range vector must have at least two samples in order to perform the calculation. When <code>+Inf</code> or <code>-Inf</code> are found in the range vector, the slope and offset value calculated will be <code>NaN</code>.</p>
+                    <p><code>deriv</code> should only be used with gauges.</p>
+                  </div>
+                </div>
+                 <!-- exp() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-exp">exp()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>exp(v instant-vector)</code> calculates the exponential function for all elements in <code>v</code>. Special cases are:</p>
+                    <ul>
+                      <li><code>Exp(+Inf) = +Inf</code></li>
+                      <li><code>Exp(NaN) = NaN</code></li>
+                    </ul>
+                  </div>
+                </div>
+                 <!-- floor() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-floor">floor()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>floor(v instant-vector)</code> rounds the sample values of all elements in <code>v</code> down to the nearest integer.</p>
+                  </div>
+                </div>
+                 <!-- histogram_quantile() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-histogram_quantile">histogram_quantile()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>histogram_quantile(φ scalar, b instant-vector)</code> calculates the φ-quantile (0 ≤ φ ≤ 1) from the buckets <code>b</code> of a histogram. (See histograms and summaries for a detailed explanation of φ-quantiles and the usage of the histogram metric type in general.) The samples in b are the counts of observations in each bucket. Each sample must have a label <code>le</code> where the label value denotes the inclusive upper bound of the bucket. (Samples without such a label are silently ignored.) The histogram metric type automatically provides time series with the <code>_bucket</code> suffix and the appropriate labels.</p>
+                    <p>Use the <code>rate()</code> function to specify the time window for the quantile calculation.</p>
+                    <p>Example: A histogram metric is called <code>http_request_duration_seconds</code>. To calculate the 90th percentile of request durations over the last 10m, use the following expression:</p>
+                    <pre>histogram_quantile(0.9, rate(http_request_duration_seconds_bucket[10m]))</pre>
+                    <p>The quantile is calculated for each label combination in <code>http_request_duration_seconds</code>. To aggregate, use the <code>sum()</code> aggregator around the <code>rate()</code> function. Since the <code>le</code> label is required by <code>histogram_quantile()</code>, it has to be included in the <code>by</code> clause. The following expression aggregates the 90th percentile by <code>job</code>:</p>
+                    <pre class="box-overflow">histogram_quantile(0.9, sum by (job, le) (rate(http_request_duration_seconds_bucket[10m])))</pre>
+                    <p>To aggregate everything, specify only the <code>le</code> label:</p>
+                    <pre class="box-overflow">histogram_quantile(0.9, sum by (le) (rate(http_request_duration_seconds_bucket[10m])))</pre>
+                    <p>The <code>histogram_quantile()</code> function interpolates quantile values by assuming a linear distribution within a bucket. The highest bucket must have an upper bound of <code>+Inf</code>. (Otherwise, <code>NaN</code> is returned.) If a quantile is located in the highest bucket, the upper bound of the second highest bucket is returned. A lower limit of the lowest bucket is assumed to be 0 if the upper bound of that bucket is greater than 0. In that case, the usual linear interpolation is applied within that bucket. Otherwise, the upper bound of the lowest bucket is returned for quantiles located in the lowest bucket.</p>
+                    <p>If <code>b</code> has 0 observations, <code>NaN</code> is returned. If <code>b</code> contains fewer than two buckets, <code>NaN</code> is returned. For φ < 0, <code>-Inf</code> is returned. For φ > 1, <code>+Inf</code> is returned. For φ = <code>NaN</code>, <code>NaN</code> is returned.</p>
+                  </div>
+                </div>
+                 <!-- holt_winters() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-holt_winters">holt_winters()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>holt_winters(v range-vector, sf scalar, tf scalar)</code> produces a smoothed value for time series based on the range in <code>v</code>. The lower the smoothing factor <code>sf</code>, the more importance is given to old data. The higher the trend factor <code>tf</code>, the more trends in the data is considered. Both <code>sf</code> and tf must be between 0 and 1.</p>
+                    <p><code>holt_winters</code> should only be used with gauges.</p>
+                  </div>
+                </div>
+                 <!-- hour() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-hour">hour()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>hour(v=vector(time()) instant-vector)</code> returns the hour of the day for each of the given times in UTC. Returned values are from 0 to 23.</p>
+                  </div>
+                </div>
+                 <!-- idelta() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-idelta">idelta()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>idelta(v range-vector)</code> calculates the difference between the last two samples in the range vector <code>v</code>, returning an instant vector with the given deltas and equivalent labels.</p>
+                    <p><code>idelta</code> should only be used with gauges.</p>
+                  </div>
+                </div>
+                 <!-- increase() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-increase">increase()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>increase(v range-vector)</code> calculates the increase in the time series in the range vector. Breaks in monotonicity (such as counter resets due to target restarts) are automatically adjusted for. The increase is extrapolated to cover the full time range as specified in the range vector selector, so that it is possible to get a non-integer result even if a counter increases only by integer increments.</p>
+                    <p>The following example expression returns the number of HTTP requests as measured over the last 5 minutes, per time series in the range vector:</p>
+                    <pre>increase(http_requests_total{job="api-server"}[5m])</pre>
+                    <p><code>increase</code> should only be used with counters. It is syntactic sugar for <code>rate(v)</code> multiplied by the number of seconds under the specified time range window, and should be used primarily for human readability. Use <code>rate</code> in recording rules so that increases are tracked consistently on a per-second basis.</p>
+                  </div>
+                </div>
+                 <!-- irate() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-irate">irate()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>irate(v range-vector)</code> calculates the per-second instant rate of increase of the time series in the range vector. This is based on the last two data points. Breaks in monotonicity (such as counter resets due to target restarts) are automatically adjusted for.</p>
+                    <p>The following example expression returns the per-second rate of HTTP requests looking up to 5 minutes back for the two most recent data points, per time series in the range vector:</p>
+                    <pre>irate(http_requests_total{job="api-server"}[5m])</pre>
+                    <p><code>irate</code> should only be used when graphing volatile, fast-moving counters. Use <code>rate</code> for alerts and slow-moving counters, as brief changes in the rate can reset the <code>FOR</code> clause and graphs consisting entirely of rare spikes are hard to read.</p>
+                    <p>Note that when combining <code>irate()</code> with an aggregation operator (e.g. <code>sum()</code>) or a function aggregating over time (any function ending in <code>_over_time</code>), always take a <code>irate()</code> first, then aggregate. Otherwise <code>irate()</code> cannot detect counter resets when your target restarts.</p>
+                  </div>
+                </div>
+                 <!-- label_join() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-label_join">label_join()</h1>
+                  <div class="introduce-view__content-label">
+                    <p>For each timeseries in <code>v</code>, <code>label_join(v instant-vector, dst_label string, separator string, src_label_1 string, src_label_2 string, ...)</code> joins all the values of all the <code>src_labels</code> using <code>separator</code> and returns the timeseries with the label <code>dst_label</code> containing the joined value. There can be any number of <code>src_labels</code> in this function.</p>
+                    <p>This example will return a vector with each time series having a <code>foo</code> label with the value <code>a,b,c</code> added to it:</p>
+                    <pre  class="box-overflow">label_join(up{job="api-server",src1="a",src2="b",src3="c"}, "foo", ",", "src1", "src2", "src3")</pre>
+                  </div>
+                </div>
+                 <!-- label_replace() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-label_replace">label_replace()</h1>
+                  <div class="introduce-view__content-label">
+                    <p>For each timeseries in <code>v</code>, <code>label_replace(v instant-vector, dst_label string, replacement string, src_label string, regex string)</code> matches the regular expression <code>regex</code> against the value of the label <code>src_label</code>. If it matches, the value of the label <code>dst_label</code> in the returned timeseries will be the expansion of <code>replacement</code>, together with the original labels in the input. Capturing groups in the regular expression can be referenced with <code>$1</code>, <code>$2</code>, etc. If the regular expression doesn't match then the timeseries is returned unchanged.</p>
+                    <p>This example will return timeseries with the values <code>a:c</code> at label <code>service</code> and <code>a</code> at label <code>foo</code>:</p>
+                    <pre  class="box-overflow">label_replace(up{job="api-server",service="a:c"}, "foo", "$1", "service", "(.*):.*")</pre>
+                  </div>
+                </div>
+                 <!-- ln() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-ln">ln()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>ln(v instant-vector)</code> calculates the natural logarithm for all elements in <code>v</code>. Special cases are:</p>
+                    <ul>
+                      <li><code>ln(+Inf) = +Inf</code></li>
+                      <li><code>ln(0) = -Inf</code></li>
+                      <li><code>ln(x &lt; 0) = NaN</code></li>
+                      <li><code>ln(NaN) = NaN</code></li>
+                    </ul>
+                  </div>
+                </div>
+                 <!-- log2() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-log2">log2()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>log2(v instant-vector)</code> calculates the binary logarithm for all elements in <code>v</code>. The special cases are equivalent to those in <code>ln</code>.</p>
+                  </div>
+                </div>
+                 <!-- log10() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-log10">log10()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>log10(v instant-vector)</code> calculates the decimal logarithm for all elements in <code>v</code>. The special cases are equivalent to those in <code>ln</code>.</p>
+                  </div>
+                </div>
+                 <!-- minute() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-minute">minute()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>minute(v=vector(time()) instant-vector)</code> returns the minute of the hour for each of the given times in UTC. Returned values are from 0 to 59.</p>
+                  </div>
+                </div>
+                 <!-- month() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-month">month()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>month(v=vector(time()) instant-vector)</code> returns the month of the year for each of the given times in UTC. Returned values are from 1 to 12, where 1 means January etc.</p>
+                  </div>
+                </div>
+                 <!-- predict_linear() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-predict_linear">predict_linear()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>predict_linear(v range-vector, t scalar)</code> predicts the value of time series <code>t</code> seconds from now, based on the range vector <code>v</code>, using simple linear regression. The range vector must have at least two samples in order to perform the calculation. When <code>+Inf</code> or <code>-Inf</code> are found in the range vector, the slope and offset value calculated will be <code>NaN</code>.</p>
+                    <p><code>predict_linear</code> should only be used with gauges.</p>
+                  </div>
+                </div>
+                 <!-- rate() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-rate">rate()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>rate(v range-vector)</code> calculates the per-second average rate of increase of the time series in the range vector. Breaks in monotonicity (such as counter resets due to target restarts) are automatically adjusted for. Also, the calculation extrapolates to the ends of the time range, allowing for missed scrapes or imperfect alignment of scrape cycles with the range's time period.</p>
+                    <p>The following example expression returns the per-second rate of HTTP requests as measured over the last 5 minutes, per time series in the range vector:</p>
+                    <pre>rate(http_requests_total{job="api-server"}[5m])</pre>
+                    <p><code>rate</code> should only be used with counters. It is best suited for alerting, and for graphing of slow-moving counters.</p>
+                    <p>Note that when combining <code>rate()</code> with an aggregation operator (e.g. <code>sum()</code>) or a function aggregating over time (any function ending in <code>_over_time</code>), always take a <code>rate()</code> first, then aggregate. Otherwise <code>rate()</code> cannot detect counter resets when your target restarts.</p>
+                  </div>
+                </div>
+                 <!-- resets() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-resets">resets()</h1>
+                  <div class="introduce-view__content-label">
+                    <p>For each input time series, <code>resets(v range-vector)</code> returns the number of counter resets within the provided time range as an instant vector. Any decrease in the value between two consecutive samples is interpreted as a counter reset.</p>
+                    <p><code>resets</code> should only be used with counters.</p>
+                  </div>
+                </div>
+                 <!-- round() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-round">round()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>round(v instant-vector, to_nearest=1 scalar)</code> rounds the sample values of all elements in <code>v</code> to the nearest integer. Ties are resolved by rounding up. The optional <code>to_nearest</code> argument allows specifying the nearest multiple to which the sample values should be rounded. This multiple may also be a fraction.</p>
+                  </div>
+                </div>
+                 <!-- scalar() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-scalar">scalar()</h1>
+                  <div class="introduce-view__content-label">
+                    <p>Given a single-element input vector, <code>scalar(v instant-vector)</code> returns the sample value of that single element as a scalar. If the input vector does not have exactly one element, <code>scalar</code> will return <code>NaN</code>.</p>
+                  </div>
+                </div>
+                 <!-- sgn() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-sgn">sgn()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>sgn(v instant-vector)</code> returns a vector with all sample values converted to their sign, defined as this: 1 if v is positive, -1 if v is negative and 0 if v is equal to zero.</p>
+                  </div>
+                </div>
+                 <!-- sort() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-sort">sort()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>sort(v instant-vector)</code> returns vector elements sorted by their sample values, in ascending order.</p>
+                  </div>
+                </div>
+                 <!-- sort_desc() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-sort_desc">sort_desc()</h1>
+                  <div class="introduce-view__content-label">
+                    <p>Same as <code>sort</code>, but sorts in descending order.</p>
+                  </div>
+                </div>
+                <!-- sqrt() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-sqrt">sqrt()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>sqrt(v instant-vector)</code> calculates the square root of all elements in <code>v</code>.</p>
+                  </div>
+                </div>
+                <!-- time() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-time">time()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>time()</code> returns the number of seconds since January 1, 1970 UTC. Note that this does not actually return the current time, but the time at which the expression is to be evaluated.</p>
+                  </div>
+                </div>
+                <!-- timestamp() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-timestamp">timestamp()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>timestamp(v instant-vector)</code> returns the timestamp of each of the samples of the given vector as the number of seconds since January 1, 1970 UTC.</p>
+                  </div>
+                </div>
+                <!-- vector() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-vector">vector()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>vector(s scalar)</code> returns the scalar <code>s</code> as a vector with no labels.</p>
+                  </div>
+                </div>
+                <!-- year() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-year">year()</h1>
+                  <div class="introduce-view__content-label">
+                    <p><code>year(v=vector(time()) instant-vector)</code> returns the year for each of the given times in UTC.</p>
+                  </div>
+                </div>
+                <!-- <aggregation>_over_time() -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-aggregation">&lt;aggregation&gt;_over_time()</h1>
+                  <div class="introduce-view__content-label">
+                    <p>The following functions allow aggregating each series of a given range vector over time and return an instant vector with per-series aggregation results:</p>
+                    <ul>
+                      <li><code>avg_over_time(range-vector):</code> the average value of all points in the specified interval.</li>
+                      <li><code>min_over_time(range-vector):</code> the minimum value of all points in the specified interval.</li>
+                      <li><code>max_over_time(range-vector):</code> the maximum value of all points in the specified interval.</li>
+                      <li><code>sum_over_time(range-vector):</code> the sum of all values in the specified interval.</li>
+                      <li><code>count_over_time(range-vector):</code> the count of all values in the specified interval.</li>
+                      <li><code>quantile_over_time(scalar, range-vector):</code> the φ-quantile (0 ≤ φ ≤ 1) of the values in the specified interval.</li>
+                      <li><code>stddev_over_time(range-vector):</code> the population standard deviation of the values in the specified interval.</li>
+                      <li><code>stdvar_over_time(range-vector):</code> the population standard variance of the values in the specified interval.</li>
+                      <li><code>last_over_time(range-vector):</code> the most recent point value in specified interval.</li>
+                      <li><code>present_over_time(range-vector):</code> the value 1 for any series in the specified interval.</li>
+                    </ul>
+                    <p>Note that all values in the specified interval have the same weight in the aggregation even if the values are not equally spaced throughout the interval.</p>
+                  </div>
+                </div>
+                <!-- Trigonometric Functions -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="functions-trigonometric">Trigonometric Functions</h1>
+                  <div class="introduce-view__content-label">
+                    <p>The trigonometric functions work in radians:</p>
+                    <ul>
+                      <li><code>acos(v instant-vector):</code> calculates the arccosine of all elements in v (special cases).</li>
+                      <li><code>acosh(v instant-vector):</code> calculates the inverse hyperbolic cosine of all elements in v (special cases).</li>
+                      <li><code>asin(v instant-vector):</code> calculates the arcsine of all elements in v (special cases).</li>
+                      <li><code>asinh(v instant-vector):</code> calculates the inverse hyperbolic sine of all elements in v (special cases).</li>
+                      <li><code>atan(v instant-vector):</code> calculates the arctangent of all elements in v (special cases).</li>
+                      <li><code>atanh(v instant-vector):</code> calculates the inverse hyperbolic tangent of all elements in v (special cases).</li>
+                      <li><code>cos(v instant-vector):</code> calculates the cosine of all elements in v (special cases).</li>
+                      <li><code>cosh(v instant-vector):</code> calculates the hyperbolic cosine of all elements in v (special cases).</li>
+                      <li><code>sin(v instant-vector):</code> calculates the sine of all elements in v (special cases).</li>
+                      <li><code>sinh(v instant-vector):</code> calculates the hyperbolic sine of all elements in v (special cases).</li>
+                      <li><code>tan(v instant-vector):</code> calculates the tangent of all elements in v (special cases).</li>
+                      <li><code>tanh(v instant-vector):</code> calculates the hyperbolic tangent of all elements in v (special cases).</li>
+                    </ul>
+                    <p>The following are useful for converting between degrees and radians:</p>
+                    <ul>
+                      <li><code>deg(v instant-vector)</code>: converts radians to degrees for all elements in <code>v</code>.</li>
+                      <li><code>pi()</code>: returns pi.</li>
+                      <li><code>rad(v instant-vector)</code>: converts degrees to radians for all elements in <code>v</code>.</li>
+                    </ul>
+                  </div>
+                </div>
+                <!-- QUERY EXAMPLES -->
+                <h1 class="page-header-one" id="query-examples">Query examples</h1>
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="simple-time-series-selection">Simple time series selection</h1>
+                  <div class="introduce-view__content-label">
+                    <p>Return all time series with the metric <code>http_requests_total</code>:</p>
+                    <pre>http_requests_total</pre>
+                    <p>Return all time series with the metric <code>http_requests_total</code> and the given <code>job</code> and <code>handler</code> labels:</p>
+                    <pre>http_requests_total{job="apiserver", handler="/api/comments"}</pre>
+                    <p>Return a whole range of time (in this case 5 minutes up to the query time) for the same vector, making it a <b style="color: #3C92F1" @click="jumpClick('#range-vector-selectors')" class="log-link">range vector</b>:</p>
+                    <pre>http_requests_total{job="apiserver", handler="/api/comments"}[5m]</pre>
+                    <p>Note that an expression resulting in a range vector cannot be graphed directly, but viewed in the tabular ("Console") view of the expression browser.</p>
+                    <p>Using regular expressions, you could select time series only for jobs whose name match a certain pattern, in this case, all jobs that end with <code>server</code>:</p>
+                    <pre>http_requests_total{job=~".*server"}</pre>
+                    <p>All regular expressions in Prometheus use RE2 syntax.</p>
+                    <p>To select all HTTP status codes except 4xx ones, you could run:</p>
+                    <pre>http_requests_total{status!~"4.."}</pre>
+                  </div>
+                </div>
+                <!-- Subquery -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="query-examples-subquery">Subquery</h1>
+                  <div class="introduce-view__content-label">
+                    <p>Return the 5-minute rate of the <code>http_requests_total</code> metric for the past 30 minutes, with a resolution of 1 minute.</p>
+                    <pre>rate(http_requests_total[5m])[30m:1m]</pre>
+                    <p>This is an example of a nested subquery. The subquery for the <code>deriv</code> function uses the default resolution. Note that using subqueries unnecessarily is unwise.</p>
+                    <pre>max_over_time(deriv(rate(distance_covered_total[5s])[30s:5s])[10m:])</pre>
+                  </div>
+                </div>
+                <!-- Using functions, operators, etc. -->
+                 <div class="introduce-view__content">
+                  <h1 class="page-header-two" id="using-functions">Using functions, operators, etc.</h1>
+                  <div class="introduce-view__content-label">
+                    <p>Return the per-second rate for all time series with the <code>http_requests_total</code> metric name, as measured over the last 5 minutes:</p>
+                    <pre>rate(http_requests_total[5m])</pre>
+                    <p>Assuming that the <code>http_requests_total</code> time series all have the labels <code>job</code> (fanout by job name) and <code>instance</code> (fanout by instance of the job), we might want to sum over the rate of all instances, so we get fewer output time series, but still preserve the <code>job</code> dimension:</p>
+                    <pre>sum by (job) (
+  rate(http_requests_total[5m])
+)</pre>
+                    <p>If we have two different metrics with the same dimensional labels, we can apply binary operators to them and elements on both sides with the same label set will get matched and propagated to the output. For example, this expression returns the unused memory in MiB for every instance (on a fictional cluster scheduler exposing these metrics about the instances it runs):</p>
+                    <pre>(instance_memory_limit_bytes - instance_memory_usage_bytes) / 1024 / 1024</pre>
+                    <p>The same expression, but summed by application, could be written like this:</p>
+                    <pre>sum by (app, proc) (
+  instance_memory_limit_bytes - instance_memory_usage_bytes
+) / 1024 / 1024</pre>
+                    <p>If the same fictional cluster scheduler exposed CPU usage metrics like the following for every instance:</p>
+                    <pre  class="box-overflow">instance_cpu_time_ns{app="lion", proc="web", rev="34d0f99", env="prod", job="cluster-manager"}
 instance_cpu_time_ns{app="elephant", proc="worker", rev="34d0f99", env="prod", job="cluster-manager"}
 instance_cpu_time_ns{app="turtle", proc="api", rev="4d3a513", env="prod", job="cluster-manager"}
 instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="cluster-manager"}
-...
-</code></pre>
-
-                <p>...we could get the top 3 CPU users grouped by application (<code>app</code>) and process type (<code>proc</code>) like this:</p>
-
-                <pre><code>topk(3, sum by (app, proc) (rate(instance_cpu_time_ns[5m])))</code></pre>
-
-                <p>Assuming this metric contains one time series per running instance, you could count the number of running instances per application like this:</p>
-
-                <pre><code>count by (app) (instance_cpu_time_ns)</code></pre>
-
+...</pre>
+                    <p>...we could get the top 3 CPU users grouped by application (<code>app</code>) and process type (<code>proc</code>) like this:</p>
+                    <pre>topk(3, sum by (app, proc) (rate(instance_cpu_time_ns[5m])))</pre>
+                    <p>Assuming this metric contains one time series per running instance, you could count the number of running instances per application like this:</p>
+                    <pre>count by (app) (instance_cpu_time_ns)</pre>
+                  </div>
+                </div>
+              </div>
+              <div class="catalog">
+                <ul class="catalog-square">
+                  <!-- Querying prometheus -->
+                  <li>
+                    <div @click="jumpClick('#querying-prometheus')"><span>Querying prometheus</span></div>
+                    <ul class="catalog-disc">
+                      <li @click="jumpClick('#querying-prometheus-examples')"><span>Examples</span></li>
+                      <li  @click="jumpClick('#expression-language-data-types')"><span>Expression language data types</span></li>
+                      <li>
+                        <div @click="jumpClick('#literals')"><span>Literals</span></div>
+                         <ul>
+                            <li @click="jumpClick('#string-literals')"><span>String literals</span></li>
+                            <li @click="jumpClick('#float-literals')"><span>Float literals</span></li>
+                        </ul>
+                      </li>
+                       <li>
+                        <div @click="jumpClick('#time-series-selectors')"><span>Time series Selectors</span></div>
+                         <ul>
+                            <li @click="jumpClick('#instant-vector-selectors')"><span>Instant vector selectors</span></li>
+                            <li @click="jumpClick('#range-vector-selectors')"><span>Range Vector Selectors</span></li>
+                            <li @click="jumpClick('#time-durations')"><span>Time Durations</span></li>
+                            <li @click="jumpClick('#offset-modifier')"><span>Offset modifier</span></li>
+                            <li @click="jumpClick('#time-series-modifier')"><span>@ modifier</span></li>
+                        </ul>
+                      </li>
+                      <li @click="jumpClick('#querying-prometheus-subquery')"><span>Subquery</span></li>
+                      <li @click="jumpClick('#querying-prometheus-operators')"><span>Operators</span></li>
+                      <li @click="jumpClick('#querying-prometheus-functions')"><span>Functions</span></li>
+                      <li @click="jumpClick('#querying-prometheus-comments')"><span>Comments</span></li>
+                       <li >
+                        <div @click="jumpClick('#querying-prometheus-gotchas')"><span>Gotchas</span></div>
+                         <ul>
+                            <li @click="jumpClick('#gotchas-staleness')"><span>Staleness</span></li>
+                            <li @click="jumpClick('#avoiding-slow-queries-and-overloads')"><span>Avoiding slow queries and overloads</span></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <!-- Operators -->
+                  <li>
+                    <div @click="jumpClick('#operators')"><span>Operators</span></div>
+                    <ul class="catalog-disc">
+                      <li>
+                        <div @click="jumpClick('#binary-operators')"><span>Binary operators</span></div>
+                         <ul>
+                            <li @click="jumpClick('#arithmetic-binary-operators')"><span>Arithmetic binary operators</span></li>
+                            <li @click="jumpClick('#trigonometric-binary-operators')"><span>Trigonometric binary operators</span></li>
+                            <li @click="jumpClick('#comparison-binary-operators')"><span>Comparison binary operators</span></li>
+                            <li @click="jumpClick('#Logical-binary-operators')"><span>Logical/set binary operators</span></li>
+                        </ul>
+                      </li>
+                      <li>
+                        <div @click="jumpClick('#vector-matching')"><span>Vector matching</span></div>
+                         <ul>
+                            <li @click="jumpClick('#vector-matching-keywords')"><span>Vector matching keywords</span></li>
+                            <li @click="jumpClick('#group-modifiers')"><span>Group modifiers</span></li>
+                            <li @click="jumpClick('#one-to-one-vector-matches')"><span>One-to-one vector matches</span></li>
+                            <li @click="jumpClick('#many-to-one')"><span>Many-to-one and one-to-many vector matches</span></li>
+                        </ul>
+                      </li>
+                      <li @click="jumpClick('#aggregation-operators')"><span>Aggregation operators</span></li>
+                      <li @click="jumpClick('#binary-operator-precedence')"><span>Binary operator precedence</span></li>
+                    </ul>
+                  </li>
+                  <!-- Functions -->
+                  <li>
+                    <div @click="jumpClick('#functions')"><span>Functions</span></div>
+                    <ul class="catalog-disc">
+                      <li @click="jumpClick('#functions-abs')"><span>abs()</span></li>
+                      <li @click="jumpClick('#functions-absent')"><span>absent()</span></li>
+                      <li @click="jumpClick('#functions-absent_over_time')"><span>absent_over_time()</span></li>
+                      <li @click="jumpClick('#functions-ceil')"><span>ceil()</span></li>
+                      <li @click="jumpClick('#functions-changes')"><span>changes()</span></li>
+                      <li @click="jumpClick('#functions-clamp')"><span>clamp()</span></li>
+                      <li @click="jumpClick('#functions-clamp_max')"><span>clamp_max()</span></li>
+                      <li @click="jumpClick('#functions-clamp_min')"><span>clamp_min()</span></li>
+                      <li @click="jumpClick('#functions-day_of_month')"><span>day_of_month()</span></li>
+                      <li @click="jumpClick('#functions-day_of_week')"><span>day_of_week()</span></li>
+                      <li @click="jumpClick('#functions-day_of_year')"><span>day_of_year()</span></li>
+                      <li @click="jumpClick('#functions-days_in_month')"><span>days_in_month()</span></li>
+                      <li @click="jumpClick('#functions-delta')"><span>delta()</span></li>
+                      <li @click="jumpClick('#functions-deriv')"><span>deriv()</span></li>
+                      <li @click="jumpClick('#functions-exp')"><span>exp()</span></li>
+                      <li @click="jumpClick('#functions-floor')"><span>floor()</span></li>
+                      <li @click="jumpClick('#functions-histogram_quantile')"><span>histogram_quantile()</span></li>
+                      <li @click="jumpClick('#functions-holt_winters')"><span>holt_winters()</span></li>
+                      <li @click="jumpClick('#functions-hour')"><span>hour()</span></li>
+                      <li @click="jumpClick('#functions-idelta')"><span>idelta()</span></li>
+                      <li @click="jumpClick('#functions-increase')"><span>increase()</span></li>
+                      <li @click="jumpClick('#functions-irate')"><span>irate()</span></li>
+                      <li @click="jumpClick('#functions-label_join')"><span>label_join()</span></li>
+                      <li @click="jumpClick('#functions-label_replace')"><span>label_replace()</span></li>
+                      <li @click="jumpClick('#functions-ln')"><span>ln()</span></li>
+                      <li @click="jumpClick('#functions-log2')"><span>log2()</span></li>
+                      <li @click="jumpClick('#functions-log10')"><span>log10()</span></li>
+                      <li @click="jumpClick('#functions-minute')"><span>minute()</span></li>
+                      <li @click="jumpClick('#functions-month')"><span>month()</span></li>
+                      <li @click="jumpClick('#functions-predict_linear')"><span>predict_linear()</span></li>
+                      <li @click="jumpClick('#functions-rate')"><span>rate()</span></li>
+                      <li @click="jumpClick('#functions-resets')"><span>resets()</span></li>
+                      <li @click="jumpClick('#functions-round')"><span>round()</span></li>
+                      <li @click="jumpClick('#functions-scalar')"><span>scalar()</span></li>
+                      <li @click="jumpClick('#functions-sgn')"><span>sgn()</span></li>
+                      <li @click="jumpClick('#functions-sort')"><span>sort()</span></li>
+                      <li @click="jumpClick('#functions-sort_desc')"><span>sort_desc()</span></li>
+                      <li @click="jumpClick('#functions-sqrt')"><span>sqrt()</span></li>
+                      <li @click="jumpClick('#functions-time')"><span>time()</span></li>
+                      <li @click="jumpClick('#functions-timestamp')"><span>timestamp()</span></li>
+                      <li @click="jumpClick('#functions-vector')"><span>vector()</span></li>
+                      <li @click="jumpClick('#functions-year')"><span>year()</span></li>
+                      <li @click="jumpClick('#functions-aggregation')"><span>&lt;aggregation&gt;_over_time()</span></li>
+                      <li @click="jumpClick('#functions-trigonometric')"><span>Trigonometric Functions</span></li>
+                    </ul>
+                  </li>
+                  <!-- QUERY EXAMPLES -->
+                  <li>
+                    <div @click="jumpClick('#query-examples')"><span>Query examples</span></div>
+                    <ul class="catalog-disc">
+                      <li @click="jumpClick('#simple-time-series-selection')"><span>Simple time series selection</span></li>
+                      <li @click="jumpClick('#query-examples-subquery')"><span>Subquery</span></li>
+                      <li @click="jumpClick('#using-functions')"><span>Using functions, operators, etc.</span></li>
+                    </ul>
+                  </li>
+                  </ul>
               </div>
             </div>
           </div>
+          <!-- ======================================================================================================================================================
+          =======================================================================================================================================================================
+          ============================================================================================================================================ -->
           <div v-else v-show="showIntroduce" class="introduce-view">
             <div class="info-room title-heard">
               <div class="col-md-9 logs-content">
                 <!-- LogQL: Log query language -->
                 <h1 class="page-header" style="margin-Top:0px" id="log-query-language">LogQL: Log query language<a class="header-anchor" href="https://grafana.com/docs/loki/latest/logql/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
                 <div class="title-heard__divider"></div>
-                <div class="page-header-label">
-                    <p style="width:calc(100% - 380px);">LogQL is Grafana Loki’s PromQL-inspired query language. Queries act as if they are a distributed grep to aggregate log sources. LogQL uses labels and operators for filtering.</p>
+                <div class="page-header-label box-w-auto">
+                    <p>LogQL is Grafana Loki’s PromQL-inspired query language. Queries act as if they are a distributed grep to aggregate log sources. LogQL uses labels and operators for filtering.</p>
                     <p>There are two types of LogQL queries:</p>
                     <ul>
                      <li><b style="color: #3C92F1" @click="jumpClick('#log-queries')" class="log-link">Log queries </b>return the contents of log lines.</li>
@@ -313,7 +1253,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 <!-- start -->
                 <div class="introduce-view__content">
                   <h1 class="page-header-one" id="log-queries">Log queries</h1>
-                  <p>All LogQL queries contain a <b>log stream selector.</b></p>
+                  <p class="box-w-auto">All LogQL queries contain a <b>log stream selector.</b></p>
                   <div class="img-hidden"><img src="data:image/png;base64,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" alt=""></div>
                   <p>Optionally, the log stream selector can be followed by <b>a log pipeline</b>. A log pipeline is a set of stage expressions that are chained together and applied to the selected log streams. Each expression can filter out, parse, or mutate log lines and their respective labels.</p>
                   <p>The following example shows a full log query in action:</p>
@@ -835,12 +1775,12 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
               </div>
               </div>
               <div class="catalog">
-                <ul>
-                  <li style="list-style:square;">
+                <ul class="catalog-square">
+                  <li>
                     <div @click="jumpClick('#log-queries')"><span>Log queries</span></div>
-                    <ul>
-                      <li style="list-style:disc;" @click="jumpClick('#log-stream-selector')"><span>Log stream selector</span></li>
-                      <li style="list-style:disc;">
+                    <ul class="catalog-disc">
+                      <li @click="jumpClick('#log-stream-selector')"><span>Log stream selector</span></li>
+                      <li>
                         <div @click="jumpClick('#log-pipeline')"><span>Log pipeline</span></div>
                          <ul>
                             <li @click="jumpClick('#line-filter-expressions')"><span>Line filter expression</span></li>
@@ -855,7 +1795,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
                             <li @click="jumpClick('#label-format-expressions')"><span>Labels format expression</span></li>
                          </ul>
                       </li>
-                      <li style="list-style:disc;">
+                      <li>
                         <div @click="jumpClick('#log-queries-examples')"><span>Log queries examples</span></div>
                          <ul>
                             <li @click="jumpClick('#multiple-filtering')"><span>Multiple filtering</span></li>
@@ -865,7 +1805,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
                       </li>
                     </ul>
                   </li>
-                  <li style="list-style:square;">
+                  <li>
                     <div @click="jumpClick('#metric-queries')"><span>Metric queries</span></div>
                     <ul>
                       <li style="list-style:disc;">

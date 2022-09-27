@@ -54,15 +54,6 @@
   }
   .el-collapse-item__content {
     padding: 0 30px 20px;
-    //.chart-body {
-    //  div:nth-of-type(2) {
-    //    background-color: $--chart-background-color !important;
-    //    border-color: $--chart-border-color !important;
-    //    div {
-    //      color: $--color-text-regular;
-    //    }
-    //  }
-    //}
   }
 }
 .explore {
@@ -214,118 +205,122 @@
       border-color: $--button-icon-border-color;
     }
   }
+  .binary-operator-precedence{
+    ul li{
+      list-style: decimal !important;
+    }
+  }
 }
 /*外部引用 样式start*/
-.doc-content {
-  font-size: 16px;
-}
+// .doc-content {
+//   font-size: 16px;
+// }
 
-.doc-content p,
-.doc-content.ul,
-.doc-content .alert {
-  margin: 15px 0 15px 0;
-  line-height: 1.5;
-  color: $--color-text-primary;
-}
+// .doc-content p,
+// .doc-content.ul,
+// .doc-content .alert {
+//   margin: 15px 0 15px 0;
+//   line-height: 1.5;
+//   color: $--color-text-primary;
+// }
 
-.doc-content .content-divider {
-  height: 1px;
-  width: 100%;
-  border-bottom: 2px solid $--explore-border-color-bottom;
-  margin: 5px 0;
-}
+// .doc-content .content-divider {
+//   height: 1px;
+//   width: 100%;
+//   border-bottom: 2px solid $--explore-border-color-bottom;
+//   margin: 5px 0;
+// }
 
-.doc-content > h1 {
-  color: #e6522c;
-  font-size: 30px;
-  text-transform: uppercase;
-}
+// .doc-content > h1 {
+//   color: #e6522c;
+//   font-size: 30px;
+//   text-transform: uppercase;
+// }
 
-.doc-content > h1 a {
-  color: #000 !important;
-}
+// .doc-content > h1 a {
+//   color: #000 !important;
+// }
 
-.doc-content.blog > h1 {
-  text-transform: none;
-}
+// .doc-content.blog > h1 {
+//   text-transform: none;
+// }
 
-.doc-content.blog .sponsor-logos > a > img {
-  width: 250px;
-  display: inline-block !important;
-  margin: 15px 55px;
-}
-.doc-content > h1 {
-  color: #e6522c;
-  font-size: 24px;
-}
+// .doc-content.blog .sponsor-logos > a > img {
+//   width: 250px;
+//   display: inline-block !important;
+//   margin: 15px 55px;
+// }
+// .doc-content > h1 {
+//   color: #e6522c;
+//   font-size: 24px;
+// }
 
-.doc-content > h2 {
-  color: #e6522c;
-  font-size: 18px;
-}
+// .doc-content > h2 {
+//   color: #e6522c;
+//   font-size: 18px;
+// }
 
-.doc-content > h2 code {
-  color: #e6522c;
-  background: none;
-}
+// .doc-content > h2 code {
+//   color: #e6522c;
+//   background: none;
+// }
 
-.doc-content > h3 {
-  font-size: 20px;
-  font-weight: bold;
-}
+// .doc-content > h3 {
+//   font-size: 20px;
+//   font-weight: bold;
+// }
 
-.doc-content > h4 {
-  font-weight: bold;
-  font-size: 18px;
-  margin-top: 20px;
-}
+// .doc-content > h4 {
+//   font-weight: bold;
+//   font-size: 18px;
+//   margin-top: 20px;
+// }
 
-.doc-content a.header-anchor {
-  padding-left: 15px;
-  color: gray;
-  text-decoration: none;
-}
+// .doc-content a.header-anchor {
+//   padding-left: 15px;
+//   color: gray;
+//   text-decoration: none;
+// }
 
-.doc-content img {
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-}
+// .doc-content img {
+//   width: 90%;
+//   margin-left: auto;
+//   margin-right: auto;
+//   display: block;
+// }
 
-.doc-content img.orig-size {
-  width: auto;
-  margin-left: 0;
-}
+// .doc-content img.orig-size {
+//   width: auto;
+//   margin-left: 0;
+// }
 
-.doc-content .open-source-notice {
-  color: $--color-text-regular;
-  background-color: $--background-color-base;
-  text-align: center;
-  padding: 0.8em;
-  margin-top: 1.5em;
-}
+// .doc-content .open-source-notice {
+//   color: $--color-text-regular;
+//   background-color: $--background-color-base;
+//   text-align: center;
+//   padding: 0.8em;
+//   margin-top: 1.5em;
+// }
 
-.toc {
-  padding: 1em;
-  background-color: $--background-color-base;
-}
+// .toc {
+//   padding: 1em;
+//   background-color: $--background-color-base;
+// }
+// .toc-right {
+//   float: right;
+//   width: 40%;
+//   margin: 0 0 0.5em 0.5em;
+// }
 
-.toc-right {
-  float: right;
-  width: 40%;
-  margin: 0 0 0.5em 0.5em;
-}
+// .toc ul {
+//   padding: 0 0 0 1.5em;
+//   margin: 0;
+// }
 
-.toc ul {
-  padding: 0 0 0 1.5em;
-  margin: 0;
-}
-
-.toc a code {
-  color: #337ab7;
-  background-color: transparent;
-}
+// .toc a code {
+//   color: #337ab7;
+//   background-color: transparent;
+// }
 
 code {
   color: $--color-text-primary;
@@ -340,7 +335,6 @@ aside {
 article {
   margin: 10px 0 60px 0;
 }
-/*外部引用 样式end*/
 
 .explore .introduce-view .title-heard.info-room{
   position: relative;
@@ -440,6 +434,7 @@ article {
     }
   }
   .catalog{
+    width: 360px;
     position: absolute;
     top: 75px;
     right: 25px;
@@ -450,9 +445,18 @@ article {
       list-style: circle;
       color: #3C92F1;
     }
+    ul.catalog-square>li{
+      list-style: square;
+    }
+    ul.catalog-disc>li{
+      list-style: disc;
+    }
     span:hover{
       cursor: pointer;
       border-bottom: 1px solid #3C92F1;
     }
+  }
+  .box-w-auto{
+    width: calc(100% - 390px) !important;
   }
 }
