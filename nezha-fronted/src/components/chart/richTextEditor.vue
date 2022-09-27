@@ -54,7 +54,6 @@ export default {
         // 覆盖默认上传图片
         const toolbar = this.quill.getModule('toolbar')
         toolbar.addHandler('image', (value) => {
-          this.uploadType = 'image'
           if (value) {
             this.$refs.upload.$children[0].$refs.input.click()
           } else {
@@ -106,6 +105,7 @@ export default {
     },
     // 上传图片
     async uploadChange (file) {
+      // 图片小于4M
       const isLt4M = (file.size / 1024 / 1024) < 4
       if (isLt4M) {
         console.log(this.$axios.defaults.baseURL + 'file/download/')
@@ -142,29 +142,30 @@ export default {
 </script>
 
 <style>
-  .rich-text-editor .ql-editor{
-    overflow: auto !important;
-  }
-  .text-too-long{
-    color: #F56C6C;
-    font-size: 12px;
-    line-height: 1;
-    padding-top: 4px;
-    position: absolute;
-    top: 100%;
-    left: 0;
-  }
-  .rich-text-editor-error  {
-    border: 1px solid #F56C6C;
-  }
-  .rich-text-editor-error .ql-container.ql-snow {
-    border: unset !important
-  }
 
-  .rich-text-editor-error .ql-toolbar.ql-snow{
-    border-top: unset !important;
-    border-left: unset !important;
-    border-right: unset !important;
-  }
+.rich-text-editor .ql-editor{
+  overflow: auto !important;
+}
+.text-too-long{
+  color: #F56C6C;
+  font-size: 12px;
+  line-height: 1;
+  padding-top: 4px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+.rich-text-editor-error  {
+  border: 1px solid #F56C6C;
+}
+.rich-text-editor-error .ql-container.ql-snow {
+  border: unset !important
+}
+
+.rich-text-editor-error .ql-toolbar.ql-snow{
+  border-top: unset !important;
+  border-left: unset !important;
+  border-right: unset !important;
+}
 
 </style>
