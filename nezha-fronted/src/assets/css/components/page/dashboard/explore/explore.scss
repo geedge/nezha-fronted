@@ -233,6 +233,7 @@ code {
 .explore .introduce-view .title-heard.info-room {
   .logs-content {
     font-size: 16px;
+    overflow: hidden;
     ul li {
       margin: 10px 0 10px 24px;
       list-style: disc;
