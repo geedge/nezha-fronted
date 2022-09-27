@@ -109,7 +109,7 @@
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
-<!--    预览-->
+   <!-- 预览 -->
     <el-dialog
       v-if="previewShow"
       :visible.sync="previewShow"
@@ -501,7 +501,7 @@ export default {
     preview (show) {
       if (show) {
         this.prevChart = ''
-        setTimeout(()=>{
+        setTimeout(() => {
           const start = new Date().setHours(new Date().getHours() - 1)
           const end = new Date()
           this.timeRange = [bus.computeTimezoneTime(start), bus.computeTimezoneTime(end)]
