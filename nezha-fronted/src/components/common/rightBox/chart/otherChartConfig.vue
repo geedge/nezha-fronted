@@ -39,12 +39,13 @@
         </el-form-item>
         <!--Default collapse-->
         <el-form-item class="form-item--half-width" v-if="isGroup(chartConfig.type)" :label='$t("dashboard.panel.chartForm.collapse")' prop="param.collapse">
-          <el-switch id="chart-box-collapse"
-                     v-model="chartConfig.param.collapse"
-                     :active-value="true"
-                     :inactive-value="false"
-                     @change="change"
-                     size="small"/>
+          <el-switch
+            id="chart-box-collapse"
+            v-model="chartConfig.param.collapse"
+            :active-value="true"
+            :inactive-value="false"
+            @change="change"
+            size="small"/>
         </el-form-item>
       </div>
       <div class="form-items--half-width-group" v-if="!isGroup(chartConfig.type)">

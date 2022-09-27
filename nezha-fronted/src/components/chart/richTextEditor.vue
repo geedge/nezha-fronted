@@ -2,6 +2,15 @@
     <div style="position: relative" class="rich-text-editor" :class="{'rich-text-editor-error':tooLong}">
       <div :id="id" class="editor-core" ref="editor" style="height:350px;"></div>
       <div class="text-too-long" v-if="tooLong">{{$t('validate.tooLong')}}</div>
+      <el-upload
+        action=""
+        :auto-upload="false"
+        accept=".jpg,.png"
+        :on-change="uploadChange"
+        style="display: none"
+        ref="upload"
+        >
+      </el-upload>
     </div>
 </template>
 
@@ -26,7 +35,8 @@ export default {
             ['link', 'code-block'],
             [{ list: 'ordered' }, { list: 'bullet' }],
             [{ color: [] }, { background: [] }],
-            [{ align: [] }]
+            [{ align: [] }],
+            ['image'] // 上传图片
           ]
         }
       },
@@ -41,6 +51,16 @@ export default {
       const $self = this
       if (!this.quill) {
         this.quill = new Quill(this.$refs.editor, this.options)
+        // 覆盖默认上传图片
+        const toolbar = this.quill.getModule('toolbar')
+        toolbar.addHandler('image', (value) => {
+          this.uploadType = 'image'
+          if (value) {
+            this.$refs.upload.$children[0].$refs.input.click()
+          } else {
+            this.quill.format('image', false)
+          }
+        })
         this.quill.on('selection-change', function (range, oldRange, source) {
           const tooltip = $self.$el.querySelector('.ql-tooltip')
           if (tooltip) {
@@ -83,6 +103,29 @@ export default {
         return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
       }
       return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4())
+    },
+    // 上传图片
+    async uploadChange (file) {
+      const isLt4M = (file.size / 1024 / 1024) < 4
+      if (isLt4M) {
+        console.log(this.$axios.defaults.baseURL + 'file/download/')
+        const form = new FormData()
+        form.append('file', file.raw)
+        const res = await this.$post('/file/upload', form, { 'Content-Type': 'multipart/form-data' })
+        if (res.code === 200) {
+          // 获取光标所在位置
+          const currentIndex = this.quill.getSelection().index
+          // 插入图片
+          const uploadUrl = this.$axios.defaults.baseURL + 'file/download/'
+          this.quill.insertEmbed(currentIndex, 'image', `${uploadUrl}${res.data.uuid}`)
+          // 调整光标到最后
+          this.quill.setSelection(currentIndex + 1)
+        } else {
+          this.$message.error(res.msg)
+        }
+      } else {
+        this.$message.error(this.$t('tip.imgSize'))
+      }
     }
   },
   mounted () {
