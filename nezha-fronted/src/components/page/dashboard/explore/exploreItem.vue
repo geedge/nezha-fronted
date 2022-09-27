@@ -1235,7 +1235,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
             <div class="info-room title-heard">
               <div class="col-md-9 logs-content">
                 <!-- LogQL: Log query language -->
-                <h1 class="page-header" style="margin-Top:0px" id="log-query-language">LogQL: Log query language<a class="header-anchor" href="https://grafana.com/docs/loki/latest/logql/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
+                <h1 class="page-header" style="margin-Top:0px" id="log-query-language">LogQL: Log Query Language<a class="header-anchor" href="https://grafana.com/docs/loki/latest/logql/" rel="noopener noreferrer" target="_blank"><i class="nz-icon nz-icon-link1" style="font-size: 16px;" :title="$t('overall.link')"></i></a></h1>
                 <div class="title-heard__divider"></div>
                 <!-- catalog 目录 -->
                 <div class="catalog">
