@@ -79,7 +79,7 @@
         </div>
         <div v-if="forceDeleteShow">
           <el-checkbox v-model="forceDelete" text-color="black" name="type" :true-label="1" :false-label="0"></el-checkbox>
-          <span class="checkTitle">{{$t('batch.forceDelete')}}</span>
+          <span class="check-title">{{$t('batch.forceDelete')}}</span>
         </div>
       </span>
     </el-dialog>

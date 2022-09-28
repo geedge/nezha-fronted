@@ -582,3 +582,8 @@ textarea {
 .el-icon-arrow-left::before{
   content: '\e6ae';
 }
+.el-select__tags .el-tag.el-tag--info {
+  background-color: $--background-color-base;
+  border-color: $--border-color-light;
+  color: $--color-text-secondary;
+}
