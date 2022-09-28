@@ -301,7 +301,7 @@ export default {
     },
     pointAnimation (timeStep) {
       const opacity = 0.5 + (timeStep % 1000) / 1000 / 2
-      this.map.setPaintProperty('pointLayer', 'circle-opacity', [
+      this.map && this.map.setPaintProperty('pointLayer', 'circle-opacity', [
         'step',
         ['get', 'color'],
         0.5,
