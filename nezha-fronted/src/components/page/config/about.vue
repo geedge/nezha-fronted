@@ -54,27 +54,27 @@ export default {
         content: [{
           id: 1,
           chinese: '[FEATURE] 新增TSG appliance vsys配置同步',
-          english: ''
+          english: '[FEATURE] Add the configuration synchronization of TSG appliance vsys '
         }, {
           id: 2,
           chinese: '[FEATURE] 资产支持添加评论',
-          english: ''
+          english: '[FEATURE] Assets support adding comments'
         }, {
           id: 3,
-          chinese: '[FEATURE] 增加记录规则，便于用户预先计算经常使用或计算量大的表达式，并将其结果保存为一组新的时间序列',
-          english: ''
+          chinese: '[FEATURE] 增加记录规则，便于用户预先计算经常使用或计算量大的表达式，并将其结果保存为一组新的时序数据',
+          english: '[FEATURE] Add recording rules, to facilitate users to calculate frequently used or compute-intensive expressions in advance, and save the results as a new set of time series'
         }, {
           id: 4,
           chinese: '[FEATURE] 新增图表类型：气泡图，桑基图，排行图',
-          english: ''
+          english: '[FEATURE] Add chart types: bubble chart, Sankey diagram and ranking chart'
         }, {
           id: 5,
           chinese: '[ENHANCEMENT] 优化页面加载动画效果',
-          english: ''
+          english: '[ENHANCEMENT] Optimize the animation of page loading'
         }, {
           id: 6,
           chinese: '[ENHANCEMENT] 优化地址栏显示，便于用户分享查询信息',
-          english: ''
+          english: '[ENHANCEMENT] Optimize the display of the browser address bar, to facilitate users’ sharing of queried information'
         }]
       }, {
         timestamp: 'Release 22.07 - Aug 2022',
@@ -275,10 +275,6 @@ export default {
     getVersion () {
       this.$get('/about').then(response => {
         this.language = localStorage.getItem('nz-language') || 'en'
-        // Release 22.10 - Oct 2022 英文版暂不更新
-        if (this.language === 'en') {
-          this.activities.shift()
-        }
         this.version = response.data
       })
     }
