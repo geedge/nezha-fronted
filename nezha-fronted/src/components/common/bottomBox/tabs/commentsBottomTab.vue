@@ -26,7 +26,7 @@
           <button class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancel()"><span>{{$t('overall.cancel')}}</span></button>
          </div>
       </div>
-      <div :style="{height: rowBox ?'calc(100% - 89px)':'100%'}">
+      <div :style="{height: rowBox ?'calc(100% - 124px)':'calc(100% - 35px)'}">
       <assetCommentTable
         ref="dataTable"
         :orderByFa="'id'"
@@ -156,7 +156,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
->>>.el-textarea__inner {
+.textarea-box >>>.el-textarea__inner {
     resize: none;
 }
 .textarea-box{
