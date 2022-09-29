@@ -66,7 +66,7 @@
         >
           <template>
             <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getTableData" @keyup.enter.native="getTableData" size="mini"/>
-            <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
+            <span class="jump-pages">/&nbsp;{{pageObj.pages}}</span>
           </template>
         </el-pagination>
       </template>
@@ -314,6 +314,12 @@ export default {
           label: 'assetState',
           id: 'stateIds',
           readonly: true,
+          disabled: false
+        }, {
+          id: 'comment',
+          name: this.$t('licenseGen.comment'),
+          type: 'input',
+          label: 'comment',
           disabled: false
         }]
       },
@@ -699,7 +705,7 @@ export default {
         }
       }
     },
-    getTableData (params) {
+    async getTableData (params) {
       if (params && Object.keys(params).length > 0) {
         for (const key in params) {
           this.$set(this.searchLabel, key, params[key])
@@ -913,11 +919,26 @@ export default {
         },
         jsonKey: 'valnum'
       },
+      comment: {
+        target: this.searchLabel,
+        propertyName: 'comment',
+        isSearchInput: true,
+        type: 'string',
+        defaultJson: {
+          disabled: false,
+          id: 'comment',
+          label: 'comment',
+          name: this.$t('licenseGen.comment'),
+          type: 'input',
+          val: ''
+        },
+        jsonKey: 'val'
+      },
       dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'string', target2: this.selectValue, type2: 'array' },
-      fields: { target: this.searchCheckBox, propertyName: 'fields', type: 'json', target2: this.selectValue, type2: 'json' },
+      typeIds: { target: this.searchCheckBox, propertyName: 'typeIds', type: 'string', target2: this.selectValue, type2: 'array' },
       ping: { target: this.searchCheckBox, propertyName: 'ping', type: 'string', target2: this.selectValue, type2: 'array' },
       modelIds: { target: this.searchCheckBox, propertyName: 'modelIds', type: 'string', target2: this.selectValue, type2: 'array' },
-      typeIds: { target: this.searchCheckBox, propertyName: 'typeIds', type: 'string', target2: this.selectValue, type2: 'array' }
+      fields: { target: this.searchCheckBox, propertyName: 'fields', type: 'json', target2: this.selectValue, type2: 'json' }
     }
     this.initQueryFromPath(searchKeys)
   },
