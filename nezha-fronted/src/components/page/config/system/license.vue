@@ -104,7 +104,7 @@ export default {
       tableData: [],
       tableTitle: [
         {
-          label: this.$t('asset.host'),
+          label: this.$t('asset.server'),
           prop: 'devicesName'
         },
         {
