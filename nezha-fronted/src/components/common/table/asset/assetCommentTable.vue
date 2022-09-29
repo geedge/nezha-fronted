@@ -38,8 +38,8 @@
                 <span class="descriptions-name">{{scope.row.createUser.name}}</span>
                 <span class="descriptions-name-small">@{{scope.row.createUser.name}}</span>
                 <span class="descriptions-time">{{utcTimeToTimezoneStr(scope.row.cts)}}</span>
-                <i class="nz-icon nz-icon-edit descriptions-button" @click="edit(scope.row.id)" :title="$t('overall.edit')" style="margin-right: 18px;cursor: pointer;"></i>
-                <i :title="$t('overall.delete')" @click="$emit('del', scope.row)" class="nz-icon nz-icon-delete descriptions-button" style="cursor: pointer;"></i>
+                <i v-if="scope.row.createUser.id == userId" class="nz-icon nz-icon-edit descriptions-button" @click="edit(scope.row.id)" :title="$t('overall.edit')" style="margin-right: 18px;cursor: pointer;"></i>
+                <i v-if="scope.row.createUser.id == userId" class="nz-icon nz-icon-delete descriptions-button" @click="$emit('del', scope.row)" :title="$t('overall.delete')" style="cursor: pointer;"></i>
             </div>
             <div v-if="editContentId == scope.row.id" class="textarea-box" style="height:122px;margin-top: 5px;margin-bottom: 0px;">
                <el-input
@@ -91,7 +91,9 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true
-        }]
+        }],
+      // 当前用户id
+      userId: localStorage.getItem('nz-user-id')
     }
   },
   methods: {
