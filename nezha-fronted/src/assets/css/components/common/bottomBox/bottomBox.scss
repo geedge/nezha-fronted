@@ -254,11 +254,15 @@
   padding-left: 8px;
 }
 
-#processBottomTab,#networkBottomTab{
+#processBottomTab,
+#networkBottomTab,
+#vsysBottomTab {
   .sub-container .nz-table-list {
     height: 100%;
   }
-  #assetProcessTable,#assetNetworkTable{
+  #assetProcessTable,
+  #assetNetworkTable,
+  #assetVsysTable {
     height: calc(100% - 14px) !important;
   }
 }
