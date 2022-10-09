@@ -28,6 +28,7 @@
       <process-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'process' && obj.clientState == '1'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab="targetTab" @changeTab="changeTab"></process-bottom-tab>
       <network-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'network' && obj.clientState == '1'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></network-bottom-tab>
       <comments-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'comments'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></comments-bottom-tab>
+      <vsys-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'vsys' && obj.tsgAppliance == '1'"  v-show="subResizeShow" :from="from" :obj="obj" :tabs="assetTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></vsys-bottom-tab>
       <!--module列表的tab-->
       <endpointTabNew :showTitle="false" v-if="from === fromRoute.module && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
       <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
@@ -55,6 +56,7 @@ import alertMessageTabNew from '@/components/common/bottomBox/tabs/alertMessageT
 import alertRuleEvalLog from '@/components/common/bottomBox/tabs/alertRuleEvalLog'
 import assetSubTab from '@/components/common/bottomBox/tabs/assetSubTab'
 import commentsBottomTab from '@/components/common/bottomBox/tabs/commentsBottomTab'
+import vsysBottomTab from '@/components/common/bottomBox/tabs/vsysBottomTab'
 import endpointQuery from '@/components/common/bottomBox/tabs/endpointQuery'
 import endpointTab from '@/components/common/bottomBox/tabs/endpointTab'
 import endpointTabNew from '@/components/common/bottomBox/tabs/endpointTabNew'
@@ -95,7 +97,8 @@ export default {
     alertRuleEvalLog,
     processBottomTab,
     networkBottomTab,
-    commentsBottomTab
+    commentsBottomTab,
+    vsysBottomTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -217,6 +220,7 @@ export default {
     assetTabs () {
       const hasSub = this.obj && this.obj.childrenNum
       const hasProcess = this.obj && this.obj.clientState == '1'
+      const hasVays = this.obj && this.obj.tsgAppliance == '1'
       const tabs = [
         { prop: 'panelTab', name: this.$t('overall.dashboard') },
         { prop: 'alertMessageTab', name: this.$t('overall.alert') },
@@ -230,6 +234,10 @@ export default {
         tabs.push({ prop: 'process', name: this.$t('overall.process') }, { prop: 'network', name: this.$t('overall.network') })
       }
       tabs.push({ prop: 'comments', name: this.$t('overall.comments') })
+      if (hasVays) {
+        tabs.push({ prop: 'vsys', name: this.$t('asset.vsys') })
+      }
+
       return tabs
     },
     endpointTabs () {

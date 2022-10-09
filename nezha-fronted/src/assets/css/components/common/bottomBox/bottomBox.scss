@@ -254,15 +254,20 @@
   padding-left: 8px;
 }
 
-#processBottomTab,#networkBottomTab{
+// process network vsys comment 二级页面
+#processBottomTab,
+#networkBottomTab,
+#vsysBottomTab {
   .sub-container .nz-table-list {
     height: 100%;
   }
-  #assetProcessTable,#assetNetworkTable{
-    height: calc(100% - 14px) !important;
+  #assetProcessTable,
+  #assetNetworkTable,
+  #assetVsysTable {
+    height: calc(100% - 15px) !important;
   }
 }
-// commentsBottomTab
+// comments
 #commentBottomTab {
   .sub-container .nz-table-list {
     height: 100%;
@@ -283,6 +288,7 @@
     background-color: $--background-color-empty;
   }
   #assetCommentTable {
+    height: calc(100% - 25px) !important;
     .descriptions-info {
       font-size: 14px;
       font-family: Roboto-Regular;
