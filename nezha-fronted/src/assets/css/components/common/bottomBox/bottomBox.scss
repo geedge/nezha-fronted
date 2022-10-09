@@ -254,6 +254,7 @@
   padding-left: 8px;
 }
 
+// process network vsys comment 二级页面
 #processBottomTab,
 #networkBottomTab,
 #vsysBottomTab {
@@ -263,10 +264,10 @@
   #assetProcessTable,
   #assetNetworkTable,
   #assetVsysTable {
-    height: calc(100% - 14px) !important;
+    height: calc(100% - 15px) !important;
   }
 }
-// commentsBottomTab
+// comments
 #commentBottomTab {
   .sub-container .nz-table-list {
     height: 100%;
@@ -287,6 +288,7 @@
     background-color: $--background-color-empty;
   }
   #assetCommentTable {
+    height: calc(100% - 25px) !important;
     .descriptions-info {
       font-size: 14px;
       font-family: Roboto-Regular;
