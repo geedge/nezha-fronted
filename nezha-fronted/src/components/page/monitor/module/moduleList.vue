@@ -235,9 +235,21 @@ export default {
               unit: '',
               appName: '',
               listenAddress: '',
+              apiServer: '',
+              role: '',
+              namespaces: {
+                tags: '',
+                names: []
+              },
               labels: '',
               labelModule: [{ key: '', value: '' }],
-              pipeline: []
+              pipeline: [],
+              basic_auth: {
+                username: '',
+                password: ''
+              },
+              bearer_token: '',
+              relabel_config: []
             }],
             enable: 1
           }
@@ -323,6 +335,7 @@ export default {
             item.showAllRelabelOption = false
             item.tags = ''
           })
+
           this.object.configs[1].config.forEach(item => {
             item.labelModule = []
             if (JSON.stringify(item.labels) !== '{}' && item.labels) {
@@ -356,18 +369,10 @@ export default {
                 pipeline.expressions = expressionsArr
               }
             })
-            if (item.type === 'file') {
-              item.unit = ''
-              item.appName = ''
-              item.listenAddress = ''
-            } else if (item.type === 'journal') {
-              item.fileName = ''
-              item.appName = ''
-              item.listenAddress = ''
-            } else if (item.type === 'syslog') {
-              item.fileName = ''
-              item.unit = ''
-            }
+            item.relabel_config && item.relabel_config.forEach(item => {
+              item.showAllRelabelOption = false
+              item.tags = ''
+            })
           })
           if (JSON.stringify(this.object.configs[0].config.labels) !== '{}' && this.object.configs[0].config.labels) {
             Object.keys(this.object.configs[0].config.labels).forEach(key => {
