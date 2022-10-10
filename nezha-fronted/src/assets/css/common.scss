@@ -418,16 +418,6 @@ td .nz-icon-gear:before {
     display: block;
   }
 }
-.el-icon-arrow-right {
-  font-family: "nz-icon" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-.el-icon-arrow-right:before {
-  content: "\e6ad";
-}
 .el-table__header-wrapper {
   table{
     background-color: $--background-color-empty !important;
@@ -564,23 +554,38 @@ textarea {
     border-radius: 3px;
   }
 }
-.el-icon-arrow-down{
-  font-family: nz-icon!important;
+.el-dialog__header{
+  color: $--color-text-primary;
 }
-.el-icon-arrow-down::before{
-  content: '\e6b0';
-}
-.el-icon-check{
-  font-family: nz-icon!important;
-}
-.el-icon-check::before{
-  content: '\e689';
-}
-.el-icon-arrow-left{
-  font-family: nz-icon!important;
-}
-.el-icon-arrow-left::before{
-  content: '\e6ae';
+#entrance {
+  .el-icon-arrow-right {
+    font-family: "nz-icon" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .el-icon-arrow-right:before {
+    content: "\e6ad";
+  }
+  .el-icon-arrow-down{
+    font-family: nz-icon!important;
+  }
+  .el-icon-arrow-down::before{
+    content: '\e6b0';
+  }
+  .el-icon-check{
+    font-family: nz-icon!important;
+  }
+  .el-icon-check::before{
+    content: '\e689';
+  }
+  .el-icon-arrow-left{
+    font-family: nz-icon!important;
+  }
+  .el-icon-arrow-left::before{
+    content: '\e6ae';
+  }
 }
 .el-select__tags .el-tag.el-tag--info {
   background-color: $--background-color-base;
