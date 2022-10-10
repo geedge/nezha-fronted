@@ -304,7 +304,7 @@ export default {
       this.$emit('closeSubList')
     },
     listResize (e) {
-      this.$emit('listResize', e)
+      this.$emit('listResize', e, this.afterResize)
       this.$nextTick(() => { this.afterResize() })
     },
     changeTab (tab) {
@@ -321,10 +321,20 @@ export default {
           this.$refs.reminalLogRecordTab.consoleResize()
         }, 600)
       }
+      const subListDom = document.querySelector('.sub-list') // 副列表
+      console.log(subListDom.style.height, subListDom.offsetHeight)
+      if (subListDom.offsetHeight < 505) {
+        this.$store.dispatch('dispatchTimeBoxClass', 'date-range-panel--top')
+      } else {
+        this.$store.dispatch('dispatchTimeBoxClass', '')
+      }
     },
     getTableData () {
       this.$emit('getTableData')
     }
+  },
+  beforeDestroy () {
+    this.$store.dispatch('dispatchTimeBoxClass', '')
   }
 }
 </script>

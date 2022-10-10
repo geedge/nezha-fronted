@@ -20,8 +20,8 @@
         </div>
       </div>
       <div class="calendar-popover-text" v-else>
-        <el-tooltip class="item" effect="light"  placement="bottom">
-          <div slot="content"> {{searchTime[0]}}<br/><p style="text-align:center">{{$t("dashboard.panel.to")}} </p>{{searchTime[1]}}</div>
+    <el-tooltip class="item" effect="light"  placement="bottom">
+      <div slot="content"> {{searchTime[0]}}<br/><p style="text-align:center">{{$t("dashboard.panel.to")}} </p>{{searchTime[1]}}</div>
       <div class="time-no-data">{{ showTime.text }}</div>
     </el-tooltip>
         <!-- <div class="time-no-data">{{ showTime.text }}</div> -->
@@ -31,7 +31,7 @@
       </div>
     </div>
     <transition name="el-zoom-in-top">
-      <div v-if="dropdownFlag" class="date-range-panel popper-z-index">
+      <div v-if="dropdownFlag" class="date-range-panel popper-z-index" :class="timeBoxClass">
         <el-row class="date-range-panel-top" style="position: relative">
           <el-col
             :span="16"
@@ -265,6 +265,11 @@ export default {
         type: 'hour',
         value: 1
       }
+    }
+  },
+  computed: {
+    timeBoxClass () {
+      return this.$store.getters.getTimeBoxClass
     }
   },
   mounted () {

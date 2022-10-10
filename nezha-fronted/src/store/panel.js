@@ -25,7 +25,8 @@ const panel = {
     isConnect: 'none',
     // 当前鼠标所在的图表id
     currentMousemove: 0,
-    variablesArr: []
+    variablesArr: [],
+    timeBoxClass: ''
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -93,6 +94,9 @@ const panel = {
     },
     setVariablesArr (state, value) {
       state.variablesArr = value
+    },
+    setTimeBoxClass (state, value) {
+      state.timeBoxClass = value
     }
   },
   getters: {
@@ -146,6 +150,9 @@ const panel = {
     },
     getVariablesArr (state) {
       return state.variablesArr
+    },
+    getTimeBoxClass (state, value) {
+      return state.timeBoxClass
     }
   },
   actions: {
@@ -187,6 +194,9 @@ const panel = {
     },
     dispatchVariablesArr (store, variablesArr) {
       store.commit('setVariablesArr', variablesArr)
+    },
+    dispatchTimeBoxClass (store, timeBoxClass) {
+      store.commit('setTimeBoxClass', timeBoxClass)
     }
   }
 }
