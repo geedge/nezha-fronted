@@ -66,7 +66,11 @@ export default {
               id: this.$refs[detailType].bottomBox.object.id,
               name: this.$refs[detailType].bottomBox.object.name,
               configs: this.$refs[detailType].bottomBox.object.configs ? this.$refs[detailType].bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
-              childrenNum: this.$refs[detailType].bottomBox.object.childrenNum || ''
+              childrenNum: this.$refs[detailType].bottomBox.object.childrenNum || '',
+              clientState: this.$refs[detailType].bottomBox.object.clientState || '',
+              model: {
+                tsgAppliance: this.$refs[detailType].bottomBox.object.model ? this.$refs[detailType].bottomBox.object.model.tsgAppliance : ''
+              }
             })
           } else if (this.$refs[detailType] && this.$refs[detailType].detailViewRightObj) {
             this.$nextTick(() => {
@@ -74,7 +78,11 @@ export default {
                 id: this.$refs[detailType].detailViewRightObj.id,
                 name: this.$refs[detailType].detailViewRightObj.name,
                 configs: this.$refs[detailType].detailViewRightObj.configs ? this.$refs[detailType].detailViewRightObj.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
-                childrenNum: this.$refs[detailType].detailViewRightObj.childrenNum || ''
+                childrenNum: this.$refs[detailType].detailViewRightObj.childrenNum || '',
+                clientState: this.$refs[detailType].detailViewRightObj.clientState || '',
+                model: {
+                  tsgAppliance: this.$refs[detailType].detailViewRightObj.model ? this.$refs[detailType].detailViewRightObj.model.tsgAppliance : ''
+                }
               })
             })
           }
@@ -88,7 +96,9 @@ export default {
             configs: this.bottomBox.object.configs ? this.bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
             childrenNum: this.bottomBox.object.childrenNum || '',
             clientState: this.bottomBox.object.clientState || '',
-            tsgAppliance: this.bottomBox.object.model ? this.bottomBox.object.model.tsgAppliance : ''
+            model: {
+              tsgAppliance: this.bottomBox.object.model ? this.bottomBox.object.model.tsgAppliance : ''
+            }
           })
           this.$router.replace({ path: path, query: params }).catch(err => {})
         } else if (from === 'nzDetailList' && this.detailViewRightObj) {
@@ -99,7 +109,9 @@ export default {
             configs: this.detailViewRightObj.configs ? this.detailViewRightObj.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
             childrenNum: this.detailViewRightObj.childrenNum || '',
             clientState: this.detailViewRightObj.clientState || '',
-            tsgAppliance: this.detailViewRightObj.model ? this.detailViewRightObj.model.tsgAppliance : ''
+            model: {
+              tsgAppliance: this.detailViewRightObj.model ? this.detailViewRightObj.model.tsgAppliance : ''
+            }
           })
           this.$router.replace({ path: path, query: params }).catch(err => {})
         } else if (from === 'bottomBox' && this.targetTab) {
