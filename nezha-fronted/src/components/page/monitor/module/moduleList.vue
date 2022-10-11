@@ -332,8 +332,8 @@ export default {
             this.object.configs[0].config.relabel_config = []
           }
           this.object.configs[0].config.relabel_config && this.object.configs[0].config.relabel_config.forEach(item => {
-            item.showAllRelabelOption = false
-            item.tags = ''
+            this.$set(item, 'showAllRelabelOption', false)
+            this.$set(item, 'tags', '')
           })
 
           this.object.configs[1].config.forEach(item => {
@@ -369,9 +369,12 @@ export default {
                 pipeline.expressions = expressionsArr
               }
             })
+            if (!item.relabel_config) {
+              this.$set(item, 'relabel_config', [])
+            }
             item.relabel_config && item.relabel_config.forEach(item => {
-              item.showAllRelabelOption = false
-              item.tags = ''
+              this.$set(item, 'showAllRelabelOption', false)
+              this.$set(item, 'tags', '')
             })
           })
           if (JSON.stringify(this.object.configs[0].config.labels) !== '{}' && this.object.configs[0].config.labels) {

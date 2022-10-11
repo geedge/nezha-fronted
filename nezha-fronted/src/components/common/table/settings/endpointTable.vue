@@ -74,9 +74,9 @@
               @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
               @mouseleave="labelHover(scope.row, item.prop, false,true)">
               <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
-              {{scope.row.asset.name}}
+              {{scope.row.asset&&scope.row.asset.name}}
              </span>
-              <i v-if="scope.row.asset.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.asset.name)" :title="$t('overall.copyText')"></i>
+              <i v-if="scope.row.asset&&scope.row.asset.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.asset.name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'alerts'">

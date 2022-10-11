@@ -267,6 +267,7 @@
                       <el-input id="module-box-input-target_label" v-model="item.target_label" placeholder='' size="small"></el-input>
                     </el-form-item>
                   </div>
+                  <!-- more option-->
                   <transition name="el-zoom-in-top">
                     <div v-show="item.showAllRelabelOption" >
                       <!--Regex-->
@@ -491,6 +492,7 @@
                             <el-input id="module-box-input-target_label" v-model="subItem.target_label" placeholder='' size="small"></el-input>
                           </el-form-item>
                         </div>
+                        <!-- more option-->
                         <transition name="el-zoom-in-top">
                           <div v-show="subItem.showAllRelabelOption" >
                             <!--Regex-->
@@ -677,8 +679,8 @@
 
                 </el-tabs>
                 <span class="nz-icon-minus-medium" :title="$t('overall.delete')">
-                <i class="nz-icon nz-icon-minus" @click="removeLogsArr(index)"></i>
-            </span>
+                  <i class="nz-icon nz-icon-minus" @click="removeLogsArr(index)"></i>
+                </span>
               </div>
               <div class="value-mapping-add" style="text-align: center;margin: 10px 144px 10px 144px;" @click="logsArrAdd()" :title="$t('tip.add')">
                 <i class="nz-icon nz-icon-plus"></i>
@@ -1220,10 +1222,10 @@ export default {
       this.$refs.moduleForm.clearValidate('configs.0.config.relabel_config.' + index + '.replacement')
     },
     logsActionChange (index, subIndex) {
-      this.$refs.moduleForm.clearValidate('configs.1.config.' + index + '.relabel_config.' + index + '.target_label')
-      this.$refs.moduleForm.clearValidate('configs.1.config.' + index + '.relabel_config.' + index + '.source_labels')
-      this.$refs.moduleForm.clearValidate('configs.1.config.' + index + '.relabel_config.' + index + '.regex')
-      this.$refs.moduleForm.clearValidate('configs.1.config.' + index + '.relabel_config.' + index + '.replacement')
+      this.$refs.moduleForm.clearValidate('configs.1.config.' + index + '.relabel_config.' + subIndex + '.target_label')
+      this.$refs.moduleForm.clearValidate('configs.1.config.' + index + '.relabel_config.' + subIndex + '.source_labels')
+      this.$refs.moduleForm.clearValidate('configs.1.config.' + index + '.relabel_config.' + subIndex + '.regex')
+      this.$refs.moduleForm.clearValidate('configs.1.config.' + index + '.relabel_config.' + subIndex + '.replacement')
     },
 
     addRelabel () {
@@ -1336,6 +1338,7 @@ export default {
         return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
       }
     },
+
     changeBasicType () {
       if (this.editModule.configs[0].config.protocol === 'snmp') {
         this.editModule.configs[0].config.metrics_path = ''
@@ -1403,10 +1406,10 @@ export default {
       item.listenAddress = ''
       item.apiServer = ''
       item.role = ''
-      item.namespaces = {
+      this.$set(item, 'namespaces', {
         tags: '',
         names: []
-      }
+      })
       if (val === 'kubernetes') {
         item.apiServer = '127.0.0.1'
         item.role = 'pod'
@@ -1418,6 +1421,7 @@ export default {
         }
       }
     },
+
     copyValue () {
       const domUrl = document.createElement('input')
       domUrl.value = this.configsCopyValue
