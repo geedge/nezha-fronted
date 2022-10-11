@@ -43,7 +43,8 @@ const store = new Vuex.Store({
     globalShow: false,
     globalSearchId: '',
     isRouteLive: true,
-    nowPath: ''
+    nowPath: '',
+    myEvent: new Event('resize')
   },
   getters: {
     getGlobalSearchId (state) {
@@ -181,6 +182,7 @@ const store = new Vuex.Store({
     isShrink (state) {
       state.isShrink = !state.isShrink
       localStorage.setItem('nz-left-menu-shrink', state.isShrink)
+      window.dispatchEvent(state.myEvent)
     },
     setMetricsList (state, metricsList) {
       state.metricsList = [...metricsList]

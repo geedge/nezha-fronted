@@ -1,5 +1,5 @@
 <template>
-  <div class="overview">
+  <div class="overview" >
     <div class="content-col-content" style="padding:0">
       <div :id="'map' + (isFullscreen ? '-screen-' : '' ) + chartInfo.id " style="height: 100%; width: 100%"></div>
     </div>
@@ -301,19 +301,26 @@ export default {
     },
     pointAnimation (timeStep) {
       const opacity = 0.5 + (timeStep % 1000) / 1000 / 2
-      this.map && this.map.setPaintProperty('pointLayer', 'circle-opacity', [
-        'step',
-        ['get', 'color'],
-        0.5,
-        2,
-        opacity,
-        3,
-        0.5
-      ])
-      requestAnimationFrame(this.pointAnimation)
+      if (this.map) {
+        this.map.setPaintProperty('pointLayer', 'circle-opacity', [
+          'step',
+          ['get', 'color'],
+          0.5,
+          2,
+          opacity,
+          3,
+          0.5
+        ])
+        requestAnimationFrame(this.pointAnimation)
+      }
     },
     resize () {
-      this.map.resize()
+      console.log(123123123123)
+      setTimeout(() => {
+        this.map && this.map.remove()
+        this.map = null
+        this.initChart()
+      }, 100)
     }
   },
   beforeDestroy () {

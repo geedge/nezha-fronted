@@ -31,17 +31,19 @@ export default {
   },
   methods: {
     changeDetailType (flag) {
-      this.detailType = flag
-      const query = { ...this.$route.query, detailType: flag }
+      setTimeout(() => {
+        const query = { ...this.$route.query, detailType: flag }
+        query.bottomBox = this.detailType !== 'view'
+        this.$router.replace({ query: query }).catch(err => {})
+      }, 100)
       if (this.detailType === flag) {
         return
       }
+      this.detailType = flag
       // this.$refs.dataList.bottomBox.showSubList = false
       // if (this.orderBy) {
       //   this.detailViewRightObj = ''
       // }
-      query.bottomBox = this.detailType !== 'view'
-      this.$router.replace({ query: query }).catch(err => {})
       let dataList = ''
       localStorage.setItem('detail-view-' + this.tableId, this.detailType)
       if (this.detailType === 'view') {

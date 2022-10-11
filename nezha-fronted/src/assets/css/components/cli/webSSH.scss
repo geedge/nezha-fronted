@@ -6,7 +6,7 @@
   background: $--background-color-empty;
   z-index: 2000;
   height: 300px;
-
+  padding: 0 !important;
   .shell-split {
     cursor: ns-resize;
     height: 8px;
@@ -210,6 +210,7 @@
 }
 .sub-list{
   background: #000 !important;
+  left: -2px;
 }
 /* 上滑resize工具条--end */
 .config-dropdown.w260{

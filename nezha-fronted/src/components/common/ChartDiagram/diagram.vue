@@ -1768,10 +1768,15 @@ export default {
         const domRect = dom ? dom.getBoundingClientRect() : {}
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
-          if (this.oldTopologyData && !this.oldTopologyData.pens) {
-            this.oldTopologyData.pens = []
+          try {
+            const obj = JSON.parse(this.oldTopologyData)
+            if (obj && !obj.pens) {
+              obj.pens = []
+            }
+            getTopology(this.topologyIndex).open(obj)
+          } catch (e) {
+            console.log(e)
           }
-          getTopology(this.topologyIndex).open(this.oldTopologyData || {})
         }
         let flag = false
         const position = {
