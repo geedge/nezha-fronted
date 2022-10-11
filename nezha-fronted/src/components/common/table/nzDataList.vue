@@ -214,9 +214,9 @@ export default {
       bottomBoxWindow.exitFullScreen(vm)
     },
     // 鼠标拖动二级列表
-    listResize (e) {
+    listResize (e, cb) {
       const vm = this
-      bottomBoxWindow.listResize(vm, e)
+      bottomBoxWindow.listResize(vm, e, cb)
     },
     showBottomBox (targetTab, row) {
       this.sign = row.id

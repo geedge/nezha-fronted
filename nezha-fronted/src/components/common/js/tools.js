@@ -239,7 +239,7 @@ export const cancelWithChange = {
 // 底部上滑框窗口控制
 export const bottomBoxWindow = {
   // 鼠标拖动二级列表
-  listResize (vm, e) {
+  listResize (vm, e, cb) {
     window.resizing = true
     const mainListDom = document.querySelector('.main-list') // 主列表
     const subBoxDom = document.querySelector('.sub-box') // 副列表
@@ -310,6 +310,9 @@ export const bottomBoxWindow = {
 
       document.onmousemove = null
       document.onmouseup = null
+      if (cb) {
+        cb()
+      }
     }
   },
   exitFullScreen (vm) {

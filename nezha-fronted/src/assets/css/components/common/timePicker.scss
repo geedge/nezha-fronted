@@ -254,6 +254,7 @@
         font-size: 12px;
         font-weight: 400;
         cursor: pointer;
+        color: $--color-text-regular;
       }
 
       .date-range-history-item:hover {
@@ -308,6 +309,9 @@
 
     }
   }
+}
+.date-range-panel--top {
+  top: -460px;
 }
 .el-date-range-picker.el-picker-panel__body__only,.el-picker-panel__body {
   width: 324px;
