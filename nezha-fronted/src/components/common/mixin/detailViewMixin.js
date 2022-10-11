@@ -17,14 +17,22 @@ export default {
       detailType: localStorage.getItem('detail-view-' + this.tableId) || 'list',
       detailViewRightObj: '',
       detailViewLoading: false,
-      detailTimer: ''
+      detailTimer: '',
+      showInput: false
     }
   },
   created () {
     this.detailType = localStorage.getItem('detail-view-' + this.tableId) || 'list'
   },
+  mounted () {
+    setTimeout(() => {
+      this.showInput = true
+    }, 300)
+  },
   methods: {
     changeDetailType (flag) {
+      this.detailType = flag
+      const query = { ...this.$route.query, detailType: flag }
       if (this.detailType === flag) {
         return
       }
@@ -32,8 +40,6 @@ export default {
       // if (this.orderBy) {
       //   this.detailViewRightObj = ''
       // }
-      this.detailType = flag
-      const query = { ...this.$route.query, detailType: flag }
       query.bottomBox = this.detailType !== 'view'
       this.$router.replace({ query: query }).catch(err => {})
       let dataList = ''
