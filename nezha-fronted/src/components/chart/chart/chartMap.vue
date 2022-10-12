@@ -315,7 +315,6 @@ export default {
       }
     },
     resize () {
-      console.log(123123123123)
       setTimeout(() => {
         this.map && this.map.remove()
         this.map = null

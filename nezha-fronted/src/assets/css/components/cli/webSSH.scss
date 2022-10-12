@@ -122,6 +122,10 @@
   .nz-icon-728bianjiqi_zitidaxiao{
     top:0 !important;
   }
+  .sub-list{
+    background: #000 !important;
+    left: -2px;
+  }
 }
 .shell-service-max {
   height: 100%;
@@ -207,10 +211,6 @@
   .window-control-btn>i:hover {
     color: $--color-primary;
   }
-}
-.sub-list{
-  background: #000 !important;
-  left: -2px;
 }
 /* 上滑resize工具条--end */
 .config-dropdown.w260{
