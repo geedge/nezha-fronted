@@ -343,14 +343,14 @@ export const bottomBoxWindow = {
   fullScreen (vm) {
     window.resizing = true
     const contentRightDom = document.querySelector('.list-page') // 右侧内容区
-    const contentRightHeight = contentRightDom.offsetHeight // 可视高度
+    // const contentRightHeight = contentRightDom.offsetHeight // 可视高度
     vm.bottomBox.isFullScreen = true
     // 主列表
     vm.bottomBox.mainListHeight = document.querySelector('.main-list-with-sub').offsetHeight // 记录全屏前主列表的高度
     document.querySelector('.main-list-with-sub').style.height = '0'
     vm.bottomBox.mainResizeShow = false
     // 副列表
-    document.querySelector('.sub-list').style.height = contentRightHeight + 'px'
+    document.querySelector('.sub-list').style.height = '100%'
     document.querySelector('.sub-list').style.top = 0 + 'px'
     window.resizing = false
   },

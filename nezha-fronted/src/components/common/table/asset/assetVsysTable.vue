@@ -31,7 +31,7 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'vsysId'">
-          {{scope.row.delFlag == 1 ? scope.row[item.prop] : '-'}}
+          {{scope.row.delFlag == 1 ? '-' + scope.row[item.prop] : scope.row[item.prop]}}
         </template>
         <template v-else-if="item.prop === 'uts'">
            {{scope.row[item.prop] ? utcTimeToTimezoneStr(scope.row[item.prop]) : '-'}}
