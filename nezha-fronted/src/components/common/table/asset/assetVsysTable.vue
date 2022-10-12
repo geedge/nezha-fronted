@@ -30,12 +30,15 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-        <template v-if="item.prop === 'uts'">
+        <template v-if="item.prop === 'vsysId'">
+          {{scope.row.delFlag == 1 ? scope.row[item.prop] : '-'}}
+        </template>
+        <template v-else-if="item.prop === 'uts'">
            {{scope.row[item.prop] ? utcTimeToTimezoneStr(scope.row[item.prop]) : '-'}}
         </template>
         <template v-else-if="item.prop === 'state'">
-          <div v-if="scope.row.state === 1">{{$t('overall.result.success')}}</div>
-          <div v-else>{{$t('overall.result.failed')}}</div>
+          <div :class="{'active-icon green-bg':scope.row.state == 1,'active-icon red-bg':scope.row.state == 0}" style="position: relative"></div>
+          {{scope.row.state === 1 ? $t('overall.result.success') : $t('overall.result.failed')}}
         </template>
         <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
         <template v-else>-</template>
