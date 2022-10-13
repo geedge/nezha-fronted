@@ -169,7 +169,6 @@
       padding-left: 5px;
       line-height: 30px;
       justify-content: space-between;
-      margin-bottom: 10px;
       box-sizing: border-box;
       height: 32px;
       .variable-title-left{
@@ -198,10 +197,6 @@
         font-size: 17px;
       }
     } 
-    .variable-title{
-      margin-bottom: 0;
-      margin-top: 10px;
-    }
     .add-variable{
       border: 1px solid $--border-color-light;
       border-radius: 2px;

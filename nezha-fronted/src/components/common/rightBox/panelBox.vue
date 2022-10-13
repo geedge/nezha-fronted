@@ -65,6 +65,7 @@
               <el-row
                 v-for="(item,index) of editPanel.param.variables"
                 :key="item.uid"
+                style="margin-top: 10px"
               >
                 <div class="variable-title">
                   <span class="variable-title-left">
