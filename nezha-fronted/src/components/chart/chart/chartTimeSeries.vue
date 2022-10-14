@@ -129,6 +129,13 @@ export default {
       chartOption.xAxis.axisLabel.formatter = this.xAxisLabelFormatter(minTime, maxTime)// 需转为毫秒
       chartOption.tooltip.formatter = this.tooltipFormatter(this.chartInfo.param.stack)
       chartOption.tooltip.position = this.tooltipPosition
+      if (navigator.userAgent.match(/Mobi/i) ||
+        navigator.userAgent.match(/Android/i) ||
+        navigator.userAgent.match(/iPhone/i)) {
+        chartOption.tooltip.confine = true
+        chartOption.tooltip.appendToBody = false
+        delete chartOption.tooltip.position
+      }
       chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, decimals)
       chartOption.yAxis.minInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'min')
       chartOption.yAxis.maxInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
@@ -249,9 +256,9 @@ export default {
         offset = moment.tz(offset).format('Z')
         offset = Number.parseInt(offset)
         const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
-        if (window.dataJson) {
-          offset = new Date().getTimezoneOffset() * -1 / 60
-        }
+        // if (window.dataJson) {
+        //   offset = new Date().getTimezoneOffset() * -1 / 60
+        // }
         const tData = new Date(value - localOffset + offset * 60 * 60 * 1000)
         let hour = tData.getHours()
         hour = hour > 9 ? hour : '0' + hour // 加0补充为两位数字

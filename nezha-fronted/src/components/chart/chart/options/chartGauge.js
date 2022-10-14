@@ -3,7 +3,7 @@ const chartGaugeOption = {
     show: true,
     trigger: 'item',
     confine: false,
-    extraCssText: 'z-index:1000;',
+   extraCssText: 'z-index:99999999;visibility:visible;',
     z: 9,
     animation: false,
     appendToBody: true,
@@ -24,7 +24,7 @@ const chartGaugeOption = {
       // tooltip: {
       //   trigger: 'axis',
       //   confine: false,
-      //   extraCssText: 'z-index:1000;',
+      //  extraCssText: 'z-index:99999999;visibility:visible;',
       //   z: 9,
       //   animation: false,
       //   appendToBody: true

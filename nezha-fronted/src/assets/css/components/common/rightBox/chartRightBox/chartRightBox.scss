@@ -357,3 +357,20 @@
     line-height: 20px;
   }
 }
+
+.chart-ghost{
+  background: #FF8C0E !important;
+  opacity: 0.13 !important;
+  color: transparent !important;
+  *{
+    visibility: hidden !important;
+  }
+}
+.fallback-class{
+  opacity: 1 !important;
+  cursor: grab !important;
+  background-color: $--background-color-empty;
+  .drag-sort .nz-icon-sort{
+    color: #FF8C0E;
+  }
+}

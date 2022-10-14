@@ -30,10 +30,10 @@
             handle: '.drag-sort'
           }">
         <el-row
-          :key="index"
           class="element-item form-row-item thresholds-from-item"
-          style=""
+          style="margin-bottom: 10px !important"
           v-for="index of chartConfig.elements.length"
+          :key="index"
         >
           <div class="chart-title chart-title-config">
             <span class="chart-title-content el-form-item" :class="{
@@ -75,7 +75,7 @@
             </span>
           </div>
           <transition name="el-zoom-in-top">
-            <el-row v-show="expressionsShow[index-1].show" style="margin-bottom: 10px">
+            <el-row v-show="expressionsShow[index-1].show">
               <el-form-item :prop="'elements.' + (index -1) + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}">
                 <promql-input
                   :from-father-data="true"

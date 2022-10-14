@@ -177,7 +177,8 @@ export default {
       scrollTopTimer: null,
       // 变量比较结果 图表是否显示/隐藏
       showHidden: {},
-      tempList: []
+      tempList: [],
+      isPhone: false
     }
   },
   methods: {
@@ -197,6 +198,12 @@ export default {
         }
         const span = document.querySelector('.temp-dom')
         this.tempDom.width = span.offsetWidth
+      }
+      if (this.isPhone) {
+        this.stepWidth = 150
+        const headerH = 50 / this.stepWidth
+        const headerHPadding = 50 / this.stepWidth
+        this.$store.commit('setHeaderH', { headerH, headerHPadding, rowHeight: this.stepWidth })
       }
     },
     resizeEvent (i, newH, newW, newHPx, newWPx) {
@@ -323,6 +330,11 @@ export default {
       }
       this.scrollTopTimer = setTimeout(() => {
         this.copyDataList.forEach(item => {
+          if (this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id]) {
+            if (this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].tooltip && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].tooltip.show) {
+              this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].tooltip.show = false
+            }
+          }
           if (!this.$refs['grid-item' + item.id] || !this.$refs['grid-item' + item.id][0]) {
             return
           }
@@ -584,6 +596,14 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        if (window.dataJson && (
+          navigator.userAgent.match(/Mobi/i) ||
+          navigator.userAgent.match(/Android/i) ||
+          navigator.userAgent.match(/iPhone/i)
+        )) { // 判断当前设备是否是 移动端设备
+          // 当前设备是移动设备
+          this.isPhone = true
+        }
         this.gridLayoutShow = false
         this.firstInit = true
         this.gridLayoutLoading = true
@@ -595,6 +615,12 @@ export default {
         let tempList = n.map(item => {
           let param = ''
           let height = ''
+          if (this.isPhone && item.type !== 'group') {
+            item.x = 0
+            item.y = 0
+            item.span = 12
+            item.height = 2
+          }
           if (item.param) {
             param = JSON.parse(JSON.stringify(item.param))
             // try {
