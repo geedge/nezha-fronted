@@ -249,9 +249,9 @@ export default {
         offset = moment.tz(offset).format('Z')
         offset = Number.parseInt(offset)
         const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
-        if (window.dataJson) {
-          offset = new Date().getTimezoneOffset() * -1 / 60
-        }
+        // if (window.dataJson) {
+        //   offset = new Date().getTimezoneOffset() * -1 / 60
+        // }
         const tData = new Date(value - localOffset + offset * 60 * 60 * 1000)
         let hour = tData.getHours()
         hour = hour > 9 ? hour : '0' + hour // 加0补充为两位数字
