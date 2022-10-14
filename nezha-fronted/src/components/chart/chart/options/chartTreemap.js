@@ -4,7 +4,7 @@ const chartTreemapOption = {
   tooltip: {
     trigger: 'item',
     confine: false,
-    extraCssText: 'z-index:1000;',
+    extraCssText: 'z-index:99999999;visibility:visible;',
     z: 9,
     animation: false,
     appendToBody: true,

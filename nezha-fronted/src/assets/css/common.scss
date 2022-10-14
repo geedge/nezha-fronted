@@ -402,10 +402,10 @@ td .nz-icon-gear:before {
 .chart-body,
 .chart__canvas,
 .line-area {
-  div:nth-of-type(2) {
-    background-color: $--chart-background-color !important;
-    border-color: $--chart-border-color !important;
-    div {
+  > div:nth-of-type(2) {
+    background-color: $--chart-background-color;
+    border-color: $--chart-border-color;
+   > div {
       color: $--color-text-regular;
     }
   }
@@ -449,6 +449,14 @@ td .nz-icon-gear:before {
   border-color: $--tooltip-border-color !important;
   color: $--color-text-regular !important;
   box-shadow: none !important;
+}
+.chart-time-series,
+.chart-pie,
+.chart-bar,
+.chart-treemap,
+.chart-gauge{
+  visibility: hidden;
+  position: absolute;
 }
 .loading-hide {
   display: none;
@@ -586,6 +594,11 @@ textarea {
   .el-icon-arrow-left::before{
     content: '\e6ae';
   }
+  //.chart__canvas {
+  //  .chart-time-series {
+  //    width:;
+  //  }
+  //}
 }
 .el-select__tags .el-tag.el-tag--info {
   background-color: $--background-color-base;

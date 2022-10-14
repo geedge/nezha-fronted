@@ -86,6 +86,13 @@ export default {
       // chartOption.series.label.formatter = this.pieFormatterLabel
       chartOption.tooltip.formatter = this.formatterFunc
       chartOption.tooltip.position = this.tooltipPosition
+      if (navigator.userAgent.match(/Mobi/i) ||
+        navigator.userAgent.match(/Android/i) ||
+        navigator.userAgent.match(/iPhone/i)) {
+        chartOption.tooltip.confine = true
+        chartOption.tooltip.appendToBody = false
+        delete chartOption.tooltip.position
+      }
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
         const myChart = this.isInit ? echarts.init(document.getElementById(`chart-canvas-${this.chartId}`)) : getChart(this.chartId)
