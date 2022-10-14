@@ -114,7 +114,10 @@
             <div class="export-box">
               <span class="export-title">{{$t('export.records')}}</span>
               <el-radio-group v-model="importBox.record"  size="small">
-                <el-radio-button :label="item.value" v-for="(item,index) in recordArr" :key="index" :disabled="item.value==='records'&&!deleteObjs.length">{{item.name}}</el-radio-button>
+                <el-radio-button :label="item.value" v-for="(item,index) in recordArr" :key="index" :disabled="item.value==='records'&&!deleteObjs.length">
+                  {{item.name}}
+                  <span v-if="item.value==='records'&&deleteObjs.length">({{deleteObjs.length}})</span>
+                </el-radio-button>
               </el-radio-group>
             </div>
             <div class="export-box">
