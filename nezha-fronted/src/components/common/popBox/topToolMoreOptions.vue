@@ -23,7 +23,7 @@
         <slot name="after"></slot>
       </el-dropdown-menu>
 
-      <el-dialog :close-on-click-modal="importBox.type!=3" destroy-on-close :show-close="true" :title="importBox.title" :visible.sync="importBox.show" width="580px" append-to-body class="nz-dialog" @close="closeDialog">
+      <el-dialog :close-on-click-modal="importBox.type!=3" destroy-on-close :show-close="true" :title="importBox.title" :visible.sync="importBox.show" width="580px" :modal-append-to-body="false" class="nz-dialog" @close="closeDialog">
 
         <!-- 新版导入 -->
         <div v-if="importBox.type == 1&&importNew">
