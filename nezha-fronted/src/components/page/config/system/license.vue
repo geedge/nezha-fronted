@@ -47,9 +47,9 @@
         <div class="license-left-footer-download" @click="downloadLicense">
           <i class="nz-icon nz-icon-download"></i><span>{{$t('license.downloadID')}}</span>
         </div>
-        <div class="license-left-footer-download" @click="openQrcode">
-          <i class="nz-icon nz-icon-download"></i><span>{{$t('license.downloadID')}}</span>
-        </div>
+<!--        <div class="license-left-footer-download" @click="openQrcode">-->
+<!--          <i class="nz-icon nz-icon-download"></i><span>{{$t('license.downloadID')}}</span>-->
+<!--        </div>-->
         <el-upload
           ref="upload"
           accept=".xml"
