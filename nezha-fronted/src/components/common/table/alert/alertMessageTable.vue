@@ -112,7 +112,23 @@
             </div>
             <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
               <!--            <el-dropdown-item :command="['showText', scope.row]"><i class="nz-icon nz-icon-guzhangshuju"></i><span class="operation-dropdown-text">{{$t('alert.config.trbShot')}}</span></el-dropdown-item>-->
-              <el-dropdown-item v-has="'alertMessage_view'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+              <!-- <el-dropdown-item v-has="'alertMessage_view'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
+              <el-dropdown-item v-has="'alertMessage_view'" :command="['delete', scope.row]">
+                  <delete-button
+                  ref="deleteButton"
+                  :from="'alertMessage'"
+                  :forceDeleteShow="false"
+                  :deleteTitle="'alert.alertMessage'"
+                  :type="'link'"
+                  :title="$t('overall.delete')"
+                  id="alert-msg-delete"
+                  v-has="'alertMessage_expired'"
+                  :api="api"
+                  :single="true"
+                  :delete-objs="singleDelete"
+                  @before="delFlag=true"
+                  ></delete-button>
+              </el-dropdown-item>
               <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'alertMessage']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'alertMessage_expired'" :disabled="scope.row.ack === 1" :command="['ack', scope.row]"><i class="nz-icon nz-icon-queren"></i><span class="operation-dropdown-text">{{$t('overall.acknowledge')}}</span></el-dropdown-item>
             </el-dropdown-menu>
@@ -151,10 +167,11 @@ import { calcDurationByStringTimeB } from '../../js/tools'
 import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
 import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 import alertMessageLabelMixin from '@/components/common/alert/alertMessageLabelMixin'
+import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'alertMessageTable',
   components: {
-    alertRuleInfo: alertRuleInfo
+    alertRuleInfo: alertRuleInfo,deleteButton
   },
   props: {
     nowTime: {

@@ -5,7 +5,7 @@
         <span><i class="nz-icon nz-icon-delete" ></i></span>
       </button>
     </div>
-
+    <button v-if="this.type === 'btn'" class="table-operation-item delete-button" :id="id" @click="batchDelete" :title="$t('overall.delete')"><i class="nz-icon nz-icon-delete"></i></button>
     <div v-if="this.type === 'link'" :id="id" @click="batchDelete" :title="$t('overall.delete')">
       <span><i class="nz-icon nz-icon-delete" ></i>{{title}}</span>
     </div>
@@ -98,6 +98,7 @@ export default {
       dialogVisible: false,
       idShow: true,
       idStr: [],
+      backupName: [],
       deleteData: [],
       forceDelete: 0,
       batchDeleteObjs: [],
@@ -126,40 +127,73 @@ export default {
     deleteTitle: {
       type: String,
       default: 'project.topology.data'
+    },
+    single: {
+      type: Boolean
     }
   },
+  inject: ['getTableData'],
   methods: {
     batchDelete: function () {
-      this.$emit('before')
-      if (this.deleteObjs.length < 1) return
-      if (this.clickFunction) {
-        this.clickFunction()
-        return
+      if (!this.single) {
+        this.$emit('before')
+        if (this.deleteObjs.length < 1) return
+        if (this.clickFunction) {
+          this.clickFunction()
+          return
+        }
+        this.idShow = true
+        this.prepare = true
+        this.process = false
+        this.finish = false
+        this.forceDelete = 0
+        this.deleteData = this.$loadsh.cloneDeep(this.deleteObjs).map(item => {
+          item.type = this.from
+          return item
+        })
+        this.checkAll = true
+        this.idStr = this.deleteData.map(item => item.id)
+        this.dialogVisible = true
+      } else {
+        setTimeout(() => {
+          this.$emit('before')
+          if (this.deleteObjs.length < 1) return
+          if (this.clickFunction) {
+            this.clickFunction()
+            return
+          }
+          this.idShow = true
+          this.prepare = true
+          this.process = false
+          this.finish = false
+          this.forceDelete = 0
+          this.deleteData = this.$loadsh.cloneDeep(this.deleteObjs).map(item => {
+            item.type = this.from
+            return item
+          })
+          this.checkAll = true
+          this.idStr = this.deleteData.map(item => item.id)
+          if (this.from == 'backup') {
+            this.backupName = this.deleteData.map(item => item.fileName)
+          }
+          this.dialogVisible = true
+        }, 50)
       }
-      this.idShow = true
-      this.prepare = true
-      this.process = false
-      this.finish = false
-      this.forceDelete = 0
-      this.deleteData = this.$loadsh.cloneDeep(this.deleteObjs).map(item => {
-        item.type = this.from
-        return item
-      })
-      this.checkAll = true
-      this.idStr = this.deleteData.map(item => item.id)
-      this.dialogVisible = true
     },
     handleClose () {
       this.dialogVisible = false
       if (this.finish) {
         this.$emit('after')
+        if (this.single) {
+          this.getTableData()
+        }
       }
     },
     batchDeleteYes () {
       if (!this.forceDeleteShow) {
         this.forceDelete = 1
       }
-      this.$delete(this.api + `?ids=${this.idStr.join(',')}&force=${this.forceDelete}`).then(res => {
+      this.$delete(this.api + `?ids=${this.idStr.join(',')}&force=${this.forceDelete}` + `${this.from == 'backup' ? '&filename=' + this.backupName : ''}`).then(res => {
         this.idShow = false
         this.prepare = false
         this.process = true

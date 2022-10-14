@@ -29,6 +29,7 @@
         <delete-button
           ref="deleteButton"
           :from="'alertMessageTab'"
+          :single="false"
           :forceDeleteShow="false"
           :clickFunction="openDelMessageBox"
           :delete-objs="batchDeleteObjs"

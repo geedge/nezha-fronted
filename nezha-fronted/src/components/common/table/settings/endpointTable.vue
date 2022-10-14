@@ -176,7 +176,23 @@
             <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
               <!--            <el-dropdown-item v-if="!endpointTab" :command="['endpointQuery', scope.row]"><i class="nz-icon nz-icon-search"></i><span class="operation-dropdown-text">{{$t('overall.query')}}</span></el-dropdown-item>-->
               <el-dropdown-item v-if="!endpointTab" v-has="'monitor_endpoint_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
-              <el-dropdown-item v-has="'monitor_endpoint_delete'" :command="['delete', scope.row, `sys/endpoint?ids=${scope.row.id}`]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+              <!-- <el-dropdown-item v-has="'monitor_endpoint_delete'" :command="['delete', scope.row, `sys/endpoint?ids=${scope.row.id}`]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
+              <el-dropdown-item v-has="'monitor_endpoint_delete'" :command="['delete', scope.row, `sys/endpoint?ids=${scope.row.id}`]">
+                  <delete-button
+                  ref="deleteButton"
+                  :from="'endpoint'"
+                  :forceDeleteShow="false"
+                  :deleteTitle="'project.endpoint.endpoint'"
+                  :type="'link'"
+                  :title="$t('overall.delete')"
+                  id="account-list-delete"
+                  v-has="'monitor_endpoint_delete'"
+                  :api="api"
+                  :single="true"
+                  :delete-objs="singleDelete"
+                  @before="delFlag=true"
+                  ></delete-button>
+              </el-dropdown-item>
               <el-dropdown-item v-has="'monitor_endpoint_edit'" :command="['copy', scope.row, 'project']"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'endpoint']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_add'" :command="['topology', scope.row, 'endpoint']"><i class="nz-icon nz-icon-Topology"></i><span class="operation-dropdown-text">{{$t('overall.topology')}}</span></el-dropdown-item>
@@ -208,11 +224,13 @@ import table from '@/components/common/mixin/table'
 import alertLabel from '../../alert/alertLabel'
 import nzTooltip from '../../alert/nzTooltip'
 import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
+import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'endpointTable',
   components: {
     alertLabel,
-    nzTooltip
+    nzTooltip,
+    deleteButton
   },
   mixins: [table, alertLabelMixin],
   props: {

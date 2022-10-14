@@ -36,6 +36,7 @@
         </button>
         <delete-button
           ref="deleteButton"
+          :single="false"
           :from="'assetMeta'"
           :forceDeleteShow="false"
           :delete-objs="batchDeleteObjs"

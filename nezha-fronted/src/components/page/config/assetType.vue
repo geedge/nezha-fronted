@@ -16,6 +16,7 @@
         </button>
         <delete-button
           ref="deleteButton"
+          :single="false"
           :from="'assetType'"
           :forceDeleteShow="false"
           id="account-list-batch-delete"

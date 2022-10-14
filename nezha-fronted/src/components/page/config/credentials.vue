@@ -15,6 +15,7 @@
         </button>
         <delete-button
           ref="deleteButton"
+          :single="false"
           :from="'credentials'"
           :forceDeleteShow="false"
           id="mib-list-batch-delete"

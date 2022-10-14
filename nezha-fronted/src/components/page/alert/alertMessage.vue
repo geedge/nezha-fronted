@@ -37,6 +37,7 @@
               <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <delete-button
                   ref="deleteButton"
+                  :single="false"
                   :from="'alertMessage'"
                   :forceDeleteShow="false"
                   :deleteTitle="'alert.alertMessage'"

@@ -33,6 +33,7 @@
               <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <delete-button
                   ref="deleteButton"
+                  :single="false"
                   :from="'ipam'"
                   :forceDeleteShow="true"
                   :type="'link'"

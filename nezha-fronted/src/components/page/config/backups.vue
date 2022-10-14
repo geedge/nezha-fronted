@@ -98,7 +98,11 @@ export default {
       isRefresh: ''
     }
   },
-
+  provide () {
+    return {
+      getTableData: this.getTableData
+    }
+  },
   components: { nzDataList, backupsTable, backupsBox },
 
   computed: {},

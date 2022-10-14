@@ -107,6 +107,7 @@
               <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <delete-button
                   ref="deleteButton"
+                  :single="false"
                   :from="'datacenter'"
                   :forceDeleteShow="true"
                   :deleteTitle="'overall.dc'"

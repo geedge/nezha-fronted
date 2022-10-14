@@ -69,6 +69,7 @@
         </button>
         <delete-button
           ref="deleteButton"
+          :single="false"
           :from="'user'"
           :forceDeleteShow="false"
           :deleteTitle="'config.user.user'"

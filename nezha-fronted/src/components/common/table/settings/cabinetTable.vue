@@ -39,7 +39,21 @@
           </div>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item v-has="'dc_add'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
-            <el-dropdown-item :command="['delete', scope.row]" v-has="'dc_delete'"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <!-- <el-dropdown-item :command="['delete', scope.row]" v-has="'dc_delete'"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
+            <el-dropdown-item :command="['delete', scope.row]" v-has="'dc_delete'">
+                  <delete-button
+                  ref="deleteButton"
+                  :from="'cabinet'"
+                  :forceDeleteShow="false"
+                  id="cabinet-delete"
+                  :type="'link'"
+                  :title="$t('overall.delete')"
+                  :api="api"
+                  :single="true"
+                  :delete-objs="singleDelete"
+                  @before="delFlag=true"
+                  ></delete-button>
+              </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -60,9 +74,10 @@
 import table from '@/components/common/mixin/table'
 import Template from '../../../page/config/template'
 import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
+import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'cabinetTable',
-  components: { Template, alertDaysInfo },
+  components: { Template, alertDaysInfo, deleteButton },
   mixins: [table],
   props: {
     loading: Boolean

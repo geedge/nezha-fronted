@@ -69,7 +69,22 @@
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item v-has="'ipam_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'ipam_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'ipam_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <!-- <el-dropdown-item v-has="'ipam_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
+            <el-dropdown-item v-has="'ipam_delete'" :command="['delete', scope.row]">
+                  <delete-button
+                  ref="deleteButton"
+                  :from="'ipam'"
+                  :forceDeleteShow="true"
+                  :type="'link'"
+                  :title="$t('overall.delete')"
+                  id="account-list-delete"
+                  v-has="'ipam_delete'"
+                  :api="api"
+                  :single="true"
+                  :delete-objs="singleDelete"
+                  @before="delFlag=true"
+                  ></delete-button>
+              </el-dropdown-item>
             <!-- <el-dropdown-item v-has="'ipam_edit'" :command="['sync', scope.row]"><i class="nz-icon nz-icon-sync"></i><span class="operation-dropdown-text">{{$t('overall.syncChart')}}</span></el-dropdown-item> -->
           </el-dropdown-menu>
         </el-dropdown>
@@ -89,9 +104,13 @@
 
 <script>
 import table from '@/components/common/mixin/table'
+import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'ipamTable',
   mixins: [table],
+  components: {
+    deleteButton
+  },
   props: {
     loading: Boolean
   },

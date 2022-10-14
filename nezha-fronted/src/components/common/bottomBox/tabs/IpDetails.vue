@@ -39,6 +39,7 @@
                 <delete-button
                   ref="deleteButton"
                   :from="'ipDetails'"
+                  :single="false"
                   :type="'link'"
                   :title="$t('overall.batchDel')"
                   v-has="'ipam_delete'"
