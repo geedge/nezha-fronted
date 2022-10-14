@@ -705,6 +705,7 @@
                       :prop="'param.valueMapping.' + index + '.value'"
                       :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                       class="thresholds-from-item"
+                      key="value"
                     >
                       <el-input-number
                         :controls="false"
@@ -719,6 +720,7 @@
                       :prop="'param.valueMapping.' + index + '.from'"
                       :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                       class="thresholds-from-item"
+                      key="from"
                     >
                       <el-input-number
                         :controls="false"
@@ -733,6 +735,7 @@
                       :prop="'param.valueMapping.' + index + '.to'"
                       :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                       class="thresholds-from-item"
+                      key="to"
                     >
                       <el-input-number
                         :controls="false"
@@ -747,6 +750,7 @@
                       :prop="'param.valueMapping.' + index + '.regx'"
                       :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
                       class="thresholds-from-item"
+                      key="regx"
                     >
                       <el-input
                         size="small"

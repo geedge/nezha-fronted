@@ -19,6 +19,11 @@
           <div style="display: inline-block">{{tooltip.value}}</div>
         </div>
       </div>
+
+      <div class="chart-canvas-tooltip-content">
+        <div>rank</div>
+        <div>{{tooltip.rank+1}}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -27,7 +32,7 @@
 import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
 import * as d3 from 'd3'
-import { formatScientificNotation, getMetricTypeValue } from '@/components/common/js/tools'
+import { getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import { initColor } from '@/components/chart/chart/tools'
 import lodash from 'lodash'
@@ -57,6 +62,7 @@ export default {
         title: 0,
         value: 0,
         mapping: {},
+        rank: 0,
         show: false
       }
     }
@@ -85,24 +91,26 @@ export default {
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
-          const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, decimals)
-          const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
-          const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
-          this.rankData.push({
-            value: value,
-            realValue: value,
-            showValue: showValue,
-            name: legend.name,
-            alias: legend.alias,
-            labels: {
-              ...data.metric,
-              legend: legend.alias
-            },
-            seriesIndex: expressionIndex,
-            dataIndex: dataIndex,
-            mapping: mapping
-          })
-          colorIndex++
+          if (value != 0) {
+            const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, decimals)
+            const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
+            const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+            this.rankData.push({
+              value: value,
+              realValue: value,
+              showValue: showValue,
+              name: legend.name,
+              alias: legend.alias,
+              labels: {
+                ...data.metric,
+                legend: legend.alias
+              },
+              seriesIndex: expressionIndex,
+              dataIndex: dataIndex,
+              mapping: mapping
+            })
+            colorIndex++
+          }
         })
       })
     },
@@ -119,14 +127,12 @@ export default {
         const height = svgDom.getBoundingClientRect().height
         const bodyX = 50
         const bodyY = 50
-        const bodyWidth = width - 2 * bodyX
+        const bodyWidth = width - 3 * bodyX
         const bodyHeight = height - 2 * bodyY
         const svg = d3.select(`#rank-svg-${this.chartId}`)
 
         // 从大到小排序
         let rankData = lodash.cloneDeep(this.rankData)
-        // 过滤掉为0的数据
-        rankData = rankData.filter(item => item.value != 0)
         rankData.sort((a, b) => b.value - a.value)
         rankData = rankData.map((item, index) => {
           return {
@@ -144,8 +150,10 @@ export default {
         const scaleY = d3.scaleBand()
           .domain(rankData.map((d) => d.rank).sort((a, b) => b - a))
           .range([bodyHeight, 0])
-          .paddingInner(0.3)
           .paddingOuter(0.06)
+          .paddingInner(0.6)
+
+        const minWidth = 10
 
         // 渲染柱形
         const bars = svg.append('g')
@@ -159,31 +167,12 @@ export default {
           .attr('y', (d) => scaleY(d.rank))
           .attr('height', scaleY.bandwidth())
           .attr('fill', (d) => d.background)
-          .attr('width', (d) => scaleX(d.value) > 10 ? scaleX(d.value) : 10)
+          .attr('width', (d) => scaleX(d.value) > minWidth ? scaleX(d.value) : minWidth)
+          .style('cursor', 'pointer')
+          .on('mouseenter', this.rankEnter)
+          .on('mousemove', this.rankMove)
+          .on('mouseleave', this.rankLeave)
         bars.exit().remove()
-
-        // 坐标轴
-        const xAxis = d3.axisTop(scaleX)
-          .ticks(6)
-          .tickSize(-(bodyHeight))
-          // .tickSizeOuter(0)
-          // .tickSizeInner(0)
-          .tickFormat(d => {
-            const value = formatScientificNotation(d, 6)
-            let chartUnit = this.chartInfo.unit
-            chartUnit = chartUnit || 2
-            const unit = chartDataFormat.getUnit(chartUnit)
-            return unit.compute(value, null, -1, 2)
-          })
-        const ticks = svg.append('g')
-          .attr('class', 'xAxis')
-          .call(xAxis)
-          .attr('transform', `translate(${bodyX},${bodyY})`)
-        ticks.select('.tick:first-of-type text').remove()
-        ticks.selectAll('.tick text').attr('class', 'tickTest')
-        ticks.select('.tick:first-of-type line').attr('class', 'tickLineFirst')
-        ticks.selectAll('.tick:not(:first-of-type) line').attr('class', 'tickLine')
-        ticks.select('.domain').remove()
 
         // 文本标签
         svg.append('g')
@@ -196,63 +185,59 @@ export default {
           .on('mousemove', this.rankMove)
           .on('mouseleave', this.rankLeave)
           .html((d) => {
-            let flag = true
             // 判断柱子宽度和高度
-            if (scaleY.bandwidth() < 38 || scaleX(d.value) < 120) {
-              flag = false
+            if (scaleY.bandwidth() > 10) {
+              return this.rankFormatterLabel(d)
             }
-            return flag ? this.rankFormatterLabel(d) : ''
           })
-          .attr('x', scaleX(0))
+          .attr('x', (d) => {
+            let x = 0
+            if (scaleX(d.value) > minWidth) {
+              x = scaleX(d.value) + 10
+            } else {
+              x = minWidth + 10
+            }
+            return x
+          })
           .attr('y', (d) => scaleY(d.rank))
           .attr('height', scaleY.bandwidth())
-          .attr('width', (d) => scaleX(d.value) > 10 ? scaleX(d.value) : 10)
           .style('cursor', 'pointer')
+          .style('overflow', 'visible')
+
+        // 生成标签和矩形
+        svg.append('g')
+          .attr('transform', `translate(${bodyX},${bodyY})`)
+          .selectAll('text')
+          .data(rankData)
+          .enter()
+          .append('text')
+          .attr('x', 4)
+          .attr('y', d => scaleY(d.rank) - 12)
+          .text(d => {
+            if (this.chartInfo.param.text !== 'all' && this.chartInfo.param.text !== 'legend') {
+              return ''
+            }
+            const margin = scaleY(1) - scaleY(0) - scaleY.bandwidth()
+            if (margin > 30 || !margin) {
+              return d.alias
+            }
+          })
       })
     },
 
     // 处理label
     rankFormatterLabel (data) {
-      let str = ''
       let valueStr = ''
       if (this.chartInfo.param.text === 'all') {
-        str += data.alias
         valueStr = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
       }
       if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
         valueStr = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
       }
-      if (this.chartInfo.param.text === 'legend') {
-        str += data.alias
-      }
-      if (this.chartInfo.param.text === 'none') {
-        str += ''
-      }
-      if (str && valueStr) {
+      if (valueStr) {
         return `
-              <div style="width:100%;height: 100%;display: flex;align-items: flex-end;justify-content: center;flex-direction: column;color:#000000">
-                <p style="width:100%;padding:0 12px;box-sizing: border-box;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:right;color: ${data.mapping && data.mapping.color && data.mapping.color.text}">
-                  <span>${str}</span>
-                </p>
-                <p style="width:100%;padding:0 12px;box-sizing: border-box;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:right;color: ${data.mapping && data.mapping.color && data.mapping.color.text}">
-                  <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
-                  <span>${valueStr}</span>
-                </p>
-              </div>
-            `
-      } else if (str) {
-        return `
-              <div style="width:100%;height: 100%;display: flex;align-items: flex-end;justify-content: center;flex-direction: column;color:#000000">
-                <p style="width:100%;padding:0 12px;box-sizing: border-box;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:right;color: ${data.mapping && data.mapping.color && data.mapping.color.text}">
-                  <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
-                  <span>${str}</span>
-                </p>
-              </div>
-            `
-      } else if (valueStr) {
-        return `
-              <div style="width:100%;height: 100%;display: flex;align-items: flex-end;justify-content: center;flex-direction: column;color:#000000">
-                <p style="width:100%;padding:0 12px;box-sizing: border-box;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;text-align:right;color: ${data.mapping && data.mapping.color && data.mapping.color.text}">
+              <div style="width:auto;height: 100%;display: flex;justify-content: center;flex-direction: column;">
+                <p class="chart-label" style="cursor:pointer;white-space: nowrap;color: ${data.mapping && data.mapping.color && data.mapping.color.text}">
                   <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                   <span>${valueStr}</span>
                 </p>
@@ -265,6 +250,7 @@ export default {
       this.tooltip.title = data.alias
       this.tooltip.value = data.showValue
       this.tooltip.mapping = data.mapping
+      this.tooltip.rank = data.rank
       this.tooltip.show = true
       this.setPosition(e)
     },

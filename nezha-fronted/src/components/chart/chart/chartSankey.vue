@@ -99,16 +99,18 @@ export default {
       originalDatas.forEach((originalData) => {
         originalData.forEach((data, dataIndex) => {
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
-          const obj = {
-            value: value,
-            realValue: value,
-            labels: data.metric,
-            dataIndex: dataIndex
-          }
-          if (data.metric[chartInfo.param.sourceLabel] && data.metric[chartInfo.param.targetLabel]) {
-            obj.source = data.metric[chartInfo.param.sourceLabel]
-            obj.target = data.metric[chartInfo.param.targetLabel]
-            sankeyData.push(obj)
+          if (value != 0) {
+            const obj = {
+              value: value,
+              realValue: value,
+              labels: data.metric,
+              dataIndex: dataIndex
+            }
+            if (data.metric[chartInfo.param.sourceLabel] && data.metric[chartInfo.param.targetLabel]) {
+              obj.source = data.metric[chartInfo.param.sourceLabel]
+              obj.target = data.metric[chartInfo.param.targetLabel]
+              sankeyData.push(obj)
+            }
           }
         })
       })
