@@ -553,7 +553,7 @@
             }">
               <div
                 v-for="(item,index) in chartConfig.param.valueMapping"
-                :key="index"
+                :key="item.uid"
                 :class="item.error? 'is-item-box-error' : ''"
               >
                 <div class="chart-title chart-title-config">

@@ -137,7 +137,7 @@
 <script>
 import { fromRoute } from '@/components/common/js/constants'
 import editRigthBox from '@/components/common/mixin/editRigthBox'
-import { resetZIndex } from '@/components/common/js/common'
+import { resetZIndex, getUUID } from '@/components/common/js/common'
 import selectPanel from '@/components/common/popBox/selectPanel'
 import chartConfig from '@/components/common/rightBox/chart/chartConfig'
 import otherChartConfig from '@/components/common/rightBox/chart/otherChartConfig'
@@ -238,6 +238,11 @@ export default {
       Promise.all(arr).then(res => {
         this.editChart.panelId = this.panelId
         const params = JSON.parse(JSON.stringify(this.editChart))
+        if (params.param.valueMapping) {
+          params.param.valueMapping.forEach(item => {
+            delete item.uid
+          })
+        }
         if (params.type === 'group') {
           params.height = 1
         }
@@ -584,6 +589,7 @@ export default {
           }
           if (obj.param.valueMapping) {
             obj.param.valueMapping.forEach(item => {
+              item.uid = getUUID()
               if (!item.show) {
                 item.show = false
               }

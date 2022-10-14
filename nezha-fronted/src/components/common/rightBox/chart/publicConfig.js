@@ -549,7 +549,8 @@ export default {
           bac: bacColor + 'FF',
           text: ColorReverse(bacColor) + 'FF',
           icon: randomcolor() + 'FF'
-        }
+        },
+        uid: getUUID()
       }
       if (this.chartConfig.type === 'table') {
         obj.column = ''
@@ -558,19 +559,13 @@ export default {
       this.change()
     },
     copyMapping (index) {
-      this.chartConfig.param.valueMapping.push(lodash.cloneDeep(this.chartConfig.param.valueMapping[index]))
+      const temp = lodash.cloneDeep(this.chartConfig.param.valueMapping[index])
+      temp.uid = getUUID()
+      this.chartConfig.param.valueMapping.push(temp)
       this.change()
     },
     removeMapping (index) {
       this.chartConfig.param.valueMapping.splice(index, 1)
-      this.chartConfig.param.valueMapping.forEach((item, index) => {
-        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.value')
-        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.from')
-        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.to')
-        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.regx')
-        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.column')
-        this.$refs.chartForm.validateField('param.valueMapping.' + index + '.display')
-      })
       this.change()
     },
     showMapping (index) {
