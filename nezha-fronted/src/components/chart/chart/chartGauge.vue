@@ -200,6 +200,13 @@ export default {
           }
         }
         option.tooltip.formatter = this.formatterFunc
+        if (navigator.userAgent.match(/Mobi/i) ||
+          navigator.userAgent.match(/Android/i) ||
+          navigator.userAgent.match(/iPhone/i)) {
+          option.tooltip.confine = true
+          option.tooltip.appendToBody = false
+          delete option.tooltip.position
+        }
         // option.tooltip.position = this.formatterFunc
         option.series[0].min = item.max == item.min ? 0 : item.min
         myChart.setOption(option)

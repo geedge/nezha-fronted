@@ -104,6 +104,7 @@
               <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <delete-button
                   ref="deleteButton"
+                  :single="false"
                   :from="'module'"
                   :forceDeleteShow="true"
                   :deleteTitle="'project.module.module'"

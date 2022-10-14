@@ -83,7 +83,22 @@
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item v-has="'agent_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'agent_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'agent_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <!-- <el-dropdown-item v-has="'agent_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
+            <el-dropdown-item v-has="'agent_delete'" :command="['delete', scope.row]">
+                  <delete-button
+                  ref="deleteButton"
+                  :from="'agent'"
+                  :forceDeleteShow="true"
+                  :type="'link'"
+                  :title="$t('overall.delete')"
+                  id="promserver-list-delete"
+                  v-has="'agent_delete'"
+                  :api="api"
+                  :single="true"
+                  :delete-objs="singleDelete"
+                  @before="delFlag=true"
+                  ></delete-button>
+              </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -112,6 +127,7 @@ import bus from '@/libs/bus'
 import table from '@/components/common/mixin/table'
 import { agent } from '@/components/common/js/constants'
 import alertStateInfo from '@/components/common/alert/alertStateInfo'
+import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'agentTable',
   props: {
@@ -119,7 +135,7 @@ export default {
   },
   mixins: [table],
   components: {
-    alertStateInfo
+    alertStateInfo, deleteButton
   },
   data () {
     return {

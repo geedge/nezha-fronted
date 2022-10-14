@@ -27,14 +27,24 @@ export default {
     return {
       operationWidth: '165', // 操作列宽
       orderBy: null,
-      severityDataWeight: this.$store.getters.severityDataWeight
+      severityDataWeight: this.$store.getters.severityDataWeight,
+      singleDelete: []
     }
   },
   methods: {
     tableOperation ([command, row, param]) {
       switch (command) {
+        // case 'delete': {
+        //   this.$emit('del', row)
+        //   break
+        // }
         case 'delete': {
-          this.$emit('del', row)
+          if (this.singleDelete.length === 0) {
+            this.singleDelete.push(row)
+          } else {
+            this.singleDelete = []
+            this.singleDelete.push(row)
+          }
           break
         }
         case 'ack': {

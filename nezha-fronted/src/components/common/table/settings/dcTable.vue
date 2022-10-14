@@ -112,7 +112,23 @@
           </div>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item v-has="'dc_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'dc_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <!-- <el-dropdown-item v-has="'dc_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
+            <el-dropdown-item v-has="'dc_delete'" :command="['delete', scope.row]">
+                  <delete-button
+                  ref="deleteButton"
+                  :from="'datacenter'"
+                  :forceDeleteShow="true"
+                  :deleteTitle="'overall.dc'"
+                  :type="'link'"
+                  :title="$t('overall.delete')"
+                  id="account-list-delete"
+                  v-has="'dc_delete'"
+                  :api="api"
+                  :single="true"
+                  :delete-objs="singleDelete"
+                  @before="delFlag=true"
+                  ></delete-button>
+              </el-dropdown-item>
             <el-dropdown-item v-has="'asset_add'" :command="['topology', scope.row, 'datacenter']"><i class="nz-icon nz-icon-Topology"></i><span class="operation-dropdown-text">{{$t('overall.topology')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -134,11 +150,12 @@
 import table from '@/components/common/mixin/table'
 import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
 import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
+import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'dcTable',
   mixins: [table],
   components: {
-    alertDaysInfo
+    alertDaysInfo, deleteButton
   },
   props: {
     loading: Boolean

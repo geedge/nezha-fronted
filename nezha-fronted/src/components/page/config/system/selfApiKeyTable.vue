@@ -67,7 +67,20 @@
             <button :disabled="prevent_opt.save" class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancel(scope.row)"><span>{{$t('overall.cancel')}}</span></button>
           </template>
           <template v-else>
-            <button class="table-operation-item" @click="$emit('del',scope.row)" v-has="'system_apiKey_delete'"><i class="nz-icon nz-icon-delete"></i></button>
+            <!-- <button class="table-operation-item" @click="$emit('del',scope.row)" v-has="'system_apiKey_delete'"><i class="nz-icon nz-icon-delete"></i></button> -->
+           <div @click="tableOperation(scope.row)" v-has="'system_apiKey_delete'">
+              <delete-button
+              ref="deleteButton"
+              :forceDeleteShow="false"
+              id="self-apiKey-delete"
+              :from="'selfApiKey'"
+              :type="'btn'"
+              :api="api"
+              :single="true"
+              :delete-objs="singleDelete"
+               @before="delFlag=true"
+              ></delete-button>
+            </div>
           </template>
         </div>
       </el-table-column>
@@ -86,11 +99,13 @@
 <script>
 import { tableCommon } from './systemCommon'
 import table from '@/components/common/mixin/table'
+import deleteButton from '@/components/common/deleteButton'
 export default {
-  name: 'apiKeyTable',
+  name: 'selfApiKeyTable',
   props: {
     loading: Boolean
   },
+  components: { deleteButton },
   mixins: [table, tableCommon],
   data () {
     return {
@@ -127,7 +142,7 @@ export default {
           show: true
         }
       ],
-      reg: new RegExp("(?<=.{8}).", 'g')
+      reg: new RegExp('(?<=.{8}).', 'g')
     }
   },
   methods: {
@@ -138,6 +153,14 @@ export default {
     //     return bus.timeFormate(new Date(data), 'YYYY-MM-DD HH:mm:ss')
     //   }
     // }
+    tableOperation (row) {
+      if (this.singleDelete.length === 0) {
+        this.singleDelete.push(row)
+      } else {
+        this.singleDelete = []
+        this.singleDelete.push(row)
+      }
+    }
   },
   created () {
   },

@@ -14,6 +14,7 @@
         </button>
         <delete-button
           ref="deleteButton"
+          :single="false"
           :from="'menus'"
           :forceDeleteShow="false"
           id="menus-list-batch-delete"

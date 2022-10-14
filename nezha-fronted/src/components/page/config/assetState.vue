@@ -17,6 +17,7 @@
         </button>
         <delete-button
           ref="deleteButton"
+          :single="false"
           :from="'assetState'"
           :forceDeleteShow="false"
           id="asset-state-list-batch-delete"

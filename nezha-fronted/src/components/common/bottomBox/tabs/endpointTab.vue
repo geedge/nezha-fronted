@@ -34,6 +34,7 @@
         </export-excel>
         <delete-button
           ref="deleteButton"
+          :single="false"
           :from="'endpoint'"
           :forceDeleteShow="false"
           :delete-objs="batchDeleteObjs"

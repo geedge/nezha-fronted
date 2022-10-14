@@ -102,7 +102,23 @@
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item v-has="'user_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'user_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'user_delete'" :command="['delete', scope.row]" :disabled="scope.row.id === 1"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <!-- <el-dropdown-item v-has="'user_delete'" :command="['delete', scope.row]" :disabled="scope.row.id === 1"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
+            <el-dropdown-item v-has="'user_delete'" :command="['delete', scope.row]" :disabled="scope.row.id === 1">
+                  <delete-button
+                  ref="deleteButton"
+                  :from="'user'"
+                  :forceDeleteShow="false"
+                  :type="'link'"
+                  :deleteTitle="'config.user.user'"
+                  :title="$t('overall.delete')"
+                  id="account-list-batch-delete"
+                  v-has="'user_delete'"
+                  :api="api"
+                  :single="true"
+                  :delete-objs="singleDelete"
+                  @before="delFlag=true"
+                  ></delete-button>
+              </el-dropdown-item>
             <el-dropdown-item v-has="'user_edit'" :command="['reset_mfa', scope.row]"><i class="nz-icon nz-icon-zhongzhi2FA"></i><span class="operation-dropdown-text">{{$t('config.user.resetMfa')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -123,9 +139,11 @@
 
 <script>
 import table from '@/components/common/mixin/table'
+import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'userTable',
   mixins: [table],
+  components: { deleteButton },
   props: {
     loading: Boolean
   },

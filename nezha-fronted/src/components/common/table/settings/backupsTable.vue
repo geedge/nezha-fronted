@@ -54,9 +54,22 @@
         <button class="table-operation-button" @click="Restore(scope.row)" v-if="scope.row" :title="$t('backup.RestoreNow')">
          <i class="nz-icon-shujubeifenhuifu nz-icon"></i>
         </button>
-        <button class="table-operation-edit" @click="del(scope.row)" v-if="scope.row" :title="$t('overall.delete')">
+        <div v-if="scope.row" @click="tableOperation(scope.row)">
+           <delete-button
+            ref="deleteButton"
+            :forceDeleteShow="false"
+            id="backup-delete"
+            :from="'backup'"
+            :type="'btn'"
+            :api="'/sys/backup'"
+            :single="true"
+            :delete-objs="singleDelete"
+            @before="delFlag=true"
+            ></delete-button>
+          </div>
+        <!-- <button class="table-operation-edit" @click="del(scope.row)" v-if="scope.row" :title="$t('overall.delete')">
           <i class="nz-icon nz-icon-delete" style="font-size='12px'"></i>
-        </button>
+        </button> -->
       </div>
     </el-table-column>
      <template slot="empty">
@@ -76,11 +89,12 @@
 import { post, put } from '@/http'
 import lodash from 'lodash'
 import bus from '@/libs/bus'
+import deleteButton from '@/components/common/deleteButton'
 
 export default {
   name: 'backupsTable',
   mixins: [],
-
+  components: { deleteButton },
   props: {
     loading: Boolean,
     customTableTitle: Array,
@@ -90,6 +104,7 @@ export default {
   },
   data () {
     return {
+      singleDelete: []
       // tableData: [
       //   {
       //     retention: '',
@@ -111,9 +126,6 @@ export default {
       // ]
     }
   },
-
-  components: {},
-
   computed: {},
 
   methods: {
@@ -145,15 +157,15 @@ export default {
         }, 400)
       }
     },
-    del (row) {
-      this.$delete('/sys/backup?filename=' + row.fileName).then(res => {
-        if (res.code == 200) {
-          this.$emit('getTableData', 'recent')
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    },
+    // del (row) {
+    //   this.$delete('/sys/backup?filename=' + row.fileName).then(res => {
+    //     if (res.code == 200) {
+    //       this.$emit('getTableData', 'recent')
+    //     } else {
+    //       this.$message.error(res.msg)
+    //     }
+    //   })
+    // },
     changeDate (item) {
       const time = this.utcTimeToTimezoneStr(item)
       const time1 = this.timeFormate(time)
@@ -174,6 +186,16 @@ export default {
     },
     edit () {
       this.$emit('edit', this.tableData[0])
+    },
+    tableOperation (row) {
+      this.$set(row, 'name', row.fileName)
+      if (this.singleDelete.length === 0) {
+        this.singleDelete.push(row)
+      } else {
+        this.singleDelete = []
+        this.singleDelete.push(row)
+      }
+      console.log(this.singleDelete)
     }
   },
 

@@ -19,6 +19,7 @@
         </button>
         <delete-button
           ref="deleteButton"
+          :single="false"
           :from="'agent'"
           :forceDeleteShow="true"
           id="promserver-list-batch-delete"

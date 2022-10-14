@@ -61,6 +61,7 @@ import exploreItem from '@/components/page/dashboard/explore/exploreItemHtml'
 import moment from 'moment-timezone'
 import { loadI18n } from '@/components/common/i18n'
 import i18nData from '@/entrance/exportHtml/i18nData'
+import bus from "@/libs/bus";
 const dataJson = window.dataJson || {}
 export default {
   name: 'Entrance',
@@ -81,8 +82,21 @@ export default {
     const localOffset = this.dataJson.timezone || moment.tz.guess()
     this.dataJson.timezone = localOffset
     localStorage.setItem('nz-sys-timezone', localOffset)
+    if (window.dataJson && (
+      navigator.userAgent.match(/Mobi/i) ||
+      navigator.userAgent.match(/Android/i) ||
+      navigator.userAgent.match(/iPhone/i)
+    )) {
+      // 当前设备是移动设备
+      document.body.style.minWidth = 'unset'
+    }
+    document.body.style.minWidth = 'unset'
   },
   mounted () {
+    if (this.$refs.dashboardScrollbar) {
+      this.scrollbarWrap = this.$refs.dashboardScrollbar
+      this.onScroll()
+    }
   },
   methods: {
     editChart () {},
@@ -96,6 +110,18 @@ export default {
       let offset = localStorage.getItem('nz-sys-timezone')
       offset = moment.tz(offset).format('Z')
       return moment(time).utcOffset(offset).format()
+    },
+    onScroll () {
+      const _self = this
+      console.log(this.scrollbarWrap)
+      this.scrollbarWrap.addEventListener('scroll', bus.debounce(function () {
+
+        _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50
+        _self.overScroll10 = _self.scrollbarWrap.scrollTop > 50
+        _self.$refs.chartList.onScroll(_self.scrollbarWrap.scrollTop)
+      }, 300, function () {
+        _self.showTopLine = _self.scrollbarWrap.scrollTop > 10
+      }))
     }
   }
 }

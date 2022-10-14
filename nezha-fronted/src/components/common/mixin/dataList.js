@@ -45,6 +45,11 @@ export default {
       searchCheckBox: {}
     }
   },
+  provide () {
+    return {
+      getTableData: this.getTableData
+    }
+  },
   methods: {
     sortableShow: tableSet.sortableShow,
     propTitle: tableSet.propTitle,

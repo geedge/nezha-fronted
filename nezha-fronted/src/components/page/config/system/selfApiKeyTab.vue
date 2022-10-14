@@ -51,7 +51,7 @@ import { parentTableCommon } from './systemCommon'
 import bus from '@/libs/bus'
 
 export default {
-  name: 'apiKeyTab',
+  name: 'selfApiKeyTab',
   components: { nzDataList, selfApiKeyTable },
   mixins: [dataListMixin, parentTableCommon],
   props: {

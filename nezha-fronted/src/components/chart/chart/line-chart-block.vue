@@ -740,7 +740,7 @@ export default {
           animation: false,
           appendToBody: true,
           className: 'line-chart-block-Zindex',
-          extraCssText: 'z-index:1000;',
+         extraCssText: 'z-index:99999999;visibility:visible;',
           /* enterable:true, 导致tooltip不消失，显示多个tooltip */
           position: function (point, params, dom, rect, size) {
             dom.style.transform = 'translateZ(0)'

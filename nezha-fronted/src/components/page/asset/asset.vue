@@ -117,6 +117,7 @@
               <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <delete-button
                   ref="deleteButton"
+                  :single="false"
                   :from="'asset'"
                   :forceDeleteShow="true"
                   :deleteTitle="'overall.asset'"

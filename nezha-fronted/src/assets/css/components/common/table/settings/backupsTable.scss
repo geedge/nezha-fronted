@@ -1,73 +1,74 @@
-.backups-table{
+.backups-table {
   .nz-table-list {
-      .el-table__row{
-        td:last-of-type{
-          // border-bottom: 1px solid $--border-color-light !important;
-          border: none !important;
-        }
+    .el-table__row {
+      td:last-of-type {
+        // border-bottom: 1px solid $--border-color-light !important;
+        border: none !important;
       }
+    }
   }
-    .el-table:not(.chart-table) {
-      .table-operation-items {
+  .el-table:not(.chart-table) {
+    .table-operation-items {
+      display: flex;
+      justify-content: center;
+      .table-operation-item.delete-button {
+        background: $--background-color-2 !important;
+        border: 1px solid $--border-color-base !important;
+      }
+      .table-operation-edit {
+        background: $--background-color-2;
+        border: 1px solid $--border-color-base;
+        border-radius: 2px;
+        width: 30px;
+        height: 22px;
+        i {
+          font-size: 12px !important;
+        }
+      }
+      .table-operation-del {
+        background: $--background-color-2;
+        border: 1px solid $--border-color-base;
+        border-radius: 2px;
+        width: 22px;
+        height: 22px;
+        i {
+          font-size: 12px !important;
+        }
+      }
+      .table-operation-button {
+        border: none;
+        background-color: $--color-primary;
+        color: $--button-primary-color;
         display: flex;
+        text-align: center;
+        line-height: 22px;
         justify-content: center;
-        
-        .table-operation-edit {
-          background: $--background-color-2;
-          border: 1px solid $--border-color-base;
-          border-radius: 2px;
-          width: 30px;
-          height: 22px;
-          i{
-            font-size: 12px !important;
-          }
-        }
-        .table-operation-del{
-          background: $--background-color-2;
-          border: 1px solid $--border-color-base;
-          border-radius: 2px;
-          width: 22px;
-          height: 22px;
-          i{
-            font-size: 12px !important;
-          }
-        }
-        .table-operation-button {
-          border: none;
-          background-color: $--color-primary;
-          color: $--button-primary-color;
-          display: flex;
-          text-align: center;
-          line-height: 22px;
-          justify-content: center;
-          align-items: center;
-          height: 22px;
-          width: 30px;
-          padding: 0 5px 0 5px;
-          margin-right: 10px;
-          cursor: pointer;
-          i.nz-icon-beifen.nz-icon::before {
-            font-size: 12px;
-          }
+        align-items: center;
+        height: 22px;
+        width: 30px;
+        padding: 0 5px 0 5px;
+        margin-right: 10px;
+        cursor: pointer;
+        i.nz-icon-beifen.nz-icon::before {
+          font-size: 12px;
         }
       }
     }
+  }
 
-    .nz-icon-shujubeifenhuifu::before{
-      font-size: 12px;
-    }
-    .el-table--border td:first-child .cell{
-      padding-left: 20px !important;
-    }
+  .nz-icon-shujubeifenhuifu::before {
+    font-size: 12px;
+  }
+  .el-table--border td:first-child .cell {
+    padding-left: 20px !important;
+  }
 
-
-
-    .el-table__empty-block{
-      .el-table__empty-text{
-        .table-no-data{
-          height: 200px;
-          padding-top: 70px;
-        }
+  .el-table__empty-block {
+    .el-table__empty-text {
+      .table-no-data {
+        height: 200px;
+        padding-top: 70px;
       }
     }
+  }
 }

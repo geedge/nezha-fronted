@@ -78,7 +78,20 @@
           </div>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item v-has="'assetType_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'assetType_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <!-- <el-dropdown-item v-has="'assetType_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
+            <el-dropdown-item v-has="'assetType_delete'" :command="['delete', scope.row]">
+                  <delete-button
+                  ref="deleteButton"
+                  :from="'assetType'"
+                  :forceDeleteShow="false"
+                  id="account-list-delete"
+                  v-has="'user_delete'"
+                  :api="api"
+                  :single="true"
+                  :delete-objs="singleDelete"
+                  @before="delFlag=true"
+                  ></delete-button>
+              </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -97,11 +110,13 @@
 
 <script>
 import table from '@/components/common/mixin/table'
+import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'asstTypeTable',
   props: {
     loading: Boolean
   },
+  components: { deleteButton },
   mixins: [table],
   data () {
     return {

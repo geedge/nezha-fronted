@@ -325,6 +325,25 @@
         &>.table-operation-item:hover {
           background-color: $--button-primary-hover-background-color;
         }
+        .delete-button.table-operation-item {
+          justify-content: center;
+          align-items: center;
+          width: 30px;
+          margin-right: 10px;
+          border: none;
+          border-radius: $--button-border-radius;
+          background-color: $--button-primary-background-color;
+          opacity: 1;
+          cursor: pointer;
+          transition: all .2s;
+          i {
+            color: $--button-primary-color;
+            font-size: 12px;
+          }
+        }
+        .delete-button.table-operation-item:hover {
+          background-color: $--button-primary-hover-background-color;
+        }
         .table-operation-item.table-operation-item--more {
           justify-content: center;
           align-items: center;

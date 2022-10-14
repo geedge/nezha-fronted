@@ -22,6 +22,7 @@
         </button>
         <delete-button
           ref="deleteButton"
+          :single="false"
           :from="'alertSilence'"
           :forceDeleteShow="false"
           :deleteTitle="'overall.silence'"

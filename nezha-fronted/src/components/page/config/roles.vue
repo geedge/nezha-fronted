@@ -16,6 +16,7 @@
         </button>
         <delete-button
           ref="deleteButton"
+          :single="false"
           :from="'roles'"
           :forceDeleteShow="true"
           :deleteTitle="'config.roles.roles'"
