@@ -3,8 +3,8 @@
     ref="rank-chart-box"
     class="nz-chart__component"
   >
-    <div :id="`chart-canvas-${chartId}`" class="chart__canvas">
-      <svg :id="`rank-svg-${chartId}`" width="100%" height="100%"></svg>
+    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" style="overflow-y:auto;">
+      <svg :id="`rank-svg-${chartId}`" width="100%" style="vertical-align: top;"></svg>
     </div>
     <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
       <div class="chart-canvas-tooltip-title tooltip-title">
@@ -91,26 +91,24 @@ export default {
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
-          if (value != 0) {
-            const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, decimals)
-            const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
-            const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
-            this.rankData.push({
-              value: value,
-              realValue: value,
-              showValue: showValue,
-              name: legend.name,
-              alias: legend.alias,
-              labels: {
-                ...data.metric,
-                legend: legend.alias
-              },
-              seriesIndex: expressionIndex,
-              dataIndex: dataIndex,
-              mapping: mapping
-            })
-            colorIndex++
-          }
+          const showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(value, null, -1, decimals)
+          const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
+          const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+          this.rankData.push({
+            value: value,
+            realValue: value,
+            showValue: showValue,
+            name: legend.name,
+            alias: legend.alias,
+            labels: {
+              ...data.metric,
+              legend: legend.alias
+            },
+            seriesIndex: expressionIndex,
+            dataIndex: dataIndex,
+            mapping: mapping
+          })
+          colorIndex++
         })
       })
     },
@@ -124,12 +122,15 @@ export default {
           return false
         }
         const width = svgDom.getBoundingClientRect().width
-        const height = svgDom.getBoundingClientRect().height
+        // 柱子高度
+        const barHeight = 24
+        // 柱子间隔
+        const margin = 40
+        // 计算svg高度
+        const height = this.rankData.length * (barHeight + margin) + margin
+        const svg = d3.select(`#rank-svg-${this.chartId}`).attr('height', height)
         const bodyX = 50
-        const bodyY = 50
         const bodyWidth = width - 3 * bodyX
-        const bodyHeight = height - 2 * bodyY
-        const svg = d3.select(`#rank-svg-${this.chartId}`)
 
         // 从大到小排序
         let rankData = lodash.cloneDeep(this.rankData)
@@ -147,27 +148,25 @@ export default {
           .domain([0, d3.max(rankData, (d) => parseFloat(d.value))])
           .range([0, bodyWidth])
 
-        const scaleY = d3.scaleBand()
-          .domain(rankData.map((d) => d.rank).sort((a, b) => b - a))
-          .range([bodyHeight, 0])
-          .paddingOuter(0.06)
-          .paddingInner(0.6)
-
-        const minWidth = 10
-
+        // 柱子最小宽度
+        const minWidth = 2
         // 渲染柱形
         const bars = svg.append('g')
-          .attr('transform', `translate(${bodyX},${bodyY})`)
+          .attr('transform', `translate(${bodyX})`)
           .selectAll()
           .data(rankData)
         bars.enter()
           .append('rect')
           .merge(bars)
-          .attr('x', scaleX(0))
-          .attr('y', (d) => scaleY(d.rank))
-          .attr('height', scaleY.bandwidth())
+          .attr('x', 0)
+          .attr('y', (d) => {
+            return (d.rank * barHeight) + (d.rank + 1) * margin
+          })
+          .attr('height', barHeight)
           .attr('fill', (d) => d.background)
-          .attr('width', (d) => scaleX(d.value) > minWidth ? scaleX(d.value) : minWidth)
+          .attr('width', (d) => {
+            return scaleX(d.value) > minWidth ? scaleX(d.value) : minWidth
+          })
           .style('cursor', 'pointer')
           .on('mouseenter', this.rankEnter)
           .on('mousemove', this.rankMove)
@@ -176,7 +175,7 @@ export default {
 
         // 文本标签
         svg.append('g')
-          .attr('transform', `translate(${bodyX},${bodyY})`)
+          .attr('transform', `translate(${bodyX})`)
           .selectAll()
           .data(rankData)
           .enter()
@@ -185,10 +184,7 @@ export default {
           .on('mousemove', this.rankMove)
           .on('mouseleave', this.rankLeave)
           .html((d) => {
-            // 判断柱子宽度和高度
-            if (scaleY.bandwidth() > 10) {
-              return this.rankFormatterLabel(d)
-            }
+            return this.rankFormatterLabel(d)
           })
           .attr('x', (d) => {
             let x = 0
@@ -199,26 +195,28 @@ export default {
             }
             return x
           })
-          .attr('y', (d) => scaleY(d.rank))
-          .attr('height', scaleY.bandwidth())
+          .attr('y', (d) => {
+            return (d.rank * barHeight) + (d.rank + 1) * margin
+          })
+          .attr('height', barHeight)
           .style('cursor', 'pointer')
           .style('overflow', 'visible')
 
         // 生成标签和矩形
         svg.append('g')
-          .attr('transform', `translate(${bodyX},${bodyY})`)
+          .attr('transform', `translate(${bodyX})`)
           .selectAll('text')
           .data(rankData)
           .enter()
           .append('text')
           .attr('x', 4)
-          .attr('y', d => scaleY(d.rank) - 12)
+          .attr('y', d => {
+            return (d.rank * barHeight) + (d.rank + 1) * margin - 12
+          })
           .text(d => {
             if (this.chartInfo.param.text !== 'all' && this.chartInfo.param.text !== 'legend') {
               return ''
-            }
-            const margin = scaleY(1) - scaleY(0) - scaleY.bandwidth()
-            if (margin > 30 || !margin) {
+            } else {
               return d.alias
             }
           })
