@@ -99,18 +99,16 @@ export default {
       originalDatas.forEach((originalData) => {
         originalData.forEach((data, dataIndex) => {
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
-          if (value != 0) {
-            const obj = {
-              value: value,
-              realValue: value,
-              labels: data.metric,
-              dataIndex: dataIndex
-            }
-            if (data.metric[chartInfo.param.sourceLabel] && data.metric[chartInfo.param.targetLabel]) {
-              obj.source = data.metric[chartInfo.param.sourceLabel]
-              obj.target = data.metric[chartInfo.param.targetLabel]
-              sankeyData.push(obj)
-            }
+          const obj = {
+            value: value,
+            realValue: value,
+            labels: data.metric,
+            dataIndex: dataIndex
+          }
+          if (data.metric[chartInfo.param.sourceLabel] && data.metric[chartInfo.param.targetLabel]) {
+            obj.source = data.metric[chartInfo.param.sourceLabel]
+            obj.target = data.metric[chartInfo.param.targetLabel]
+            sankeyData.push(obj)
           }
         })
       })
@@ -162,6 +160,16 @@ export default {
           .nodeId((d) => d.node)
         const nodesData = lodash.cloneDeep(this.nodesData)
         const linksData = lodash.cloneDeep(this.linksData)
+
+        // 判断数据是否全部为0
+        let allZero = false
+        if (linksData.every(item => item.value == 0)) {
+          linksData.forEach(item => {
+            item.value = 100 // 目的是显示图表 与值大小无关
+          })
+          allZero = true
+        }
+
         const { nodes, links } = sankey({
           nodes: nodesData,
           links: linksData
@@ -177,7 +185,7 @@ export default {
           item.mapping = mapping
           item.background = mapping ? mapping.color.bac : this.colorList[index]
           const decimals = this.chartInfo.param.decimals || 2
-          item.showValue = chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(item.value, null, -1, decimals)
+          item.showValue = !allZero ? chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(item.value, null, -1, decimals) : 0
         })
 
         // 创建一个连线绘制组，绑定连线数据(links)
@@ -191,10 +199,10 @@ export default {
             return 'i-' + d.source.index + ' ' + 'i-' + d.target.index
           })
           .attr('d', d3Sankey.sankeyLinkHorizontal())
-          .attr('stroke', (d, i) => {
+          .attr('stroke', (d) => {
             return d.source.background
           })
-          .attr('stroke-width', (d) => d.width)
+          .attr('stroke-width', (d) => d.width || 1)
           .style('stroke-opacity', '0.5')
           .attr('cursor', 'pointer')
           .style('transition', 'all 0.3s')
@@ -227,7 +235,7 @@ export default {
           })
           .attr('x', (d) => d.x0)
           .attr('y', (d) => d.y0)
-          .attr('height', (d) => d.y1 - d.y0)
+          .attr('height', (d) => d.y1 - d.y0 || 2)
           .attr('width', (d) => d.x1 - d.x0)
           .attr('cursor', 'pointer')
           .style('transition', 'all 0.3s')
@@ -257,6 +265,7 @@ export default {
               chart.selectAll('[index=' + index + ']').style('fill-opacity', '1').selectAll('foreignObject').style('opacity', '1')
             })
             // 显示悬浮框
+            console.log(d)
             this.tooltip.title = d.source.node + '  ——>  ' + d.target.node
             this.tooltip.value = d.showValue
             this.tooltip.mapping = ''
