@@ -76,10 +76,10 @@ export default {
         text: this.$t('dashboard.panel.noDate')
       },
       timeData: [
-        {
-          id: 0,
-          text: this.$t('dashboard.panel.customTimeRange')
-        },
+        // {
+        //   id: 0,
+        //   text: this.$t('dashboard.panel.customTimeRange')
+        // },
         {
           id: 12,
           text: this.$t('dashboard.panel.noDate')

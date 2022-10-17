@@ -270,6 +270,8 @@ export default {
         case 'alertRule' : return 'nz-icon monitorColor nz-icon-Alertrule'
         case 'alertMessage' : return 'nz-icon monitorColor nz-icon-overview-alert'
         case 'agent' : return 'nz-icon monitorColor nz-icon-agent'
+        case 'assetMeta' : return 'nz-icon monitorColor nz-icon-label'
+        case 'model' : return 'nz-icon monitorColor nz-icon-model'
       }
       return ' '
     }

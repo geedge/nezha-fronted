@@ -57,7 +57,7 @@
         <!-- 值 -->
         <div class="condition__value">
           <div v-if="meta.valueIsEditing">
-            <el-input v-model="meta.value" size="mini" @blur="valueBlur(meta,index)" ref="valueInput" @keyup.enter.native="valueBlur(meta,index)"></el-input>
+            <el-input v-model="meta.value" size="mini" @blur="valueBlur(meta,index)" ref="valueInput" @keyup.enter.native="valueEnter(meta,index)"></el-input>
           </div>
           <div v-else @click="valueClick(meta,index)" :style="`padding:${meta.value ? 0 : 10}px`">{{meta.value}}</div>
         </div>
@@ -194,7 +194,23 @@ export default {
         this.$refs.operSelect[0].focus()
       })
     },
+    valueEnter (meta, index) {
+      console.log(123)
+      meta.valueIsEditing = false
+      for (let i = 0; i < this.rule.length; i++) {
+        const item = this.rule[i]
+        const reg = new RegExp(item.regex)
+        if (!reg.test(meta.value)) {
+          meta.value = ''
+          // this.$message.error(this.$t('FILTER_PROJECT_IS_NULL'))
+          break
+        }
+      }
+      this.$emit('update:valueList', this.metaList)
+      this.$emit('change')
+    },
     valueBlur (meta, index, type) {
+      console.log(456)
       meta.valueIsEditing = false
       for (let i = 0; i < this.rule.length; i++) {
         const item = this.rule[i]
