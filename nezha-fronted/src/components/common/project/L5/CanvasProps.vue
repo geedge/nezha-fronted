@@ -1546,7 +1546,6 @@ export default {
       if (value === 'lineDash') {
         this.selection.pen.lineDash = val ? (val == 1 ? [5, 5] : ((val == 2 ? [10, 10] : [10, 10, 2, 10]))) : []
       }
-      console.log(this.selection.pen)
       this.$emit('change', this.selection.pen)
       // if(!this.selection.pen.type||this.selection.pens){
       //   this.$emit('change',this.selection.pen||this.selection.pens);

@@ -28,7 +28,7 @@
 
         <!--terminal-log的记录和回放-->
         <terminal-log-cmd-tab v-if="from === fromRoute.terminalLog && targetTab === 'cmdTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.cmd" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-cmd-tab>
-        <terminal-log-record-tab v-if="from === fromRoute.terminalLog && targetTab === 'recordTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.record" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-record-tab>
+        <terminal-log-record-tab v-if="from === fromRoute.terminalLog && targetTab === 'recordTab'" ref="reminalLogRecordTab" :from="from" :obj="obj" :tabs="tabs.terminalLog.record" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-record-tab>
         <terminal-log-monitor-tab v-if="from === fromRoute.terminalLog && targetTab === 'monitorTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.monitor" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></terminal-log-monitor-tab>
 
         <asset-tab v-if="from === fromRoute.dc && targetTab === 'asset'" :tabs="tabs.dc.asset" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></asset-tab>
@@ -316,13 +316,12 @@ export default {
     afterResize () {
       if (this.from === this.fromRoute.endpoint && this.targetTab === 'endpointQuery') {
         this.$refs.endpointQuery.tableReload()
-      } else if (this.from === this.fromRoute.terminalLog && this.targetTab === 'record') {
+      } else if (this.from === this.fromRoute.terminalLog && this.targetTab === 'recordTab') {
         setTimeout(() => {
           this.$refs.reminalLogRecordTab.consoleResize()
         }, 600)
       }
       const subListDom = document.querySelector('.sub-list') // 副列表
-      console.log(subListDom.style.height, subListDom.offsetHeight)
       if (subListDom.offsetHeight < 505) {
         this.$store.dispatch('dispatchTimeBoxClass', 'date-range-panel--top')
       } else {

@@ -18,10 +18,10 @@
         <div class="record-container--record">
           <div class="record--title">{{$t('config.terminallog.cmd.history')}}</div>
           <div class="record--list">
-            <template v-for="record in records">
-              <template v-for="(item, index) in record.list">
+            <template v-for="record in records" >
+              <template v-for="(item, index) in record.list" >
                 <div :key="index" class="detail--time"><span>{{calcTime(item.time)}}</span></div>
-                <div :key="index" class="detail--cmd"><span :class="matchBgColor(item.cmd)">{{item.cmd}}</span></div>
+                <div :key="'cmd' + index" class="detail--cmd"><span :class="matchBgColor(item.cmd)">{{item.cmd}}</span></div>
               </template>
             </template>
           </div>

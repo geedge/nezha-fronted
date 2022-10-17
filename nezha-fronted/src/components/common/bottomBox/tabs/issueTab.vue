@@ -167,10 +167,8 @@ export default {
   },
   methods: {
     handleNodeClick (data) {
-      console.log(data)
     },
     handleClick (tab, event) {
-      console.log(tab, event)
     },
     addcommentBtn () {
       this.textareaShow = true
@@ -209,8 +207,6 @@ export default {
         if (response.code === 200) {
           this.changeData = response.data.list
           this.time = response.time
-          console.log(response.time)
-          console.log(response.data, 1)
         //   console.log(response.data, 2)
         }
       })

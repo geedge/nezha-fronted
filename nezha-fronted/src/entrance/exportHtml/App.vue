@@ -113,7 +113,6 @@ export default {
     },
     onScroll () {
       const _self = this
-      console.log(this.scrollbarWrap)
       this.scrollbarWrap.addEventListener('scroll', bus.debounce(function () {
 
         _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50

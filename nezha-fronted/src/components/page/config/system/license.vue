@@ -258,7 +258,6 @@ export default {
       this.qrCodeArr = []
       const self = this
       this.$get('/sys/license/token').then(res => {
-        console.log(res.data.length)
         this.totalQrCode = Math.ceil(res.data.length / (1024 + 512))
         if (this.totalQrCode < 1) {
           this.totalQrCode = 1
@@ -271,7 +270,6 @@ export default {
         for (let i = 0; i < this.totalQrCode; i++) {
           const num = (1024 + 512)
           let str1 = res.data.slice(num * i, num * (i + 1))
-          console.log(str1)
           const index = i < 10 ? ('0' + (i + 1)) : (i + 1)
           const md5 = SparkMD5.hashBinary(str1).slice(0, 8)
           str1 = total + '' + index + totalMD5 + md5 + '' + str1

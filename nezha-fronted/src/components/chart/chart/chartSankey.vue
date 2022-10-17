@@ -265,7 +265,6 @@ export default {
               chart.selectAll('[index=' + index + ']').style('fill-opacity', '1').selectAll('foreignObject').style('opacity', '1')
             })
             // 显示悬浮框
-            console.log(d)
             this.tooltip.title = d.source.node + '  ——>  ' + d.target.node
             this.tooltip.value = d.showValue
             this.tooltip.mapping = ''

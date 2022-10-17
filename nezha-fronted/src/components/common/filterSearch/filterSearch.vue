@@ -195,7 +195,6 @@ export default {
       })
     },
     valueEnter (meta, index) {
-      console.log(123)
       meta.valueIsEditing = false
       for (let i = 0; i < this.rule.length; i++) {
         const item = this.rule[i]
@@ -210,7 +209,6 @@ export default {
       this.$emit('change')
     },
     valueBlur (meta, index, type) {
-      console.log(456)
       meta.valueIsEditing = false
       for (let i = 0; i < this.rule.length; i++) {
         const item = this.rule[i]

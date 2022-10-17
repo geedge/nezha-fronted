@@ -1774,8 +1774,8 @@ export default {
               obj.pens = []
             }
             getTopology(this.topologyIndex).open(obj)
-          } catch (e) {
-            console.log(e)
+          } catch (err) {
+            console.log(err)
           }
         }
         let flag = false

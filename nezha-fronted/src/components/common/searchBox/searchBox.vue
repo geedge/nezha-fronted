@@ -343,7 +343,6 @@ export default {
       this.key = ''
     },
     focusSearchInput () {
-      console.log(123)
     },
     contentShow (key) {
       this.keyShow = false // key 的下拉

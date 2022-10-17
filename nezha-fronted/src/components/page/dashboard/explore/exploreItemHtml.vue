@@ -221,7 +221,6 @@ export default {
             const data = response.data.result
             if (data) {
               data.forEach((result, i) => {
-                console.log(result)
                 const metrics = Object.assign({}, result.metric)
                 if (!Array.isArray(result.values)) {
                   const val = result
@@ -292,7 +291,6 @@ export default {
             return
           }
           const promqlIndex = promqlInputIndexs[index]
-          console.log(response)
           if (response.data) {
             const data = response.data.result
             if ((!data || data.length < 1) && response.message) {

@@ -195,7 +195,6 @@ export default {
         this.singleDelete = []
         this.singleDelete.push(row)
       }
-      console.log(this.singleDelete)
     }
   },
 

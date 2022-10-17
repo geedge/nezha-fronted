@@ -1650,7 +1650,6 @@ export default {
 
     onUpdateProps (node) { // 更新pen
       const obj = this.$loadsh.cloneDeep(node)
-      console.log(obj)
       delete obj.x
       delete obj.y
       delete obj.center
