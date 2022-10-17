@@ -1,4 +1,5 @@
 import bus from '@/libs/bus'
+import { Loading } from 'element-ui'
 export default {
   data () {
     return {
@@ -20,7 +21,13 @@ export default {
         end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[1])),
         vars: vars
       }
+      const loading = Loading.service({
+        lock: true,
+        customClass: 'export-pdf-mask',
+        background: 'rgba(0,0,0,.2)'
+      })
       this.$get('/visual/panel/snapshot', params, 'blob').then(res => {
+        loading.close()
         const self = this
         let fileName = name
         const resFileName = ''
