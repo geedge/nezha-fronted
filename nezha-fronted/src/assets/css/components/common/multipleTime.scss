@@ -2,7 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 4px;
+  padding-top: 5px;
+  // margin-top: 4px;
   .loading-font {
     color: #232f3e !important;
   }
@@ -69,9 +70,9 @@
   }
   .nz-icon-compare {
     background: $--background-color-empty;
-    border: 1px solid $--border-color-base;
+    border: 1px solid $--border-color-light;
     border-radius: 2px;
-    padding: 6px 8px;
+    padding: 7px 8px;
   }
   .multiple-time-datepicker-enter-active {
     animation: bounce-in .5s;
