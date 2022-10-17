@@ -107,28 +107,28 @@ export default {
     }
   },
   props: {
-    forceDeleteShow: {
+    forceDeleteShow: { // 是否显示强制删除
       type: Boolean,
       default: false
     },
     filterFunction: Function,
-    deleteObjs: Array,
-    api: String,
-    from: String,
+    deleteObjs: Array, // 删除的数组
+    api: String, // 删除的接口
+    from: String, // 通过 from 确认删除的 icon
     clickFunction: Function,
     id: String,
-    type: {
+    type: { // 删除按钮的样式 是按钮 还是文字
       type: String,
       default: 'button'
     },
     title: {
       type: String
     },
-    deleteTitle: {
+    deleteTitle: { // 删除的名称
       type: String,
       default: 'project.topology.data'
     },
-    single: {
+    single: { // 是否需要强制删除
       type: Boolean
     }
   },
@@ -257,6 +257,7 @@ export default {
       switch (type) {
         case 'asset' : return 'nz-icon monitorColor nz-icon-overview-project'
         case 'datacenter' : return 'nz-icon monitorColor nz-icon-Datacenter2'
+        case 'dc' : return 'nz-icon monitorColor nz-icon-Datacenter2'
         case 'project' : return 'nz-icon monitorColor nz-icon-project'
         case 'module' : return 'nz-icon monitorColor nz-icon-overview-module'
         case 'endpoint' : return 'nz-icon monitorColor nz-icon-overview-endpoint'
@@ -265,6 +266,10 @@ export default {
         case 'roles' : return 'nz-icon monitorColor nz-icon-role1'
         case 'alertSilence' : return 'nz-icon monitorColor nz-icon-a-Silencealert'
         case 'user' : return 'nz-icon monitorColor nz-icon-user1'
+        case 'cabinet' : return 'nz-icon monitorColor nz-icon-Cabinet1'
+        case 'alertRule' : return 'nz-icon monitorColor nz-icon-Alertrule'
+        case 'alertMessage' : return 'nz-icon monitorColor nz-icon-overview-alert'
+        case 'agent' : return 'nz-icon monitorColor nz-icon-agent'
       }
       return ' '
     }

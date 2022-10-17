@@ -3,8 +3,12 @@ import { tableSet } from '@/components/common/js/tools'
 import { fromRoute } from '@/components/common/js/constants'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import defaultData from '@/components/chart/defaultLineData'
+import deleteButton from '@/components/common/deleteButton'
 import lodash from 'lodash'
 export default {
+  components: {
+    deleteButton
+  },
   mixins: [routerPathParams],
   props: {
     switchTab: {

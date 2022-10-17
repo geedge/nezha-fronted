@@ -29,6 +29,26 @@
           import-url="/record/rule/import"
           @afterImport="getTableData"
         >
+          <template v-slot:before>
+            <div>
+              <el-dropdown-item :disabled="batchDeleteObjs.length==0">
+                <delete-button
+                  ref="deleteButton"
+                  :single="true"
+                  :from="'recordRule'"
+                  :forceDeleteShow="false"
+                  :deleteTitle="'record_rule'"
+                  :type="'link'"
+                  :title="$t('overall.batchDel')"
+                  id="asset-list-batch-delete"
+                  v-has="'record_rule_delete'"
+                  :api="url"
+                  :delete-objs="batchDeleteObjs"
+                  @after="getTableData"
+                  @before="delFlag=true"></delete-button>
+              </el-dropdown-item>
+            </div>
+          </template>
         </top-tool-more-options>
       </template>
       <template v-slot:default="slotProps">
