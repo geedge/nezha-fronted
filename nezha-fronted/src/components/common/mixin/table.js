@@ -39,6 +39,10 @@ export default {
         //   break
         // }
         case 'delete': {
+          if (param == 'singleDel') {
+            this.$emit('del', row)
+            break
+          }
           if (this.singleDelete.length === 0) {
             this.singleDelete.push(row)
           } else {
