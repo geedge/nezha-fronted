@@ -14,7 +14,7 @@
       <div class="container__form container__form-width">
         <el-form ref="ExprTempForm" :model="editExprTemp" :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label="$t('overall.name')" prop="name">
-            <el-input maxlength="64" show-word-limit v-model="editExprTemp.name" :placeholder="$t('overall.placeHolder')" size="small"></el-input>
+            <el-input maxlength="64" show-word-limit v-model.trim="editExprTemp.name" :placeholder="$t('overall.placeHolder')" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('dashboard.panel.chartForm.group')" prop="gname">
             <!--<el-input v-model="editExprTemp.gname" size="small" :placeholder="$t('overall.placeHolder')"></el-input>-->

@@ -12,7 +12,7 @@
           <!--name-->
           <el-form-item :label="$t('overall.name')" prop="name">
             <el-input  maxlength="64" placeholder="" id="role-box-input-name"
-                       show-word-limit size="small" type="text" v-model="editRole.name"></el-input>
+                       show-word-limit size="small" type="text" v-model.trim="editRole.name"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')">
             <el-input maxlength="256" show-word-limit :rows="2" size='small' type="textarea" v-model="editRole.remark" id="role-box-input-remark"/>

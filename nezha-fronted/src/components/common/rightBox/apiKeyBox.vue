@@ -10,7 +10,7 @@
       <div class="container__form">
         <el-form ref="apiKeyBoxForm" :model="apiKeyBox" :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label="$t('overall.name')" prop="name">
-            <el-input maxlength="64" show-word-limit v-model="apiKeyBox.name" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model.trim="apiKeyBox.name" size="small" type="text"></el-input>
           </el-form-item>
            <el-form-item
             :label="$t('config.system.apiKey.expireAt')"

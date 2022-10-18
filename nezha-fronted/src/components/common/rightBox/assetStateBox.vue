@@ -20,7 +20,7 @@
       <el-form :model="editAssetState" :rules="rules" class="right-box-form right-box-form-left" label-position="top" label-width="120px" ref="assetStateForm">
         <!--name-->
         <el-form-item :label="$t('overall.name')" prop="name">
-          <el-input id="asset-state-input-name" placeholder="" size="small" type="text" v-model="editAssetState.name"></el-input>
+          <el-input id="asset-state-input-name" placeholder="" size="small" type="text" v-model.trim="editAssetState.name"></el-input>
         </el-form-item>
         <!--ping-->
         <el-form-item label="Ping">

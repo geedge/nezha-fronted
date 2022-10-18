@@ -15,7 +15,7 @@
         <el-form ref="alertRuleForm" :model="editAlertRule" :rules="rules" label-position = "top" label-width="120px">
           <!--name-->
           <el-form-item :label='$t("overall.name")' prop="name">
-            <el-input id="alert-box-input-name" ref="alertName" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
+            <el-input id="alert-box-input-name" ref="alertName" v-model.trim="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--type-->
           <el-form-item :label="$t('overall.type')" prop="type" class="half-form-item">

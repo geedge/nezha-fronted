@@ -13,7 +13,7 @@
       <div class="container__form">
         <el-form ref="projectForm" :model="editProject" :rules="rules" label-position = "top" label-width="120px">
           <el-form-item :label='$t("overall.name")' prop="name">
-            <el-input id="project-box-input-name" v-model="editProject.name" maxlength="64" show-word-limit size="small"></el-input>
+            <el-input id="project-box-input-name" v-model.trim="editProject.name" maxlength="64" show-word-limit size="small"></el-input>
           </el-form-item>
           <el-form-item :label='$t("overall.remark")'>
             <el-input id="project-box-input-remark" v-model="editProject.remark" maxlength="256" show-word-limit type="textarea" size="small" :rows="2"></el-input>

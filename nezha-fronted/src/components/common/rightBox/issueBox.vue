@@ -17,7 +17,8 @@
            <!-- title -->
           <el-form-item :label='$t("project.topology.title")' prop="name">
             <el-input
-              v-model="editIssue.name" :placeholder="''"
+              v-model.trim="editIssue.name"
+              :placeholder="''"
               maxlength="64"
               show-word-limit
               ref="issueName"

@@ -14,7 +14,7 @@
         <div class="container__form">
           <el-form label-width="120px"  :model="editAssetMeta" label-position = "top" ref="editAssetMetaForm" :rules="rules">
             <el-form-item :label='$t("overall.name")' prop="name">
-              <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetMeta.name" size="small" id="editAssetMeta-box-input-name"></el-input>
+              <el-input placeholder="" maxlength="64" show-word-limit v-model.trim="editAssetMeta.name" size="small" id="editAssetMeta-box-input-name"></el-input>
             </el-form-item>
             <el-form-item :label='$t("overall.key")' prop="metaKey">
               <el-input placeholder="" maxlength="128" show-word-limit v-model="editAssetMeta.metaKey" size="small" id="editAssetMeta-box-input-key"></el-input>

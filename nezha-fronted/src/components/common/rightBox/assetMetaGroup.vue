@@ -14,7 +14,7 @@
         <div class="container__form">
           <el-form label-width="120px"  :model="editMetaGroup" label-position = "top" ref="editMetaGroupForm">
             <el-form-item :label='$t("overall.name")' prop="name" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
-              <el-input placeholder="" maxlength="64" show-word-limit v-model="editMetaGroup.name" size="small" id="editMetaGroup-box-input-name"></el-input>
+              <el-input placeholder="" maxlength="64" show-word-limit v-model.trim="editMetaGroup.name" size="small" id="editMetaGroup-box-input-name"></el-input>
             </el-form-item>
             <el-form-item :label='$t("overall.remark")' prop="remark">
               <el-input placeholder="" maxlength="256" type="textarea" show-word-limit v-model="editMetaGroup.remark" size="small" :rows="2" id="editMetaGroup-box-input-remark"></el-input>

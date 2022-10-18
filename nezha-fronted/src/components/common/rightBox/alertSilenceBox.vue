@@ -16,7 +16,7 @@
                  :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label='$t("overall.name")' class="range-name" prop="name">
             <el-input
-              v-model="editAlertSilence.name" :placeholder="''"
+              v-model.trim="editAlertSilence.name" :placeholder="''"
               maxlength="64"
               show-word-limit
               size="small">
