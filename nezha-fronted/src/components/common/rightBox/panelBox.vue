@@ -12,7 +12,7 @@
       <div class="container__form">
         <el-form ref="form" :model="editPanel" :rules="rules" label-position = "top" label-width="120px" size="small">
           <el-form-item :label='$t("overall.name")' prop="name">
-            <el-input id="dc-box-input-name" v-model="editPanel.name" maxlength="64" placeholder="" show-word-limit size="small" :disabled="isBottom"></el-input>
+            <el-input id="dc-box-input-name" v-model.trim="editPanel.name" maxlength="64" placeholder="" show-word-limit size="small" :disabled="isBottom"></el-input>
           </el-form-item>
           <!--remark-->
            <el-form-item :label='$t("overall.remark")' class="range-time" prop="remark">

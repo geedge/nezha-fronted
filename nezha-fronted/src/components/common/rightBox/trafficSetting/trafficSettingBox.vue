@@ -7,7 +7,7 @@
     <div class="right-box-form-box">
       <el-form :model="traffic" class="right-box-form" label-position="top" label-width="100px" ref="trafficForm">
         <el-form-item :label="$t('config.dc.dc')" size="small">
-          <el-input :disabled="true" v-model="dc.name" id="traffic-setting-name"></el-input>
+          <el-input :disabled="true" v-model.trim="dc.name" id="traffic-setting-name"></el-input>
         </el-form-item>
         <traffic-setting-tab ref="trafficSetting" :post-asset-list="assetList" v-for="(item,index) in traffic.setting" :index="index" :asset-setting="item" :key="uuids[index]" :id="uuids[index]" @delSelf="delAssetSetting" :validate-repeat-func="valiateRepeatFunc"></traffic-setting-tab>
         <button @click="addAssetSetting" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="traffic-setting-add" style="margin:15px 1px 15px 15px" type="button">{{$t('buttons.add')}}</button>

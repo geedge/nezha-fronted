@@ -10,7 +10,7 @@
       <div class="container__form">
         <el-form ref="profileForm" :model="editProfile" :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label="$t('overall.name')" prop="name">
-            <el-input maxlength="64" show-word-limit v-model="editProfile.name" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model.trim="editProfile.name" size="small" type="text"></el-input>
           </el-form-item>
           <el-form-item :label="$t('profile.username')" prop="username">
             <el-input maxlength="64" show-word-limit v-model="editProfile.username" disabled size="small" type="text"></el-input>

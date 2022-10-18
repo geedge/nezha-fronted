@@ -14,7 +14,7 @@
     <div class="right-box-form-box">
       <el-form class="right-box-form right-box-form-left" label-width="120px" label-position = "top" :model="editCabinet" ref="cabinetForm" :rules="rules">
         <el-form-item :label="$t('overall.name')" prop="name">
-          <el-input size='mini' maxlength="64" show-word-limit v-model="editCabinet.name" id="cabinet-box-input-name"/>
+          <el-input size='mini' maxlength="64" show-word-limit v-model.trim="editCabinet.name" id="cabinet-box-input-name"/>
         </el-form-item>
         <el-form-item :label="$t('overall.dc')" prop="idcId">
           <el-input v-if="dcDisabled" size='mini' v-model="currentDc.name" disabled id="cabinet-box-input-dc"/>

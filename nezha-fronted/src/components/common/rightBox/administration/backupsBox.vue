@@ -59,7 +59,7 @@
             <el-input
               v-if="whoshow === 3 ? true : false"
               size="small"
-              v-model="editBackup.repeat"
+              v-model.trim="editBackup.repeat"
               id="chart-box-title"
               @change="inputchange"
             >
@@ -68,7 +68,7 @@
             <el-input
               v-if="whoshow === 2 ? true : false"
               size="small"
-              v-model="editBackup.repeat"
+              v-model.trim="editBackup.repeat"
               id="chart-box-title"
               @change="inputchange"
             >
@@ -120,7 +120,7 @@
             <el-input
               maxlength="64"
               size="small"
-              v-model="editBackup.retention"
+              v-model.trim="editBackup.retention"
               id="chart-box-title"
               @change="inputchange"
             ></el-input>
