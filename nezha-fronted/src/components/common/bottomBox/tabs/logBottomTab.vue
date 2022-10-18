@@ -2,6 +2,7 @@
  <nz-bottom-data-list
       :showTitle='showTitle'
       :obj='obj'
+      id="logBottomTab"
     :custom-tool="true"
     :layout="[]"
     :show-pagination="false"
@@ -11,7 +12,7 @@
   >
     <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
     <template v-slot:top-tool-right>
-      <el-input v-model="matchContent" class="margin-r-10" placeholder="" size="small" suffix-icon="el-icon-search" @keyup.enter.native="queryLogData()">
+      <el-input v-model="matchContent" class="margin-r-10" placeholder="" size="small" @keyup.enter.native="queryLogData()">
         <el-select slot="prepend" v-model="matchSymbol" class="symbol-select" size="small" style="width: 60px;">
           <el-option value="|=">
             <span style="font-family: Inter-Regular">|=</span>
@@ -26,6 +27,7 @@
             <span style="font-family: Inter-Regular">!~</span>
           </el-option>
         </el-select>
+        <button  slot="suffix" class="search-icon-btn"><i class="el-icon-search" @click="queryLogData()"></i></button>
       </el-input>
       <pick-time id="explore" ref="pickTime" v-model="filterTime" :refresh-data-func="queryLogData" :sign="sign" :use-chart-unit="false" :use-refresh="false">
         <template slot="added-text">{{$t('overall.query')}}</template>
@@ -55,7 +57,7 @@ export default {
     logTab
   },
   props: {
-    sign:[Number,String]
+    sign: [Number, String]
   },
   data () {
     return {
@@ -154,3 +156,16 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.top-tool-right>.el-input.el-input--small.el-input-group{
+  position: relative;
+  .search-icon-btn{
+    height: 100%;
+    padding: 0 3px;
+    background-color: transparent;
+    border: 0;
+    position: absolute;
+    right: 0;
+  }
+}
+</style>
