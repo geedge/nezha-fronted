@@ -13,7 +13,7 @@
       ref="batchDeleteDialog"
       id="batch-delete-dialog"
       class="batch-delete-dialog"
-      title="Hint"
+      :title="$t('el.table.confirmFilter')"
       v-if="dialogVisible"
       :visible.sync="dialogVisible"
       @close='handleClose'
