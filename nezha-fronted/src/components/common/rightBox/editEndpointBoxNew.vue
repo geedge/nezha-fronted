@@ -526,15 +526,15 @@
                     </div>
                   </el-tab-pane>
                   <!-- Labels -->
-                  <el-tab-pane :label="$t('project.endpoint.labels2')" name="Labels">
+                  <el-tab-pane v-if="item.type!=='kubernetes'" :label="$t('project.endpoint.labels2')" name="Labels">
                     <div id="module-box-logs-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                       <div v-for="(item1, i) in item.labelModule" :key="i" class="param-box-row">
                         <el-form-item :prop="'configs.1.config.'+ index +'.labelModule.' + i + '.key'" :rules="[{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('overall.ASCIIKey') ,trigger: 'blur'}]" class="param-box-row-key">
-                          <el-input v-model="item1.key" placeholder="key" size="mini" @input="$forceUpdate()"></el-input>
+                          <el-input v-model="item1.key" placeholder="key" size="mini"></el-input>
                         </el-form-item>
                         <span class="param-box-row-eq">=</span>
                         <el-form-item class="param-box-row-value">
-                          <el-input v-model="item1.value" placeholder="value" size="mini" @input="$forceUpdate()"></el-input>
+                          <el-input v-model="item1.value" placeholder="value" size="mini"></el-input>
                         </el-form-item>
                         <span :id="'moduel-remove-label-'+i" class="param-box-row-symbol" @click="removeLogsLabel(index, i)" :title="$t('overall.delete')"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
                       </div>
@@ -1302,6 +1302,7 @@ export default {
       if (val === 'kubernetes') {
         item.apiServer = '127.0.0.1'
         item.role = 'pod'
+        item.labelModule = [{ key: '', value: '' }] // 当log type = kubernetes时，不显示labels配置项
       } else {
         item.bearer_token = ''
         item.basic_auth = {
@@ -1612,7 +1613,7 @@ export default {
             }
           })
           this.editEndpoint.configs[1].config.forEach(item => {
-            item.labelModule = []
+            this.$set(item, 'labelModule', [])
             if (JSON.stringify(item.labels) !== '{}' && item.labels) {
               Object.keys(item.labels).forEach(key => {
                 item.labelModule.push({ key, value: item.labels[key] })

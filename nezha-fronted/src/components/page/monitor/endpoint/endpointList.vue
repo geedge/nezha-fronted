@@ -529,7 +529,7 @@ export default {
           this.$set(item, 'tags', '')
         })
         this.object.configs[1].config.forEach(item => {
-          item.labelModule = []
+          this.$set(item, 'labelModule', [])
           if (JSON.stringify(item.labels) !== '{}' && item.labels) {
             Object.keys(item.labels).forEach(key => {
               item.labelModule.push({ key, value: item.labels[key] })
