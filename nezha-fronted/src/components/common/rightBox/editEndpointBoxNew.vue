@@ -1724,7 +1724,7 @@ export default {
       this.editEndpoint.configs[1].config[index].relabel_config.push({
         source_labels: [],
         target_label: '',
-        action: '',
+        action: 'replace',
         regex: '(.*)',
         replacement: '$1',
         showAllRelabelOption: false

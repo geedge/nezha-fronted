@@ -1232,7 +1232,7 @@ export default {
       this.editModule.configs[0].config.relabel_config.push({
         source_labels: [],
         target_label: '',
-        action: '',
+        action: 'replace',
         regex: '(.*)',
         replacement: '$1',
         showAllRelabelOption: false
@@ -1258,7 +1258,7 @@ export default {
       this.editModule.configs[1].config[index].relabel_config.push({
         source_labels: [],
         target_label: '',
-        action: '',
+        action: 'replace',
         regex: '(.*)',
         replacement: '$1',
         showAllRelabelOption: false
