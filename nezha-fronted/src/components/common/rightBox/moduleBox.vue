@@ -428,7 +428,7 @@
                     </el-form-item>
                   </el-tab-pane>
                   <!-- Labels -->
-                  <el-tab-pane :label="$t('project.endpoint.labels2')" name="Labels">
+                  <el-tab-pane v-if="item.type!=='kubernetes'" :label="$t('project.endpoint.labels2')" name="Labels">
                     <div id="module-box-logs-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                       <div v-for="(item1, i) in item.labelModule" :key="i" class="param-box-row">
                         <el-form-item :prop="'configs.1.config.'+ index +'.labelModule.' + i + '.key'" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('overall.ASCIIKey') ,trigger: 'blur'}]" class="param-box-row-key">
