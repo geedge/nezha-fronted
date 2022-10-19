@@ -572,7 +572,7 @@
                             <el-input v-model="item2.expressions[eindex].value" placeholder="value" size="mini" ></el-input>
                           </el-form-item>
                           <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)" :title="$t('tip.add')"></i>
-                          <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))" :title="$t('overall.delete')"></i>
+                          <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem(index, index2, eindex)" :title="$t('overall.delete')"></i>
                         </div>
                         <el-form-item
                           :label="'Source'"
@@ -635,7 +635,7 @@
                             <el-input v-model="item2.labels[eindex].value" placeholder="value" size="mini" ></el-input>
                           </el-form-item>
                           <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)" :title="$t('tip.add')"></i>
-                          <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))" :title="$t('overall.delete')"></i>
+                          <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem(index, index2, eindex)" :title="$t('overall.delete')"></i>
                         </div>
                       </div>
                       <div v-if="item2.type === 'output'">
@@ -1554,9 +1554,9 @@ export default {
     },
     delPipelineItem (logsIndex, pipelineIndex, itemIndex) {
       const val = this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].type
-      if (val === 'json') {
+      if (val === 'json' && this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.length > 1) {
         this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.splice(itemIndex, 1)
-      } else if (val === 'labels') {
+      } else if (val === 'labels' && this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].labels.length > 1) {
         this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].labels.splice(itemIndex, 1)
       }
       this.$refs.moduleForm.clearValidate()
