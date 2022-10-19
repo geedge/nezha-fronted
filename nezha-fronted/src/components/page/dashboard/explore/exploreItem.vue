@@ -1843,6 +1843,7 @@ import chartDataFormat from '../../../chart/chartDataFormat'
 import logTab from './logTab'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
+import {Loading} from "element-ui";
 
 export default {
   name: 'exploreItem',
@@ -2627,7 +2628,13 @@ export default {
       if (!this.showMetrics) {
         params.limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
       }
+      const loading = Loading.service({
+        lock: true,
+        customClass: 'export-pdf-mask',
+        background: 'rgba(0,0,0,.2)'
+      })
       this.$get('/visual/explore/snapshot', params, 'blob').then(res => {
+        loading.close()
         const self = this
         let fileName = this.showMetrics ? 'Metrics explore' : 'Logs explore'
         const resFileName = ''

@@ -161,7 +161,7 @@ export default {
       chartUnit: 5,
       rightBox: { show: false },
       minusTime: 0,
-      searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
+      searchTime: bus.getTimezontDateRange(),
       tableId: 'endpointQueryTable',
       pageObj: {
         pageSize: 20,
