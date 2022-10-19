@@ -608,3 +608,19 @@ textarea {
 .el-tabs--border-card {
   background: $--background-color-empty;
 }
+.nz-table-global-select{
+  background: linear-gradient(to right, $--table-row-hover-background-color 0%,$--table-row-hover-background-color 50%,$--background-color-empty 51%,$--background-color-empty 100%);
+  background-size: 200% 100%;
+  animation: gradientBG 5s ease-in infinite;
+}
+@keyframes gradientBG {
+  0% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 0%;
+  }
+}

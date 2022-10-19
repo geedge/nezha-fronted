@@ -6,6 +6,7 @@
     :height="height"
     border
     :default-sort="orderBy"
+    @cell-mouse-enter="cellMouseEnter"
     @header-dragend="dragend"
     @sort-change="tableDataSort"
     @selection-change="selectionChange"

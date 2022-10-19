@@ -5,6 +5,7 @@
     :data="tableData"
     :height="height"
     border
+    @cell-mouse-enter="cellMouseEnter"
     :default-sort="orderBy"
     @header-dragend="dragend"
     @sort-change="tableDataSort"
