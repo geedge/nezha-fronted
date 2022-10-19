@@ -8,8 +8,8 @@
             style="width: 40px; height: 40px;"
           />
         </div>
-        <el-skeleton-item class="search-item-path" search-item-path variant="h3" style="width: 30%;height: 21px;margin-top: 16px;margin-bottom: 16px" />
-        <el-skeleton-item class="search-item-name" search-item-path variant="h3" style="width: 50%;height: 30px;margin-bottom: 30px" />
+        <el-skeleton-item class="search-item-path" variant="h3" style="width: 30%;height: 12px;margin-top: 12px;margin-bottom: 12px" />
+        <el-skeleton-item class="search-item-name" variant="h3" style="width: 50%;height: 14px;margin-bottom: 12px" />
         <div v-for="item in skeletonArr" :key="item" class="search-item-info">
           <el-skeleton-item class="search-item-key" style="height: 21px"/>
           <el-skeleton-item class="search-item-value-box" style="width: 57%;margin-left: 20px;height: 21px;margin-top: 13px;margin-bottom: 13px"/>
