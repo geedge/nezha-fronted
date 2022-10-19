@@ -244,7 +244,7 @@
                     <el-col class="legend-title">
                       {{ $t('dashboard.panel.chartForm.legend') }}&nbsp;
                       <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
-                        <div style="word-break:keep-all;">{{ $t('dashboard.panel.chartForm.legendTip') }}</div>
+                        <div :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{ $t('dashboard.panel.chartForm.legendTip') }}</div>
                         <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"
                            @mouseover="rz"></i>
                       </el-popover>
@@ -1118,6 +1118,7 @@ export default {
     return {
       theme: theme,
       expressions: [],
+      language: localStorage.getItem('nz-language') || 'en',
       chartTypeList: [
         {
           id: 'line',
