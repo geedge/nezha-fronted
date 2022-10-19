@@ -2,7 +2,7 @@
   <div class="multiple-time-box">
     <div :class="showDropdown?'compare-box':''" :title="$t('dashboard.panel.customTimeRange')"><i class="nz-icon nz-icon-compare" @click="changeShowDropdown" /></div>
     <transition>
-      <div v-show="showDropdown" id="panel-calender" class="calendar">
+      <div v-show="showDropdown" id="panel-calender" class="calendar" style="position: relative">
         <my-date-picker prefix-icon=" " size="mini" ref="calendar"
                         :value-format="timeFormatStrToDatePickFormat(timeFormatMain)"
                         :format="timeFormatStrToDatePickFormat(timeFormatMain)" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
@@ -76,10 +76,10 @@ export default {
         text: this.$t('dashboard.panel.noDate')
       },
       timeData: [
-        // {
-        //   id: 0,
-        //   text: this.$t('dashboard.panel.customTimeRange')
-        // },
+        {
+          id: 0,
+          text: this.$t('dashboard.panel.customTimeRange')
+        },
         {
           id: 12,
           text: this.$t('dashboard.panel.noDate')
@@ -198,8 +198,11 @@ export default {
   },
   methods: {
     dateChange (val) {
-      const startTime = bus.timeFormate(val, this.multipleTime)
-      const endTime = bus.timeFormate(new Date(val).getTime() + new Date(this.stepSearchTime[1]).getTime() - new Date(this.stepSearchTime[0]).getTime(), this.multipleTime)
+      console.log(val)
+      const startTime = this.momentTz(this.momentStrToTimestamp(val))
+      console.log(this.stepSearchTime[1], this.stepSearchTime[0])
+      const end = this.momentStrToTimestamp(val) + this.momentStrToTimestamp(this.stepSearchTime[1]) - this.momentStrToTimestamp(this.stepSearchTime[0])
+      const endTime = this.momentTz(end, this.multipleTime)
       this.$set(this.searchTime, 0, startTime)
       this.$set(this.searchTime, 1, endTime)
 

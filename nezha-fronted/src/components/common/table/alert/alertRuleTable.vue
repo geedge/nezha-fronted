@@ -8,6 +8,7 @@
     border
     :default-sort="orderBy"
     @header-dragend="dragend"
+    @cell-mouse-enter="cellMouseEnter"
     @sort-change="tableDataSort"
     @selection-change="selectionChange"
     @row-dblclick="(row)=>{queryMessage(row)}"

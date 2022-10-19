@@ -148,6 +148,10 @@ export default {
     },
     rowKey (row) { // ping trace的 唯一key
       return row.ip + '-' + row.dc.id
+    },
+    cellMouseEnter (row, column, cell, event) {
+      // console.log(row, column, cell, event)
+      cell.parentNode.classList.remove('nz-table-global-select')
     }
   },
   watch: {
@@ -173,7 +177,10 @@ export default {
           if (id) {
             setTimeout(() => {
               if (document.getElementById('globalSearch' + id)) {
-                document.getElementById('globalSearch' + id).scrollIntoView(true)
+                document.getElementById('globalSearch' + id).scrollIntoView({ block: 'center', inline: 'center' })
+                if (document.getElementById('globalSearch' + id).parentNode.parentNode.parentNode.classList.contains('el-table__row')) {
+                  document.getElementById('globalSearch' + id).parentNode.parentNode.parentNode.classList.add('nz-table-global-select')
+                }
                 this.$store.commit('setGlobalSearchId', '')
               }
             }, 500)

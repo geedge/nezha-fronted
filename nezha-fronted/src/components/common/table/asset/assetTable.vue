@@ -8,6 +8,7 @@
       :height="height"
       :default-sort="orderBy"
       border
+      @cell-mouse-enter="cellMouseEnter"
       @header-dragend="dragend"
       @sort-change="tableDataSort"
       @selection-change="selectionChange"
