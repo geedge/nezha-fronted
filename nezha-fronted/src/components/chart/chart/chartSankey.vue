@@ -185,7 +185,7 @@ export default {
           item.mapping = mapping
           item.background = mapping ? mapping.color.bac : this.colorList[index]
           const decimals = this.chartInfo.param.decimals || 2
-          item.showValue = !allZero ? chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(item.value, null, -1, decimals) : 0
+          item.showValue = chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(!allZero ? item.value : 0, null, -1, decimals)
         })
 
         // 创建一个连线绘制组，绑定连线数据(links)
