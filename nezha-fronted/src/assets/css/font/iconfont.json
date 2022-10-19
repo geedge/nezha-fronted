@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "32391765",
+      "name": "二维码",
+      "font_class": "erweima",
+      "unicode": "e7a0",
+      "unicode_decimal": 59296
+    },
+    {
       "icon_id": "31836711",
       "name": "No Comment",
       "font_class": "a-NoComment",

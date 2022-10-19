@@ -24,7 +24,7 @@
       <!--  -->
       <div class="dialog-header" style="vertical-align:top;"  v-if="prepare">
         <i class="nz-icon nz-icon-jinggao"></i>
-        <span>{{$t('batch.prepare', { dataLength: deleteObjs.length })}}</span>
+        <span>{{$t('batch.prepare', { dataLength: idStr.length })}}</span>
       </div>
       <!--  -->
       <div class="dialog-header" style="vertical-align:top;" v-if="process">

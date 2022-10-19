@@ -28,6 +28,7 @@
           :table-data="tableData"
           @del="del"
           @edit="edit"
+          @copy="copy"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
@@ -102,6 +103,10 @@ export default {
     }
   },
   methods: {
+    copy (u) {
+      this.object = { ...u, name: u.name, id: '' }
+      this.rightBox.show = true
+    },
     getUserData () {
       return new Promise(resolve => {
         this.$get('/sys/i18n', { pageSize: -1, pageNo: 1 }).then(response => {

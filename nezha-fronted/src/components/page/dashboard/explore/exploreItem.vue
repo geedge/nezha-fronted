@@ -2074,7 +2074,7 @@ export default {
           }
         }).catch(e => {
           this.chartLoading = false
-          this.$message.error(this.$t('terminallog.statusItem.unknownError'))
+          this.$message.error(this.$t('config.terminallog.statusItem.unknownError'))
         })
       }
     },
