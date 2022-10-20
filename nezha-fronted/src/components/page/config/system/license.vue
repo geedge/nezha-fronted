@@ -93,7 +93,7 @@
       </div>
     </div>
     <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="qrCodeShow" @close="closeQrCode" :title="'QR code'" class="nz-dialog overview" width="650px">
-      <el-carousel arrow="never" :autoplay="false" :height="'500px'" ref="carousel">
+      <el-carousel arrow="never" :autoplay="false" :height="'500px'" ref="carousel" v-my-loading="qrloading">
         <el-carousel-item v-for="(item, index) in qrCodeArr" :key="index" :name="'qr-' + index">
 <!--            :logo-src="getSrc(index)"-->
           <vueQr
@@ -153,7 +153,8 @@ export default {
       qrCodeShow: false,
       qrCodeArr: [],
       totalQrCode: 10,
-      currentPage: 1
+      currentPage: 1,
+      qrloading: false
     }
   },
   methods: {
@@ -267,40 +268,42 @@ export default {
     },
     openQrcode () {
       this.qrCodeArr = []
-      const self = this
-      this.$get('/sys/license/token').then(res => {
-        this.totalQrCode = Math.ceil(res.data.length / (1024 + 512))
-        if (this.totalQrCode < 1) {
-          this.totalQrCode = 1
-        }
-        // let qrstr = '<?xml version="1.0" encoding="UTF-8"?> <license><supportID>GDNT-1000000047392188</supportID><Signature><DigestMethod>sha1</DigestMethod><DigestValue>2fd55f0536bf0fe985ec584b3205796833f9c686</DigestValue></Signature><hasps><hasp_info> <haspscope> <hasp id="876940681788086081"> <vendor id="25743"/> <update_counter>0</update_counter> </hasp> </haspscope> <c2v> YYIcLYADY3R2oQaABGNGigeiCYABAIEBAIIBAKMVgAEAgRAAAAAAAAAAAAAAAAAA AAAApoIb+oAIDCuE52MRV0GjghvsoIIb6ICCAQDFmdf8/XqWoYFME+3f3f1BNBZ3 8NYY7Ww9IKys44YsV3KyiRUU/32EW8Cylg99S7QlTYX56CSfTR2n1iGz+bkD+PsS gMiz4ClAn+niZLxEesZamsrp+SdjAbMS+aKeUoM/yAawPrbfchZoc5dNxipY/gKc qi9qKzX/XK/FIL0FPU8ss4wCnsSMZbR2zFcbBGOqAMSacRScrVnCcjfyvyx6PZAn M9Nlp6yaPfnWuqrP2asQ/0ThoiGzaC1usnUDZxesP1xf8aaZVmTWBhW7x0i1Ah6Q 53T6aRKwtJerOmY/naBBETcNRAbBWpxKfRR+6Cv5Bv+yLnfirV7/oI7i9sYMgYIa 4E4nX5U+8LPBiZtVrmuWy+ZrlTjHSzU25K0nH+D/JPNqjDtNr1cfA9larAFd6Vow uoWQL48K2MsG6D0S8fAm7B1VPSol9uhFZL7H49tB69hqhxxTL8HD8ytOe4qxSbPF k7SdiYsJr3PA+yITJq5vMMY6wREu+yCD/yBe2nhrVN+SnjoXbkoI+PD6hbnRw2+I eGmLDQvr8hz5qloK9Bl2f+TFqFE+0o3UwGzLy9UWRC1O+aoExj6g54FCHQsOyagg Bdnlb6LKnsOgIY5Iq4ZWkdZCvp4LPNlgKopq9qe0qy9MhiobgKjGRzevuOFNlmgn u5ktAVNCkeKHbmCyjQ3asO8eVX4K1fbUTiJK/7EMvf3JclBwqQJzMFOdjbbvo3Lf Tox/8sLNbqNv8wkkweFSmq31WMWn7r5B93KUZaP6SaVTQu5IqNdfW/sbBCGAWWLX zFEJgjN+EQisA0G/7iFR/6gehaHTEjtxElVrGdE7K8dZ0ZRJLPHMq5rllNY4AvPu 9BSdN5rn95DV26RrYTwjYOcirLAKZ2G59H41LmhnEzk4txulqSCQkCkUthgFwgpA IulXP0E28caYqTDbe7OTGWQfAZyXnn5txtUcGNUdvzJT4L9/441uS2l1zUygmeFL GVkodECzntiYA0UN5UIEygI06cABLbKRjAaEP1MBLSKz6UVMIZWoPHA7FXwE6+/S pdfPyT5DmP+nXjITq63IRT+reX9J361pB8wRtEEU1YeQ+3tyYxsK9Wgew1uGTXnk oTJb4Ensd72PgSl6xck97xMwEr38j7TVVscO0kbA3+njMSbstpmf7U8aSmMiDUk+ jNBVIbvURobMNUgC96FJjmtVc6EsbQ/Kssa4C68kcwnUXU9o3qKyJOnhXW0DgOlj OlNcYcfhK3zS1pKEDwxD7H688aib1M2dKEd0QbYDYDkcyivWp/YQVAZpHBLn2OFo 8tLD4/Zv7SX5jvTjyigOUF4mXcFiPi4bVhDX0Qi1+NU0nzwkj9BXpQWlg3UJaWyp 1XMWRNo7PkupW2Rq0vLcr2gu4lrGNa5kgVpoeJNH9XOzvz5lyXlZBxtK8CYbZ4XG BDZrEpZJm4jHtpVCP3fQRjEhlO7VDW/aqyxYyB7/tttfNGgW2CdJFRfuBCQqvkAu'
-        // console.log(JSON.parse(qrstr))
-        // console.log(SparkMD5.hashBinary(qrstr).slice(0, 8))
-        const total = this.totalQrCode < 10 ? ('0' + this.totalQrCode) : this.totalQrCode
-        const totalMD5 = SparkMD5.hashBinary(res.data).slice(0, 8)
-        for (let i = 0; i < this.totalQrCode; i++) {
-          const num = (1024 + 512)
-          let str1 = res.data.slice(num * i, num * (i + 1))
-          const index = i < 10 ? ('0' + (i + 1)) : (i + 1)
-          const md5 = SparkMD5.hashBinary(str1).slice(0, 8)
-          str1 = total + '' + index + totalMD5 + md5 + '' + str1
-          self.qrCodeArr.push(str1)
-        }
-        this.qrCodeShow = true
-      }, error => {
-        const $self = this
-        const reader = new FileReader()
-        reader.onload = function (event) {
-          const responseText = reader.result
-          const exception = JSON.parse(responseText)
-          if (exception.message) {
-            $self.$message.error(exception.message)
-          } else {
-            console.error(error)
+      this.qrCodeShow = true
+      this.qrloading = true
+      setTimeout(() => {
+        this.$get('/sys/license/token').then(res => {
+          this.totalQrCode = Math.ceil(res.data.length / (1024 + 512))
+          if (this.totalQrCode < 1) {
+            this.totalQrCode = 1
           }
-        }
-        reader.readAsText(error.response.data)
-      })
+          const total = this.totalQrCode < 10 ? ('0' + this.totalQrCode) : this.totalQrCode
+          const totalMD5 = SparkMD5.hashBinary(res.data).slice(0, 8)
+          const arr = []
+          for (let i = 0; i < this.totalQrCode; i++) {
+            const num = (1024 + 512)
+            let str1 = res.data.slice(num * i, num * (i + 1))
+            const index = i < 10 ? ('0' + (i + 1)) : (i + 1)
+            const md5 = SparkMD5.hashBinary(str1).slice(0, 8)
+            str1 = total + '' + index + totalMD5 + md5 + '' + str1
+            arr.push(str1)
+          }
+          this.qrCodeArr = this.$loadsh.cloneDeep(arr)
+          this.qrloading = false
+        }, error => {
+          const $self = this
+          const reader = new FileReader()
+          reader.onload = function (event) {
+            const responseText = reader.result
+            const exception = JSON.parse(responseText)
+            if (exception.message) {
+              $self.$message.error(exception.message)
+            } else {
+              console.error(error)
+            }
+          }
+          reader.readAsText(error.response.data)
+        })
+      }, 100)
     },
     getSrc (index) {
       const cas = document.createElement('canvas')
