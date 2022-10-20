@@ -419,6 +419,7 @@ export default {
       this.$get('/stat/search', param).then(res => {
         this.firstShow = false
         this.nextLoading = false
+        this.jumpLoading = false
         if (res.code === 200) {
           this.tableData = this.tableData.concat(res.data.list)
           if (!this.tableData.length) {

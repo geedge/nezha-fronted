@@ -99,7 +99,6 @@
           <vueQr
             :text="item"
             :size="2000"
-            :logo-src="getSrc(index)"
             :margin="50"
           />
         </el-carousel-item>
