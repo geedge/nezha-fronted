@@ -86,24 +86,27 @@
             <div ref="detailScrollbar" class="mib-browser-detail">
               <div class="mib-browser-detail-row">
                 <div>Name</div>
-                <div class="document-copy-block" >
-                <div class="document-copy-text">{{currentWalk.name}}</div>
-                <i v-if="currentWalk.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(currentWalk.name)" :title="$t('overall.copyText')"></i>
-                </div>
+                    <copy :copyData='currentWalk.name' :showInfo='currentWalk.name'>
+                      <template slot="copy-text">
+                         {{currentWalk.name}}
+                      </template>
+                    </copy>
               </div>
               <div class="mib-browser-detail-row">
                 <div>OID</div>
-                <div class="document-copy-block">
-                <div class="document-copy-text">{{currentWalk.objectID}}</div>
-                <i v-if="currentWalk.objectID" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(currentWalk.objectID)" :title="$t('overall.copyText')"></i>
-                </div>
+                <copy :copyData='currentWalk.objectID' :showInfo='currentWalk.objectID'>
+                  <template slot="copy-text">
+                     {{currentWalk.objectID}}
+                  </template>
+                </copy>
               </div>
               <div class="mib-browser-detail-row">
                 <div>MIB</div>
-                <div class="document-copy-block">
-                <div class="document-copy-text">{{mibName(currentWalk.objectID)}}</div>
-                <i v-if="mibName(currentWalk.objectID)" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(mibName(currentWalk.objectID))" :title="$t('overall.copyText')"></i>
-                </div>
+                <copy :copyData='mibName(currentWalk.objectID)' :showInfo='mibName(currentWalk.objectID)'>
+                  <template slot="copy-text">
+                     {{mibName(currentWalk.objectID)}}
+                  </template>
+                </copy>
               </div>
               <div class="mib-browser-detail-row">
                 <div>Syntax</div>
@@ -141,20 +144,18 @@
             <pl-table v-if="showTable" ref="resultTable" v-my-loading="loading" :datas="resultData" :empty-text="$t('overall.noData')" :pagination-show="false" :row-height="28"
                       border class="mib-browser-table" size="small" style="width: 100%; height: 100%" use-virtual>
               <pl-table-column v-slot="{row}" label="Name/OID">
-                <div class="document-copy-block">
-                  <div class="document-copy-text">
-                    <div class="too-long-split" @click="searchParam.oid = row.oid">{{row.name ? row.name : row.oid}}</div>
-                  </div>
-                  <i  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(row.name ? row.name : row.oid)" :title="$t('overall.copyText')"></i>
-               </div>
+                <copy :copyData='row.name ? row.name : row.oid' :showInfo='true'>
+                  <template slot="copy-text">
+                     <div class="too-long-split" @click="searchParam.oid = row.oid">{{row.name ? row.name : row.oid}}</div>
+                  </template>
+                </copy>
               </pl-table-column>
               <pl-table-column v-slot="{row}" label="Value">
-                 <div class="document-copy-block">
-                  <div class="document-copy-text">
-                    <div @click="searchParam.oid = row.oid">{{row.value}}</div>
-                  </div>
-                  <i v-if="row.value"  class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(row.value)" :title="$t('overall.copyText')"></i>
-               </div>
+                <copy :copyData='row.value' :showInfo='row.value'>
+                  <template slot="copy-text">
+                     <div @click="searchParam.oid = row.oid">{{row.value}}</div>
+                  </template>
+                </copy>
               </pl-table-column>
               <pl-table-column v-slot="{row}" label="Type">
                 <template><div @click="searchParam.oid = row.oid">{{row.type}}</div></template>
@@ -174,6 +175,7 @@
 import fileSaver from 'file-saver'
 import nzDataList from '@/components/common/table/nzDataList'
 import xlsx from 'xlsx'
+import copy from '@/components/common/copy'
 
 export default {
   name: 'mibBrowser',
@@ -181,7 +183,8 @@ export default {
     switchTab: String
   },
   components: {
-    nzDataList
+    nzDataList,
+    copy
   },
   data () {
     return {
