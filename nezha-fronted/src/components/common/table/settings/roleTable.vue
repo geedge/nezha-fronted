@@ -37,16 +37,18 @@
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
           <template v-if="scope.row.i18n">
-            <div class="document-copy-block">
-              <span class="document-copy-text">{{$t(scope.row.i18n)}}</span>
-              <i v-if="$t(scope.row.i18n)" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy($t(scope.row.i18n))" :title="$t('overall.copyText')"></i>
-            </div>
+            <copy :copyData='$t(scope.row.i18n)' :showInfo='$t(scope.row.i18n)'>
+                  <template slot="copy-text">
+                     {{$t(scope.row.i18n)}}
+                  </template>
+            </copy>
           </template>
           <template v-else-if="scope.row.name">
-            <div class="document-copy-block">
-              <span class="document-copy-text">{{scope.row.name}}</span>
-              <i v-if="$t(scope.row.name)" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy($t(scope.row.name))" :title="$t('overall.copyText')"></i>
-            </div>
+            <copy :copyData='$t(scope.row.name)' :showInfo='$t(scope.row.name)'>
+                  <template slot="copy-text">
+                     {{scope.row.name}}
+                  </template>
+              </copy>
           </template>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -102,10 +104,11 @@
 <script>
 import table from '@/components/common/mixin/table'
 import deleteButton from '@/components/common/deleteButton'
+import copy from '@/components/common/copy'
 export default {
   name: 'roleTable',
   mixins: [table],
-  components: { deleteButton },
+  components: { deleteButton, copy },
   props: {
     loading: Boolean
   },

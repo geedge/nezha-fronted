@@ -37,7 +37,7 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-           <copy :copyData='scope.row.name'>
+           <copy :copyData='scope.row.name' :showInfo='scope.row.name'>
               <template slot="copy-text">
                  {{scope.row.name ? scope.row.name : '-'}}
               </template>
@@ -51,7 +51,7 @@
           <template v-else>{{"-"}}</template>
         </template>
         <template v-else-if="item.prop === 'expr'">
-            <copy :copyData='scope.row[item.prop]'>
+            <copy :copyData='scope.row[item.prop]' :showInfo='scope.row[item.prop]'>
               <template slot="copy-text">
                  {{scope.row[item.prop] ? scope.row[item.prop] : '-'}}
               </template>

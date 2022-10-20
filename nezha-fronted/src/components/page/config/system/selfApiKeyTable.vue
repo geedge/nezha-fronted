@@ -40,10 +40,11 @@
                {{scope.row[item.prop]?scope.row[item.prop]:'-'}}
             </template>
              <template v-if="item.prop == 'token'">
-              <div class="document-copy-block">
-              <span class="document-copy-text">  {{scope.row[item.prop]?scope.row[item.prop].replace(reg, '*'):'-'}}</span>
-              <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.copyText')"></i>
-              </div>
+              <copy :copyData='scope.row[item.prop]' :showInfo='scope.row.name'>
+                  <template slot="copy-text">
+                     {{scope.row[item.prop]?scope.row[item.prop].replace(reg, '*'):'-'}}
+                  </template>
+              </copy>
             </template>
              <template v-if="item.prop == 'expireAt'">
               {{scope.row[item.prop]?utcTimeToTimezoneStr(scope.row[item.prop]):'-'}}
@@ -100,12 +101,13 @@
 import { tableCommon } from './systemCommon'
 import table from '@/components/common/mixin/table'
 import deleteButton from '@/components/common/deleteButton'
+import copy from '@/components/common/copy'
 export default {
   name: 'selfApiKeyTable',
   props: {
     loading: Boolean
   },
-  components: { deleteButton },
+  components: { deleteButton, copy },
   mixins: [table, tableCommon],
   data () {
     return {

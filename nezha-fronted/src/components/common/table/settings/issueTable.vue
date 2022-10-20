@@ -37,14 +37,14 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-          <copy :copyData='scope.row.name'>
+          <copy :copyData='scope.row.name' :showInfo='scope.row.name'>
               <template slot="copy-text">
                  {{scope.row.name ? scope.row.name : '-'}}
               </template>
             </copy>
         </template>
         <template v-else-if="item.prop === 'type'">
-          <copy :copyData='scope.row.type'>
+          <copy :copyData='scope.row.type' :showInfo='scope.row.type'>
               <template slot="copy-text">
                  {{scope.row.type ? scope.row.type : '-'}}
               </template>
