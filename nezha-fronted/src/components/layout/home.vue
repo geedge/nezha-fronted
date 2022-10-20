@@ -1,5 +1,5 @@
 <template>
-  <div class="home" :class="mode" v-my-loading="loading">
+  <div class="home" :class="mode" v-my-loading.dark="loading">
     <left-menu @refresh="refresh"></left-menu>
     <div ref="body" class="body">
       <Header></Header>

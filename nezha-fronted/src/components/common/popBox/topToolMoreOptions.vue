@@ -93,7 +93,7 @@
               <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
             </el-upload>
           </div>
-          <div slot="footer" class="footer">
+          <div class="footer">
             <div class="el-message-box__btns" style="text-align: right;">
               <button :id="id+'-xlsx-import-template'" class="nz-btn el-button el-button--default el-button--small" @click="downloadTemplate()">
                 <span>{{$t('upload.template')}}</span>
@@ -127,7 +127,7 @@
               </el-radio-group>
             </div>
           </div>
-          <div slot="footer" class="footer">
+          <div class="footer">
             <div class="el-message-box__btns">
               <button :id="id+'-xlsx-import-export'"  class="nz-btn el-button--small nz-btn-style-normal" @click="exportData">
                 <span style="text-transform:Capitalize">{{$t('overall.exportExcel')}}</span>
@@ -180,7 +180,7 @@
               </div>
             </div>
           </div>
-          <div slot="footer" class="footer">
+          <div class="footer">
             <div class="el-message-box__btns">
               <button :id="id+'-xlsx-import-rollback'"  class="nz-btn el-button el-button--small nz-btn-style-error" @click="rollbackImport">
                 <span>{{$t('overall.rollbackImport')}}</span>

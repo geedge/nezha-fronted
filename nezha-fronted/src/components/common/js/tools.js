@@ -151,6 +151,9 @@ function myLoadingFunction (el, binding, vnode) {
   if (binding.modifiers.scaleMax) {
     divBox.style.transform = 'scale(2)'
   }
+  if (binding.modifiers.dark) {
+    divBox.style.background = 'rgba(0, 0, 0, 0.7)'
+  }
   const div = document.createElement('div')
   div.setAttribute('class', className + ' my-loading')
   if (className === 'bars1') {
