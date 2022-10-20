@@ -505,9 +505,9 @@ export default {
       this.rightBox.chartTemp.show = true
     },
     chartBySync () {
-      this.panelTabLoading = true
+      this.$store.dispatch('dispatchHomeLoading', true)
       this.$post('visual/panel/chart/syncTmpl', { panelId: this.showPanel.id }).then(res => {
-        this.panelTabLoading = false
+        this.$store.dispatch('dispatchHomeLoading', false)
         if (res.code === 200) {
           this.getData(this.filter)
           this.$message.success(this.$t('tip.syncSuccess'))

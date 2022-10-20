@@ -717,7 +717,7 @@ export default {
       this.$store.dispatch('dispatchPanelLock', { flag: boolean })
     },
     chartBySync () {
-      this.panelTabLoading = true
+      this.$store.dispatch('dispatchHomeLoading', true)
       const params = {}
       if (this.from === 'chartTemp') {
         params.pid = this.obj.id
@@ -725,7 +725,7 @@ export default {
         params.panelId = this.showPanel.id
       }
       this.$post('visual/panel/chart/syncTmpl', params).then(res => {
-        this.panelTabLoading = false
+        this.$store.dispatch('dispatchHomeLoading', false)
         if (res.code === 200) {
           this.getTableData(this.obj.id)
           this.$message.success(this.$t('tip.syncSuccess'))

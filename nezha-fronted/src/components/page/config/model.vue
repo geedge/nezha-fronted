@@ -131,7 +131,9 @@ export default {
   },
   methods: {
     chartBySync (row) {
+      this.$store.dispatch('dispatchHomeLoading', true)
       this.$post('visual/panel/chart/syncTmpl', { models: [row.id] }).then(res => {
+        this.$store.dispatch('dispatchHomeLoading', false)
         if (res.code === 200) {
           this.getTableData()
           this.$message.success(this.$t('tip.syncSuccess'))

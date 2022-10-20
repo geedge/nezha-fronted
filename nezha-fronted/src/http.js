@@ -123,9 +123,7 @@ export function get (url, params, responseType) {
       if (err.response) {
         resolve(err.response.data)
       } else if (err.message) {
-        if (err.message !== 'cancel') { // 判断是否是路由跳转取消的请求（是的话没必要提示message）
-          resolve(err.message)
-        }
+        resolve(err.message)
       } else {
         resolve(err)
       }
