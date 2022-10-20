@@ -97,10 +97,11 @@
           {{ utcTimeToTimezoneStr(scope.row[item.prop]) }}
         </template>
         <template v-else-if="item.prop === 'name'">
-           <div class="document-copy-block">
-              <span class="document-copy-text">{{scope.row.name ? scope.row.name : '-'}}</span>
-              <i v-if="scope.row.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
-            </div>
+          <copy :copyData='scope.row[item.prop]' :showInfo='scope.row[item.prop]'>
+                  <template slot="copy-text">
+                     {{scope.row[item.prop]?scope.row[item.prop]:'-'}}
+                  </template>
+              </copy>
         </template>
         <span v-else-if="scope.row[item.prop]">{{
           scope.row[item.prop] || "-"
@@ -201,11 +202,13 @@ import { calcDurationByStringTimeB } from '@/components/common/js/tools'
 import nzAlertTag from '../../../page/alert/nzAlertTag'
 import { sameLabels } from '@/components/common/js/constants'
 import deleteButton from '@/components/common/deleteButton'
+import copy from '@/components/common/copy'
 export default {
   name: 'alertSilenceTable',
   components: {
     nzAlertTag,
-    deleteButton
+    deleteButton,
+    copy
   },
   mixins: [table],
   props: {

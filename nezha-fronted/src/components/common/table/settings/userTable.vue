@@ -79,10 +79,11 @@
           <span v-else-if="scope.row[item.prop] === 'zh'">简体中文</span>
         </template>
         <template v-else-if="item.prop === 'email'">
-          <div class="document-copy-block">
-              <span class="document-copy-text">{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</span>
-              <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.copyText')"></i>
-            </div>
+          <copy :copyData='scope.row[item.prop]' :showInfo='scope.row[item.prop]'>
+                  <template slot="copy-text">
+                     {{scope.row[item.prop]?scope.row[item.prop]:'-'}}
+                  </template>
+          </copy>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <span v-else>-</span>
@@ -140,10 +141,11 @@
 <script>
 import table from '@/components/common/mixin/table'
 import deleteButton from '@/components/common/deleteButton'
+import copy from '@/components/common/copy'
 export default {
   name: 'userTable',
   mixins: [table],
-  components: { deleteButton },
+  components: { deleteButton, copy },
   props: {
     loading: Boolean
   },
