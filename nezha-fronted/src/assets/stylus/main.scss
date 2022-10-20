@@ -1179,6 +1179,7 @@ li {
     display: flex;
     margin-bottom: 5px;
     .line-num {
+      min-width: 55px;
       font-size: 14px;
       color: $--color-text-primary;
       letter-spacing: 0;

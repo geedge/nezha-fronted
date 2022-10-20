@@ -359,7 +359,7 @@ export default {
     display: flex;
   }
   .import-result-item .line-num{
-    width: 55px;
+    /*width: 55px;*/
   }
 
   .endpoint-query-dropdown {
