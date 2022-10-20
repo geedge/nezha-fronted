@@ -26,7 +26,8 @@ const panel = {
     // 当前鼠标所在的图表id
     currentMousemove: 0,
     variablesArr: [],
-    timeBoxClass: ''
+    timeBoxClass: '',
+    homeLoading: false
   },
   mutations: {
     setShowRightBox (state, flag) {
@@ -97,6 +98,9 @@ const panel = {
     },
     setTimeBoxClass (state, value) {
       state.timeBoxClass = value
+    },
+    setHomeLoading (state, value) {
+      state.homeLoading = value
     }
   },
   getters: {
@@ -153,6 +157,9 @@ const panel = {
     },
     getTimeBoxClass (state, value) {
       return state.timeBoxClass
+    },
+    getHomeLoading (state, value) {
+      return state.homeLoading
     }
   },
   actions: {
@@ -197,7 +204,10 @@ const panel = {
     },
     dispatchTimeBoxClass (store, timeBoxClass) {
       store.commit('setTimeBoxClass', timeBoxClass)
-    }
+    },
+    dispatchHomeLoading (store, homeLoading) {
+      store.commit('setHomeLoading', homeLoading)
+    },
   }
 }
 export default panel

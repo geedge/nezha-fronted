@@ -47,9 +47,9 @@
         <div class="license-left-footer-download" @click="downloadLicense">
           <i class="nz-icon nz-icon-download"></i><span>{{$t('license.downloadID')}}</span>
         </div>
-<!--        <div class="license-left-footer-download" @click="openQrcode">-->
-<!--          <i class="nz-icon nz-icon-download"></i><span>{{$t('license.downloadID')}}</span>-->
-<!--        </div>-->
+        <div class="license-left-footer-download" @click="openQrcode" style="margin-left: 5px">
+          <i class="nz-icon nz-icon-erweima"></i>
+        </div>
         <el-upload
           ref="upload"
           accept=".xml"
@@ -92,17 +92,28 @@
         </el-table>
       </div>
     </div>
-    <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="qrCodeShow" @close="closeQrCode" :title="'xs'" class="nz-dialog overview" width="650px">
-      <el-carousel arrow="always" :autoplay="false" :height="'550px'">
-        <el-carousel-item v-for="(item, index) in qrCodeArr" :key="index">
+    <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="qrCodeShow" @close="closeQrCode" :title="'QR code'" class="nz-dialog overview" width="650px">
+      <el-carousel arrow="never" :autoplay="false" :height="'500px'" ref="carousel">
+        <el-carousel-item v-for="(item, index) in qrCodeArr" :key="index" :name="'qr-' + index">
 <!--            :logo-src="getSrc(index)"-->
           <vueQr
             :text="item"
             :size="2000"
+            :logo-src="getSrc(index)"
             :margin="50"
           />
         </el-carousel-item>
       </el-carousel>
+      <div class="nz-license-footer">
+        <el-pagination
+          @current-change="setActiveItem"
+          small
+          :page-size="1"
+          :current-page.sync="currentPage"
+          layout="prev, pager, next"
+          :total="qrCodeArr.length">
+        </el-pagination>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -142,7 +153,8 @@ export default {
       endItem: '',
       qrCodeShow: false,
       qrCodeArr: [],
-      totalQrCode: 10
+      totalQrCode: 10,
+      currentPage: 1
     }
   },
   methods: {
@@ -306,6 +318,10 @@ export default {
       // 把画布的内容转换为base64编码格式的图片
       const data = cas.toDataURL('image/png', 1)
       return data
+    },
+    setActiveItem (currentPage) {
+      console.log()
+      this.$refs.carousel.setActiveItem('qr-' + (currentPage - 1))
     }
   },
   computed: {
@@ -321,8 +337,6 @@ export default {
   }
 }
 </script>
-<style scoped>
-  /deep/ .el-carousel__item{
-    text-align: center;
-  }
+<style scoped lang="scss">
+
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="home" :class="mode">
+  <div class="home" :class="mode" v-my-loading="loading">
     <left-menu @refresh="refresh"></left-menu>
     <div ref="body" class="body">
       <Header></Header>
@@ -43,6 +43,9 @@ export default {
     // 查看模式
     mode () {
       return this.$store.state.panel.mode
+    },
+    loading () {
+      return this.$store.getters.getHomeLoading
     }
   },
   methods: {

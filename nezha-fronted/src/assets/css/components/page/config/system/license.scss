@@ -147,4 +147,37 @@
       display: none;
     }
   }
+  .el-carousel__item{
+    text-align: center;
+  }
+  .nz-license-footer{
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 15px;
+   .el-pagination{
+      font-size: 14px;
+      .btn-prev, .btn-next{
+        color: #fff;
+        font-size: 14px;
+        margin: 0 5px;
+        border: none;
+        background-color: #CBCED1 !important;
+        border-radius: 50%;
+        height: 24px;
+        width: 24px;
+      }
+      .number {
+        font-size: 14px;
+        margin: 0px;
+        border: none;
+        background-color: transparent !important;
+      }
+      .number.active{
+        color: #FA901C;
+      }
+    }
+  }
+ .el-carousel__indicators.el-carousel__indicators--horizontal{
+    display: none;
+  }
 }

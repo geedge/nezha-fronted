@@ -21,13 +21,9 @@ export default {
         end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[1])),
         vars: vars
       }
-      const loading = Loading.service({
-        lock: true,
-        customClass: 'export-pdf-mask',
-        background: 'rgba(0,0,0,.2)'
-      })
+      this.$store.dispatch('dispatchHomeLoading', true)
       this.$get('/visual/panel/snapshot', params, 'blob').then(res => {
-        loading.close()
+        this.$store.dispatch('dispatchHomeLoading', false)
         const self = this
         let fileName = name
         const resFileName = ''
