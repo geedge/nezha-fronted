@@ -206,6 +206,7 @@ export default {
             })
             return item
           })
+          this.idStr = this.deleteData.map(item => item.id)
         } else if (res.code === 200) {
           this.idShow = false
           this.prepare = false
