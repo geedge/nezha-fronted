@@ -211,6 +211,9 @@ export default {
           this.prepare = false
           this.process = false
           this.finish = true
+          this.deleteData = this.deleteData.filter(item => {
+            return this.idStr.indexOf(item.id) !== -1
+          })
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
           // this.$emit('after')
         } else {
