@@ -92,26 +92,58 @@
         </el-table>
       </div>
     </div>
-    <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="qrCodeShow" @close="closeQrCode" :title="'QR code'" class="nz-dialog overview" width="650px">
-      <el-carousel arrow="never" :autoplay="false" :height="'500px'" ref="carousel" v-my-loading="qrloading">
-        <el-carousel-item v-for="(item, index) in qrCodeArr" :key="index" :name="'qr-' + index">
-<!--            :logo-src="getSrc(index)"-->
+    <el-dialog :modal-append-to-body='false' :fullscreen="dialogQrType === 'all'" :show-close="true" :visible.sync="qrCodeShow" @close="closeQrCode" :title="'QR code'" class="nz-dialog overview" width="650px">
+      <div slot="title">
+        <span class="el-dialog__header-title">
+           QR code
+        </span>
+        <div style="float: right; margin-right: 25px">
+          <el-button-group>
+            <el-button class="top-tool-btn" :class="{active: dialogQrType == 'item' }" size="small" @click="dialogQrType = 'item'"><i class="nz-icon nz-icon-dangemoshi"/></el-button>
+            <el-button class="top-tool-btn" :class="{active: dialogQrType == 'all' }" size="small" @click="dialogQrType = 'all'"><i class="nz-icon nz-icon-duogemoshi"/></el-button>
+          </el-button-group>
+        </div>
+      </div>
+      <div v-if="dialogQrType === 'item'">
+        <el-carousel arrow="never" :autoplay="false" :height="'500px'" ref="carousel" v-my-loading="qrloading">
+          <el-carousel-item v-for="(item, index) in qrCodeArr" :key="index" :name="'qr-' + index">
+            <!--            :logo-src="getSrc(index)"-->
+            <vueQr
+              style="width: 500px;height: 500px"
+              :text="item"
+              :size="2000"
+              :margin="50"
+            />
+          </el-carousel-item>
+        </el-carousel>
+        <div class="nz-license-footer">
+          <el-pagination
+            @current-change="setActiveItem"
+            small
+            :page-size="1"
+            :current-page.sync="currentPage"
+            layout="prev, pager, next"
+            :total="qrCodeArr.length">
+          </el-pagination>
+        </div>
+      </div>
+      <div v-else-if="dialogQrType === 'all'" style="display: flex;flex-wrap: wrap">
+        <div v-for="(item, index) in qrCodeArr" :key="index" :name="'qr-' + index" :style="{
+          width: qrWidth + 'px',
+          height: qrWidth + 'px'
+        }">
+          <!--            :logo-src="getSrc(index)"-->
           <vueQr
+            :style="{
+              width: qrWidth - 32 + 'px',
+              height: qrWidth - 32 + 'px'
+            }"
             :text="item"
             :size="2000"
-            :margin="50"
+            :margin="10"
           />
-        </el-carousel-item>
-      </el-carousel>
-      <div class="nz-license-footer">
-        <el-pagination
-          @current-change="setActiveItem"
-          small
-          :page-size="1"
-          :current-page.sync="currentPage"
-          layout="prev, pager, next"
-          :total="qrCodeArr.length">
-        </el-pagination>
+          <div style="text-align: center"> {{index+1}} / {{qrCodeArr.length}}</div>
+        </div>
       </div>
     </el-dialog>
   </div>
@@ -154,7 +186,11 @@ export default {
       qrCodeArr: [],
       totalQrCode: 10,
       currentPage: 1,
-      qrloading: false
+      qrloading: false,
+      dialogQrType: 'item',
+      boxWidth: '',
+      boxHeight: '',
+      qrWidth: 10
     }
   },
   methods: {
@@ -288,6 +324,7 @@ export default {
             arr.push(str1)
           }
           this.qrCodeArr = this.$loadsh.cloneDeep(arr)
+          this.getLayout()
           this.qrloading = false
         }, error => {
           const $self = this
@@ -322,8 +359,47 @@ export default {
       return data
     },
     setActiveItem (currentPage) {
-      console.log()
       this.$refs.carousel.setActiveItem('qr-' + (currentPage - 1))
+    },
+    getLayout () {
+      try {
+        this.boxWidth = document.body.offsetWidth - 30 - 40
+        this.boxHeight = document.body.offsetHeight - 104 - 50
+      } catch (error) {}
+      return new Promise(resolve => {
+        let rateMax = 0
+        let col = 0
+        let row = 0
+        for (let i = 1; i <= this.qrCodeArr.length; i++) {
+          const cols = Math.ceil(this.qrCodeArr.length / i)
+          const w = this.boxWidth / i
+          const h = this.boxHeight / cols
+          const rate = w > h ? h / w : w / h
+          if (rate > rateMax) {
+            rateMax = rate
+            col = cols
+            row = i
+          }
+        }
+        if (this.qrCodeArr.length) {
+          while (col * row >= this.qrCodeArr.length) { // 避免出现空白
+            row--
+          }
+        }
+        row++
+        if (col === 1 || row === 1) { // 行 或 列有一个为1时 需要调换位置
+          const temp = col
+          col = row
+          row = temp
+        }
+        this.qrWidth = 10
+        if (this.boxHeight / col < this.boxWidth / row) {
+          this.qrWidth = this.boxHeight / col
+        } else {
+          this.qrWidth = this.boxWidth / row
+        }
+        resolve({ col, row })
+      })
     }
   },
   computed: {
@@ -340,5 +416,23 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-
+/deep/ .el-dialog__header {
+  border-bottom: 1px solid #E7EAED;
+  height: 32px;
+  line-height: 32px;
+  .el-dialog__header-title {
+    font-weight: 600;
+  }
+  .top-tool-btn{
+    height: 32px;
+    width: 36px;
+    padding: 0;
+  }
+  .el-dialog__headerbtn{
+    line-height: 32px;
+  }
+}
+  /deep/ .el-dialog__body{
+    padding: 20px !important;
+  }
 </style>

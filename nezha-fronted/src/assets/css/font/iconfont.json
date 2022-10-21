@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "32442422",
+      "name": "New",
+      "font_class": "New",
+      "unicode": "e7a5",
+      "unicode_decimal": 59301
+    },
+    {
+      "icon_id": "32442423",
+      "name": "Update",
+      "font_class": "Update",
+      "unicode": "e7a6",
+      "unicode_decimal": 59302
+    },
+    {
+      "icon_id": "32438331",
+      "name": "单个模式",
+      "font_class": "dangemoshi",
+      "unicode": "e7a1",
+      "unicode_decimal": 59297
+    },
+    {
+      "icon_id": "32438332",
+      "name": "多个模式",
+      "font_class": "duogemoshi",
+      "unicode": "e7a2",
+      "unicode_decimal": 59298
+    },
+    {
       "icon_id": "32391765",
       "name": "二维码",
       "font_class": "erweima",
