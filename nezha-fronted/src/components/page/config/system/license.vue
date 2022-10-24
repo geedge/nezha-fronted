@@ -104,16 +104,18 @@
           </el-button-group>
         </div>
       </div>
-      <div v-if="dialogQrType === 'item'">
+      <div v-show="dialogQrType === 'item'">
         <el-carousel arrow="never" :autoplay="false" :height="'500px'" ref="carousel" v-my-loading="qrloading">
-          <el-carousel-item v-for="(item, index) in qrCodeArr" :key="index" :name="'qr-' + index">
+          <el-carousel-item v-for="(item, index) in qrCodeNum" :key="index" :name="'qr-' + index"  style="width: 100%;height: 100%">
             <!--            :logo-src="getSrc(index)"-->
-            <vueQr
-              style="width: 500px;height: 500px"
-              :text="item"
-              :size="2000"
-              :margin="50"
-            />
+            <div  v-my-loading="item">
+              <vueQr
+                style="width: 500px;height: 500px"
+                :text="qrCodeArr[index]"
+                :size="2000"
+                :margin="50"
+              />
+            </div>
           </el-carousel-item>
         </el-carousel>
         <div class="nz-license-footer">
@@ -123,26 +125,28 @@
             :page-size="1"
             :current-page.sync="currentPage"
             layout="prev, pager, next"
-            :total="qrCodeArr.length">
+            :total="qrCodeNum.length">
           </el-pagination>
         </div>
       </div>
-      <div v-else-if="dialogQrType === 'all'" style="display: flex;flex-wrap: wrap">
-        <div v-for="(item, index) in qrCodeArr" :key="index" :name="'qr-' + index" :style="{
+      <div v-show="dialogQrType === 'all'" style="display: flex;flex-wrap: wrap;justify-content: center" v-my-loading="qrloading">
+        <div v-for="(item, index) in qrCodeNum" :key="index" :name="'qr-' + index" :style="{
           width: qrWidth + 'px',
           height: qrWidth + 'px'
-        }">
+        }"
+             v-my-loading="item"
+        >
           <!--            :logo-src="getSrc(index)"-->
           <vueQr
             :style="{
               width: qrWidth - 32 + 'px',
               height: qrWidth - 32 + 'px'
             }"
-            :text="item"
+            :text="qrCodeArr[index]"
             :size="2000"
             :margin="10"
           />
-          <div style="text-align: center"> {{index+1}} / {{qrCodeArr.length}}</div>
+          <div style="text-align: center"> {{index+1}} / {{qrCodeNum.length}}</div>
         </div>
       </div>
     </el-dialog>
@@ -184,6 +188,7 @@ export default {
       endItem: '',
       qrCodeShow: false,
       qrCodeArr: [],
+      qrCodeNum: [], // 逐个加载 qr
       totalQrCode: 10,
       currentPage: 1,
       qrloading: false,
@@ -304,6 +309,7 @@ export default {
     },
     openQrcode () {
       this.qrCodeArr = []
+      this.qrCodeNum = []
       this.qrCodeShow = true
       this.qrloading = true
       setTimeout(() => {
@@ -323,8 +329,17 @@ export default {
             str1 = total + '' + index + totalMD5 + md5 + '' + str1
             arr.push(str1)
           }
-          this.qrCodeArr = this.$loadsh.cloneDeep(arr)
-          this.getLayout()
+          this.qrCodeArr = []
+          this.qrCodeNum = arr.map(() => {
+            return true
+          })
+          arr.forEach((item, index) => {
+            setTimeout(() => {
+              this.qrCodeArr.push(item)
+              this.qrCodeNum[index] = false
+            }, index * 100)
+          })
+          this.getLayout(arr)
           this.qrloading = false
         }, error => {
           const $self = this
@@ -370,8 +385,8 @@ export default {
         let rateMax = 0
         let col = 0
         let row = 0
-        for (let i = 1; i <= this.qrCodeArr.length; i++) {
-          const cols = Math.ceil(this.qrCodeArr.length / i)
+        for (let i = 1; i <= this.qrCodeNum.length; i++) {
+          const cols = Math.ceil(this.qrCodeNum.length / i)
           const w = this.boxWidth / i
           const h = this.boxHeight / cols
           const rate = w > h ? h / w : w / h
@@ -381,8 +396,8 @@ export default {
             row = i
           }
         }
-        if (this.qrCodeArr.length) {
-          while (col * row >= this.qrCodeArr.length) { // 避免出现空白
+        if (this.qrCodeNum.length) {
+          while (col * row >= this.qrCodeNum.length) { // 避免出现空白
             row--
           }
         }
@@ -434,5 +449,7 @@ export default {
 }
   /deep/ .el-dialog__body{
     padding: 20px !important;
+    height: calc(100% - 40px);
+    width: calc(100% - 40px);
   }
 </style>
