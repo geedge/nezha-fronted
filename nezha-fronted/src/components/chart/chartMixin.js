@@ -71,6 +71,11 @@ export default {
           }
           this.isNoData = false
           const s = lodash.cloneDeep(seriesTemplate)
+          if (s.param && s.param.nullType) {
+            s.connectNulls = s.param.nullType !== 'null'
+          } else {
+            s.connectNulls = false
+          }
           if (s) {
             s.data = data.values
             s.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
