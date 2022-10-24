@@ -58,8 +58,8 @@
                 <delete-button
                   ref="deleteButton"
                   :from="'cabinetTab'"
-                  :single="false"
-                  :forceDeleteShow="false"
+                  :single="true"
+                  :forceDeleteShow="true"
                   :type="'link'"
                   :title="$t('overall.batchDel')"
                   id="asset-model-batch-delete"

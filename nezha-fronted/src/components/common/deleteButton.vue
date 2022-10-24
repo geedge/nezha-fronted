@@ -52,7 +52,7 @@
                 <i :class="selectIcon(item.type)"/>
                 <span class="text-ellipsis batch-delete-item-text" :title="item.name">{{item.name}}</span>
                 <el-collapse-transition>
-                  <div v-show="item.showChildren && item.relates.length">
+                  <div v-show="item.showChildren && item.relates && item.relates.length">
                     <div v-for="(relate,i) in item.relates" :key = 'i' class="tree-body-item tree-body-children" @click="showChild(relate)" :style="i === item.relates.length-1?'margin-bottom: 0':''">
                       <i class="nz-icon nz-icon-caret-right" :class="relate.showChildren ? 'rotate90': '' " :style="relate.relates && relate.relates.length ? '' : 'opacity: 0'"/>
                       <i :class="selectIcon(relate.type)"/>
