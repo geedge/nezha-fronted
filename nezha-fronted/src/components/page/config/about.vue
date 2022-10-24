@@ -44,7 +44,7 @@ export default {
     return {
       noData: false,
       timeLineData: [],
-      language: '',
+      // language: '',
       version: {
         nezha: { name: '', version: '' },
         components: [{ name: '', version: '' }]
@@ -274,18 +274,18 @@ export default {
   methods: {
     getVersion () {
       this.$get('/about').then(response => {
-        this.language = localStorage.getItem('nz-language') || 'en'
+        // this.language = localStorage.getItem('nz-language') || 'en'
         this.version = response.data
       })
     }
   },
   mounted () {
     this.getVersion()
+  },
+  computed: {
+    language () {
+      return this.$store.getters.getLanguage
+    }
   }
-  // computed: {
-  //   language () {
-  //     return this.$store.getters.getLanguage
-  //   }
-  // }
 }
 </script>
