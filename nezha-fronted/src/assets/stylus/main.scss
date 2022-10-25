@@ -1162,6 +1162,10 @@ li {
   color: $--color-success;
   font-size: 14px;
 }
+.nz-icon-New,.nz-icon-Update{
+  color: $--color-success;
+  font-size: 14px;
+}
 .nz-icon-import-failed {
   margin-right: 5px;
   color: $--color-danger;
@@ -1198,6 +1202,9 @@ li {
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+  }
+  .import-result-block:last-of-type .import-result-item{
+    margin-bottom: 0;
   }
 }
 .result-success-box {
@@ -1261,6 +1268,108 @@ li {
       margin-top: 6px;
       .el-checkbox__input.is-checked+.el-checkbox__label{
         color: $--checkbox-font-color !important;
+      }
+    }
+  }
+}
+.import-result-dialog{
+  .el-dialog__header{
+    padding: 14px;
+    border-bottom: 1px solid $--border-color-light;
+  }
+  .el-dialog__body{
+    padding: 0;
+    .result-body{
+      padding: 15px 30px;
+      .result-title-top{
+        .result-number{
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          box-sizing: border-box;
+          margin-bottom: 4px;
+          font-family: Roboto-Regular;
+          font-size: 14px;
+          color: $--color-text-primary;
+          font-weight: 400;
+          .nz-icon{
+            font-size: 14px;
+            margin-right: 4px;
+          }
+          &>span:last-of-type{
+            font-weight: 700;
+          }
+        }
+        .result-number.fail{
+          margin-bottom: 0;
+        }
+      }
+      .result-detail{
+        height: 182px;
+        margin: 10px 0;
+        padding: 16px 0;
+        box-sizing: border-box;
+        position: relative;
+        &>div{
+          padding: 0 12px;
+        }
+        .nz-icon-override{
+          cursor: pointer;
+          position: absolute;
+          top: 5px;
+          right: 15px;
+        }
+        .import-result-item {
+          margin-bottom: 2px;
+          .import-result-item-left {
+            font-size: 16px;
+            color: $--color-text-primary;
+            letter-spacing: 0;
+            line-height: 16px;
+            font-weight: 600;
+            margin-right: 2px;
+          }
+          .import-result-item-right{
+            .line-num{
+              min-width: 50px;
+              display: inline-block;
+              margin-right: 6px;
+            }
+            .line-content{
+              overflow: auto;
+              text-overflow: clip;
+              white-space: normal;
+            }
+          }
+        }
+      }
+      .result-success-box{
+        height: 220px;
+        .success-number{
+          width: 300px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-family: Roboto-Regular;
+          font-size: 14px;
+          color: $--color-text-primary;
+          font-weight: 400;
+          .nz-icon{
+            font-size: 14px;
+            margin-right: 4px;
+          }
+          &>span:last-of-type{
+            font-weight: 700;
+          }
+        }
+      }
+    }
+    .footer{
+      border-top: 1px solid $--border-color-light;
+      padding: 12px 20px;
+      .el-message-box__btns{
+        padding: 0;
       }
     }
   }

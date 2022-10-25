@@ -189,7 +189,7 @@
         @refresh="getTableData">
       </batchEditEndpoint>
     </transition>
-    <el-dialog :close-on-click-modal="false" :show-close="true" destroy-on-close :title='$t("overall.batchAddEndpoint")' :visible.sync="importBoxShow" :width="'600px'" append-to-body class="nz-dialog" @close="closeDialog">
+    <el-dialog :close-on-click-modal="false" :show-close="true" destroy-on-close :title='$t("overall.batchAddEndpoint")' :visible.sync="importBoxShow" :width="'580px'" append-to-body class="nz-dialog" @close="closeDialog">
       <div class="upload-body result-body">
         <div v-if="importResult&&importResult.failNum">
           <div class="result-title-top">
@@ -217,7 +217,7 @@
             </div>
           </div>
         </div>
-        <div v-else class="result-success-box">
+        <div v-else-if="importResult&&!importResult.failNum" class="result-success-box">
           <div>
             <i class="nz-icon nz-icon-import-success"/>
           </div>
@@ -229,12 +229,12 @@
           </div>
         </div>
       </div>
-      <div slot="footer" class="footer">
+      <div class="footer">
         <div class="el-message-box__btns">
-          <button :id="'xlsx-import-rollback'"  class="nz-btn nz-btn-size-normal nz-btn-style-error" @click="rollbackImport">
+          <button :id="'xlsx-import-rollback'"  class="nz-btn el-button el-button--small nz-btn-style-error" @click="rollbackImport">
             <span>{{$t('overall.rollbackImport')}}</span>
           </button>
-          <button :id="'xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
+          <button :id="'xlsx-import-close'" class="nz-btn el-button el-button--small el-button--default" @click="closeDialog">
             <span>{{$t('overall.close')}}</span>
           </button>
         </div>

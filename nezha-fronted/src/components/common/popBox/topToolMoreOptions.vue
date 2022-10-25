@@ -23,10 +23,19 @@
         <slot name="after"></slot>
       </el-dropdown-menu>
 
-      <el-dialog :close-on-click-modal="importBox.type!=3" destroy-on-close :show-close="true" :title="importBox.title" :visible.sync="importBox.show" width="580px" :modal-append-to-body="false" class="nz-dialog" @close="closeDialog">
-
+      <el-dialog
+        :close-on-click-modal="importBox.type!=3"
+        destroy-on-close
+        :show-close="true"
+        :title="importBox.title"
+        :visible.sync="importBox.show"
+        width="580px"
+        :modal-append-to-body="false"
+        @close="closeDialog"
+        :class="{'import-result-dialog':importBox.type==3}"
+        class="nz-dialog">
         <!-- 新版导入 -->
-        <div v-if="importBox.type == 1&&importNew">
+        <div v-if="importBox.type == 1">
           <div class="upload-body">
             <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls,.csv,.json" action="" class="import-upload" drag>
               <i class="el-icon-upload"></i>
@@ -84,30 +93,6 @@
           </div>
         </div>
 
-        <!-- 导入 -->
-        <div v-else-if="importBox.type == 1">
-          <div class="upload-body">
-            <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls"  action="" class="upload-demo" drag>
-              <div slot="tip" class="el-upload__tip" >{{$t('overall.importTip')}}</div>
-              <i class="nz-icon nz-icon-upload"></i>
-              <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
-            </el-upload>
-          </div>
-          <div class="footer">
-            <div class="el-message-box__btns" style="text-align: right;">
-              <button :id="id+'-xlsx-import-template'" class="nz-btn el-button el-button--default el-button--small" @click="downloadTemplate()">
-                <span>{{$t('upload.template')}}</span>
-              </button>
-              <button :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
-                <span>{{$t('overall.importExcel')}}</span>
-              </button>
-              <button :id="id+'-xlsx-import-esc'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
-                <span>{{$t('overall.cancel')}}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
         <!-- 导出 -->
         <div v-else-if="importBox.type == 2">
           <div class="upload-body" style="height: 200px">
@@ -142,15 +127,38 @@
         <!-- 导入结果 -->
         <div v-if="importBox.type==3">
           <div class="upload-body result-body">
+            <!-- 失败提示 -->
             <div v-if="importResult&&importResult.failNum">
+              <!-- success number-->
               <div class="result-title-top">
-                <div class="">
-                  <i class="nz-icon nz-icon-import-success"/>
-                  <span>{{$t('overall.result.successNum',{successNum:importResult.successNum})}}</span><br/>
+                <div class="result-number">
+                  <span>
+                    <i class="nz-icon nz-icon-import-success"/>
+                    {{$t('overall.result.successful')}}
+                  </span>
+                  <span>{{importResult.successNum}}</span>
                 </div>
-                <div class="">
-                  <i class="nz-icon nz-icon-import-failed"/>
-                  <span>{{$t('overall.result.failedNum',{failedNum:importResult.failNum,total:importResult.totalNum})}}</span>
+                <div class="result-number" style="padding-left:20px;">
+                  <span>
+                    <i class="nz-icon nz-icon-New"/>
+                    {{$t('overall.result.newQuantity')}}
+                  </span>
+                  <span>{{importResult.addNum}}</span>
+                </div>
+                <div class="result-number" style="padding-left:20px;">
+                  <span>
+                    <i class="nz-icon nz-icon-Update"/>
+                    {{$t('overall.result.updates')}}
+                  </span>
+                  <span>{{importResult.updateNum}}</span>
+                </div>
+                <!-- fail number-->
+                <div class="result-number fail">
+                  <span>
+                    <i class="nz-icon nz-icon-import-failed"/>
+                    {{$t('overall.result.fail')}}
+                  </span>
+                  <span>{{importResult.failNum}}</span>
                 </div>
               </div>
               <div>
@@ -159,32 +167,56 @@
                     <template v-for="(item, index) in importResult.failDetail">
                       <div :key="index" class="import-result-block">
                         <div class="import-result-item">
-                          <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
-                          <div class="line-content" :title="item.errorMsg">{{item.errorMsg}}</div>
+                          <div class="import-result-item-left">•</div>
+                          <div class="import-result-item-right">
+                            <span class="line-num">{{$t('overall.result.line',[item.lineNo])}}</span>
+                            <span class="line-content" :title="item.errorMsg">{{item.errorMsg}}</span>
+                          </div>
                         </div>
                       </div>
                     </template>
                   </div>
+                  <i class="nz-icon nz-icon-override" @click="copyFailDetail(importResult.failDetail)"></i>
                 </div>
               </div>
             </div>
-            <div v-else class="result-success-box">
-              <div>
-                <i class="nz-icon nz-icon-import-success"/>
+            <!-- 成功提示 -->
+            <div v-else-if="importResult&&!importResult.failNum" class="result-success-box">
+              <div style="height:80px;line-height:80px;">
+                <i class="nz-icon nz-icon-import-success" style="margin-right:0" />
               </div>
-              <div class="result-success-txt">{{$t('overall.result.successfully')}}</div>
-              <div class="result-success-txt">
-                {{$t('overall.result.imported')}}
-                <span v-if="importResult">{{importResult.successNum}}</span>
-                {{$t('overall.result.records')}}
+              <div style="margin-top:30px">
+                <div class="success-number">
+                  <span>
+                    {{$t('overall.result.importedRecords')}}
+                  </span>
+                  <span>{{importResult.successNum}}</span>
+                </div>
+                <div class="success-number" style="margin-top:8px">
+                  <span>
+                    <i class="nz-icon nz-icon-New"/>
+                    {{$t('overall.result.newRecords')}}
+                  </span>
+                  <span>{{importResult.addNum}}</span>
+                </div>
+                <div class="success-number" style="margin-top:4px">
+                  <span>
+                    <i class="nz-icon nz-icon-Update"/>
+                    {{$t('overall.result.updatedRecords')}}
+                  </span>
+                  <span>{{importResult.updateNum}}</span>
+                </div>
               </div>
             </div>
           </div>
           <div class="footer">
             <div class="el-message-box__btns">
-              <button :id="id+'-xlsx-import-rollback'"  class="nz-btn el-button el-button--small nz-btn-style-error" @click="rollbackImport">
-                <span>{{$t('overall.rollbackImport')}}</span>
+              <button v-if="importResult&&importResult.failNum" :id="id+'-xlsx-import-downloadFail'" class="nz-btn el-button el-button--small nz-btn-style-error" @click="downloadFail">
+                <span>{{$t('overall.result.downloadFail')}}</span>
               </button>
+              <!-- <button :id="id+'-xlsx-import-rollback'" class="nz-btn el-button el-button--small nz-btn-style-error" @click="rollbackImport">
+                <span>{{$t('overall.rollbackImport')}}</span>
+              </button> -->
               <button :id="id+'-xlsx-import-close'" class="nz-btn el-button el-button--small el-button--default" @click="closeDialog">
                 <span>{{$t('overall.close')}}</span>
               </button>
@@ -237,10 +269,6 @@ export default {
     deleteObjs: Array,
     exportBoxShow: {
       type: Boolean, default: false
-    },
-    // 显示新版导入
-    importNew: {
-      type: Boolean, default: true
     },
     // 已存在的内容处理方式
     showEexisted: {
@@ -312,6 +340,16 @@ export default {
     // this.getParamsType()
   },
   methods: {
+    // 复制失败记录
+    copyFailDetail (data) {
+      let txt = ''
+      data.forEach((item, index) => {
+        txt += '• ' + this.$t('overall.result.line', [item.lineNo]) + ' ' + item.errorMsg + (index + 1 < data.length ? '\n' : '')
+      })
+      this.$copyText(txt).then(() => {
+        this.$message.success({ message: this.$t('overall.copySuccess') })
+      })
+    },
     importChange (file, fileList) {
       if (fileList.length > 0) {
         this.importFileList = [fileList[fileList.length - 1]]
@@ -362,11 +400,7 @@ export default {
       if (this.importFile && this.importFile.raw) {
         this.prevent_opt.import = true
         const form = new FormData()
-        if (this.importNew) {
-          form.append('file', this.importFile.raw)
-        } else {
-          form.append('excelFile', this.importFile.raw)
-        }
+        form.append('file', this.importFile.raw)
         if (this.showEexisted) {
           form.append('existed', this.importBox.existed)
         }
@@ -391,11 +425,11 @@ export default {
         // form.append('language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
         this.$post(this.importUrl, form, { 'Content-Type': 'multipart/form-data' }).then(response => {
           if (response.code == 200 && response.msg == 'success') {
+            this.importBox.type = 3
+            this.importBox.title = this.$t('overall.importResult')
             this.importResult = response.data
             const linkId = this.link ? this.link.id : ''
             this.$emit('afterImport', linkId)
-            this.importBox.type = 3
-            this.importBox.title = this.$t('overall.importResult')
           } else {
             this.$message.error(response.msg)
           }
@@ -426,7 +460,7 @@ export default {
           this.importBox.record = 'all'
           this.importBox.format = 1
           this.importBox.templateFormat = 1 // 模板格式
-          this.importBox.existed = 0// 已存在的内容处理方式
+          this.importBox.existed = 0 // 已存在的内容处理方式
           this.importBox.ignoreError = 0 // 遇到错误是否继续导入
           this.importBox.syncDashboard = 0 // 是否同步更新关联的dashboard
           this.importBox.syncEndpoint = 0 // 是否同步更新关联的endpoint
@@ -644,6 +678,25 @@ export default {
         }
         reader.readAsText(error.response.data)
       })
+    },
+    // 导出失败记录
+    downloadFail () {
+      const result = this.importResult.failContent
+      const raw = window.atob(result)
+      const uInt8Array = new Uint8Array(raw.length)
+      for (let i = 0; i < raw.length; i++) {
+        uInt8Array[i] = raw.charCodeAt(i)
+      }
+      const link = document.createElement('a')
+      const blob = new Blob([uInt8Array], {
+        type: 'application/vnd.ms-excel'
+      })
+      link.style.display = 'none'
+      link.href = URL.createObjectURL(blob)
+      link.setAttribute('download', 'failed_records' + '-' + this.getTimeString() + '.xlsx')
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
     },
     showImportBox (type) {
       this.importBox.show = true
