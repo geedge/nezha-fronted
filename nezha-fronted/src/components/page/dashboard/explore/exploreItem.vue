@@ -4076,7 +4076,7 @@ export default {
       if (!temp) {
         this.showIntroduce = true
       }
-      this.expressionChange()
+      // this.expressionChange()
     },
     addExpression (index) {
       this.expressions.splice(index + 1, 0, '')
@@ -4300,7 +4300,7 @@ export default {
   },
   watch: {
     promqlCount (n, o) {
-      this.expressionChange()
+      // this.expressionChange()
     },
     showMetrics (n, o) { // 更换type后，将折叠面板都置为展开状态
       if (n !== o) {
