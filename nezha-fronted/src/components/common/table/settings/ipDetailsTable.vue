@@ -71,6 +71,9 @@
                   ref="deleteButton"
                   :from="'ipDetails'"
                   :forceDeleteShow="false"
+                  :title="$t('overall.delete')"
+                  v-has="'ipam_delete'"
+                  :type="'link'"
                   id="account-list-delete"
                   :api="api"
                   :single="true"
@@ -100,7 +103,7 @@ import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'ipDetailsTable',
   mixins: [table],
-  components:{
+  components: {
     deleteButton
   },
   props: {
