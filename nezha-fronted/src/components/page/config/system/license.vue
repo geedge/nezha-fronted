@@ -111,7 +111,7 @@
             <div  v-my-loading="item">
               <vueQr
                 style="width: 500px;height: 500px"
-                :text="qrCodeArr[index]"
+                :text="qrCodeArr[index] || index"
                 :size="2000"
                 :margin="50"
               />
@@ -142,7 +142,7 @@
               width: qrWidth - 32 + 'px',
               height: qrWidth - 32 + 'px'
             }"
-            :text="qrCodeArr[index]"
+            :text="qrCodeArr[index] || index"
             :size="2000"
             :margin="10"
           />
@@ -431,22 +431,6 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-/deep/ .el-dialog__header {
-  border-bottom: 1px solid #E7EAED;
-  height: 32px;
-  line-height: 32px;
-  .el-dialog__header-title {
-    font-weight: 600;
-  }
-  .top-tool-btn{
-    height: 32px;
-    width: 36px;
-    padding: 0;
-  }
-  .el-dialog__headerbtn{
-    line-height: 32px;
-  }
-}
   /deep/ .el-dialog__body{
     padding: 20px !important;
     height: calc(100% - 40px);
