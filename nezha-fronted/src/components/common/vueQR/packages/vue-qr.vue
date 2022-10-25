@@ -1,5 +1,5 @@
 <template>
-  <img style="display: inline-block;width: 500px;height: 500px" :src="imgUrl" v-if="bindElement" />
+  <img style="display: inline-block;width: 100%;height: 100%" :src="imgUrl" v-if="bindElement" />
 </template>
 
 <script>

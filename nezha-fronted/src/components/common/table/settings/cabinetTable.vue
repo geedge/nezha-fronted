@@ -44,7 +44,7 @@
                   <delete-button
                   ref="deleteButton"
                   :from="'cabinet'"
-                  :forceDeleteShow="false"
+                  :forceDeleteShow="true"
                   id="cabinet-delete"
                   :type="'link'"
                   :title="$t('overall.delete')"

@@ -234,7 +234,9 @@ export default {
               }
               let query = `${urlPre}/api/v1/query_range?start=${startTime}&end=${endTime}&step=${step}`
               if (isTimeSeries(this.chartInfo.type)) {
-                query += `&nullType=${this.chartInfo.param.nullType || 'null'}`
+                let nullType = this.chartInfo.param.nullType || 'null'
+                nullType = (nullType === 'connected' ? 'null' : nullType)
+                query += `&nullType=${nullType}`
               }
               if (element.filter) {
                 query += `&filter=${element.filter}`
@@ -262,7 +264,9 @@ export default {
                 }
                 let query = `${urlPre}/api/v1/query_range?start=${startTime - this.minusTime / 1000}&end=${endTime - this.minusTime / 1000}&step=${step}`
                 if (isTimeSeries(this.chartInfo.type)) {
-                  query += `&nullType=${this.chartInfo.param.nullType || 'null'}`
+                  let nullType = this.chartInfo.param.nullType || 'null'
+                  nullType = (nullType === 'connected' ? 'null' : nullType)
+                  query += `&nullType=${nullType}`
                 }
                 if (element.filter) {
                   query += `&filter=${element.filter}`

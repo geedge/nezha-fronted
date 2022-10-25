@@ -225,7 +225,7 @@ export default {
           }
         }
         row++
-        if (col === 1 || row === 1) { // 行 或 列有一个为1时 需要调换位置 显示才会好看
+        if (col === 1 || row === 1) { // 行 或 列有一个为1时 需要调换位置
           const temp = col
           col = row
           row = temp

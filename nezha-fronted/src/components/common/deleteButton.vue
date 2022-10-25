@@ -13,7 +13,7 @@
       ref="batchDeleteDialog"
       id="batch-delete-dialog"
       class="batch-delete-dialog"
-      :title="$t('el.table.confirmFilter')"
+      :title="$t('deleteButton.confirm')"
       v-if="dialogVisible"
       :visible.sync="dialogVisible"
       @close='handleClose'
@@ -52,7 +52,7 @@
                 <i :class="selectIcon(item.type)"/>
                 <span class="text-ellipsis batch-delete-item-text" :title="item.name">{{item.name}}</span>
                 <el-collapse-transition>
-                  <div v-show="item.showChildren && item.relates.length">
+                  <div v-show="item.showChildren && item.relates && item.relates.length">
                     <div v-for="(relate,i) in item.relates" :key = 'i' class="tree-body-item tree-body-children" @click="showChild(relate)" :style="i === item.relates.length-1?'margin-bottom: 0':''">
                       <i class="nz-icon nz-icon-caret-right" :class="relate.showChildren ? 'rotate90': '' " :style="relate.relates && relate.relates.length ? '' : 'opacity: 0'"/>
                       <i :class="selectIcon(relate.type)"/>
@@ -206,11 +206,15 @@ export default {
             })
             return item
           })
+          this.idStr = this.deleteData.map(item => item.id)
         } else if (res.code === 200) {
           this.idShow = false
           this.prepare = false
           this.process = false
           this.finish = true
+          this.deleteData = this.deleteData.filter(item => {
+            return this.idStr.indexOf(item.id) !== -1
+          })
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
           // this.$emit('after')
         } else {
@@ -264,6 +268,7 @@ export default {
         case 'alertrule' : return 'nz-icon monitorColor nz-icon-Alertrule'
         case 'cabinetTab' : return 'nz-icon monitorColor nz-icon-Cabinet1'
         case 'roles' : return 'nz-icon monitorColor nz-icon-role1'
+        case 'role' : return 'nz-icon monitorColor nz-icon-role1'
         case 'alertSilence' : return 'nz-icon monitorColor nz-icon-a-Silencealert'
         case 'user' : return 'nz-icon monitorColor nz-icon-user1'
         case 'cabinet' : return 'nz-icon monitorColor nz-icon-Cabinet1'
