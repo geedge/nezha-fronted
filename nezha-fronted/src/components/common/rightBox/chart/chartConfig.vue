@@ -1286,6 +1286,8 @@ export default {
             }
           })
         })
+        const arr = this.chartConfig.elements.map((item, index) => 'elements.' + (index) + '.expression')
+        this.$refs.chartForm.clearValidate(arr)
       }
       this.change()
     },
