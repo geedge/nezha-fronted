@@ -113,18 +113,18 @@ export default {
           show: true,
           minWidth: 120
         }, {
-          label: this.$t('overall.time'),
-          prop: 'uts',
-          show: true,
-          minWidth: 120
-        }, {
-          label: this.$t('overall.config'),
+          label: this.$t('project.module.configs'),
           prop: 'vsysInfo',
-          show: true,
+          show: false,
           minWidth: 120
         }, {
           label: this.$t('alert.alertRuleMessage'),
           prop: 'vsysResult',
+          show: false,
+          minWidth: 120
+        }, {
+          label: this.$t('overall.time'),
+          prop: 'uts',
           show: true,
           minWidth: 120
         }
