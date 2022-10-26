@@ -44,13 +44,13 @@
           <span class="configs-endpoint metrics"
                 @mouseenter="labelHover1(scope.row, item.prop, true, $event)"
                 @mouseleave="labelHover1(scope.row, item.prop, false, $event, true)">
-                {{`{ ... }`}}
+                {{scope.row[item.prop] ? `{ ... }` : '-'}}
           </span>
             <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop">
               <div name="default">
                 <pre>{{`{
-    "deviceTag": "${scope.row[item.prop].deviceTag}",
-    "params": "${scope.row[item.prop].params}"
+    "deviceTag": "${scope.row[item.prop].deviceTag || ''}",
+    "params": "${scope.row[item.prop].params || ''}"
 }`}}</pre>
               </div>
             </nz-tooltip>
