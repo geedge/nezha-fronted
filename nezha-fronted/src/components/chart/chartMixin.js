@@ -3,6 +3,7 @@ import * as echarts from 'echarts'
 import { getMetricTypeValue } from '@/components/common/js/tools'
 import { getChart, getMousePoint, setChart } from '@/components/common/js/common'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
+import chartDataFormat from "@/components/chart/chartDataFormat";
 export default {
   data () {
     return {
@@ -316,6 +317,69 @@ export default {
             }
           })
         }, 300)
+      }
+    },
+    getMaxValue (dataArg, chartInfo) {
+      let maxValue = 0
+      let minValue = 0
+      if (dataArg.length > 0) {
+        maxValue = 0
+        minValue = 0
+        for (let j = 0; j < dataArg.length; j++) {
+          for (let i = 0; i < dataArg[j].data.length; i++) {
+            if (!isNaN(dataArg[j].data[i][1])) {
+              maxValue = (maxValue < Number(dataArg[j].data[i][1]) ? Number(dataArg[j].data[i][1]) : maxValue)
+              minValue = (minValue > Number(dataArg[j].data[i][1]) ? Number(dataArg[j].data[i][1]) : minValue)
+            }
+          }
+        }
+      }
+      const chartUnit = chartInfo.unit ? chartInfo.unit : 2
+      const unit = chartDataFormat.getUnit(chartUnit)
+      minValue = minValue > 0 ? 0 : minValue
+      if (maxValue < 0) {
+        maxValue = Math.abs(maxValue)
+      }
+      if (Math.abs(minValue) > Math.abs(maxValue)) {
+        maxValue = Math.abs(minValue)
+      }
+      maxValue = maxValue - minValue
+      maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii)
+      let oldValue = maxValue
+      if (maxValue < 0) {
+        oldValue = Math.abs(maxValue)
+      }
+      if (minValue < 0) {
+        oldValue = Math.abs(maxValue - minValue)
+      }
+      let dot = 0
+      if (maxValue == 1) {
+        dot++
+      }
+      if (oldValue > 10) {
+        while (oldValue > 10) {
+          oldValue = oldValue / 10
+        }
+      } else if (oldValue < 1 && maxValue !== 0) {
+        while (oldValue < 1 && oldValue > 0) {
+          oldValue = oldValue * 10
+          dot++
+        }
+        maxValue = Math.floor(oldValue) / Math.pow(10, dot)
+        dot++
+      }
+      const copies = chartDataFormat.copies(oldValue, unit.type)
+      let oldDot = 2
+      if (maxValue <= 1) {
+        oldDot = dot > 6 ? 6 : dot
+      }
+      return {
+        maxValue,
+        dot,
+        copies,
+        minValue,
+        unit,
+        oldDot
       }
     },
     resize () {

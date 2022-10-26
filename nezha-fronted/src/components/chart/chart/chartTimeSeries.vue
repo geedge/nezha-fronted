@@ -167,7 +167,69 @@ export default {
             }
           })
         }
-
+        const self = this
+        getChart(this.chartId).off('dataZoom')
+        getChart(this.chartId).on('dataZoom', function (params) {
+          if (params.batch[0].startValue) {
+            const chartInfo = self.chartInfo
+            const dataArg = self.$loadsh.cloneDeep(self.series)
+            dataArg.forEach(item => {
+              item.data = item.data.filter(value => value[0] > params.batch[0].startValue && value[0] < params.batch[0].endValue)
+            })
+            const maxValueCopies = self.getMaxValue(dataArg, chartInfo)
+            const maxValue = maxValueCopies.maxValue
+            const copies = maxValueCopies.copies
+            const unit = maxValueCopies.unit
+            const option = {
+              yAxis: {
+                minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
+                maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+              }
+            }
+            if (!maxValueCopies.copies) {
+              option.yAxis.min = 0
+              option.yAxis.max = 1
+            } else {
+              option.yAxis.max = undefined
+            }
+            if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+              delete option.yAxis.maxInterval
+            }
+            getChart(self.chartId) && getChart(self.chartId).setOption({
+              yAxis: {
+                ...option.yAxis
+              }
+            })
+          } else {
+            // 处理点击后的 Y轴
+            const chartInfo = self.chartInfo
+            const dataArg = self.series
+            const maxValueCopies = self.getMaxValue(dataArg, chartInfo)
+            const maxValue = maxValueCopies.maxValue
+            const copies = maxValueCopies.copies
+            const unit = maxValueCopies.unit
+            const option = {
+              yAxis: {
+                minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
+                maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+              }
+            }
+            if (!maxValueCopies.copies) {
+              option.yAxis.min = 0
+              option.yAxis.max = 1
+            } else {
+              option.yAxis.max = undefined
+            }
+            if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+              delete option.yAxis.maxInterval
+            }
+            getChart(self.chartId) && getChart(self.chartId).setOption({
+              yAxis: {
+                ...option.yAxis
+              }
+            })
+          }
+        })
         this.isInit = false
       }, 200)
     },
