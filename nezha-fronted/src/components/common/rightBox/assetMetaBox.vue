@@ -69,7 +69,9 @@
                 </el-row>
                 <el-row v-for="(item,index) in editAssetMeta.param.items" :key="index" class="asset-meta-param-row">
                   <el-col :span="12">
-                    <el-input v-model = "item.name" size="small" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" @input="(val)=>{inputChange(index, val)}" :ref="'metaNameOption'+index"></el-input>
+                    <el-form-item :prop="'param.items.'+ index + '.name'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur'},{ validator: checkItems, trigger: 'blur' }]">
+                      <el-input v-model.trim = "item.name" size="small" @input="(val)=>{inputChange(index, val)}" :ref="'metaNameOption'+index"></el-input>
+                    </el-form-item>
                   </el-col>
                   <el-col :span="6">
                     <el-radio v-if="editAssetMeta.type.toUpperCase()==='RADIO' || editAssetMeta.type.toUpperCase()==='SELECT'" v-model = "item.check" :label="true" @change="radioChange(index)">{{$t('config.assetLabel.default')}}</el-radio>
@@ -162,6 +164,7 @@ export default {
         type: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }]
       },
       value: '',
+      checkItemsArr: [],
       typeData: [
         {
           icon: 'nz-icon nz-icon-text',
@@ -393,7 +396,9 @@ export default {
             case 'CHECKBOX' :
             case 'SELECT' :
               this.showParam = true
-              this.editAssetMeta.param = {}
+              this.editAssetMeta.param = {
+                items: []
+              }
               this.editAssetMeta.param.items = [{
                 name: 'Option 1',
                 check: false
@@ -423,6 +428,7 @@ export default {
       }
     },
     inputChange (index, val) {
+      this.$refs.editAssetMetaForm.clearValidate('param.items.' + index + '.name')
       this.$forceUpdate()
     },
     radioChange (i) {
@@ -469,6 +475,29 @@ export default {
         })
       }
       this.$forceUpdate()
+    },
+    checkItems (rule, value, callback) { // 校验是否有重复项
+      const nowIndex = rule.field.split('.')[2]
+      const findItem = this.editAssetMeta.param.items.find((item, index) => (item.name === value) && (index != nowIndex))
+      if (!findItem) {
+        if (!this.checkItemsArr.length) {
+          setTimeout(() => {
+            this.checkItemsArr = this.editAssetMeta.param.items.map((item, index) => {
+              if (item.name) {
+                return 'param.items.' + index + '.name'
+              } else {
+                return false
+              }
+            })
+            this.checkItemsArr = this.checkItemsArr.filter(item => item)
+            this.$refs.editAssetMetaForm.validateField(this.checkItemsArr)
+            this.checkItemsArr = []
+          })
+        }
+        callback()
+      } else {
+        callback(new Error(this.$t('error.nameDuplicate')))
+      }
     }
   }
 }
