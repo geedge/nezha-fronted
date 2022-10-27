@@ -208,7 +208,7 @@ export default {
       this.basic.lnglat = lnglat
     },
     timezoneOptionHandler: function (offset) {
-      const offsetHour = (offset / 1000 / 60 / 60).toFixed(0)
+      const offsetHour = Math.floor((offset / 1000 / 60 / 60))
 
       const offsetMinute = offset % (1000 * 60 * 60) / (1000 * 60)
 
