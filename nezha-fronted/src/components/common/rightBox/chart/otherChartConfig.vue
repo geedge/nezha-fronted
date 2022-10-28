@@ -408,6 +408,7 @@ export default {
     textChange (val) {
       const html = `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${val}</div></div>`
       this.chartConfig.param.text = html
+      this.$refs.chartForm.validateField('param.text')
       this.change()
     }
   },

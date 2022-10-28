@@ -273,8 +273,11 @@
     height: 100%;
   }
   .textarea-box {
+    // border: 1px solid $--border-color-light;
+    background-color: $--background-color-empty;
     .textarea-small.el-textarea {
       height: 100% !important;
+      border: 1px solid $--border-color-light;
     }
     .textarea-big.el-textarea {
       height: calc(100% - 40px) !important;
@@ -283,9 +286,31 @@
       height: 100%;
       border-color: transparent;
     }
-    margin-bottom: 10px;
+  }
+  .comment-editor{
     border: 1px solid $--border-color-light;
-    background-color: $--background-color-empty;
+    display: flex;
+    flex-direction: column;
+    .ql-toolbar.ql-snow{
+      border-top: unset !important;
+      border-left: unset !important;
+      border-right: unset !important;
+    }
+    .editor-core{
+      height: auto !important;
+      flex: 1;
+      overflow: hidden;
+    }
+    .ql-container.ql-snow {
+      border: unset !important
+    }
+    .text-too-long{
+      display: none;
+    }
+    .ql-editor.ql-blank::before{
+      font-style: normal;
+      color: $--color-text-placeholder;
+    }
   }
   #assetCommentTable {
     height: calc(100% - 25px) !important;

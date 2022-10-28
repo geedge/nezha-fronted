@@ -1,17 +1,18 @@
 <template>
-    <div style="position: relative" class="rich-text-editor" :class="{'rich-text-editor-error':tooLong}">
-      <div :id="id" class="editor-core" ref="editor" style="height:350px;"></div>
-      <div class="text-too-long" v-if="tooLong">{{$t('validate.tooLong')}}</div>
-      <el-upload
-        action=""
-        :auto-upload="false"
-        accept=".jpg,.png"
-        :on-change="uploadChange"
-        style="display: none"
-        ref="upload"
-        >
-      </el-upload>
-    </div>
+  <div style="position: relative" class="rich-text-editor" :class="{'rich-text-editor-error':tooLong}">
+    <div :id="id" class="editor-core" ref="editor" style="height:350px;"></div>
+    <slot></slot>
+    <div class="text-too-long" v-if="tooLong">{{$t('validate.tooLong')}}</div>
+    <el-upload
+      action=""
+      :auto-upload="false"
+      accept=".jpg,.png"
+      :on-change="uploadChange"
+      style="display: none"
+      ref="upload"
+      >
+    </el-upload>
+  </div>
 </template>
 
 <script>
@@ -20,7 +21,11 @@ import Quill from 'quill'
 export default {
   name: 'richTextEditor',
   props: {
-    editData: String
+    editData: String,
+    placeholder: {
+      default: '',
+      type: String
+    }
   },
   data () {
     return {
@@ -38,7 +43,8 @@ export default {
             [{ align: [] }],
             ['image'] // 上传图片
           ]
-        }
+        },
+        placeholder: this.placeholder
       },
       maxLength: 0, // 记录最大长度
       tooLong: false
@@ -72,13 +78,15 @@ export default {
         this.quill.on('text-change', function (delta, oldDelta, source) {
           const length = $self.getHtml().length
           if (length > 60000) {
-            $self.quill.deleteText($self.maxLength - 1, $self.quill.getText().length - 1, 'api')
+            const start = $self.maxLength > 0 ? $self.maxLength - 1 : 0
+            const end = $self.quill.getText().length > 1 ? $self.quill.getText().length - 1 : 1
+            $self.quill.deleteText(start, end, 'api')
             $self.tooLong = true
           } else {
             $self.maxLength = $self.quill.getText().length
             $self.tooLong = false
           }
-          $self.$emit('textChange', $self.quill.root.innerHTML)
+          $self.$emit('textChange', $self.quill.root.innerHTML, $self.quill.getText())
         })
         this.$nextTick(() => {
           this.$emit('after-init')
@@ -108,7 +116,6 @@ export default {
       // 图片小于4M
       const isLt4M = (file.size / 1024 / 1024) < 4
       if (isLt4M) {
-        console.log(this.$axios.defaults.baseURL + 'file/download/')
         const form = new FormData()
         form.append('file', file.raw)
         const res = await this.$post('/file/upload', form, { 'Content-Type': 'multipart/form-data' })
@@ -158,14 +165,13 @@ export default {
 .rich-text-editor-error  {
   border: 1px solid #F56C6C;
 }
-.rich-text-editor-error .ql-container.ql-snow {
-  border: unset !important
-}
-
 .rich-text-editor-error .ql-toolbar.ql-snow{
   border-top: unset !important;
   border-left: unset !important;
   border-right: unset !important;
+}
+.rich-text-editor-error .ql-container.ql-snow {
+  border: unset !important
 }
 
 </style>

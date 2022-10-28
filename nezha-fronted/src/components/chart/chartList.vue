@@ -330,7 +330,7 @@ export default {
       }
       this.scrollTopTimer = setTimeout(() => {
         this.copyDataList.forEach(item => {
-          if (this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id]) {
+          if (this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id]) {
             if (this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].tooltip && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].tooltip.show) {
               this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id].tooltip.show = false
             }

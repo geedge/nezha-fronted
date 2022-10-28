@@ -1,8 +1,8 @@
 <template>
   <nz-bottom-data-list
-      :showTitle='showTitle'
-      :obj='obj'
-      id="commentBottomTab"
+    :showTitle='showTitle'
+    :obj='obj'
+    id="commentBottomTab"
     :api="url"
     :custom-table-title.sync="tools.customTableTitle"
     :tabs="tabs"
@@ -13,35 +13,38 @@
   >
     <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
     <template v-slot>
-      <div class="textarea-box" :style="{height: rowBox ?'122px':'33px'}">
-          <el-input
+      <div class="textarea-box" :style="{height: rowBox ?'184px':'33px','margin-bottom': '10px'}">
+        <el-input
+          v-if="!rowBox"
           type="textarea"
-          :class="rowBox ? 'textarea-big' : 'textarea-small'"
+          class="textarea-small"
           :placeholder="$t('overall.addComment') + '...'"
-          v-model="editComment.content"
           @focus="stageZoomIn">
-         </el-input>
-         <div class="textarea-button" v-if="rowBox">
-          <button class="nz-btn nz-btn-size-mini nz-btn-style-normal" style="margin-right: 10px" type="button"  @click="save(editComment,false)"><span>{{$t('overall.save')}}</span></button>
-          <button class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancel()"><span>{{$t('overall.cancel')}}</span></button>
-         </div>
+        </el-input>
+        <rich-text-editor v-else class="comment-editor" ref="richTextEditor" :placeholder="$t('overall.addComment') + '...'" :edit-data="editComment.html" @textChange="textChange(arguments)" style="height:100%;">
+          <div class="textarea-button">
+            <button class="nz-btn nz-btn-size-mini nz-btn-style-normal" style="margin-right: 10px" type="button"  @click="save(editComment,false)"><span>{{$t('overall.save')}}</span></button>
+            <button class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancel()"><span>{{$t('overall.cancel')}}</span></button>
+          </div>
+        </rich-text-editor>
       </div>
-      <div :style="{height: rowBox ?'calc(100% - 124px)':'calc(100% - 35px)'}">
-      <assetCommentTable
-        ref="dataTable"
-        :orderByFa="'id'"
-        v-my-loading="tools.loading"
-        :loading="tools.loading"
-        :api="url"
-        :custom-table-title="tools.customTableTitle"
-        :height="subTableHeight"
-        :table-data="tableData"
-        :terminaLogTab="true"
-        @del="del"
-        @save="save"
-        @orderBy="tableDataSort"
-        @reload="getTableData"
-        @selectionChange="selectionChange"></assetCommentTable>
+      <div :style="{height: rowBox ?'calc(100% - 184px)':'calc(100% - 35px)'}">
+        <assetCommentTable
+          ref="dataTable"
+          :orderByFa="'id'"
+          v-my-loading="tools.loading"
+          :loading="tools.loading"
+          :api="url"
+          :custom-table-title="tools.customTableTitle"
+          :height="subTableHeight"
+          :table-data="tableData"
+          :terminaLogTab="true"
+          @del="del"
+          @save="save"
+          @orderBy="tableDataSort"
+          @reload="getTableData"
+          @selectionChange="selectionChange">
+        </assetCommentTable>
       </div>
     </template>
     <template v-slot:pagination>
@@ -56,13 +59,15 @@ import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import assetCommentTable from '@/components/common/table/asset/assetCommentTable'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
+import richTextEditor from '@/components/chart/richTextEditor'
 
 export default {
-  name: 'networkBottomTab',
+  name: 'commentsBottomTab',
   mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,
-    assetCommentTable
+    assetCommentTable,
+    richTextEditor
   },
   props: {
     obj: Object,
@@ -85,12 +90,18 @@ export default {
       editComment: {
         id: '',
         content: '',
+        html: '',
         assetId: '',
         replyId: ''
       }
     }
   },
   methods: {
+    textChange (val) {
+      const html = `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${val[0]}</div></div>`
+      this.editComment.html = html
+      this.editComment.content = val[1].substr(0, val[1].length - 1)
+    },
     getTableData () {
       this.$set(this.searchLabel, 'pageSize', '-1')
       this.$set(this.searchLabel, 'assetId', this.obj.id)
@@ -107,11 +118,15 @@ export default {
     // 输入框聚焦事件
     stageZoomIn () {
       this.rowBox = true
+      this.$nextTick(() => {
+        // 聚焦
+        this.$refs.richTextEditor.quill.focus()
+      })
     },
     // 取消事件
     cancel () {
       this.editComment.content = ''
-      this.editComment.id = ''
+      this.editComment.html = ''
       this.rowBox = false
     },
     save (data, flag) {
@@ -157,15 +172,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .textarea-box >>>.el-textarea__inner {
-    resize: none;
+  resize: none;
 }
-.textarea-box{
-  position: relative;
-}
-.textarea-button{
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
+.comment-editor>>>.textarea-button{
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 10px;
+  padding-right: 10px;
   .nz-btn.nz-btn-size-mini{
     width: 74px;
     height: 30px;
