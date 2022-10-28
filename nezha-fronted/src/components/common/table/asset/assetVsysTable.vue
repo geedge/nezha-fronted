@@ -141,7 +141,7 @@ export default {
         if (slow) {
           item[type].timeout = setTimeout(() => {
             this.$set(item[type], 'loading', loading)
-          }, 30)
+          }, 200)
         } else {
           if (item[type].timeout) {
             clearTimeout(item[type].timeout)
