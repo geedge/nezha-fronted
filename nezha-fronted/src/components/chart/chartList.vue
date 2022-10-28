@@ -102,6 +102,7 @@ import panelChart from '@/components/chart/panelChart'
 import bus from '@/libs/bus'
 import groupData from '@/components/chart/tempGroup'
 import { lineChartMove } from '@/components/common/js/common'
+import lodash from "lodash";
 
 export default {
   name: 'chartList',
@@ -539,6 +540,111 @@ export default {
         }
       })
       this.onScroll(this.scrollTop)
+    },
+    getSnapshotData (chartInfo) {
+      this.isError = false
+      this.allDataLength = 0
+      let chartData = []
+      const elements = chartInfo.elements || []
+      // chartData = chartInfo.chartData
+      try {
+        switch (chartInfo.datasource) {
+          case 'metrics':
+          case 'logs': {
+            chartData = []
+            elements.forEach((element, index) => {
+              chartData.push(this.dataJson[chartInfo.id + '_' + index].data.result)
+            })
+            break
+          }
+          case 'system': {
+            chartInfo.elements = chartInfo.param.datasource
+            chartData = []
+            if (chartInfo.type === 'assetInfo' || chartInfo.type === 'endpointInfo') {
+              chartData = this.dataJson[chartInfo.id + '_' + 0].data
+              this.loading = false
+              break
+            }
+            chartData.push(this.dataJson[chartInfo.id + '_' + 0].result)
+            break
+          }
+          case 'misc': {
+            this.loading = false
+            setTimeout(() => {
+              this.loading = false
+            })
+            if (chartInfo.type === 'hexagon') {
+              this.getHexagonFigureData().then(res => {
+                chartData = JSON.parse(JSON.stringify(res))
+              }).finally(() => {
+                this.loading = false
+              })
+            }
+            if (chartInfo.type === 'diagram') {
+              chartData = [chartInfo.param.topo]
+              if (!chartInfo.param.topo || !chartInfo.param.topo.pens.length) {
+                chartData = []
+              } else {
+                chartData = [chartInfo.param.topo]
+              }
+            }
+            if (chartInfo.type === 'group') {
+              chartData = lodash.get(this, 'chartInfo.children', [])
+              this.loading = false
+              this.groupInit()
+            }
+            if (chartInfo.type === 'topology') {
+              chartData = ['topology']
+            }
+            if (chartInfo.type === 'map') {
+              chartData = ['map']
+            }
+            break
+          }
+          case 'topology': {
+            this.loading = true
+            const params = {
+              type: chartInfo.linkType,
+              id: chartInfo.id
+            }
+            this.$get('/stat/rel', params).then(res => {
+              this.loading = false
+              const parentId = chartInfo.linkType + '-' + chartInfo.id
+              res.data.nodes.forEach(item => {
+                item.parentId = [parentId]
+                item.highlight = true
+                item.x = 0
+                item.y = 0
+                if (item.id === parentId) {
+                  item.hasChildren = true
+                  item.parentId = []
+                  item.fx = 0
+                  item.fy = 0
+                } else {
+                  item.hasChildren = false
+                }
+                item.radius = this.getRadius(item) // 需要计算 分三级
+                item.color = this.getColor(item) // 需要计算 分三级
+              })
+              res.data.links.forEach(item => {
+                item.id = item.source + '-' + item.target
+              })
+              chartData = JSON.parse(JSON.stringify([res.data]))
+            })
+            break
+          }
+        }
+        if (chartInfo.type === 'log') {
+          chartData.forEach((item, index) => {
+            const elements = chartInfo.elements[index]
+            item.forEach(row => {
+              row.elements = elements
+            })
+          })
+        }
+        return chartData
+      } catch (e) {
+      }
     }
   },
   created () {
@@ -646,6 +752,10 @@ export default {
                 }
               })
             }
+          }
+          if (window.dataJson) {
+            item.chartData = this.getSnapshotData(item) // 快照提前处理数据 防止打开刷新的问题
+            item.loaded = true
           }
           return {
             ...item,
