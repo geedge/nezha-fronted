@@ -445,6 +445,9 @@ function timeCompute (value, unit, dot = 0) {
 function keepDoubleNumber (num) {
   const decimal = num.toString()
   let returnNum = ''
+  if (num == 0) {
+    return 0
+  }
   const arr = decimal.split('.')
   if (arr.length > 1) {
     returnNum = arr[0] + '.'
