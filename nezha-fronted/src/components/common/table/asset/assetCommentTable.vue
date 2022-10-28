@@ -10,11 +10,9 @@
     @header-dragend="dragend"
     @sort-change="tableDataSort"
     @selection-change="selectionChange"
-    @row-dblclick="(row)=>{queryMessage(row)}"
   >
     <el-table-column
       v-for="(item, index) in customTableTitle"
-      v-if="item.show"
       :key="`col-${index}`"
       :fixed="item.fixed"
       :label="item.label"
@@ -33,26 +31,23 @@
       </template>
       <template slot-scope="scope" :column="item">
         <div class="descriptions-info">
-            <div>
-                <i class="nz-icon nz-icon-user" style="margin-right: 4px;"></i>
-                <span class="descriptions-name">{{scope.row.createUser.name}}</span>
-                <span class="descriptions-name-small">@{{scope.row.createUser.name}}</span>
-                <span class="descriptions-time">{{momentTz(scope.row.cts)}}</span>
-                <i v-if="scope.row.createUser.id == userId" class="nz-icon nz-icon-edit descriptions-button" @click="edit(scope.row.id)" :title="$t('overall.edit')" style="margin-right: 18px;cursor: pointer;"></i>
-                <i v-if="scope.row.createUser.id == userId" class="nz-icon nz-icon-delete descriptions-button" @click="$emit('del', scope.row)" :title="$t('overall.delete')" style="cursor: pointer;"></i>
-            </div>
-            <div v-if="editContentId == scope.row.id" class="textarea-box" style="height:122px;margin-top: 5px;margin-bottom: 0px;">
-               <el-input
-               type="textarea"
-               style="height:calc(100% - 40px)"
-               v-model="editComment.content">
-               </el-input>
-               <div class="textarea-button">
+          <div>
+            <i class="nz-icon nz-icon-user" style="margin-right: 4px;"></i>
+            <span class="descriptions-name">{{scope.row.createUser.name}}</span>
+            <span class="descriptions-name-small">@{{scope.row.createUser.name}}</span>
+            <span class="descriptions-time">{{momentTz(scope.row.cts)}}</span>
+            <i v-if="scope.row.createUser.id == userId" class="nz-icon nz-icon-edit descriptions-button" @click="edit(scope.row.id)" :title="$t('overall.edit')" style="margin-right: 18px;cursor: pointer;"></i>
+            <i v-if="scope.row.createUser.id == userId" class="nz-icon nz-icon-delete descriptions-button" @click="$emit('del', scope.row)" :title="$t('overall.delete')" style="cursor: pointer;"></i>
+          </div>
+          <div v-if="editContentId == scope.row.id" class="textarea-box" style="height:184px;margin-top: 5px;">
+            <rich-text-editor class="comment-editor" ref="richTextEditor" :edit-data="editComment.html" @textChange="textChange(arguments)" style="height:100%;">
+              <div class="textarea-button">
                 <button class="nz-btn nz-btn-size-mini nz-btn-style-normal" style="margin-right: 10px" type="button"  @click="$emit('save', editComment,true)"><span>{{$t('overall.save')}}</span></button>
                 <button class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancelEdit()"><span>{{$t('overall.cancel')}}</span></button>
-               </div>
-            </div>
-            <div v-else class="descriptions-content" >{{scope.row.content}}</div>
+              </div>
+            </rich-text-editor>
+          </div>
+          <div v-else class="descriptions-content" v-html="scope.row.html"></div>
         </div>
       </template>
     </el-table-column>
@@ -70,9 +65,13 @@
 
 <script>
 import table from '@/components/common/mixin/table'
+import richTextEditor from '@/components/chart/richTextEditor'
 export default {
   name: 'assetCommentTable',
   mixins: [table],
+  components: {
+    richTextEditor
+  },
   props: {
     loading: Boolean
   },
@@ -83,54 +82,69 @@ export default {
       editComment: {
         id: '',
         content: '',
+        html: '',
         assetId: '',
         replyId: ''
       },
       tableTitle: [
         {
           label: 'ID',
-          prop: 'id',
-          show: true
-        }],
+          prop: 'id'
+        }
+      ],
       // 当前用户id
       userId: localStorage.getItem('nz-user-id')
     }
   },
   methods: {
+    textChange (val) {
+      const html = `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${val[0]}</div></div>`
+      this.editComment.html = html
+      this.editComment.content = val[1].substr(0, val[1].length - 1)
+    },
     // 修改
     async edit (id) {
+      if (this.editContentId == id) return
       const response = await this.$get('asset/comment/' + id)
       if (response.code === 200) {
         this.editComment = {
           id: response.data.id,
           content: response.data.content,
+          html: response.data.html,
           assetId: response.data.assetId,
           replyId: response.data.replyId
         }
       }
       this.editContentId = id
+      this.$nextTick(() => {
+        this.$refs.dataTable.doLayout()
+      })
     },
     cancelEdit () {
       this.editContentId = ''
       this.editComment.content = ''
+      this.editComment.html = ''
     }
   }
 }
 </script>
 <style lang="scss" scoped>
->>>.el-textarea__inner {
-    resize: none;
-}
-.textarea-box{
-  position: relative;
-}
-.textarea-button{
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
+.comment-editor>>>.textarea-button{
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 10px;
+  padding-right: 10px;
   .nz-btn.nz-btn-size-mini{
     width: 74px;
     height: 30px;
+  }
+}
+#assetCommentTable>>>.descriptions-content {
+  .ql-container.ql-snow{
+    border: unset;
+  }
+  .ql-editor{
+    padding: 0;
   }
 }
 </style>
