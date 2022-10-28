@@ -41,14 +41,16 @@
           {{scope.row.state === 1 ? $t('overall.result.success') : $t('overall.result.failed')}}
         </template>
         <template v-else-if="item.prop === 'vsysInfo'">
-          <span class="configs-endpoint metrics"
+          <span
                 @mouseenter="labelHover1(scope.row, item.prop, true, $event)"
                 @mouseleave="labelHover1(scope.row, item.prop, false, $event, true)">
-                {{scope.row[item.prop] ? `{ ... }` : '-'}}
+                <span v-if="scope.row[item.prop]" class="configs-endpoint">{ ... }</span>
+                <span v-else style="padding-left:7px">-</span>
           </span>
             <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop">
               <div name="default">
-                <pre>{{`{
+                <span class="copy-value-content" style="margin-right: 10px" :title="$t('overall.duplicate')"> <i class="nz-icon nz-icon-override" @click='copyValue(scope.row[item.prop])'></i></span>
+                <pre class="copy-value-content__pre">{{`{
     "deviceTag": "${scope.row[item.prop].deviceTag || ''}",
     "params": "${scope.row[item.prop].params || ''}"
 }`}}</pre>
@@ -56,18 +58,13 @@
             </nz-tooltip>
         </template>
         <template v-else-if="item.prop === 'vsysResult'">
-           <span class="configs-endpoint"
-                @mouseenter="labelHover1(scope.row, item.prop, true, $event)"
-                @mouseleave="labelHover1(scope.row, item.prop, false,$event, true)">
-                <div class="vsys-result" v-if="scope.row[item.prop]">{{ clConfigs(scope.row[item.prop])}}</div>
-                <div class="vsys-result" v-else>{{'-'}}</div>
-          </span>
-            <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && clConfigs(scope.row[item.prop]) != '-' && scope.row[item.prop].loading" :type="item.prop">
-              <div name="default">
-                <span class="copy-value-content" style="margin-right: 10px" :title="$t('overall.duplicate')"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row[item.prop]))"></i></span>
-                <pre class="copy-value-content__pre">{{clConfigs(scope.row[item.prop])}}</pre>
-              </div>
-            </nz-tooltip>
+          <div :title="scope.row[item.prop] && scope.row[item.prop].msg ? scope.row[item.prop].msg : '-'">
+            <copy :copyData='scope.row[item.prop] && scope.row[item.prop].msg ? scope.row[item.prop].msg : ""' :showInfo='scope.row[item.prop]'>
+              <template slot="copy-text">
+                 {{scope.row[item.prop] && scope.row[item.prop].msg ? scope.row[item.prop].msg : '-'}}
+              </template>
+            </copy>
+          </div>
         </template>
         <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
         <template v-else>-</template>
@@ -86,7 +83,7 @@
 </template>
 
 <script>
-import lodash from 'lodash'
+import copy from '@/components/common/copy'
 import table from '@/components/common/mixin/table'
 import nzTooltip from '@/components/common/alert/nzTooltip'
 export default {
@@ -96,7 +93,8 @@ export default {
     loading: Boolean
   },
   components: {
-    nzTooltip
+    nzTooltip,
+    copy
   },
   data () {
     return {
@@ -154,52 +152,36 @@ export default {
       }
       // this.$set(this.tableData,index,item);// 调用父组件
     },
-    clConfigs (item) {
-      if (item.msg) {
-        if (!lodash.isEmpty(item.msg)) {
-          const str = []
-          str.push(item.msg)
-          return str
-        }
-        return '-'
-      }
-    },
-    copyValue (item) {
-      const str = item
-      const domUrl = document.createElement('input')
-      domUrl.value = JSON.stringify(str)
-      domUrl.id = 'creatDom'
-      document.body.appendChild(domUrl)
-      domUrl.select() // 选择对象
-      document.execCommand('Copy') // 执行浏览器复制命令
-      const creatDom = document.getElementById('creatDom')
-      creatDom.parentNode.removeChild(creatDom)
-      this.$message.success(this.$t('overall.copySuccess'))
+    copyValue (txt) {
+      const str = `{
+    "deviceTag": "${txt.deviceTag || ''}",
+    "params": "${txt.params || ''}"
+}`
+      this.$copyText(str).then(() => {
+        this.$message.success({ message: this.$t('overall.copySuccess') })
+      })
     }
   }
 }
 </script>
-<style scoped>
-.vsys-result{
-  padding: 0 7px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+<style>
+#assetVsysTable .document-copy-text{
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
-.configs-endpoint{
-  cursor: pointer;
-}
-.endpoint-cell-left{
+#assetVsysTable .endpoint-cell-left{
   margin-right: 5px;
 }
-.configs-endpoint.metrics{
+#assetVsysTable .configs-endpoint{
   padding: 0 7px;
+  cursor: pointer;
   color: #3C92F1;
 }
-.copy-value-content__pre {
-  height: 200px;
+#assetVsysTable .copy-value-content__pre {
+  width: 400px;
   margin-top: 20px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
 </style>
