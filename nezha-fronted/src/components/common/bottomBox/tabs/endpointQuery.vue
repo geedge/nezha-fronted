@@ -4,6 +4,7 @@
       :showTitle='showTitle'
       :obj='obj'
       :api="url"
+      :tableId="tableId"
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg"
       :tabs="tabs"

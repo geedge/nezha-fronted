@@ -3,6 +3,7 @@
       :showTitle='showTitle'
       :obj='obj'
       id="logBottomTab"
+      :tableId="tableId"
     :custom-tool="true"
     :layout="[]"
     :show-pagination="false"
@@ -61,6 +62,7 @@ export default {
   },
   data () {
     return {
+      tableId: 'logBottomTab',
       logData: null,
       filterTime: [
         bus.timeFormate(bus.getOffsetTimezoneData(-1)),

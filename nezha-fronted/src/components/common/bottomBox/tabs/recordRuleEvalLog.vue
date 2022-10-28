@@ -2,6 +2,7 @@
   <nz-bottom-data-list
       :showTitle='showTitle'
       :obj='obj'
+      :tableId="tableId"
     :api="url"
     :custom-table-title.sync="tools.customTableTitle"
     :layout="['elementSet']"

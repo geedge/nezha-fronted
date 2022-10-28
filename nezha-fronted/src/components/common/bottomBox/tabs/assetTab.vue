@@ -9,6 +9,7 @@
       :custom-table-title.sync="tools.customTableTitle"
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg"
+      :tableId="tableId"
       :tabs="tabs"
       @search="search"
       @changeTab="changeTab"

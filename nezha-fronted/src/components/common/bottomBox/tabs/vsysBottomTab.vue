@@ -1,7 +1,8 @@
 <template>
   <nz-bottom-data-list
-      :showTitle='showTitle'
-      :obj='obj'
+    :showTitle='showTitle'
+    :obj='obj'
+    :tableId="tableId"
     id="vsysBottomTab"
     :api="url"
     :custom-table-title.sync="tools.customTableTitle"

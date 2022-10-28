@@ -1314,10 +1314,12 @@ export default {
     if (pageSize && pageSize !== 'undefined') {
       this.pageObj.pageSize = pageSize
     }
-    if (!this.$refs.dataTable && !this.$refs.dataDetail) {
-      return
+    let tableTitle = ''
+    if (this.$refs.dataTable) {
+      tableTitle = this.$refs.dataTable.tableTitle
+    } else if (this.$refs.dataDetail) {
+      tableTitle = this.$refs.dataDetail.tableTitle
     }
-    const tableTitle = this.$refs.dataTable ? this.$refs.dataTable.tableTitle : this.$refs.dataDetail.tableTitle
     let localStorageTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
     localStorageTableTitle = localStorageTableTitle ? JSON.parse(localStorageTableTitle) : tableTitle
     this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题

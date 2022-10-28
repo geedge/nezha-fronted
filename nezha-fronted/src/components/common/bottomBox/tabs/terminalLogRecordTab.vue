@@ -2,6 +2,7 @@
   <nz-bottom-data-list
     :showTitle='showTitle'
     :obj='obj'
+    :tableId="tableId"
     :layout="[]"
     :tabs="tabs"
     :targetTab="targetTab"
@@ -49,6 +50,7 @@ export default {
   },
   data () {
     return {
+      tableId: 'terminaLogRecordTab',
       filter: {
         size: 1,
         uuid: ''
