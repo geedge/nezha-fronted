@@ -783,7 +783,10 @@ export default {
     }
   },
   beforeMount () {
-    this.chartData = this.chartInfo.chartData
+    if (window.dataJson){
+      this.chartData = this.chartInfo.chartData
+      this.loading = false
+    }
   },
   mounted () {
     this.chartInfo.loaded && !window.dataJson && this.getChartData()
