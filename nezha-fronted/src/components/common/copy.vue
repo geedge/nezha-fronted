@@ -12,7 +12,7 @@ export default {
   name: 'copy',
   props: {
     copyData: String,
-    showInfo: String
+    showInfo: {}
   },
   data () {
     return {

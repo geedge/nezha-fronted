@@ -29,13 +29,17 @@ export default {
     calcPosition () {
       return function (position) {
         const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
+        const clientWidth =
+          document.body.clientWidth < document.documentElement.clientWidth
+            ? document.body.clientWidth
+            : document.documentElement.clientWidth
         const leftOffSetView = this.detailList ? -80 : 10
         const leftOffSet = this.detailList ? -80 : 10
         const topOffSet = this.detailList ? 60 : 22
         const topoOffset = this.isTopoInfo ? 155 : 0
         if (position.top + this.heightList > clientHeight) {
           return {
-            left: `${position.left + position.width + leftOffSet - topoOffset}px`,
+            left: clientWidth - (position.left + position.width) < position.width ? `${position.left - position.width + leftOffSet - topoOffset}px` : `${position.left + position.width + leftOffSet - topoOffset}px`,
             top: `${position.top - this.heightList + topOffSet}px`
           }
         } else if (this.alertTableDialog) {
@@ -49,7 +53,7 @@ export default {
           }
         } else {
           return {
-            left: `${position.left + position.width + leftOffSetView - topoOffset}px`,
+            left: clientWidth - (position.left + position.width) < position.width ? `${position.left - position.width + leftOffSet - topoOffset}px` : `${position.left + position.width + leftOffSet - topoOffset}px`,
             top: `${position.top}px`
           }
         }
