@@ -3,6 +3,7 @@
     <nz-bottom-data-list
       :showTitle='showTitle'
       :obj='obj'
+      :tableId="tableId"
       :api="url"
       :targetTab="targetTab"
       style="height: 100%"

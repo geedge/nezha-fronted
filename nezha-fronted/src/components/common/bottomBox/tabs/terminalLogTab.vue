@@ -4,6 +4,7 @@
     :obj='obj'
     :targetTab="targetTab"
     :api="url"
+    :tableId="tableId"
     :custom-table-title.sync="tools.customTableTitle"
     :layout="['searchInput', 'elementSet']"
     :search-msg="searchMsg"

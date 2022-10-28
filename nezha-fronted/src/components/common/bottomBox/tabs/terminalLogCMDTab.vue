@@ -1,6 +1,7 @@
 <template>
   <nz-bottom-data-list
     :showTitle='showTitle'
+    :tableId="tableId"
     :obj='obj'
     :layout="[]"
     :tabs="tabs"
@@ -91,7 +92,8 @@ export default {
       },
       records: [ // 加载更多时有多个record，否则只有一个
 
-      ]
+      ],
+      tableId: 'terminaLogCMDTab'
     }
   },
   methods: {

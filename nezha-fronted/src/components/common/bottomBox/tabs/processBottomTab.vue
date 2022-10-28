@@ -2,6 +2,7 @@
   <nz-bottom-data-list
       :showTitle='showTitle'
       :obj='obj'
+      :tableId="tableId"
     id="processBottomTab"
     :api="url"
     :custom-table-title.sync="tools.customTableTitle"

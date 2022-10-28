@@ -3,6 +3,7 @@
     <nz-bottom-data-list
       :showTitle='showTitle'
       :obj='obj'
+      :tableId="tableId"
       :layout="[]"
       :tabs="tabs"
       :targetTab="targetTab"
@@ -188,6 +189,7 @@ export default {
   data () {
     return {
       fromRoute,
+      tableId: 'panelTabNew',
       pdfId: 'pdfDom',
       htmlTitle: 'panel',
       panelTabLoading: false,
