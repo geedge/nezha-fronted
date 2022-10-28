@@ -144,7 +144,10 @@
                     <template v-for="(item, index) in importResult.failDetail">
                       <div :key="index" class="import-result-block">
                         <div class="import-result-item">
-                          <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
+                          <div style="display: flex;">
+                            <span class="import-result-item-left">•</span>
+                            <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
+                          </div>
                           <div class="line-content" :title="item.errorMsg">{{item.errorMsg}}</div>
                         </div>
                       </div>
@@ -220,7 +223,7 @@
                     <template v-for="(item, index) in importResult.failDetail">
                       <div :key="index" class="import-result-block">
                         <div class="import-result-item">
-                          <div class="import-result-item-left">•</div>
+                          <span class="import-result-item-left">•</span>
                           <div class="import-result-item-right">
                             <span class="line-num">{{$t('overall.result.line',[item.lineNo])}}</span>
                             <span class="line-content" :title="item.errorMsg">{{item.errorMsg}}</span>

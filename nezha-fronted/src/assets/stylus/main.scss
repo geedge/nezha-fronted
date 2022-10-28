@@ -1182,6 +1182,14 @@ li {
   .import-result-item {
     display: flex;
     margin-bottom: 5px;
+    .import-result-item-left {
+      font-size: 16px;
+      color: $--color-text-primary;
+      letter-spacing: 0;
+      line-height: 16px;
+      font-weight: 600;
+      margin-right: 2px;
+    }
     .line-num {
       min-width: 55px;
       font-size: 14px;
@@ -1332,9 +1340,9 @@ li {
           }
           .import-result-item-right{
             .line-num{
-              min-width: 50px;
+              min-width: 55px;
               display: inline-block;
-              margin-right: 6px;
+              margin-right: 5px;
             }
             .line-content{
               overflow: auto;
