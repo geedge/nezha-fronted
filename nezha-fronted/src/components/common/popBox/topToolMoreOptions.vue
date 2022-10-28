@@ -32,7 +32,7 @@
         width="580px"
         :modal-append-to-body="false"
         @close="closeDialog"
-        :class="{'import-result-dialog':importBox.type==3}"
+        :class="{'import-failContent-dialog':importBox.type==3&&importResult.failContent!=undefined}"
         class="nz-dialog">
         <!-- 新版导入 -->
         <div v-if="importBox.type == 1">
@@ -124,8 +124,61 @@
           </div>
         </div>
 
-        <!-- 导入结果 -->
-        <div v-if="importBox.type==3">
+        <!-- 导入结果（不展示导出失败记录） -->
+        <div v-if="importBox.type==3&&importResult.failContent==undefined">
+          <div class="upload-body result-body">
+            <div v-if="importResult&&importResult.failNum">
+              <div class="result-title-top">
+                <div class="">
+                  <i class="nz-icon nz-icon-import-success"/>
+                  <span>{{$t('overall.result.successNum',{successNum:importResult.successNum})}}</span><br/>
+                </div>
+                <div class="">
+                  <i class="nz-icon nz-icon-import-failed"/>
+                  <span>{{$t('overall.result.failedNum',{failedNum:importResult.failNum,total:importResult.totalNum})}}</span>
+                </div>
+              </div>
+              <div>
+                <div v-if="importResult&&importResult.failDetail" class="result-detail">
+                  <div style="height: 100%; overflow: auto">
+                    <template v-for="(item, index) in importResult.failDetail">
+                      <div :key="index" class="import-result-block">
+                        <div class="import-result-item">
+                          <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
+                          <div class="line-content" :title="item.errorMsg">{{item.errorMsg}}</div>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else class="result-success-box">
+              <div>
+                <i class="nz-icon nz-icon-import-success"/>
+              </div>
+              <div class="result-success-txt">{{$t('overall.result.successfully')}}</div>
+              <div class="result-success-txt">
+                {{$t('overall.result.imported')}}
+                <span v-if="importResult">{{importResult.successNum}}</span>
+                {{$t('overall.result.records')}}
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <div class="el-message-box__btns">
+              <button :id="id+'-xlsx-import-rollback'"  class="nz-btn el-button el-button--small nz-btn-style-error" @click="rollbackImport">
+                <span>{{$t('overall.rollbackImport')}}</span>
+              </button>
+              <button :id="id+'-xlsx-import-close'" class="nz-btn el-button el-button--small el-button--default" @click="closeDialog">
+                <span>{{$t('overall.close')}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 导入结果（展示导出失败记录） -->
+        <div v-if="importBox.type==3&&importResult.failContent!=undefined">
           <div class="upload-body result-body">
             <!-- 失败提示 -->
             <div v-if="importResult&&importResult.failNum">
@@ -181,7 +234,7 @@
               </div>
             </div>
             <!-- 成功提示 -->
-            <div v-else-if="importResult&&!importResult.failNum" class="result-success-box">
+            <div v-else class="result-success-box">
               <div style="height:80px;line-height:80px;">
                 <i class="nz-icon nz-icon-import-success" style="margin-right:0" />
               </div>
@@ -214,15 +267,13 @@
               <button v-if="importResult&&importResult.failNum" :id="id+'-xlsx-import-downloadFail'" class="nz-btn el-button el-button--small nz-btn-style-error" @click="downloadFail">
                 <span>{{$t('overall.result.downloadFail')}}</span>
               </button>
-              <!-- <button :id="id+'-xlsx-import-rollback'" class="nz-btn el-button el-button--small nz-btn-style-error" @click="rollbackImport">
-                <span>{{$t('overall.rollbackImport')}}</span>
-              </button> -->
               <button :id="id+'-xlsx-import-close'" class="nz-btn el-button el-button--small el-button--default" @click="closeDialog">
                 <span>{{$t('overall.close')}}</span>
               </button>
             </div>
           </div>
         </div>
+
       </el-dialog>
     </el-dropdown>
     <transition name="right-box">
@@ -456,7 +507,7 @@ export default {
           this.importResult = null
           this.importFileList = []
           this.importFile = null
-          this.importBox.value = 1
+          this.importBox.type = 1
           this.importBox.record = 'all'
           this.importBox.format = 1
           this.importBox.templateFormat = 1 // 模板格式

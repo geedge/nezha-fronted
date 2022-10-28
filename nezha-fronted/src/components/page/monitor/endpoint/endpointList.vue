@@ -217,7 +217,7 @@
             </div>
           </div>
         </div>
-        <div v-else-if="importResult&&!importResult.failNum" class="result-success-box">
+        <div v-else class="result-success-box">
           <div>
             <i class="nz-icon nz-icon-import-success"/>
           </div>
