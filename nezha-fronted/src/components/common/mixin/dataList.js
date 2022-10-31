@@ -232,8 +232,9 @@ export default {
         }
       })
     },
-    copy (u) {
-      this.object = { ...u, name: u.name + '-copy', id: '' }
+    copy (u, copyParams) {
+      const copyName = this.$loadsh.get(copyParams, 'copyName', '-copy')
+      this.object = { ...u, name: u.name + copyName, id: '' }
       if (this.object.name.length > 64) {
         const length = this.object.name.length - 64
         this.object.name = u.name.substring(0, u.name.length - length) + '-copy'

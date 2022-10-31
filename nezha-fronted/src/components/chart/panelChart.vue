@@ -55,7 +55,7 @@
       :multipleTime="multipleTime"
       :isFullscreen="isFullscreen"
       :showAllData="showAllData"
-      v-if="!isGroup(chartInfo.type) || !chartInfo.param.collapse"
+      v-if="(!isGroup(chartInfo.type) || !chartInfo.param.collapse) && snapshotShow"
     ></chart>
   </div>
 </template>
@@ -118,7 +118,8 @@ export default {
       allDataLength: 0,
       severityData: this.$store.getters.severityData, // 告警级别的数据
       severityDataWeight: this.$store.getters.severityDataWeight,
-      myVariables: [] // 添加当前使用的变量 用于判断是否需要重新加载
+      myVariables: [], // 添加当前使用的变量 用于判断是否需要重新加载
+      snapshotShow: true
       // isExportData: false
     }
   },
@@ -159,7 +160,7 @@ export default {
       if (!this.variablesInit) { // 变量未加载完成 不请求数据
         return
       }
-      this.chartData = []
+      this.chartData = window.dataJson ? this.chartData : []
       this.myVariables = []
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
@@ -758,6 +759,9 @@ export default {
       deep: true,
       handler (n) {
         // console.log(n)
+        if (window.dataJson && this.loading) {
+          this.loading = false
+        }
       }
     },
     variablesArr: {
@@ -778,8 +782,17 @@ export default {
       }
     }
   },
+  created () {
+    if (window.dataJson) {
+      this.snapshotShow = false
+      this.getChartData()
+    }
+  },
   mounted () {
     this.chartInfo.loaded && this.getChartData()
+    setTimeout(() => {
+      this.snapshotShow = true
+    })
     this.showAllData = !this.showMultiple(this.chartInfo.type)
   }
 }
