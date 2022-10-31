@@ -375,7 +375,7 @@ export const coordinatePoint = {
     offsetY: '77.5%',
     point: [
       { x: 40, y: 130 },
-      { x: 20, y: 150 , disabled: true},
+      { x: 20, y: 150, disabled: true },
       { x: 10, y: 160 },
       { x: 30, y: 180 },
       { x: 70, y: 185 },
@@ -383,7 +383,7 @@ export const coordinatePoint = {
       { x: 110, y: 150 },
       { x: 120, y: 120 },
       { x: 160, y: 70 },
-      { x: 170, y: 60 , disabled: true},
+      { x: 170, y: 60, disabled: true },
       { x: 190, y: 50 },
       { x: 230, y: 30 },
       { x: 220, y: 10 },
@@ -397,7 +397,7 @@ export const coordinatePoint = {
     offsetY: '47.5%',
     point: [
       { x: 160, y: 260 },
-      { x: 120, y: 230 , disabled: true},
+      { x: 120, y: 230, disabled: true },
       { x: 110, y: 220 },
       { x: 70, y: 225 },
       { x: 65, y: 260 },

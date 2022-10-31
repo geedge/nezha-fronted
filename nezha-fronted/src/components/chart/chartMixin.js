@@ -3,7 +3,7 @@ import * as echarts from 'echarts'
 import { getMetricTypeValue } from '@/components/common/js/tools'
 import { getChart, getMousePoint, setChart } from '@/components/common/js/common'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
-import chartDataFormat from "@/components/chart/chartDataFormat";
+import chartDataFormat from '@/components/chart/chartDataFormat'
 export default {
   data () {
     return {

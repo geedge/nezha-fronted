@@ -1558,7 +1558,7 @@ export default {
     },
     // 判断输入框的高度
     getHeight () {
-      if (document.getElementById('search-ul').clientHeight < 24 ||  this.$refs['input-center-box'].clientHeight < 24) {
+      if (document.getElementById('search-ul').clientHeight < 24 || this.$refs['input-center-box'].clientHeight < 24) {
         this.$refs['input-center-box'].style.height = 27 + 'px'
         document.getElementById('search-ul').style.height = 21 + 'px'
       }

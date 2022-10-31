@@ -61,7 +61,7 @@ import exploreItem from '@/components/page/dashboard/explore/exploreItemHtml'
 import moment from 'moment-timezone'
 import { loadI18n } from '@/components/common/i18n'
 import i18nData from '@/entrance/exportHtml/i18nData'
-import bus from "@/libs/bus";
+import bus from '@/libs/bus'
 const dataJson = window.dataJson || {}
 export default {
   name: 'Entrance',
@@ -114,7 +114,6 @@ export default {
     onScroll () {
       const _self = this
       this.scrollbarWrap.addEventListener('scroll', bus.debounce(function () {
-
         _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50
         _self.overScroll10 = _self.scrollbarWrap.scrollTop > 50
         _self.$refs.chartList.onScroll(_self.scrollbarWrap.scrollTop)

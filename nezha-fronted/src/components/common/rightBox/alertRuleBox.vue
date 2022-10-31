@@ -618,7 +618,7 @@ export default {
         this.showMetrics = true
         this.expressions = ['']
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
-        this.$nextTick(()=>{
+        this.$nextTick(() => {
           this.showSnmpTrap = true
         })
       } else if (val === 2) {
@@ -626,7 +626,7 @@ export default {
         this.expressions = ['']
         // showMetrics 为 false 时,展示 Logs label
         this.showSnmpTrap = false // showSnmpTrap 为 true 时显示 expr,threshold,unit
-        this.$nextTick(()=>{
+        this.$nextTick(() => {
           this.showSnmpTrap = true
         })
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证

@@ -350,7 +350,7 @@ export default {
     this.getAlertMessageInfo()
     window.addEventListener('resize', this.resize)
   },
-  destroyed() {
+  destroyed () {
     window.removeEventListener('resize', this.resize)
   }
 }

@@ -107,9 +107,9 @@ import bottomBox from '@/components/common/bottomBox/bottomBox'
 import { bottomBoxWindow } from '@/components/common/js/tools'
 import panelChart from '@/components/chart/panelChart'
 import bus from '@/libs/bus'
-import routerPathParams from "@/components/common/mixin/routerPathParams";
-import lodash from "lodash";
-import SearchBox from "@/components/common/searchBox/searchBox";
+import routerPathParams from '@/components/common/mixin/routerPathParams'
+import lodash from 'lodash'
+import SearchBox from '@/components/common/searchBox/searchBox'
 export default {
   name: 'nzDataList',
   mixins: [routerPathParams],

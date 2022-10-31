@@ -1,5 +1,5 @@
-import vueQr from './vue-qr.vue';
+import vueQr from './vue-qr.vue'
 
-vueQr.install = Vue => Vue.component(vueQr.name, vueQr);
+vueQr.install = Vue => Vue.component(vueQr.name, vueQr)
 
-export default vueQr;
+export default vueQr

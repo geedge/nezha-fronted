@@ -85,7 +85,7 @@
 import { fromRoute } from '@/components/common/js/constants'
 import { bottomBoxWindow } from '@/components/common/js/tools'
 import detailViewRight from '@/components/common/detailView/view/detailViewRight'
-import panelChart from "@/components/chart/panelChart";
+import panelChart from '@/components/chart/panelChart'
 
 export default {
   name: 'nzDataList',

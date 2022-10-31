@@ -386,7 +386,7 @@ export default {
           val: '',
           listStr: 'silenceState'
         },
-        jsonKey: 'valnum',
+        jsonKey: 'valnum'
       }
     }
     this.initQueryFromPath(searchKeys)

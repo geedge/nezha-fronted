@@ -227,7 +227,7 @@ export function moveElement (layout, l, x, y, isUserAction, preventCollision) {
   // nearest collision.
   let sorted = sortLayoutItemsByRowCol(layout)
   if (movingUp) sorted = sorted.reverse()
-  let collisions = getAllCollisions(sorted, l)
+  const collisions = getAllCollisions(sorted, l)
   if (preventCollision && collisions.length) {
     l.x = oldX
     l.y = oldY

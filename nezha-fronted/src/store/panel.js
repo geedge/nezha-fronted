@@ -207,7 +207,7 @@ const panel = {
     },
     dispatchHomeLoading (store, homeLoading) {
       store.commit('setHomeLoading', homeLoading)
-    },
+    }
   }
 }
 export default panel

@@ -26,7 +26,7 @@ import chartList from '@/components/chart/chartList.vue' // 全局引入 chartLi
 import pickTime from '@/components/common/pickTime'
 import nzDataList from '@/components/common/table/nzDataList'
 import mainMixin from '@/components/common/mixin/mainMixinFun'
-import Pagination from "@/components/common/pagination";
+import Pagination from '@/components/common/pagination'
 Vue.component('pick-time', pickTime)
 Vue.component('nzDataList', nzDataList)
 Vue.component('chartList', chartList)

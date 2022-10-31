@@ -152,7 +152,7 @@ export default {
   },
   props: {
     from: String,
-    sign:[Number,String]
+    sign: [Number, String]
   },
   watch: {
     obj: {

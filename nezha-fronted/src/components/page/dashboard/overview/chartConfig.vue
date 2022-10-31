@@ -8,7 +8,7 @@ window.onload = function () {
     commonOption.toolbox.feature.dataZoom.title.zoom = vm.$i18n.t('overall.toolBox.zoom')
     commonOption.toolbox.feature.dataZoom.title.back = vm.$i18n.t('overall.toolBox.back')
     commonOption.toolbox.feature.magicType.title.stack = vm.$i18n.t('overall.toolBox.stack')
-  }else {
+  } else {
     commonOption.toolbox.feature.dataZoom.title.zoom = exportHtml.$i18n.t('overall.toolBox.zoom')
     commonOption.toolbox.feature.dataZoom.title.back = exportHtml.$i18n.t('overall.toolBox.back')
     commonOption.toolbox.feature.magicType.title.stack = exportHtml.$i18n.t('overall.toolBox.stack')

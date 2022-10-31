@@ -3,7 +3,7 @@ const chartGaugeOption = {
     show: true,
     trigger: 'item',
     confine: false,
-   extraCssText: 'z-index:99999999;visibility:visible;',
+    extraCssText: 'z-index:99999999;visibility:visible;',
     z: 9,
     animation: false,
     appendToBody: true,

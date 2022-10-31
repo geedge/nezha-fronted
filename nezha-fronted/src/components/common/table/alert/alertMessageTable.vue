@@ -171,7 +171,7 @@ import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'alertMessageTable',
   components: {
-    alertRuleInfo: alertRuleInfo,deleteButton
+    alertRuleInfo: alertRuleInfo, deleteButton
   },
   props: {
     nowTime: {
