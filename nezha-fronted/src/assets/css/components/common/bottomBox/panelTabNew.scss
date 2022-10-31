@@ -146,9 +146,16 @@
       outline: none;
       border: 1px solid #ccc;
     }
-
     button:hover {
       background: $--background-color-empty;
+    }
+    .nz-btn-style-normal {
+      background: $--button-primary-background-color;
+      color: $--button-primary-color;
+      border: 1px solid $--button-primary-background-color;
+    }
+    .el-dialog__headerbtn{
+      border: none;
     }
     .footer__btn {
       background-color: $--color-primary;
