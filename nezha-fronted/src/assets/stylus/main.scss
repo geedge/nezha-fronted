@@ -1178,7 +1178,7 @@ li {
   border-radius: 2px;
   padding: 12px;
   margin-top: 10px;
-  height: 180px;
+  height: 184px;
   .import-result-item {
     display: flex;
     margin-bottom: 5px;
@@ -1429,6 +1429,9 @@ li {
 }
 .transparent-pop{ //防止popover的提示框挡住页面元素无法操作
   pointer-events: none;
+}
+.el-dialog__headerbtn{
+  border: none !important;
 }
 
 .chart-no-data{

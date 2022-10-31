@@ -32,10 +32,35 @@
         width="580px"
         :modal-append-to-body="false"
         @close="closeDialog"
-        :class="{'import-failContent-dialog':importBox.type==3&&importResult.failContent!=undefined}"
+        :class="{'import-failContent-dialog':importBox.type==3&&resultNew}"
         class="nz-dialog">
+
+        <!-- 导入 -->
+        <div v-if="importBox.type == 1&&!importNew">
+          <div class="upload-body" style="margin:10px 0;">
+            <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls"  action="" class="upload-demo" drag>
+              <div slot="tip" class="el-upload__tip" style="margin-top: 0;">{{$t('overall.importTip')}}</div>
+              <i class="nz-icon nz-icon-upload"></i>
+              <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
+            </el-upload>
+          </div>
+          <div class="footer">
+            <div class="el-message-box__btns" style="text-align: right;">
+              <button :id="id+'-xlsx-import-template'" class="nz-btn el-button el-button--default el-button--small" @click="downloadTemplate()">
+                <span>{{$t('upload.template')}}</span>
+              </button>
+              <button :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
+                <span>{{$t('overall.importExcel')}}</span>
+              </button>
+              <button :id="id+'-xlsx-import-esc'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
+                <span>{{$t('overall.cancel')}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- 新版导入 -->
-        <div v-if="importBox.type == 1">
+        <div v-if="importBox.type == 1&&importNew">
           <div class="upload-body">
             <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls,.csv,.json" action="" class="import-upload" drag>
               <i class="el-icon-upload"></i>
@@ -125,7 +150,7 @@
         </div>
 
         <!-- 导入结果（不展示导出失败记录） -->
-        <div v-if="importBox.type==3&&importResult.failContent==undefined">
+        <div v-if="importBox.type==3&&!resultNew">
           <div class="upload-body result-body">
             <div v-if="importResult&&importResult.failNum">
               <div class="result-title-top">
@@ -181,7 +206,7 @@
         </div>
 
         <!-- 导入结果（展示导出失败记录） -->
-        <div v-if="importBox.type==3&&importResult.failContent!=undefined">
+        <div v-if="importBox.type==3&&resultNew">
           <div class="upload-body result-body">
             <!-- 失败提示 -->
             <div v-if="importResult&&importResult.failNum">
@@ -335,6 +360,18 @@ export default {
   },
   computed: {
     language () { return this.$store.getters.getLanguage },
+    // 是否展示新版导入
+    importNew () {
+      // chartTemplate dashboard asset endpoint导入样式维持原状
+      const arr = ['/visual/panel/import', '/asset/asset/import', '/monitor/endpoint/import']
+      return !arr.some(item => item === this.importUrl)
+    },
+    // 是否展示新版导入结果
+    resultNew () {
+      // model module rule dc cabinet ip subnet record
+      const arr = ['/asset/model/import', '/monitor/module/import', '/alert/rule/import', '/dc/import', '/dc/cabinet/import', '/ipam/ip/import', '/ipam/subnet/import', '/record/rule/import']
+      return arr.some(item => item === this.importUrl)
+    },
     // 是否同步更新关联的dashboard
     showSyncDashboard () {
       // asset endpoint model
