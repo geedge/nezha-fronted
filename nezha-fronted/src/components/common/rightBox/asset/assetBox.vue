@@ -871,7 +871,7 @@ export default {
         } else if (this.editAsset.cabinetStart && this.editAsset.cabinetEnd) {
           callback()
         } else {
-          callback(new Error(vm.$t('validate.required')))
+          callback(new Error(this.$t('validate.required')))
         }
       }, 100)
     }
