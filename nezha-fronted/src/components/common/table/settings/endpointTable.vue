@@ -439,9 +439,10 @@ export default {
     top: 4px;
   }
   .copy-value-content__pre {
+    width: 500px;
     height: 200px;
     margin-top: 20px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow-y: scroll;
+    overflow-x: scroll;
   }
 </style>

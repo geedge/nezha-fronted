@@ -162,10 +162,6 @@ export default {
       this.chartData = []
       this.myVariables = []
       this.loading = true
-      if (window.dataJson) {
-        this.chartData = this.chartInfo.chartData
-        this.loading = false
-      }
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
       let endTime = ''
@@ -201,7 +197,7 @@ export default {
       })
       const elements = this.chartInfo.elements || []
       if (this.isExportHtml) {
-        // this.chartInfo.loaded && this.queryData(elements, startTime, endTime, step, params)
+        this.chartInfo.loaded && this.queryData(elements, startTime, endTime, step, params)
         return
       }
       this.chartInfo.loaded && this.query(elements, startTime, endTime, step, params)
@@ -782,11 +778,8 @@ export default {
       }
     }
   },
-  beforeMount () {
-    this.chartData = this.chartInfo.chartData
-  },
   mounted () {
-    this.chartInfo.loaded && !window.dataJson && this.getChartData()
+    this.chartInfo.loaded && this.getChartData()
     this.showAllData = !this.showMultiple(this.chartInfo.type)
   }
 }
