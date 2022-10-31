@@ -362,15 +362,15 @@ export default {
     language () { return this.$store.getters.getLanguage },
     // 是否展示新版导入
     importNew () {
-      // chartTemplate dashboard asset endpoint导入样式维持原状
-      const arr = ['/visual/panel/import', '/asset/asset/import', '/monitor/endpoint/import']
+      // chartTemplate dashboard
+      const arr = ['/visual/panel/import']
       return !arr.some(item => item === this.importUrl)
     },
     // 是否展示新版导入结果
     resultNew () {
-      // model module rule dc cabinet ip subnet record
-      const arr = ['/asset/model/import', '/monitor/module/import', '/alert/rule/import', '/dc/import', '/dc/cabinet/import', '/ipam/ip/import', '/ipam/subnet/import', '/record/rule/import']
-      return arr.some(item => item === this.importUrl)
+      // chartTemplate dashboard导入样式维持原状
+      const arr = ['/visual/panel/import']
+      return !arr.some(item => item === this.importUrl)
     },
     // 是否同步更新关联的dashboard
     showSyncDashboard () {
