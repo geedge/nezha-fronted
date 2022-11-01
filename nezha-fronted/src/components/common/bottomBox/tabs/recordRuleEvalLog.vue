@@ -15,7 +15,7 @@
   >
     <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
     <template v-slot>
-      <alertRuleEvalLogTable
+      <recordRuleEvalLogTable
         ref="dataTable"
         :orderByFa="'id'"
         v-my-loading="tools.loading"
@@ -30,7 +30,7 @@
         @edit="edit"
         @orderBy="tableDataSort"
         @reload="getTableData"
-        @selectionChange="selectionChange"></alertRuleEvalLogTable>
+        @selectionChange="selectionChange"></recordRuleEvalLogTable>
     </template>
     <template v-slot:pagination>
       <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
@@ -42,7 +42,7 @@
 import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
-import alertRuleEvalLogTable from '@/components/common/table/alert/alertRuleEvalLogTable'
+import recordRuleEvalLogTable from '@/components/common/table/settings/recordRuleEvalLogTable'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 
 export default {
@@ -50,7 +50,7 @@ export default {
   mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,
-    alertRuleEvalLogTable
+    recordRuleEvalLogTable
   },
   props: {
     obj: Object,

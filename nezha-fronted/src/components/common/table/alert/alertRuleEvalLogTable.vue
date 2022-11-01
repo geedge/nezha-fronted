@@ -11,12 +11,12 @@
     @selection-change="selectionChange"
     @row-dblclick="(row)=>{queryMessage(row)}"
   >
-    <el-table-column
+    <!-- <el-table-column
       :resizable="false"
       align="center"
       type="selection"
       width="55">
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column
       v-for="(item, index) in customTableTitle"
       v-if="item.show"
@@ -86,23 +86,24 @@ export default {
     return {
       tableTitle: [
         {
-          label: this.$t('overall.state'),
-          prop: 'state',
-          show: true,
-          minWidth: 100
-        }, {
-          label: this.$t('alert.alertRuleMessage'),
-          prop: 'msg',
-          show: true,
-          minWidth: 100
-        }, {
           label: this.$t('overall.startTime'),
           prop: 'stts',
           show: true,
-          minWidth: 300
+          minWidth: 120
         }, {
           label: this.$t('config.terminallog.duration'),
           prop: 'duration',
+          show: true,
+          minWidth: 120
+        },
+        {
+          label: this.$t('overall.state'),
+          prop: 'state',
+          show: true,
+          minWidth: 120
+        }, {
+          label: this.$t('alert.alertRuleMessage'),
+          prop: 'msg',
           show: true,
           minWidth: 120
         }
