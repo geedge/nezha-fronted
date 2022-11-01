@@ -40,7 +40,6 @@
         <span v-else-if="item.prop==='type'">
           <i :class="typeIcon(scope.row)"/>
         {{findTypeLabel(scope.row)}}
-          {{scope.row.type}}
         </span>
         <template v-else-if="item.prop === 'name'">
           <copy :copyData='scope.row[item.prop]' :showInfo='scope.row[item.prop]'>
