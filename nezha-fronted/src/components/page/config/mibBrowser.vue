@@ -581,12 +581,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-
-.document-copy-text{
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-</style>
