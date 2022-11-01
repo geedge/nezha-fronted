@@ -225,7 +225,7 @@ export default {
     },
     /* 获取chart列表数据 */
     ChartTemplateList () {
-      this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0, groupId: 0 }).then(res => {
+      this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0, groupId: 0, returnChildren: 0 }).then(res => {
         this.chartlList = res.data.list
       })
     },
