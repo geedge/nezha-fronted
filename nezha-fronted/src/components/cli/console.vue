@@ -130,8 +130,7 @@ export default {
     focusConsole () {
       this.term.focus()
     },
-    create () {
-      const that = this
+    beforeCreate () {
       let rows = this.termimalRows
       if (this.isFullScreen) {
         // 容器高度设置100%
@@ -157,6 +156,31 @@ export default {
       })
       this.term.open(terminalContainer)
       this.term.focus()
+      const params = {
+        width: this.terminal.width,
+        height: this.terminal.height,
+        cols: this.terminal.cols,
+        rows: this.terminal.rows,
+        host: this.$loadsh.get(this.terminal, 'custom.host', ''),
+        port: this.$loadsh.get(this.terminal, 'custom.port', ''),
+        assetId: this.$loadsh.get(this.terminal, 'assetId', ''),
+        accountId: this.$loadsh.get(this.terminal, 'accountId', ''),
+        authProtocol: this.$loadsh.get(this.terminal, 'custom.authProtocol', ''),
+        authProtocolPort: this.$loadsh.get(this.terminal, 'custom.authProtocolPort', ''),
+        authType: this.$loadsh.get(this.terminal, 'custom.authType', ''),
+        authUsername: this.$loadsh.get(this.terminal, 'custom.authUsername', ''),
+        authPin: this.$loadsh.get(this.terminal, 'custom.authPin', ''),
+        authPriKey: this.$loadsh.get(this.terminal, 'custom.authPriKey', ''),
+        authUserTip: this.$loadsh.get(this.terminal, 'custom.authUserTip', ''),
+        authPinTip: this.$loadsh.get(this.terminal, 'custom.authPinTip', '')
+      }
+      this.$post('/terminal/login', params).then(res => {
+        console.log(res)
+        this.create()
+      })
+    },
+    create () {
+      const that = this
       const token = localStorage.getItem('nz-token')
       let baseUrl = JSON.parse(JSON.stringify(this.$axios.defaults.baseURL))
       const protocol = window.location.protocol.indexOf('https') > -1 ? 'wss' : 'ws'
@@ -295,7 +319,7 @@ export default {
     }
   },
   mounted () {
-    this.create()
+    this.beforeCreate()
   },
   beforeDestroy () {
     this.closeSocket()
