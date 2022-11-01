@@ -40,6 +40,7 @@
         <span v-else-if="item.prop==='type'">
           <i :class="typeIcon(scope.row)"/>
         {{findTypeLabel(scope.row)}}
+          {{scope.row.type}}
         </span>
         <template v-else-if="item.prop === 'name'">
           <copy :copyData='scope.row[item.prop]' :showInfo='scope.row[item.prop]'>
@@ -114,6 +115,7 @@ export default {
   data () {
     return {
       chartTypeList: chartConstant.type,
+      qsArr: [],
       tableTitle: [
         {
           label: 'ID',
@@ -185,17 +187,56 @@ export default {
         case 'logs':
           str += 'nz-icon-logs'
           break
+        case 'log':
+          str += 'nz-icon-logs'
+          break
         case 'bubble':
           str += 'nz-icon-bubble'
           break
+        case 'area':
+          str += 'nz-icon-stack-area'
+          break
+        case 'point':
+          str += 'nz-icon-bubble'
+          break
+        case 'stat':
+          str += 'nz-icon-single-value'
+          break
+        case 'hexagon':
+          str += 'nz-icon-duobianxing'
+          break
+        case 'gauge':
+          str += 'nz-icon-menu-dashboard'
+          break
+        case 'treemap':
+          str += 'nz-icon-Firewall'
+          break
+        case 'sankey':
+          str += 'nz-icon-sankey'
+          break
+        case 'rank':
+          str += 'nz-icon-rank'
+          break
+        case 'diagram':
+          str += 'nz-icon-diagram'
+          break
+        case 'map':
+          str += 'nz-icon-map'
+          break
+        case 'clock':
+          str += 'nz-icon-clock'
+          break
+        case 'topology':
+          str += 'nz-icon-projectTopology'
+          break
         default :
-          str += 'nz-icon-table1'
+          // str += 'nz-icon-table1'
           break
       }
       return str
     },
     findTypeLabel (row) {
-      const typeItem = this.chartTypeList.find(title => title.value === row.type)
+      const typeItem = this.chartTypeList.find(title => title.value == row.type)
       return typeItem ? this.$t(typeItem.label) : '-'
     }
   }
