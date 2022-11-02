@@ -22,6 +22,7 @@
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
       :sortable="item.sortable"
+      :width="`${item.width}`"
       :show-overflow-tooltip="item.prop === 'description'"
       class="data-column"
     >
@@ -103,13 +104,15 @@ export default {
           label: this.$t('asset.vsysId'),
           prop: 'vsysId',
           show: true,
-          minWidth: 120
+          minWidth: 120,
+          sortable: 'custom'
         },
         {
           label: this.$t('overall.state'),
           prop: 'state',
           show: true,
-          minWidth: 120
+          minWidth: 120,
+          sortable: 'custom'
         }, {
           label: this.$t('project.module.configs'),
           prop: 'vsysInfo',
@@ -124,7 +127,8 @@ export default {
           label: this.$t('overall.time'),
           prop: 'uts',
           show: true,
-          minWidth: 120
+          minWidth: 120,
+          sortable: 'custom'
         }
       ]
     }
@@ -153,10 +157,10 @@ export default {
       // this.$set(this.tableData,index,item);// 调用父组件
     },
     copyValue (item) {
-      const str = `{
-    "deviceTag": "${item.deviceTag || ''}",
-    "params": "${item.params || ''}"
-}`
+      const str = {
+        deviceTag: item.deviceTag || '',
+        params: item.params || ''
+      }
       const domUrl = document.createElement('input')
       domUrl.value = JSON.stringify(str)
       domUrl.id = 'creatDom'
@@ -166,6 +170,11 @@ export default {
       const creatDom = document.getElementById('creatDom')
       creatDom.parentNode.removeChild(creatDom)
       this.$message.success(this.$t('overall.copySuccess'))
+    },
+    // 数据排序
+    tableDataSort (item) {
+      const orderBy = { order: item.order, prop: item.prop }
+      this.$emit('tableDataSort', orderBy)
     }
   }
 }
