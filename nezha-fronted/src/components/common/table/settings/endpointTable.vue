@@ -312,15 +312,18 @@ export default {
   methods: {
     copyValue (item) {
       const str = item
-      const domUrl = document.createElement('input')
-      domUrl.value = JSON.stringify(str)
-      domUrl.id = 'creatDom'
-      document.body.appendChild(domUrl)
-      domUrl.select() // 选择对象
-      document.execCommand('Copy') // 执行浏览器复制命令
-      const creatDom = document.getElementById('creatDom')
-      creatDom.parentNode.removeChild(creatDom)
-      this.$message.success(this.$t('overall.copySuccess'))
+      // const domUrl = document.createElement('input')
+      // domUrl.value = JSON.stringify(str)
+      // domUrl.id = 'creatDom'
+      // document.body.appendChild(domUrl)
+      // domUrl.select() // 选择对象
+      // document.execCommand('Copy') // 执行浏览器复制命令
+      // const creatDom = document.getElementById('creatDom')
+      // creatDom.parentNode.removeChild(creatDom)
+      // this.$message.success(this.$t('overall.copySuccess'))
+      this.$copyText(JSON.stringify(str)).then(() => {
+        this.$message.success({ message: this.$t('overall.copySuccess') })
+      })
     },
     suspendedStr (status) { // 10进制转为2进制 分别给对应的状态
       if (!status || status === 1 || status == 0) { return '' }
