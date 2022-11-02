@@ -59,7 +59,7 @@
         </template>
         <template v-else-if="item.prop === 'vsysResult'">
           <div :title="scope.row[item.prop] && scope.row[item.prop].msg ? scope.row[item.prop].msg : '-'">
-            <copy :copyData='scope.row[item.prop] && scope.row[item.prop].msg ? scope.row[item.prop].msg : ""' :showInfo='scope.row[item.prop]'>
+            <copy :copyData='scope.row[item.prop] && scope.row[item.prop].msg ? scope.row[item.prop].msg : ""' :showInfo='scope.row[item.prop] && scope.row[item.prop].msg'>
               <template slot="copy-text">
                  {{scope.row[item.prop] && scope.row[item.prop].msg ? scope.row[item.prop].msg : '-'}}
               </template>
@@ -152,14 +152,20 @@ export default {
       }
       // this.$set(this.tableData,index,item);// 调用父组件
     },
-    copyValue (txt) {
+    copyValue (item) {
       const str = `{
-    "deviceTag": "${txt.deviceTag || ''}",
-    "params": "${txt.params || ''}"
+    "deviceTag": "${item.deviceTag || ''}",
+    "params": "${item.params || ''}"
 }`
-      this.$copyText(str).then(() => {
-        this.$message.success({ message: this.$t('overall.copySuccess') })
-      })
+      const domUrl = document.createElement('input')
+      domUrl.value = JSON.stringify(str)
+      domUrl.id = 'creatDom'
+      document.body.appendChild(domUrl)
+      domUrl.select() // 选择对象
+      document.execCommand('Copy') // 执行浏览器复制命令
+      const creatDom = document.getElementById('creatDom')
+      creatDom.parentNode.removeChild(creatDom)
+      this.$message.success(this.$t('overall.copySuccess'))
     }
   }
 }
