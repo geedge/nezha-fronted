@@ -68,6 +68,8 @@ export default {
               configs: this.$refs[detailType].bottomBox.object.configs ? this.$refs[detailType].bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
               childrenNum: this.$refs[detailType].bottomBox.object.childrenNum || '',
               clientState: this.$refs[detailType].bottomBox.object.clientState || '',
+              uuid: this.$refs[detailType].bottomBox.object.uuid || '',
+              startTime: this.$refs[detailType].bottomBox.object.startTime || '',
               model: {
                 tsgAppliance: this.$refs[detailType].bottomBox.object.model ? this.$refs[detailType].bottomBox.object.model.tsgAppliance : ''
               }
@@ -80,6 +82,8 @@ export default {
                 configs: this.$refs[detailType].detailViewRightObj.configs ? this.$refs[detailType].detailViewRightObj.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
                 childrenNum: this.$refs[detailType].detailViewRightObj.childrenNum || '',
                 clientState: this.$refs[detailType].detailViewRightObj.clientState || '',
+                uuid: this.$refs[detailType].detailViewRightObj.uuid || '',
+                startTime: this.$refs[detailType].detailViewRightObj.startTime || '',
                 model: {
                   tsgAppliance: this.$refs[detailType].detailViewRightObj.model ? this.$refs[detailType].detailViewRightObj.model.tsgAppliance : ''
                 }
@@ -96,6 +100,8 @@ export default {
             configs: this.bottomBox.object.configs ? this.bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
             childrenNum: this.bottomBox.object.childrenNum || '',
             clientState: this.bottomBox.object.clientState || '',
+            uuid: this.bottomBox.object.uuid || '',
+            startTime: this.bottomBox.object.startTime || '',
             model: {
               tsgAppliance: this.bottomBox.object.model ? this.bottomBox.object.model.tsgAppliance : ''
             }
@@ -109,6 +115,8 @@ export default {
             configs: this.detailViewRightObj.configs ? this.detailViewRightObj.configs.map(item => { return { type: item.type, enable: item.enable } }) : '',
             childrenNum: this.detailViewRightObj.childrenNum || '',
             clientState: this.detailViewRightObj.clientState || '',
+            uuid: this.detailViewRightObj.uuid || '',
+            startTime: this.detailViewRightObj.startTime || '',
             model: {
               tsgAppliance: this.detailViewRightObj.model ? this.detailViewRightObj.model.tsgAppliance : ''
             }
