@@ -209,6 +209,7 @@ export default {
           .data(rankData)
           .enter()
           .append('text')
+          .attr('class', 'chart-label-text')
           .attr('x', 4)
           .attr('y', d => {
             return (d.rank * barHeight) + (d.rank + 1) * margin - 12

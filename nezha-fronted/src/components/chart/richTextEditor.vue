@@ -116,7 +116,9 @@ export default {
           const currentIndex = this.quill.getSelection().index
           // 插入图片
           let baseURL = this.$axios.defaults.baseURL
-          baseURL = baseURL.startsWith('/') ? window.location.host + baseURL : baseURL
+          if (baseURL.startsWith('/')) {
+            baseURL = `${window.location.protocol}//` + window.location.host + baseURL
+          }
           const uploadUrl = baseURL + 'file/download/'
           this.quill.insertEmbed(currentIndex, 'image', `${uploadUrl}${res.data.uuid}`)
           // 调整光标到最后
