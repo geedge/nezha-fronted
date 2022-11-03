@@ -44,6 +44,7 @@ export default {
             ['image'] // 上传图片
           ]
         },
+        bounds: '.editor-core',
         placeholder: this.placeholder
       },
       maxLength: 0, // 记录最大长度
@@ -65,26 +66,6 @@ export default {
           } else {
             this.quill.format('image', false)
           }
-        })
-        this.quill.on('selection-change', function (range, oldRange, source) {
-          const tooltip = $self.$el.querySelector('.ql-tooltip')
-          if (tooltip) {
-            const left = tooltip.style.left
-            if (left && /\-\d+\.?\d+?px/.test(left)) {
-              tooltip.style.left = '10px'
-            }
-          }
-        })
-        this.quill.on('editor-change', () => {
-          setTimeout(() => {
-            const tooltip = $self.$el.querySelector('.ql-tooltip')
-            if (tooltip) {
-              const left = tooltip.style.left
-              if (left && /\-\d+\.?\d+?px/.test(left)) {
-                tooltip.style.left = '10px'
-              }
-            }
-          })
         })
         this.quill.on('text-change', function (delta, oldDelta, source) {
           const length = $self.getHtml().length
