@@ -218,27 +218,37 @@
           </template>
           <!-- TELNET -->
           <template v-if="editAsset.type && editAsset.type.authProtocol === assetConstants.authProtocolData.telnet">
-            <div class="form__sub-title">TELNET</div>
-            <el-form-item :label="$t('profile.username')" prop="authUsername">
-              <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
-            </el-form-item>
-            <el-form-item :label="$t('login.pin')" prop="authPin">
-              <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small"  type="password"/>
-            </el-form-item>
-            <el-form-item :label="$t('asset.usernamePrompt')" prop="authUserTip">
-              <el-input maxlength="64" show-word-limit v-model="editAsset.authUserTip" size="small"/>
-            </el-form-item>
-            <el-form-item :label="$t('asset.pinPrompt')" prop="authPinTip">
-              <el-input maxlength="64" show-word-limit v-model="editAsset.authPinTip" size="small"  type="password"/>
-            </el-form-item>
-            <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
-              <el-input v-model="editAsset.authProtocolPort" size="small"/>
-            </el-form-item>
+            <div class="form__sub-title">TELNET
+              <div>
+                <el-switch v-model="editAsset.showTelnet" :active-value="true" :inactive-value="false" size="small"></el-switch>
+              </div>
+            </div>
+            <div v-if="editAsset.showTelnet">
+              <el-form-item :label="$t('profile.username')" prop="authUsername">
+                <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
+              </el-form-item>
+              <el-form-item :label="$t('login.pin')" prop="authPin">
+                <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small"  type="password"/>
+              </el-form-item>
+              <el-form-item :label="$t('asset.usernamePrompt')" prop="authUserTip">
+                <el-input maxlength="64" show-word-limit v-model="editAsset.authUserTip" size="small"/>
+              </el-form-item>
+              <el-form-item :label="$t('asset.pinPrompt')" prop="authPinTip">
+                <el-input maxlength="64" show-word-limit v-model="editAsset.authPinTip" size="small"  type="password"/>
+              </el-form-item>
+              <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
+                <el-input v-model="editAsset.authProtocolPort" size="small"/>
+              </el-form-item>
+            </div>
           </template>
           <!-- SNMP -->
           <template v-if="editAsset.type && editAsset.type.snmpEnable === 1">
-            <div class="form__sub-title">SNMP</div>
-            <el-form-item :label="$t('asset.snmpCredential')" prop="snmpCredentialId">
+            <div class="form__sub-title">SNMP
+              <div>
+                <el-switch v-model="editAsset.showSnmp" :active-value="true" :inactive-value="false" size="small"></el-switch>
+              </div>
+            </div>
+            <el-form-item :label="$t('asset.snmpCredential')" prop="snmpCredentialId" v-if="editAsset.showSnmp">
               <el-select v-model="editAsset.snmpCredentialId" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="snmp in options.snmpCredentialOptions" :key="snmp.id" :label="snmp.name" :value="snmp.id"></el-option>
               </el-select>
@@ -449,6 +459,16 @@ export default {
           editAsset.showSSH = true
         } else {
           editAsset.showSSH = false
+        }
+        if (!editAsset.authType && this.editAsset.authUsername) {
+          editAsset.showTelnet = true
+        } else if (!editAsset.authType && !this.editAsset.authUsername) {
+          editAsset.showTelnet = false
+        }
+        if (editAsset.type.snmpEnable === 1 && editAsset.snmpCredentialId) {
+          editAsset.showSnmp = true
+        } else {
+          editAsset.showSnmp = false
         }
         this.editAsset = editAsset
         this.editAsset.brandAndModel = [this.editAsset.brand.id, this.editAsset.model.id]
@@ -677,6 +697,7 @@ export default {
       this.editAsset.snmpCredentialId = ''
       this.editAsset.authProtocolPort = ''
       this.editAsset.pid = ''
+      this.$refs.form.clearValidate()
       this.getModelData()
     },
     addLabel ([groupId, metaId]) {
@@ -733,11 +754,27 @@ export default {
           if (params.purchaseDate) {
             params.purchaseDate = bus.timeFormate(new Date(params.purchaseDate), 'YYYY-MM-DD')
           }
-          if (!params.showSSH) {
+          // 判断是 ssh 还是 telnet
+          if (params.type.authProtocol === assetConstants.authProtocolData.telnet && !params.showTelnet) { // telnet
             params.authType = ''
             params.authUsername = ''
             params.authPriKey = ''
             params.authPin = ''
+          }
+          if (params.type.authProtocol === assetConstants.authProtocolData.ssh && !params.showSSH) { // ssh
+            params.authType = ''
+            params.authUsername = ''
+            params.authPriKey = ''
+            params.authPin = ''
+          }
+          if (!params.showSSH && !params.showTelnet) {
+            params.authType = ''
+            params.authUsername = ''
+            params.authPriKey = ''
+            params.authPin = ''
+          }
+          if (!params.showSnmp) {
+            params.snmpCredentialId = ''
           }
           if (params.type.vm !== 1) {
             params.parent = {}
