@@ -67,7 +67,8 @@
         <!-- ipam -->
         <ip-details v-if="from === fromRoute.ipam && targetTab === 'ipam'" :from="from" :obj="obj" :tabs="tabs.ipam" @changeTab="changeTab" :targetTab.sync="targetTab"></ip-details>
         <!-- recordRule  下滑-->
-        <record-rule-eval-log v-if="from === fromRoute.recordRule && targetTab === 'recordRule'" :from="from" :obj="obj" :tabs="tabs.recordRule" @changeTab="changeTab" :targetTab.sync="targetTab"></record-rule-eval-log>
+        <record-rule-eval-log v-if="from === fromRoute.recordRule && targetTab === 'recordRule'" :from="from" :obj="obj" :tabs="tabs.recordRule.evalLog" @changeTab="changeTab" :targetTab.sync="targetTab"></record-rule-eval-log>
+        <recordRulesQuery v-if="from === fromRoute.recordRule && targetTab === 'Metrics'" :from="from" :obj="obj" :tabs="tabs.recordRule.Metrics" @changeTab="changeTab" :targetTab.sync="targetTab"></recordRulesQuery>
         <!--alertRule Tab-->
         <alertMessageTabNew v-if="from === fromRoute.alertSilence && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
         <!--issue Tab-->
@@ -87,6 +88,7 @@ import assetSubTab from './tabs/assetSubTab'
 import commentsBottomTab from './tabs/commentsBottomTab'
 import vsysBottomTab from './tabs/vsysBottomTab'
 import endpointQuery from './tabs/endpointQuery'
+import recordRulesQuery from './tabs/recordRulesQuery'
 import endpointTab from './tabs/endpointTab'
 import endpointTabNew from './tabs/endpointTabNew'
 import panelTabNew from './tabs/panelTabNew'
@@ -130,6 +132,7 @@ export default {
     alertRuleEvalLog,
     IpDetails,
     recordRuleEvalLog,
+    recordRulesQuery,
     issueTab,
     commentsBottomTab,
     vsysBottomTab
@@ -238,9 +241,16 @@ export default {
         ipam: [
           { prop: 'ipam', name: this.$t('ipam.subnet.ipDetails'), active: true }
         ],
-        recordRule: [
-          { prop: 'recordRule', name: this.$t('overall.alertRuleEvalLog'), active: true }
-        ],
+        recordRule: {
+          evalLog: [
+            { prop: 'recordRule', name: this.$t('overall.alertRuleEvalLog'), active: true },
+            { prop: 'Metrics', name: this.$t('overall.metric'), active: false }
+          ],
+          Metrics: [
+            { prop: 'recordRule', name: this.$t('overall.alertRuleEvalLog'), active: false },
+            { prop: 'Metrics', name: this.$t('overall.metric'), active: true }
+          ]
+        },
         alertSilence: [
           { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
         ],

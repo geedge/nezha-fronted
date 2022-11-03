@@ -123,7 +123,9 @@ export default {
           // 获取光标所在位置
           const currentIndex = this.quill.getSelection().index
           // 插入图片
-          const uploadUrl = this.$axios.defaults.baseURL + 'file/download/'
+          let baseURL = this.$axios.defaults.baseURL
+          baseURL = baseURL.startsWith('/') ? window.location.host + baseURL : baseURL
+          const uploadUrl = baseURL + 'file/download/'
           this.quill.insertEmbed(currentIndex, 'image', `${uploadUrl}${res.data.uuid}`)
           // 调整光标到最后
           this.quill.setSelection(currentIndex + 1)

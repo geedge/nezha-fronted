@@ -1,4 +1,5 @@
 .rich-text-editor {
+  color: $--color-text-regular;
   .ql-toolbar {
     border: 1px solid $--border-color-light;
   }
@@ -11,4 +12,11 @@
       color: $--color-text-regular;
     }
   }
+  .ql-tooltip{
+    line-height: normal;
+  }
+  .ql-editing input{
+    color: $--color-text-regular;
+  }
+
 }

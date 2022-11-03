@@ -449,7 +449,7 @@
     }
   }
 }
-.endpoint-query-metrics.chart-fullscreen.nz-dialog {
+.endpoint-query-metrics.chart-fullscreen.nz-dialog,.recordRules-query-metrics.chart-fullscreen.nz-dialog {
   .chart-screen-header .chart-header__tools #browser-go {
     margin-left: 5px;
   }
@@ -633,6 +633,9 @@
 
 .chart-label{
   color: $--color-text-primary;
+}
+.chart-label-text{
+  fill: $--color-text-primary;
 }
 .tickTest{
   font-size: 12px;

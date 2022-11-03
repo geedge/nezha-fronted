@@ -97,21 +97,21 @@
         }
       }
       .nz-btn-group {
-        #endpoint-query-changetime:hover {
+        #endpoint-query-changetime,#recordRules-query-changetime:hover {
           border: 1px solid $--asset-label-btn-border-color;
         }
         .nz-btn.nz-btn-size-normal.nz-btn-style-light.control-icon-unchecked:hover {
           border: 1px solid $--asset-label-btn-border-color;
           z-index: 2;
         }
-        .nz-btn.nz-btn-size-normal.nz-btn-style-light.control-icon-unchecked {
+        .nz-btn.nz-btn-size-normal.nz-btn-style-light.control-icon-unchecked,.nz-btn.nz-btn-size-normal.nz-btn-style-light.control-icon-checked {
           margin-right: -1px;
         }
         .project-calendar.nz-input-group-middle {
           border-left: 0;
           border-right: 0;
-          border-top: 1px solid $--border-color-base;
-          border-bottom: 1px solid $--border-color-base;
+          border-top: 1px solid $--border-color-light;
+          border-bottom: 1px solid $--border-color-light;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -237,6 +237,16 @@
   border-right: 0 !important;
 }
 .endpoint-tab-new .bottom-data-list .nz-btn-group.nz-btn-group-size-normal.nz-btn-group-light {
+  border: 0 !important;
+  box-shadow: 0 0 0px 0px rgba(0, 0, 0, 0);
+}
+.recordRules-query .sub-container .nz-table-list {
+  height: 100%;
+}
+.recordRules-query .bottom-data-list .nz-btn-group .nz-input-group-middle input {
+  border-right: 0 !important;
+}
+.recordRules-query .bottom-data-list .nz-btn-group.nz-btn-group-size-normal.nz-btn-group-light {
   border: 0 !important;
   box-shadow: 0 0 0px 0px rgba(0, 0, 0, 0);
 }

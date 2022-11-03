@@ -7,12 +7,12 @@
        :close-delay=10
        trigger="hover"
        popper-class="chart-error-popper">
-            <div >{{errorText}}</div>
-            <span slot="reference" class="panel-info-corner panel-info-corner--error">
-              <i class="nz-icon nz-icon-warning fa"></i>
-              <span class="panel-info-corner-inner"></span>
-           </span>
-          </el-popover>
+      <div >{{errorText}}</div>
+      <span slot="reference" class="panel-info-corner panel-info-corner--error">
+        <i class="nz-icon nz-icon-warning fa"></i>
+        <span class="panel-info-corner-inner"></span>
+      </span>
+    </el-popover>
     </span>
     <span v-if="!isError&&!showAllData&&allDataLength>20" class="chart-header-error moreTitle">
      <el-popover
@@ -20,11 +20,11 @@
        :close-delay=10
        trigger="hover"
        popper-class="chart-warring-popper">
-          <div class="moreTitle" @click="loadMore">{{$t('dashboard.panel.moreTitle')}}{{$t('dashboard.panel.showAll')}}{{allDataLength}}</div>
-          <span slot="reference" class="panel-info-corner panel-info-corner--error"  @click="loadMore">
-            <i class="nz-icon nz-icon-warning fa"></i>
-            <span class="panel-info-corner-inner"></span>
-          </span>
+        <div class="moreTitle" @click="loadMore">{{$t('dashboard.panel.moreTitle')}}{{$t('dashboard.panel.showAll')}}{{allDataLength}}</div>
+        <span slot="reference" class="panel-info-corner panel-info-corner--error"  @click="loadMore">
+          <i class="nz-icon nz-icon-warning fa"></i>
+          <span class="panel-info-corner-inner"></span>
+        </span>
      </el-popover>
     </span>
     <div class="chart-header__title" :title="chartInfo.name">
@@ -51,7 +51,7 @@
         ></pick-time>
       </span>
       <span class="chart-header__tool" v-if="showSaveBtn(from)">
-            <button id="endpoint-query-full-chart-save" v-has="'main_add'" class="nz-btn nz-btn-size-large nz-btn-style-normal" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
+        <button id="endpoint-query-full-chart-save" v-has="'main_add'" class="nz-btn nz-btn-size-large nz-btn-style-normal" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
       </span>
       <span class="chart-header__tool" @click="closeDialog"  :title="$t('overall.close')">
         <i class="nz-icon nz-icon-close" style="font-size: 16px;"></i>
@@ -159,6 +159,7 @@ export default {
     showUnit (type) {
       switch (type) {
         case 'endpointQuery' :
+        case 'recordRulesQuery' :
           return true
         default: return false
       }
@@ -166,6 +167,7 @@ export default {
     showSaveBtn (type) {
       switch (type) {
         case 'endpointQuery' :
+        case 'recordRulesQuery' :
           return true
         default: return false
       }
