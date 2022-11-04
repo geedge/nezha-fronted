@@ -44,7 +44,7 @@ export default {
             ['image'] // 上传图片
           ]
         },
-        bounds: '.editor-core',
+        bounds: '.rich-text-editor',
         placeholder: this.placeholder
       },
       maxLength: 0, // 记录最大长度

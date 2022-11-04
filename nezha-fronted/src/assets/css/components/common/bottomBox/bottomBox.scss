@@ -297,9 +297,8 @@
       border-right: unset !important;
     }
     .editor-core {
-      height: auto !important;
+      height: 0 !important;
       flex: 1;
-      overflow: hidden;
     }
     .ql-container.ql-snow {
       border: unset !important;
