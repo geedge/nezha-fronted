@@ -181,7 +181,8 @@ export default {
       timeFormatData: [],
       tableChartData: [],
       myChart: null,
-      noData: false
+      noData: false,
+      filterData: []
     }
   },
   methods: {
@@ -228,6 +229,19 @@ export default {
     },
     loadChart () {
       const vm = this
+      const selectObj = {}
+      const sele = this.filterData.every(item => { return item.level == this.filterData[0].level })
+      this.tableChartData.forEach(item => {
+        if (sele) {
+          if (item.name == this.filterData[0].level) {
+            selectObj[item.name] = true
+          } else {
+            selectObj[item.name] = false
+          }
+        } else {
+          selectObj[item.name] = true
+        }
+      })
       const dom = document.getElementById(`logChart${this.tabIndex}`)
       if (!dom) {
         return
@@ -270,6 +284,7 @@ export default {
               padding: [0, 0, 0, 6],
               color: this.theme == 'light' ? '#666666' : '#BEBEBE'
             },
+            selected: selectObj,
             inactiveColor: this.theme == 'light' ? '#BEBEBE' : '#666666' // 字体颜色
           },
           series,
@@ -395,6 +410,7 @@ export default {
         })
         return hit
       })
+      this.filterData = filterLevelData
       // 复制一份升序的数据用于后面处理
       const copyData = [...data]
       // 升降序
