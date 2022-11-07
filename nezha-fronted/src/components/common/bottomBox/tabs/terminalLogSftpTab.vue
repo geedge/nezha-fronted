@@ -57,7 +57,7 @@ export default {
   },
   data () {
     return {
-      url: '/mock/terminal/sftp/log/',
+      url: '/terminal/sftp/log/',
       tableId: 'sftpTable', // 需要分页的table的id，用于记录每页数量
       detailType: 'list',
       searchMsg: { // 给搜索框子组件传递的信息
