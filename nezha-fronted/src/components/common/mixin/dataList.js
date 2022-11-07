@@ -1323,10 +1323,12 @@ export default {
     }
     let localStorageTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
     localStorageTableTitle = localStorageTableTitle ? JSON.parse(localStorageTableTitle) : tableTitle
-    this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
-      item.show = localStorageTableTitle[index].show
-      return item
-    })
+    if (tableTitle) {
+      this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
+        item.show = localStorageTableTitle[index].show
+        return item
+      })
+    }
     if (localStorageTableTitle && (localStorageTableTitle.length > tableTitle.length)) {
       const arr = localStorageTableTitle.splice(tableTitle.length, localStorageTableTitle.length)
       arr.forEach(item => {

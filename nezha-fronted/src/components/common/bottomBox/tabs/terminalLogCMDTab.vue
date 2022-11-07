@@ -93,7 +93,8 @@ export default {
       records: [ // 加载更多时有多个record，否则只有一个
 
       ],
-      tableId: 'terminaLogCMDTab'
+      tableId: 'terminaLogCMDTab',
+      detailType: 'list'
     }
   },
   methods: {
