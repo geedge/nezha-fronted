@@ -230,16 +230,17 @@ export default {
     loadChart () {
       const vm = this
       const selectObj = {}
-      const sele = this.filterData.every(item => { return item.level == this.filterData[0].level })
+      const sele = []
+      this.filterData.forEach(item => {
+        if (sele.indexOf(item.level) == -1) {
+          sele.push(item.level)
+        }
+      })
       this.tableChartData.forEach(item => {
-        if (sele) {
-          if (item.name == this.filterData[0].level) {
-            selectObj[item.name] = true
-          } else {
-            selectObj[item.name] = false
-          }
-        } else {
+        if (sele.indexOf(item.name) !== -1) {
           selectObj[item.name] = true
+        } else {
+          selectObj[item.name] = false
         }
       })
       const dom = document.getElementById(`logChart${this.tabIndex}`)
