@@ -9,7 +9,7 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-//const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 // const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 const fileManagerPlugin = require('filemanager-webpack-plugin')
 const WebpackZipPlugin = require('webpack-zip-plugin')
@@ -19,10 +19,6 @@ const GenerateAssetPlugin = require('generate-asset-webpack-plugin')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
 const serverConfig = require('../static/config.json')// 引入根目录下的配置文件
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-const HappyPack = require('happypack');
-const smp = new SpeedMeasurePlugin();
-
 
 // const gitRevisionPlugin = new GitRevisionPlugin();
 const createJson = function () {
@@ -55,9 +51,6 @@ if (arg === 'html') {
       chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
     },
     plugins: [
-      new webpack.DllReferencePlugin({
-        manifest: require("../static/vendor-manifest.json"), // dll 中生成的json 文件
-      }),
       new webpack.ProvidePlugin({
         introJs: ['intro.js'],
       }),
@@ -95,11 +88,11 @@ if (arg === 'html') {
       }),
       // Compress extracted CSS. We are using this plugin so that possible
       // duplicated CSS from different components can be deduped.
-      /*new OptimizeCSSPlugin({
+      new OptimizeCSSPlugin({
         cssProcessorOptions: config.build.productionSourceMap
           ? { safe: true, map: { inline: false } }
           : { safe: true }
-      }),*/
+      }),
       // generate dist index.html with correct asset hash for caching.
       // you can customize output by editing /index.html
       // see https://github.com/ampedandwired/html-webpack-plugin
@@ -239,11 +232,11 @@ if (arg === 'html') {
       }),
       // Compress extracted CSS. We are using this plugin so that possible
       // duplicated CSS from different components can be deduped.
-      /*new OptimizeCSSPlugin({
+      new OptimizeCSSPlugin({
         cssProcessorOptions: config.build.productionSourceMap
           ? { safe: true, map: { inline: false } }
           : { safe: true }
-      }),*/
+      }),
       // generate dist index.html with correct asset hash for caching.
       // you can customize output by editing /index.html
       // see https://github.com/ampedandwired/html-webpack-plugin
@@ -311,10 +304,7 @@ if (arg === 'html') {
           to: config.build.assetsSubDirectory,
           ignore: ['*']
         }
-      ]),
-      new webpack.DllReferencePlugin({
-        manifest: require("../static/vendor-manifest.json"), // dll 中生成的json 文件
-      })
+      ])
     ]
   })
 }
@@ -338,9 +328,6 @@ if (process.env.NODE_ENV == 'development') {
           ],
           copy: [
             { source: path.join(__dirname, '../dist', '/config.json'), destination: path.join(__dirname, '../dist', '/static/config.json') }
-          ],
-          copy: [
-            { source: path.join(__dirname, '../static', '/vendor.dll.js'), destination: path.join(__dirname, '../dist', '/static/vendor.dll.js') } //dll 生成的js 文件
           ]
         },
         {
@@ -375,9 +362,6 @@ if (process.env.NODE_ENV == 'development') {
         ],
         copy: [
           { source: path.join(__dirname, '../dist', '/config.json'), destination: path.join(__dirname, '../dist', '/static/config.json') }
-        ],
-        copy: [
-          { source: path.join(__dirname, '../static', '/vendor.dll.js'), destination: path.join(__dirname, '../dist', '/static/vendor.dll.js') }
         ]
       },
       {
@@ -426,7 +410,5 @@ if (config.build.bundleAnalyzerReport) {
   const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
-
-webpackConfig = smp.wrap(webpackConfig);
 
 module.exports = webpackConfig
