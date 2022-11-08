@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const HappyPack = require('happypack');
 const arg = process.env.BUILD_MODE
 const devStart = process.env.npm_lifecycle_event
 function resolve (dir) {
@@ -37,7 +38,6 @@ const baseConfig = {
       },
       {
         test: /\.(js)$/,
-        loader: 'babel-loader',
         include: [
           resolve('src'),
           resolve('test'),
@@ -47,18 +47,7 @@ const baseConfig = {
           resolve('node_modules/vue-grid-layout')
         ],
         exclude: '/node_modules/',
-        options: {
-          presets: [
-            ['env', {
-              modules: false,
-              targets: {
-                browsers: ['> 1%', 'last 2 versions', 'not ie <= 8']
-              }
-            }],
-            'stage-2'
-          ],
-          plugins: ['transform-vue-jsx', 'transform-runtime']
-        }
+        use: 'HappyPack/loader?id=babel'
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -86,6 +75,30 @@ const baseConfig = {
       }
     ]
   },
+   plugins:[
+     new HappyPack(
+       {
+         id:'babel',
+         use:[
+         {
+           loader: 'babel-loader',
+           options: {
+             cacheDirectory: true, //缓存
+             presets: [
+               ['env', {
+                 modules: false,
+                 targets: {
+                   browsers: ['> 1%', 'last 2 versions', 'not ie <= 8']
+                 }
+               }],
+               'stage-2'
+             ],
+             plugins: ['transform-vue-jsx', 'transform-runtime']
+             }
+           }]
+       }
+     )
+   ],
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue
     // source contains it (although only uses it if it's native).

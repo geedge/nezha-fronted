@@ -48,7 +48,7 @@ dev_build:
       else
           echo "No need to update snapshot template"
       fi
-
+    - npm run build:dll
     - npm run build
     - cd /builds/nezha/nezha-fronted/nezha-fronted/dist
     - mc cp nz/depends/template/snapshot_template.html ./snapshot_template.html
