@@ -73,6 +73,7 @@
 import selectWalk from '../../popBox/selectWalk'
 import editRigthBox from '../../mixin/editRigthBox'
 import { sysObjectIdInput } from '@/components/common/js/validate'
+import bus from '@/libs/bus'
 
 export default {
   name: 'modelBox',
@@ -184,6 +185,7 @@ export default {
       if (typeof this.editModel.brandId === 'string') { // 判断是否是新增的
         this.$post(this.brandUrl, { name: this.editModel.brandId }).then(res => {
           if (res.code === 200) { // 新增成功
+            bus.$emit('refreshBrand')
             this.getBrandList().then(res2 => { // 新增成功后，重新调用getBrandList，刷新brandList
               const newBrand = this.brandList.find(b => b.name === this.editModel.brandId) // 取出刚新增的brand对象
               if (newBrand) {
