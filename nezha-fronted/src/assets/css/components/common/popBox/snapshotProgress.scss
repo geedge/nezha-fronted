@@ -1,0 +1,79 @@
+.nz-dialog.snapshot-dialog{
+  .el-dialog__header{
+    padding: 15px;
+    padding-right: 40px;
+    border-bottom: 1px solid $--border-color-light;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    .el-dialog__title{
+      font-family: Roboto-Medium;
+      font-size: 16px;
+      color: $--color-text-primary;
+      letter-spacing: 0;
+      font-weight: 500;
+    }
+  }
+  .el-dialog__body{
+    padding: 20px;
+    padding-bottom: 30px;
+    .snapshot-name,.snapshot-time{
+      font-family: Roboto-Regular;
+      font-size: 14px;
+      color: $--color-text-regular;
+      letter-spacing: 0;
+      font-weight: 400;
+    }
+    .el-progress-bar{
+      margin-top: 20px;
+      overflow: hidden;
+      position: relative;
+      .el-progress-bar__outer{
+        height: 20px;
+        border-radius: 0;
+        background-color: $--background-color-2;
+        border: 1px solid $--border-color-light;
+        box-sizing: border-box;
+        overflow: unset;
+        .el-progress-bar__inner{
+          transition: width 0.3s linear;
+          border-radius: 0;
+          background-color:#3B92F1;
+          height: 18px;
+          // height: 20px;
+          // position: absolute;
+          // left: -1px;
+          // top: -1px;
+        }
+      }
+    }
+    .snapshot-elapsed{
+      font-family: Roboto-Black;
+      font-size: 12px;
+      color: $--color-text-regular;
+      letter-spacing: 0;
+      line-height: 17px;
+      font-weight: 400;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2px;
+    }
+    .snapshot-msg{
+      font-family: Roboto-Regular;
+      font-size: 14px;
+      color: $--color-text-regular;
+      letter-spacing: 0;
+      line-height: 16px;
+      font-weight: 400;
+      margin-top: 20px;
+    }
+  }
+  .el-dialog__footer{
+    padding: 12px 20px;
+    border-top: 1px solid $--border-color-light;
+    .el-message-box__btns{
+      padding: 0;
+    }
+  }
+}

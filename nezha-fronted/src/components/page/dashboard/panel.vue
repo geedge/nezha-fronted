@@ -142,6 +142,8 @@
     <transition name="right-box">
       <panel-box v-if="rightBox.panel.show" ref="panelBox" :obj="panel" @close="closePanelBox" @reload="panelReload" @reloadForDel="panelReloadForDel" ></panel-box>
     </transition>
+
+    <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="searchTime" :snapshotVisible.sync="snapshotVisible"></snapshotProgress>
   </div>
 </template>
 
@@ -162,6 +164,7 @@ import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
 import * as echarts from 'echarts'
 import panelVariables from '@/components/common/panel/panelVariables'
+import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
 // import FileSaver from 'file-saver'
 // import chartData from './testData'
 export default {
@@ -309,7 +312,8 @@ export default {
       // 查看模式
       mode: '',
       variables: [],
-      variablesInit: false // 判断variables 是否加载完成
+      variablesInit: false, // 判断variables 是否加载完成
+      snapshotVisible: false
     }
   },
   components: {
@@ -319,7 +323,8 @@ export default {
     selectDashboard,
     chartTempBox,
     chartRightBox,
-    panelVariables // 处理panel变量的组件
+    panelVariables, // 处理panel变量的组件
+    snapshotProgress // 快照进度
   },
   computed: {
     chartRightBoxShow () {
@@ -994,7 +999,8 @@ export default {
       if (type === 'PDF') {
         this.htmlToPdf()
       } else {
-        this.exportToHtml(this.showPanel.name)
+        // this.exportToHtml(this.showPanel.name)
+        this.snapshotVisible = true
       }
     },
     // 切换查看模式
