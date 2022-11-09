@@ -21,7 +21,7 @@
           </el-form-item>
           <!-- type -->
           <el-form-item :label='$t("overall.type")' prop="typeId">
-            <el-select value-key="id" allow-create class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.typeId" placeholder="" size="small" id="module-box-input-project">
+            <el-select value-key="id" allow-create class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.typeId" placeholder="" size="small" id="module-box-input-project" disabled>
               <el-option v-for="(item, index) in typeDataList" :key="index" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
