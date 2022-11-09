@@ -21,8 +21,8 @@
           </el-form-item>
           <!-- type -->
           <el-form-item :label='$t("overall.type")' prop="typeId">
-            <el-select :disabled='editModel.id !== ""' value-key="id" allow-create class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.typeId" placeholder="" size="small" id="module-box-input-project">
-              <el-option v-for="(item, index) in typeDataList" :key="index" :label="item.name" :value="item.id"></el-option>
+            <el-select value-key="id" allow-create class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.typeId" placeholder="" size="small" id="module-box-input-project">
+              <el-option :disabled='editModel.id !== ""' v-for="(item, index) in typeDataList" :key="index" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <!-- ChartTemplate -->
@@ -134,7 +134,6 @@ export default {
       handler (n) {
         this.isEdit = true
         this.editModel = JSON.parse(JSON.stringify(n))
-        console.log(this.editModel.id)
       }
     }
   },
