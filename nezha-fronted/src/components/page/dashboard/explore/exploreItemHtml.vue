@@ -28,12 +28,13 @@
         <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
           <div slot="title" class="explore-table-title">
             {{$t('dashboard.panel.chartForm.typeVal.table.label')}}
-<!--            <i-->
-<!--              class="nz-icon-gear nz-icon"-->
-<!--              style="position: absolute;right: 10px;top: 8px"-->
-<!--              @click.stop="tools.showCustomTableTitle = true"-->
-<!--              :title="$t('overall.selectColumns')"-->
-<!--            ></i>-->
+            <i
+              class="nz-icon-gear nz-icon"
+              style="position: absolute;right: 10px;top: 8px"
+              @click.stop="tools.showCustomTableTitle = true"
+              :title="$t('overall.selectColumns')"
+            >
+            </i>
             <!-- 自定义table列 -->
             <transition name="el-zoom-in-top">
               <element-set
@@ -51,13 +52,14 @@
           </div>
           <!-- 自定义table列 -->
           <div class="nz-table-list explore-table">
-            <el-table ref="exploreTable"
-                      v-my-loading="tools.loading"
-                      class="metric-table"
-                      :data="tableData"
-                      border
-                      :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
-                      tooltip-effect="light">
+            <el-table
+              ref="exploreTable"
+              v-my-loading="tools.loading"
+              class="metric-table"
+              :data="tableData"
+              border
+              :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
+              tooltip-effect="light">
               <el-table-column
                 v-for="(item, index) in tools.customTableTitle"
                 v-if="item.show"
@@ -85,8 +87,7 @@
               </template>
             </el-table>
           </div>
-          <pagination ref="Pagination" :page-obj="pageObj" @pageNo='pageNo'
-                      @pageSize='pageSize'></pagination>
+          <pagination ref="Pagination" :page-obj="pageObj" @pageNo='pageNo' @pageSize='pageSize'></pagination>
         </el-collapse-item>
       </template>
       <!--log-->

@@ -4287,7 +4287,6 @@ export default {
           document.body.removeChild(link) // 下载完成移除元素
           window.URL.revokeObjectURL(href) // 释放blob对象
         }
-        this.$refs.topTool.closeDialog()
       }, () => {
         this.$message.error('123')
       })
