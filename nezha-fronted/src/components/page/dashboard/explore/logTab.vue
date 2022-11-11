@@ -34,7 +34,7 @@
         <span class="operation-label">Result:</span>
         <span class="operation-length">{{tableData.length}}</span>
       </div>
-      <div class="log-operation log-operation--right" v-if=" dataJson && dataJson.type">
+      <div class="log-operation log-operation--right" v-if="!dataJson">
         <button class="top-tool-btn" style="cursor: pointer;z-index: 2;" type="button" @click="exportLog" :title="$t('overall.download')"><i class="nz-icon nz-icon-download"></i></button>
       </div>
     </div>
