@@ -14,6 +14,7 @@
         <span class="operation-label">{{$t('dashboard.explore.descending')}}</span>
         <el-switch
           v-model="operations.descending"
+          :disabled="Boolean(dataJson)"
         >
         </el-switch>
       </div>
@@ -26,7 +27,7 @@
       </div>
       <div class="log-operation">
         <span class="operation-label">{{$t('overall.limit')}}:</span>
-        <el-select v-model="limit" size="small" style="width: 100px;" popper-class="right-box-select-top right-public-box-dropdown-top">
+        <el-select v-model="limit" :disabled="Boolean(dataJson)" size="small" style="width: 100px;" popper-class="right-box-select-top right-public-box-dropdown-top">
           <el-option v-for="option in limitOptions" :key="option" :value="option"></el-option>
         </el-select>
       </div>
@@ -185,11 +186,20 @@ export default {
       filterData: []
     }
   },
+  created () {
+    if (this.dataJson) {
+      this.limit = this.dataJson.limit || 100
+      this.operations.descending = this.dataJson.direction === 'backward'
+    }
+  },
   methods: {
     resetOperation () {
       this.operations = {
         levels: [0, 1, 2, 3, 4, 5, 6],
         descending: true
+      }
+      if (this.dataJson) {
+        this.operations.descending = this.dataJson.direction === 'backward'
       }
     },
     exportLog () {
@@ -270,9 +280,10 @@ export default {
           },
           grid: {
             top: 20,
-            left: 30,
+            left: 20,
             right: 10,
-            bottom: 80
+            bottom: 80,
+            containLabel: true
           },
           legend: {
             bottom: 20,
@@ -485,6 +496,9 @@ export default {
     getLimit () {
       return this.limit
     },
+    getDescending () {
+      return this.operations.descending ? 'backward' : 'forward'
+    },
     resizeChart () {
       setTimeout(() => {
         this.myChart.resize()
@@ -588,9 +602,6 @@ export default {
         this.tableData = tableData
         this.tableChartData = tableChartData
       }
-    },
-    limit (n) {
-      this.$emit('limitChange', n)
     }
   },
   destroyed () {

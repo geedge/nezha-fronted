@@ -4253,6 +4253,7 @@ export default {
       }
       if (!this.showMetrics) {
         params.limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
+        params.direction = this.$refs.logDetail ? this.$refs.logDetail.getDescending() : 'backward'
       }
       this.$store.dispatch('dispatchHomeLoading', true)
       this.$get('/visual/explore/snapshot', params, 'blob').then(res => {
