@@ -27,6 +27,15 @@
             <el-option label="Per-datacenter" value="2"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item :label="$t('config.system.monitor.interface_name')" prop="interface_name">
+          <vue-tags-input
+                        v-model="tag"
+                        :maxlength="32"
+                        :placeholder="$t('overall.add.interface_name')"
+                        :tags="monitor.interface_name"
+                        @tags-changed="newTags=> monitor.interface_name = newTags"
+                      />
+        </el-form-item>
         <!--metrics-->
         <div class="system-title system-title-border">{{$t('config.system.monitor.metricsTitle')}}</div>
         <el-form-item :label="$t('config.system.monitor.metrics_storage_retention')" prop="metrics_storage_retention">
@@ -110,13 +119,18 @@
 <script>
 import systemMixin from '../../common/mixin/system/systemMixin'
 import routerPathParams from '../../common/mixin/routerPathParams'
+import VueTagsInput from '@johmun/vue-tags-input'
 
 export default {
   name: 'monitor',
   mixins: [systemMixin, routerPathParams],
+  components: {
+    VueTagsInput
+  },
   data () {
     return {
       switchTab: 'monitor',
+      tag: '',
       monitor: {
         // alert_api: '',
         asset_ping_from: '',
@@ -137,7 +151,8 @@ export default {
         metrics_storage_s3_endpoint: '',
         metrics_storage_s3_secret_access_key: '',
         metrics_storage_type: '',
-        prometheus_federation_enabled: ''
+        prometheus_federation_enabled: '',
+        interface_name: []
       },
       monitorRules: {
         // alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
@@ -169,3 +184,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.vue-tags-input{
+  max-width: unset;
+}
+</style>
