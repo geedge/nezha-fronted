@@ -133,7 +133,7 @@
               :use-chart-unit="false"
               class="pickTime margin-r-10">
             </pick-time>
-            <button v-has="'project_edit'" class="top-tool-btn margin-r-10" type="button" @click="editTopology" :title="$t('overall.edit')">
+            <button v-has="'project_edit'" class="top-tool-btn margin-r-10" type="button" @click="editTopology(false)" :title="$t('overall.edit')">
               <i class="nz-icon nz-icon-edit"></i>
             </button>
             <button class="top-tool-btn" type="button" @click="changeScreen" :title="topoScreen? $t('dashboard.screen.exit') : $t('dashboard.screen')">
@@ -1982,7 +1982,7 @@ export default {
       }
     },
 
-    editTopology (val) {
+    editTopology (isPreview) {
       this.editTopologyFlag = true
       this.showNoData = false
       this.topoScreenState = JSON.parse(JSON.stringify(this.topoScreen))
@@ -2026,6 +2026,13 @@ export default {
             item.toArrowColor = item.data.arrowColor
             item.animatePlay = false
             item.fontColor = item.data.fontColor || '#222222'
+          }
+          if (isPreview) {
+            const scale = getTopology(this.topologyIndex).store.data.scale
+            item.x = item.x / scale
+            item.y = item.y / scale
+            item.width = item.width / scale
+            item.height = item.height / scale
           }
           getTopology(this.topologyIndex)._setValue(item)
         })
@@ -2212,7 +2219,7 @@ export default {
     },
     previewExit () { // 继续编辑
       this.isPreview = false
-      this.editTopology()
+      this.editTopology(true)
     },
 
     // 联动 project
