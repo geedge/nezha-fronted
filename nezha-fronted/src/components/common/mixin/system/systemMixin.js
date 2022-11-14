@@ -81,7 +81,8 @@ export default {
         metrics_storage_s3_endpoint: '',
         metrics_storage_s3_secret_access_key: '',
         metrics_storage_type: '',
-        prometheus_federation_enabled: ''
+        prometheus_federation_enabled: '',
+        interface_name: []
       },
       monitorRules: {
         // alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
@@ -253,6 +254,13 @@ export default {
             this.$refs.emailForm.clearValidate()
           }
           if (type == 'monitor') {
+            if(response.data.interface_name){
+              let arr = response.data.interface_name.split(',')
+              this.monitor.interface_name = arr.map(item=>{
+                 return {text: item}
+
+              })
+            }
             localStorage.setItem('nz-prometheus-federation-enabled', this.monitor.prometheus_federation_enabled)
           }
           this[type + 'Copy'] = Object.assign({}, this[type])
@@ -269,6 +277,12 @@ export default {
             const mapConfig = this.$refs.latlngPicker.getAttribute()
             param.map_center_config = JSON.stringify(mapConfig)
             param.pin_policy = JSON.stringify(this.basic.pin_policy)
+          }
+          if(type == 'monitor') {
+            let str = this.monitor.interface_name.map(item=>{
+              return item.text
+            })
+            param.interface_name = str.join(',')
           }
           const postParam = Object.assign({}, param)
           for (const key in postParam[type]) {
