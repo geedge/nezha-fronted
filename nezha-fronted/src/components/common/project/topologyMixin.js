@@ -104,7 +104,15 @@ export default {
       if (data.type === 0 || data.type === 1) {
         data.lineWidth = data.data.lineWidth
       }
-      getTopology(this.topologyIndex).setValue(data)
+      const obj = this.$loadsh.cloneDeep(data)
+      delete obj.x
+      delete obj.y
+      delete obj.center
+      delete obj.ex
+      delete obj.ey
+      delete obj.width
+      delete obj.height
+      getTopology(this.topologyIndex).setValue(obj)
     },
     pensActive (pens) {
       this.props = {
