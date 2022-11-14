@@ -247,6 +247,46 @@
           </div>
         </transition>
       </div>
+      <!-- repeat -->
+      <div v-if="params.type === 'group'">
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.repeat')}}</span>
+          <el-switch
+            v-model="chartConfig.param.enable.repeat"
+            size="small"
+            @change="change"
+          ></el-switch>
+        </div>
+        <transition name="el-zoom-in-top">
+          <div
+            v-if="chartConfig.param.enable.repeat"
+            class="form-items--half-width-group"
+          >
+            <!-- variable -->
+            <el-form-item
+              :label="$t('dashboard.panel.variableName')"
+              class="form-item--half-width"
+              prop="param.repeat.variable"
+              :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+            >
+              <el-select
+                v-model="chartConfig.param.repeat.variable"
+                :placeholder="$t('el.select.placeholder')"
+                popper-class="right-box-select-top prevent-clickoutside"
+                size="small"
+                @change="change"
+              >
+                <el-option
+                  v-for="item in variables"
+                  :key="item.name"
+                  :label="$t(item.name)"
+                  :value="item.name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </transition>
+      </div>
 
     </el-form>
   </div>
@@ -320,7 +360,8 @@ export default {
             link: this.chartConfig.param.link,
             collapse: true,
             enable: {
-              visibility: false
+              visibility: false,
+              repeat: false
             },
             showHeader: this.chartConfig.param.showHeader,
             visibility: {
@@ -328,6 +369,9 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
+            },
+            repeat: {
+              variable: ''
             }
           }
           break

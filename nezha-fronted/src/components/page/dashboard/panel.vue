@@ -42,7 +42,7 @@
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id"></pick-time>
 
               <!-- 切换查看模式 -->
-              <button slot="reference" class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
+              <button class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
                 <i class="nz-icon nz-icon-moshiqiehuan"></i>
               </button>
 
