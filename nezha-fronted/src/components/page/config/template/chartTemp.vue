@@ -270,10 +270,13 @@ export default {
         const length = this.object.name.length - 64
         this.object.name = u.name.substring(0, u.name.length - length) + '-copy'
       }
-      this.object.elements = this.object.elements.map(item => {
-        item.id = ''
-        return item
-      })
+      if (this.object.type !== 'group') {
+        this.object.elements = this.object.elements.map(item => {
+          item.id = ''
+          return item
+        })
+      }
+
       this.rightBox.show = true
     },
     chartBySync (row) {
