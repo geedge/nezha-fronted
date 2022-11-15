@@ -189,6 +189,11 @@ export default {
   max-width: unset;
 }
 /deep/ .vue-tags-input .ti-input{
-    padding: 2px !important;
+    min-height: 32px;
+    padding: 0px 0px 0px 15px !important;
+}
+/deep/ .vue-tags-input .ti-input .ti-new-tag-input-wrapper{
+  padding: 0;
+  margin: 0;
 }
 </style>
