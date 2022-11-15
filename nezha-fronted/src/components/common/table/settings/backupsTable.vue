@@ -50,26 +50,30 @@
         </button>
       </div>
 
-      <div slot-scope="scope" v-else class="table-operation-items">
-        <button class="table-operation-button" @click="Restore(scope.row)" v-if="scope.row" :title="$t('backup.RestoreNow')">
-         <i class="nz-icon-shujubeifenhuifu nz-icon"></i>
-        </button>
-        <div v-if="scope.row" @click="tableOperation(scope.row)">
-           <delete-button
-            ref="deleteButton"
-            :forceDeleteShow="false"
-            id="backup-delete"
-            :from="'backup'"
-            :type="'btn'"
-            :api="'/sys/backup'"
-            :single="true"
-            :delete-objs="singleDelete"
-            @before="delFlag=true"
-            ></delete-button>
+       <div slot-scope="scope" class="table-operation-items" v-else>
+        <button class="table-operation-item" :title="$t('overall.download')" v-has="'backup_download'" @click="downloadBackup(scope.row)"><i class="nz-icon nz-icon-download"></i></button>
+        <el-dropdown size="medium" v-has="['backup_restore','backup_del']" trigger="click" @command="tableOperation">
+          <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
+            <i class="nz-icon nz-icon-more3"></i>
           </div>
-        <!-- <button class="table-operation-edit" @click="del(scope.row)" v-if="scope.row" :title="$t('overall.delete')">
-          <i class="nz-icon nz-icon-delete" style="font-size='12px'"></i>
-        </button> -->
+          <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
+            <el-dropdown-item v-has="'backup_restore'" :command="['restore', scope.row]" disabled><i class="nz-icon-shujubeifenhuifu nz-icon"></i><span>{{$t('backup.RestoreNow')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'backup_del'" :command="['delete', scope.row]">
+                  <delete-button
+                    ref="deleteButton"
+                    :forceDeleteShow="false"
+                    id="backup-delete"
+                    :from="'backup'"
+                    :type="'link'"
+                    :title="$t('overall.delete')"
+                    :api="'/sys/backup'"
+                    :single="true"
+                    :delete-objs="singleDelete"
+                    @before="delFlag=true"
+                    ></delete-button>
+              </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </el-table-column>
      <template slot="empty">
@@ -87,7 +91,7 @@
 
 <script>
 import { post, put } from '@/http'
-import lodash from 'lodash'
+import axios from 'axios'
 import bus from '@/libs/bus'
 import deleteButton from '@/components/common/deleteButton'
 
@@ -157,15 +161,6 @@ export default {
         }, 400)
       }
     },
-    // del (row) {
-    //   this.$delete('/sys/backup?filename=' + row.fileName).then(res => {
-    //     if (res.code == 200) {
-    //       this.$emit('getTableData', 'recent')
-    //     } else {
-    //       this.$message.error(res.msg)
-    //     }
-    //   })
-    // },
     changeDate (item) {
       const time = this.utcTimeToTimezoneStr(item)
       const time1 = this.timeFormate(time)
@@ -187,14 +182,49 @@ export default {
     edit () {
       this.$emit('edit', this.tableData[0])
     },
-    tableOperation (row) {
-      this.$set(row, 'name', row.fileName)
-      if (this.singleDelete.length === 0) {
-        this.singleDelete.push(row)
-      } else {
-        this.singleDelete = []
-        this.singleDelete.push(row)
+    tableOperation ([command, row]) {
+      switch (command) {
+        case 'delete': {
+          this.$set(row, 'name', row.fileName)
+          if (this.singleDelete.length === 0) {
+            this.singleDelete.push(row)
+          } else {
+            this.singleDelete = []
+            this.singleDelete.push(row)
+          }
+          break
+        }
+        case 'restore': {
+          this.Restore(row)
+          break
+        }
+        default:
+          break
       }
+    },
+    downloadBackup (backup) {
+      axios.get('/sys/backup/download?filename=' + backup.fileName, { responseType: 'blob' }).then(data => {
+        let fileName = new Date().getTime() + '.txt'
+        const disposition = data.headers['content-disposition']
+        if (disposition) {
+          fileName = disposition.split(';')[1].split('filename=')[1]
+        }
+        // 由于ie不支持download属性，故需要做兼容判断
+        if (navigator.appVersion.toString().indexOf('.NET') > 0) {
+          // ie独有的msSaveBlob属性，data.data为Blob文件流
+          window.navigator.msSaveBlob(data.data, fileName)
+        } else {
+          // 以下流程即为文章开始的下载流程
+          const url = window.URL.createObjectURL(data.data)
+          const link = document.createElement('a')
+          link.style.display = 'none'
+          link.href = url
+          link.download = fileName
+          document.body.appendChild(link)
+          link.click()
+          window.URL.revokeObjectURL(link.href)
+        }
+      })
     }
   },
 
