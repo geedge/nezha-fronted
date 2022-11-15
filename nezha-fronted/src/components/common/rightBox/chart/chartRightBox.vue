@@ -580,6 +580,11 @@ export default {
               result: ''
             }
           }
+          if (obj.type === 'group' && !obj.param.repeat) {
+            obj.param.repeat = {
+              variable: ''
+            }
+          }
           // this.editChart.varType = 1
           if (obj.param.enable.legend && !obj.param.legend) {
             obj.param.legend = { placement: 'bottom', values: [], show: true }

@@ -309,6 +309,7 @@
                     <el-select v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
                       <el-option v-for="item in userData" :key="item.id" :label="item.name" :value="item.id">
                       <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                      <span class="user-username" :title="item.username">@{{item.username}}</span>
                       </el-option>
                     </el-select>
                   </el-form-item>
