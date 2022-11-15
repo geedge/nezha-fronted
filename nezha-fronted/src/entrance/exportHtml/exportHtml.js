@@ -2,7 +2,7 @@
 // import 'element-ui/lib/theme-chalk/index.css'
 // import 'xterm/dist/xterm.css'
 import '@/assets/css/main.scss'
-// import '@/assets/css/font/iconfont.js'
+import '@/assets/css/font/iconfont.js'
 import ElementUI from 'element-ui'
 import i18n from '@/components/common/i18n'
 
@@ -21,12 +21,14 @@ import { clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToSt
 import * as tools from '@/components/common/js/tools.js'
 import * as constants from '@/components/common/js/constants.js'
 
+import elementSet from '@/components/common/elementSet' // 自定义表头组件
 import chartList from '@/components/chart/chartList.vue' // 全局引入 chartList 组件 防止 chart-group爆粗
-
 import pickTime from '@/components/common/pickTime'
 import nzDataList from '@/components/common/table/nzDataList'
 import mainMixin from '@/components/common/mixin/mainMixinFun'
 import Pagination from '@/components/common/pagination'
+
+Vue.component('element-set', elementSet) // 公用设置表头
 Vue.component('pick-time', pickTime)
 Vue.component('nzDataList', nzDataList)
 Vue.component('chartList', chartList)

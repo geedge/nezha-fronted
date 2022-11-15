@@ -31,10 +31,10 @@ export default new Router({
           path: '/explore',
           component: resolve => require(['@/components/page/dashboard/explore/explore'], resolve)
         },
-        {
-          path: '/overview',
-          component: resolve => require(['@/components/page/dashboard/overview/overview'], resolve)
-        },
+        // {
+        //   path: '/overview',
+        //   component: resolve => require(['@/components/page/dashboard/overview/overview'], resolve)
+        // },
         {
           path: '/project',
           component: resolve => require(['@/components/page/monitor/project/index'], resolve)

@@ -79,6 +79,7 @@
   </div>
 </template>
 <script>
+import bus from '@/libs/bus'
 import deleteButton from '@/components/common/deleteButton'
 import modelBox from '@/components/common/rightBox/administration/modelBox'
 import nzDataList from '@/components/common/table/nzDataList'
@@ -129,6 +130,11 @@ export default {
       }
     }
   },
+  mounted () {
+    bus.$on('refreshBrand', () => {
+      this.$refs.dataList.$refs.searchInput.getBrandData()
+    })
+  },
   methods: {
     chartBySync (row) {
       this.$store.dispatch('dispatchHomeLoading', true)
@@ -142,6 +148,11 @@ export default {
         }
       })
     }
+  },
+  beforeDestroy () {
+    bus.$off('refreshBrand', () => {
+      this.$refs.dataList.$refs.searchInput.getBrandData()
+    })
   },
   created () {
 

@@ -1,5 +1,4 @@
 import bus from '@/libs/bus'
-import { Loading } from 'element-ui'
 export default {
   data () {
     return {

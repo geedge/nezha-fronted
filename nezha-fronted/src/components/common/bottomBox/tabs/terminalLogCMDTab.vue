@@ -1,7 +1,6 @@
 <template>
   <nz-bottom-data-list
     :showTitle='showTitle'
-    :tableId="tableId"
     :obj='obj'
     :layout="[]"
     :tabs="tabs"
@@ -51,10 +50,10 @@ export default {
     calcTime () {
       return function (time) {
         if (this.obj.startTime) {
-          const startTime = new Date(this.obj.startTime).getTime()
+          const startTime = new Date(this.utcTimeToTimezoneStr(this.obj.startTime)).getTime()
           if (startTime) {
             const thisTime = startTime + time
-            return this.dateFormat(thisTime)
+            return this.momentTz(thisTime)
           }
         }
         return '-'

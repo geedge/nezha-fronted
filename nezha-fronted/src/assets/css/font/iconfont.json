@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "586976",
+      "name": "map-sankey",
+      "font_class": "sankey",
+      "unicode": "e784",
+      "unicode_decimal": 59268
+    },
+    {
+      "icon_id": "6537184",
+      "name": "地图",
+      "font_class": "map",
+      "unicode": "e66c",
+      "unicode_decimal": 58988
+    },
+    {
+      "icon_id": "6807270",
+      "name": "Diagram-2",
+      "font_class": "diagram",
+      "unicode": "ec02",
+      "unicode_decimal": 60418
+    },
+    {
+      "icon_id": "11488020",
+      "name": "clock",
+      "font_class": "clock",
+      "unicode": "e762",
+      "unicode_decimal": 59234
+    },
+    {
+      "icon_id": "17692259",
+      "name": "走马灯",
+      "font_class": "projectTopology",
+      "unicode": "e765",
+      "unicode_decimal": 59237
+    },
+    {
+      "icon_id": "20559415",
+      "name": "165ranking",
+      "font_class": "rank",
+      "unicode": "e7ac",
+      "unicode_decimal": 59308
+    },
+    {
       "icon_id": "32442422",
       "name": "New",
       "font_class": "New",

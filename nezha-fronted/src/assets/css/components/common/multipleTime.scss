@@ -15,14 +15,14 @@
     color: #fff;
   }
   .calendar-dropdown-title {
-    line-height: 28px;
+    line-height: 30px;
     padding-left: 5px;
     margin-left: 0;
-    margin-top: -3px !important;
+    margin-top: -5px !important;
     text-align: left;
     border-radius: 2px;
     min-width: 80px;
-    height: 28px;
+    height: 30px;
     border: solid 1px $--border-color-base;
     white-space: nowrap;
     overflow: hidden;
@@ -65,7 +65,7 @@
     box-sizing: content-box;
     line-height: unset;
     height: 100%;
-    margin-left: -6px;
+    margin-left: -1px;
     margin-right: 10px;
   }
   .nz-icon-compare {

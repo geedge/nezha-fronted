@@ -439,7 +439,7 @@ export default {
       queryVariableList: [
         { name: 'label_names()', description: this.$t('dashboard.panel.label_names()') },
         { name: 'label_values(label)', description: this.$t('dashboard.panel.label_values(label)') },
-        { name: 'label_values(metric, label)', description: this.$t('dashboard.label_values(metric, label)') },
+        { name: 'label_values(metric, label)', description: this.$t('dashboard.panel.label_values(metric, label)') },
         { name: 'metrics(metric)', description: this.$t('dashboard.panel.metrics(metric)') },
         { name: 'query_result(query)', description: this.$t('dashboard.panel.query_result(query)') }
       ]
