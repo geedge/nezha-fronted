@@ -116,6 +116,9 @@
     height: 100%;
     padding-right: 12px;
     overflow: auto;
+    text-overflow: initial;
+    white-space: normal;
+    box-sizing: content-box;
   }
   /*第一列宽25%*/
   .mib-browser-detail-row>div:first-of-type {
@@ -129,6 +132,15 @@
     border-left: 1px solid $--border-color-light;
     word-break: break-all;
     color: $--color-text-secondary;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    .document-copy-text{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
   .mib-browser-detail-row:not(:last-of-type) {
     border-bottom: 1px solid $--border-color-light;
@@ -139,7 +151,6 @@
   }
   .mib-browser-detail-row>div {
     padding-left: 5px;
-    box-sizing: border-box;
   }
   .mib-browser-detail-description {
     padding: 0 14px 0 0;

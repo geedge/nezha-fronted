@@ -42,7 +42,7 @@
     </span>
     <div class="chart-header__title" v-if="!isGroup" :title="chartInfo.name">{{chartInfo.name}}</div>
     <div class="chart-header__title groupTitle" v-else >
-      <span @click="groupShow"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-right': 'nz-icon-arrow-down'"></i></span>
+      <span @click="groupShow" style="cursor:pointer"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-right': 'nz-icon-arrow-down'"></i></span>
       {{chartInfo.name}}
       <span v-show="chartInfo.param.collapse" class="collapse-content">({{chartData ? chartData.length : 0}} charts)</span>
     </div>

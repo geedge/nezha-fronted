@@ -90,8 +90,8 @@ export default {
           { validator: noSpecialChar, trigger: 'blur' }
         ],
         lnglat: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: latlng, trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          { validator: latlng, trigger: 'change' }
         ]
       },
       areaData: [],

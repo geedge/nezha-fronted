@@ -4253,6 +4253,7 @@ export default {
       }
       if (!this.showMetrics) {
         params.limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
+        params.direction = this.$refs.logDetail ? this.$refs.logDetail.getDescending() : 'backward'
       }
       this.$store.dispatch('dispatchHomeLoading', true)
       this.$get('/visual/explore/snapshot', params, 'blob').then(res => {
@@ -4287,7 +4288,6 @@ export default {
           document.body.removeChild(link) // 下载完成移除元素
           window.URL.revokeObjectURL(href) // 释放blob对象
         }
-        this.$refs.topTool.closeDialog()
       }, () => {
         this.$message.error('123')
       })

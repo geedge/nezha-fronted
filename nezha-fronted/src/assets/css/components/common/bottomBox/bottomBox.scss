@@ -297,11 +297,11 @@
       border-color: transparent;
     }
   }
-  .comment-editor{
+  .comment-editor {
     border: 1px solid $--border-color-light;
     display: flex;
     flex-direction: column;
-    .ql-toolbar.ql-snow{
+    .ql-toolbar.ql-snow {
       border-top: unset !important;
       border-left: unset !important;
       border-right: unset !important;
@@ -311,12 +311,12 @@
       flex: 1;
     }
     .ql-container.ql-snow {
-      border: unset !important
+      border: unset !important;
     }
-    .text-too-long{
+    .text-too-long {
       display: none;
     }
-    .ql-editor.ql-blank::before{
+    .ql-editor.ql-blank::before {
       font-style: normal;
       color: $--color-text-placeholder;
     }
@@ -366,5 +366,12 @@
     .el-icon-search {
       color: $--color-text-regular;
     }
+  }
+}
+
+//endpoint 二级页面搜索
+.endpoint-tab-new {
+  .top-tool-right .nz-btn.nz-btn-size-normal {
+    box-sizing: content-box;
   }
 }

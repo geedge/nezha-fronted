@@ -1321,6 +1321,9 @@ export default {
     } else if (this.$refs.dataDetail) {
       tableTitle = this.$refs.dataDetail.tableTitle
     }
+    if (!tableTitle || !this.tableId) {
+      return
+    }
     let localStorageTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
     localStorageTableTitle = localStorageTableTitle ? JSON.parse(localStorageTableTitle) : tableTitle
     if (tableTitle) {

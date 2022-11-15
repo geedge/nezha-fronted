@@ -263,6 +263,19 @@ export default {
         })
       }
     },
+    copy (u, copyParams) {
+      const copyName = this.$loadsh.get(copyParams, 'copyName', '-copy')
+      this.object = { ...u, name: u.name + copyName, id: '' }
+      if (this.object.name.length > 64) {
+        const length = this.object.name.length - 64
+        this.object.name = u.name.substring(0, u.name.length - length) + '-copy'
+      }
+      this.object.elements = this.object.elements.map(item => {
+        item.id = ''
+        return item
+      })
+      this.rightBox.show = true
+    },
     chartBySync (row) {
       this.$store.dispatch('dispatchHomeLoading', true)
       this.$post('visual/panel/chart/syncTmpl', { pid: row.id }).then(res => {

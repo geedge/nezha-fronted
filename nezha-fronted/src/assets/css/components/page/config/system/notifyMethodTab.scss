@@ -1,11 +1,14 @@
 .notify-method-tab {
-  .notify-table{
-    height:  calc(100% - 110px)
+  .notify-table {
+    height: calc(100% - 110px);
+    .pagination-bottom {
+      width: 0 !important;
+    }
   }
-  .notify-table .el-table{
+  .notify-table .el-table {
     height: calc(100% - 10px) !important;
   }
-  .notificationMessage{
+  .notificationMessage {
     margin-left: 20px;
     display: flex;
     width: calc(100% - 39px);
@@ -22,7 +25,7 @@
   .notificationMessage .nz-icon {
     font-size: 20px;
   }
-  .notificationMessage .more{
+  .notificationMessage .more {
     font-size: 14px;
     cursor: pointer;
   }

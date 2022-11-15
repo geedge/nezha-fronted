@@ -118,6 +118,7 @@ export default {
     return {
       url: 'record/rule',
       tableId: 'recordRuleTable',
+      detailType: 'list',
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [
           {

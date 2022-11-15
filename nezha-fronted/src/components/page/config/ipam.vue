@@ -97,6 +97,7 @@ export default {
   data () {
     return {
       url: 'ipam/subnet',
+      detailType: 'list',
       blankObject: { // 空白对象
         id: '',
         name: '',

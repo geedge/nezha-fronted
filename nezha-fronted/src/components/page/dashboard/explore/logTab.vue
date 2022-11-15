@@ -14,6 +14,7 @@
         <span class="operation-label">{{$t('dashboard.explore.descending')}}</span>
         <el-switch
           v-model="operations.descending"
+          :disabled="Boolean(dataJson)"
         >
         </el-switch>
       </div>
@@ -26,7 +27,7 @@
       </div>
       <div class="log-operation">
         <span class="operation-label">{{$t('overall.limit')}}:</span>
-        <el-select v-model="limit" size="small" style="width: 100px;" popper-class="right-box-select-top right-public-box-dropdown-top">
+        <el-select v-model="limit" :disabled="Boolean(dataJson)" size="small" style="width: 100px;" popper-class="right-box-select-top right-public-box-dropdown-top">
           <el-option v-for="option in limitOptions" :key="option" :value="option"></el-option>
         </el-select>
       </div>
@@ -34,7 +35,7 @@
         <span class="operation-label">Result:</span>
         <span class="operation-length">{{tableData.length}}</span>
       </div>
-      <div class="log-operation log-operation--right" v-if=" dataJson && dataJson.type">
+      <div class="log-operation log-operation--right" v-if="!dataJson">
         <button class="top-tool-btn" style="cursor: pointer;z-index: 2;" type="button" @click="exportLog" :title="$t('overall.download')"><i class="nz-icon nz-icon-download"></i></button>
       </div>
     </div>
@@ -181,7 +182,14 @@ export default {
       timeFormatData: [],
       tableChartData: [],
       myChart: null,
-      noData: false
+      noData: false,
+      filterData: []
+    }
+  },
+  created () {
+    if (this.dataJson) {
+      this.limit = this.dataJson.limit || 100
+      this.operations.descending = this.dataJson.direction === 'backward'
     }
   },
   methods: {
@@ -189,6 +197,9 @@ export default {
       this.operations = {
         levels: [0, 1, 2, 3, 4, 5, 6],
         descending: true
+      }
+      if (this.dataJson) {
+        this.operations.descending = this.dataJson.direction === 'backward'
       }
     },
     exportLog () {
@@ -228,6 +239,20 @@ export default {
     },
     loadChart () {
       const vm = this
+      const selectObj = {}
+      const sele = []
+      this.filterData.forEach(item => {
+        if (sele.indexOf(item.level) == -1) {
+          sele.push(item.level)
+        }
+      })
+      this.tableChartData.forEach(item => {
+        if (sele.indexOf(item.name) !== -1) {
+          selectObj[item.name] = true
+        } else {
+          selectObj[item.name] = false
+        }
+      })
       const dom = document.getElementById(`logChart${this.tabIndex}`)
       if (!dom) {
         return
@@ -255,9 +280,10 @@ export default {
           },
           grid: {
             top: 20,
-            left: 30,
+            left: 20,
             right: 10,
-            bottom: 80
+            bottom: 80,
+            containLabel: true
           },
           legend: {
             bottom: 20,
@@ -270,6 +296,7 @@ export default {
               padding: [0, 0, 0, 6],
               color: this.theme == 'light' ? '#666666' : '#BEBEBE'
             },
+            selected: selectObj,
             inactiveColor: this.theme == 'light' ? '#BEBEBE' : '#666666' // 字体颜色
           },
           series,
@@ -395,6 +422,7 @@ export default {
         })
         return hit
       })
+      this.filterData = filterLevelData
       // 复制一份升序的数据用于后面处理
       const copyData = [...data]
       // 升降序
@@ -467,6 +495,9 @@ export default {
     },
     getLimit () {
       return this.limit
+    },
+    getDescending () {
+      return this.operations.descending ? 'backward' : 'forward'
     },
     resizeChart () {
       setTimeout(() => {
@@ -571,9 +602,6 @@ export default {
         this.tableData = tableData
         this.tableChartData = tableChartData
       }
-    },
-    limit (n) {
-      this.$emit('limitChange', n)
     }
   },
   destroyed () {

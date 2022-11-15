@@ -22,6 +22,7 @@
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
       :sortable="item.sortable"
+      :width="`${item.width}`"
       :show-overflow-tooltip="item.prop === 'description'"
       class="data-column"
     >
@@ -59,7 +60,7 @@
         </template>
         <template v-else-if="item.prop === 'vsysResult'">
           <div :title="scope.row[item.prop] && scope.row[item.prop].msg ? scope.row[item.prop].msg : '-'">
-            <copy :copyData='scope.row[item.prop] && scope.row[item.prop].msg ? scope.row[item.prop].msg : ""' :showInfo='scope.row[item.prop]'>
+            <copy :copyData='scope.row[item.prop] && scope.row[item.prop].msg ? scope.row[item.prop].msg : ""' :showInfo='scope.row[item.prop] && scope.row[item.prop].msg'>
               <template slot="copy-text">
                  {{scope.row[item.prop] && scope.row[item.prop].msg ? scope.row[item.prop].msg : '-'}}
               </template>
@@ -103,13 +104,15 @@ export default {
           label: this.$t('asset.vsysId'),
           prop: 'vsysId',
           show: true,
-          minWidth: 120
+          minWidth: 120,
+          sortable: 'custom'
         },
         {
           label: this.$t('overall.state'),
           prop: 'state',
           show: true,
-          minWidth: 120
+          minWidth: 120,
+          sortable: 'custom'
         }, {
           label: this.$t('project.module.configs'),
           prop: 'vsysInfo',
@@ -124,7 +127,8 @@ export default {
           label: this.$t('overall.time'),
           prop: 'uts',
           show: true,
-          minWidth: 120
+          minWidth: 120,
+          sortable: 'custom'
         }
       ]
     }
@@ -152,14 +156,19 @@ export default {
       }
       // this.$set(this.tableData,index,item);// 调用父组件
     },
-    copyValue (txt) {
-      const str = `{
-    "deviceTag": "${txt.deviceTag || ''}",
-    "params": "${txt.params || ''}"
-}`
-      this.$copyText(str).then(() => {
+    copyValue (item) {
+      const str = {
+        deviceTag: item.deviceTag || '',
+        params: item.params || ''
+      }
+      this.$copyText(JSON.stringify(str)).then(() => {
         this.$message.success({ message: this.$t('overall.copySuccess') })
       })
+    },
+    // 数据排序
+    tableDataSort (item) {
+      const orderBy = { order: item.order, prop: item.prop }
+      this.$emit('tableDataSort', orderBy)
     }
   }
 }
