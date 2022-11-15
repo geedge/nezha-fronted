@@ -6,7 +6,7 @@
       </button>
     </div>
     <button v-if="this.type === 'btn'" class="table-operation-item delete-button" :id="id" @click="batchDelete" :title="$t('overall.delete')"><i class="nz-icon nz-icon-delete"></i></button>
-    <div v-if="this.type === 'link'" :id="id" @click="batchDelete" :title="$t('overall.delete')">
+    <div v-if="this.type === 'link'" :id="id" @click="batchDelete">
       <span><i class="nz-icon nz-icon-delete" ></i>{{title}}</span>
     </div>
     <el-dialog
