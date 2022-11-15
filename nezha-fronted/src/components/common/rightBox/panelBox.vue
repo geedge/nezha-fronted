@@ -306,9 +306,14 @@
                     </el-checkbox-group>
                   </el-form-item>
                   <el-form-item :label="$t('dashboard.panel.receivers')" class="item-receivers" prop="param.report.receivers">
-                    <el-select v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
-                      <el-option v-for="item in userData" :key="item.id" :label="item.name" :value="item.id">
-                      <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                    <el-select
+                    class="right-box__select"
+                    v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
+                      <el-option
+                      style="width: 620px"
+                      v-for="item in userData" :key="item.id"
+                      :label="item.name" :value="item.id">
+                      <span class="user-name" :title="item.name">{{item.name}}</span>
                       <span class="user-username" :title="item.username">@{{item.username}}</span>
                       </el-option>
                     </el-select>
