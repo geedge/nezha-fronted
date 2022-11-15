@@ -188,4 +188,7 @@ export default {
 .vue-tags-input{
   max-width: unset;
 }
+/deep/ .vue-tags-input .ti-input{
+    padding: 2px !important;
+}
 </style>
