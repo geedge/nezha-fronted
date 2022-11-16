@@ -31,6 +31,7 @@
           <vue-tags-input
                         v-model="tag"
                         :maxlength="32"
+                        :class="monitor.interface_name.length !== 0 ? 'interface-name' : ''"
                         :placeholder="$t('overall.add.interface_name')"
                         :tags="monitor.interface_name"
                         @tags-changed="newTags=> monitor.interface_name = newTags"
@@ -195,5 +196,8 @@ export default {
 /deep/ .vue-tags-input .ti-input .ti-new-tag-input-wrapper{
   padding: 0;
   margin: 0;
+}
+/deep/ .vue-tags-input.interface-name .ti-input .ti-new-tag-input-wrapper{
+  padding-left: 7px;
 }
 </style>
