@@ -1,12 +1,7 @@
 <template>
   <div class="about">
     <div class="app">
-       <div class="app-header">
-      <div class="header-logo"><img width="60" height="60" src="../../../assets/img/logo1-2.png"></div>
-      <div class="header-title">
-        <div class="app-name">{{version.nezha.name}}</div>
-        <div class="app-version"><span class="about-label">{{$t("overall.version")}}&nbsp;&nbsp;&nbsp;</span><span>{{version.nezha.version}}</span></div>
-      </div>
+      
     </div>
     <div class="app-component">
       <div class="component-content">

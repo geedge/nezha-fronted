@@ -8,9 +8,9 @@ const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+//const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-// const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
+ const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 const fileManagerPlugin = require('filemanager-webpack-plugin')
 const WebpackZipPlugin = require('webpack-zip-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
@@ -19,6 +19,12 @@ const GenerateAssetPlugin = require('generate-asset-webpack-plugin')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin')
 const serverConfig = require('../static/config.json')// 引入根目录下的配置文件
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const smp = new SpeedMeasurePlugin();
+
 
 // const gitRevisionPlugin = new GitRevisionPlugin();
 const createJson = function () {
@@ -37,6 +43,7 @@ const createConfig = function(compilation){
 let webpackConfig = {}
 if (arg === 'html') {
   webpackConfig = merge(baseWebpackConfig, {
+    mode: 'production',
     module: {
       rules: utils.styleLoaders({
         sourceMap: config.build.productionSourceMap,
@@ -65,6 +72,10 @@ if (arg === 'html') {
       new webpack.DefinePlugin({
         'process.env': env
       }),
+      new MiniCssExtractPlugin({
+        filename: utils.assetsPath('css/[name].[contenthash].css'),
+        chunkFilename: "[name].[contenthash].css"
+      }),
       new UglifyJsPlugin({
         uglifyOptions: {
           compress: {
@@ -78,14 +89,14 @@ if (arg === 'html') {
         parallel: true
       }),
       // extract css into its own file
-      new ExtractTextPlugin({
+      /*new ExtractTextPlugin({
         filename: utils.assetsPath('css/[name].[contenthash].css'),
         // Setting the following option to `false` will not extract CSS from codesplit chunks.
         // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
         // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`,
         // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
         allChunks: true
-      }),
+      }),*/
       // Compress extracted CSS. We are using this plugin so that possible
       // duplicated CSS from different components can be deduped.
       new OptimizeCSSPlugin({
@@ -123,11 +134,11 @@ if (arg === 'html') {
           minifyJS: true // 压缩文内js
         },
         // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-        chunksSortMode: 'dependency',
+        chunksSortMode: 'auto',
         chunks: ['exportHtml'],
         excludeChunks: ['app']
       }),
-      new HtmlWebpackInlineSourcePlugin(),
+      new HtmlWebpackInlineSourcePlugin(HtmlWebpackPlugin),
       new GenerateAssetPlugin({
         filename: 'static/config.json',
         fn: (compilation, cb) => {
@@ -177,9 +188,26 @@ if (arg === 'html') {
         }
       ])
     ]
+    // optimization: {
+    //   minimizer: [
+    //     new CssMinimizerPlugin(), // 去重压缩css
+    //     new TerserPlugin({ // 压缩JS代码
+    //       terserOptions: {
+    //         compress: {
+    //         warnings: false,
+    //         drop_console: true,  // 去除console
+    //         pure_funcs: ['console.log']
+    //         }
+    //       },
+    //       exclude: /manifest.+js/,
+    //       sourceMap: config.build.productionSourceMap,
+    //     })
+    //   ]
+    // }
   })
 } else if (arg === 'app') {
   webpackConfig = merge(baseWebpackConfig, {
+    mode: 'production',
     module: {
       rules: utils.styleLoaders({
         sourceMap: config.build.productionSourceMap,
@@ -209,7 +237,11 @@ if (arg === 'html') {
       new webpack.DefinePlugin({
         'process.env': env
       }),
-      new UglifyJsPlugin({
+      new MiniCssExtractPlugin({  //替换 ExtractTextPlugin 用于css抽取
+        filename: utils.assetsPath('css/[name].[contenthash].css')
+        // chunkFilename: "[name].[contenthash].css"
+      }),
+     /* new UglifyJsPlugin({
         uglifyOptions: {
           compress: {
             warnings: false,
@@ -220,23 +252,23 @@ if (arg === 'html') {
         exclude: /manifest.+js/,
         sourceMap: config.build.productionSourceMap,
         parallel: true
-      }),
+      }),*/
       // extract css into its own file
-      new ExtractTextPlugin({
-        filename: utils.assetsPath('css/[name].[contenthash].css'),
+      /*new ExtractTextPlugin({
+        filename: utils.assetsPath('css/[name]_[md5:contenthash:hex:8].css'),
         // Setting the following option to `false` will not extract CSS from codesplit chunks.
         // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
         // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`,
         // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
         allChunks: true
-      }),
+      }),*/
       // Compress extracted CSS. We are using this plugin so that possible
       // duplicated CSS from different components can be deduped.
-      new OptimizeCSSPlugin({
-        cssProcessorOptions: config.build.productionSourceMap
-          ? { safe: true, map: { inline: false } }
-          : { safe: true }
-      }),
+      // new OptimizeCSSPlugin({
+      //   cssProcessorOptions: config.build.productionSourceMap
+      //     ? { safe: true, map: { inline: false } }
+      //     : { safe: true }
+      // }),
       // generate dist index.html with correct asset hash for caching.
       // you can customize output by editing /index.html
       // see https://github.com/ampedandwired/html-webpack-plugin
@@ -254,7 +286,7 @@ if (arg === 'html') {
           // https://github.com/kangax/html-minifier#options-quick-reference
         },
         // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-        chunksSortMode: 'dependency',
+        //chunksSortMode: 'auto',
         excludeChunks: ['exportHtml']
       }),
       new GenerateAssetPlugin({
@@ -268,7 +300,7 @@ if (arg === 'html') {
       // enable scope hoisting
       new webpack.optimize.ModuleConcatenationPlugin(),
       // split vendor js into its own file
-      new webpack.optimize.CommonsChunkPlugin({
+     /* new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
         minChunks (module) {
           // any required modules inside node_modules are extracted to vendor
@@ -295,7 +327,7 @@ if (arg === 'html') {
         async: 'vendor-async',
         children: true,
         minChunks: 3
-      }),
+      }),*/
 
       // copy custom static assets
       new CopyWebpackPlugin([
@@ -305,7 +337,33 @@ if (arg === 'html') {
           ignore: ['*']
         }
       ])
-    ]
+    ],
+    optimization: {
+      minimizer: [
+        new CssMinimizerPlugin(), // 去重压缩css
+        new TerserPlugin({ // 压缩JS代码
+          terserOptions: {
+            compress: {
+            warnings: false,
+            drop_console: true,  // 去除console
+            pure_funcs: ['console.log']
+            }
+          },
+          exclude: /manifest.+js/,
+          sourceMap: config.build.productionSourceMap,
+        })
+      ],
+      splitChunks: { //
+        chunks: 'async',
+        minSize: 30000,
+        maxSize: 0,
+        minChunks: 1,
+        maxAsyncRequests: 5,
+        maxInitialRequests: 3,
+        automaticNameDelimiter: '~',
+        automaticNameMaxLength: 30,
+      }
+    }
   })
 }
 if (process.env.NODE_ENV == 'development') {
@@ -410,5 +468,7 @@ if (config.build.bundleAnalyzerReport) {
   const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
+
+webpackConfig = smp.wrap(webpackConfig);
 
 module.exports = webpackConfig

@@ -16,6 +16,7 @@ const devStart = process.env.npm_lifecycle_event
 const indexHtml = devStart === 'dev' ? 'src/entrance/app/index.html' : 'src/entrance/exportHtml/exportHtml.html'
 let devWebpackConfig = ''
 devWebpackConfig = merge(baseWebpackConfig, {
+  mode: 'development',
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
