@@ -1,5 +1,6 @@
 <template>
   <nz-bottom-data-list
+    :showPagination="false"
     :showTitle='showTitle'
     :obj='obj'
     :layout="[]"
@@ -50,7 +51,8 @@ export default {
     calcTime () {
       return function (time) {
         if (this.obj.startTime) {
-          const startTime = new Date(this.utcTimeToTimezoneStr(this.obj.startTime)).getTime()
+          console.log(this.utcTimeToTimezoneStr(this.obj.startTime))
+          const startTime = this.momentStrToTimestamp(this.utcTimeToTimezoneStr(this.obj.startTime))
           if (startTime) {
             const thisTime = startTime + time
             return this.momentTz(thisTime)
