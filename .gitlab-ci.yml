@@ -38,16 +38,10 @@ dev_build:
     - npm install --registry=http://registry.npmmirror.com
     - echo "npm run build"
 
+    # 编译 上传模板
+    - npm run build:html
     - mc alias set nz $MINIO_HOST $MINIO_USER $MINIO_PWD
-    # 根据提交信息，判断本次是否 编译上传模板
-    - >
-      if [[ $CI_COMMIT_MESSAGE =~ "snapshotTemplate" ]]; then
-          echo "Update snapshot template ..."
-          npm run build:html
-          mc cp dist/index.html nz/depends/template/snapshot_template.html
-      else
-          echo "No need to update snapshot template"
-      fi
+    - mc cp dist/index.html nz/depends/template/snapshot_template.html
 
     - npm run build
     - cd /builds/nezha/nezha-fronted/nezha-fronted/dist
@@ -56,7 +50,13 @@ dev_build:
     - export FILE_NAME=nz-gui-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA.zip
     # 生成 git log 日志文件
     - sed -i 's+</body>+<a style="position:fixed;bottom:20px;left:40px;z-index:999;color:white;" target="_blank" href="/static/git-log.html">更新记录</a>\n</body>+g' ./index.html;
+    # echo "<html>" > ./static/git-log.html
+    # echo "<head>" >> ./static/git-log.html
+    # echo '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">' >> ./static/git-log.html
+    # echo "</head>" >> ./static/git-log.html
+    # echo "<pre>" >> ./static/git-log.html
     - "git log -100 --pretty=format:'%ad : %s' >> ./static/git-log.log"
+    # echo "</pre></html>" >> ./static/git-log.html
     - zip -q -r $FILE_NAME ./*
 
     # 将 dist zip 上传到 minio
@@ -88,6 +88,10 @@ rel_build:
     - npm install --registry=http://registry.npmmirror.com
     - echo "npm run build"
 
+    - npm run build:html
+    - mc alias set nz $MINIO_HOST $MINIO_USER $MINIO_PWD
+    - mc cp dist/index.html nz/depends/template/snapshot_template.html
+
     - npm run build
     - cd /builds/nezha/nezha-fronted/nezha-fronted/dist
     - mc cp nz/depends/template/snapshot_template.html ./snapshot_template.html
@@ -108,3 +112,4 @@ rel_build:
   # 指定哪个ci runner跑该工作
   tags:
     - nezha
+
