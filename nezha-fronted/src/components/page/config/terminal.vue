@@ -19,7 +19,33 @@
             <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
           </el-input>
         </el-form-item>
-        <el-form-item>
+         <el-form-item :label="$t('config.system.monitor.metrics_storage_type')" prop="terminal_storage_type">
+          <el-select v-model="terminal.terminal_storage_type" popper-class="right-box-select-top right-public-box-dropdown-top">
+            <el-option :label="$t('config.system.monitor.local')" value="1"></el-option>
+            <el-option :label="$t('config.system.monitor.s3')" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <transition name="el-zoom-in-top">
+          <div v-show="terminal.terminal_storage_type == 2">
+            <el-form-item :label="$t('asset.endpoint')" prop="terminal_storage_s3_endpoint" :rules=" [ { required: terminal.terminal_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-input v-model="terminal.terminal_storage_s3_endpoint" id="terminal-terminal_storage_s3_endpoint">
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_bucket')" prop="terminal_storage_s3_bucket" :rules=" [ { required: terminal.terminal_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-input v-model="terminal.terminal_storage_s3_bucket" id="terminal-terminal_storage_s3_bucket">
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_access_key')" prop="terminal_storage_s3_access_key" :rules=" [ { required: terminal.terminal_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-input v-model="terminal.terminal_storage_s3_access_key" id="terminal-terminal_storage_s3_access_key">
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.terminallog.key')" prop="terminal_storage_s3_secret_access_key" :rules=" [ { required: terminal.terminal_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+              <el-input v-model="terminal.terminal_storage_s3_secret_access_key" id="terminal-terminal_storage_s3_secret_access_key" type="password">
+              </el-input>
+            </el-form-item>
+          </div>
+        </transition>
+         <el-form-item>
           <button v-has="'system_terminal_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('terminal','terminalForm')">{{$t('overall.save')}}</button>
         </el-form-item>
       </el-form>
@@ -42,12 +68,18 @@ export default {
         terminal_timeout: 30,
         terminal_telnet_user_tip: 'ogin:',
         terminal_telnet_pin_tip: 'assword:',
-        terminal_record_local_retention: 365
+        terminal_record_local_retention: 365,
+        terminal_storage_type: '',
+        terminal_storage_s3_endpoint: '',
+        terminal_storage_s3_bucket: '',
+        terminal_storage_s3_access_key: '',
+        terminal_storage_s3_secret_access_key: ''
       },
       terminalCopy: null,
       terminalRules: {
         terminal_timeout: [{ validator: positiveInteger, trigger: 'blur' }],
-        terminal_record_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }]
+        terminal_record_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        terminal_storage_type: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       }
     }
   },
