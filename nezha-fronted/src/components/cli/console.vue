@@ -8,13 +8,25 @@
 </style>
 <template>
     <div :id="'ternimalContainer'+idIndex" class="console">
+      <div style="display: flex;width: 100%; justify-content: space-between">
+        <span style="color: #fff">{{userName}}</span>
+        <span  style="color: #fff">
+          <i class="nz-icon nz-icon-clock"></i>
+          <i class="nz-icon nz-icon-projectTopology" @click="fileDirectoryShow = !fileDirectoryShow"></i>
+        </span>
+      </div>
         <div :id="'terminal'+idIndex" ></div>
+      <fileDirectory :uuid="terminal.uuid" v-if="fileDirectoryShow" style="height: 80%;position: absolute;bottom: 0;background: #1E1E1E;box-shadow: 5px 0 3px 0 #5E5E5E;width: 100%"/>
     </div>
 </template>
 <script>
 import Terminal from '../common/js/Xterm'
+import fileDirectory from './fileDirectory'
 export default {
   name: 'console',
+  components: {
+    fileDirectory,
+  },
   props: {
     terminal: { },
     idIndex: {
@@ -47,7 +59,9 @@ export default {
       psdCont: 'password: ',
       conFinish: false,
       conSuccessNum: 0,
-      inputSecret: false
+      inputSecret: false,
+      userName: 'root@192.168.44.36',
+      fileDirectoryShow: false
     }
   },
   watch: {
@@ -175,7 +189,7 @@ export default {
         authPinTip: this.$loadsh.get(this.terminal, 'custom.authPinTip', '')
       }
       this.$post('/terminal/login', params).then(res => {
-        console.log(res)
+        // this.terminal.uuid = res.data.uuid
         this.create()
       })
     },
