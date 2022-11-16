@@ -165,6 +165,7 @@ export default {
   },
   data () {
     return {
+      tableId: 'ping',
       // 防止用户重复点击
       flag: true,
       loading: false,
