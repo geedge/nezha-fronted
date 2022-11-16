@@ -158,6 +158,7 @@ export default {
   },
   data () {
     return {
+      tableId: 'trace',
       // 防止用户重复点击
       flag: true,
       loading: false,
