@@ -187,9 +187,15 @@ export default {
       if (!this.chartInfo.oldElements) { // 创建一个备份 用于判断变量替换 能拿到原本变量的位置
         this.chartInfo.oldElements = this.chartInfo.elements ? JSON.parse(JSON.stringify(this.chartInfo.elements)) : []
       }
-      this.chartInfo.elements = this.chartInfo.oldElements.filter(item => item.state) // 处理不显示的表达式
-      this.chartInfo.elements = this.chartInfo.elements.map(item => { // 处理表达式的变量
-        const variables = this.variablesReplace(item.expression)
+      // eslint-disable-next-line vue/no-mutating-props
+      this.chartInfo.elements = this.$loadsh.cloneDeep(this.chartInfo.oldElements.filter(item => item.state)) // 处理不显示的表达式
+      // eslint-disable-next-line vue/no-mutating-props
+      this.chartInfo.elements = this.chartInfo.elements.map((item, index) => { // 处理表达式的变量
+        // group图表设置repeat的表达式替换
+        if (this.chartInfo.repeatVariable) {
+          item.expression = this.variablesReplaceRepeat(item.expression)
+        }
+        const variables = this.variablesReplace((item.expression))
         this.myVariables.push(variables)
         return {
           ...item,
@@ -574,6 +580,14 @@ export default {
       }
       return str
     },
+    // group图表repeat 表达式替换
+    variablesReplaceRepeat (expression) {
+      let str = expression
+      const variable = this.chartInfo.repeatVariable
+      const reg = new RegExp('\\$' + variable, 'g')
+      str = str.replace(reg, this.chartInfo.repeatValue.replace(/\"/g, '\\"').replace(/\'/g, "\\'"))
+      return str
+    },
     getHexagonFigureData () {
       return new Promise(resolve => {
         this.$get('stat/alertMessage/topN', { size: 48, dimension: 'module' }).then(response => {
@@ -766,7 +780,7 @@ export default {
     },
     variablesArr: {
       handler (n) {
-        const elements = this.chartInfo.oldElements || []
+        const elements = this.$loadsh.cloneDeep(this.chartInfo.oldElements) || []
         const variables = elements.map((element) => {
           return this.variablesReplace(element.expression)
         })

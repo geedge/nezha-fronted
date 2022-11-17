@@ -27,9 +27,9 @@
         </span>
      </el-popover>
     </span>
-    <div class="chart-header__title" :title="chartInfo.name">
+    <div class="chart-header__title" :title="nameFormate()">
       <slot name="title-icon"></slot>
-      {{chartInfo.name}}
+      {{nameFormate()}}
     </div>
     <div class="chart-header__tools">
       <span v-if="chartInfo.remark" class="chart-header__tool top-tool-btn-group">
