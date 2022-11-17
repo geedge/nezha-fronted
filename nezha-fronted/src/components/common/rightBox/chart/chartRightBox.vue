@@ -164,12 +164,6 @@ export default {
     fromEndpoint: {
       type: Boolean,
       default: false
-    },
-    variables: {
-      type: Array,
-      default: () => {
-        return []
-      }
     }
   },
   mixins: [rz, editRigthBox],
@@ -183,6 +177,9 @@ export default {
   computed: {
     chartLastPosition () {
       return this.$store.getters.getChartLastPosition
+    },
+    variables () {
+      return this.$store.state.panel.variablesArr
     }
   },
   data () {

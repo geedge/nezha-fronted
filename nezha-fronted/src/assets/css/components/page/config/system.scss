@@ -50,6 +50,9 @@
   .vue-tags-input {
     max-width: unset !important;
   }
+  .vue-tags-input.interface-name .ti-input{
+    padding: 0px !important;
+  }
   .vue-tags-input .ti-input {
     min-height: 32px;
     padding: 0px 0px 0px 15px !important;

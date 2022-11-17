@@ -97,14 +97,16 @@
         }
       }
       .nz-btn-group {
-        #endpoint-query-changetime,#recordRules-query-changetime:hover {
+        #endpoint-query-changetime,
+        #recordRules-query-changetime:hover {
           border: 1px solid $--asset-label-btn-border-color;
         }
         .nz-btn.nz-btn-size-normal.nz-btn-style-light.control-icon-unchecked:hover {
           border: 1px solid $--asset-label-btn-border-color;
           z-index: 2;
         }
-        .nz-btn.nz-btn-size-normal.nz-btn-style-light.control-icon-unchecked,.nz-btn.nz-btn-size-normal.nz-btn-style-light.control-icon-checked {
+        .nz-btn.nz-btn-size-normal.nz-btn-style-light.control-icon-unchecked,
+        .nz-btn.nz-btn-size-normal.nz-btn-style-light.control-icon-checked {
           margin-right: -1px;
         }
         .project-calendar.nz-input-group-middle {
@@ -277,6 +279,60 @@
     height: calc(100% - 15px) !important;
   }
 }
+
+#assetProcessTable {
+  .el-popover__reference {
+    display: flex;
+    align-items: center;
+  }
+  .bar {
+    width: 3px;
+    height: 14px;
+    border-radius: 0;
+    margin-right: 0px;
+    line-height: 100%;
+  }
+  .process-name {
+    height: 100%;
+    margin-left: 6px;
+    line-height: 24px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #container {
+    width: 120px;
+    min-width: 120px;
+    height: 18px;
+    margin-right: 20px;
+  }
+  .percentage {
+    flex-grow: 1;
+    word-wrap: break-word;
+  }
+  .el-progress-bar__outer {
+    border-radius: 2px;
+    background-color: #e6eaed;
+  }
+  .el-progress-bar__inner {
+    border-radius: 0;
+  }
+  .active-icon {
+    margin-left: 5px;
+  }
+}
+
+#assetNetworkTable{
+  .process-name{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+#assetVsysTable{
+  
+}
 // comments
 #commentBottomTab {
   .sub-container .nz-table-list {
@@ -306,7 +362,7 @@
       border-left: unset !important;
       border-right: unset !important;
     }
-    .editor-core{
+    .editor-core {
       height: 0 !important;
       flex: 1;
     }

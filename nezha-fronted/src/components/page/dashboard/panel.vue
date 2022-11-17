@@ -127,7 +127,6 @@
         :from="fromRoute.panel"
         :panel-data="panelData"
         :show-panel="showPanel"
-        :variables="variables"
         @close="closeChartBox"
         @reload="panelReload"
         @reloadOnlyPanel="panelReloadOnlyPanel"

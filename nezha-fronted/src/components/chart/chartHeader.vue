@@ -40,10 +40,10 @@
           </span>
      </el-popover>
     </span>
-    <div class="chart-header__title" v-if="!isGroup" :title="chartInfo.name">{{chartInfo.name}}</div>
+    <div class="chart-header__title" v-if="!isGroup" :title="nameFormate()">{{nameFormate()}}</div>
     <div class="chart-header__title groupTitle" v-else >
       <span @click="groupShow" style="cursor:pointer"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-right': 'nz-icon-arrow-down'"></i></span>
-      {{chartInfo.name}}
+      {{nameFormate()}}
       <span v-show="chartInfo.param.collapse" class="collapse-content">({{chartData ? chartData.length : 0}} charts)</span>
     </div>
     <div class="temp"></div>
@@ -56,7 +56,7 @@
            <i class="nz-icon nz-icon-info-normal tool__icon"></i>
         </el-tooltip>
       </span>
-      <span  v-if="chartInfo.type=='group'" class="chart-header__tool" @click="addChartGroup">
+      <span v-if="chartInfo.type=='group'&&!chartInfo.repeatIndex" class="chart-header__tool" @click="addChartGroup">
         <!-- <el-tooltip :content="$t('button.add')" effect="light" placement="top" > -->
            <i class="nz-icon nz-icon-plus tool__icon" :title="$t('tip.add')"></i>
         <!-- </el-tooltip> -->
@@ -71,7 +71,7 @@
            <i class="nz-icon nz-icon-maxview tool__icon"></i>
         </div>
       </span>
-      <span class="chart-header__tool">
+      <span class="chart-header__tool" v-if="!chartInfo.repeatIndex">
         <el-dropdown v-clickoutside="clickos" v-has="['main_edit','main_delete','main_add']" trigger="click">
           <i class="el-icon-more tool__icon" @click.stop="dropdownMenuShow = !dropdownMenuShow" :title="$t('overall.more')"></i>
           <el-dropdown-menu style="display: none" class="temp-dropdown"></el-dropdown-menu>
