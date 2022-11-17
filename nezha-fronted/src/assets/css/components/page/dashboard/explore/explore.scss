@@ -3,6 +3,16 @@
   padding: 0px 0 10px 0px;
   background-color: $--background-color-base;
   box-sizing: border-box;
+  .main-list::after{
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    right: 14px;
+    height: 10px;
+    background-color: $--background-color-empty;
+  }
   pre {
     border: 1px solid $--border-color-base;
     border-left: 4px solid #e6522c;

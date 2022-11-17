@@ -21,7 +21,7 @@
           </el-form-item>
           <!-- type -->
           <el-form-item :label='$t("overall.type")' prop="typeId">
-            <el-select value-key="id" allow-create class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.typeId" placeholder="" size="small" id="module-box-input-project">
+            <el-select :disabled='editModel.id !== ""' value-key="id" allow-create class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" :filterable="true" v-model="editModel.typeId" placeholder="" size="small" id="module-box-input-project">
               <el-option v-for="(item, index) in typeDataList" :key="index" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -73,6 +73,7 @@
 import selectWalk from '../../popBox/selectWalk'
 import editRigthBox from '../../mixin/editRigthBox'
 import { sysObjectIdInput } from '@/components/common/js/validate'
+import bus from '@/libs/bus'
 
 export default {
   name: 'modelBox',
@@ -184,6 +185,7 @@ export default {
       if (typeof this.editModel.brandId === 'string') { // 判断是否是新增的
         this.$post(this.brandUrl, { name: this.editModel.brandId }).then(res => {
           if (res.code === 200) { // 新增成功
+            bus.$emit('refreshBrand')
             this.getBrandList().then(res2 => { // 新增成功后，重新调用getBrandList，刷新brandList
               const newBrand = this.brandList.find(b => b.name === this.editModel.brandId) // 取出刚新增的brand对象
               if (newBrand) {
@@ -225,7 +227,7 @@ export default {
     },
     /* 获取chart列表数据 */
     ChartTemplateList () {
-      this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0, groupId: 0 }).then(res => {
+      this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0, groupId: 0, returnChildren: 0 }).then(res => {
         this.chartlList = res.data.list
       })
     },

@@ -3,7 +3,7 @@
   position: relative;
   overflow: auto;
   margin: 0px;
-  .el-form{
+  .el-form {
     padding-left: 15px;
   }
   .el-tag.el-tag--info {
@@ -36,34 +36,52 @@
       .el-input.el-input--small {
         width: calc(100% - 49px);
       }
-
     }
   }
-  #system-basic{
+  #system-basic {
     display: flex;
     align-items: center;
-    .el-form-item__content{
+    .el-form-item__content {
       margin-left: 0px !important;
     }
   }
 }
-.system-config-form{
+.system-config-form.basicForm {
+  .vue-tags-input {
+    max-width: unset !important;
+  }
+  .vue-tags-input.interface-name .ti-input{
+    padding: 0px !important;
+  }
+  .vue-tags-input .ti-input {
+    min-height: 32px;
+    padding: 0px 0px 0px 15px !important;
+  }
+  .vue-tags-input .ti-input .ti-new-tag-input-wrapper {
+    padding: 0;
+    margin: 0;
+  }
+  .vue-tags-input.interface-name .ti-input .ti-new-tag-input-wrapper {
+    padding-left: 7px;
+  }
+}
+.system-config-form {
   width: 61.8% !important;
   position: relative;
 }
 
-.linkBox{
+.linkBox {
   max-height: 800px;
   width: 800px;
 }
-.scrollBox{
+.scrollBox {
   position: relative;
   height: 600px;
   margin-bottom: 20px;
 }
-.linkTitle{
+.linkTitle {
   display: flex;
-  align-items:center;
+  align-items: center;
   border-bottom: 2px solid $--border-color-base;
   color: #6b778c;
   font-size: 12px;
@@ -71,40 +89,40 @@
   line-height: 24px;
   font-weight: 600;
 }
-.handle{
+.handle {
   cursor: move !important;
-  padding:0 5px;
+  padding: 0 5px;
   line-height: 34px;
 }
-.linkBtn{
+.linkBtn {
   height: 28px;
   line-height: 0;
   font-size: 12px;
 }
-.linkTitleHandle{
+.linkTitleHandle {
   padding: 0 13px;
 }
-.linkAddBox{
+.linkAddBox {
   display: flex;
   padding: 10px 0;
   border-bottom: 1px solid $--border-color-base;
   font-size: 13px;
   line-height: 34px;
 }
-.linkContent{
+.linkContent {
   display: flex;
   padding: 10px 0;
   font-size: 13px;
   line-height: 34px;
 }
-.linkContent:not(:last-child){
+.linkContent:not(:last-child) {
   border-bottom: 1px solid $--border-color-base;
 }
-.linkFormContent{
+.linkFormContent {
   display: flex;
   line-height: 34px;
 }
-.linkTitleName{
+.linkTitleName {
   width: 100px;
   margin-right: 12px;
   overflow: hidden;
@@ -112,12 +130,12 @@
   white-space: nowrap;
   height: 31px;
 }
-.linkTitleUrl{
+.linkTitleUrl {
   width: 462px;
   margin-right: 12px;
   height: 31px;
 }
-.linkTitleUrlContent{
+.linkTitleUrlContent {
   display: inline-block;
   width: 460px;
   overflow: hidden;
@@ -127,39 +145,39 @@
   cursor: pointer;
   outline: none;
 }
-.linkFormBtn .nz-icon-delete{
+.linkFormBtn .nz-icon-delete {
   cursor: pointer;
   color: $--color-primary;
   margin-left: 10px;
 }
-.linkFormBtn .nz-icon-edit{
+.linkFormBtn .nz-icon-edit {
   font-size: 14px;
   cursor: pointer;
 }
-.nz-icon-create-square{
+.nz-icon-create-square {
   cursor: pointer;
   color: $--color-text-primary;
 }
-.el-form-item--small .el-form-item__error{
+.el-form-item--small .el-form-item__error {
   padding-top: 0;
 }
-.linkUrlTip{
+.linkUrlTip {
   width: 430px;
 }
-.system-config-form.terminal .el-input-number--small{
+.system-config-form.terminal .el-input-number--small {
   width: 512px;
 }
-.system-config-form.basicForm .el-input-number--small{
+.system-config-form.basicForm .el-input-number--small {
   width: 512px;
 }
-.system-config-form .el-input input{
+.system-config-form .el-input input {
   text-align: left;
 }
 .utc-item {
   color: $--color-text-secondary;
   font-size: 12px;
 }
-.system-title{
+.system-title {
   font-size: 14px;
   color: $--color-text-regular;
   letter-spacing: 0;
@@ -168,7 +186,7 @@
   font-weight: 500;
   margin-bottom: 30px;
 }
-.system-title-border{
+.system-title-border {
   border-top: 1px dashed $--border-color-light;
   padding-top: 30px;
   width: 699px;
@@ -178,19 +196,25 @@
   background-color: $--background-color-empty;
   padding: 10px;
   .el-form-item:last-of-type.monitorLastEle {
-    .el-form-item__content{
+    .el-form-item__content {
       margin-left: 180px !important;
       margin-bottom: 20px;
     }
   }
-  .el-tabs__nav-scroll{
+  .el-form-item:last-of-type.monitorLastElement {
+    .el-form-item__content {
+      margin-left: 180px !important;
+    }
+  }
+  .el-tabs__nav-scroll {
     background-color: $--background-color-empty;
   }
-  .el-tabs__nav-scroll,.el-tabs__header,.el-tabs__nav-wrap{
+  .el-tabs__nav-scroll,
+  .el-tabs__header,
+  .el-tabs__nav-wrap {
     border-bottom: 0;
   }
   .el-form-item:last-of-type {
-
     .el-form-item__content {
       margin-left: 0 !important;
       text-align: center;
@@ -200,13 +224,14 @@
     }
   }
   .full-table {
-    .el-tabs__content{
-      height:  calc( 100% - 100px);
+    .el-tabs__content {
+      height: calc(100% - 100px);
     }
-    .list-page .main-container{
+    .list-page .main-container {
       padding: unset;
     }
-    .table-column-setting,.pagination-bottom{
+    .table-column-setting,
+    .pagination-bottom {
       display: none;
     }
   }
@@ -218,17 +243,17 @@
     outline: none;
     box-sizing: border-box;
   }
-  .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
+  .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
     color: $--color-primary;
     background: $--background-color-empty;
     border-bottom: none;
-    margin-left: .1px;
+    margin-left: 0.1px;
   }
-  .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(.is-disabled):hover {
+  .el-tabs--border-card > .el-tabs__header .el-tabs__item:not(.is-disabled):hover {
     color: $--color-primary;
-    opacity: .8;
+    opacity: 0.8;
   }
-  .el-tabs--border-card>.el-tabs__header .el-tabs__item {
+  .el-tabs--border-card > .el-tabs__header .el-tabs__item {
     height: 40px;
     background: $--background-color-base;
     border: 1px solid $--border-color-light;
@@ -236,7 +261,7 @@
     border-top-right-radius: 4px;
     margin-top: 0;
   }
-  .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(:first-child) {
+  .el-tabs--border-card > .el-tabs__header .el-tabs__item:not(:first-child) {
     margin-left: 5px;
   }
   .el-input-group__prepend {
@@ -249,7 +274,10 @@
     border: 1px solid $--border-color-light;
     border-left: none;
   }
-  .el-input-number__decrease,.el-input-number__increase,.el-input-number__decrease.is-disabled,.el-input-number__increase.is-disabled {
+  .el-input-number__decrease,
+  .el-input-number__increase,
+  .el-input-number__decrease.is-disabled,
+  .el-input-number__increase.is-disabled {
     background-color: $--popover-background-color;
   }
   .el-input-number__decrease {
@@ -273,21 +301,21 @@
     border-color: $--color-primary;
   }
 }
-.system-config-form .el-form-item__content{
+.system-config-form .el-form-item__content {
   width: 512px;
 }
 
-.system-config-form .el-input{
+.system-config-form .el-input {
   width: 512px;
   text-align: left;
 }
 .system-tabs {
   box-shadow: unset !important;
-  border:unset;
+  border: unset;
   border-top: unset;
   height: 100%;
 }
-.system-tabs.el-tabs--border-card{
+.system-tabs.el-tabs--border-card {
   box-shadow: unset !important;
   height: 100%;
   width: 100%;
@@ -295,7 +323,7 @@
   border-left: unset;
   background-color: $--background-color-empty;
 }
-.reset-form .el-checkbox-group{
+.reset-form .el-checkbox-group {
   margin-left: -28px !important;
 }
 .el-form-item__tip {
@@ -318,22 +346,32 @@
   margin-bottom: 54px;
 }
 @keyframes warnBackground {
-  0% {background-color: #FFFFFF;}
-  25% {background-color: #EF7458;}
-  50% {background-color: #FFFFFF;}
-  75% {background-color: #EF7458;}
-  100% {background-color: #FFFFFF;}
+  0% {
+    background-color: #ffffff;
+  }
+  25% {
+    background-color: #ef7458;
+  }
+  50% {
+    background-color: #ffffff;
+  }
+  75% {
+    background-color: #ef7458;
+  }
+  100% {
+    background-color: #ffffff;
+  }
 }
 .warn-pop {
-  background-color: #FEF0F0;
-  border-color: #FEF0F0;
-  color:#F66C6C;
+  background-color: #fef0f0;
+  border-color: #fef0f0;
+  color: #f66c6c;
 }
-.warn-pop .popper__arrow:after{
-  border-top-color: #FEF0F0 !important;
+.warn-pop .popper__arrow:after {
+  border-top-color: #fef0f0 !important;
 }
-.system .logo-upload-tip{
-  color:#F66C6C;
+.system .logo-upload-tip {
+  color: #f66c6c;
   font-size: 12px;
   line-height: 20px;
 }

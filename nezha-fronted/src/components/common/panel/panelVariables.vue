@@ -33,7 +33,7 @@
             <div class="choose-box-content" :title="item.checked.map(value=> labelValue[item.name].find(labelObj=>labelObj.value === value).label).join(' + ')">
               {{item.checked.map(value=> labelValue[item.name].find(labelObj=>labelObj.value === value).label).join(' + ')}}
             </div>
-            <i class="nz-icon nz-icon-arrow-down6"/>
+            <i class="nz-icon nz-icon-arrow-down6" style="cursor:pointer"/>
           </div>
         </div>
       </el-popover>

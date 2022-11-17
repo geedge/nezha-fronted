@@ -26,7 +26,7 @@
     </el-tooltip>
         <!-- <div class="time-no-data">{{ showTime.text }}</div> -->
       </div>
-      <div class="calendar-popover-text">
+      <div class="calendar-popover-text" style="cursor:pointer">
         <i class="el-icon-arrow-down"></i>
       </div>
     </div>

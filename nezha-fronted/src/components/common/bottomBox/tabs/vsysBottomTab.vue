@@ -28,7 +28,7 @@
         :terminaLogTab="true"
         @del="del"
         @edit="edit"
-        @orderBy="tableDataSort"
+        @tableDataSort="tableDataSort"
         @reload="getTableData"
         @selectionChange="selectionChange"></assetVsysTable>
     </template>
@@ -65,7 +65,9 @@ export default {
         searchLabelList: []
       },
       searchLabel: {},
-      tableData: []
+      tableData: [],
+      orderBy: { order: 'ascending', prop: 'id' }
+
     }
   },
   methods: {
@@ -75,7 +77,7 @@ export default {
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
-          this.tableData = response.data.list
+          this.tableData = this.filterShowData(response.data.list, this.orderBy)
           if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
@@ -84,6 +86,22 @@ export default {
           }
         }
       })
+    },
+    // 数据排序
+    tableDataSort (item) {
+      this.orderBy = item
+      this.filterShowData(this.tableData, item)
+    },
+    filterShowData (source, ord) {
+      let orderBy = null
+      orderBy = ord
+      if (orderBy.order === 'ascending') {
+        source = source.sort(this.$tableSet.asce(orderBy.prop))
+      }
+      if (orderBy.order === 'descending') {
+        source = source.sort(this.$tableSet.desc(orderBy.prop))
+      }
+      return source
     }
   }
 }

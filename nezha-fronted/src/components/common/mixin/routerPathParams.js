@@ -70,6 +70,7 @@ export default {
               clientState: this.$refs[detailType].bottomBox.object.clientState || '',
               protocol: this.$refs[detailType].bottomBox.object.protocol || '',
               uuid: this.$refs[detailType].bottomBox.object.uuid || '',
+              startTime: this.$refs[detailType].bottomBox.object.startTime || '',
               model: {
                 tsgAppliance: this.$refs[detailType].bottomBox.object.model ? this.$refs[detailType].bottomBox.object.model.tsgAppliance : ''
               }
@@ -84,6 +85,7 @@ export default {
                 clientState: this.$refs[detailType].detailViewRightObj.clientState || '',
                 protocol: this.$refs[detailType].detailViewRightObj.protocol || '',
                 uuid: this.$refs[detailType].detailViewRightObj.uuid || '',
+                startTime: this.$refs[detailType].detailViewRightObj.startTime || '',
                 model: {
                   tsgAppliance: this.$refs[detailType].detailViewRightObj.model ? this.$refs[detailType].detailViewRightObj.model.tsgAppliance : ''
                 }
@@ -102,6 +104,7 @@ export default {
             clientState: this.bottomBox.object.clientState || '',
             protocol: this.bottomBox.object.protocol || '',
             uuid: this.bottomBox.object.uuid || '',
+            startTime: this.bottomBox.object.startTime || '',
             model: {
               tsgAppliance: this.bottomBox.object.model ? this.bottomBox.object.model.tsgAppliance : ''
             }
@@ -117,6 +120,7 @@ export default {
             clientState: this.detailViewRightObj.clientState || '',
             protocol: this.detailViewRightObj.protocol || '',
             uuid: this.detailViewRightObj.uuid || '',
+            startTime: this.detailViewRightObj.startTime || '',
             model: {
               tsgAppliance: this.detailViewRightObj.model ? this.detailViewRightObj.model.tsgAppliance : ''
             }

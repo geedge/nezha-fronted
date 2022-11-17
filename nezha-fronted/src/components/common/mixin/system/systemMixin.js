@@ -119,12 +119,18 @@ export default {
         terminal_timeout: 30,
         terminal_telnet_user_tip: 'ogin:',
         terminal_telnet_pin_tip: 'assword:',
-        terminal_record_local_retention: 365
+        terminal_record_local_retention: 365,
+        terminal_storage_type: '',
+        terminal_storage_s3_endpoint: '',
+        terminal_storage_s3_bucket: '',
+        terminal_storage_s3_access_key: '',
+        terminal_storage_s3_secret_access_key: ''
       },
       terminalCopy: null,
       terminalRules: {
         terminal_timeout: [{ validator: positiveInteger, trigger: 'blur' }],
-        terminal_record_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }]
+        terminal_record_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        terminal_storage_type: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
       ldap: {
         ldap_address: '',

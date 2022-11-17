@@ -4,7 +4,7 @@
       <div class="top-tool-left">
         <div class="sub-list-title" v-if="showTitle">{{bottomHeaderTitle}}：<slot name="title"></slot></div>
         <div class="sub-list-tabs">
-          <div v-for="tab in tabs" :key="tab.prop" :class="{'sub-list-tab--active': tab.active || tab.prop == targetTab }" :title='tab.prop' class="sub-list-tab" @click="changeTab(tab.prop)">{{tab.name}}</div>
+          <div v-for="tab in tabs" :key="tab.prop" :class="{'sub-list-tab--active': tab.active || tab.prop == targetTab }" :title='tab.name' class="sub-list-tab" @click="changeTab(tab.prop)">{{tab.name}}</div>
         </div>
       </div>
       <div class="top-tool-right" v-if="!customTool">

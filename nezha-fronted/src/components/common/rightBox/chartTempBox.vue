@@ -27,17 +27,35 @@
           </el-form-item>
           <!--chartTemp list-->
           <el-form-item :label="$t('overall.chartTemplate')" prop="pid">
-            <el-select id="chart-box-group"
-                       v-model="editChartTemp.pid"
-                       class="right-box__select" clearable
-                       placeholder=""
-                       popper-class="prevent-clickoutside right-box-select-top"
-                       size="small"
-                       value-key="chartType" >
-              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTempArr">
-                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-              </el-option>
-            </el-select>
+<!--            <el-select id="chart-box-group"-->
+<!--                       v-model="v"-->
+<!--                       filterable-->
+<!--                       class="right-box__select" clearable-->
+<!--                       placeholder=""-->
+<!--                       popper-class="prevent-clickoutside right-box-select-top"-->
+<!--                       size="small"-->
+<!--                       value-key="chartType" >-->
+<!--              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTempArr">-->
+<!--                <span class="panel-dropdown-label-txt" >{{item.name}}</span>-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+            <v-selectpage
+              :data="chartTempArr"
+              :tb-columns="ChartSearchShowFields"
+              :params="{
+                varType: 2, panelId: 0,
+                returnChildren:0,groupId:0,
+              }"
+              :multiple="false"
+              :language="language"
+              title="ChartSearch"
+              key-field="id"
+              show-field="name"
+              :width="626"
+              v-model="editChartTemp.pid"
+              class="form-control"
+              :result-format="resultFormat"
+            ></v-selectpage>
           </el-form-item>
 
           <!-- 选择资产，穿梭框 -->
@@ -106,6 +124,30 @@ export default {
         { name: 'Endpoint', id: 2 }
       ],
       chartTempArr: [],
+      ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
+        { title: 'ID', data: 'id' },
+        {
+          title: this.$t('overall.name'),
+          data: function (row) {
+            if (row.name.length > 15) {
+              return row.name.substring(0, 12) + '...'
+            }
+            return row.name
+          },
+          key: 'name'
+        },
+        { title: this.$t('overall.type'), data: 'type', key: 'type' },
+        {
+          title: this.$t('overall.remark'),
+          data: function (row) {
+            if (row.remark && row.remark.length > 15) {
+              return row.remark.substring(0, 12) + '...'
+            }
+            return row.remark
+          },
+          key: 'remark'
+        }
+      ],
       tableData: [],
       transfer: {
         tableData: [],
@@ -196,7 +238,8 @@ export default {
         return false
       }
       return true
-    }
+    },
+    language () { return this.$store.getters.getLanguage }
   },
   methods: {
     pageNoChange (val) {
@@ -236,9 +279,11 @@ export default {
         this.editChartTemp.varIds = this.$refs.transfer.selectedData.map(item => item.id)
       }
       this.$refs.userForm.validate((valid) => {
+        const params = this.$loadsh.cloneDeep(this.editChartTemp)
+        params.pid = Number(params.pid)
         if (valid) {
-          if (this.editChartTemp.id) {
-            this.$put(this.url, this.editChartTemp).then(res => {
+          if (params.id) {
+            this.$put(this.url, params).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -249,7 +294,7 @@ export default {
               }
             })
           } else {
-            this.$post(this.url, this.editChartTemp).then(res => {
+            this.$post(this.url, params).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -289,6 +334,14 @@ export default {
           this.chartTempArr = response.data.list
         }
       })
+    },
+    resultFormat (resp) {
+      if (resp && resp.data) {
+        const assetData = {}
+        assetData.list = resp.data.list
+        assetData.totalRow = resp.data.total
+        return assetData
+      }
     },
     getTableData () {
       if (this.editChartTemp.varType === 1) {

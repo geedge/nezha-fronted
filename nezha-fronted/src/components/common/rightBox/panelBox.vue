@@ -306,9 +306,15 @@
                     </el-checkbox-group>
                   </el-form-item>
                   <el-form-item :label="$t('dashboard.panel.receivers')" class="item-receivers" prop="param.report.receivers">
-                    <el-select v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
-                      <el-option v-for="item in userData" :key="item.id" :label="item.name" :value="item.id">
-                      <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                    <el-select
+                    class="right-box__select"
+                    v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
+                      <el-option
+                      style="width: 620px"
+                      v-for="item in userData" :key="item.id"
+                      :label="item.name" :value="item.id">
+                      <span class="user-name" :title="item.name">{{item.name}}</span>
+                      <span class="user-username" :title="item.username">@{{item.username}}</span>
                       </el-option>
                     </el-select>
                   </el-form-item>
@@ -438,7 +444,7 @@ export default {
       queryVariableList: [
         { name: 'label_names()', description: this.$t('dashboard.panel.label_names()') },
         { name: 'label_values(label)', description: this.$t('dashboard.panel.label_values(label)') },
-        { name: 'label_values(metric, label)', description: this.$t('dashboard.label_values(metric, label)') },
+        { name: 'label_values(metric, label)', description: this.$t('dashboard.panel.label_values(metric, label)') },
         { name: 'metrics(metric)', description: this.$t('dashboard.panel.metrics(metric)') },
         { name: 'query_result(query)', description: this.$t('dashboard.panel.query_result(query)') }
       ]

@@ -252,6 +252,30 @@ export const chart = {
       label: i18n.t('dashboard.panel.chartForm.typeVal.stackArea.label')
     },
     {
+      value: 'area',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.stackArea.label')
+    },
+    {
+      value: 'point',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.point.label')
+    },
+    {
+      value: 'gauge',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.gauge.label')
+    },
+    {
+      value: 'sankey',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.sankey.label')
+    },
+    {
+      value: 'hexagon',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
+    },
+    {
+      value: 'stat',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.singleStat.label')
+    },
+    {
       value: 'bar',
       label: i18n.t('dashboard.panel.chartForm.typeVal.bar.label')
     },
@@ -283,6 +307,7 @@ export const chart = {
       value: 'group',
       label: i18n.t('dashboard.panel.chartForm.group')
     },
+
     {
       value: 'logs',
       label: i18n.t('overall.logs')
@@ -290,6 +315,42 @@ export const chart = {
     {
       value: 'diagram',
       label: i18n.t('dashboard.panel.chartForm.typeVal.diagram.label')
+    },
+    {
+      value: 'treemap',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.treemap.label')
+    },
+    {
+      value: 'pie',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.pie.label')
+    },
+    {
+      value: 'bubble',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.bubble.label')
+    },
+    {
+      value: 'rank',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.rank.label')
+    },
+    {
+      value: 'log',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.log.label')
+    },
+    {
+      value: 'table',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.table.label')
+    },
+    {
+      value: 'map',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.map.label')
+    },
+    {
+      value: 'topology',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.topology.label')
+    },
+    {
+      value: 'clock',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.clock.label')
     }
   ]
 }

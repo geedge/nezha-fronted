@@ -1423,15 +1423,9 @@ export default {
     },
 
     copyValue () {
-      const domUrl = document.createElement('input')
-      domUrl.value = this.configsCopyValue
-      domUrl.id = 'creatDom'
-      document.body.appendChild(domUrl)
-      domUrl.select() // 选择对象
-      document.execCommand('Copy') // 执行浏览器复制命令
-      const creatDom = document.getElementById('creatDom')
-      creatDom.parentNode.removeChild(creatDom)
-      this.$message.success(this.$t('overall.copySuccess'))
+      this.$copyText(this.configsCopyValue).then(() => {
+        this.$message.success({ message: this.$t('overall.copySuccess') })
+      })
     },
     copyLogsValue (index) {
       const domUrl = document.createElement('input')
