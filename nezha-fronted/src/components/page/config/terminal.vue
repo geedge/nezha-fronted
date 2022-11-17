@@ -39,7 +39,7 @@
               <el-input v-model="terminal.terminal_storage_s3_access_key" id="terminal-terminal_storage_s3_access_key">
               </el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.terminallog.key')" prop="terminal_storage_s3_secret_access_key" :rules=" [ { required: terminal.terminal_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+            <el-form-item :label="$t('config.terminallog.key')" prop="terminal_storage_s3_secret_access_key" :rules=" [ { required: terminal.terminal_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastElement">
               <el-input v-model="terminal.terminal_storage_s3_secret_access_key" id="terminal-terminal_storage_s3_secret_access_key" type="password">
               </el-input>
             </el-form-item>

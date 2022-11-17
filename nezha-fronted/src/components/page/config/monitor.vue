@@ -64,7 +64,7 @@
               <el-input v-model="monitor.metrics_storage_s3_access_key" id="monitor-metrics_storage_s3_access_key">
               </el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.terminallog.key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+            <el-form-item :label="$t('config.terminallog.key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastElement">
               <el-input v-model="monitor.metrics_storage_s3_secret_access_key" id="monitor-metrics_storage_s3_secret_access_key" type="password">
               </el-input>
             </el-form-item>
@@ -100,7 +100,7 @@
               <el-input v-model="monitor.logs_storage_s3_access_key" id="monitor-logs_storage_s3_access_key">
               </el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.terminallog.key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+            <el-form-item :label="$t('config.terminallog.key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastElement">
               <el-input v-model="monitor.logs_storage_s3_secret_access_key" id="monitor-logs_storage_s3_secret_access_key" type="password">
               </el-input>
             </el-form-item>
@@ -186,18 +186,4 @@ export default {
 }
 </script>
 <style scoped>
-.vue-tags-input{
-  max-width: unset;
-}
-/deep/ .vue-tags-input .ti-input{
-    min-height: 32px;
-    padding: 0px 0px 0px 15px !important;
-}
-/deep/ .vue-tags-input .ti-input .ti-new-tag-input-wrapper{
-  padding: 0;
-  margin: 0;
-}
-/deep/ .vue-tags-input.interface-name .ti-input .ti-new-tag-input-wrapper{
-  padding-left: 7px;
-}
 </style>
