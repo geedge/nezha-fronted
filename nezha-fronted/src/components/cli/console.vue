@@ -8,15 +8,18 @@
 </style>
 <template>
     <div :id="'ternimalContainer'+idIndex" class="console">
-      <div style="display: flex;width: 100%; justify-content: space-between">
-        <span style="color: #fff">{{userName}}</span>
+      <div style="display: flex;width: 100%; justify-content: space-between;background: #101010;box-shadow: 0 1px 0 0 #303030;">
+        <span style="color: #fff">
+          <div class="active-icon green-bg"></div>
+          {{userName}}
+        </span>
         <span  style="color: #fff">
-          <i class="nz-icon nz-icon-clock"></i>
-          <i class="nz-icon nz-icon-projectTopology" @click="fileDirectoryShow = !fileDirectoryShow"></i>
+          <i class="nz-icon nz-icon-reconnect" style="margin-right: 22px"></i>
+          <i class="nz-icon nz-icon-SFTP" style="margin-right: 22px" @click="fileDirectoryShow = !fileDirectoryShow"></i>
         </span>
       </div>
         <div :id="'terminal'+idIndex" ></div>
-      <fileDirectory :uuid="terminal.uuid" v-if="fileDirectoryShow" style="height: 80%;position: absolute;bottom: 0;background: #1E1E1E;box-shadow: 5px 0 3px 0 #5E5E5E;width: 100%"/>
+      <fileDirectory :uuid="terminal.uuid" v-if="fileDirectoryShow" @close="fileDirectoryShow=false" style=""/>
     </div>
 </template>
 <script>
@@ -189,7 +192,9 @@ export default {
         authPinTip: this.$loadsh.get(this.terminal, 'custom.authPinTip', '')
       }
       this.$post('/terminal/login', params).then(res => {
-        // this.terminal.uuid = res.data.uuid
+        this.terminal.uuid = res.data.uuid
+        this.userName = res.data.authUsername + '@' + res.data.host
+        this.host = res.data.host
         this.create()
       })
     },

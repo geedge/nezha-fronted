@@ -17,14 +17,16 @@ const removePending = (config) => {
 }
 axios.interceptors.request.use(
   config => {
-    const source = CancelToken.source() // 申明CancelToken,也可new CancelToken.source()实例一个
-    config.cancelToken = source.token // 将实例对象的token赋予该请求
-    const id = getUUID() // 添加唯一识别id 在请求完成时清除requestsArr
-    config.id = id
-    requestsArr.push({
-      id,
-      cancel: source.cancel
-    }) // 将该实例添加到队列中
+    if (!config.cancelToken) {
+      const source = CancelToken.source() // 申明CancelToken,也可new CancelToken.source()实例一个
+      config.cancelToken = source.token // 将实例对象的token赋予该请求
+      const id = getUUID() // 添加唯一识别id 在请求完成时清除requestsArr
+      config.id = id
+      requestsArr.push({
+        id,
+        cancel: source.cancel
+      }) // 将该实例添加到队列中
+    }
     const token = localStorage.getItem('nz-token')
     if (token) {
       config.headers.Authorization = token // 请求头token

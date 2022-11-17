@@ -59,13 +59,17 @@
         </el-tab-pane>
       </el-tabs>
       <div class="console-icon">
+        <div class="console-title-icon" style='right: 106px;display: inline;' @click="showFileState">
+          <i class="nz-icon nz-icon-a-filetransfer" :title="$t('guide.webTerminal')"></i>
+          <span v-show="fileList.length>0" class="right-tip">{{fileList.length<=99?fileList.length:'99+'}}</span>
+        </div>
         <i @click="minScreen" class="nz-icon nz-icon-minus console-title-icon" style='right: 76px;' :title="$t('overall.shrink')"></i>
         <i @click="fullScreen" class="el-icon-full-screen console-title-icon" style='right: 46px;' v-if="!isFullScreen" :title="$t('dashboard.screen')"></i>
         <i @click="exitFullScreen" class="nz-icon nz-icon-exit-full-screen console-title-icon" style='right: 46px;' v-else :title="$t('dashboard.screen.exit')"></i>
         <i @click="closeConsole" class="nz-icon nz-icon-close console-title-icon" style='right: 16px;' :title="$t('overall.close')"></i>
       </div>
     </div>
-
+    <fileListState v-clickoutside="hideFileState" ref="fileListState"/>
     <div >
       <el-dialog :modal-append-to-body='false' :show-close="true" :title="uploadBox.title" :visible.sync="uploadBox.showUpload" @close="closeDialog" class="nz-dialog" width="500px" >
         <div >
@@ -255,16 +259,21 @@
 
 <script>
 import Console from './console'
+import fileListState from './fileListState'
 import uuidv1 from 'uuid/v1'
 import axios from 'axios'
 import { host, port } from '@/components/common/js/validate'
 export default {
   name: 'webSSH',
   components: {
-    'my-console': Console
+    'my-console': Console,
+    fileListState
   },
   computed: {
-    language () { return this.$store.getters.getLanguage }
+    language () { return this.$store.getters.getLanguage },
+    fileList () {
+      return this.$store.getters.getFileList
+    },
   },
   data () {
     const termFontSize = parseInt(localStorage.getItem('termFontSize'))
@@ -969,6 +978,14 @@ export default {
         authProtocolPort: '',
         authProtocol: 1
       }
+    },
+    showFileState () {
+      let type = 'top'
+      console.log( this.$refs.fileListState)
+      this.$refs.fileListState.fileStateShow(true, type)
+    },
+    hideFileState () {
+      this.$refs.fileListState.fileStateShow(false)
     }
   },
   watch: {

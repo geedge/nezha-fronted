@@ -126,7 +126,21 @@
     background: #000 !important;
     left: -2px;
   }
+  .right-tip {
+    position: absolute;
+    left: 9px;
+    top: -8px;
+    padding: 0 6px;
+    line-height: 15px;
+    height: 15px;
+    background-color: #ba3939;
+    opacity: .9;
+    border-radius: 7px;
+    color: white;
+    font-size: 6px;
+  }
 }
+
 .shell-service-max {
   height: 100%;
   position: fixed !important;
@@ -275,4 +289,5 @@ div.sp-header{
   .custom-footer {
     box-shadow: none;
   }
+
 }
