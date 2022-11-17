@@ -119,6 +119,12 @@ export default {
         ],
         type: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        token: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        protocol: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ]
       },
       editPromServer: {},
