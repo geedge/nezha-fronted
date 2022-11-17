@@ -203,6 +203,7 @@ export default {
       }
     },
     downloadBackup (backup) {
+      this.$emit('loading', true)
       axios.get('/sys/backup/download?filename=' + backup.fileName, { responseType: 'blob' }).then(data => {
         let fileName = new Date().getTime() + '.txt'
         const disposition = data.headers['content-disposition']
@@ -224,10 +225,10 @@ export default {
           link.click()
           window.URL.revokeObjectURL(link.href)
         }
+        this.$emit('loading', false)
       })
     }
   },
-
   watch: {
   }
 }
