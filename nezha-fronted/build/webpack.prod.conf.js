@@ -367,6 +367,7 @@ if (process.env.NODE_ENV == 'development') {
       {
         delete: [
           path.join(__dirname, '../dist', '/config.json'),
+          path.join(__dirname, '../dist', '/*.js'),
           path.join(__dirname, '../.cache/')
         ]
       },
