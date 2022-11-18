@@ -609,7 +609,7 @@
                         <el-form-item
                           :label="'Format'"
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.format'"
-                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]"
                         >
                           <el-select v-model="item2.format" :id="'timestamp' + index +'-' + index2" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
                             <el-option v-for="item in timestampList" :id="'module-timestamp-'+item" :key="item" :label="item" :value="item"></el-option>
