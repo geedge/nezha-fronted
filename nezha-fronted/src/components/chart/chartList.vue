@@ -570,6 +570,10 @@ export default {
         if (item.repeatIndex > 0) {
           this.copyDataList.splice(index, 1)
           index--
+        } else {
+          // 置为原来的数据
+          const temp = this.tempList.find(subItem => item.id == subItem.id)
+          this.copyDataList[index] = this.$loadsh.cloneDeep(temp)
         }
       }
       this.$nextTick(() => {
