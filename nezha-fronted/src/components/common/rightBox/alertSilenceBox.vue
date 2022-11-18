@@ -311,7 +311,7 @@ export default {
     rangeTimeCallback () {
       if (this.editAlertSilence.time) {
         const num = new Date(this.editAlertSilence.endAt).getTime() - new Date(this.editAlertSilence.startAt).getTime()
-        this.rangeTime = num / (60 * 60 * 1000)// 以小时为单位
+        this.rangeTime = parseInt(num / (60 * 60 * 1000))// 以小时为单位
       } else {
         this.rangeTime = null
       }
