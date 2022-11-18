@@ -14,7 +14,7 @@
         <div class="container__form">
           <el-form label-width="120px"  :model="editAssetMeta" label-position = "top" ref="editAssetMetaForm" :rules="rules">
             <el-form-item :label='$t("overall.name")' prop="name">
-              <el-input placeholder="" maxlength="64" show-word-limit v-model.trim="editAssetMeta.name" size="small" id="editAssetMeta-box-input-name"></el-input>
+              <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetMeta.name" size="small" id="editAssetMeta-box-input-name"></el-input>
             </el-form-item>
             <el-form-item :label='$t("overall.key")' prop="metaKey">
               <el-input placeholder="" maxlength="128" show-word-limit v-model="editAssetMeta.metaKey" size="small" id="editAssetMeta-box-input-key"></el-input>
@@ -70,7 +70,7 @@
                 <el-row v-for="(item,index) in editAssetMeta.param.items" :key="index" class="asset-meta-param-row">
                   <el-col :span="12">
                     <el-form-item :prop="'param.items.'+ index + '.name'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur'},{ validator: checkItems, trigger: 'blur' }]">
-                      <el-input v-model.trim = "item.name" size="small" @input="(val)=>{inputChange(index, val)}" :ref="'metaNameOption'+index"></el-input>
+                      <el-input v-model = "item.name" size="small" @input="(val)=>{inputChange(index, val)}" :ref="'metaNameOption'+index"></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col :span="6">

@@ -30,7 +30,7 @@
         </el-form-item>
         <!--name-->
         <el-form-item :label="$t('overall.name')" prop="name">
-          <el-input  placeholder="" type="text" v-model.trim="editMenu.name" id="menu-box-input-name"></el-input>
+          <el-input  placeholder="" type="text" v-model="editMenu.name" id="menu-box-input-name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.menus.code')" prop="code">
           <el-input  placeholder="" type="text" v-model="editMenu.code" id="menu-box-input-code"></el-input>

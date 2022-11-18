@@ -12,7 +12,7 @@
       <div class="container__form">
         <el-form :model="editipDetails" label-position="top" label-width="120px" :rules="rules" ref="ipDetailsForm">
           <el-form-item :label="$t('overall.name')" prop="name">
-            <el-input maxlength="64" rows="4" show-word-limit placeholder="" v-model.trim="editipDetails.name" size="small"></el-input>
+            <el-input maxlength="64" rows="4" show-word-limit placeholder="" v-model="editipDetails.name" size="small"></el-input>
           </el-form-item>
           <el-form-item label="IP" prop="addr">
             <el-input maxlength="256" rows="4" show-word-limit placeholder="" v-model="editipDetails.addr" size="small"></el-input>

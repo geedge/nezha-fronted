@@ -32,19 +32,19 @@
               </el-form-item>
               <!--     第三级：Auth type = username | key -->
               <el-form-item :label="$t('profile.username')" prop="authUsername">
-                <el-input v-model.trim="editData.authUsername" size="small"/>
+                <el-input v-model="editData.authUsername" size="small"/>
               </el-form-item>
               <template v-if="editData.authType === assetConstants.authTypeData.key">
                 <!-- Key支持私钥 -->
                 <el-form-item :label="$t('asset.privateKey')" prop="authPriKey">
-                  <el-input v-model.trim="editData.authPriKey" size="small" type="password" autocomplete="new-password"/>
+                  <el-input v-model="editData.authPriKey" size="small" type="password" autocomplete="new-password"/>
                 </el-form-item>
               </template>
               <el-form-item :label="$t('login.pin')" prop="authPin">
-                <el-input v-model.trim="editData.authPin" size="small"  type="password" autocomplete="new-password"/>
+                <el-input v-model="editData.authPin" size="small"  type="password" autocomplete="new-password"/>
               </el-form-item>
               <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
-                <el-input v-model.trim="editData.authProtocolPort" size="small"/>
+                <el-input v-model="editData.authProtocolPort" size="small"/>
               </el-form-item>
             </template>
 
@@ -52,16 +52,16 @@
             <template v-if="editData.authProtocol === assetConstants.authProtocolData.telnet">
               <div class="form__sub-title">TELNET</div>
               <el-form-item :label="$t('profile.username')" prop="authUsername">
-                <el-input v-model.trim="editData.authUsername" size="small"/>
+                <el-input v-model="editData.authUsername" size="small"/>
               </el-form-item>
               <el-form-item :label="$t('login.pin')" prop="authPin">
-                <el-input v-model.trim="editData.authPin" size="small"/>
+                <el-input v-model="editData.authPin" size="small"/>
               </el-form-item>
               <el-form-item :label="$t('asset.usernamePrompt')" prop="authUserTip">
-                <el-input v-model.trim="editData.authUserTip" size="small"/>
+                <el-input v-model="editData.authUserTip" size="small"/>
               </el-form-item>
               <el-form-item :label="$t('asset.pinPrompt')" prop="authPinTip">
-                <el-input v-model.trim="editData.authPinTip" size="small"/>
+                <el-input v-model="editData.authPinTip" size="small"/>
               </el-form-item>
             </template>
           </template>
@@ -83,16 +83,16 @@
                 </template>
                 <template v-if="label.action !== 1">
                   <template v-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXT">
-                    <el-input v-model.trim="label.value" size="small"/>
+                    <el-input v-model="label.value" size="small"/>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.MULTITEXT">
                     <div v-for="(value, i) in label.value" :key="i" class="label__multi-text">
-                      <el-input v-model.trim="label.value[i]" size="small" style="margin-right: 15px;"/>
+                      <el-input v-model="label.value[i]" size="small" style="margin-right: 15px;"/>
                       <span :style="{'opacity': label.value.length > 1 ? 1 : 0.5}" @click="label.value.length > 1 ? label.value.splice(i, 1) : ''" :title="$t('overall.delete')"><i class="nz-icon nz-icon-minus"></i></span>
                     </div>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA">
-                    <el-input v-model.trim="label.value" :maxlength="4096" size="small" :rows="2" show-word-limit type="textarea"/>
+                    <el-input v-model="label.value" :maxlength="4096" size="small" :rows="2" show-word-limit type="textarea"/>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.RADIO">
                     <el-radio v-for="item in JSON.parse(label.param).items" :key="item.name" v-model="label.value" :label="item.name">{{item.name}}</el-radio>
@@ -108,10 +108,10 @@
                     </el-select>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.INTEGER">
-                    <el-input v-model.trim="label.value" oninput="value=value.replace(/[^\d]/g,'')" size="small"></el-input>
+                    <el-input v-model="label.value" oninput="value=value.replace(/[^\d]/g,'')" size="small"></el-input>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.DOUBLE">
-                    <el-input v-model.trim="label.value" oninput="value=value.replace(/[^0-9.]/g,'')" size="small"></el-input>
+                    <el-input v-model="label.value" oninput="value=value.replace(/[^0-9.]/g,'')" size="small"></el-input>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.DATETIME">
                     <template v-if="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.time">

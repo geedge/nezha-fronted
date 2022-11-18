@@ -11,7 +11,7 @@
         <el-form ref="modelForm" :model="editModel" :rules="rules" label-position="top" label-width="120px">
           <!--name-->
           <el-form-item :label="$t('config.model.name')" prop="name">
-            <el-input maxlength="64" show-word-limit v-model.trim="editModel.name" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="editModel.name" size="small" type="text"></el-input>
           </el-form-item>
           <!--brand-->
           <el-form-item :label='$t("asset.brand")' prop="brandId">
@@ -48,7 +48,7 @@
           </el-form-item>
           <!-- sys object id -->
           <el-form-item :label="$t('config.model.sysObjectId')" prop="sysObjectId">
-            <el-input maxlength="64" show-word-limit v-model.trim="editModel.sysObjectId" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="editModel.sysObjectId" size="small" type="text"></el-input>
           </el-form-item>
           <!--remark-->
           <el-form-item :label="$t('overall.remark')" prop="remark">

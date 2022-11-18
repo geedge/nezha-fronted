@@ -17,7 +17,7 @@
             <!-- name -->
           <el-form-item :label='$t("overall.name")' prop="name">
             <el-input
-              v-model.trim="editRecordRule.name" :placeholder="''"
+              v-model="editRecordRule.name" :placeholder="''"
               maxlength="64"
               show-word-limit
               size="small">

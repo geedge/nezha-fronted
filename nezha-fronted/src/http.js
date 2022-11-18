@@ -66,12 +66,31 @@ axios.interceptors.request.use(
         paramsArr.forEach(p => {
           const i = p.indexOf('=')
           if (i > -1) {
-            params[p.substring(0, i)] = p.substring(i + 1, p.length)
+            params[p.substring(0, i)] = p.substring(i + 1, p.length).trim()
           } else {
             params[p] = ''
           }
         })
         config = { ...config, url: pre, params: params }
+      }
+    } else if (config.method === 'post' || config.method === 'put') {
+      try {
+        console.log(config.data.name)
+        let params = config.data
+        if ((typeof params == 'string') && params.constructor == String) {
+          params = JSON.parse( config.data)
+        }
+        Object.keys(params).forEach(key => {
+          if ((typeof params[key] == 'string') && params[key].constructor == String) {
+            params[key] = params[key].trim()
+          }
+        })
+        if ((typeof config.data == 'string') && config.data.constructor == String) {
+          config.data = JSON.stringify(params)
+        } else {
+          config.data = params
+        }
+      } catch (e) {
       }
     }
     return config

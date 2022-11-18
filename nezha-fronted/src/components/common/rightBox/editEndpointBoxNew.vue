@@ -67,7 +67,7 @@
           </el-form-item>
           <!--name-->
           <el-form-item v-if="optionType!=='batch'" :label='$t("overall.name")' label-width="125px" prop="name">
-            <el-input id="module-box-input-name" v-model.trim="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
+            <el-input id="module-box-input-name" v-model="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--Enpoint template-->
           <div class="right-box-sub-title">{{ $t("overall.config") }}

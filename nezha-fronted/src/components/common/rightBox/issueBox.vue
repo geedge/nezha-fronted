@@ -17,7 +17,7 @@
            <!-- title -->
           <el-form-item :label='$t("project.topology.title")' prop="name">
             <el-input
-              v-model.trim="editIssue.name"
+              v-model="editIssue.name"
               :placeholder="''"
               maxlength="64"
               show-word-limit
@@ -84,7 +84,7 @@
            <el-form-item :label='$t("issue.reporter")' prop="rid">
              <el-select
               id="issue-box-input-receiver"
-              v-model.trim="editIssue.rid"
+              v-model="editIssue.rid"
               class="right-box__select"
               filterable
               placeholder=""
@@ -106,7 +106,7 @@
           <el-form-item :label='$t("issue.assignee")' prop="aid">
              <el-select
               id="issue-box-input-receiver"
-              v-model.trim="editIssue.aid"
+              v-model="editIssue.aid"
               class="right-box__select"
               filterable
               placeholder=""

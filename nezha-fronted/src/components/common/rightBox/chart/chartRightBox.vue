@@ -17,7 +17,7 @@
       <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px">
         <el-form-item :label='$t("overall.name")' prop="name">
           <div style="display:flex;align-items:center">
-            <el-input style="flex:1;margin-right:10px" maxlength="64" show-word-limit size="small" v-model.trim="editChart.name" id="chart-box-title"></el-input>
+            <el-input style="flex:1;margin-right:10px" maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
             <!-- 显示头部 -->
             <div class="choose-header-btn" v-if="editChart.param&&editChart.param.showHeader!==0" @click="switchHeader(0)" :title="$t('overall.visible')">
               <i class="nz-icon nz-icon-mimakejian"></i>
@@ -67,11 +67,11 @@
         </div>
         <!--remark-->
         <el-form-item :label="$t('overall.remark')">
-          <el-input  maxlength="256" show-word-limit v-model.trim="editChart.remark" size="small" :rows="2" type="textarea"/>
+          <el-input  maxlength="256" show-word-limit v-model="editChart.remark" size="small" :rows="2" type="textarea"/>
         </el-form-item>
         <!--remark-->
         <el-form-item :label="$t('overall.link')" v-if="editChart.param">
-          <el-input  maxlength="256" show-word-limit v-model.trim="editChart.param.link" size="small" :rows="2" type="textarea"/>
+          <el-input  maxlength="256" show-word-limit v-model="editChart.param.link" size="small" :rows="2" type="textarea"/>
         </el-form-item>
 
         <!--title-->

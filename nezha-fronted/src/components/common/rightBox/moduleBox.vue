@@ -15,7 +15,7 @@
         <el-form ref="moduleForm" :model="editModule" :rules="rules" label-position="top" label-width="120px">
           <!--name-->
           <el-form-item :label='$t("overall.name")' label-width="125px" prop="name">
-            <el-input id="module-box-input-name" v-model.trim="editModule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
+            <el-input id="module-box-input-name" v-model="editModule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--project-->
           <el-form-item :label='$t("project.project.projectName")' prop="projectId">
