@@ -570,10 +570,16 @@ export default {
         if (item.repeatIndex > 0) {
           this.copyDataList.splice(index, 1)
           index--
-        } else {
+        } else if (item.repeatIndex == 0) {
           // 置为原来的数据
-          const temp = this.tempList.find(subItem => item.id == subItem.id)
-          this.copyDataList[index] = this.$loadsh.cloneDeep(temp)
+          delete item.repeatIndex
+          delete item.repeatVariable
+          delete item.repeatValue
+          item.children.forEach(children => {
+            delete children.repeatIndex
+            delete children.repeatVariable
+            delete children.repeatValue
+          })
         }
       }
       this.$nextTick(() => {
