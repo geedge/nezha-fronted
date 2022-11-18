@@ -2,13 +2,15 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './user'
 import panel from './panel'
+import terminalFile from './terminalFile'
 // import topology from './topology'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
   modules: {
     user,
-    panel
+    panel,
+    terminalFile
   },
   state: {
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */

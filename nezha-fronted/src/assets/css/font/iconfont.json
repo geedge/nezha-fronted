@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "32660007",
+      "name": "Folder ",
+      "font_class": "Folder",
+      "unicode": "e7ad",
+      "unicode_decimal": 59309
+    },
+    {
+      "icon_id": "32660008",
+      "name": "File",
+      "font_class": "File",
+      "unicode": "e7ae",
+      "unicode_decimal": 59310
+    },
+    {
+      "icon_id": "32659266",
+      "name": "file transfer",
+      "font_class": "a-filetransfer",
+      "unicode": "e7a7",
+      "unicode_decimal": 59303
+    },
+    {
+      "icon_id": "32659269",
+      "name": "reconnect",
+      "font_class": "reconnect",
+      "unicode": "e7a8",
+      "unicode_decimal": 59304
+    },
+    {
+      "icon_id": "32659270",
+      "name": "upper level",
+      "font_class": "a-upperlevel",
+      "unicode": "e7a9",
+      "unicode_decimal": 59305
+    },
+    {
+      "icon_id": "32659271",
+      "name": "new folder",
+      "font_class": "a-newfolder",
+      "unicode": "e7aa",
+      "unicode_decimal": 59306
+    },
+    {
+      "icon_id": "32659272",
+      "name": "SFTP",
+      "font_class": "SFTP",
+      "unicode": "e7ab",
+      "unicode_decimal": 59307
+    },
+    {
       "icon_id": "586976",
       "name": "map-sankey",
       "font_class": "sankey",
