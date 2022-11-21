@@ -151,7 +151,6 @@ export default {
       }
     },
     clearInput () {
-      console.log(666)
       this.$refs.elementQuery.focus()
     },
     changeTime (size, unit) {

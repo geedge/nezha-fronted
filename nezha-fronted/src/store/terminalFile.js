@@ -8,7 +8,6 @@ const terminalFile = {
       state.fileList = arr
     },
     addFileList (state, item) {
-      console.log(item)
       state.fileList.push(item)
     },
     delFileList (state, item) {

@@ -6,18 +6,25 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "32964483",
+      "name": "File",
+      "font_class": "File",
+      "unicode": "e7ae",
+      "unicode_decimal": 59310
+    },
+    {
+      "icon_id": "32961611",
+      "name": "Clear",
+      "font_class": "Clear",
+      "unicode": "e7b0",
+      "unicode_decimal": 59312
+    },
+    {
       "icon_id": "32660007",
       "name": "Folder ",
       "font_class": "Folder",
       "unicode": "e7ad",
       "unicode_decimal": 59309
-    },
-    {
-      "icon_id": "32660008",
-      "name": "File",
-      "font_class": "File",
-      "unicode": "e7ae",
-      "unicode_decimal": 59310
     },
     {
       "icon_id": "32659266",

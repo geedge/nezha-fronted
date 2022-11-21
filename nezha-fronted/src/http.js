@@ -75,10 +75,9 @@ axios.interceptors.request.use(
       }
     } else if (config.method === 'post' || config.method === 'put') {
       try {
-        console.log(config.data.name)
         let params = config.data
         if ((typeof params == 'string') && params.constructor == String) {
-          params = JSON.parse( config.data)
+          params = JSON.parse(config.data)
         }
         Object.keys(params).forEach(key => {
           if ((typeof params[key] == 'string') && params[key].constructor == String) {

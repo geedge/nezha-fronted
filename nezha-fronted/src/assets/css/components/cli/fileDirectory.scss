@@ -1,0 +1,77 @@
+.fileDirectory {
+  height: 80%;
+  position: absolute;
+  bottom: 0;
+  background: #1E1E1E;
+  box-shadow: 5px 0 3px 0 #5E5E5E;
+  width: 100% !important;
+  z-index: 10;
+  .file-directory-header{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 10px;
+    background: #1E1E1E;
+    box-sizing: border-box;
+    color: #ffffff;
+    i {
+      margin-right: 22px;
+    }
+  }
+  .file-directory-content{
+    height: calc(100% - 26px);
+    width: calc(100% - 15px);
+    overflow: auto;
+  }
+  .file-state-panel-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  .file-directory-content::-webkit-scrollbar-thumb {
+    background: rgba(244,244,244,0.16);
+    border-radius: 4px;
+    border:none
+  }
+  .file-directory-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(244,244,244,0.16);
+    border-radius: 4px;
+    border:none
+  }
+  .file-item{
+    font-family: Roboto-Regular;
+    font-size: 14px;
+    color: #B7B7B7;
+    line-height: 21px;
+    font-weight: 400;
+    margin-top: 8px;
+  }
+  .file-item{
+    display: flex;
+    padding: 0 10px;
+    .file-name{
+      width: calc(100% - 300px);
+      flex: 1;
+    }
+    .file-feature{
+      width: 100px;
+      flex-shrink: 1;
+      >.nz-icon-download1 {
+        margin-right: 24px;
+      }
+    }
+    .file-date {
+      width: 260px;
+      flex-shrink: 1;
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row-reverse;
+    }
+  }
+  .file-item:hover{
+    background: rgba(255,134,0,0.50);
+    font-family: Roboto-Regular;
+    font-size: 14px;
+    color: #FF9230;
+    line-height: 21px;
+    font-weight: 400;
+  }
+}

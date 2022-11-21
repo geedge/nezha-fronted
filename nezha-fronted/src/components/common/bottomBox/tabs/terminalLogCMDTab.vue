@@ -8,7 +8,6 @@
     :targetTab="targetTab"
     @changeTab="changeTab"
     :title="'Session ID'"
-    id="terminalLogCMDTab"
   >
     <template v-slot:title><span :title="obj.uuid.substring(0, 8).toUpperCase()">{{obj.uuid.substring(0, 8).toUpperCase()}}</span></template>
     <template v-slot>
@@ -52,7 +51,6 @@ export default {
     calcTime () {
       return function (time) {
         if (this.obj.startTime) {
-          console.log(this.utcTimeToTimezoneStr(this.obj.startTime))
           const startTime = this.momentStrToTimestamp(this.utcTimeToTimezoneStr(this.obj.startTime))
           if (startTime) {
             const thisTime = startTime + time
