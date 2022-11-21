@@ -18,6 +18,7 @@
       :fixed="item.fixed"
       :label="item.label"
       :min-width="`${item.minWidth}`"
+      :width="`${item.Width}`"
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
@@ -32,6 +33,13 @@
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'id'">
           {{scope.row[item.prop] ? scope.row[item.prop] : '-'}}
+        </template>
+        <template v-else-if="item.prop === 'type'">
+          <div v-if="scope.row[item.prop] == 1">{{$t("overall.uploadFiles")}}</div>
+          <div v-else-if="scope.row[item.prop] == 2">{{$t("overall.downloadFile")}}</div>
+          <div v-else-if="scope.row[item.prop] == 3">{{$t("overall.newFolder")}}</div>
+          <div v-else-if="scope.row[item.prop] == 4">{{$t("overall.deleteFiles")}}</div>
+          <div v-else>{{'-'}}</div>
         </template>
         <template v-else-if="item.prop === 'ts'">
            {{scope.row[item.prop] ? momentTz(scope.row[item.prop]) : '-'}}
@@ -75,7 +83,7 @@ export default {
           label: this.$t('overall.name'),
           prop: 'name',
           show: true,
-          width: 150,
+          minWidth: 150,
           sortable: 'custom'
         }, {
           label: this.$t('overall.type'),

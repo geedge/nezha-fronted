@@ -269,7 +269,8 @@
 // process network vsys comment 二级页面
 #processBottomTab,
 #networkBottomTab,
-#vsysBottomTab {
+#vsysBottomTab,
+#sftpBottomTab {
   .sub-container .nz-table-list {
     height: 100%;
   }
@@ -330,9 +331,6 @@
   }
 }
 
-#assetVsysTable{
-  
-}
 // comments
 #commentBottomTab {
   .sub-container .nz-table-list {
