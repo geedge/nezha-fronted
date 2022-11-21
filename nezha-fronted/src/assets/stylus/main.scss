@@ -1415,7 +1415,7 @@ li {
 .dropdown-item-active {
   color: $--color-primary !important;
   font-weight: bold;
-  background-color: #FAFAFA;
+  background-color: $--background-color-base;
 }
 .el-dropdown-multi .el-dropdown-menu__item:focus {
   color: $--color-text-regular;
