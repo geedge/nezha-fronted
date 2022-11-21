@@ -8,6 +8,7 @@
     :targetTab="targetTab"
     @changeTab="changeTab"
     :title="'Session ID'"
+    id="terminalLogCMDTab"
   >
     <template v-slot:title><span :title="obj.uuid.substring(0, 8).toUpperCase()">{{obj.uuid.substring(0, 8).toUpperCase()}}</span></template>
     <template v-slot>

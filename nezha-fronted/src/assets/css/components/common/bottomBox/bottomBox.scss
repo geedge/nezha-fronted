@@ -270,13 +270,15 @@
 #processBottomTab,
 #networkBottomTab,
 #vsysBottomTab,
-#sftpBottomTab {
+#sftpBottomTab,
+#terminalLogCMDTab {
   .sub-container .nz-table-list {
     height: 100%;
   }
   #assetProcessTable,
   #assetNetworkTable,
-  #assetVsysTable {
+  #assetVsysTable,
+  #terminalLogSftpTable {
     height: calc(100% - 15px) !important;
   }
 }
@@ -323,8 +325,8 @@
   }
 }
 
-#assetNetworkTable{
-  .process-name{
+#assetNetworkTable {
+  .process-name {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -427,5 +429,12 @@
 .endpoint-tab-new {
   .top-tool-right .nz-btn.nz-btn-size-normal {
     box-sizing: content-box;
+  }
+}
+
+//record  command 二级页面搜索
+#terminalLogRecordTab {
+  .pagination-bottom{
+    bottom: 5px;
   }
 }
