@@ -33,7 +33,7 @@
         <!--panel-->
         <el-form-item
           class="form-item--half-width"
-          v-if="showPanel.type !== fromRoute.project && showPanel.type !== fromRoute.asset && showPanel.type !== fromRoute.endpoint && showPanel.type !== fromRoute.model && from!=='chartTemp'"
+          v-if="showPanel.type !== fromRoute.project && showPanel.type !== fromRoute.asset && showPanel.type !== fromRoute.endpoint && showPanel.type !== fromRoute.model && from!=='chartTemp' && from!=='dashboardTemp'"
           :label="$t('overall.dashboard')"
           prop="panelName"
         >

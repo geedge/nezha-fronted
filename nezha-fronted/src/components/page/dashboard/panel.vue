@@ -147,6 +147,7 @@
 </template>
 
 <script>
+import * as echarts from 'echarts'
 import { chartCache } from '@/components/common/js/common'
 import { data as le5leData, observers as le5leObservers } from 'le5le-store/store/data.js'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
@@ -161,7 +162,6 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
-import * as echarts from 'echarts'
 import panelVariables from '@/components/common/panel/panelVariables'
 import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
 // import FileSaver from 'file-saver'
@@ -1110,6 +1110,7 @@ export default {
     }
   },
   watch: {
+    // 监听图表联动配置
     'showPanel.param.chartShare': {
       handler (value) {
         // 每次切换联动模式 tooltip设置显示

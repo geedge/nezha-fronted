@@ -69,7 +69,7 @@
             </el-upload>
           </div>
           <div class="import-select">
-            <div v-if="showEexisted" class="exists">
+            <div v-if="importNew" class="exists">
               <span>{{$t('overall.existed')}}</span>
               <el-select v-model="importBox.existed" style="flex:1" size="medium" popper-class="exists-select">
                 <el-option
@@ -77,11 +77,11 @@
                   :key="item.value"
                   :label="item.name"
                   :value="item.value">
-                </el-option>
+                </el-option>  
               </el-select>
             </div>
             <ul class="import-select-list">
-              <li v-if="showIgnoreError" class="import-select-item">
+              <li v-if="importNew" class="import-select-item">
                 <el-checkbox v-model="importBox.ignoreError">{{$t('overall.ignoreError')}}</el-checkbox>
               </li>
               <li v-if="showSyncDashboard" class="import-select-item">
@@ -348,14 +348,6 @@ export default {
     deleteObjs: Array,
     exportBoxShow: {
       type: Boolean, default: false
-    },
-    // 已存在的内容处理方式
-    showEexisted: {
-      type: Boolean, default: true
-    },
-    // 遇到错误是否继续导入
-    showIgnoreError: {
-      type: Boolean, default: true
     }
   },
   computed: {
@@ -492,10 +484,8 @@ export default {
         this.prevent_opt.import = true
         const form = new FormData()
         form.append('file', this.importFile.raw)
-        if (this.showEexisted) {
+        if (this.importNew) {
           form.append('existed', this.importBox.existed)
-        }
-        if (this.showIgnoreError) {
           form.append('ignoreError', Number(this.importBox.ignoreError))
         }
         if (this.showSyncDashboard) {
@@ -611,6 +601,7 @@ export default {
     },
     exportCur () {
       const params = JSON.parse(JSON.stringify(this.params))
+      console.log(params)
       if (this.params2) {
         Object.keys(this.params2).forEach(key => {
           if (params[key]) {

@@ -57,7 +57,9 @@
         <log-bottom-tab v-if="from === fromRoute.endpoint && targetTab === 'log' && hasLogConfig" :sign="sign+'log'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
         <alertMessageTabNew  v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" :sign="sign+'alert'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></alertMessageTabNew>
         <!--chartTemp的Tab-->
-        <panel-tab-new @exit="closeSubList" @getTableData="getTableData"  :paramsType="'template'" v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.chartTemp.chartTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <panel-tab-new @exit="closeSubList" @getTableData="getTableData" :paramsType="'template'" v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.chartTemp.chartTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <!--dashboardTemp的Tab-->
+        <panel-tab-new @exit="closeSubList" @getTableData="getTableData" :paramsType="'template'" v-if="from === fromRoute.dashboardTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.dashboardTemp.dashboardTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--alertRule Tab-->
         <alertMessageTabNew v-if="from === fromRoute.alertRule && targetTab === 'alertRuleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
         <alertRuleEvalLog v-if="from === fromRoute.alertRule && targetTab === 'evalLog'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertRuleEvalLog>
@@ -73,7 +75,7 @@
         <!--alertRule Tab-->
         <alertMessageTabNew v-if="from === fromRoute.alertSilence && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
         <!--issue Tab-->
-<!--        <issueTab v-if="from === fromRoute.issue && targetTab === 'issue'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></issueTab>-->
+        <!-- <issueTab v-if="from === fromRoute.issue && targetTab === 'issue'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></issueTab> -->
       </div>
     </div>
   </div>
@@ -210,6 +212,11 @@ export default {
         chartTemp: {
           chartTempTabTitle: [
             { prop: 'panel', name: this.$t('overall.tempPrev') }
+          ]
+        },
+        dashboardTemp: {
+          dashboardTempTabTitle: [
+            { prop: 'panel', name: this.$t('overall.dashboardTemp') }
           ]
         },
         alertRule: {

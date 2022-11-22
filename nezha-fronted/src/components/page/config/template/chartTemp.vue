@@ -398,10 +398,10 @@ export default {
         },
         jsonKey: 'val'
       },
-      state: {
+      varType: {
         target: this.searchLabel,
         isSearchInput: true,
-        propertyName: 'state',
+        propertyName: 'varType',
         type: 'string',
         defaultJson: {
           disabled: false,
@@ -409,9 +409,10 @@ export default {
           name: 'Variable type',
           readonly: true,
           type: 'select',
-          val: ''
+          val: '',
+          listStr: 'varType'
         },
-        jsonKey: 'val'
+        jsonKey: 'valnum'
       }
     }
     this.initQueryFromPath(searchKeys)

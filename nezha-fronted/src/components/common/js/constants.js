@@ -418,7 +418,6 @@ export const fromRoute = {
   assetType: 'assetType',
   assetState: 'assetState',
   assetLabel: 'assetLabel',
-  expressionTemplate: 'expressionTemplate',
   user: 'user',
   agent: 'agent',
   recordRule: 'recordRule',
@@ -438,6 +437,8 @@ export const fromRoute = {
   ipam: 'ipam',
   apiKey: 'apiKey',
   chartTemp: 'chartTemp',
+  dashboardTemp: 'dashboardTemp',
+  expressionTemplate: 'expressionTemplate',
   backups: 'backups',
   ping: 'ping',
   trace: 'trace'

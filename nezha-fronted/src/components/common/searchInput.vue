@@ -977,6 +977,8 @@ export default {
               objectInfo.state = val.valnum
             } else if (val.label === 'priority') {
               objectInfo.priority = val.valnum
+            } else if (val.label === 'dashboardVarType') {
+              objectInfo.varType = val.valnum
             } else if (typeof (val.valnum) === 'undefined' || val.valnum == '') {
               this.selectInfoList[val.label].forEach(item => {
                 if (item.label === val.val) {

@@ -205,6 +205,10 @@ export default new Router({
           component: resolve => require(['@/components/page/config/template/chartTemp'], resolve)
         },
         {
+          path: '/dashboardTemp',
+          component: resolve => require(['@/components/page/config/template/dashboardTemp'], resolve)
+        },
+        {
           path: '/backup',
           component: resolve => require(['@/components/page/config/backups'], resolve)
         },
