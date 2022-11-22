@@ -245,13 +245,13 @@ export default {
           { prop: 'ipam', name: this.$t('ipam.subnet.ipDetails'), active: true }
         ],
         recordRule: {
-          evalLog: [
-            { prop: 'recordRule', name: this.$t('overall.alertRuleEvalLog'), active: true },
-            { prop: 'Metrics', name: this.$t('overall.metric'), active: false }
-          ],
           Metrics: [
-            { prop: 'recordRule', name: this.$t('overall.alertRuleEvalLog'), active: false },
-            { prop: 'Metrics', name: this.$t('overall.metric'), active: true }
+            { prop: 'Metrics', name: this.$t('overall.metric'), active: true },
+            { prop: 'recordRule', name: this.$t('overall.alertRuleEvalLog'), active: false }
+          ],
+          evalLog: [
+            { prop: 'Metrics', name: this.$t('overall.metric'), active: false },
+            { prop: 'recordRule', name: this.$t('overall.alertRuleEvalLog'), active: true }
           ]
         },
         alertSilence: [

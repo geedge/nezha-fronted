@@ -1,7 +1,9 @@
 const terminalFile = {
   state: {
     fileList: [],
-    uploadItem: {}
+    uploadItem: {},
+    updateUuid: '', // 根据uuid的变化 判断页面是否需要刷新
+    updateIndex: 1
   },
   mutations: {
     setFileList (state, arr) {
@@ -15,6 +17,13 @@ const terminalFile = {
     },
     setUploadItem (state, item) {
       state.uploadItem = item
+    },
+    setUpdateUuid (state, uuid) {
+      state.updateUuid = uuid
+      state.updateIndex++
+      if (state.updateIndex == 10) {
+        state.updateIndex = 1
+      }
     }
   },
   getters: {
@@ -23,6 +32,12 @@ const terminalFile = {
     },
     getUploadItem (state) {
       return state.uploadItem
+    },
+    getUpdateUuid (state) {
+      return state.updateUuid
+    },
+    getUpdateIndex (state) {
+      return state.updateIndex
     }
   },
   actions: {
@@ -37,6 +52,9 @@ const terminalFile = {
     },
     uploadFile (store, item) {
       store.commit('setUploadItem', item)
+    },
+    upDateConsole (store, uuid) {
+      store.commit('setUpdateUuid', uuid)
     }
   }
 }

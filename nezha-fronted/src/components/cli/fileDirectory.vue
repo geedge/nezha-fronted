@@ -9,7 +9,7 @@
         </span>
     </div>
     <div class="file-directory-content" v-my-loading="fileDirectoryLoading">
-      <div v-if="fileDirectory !== '/'" @click="backFileDirectory" class="file-item"><i class="nz-icon nz-icon-a-upperlevel"/>{{$t('terminal.back')}}</div>
+      <div v-if="fileDirectory !== '/'" @click="backFileDirectory" class="file-item"><i class="nz-icon nz-icon-a-upperlevel" style="margin-right: 10px"/>{{$t('terminal.back')}}</div>
       <div v-for="(item,index) in fileList" :key="index" class="file-item" @click="selectFile(item)">
         <div class="text-ellipsis file-name">
           <i class="nz-icon" :class="selIcon(item)"/>
@@ -58,7 +58,16 @@ export default {
       fileList: [],
       newFolderBoxShow: false,
       folder: '',
-      fileDirectoryLoading: false
+      fileDirectoryLoading: false,
+      timer: ''
+    }
+  },
+  computed: {
+    updateUuid () {
+      return this.$store.getters.getUpdateUuid
+    },
+    updateIndex () {
+      return this.$store.getters.getUpdateIndex
     }
   },
   mounted () {
@@ -68,6 +77,17 @@ export default {
     fileDirectoryShow (n) {
       if (n) {
         this.init()
+      }
+    },
+    updateIndex (n) {
+      if (this.updateUuid == this.uuid) {
+        if (this.timer) {
+          clearTimeout(this.timer)
+        }
+        this.timer = setTimeout(() => {
+          this.getSftpPath(this.fileDirectory)
+          this.timer = null
+        }, 200)
       }
     }
   },
@@ -169,6 +189,7 @@ export default {
         if (res.code == 200) {
           this.getSftpPath(this.fileDirectory)
         } else {
+          this.getSftpPath(this.fileDirectory)
           this.$message.error(res.msg)
         }
       })
