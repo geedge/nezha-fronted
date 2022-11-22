@@ -8,18 +8,18 @@
 </style>
 <template>
     <div :id="'ternimalContainer'+idIndex" class="console">
-      <div style="display: flex;width: 100%; justify-content: space-between;background: #101010;box-shadow: 0 1px 0 0 #303030;">
+      <div class="ternimal-header">
         <span style="color: #fff">
           <div class="active-icon green-bg"></div>
           {{userName}}
         </span>
-        <span  style="color: #fff">
-          <i class="nz-icon nz-icon-reconnect" style="margin-right: 22px"></i>
-          <i class="nz-icon nz-icon-SFTP" style="margin-right: 22px" @click="fileDirectoryShow = !fileDirectoryShow"></i>
+        <span  style="color: #fff" v-show="isLogin">
+          <i class="nz-icon nz-icon-reconnect" style="margin-right: 22px" @click="reconnect"></i>
+          <i class="nz-icon nz-icon-SFTP" v-if="userName && terminalType == '1'" style="margin-right: 22px" @click="showFileDir(true)"></i>
         </span>
       </div>
         <div :id="'terminal'+idIndex" ></div>
-      <fileDirectory :uuid="terminal.uuid" v-if="fileDirectoryShow" @close="fileDirectoryShow=false" style=""/>
+      <fileDirectory :uuid="terminal.uuid" v-show="fileDirectoryShow" @close="showFileDir(false)" :fileDirectoryShow="fileDirectoryShow" ref="fileDirectory"/>
     </div>
 </template>
 <script>
@@ -28,10 +28,11 @@ import fileDirectory from './fileDirectory'
 export default {
   name: 'console',
   components: {
-    fileDirectory,
+    fileDirectory
   },
   props: {
     terminal: { },
+    terminalType: { default: '1' },
     idIndex: {
       type: Number,
       default: 0
@@ -55,6 +56,7 @@ export default {
       obj: {
         id: 2
       },
+      isLogin: false,
       successBackContent: 'Connecting to',
       failBackContent: 'Sorry',
       connectFailContent: 'Connection failed',
@@ -63,7 +65,7 @@ export default {
       conFinish: false,
       conSuccessNum: 0,
       inputSecret: false,
-      userName: 'root@192.168.44.36',
+      userName: '',
       fileDirectoryShow: false
     }
   },
@@ -192,10 +194,18 @@ export default {
         authPinTip: this.$loadsh.get(this.terminal, 'custom.authPinTip', '')
       }
       this.$post('/terminal/login', params).then(res => {
-        this.terminal.uuid = res.data.uuid
-        this.userName = res.data.authUsername + '@' + res.data.host
-        this.host = res.data.host
-        this.create()
+        this.isLogin = true
+        if (res.code == 200) {
+          this.terminal.uuid = res.data.uuid
+          this.userName = res.data.authUsername + '@' + res.data.host
+          this.host = res.data.host
+          this.create()
+        } else {
+          this.terminal.uuid = res.data.uuid
+          this.userName = res.data.authUsername + '@' + res.data.host
+          this.host = res.data.host
+          this.$message.error(res.msg)
+        }
       })
     },
     create () {
@@ -335,6 +345,26 @@ export default {
           }
         })
       })
+    },
+    reconnect () {
+      this.isLogin = false
+      this.closeSocket()
+      this.term.off('selection')
+      this.term.off('data')
+      this.beforeCreate()
+    },
+    showFileDir (show) {
+      if (JSON.stringify(show) == JSON.stringify(this.fileDirectoryShow)) {
+        return
+      }
+      if (show) {
+        this.fileDirectoryShow = show
+      }
+      let animationClass = ''
+      animationClass = show ? 'backInUp' : 'backOutDown'
+      this.animateCSS(this.$refs.fileDirectory.$el, animationClass).then((message) => {
+        this.fileDirectoryShow = show
+      })
     }
   },
   mounted () {
@@ -347,3 +377,6 @@ export default {
   }
 }
 </script>
+<style scoped lang="scss">
+
+</style>

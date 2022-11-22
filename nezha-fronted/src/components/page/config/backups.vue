@@ -1,5 +1,5 @@
 <template>
-  <div class="system backup" v-my-loading.dark="loading">
+  <div class="system backup">
     <div class="system-config-form system-config-backup">
       <div class="system-title">{{ $t("backup.configurations") }}</div>
       <nz-data-list
@@ -39,7 +39,6 @@
             key="backups2"
             :table-data2="tableData2"
             @getTableData="getTableData"
-            @loading="load"
           >
           </backups-table>
         </template>
@@ -96,8 +95,7 @@ export default {
         // }
       ],
       rightBoxshow: false,
-      isRefresh: '',
-      loading: false
+      isRefresh: ''
     }
   },
   provide () {
@@ -185,9 +183,6 @@ export default {
         }
       }
       this.rightBoxshow = true
-    },
-    load (flag) {
-      this.loading = flag
     },
     closeRightBox (refresh) {
       if (refresh) {

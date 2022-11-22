@@ -1,62 +1,98 @@
 <template>
-  <div class="fileDirectory">
+  <div class="fileDirectory" style="width: 100% !important;transform: scale(1) !important;">
     <div class="file-directory-header">
-      <span style="color: #fff">SFTP <span style="color: #B7B7B7">{{fileDirectory}}</span></span>
+      <span style="color: #fff">{{$t('terminal.sftp')}} <span style="color: #B7B7B7">{{fileDirectory}}</span></span>
       <span  style="color: #fff">
           <i class="nz-icon nz-icon-a-newfolder" @click="newFolderBoxShow = true"></i>
           <i class="nz-icon nz-icon-upload" @click="uploadFile"></i>
           <i class="nz-icon nz-icon-close" @click="$emit('close')"></i>
         </span>
     </div>
-    <div class="file-directory-content">
-      <div v-if="fileDirectory !== '/'" @click="backFileDirectory" class="file-item"><i class="nz-icon nz-icon-a-upperlevel"/>上一级</div>
+    <div class="file-directory-content" v-my-loading="fileDirectoryLoading">
+      <div v-if="fileDirectory !== '/'" @click="backFileDirectory" class="file-item"><i class="nz-icon nz-icon-a-upperlevel" style="margin-right: 10px"/>{{$t('terminal.back')}}</div>
       <div v-for="(item,index) in fileList" :key="index" class="file-item" @click="selectFile(item)">
-        <span>
+        <div class="text-ellipsis file-name">
           <i class="nz-icon" :class="selIcon(item)"/>
           {{item.name}}
-        </span>
-        <span>
+        </div>
+        <div class="file-feature" v-if="!item.isDir">
           <i class="nz-icon nz-icon-download1" v-if="!item.isDir" @click="downloadFile(item)"></i>
           <i class="nz-icon nz-icon-delete" v-if="!item.isDir" @click="delFile(item)"></i>
-        </span>
+        </div>
+        <div class="file-date">
+          <span>{{momentTz(item.cts * 1000)}}</span>
+          <span v-if="!item.isDir">{{bytes(item.size, 0, 0)}}</span>
+        </div>
       </div>
     </div>
     <el-dialog
-      title='新建文件夹'
+      :title='$t("overall.newFolder")'
       :visible.sync="newFolderBoxShow"
-      :modal-append-to-body="false"
-      :append-to-body="false"
-      width="30%"
+      :modal-append-to-body="true"
+      :append-to-body="true"
+      :width="'400px'"
       >
-      <div>
-        <el-input v-model="folder" size="small"/>
+      <div style="display: flex; align-items: center">
+        <div style="width: 100px;flex-shrink: 1">{{$t('overall.folderName')}}</div>
+        <el-input v-model="folder" size="small" style="flex: 1"/>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="newFolder(false)">取 消</el-button>
-        <el-button type="primary" @click="newFolder(true)">确 定</el-button>
+        <el-button @click="newFolder(false)" size="small">{{$t('overall.cancel')}}</el-button>
+        <el-button type="primary" @click="newFolder(true)" size="small">{{$t('overall.create')}}</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import chartDataFormat from '@/components/chart/chartDataFormat'
 export default {
   name: 'fileDirectory',
   props: {
-    uuid: {}
+    uuid: {},
+    fileDirectoryShow: {}
   },
   data () {
     return {
       fileDirectory: '/',
       fileList: [],
       newFolderBoxShow: false,
-      folder: ''
+      folder: '',
+      fileDirectoryLoading: false,
+      timer: ''
+    }
+  },
+  computed: {
+    updateUuid () {
+      return this.$store.getters.getUpdateUuid
+    },
+    updateIndex () {
+      return this.$store.getters.getUpdateIndex
     }
   },
   mounted () {
-    this.init()
+    // this.init()
+  },
+  watch: {
+    fileDirectoryShow (n) {
+      if (n) {
+        this.init()
+      }
+    },
+    updateIndex (n) {
+      if (this.updateUuid == this.uuid) {
+        if (this.timer) {
+          clearTimeout(this.timer)
+        }
+        this.timer = setTimeout(() => {
+          this.getSftpPath(this.fileDirectory)
+          this.timer = null
+        }, 200)
+      }
+    }
   },
   methods: {
+    bytes: chartDataFormat.getUnit(7).compute,
     init () {
       this.getSftpPath(this.fileDirectory)
     },
@@ -78,7 +114,6 @@ export default {
         path: path + '/' + this.folder
       }
       this.$post('/terminal/sftp/mkdir', params).then(res => {
-        console.log(res)
         this.newFolderBoxShow = false
         this.getSftpPath(this.fileDirectory)
       })
@@ -86,9 +121,7 @@ export default {
     backFileDirectory () {
       const arr = this.fileDirectory.split('/')
       arr.pop()
-      console.log(arr, this.fileDirectory.split('/').pop())
       const path = arr.join('/')
-      console.log(path)
       this.getSftpPath(path || '/')
     },
     getSftpPath (path) {
@@ -96,10 +129,11 @@ export default {
         uuid: this.uuid,
         path: path
       }
+      this.fileDirectoryLoading = true
       this.$post('/terminal/sftp/ls', params).then(res => {
+        this.fileDirectoryLoading = false
         this.fileDirectory = res.data.path
         this.fileList = res.data.list
-        console.log(res)
       })
     },
     uploadFile () {
@@ -116,28 +150,35 @@ export default {
         fileLength: '',
         startTime: '',
         cancel: '',
-        axios: ''
+        axios: '',
+        timer: '',
+        done: 0
       }
       this.$store.dispatch('uploadFile', params)
     },
     downloadFile (item) {
-      const path = this.fileDirectory == '/' ? '' : this.fileDirectory
-      const params = {
-        ...item,
-        uuid: this.uuid,
-        path: path + '/' + item.name,
-        myId: 'download' + this.uuid + new Date().getTime(),
-        type: 'download',
-        isStart: false,
-        isFinish: false,
-        total: '',
-        speed: '',
-        fileLength: '',
-        startTime: '',
-        cancel: '',
-        axios: ''
+      if (item.timer) {
+        clearTimeout(item.timer)
       }
-      this.$store.dispatch('dispatchAddFileList', params)
+      item.timer = setTimeout(() => {
+        const path = this.fileDirectory == '/' ? '' : this.fileDirectory
+        const params = {
+          ...item,
+          uuid: this.uuid,
+          path: path + '/' + item.name,
+          myId: 'download' + this.uuid + new Date().getTime(),
+          type: 'download',
+          isStart: false,
+          isFinish: false,
+          total: '',
+          speed: '',
+          fileLength: '',
+          startTime: '',
+          cancel: '',
+          axios: ''
+        }
+        this.$store.dispatch('dispatchAddFileList', params)
+      }, 300)
     },
     delFile (item) {
       const params = {
@@ -148,6 +189,7 @@ export default {
         if (res.code == 200) {
           this.getSftpPath(this.fileDirectory)
         } else {
+          this.getSftpPath(this.fileDirectory)
           this.$message.error(res.msg)
         }
       })
@@ -168,53 +210,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
- .fileDirectory {
-   height: 80%;
-   position: absolute;
-   bottom: 0;
-   background: #1E1E1E;
-   box-shadow: 5px 0 3px 0 #5E5E5E;
-   width: 100%;
-   z-index: 10;
-   /deep/ .el-menu::-webkit-scrollbar-thumb {
-     background-color: #fff;
-     border-radius: 3px;
-   }
-   /deep/  .el-menu::-webkit-scrollbar-thumb:hover {
-     background-color: #fff;
-     border-radius: 3px;
-   }
-   .file-directory-header{
-     display: flex;
-     width: 100%;
-     justify-content: space-between;
-     padding: 0 10px;
-     background: #1E1E1E;
-     box-sizing: border-box;
-     color: #ffffff;
-     i {
-       margin-right: 22px;
-     }
-   }
-   .file-directory-content{
-     height: calc(100% - 26px);
-     overflow: auto;
-   }
-   .file-item{
-     font-family: Roboto-Regular;
-     font-size: 14px;
-     color: #B7B7B7;
-     line-height: 21px;
-     font-weight: 400;
-     margin-top: 8px;
-   }
-   .file-item:hover{
-     background: rgba(255,134,0,0.50);
-     font-family: Roboto-Regular;
-     font-size: 14px;
-     color: #FF9230;
-     line-height: 21px;
-     font-weight: 400;
-   }
- }
+
 </style>

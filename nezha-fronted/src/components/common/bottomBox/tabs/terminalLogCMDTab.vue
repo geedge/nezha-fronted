@@ -51,7 +51,6 @@ export default {
     calcTime () {
       return function (time) {
         if (this.obj.startTime) {
-          console.log(this.utcTimeToTimezoneStr(this.obj.startTime))
           const startTime = this.momentStrToTimestamp(this.utcTimeToTimezoneStr(this.obj.startTime))
           if (startTime) {
             const thisTime = startTime + time

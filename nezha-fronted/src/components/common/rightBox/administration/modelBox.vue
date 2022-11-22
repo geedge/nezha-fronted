@@ -26,7 +26,7 @@
             </el-select>
           </el-form-item>
           <!-- ChartTemplate -->
-          <el-form-item :label="$t('overall.chartTemp')" prop="ChartTemplate">
+          <!-- <el-form-item :label="$t('overall.chartTemp')" prop="ChartTemplate">
             <v-selectpage
             :data="chartlList"
             :tb-columns="ChartSearchShowFields"
@@ -43,6 +43,25 @@
             show-field="name"
             class="form-control"
             @values="(data) => {editModel.chartIds = data.map(d => d.id).join(',')}"
+            :result-format="resultFormat"
+            ></v-selectpage>
+          </el-form-item> -->
+           <!-- DashboardTemplate -->
+           <el-form-item :label="$t('model.dashboardtemplate')" prop="DashboardTemplate">
+            <v-selectpage
+            :data="dashboardList"
+            :tb-columns="DashboardSearchShowFields"
+            :params="{
+              varType: 1,}"
+            :multiple="false"
+            :language="language"
+            title="DashboardSearch"
+            key-field="id"
+            :width="640"
+            v-model="editModel.panelId"
+            show-field="name"
+            class="form-control"
+            @values="(data) => {editModel.panelId = data.map(d => d.id).join(',')}"
             :result-format="resultFormat"
             ></v-selectpage>
           </el-form-item>
@@ -100,11 +119,17 @@ export default {
       brandList: [], // brand 列表数据
       editModule: {},
       typeDataList: [],
-      chartlList: [], // chart 列表数据
-      ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
+      // chartlList: [], // chart 列表数据
+      dashboardList: [], // dashboard 列表数据
+      // ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
+      //   { title: 'ID', data: 'id' },
+      //   { title: this.$t('overall.name'), data: 'name', key: 'name' },
+      //   { title: this.$t('overall.type'), data: 'type', key: 'type' },
+      //   { title: this.$t('overall.remark'), data: 'remark', key: 'remark' }
+      // ],
+      DashboardSearchShowFields: [ // DashboardSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
         { title: this.$t('overall.name'), data: 'name', key: 'name' },
-        { title: this.$t('overall.type'), data: 'type', key: 'type' },
         { title: this.$t('overall.remark'), data: 'remark', key: 'remark' }
       ],
       url: 'asset/model',
@@ -134,13 +159,15 @@ export default {
       handler (n) {
         this.isEdit = true
         this.editModel = JSON.parse(JSON.stringify(n))
+        this.editModel.panelId = n.panelId ? n.panelId + '' : ''
       }
     }
   },
   created () {
     this.getBrandList()
     this.modelTypeList()
-    this.ChartTemplateList()
+    // this.ChartTemplateList()
+    this.DashboardTemplateList ()
   },
   methods: {
     clickOutside () {
@@ -154,8 +181,12 @@ export default {
     saveModel () {
       this.$refs.modelForm.validate((valid) => {
         if (valid) {
+          const params = {
+            ...this.editModel,
+            panelId: Number(this.editModel.panelId),
+          }
           if (this.editModel.id) {
-            this.$put(this.url, this.editModel).then(res => {
+            this.$put(this.url, params).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -165,7 +196,7 @@ export default {
               }
             })
           } else {
-            this.$post(this.url, this.editModel).then(res => {
+            this.$post(this.url, params).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -225,10 +256,16 @@ export default {
         return assetData
       }
     },
-    /* 获取chart列表数据 */
-    ChartTemplateList () {
-      this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0, groupId: 0, returnChildren: 0 }).then(res => {
-        this.chartlList = res.data.list
+    // /* 获取chart列表数据 */
+    // ChartTemplateList () {
+    //   this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0, groupId: 0, returnChildren: 0 }).then(res => {
+    //     this.chartlList = res.data.list
+    //   })
+    // },
+    /* 获取Dashboard列表数据 */
+    DashboardTemplateList () {
+      this.$get('visual/panel', { pageSize: -1, varType: 1}).then(res => {
+        this.dashboardList = res.data.list
       })
     },
     modelTypeList () {

@@ -11,7 +11,7 @@
 }
 /*---滚动条大小--*/
 ::-webkit-scrollbar {
-  width: 14px;
+  width: 6px;
   height: 14px;
 }
 /*---滚动框背景样式--*/
@@ -1415,7 +1415,7 @@ li {
 .dropdown-item-active {
   color: $--color-primary !important;
   font-weight: bold;
-  background-color: #FAFAFA;
+  background-color: $--background-color-base;
 }
 .el-dropdown-multi .el-dropdown-menu__item:focus {
   color: $--color-text-regular;

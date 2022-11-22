@@ -101,7 +101,7 @@ export default {
       const vars = this.$store.getters.getVariablesArr.map(item => {
         return {
           name: item.name,
-          value: item.checked.join('|')
+          values: item.checked
         }
       })
       const params = {

@@ -39,7 +39,16 @@
                  style="margin-top: 0px;"></div>{{item.title}}
           </span>
 
-          <my-console :fontSize="fontSize"    :idIndex="index" :isFullScreen="isFullScreen"    :ref="'console'+index" :terminal="item.terminal" @closeConsole="removeTab" @refreshConsoleTitle="refreshTabTitle"></my-console>
+          <my-console
+            :fontSize="fontSize"
+            :terminalType="item.terminal.terminalType"
+            :idIndex="index"
+            :isFullScreen="isFullScreen"
+            :ref="'console'+index"
+            :terminal="item.terminal"
+            @closeConsole="removeTab"
+            @refreshConsoleTitle="refreshTabTitle"
+          ></my-console>
 
         </el-tab-pane>
         <el-tab-pane key="add" name="addConsole" style="width: 20px">
@@ -59,8 +68,8 @@
         </el-tab-pane>
       </el-tabs>
       <div class="console-icon">
-        <div class="console-title-icon" style='right: 106px;display: inline;' @click="showFileState">
-          <i class="nz-icon nz-icon-a-filetransfer" :title="$t('guide.webTerminal')"></i>
+        <div class="console-title-icon" style='right: 106px;display: inline;' @click="showFileState" v-show="fileList.length">
+          <i class="nz-icon nz-icon-a-filetransfer" :title="$t('terminal.filetransfer')"></i>
           <span v-show="fileList.length>0" class="right-tip">{{fileList.length<=99?fileList.length:'99+'}}</span>
         </div>
         <i @click="minScreen" class="nz-icon nz-icon-minus console-title-icon" style='right: 76px;' :title="$t('overall.shrink')"></i>
@@ -273,12 +282,13 @@ export default {
     language () { return this.$store.getters.getLanguage },
     fileList () {
       return this.$store.getters.getFileList
-    },
+    }
   },
   data () {
     const termFontSize = parseInt(localStorage.getItem('termFontSize'))
     return {
       selectValue: 'SSH',
+      fileListStateType: 'down',
       searchMetrics: [
         {
           value: 'SSH',
@@ -519,6 +529,7 @@ export default {
           host: this.customConnect.host,
           port: this.customConnect.port,
           authType: this.customConnect.authType,
+          terminalType: this.customConnect.authProtocol,
           authUsername: encodeURIComponent(this.customConnect.authUsername),
           authPin: this.encode(this.customConnect.authPin),
           authPriKey: encodeURIComponent(this.customConnect.authPriKey),
@@ -528,9 +539,16 @@ export default {
           authProtocol: encodeURIComponent(this.customConnect.authProtocol)
         }
       }
+      if (id) {
+        this.$get('/asset/asset/' + id).then(res => {
+          console.terminal.terminalType = res.data.type.authProtocol
+          this.editableTabsValue = newTabName
+          this.editableTabs.push(console)
+        })
+        return
+      }
       this.editableTabsValue = newTabName
       this.editableTabs.push(console)
-
       setTimeout(function () {
         const tabScroll = document.getElementsByClassName('el-tabs__nav is-top')
         const tabViewWidth = document.getElementsByClassName('el-tabs__nav-scroll')
@@ -980,12 +998,23 @@ export default {
       }
     },
     showFileState () {
-      let type = 'top'
-      console.log( this.$refs.fileListState)
-      this.$refs.fileListState.fileStateShow(true, type)
+      let type = 'down'
+      const targetDiv = document.getElementById('shell-service')
+      let height = targetDiv.style.height
+      if (height) {
+        height = height.slice(0, -2)
+        if (height < 265) {
+          this.fileListStateType = type = 'up'
+        } else {
+          this.fileListStateType = type = 'down'
+        }
+      } else {
+        this.fileListStateType = type = 'down'
+      }
+      this.$refs.fileListState.fileStateShow(!this.$refs.fileListState.fileStateBox, type)
     },
     hideFileState () {
-      this.$refs.fileListState.fileStateShow(false)
+      this.$refs.fileListState.fileStateShow(false, this.fileListStateType)
     }
   },
   watch: {
