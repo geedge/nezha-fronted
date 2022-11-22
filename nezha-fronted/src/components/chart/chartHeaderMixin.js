@@ -84,6 +84,11 @@ export default {
     },
     unitChange (val) {
       this.$emit('unitChange', val)
+    }
+  },
+  computed: {
+    variablesArr () {
+      return this.$store.getters.getVariablesArr
     },
     // 所有类型 chart name 支持变量替换
     nameFormate () {
@@ -114,25 +119,12 @@ export default {
       return str
     }
   },
-  computed: {
-    variablesArr () {
-      return this.$store.getters.getVariablesArr
-    }
-  },
   watch: {
     isError: {
       immediate: true,
       handler (n) {
         if (n) {
           this.errorText = this.chartData.filter(item => item.error).map(item => item.error).join('\n')
-        }
-      }
-    },
-    'chartInfo.repeatVariable': {
-      immediate: true,
-      handler (n) {
-        if (n) {
-          this.nameFormate()
         }
       }
     }

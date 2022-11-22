@@ -591,9 +591,9 @@ export default {
               if (item.type === 'group' && variables.name === repeatVariable) {
                 if (!variables.checked.length) {
                   item.children.forEach(children => {
-                    delete children.repeatIndex
-                    delete children.repeatVariable
-                    delete children.repeatValue
+                    this.$delete(children, 'repeatIndex')
+                    this.$delete(children, 'repeatVariable')
+                    this.$delete(children, 'repeatValue')
                   })
                   return
                 }
@@ -616,13 +616,13 @@ export default {
                     // 复制数据
                     this.copyDataList.splice(index, 0, repeatItem)
                   } else {
-                    item.repeatIndex = 0
-                    item.repeatVariable = repeatVariable
-                    item.repeatValue = subItem
+                    this.$set(item, 'repeatIndex', 0)
+                    this.$set(item, 'repeatVariable', repeatVariable)
+                    this.$set(item, 'repeatValue', subItem)
                     item.children.forEach(children => {
-                      children.repeatIndex = 0
-                      children.repeatVariable = repeatVariable
-                      children.repeatValue = subItem
+                      this.$set(children, 'repeatIndex', 0)
+                      this.$set(children, 'repeatVariable', repeatVariable)
+                      this.$set(children, 'repeatValue', subItem)
                     })
                     this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].getChartData()
                   }
