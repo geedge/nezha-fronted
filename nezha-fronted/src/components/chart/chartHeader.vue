@@ -40,10 +40,10 @@
           </span>
      </el-popover>
     </span>
-    <div class="chart-header__title" v-if="!isGroup" :title="nameFormate()">{{nameFormate()}}</div>
+    <div class="chart-header__title" v-if="!isGroup" :title="nameFormate">{{nameFormate}}</div>
     <div class="chart-header__title groupTitle" v-else >
       <span @click="groupShow" style="cursor:pointer"> <i class="nz-icon" :class="chartInfo.param.collapse ? 'nz-icon-arrow-right': 'nz-icon-arrow-down'"></i></span>
-      {{nameFormate()}}
+      {{nameFormate}}
       <span v-show="chartInfo.param.collapse" class="collapse-content">({{chartData ? chartData.length : 0}} charts)</span>
     </div>
     <div class="temp"></div>
