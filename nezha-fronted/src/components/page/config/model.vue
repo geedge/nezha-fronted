@@ -103,7 +103,8 @@ export default {
       blankObject: { // 空白对象
         id: '',
         name: '',
-        chartIds: '',
+        // chartIds: '',
+        panelId:'',
         sysObjectId: '',
         type: { id: '', name: '' },
         remark: ''
