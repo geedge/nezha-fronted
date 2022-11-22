@@ -76,7 +76,7 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 120,
+          width: 80,
           sortable: 'custom'
         },
         {
@@ -88,7 +88,7 @@ export default {
         }, {
           label: this.$t('overall.type'),
           prop: 'type',
-          width: 150,
+          width: 80,
           show: true,
           sortable: 'custom'
         },
@@ -96,7 +96,7 @@ export default {
           label: this.$t('overall.time'),
           prop: 'ts',
           show: true,
-          width: 150,
+          width: 80,
           sortable: 'custom'
         }
       ]
