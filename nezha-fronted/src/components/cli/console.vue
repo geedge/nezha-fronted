@@ -8,7 +8,7 @@
 </style>
 <template>
     <div :id="'ternimalContainer'+idIndex" class="console">
-      <div style="display: flex;width: 100%; justify-content: space-between;background: #101010;box-shadow: 0 1px 0 0 #303030;">
+      <div class="ternimal-header">
         <span style="color: #fff">
           <div class="active-icon green-bg"></div>
           {{userName}}
@@ -377,3 +377,6 @@ export default {
   }
 }
 </script>
+<style scoped lang="scss">
+
+</style>

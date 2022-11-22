@@ -1,7 +1,7 @@
 <template>
   <div class="fileDirectory" style="width: 100% !important;transform: scale(1) !important;">
     <div class="file-directory-header">
-      <span style="color: #fff">SFTP <span style="color: #B7B7B7">{{fileDirectory}}</span></span>
+      <span style="color: #fff">{{$t('terminal.sftp')}} <span style="color: #B7B7B7">{{fileDirectory}}</span></span>
       <span  style="color: #fff">
           <i class="nz-icon nz-icon-a-newfolder" @click="newFolderBoxShow = true"></i>
           <i class="nz-icon nz-icon-upload" @click="uploadFile"></i>
@@ -9,7 +9,7 @@
         </span>
     </div>
     <div class="file-directory-content" v-my-loading="fileDirectoryLoading">
-      <div v-if="fileDirectory !== '/'" @click="backFileDirectory" class="file-item"><i class="nz-icon nz-icon-a-upperlevel"/>上一级</div>
+      <div v-if="fileDirectory !== '/'" @click="backFileDirectory" class="file-item"><i class="nz-icon nz-icon-a-upperlevel"/>{{$t('terminal.back')}}</div>
       <div v-for="(item,index) in fileList" :key="index" class="file-item" @click="selectFile(item)">
         <div class="text-ellipsis file-name">
           <i class="nz-icon" :class="selIcon(item)"/>
@@ -26,18 +26,19 @@
       </div>
     </div>
     <el-dialog
-      title='新建文件夹'
+      :title='$t("overall.newFolder")'
       :visible.sync="newFolderBoxShow"
-      :modal-append-to-body="false"
-      :append-to-body="false"
-      width="30%"
+      :modal-append-to-body="true"
+      :append-to-body="true"
+      :width="'400px'"
       >
-      <div>
-        <el-input v-model="folder" size="small"/>
+      <div style="display: flex; align-items: center">
+        <div style="width: 100px;flex-shrink: 1">{{$t('overall.folderName')}}</div>
+        <el-input v-model="folder" size="small" style="flex: 1"/>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="newFolder(false)">取 消</el-button>
-        <el-button type="primary" @click="newFolder(true)">确 定</el-button>
+        <el-button @click="newFolder(false)" size="small">{{$t('overall.cancel')}}</el-button>
+        <el-button type="primary" @click="newFolder(true)" size="small">{{$t('overall.create')}}</el-button>
       </span>
     </el-dialog>
   </div>

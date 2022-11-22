@@ -69,7 +69,7 @@
       </el-tabs>
       <div class="console-icon">
         <div class="console-title-icon" style='right: 106px;display: inline;' @click="showFileState" v-show="fileList.length">
-          <i class="nz-icon nz-icon-a-filetransfer" :title="$t('guide.webTerminal')"></i>
+          <i class="nz-icon nz-icon-a-filetransfer" :title="$t('terminal.filetransfer')"></i>
           <span v-show="fileList.length>0" class="right-tip">{{fileList.length<=99?fileList.length:'99+'}}</span>
         </div>
         <i @click="minScreen" class="nz-icon nz-icon-minus console-title-icon" style='right: 76px;' :title="$t('overall.shrink')"></i>

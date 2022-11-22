@@ -3,7 +3,7 @@
 <!--    显示进度-->
     <div class="file-state-panel" v-show="fileStateBox && fileList.length" :style="{'top': position.top + 'px', right: '10px'}" ref="fileStatePanel" :class="position.top>0? 'translationOriginDown': 'translationOriginUp'">
       <div class="file-state-panel-header">
-        <span class="file-state-panel-title">File transfers</span>
+        <span class="file-state-panel-title">{{$t('terminal.filetransfer')}}}</span>
         <i class="nz-icon nz-icon-Clear" @click="clearFileList"></i>
       </div>
       <div class="file-state-panel-content" v-if="fileList.length">
