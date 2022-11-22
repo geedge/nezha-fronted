@@ -177,12 +177,14 @@ export default {
         item.cancel.cancel('operation canceled by the user.')
         if (item.done || (item.fileLength === item.total)) { // 取消 上传 50-100
           clearInterval(item.timer)
-          this.$delete('/terminal/sftp/cancel/' + item.tid).then(res => {
-            if (res.code === 200) {
-            } else {
-              this.$message.error(res.msg)
-            }
-          })
+          if (item.tid) {
+            this.$delete('/terminal/sftp/cancel/' + item.tid).then(res => {
+              if (res.code === 200) {
+              } else {
+                this.$message.error(res.msg)
+              }
+            })
+          }
         }
       }
       this.$store.dispatch('dispatchDelFileList', item)
@@ -234,6 +236,7 @@ export default {
             item.isFinish = true
             clearInterval(item.timer)
             // todo 上传成功后 刷新对应terminal
+            this.$store.dispatch('upDateConsole', item.uuid)
           }
         })
       }, 200)
