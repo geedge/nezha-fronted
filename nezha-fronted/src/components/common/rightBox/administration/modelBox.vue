@@ -148,9 +148,6 @@ export default {
         ],
         sysObjectId: [
           { validator: sysObjectIdInput, trigger: 'blur' }
-        ],
-        panelId: [
-          { required: true, message: this.$t('validate.required'), trigger: ['blur', 'change'] }
         ]
       }
     }
@@ -163,13 +160,6 @@ export default {
         this.isEdit = true
         this.editModel = JSON.parse(JSON.stringify(n))
         this.editModel.panelId = n.panelId ? n.panelId + '' : ''
-      }
-    },
-    'editModel.panelId': {
-      handler (n) {
-        if (n) {
-          this.$refs.dashboardTemplate.$emit('el.form.change')
-        }
       }
     }
   },
@@ -194,6 +184,9 @@ export default {
           const params = {
             ...this.editModel,
             panelId: Number(this.editModel.panelId)
+          }
+          if (Number(this.editModel.panelId) == 0) {
+            delete params.panelId
           }
           if (this.editModel.id) {
             this.$put(this.url, params).then(res => {

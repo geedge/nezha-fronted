@@ -800,9 +800,6 @@ export default {
         ],
         timeout: [
           { validator: nzNumber, trigger: 'blur' }
-        ],
-        panelId: [
-          { required: true, message: this.$t('validate.required'), trigger: ['blur', 'change'] }
         ]
       },
       projectList: [],
@@ -1112,7 +1109,9 @@ export default {
           }
           if (valid) {
             this.prevent_opt.save = true
-            params.panelId = Number(this.editModule.panelId)
+            if (Number(this.editModule.panelId) !== 0) {
+              params.panelId = Number(this.editModule.panelId)
+            }
             if (this.editModule.id) {
               this.$put('monitor/module', params).then(response => {
                 if (response.code === 200) {
@@ -1685,13 +1684,6 @@ export default {
             })
           })
           this.configsCopyValue = JSON.stringify(params, null, 2)
-        }
-      }
-    },
-    'editModule.panelId': {
-      handler (n) {
-        if (n) {
-          this.$refs.dashboardTemplate.$emit('el.form.change')
         }
       }
     }
