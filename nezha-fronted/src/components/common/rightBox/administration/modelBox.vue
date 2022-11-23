@@ -47,7 +47,7 @@
             ></v-selectpage>
           </el-form-item> -->
            <!-- DashboardTemplate -->
-           <el-form-item :label="$t('model.dashboardtemplate')" prop="DashboardTemplate">
+           <el-form-item :label="$t('model.dashboardtemplate')" prop="panelId" ref="dashboardTemplate">
             <v-selectpage
             :data="dashboardList"
             :tb-columns="DashboardSearchShowFields"
@@ -57,7 +57,7 @@
             :language="language"
             title="DashboardSearch"
             key-field="id"
-            :width="640"
+            :width="634"
             v-model="editModel.panelId"
             show-field="name"
             class="form-control"
@@ -148,6 +148,9 @@ export default {
         ],
         sysObjectId: [
           { validator: sysObjectIdInput, trigger: 'blur' }
+        ],
+        panelId: [
+          { required: true, message: this.$t('validate.required'), trigger: ['blur', 'change'] }
         ]
       }
     }
@@ -160,6 +163,13 @@ export default {
         this.isEdit = true
         this.editModel = JSON.parse(JSON.stringify(n))
         this.editModel.panelId = n.panelId ? n.panelId + '' : ''
+      }
+    },
+    'editModel.panelId': {
+      handler (n) {
+        if (n) {
+          this.$refs.dashboardTemplate.$emit('el.form.change')
+        }
       }
     }
   },
