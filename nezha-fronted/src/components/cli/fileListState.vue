@@ -3,7 +3,7 @@
 <!--    显示进度-->
     <div class="file-state-panel" v-show="fileStateBox && fileList.length" :style="{'top': position.top + 'px', right: '10px'}" ref="fileStatePanel" :class="position.top>0? 'translationOriginDown': 'translationOriginUp'">
       <div class="file-state-panel-header">
-        <span class="file-state-panel-title">{{$t('terminal.filetransfer')}}}</span>
+        <span class="file-state-panel-title">{{$t('terminal.filetransfer')}}</span>
         <i class="nz-icon nz-icon-Clear" @click="clearFileList"></i>
       </div>
       <div class="file-state-panel-content" v-if="fileList.length">
@@ -76,6 +76,9 @@ export default {
     fileList: {
       immediate: true,
       handler (n) {
+        if (!n.length) {
+          this.fileStateBox = false
+        }
         n.forEach(item => {
           if (!item.isStart) {
             item.total = 1
@@ -224,7 +227,7 @@ export default {
         }
       })
     },
-    nextUpload (item, tid){
+    nextUpload (item, tid) {
       // this.$message.success(response.msg)
       item.timer = setInterval(() => { // 上传 50-100
         item.tid = tid
@@ -266,8 +269,12 @@ export default {
       })
     },
     clearFileList () {
-      const arr = this.fileList.filter(item => !item.isFinish)
-      this.$store.dispatch('dispatchFileList', arr)
+      this.fileList.forEach(item => {
+        this.removeRecord(item)
+      })
+      setTimeout(() => {
+        this.$store.dispatch('dispatchFileList', [])
+      })
     }
   }
 }

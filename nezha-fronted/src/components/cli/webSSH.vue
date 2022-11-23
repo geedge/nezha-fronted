@@ -326,9 +326,9 @@ export default {
       isFullScreen: false,
       closeConfirmShow: false,
       closeRemember: false,
-      initConsoleHeight: 300, // 只读,初始化高度
-      consoleHeight: 250, // console高度
-      resizeConsoleHeight: 250, // resize后的高度，用于记录最大化、最小化前的高度
+      initConsoleHeight: 500, // 只读,初始化高度
+      consoleHeight: 450, // console高度
+      resizeConsoleHeight: 450, // resize后的高度，用于记录最大化、最小化前的高度
       currentTransform: 0,
       editableTabsValue: '-1', // 当前显示的console
       currentIndex: '-1',
@@ -545,10 +545,10 @@ export default {
           this.editableTabsValue = newTabName
           this.editableTabs.push(console)
         })
-        return
+      } else {
+        this.editableTabsValue = newTabName
+        this.editableTabs.push(console)
       }
-      this.editableTabsValue = newTabName
-      this.editableTabs.push(console)
       setTimeout(function () {
         const tabScroll = document.getElementsByClassName('el-tabs__nav is-top')
         const tabViewWidth = document.getElementsByClassName('el-tabs__nav-scroll')
@@ -1042,6 +1042,10 @@ export default {
           })
           const targetDiv = document.getElementById('shell-service')
           targetDiv.style.height = this.webSSHHeight
+          if (!this.webSSHHeight) {
+            this.initConsoleHeight = this.initConsoleHeight > window.innerHeight * 0.4 ? this.initConsoleHeight : window.innerHeight
+            targetDiv.style.height = this.initConsoleHeight + 'px'
+          }
         }
         this.$store.state.consoleShow = false
       }

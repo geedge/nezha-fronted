@@ -1,8 +1,16 @@
 <template>
   <div class="fileDirectory" style="width: 100% !important;transform: scale(1) !important;">
     <div class="file-directory-header">
-      <span style="color: #fff">{{$t('terminal.sftp')}} <span style="color: #B7B7B7">{{fileDirectory}}</span></span>
-      <span  style="color: #fff">
+      <span style="color: #fff">
+        {{$t('terminal.sftp')}}
+        <span style="color: #B7B7B7;margin-left: 10px">
+          <span @click="getSftpPath('/')" class="breadcrumb-item breadcrumb-action"><i class="nz-icon nz-icon-Computer"/></span>
+          <span v-for="(item,index) in breadcrumb" :key="index" class="breadcrumb-item">
+            /<span class="breadcrumb-action" @click="gotoPath(item,index)">{{item}}</span>
+          </span>
+        </span>
+      </span>
+      <span  style="color: #fff" class="header-option">
           <i class="nz-icon nz-icon-a-newfolder" @click="newFolderBoxShow = true"></i>
           <i class="nz-icon nz-icon-upload" @click="uploadFile"></i>
           <i class="nz-icon nz-icon-close" @click="$emit('close')"></i>
@@ -26,20 +34,29 @@
       </div>
     </div>
     <el-dialog
+      class="nz-dialog snapshot-dialog"
+      width="472px"
       :title='$t("overall.newFolder")'
+      destroy-on-close
+      :modal-append-to-body="false"
+      :close-on-click-modal="false"
       :visible.sync="newFolderBoxShow"
-      :modal-append-to-body="true"
-      :append-to-body="true"
-      :width="'400px'"
-      >
+      @close="newFolder(false)"
+    >
       <div style="display: flex; align-items: center">
         <div style="width: 100px;flex-shrink: 1">{{$t('overall.folderName')}}</div>
         <el-input v-model="folder" size="small" style="flex: 1"/>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="newFolder(false)" size="small">{{$t('overall.cancel')}}</el-button>
-        <el-button type="primary" @click="newFolder(true)" size="small">{{$t('overall.create')}}</el-button>
-      </span>
+      <div slot="footer">
+        <div class="el-message-box__btns">
+          <button class="nz-btn el-button el-button--small el-button--default" @click="newFolder(false)">
+            <span>{{$t('overall.cancel')}}</span>
+          </button>
+          <button class="nz-btn el-button--small nz-btn-style-normal" @click="newFolder(true)">
+            <span style="text-transform:Capitalize">{{$t('overall.create')}}</span>
+          </button>
+        </div>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -55,6 +72,7 @@ export default {
   data () {
     return {
       fileDirectory: '/',
+      breadcrumb: [],
       fileList: [],
       newFolderBoxShow: false,
       folder: '',
@@ -124,7 +142,14 @@ export default {
       const path = arr.join('/')
       this.getSftpPath(path || '/')
     },
+    gotoPath (item, index) {
+      console.log(item, index, this.breadcrumb.slice(0, index + 1))
+      const path = '/' + this.breadcrumb.slice(0, index + 1).join('/')
+      console.log(path)
+      this.getSftpPath(path || '/')
+    },
     getSftpPath (path) {
+      this.breadcrumb = path.split('/').filter(item => item)
       const params = {
         uuid: this.uuid,
         path: path

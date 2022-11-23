@@ -10,7 +10,7 @@
     <div :id="'ternimalContainer'+idIndex" class="console">
       <div class="ternimal-header">
         <span style="color: #fff">
-          <div class="active-icon green-bg"></div>
+          <div class="active-icon" :class="isLogin ? 'green-bg': 'red-bg'"></div>
           {{userName}}
         </span>
         <span  style="color: #fff" v-show="isLogin">
@@ -19,7 +19,7 @@
         </span>
       </div>
         <div :id="'terminal'+idIndex" ></div>
-      <fileDirectory :uuid="terminal.uuid" v-show="fileDirectoryShow" @close="showFileDir(false)" :fileDirectoryShow="fileDirectoryShow" ref="fileDirectory"/>
+      <fileDirectory v-clickoutside="closeFileDir" :uuid="terminal.uuid" v-show="fileDirectoryShow" @close="showFileDir(false)" :fileDirectoryShow="fileDirectoryShow" ref="fileDirectory"/>
     </div>
 </template>
 <script>
@@ -194,7 +194,6 @@ export default {
         authPinTip: this.$loadsh.get(this.terminal, 'custom.authPinTip', '')
       }
       this.$post('/terminal/login', params).then(res => {
-        this.isLogin = true
         if (res.code == 200) {
           this.terminal.uuid = res.data.uuid
           this.userName = res.data.authUsername + '@' + res.data.host
@@ -232,6 +231,7 @@ export default {
       this.terminalSocket = new WebSocket(url)
       // 连接成功
       this.terminalSocket.onopen = () => {
+        this.isLogin = true
       }
       // 登录后，你输入的内容从后台服务返回
       this.term.on('data', function (data) {
@@ -245,7 +245,9 @@ export default {
       // 返回
       this.terminalSocket.onmessage = function (evt) {
         let backContent = evt.data
-
+        if (backContent.indexOf('Connection closed') !== -1 && backContent.indexOf('logout') !== -1) {
+          that.isLogin = false
+        }
         const welComIndex = backContent.indexOf(that.welcomeBackContent)
         if (welComIndex > -1) { // 无服务器信息（只与nezha进行了连接）
           const connectResult = {
@@ -288,13 +290,18 @@ export default {
       }
       // 关闭
       this.terminalSocket.onclose = () => {
+        this.isLogin = false
+        console.log(this.isLogin, 'close')
         // 报错sorry的，还没来得及看信息就关闭
         // this.$emit("closeConsole",this.terminal.name);//
         this.term && this.term.setOption('disableStdin', true)
       }
 
       // 错误
-      this.terminalSocket.onerror = (e) => {}
+      this.terminalSocket.onerror = (e) => {
+        this.isLogin = false
+        console.log(this.isLogin, 'close')
+      }
       // 选中 复制
       this.term.on('selection', function () {})
       this.term.attachCustomKeyEventHandler(function (ev) { })
@@ -352,6 +359,9 @@ export default {
       this.term.off('selection')
       this.term.off('data')
       this.beforeCreate()
+    },
+    closeFileDir () {
+      this.showFileDir(false)
     },
     showFileDir (show) {
       if (JSON.stringify(show) == JSON.stringify(this.fileDirectoryShow)) {

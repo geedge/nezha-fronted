@@ -28,6 +28,11 @@
     box-shadow: 0 1px 0 0 #19191C;
     padding: 0 20px;
     line-height: 48px;
+    display: flex;
+    justify-content: space-between;
+    > i {
+      color: #ffffff;
+    }
   }
   .file-state-panel-title{
     font-size: 14px;
@@ -109,5 +114,8 @@
   }
   .translationOriginDown{
     transform-origin: 70% 0%
+  }
+  .el-progress-bar__outer{
+    background-color: #19191C;
   }
 }
