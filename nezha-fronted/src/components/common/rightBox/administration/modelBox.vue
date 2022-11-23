@@ -183,10 +183,7 @@ export default {
         if (valid) {
           const params = {
             ...this.editModel,
-            panelId: Number(this.editModel.panelId)
-          }
-          if (Number(this.editModel.panelId) == 0) {
-            delete params.panelId
+            panelId: this.editModel.panelId == '' ? null : Number(this.editModel.panelId)
           }
           if (this.editModel.id) {
             this.$put(this.url, params).then(res => {

@@ -1109,9 +1109,7 @@ export default {
           }
           if (valid) {
             this.prevent_opt.save = true
-            if (Number(this.editModule.panelId) !== 0) {
-              params.panelId = Number(this.editModule.panelId)
-            }
+            params.panelId = this.editModule.panelId !== '' ? Number(this.editModule.panelId) : null
             if (this.editModule.id) {
               this.$put('monitor/module', params).then(response => {
                 if (response.code === 200) {
