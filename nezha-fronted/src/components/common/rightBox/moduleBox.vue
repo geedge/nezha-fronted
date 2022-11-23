@@ -60,24 +60,23 @@
               size="small"
             ></el-autocomplete>
           </el-form-item>
-          <!-- ChartTemplate  -->
-          <el-form-item :label="$t('overall.chartTemplate')" prop="ChartTemplate">
+          <!-- DashboardTemplate  -->
+          <el-form-item :label="$t('model.dashboardtemplate')" prop="DashboardTemplate">
             <v-selectpage
-              :data="chartTempList"
-              :tb-columns="ChartSearchShowFields"
-              :params="{
-                varType: 2, panelId: 0,
-                returnChildren:0,groupId:0,
-              }"
-              :multiple="true"
-              :language="language"
-              title="ChartSearch"
-              key-field="id"
-              show-field="name"
-              :width="626"
-              v-model="editModule.chartIds"
-              class="form-control"
-              :result-format="resultFormat"
+            :data="dashboardList"
+            :tb-columns="DashboardSearchShowFields"
+            :params="{
+              varType: 2,type: 'template'}"
+            :multiple="false"
+            :language="language"
+            title="DashboardSearch"
+            key-field="id"
+            :width="640"
+            v-model="editModule.panelId"
+            show-field="name"
+            class="form-control"
+            @values="(data) => {editModule.panelId = data.map(d => d.id).join(',')}"
+            :result-format="resultFormat"
             ></v-selectpage>
           </el-form-item>
 
@@ -738,7 +737,7 @@ export default {
       requirdRelabel (rule, value, callback) {
         callback()
       },
-      chartTempList: [],
+      dashboardList: [], // dashboard 列表数据
       activeName: 'Basic',
       activeNameLogs: ['Basic'],
       pipelineOptionValue: '',
@@ -749,7 +748,7 @@ export default {
         { value: '{{module.name}}-{{asset.name}}' },
         { value: '{{module.name}}-{{asset.manageIp}}' }
       ],
-      ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
+      DashboardSearchShowFields: [ // DashboardSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
         {
           title: this.$t('overall.name'),
@@ -761,7 +760,6 @@ export default {
           },
           key: 'name'
         },
-        { title: this.$t('overall.type'), data: 'type', key: 'type' },
         {
           title: this.$t('overall.remark'),
           data: function (row) {
@@ -1111,6 +1109,7 @@ export default {
           }
           if (valid) {
             this.prevent_opt.save = true
+            params.panelId = Number(this.editModule.panelId)
             if (this.editModule.id) {
               this.$put('monitor/module', params).then(response => {
                 if (response.code === 200) {
@@ -1501,10 +1500,10 @@ export default {
         return assetData
       }
     },
-    /* 获取chart列表数据 */
-    ChartTemplateList () {
-      this.$get('visual/panel/chart', { pageSize: -1, varType: 2, panelId: 0, returnChildren: 0, groupId: 0 }).then(res => {
-        this.chartTempList = res.data.list
+    /* 获取Dashboard列表数据 */
+    DashboardTemplateList () {
+      this.$get('visual/panel', { pageSize: -1, varType: 2, type: 'template' }).then(res => {
+        this.dashboardList = res.data.list
       })
     },
     // 添加pipeline
@@ -1563,7 +1562,7 @@ export default {
     this.getProjectList()
     this.getCredential()
     this.getWalkData()
-    this.ChartTemplateList()
+    this.DashboardTemplateList()
   },
   computed: {
     mibName () {
@@ -1580,6 +1579,7 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editModule = JSON.parse(JSON.stringify(n))
+        this.editModule.panelId = n.panelId ? n.panelId + '' : ''
         this.activeName = 'Basic'
         this.activeNameLogs = this.editModule.configs[1].config.map(() => 'Basic')
         this.logsCopyValue = this.editModule.configs[1].config.map(() => '')

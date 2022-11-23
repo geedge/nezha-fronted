@@ -52,7 +52,7 @@
             :data="dashboardList"
             :tb-columns="DashboardSearchShowFields"
             :params="{
-              varType: 1,}"
+              varType: 1,type: 'template'}"
             :multiple="false"
             :language="language"
             title="DashboardSearch"
@@ -167,7 +167,7 @@ export default {
     this.getBrandList()
     this.modelTypeList()
     // this.ChartTemplateList()
-    this.DashboardTemplateList ()
+    this.DashboardTemplateList()
   },
   methods: {
     clickOutside () {
@@ -183,7 +183,7 @@ export default {
         if (valid) {
           const params = {
             ...this.editModel,
-            panelId: Number(this.editModel.panelId),
+            panelId: Number(this.editModel.panelId)
           }
           if (this.editModel.id) {
             this.$put(this.url, params).then(res => {
@@ -264,7 +264,7 @@ export default {
     // },
     /* 获取Dashboard列表数据 */
     DashboardTemplateList () {
-      this.$get('visual/panel', { pageSize: -1, varType: 1}).then(res => {
+      this.$get('visual/panel', { pageSize: -1, varType: 1, type: 'template' }).then(res => {
         this.dashboardList = res.data.list
       })
     },
