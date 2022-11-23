@@ -98,6 +98,7 @@ export default {
   mixins: [dataListMixin, routerPathParams],
   data () {
     return {
+      detailType: 'list',
       url: 'visual/panel',
       tableId: 'dashboardTemp',
       orderBy: 'id',
