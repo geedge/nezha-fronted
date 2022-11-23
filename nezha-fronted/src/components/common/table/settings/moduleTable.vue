@@ -76,6 +76,9 @@
             />
           </span>
         </template>
+        <template v-else-if="item.prop === 'panel'">
+          {{scope.row.panel ? scope.row.panel.name : '-'}}
+        </template>
         <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <span v-else>-</span>
@@ -178,8 +181,12 @@ export default {
           show: true,
           width: 120,
           sortable: 'custom'
-        },
-        {
+        }, {
+          label: this.$t('model.dashboardtemplate'),
+          prop: 'panel',
+          minWidth: 150,
+          show: false
+        }, {
           label: this.$t('overall.remark'),
           prop: 'remark',
           show: true,

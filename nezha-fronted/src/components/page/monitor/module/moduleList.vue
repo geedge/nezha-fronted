@@ -194,7 +194,7 @@ export default {
         name: '',
         endpointNameTmpl: '{{module.name}}-{{asset.name}}',
         port: '',
-        chartIds: '',
+        panelId: '',
         metricsEnable: 1,
         configs: [
           {
