@@ -12,14 +12,14 @@
           <!--type-->
           <el-form-item v-if="from !== fromRoute.endpoint" :label="$t('dashboard.panel.chartForm.varType')" prop="varType">
             <el-select id="chart-box-group"
-                       v-model="editChartTemp.varType"
-                       class="right-box__select"
-                       clearable
-                       placeholder=""
-                       popper-class="prevent-clickoutside right-box-select-top"
-                       size="small"
-                       value-key="chartType"
-                       @change="varTypeChange">
+              v-model="editChartTemp.varType"
+              class="right-box__select"
+              clearable
+              placeholder=""
+              popper-class="prevent-clickoutside right-box-select-top"
+              size="small"
+              value-key="chartType"
+              @change="varTypeChange">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
@@ -61,17 +61,18 @@
           <!-- 选择资产，穿梭框 -->
           <template v-if="showTransfer">
             <div class="form__sub-title">{{editChartTemp.varType === 1 ? $t('overall.asset') : $t('project.endpoint.endpoint')}}</div>
-            <nz-transfer ref="transfer"
-                         :from="from"
-                         :page-obj="transfer.pageObj"
-                         :search-msg="transfer.searchMsg"
-                         :table-data="transfer.tableData"
-                         :tableTitle="transferTableTitle"
-                         style="margin-bottom: 20px;"
-                         @pageNo="pageNoChange"
-                         @leftToRight="addAsset"
-                         @rightToLeft="removeAsset"
-                         @search="search">
+            <nz-transfer
+              ref="transfer"
+              :from="from"
+              :page-obj="transfer.pageObj"
+              :search-msg="transfer.searchMsg"
+              :table-data="transfer.tableData"
+              :tableTitle="transferTableTitle"
+              style="margin-bottom: 20px;"
+              @pageNo="pageNoChange"
+              @leftToRight="addAsset"
+              @rightToLeft="removeAsset"
+              @search="search">
               <template v-slot:title>{{$t('overall.selected')}}</template>
             </nz-transfer>
           </template>

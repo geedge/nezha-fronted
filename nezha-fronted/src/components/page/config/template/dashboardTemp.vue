@@ -244,7 +244,7 @@ export default {
         this.tools.loading = false
         if (response.code === 200) {
           this.tableData = response.data.list
-          this.pageObj.total = response.data.list.length
+          this.pageObj.total = response.data.total
           if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
