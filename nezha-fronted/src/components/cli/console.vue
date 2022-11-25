@@ -203,6 +203,8 @@ export default {
           this.terminal.uuid = res.data.uuid
           this.userName = res.data.authUsername + '@' + res.data.host
           this.host = res.data.host
+          params.name = this.terminal.name
+          this.$emit('loginFail', params)
           this.$message.error(res.msg)
         }
       })

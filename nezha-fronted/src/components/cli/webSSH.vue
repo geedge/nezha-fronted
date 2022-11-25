@@ -46,6 +46,7 @@
             :isFullScreen="isFullScreen"
             :ref="'console'+index"
             :terminal="item.terminal"
+            @loginFail="loginFail"
             @closeConsole="removeTab"
             @refreshConsoleTitle="refreshTabTitle"
           ></my-console>
@@ -647,8 +648,23 @@ export default {
       this.$store.commit('removeConsole')
 
       if (this.editableTabs.length <= 0) {
-        this.closeConsole()
+        // this.closeConsole()
       }
+    },
+    loginFail (params) {
+      this.removeTab(params.name)
+      setTimeout(() => {
+        if (params.assetId) {
+          this.assetShowChange()
+        } else {
+          console.log()
+          this.customConnect = {
+            authType: Number(params.authType),
+            ...params
+          }
+          this.customShow = true
+        }
+      })
     },
     /* 活动标签切换时触发 */
     beforeLeave (currentName, oldName) {
