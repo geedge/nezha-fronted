@@ -221,7 +221,7 @@ export default {
     /* 密码失去焦点 检验确认密码 */
     pinBlur () {
       if (this.editUser.pin && this.editUser.pinChange) {
-        this.$refs.accountForm.validateField('pinChange')
+        this.$refs.userForm.validateField('pinChange')
       }
     },
     getRoles () {
