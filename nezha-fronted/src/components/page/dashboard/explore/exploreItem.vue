@@ -37,12 +37,11 @@
                 <i class="nz-icon nz-icon-more2"></i>
               </button>
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
-                <el-dropdown-item :disabled="saveDisabled">
+                <el-dropdown-item :disabled="saveDisabled" v-has="'main_add'">
                   <div>
                     <i class="nz-icon nz-icon-add" />
                     <span v-if="showMetrics"
                           id="explore-save-chart"
-                          v-has="'main_add'"
                           :class="{'btn-disabled-cursor-not-allowed' : saveDisabled}"
                           :disabled="saveDisabled"
                           class="top-tool-btn top-tool-btn--text"
@@ -52,7 +51,6 @@
                   </span>
                     <span v-else
                           id="explore-save-chart-logs"
-                          v-has="'main_add'"
                           :class="{'btn-disabled-cursor-not-allowed' : saveDisabled}"
                           :disabled="saveDisabled"
                           class="top-tool-btn top-tool-btn--text"
