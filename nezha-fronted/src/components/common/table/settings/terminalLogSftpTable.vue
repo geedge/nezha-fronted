@@ -77,6 +77,7 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
+          minWidth: 80,
           sortable: 'custom'
         },
         {
@@ -88,7 +89,8 @@ export default {
         }, {
           label: this.$t('overall.type'),
           prop: 'type',
-          width: 80,
+          width: 30,
+          minWidth: 30,
           show: true,
           sortable: 'custom'
         },
@@ -96,7 +98,8 @@ export default {
           label: this.$t('overall.time'),
           prop: 'ts',
           show: true,
-          width: 80,
+          width: 40,
+          minWidth: 40,
           sortable: 'custom'
         }
       ]
