@@ -18,7 +18,7 @@
       :fixed="item.fixed"
       :label="item.label"
       :min-width="`${item.minWidth}`"
-      :width="`${item.Width}`"
+      :width="`${item.width}`"
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
@@ -77,7 +77,6 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          minWidth: 80,
           sortable: 'custom'
         },
         {
@@ -89,7 +88,7 @@ export default {
         }, {
           label: this.$t('overall.type'),
           prop: 'type',
-          width: 30,
+          width: 150,
           minWidth: 30,
           show: true,
           sortable: 'custom'
@@ -98,7 +97,7 @@ export default {
           label: this.$t('overall.time'),
           prop: 'ts',
           show: true,
-          width: 40,
+          width: 180,
           minWidth: 40,
           sortable: 'custom'
         }
