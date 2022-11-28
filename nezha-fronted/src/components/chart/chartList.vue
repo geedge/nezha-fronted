@@ -599,14 +599,6 @@ export default {
             this.variablesArr.forEach((variables) => {
               const repeatVariable = this.$loadsh.get(item.param.repeat, 'variable')
               if (item.type === 'group' && variables.name === repeatVariable) {
-                if (!variables.checked.length) {
-                  item.children.forEach(children => {
-                    this.$delete(children, 'repeatIndex')
-                    this.$delete(children, 'repeatVariable')
-                    this.$delete(children, 'repeatValue')
-                  })
-                  return
-                }
                 variables.checked.forEach((subItem, subIndex) => {
                   if (subIndex > 0) {
                   // 复制数据 重新设置id

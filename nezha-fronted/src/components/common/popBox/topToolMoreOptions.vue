@@ -77,7 +77,7 @@
                   :key="item.value"
                   :label="item.name"
                   :value="item.value">
-                </el-option>  
+                </el-option>
               </el-select>
             </div>
             <ul class="import-select-list">
@@ -601,7 +601,6 @@ export default {
     },
     exportCur () {
       const params = JSON.parse(JSON.stringify(this.params))
-      console.log(params)
       if (this.params2) {
         Object.keys(this.params2).forEach(key => {
           if (params[key]) {
