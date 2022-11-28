@@ -134,6 +134,7 @@ export default {
           item.fileLength = progressEvent.loaded
           item.speed = item.fileLength / ((new Date().getTime() - item.startTime) / 1000)
           item.speed = self.bytes(item.speed, 0, 0) + '/s'
+          item.done = (item.fileLength / item.total) * 100
           // this.$set(this.fileList, 0,item)
         }
       }).then(res => {

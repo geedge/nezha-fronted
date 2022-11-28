@@ -1,5 +1,5 @@
 <template>
-  <div class="fileDirectory" style="width: 100% !important;transform: scale(1) !important;">
+  <div class="fileDirectory" style="width: 100% !important;">
     <div class="file-directory-header">
       <span style="color: #fff">
         {{$t('terminal.sftp')}}
@@ -39,7 +39,6 @@
       :title='$t("overall.newFolder")'
       destroy-on-close
       :modal-append-to-body="false"
-      :close-on-click-modal="false"
       :visible.sync="newFolderBoxShow"
       @close="newFolder(false)"
     >
@@ -143,9 +142,7 @@ export default {
       this.getSftpPath(path || '/')
     },
     gotoPath (item, index) {
-      console.log(item, index, this.breadcrumb.slice(0, index + 1))
       const path = '/' + this.breadcrumb.slice(0, index + 1).join('/')
-      console.log(path)
       this.getSftpPath(path || '/')
     },
     getSftpPath (path) {
@@ -206,9 +203,10 @@ export default {
       }, 300)
     },
     delFile (item) {
+      const path = this.fileDirectory == '/' ? '' : this.fileDirectory
       const params = {
         uuid: this.uuid,
-        path: this.fileDirectory + '/' + item.name
+        path: path + '/' + item.name
       }
       this.$post('/terminal/sftp/rm', params).then(res => {
         if (res.code == 200) {
