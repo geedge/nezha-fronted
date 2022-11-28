@@ -1,5 +1,5 @@
 <template>
-  <div class="fileDirectory" style="width: 100% !important;transform: scale(1) !important;">
+  <div class="fileDirectory" style="width: 100% !important;">
     <div class="file-directory-header">
       <span style="color: #fff">
         {{$t('terminal.sftp')}}
@@ -39,7 +39,6 @@
       :title='$t("overall.newFolder")'
       destroy-on-close
       :modal-append-to-body="false"
-      :close-on-click-modal="false"
       :visible.sync="newFolderBoxShow"
       @close="newFolder(false)"
     >

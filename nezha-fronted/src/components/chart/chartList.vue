@@ -284,14 +284,24 @@ export default {
       if (!this.groupInfo) {
         const moveItem = this.copyDataList.find(item => item.id == id)
         const moveIndex = this.copyDataList.findIndex(item => item.id == id)
-        let num = 1
+        const repeatArr = []
         this.copyDataList.forEach((item, index) => {
           const moveId = String(id).split('-repeat-')[0]
           const repeatId = String(item.id).split('-repeat-')[0]
           if (moveId == repeatId && moveIndex != index) {
-            item.y = moveItem.y + (num * 0.1)
-            num++
+            repeatArr.push({
+              id: item.id,
+              y: item.y
+            })
           }
+        })
+        repeatArr.sort((a, b) => a.y - b.y)
+        this.copyDataList.forEach(item => {
+          repeatArr.forEach((subItem, subIndex) => {
+            if (item.id == subItem.id) {
+              item.y = moveItem.y + ((subIndex + 1) * 0.03)
+            }
+          })
         })
       }
       this.onScroll(this.scrollTop)
@@ -589,14 +599,6 @@ export default {
             this.variablesArr.forEach((variables) => {
               const repeatVariable = this.$loadsh.get(item.param.repeat, 'variable')
               if (item.type === 'group' && variables.name === repeatVariable) {
-                if (!variables.checked.length) {
-                  item.children.forEach(children => {
-                    this.$delete(children, 'repeatIndex')
-                    this.$delete(children, 'repeatVariable')
-                    this.$delete(children, 'repeatValue')
-                  })
-                  return
-                }
                 variables.checked.forEach((subItem, subIndex) => {
                   if (subIndex > 0) {
                   // 复制数据 重新设置id
