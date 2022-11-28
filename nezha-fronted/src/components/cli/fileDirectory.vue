@@ -143,9 +143,7 @@ export default {
       this.getSftpPath(path || '/')
     },
     gotoPath (item, index) {
-      console.log(item, index, this.breadcrumb.slice(0, index + 1))
       const path = '/' + this.breadcrumb.slice(0, index + 1).join('/')
-      console.log(path)
       this.getSftpPath(path || '/')
     },
     getSftpPath (path) {
@@ -206,9 +204,10 @@ export default {
       }, 300)
     },
     delFile (item) {
+      const path = this.fileDirectory == '/' ? '' : this.fileDirectory
       const params = {
         uuid: this.uuid,
-        path: this.fileDirectory + '/' + item.name
+        path: path + '/' + item.name
       }
       this.$post('/terminal/sftp/rm', params).then(res => {
         if (res.code == 200) {
