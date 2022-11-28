@@ -657,7 +657,6 @@ export default {
         if (params.assetId) {
           this.assetShowChange()
         } else {
-          console.log()
           this.customConnect = {
             authType: Number(params.authType),
             ...params
@@ -1059,7 +1058,7 @@ export default {
           const targetDiv = document.getElementById('shell-service')
           targetDiv.style.height = this.webSSHHeight
           if (!this.webSSHHeight) {
-            this.initConsoleHeight = this.initConsoleHeight > window.innerHeight * 0.4 ? this.initConsoleHeight : window.innerHeight
+            this.initConsoleHeight = this.initConsoleHeight > (window.innerHeight * 0.4) ? this.initConsoleHeight : (window.innerHeight * 0.4)
             targetDiv.style.height = this.initConsoleHeight + 'px'
           }
         }
@@ -1070,6 +1069,7 @@ export default {
   created () {
     // window.addEventListener('resize',this.windowChange);
     window.addEventListener('resize', this.debounce(this.windowChange, 1000), false)
+    this.initConsoleHeight = this.initConsoleHeight > (window.innerHeight * 0.4) ? this.initConsoleHeight : (window.innerHeight * 0.4)
   },
   mounted () {
 

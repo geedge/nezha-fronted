@@ -13,9 +13,9 @@
           <div class="active-icon" :class="isLogin ? 'green-bg': 'red-bg'"></div>
           {{userName}}
         </span>
-        <span  style="color: #fff" v-show="isLogin">
-          <i class="nz-icon nz-icon-reconnect" style="margin-right: 22px" @click="reconnect"></i>
-          <i class="nz-icon nz-icon-SFTP" v-if="userName && terminalType == '1'" style="margin-right: 22px" @click="showFileDir(true)"></i>
+        <span  style="color: #fff">
+          <i class="nz-icon nz-icon-reconnect"  v-show="isInit" style="margin-right: 22px" @click="reconnect"></i>
+          <i class="nz-icon nz-icon-SFTP" v-show="isLogin" v-if="userName && terminalType == '1'" style="margin-right: 22px" @click="showFileDir(true)"></i>
         </span>
       </div>
         <div :id="'terminal'+idIndex" ></div>
@@ -57,6 +57,7 @@ export default {
         id: 2
       },
       isLogin: false,
+      isInit:false,
       successBackContent: 'Connecting to',
       failBackContent: 'Sorry',
       connectFailContent: 'Connection failed',
@@ -231,9 +232,10 @@ export default {
         })
       }
       this.terminalSocket = new WebSocket(url)
-      // 连接成功
+      // 连接成功onclose
       this.terminalSocket.onopen = () => {
         this.isLogin = true
+        this.isInit = true
       }
       // 登录后，你输入的内容从后台服务返回
       this.term.on('data', function (data) {
@@ -247,9 +249,6 @@ export default {
       // 返回
       this.terminalSocket.onmessage = function (evt) {
         let backContent = evt.data
-        if (backContent.indexOf('Connection closed') !== -1 && backContent.indexOf('logout') !== -1) {
-          that.isLogin = false
-        }
         const welComIndex = backContent.indexOf(that.welcomeBackContent)
         if (welComIndex > -1) { // 无服务器信息（只与nezha进行了连接）
           const connectResult = {
@@ -293,7 +292,6 @@ export default {
       // 关闭
       this.terminalSocket.onclose = () => {
         this.isLogin = false
-        console.log(this.isLogin, 'close')
         // 报错sorry的，还没来得及看信息就关闭
         // this.$emit("closeConsole",this.terminal.name);//
         this.term && this.term.setOption('disableStdin', true)
