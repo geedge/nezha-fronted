@@ -65,6 +65,16 @@
             <span>{{getDuration(scope.row)}}</span>
           </el-tooltip>
         </template>
+        <template v-else-if="item.prop === 'cmdNum'">
+          <div style="cursor: pointer" @click="showBottomBox('cmdTab', scope.row)">
+            {{scope.row[item.prop] ? scope.row[item.prop] : '-'}}
+          </div>
+        </template>
+        <template v-else-if="item.prop === 'sftpNum'">
+          <div style="cursor: pointer" @click="showBottomBox('sftpTab', scope.row)">
+            {{scope.row[item.prop] ? scope.row[item.prop] : '-'}}
+          </div>
+        </template>
         <template v-else-if="item.prop === 'authType'">
           <span v-if="scope.row.authType == 1">{{$t('login.pin')}}</span>
           <span v-else-if="scope.row.authType == 2">{{$t('config.terminallog.key')}}</span>
@@ -182,6 +192,20 @@ export default {
           prop: 'authType',
           minWidth: 100,
           show: false
+        },
+        {
+          label: this.$t('config.terminallog.cmd.cmd'),
+          prop: 'cmdNum',
+          show: false,
+          width: 120,
+          sortable: 'custom'
+        },
+        {
+          label: this.$t('terminal.sftp'),
+          prop: 'sftpNum',
+          show: false,
+          width: 100,
+          sortable: 'custom'
         },
         {
           label: this.$t('overall.state'), // killusername鼠标悬停形式
