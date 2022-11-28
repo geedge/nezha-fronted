@@ -593,47 +593,75 @@ export default {
         }
       }
       this.$nextTick(() => {
-        for (let index = 0; index < this.copyDataList.length; index++) {
-          const item = this.copyDataList[index]
-          if (this.$loadsh.get(this.showHidden[item.id], 'visibility') !== 'hidden' && this.$loadsh.get(item.param.enable, 'repeat')) {
-            this.variablesArr.forEach((variables) => {
-              const repeatVariable = this.$loadsh.get(item.param.repeat, 'variable')
-              if (item.type === 'group' && variables.name === repeatVariable) {
-                variables.checked.forEach((subItem, subIndex) => {
-                  if (subIndex > 0) {
-                  // 复制数据 重新设置id
-                    const repeatItem = this.$loadsh.cloneDeep(item)
-                    repeatItem.id = item.id + '-' + 'repeat-' + subIndex
-                    repeatItem.i = repeatItem.id
-                    repeatItem.repeatIndex = subIndex
-                    repeatItem.repeatVariable = repeatVariable
-                    repeatItem.repeatValue = subItem
-                    repeatItem.children.forEach(children => {
-                      children.id = children.id + '-' + 'repeat-' + subIndex
-                      children.repeatIndex = subIndex
-                      children.repeatVariable = repeatVariable
-                      children.repeatValue = subItem
-                    })
-                    index += 1
-                    // 复制数据
-                    this.copyDataList.splice(index, 0, repeatItem)
-                  } else {
-                    this.$set(item, 'repeatIndex', 0)
-                    this.$set(item, 'repeatVariable', repeatVariable)
-                    this.$set(item, 'repeatValue', subItem)
-                    item.children.forEach(children => {
-                      this.$set(children, 'repeatIndex', 0)
-                      this.$set(children, 'repeatVariable', repeatVariable)
-                      this.$set(children, 'repeatValue', subItem)
-                    })
-                    this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].getChartData()
-                  }
+        // 先让数组根据 y 排序 之后直接判断顺序 即可判断 Group 是否相邻
+        let arr = this.$loadsh.cloneDeep(this.copyDataList)
+        arr = this.$loadsh.orderBy(arr, function (item) {
+          return item.y
+        })
+        const variablesRepeat = {}
+        for (let index = 0; index < arr.length; index++) { // 遍历找出所有需要 repeat的group 按照 name进行多次的分组
+          const item = arr[index]
+          const repeatVariable = this.$loadsh.get(item.param.repeat, 'variable')
+          if (item.type === 'group' && repeatVariable) {
+            const itemPrev = arr[index - 1]
+            const repeatPrevVariable = this.$loadsh.get(itemPrev.param.repeat, 'variable')
+            if (itemPrev && itemPrev.type === 'group' && repeatPrevVariable === repeatVariable) {
+              const arr = variablesRepeat[repeatVariable]
+              arr[arr.length - 1].repeatArr.push(item)
+              arr[arr.length - 1].lastGroup = item
+            } else {
+              if (variablesRepeat[repeatVariable]) {
+                variablesRepeat[repeatVariable].push({
+                  repeatArr: [item],
+                  lastGroup: item
                 })
+              } else {
+                variablesRepeat[repeatVariable] = [{
+                  repeatArr: [item],
+                  lastGroup: item
+                }]
               }
-            })
+            }
           }
         }
-        this.onScroll(this.scrollTop)
+        Object.keys(variablesRepeat).forEach(key => { // 遍历 variablesRepeat 确定需要插入的数组
+          const findVariables = this.variablesArr.find(item => item.name == key)
+          findVariables.checked.forEach((subItem, subIndex) => {
+            variablesRepeat[key].forEach(group => {
+              group.repeatArr.forEach(item => {
+                if (subIndex > 0) {
+                  // 复制数据 重新设置id
+                  const repeatItem = this.$loadsh.cloneDeep(item)
+                  repeatItem.id = item.id + '-' + 'repeat-' + subIndex
+                  repeatItem.i = repeatItem.id
+                  repeatItem.repeatIndex = subIndex
+                  repeatItem.repeatVariable = key
+                  repeatItem.repeatValue = subItem
+                  repeatItem.y = group.lastGroup.y
+                  repeatItem.children.forEach(children => {
+                    children.id = children.id + '-' + 'repeat-' + subIndex
+                    children.repeatIndex = subIndex
+                    children.repeatVariable = key
+                    children.repeatValue = subItem
+                  })
+                  // 复制数据
+                  this.copyDataList.push(repeatItem)
+                } else {
+                  const findItem = this.copyDataList.find(chart => chart.id === item.id)
+                  this.$set(findItem, 'repeatIndex', 0)
+                  this.$set(findItem, 'repeatVariable', key)
+                  this.$set(findItem, 'repeatValue', subItem)
+                  findItem.children.forEach(children => {
+                    this.$set(children, 'repeatIndex', 0)
+                    this.$set(children, 'repeatVariable', key)
+                    this.$set(children, 'repeatValue', subItem)
+                  })
+                  this.$refs['chart' + findItem.id] && this.$refs['chart' + findItem.id][0] && this.$refs['chart' + findItem.id][0].getChartData()
+                }
+              })
+            })
+          })
+        })
       })
     }
 
