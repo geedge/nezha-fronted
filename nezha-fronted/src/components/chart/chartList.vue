@@ -602,7 +602,7 @@ export default {
         for (let index = 0; index < arr.length; index++) { // 遍历找出所有需要 repeat的group 按照 name进行多次的分组
           const item = arr[index]
           const repeatVariable = this.$loadsh.get(item.param.repeat, 'variable')
-          if (item.type === 'group' && repeatVariable) {
+          if (item.type === 'group' && repeatVariable && this.$loadsh.get(this.showHidden[item.id], 'visibility') !== 'hidden') {
             const itemPrev = arr[index - 1]
             const repeatPrevVariable = this.$loadsh.get(itemPrev.param.repeat, 'variable')
             if (itemPrev && itemPrev.type === 'group' && repeatPrevVariable === repeatVariable) {

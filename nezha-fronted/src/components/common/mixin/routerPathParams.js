@@ -62,6 +62,7 @@ export default {
             params.targetTab = this.$route.query.targetTab
           }
           if (!params.targetTab) delete params.targetTab
+          if (!params.bottomBox) delete params.bottomBox
           if (this.detailType === 'list' && this.$refs[detailType]) {
             const obj = {
               id: this.$refs[detailType].bottomBox.object.id,
@@ -119,29 +120,35 @@ export default {
         } else if (from === 'nzDatalist' && this.bottomBox) {
           params.bottomBox = this.bottomBox.showSubList
           params.targetTab = this.bottomBox.targetTab
-          const obj = {
-            id: this.bottomBox.object.id,
-            name: this.bottomBox.object.name,
-            childrenNum: this.bottomBox.object.childrenNum || '',
-            clientState: this.bottomBox.object.clientState || '',
-            protocol: this.bottomBox.object.protocol || '',
-            uuid: this.bottomBox.object.uuid || '',
-            startTime: this.bottomBox.object.startTime || '',
-            model: {
-              tsgAppliance: this.bottomBox.object.model ? this.bottomBox.object.model.tsgAppliance : ''
+          if (!params.targetTab) delete params.targetTab
+          if (!params.bottomBox) delete params.bottomBox
+          if (this.bottomBox.showSubList) { // 关闭bottomBox打开还是关闭
+            const obj = {
+              id: this.bottomBox.object.id,
+              name: this.bottomBox.object.name,
+              childrenNum: this.bottomBox.object.childrenNum || '',
+              clientState: this.bottomBox.object.clientState || '',
+              protocol: this.bottomBox.object.protocol || '',
+              uuid: this.bottomBox.object.uuid || '',
+              startTime: this.bottomBox.object.startTime || '',
+              model: {
+                tsgAppliance: this.bottomBox.object.model ? this.bottomBox.object.model.tsgAppliance : ''
+              }
             }
-          }
-          if (this.bottomBox.object.configs) {
-            // 判断是JSON字符串还是对象
-            if (typeof (this.bottomBox.object.configs) == 'string') {
-              obj.configs = JSON.parse(this.bottomBox.object.configs).map(item => { return { type: item.type, enable: item.enable } })
-            } else {
-              obj.configs = this.bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } })
+            if (this.bottomBox.object.configs) {
+              // 判断是JSON字符串还是对象
+              if (typeof (this.bottomBox.object.configs) == 'string') {
+                obj.configs = JSON.parse(this.bottomBox.object.configs).map(item => { return { type: item.type, enable: item.enable } })
+              } else {
+                obj.configs = this.bottomBox.object.configs.map(item => { return { type: item.type, enable: item.enable } })
+              }
             }
-          }
-          this.removeEmpty(obj)
-          if (JSON.stringify(obj) != '{}') {
-            params.selectObj = JSON.stringify(obj)
+            this.removeEmpty(obj)
+            if (JSON.stringify(obj) != '{}') {
+              params.selectObj = JSON.stringify(obj)
+            }
+          } else {
+            delete params.selectObj
           }
           this.$router.replace({ path: path, query: params }).catch(err => {})
         } else if (from === 'nzDetailList' && this.detailViewRightObj) {

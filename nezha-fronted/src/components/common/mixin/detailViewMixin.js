@@ -33,7 +33,9 @@ export default {
     changeDetailType (flag) {
       setTimeout(() => {
         const query = { ...this.$route.query, detailType: flag }
-        query.bottomBox = this.detailType !== 'view'
+        if (this.detailType == 'view') {
+          delete query.bottomBox
+        }
         this.$router.replace({ query: query }).catch(err => {})
       }, 100)
       if (this.detailType === flag) {
