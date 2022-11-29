@@ -82,6 +82,8 @@ export default {
   methods: {
     async getTableData () {
       this.$set(this.searchLabel, 'uuid', this.obj.uuid)
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', -1)
       this.tools.loading = true
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false

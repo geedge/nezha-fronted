@@ -67,12 +67,12 @@
         </template>
         <template v-else-if="item.prop === 'cmdNum'">
           <div style="cursor: pointer" @click="showBottomBox('cmdTab', scope.row)">
-            {{scope.row[item.prop] ? scope.row[item.prop] : '-'}}
+            {{scope.row[item.prop] ? scope.row[item.prop] : 0}}
           </div>
         </template>
         <template v-else-if="item.prop === 'sftpNum'">
           <div style="cursor: pointer" @click="showBottomBox('sftpTab', scope.row)">
-            {{scope.row[item.prop] ? scope.row[item.prop] : '-'}}
+            {{scope.row[item.prop] ? scope.row[item.prop] : 0}}
           </div>
         </template>
         <template v-else-if="item.prop === 'authType'">
@@ -197,15 +197,13 @@ export default {
           label: this.$t('config.terminallog.cmd.cmd'),
           prop: 'cmdNum',
           show: false,
-          width: 120,
-          sortable: 'custom'
+          width: 100
         },
         {
           label: this.$t('terminal.sftp'),
           prop: 'sftpNum',
           show: false,
-          width: 100,
-          sortable: 'custom'
+          width: 80
         },
         {
           label: this.$t('overall.state'), // killusername鼠标悬停形式
