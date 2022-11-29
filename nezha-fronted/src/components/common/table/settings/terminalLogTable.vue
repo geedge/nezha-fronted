@@ -214,7 +214,20 @@ export default {
           width: 150,
           sortable: 'custom'
         }
-      ]
+      ],
+      timer: null
+    }
+  },
+  methods: {
+    showBottomBox (targetTab, row) {
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      const self = this
+      this.timer = setTimeout(() => {
+        self.$emit('showBottomBox', targetTab, row)
+        self.timer = null
+      }, 200)
     }
   },
   computed: {

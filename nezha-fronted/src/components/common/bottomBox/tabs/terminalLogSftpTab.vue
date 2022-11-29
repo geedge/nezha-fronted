@@ -69,6 +69,16 @@ export default {
       orderBy: { order: 'ascending', prop: 'id' }
     }
   },
+  watch: {
+    obj: {
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.getTableData()
+        }
+      }
+    }
+  },
   methods: {
     async getTableData () {
       this.$set(this.searchLabel, 'uuid', this.obj.uuid)
