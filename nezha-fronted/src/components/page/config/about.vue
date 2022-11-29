@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="about" v-my-loading='loading'>
     <div class="app">
        <div class="app-header">
       <div class="header-logo"><img width="60" height="60" src="../../../assets/img/logo1-2.png"></div>
@@ -45,6 +45,7 @@ export default {
       noData: false,
       timeLineData: [],
       // language: '',
+      loading: false,
       version: {
         nezha: { name: '', version: '' },
         components: [{ name: '', version: '' }]
@@ -273,9 +274,11 @@ export default {
   },
   methods: {
     getVersion () {
+      this.loading = true
       this.$get('/about').then(response => {
         // this.language = localStorage.getItem('nz-language') || 'en'
         this.version = response.data
+        this.loading = false
       })
     }
   },
