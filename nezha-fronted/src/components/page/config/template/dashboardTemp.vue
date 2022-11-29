@@ -11,7 +11,7 @@
       @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
-        <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn margin-r-10" type="button" @click="add">
+        <button id="expr-tmpl-list-export" v-has="'dashboard_temp_add'" :title="$t('overall.createTemplate')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
        <top-tool-more-options
@@ -23,7 +23,7 @@
           export-file-name="dashboard-temp"
           :params="searchLabel"
           :paramsType="'template'"
-          :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_edit'}"
+          :permissions="{import: 'dashboard_temp_add', export: 'dashboard_temp_edit'}"
           class="top-tool-export margin-r-10"
           @afterImport="getTableData"
         >
@@ -40,7 +40,7 @@
                   :delete-objs="batchDeleteObjs"
                   @after="getTableData"
                   id="alert-msg-batch-delete"
-                  v-has="'expressionTemplate_delete'"
+                  v-has="'dashboard_temp_delete'"
                   :api="url">
                 </delete-button>
               </el-dropdown-item>
