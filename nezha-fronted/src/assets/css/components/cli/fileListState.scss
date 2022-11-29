@@ -44,14 +44,17 @@
     min-height: 50px;
     max-height: 146px;
     line-height: 48px;
+    padding-bottom: 15px;
+    border-radius: 0 0 2px 2px;
     width: 100%;
     overflow-y: auto;
     .file-state-panel-item{
       height: 48px;
       width: 100%;
       box-sizing: border-box;
-      padding: 12px 14px 0px 20px;
+      padding: 3px 14px 3px 20px;
       display: flex;
+      align-items: center;
       justify-content: space-around;
       .item-icon{
         width: 28px;
@@ -78,10 +81,12 @@
           line-height: 15px;
           font-size: 12px;
           font-weight: 400;
+          margin-bottom: 3px;
         }
         .item-progress-middle{
         }
         .item-progress-bottom{
+          margin-top: 3px;
           display: flex;
           justify-content: space-between;
           font-size: 10px;
@@ -96,6 +101,7 @@
         height: 28px;
         color: #fff;
         line-height: 28px;
+        text-align: center;
       }
     }
   }

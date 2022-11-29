@@ -85,7 +85,7 @@ export default {
       const consoleBox = document.getElementById('ternimalContainer' + this.idIndex)
       consoleBox.style.height = `${consoleHeigt - 55}px`
       // 调整终端可视区域高度
-      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height = `${consoleHeigt - 10}px`
+      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height = `${consoleHeigt - 10 - 30}px`
       this.$nextTick(() => { // 解决进入全屏和退出全屏是底部隐藏
         this.setFontSize(this.fontSize)
       })
@@ -341,7 +341,7 @@ export default {
         rows: this.term.rows
       }
       // 调整终端可视区域高度
-      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height = height + 'px'
+      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height = height - 30 + 'px'
       this.$nextTick(() => {
         this.term.resize(this.term.cols, this.term.rows)
         this.$post('terminal/resize', winStyle).then(response => {
