@@ -661,9 +661,8 @@ export default {
   methods: {
     init () {
       // canvasOptions.on = this.onMessage
-      clearTimeout(this.timer3)
-      this.timer3 = null
       this.reload()
+      this.popDataShowUpdate('', false)
     },
 
     reload () {
