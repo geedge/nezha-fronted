@@ -585,7 +585,7 @@ export default {
           delete item.repeatIndex
           delete item.repeatVariable
           delete item.repeatValue
-          item.children.forEach(children => {
+          item.children && item.children.forEach(children => {
             delete children.repeatIndex
             delete children.repeatVariable
             delete children.repeatValue
@@ -638,7 +638,7 @@ export default {
                   repeatItem.repeatVariable = key
                   repeatItem.repeatValue = subItem
                   repeatItem.y = group.lastGroup.y
-                  repeatItem.children.forEach(children => {
+                  repeatItem.children && repeatItem.children.forEach(children => {
                     children.id = children.id + '-' + 'repeat-' + subIndex
                     children.repeatIndex = subIndex
                     children.repeatVariable = key
@@ -651,7 +651,7 @@ export default {
                   this.$set(findItem, 'repeatIndex', 0)
                   this.$set(findItem, 'repeatVariable', key)
                   this.$set(findItem, 'repeatValue', subItem)
-                  findItem.children.forEach(children => {
+                  findItem.children && findItem.children.forEach(children => {
                     this.$set(children, 'repeatIndex', 0)
                     this.$set(children, 'repeatVariable', key)
                     this.$set(children, 'repeatValue', subItem)
