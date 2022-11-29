@@ -66,12 +66,12 @@
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'cmdNum'">
-          <div style="cursor: pointer" @click="showBottomBox('cmdTab', scope.row)">
+          <div style="cursor: pointer" @click.stop="showBottomBox('cmdTab', scope.row)" @dblclick.stop="">
             {{scope.row[item.prop] ? scope.row[item.prop] : '-'}}
           </div>
         </template>
         <template v-else-if="item.prop === 'sftpNum'">
-          <div style="cursor: pointer" @click="showBottomBox('sftpTab', scope.row)">
+          <div style="cursor: pointer" @click.stop="showBottomBox('sftpTab', scope.row)" @dblclick.stop="">
             {{scope.row[item.prop] ? scope.row[item.prop] : '-'}}
           </div>
         </template>
