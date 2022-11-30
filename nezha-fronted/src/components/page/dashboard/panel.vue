@@ -46,6 +46,7 @@
                 <i class="nz-icon nz-icon-moshiqiehuan"></i>
               </button>
 
+              <!-- 新增图表 -->
               <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChartBefore">
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>
@@ -74,12 +75,12 @@
                   </el-dropdown-item>
                 </template>
                 <template v-slot:after>
-                  <el-dropdown-item v-has="'main_add'">
+                  <!-- <el-dropdown-item v-has="'main_add'">
                     <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{$t('overall.AddByTemplate')}}</div>
                   </el-dropdown-item>
                   <el-dropdown-item v-has="'panel_view'">
                     <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-                  </el-dropdown-item>
+                  </el-dropdown-item> -->
                   <el-dropdown-item v-has="'panel_view'">
                     <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
                   </el-dropdown-item>

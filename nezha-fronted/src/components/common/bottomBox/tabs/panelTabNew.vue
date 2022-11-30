@@ -38,12 +38,12 @@
             @panelLockChange="panelLockChange"
           >
             <template v-slot:after>
-              <el-dropdown-item v-has="'main_add'">
+              <!-- <el-dropdown-item v-has="'main_add'">
                 <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
               </el-dropdown-item>
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-              </el-dropdown-item>
+              </el-dropdown-item> -->
               <el-dropdown-item v-has="'panel_view'">
                 <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
               </el-dropdown-item>
@@ -75,12 +75,12 @@
             @panelLockChange="panelLockChange"
           >
             <template v-slot:after>
-              <el-dropdown-item v-has="'main_add'">
+              <!-- <el-dropdown-item v-has="'main_add'">
                 <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
               </el-dropdown-item>
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-              </el-dropdown-item>
+              </el-dropdown-item> -->
               <el-dropdown-item v-has="'panel_view'">
                 <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
               </el-dropdown-item>

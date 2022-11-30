@@ -35,6 +35,7 @@ export default {
         const query = { ...this.$route.query, detailType: flag }
         if (this.detailType == 'view') {
           delete query.bottomBox
+          delete query.selectObj
         }
         this.$router.replace({ query: query }).catch(err => {})
       }, 100)
