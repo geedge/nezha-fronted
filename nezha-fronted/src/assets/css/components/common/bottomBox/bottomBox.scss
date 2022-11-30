@@ -271,14 +271,16 @@
 #networkBottomTab,
 #vsysBottomTab,
 #sftpBottomTab,
-#terminalLogCMDTab {
+#terminalLogCMDTab,
+#recordRuleEvalLog {
   .sub-container .nz-table-list {
     height: 100%;
   }
   #assetProcessTable,
   #assetNetworkTable,
   #assetVsysTable,
-  #terminalLogSftpTable {
+  #terminalLogSftpTable,
+  #recordRuleEvalLogTable {
     height: calc(100% - 15px) !important;
   }
 }

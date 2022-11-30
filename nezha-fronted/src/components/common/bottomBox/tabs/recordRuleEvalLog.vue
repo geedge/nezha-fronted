@@ -3,16 +3,16 @@
       :showTitle='showTitle'
       :obj='obj'
       :tableId="tableId"
-    :api="url"
-    :custom-table-title.sync="tools.customTableTitle"
-    :layout="['elementSet']"
-    :search-msg="searchMsg"
-    :tabs="tabs"
-    :targetTab="targetTab"
-    :showPagination="false"
-    @search="search"
-    @changeTab="changeTab"
-  >
+      id="recordRuleEvalLog"
+      :api="url"
+      :custom-table-title.sync="tools.customTableTitle"
+      :layout="['elementSet']"
+      :search-msg="searchMsg"
+      :tabs="tabs"
+      :targetTab="targetTab"
+      :showPagination="false"
+      @search="search"
+      @changeTab="changeTab">
     <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
     <template v-slot>
       <recordRuleEvalLogTable
