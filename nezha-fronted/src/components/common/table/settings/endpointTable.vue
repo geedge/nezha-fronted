@@ -81,7 +81,7 @@
             </div>
           </template>
           <template v-else-if="item.prop === 'alerts'">
-          <span style="cursor: pointer"  @click="showBottomBox('endpointAlertMessage', scope.row)">
+          <span style="cursor: pointer"  @click.stop="showBottomBox('endpointAlertMessage', scope.row)" @dblclick.stop="">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
               <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
