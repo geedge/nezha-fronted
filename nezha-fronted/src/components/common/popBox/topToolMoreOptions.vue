@@ -533,6 +533,9 @@ export default {
         delete params.end_time
         delete params.id
         delete params.searchName
+        delete params.value
+        params.ids = params.panelId
+        delete params.panelId
       }
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
@@ -561,8 +564,7 @@ export default {
         delete params.end_time
         delete params.id
         delete params.searchName
-      }
-      if (this.importUrl.indexOf('panel') > -1) {
+        delete params.value
         delete params.panelId
       }
       // if (this.importUrl.indexOf('endpoint') > -1){
@@ -595,8 +597,7 @@ export default {
         delete params.end_time
         delete params.id
         delete params.searchName
-      }
-      if (this.importUrl.indexOf('panel') > -1) {
+        delete params.value
         delete params.panelId
       }
       // if (this.importUrl.indexOf('endpoint') > -1){
@@ -680,12 +681,10 @@ export default {
         uInt8Array[i] = raw.charCodeAt(i)
       }
       const link = document.createElement('a')
-      const blob = new Blob([uInt8Array], {
-        type: 'application/vnd.ms-excel'
-      })
+      const blob = new Blob([uInt8Array])
       link.style.display = 'none'
       link.href = URL.createObjectURL(blob)
-      link.setAttribute('download', 'failed_records' + '-' + this.getTimeString() + '.xlsx')
+      link.setAttribute('download', 'failed_records' + '-' + this.getTimeString() + '.json')
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
