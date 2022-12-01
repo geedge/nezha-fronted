@@ -217,7 +217,7 @@ export default {
         switch (this.chartInfo.datasource) {
           case 'metrics':
           case 'logs': {
-            if (this.from === fromRoute.chartTemp) {
+            if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
               setTimeout(() => {
                 this.chartData = [chartTempData.data.result]
                 this.chartData.forEach(item => {
@@ -236,7 +236,7 @@ export default {
               urlPre += '/logs/loki'
             }
             let requests = elements.map((element) => {
-              if (this.from === fromRoute.chartTemp) {
+              if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
                 return chartTempData
               }
               let query = `${urlPre}/api/v1/query_range?start=${startTime}&end=${endTime}&step=${step}`
@@ -266,7 +266,7 @@ export default {
             })
             if (this.multipleTime) {
               const multipleRequests = elements.map((element) => {
-                if (this.from === fromRoute.chartTemp) {
+                if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
                   return chartTempData
                 }
                 let query = `${urlPre}/api/v1/query_range?start=${startTime - this.minusTime / 1000}&end=${endTime - this.minusTime / 1000}&step=${step}`
@@ -331,7 +331,7 @@ export default {
           }
           case 'system': {
             this.chartInfo.elements = this.chartInfo.param.datasource
-            if (this.from === fromRoute.chartTemp) {
+            if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
               setTimeout(() => {
                 this.chartData = [chartTempData.data.result]
                 this.loading = false
