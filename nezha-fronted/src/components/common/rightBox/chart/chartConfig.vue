@@ -480,7 +480,7 @@
           <el-row v-if="chartConfig.param.enable.thresholds && isThresholdConfig(chartConfig.type)">
             <el-form-item
               v-for="(item,index) in chartConfig.param.thresholds"
-              :key="item.color"
+              :key="item.color + '' + index"
               class="thresholds-item"
               :prop="'param.thresholds.' + index + '.value'"
               :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
