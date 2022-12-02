@@ -113,7 +113,7 @@ export default {
       if (confirmReg.length) {
         confirmReg.forEach(item => {
           const reg = new RegExp('\\$' + item.name, 'g') // 后续需要考虑 item,name 使用特殊字符的问题
-          str = str.replace(reg, item.checked.map(label => label.replace(/\"/g, '\\"').replace(/\'/g, "\\'")).join('+'))
+          str = str.replace(reg, item.checked.map(label => label.replace(/\\"/g, '"').replace(/\\'/g, "'")).join('+'))
         })
       }
       return str
