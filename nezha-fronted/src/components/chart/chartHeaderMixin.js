@@ -97,7 +97,7 @@ export default {
       if (this.chartInfo.repeatVariable) {
         const variable = this.chartInfo.repeatVariable
         const reg = new RegExp('\\$' + variable, 'g')
-        str = str.replace(reg, this.chartInfo.repeatValue.replace(/\"/g, '\\"').replace(/\'/g, "\\'"))
+        str = str.replace(reg, this.chartInfo.repeatValue.replace(/\\"/g, '"').replace(/\\'/g, "'"))
       }
       let confirmReg = []
       this.variablesArr.forEach(item => {
