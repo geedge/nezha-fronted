@@ -21,8 +21,8 @@
           </el-form-item>
 
           <!--varType-->
-          <el-form-item v-if="from==='dashboardTemp'" :label="$t('dashboard.panel.chartForm.varType')" clearable class="item-receivers" prop="varType">
-            <el-select  v-model="editPanel.varType" :disabled="!!editPanel.id" clearable popper-class="right-box-select-top prevent-clickoutside" placeholder="" size="small">
+          <el-form-item v-if="from==='dashboardTemp'" :label="$t('dashboard.panel.chartForm.varType')" class="item-receivers" prop="varType">
+            <el-select v-model="editPanel.varType" clearable :disabled="!!editPanel.id" popper-class="right-box-select-top prevent-clickoutside" placeholder="" size="small">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
@@ -388,6 +388,9 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        varType: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         'param.report.range.unit': [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }

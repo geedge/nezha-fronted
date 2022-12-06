@@ -29,6 +29,23 @@
                   <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred===1" class="nz-icon nz-icon-a-xingzhuang2" :title ="$t('overall.starred')"></i>
                   <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang" :title ="$t('overall.unstarred')"></i>
                 </template>
+                <!-- 按钮插槽 -->
+                <template slot="button">
+                  <span class="dashboard-select-add" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd">
+                    <i class="nz-icon nz-icon-create-square"></i>&nbsp;{{$t('overall.addDashboard')}}
+                  </span>
+                  <!-- 通过dashboard模板创建 -->
+                  <el-dropdown v-has="['main_add']" trigger="click">
+                    <span :title='$t("dashboard.panel.addByTemplate")' class="dashboard-addBy-template">
+                      <i class="el-icon-more tool__icon"></i>
+                    </span>
+                    <el-dropdown-menu class="dashboard-addBy-template-menu">
+                      <el-dropdown-item @click.native="addByTemplate">
+                        <span>{{$t("dashboard.panel.addByTemplate")}}</span>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </template>
               </select-dashboard>
             </div>
 
@@ -140,9 +157,13 @@
       <chart-temp-box v-if="rightBox.chartTemp.show" :from="fromRoute.panel" :obj="chart" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess"></chart-temp-box>
     </transition>
     <transition name="right-box">
-      <panel-box v-if="rightBox.panel.show" ref="panelBox" :obj="panel" @close="closePanelBox" @reload="panelReload" @reloadForDel="panelReloadForDel" ></panel-box>
+      <panel-box v-if="rightBox.panel.show" :from="fromRoute.panel" ref="panelBox" :obj="panel" @close="closePanelBox" @reload="panelReload" @reloadForDel="panelReloadForDel" ></panel-box>
     </transition>
-
+    <!-- dashboard模板 -->
+    <transition name="right-box">
+      <dashboardTempBox v-if="rightBox.dashboardTemp.show" :from="fromRoute.panel" @close="closeDashboardTempBox"></dashboardTempBox>
+    </transition>
+    <!-- 快照进度 -->
     <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="searchTime" :snapshotVisible.sync="snapshotVisible"></snapshotProgress>
   </div>
 </template>
@@ -165,6 +186,7 @@ import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
 import panelVariables from '@/components/common/panel/panelVariables'
 import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
+import dashboardTempBox from '@/components/common/rightBox/dashboardTempBox'
 // import FileSaver from 'file-saver'
 // import chartData from './testData'
 export default {
@@ -184,6 +206,7 @@ export default {
       rightBox: { // 面板弹出框相关
         chart: { show: false },
         chartTemp: { show: false },
+        dashboardTemp: { show: false },
         panel: { show: false },
         loading: false
       },
@@ -324,7 +347,8 @@ export default {
     chartTempBox,
     chartRightBox,
     panelVariables, // 处理panel变量的组件
-    snapshotProgress // 快照进度
+    snapshotProgress, // 快照进度
+    dashboardTempBox // dashboard模板
   },
   computed: {
     chartRightBoxShow () {
@@ -338,6 +362,18 @@ export default {
     }
   },
   methods: {
+    closeDashboardTempBox (refresh) {
+      this.rightBox.dashboardTemp.show = false
+      if (refresh) {
+        this.getTableData()
+      }
+    },
+    // 通过dashboard模板创建
+    addByTemplate () {
+      this.rightBox.dashboardTemp.show = true
+      // 关闭selectDashboard弹框
+      this.$refs.selectDashboard && this.$refs.selectDashboard.esc()
+    },
     // 新增收藏
     addStarred (data) {
       this.$refs.selectDashboard.addStarred(data)

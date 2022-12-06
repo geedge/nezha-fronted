@@ -74,7 +74,7 @@
     </nzDataList>
 
     <transition name="right-box">
-      <panel-box v-if="rightBox.show" ref="panelBox" :obj="object" from="dashboardTemp" @close="closePanelBox" panelType="template"></panel-box>
+      <panel-box v-if="rightBox.show" :from="fromRoute.dashboardTemp" ref="panelBox" :obj="object" @close="closePanelBox" panelType="template"></panel-box>
     </transition>
   </div>
 </template>

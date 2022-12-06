@@ -9,9 +9,7 @@
           </li>
         </ul>
         <div class="dashboard-select-tail">
-          <span class="dashboard-select-add" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd">
-            <i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t('overall.addDashboard')}}
-          </span>
+          <slot name="button"></slot>
         </div>
       </div>
       <div class="pop-item-wider">
@@ -165,14 +163,11 @@ export default {
       // 其他tab的数据（我的收藏、我的创建、最近浏览数据）
       otherData: [],
       // 收藏列表
-      starredList: []
+      starredList: [],
+      visible: false
     }
   },
   methods: {
-    // 新增仪表盘
-    toAdd () {
-      this.$parent.toAdd()
-    },
     // 左侧tab点击
     tabChange (value) {
       if (this.currentTab !== value) {
