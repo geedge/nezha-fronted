@@ -163,8 +163,7 @@ export default {
       // 其他tab的数据（我的收藏、我的创建、最近浏览数据）
       otherData: [],
       // 收藏列表
-      starredList: [],
-      visible: false
+      starredList: []
     }
   },
   methods: {

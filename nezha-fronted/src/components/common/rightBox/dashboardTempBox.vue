@@ -16,7 +16,7 @@
           <!-- dashboardTemplate -->
           <el-form-item :label="$t('upload.template')" prop="tmplId">
             <v-selectpage
-              :data="dashboardList"
+              :data="templateList"
               :tb-columns="ChartSearchShowFields"
               :multiple="false"
               :language="language"
@@ -29,27 +29,11 @@
               @values="tempChange"
             ></v-selectpage>
           </el-form-item>
-          <!-- link(asset) -->
-          <el-form-item :label="$t('asset.asset')" prop="link" v-if="selectedTemp.varType==1" key="asset">
+          <!-- link -->
+          <el-form-item v-if="templateType" :label="templateType==1?$t('asset.asset'):$t('asset.endpoint')" prop="link" key="link">
             <v-selectpage
               :data="dataList"
-              :tb-columns="assetColumns"
-              :multiple="false"
-              :language="language"
-              key-field="id"
-              show-field="name"
-              :width="640"
-              v-model="editDashboard.link"
-              class="form-control"
-              :result-format="resultFormat"
-              @values="linkChange"
-            ></v-selectpage>
-          </el-form-item>
-          <!-- link(endpoint) -->
-          <el-form-item :label="$t('asset.endpoint')" prop="link" v-else-if="selectedTemp.varType==2" key="endpoint">
-            <v-selectpage
-              :data="dataList"
-              :tb-columns="endpointColumns"
+              :tb-columns="templateType==1?assetColumns:endpointColumns"
               :multiple="false"
               :language="language"
               key-field="id"
@@ -88,12 +72,14 @@
 
 <script>
 import bus from '@/libs/bus'
+import editRigthBox from '../mixin/editRigthBox'
 export default {
   props: {
   },
+  mixins: [editRigthBox],
   data () {
     return {
-      url: 'visual/panel/fromTmpl',
+      url: '/visual/panel/fromTmpl',
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
@@ -208,26 +194,26 @@ export default {
         link: '',
         description: ''
       },
-      dashboardList: [],
+      templateList: [],
       dataList: [],
-      selectedTemp: {} // 选中的dashboard模板
+      templateType: undefined // 选中模板的varType
     }
   },
   computed: {
     language () { return this.$store.getters.getLanguage }
   },
-  mounted () {
+  created () {
+    this.isEdit = true
     this.getDashboardTempData()
   },
   methods: {
     // 选中的模板变化
     tempChange: bus.debounce(function (val) {
-      this.editDashboard.link = ''
-      const newValue = val.length ? val[0] : {}
-      const oldValue = this.$loadsh.cloneDeep(this.selectedTemp)
-      this.selectedTemp = this.$loadsh.cloneDeep(newValue)
+      const newValue = this.$loadsh.get(val, ['0', 'varType'])
+      const oldValue = this.templateType
+      this.templateType = newValue
       // 判断varType是否变化
-      if (oldValue.varType != newValue.varType) {
+      if (oldValue != newValue) {
         this.getTableData()
       }
       this.$refs.form.validateField('tmplId')
@@ -240,16 +226,17 @@ export default {
     getDashboardTempData () {
       this.$get('visual/panel', { type: 'template', pageSize: -1 }).then(response => {
         if (response.code === 200) {
-          this.dashboardList = response.data.list
+          this.templateList = response.data.list
         }
       })
     },
     // 根据选中模板vartype请求数据
     getTableData () {
+      this.editDashboard.link = ''
       this.dataList = []
-      if (this.selectedTemp.varType === 1) {
+      if (this.templateType === 1) {
         this.getAssetData()
-      } else if (this.selectedTemp.varType === 2) {
+      } else if (this.templateType === 2) {
         this.getEndpointData()
       }
     },
@@ -277,8 +264,8 @@ export default {
       const params = this.$loadsh.cloneDeep(this.editDashboard)
       this.$refs.form.validate((valid) => {
         if (valid) {
-          // 模板varType ≠ 0时有效且必填
-          if (this.selectedTemp.varType == 0) {
+          // 模板varType ≠ 0时link有效且必填
+          if (this.templateType == 0) {
             delete params.link
           }
           this.$post(this.url, params).then(response => {
