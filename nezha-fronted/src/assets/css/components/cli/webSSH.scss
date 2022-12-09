@@ -253,6 +253,38 @@
   .popper__arrow{
     display: none;
   }
+  .webshell-box-top{
+    border-bottom: 1px solid rgba(25,25,28,0.10);
+  }
+  .webshell-box-bottom{
+    border-top: 1px solid rgba(25,25,28,0.10);
+  }
+  .webshell-box-item{
+    height: 32px;
+    font-size: 14px;
+    color: $--color-text-primary;
+    letter-spacing: 0;
+    line-height: 32px;
+    .nz-icon {
+      margin-right: 8px;
+    }
+  }
+  .webshell-box-item:hover{
+    background: $--background-color-base;
+    color: $--color-primary;
+  }
+
+}
+.popover-webshell-new{
+  padding: 0 !important;
+  .webshell-box-top, .webshell-box-bottom{
+    height: 40px;
+    line-height: 40px;
+    box-sizing: border-box;
+  }
+  .webshell-box-top, .webshell-box-bottom,.webshell-box-item{
+    padding-left: 15px;
+  }
 }
 div.sp-header{
   display: none;

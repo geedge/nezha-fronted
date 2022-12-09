@@ -142,7 +142,12 @@ export default {
   methods: {
     ...mapActions(['logoutSuccess']),
     cli () {
-      this.$store.commit('openConsole')
+      // this.$store.commit('openConsole')
+      if (!this.externalTerminal) {
+        this.$store.dispatch('dispatchExternalTerminal')
+      } else {
+        this.$store.dispatch('dispatchOpenExternalTerminalWindow')
+      }
     },
     // 打开全局搜索
     openGlobalSearch () {
@@ -283,6 +288,9 @@ export default {
     },
     isShrink () {
       return this.$store.getters.getIsShrink
+    },
+    externalTerminal () {
+      return this.$store.getters.getExternalTerminal
     }
   },
   beforeDestroy () {

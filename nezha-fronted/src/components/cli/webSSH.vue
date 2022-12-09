@@ -31,12 +31,10 @@
               :popper-class="'popover-webshell'"
             >
             <div>
-             Session ID : {{item.uuid.slice(0,7).toLocaleUpperCase()}}
+             Session ID : {{item.terminal.uuid.slice(0,7).toLocaleUpperCase()}}
             </div>
             <span slot="reference"> <i class="nz-icon nz-icon-about" /></span>
           </el-popover>
-            <div :class="{'active-icon grey':item.circleColor == 1,'active-icon green':item.circleColor == 2,'active-icon red':item.circleColor == 3}"
-                 style="margin-top: 0px;"></div>{{item.title}}
           </span>
 
           <my-console

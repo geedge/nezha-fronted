@@ -12,11 +12,13 @@
           <div class="item-progress">
             <div class="item-progress-top text-ellipsis">{{item.name}}</div>
             <div class="item-progress-middle">
-              <el-progress :show-text="false" :percentage="item.done" :color="customColorMethod"></el-progress>
+              <el-progress :show-text="false" :percentage="item.done" :color="customColorMethod.bind(item)"></el-progress>
             </div>
             <div class="item-progress-bottom">
               <span>{{bytes(item.total, 0, 0)}}</span>
-              <span>{{item.speed}}</span>
+              <span v-if="!item.isFinish && !item.isError">{{item.speed}}</span>
+              <span v-if="item.isFinish">Completed</span>
+              <span v-if="item.isError">Error</span>
             </div>
           </div>
           <div class="item-state">
@@ -107,7 +109,8 @@ export default {
   },
   methods: {
     bytes: chartDataFormat.getUnit(7).compute,
-    customColorMethod (percentage) {
+    customColorMethod (percentage, item) {
+      console.log(item)
       if (percentage < 100) {
         return '#3B92F1'
       } else {

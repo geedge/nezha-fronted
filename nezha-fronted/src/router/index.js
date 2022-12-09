@@ -221,6 +221,14 @@ export default new Router({
           component: resolve => require(['@/components/page/tool/trace'], resolve)
         }
       ]
+    },
+    {
+      path: '/externalTerminal',
+      component: resolve => require(['@/components/cli/terminal'], resolve),
+      meta: {
+        hideHeader: true,
+        hideMenu: true
+      }
     }
   ]
 })

@@ -3,46 +3,48 @@
   z-index: 10;
   right:0;
   top:-100px;
-  max-height: 194px;
+  max-height: 246px;
   min-width: 96px;
   width: 308px;
-  background: #222329;
-  box-shadow: 1px 1px 4px -1px #1E1E1E;
+  background: $--background-color-empty;
+  box-shadow: -2px 1px 4px 0 rgba(0,0,0,0.06), 1px 1px 4px -1px rgba(0,0,0,0.16);
   border-radius: 2px;
   .file-state-panel-content::-webkit-scrollbar {
     width: 6px;
   }
   .file-state-panel-content::-webkit-scrollbar-thumb {
-    background: rgba(244,244,244,0.16);
+    background: rgba(0,0,0,0.16);
     border-radius: 4px;
     border:none
   }
   .file-state-panel-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(244,244,244,0.16);
+    background: rgba(0,0,0,0.16);
     border-radius: 4px;
     border:none
   }
   .file-state-panel-header{
     height: 48px;
-    background: #222329;
-    box-shadow: 0 1px 0 0 #19191C;
+    background: $--background-color-empty;
+    box-shadow: 0 1px 0 0 $--background-color-disabled;
     padding: 0 20px;
     line-height: 48px;
     display: flex;
     justify-content: space-between;
+    text-transform: capitalize;
     > i {
-      color: #ffffff;
+      color: $--color-text-primary;
     }
   }
   .file-state-panel-title{
     font-size: 14px;
-    color: #E7EAED;
     letter-spacing: 0;
     font-weight: 500;
+    text-transform: capitalize;
+    color: $--color-text-primary;
   }
   .file-state-panel-content {
     min-height: 50px;
-    max-height: 146px;
+    max-height: 180px;
     line-height: 48px;
     padding-bottom: 15px;
     border-radius: 0 0 2px 2px;
@@ -59,9 +61,9 @@
       .item-icon{
         width: 28px;
         height: 28px;
-        background: #19191C;
+        background: $--background-color-base;
         border-radius: 2px;
-        color: #fff;
+        color: $--color-text-regular;
         display: flex;
         justify-items: center;
         justify-content: center;
@@ -76,21 +78,21 @@
         flex-direction: column;
         .item-progress-top{
           width: 100%;
-          color: #fff;
+          color: $--color-text-regular;
           height: 15px;
           line-height: 15px;
           font-size: 12px;
           font-weight: 400;
-          margin-bottom: 3px;
+          margin-bottom: 4px;
         }
         .item-progress-middle{
         }
         .item-progress-bottom{
-          margin-top: 3px;
+          margin-top: 4px;
           display: flex;
           justify-content: space-between;
           font-size: 10px;
-          color: #B7B7B7;
+          color: $--color-text-secondary;
           line-height: 12px;
           font-weight: 400;
         }
@@ -99,7 +101,7 @@
         flex-shrink:0;
         width: 28px;
         height: 28px;
-        color: #fff;
+        color: $--color-text-regular;
         line-height: 28px;
         text-align: center;
       }
@@ -122,6 +124,6 @@
     transform-origin: 70% 0%
   }
   .el-progress-bar__outer{
-    background-color: #19191C;
+    background-color: $--el-progress-bar__outer;
   }
 }

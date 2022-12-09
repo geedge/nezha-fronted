@@ -259,7 +259,8 @@ $--tooltip-background-color: #222329;
 $--tooltip-border-color: rgba(112,116,122,0.6);
 /* 17.label*/
 $--label-background-color: $--background-color-empty;
-
+/* 18 进度条颜色 */
+$--el-progress-bar__outer: #19191C;
 /*** themes/common.scss是与主题切换无关的变量 ***/
 @import './src/common/var.scss';
 @import './common.scss';

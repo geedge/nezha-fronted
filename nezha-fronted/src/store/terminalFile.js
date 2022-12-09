@@ -3,7 +3,10 @@ const terminalFile = {
     fileList: [],
     uploadItem: {},
     updateUuid: '', // 根据uuid的变化 判断页面是否需要刷新
-    updateIndex: 1
+    updateIndex: 1,
+    externalTerminal: false,
+    messageFunction: false,
+    externalTerminalWindow: ''
   },
   mutations: {
     setFileList (state, arr) {
@@ -17,6 +20,48 @@ const terminalFile = {
     },
     setUploadItem (state, item) {
       state.uploadItem = item
+    },
+    setExternalTerminal (state, item) { // 第一次 关闭或者打开 termail
+      state.externalTerminal = !state.externalTerminal
+      if (!state.messageFunction) {
+        state.messageFunction = true
+        window.addEventListener('message', function (e) {
+          console.log(e)
+          const data = JSON.parse(e.data) // e.data  里面有自己所传的所有参数  可以根据参数做自己的判断
+          if (data.close) {
+            state.externalTerminal = false
+          }
+        })
+      }
+      if (state.externalTerminal) {
+        state.externalTerminalWindow = window.open('/ui/externalTerminal', 'terminal')
+      } else {
+        state.externalTerminalWindow = ''
+      }
+      if (item && state.externalTerminal) {
+        console.log('onloda', state.externalTerminalWindow)
+        state.externalTerminalWindow.addEventListener('load', () => {
+          console.log(123123123123123)
+          setTimeout(() => {
+            console.log('time')
+            state.externalTerminalWindow.postMessage(
+              JSON.stringify(item)
+            )
+          }, 3000)
+        })
+      }
+    },
+    openExternalTerminalWindow (state, item) { // 后续打开 termail
+      if (state.externalTerminalWindow) {
+        window.open('', 'terminal')
+      } else {
+        state.externalTerminalWindow = window.open('/ui/externalTerminal', 'terminal')
+      }
+      if (item) {
+        state.externalTerminalWindow.postMessage(
+          JSON.stringify(item)
+        )
+      }
     },
     setUpdateUuid (state, uuid) {
       state.updateUuid = uuid
@@ -38,6 +83,9 @@ const terminalFile = {
     },
     getUpdateIndex (state) {
       return state.updateIndex
+    },
+    getExternalTerminal (state) {
+      return state.externalTerminal
     }
   },
   actions: {
@@ -55,6 +103,13 @@ const terminalFile = {
     },
     upDateConsole (store, uuid) {
       store.commit('setUpdateUuid', uuid)
+    },
+    // 打开外部termail
+    dispatchExternalTerminal (store, item) { // 第一次打开termail
+      store.commit('setExternalTerminal', item)
+    },
+    dispatchOpenExternalTerminalWindow (store, item) { // 后续操作termail
+      store.commit('openExternalTerminalWindow', item)
     }
   }
 }
