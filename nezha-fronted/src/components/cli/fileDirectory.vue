@@ -32,10 +32,34 @@
           {{$t('overall.name')}}
         </div>
         <div class="text-ellipsis file-size">
-          {{$t('backup.size')}}
+          <div class="file-arrow-header" >
+            <div>
+              {{$t('backup.size')}}
+            </div>
+            <div class="nz-arrow-box">
+              <div class="nz-arrow-up" :class="{
+            'is-select': sizeOrderType === 'asc'
+            }" @click="orderBy('sizeOrderType','asc' , 'size')"></div>
+              <div class="nz-arrow-down" :class="{
+            'is-select': sizeOrderType === 'desc'
+            }" @click="orderBy('sizeOrderType','desc', 'size')"></div>
+            </div>
+          </div>
         </div>
         <div class="text-ellipsis file-date">
-          {{$t('issue.createTime')}}
+          <div class="file-arrow-header">
+            <div>
+              {{$t('issue.createTime')}}
+            </div>
+            <div class="nz-arrow-box" style="">
+              <div class="nz-arrow-up" :class="{
+            'is-select': dateOrderType === 'asc'
+            }" @click="orderBy('dateOrderType','asc', 'cts')"></div>
+              <div class="nz-arrow-down" :class="{
+            'is-select': dateOrderType === 'desc'
+            }" @click="orderBy('dateOrderType','desc', 'cts')"></div>
+            </div>
+          </div>
         </div>
         <div class="text-ellipsis file-opt">
           {{$t('overall.option')}}
@@ -217,8 +241,11 @@ export default {
   data () {
     return {
       fileDirectory: '/',
+      sizeOrderType: 0,
+      dateOrderType: 0,
       breadcrumb: [],
       fileList: [],
+      oldFileList: [],
       newFolderBoxShow: false,
       folder: '',
       fileDirectoryLoading: false,
@@ -287,8 +314,7 @@ export default {
       this.editPath = ''
       this.editPathShow = false
     },
-      goEditPath () {
-      console.log('123123123')
+    goEditPath () {
       this.getSftpPath(this.editPath)
       setTimeout(() => {
         this.editPath = ''
@@ -302,7 +328,6 @@ export default {
       }
     },
     showFileInfo (item) {
-      console.log(item)
       this.fileInfo = item
       this.fileInfoShow = true
     },
@@ -344,6 +369,7 @@ export default {
           this.fileDirectoryLoading = false
           this.fileDirectory = res.data.path
           this.fileList = res.data.list
+          this.oldFileList = res.data.list
           this.editPath = ''
           this.breadcrumb = res.data.path.split('/').filter(item => item)
         } else {
@@ -474,6 +500,15 @@ export default {
         return item.permissionsString
       }
       return '-'
+    },
+    orderBy (key, orderType, order) {
+      if (this[key] == orderType) {
+        this[key] = 0
+        this.fileList = this.oldFileList
+      } else {
+        this[key] = orderType
+        this.fileList = this.$loadsh.orderBy(this.oldFileList, order, orderType)
+      }
     },
     tableOperation ([command, row, param]) {
       switch (command) {

@@ -4,7 +4,6 @@ import vm from '../../../../entrance/app/main'
 import exportHtml from '../../../../entrance/exportHtml/exportHtml'
 // const vm = window.dataJson ? exportHtml : app
 window.addEventListener('load', function () {
-  console.log(123213)
   if (!window.dataJson) {
     commonOption.toolbox.feature.dataZoom.title.zoom = vm.$i18n.t('overall.toolBox.zoom')
     commonOption.toolbox.feature.dataZoom.title.back = vm.$i18n.t('overall.toolBox.back')

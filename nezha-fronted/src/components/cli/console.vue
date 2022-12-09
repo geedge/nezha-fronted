@@ -300,7 +300,6 @@ export default {
       // 错误
       this.terminalSocket.onerror = (e) => {
         this.isLogin = false
-        console.log(this.isLogin, 'close')
       }
       // 选中 复制
       this.term.on('selection', function () {})

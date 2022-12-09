@@ -610,12 +610,12 @@ export default {
         })
       } else {
         console.terminal.username = ''
+        console.terminal.terminalType = this.customConnect.authProtocol
         this.editableTabsValue = newTabName
         this.editableTabs.push(console)
       }
     },
     duplicate (item, index) {
-      console.log(item, index)
       if (item.terminal.assetId) {
         const newTabName = ++this.tabIndex + ''
         this.editableTabsValue = newTabName
@@ -652,7 +652,6 @@ export default {
       }
     },
     reconnect (item, index) {
-      console.log(item, index)
       this.$refs['console' + index][0].reconnect()
     },
     showFileDir (item, index) {
@@ -660,6 +659,11 @@ export default {
     },
     closeShell (item, index) {
       this.removeTab(item.name)
+    },
+    sendMessage (message) {
+      this.editableTabs.forEach((item, index) => {
+        this.$refs['console' + index][0].enterStr(message)
+      })
     }
   },
   watch: {

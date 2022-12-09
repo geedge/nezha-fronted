@@ -126,7 +126,6 @@ export default {
         authPinTip: this.$loadsh.get(this.terminal, 'custom.authPinTip', '')
       }
       this.$post('/terminal/login', params).then(res => {
-        console.log(res)
         if (res.code == 200) {
           this.terminal.uuid = res.data.uuid
           this.$forceUpdate()
@@ -234,7 +233,6 @@ export default {
       // 错误
       this.terminalSocket.onerror = (e) => {
         this.terminal.isLogin = false
-        console.log(this.terminal.isLogin, 'close')
       }
       // 选中 复制
       this.term.on('selection', function () {})
@@ -262,7 +260,6 @@ export default {
       this.term && this.term.setOption('fontSize', fontSize)
       const consoleBox = document.getElementById('ternimalContainer' + this.idIndex)
       const width = document.body.clientWidth// 可视宽度
-      console.log(consoleBox.offsetHeight)
       let height = parseInt(consoleBox.offsetHeight)
       if (height == null || !height) { height = this.termimalHeight }
       const winStyle = {
@@ -306,6 +303,12 @@ export default {
       this.animateCSS(this.$refs.fileDirectory.$el, animationClass).then((message) => {
         this.fileDirectoryShow = show
       })
+    },
+    enterStr (message) {
+      this.terminalSocket.send(message)
+      setTimeout(()=>{
+        this.terminalSocket.send('\n')
+      }, 100)
     }
   },
   mounted () {

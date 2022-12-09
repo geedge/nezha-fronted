@@ -60,7 +60,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$router, this.$route)
   },
   destroyed () {
     localStorage.removeItem('moduleProjectId')

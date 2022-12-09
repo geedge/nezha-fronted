@@ -26,7 +26,6 @@ const terminalFile = {
       if (!state.messageFunction) {
         state.messageFunction = true
         window.addEventListener('message', function (e) {
-          console.log(e)
           const data = JSON.parse(e.data) // e.data  里面有自己所传的所有参数  可以根据参数做自己的判断
           if (data.close) {
             state.externalTerminal = false
@@ -39,11 +38,8 @@ const terminalFile = {
         state.externalTerminalWindow = ''
       }
       if (item && state.externalTerminal) {
-        console.log('onloda', state.externalTerminalWindow)
         state.externalTerminalWindow.addEventListener('load', () => {
-          console.log(123123123123123)
           setTimeout(() => {
-            console.log('time')
             state.externalTerminalWindow.postMessage(
               JSON.stringify(item)
             )

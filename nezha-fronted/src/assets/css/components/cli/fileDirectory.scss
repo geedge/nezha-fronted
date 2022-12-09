@@ -104,10 +104,12 @@
   .file-size{
     width: 15%;
     display: inline-block;
+    position: relative;
   }
   .file-date{
     width: 25%;
     display: inline-block;
+    position: relative;
   }
   .file-opt{
     width: 14%;
@@ -115,6 +117,27 @@
     .nz-icon-shuxing{
       margin-right: 20px;
     }
+  }
+  .file-arrow-header{
+  display: inline-flex;align-items: center;width: 100%
+}
+  .nz-arrow-box{
+    display: flex;flex-direction: column;align-items: center;margin-left: 7px
+  }
+  .nz-arrow-up{
+    margin-bottom: 5px;
+  }
+  .nz-arrow-up.is-select{
+    border-bottom:5px solid $--color-primary; /* 定义底部颜色 */
+  }
+  .nz-arrow-down.is-select{
+    border-top:5px solid $--color-primary; /* 定义底部颜色 */
+  }
+  .nz-icon-caret-up {
+    position: absolute;
+  }
+  .nz-icon-caret-down {
+    position: absolute;
   }
   .file-item{
     font-family: Roboto-Regular;
@@ -153,3 +176,25 @@
     }
   }
 }
+div.nz-arrow-up {
+  width:0px;
+  height:0px;
+  border-left:5px solid transparent;  /* 右透明 */
+  border-right:5px solid transparent; /*右透明 */
+  border-bottom:5px solid $--color-text-disabled; /* 定义底部颜色 */
+  font-size:0px;
+  line-height:0px;
+  cursor: pointer;
+}
+/* css3三角形（向下 ▼） */
+div.nz-arrow-down {
+  width:0px;
+  height:0px;
+  border-left:5px solid transparent;
+  border-right:5px solid transparent;
+  border-top:5px solid $--color-text-disabled;
+  font-size:0px;
+  line-height:0px;
+  cursor: pointer;
+}
+

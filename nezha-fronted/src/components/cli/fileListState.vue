@@ -110,7 +110,6 @@ export default {
   methods: {
     bytes: chartDataFormat.getUnit(7).compute,
     customColorMethod (percentage, item) {
-      console.log(item)
       if (percentage < 100) {
         return '#3B92F1'
       } else {

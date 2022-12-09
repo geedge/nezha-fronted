@@ -11,7 +11,7 @@
     </div>
     <fileListState v-clickoutside="hideFileState" ref="fileListState"/>
     <webSSHNew ref="websshNew" />
-    <el-input :placeholder="'发送文本到所有SSH终端'" size="small"  class="shell-input" v-model="message"/>
+    <el-input :placeholder="'发送文本到所有SSH终端'" size="small"  class="shell-input" v-model="message" @keyup.enter.native="sendMessage"/>
   </div>
 </template>
 
@@ -59,7 +59,6 @@ export default {
       )
     }
     window.addEventListener('message', function (e) {
-      console.log(e)
       if (e.data) {
         try {
           const data = JSON.parse(e.data)
@@ -81,6 +80,9 @@ export default {
     },
     hideFileState () {
       this.$refs.fileListState.fileStateShow(false, this.fileListStateType)
+    },
+    sendMessage () {
+      this.$refs.websshNew.sendMessage(this.message)
     }
   },
   beforeDestroy  () {
