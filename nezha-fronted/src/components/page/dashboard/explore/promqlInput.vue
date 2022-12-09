@@ -897,6 +897,13 @@ export default {
                 item.child = true
               })
               this.metricOptions.find(item => item.value === data.value).children = res.data.list
+
+              // el-cascader-panel监听到options变化 会触发scrollIntoView函数
+              const temp = this.$refs.metricSelector.scrollIntoView
+              this.$refs.metricSelector.scrollIntoView = function () {}
+              this.$nextTick(() => {
+                this.$refs.metricSelector.scrollIntoView = temp
+              })
             }
           })
         } else {
@@ -926,11 +933,6 @@ export default {
           })
         }
       } else if (data.children && (!data.children.length || data.children.length > 100) && this.type !== 'log') {
-        this.metricOptions.forEach(item => {
-          if (!item.temp && item.children && item.value != data.value) {
-            item.children = []
-          }
-        })
         setTimeout(() => {
           new Promise(resolve => {
             const children = this.$store.state.metricsList.find(item => item.value === data.value).children
@@ -938,7 +940,6 @@ export default {
           }).then((children) => {
             const childrenCopy = JSON.parse(JSON.stringify(children))
             const findChild = this.metricOptions.find(item => item.label === data.label)
-
             if (childrenCopy.length > 100) {
               childrenCopy.splice(100, childrenCopy.length)
               childrenCopy.push({
@@ -951,6 +952,18 @@ export default {
             } else {
               findChild.children = childrenCopy
             }
+            this.metricOptions.forEach(item => {
+              if (!item.temp && item.children && item.value != data.value) {
+                item.children = []
+              }
+            })
+
+            // el-cascader-panel监听到options变化 会触发scrollIntoView函数
+            const temp = this.$refs.metricSelector.scrollIntoView
+            this.$refs.metricSelector.scrollIntoView = function () {}
+            this.$nextTick(() => {
+              this.$refs.metricSelector.scrollIntoView = temp
+            })
           })
         })
       } else if (data.more) {
@@ -978,6 +991,13 @@ export default {
             } else {
               findChild.children = childrenCopy
             }
+
+            // el-cascader-panel监听到options变化 会触发scrollIntoView函数
+            const temp = this.$refs.metricSelector.scrollIntoView
+            this.$refs.metricSelector.scrollIntoView = function () {}
+            this.$nextTick(() => {
+              this.$refs.metricSelector.scrollIntoView = temp
+            })
           })
         })
       }

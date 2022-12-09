@@ -626,7 +626,7 @@ export default {
         }
         Object.keys(variablesRepeat).forEach(key => { // 遍历 variablesRepeat 确定需要插入的数组
           const findVariables = this.variablesArr.find(item => item.name == key)
-          findVariables.checked.forEach((subItem, subIndex) => {
+          findVariables && findVariables.checked.forEach((subItem, subIndex) => {
             variablesRepeat[key].forEach(group => {
               group.repeatArr.forEach(item => {
                 if (subIndex > 0) {
