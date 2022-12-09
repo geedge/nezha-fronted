@@ -3,7 +3,8 @@ import bus from '../../../../libs/bus'
 import vm from '../../../../entrance/app/main'
 import exportHtml from '../../../../entrance/exportHtml/exportHtml'
 // const vm = window.dataJson ? exportHtml : app
-window.onload = function () {
+window.addEventListener('load', function () {
+  console.log(123213)
   if (!window.dataJson) {
     commonOption.toolbox.feature.dataZoom.title.zoom = vm.$i18n.t('overall.toolBox.zoom')
     commonOption.toolbox.feature.dataZoom.title.back = vm.$i18n.t('overall.toolBox.back')
@@ -13,7 +14,7 @@ window.onload = function () {
     commonOption.toolbox.feature.dataZoom.title.back = exportHtml.$i18n.t('overall.toolBox.back')
     commonOption.toolbox.feature.magicType.title.stack = exportHtml.$i18n.t('overall.toolBox.stack')
   }
-}
+})
 const bgColorList = ['#b3424a', '#7bbfea', '#f05b72', '#596032', '#bd6758',
   '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
   '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',

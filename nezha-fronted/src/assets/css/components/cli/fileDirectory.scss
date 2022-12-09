@@ -1,26 +1,62 @@
 .fileDirectory {
-  height: 80%;
+  width: 45%;
+  min-width: 700px;
   position: absolute;
-  bottom: 0;
-  background: #1E1E1E;
-  box-shadow: 5px 0 3px 0 #5E5E5E;
-  width: 100% !important;
+  top: -5px;
+  height: calc(100% + 30px);
+  right: -15px;
+  background: $--background-color-empty;
+  box-shadow: 5px 0 3px 0 $--explore-border-color-bottom;
   z-index: 10;
+  font-size: 14px;
   .file-directory-header{
     display: flex;
+    font-size: 14px;
     width: 100%;
     justify-content: space-between;
-    padding: 0 10px;
-    background: #1E1E1E;
+    padding: 0 20px;
+    height: 36px;
+    line-height: 36px;
+    background: $--background-color-empty;
+    border-bottom: 1px solid rgba(51,51,51,0.10);
     box-sizing: border-box;
-    color: #ffffff;
+    color:$--color-text-regular;
     .header-option{
       >i {
         margin-right: 22px;
       }
+      .nz-icon-close {
+        margin-right: 15px;
+      }
+    }
+  }
+  .file-directory-path{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: $--background-color-empty;
+    height: 36px;
+    line-height: 36px;
+    box-sizing: border-box;
+    color:$--color-text-regular;
+    .breadcrumb-box{
+      .nz-icon-edit{
+        margin-left: 15px;
+        display: none;
+      }
+    }
+    .breadcrumb-box:hover {
+      .nz-icon-edit{
+        display: inline-block;
+      }
+    }
+    .nz-icon-edit:hover{
+      color: $--color-primary;
+      cursor: pointer;
     }
     .breadcrumb-item{
-      color: #ffffff
+      color:$--color-text-regular
     }
     .breadcrumb-action{
       cursor: pointer;
@@ -28,9 +64,17 @@
     .breadcrumb-action:hover{
       color: $--color-primary;
     }
+    .path-option{
+      display: inline-block;
+      align-items: center;
+      .nz-icon-a-newfolder{
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+    }
   }
   .file-directory-content{
-    height: calc(100% - 26px);
+    height: calc(100% - 60px);
     width: calc(100% - 15px);
     overflow: auto;
   }
@@ -38,61 +82,74 @@
     width: 6px;
   }
   .file-directory-content::-webkit-scrollbar-thumb {
-    background: rgba(244,244,244,0.16);
-    border-radius: 4px;
-    border:none
+    width: 6px;
   }
   .file-directory-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(244,244,244,0.16);
-    border-radius: 4px;
-    border:none;
-    .file-feature{
-      display: none;
+    width: 6px;
+  }
+  .directory-content-header{
+    height: 32px;
+    line-height: 32px;
+    background: $--background-color-2;
+    width: calc(100% - 22px);
+    color: $--color-text-regular;
+    > div{text-transform:capitalize};
+  }
+  .file-name{
+    width: 44%;
+    box-sizing: border-box;
+    padding-left: 10px;
+    display: inline-block;
+  }
+  .file-size{
+    width: 15%;
+    display: inline-block;
+  }
+  .file-date{
+    width: 25%;
+    display: inline-block;
+  }
+  .file-opt{
+    width: 14%;
+    display: inline-block;
+    .nz-icon-shuxing{
+      margin-right: 20px;
     }
   }
   .file-item{
     font-family: Roboto-Regular;
     font-size: 14px;
-    color: #B7B7B7;
-    line-height: 21px;
+    color: $--color-text-regular;
     font-weight: 400;
     margin-top: 8px;
-  }
-  .file-item{
-    display: flex;
-    padding: 0 10px;
-    .file-name{
-      width: calc(100% - 300px);
-      flex: 1;
-    }
-    .file-feature{
-      width: 100px;
-      flex-shrink: 1;
-      opacity: 0;
-      >.nz-icon-download1 {
-        margin-right: 24px;
-      }
-    }
-    .file-date {
-      width: 260px;
-      flex-shrink: 1;
-      display: flex;
-      justify-content: space-between;
-      flex-direction: row-reverse;
-    }
+    line-height: 24px;
+    height: 24px;
   }
   .file-item:hover{
     background: rgba(255,134,0,0.50);
     font-family: Roboto-Regular;
-    font-size: 14px;
-    color: #FF9230;
-    line-height: 21px;
-    font-weight: 400;
-    .file-feature{
-      opacity: 1;
-    }
   }
   .my-loading-box{
     background: #1a1a1a;
+  }
+  .nz-icon:hover{
+    color: $--color-primary;
+  }
+  .file-info-item-header{
+    padding-bottom: 20px; border-bottom: 1px solid $--border-color-light;
+  }
+  .file-info-item{
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+
+    .file-info-item-left{
+      width: 180px;
+      flex-shrink: 1;
+    }
+    .file-info-item-right{
+      width: 200px;
+      flex-shrink: 1;
+    }
   }
 }

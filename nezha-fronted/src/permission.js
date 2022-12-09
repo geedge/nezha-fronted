@@ -8,7 +8,7 @@ import VueResource from 'vue-resource'
 import bus from '@/libs/bus'
 Vue.use(VueResource)
 
-const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state', '/sys/appearance', '/i18n'] // 免登陆白名单
+const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state', '/sys/appearance', '/i18n', '/externalTerminal'] // 免登陆白名单
 const permissionWhiteList = ['/profile', '/menu', ...loginWhiteList] // 权限白名单
 router.beforeEach((to, from, next) => {
   if (window.entrance) {

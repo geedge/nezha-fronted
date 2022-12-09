@@ -225,6 +225,11 @@ export default {
     detailViewTopSearch
   },
   mixins: [dataListMixin, detailViewMixin, routerPathParams],
+  computed: {
+    externalTerminal () {
+      return this.$store.getters.getExternalTerminal
+    }
+  },
   data () {
     return {
       url: 'asset/asset',
@@ -467,7 +472,12 @@ export default {
         host: row.manageIp,
         port: row.authProtocolPort
       }
-      this.$store.commit('addConsole', consoleParam)
+      if (!this.externalTerminal) {
+        this.$store.dispatch('dispatchExternalTerminal', consoleParam)
+      } else {
+        this.$store.dispatch('dispatchOpenExternalTerminalWindow', consoleParam)
+      }
+      // this.$store.commit('addConsole', consoleParam)
     },
     duplicate (row) {
       this.$get(`${this.url}/${row.id}`).then(response => {
