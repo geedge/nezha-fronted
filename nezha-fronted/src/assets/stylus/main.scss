@@ -1270,6 +1270,10 @@ li {
     &>span{
       margin-right: 12px;
     }
+    .exists-select{
+      top: auto !important;
+      left: auto !important;
+    }
   }
   .import-select-list{
     .import-select-item{

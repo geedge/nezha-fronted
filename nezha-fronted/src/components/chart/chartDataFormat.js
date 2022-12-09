@@ -700,7 +700,6 @@ const unitOptions = [
 ]
 const units = []
 window.addEventListener('load', function () {
-  console.log(13213)
   if (units.length < 1) {
     unitOptions.forEach((item, index) => {
       item.children.forEach((n, i) => {
