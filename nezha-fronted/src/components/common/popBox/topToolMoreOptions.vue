@@ -30,7 +30,7 @@
         :title="importBox.title"
         :visible.sync="importBox.show"
         width="580px"
-        :modal-append-to-body="false"
+        :append-to-body="true"
         @close="closeDialog"
         :class="{'import-failContent-dialog':importBox.type==3&&resultNew}"
         class="nz-dialog">
@@ -71,7 +71,7 @@
           <div class="import-select">
             <div v-if="showEexisted" class="exists">
               <span>{{$t('overall.existed')}}</span>
-              <el-select v-model="importBox.existed" style="flex:1" size="medium" popper-class="exists-select">
+              <el-select v-model="importBox.existed" :popper-append-to-body="false" style="flex:1" size="medium" popper-class="exists-select">
                 <el-option
                   v-for="item in existedArr"
                   :key="item.value"
