@@ -10,6 +10,7 @@
     @header-dragend="dragend"
     @sort-change="tableDataSort"
     @selection-change="selectionChange"
+    @row-dblclick="(row)=>{showBottomBox('cabinet', row)}"
   >
     <el-table-column
       :resizable="false"
@@ -61,13 +62,13 @@
           <template v-else>-</template>
         </template>
         <template v-else-if="item.prop === 'assetNum'">
-          <span style="cursor: pointer" class="asset-num"  @click="showBottomBox('asset', scope.row)">
+          <span style="cursor: pointer" class="asset-num"  @click.stop="showBottomBox('asset', scope.row)" @dblclick.stop="">
              <i class="nz-icon nz-icon-overview-project monitorColor" :class="scope.row[item.prop]>0?'color23BF9A':'color23BF9A'"/>
           {{scope.row[item.prop]}}
           </span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-           <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)">
+           <span style="cursor: pointer" @click.stop="$emit('showBottomBox', 'alertMessageTab', scope.row)" @dblclick.stop="">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
               <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
@@ -84,7 +85,7 @@
         </template>
 
         <template v-else-if="item.prop === 'cabinetNum'">
-          <span style="cursor: pointer" class="cabinet-num" @click="showBottomBox('cabinet', scope.row)">
+          <span style="cursor: pointer" class="cabinet-num" @click.stop="showBottomBox('cabinet', scope.row)" @dblclick.stop="">
             <i class="nz-icon nz-icon-cabinet monitorColor" :class="scope.row[item.prop]>0?'color23BF9A':'colorEF7458'"/>
             {{scope.row[item.prop]}}
           </span>
@@ -107,12 +108,13 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" v-has="'dc_edit'" @click="tableOperation(['edit', scope.row])" :title="$t('overall.edit')"><i class="nz-icon nz-icon-edit"></i></button>
+        <button class="table-operation-item" v-has="'dc_edit'" @click="showBottomBox('cabinet', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['dc_delete','dc_edit']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
+            <el-dropdown-item v-has="'dc_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'dc_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
             <!-- <el-dropdown-item v-has="'dc_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
             <el-dropdown-item v-has="'dc_delete'" :command="['delete', scope.row]">
