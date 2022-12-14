@@ -33,7 +33,7 @@ const terminalFile = {
         })
       }
       if (state.externalTerminal) {
-        state.externalTerminalWindow = window.open('/ui/externalTerminal', 'terminal')
+        state.externalTerminalWindow = window.open('/ui/terminal', 'terminal')
       } else {
         state.externalTerminalWindow = ''
       }
@@ -51,7 +51,7 @@ const terminalFile = {
       if (state.externalTerminalWindow) {
         window.open('', 'terminal')
       } else {
-        state.externalTerminalWindow = window.open('/ui/externalTerminal', 'terminal')
+        state.externalTerminalWindow = window.open('/ui/terminal', 'terminal')
       }
       if (item) {
         state.externalTerminalWindow.postMessage(

@@ -15,8 +15,12 @@
           </span>
           <i class="nz-icon nz-icon-edit" @click="showEditPath"/>
         </span>
-      <span v-show="editPathShow">
-        <el-input  v-model="editPath" size="small" @keyup.enter.native="goEditPath"/>
+      <span v-show="editPathShow" style="display: inline-block;flex: 1;padding-right: 40px">
+        <el-input  v-model="editPath" size="mini" @keyup.enter.native="goEditPath">
+          <span slot="suffix">
+            {{$t('terminal.confirm')}}
+          </span>
+        </el-input>
       </span>
       <div class="path-option">
         <span style="margin-right: 5px">Show hide File: </span>
@@ -29,7 +33,19 @@
     <div style="padding: 0 20px;height: calc(100% - 50px)" v-my-loading="fileDirectoryLoading">
       <div class="directory-content-header">
         <div class="text-ellipsis file-name">
-          {{$t('overall.name')}}
+          <div class="file-arrow-header" >
+            <div>
+              {{$t('overall.name')}}
+            </div>
+            <div class="nz-arrow-box">
+              <div class="nz-arrow-up" :class="{
+            'is-select': nameOrderType === 'asc'
+            }" @click="orderBy('nameOrderType','asc' , 'size')"></div>
+              <div class="nz-arrow-down" :class="{
+            'is-select': nameOrderType === 'desc'
+            }" @click="orderBy('nameOrderType','desc', 'size')"></div>
+            </div>
+          </div>
         </div>
         <div class="text-ellipsis file-size">
           <div class="file-arrow-header" >
@@ -66,16 +82,18 @@
         </div>
       </div>
       <div class="file-directory-content">
-        <div v-if="fileDirectory !== '/'" @click="backFileDirectory" class="file-item">
+        <div v-if="fileDirectory !== '/'" @dblclick.prevent="backFileDirectory" class="file-item">
           <div class="text-ellipsis file-name">
-            <i class="nz-icon nz-icon-a-upperlevel" style="margin-right: 10px"/>
-            {{$t('terminal.back')}}
+            <i class="nz-icon nz-icon-Folder colorFA901C" style="margin-right: 3px"/>
+            <i class="nz-icon nz-icon-more1"/>
+<!--            {{$t('terminal.back')}}-->
           </div>
         </div>
-        <div v-for="(item,index) in fileList" :key="index" class="file-item" @click="selectFile(item)">
+        <div v-for="(item,index) in fileList" :key="index" class="file-item" onselectstart="return false;" style="-moz-user-select:none;" @dblclick.prevent="selectFile(item)">
           <div class="text-ellipsis file-name">
             <i class="nz-icon" :class="selIcon(item)"/>
-            {{item.name}}
+            <i class="nz-icon nz-icon-link" v-if="item.isLink"/>
+            {{item.name}} <span v-if="item.isLink">-> {{item.linkName}}</span>
           </div>
           <div class="text-ellipsis file-size">
             <span v-if="!item.isDir">{{bytes(item.size, 0, 0)}}</span>
@@ -243,6 +261,7 @@ export default {
       fileDirectory: '/',
       sizeOrderType: 0,
       dateOrderType: 0,
+      nameOrderType: 0,
       breadcrumb: [],
       fileList: [],
       oldFileList: [],
@@ -326,6 +345,7 @@ export default {
         const path = this.fileDirectory == '/' ? '' : this.fileDirectory
         this.getSftpPath(path + '/' + item.name)
       }
+      return false
     },
     showFileInfo (item) {
       this.fileInfo = item
@@ -352,6 +372,7 @@ export default {
       arr.pop()
       const path = arr.join('/')
       this.getSftpPath(path || '/')
+      return false
     },
     gotoPath (item, index) {
       const path = '/' + this.breadcrumb.slice(0, index + 1).join('/')
@@ -455,6 +476,15 @@ export default {
       if (item.isReg) {
         return 'nz-icon-File'
       }
+      if (item.isFifo) {
+        return 'nz-icon-guandaowenjian'
+      }
+      if (item.isSock) {
+        return 'nz-icon-taojieziwenjian'
+      }
+      if (item.isBlk) {
+        return 'nz-icon-kuaishebeiwenjian'
+      }
       return 'nz-icon-File'
     },
     selInfo (item, key) {
@@ -491,10 +521,10 @@ export default {
         return this.momentTz(item.uts * 1000)
       }
       if (key === 'Owner') {
-        return 'Owner'
+        return item.uid
       }
       if (key === 'group') {
-        return 'group'
+        return item.gid
       }
       if (key === 'permissionsString') {
         return item.permissionsString
@@ -505,6 +535,9 @@ export default {
       if (this[key] == orderType) {
         this[key] = 0
         this.fileList = this.oldFileList
+      } else if (orderType == 'nameOrderType') {
+        this[key] = orderType
+        this.fileList = this.$loadsh.orderBy(this.oldFileList, [user => user.name.toLowerCase()], [orderType])
       } else {
         this[key] = orderType
         this.fileList = this.$loadsh.orderBy(this.oldFileList, order, orderType)

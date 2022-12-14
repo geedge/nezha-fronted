@@ -177,7 +177,7 @@ export default new Router({
           component: resolve => require(['@/components/page/config/monitor'], resolve)
         },
         {
-          path: '/terminal',
+          path: '/terminalSetting',
           component: resolve => require(['@/components/page/config/terminal'], resolve)
         },
         {
@@ -223,7 +223,7 @@ export default new Router({
       ]
     },
     {
-      path: '/externalTerminal',
+      path: '/terminal',
       component: resolve => require(['@/components/cli/terminal'], resolve),
       meta: {
         hideHeader: true,

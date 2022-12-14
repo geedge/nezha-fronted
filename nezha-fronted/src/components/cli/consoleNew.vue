@@ -249,6 +249,7 @@ export default {
     closeSocket () {
       if (this.terminalSocket) {
         this.terminalSocket.close()
+        this.terminalSocket = ''
       }
       if (this.term) {
         this.term.destroy()
@@ -305,10 +306,12 @@ export default {
       })
     },
     enterStr (message) {
-      this.terminalSocket.send(message)
-      setTimeout(()=>{
-        this.terminalSocket.send('\n')
-      }, 100)
+      if (this.terminalSocket && this.terminal.isLogin) {
+        this.terminalSocket.send(message)
+        setTimeout(()=>{
+          this.terminalSocket.send('\n')
+        }, 100)
+      }
     }
   },
   mounted () {

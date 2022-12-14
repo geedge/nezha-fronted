@@ -20,6 +20,7 @@
             <el-popover
               slot="label"
               placement="bottom"
+              :ref="'popover' + index"
               width="180"
               trigger="click"
               :popper-class="'popover-webshell popover-webshell-new'"
@@ -572,6 +573,7 @@ export default {
         name: newTabName,
         circleColor: 1, // 1 grey,2 green, 3 red
         uuid: uuid,
+        showTooltip: false,
         terminal: {
           name: newTabName,
           cols: 225,
@@ -619,6 +621,10 @@ export default {
       if (item.terminal.assetId) {
         const newTabName = ++this.tabIndex + ''
         this.editableTabsValue = newTabName
+        const console = JSON.parse(JSON.stringify(item))
+        console.name = newTabName
+        console.terminal.name = newTabName
+        console.terminal.isLogin = false
         this.editableTabs.push(console)
       } else {
         this.customConnect = {
@@ -627,6 +633,9 @@ export default {
           authPin: atob(decodeURIComponent(item.terminal.custom.authPin))
         }
         this.customShow = true
+      }
+      if (this.$refs['popover' + index] && this.$refs['popover' + index][0]) {
+        this.$refs['popover' + index][0].doClose()
       }
     },
     debounce (operate, delay) {
@@ -653,12 +662,21 @@ export default {
     },
     reconnect (item, index) {
       this.$refs['console' + index][0].reconnect()
+      if (this.$refs['popover' + index] && this.$refs['popover' + index][0]) {
+        this.$refs['popover' + index][0].doClose()
+      }
     },
     showFileDir (item, index) {
       this.$refs['console' + index][0].showFileDir(true)
+      if (this.$refs['popover' + index] && this.$refs['popover' + index][0]) {
+        this.$refs['popover' + index][0].doClose()
+      }
     },
     closeShell (item, index) {
       this.removeTab(item.name)
+      if (this.$refs['popover' + index] && this.$refs['popover' + index][0]) {
+        this.$refs['popover' + index][0].doClose()
+      }
     },
     sendMessage (message) {
       this.editableTabs.forEach((item, index) => {
