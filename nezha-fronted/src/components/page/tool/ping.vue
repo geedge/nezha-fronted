@@ -126,7 +126,7 @@
          </el-step> -->
           <el-step>
             <span class="msg" slot="icon">Ping</span>
-            <p class="txt" slot="title">Ping {{$t('config.terminallog.cmd.cmd')}}</p>
+            <p class="txt" slot="title">Ping {{$t('tools.cmd')}}</p>
           </el-step>
         </el-steps>
       </div>
