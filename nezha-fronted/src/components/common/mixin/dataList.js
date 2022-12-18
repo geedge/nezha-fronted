@@ -335,6 +335,21 @@ export default {
       }
       this.silenceBoxShow = true
     },
+    metricTarget (row, type) {
+      const protocol = row.configs[0].config.protocol
+      const host = row.configs[0].config.host
+      const port = row.configs[0].config.port
+      const metricsPath = row.configs[0].config.metrics_path
+      const params = row.configs[0].config.params
+      let str = ''
+      if (!lodash.isEmpty(params)) {
+        for (const key in params) {
+          str += key + '=' + params[key]
+        }
+      }
+      const linkTarget = protocol + ':' + '//' + host + ':' + port + metricsPath + '?' + str
+      window.open(linkTarget, 'target')
+    },
     topology (row, type) {
       const chartInfo = lodash.cloneDeep(defaultData)
       chartInfo.id = row.id
