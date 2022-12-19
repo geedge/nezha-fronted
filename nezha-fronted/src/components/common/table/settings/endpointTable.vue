@@ -197,7 +197,7 @@
               <el-dropdown-item v-has="'monitor_endpoint_edit'" :command="['copy', scope.row, 'project']"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'endpoint']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_add'" :command="['topology', scope.row, 'endpoint']"><i class="nz-icon nz-icon-Topology"></i><span class="operation-dropdown-text">{{$t('overall.topology')}}</span></el-dropdown-item>
-              <el-dropdown-item v-has="'asset_add'" :command="['metricTarget', scope.row, 'endpoint']" :disabled="scope.row.configs[0].config.protocol !== ('http'||'https')"><span class="operation-dropdown-text">Metric target</span></el-dropdown-item>
+              <el-dropdown-item v-has="'monitor_endpoint_add'" :command="['metricTarget', scope.row, 'endpoint']" :disabled="scope.row.configs[0].config.protocol !== ('http'||'https')"><span class="operation-dropdown-text">{{$t('endpoints.metricTarget')}}</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>

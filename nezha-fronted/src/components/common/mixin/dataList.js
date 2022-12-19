@@ -344,11 +344,12 @@ export default {
       let str = ''
       if (!lodash.isEmpty(params)) {
         for (const key in params) {
-          str += key + '=' + params[key]
+          str += key + '=' + params[key] + '&'
         }
       }
-      const linkTarget = protocol + ':' + '//' + host + ':' + port + metricsPath + '?' + str
-      window.open(linkTarget, 'target')
+      const linkTarget = `${protocol}://${host}:${port + metricsPath}${str ? '?' + str.slice(0, str.length - 1) : ''}`
+      // window.open(linkTarget, 'target')
+      window.open(linkTarget)
     },
     topology (row, type) {
       const chartInfo = lodash.cloneDeep(defaultData)
