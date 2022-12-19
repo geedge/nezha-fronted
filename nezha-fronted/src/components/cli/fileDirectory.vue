@@ -33,47 +33,47 @@
     <div style="padding: 0 20px;height: calc(100% - 50px)" v-my-loading="fileDirectoryLoading">
       <div class="directory-content-header">
         <div class="text-ellipsis file-name">
-          <div class="file-arrow-header" >
+          <div class="file-arrow-header" style="cursor: pointer"  @click.stop="orderBy('nameOrderType','' , 'name')">
             <div>
               {{$t('overall.name')}}
             </div>
             <div class="nz-arrow-box">
               <div class="nz-arrow-up" :class="{
             'is-select': nameOrderType === 'asc'
-            }" @click="orderBy('nameOrderType','asc' , 'size')"></div>
+            }" @click.stop="orderBy('nameOrderType','asc' , 'name')"></div>
               <div class="nz-arrow-down" :class="{
             'is-select': nameOrderType === 'desc'
-            }" @click="orderBy('nameOrderType','desc', 'size')"></div>
+            }" @click.stop="orderBy('nameOrderType','desc', 'name')"></div>
             </div>
           </div>
         </div>
         <div class="text-ellipsis file-size">
-          <div class="file-arrow-header" >
+          <div class="file-arrow-header" style="cursor: pointer"  @click.stop="orderBy('sizeOrderType','' , 'size')">
             <div>
               {{$t('backup.size')}}
             </div>
             <div class="nz-arrow-box">
               <div class="nz-arrow-up" :class="{
             'is-select': sizeOrderType === 'asc'
-            }" @click="orderBy('sizeOrderType','asc' , 'size')"></div>
+            }" @click.stop="orderBy('sizeOrderType','asc' , 'size')"></div>
               <div class="nz-arrow-down" :class="{
             'is-select': sizeOrderType === 'desc'
-            }" @click="orderBy('sizeOrderType','desc', 'size')"></div>
+            }" @click.stop="orderBy('sizeOrderType','desc', 'size')"></div>
             </div>
           </div>
         </div>
         <div class="text-ellipsis file-date">
-          <div class="file-arrow-header">
+          <div class="file-arrow-header" style="cursor: pointer"  @click.stop="orderBy('dateOrderType','' , 'cts')">
             <div>
               {{$t('issue.createTime')}}
             </div>
             <div class="nz-arrow-box" style="">
               <div class="nz-arrow-up" :class="{
             'is-select': dateOrderType === 'asc'
-            }" @click="orderBy('dateOrderType','asc', 'cts')"></div>
+            }" @click.stop="orderBy('dateOrderType','asc', 'cts')"></div>
               <div class="nz-arrow-down" :class="{
             'is-select': dateOrderType === 'desc'
-            }" @click="orderBy('dateOrderType','desc', 'cts')"></div>
+            }" @click.stop="orderBy('dateOrderType','desc', 'cts')"></div>
             </div>
           </div>
         </div>
@@ -81,15 +81,24 @@
           {{$t('overall.option')}}
         </div>
       </div>
-      <div class="file-directory-content">
+      <div class="file-directory-content"
+           onselectstart="return false;"
+           style="-moz-user-select:none;">
         <div v-if="fileDirectory !== '/'" @dblclick.prevent="backFileDirectory" class="file-item">
           <div class="text-ellipsis file-name">
             <i class="nz-icon nz-icon-Folder colorFA901C" style="margin-right: 3px"/>
-            <i class="nz-icon nz-icon-more1"/>
+            ..
 <!--            {{$t('terminal.back')}}-->
           </div>
         </div>
-        <div v-for="(item,index) in fileList" :key="index" class="file-item" onselectstart="return false;" style="-moz-user-select:none;" @dblclick.prevent="selectFile(item)">
+        <div
+          v-for="(item,index) in fileList"
+          v-show="showHideFile || !item.isHide"
+          :key="index" class="file-item"
+          onselectstart="return false;"
+          style="-moz-user-select:none;"
+          @dblclick.prevent="selectFile(item)"
+        >
           <div class="text-ellipsis file-name">
             <i class="nz-icon" :class="selIcon(item)"/>
             <i class="nz-icon nz-icon-link" v-if="item.isLink"/>
@@ -389,10 +398,24 @@ export default {
         if (res.code === 200) {
           this.fileDirectoryLoading = false
           this.fileDirectory = res.data.path
+          res.data.list.forEach(item => {
+            if (item.name[0] === '.') {
+              item.isHide = true
+            }
+          })
           this.fileList = res.data.list
           this.oldFileList = res.data.list
           this.editPath = ''
           this.breadcrumb = res.data.path.split('/').filter(item => item)
+          if (this.nameOrderType) {
+            this.orderBy('nameOrderType',this.nameOrderType , 'name')
+          }
+          if (this.sizeOrderType) {
+            this.orderBy('sizeOrderType',this.sizeOrderType , 'size')
+          }
+          if (this.dateOrderType) {
+            this.orderBy('dateOrderType',this.dateOrderType , 'cts')
+          }
         } else {
           this.$message.error(res.msg)
           this.editPath = ''
@@ -531,16 +554,41 @@ export default {
       }
       return '-'
     },
-    orderBy (key, orderType, order) {
+    orderBy (key, type, order) {
+      let orderType = type
+      if (!orderType) {
+        orderType = this[key] === 'asc' ? 'desc' : 'asc'
+      }
+      this.sizeOrderType = 0
+      this.dateOrderType = 0
+      this.nameOrderType = 0
       if (this[key] == orderType) {
         this[key] = 0
         this.fileList = this.oldFileList
       } else if (orderType == 'nameOrderType') {
         this[key] = orderType
-        this.fileList = this.$loadsh.orderBy(this.oldFileList, [user => user.name.toLowerCase()], [orderType])
+        let isDirArr = this.oldFileList.filter(item => item.isDir)
+        let isRegArr = this.oldFileList.filter(item => !item.isDir)
+        isDirArr = this.$loadsh.orderBy(isDirArr, [user => user.name.toLowerCase()], [orderType])
+        isRegArr = this.$loadsh.orderBy(isRegArr, [user => user.name.toLowerCase()], [orderType])
+        this.fileList = []
+        if (orderType === 'asc') {
+          this.fileList = this.fileList.concat(isDirArr, isRegArr)
+        } else {
+          this.fileList = this.fileList.concat(isRegArr, isDirArr)
+        }
       } else {
         this[key] = orderType
-        this.fileList = this.$loadsh.orderBy(this.oldFileList, order, orderType)
+        let isDirArr = this.oldFileList.filter(item => item.isDir)
+        let isRegArr = this.oldFileList.filter(item => !item.isDir)
+        isDirArr = this.$loadsh.orderBy(isDirArr, order, orderType)
+        isRegArr = this.$loadsh.orderBy(isRegArr, order, orderType)
+        this.fileList = []
+        if (orderType === 'asc') {
+          this.fileList = this.fileList.concat(isDirArr, isRegArr)
+        } else {
+          this.fileList = this.fileList.concat(isRegArr, isDirArr)
+        }
       }
     },
     tableOperation ([command, row, param]) {
