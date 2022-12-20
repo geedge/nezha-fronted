@@ -81,15 +81,15 @@
     width: calc(100% - 15px);
     overflow: auto;
   }
-  .file-state-panel-content::-webkit-scrollbar {
-    width: 6px;
-  }
-  .file-directory-content::-webkit-scrollbar-thumb {
-    width: 6px;
-  }
-  .file-directory-content::-webkit-scrollbar-thumb:hover {
-    width: 6px;
-  }
+  //.file-state-panel-content::-webkit-scrollbar {
+  //  width: 6px;
+  //}
+  //.file-directory-content::-webkit-scrollbar-thumb {
+  //  width: 6px;
+  //}
+  //.file-directory-content::-webkit-scrollbar-thumb:hover {
+  //  width: 6px;
+  //}
   .directory-content-header{
     height: 32px;
     line-height: 32px;
