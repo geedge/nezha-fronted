@@ -7,6 +7,7 @@
     :targetTab="targetTab"
     @changeTab="changeTab"
     :title="'Session ID'"
+    id="terminalLogRecordTab"
   >
     <template v-slot:title><span :title="obj.uuid.substring(0, 8).toUpperCase()">{{obj.uuid.substring(0, 8).toUpperCase()}}</span></template>
     <template v-slot>
@@ -36,14 +37,14 @@
 <script>
 import Terminal from '../../js/Xterm'
 import bus from '../../../../libs/bus'
-import dataListMixin from '@/components/common/mixin/dataList'
+// import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 
 export default {
   name: 'terminalLogReplayTab',
-  mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
+  mixins: [subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList
   },
@@ -77,7 +78,8 @@ export default {
       speedOffset: 0, // 快进倍数index
       progress: 0, // 进度条进度
       needSkip: true, // 是否跳过无操作时间，为true时表示需要，即不跳过无操作时间
-      timeUsed: 0
+      timeUsed: 0,
+      detailType: 'list'
     }
   },
   methods: {

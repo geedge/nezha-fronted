@@ -12,7 +12,7 @@
       <div class="container__form">
         <el-form :model="editipam" label-position = "top" label-width="120px" :rules="rules" ref="ipamForm">
           <el-form-item :label="$t('overall.name')" prop="name">
-            <el-input maxlength="64" rows="4" show-word-limit placeholder="" v-model.trim="editipam.name" size="small"></el-input>
+            <el-input maxlength="64" rows="4" show-word-limit placeholder="" v-model="editipam.name" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.type')" prop="type">
             <el-select id="account-input-language"
@@ -132,7 +132,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         'dc.name': [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ]
       },
       dcData: []

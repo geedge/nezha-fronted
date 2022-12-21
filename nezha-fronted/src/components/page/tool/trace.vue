@@ -114,11 +114,11 @@
         <el-steps align-center>
           <el-step>
             <span class="nz-icon nz-icon-edit" slot="icon"></span>
-            <p class="txt" slot="title">{{$t('overall.placeHolder')}}IP</p>
+            <p class="txt" slot="title">{{$t('overall.placeHolder')}} IP</p>
           </el-step>
           <el-step>
             <span class="msg" slot="icon">Trace</span>
-            <p class="txt" slot="title">Trace {{$t('config.terminallog.cmd.cmd')}}</p>
+            <p class="txt" slot="title">Trace {{$t('tools.cmd')}}</p>
           </el-step>
         </el-steps>
       </div>
@@ -158,6 +158,7 @@ export default {
   },
   data () {
     return {
+      tableId: 'trace',
       // 防止用户重复点击
       flag: true,
       loading: false,

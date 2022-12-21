@@ -65,6 +65,16 @@
             <span>{{getDuration(scope.row)}}</span>
           </el-tooltip>
         </template>
+        <template v-else-if="item.prop === 'cmdNum'">
+          <div style="cursor: pointer" @click.stop="showBottomBox('cmdTab', scope.row)" @dblclick.stop="">
+            {{scope.row[item.prop] ? scope.row[item.prop] : 0}}
+          </div>
+        </template>
+        <template v-else-if="item.prop === 'sftpNum'">
+          <div style="cursor: pointer" @click.stop="showBottomBox('sftpTab', scope.row)" @dblclick.stop="">
+            {{scope.row[item.prop] ? scope.row[item.prop] : 0}}
+          </div>
+        </template>
         <template v-else-if="item.prop === 'authType'">
           <span v-if="scope.row.authType == 1">{{$t('login.pin')}}</span>
           <span v-else-if="scope.row.authType == 2">{{$t('config.terminallog.key')}}</span>
@@ -184,13 +194,38 @@ export default {
           show: false
         },
         {
+          label: this.$t('config.terminallog.cmd.cmd'),
+          prop: 'cmdNum',
+          show: false,
+          width: 100
+        },
+        {
+          label: this.$t('terminal.sftp'),
+          prop: 'sftpNum',
+          show: false,
+          width: 80
+        },
+        {
           label: this.$t('overall.state'), // killusername鼠标悬停形式
           prop: 'state',
           show: true,
           width: 150,
           sortable: 'custom'
         }
-      ]
+      ],
+      timer: null
+    }
+  },
+  methods: {
+    showBottomBox (targetTab, row) {
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      const self = this
+      this.timer = setTimeout(() => {
+        self.$emit('showBottomBox', targetTab, row)
+        self.timer = null
+      }, 200)
     }
   },
   computed: {

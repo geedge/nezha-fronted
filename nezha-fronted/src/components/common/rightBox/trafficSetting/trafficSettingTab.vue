@@ -49,7 +49,7 @@
                   <div class="mib-browser-ad-search-label">{{$t('login.username')}}</div>
                 </el-col>
                 <el-col :span="17">
-                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.username" id="traffic-setting-username"></el-input>
+                  <el-input class="input-x-mini-24" v-model="assetSetting.auth.username" id="traffic-setting-username"></el-input>
                 </el-col>
               </el-row>
 
@@ -71,7 +71,7 @@
                   <div class="mib-browser-ad-search-label">{{$t('login.pin')}}</div>
                 </el-col>
                 <el-col :span="17">
-                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.pin" id="traffic-setting-password"></el-input>
+                  <el-input class="input-x-mini-24" v-model="assetSetting.auth.pin" id="traffic-setting-password"></el-input>
                 </el-col>
               </el-row>
 
@@ -104,7 +104,7 @@
                   <div class="mib-browser-ad-search-label">{{$t('project.module.privPin')}}</div>
                 </el-col>
                 <el-col :span="17">
-                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.privPin" id="traffic-setting-privPassword"></el-input>
+                  <el-input class="input-x-mini-24" v-model="assetSetting.auth.privPin" id="traffic-setting-privPassword"></el-input>
                 </el-col>
               </el-row>
             </template>

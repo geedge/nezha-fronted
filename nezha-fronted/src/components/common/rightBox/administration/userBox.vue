@@ -11,22 +11,22 @@
         <el-form ref="userForm" :model="editUser" :rules="editUser.id ? rules2 : rules" label-position="top" label-width="120px">
           <!--name-->
           <el-form-item :label="$t('config.user.name')" prop="name">
-            <el-input id="account-input-name" v-model.trim="editUser.name" :disabled="editUser.username==='admin' && editUser.id==1"
+            <el-input id="account-input-name" v-model="editUser.name" :disabled="editUser.username==='admin' && editUser.id==1"
                       maxlength="64" placeholder="" show-word-limit size="small" type="text"></el-input>
           </el-form-item>
           <!--username-->
           <el-form-item :label="$t('login.username')" prop="username">
-            <el-input id="account-input-username" v-model.trim="editUser.username" :disabled="editUser.username==='admin' && editUser.id==1"
+            <el-input id="account-input-username" v-model="editUser.username" :disabled="editUser.username==='admin' && editUser.id==1"
                       maxlength="64" placeholder="" show-word-limit size="small" type="text"></el-input>
           </el-form-item>
           <!--password-->
           <el-form-item :label="$t('login.pin')" prop="pin">
-            <el-input id="account-input-password" v-model.trim="editUser.pin"  maxlength="64" placeholder=""
+            <el-input id="account-input-password" v-model="editUser.pin"  maxlength="64" placeholder=""
                       show-word-limit size="small" type="password" @blur="pinBlur" autocomplete="new-password"></el-input>
           </el-form-item>
           <!--pinChange-->
           <el-form-item :label="$t('profile.confirmPassword')" label-width="200px" prop="pinChange">
-            <el-input id="account-input-pinChange" v-model.trim="editUser.pinChange"  maxlength="64" placeholder=""
+            <el-input id="account-input-pinChange" v-model="editUser.pinChange"  maxlength="64" placeholder=""
                       show-word-limit size="small" type="password"></el-input>
           </el-form-item>
           <!--mfaLevel-->
@@ -46,7 +46,7 @@
           </el-form-item>
           <!--email-->
           <el-form-item :label="$t('config.system.email.email')" prop="email">
-            <el-input id="account-input-email" v-model.trim="editUser.email" maxlength="64" show-word-limit placeholder="" size="small" type="text"></el-input>
+            <el-input id="account-input-email" v-model="editUser.email" maxlength="64" show-word-limit placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--mobile-->
           <el-form-item :label="$t('profile.mobile')" prop="mobile">
@@ -221,7 +221,7 @@ export default {
     /* 密码失去焦点 检验确认密码 */
     pinBlur () {
       if (this.editUser.pin && this.editUser.pinChange) {
-        this.$refs.accountForm.validateField('pinChange')
+        this.$refs.userForm.validateField('pinChange')
       }
     },
     getRoles () {

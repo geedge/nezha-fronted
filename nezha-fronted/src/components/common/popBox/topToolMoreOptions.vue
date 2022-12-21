@@ -30,48 +30,24 @@
         :title="importBox.title"
         :visible.sync="importBox.show"
         width="580px"
-        :modal-append-to-body="false"
+        :append-to-body="true"
         @close="closeDialog"
-        :class="{'import-failContent-dialog':importBox.type==3&&resultNew}"
+        :class="{'import-failContent-dialog':importBox.type==3}"
         class="nz-dialog">
 
-        <!-- 导入 -->
-        <div v-if="importBox.type == 1&&!importNew">
-          <div class="upload-body" style="margin:10px 0;">
-            <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls"  action="" class="upload-demo" drag>
-              <div slot="tip" class="el-upload__tip" style="margin-top: 0;">{{$t('overall.importTip')}}</div>
-              <i class="nz-icon nz-icon-upload"></i>
-              <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
-            </el-upload>
-          </div>
-          <div class="footer">
-            <div class="el-message-box__btns" style="text-align: right;">
-              <button :id="id+'-xlsx-import-template'" class="nz-btn el-button el-button--default el-button--small" @click="downloadTemplate()">
-                <span>{{$t('upload.template')}}</span>
-              </button>
-              <button :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
-                <span>{{$t('overall.importExcel')}}</span>
-              </button>
-              <button :id="id+'-xlsx-import-esc'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
-                <span>{{$t('overall.cancel')}}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
         <!-- 新版导入 -->
-        <div v-if="importBox.type == 1&&importNew">
+        <div v-if="importBox.type == 1">
           <div class="upload-body">
-            <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls,.csv,.json" action="" class="import-upload" drag>
+            <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false" :file-list="importFileList" :on-change="importChange" :accept="!isDashboard?'.xlsx,.xls,.csv,.json':'.json'" action="" class="import-upload" drag>
               <i class="el-icon-upload"></i>
               <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
-              <div class="el-upload__tip" >{{$t('overall.importSupport')}}</div>
+              <div class="el-upload__tip" >{{!isDashboard?$t('overall.importSupport'):$t('overall.supportJson')}}</div>
             </el-upload>
           </div>
           <div class="import-select">
-            <div v-if="showEexisted" class="exists">
+            <div class="exists">
               <span>{{$t('overall.existed')}}</span>
-              <el-select v-model="importBox.existed" style="flex:1" size="medium" popper-class="exists-select">
+              <el-select v-model="importBox.existed" :popper-append-to-body="false" style="flex:1" size="medium" popper-class="exists-select">
                 <el-option
                   v-for="item in existedArr"
                   :key="item.value"
@@ -81,7 +57,7 @@
               </el-select>
             </div>
             <ul class="import-select-list">
-              <li v-if="showIgnoreError" class="import-select-item">
+              <li class="import-select-item">
                 <el-checkbox v-model="importBox.ignoreError">{{$t('overall.ignoreError')}}</el-checkbox>
               </li>
               <li v-if="showSyncDashboard" class="import-select-item">
@@ -95,6 +71,7 @@
           <div class="footer">
             <div class="el-message-box__btns" style="text-align: right;">
               <el-popover
+                v-if="!isDashboard"
                 placement="bottom-start"
                 trigger="click">
                 <div class="template-pop">
@@ -133,7 +110,7 @@
             <div class="export-box">
               <span class="export-title">{{$t('export.fileFormat')}}</span>
               <el-radio-group v-model="importBox.format"  size="small">
-                <el-radio-button :label="item.value" v-for="(item,index) in formatArr" :key="index">{{item.name}}</el-radio-button>
+                <el-radio-button :label="item.value" v-for="(item,index) in formatArr" :key="index" :disabled="isDashboard&&item.name!='JSON'">{{item.name}}</el-radio-button>
               </el-radio-group>
             </div>
           </div>
@@ -149,64 +126,8 @@
           </div>
         </div>
 
-        <!-- 导入结果（不展示导出失败记录） -->
-        <div v-if="importBox.type==3&&!resultNew">
-          <div class="upload-body result-body">
-            <div v-if="importResult&&importResult.failNum">
-              <div class="result-title-top">
-                <div class="">
-                  <i class="nz-icon nz-icon-import-success"/>
-                  <span>{{$t('overall.result.successNum',{successNum:importResult.successNum})}}</span><br/>
-                </div>
-                <div class="">
-                  <i class="nz-icon nz-icon-import-failed"/>
-                  <span>{{$t('overall.result.failedNum',{failedNum:importResult.failNum,total:importResult.totalNum})}}</span>
-                </div>
-              </div>
-              <div>
-                <div v-if="importResult&&importResult.failDetail" class="result-detail">
-                  <div style="height: 100%; overflow: auto">
-                    <template v-for="(item, index) in importResult.failDetail">
-                      <div :key="index" class="import-result-block">
-                        <div class="import-result-item">
-                          <div style="display: flex;">
-                            <span class="import-result-item-left">•</span>
-                            <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
-                          </div>
-                          <div class="line-content" :title="item.errorMsg">{{item.errorMsg}}</div>
-                        </div>
-                      </div>
-                    </template>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div v-else class="result-success-box">
-              <div>
-                <i class="nz-icon nz-icon-import-success"/>
-              </div>
-              <div class="result-success-txt">{{$t('overall.result.successfully')}}</div>
-              <div class="result-success-txt">
-                {{$t('overall.result.imported')}}
-                <span v-if="importResult">{{importResult.successNum}}</span>
-                {{$t('overall.result.records')}}
-              </div>
-            </div>
-          </div>
-          <div class="footer">
-            <div class="el-message-box__btns">
-              <button :id="id+'-xlsx-import-rollback'"  class="nz-btn el-button el-button--small nz-btn-style-error" @click="rollbackImport">
-                <span>{{$t('overall.rollbackImport')}}</span>
-              </button>
-              <button :id="id+'-xlsx-import-close'" class="nz-btn el-button el-button--small el-button--default" @click="closeDialog">
-                <span>{{$t('overall.close')}}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
         <!-- 导入结果（展示导出失败记录） -->
-        <div v-if="importBox.type==3&&resultNew">
+        <div v-if="importBox.type==3">
           <div class="upload-body result-body">
             <!-- 失败提示 -->
             <div v-if="importResult&&importResult.failNum">
@@ -348,29 +269,13 @@ export default {
     deleteObjs: Array,
     exportBoxShow: {
       type: Boolean, default: false
-    },
-    // 已存在的内容处理方式
-    showEexisted: {
-      type: Boolean, default: true
-    },
-    // 遇到错误是否继续导入
-    showIgnoreError: {
-      type: Boolean, default: true
     }
   },
   computed: {
     language () { return this.$store.getters.getLanguage },
-    // 是否展示新版导入
-    importNew () {
-      // chartTemplate dashboard
-      const arr = ['/visual/panel/import']
-      return !arr.some(item => item === this.importUrl)
-    },
-    // 是否展示新版导入结果
-    resultNew () {
-      // chartTemplate dashboard导入样式维持原状
-      const arr = ['/visual/panel/import']
-      return !arr.some(item => item === this.importUrl)
+    // 判断是否是dashboard
+    isDashboard () {
+      return this.importUrl === '/visual/panel/import'
     },
     // 是否同步更新关联的dashboard
     showSyncDashboard () {
@@ -492,12 +397,8 @@ export default {
         this.prevent_opt.import = true
         const form = new FormData()
         form.append('file', this.importFile.raw)
-        if (this.showEexisted) {
-          form.append('existed', this.importBox.existed)
-        }
-        if (this.showIgnoreError) {
-          form.append('ignoreError', Number(this.importBox.ignoreError))
-        }
+        form.append('existed', this.importBox.existed)
+        form.append('ignoreError', Number(this.importBox.ignoreError))
         if (this.showSyncDashboard) {
           form.append('syncDashboard', Number(this.importBox.syncDashboard))
         }
@@ -632,6 +533,9 @@ export default {
         delete params.end_time
         delete params.id
         delete params.searchName
+        delete params.value
+        params.ids = params.panelId
+        delete params.panelId
       }
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
@@ -660,8 +564,7 @@ export default {
         delete params.end_time
         delete params.id
         delete params.searchName
-      }
-      if (this.importUrl.indexOf('panel') > -1) {
+        delete params.value
         delete params.panelId
       }
       // if (this.importUrl.indexOf('endpoint') > -1){
@@ -694,8 +597,7 @@ export default {
         delete params.end_time
         delete params.id
         delete params.searchName
-      }
-      if (this.importUrl.indexOf('panel') > -1) {
+        delete params.value
         delete params.panelId
       }
       // if (this.importUrl.indexOf('endpoint') > -1){
@@ -779,12 +681,10 @@ export default {
         uInt8Array[i] = raw.charCodeAt(i)
       }
       const link = document.createElement('a')
-      const blob = new Blob([uInt8Array], {
-        type: 'application/vnd.ms-excel'
-      })
+      const blob = new Blob([uInt8Array])
       link.style.display = 'none'
       link.href = URL.createObjectURL(blob)
-      link.setAttribute('download', 'failed_records' + '-' + this.getTimeString() + '.xlsx')
+      link.setAttribute('download', 'failed_records' + '-' + this.getTimeString() + '.json')
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -792,6 +692,10 @@ export default {
     showImportBox (type) {
       this.importBox.show = true
       this.importBox.type = type
+      // isDashboard 只支持JSON
+      if (this.isDashboard) {
+        this.importBox.format = 3
+      }
       if (type == 2 && (!this.showCur)) {
         this.exportCur()
         return

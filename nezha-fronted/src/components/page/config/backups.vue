@@ -192,7 +192,6 @@ export default {
     }
   },
 
-  watch: {},
   beforeDestroy () {
     bus.$off('backupNow', this.getTableData)
   }

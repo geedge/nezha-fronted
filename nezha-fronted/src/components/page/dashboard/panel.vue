@@ -29,6 +29,23 @@
                   <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred===1" class="nz-icon nz-icon-a-xingzhuang2" :title ="$t('overall.starred')"></i>
                   <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang" :title ="$t('overall.unstarred')"></i>
                 </template>
+                <!-- 按钮插槽 -->
+                <template slot="button">
+                  <span class="dashboard-select-add" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd">
+                    <i class="nz-icon nz-icon-create-square"></i>&nbsp;{{$t('overall.addDashboard')}}
+                  </span>
+                  <!-- 通过dashboard模板创建 -->
+                  <el-dropdown v-has="['main_add']" trigger="click">
+                    <span :title='$t("dashboard.panel.addByTemplate")' class="dashboard-addBy-template">
+                      <i class="el-icon-more tool__icon"></i>
+                    </span>
+                    <el-dropdown-menu class="dashboard-addBy-template-menu">
+                      <el-dropdown-item @click.native="addByTemplate">
+                        <span>{{$t("dashboard.panel.addByTemplate")}}</span>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </template>
               </select-dashboard>
             </div>
 
@@ -42,10 +59,11 @@
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id"></pick-time>
 
               <!-- 切换查看模式 -->
-              <button slot="reference" class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
+              <button class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
                 <i class="nz-icon nz-icon-moshiqiehuan"></i>
               </button>
 
+              <!-- 新增图表 -->
               <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChartBefore">
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>
@@ -74,12 +92,12 @@
                   </el-dropdown-item>
                 </template>
                 <template v-slot:after>
-                  <el-dropdown-item v-has="'main_add'">
+                  <!-- <el-dropdown-item v-has="'main_add'">
                     <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{$t('overall.AddByTemplate')}}</div>
                   </el-dropdown-item>
                   <el-dropdown-item v-has="'panel_view'">
                     <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-                  </el-dropdown-item>
+                  </el-dropdown-item> -->
                   <el-dropdown-item v-has="'panel_view'">
                     <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
                   </el-dropdown-item>
@@ -127,7 +145,6 @@
         :from="fromRoute.panel"
         :panel-data="panelData"
         :show-panel="showPanel"
-        :variables="variables"
         @close="closeChartBox"
         @reload="panelReload"
         @reloadOnlyPanel="panelReloadOnlyPanel"
@@ -140,12 +157,19 @@
       <chart-temp-box v-if="rightBox.chartTemp.show" :from="fromRoute.panel" :obj="chart" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess"></chart-temp-box>
     </transition>
     <transition name="right-box">
-      <panel-box v-if="rightBox.panel.show" ref="panelBox" :obj="panel" @close="closePanelBox" @reload="panelReload" @reloadForDel="panelReloadForDel" ></panel-box>
+      <panel-box v-if="rightBox.panel.show" :from="fromRoute.panel" ref="panelBox" :obj="panel" @close="closePanelBox" @reload="panelReload" @reloadForDel="panelReloadForDel" ></panel-box>
     </transition>
+    <!-- dashboard模板 -->
+    <transition name="right-box">
+      <dashboardTempBox v-if="rightBox.dashboardTemp.show" :from="fromRoute.panel" @close="closeDashboardTempBox"></dashboardTempBox>
+    </transition>
+    <!-- 快照进度 -->
+    <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="searchTime" :snapshotVisible.sync="snapshotVisible"></snapshotProgress>
   </div>
 </template>
 
 <script>
+import * as echarts from 'echarts'
 import { chartCache } from '@/components/common/js/common'
 import { data as le5leData, observers as le5leObservers } from 'le5le-store/store/data.js'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
@@ -160,8 +184,9 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
-import * as echarts from 'echarts'
 import panelVariables from '@/components/common/panel/panelVariables'
+import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
+import dashboardTempBox from '@/components/common/rightBox/dashboardTempBox'
 // import FileSaver from 'file-saver'
 // import chartData from './testData'
 export default {
@@ -181,6 +206,7 @@ export default {
       rightBox: { // 面板弹出框相关
         chart: { show: false },
         chartTemp: { show: false },
+        dashboardTemp: { show: false },
         panel: { show: false },
         loading: false
       },
@@ -309,7 +335,8 @@ export default {
       // 查看模式
       mode: '',
       variables: [],
-      variablesInit: false // 判断variables 是否加载完成
+      variablesInit: false, // 判断variables 是否加载完成
+      snapshotVisible: false
     }
   },
   components: {
@@ -319,7 +346,9 @@ export default {
     selectDashboard,
     chartTempBox,
     chartRightBox,
-    panelVariables // 处理panel变量的组件
+    panelVariables, // 处理panel变量的组件
+    snapshotProgress, // 快照进度
+    dashboardTempBox // dashboard模板
   },
   computed: {
     chartRightBoxShow () {
@@ -333,6 +362,18 @@ export default {
     }
   },
   methods: {
+    closeDashboardTempBox (refresh) {
+      this.rightBox.dashboardTemp.show = false
+      if (refresh) {
+        this.getTableData()
+      }
+    },
+    // 通过dashboard模板创建
+    addByTemplate () {
+      this.rightBox.dashboardTemp.show = true
+      // 关闭selectDashboard弹框
+      this.$refs.selectDashboard && this.$refs.selectDashboard.esc()
+    },
     // 新增收藏
     addStarred (data) {
       this.$refs.selectDashboard.addStarred(data)
@@ -994,7 +1035,8 @@ export default {
       if (type === 'PDF') {
         this.htmlToPdf()
       } else {
-        this.exportToHtml(this.showPanel.name)
+        // this.exportToHtml(this.showPanel.name)
+        this.snapshotVisible = true
       }
     },
     // 切换查看模式
@@ -1105,6 +1147,7 @@ export default {
     }
   },
   watch: {
+    // 监听图表联动配置
     'showPanel.param.chartShare': {
       handler (value) {
         // 每次切换联动模式 tooltip设置显示

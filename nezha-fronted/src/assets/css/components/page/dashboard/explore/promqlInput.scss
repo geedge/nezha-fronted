@@ -16,6 +16,10 @@
       border: 1px solid $--border-color-light;
     }
   }
+  .not-fixed-height.no-resize.no-close{
+    height: 100%;
+    box-sizing: border-box;
+  }
 
   .query-row {
     display: flex;

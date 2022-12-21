@@ -12,7 +12,7 @@
         <div class="container__form">
           <el-form label-width="120px" size="small" :model="editCredential" label-position = "top" :rules="rules" ref="credentialForm">
             <el-form-item :label='$t("overall.name")' prop="name">
-              <el-input placeholder="" maxlength="64" show-word-limit v-model.trim="editCredential.name" size="small" id="credential-box-input-name"></el-input>
+              <el-input placeholder="" maxlength="64" show-word-limit v-model="editCredential.name" size="small" id="credential-box-input-name"></el-input>
             </el-form-item>
             <el-form-item :label='$t("overall.remark")' prop="remark">
               <el-input placeholder="" maxlength="256"  rows="2" show-word-limit size="small" type="textarea" v-model="editCredential.remark"  id="credential-box-input-remark"></el-input>

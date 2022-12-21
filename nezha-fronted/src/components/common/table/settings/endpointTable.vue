@@ -81,7 +81,7 @@
             </div>
           </template>
           <template v-else-if="item.prop === 'alerts'">
-          <span style="cursor: pointer"  @click="showBottomBox('endpointAlertMessage', scope.row)">
+          <span style="cursor: pointer"  @click.stop="showBottomBox('endpointAlertMessage', scope.row)" @dblclick.stop="">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
               <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
@@ -197,6 +197,7 @@
               <el-dropdown-item v-has="'monitor_endpoint_edit'" :command="['copy', scope.row, 'project']"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'endpoint']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_add'" :command="['topology', scope.row, 'endpoint']"><i class="nz-icon nz-icon-Topology"></i><span class="operation-dropdown-text">{{$t('overall.topology')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'monitor_endpoint_add'" :command="['metricTarget', scope.row, 'endpoint']" :disabled="scope.row.configs[0].config.protocol !== ('http'||'https')"><i class="nz-icon nz-icon-Metrics"></i><span class="operation-dropdown-text">{{$t('endpoints.metricTarget')}}</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>

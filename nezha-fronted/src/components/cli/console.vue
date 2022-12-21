@@ -8,15 +8,31 @@
 </style>
 <template>
     <div :id="'ternimalContainer'+idIndex" class="console">
+      <div class="ternimal-header">
+        <span style="color: #fff">
+          <div class="active-icon" :class="isLogin ? 'green-bg': 'red-bg'"></div>
+          {{userName}}
+        </span>
+        <span  style="color: #fff">
+          <i class="nz-icon nz-icon-reconnect"  v-show="isInit" style="margin-right: 22px" @click="reconnect"></i>
+          <i class="nz-icon nz-icon-SFTP" v-show="isLogin" v-if="userName && terminalType == '1'" style="margin-right: 22px" @click="showFileDir(true)"></i>
+        </span>
+      </div>
         <div :id="'terminal'+idIndex" ></div>
+      <fileDirectory v-clickoutside="closeFileDir" :uuid="terminal.uuid" v-show="fileDirectoryShow" @close="showFileDir(false)" :fileDirectoryShow="fileDirectoryShow" ref="fileDirectory"/>
     </div>
 </template>
 <script>
 import Terminal from '../common/js/Xterm'
+import fileDirectory from './fileDirectory'
 export default {
   name: 'console',
+  components: {
+    fileDirectory
+  },
   props: {
     terminal: { },
+    terminalType: { default: '1' },
     idIndex: {
       type: Number,
       default: 0
@@ -40,6 +56,8 @@ export default {
       obj: {
         id: 2
       },
+      isLogin: false,
+      isInit:false,
       successBackContent: 'Connecting to',
       failBackContent: 'Sorry',
       connectFailContent: 'Connection failed',
@@ -47,7 +65,9 @@ export default {
       psdCont: 'password: ',
       conFinish: false,
       conSuccessNum: 0,
-      inputSecret: false
+      inputSecret: false,
+      userName: '',
+      fileDirectoryShow: false
     }
   },
   watch: {
@@ -65,7 +85,7 @@ export default {
       const consoleBox = document.getElementById('ternimalContainer' + this.idIndex)
       consoleBox.style.height = `${consoleHeigt - 55}px`
       // 调整终端可视区域高度
-      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height = `${consoleHeigt - 10}px`
+      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height = `${consoleHeigt - 10 - 30}px`
       this.$nextTick(() => { // 解决进入全屏和退出全屏是底部隐藏
         this.setFontSize(this.fontSize)
       })
@@ -130,8 +150,7 @@ export default {
     focusConsole () {
       this.term.focus()
     },
-    create () {
-      const that = this
+    beforeCreate () {
       let rows = this.termimalRows
       if (this.isFullScreen) {
         // 容器高度设置100%
@@ -157,6 +176,42 @@ export default {
       })
       this.term.open(terminalContainer)
       this.term.focus()
+      const params = {
+        width: this.terminal.width,
+        height: this.terminal.height,
+        cols: this.terminal.cols,
+        rows: this.terminal.rows,
+        host: this.$loadsh.get(this.terminal, 'custom.host', ''),
+        port: this.$loadsh.get(this.terminal, 'custom.port', ''),
+        assetId: this.$loadsh.get(this.terminal, 'assetId', ''),
+        accountId: this.$loadsh.get(this.terminal, 'accountId', ''),
+        authProtocol: this.$loadsh.get(this.terminal, 'custom.authProtocol', ''),
+        authProtocolPort: this.$loadsh.get(this.terminal, 'custom.authProtocolPort', ''),
+        authType: this.$loadsh.get(this.terminal, 'custom.authType', ''),
+        authUsername: this.$loadsh.get(this.terminal, 'custom.authUsername', ''),
+        authPin: this.$loadsh.get(this.terminal, 'custom.authPin', ''),
+        authPriKey: this.$loadsh.get(this.terminal, 'custom.authPriKey', ''),
+        authUserTip: this.$loadsh.get(this.terminal, 'custom.authUserTip', ''),
+        authPinTip: this.$loadsh.get(this.terminal, 'custom.authPinTip', '')
+      }
+      this.$post('/terminal/login', params).then(res => {
+        if (res.code == 200) {
+          this.terminal.uuid = res.data.uuid
+          this.userName = res.data.authUsername + '@' + res.data.host
+          this.host = res.data.host
+          this.create()
+        } else {
+          this.terminal.uuid = res.data.uuid
+          this.userName = res.data.authUsername + '@' + res.data.host
+          this.host = res.data.host
+          params.name = this.terminal.name
+          this.$emit('loginFail', params)
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    create () {
+      const that = this
       const token = localStorage.getItem('nz-token')
       let baseUrl = JSON.parse(JSON.stringify(this.$axios.defaults.baseURL))
       const protocol = window.location.protocol.indexOf('https') > -1 ? 'wss' : 'ws'
@@ -177,8 +232,10 @@ export default {
         })
       }
       this.terminalSocket = new WebSocket(url)
-      // 连接成功
+      // 连接成功onclose
       this.terminalSocket.onopen = () => {
+        this.isLogin = true
+        this.isInit = true
       }
       // 登录后，你输入的内容从后台服务返回
       this.term.on('data', function (data) {
@@ -192,7 +249,6 @@ export default {
       // 返回
       this.terminalSocket.onmessage = function (evt) {
         let backContent = evt.data
-
         const welComIndex = backContent.indexOf(that.welcomeBackContent)
         if (welComIndex > -1) { // 无服务器信息（只与nezha进行了连接）
           const connectResult = {
@@ -235,13 +291,16 @@ export default {
       }
       // 关闭
       this.terminalSocket.onclose = () => {
+        this.isLogin = false
         // 报错sorry的，还没来得及看信息就关闭
         // this.$emit("closeConsole",this.terminal.name);//
         this.term && this.term.setOption('disableStdin', true)
       }
 
       // 错误
-      this.terminalSocket.onerror = (e) => {}
+      this.terminalSocket.onerror = (e) => {
+        this.isLogin = false
+      }
       // 选中 复制
       this.term.on('selection', function () {})
       this.term.attachCustomKeyEventHandler(function (ev) { })
@@ -281,7 +340,7 @@ export default {
         rows: this.term.rows
       }
       // 调整终端可视区域高度
-      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height = height + 'px'
+      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height = height - 30 + 'px'
       this.$nextTick(() => {
         this.term.resize(this.term.cols, this.term.rows)
         this.$post('terminal/resize', winStyle).then(response => {
@@ -292,10 +351,33 @@ export default {
           }
         })
       })
+    },
+    reconnect () {
+      this.isLogin = false
+      this.closeSocket()
+      this.term.off('selection')
+      this.term.off('data')
+      this.beforeCreate()
+    },
+    closeFileDir () {
+      this.showFileDir(false)
+    },
+    showFileDir (show) {
+      if (JSON.stringify(show) == JSON.stringify(this.fileDirectoryShow)) {
+        return
+      }
+      if (show) {
+        this.fileDirectoryShow = show
+      }
+      let animationClass = ''
+      animationClass = show ? 'backInUp' : 'backOutDown'
+      this.animateCSS(this.$refs.fileDirectory.$el, animationClass).then((message) => {
+        this.fileDirectoryShow = show
+      })
     }
   },
   mounted () {
-    this.create()
+    this.beforeCreate()
   },
   beforeDestroy () {
     this.closeSocket()
@@ -304,3 +386,6 @@ export default {
   }
 }
 </script>
+<style scoped lang="scss">
+
+</style>

@@ -55,13 +55,13 @@
           </copy>
         </template>
         <template v-else-if="item.prop === 'endpointNum'">
-          <span class="endpoint-num"  @click="showBottomBox('endpoint', scope.row)">
+          <span class="endpoint-num"  @click.stop="showBottomBox('endpoint', scope.row)" @dblclick.stop="">
              <i class="nz-icon nz-icon-overview-endpoint monitorColor"/>
           {{scope.row[item.prop]}}
           </span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-          <span style="cursor: pointer"  @click="showBottomBox('moduleAlertMessage', scope.row)">
+          <span style="cursor: pointer"  @click.stop="showBottomBox('moduleAlertMessage', scope.row)" @dblclick.stop="">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
               <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
@@ -75,6 +75,9 @@
               :alertDaysData="scope.row.alertDaysData"
             />
           </span>
+        </template>
+        <template v-else-if="item.prop === 'panel'">
+          {{scope.row.panel ? scope.row.panel.name : '-'}}
         </template>
         <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -178,8 +181,12 @@ export default {
           show: true,
           width: 120,
           sortable: 'custom'
-        },
-        {
+        }, {
+          label: this.$t('model.dashboardtemplate'),
+          prop: 'panel',
+          minWidth: 150,
+          show: false
+        }, {
           label: this.$t('overall.remark'),
           prop: 'remark',
           show: true,

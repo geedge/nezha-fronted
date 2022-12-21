@@ -157,7 +157,7 @@
    .el-pagination{
       font-size: 14px;
       .btn-prev, .btn-next{
-        color: $--background-color-empty;
+        color: $--color-text-regular;
         font-size: 14px;
         margin: 0 5px;
         border: none;
@@ -195,6 +195,9 @@
     .el-dialog__headerbtn{
       line-height: 32px;
     }
+  }
+  .el-dialog__body{
+
   }
   .el-button{
     //background-color: $--background-color-1 !important;

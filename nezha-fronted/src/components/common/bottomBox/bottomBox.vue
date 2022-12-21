@@ -27,8 +27,9 @@
         <endpoint-tab v-if="from === fromRoute.asset && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab" :targetTab.sync="targetTab"></endpoint-tab>
 
         <!--terminal-log的记录和回放-->
-        <terminal-log-cmd-tab v-if="from === fromRoute.terminalLog && targetTab === 'cmdTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.cmd" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-cmd-tab>
-        <terminal-log-record-tab v-if="from === fromRoute.terminalLog && targetTab === 'recordTab'" ref="reminalLogRecordTab" :from="from" :obj="obj" :tabs="tabs.terminalLog.record" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-record-tab>
+        <terminal-log-cmd-tab v-if="from === fromRoute.terminalLog && targetTab === 'cmdTab'" :from="from" :obj="obj" :tabs="hasTerminalLogTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-cmd-tab>
+        <terminal-log-sftp-tab v-if="from === fromRoute.terminalLog && targetTab === 'sftpTab' && obj.protocol == 'SSH'" :from="from" :obj="obj" :tabs="hasTerminalLogTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-sftp-tab>
+        <terminal-log-record-tab v-if="from === fromRoute.terminalLog && targetTab === 'recordTab'" ref="reminalLogRecordTab" :from="from" :obj="obj" :tabs="hasTerminalLogTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-record-tab>
         <terminal-log-monitor-tab v-if="from === fromRoute.terminalLog && targetTab === 'monitorTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.monitor" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></terminal-log-monitor-tab>
 
         <asset-tab v-if="from === fromRoute.dc && targetTab === 'asset'" :tabs="tabs.dc.asset" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></asset-tab>
@@ -56,7 +57,9 @@
         <log-bottom-tab v-if="from === fromRoute.endpoint && targetTab === 'log' && hasLogConfig" :sign="sign+'log'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
         <alertMessageTabNew  v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" :sign="sign+'alert'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></alertMessageTabNew>
         <!--chartTemp的Tab-->
-        <panel-tab-new @exit="closeSubList" @getTableData="getTableData"  :paramsType="'template'" v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.chartTemp.chartTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <panel-tab-new @exit="closeSubList" @getTableData="getTableData" :paramsType="'template'" v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.chartTemp.chartTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <!--dashboardTemp的Tab-->
+        <panel-tab-new @exit="closeSubList" @getTableData="getTableData" :paramsType="'template'" v-if="from === fromRoute.dashboardTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.dashboardTemp.dashboardTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--alertRule Tab-->
         <alertMessageTabNew v-if="from === fromRoute.alertRule && targetTab === 'alertRuleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
         <alertRuleEvalLog v-if="from === fromRoute.alertRule && targetTab === 'evalLog'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertRuleEvalLog>
@@ -67,11 +70,12 @@
         <!-- ipam -->
         <ip-details v-if="from === fromRoute.ipam && targetTab === 'ipam'" :from="from" :obj="obj" :tabs="tabs.ipam" @changeTab="changeTab" :targetTab.sync="targetTab"></ip-details>
         <!-- recordRule  下滑-->
-        <record-rule-eval-log v-if="from === fromRoute.recordRule && targetTab === 'recordRule'" :from="from" :obj="obj" :tabs="tabs.recordRule" @changeTab="changeTab" :targetTab.sync="targetTab"></record-rule-eval-log>
+        <record-rule-eval-log v-if="from === fromRoute.recordRule && targetTab === 'recordRule'" :from="from" :obj="obj" :tabs="tabs.recordRule.evalLog" @changeTab="changeTab" :targetTab.sync="targetTab"></record-rule-eval-log>
+        <recordRulesQuery v-if="from === fromRoute.recordRule && targetTab === 'Metrics'" :from="from" :obj="obj" :tabs="tabs.recordRule.Metrics" @changeTab="changeTab" :targetTab.sync="targetTab"></recordRulesQuery>
         <!--alertRule Tab-->
         <alertMessageTabNew v-if="from === fromRoute.alertSilence && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
         <!--issue Tab-->
-<!--        <issueTab v-if="from === fromRoute.issue && targetTab === 'issue'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></issueTab>-->
+        <!-- <issueTab v-if="from === fromRoute.issue && targetTab === 'issue'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></issueTab> -->
       </div>
     </div>
   </div>
@@ -87,10 +91,12 @@ import assetSubTab from './tabs/assetSubTab'
 import commentsBottomTab from './tabs/commentsBottomTab'
 import vsysBottomTab from './tabs/vsysBottomTab'
 import endpointQuery from './tabs/endpointQuery'
+import recordRulesQuery from './tabs/recordRulesQuery'
 import endpointTab from './tabs/endpointTab'
 import endpointTabNew from './tabs/endpointTabNew'
 import panelTabNew from './tabs/panelTabNew'
 import terminalLogRecordTab from './tabs/terminalLogRecordTab'
+import terminalLogSftpTab from './tabs/terminalLogSftpTab'
 import terminalLogMonitorTab from './tabs/terminalLogMonitorTab'
 import terminalLogCMDTab from './tabs/terminalLogCMDTab'
 import operationLogTab from './tabs/operationLogTab'
@@ -117,6 +123,7 @@ export default {
     alertMessageTab,
     endpointTab,
     terminalLogRecordTab,
+    terminalLogSftpTab,
     terminalLogMonitorTab,
     operationLogTab,
     terminalLogTab,
@@ -130,6 +137,7 @@ export default {
     alertRuleEvalLog,
     IpDetails,
     recordRuleEvalLog,
+    recordRulesQuery,
     issueTab,
     commentsBottomTab,
     vsysBottomTab
@@ -157,15 +165,15 @@ export default {
         terminalLog: {
           monitor: [
             { prop: 'monitorTab', name: this.$t('config.terminallog.monitor.monitor'), active: true }
-          ],
-          cmd: [
-            { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: true },
-            { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: false }
-          ],
-          record: [
-            { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: false },
-            { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: true }
           ]
+        //   // cmd: [
+        //   //   { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: true },
+        //   //   { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: false }
+        //   // ],
+        //   // record: [
+        //   //   { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: false },
+        //   //   { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: true }
+        //   // ]
         },
         user: {
           operationLog: [
@@ -206,6 +214,11 @@ export default {
             { prop: 'panel', name: this.$t('overall.tempPrev') }
           ]
         },
+        dashboardTemp: {
+          dashboardTempTabTitle: [
+            { prop: 'panel', name: this.$t('overall.dashboardTemp') }
+          ]
+        },
         alertRule: {
           alertRule: [
             { prop: 'alertRuleAlertMessage', name: this.$t('overall.alert') },
@@ -238,9 +251,16 @@ export default {
         ipam: [
           { prop: 'ipam', name: this.$t('ipam.subnet.ipDetails'), active: true }
         ],
-        recordRule: [
-          { prop: 'recordRule', name: this.$t('overall.alertRuleEvalLog'), active: true }
-        ],
+        recordRule: {
+          Metrics: [
+            { prop: 'Metrics', name: this.$t('overall.metric'), active: true },
+            { prop: 'recordRule', name: this.$t('overall.alertRuleEvalLog'), active: false }
+          ],
+          evalLog: [
+            { prop: 'Metrics', name: this.$t('overall.metric'), active: false },
+            { prop: 'recordRule', name: this.$t('overall.alertRuleEvalLog'), active: true }
+          ]
+        },
         alertSilence: [
           { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
         ],
@@ -251,6 +271,17 @@ export default {
     }
   },
   computed: {
+    hasTerminalLogTabs () {
+      const hasSftp = this.obj && this.obj.protocol == 'SSH'
+      const tabs = [
+        { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd') },
+        { prop: 'recordTab', name: this.$t('config.terminallog.record.record') }
+      ]
+      if (hasSftp) {
+        tabs.splice(1, 0, { prop: 'sftpTab', name: 'SFTP ' })
+      }
+      return tabs
+    },
     hasLogConfig () {
       const config = this.obj.configs.find(c => c.type === 'logs')
       return config && config.enable === 1
@@ -258,7 +289,7 @@ export default {
     assetTabs () {
       const hasSub = this.obj && this.obj.childrenNum
       const hasProcess = this.obj && this.obj.clientState == '1'
-      const hasVays = this.obj && this.obj.model.tsgAppliance == '1'
+      const hasVays = this.obj && this.obj.model && this.obj.model.tsgAppliance == '1'
       const tabs = [
         { prop: 'panelTab', name: this.$t('overall.dashboard') },
         { prop: 'alertMessageTab', name: this.$t('overall.alert') },

@@ -1270,6 +1270,10 @@ li {
     &>span{
       margin-right: 12px;
     }
+    .exists-select{
+      top: auto !important;
+      left: auto !important;
+    }
   }
   .import-select-list{
     .import-select-item{
@@ -1282,7 +1286,7 @@ li {
 }
 .import-failContent-dialog{
   .el-dialog__header{
-    padding: 14px;
+    padding: 15px;
     border-bottom: 1px solid $--border-color-light;
   }
   .el-dialog__body{
@@ -1314,9 +1318,9 @@ li {
         }
       }
       .result-detail{
-        height: 182px;
+        height: 184px;
         margin: 10px 0;
-        padding: 16px 0;
+        padding: 18px 0;
         box-sizing: border-box;
         position: relative;
         &>div{
@@ -1325,7 +1329,7 @@ li {
         .nz-icon-override{
           cursor: pointer;
           position: absolute;
-          top: 5px;
+          top: 3px;
           right: 15px;
         }
         .import-result-item {
@@ -1415,7 +1419,7 @@ li {
 .dropdown-item-active {
   color: $--color-primary !important;
   font-weight: bold;
-  background-color: #FAFAFA;
+  background-color: $--background-color-base;
 }
 .el-dropdown-multi .el-dropdown-menu__item:focus {
   color: $--color-text-regular;

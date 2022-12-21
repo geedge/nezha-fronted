@@ -37,12 +37,11 @@
                 <i class="nz-icon nz-icon-more2"></i>
               </button>
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
-                <el-dropdown-item :disabled="saveDisabled">
+                <el-dropdown-item :disabled="saveDisabled" v-has="'main_add'">
                   <div>
                     <i class="nz-icon nz-icon-add" />
                     <span v-if="showMetrics"
                           id="explore-save-chart"
-                          v-has="'main_add'"
                           :class="{'btn-disabled-cursor-not-allowed' : saveDisabled}"
                           :disabled="saveDisabled"
                           class="top-tool-btn top-tool-btn--text"
@@ -52,7 +51,6 @@
                   </span>
                     <span v-else
                           id="explore-save-chart-logs"
-                          v-has="'main_add'"
                           :class="{'btn-disabled-cursor-not-allowed' : saveDisabled}"
                           :disabled="saveDisabled"
                           class="top-tool-btn top-tool-btn--text"
@@ -4253,6 +4251,7 @@ export default {
       }
       if (!this.showMetrics) {
         params.limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
+        params.direction = this.$refs.logDetail ? this.$refs.logDetail.getDescending() : 'backward'
       }
       this.$store.dispatch('dispatchHomeLoading', true)
       this.$get('/visual/explore/snapshot', params, 'blob').then(res => {
@@ -4287,7 +4286,6 @@ export default {
           document.body.removeChild(link) // 下载完成移除元素
           window.URL.revokeObjectURL(href) // 释放blob对象
         }
-        this.$refs.topTool.closeDialog()
       }, () => {
         this.$message.error('123')
       })

@@ -1,5 +1,6 @@
 <template>
   <nz-bottom-data-list
+    :showPagination="false"
     :showTitle='showTitle'
     :obj='obj'
     :layout="[]"
@@ -35,14 +36,14 @@
 </template>
 
 <script>
-import dataListMixin from '@/components/common/mixin/dataList'
+// import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 
 export default {
   name: 'terminalLogRecordTab',
-  mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
+  mixins: [subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList
   },
@@ -50,7 +51,7 @@ export default {
     calcTime () {
       return function (time) {
         if (this.obj.startTime) {
-          const startTime = new Date(this.utcTimeToTimezoneStr(this.obj.startTime)).getTime()
+          const startTime = this.momentStrToTimestamp(this.utcTimeToTimezoneStr(this.obj.startTime))
           if (startTime) {
             const thisTime = startTime + time
             return this.momentTz(thisTime)
@@ -92,7 +93,8 @@ export default {
       records: [ // 加载更多时有多个record，否则只有一个
 
       ],
-      tableId: 'terminaLogCMDTab'
+      tableId: 'terminaLogCMDTab',
+      detailType: 'list'
     }
   },
   methods: {

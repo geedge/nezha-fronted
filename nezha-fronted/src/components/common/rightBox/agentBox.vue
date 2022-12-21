@@ -14,7 +14,7 @@
         <el-form ref="agentForm" :model="editPromServer" :rules="rules" label-position = "top" label-width="120px">
           <!--          name-->
           <el-form-item :label='$t("overall.name")' prop="name">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model.trim="editPromServer.name" size="small" id="agent-box-input-name"></el-input>
+            <el-input placeholder="" maxlength="64" show-word-limit v-model="editPromServer.name" size="small" id="agent-box-input-name"></el-input>
           </el-form-item>
           <!--DC-->
           <el-form-item :label="$t('overall.dc')" prop="dc.name">
@@ -118,6 +118,12 @@ export default {
           { required: true, message: this.$t('validate.required') }
         ],
         type: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        token: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        protocol: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ]
       },

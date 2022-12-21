@@ -1,0 +1,147 @@
+.web-terminal-new{
+  height: calc(100vh - 68px);
+  background: $--background-color-base;
+  /*border-top: 1px solid #BEBEBE;*/
+  box-shadow: 0 1px 0 0 $--border-color-light;
+  /deep/ .el-tabs{
+    border: none;
+    height: 100%;
+    width:100%;
+    margin-left:0px;
+    .el-tabs__nav-prev, .el-tabs__nav-next{
+      display: inline-block;
+      background: $--background-color-2 !important;
+      width: 20px;
+      height: 36px;
+      text-align: center;
+      line-height: 40px;
+      color: $--color-text-primary;
+    }
+    .el-tabs__nav-prev.is-disabled, .el-tabs__nav-next.is-disabled{
+      cursor: pointer !important;
+      display: inline-block;
+      background: $--background-color-2 !important;
+      width: 20px;
+      height: 36px;
+      text-align: center;
+      line-height: 40px;
+      color: $--color-text-primary;
+    }
+    .el-tabs__header{
+      height: 36px;
+      width: 100%;
+      .el-tabs__item{
+        height: 36px;
+        transform: translateY(-2px);
+        padding: 0 10px 0 10px;
+        margin-top: 0;
+        border-top: 2px solid transparent;
+        width: 126px;
+        background: $--background-color-empty;
+        line-height: 34px;
+        display: inline-block;
+        box-sizing: border-box;
+        .el-tabs__item-label{
+          display: inline-flex;
+          width: calc(100% - 20px);
+          align-items: center;
+          .active-icon{
+            flex-shrink: 1;
+          }
+          .el-tabs__item-label-name{
+            flex: 1;
+            width: calc(100% - 30px);
+          }
+        }
+        .el-icon-close{
+          display: none;
+        }
+      }
+      .el-tabs__item.is-active {
+        width: 200px;
+        border-top: 2px solid $--color-primary;
+        font-size: 14px;
+        color: $--color-text-primary;
+      }
+      .icon-reference{
+        display: none;
+      }
+      .el-tabs__item:hover{
+        width: 200px;
+        .icon-reference{
+          display: inline-block;
+        }
+        .el-icon-close{
+          display: inline-block;
+        }
+      }
+      .el-tabs__item:last-of-type {
+        height: 36px;
+        padding: 0 5px;
+        border: none;
+        border-top: 2px solid transparent;
+        background: transparent;
+        width: 40px;
+        line-height: 34px;
+      }
+    }
+    .el-tabs__content{
+      height: calc(100% - 36px);
+      background: #000;
+      box-sizing: border-box;
+      overflow: unset;
+      padding: 5px 5px;
+      .el-tab-pane{
+        height: 100%;
+      }
+    }
+  }
+}
+
+.webTerminal{
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  .web-terminal-header{
+    height: 36px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 0 15px;
+    background: $--background-color-base;
+    box-shadow: inset 0 -1px 0 0 $--dropdown-menu-box-shadow-color;
+    font-size: 14px;
+    line-height: 36px;
+    color: $--color-text-primary;
+    img {
+      vertical-align: sub;
+      height: 20px;
+      width: 20px;
+      margin-right: 10px;
+    }
+  }
+  .right-tip {
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    padding: 0 6px;
+    line-height: 15px;
+    height: 15px;
+    background-color: #ba3939;
+    opacity: .9;
+    border-radius: 7px;
+    color: white;
+    font-size: 6px;
+  }
+  .shell-input{
+    input {
+      background: #1E1E1E !important;
+      border: none;
+    }
+    input::input-placeholder{
+      color: #7C7C7C;
+    }
+  }
+}
+

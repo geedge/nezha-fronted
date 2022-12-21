@@ -1,8 +1,8 @@
 <template>
-  <div class="home" :class="mode" v-my-loading.dark="loading">
-    <left-menu @refresh="refresh"></left-menu>
+  <div class="home" :class="mode" v-my-loading.dark="loading" >
+    <left-menu @refresh="refresh" v-show="showMenu"></left-menu>
     <div ref="body" class="body">
-      <Header></Header>
+      <Header v-show="showHeader"></Header>
       <container v-if="containerShow" ref="container"></container>
     </div>
     <!--web-ssh-->
@@ -46,6 +46,12 @@ export default {
     },
     loading () {
       return this.$store.getters.getHomeLoading
+    },
+    showMenu () {
+      return !this.$route.meta.hideMenu
+    },
+    showHeader () {
+      return !this.$route.meta.hideHeader
     }
   },
   methods: {

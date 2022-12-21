@@ -1,0 +1,211 @@
+.fileDirectory {
+  width: 45%;
+  min-width: 700px;
+  position: absolute;
+  top: -5px;
+  height: calc(100% + 30px);
+  right: -15px;
+  background: $--background-color-empty;
+  box-shadow: 5px 0 3px 0 $--explore-border-color-bottom;
+  z-index: 10;
+  font-size: 14px;
+  .file-directory-header{
+    display: flex;
+    font-size: 14px;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 36px;
+    line-height: 36px;
+    background: $--background-color-empty;
+    border-bottom: 1px solid rgba(51,51,51,0.10);
+    box-sizing: border-box;
+    color:$--color-text-regular;
+    .header-option{
+      >i {
+        margin-right: 22px;
+      }
+      .nz-icon-close {
+        margin-right: 15px;
+      }
+    }
+  }
+  .file-directory-path{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: $--background-color-empty;
+    height: 36px;
+    line-height: 36px;
+    box-sizing: border-box;
+    color:$--color-text-regular;
+    .breadcrumb-box{
+      .nz-icon-edit{
+        margin-left: 15px;
+        display: none;
+      }
+    }
+    .breadcrumb-box:hover {
+      .nz-icon-edit{
+        display: inline-block;
+      }
+    }
+    .nz-icon-edit:hover{
+      color: $--color-primary;
+      cursor: pointer;
+    }
+    .breadcrumb-item{
+      color:$--color-text-regular
+    }
+    .breadcrumb-action{
+      cursor: pointer;
+    }
+    .breadcrumb-action:hover{
+      color: $--color-primary;
+    }
+    .path-option{
+      display: inline-block;
+      align-items: center;
+      .nz-icon-a-newfolder{
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+    }
+    .el-input--suffix .el-input__inner{
+      padding-right: 106px;
+    }
+  }
+  .file-directory-content{
+    height: calc(100% - 60px);
+    width: calc(100% - 15px);
+    overflow: auto;
+  }
+  //.file-state-panel-content::-webkit-scrollbar {
+  //  width: 6px;
+  //}
+  //.file-directory-content::-webkit-scrollbar-thumb {
+  //  width: 6px;
+  //}
+  //.file-directory-content::-webkit-scrollbar-thumb:hover {
+  //  width: 6px;
+  //}
+  .directory-content-header{
+    height: 32px;
+    line-height: 32px;
+    background: $--background-color-2;
+    width: calc(100% - 22px);
+    color: $--color-text-regular;
+    > div{text-transform:capitalize};
+  }
+  .file-name{
+    width: 44%;
+    box-sizing: border-box;
+    padding-left: 10px;
+    display: inline-block;
+    position: relative;
+    .nz-icon-link{
+      position: absolute;
+      font-size: 10px;
+      left: 7px;
+      bottom: -5px;
+      font-weight: 600;
+    }
+  }
+  .file-size{
+    width: 15%;
+    display: inline-block;
+    position: relative;
+  }
+  .file-date{
+    width: 25%;
+    display: inline-block;
+    position: relative;
+  }
+  .file-opt{
+    width: 14%;
+    display: inline-block;
+    .nz-icon-shuxing{
+      margin-right: 20px;
+    }
+  }
+  .file-arrow-header{
+  display: inline-flex;align-items: center;width: 100%
+}
+  .nz-arrow-box{
+    display: flex;flex-direction: column;align-items: center;margin-left: 7px
+  }
+  .nz-arrow-up{
+    margin-bottom: 5px;
+  }
+  .nz-arrow-up.is-select{
+    border-bottom:5px solid $--color-primary; /* 定义底部颜色 */
+  }
+  .nz-arrow-down.is-select{
+    border-top:5px solid $--color-primary; /* 定义底部颜色 */
+  }
+  .nz-icon-caret-up {
+    position: absolute;
+  }
+  .nz-icon-caret-down {
+    position: absolute;
+  }
+  .file-item{
+    font-family: Roboto-Regular;
+    font-size: 14px;
+    color: $--color-text-regular;
+    font-weight: 400;
+    margin-top: 8px;
+    line-height: 24px;
+    height: 24px;
+  }
+  .file-item:hover{
+    background: rgba(255,134,0,0.50);
+    font-family: Roboto-Regular;
+  }
+  .my-loading-box{
+    background: #1a1a1a;
+  }
+  .nz-icon:hover{
+    color: $--color-primary;
+  }
+  .file-info-item-header{
+    padding-bottom: 20px; border-bottom: 1px solid $--border-color-light;
+  }
+  .file-info-item{
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+
+    .file-info-item-left{
+      width: 180px;
+      flex-shrink: 1;
+    }
+    .file-info-item-right{
+      width: 200px;
+      flex-shrink: 1;
+    }
+  }
+}
+div.nz-arrow-up {
+  width:0px;
+  height:0px;
+  border-left:5px solid transparent;  /* 右透明 */
+  border-right:5px solid transparent; /*右透明 */
+  border-bottom:5px solid $--color-text-disabled; /* 定义底部颜色 */
+  font-size:0px;
+  line-height:0px;
+  cursor: pointer;
+}
+/* css3三角形（向下 ▼） */
+div.nz-arrow-down {
+  width:0px;
+  height:0px;
+  border-left:5px solid transparent;
+  border-right:5px solid transparent;
+  border-top:5px solid $--color-text-disabled;
+  font-size:0px;
+  line-height:0px;
+  cursor: pointer;
+}
+

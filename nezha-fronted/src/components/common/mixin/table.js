@@ -78,6 +78,10 @@ export default {
           this.$emit('topology', row, param)
           break
         }
+        case 'metricTarget': {
+          this.$emit('metricTarget', row, param)
+          break
+        }
         default:
           this.$emit(command, row, param)
           break

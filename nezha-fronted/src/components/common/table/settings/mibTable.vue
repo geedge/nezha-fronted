@@ -160,7 +160,7 @@ export default {
           show: true,
           minWidth: 100
         }, {
-          label: this.$t('asset.model'),
+          label: this.$t('overall.models'),
           prop: 'modelsDetail',
           show: true
         }, {

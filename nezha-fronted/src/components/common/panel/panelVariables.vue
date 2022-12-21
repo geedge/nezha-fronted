@@ -33,7 +33,7 @@
             <div class="choose-box-content" :title="item.checked.map(value=> labelValue[item.name].find(labelObj=>labelObj.value === value).label).join(' + ')">
               {{item.checked.map(value=> labelValue[item.name].find(labelObj=>labelObj.value === value).label).join(' + ')}}
             </div>
-            <i class="nz-icon nz-icon-arrow-down6"/>
+            <i class="nz-icon nz-icon-arrow-down6" style="cursor:pointer"/>
           </div>
         </div>
       </el-popover>
@@ -389,13 +389,22 @@ export default {
       })
     },
     close () {
+      let flag = false
       this.labelArr.forEach((item) => {
         if (item.visible && item.multi) {
-          this.$store.dispatch('dispatchVariablesArr', [...this.labelArr])
+          flag = true
         }
         item.visible = false
       })
+      if (flag) {
+        const oldVariables = this.$store.state.panel.variablesArr
+        // 如果新旧值相等 则不执行
+        if (JSON.stringify(oldVariables) !== JSON.stringify(this.labelArr)) {
+          this.$store.dispatch('dispatchVariablesArr', [...this.labelArr])
+        }
+      }
     }
+
   },
   beforeDestroy () {
     this.$store.dispatch('dispatchVariablesArr', [])

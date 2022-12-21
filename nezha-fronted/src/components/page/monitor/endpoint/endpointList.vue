@@ -157,6 +157,7 @@
           @reload="getTableData"
           @addSilence="addSilence"
           @topology="topology"
+          @metricTarget="metricTarget"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, item) => { $refs.dataList.showBottomBox(targetTab, item) }"></endpoint-table>
       </template>

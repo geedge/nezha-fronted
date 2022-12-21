@@ -10,10 +10,10 @@
       <div class="container__form">
         <el-form label-width="120px" label-position = "top" :model="editCabinet" ref="cabinetForm" :rules="rules">
           <el-form-item :label="$t('overall.name')" prop="name">
-            <el-input size='mini' maxlength="64" show-word-limit v-model.trim="editCabinet.name" id="cabinet-box-input-name"/>
+            <el-input size='mini' maxlength="64" show-word-limit v-model="editCabinet.name" id="cabinet-box-input-name"/>
           </el-form-item>
           <el-form-item :label="$t('overall.dc')" prop="idcId">
-            <el-input size='mini' v-model.trim="currentDc.name" disabled id="cabinet-box-input-dc"/>
+            <el-input size='mini' v-model="currentDc.name" disabled id="cabinet-box-input-dc"/>
           </el-form-item>
           <el-form-item :label="$t('config.cab.uSize')" prop="uSize">
             <el-input v-model.number="editCabinet.uSize" :max="47" id="cabinet-box-input-uSize" size="small"></el-input>

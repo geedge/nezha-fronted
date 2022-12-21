@@ -76,7 +76,7 @@
           </div>
           <transition name="el-zoom-in-top">
             <el-row v-show="expressionsShow[index-1].show">
-              <el-form-item :prop="'elements.' + (index -1) + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}">
+              <el-form-item :prop="'elements.' + (index -1) + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}">
                 <promql-input
                   :from-father-data="true"
                   :metricOptionsParent="metricOptions"
@@ -480,7 +480,7 @@
           <el-row v-if="chartConfig.param.enable.thresholds && isThresholdConfig(chartConfig.type)">
             <el-form-item
               v-for="(item,index) in chartConfig.param.thresholds"
-              :key="index"
+              :key="item.color + '' + index"
               class="thresholds-item"
               :prop="'param.thresholds.' + index + '.value'"
               :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"

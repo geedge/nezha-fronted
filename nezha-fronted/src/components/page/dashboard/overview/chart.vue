@@ -409,6 +409,12 @@ export default {
       if (params.name === 'stack') {
         return this.$t('overall.toolBox.stack')
       }
+      if (params.name === 'zoom') {
+        return this.$t('overall.toolBox.zoom')
+      }
+      if (params.name === 'back') {
+        return this.$t('overall.toolBox.back')
+      }
       return params.title
     },
     defaultTooltipFormatter: function (params) {

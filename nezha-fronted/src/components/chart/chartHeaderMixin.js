@@ -86,6 +86,39 @@ export default {
       this.$emit('unitChange', val)
     }
   },
+  computed: {
+    variablesArr () {
+      return this.$store.getters.getVariablesArr
+    },
+    // 所有类型 chart name 支持变量替换
+    nameFormate () {
+      let str = this.chartInfo.name
+      // group图表设置repeat的name替换
+      if (this.chartInfo.repeatVariable) {
+        const variable = this.chartInfo.repeatVariable
+        const reg = new RegExp('\\$' + variable, 'g')
+        str = str.replace(reg, this.chartInfo.repeatValue.replace(/\\"/g, '"').replace(/\\'/g, "'"))
+      }
+      let confirmReg = []
+      this.variablesArr.forEach(item => {
+        const reg = '$' + item.name // 后续需要考虑 item,name 使用特殊字符的问题
+        const index = this.chartInfo.name.indexOf(reg)
+        if (index !== -1) {
+          confirmReg.push(item)
+        }
+      })
+      confirmReg = this.$loadsh.orderBy(confirmReg, function (item) { // 根据 匹配的name的长度排序 避免匹配的 $a 没匹配 $asset的问题
+        return item.name.length
+      }, 'desc')
+      if (confirmReg.length) {
+        confirmReg.forEach(item => {
+          const reg = new RegExp('\\$' + item.name, 'g') // 后续需要考虑 item,name 使用特殊字符的问题
+          str = str.replace(reg, item.checked.map(label => label.replace(/\\"/g, '"').replace(/\\'/g, "'")).join('+'))
+        })
+      }
+      return str
+    }
+  },
   watch: {
     isError: {
       immediate: true,

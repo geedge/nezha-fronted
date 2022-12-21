@@ -94,7 +94,7 @@ const panel = {
       state.currentMousemove = value
     },
     setVariablesArr (state, value) {
-      state.variablesArr = value
+      state.variablesArr = JSON.parse(JSON.stringify(value))
     },
     setTimeBoxClass (state, value) {
       state.timeBoxClass = value

@@ -335,6 +335,22 @@ export default {
       }
       this.silenceBoxShow = true
     },
+    metricTarget (row, type) {
+      const protocol = row.configs[0].config.protocol
+      const host = row.configs[0].config.host
+      const port = row.configs[0].config.port
+      const metricsPath = row.configs[0].config.metrics_path
+      const params = row.configs[0].config.params
+      let str = ''
+      if (!lodash.isEmpty(params)) {
+        for (const key in params) {
+          str += key + '=' + params[key] + '&'
+        }
+      }
+      const linkTarget = `${protocol}://${host}:${port + metricsPath}${str ? '?' + str.slice(0, str.length - 1) : ''}`
+      // window.open(linkTarget, 'target')
+      window.open(linkTarget)
+    },
     topology (row, type) {
       const chartInfo = lodash.cloneDeep(defaultData)
       chartInfo.id = row.id
@@ -1326,10 +1342,12 @@ export default {
     }
     let localStorageTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
     localStorageTableTitle = localStorageTableTitle ? JSON.parse(localStorageTableTitle) : tableTitle
-    this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
-      item.show = localStorageTableTitle[index].show
-      return item
-    })
+    if (tableTitle) {
+      this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
+        item.show = localStorageTableTitle[index].show
+        return item
+      })
+    }
     if (localStorageTableTitle && (localStorageTableTitle.length > tableTitle.length)) {
       const arr = localStorageTableTitle.splice(tableTitle.length, localStorageTableTitle.length)
       arr.forEach(item => {

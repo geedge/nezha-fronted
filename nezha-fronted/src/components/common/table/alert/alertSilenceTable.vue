@@ -265,7 +265,7 @@ export default {
           width: 300
         },
         {
-          label: this.$t('alert.alert'),
+          label: this.$t('overall.alert'),
           prop: 'alertNum',
           show: false,
           width: 120,

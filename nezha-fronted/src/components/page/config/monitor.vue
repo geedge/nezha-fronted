@@ -27,6 +27,16 @@
             <el-option label="Per-datacenter" value="2"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item :label="$t('config.system.monitor.interface_name')" prop="interface_name">
+          <vue-tags-input
+                        v-model="tag"
+                        :maxlength="32"
+                        :class="monitor.interface_name.length !== 0 ? 'interface-name' : ''"
+                        :placeholder="$t('overall.add.interface_name')"
+                        :tags="monitor.interface_name"
+                        @tags-changed="newTags=> monitor.interface_name = newTags"
+                      />
+        </el-form-item>
         <!--metrics-->
         <div class="system-title system-title-border">{{$t('config.system.monitor.metricsTitle')}}</div>
         <el-form-item :label="$t('config.system.monitor.metrics_storage_retention')" prop="metrics_storage_retention">
@@ -54,7 +64,7 @@
               <el-input v-model="monitor.metrics_storage_s3_access_key" id="monitor-metrics_storage_s3_access_key">
               </el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.terminallog.key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+            <el-form-item :label="$t('config.terminallog.key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastElement">
               <el-input v-model="monitor.metrics_storage_s3_secret_access_key" id="monitor-metrics_storage_s3_secret_access_key" type="password">
               </el-input>
             </el-form-item>
@@ -90,7 +100,7 @@
               <el-input v-model="monitor.logs_storage_s3_access_key" id="monitor-logs_storage_s3_access_key">
               </el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.terminallog.key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+            <el-form-item :label="$t('config.terminallog.key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastElement">
               <el-input v-model="monitor.logs_storage_s3_secret_access_key" id="monitor-logs_storage_s3_secret_access_key" type="password">
               </el-input>
             </el-form-item>
@@ -110,13 +120,18 @@
 <script>
 import systemMixin from '../../common/mixin/system/systemMixin'
 import routerPathParams from '../../common/mixin/routerPathParams'
+import VueTagsInput from '@johmun/vue-tags-input'
 
 export default {
   name: 'monitor',
   mixins: [systemMixin, routerPathParams],
+  components: {
+    VueTagsInput
+  },
   data () {
     return {
       switchTab: 'monitor',
+      tag: '',
       monitor: {
         // alert_api: '',
         asset_ping_from: '',
@@ -137,7 +152,8 @@ export default {
         metrics_storage_s3_endpoint: '',
         metrics_storage_s3_secret_access_key: '',
         metrics_storage_type: '',
-        prometheus_federation_enabled: ''
+        prometheus_federation_enabled: '',
+        interface_name: []
       },
       monitorRules: {
         // alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
@@ -169,3 +185,5 @@ export default {
   }
 }
 </script>
+<style scoped>
+</style>

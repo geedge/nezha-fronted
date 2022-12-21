@@ -67,7 +67,7 @@
           </el-form-item>
           <!--name-->
           <el-form-item v-if="optionType!=='batch'" :label='$t("overall.name")' label-width="125px" prop="name">
-            <el-input id="module-box-input-name" v-model.trim="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
+            <el-input id="module-box-input-name" v-model="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--Enpoint template-->
           <div class="right-box-sub-title">{{ $t("overall.config") }}
@@ -627,7 +627,7 @@
                         <el-form-item
                           :label="'Format'"
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.format'"
-                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]"
                         >
                          <!-- <el-input v-model="item2.format" placeholder="key" size="mini"></el-input> -->
                           <el-select v-model="item2.format" :id="'timestamp' + index +'-' + index2" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">

@@ -17,14 +17,16 @@ const removePending = (config) => {
 }
 axios.interceptors.request.use(
   config => {
-    const source = CancelToken.source() // 申明CancelToken,也可new CancelToken.source()实例一个
-    config.cancelToken = source.token // 将实例对象的token赋予该请求
-    const id = getUUID() // 添加唯一识别id 在请求完成时清除requestsArr
-    config.id = id
-    requestsArr.push({
-      id,
-      cancel: source.cancel
-    }) // 将该实例添加到队列中
+    if (!config.cancelToken) {
+      const source = CancelToken.source() // 申明CancelToken,也可new CancelToken.source()实例一个
+      config.cancelToken = source.token // 将实例对象的token赋予该请求
+      const id = getUUID() // 添加唯一识别id 在请求完成时清除requestsArr
+      config.id = id
+      requestsArr.push({
+        id,
+        cancel: source.cancel
+      }) // 将该实例添加到队列中
+    }
     const token = localStorage.getItem('nz-token')
     if (token) {
       config.headers.Authorization = token // 请求头token
@@ -64,12 +66,30 @@ axios.interceptors.request.use(
         paramsArr.forEach(p => {
           const i = p.indexOf('=')
           if (i > -1) {
-            params[p.substring(0, i)] = p.substring(i + 1, p.length)
+            params[p.substring(0, i)] = p.substring(i + 1, p.length).trim()
           } else {
             params[p] = ''
           }
         })
         config = { ...config, url: pre, params: params }
+      }
+    } else if (config.method === 'post' || config.method === 'put') {
+      try {
+        let params = config.data
+        if ((typeof params == 'string') && params.constructor == String) {
+          params = JSON.parse(config.data)
+        }
+        Object.keys(params).forEach(key => {
+          if ((typeof params[key] == 'string') && params[key].constructor == String) {
+            params[key] = params[key].trim()
+          }
+        })
+        if ((typeof config.data == 'string') && config.data.constructor == String) {
+          config.data = JSON.stringify(params)
+        } else {
+          config.data = params
+        }
+      } catch (e) {
       }
     }
     return config

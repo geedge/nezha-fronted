@@ -81,7 +81,8 @@ export default {
         metrics_storage_s3_endpoint: '',
         metrics_storage_s3_secret_access_key: '',
         metrics_storage_type: '',
-        prometheus_federation_enabled: ''
+        prometheus_federation_enabled: '',
+        interface_name: []
       },
       monitorRules: {
         // alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
@@ -118,12 +119,18 @@ export default {
         terminal_timeout: 30,
         terminal_telnet_user_tip: 'ogin:',
         terminal_telnet_pin_tip: 'assword:',
-        terminal_record_local_retention: 365
+        terminal_record_local_retention: 365,
+        terminal_storage_type: '',
+        terminal_storage_s3_endpoint: '',
+        terminal_storage_s3_bucket: '',
+        terminal_storage_s3_access_key: '',
+        terminal_storage_s3_secret_access_key: ''
       },
       terminalCopy: null,
       terminalRules: {
         terminal_timeout: [{ validator: positiveInteger, trigger: 'blur' }],
-        terminal_record_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }]
+        terminal_record_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        terminal_storage_type: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
       ldap: {
         ldap_address: '',
@@ -253,6 +260,13 @@ export default {
             this.$refs.emailForm.clearValidate()
           }
           if (type == 'monitor') {
+            if(response.data.interface_name){
+              let arr = response.data.interface_name.split(',')
+              this.monitor.interface_name = arr.map(item=>{
+                 return {text: item}
+
+              })
+            }
             localStorage.setItem('nz-prometheus-federation-enabled', this.monitor.prometheus_federation_enabled)
           }
           this[type + 'Copy'] = Object.assign({}, this[type])
@@ -269,6 +283,12 @@ export default {
             const mapConfig = this.$refs.latlngPicker.getAttribute()
             param.map_center_config = JSON.stringify(mapConfig)
             param.pin_policy = JSON.stringify(this.basic.pin_policy)
+          }
+          if(type == 'monitor') {
+            let str = this.monitor.interface_name.map(item=>{
+              return item.text
+            })
+            param.interface_name = str.join(',')
           }
           const postParam = Object.assign({}, param)
           for (const key in postParam[type]) {

@@ -126,7 +126,7 @@
          </el-step> -->
           <el-step>
             <span class="msg" slot="icon">Ping</span>
-            <p class="txt" slot="title">Ping {{$t('config.terminallog.cmd.cmd')}}</p>
+            <p class="txt" slot="title">Ping {{$t('tools.cmd')}}</p>
           </el-step>
         </el-steps>
       </div>
@@ -165,6 +165,7 @@ export default {
   },
   data () {
     return {
+      tableId: 'ping',
       // 防止用户重复点击
       flag: true,
       loading: false,

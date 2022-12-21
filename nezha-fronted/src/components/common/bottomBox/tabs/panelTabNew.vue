@@ -13,13 +13,13 @@
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
+        <!-- asset -->
         <div v-if="from === fromRoute.asset" style="display: flex">
           <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'panel' + obj.id"></pick-time>
-          <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
-                  type="button" @click="addChart">
+          <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChart">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-         <top-tool-more-options
+          <top-tool-more-options
             ref="topTool"
             :delete-objs="batchDeleteObjs"
             id="asset-list"
@@ -38,24 +38,25 @@
             @panelLockChange="panelLockChange"
           >
             <template v-slot:after>
-              <el-dropdown-item v-has="'main_add'">
+              <!-- <el-dropdown-item v-has="'main_add'">
                 <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
               </el-dropdown-item>
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-              </el-dropdown-item>
+              </el-dropdown-item> -->
               <el-dropdown-item v-has="'panel_view'">
                 <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
               </el-dropdown-item>
             </template>
           </top-tool-more-options>
         </div>
+        <!-- endpoint -->
         <div v-else-if="from === fromRoute.endpoint" style="display: flex">
           <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'panel' + obj.id"></pick-time>
           <button id="endpoint-create-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
-         <top-tool-more-options
+          <top-tool-more-options
             ref="topTool"
             :delete-objs="batchDeleteObjs"
             id="asset-list"
@@ -74,24 +75,36 @@
             @panelLockChange="panelLockChange"
           >
             <template v-slot:after>
-              <el-dropdown-item v-has="'main_add'">
+              <!-- <el-dropdown-item v-has="'main_add'">
                 <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
               </el-dropdown-item>
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-              </el-dropdown-item>
+              </el-dropdown-item> -->
               <el-dropdown-item v-has="'panel_view'">
                 <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
               </el-dropdown-item>
             </template>
           </top-tool-more-options>
         </div>
-        <div  v-else-if="from === fromRoute.chartTemp">
+        <!-- chartTemp -->
+        <div v-else-if="from === fromRoute.chartTemp">
           <button id="panel-lock" :title='panelLock ? $t("overall.unlocked") : $t("overall.locked")'  class="top-tool-btn margin-r-10" @click="panelLockChange(!panelLock)" type="button">
-          <i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>
-        </button>
-          <button  @click="chartBySync" id="chart-sync"  :title="$t('overall.syncChart')" class="top-tool-btn margin-r-10"
-                   type="button">
+            <i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>
+          </button>
+          <button @click="chartBySync" id="chart-sync"  :title="$t('overall.syncChart')" class="top-tool-btn margin-r-10" type="button">
+            <i class="nz-icon nz-icon-sync"></i>
+          </button>
+        </div>
+        <!-- dashboardTemp -->
+        <div v-else-if="from === fromRoute.dashboardTemp">
+          <button id="endpoint-create-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
+            <i class="nz-icon nz-icon-create-square"></i>
+          </button>
+          <button id="panel-lock" :title='panelLock ? $t("overall.unlocked") : $t("overall.locked")'  class="top-tool-btn margin-r-10" @click="panelLockChange(!panelLock)" type="button">
+            <i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>
+          </button>
+          <button @click="chartBySync" id="chart-sync"  :title="$t('overall.syncChart')" class="top-tool-btn margin-r-10" type="button">
             <i class="nz-icon nz-icon-sync"></i>
           </button>
         </div>
@@ -123,8 +136,9 @@
         </div>
       </div>
     </nz-bottom-data-list>
+
     <transition name="right-box">
-<!--      <chart-box v-if="rightBox.chart.show" ref="addChartModal" :chart="chart" :from="from" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>-->
+     <!-- <chart-box v-if="rightBox.chart.show" ref="addChartModal" :chart="chart" :from="from" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box> -->
       <chart-right-box
         v-if="chartRightBoxShow"
         v-my-loading="rightBox.loading"
@@ -149,6 +163,8 @@
 
 <script>
 // import chartBox from '../../../page/dashboard/chartBox'
+import * as echarts from 'echarts'
+import { chartCache } from '@/components/common/js/common'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import chartList from '@/components/chart/chartList'
 import bus from '../../../../libs/bus'
@@ -574,12 +590,31 @@ export default {
             this.showPanel.id = this.filter.panelId = 0
             this.getData(this.filter)
           }
+        } else if (this.from === this.fromRoute.dashboardTemp) {
+          this.$get('visual/panel', { type: 'template', ids: this.obj.id }).then(response => {
+            if (response.code === 200) {
+              this.panelData = response.data.list
+              if (this.panelData.length > 0) {
+                this.filter.panelId = this.panelData[0].id
+                this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
+                this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
+                this.getData(this.filter)
+              }
+            }
+          }).catch((error) => {
+            if (error) {
+              console.error(error)
+              this.$message.error(error.toString())
+            }
+          })
         } else {
           this.$get('visual/panel', { type: this.from, link: linkId || this.obj.id }).then(response => {
             if (response.code === 200) {
               this.panelData = response.data.list
               if (this.panelData.length > 0) {
-                this.showPanel.id = this.filter.panelId = this.panelData[0].id
+                // this.showPanel.id = this.filter.panelId = this.panelData[0].id
+                this.filter.panelId = this.panelData[0].id
+                this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
                 this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
                 this.getData(this.filter)
               }
@@ -855,6 +890,31 @@ export default {
           this.disposeChart()
         }
       }
+    },
+    // 监听图表联动配置panelId
+    'showPanel.param.chartShare': {
+      handler (value) {
+        // 每次切换联动模式 tooltip设置显示
+        const option = {
+          tooltip: {
+            className: 'chart-time-series'
+          }
+        }
+        for (const key in chartCache) {
+          if (!chartCache[key] || chartCache[key].group !== 'timeSeriesGroup') {
+            continue
+          }
+          chartCache[key].setOption(option)
+        }
+        this.$store.commit('setCurrentMousemove', 0)
+        if (value && value !== 'none') {
+          this.$store.commit('setConnect', value)
+          echarts.connect('timeSeriesGroup')
+        } else {
+          this.$store.commit('setConnect', value)
+          echarts.disconnect('timeSeriesGroup')
+        }
+      }
     }
   },
   beforeDestroy () {
@@ -862,6 +922,11 @@ export default {
     document.querySelector('#tableList') && document.querySelector('#tableList').removeEventListener('mouseleave', this.tableListLeave)
     this.scrollbarWrap && this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
     this.$store.dispatch('dispatchPanelLock', { flag: true })
+
+    // 页面销毁 清除图表联动
+    this.$store.commit('setCurrentMousemove', 0)
+    this.$store.commit('setConnect', 'none')
+    echarts.disconnect('timeSeriesGroup')
   }
 }
 </script>

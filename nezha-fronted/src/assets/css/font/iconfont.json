@@ -6,6 +6,153 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "680988",
+      "name": "属性",
+      "font_class": "shuxing",
+      "unicode": "e785",
+      "unicode_decimal": 59269
+    },
+    {
+      "icon_id": "33167519",
+      "name": "套接字文件",
+      "font_class": "taojieziwenjian",
+      "unicode": "e7bb",
+      "unicode_decimal": 59323
+    },
+    {
+      "icon_id": "33166559",
+      "name": "目录链接",
+      "font_class": "mululianjie",
+      "unicode": "e7b9",
+      "unicode_decimal": 59321
+    },
+    {
+      "icon_id": "33165863",
+      "name": "套接字文件链接",
+      "font_class": "taojieziwenjianlianjie",
+      "unicode": "e7ba",
+      "unicode_decimal": 59322
+    },
+    {
+      "icon_id": "33158668",
+      "name": "文件链接",
+      "font_class": "wenjianlianjie",
+      "unicode": "e7b5",
+      "unicode_decimal": 59317
+    },
+    {
+      "icon_id": "33158669",
+      "name": "管道文件链接",
+      "font_class": "guandaowenjianlianjie",
+      "unicode": "e7b6",
+      "unicode_decimal": 59318
+    },
+    {
+      "icon_id": "33158670",
+      "name": "块设备文件链接",
+      "font_class": "kuaishebeiwenjianlianjie",
+      "unicode": "e7b7",
+      "unicode_decimal": 59319
+    },
+    {
+      "icon_id": "33158671",
+      "name": "字符串设备文件链接",
+      "font_class": "zifuchuanshebeiwenjianlianjie",
+      "unicode": "e7b8",
+      "unicode_decimal": 59320
+    },
+    {
+      "icon_id": "33158636",
+      "name": "管道文件",
+      "font_class": "guandaowenjian",
+      "unicode": "e7b1",
+      "unicode_decimal": 59313
+    },
+    {
+      "icon_id": "33158637",
+      "name": "链接文件",
+      "font_class": "lianjiewenjian",
+      "unicode": "e7b2",
+      "unicode_decimal": 59314
+    },
+    {
+      "icon_id": "33158639",
+      "name": "块设备文件",
+      "font_class": "kuaishebeiwenjian",
+      "unicode": "e7b3",
+      "unicode_decimal": 59315
+    },
+    {
+      "icon_id": "33158641",
+      "name": "字符设备文件",
+      "font_class": "zifushebeiwenjian",
+      "unicode": "e7b4",
+      "unicode_decimal": 59316
+    },
+    {
+      "icon_id": "33112141",
+      "name": "home",
+      "font_class": "home",
+      "unicode": "e7af",
+      "unicode_decimal": 59311
+    },
+    {
+      "icon_id": "32964483",
+      "name": "File",
+      "font_class": "File",
+      "unicode": "e7ae",
+      "unicode_decimal": 59310
+    },
+    {
+      "icon_id": "32961611",
+      "name": "Clear",
+      "font_class": "Clear",
+      "unicode": "e7b0",
+      "unicode_decimal": 59312
+    },
+    {
+      "icon_id": "32660007",
+      "name": "Folder ",
+      "font_class": "Folder",
+      "unicode": "e7ad",
+      "unicode_decimal": 59309
+    },
+    {
+      "icon_id": "32659266",
+      "name": "file transfer",
+      "font_class": "a-filetransfer",
+      "unicode": "e7a7",
+      "unicode_decimal": 59303
+    },
+    {
+      "icon_id": "32659269",
+      "name": "reconnect",
+      "font_class": "reconnect",
+      "unicode": "e7a8",
+      "unicode_decimal": 59304
+    },
+    {
+      "icon_id": "32659270",
+      "name": "upper level",
+      "font_class": "a-upperlevel",
+      "unicode": "e7a9",
+      "unicode_decimal": 59305
+    },
+    {
+      "icon_id": "32659271",
+      "name": "new folder",
+      "font_class": "a-newfolder",
+      "unicode": "e7aa",
+      "unicode_decimal": 59306
+    },
+    {
+      "icon_id": "32659272",
+      "name": "SFTP",
+      "font_class": "SFTP",
+      "unicode": "e7ab",
+      "unicode_decimal": 59307
+    },
+    {
       "icon_id": "586976",
       "name": "map-sankey",
       "font_class": "sankey",

@@ -259,13 +259,13 @@ export default {
           minWidth: 200,
           show: true
         }, {
-          label: this.$t('alert.alert'),
+          label: this.$t('overall.alert'),
           prop: 'alertNum',
           show: true,
           width: 120,
           sortable: 'custom'
         }, {
-          label: this.$t('alert.receiver'),
+          label: this.$t('dashboard.panel.receivers'),
           prop: 'receivers',
           show: false,
           minWidth: 100

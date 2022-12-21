@@ -699,7 +699,7 @@ const unitOptions = [
   }
 ]
 const units = []
-window.onload = function () {
+window.addEventListener('load', function () {
   if (units.length < 1) {
     unitOptions.forEach((item, index) => {
       item.children.forEach((n, i) => {
@@ -707,8 +707,7 @@ window.onload = function () {
       })
     })
   }
-}
-
+})
 export default {
   unitOptions: function () {
     return unitOptions

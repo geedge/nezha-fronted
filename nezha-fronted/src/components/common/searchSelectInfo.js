@@ -242,6 +242,11 @@ export default {
           { value: '1', label: i18n.t('asset.asset') },
           { value: '2', label: i18n.t('asset.endpoint') }
         ],
+        dashboardVarType: [
+          { value: '0', label: i18n.t('project.topology.none') },
+          { value: '1', label: i18n.t('asset.asset') },
+          { value: '2', label: i18n.t('asset.endpoint') }
+        ],
         chartType: [
           {
             value: 'line',

@@ -1,4 +1,3 @@
-import i18n from '@/components/common/i18n'
 import { getUUID } from '../js/common'
 export default {
   data () {

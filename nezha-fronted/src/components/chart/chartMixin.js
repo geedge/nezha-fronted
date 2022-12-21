@@ -207,9 +207,16 @@ export default {
             value = self.$loadsh.get(myParams, label)
           }
           if (label) {
-            const reg = new RegExp(label + '=".+?"')
+            const reg = new RegExp(label + '=".+?"', 'g')
             if (reg.test(legend)) {
-              const find = legend.match(reg)[0]
+              const ans = legend.match(reg)
+              let find = ''
+              ans.forEach(item => {
+                const index = legend.indexOf(item)
+                if (legend[index - 1] !== '_') {
+                  find = item
+                }
+              })
               value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
             }
           }

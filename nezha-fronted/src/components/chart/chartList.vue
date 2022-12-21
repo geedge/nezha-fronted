@@ -243,7 +243,7 @@ export default {
     },
     movedEvent (i, newX, newY) {
       if (!this.isGroup) {
-        this.moveChart()
+        this.moveChart(i, newX, newY)
         this.onScroll(this.scrollTop)
       } else {
         bus.$emit('groupChildMove')
@@ -280,9 +280,32 @@ export default {
       this.$set(this.copyDataList, index, chart)
       this.onScroll(this.scrollTop)
     },
-    moveChart () {
+    moveChart (id, newX, newY) {
+      if (!this.groupInfo) {
+        const moveItem = this.copyDataList.find(item => item.id == id)
+        const moveIndex = this.copyDataList.findIndex(item => item.id == id)
+        const repeatArr = []
+        this.copyDataList.forEach((item, index) => {
+          const moveId = String(id).split('-repeat-')[0]
+          const repeatId = String(item.id).split('-repeat-')[0]
+          if (moveId == repeatId && moveIndex != index) {
+            repeatArr.push({
+              id: item.id,
+              y: item.y
+            })
+          }
+        })
+        repeatArr.sort((a, b) => a.y - b.y)
+        this.copyDataList.forEach(item => {
+          repeatArr.forEach((subItem, subIndex) => {
+            if (item.id == subItem.id) {
+              item.y = moveItem.y + ((subIndex + 1) * 0.03)
+            }
+          })
+        })
+      }
       this.onScroll(this.scrollTop)
-      const arr = this.copyDataList.filter(item => !item.staic)
+      const arr = this.copyDataList.filter(item => !item.staic && !item.repeatIndex)
       const charts = []
       let weight = 0
       arr.forEach(item => {
@@ -393,7 +416,7 @@ export default {
       bus.$emit('refreshPanel')
     },
     createChartSuccess (params) {
-      const arr = this.copyDataList.filter(item => !item.staic)
+      const arr = this.copyDataList.filter(item => !item.staic && !item.repeatIndex)
       const charts = []
       let weight = 0
       arr.forEach(item => {
@@ -453,6 +476,10 @@ export default {
     },
     // 比较变量 图表是否显示/隐藏
     compareVariables () {
+      // 防止group中的chartList执行
+      if (this.groupInfo) {
+        return
+      }
       const isRegExp = (v) => {
         let isReg
         try {
@@ -539,7 +566,105 @@ export default {
         }
       })
       this.onScroll(this.scrollTop)
+    },
+
+    // group设置repeat 便利变量重复渲染图表
+    repeatVariableFn () {
+      // 防止group中的chartList执行
+      if (this.groupInfo) {
+        return
+      }
+      // 先删除掉复制的数据
+      for (let index = 0; index < this.copyDataList.length; index++) {
+        const item = this.copyDataList[index]
+        if (item.repeatIndex > 0) {
+          this.copyDataList.splice(index, 1)
+          index--
+        } else if (item.repeatIndex == 0) {
+          // 置为原来的数据
+          delete item.repeatIndex
+          delete item.repeatVariable
+          delete item.repeatValue
+          item.children && item.children.forEach(children => {
+            delete children.repeatIndex
+            delete children.repeatVariable
+            delete children.repeatValue
+          })
+        }
+      }
+      this.$nextTick(() => {
+        // 先让数组根据 y 排序 之后直接判断顺序 即可判断 Group 是否相邻
+        let arr = this.$loadsh.cloneDeep(this.copyDataList)
+        arr = this.$loadsh.orderBy(arr, function (item) {
+          return item.y
+        })
+        const variablesRepeat = {}
+        for (let index = 0; index < arr.length; index++) { // 遍历找出所有需要 repeat的group 按照 name进行多次的分组
+          const item = arr[index]
+          const repeatVariable = this.$loadsh.get(item.param.repeat, 'variable')
+          if (item.type === 'group' && repeatVariable && this.$loadsh.get(this.showHidden[item.id], 'visibility') !== 'hidden') {
+            const itemPrev = arr[index - 1]
+            const repeatPrevVariable = this.$loadsh.get(itemPrev.param.repeat, 'variable')
+            if (itemPrev && itemPrev.type === 'group' && repeatPrevVariable === repeatVariable) {
+              const arr = variablesRepeat[repeatVariable]
+              arr[arr.length - 1].repeatArr.push(item)
+              arr[arr.length - 1].lastGroup = item
+            } else {
+              if (variablesRepeat[repeatVariable]) {
+                variablesRepeat[repeatVariable].push({
+                  repeatArr: [item],
+                  lastGroup: item
+                })
+              } else {
+                variablesRepeat[repeatVariable] = [{
+                  repeatArr: [item],
+                  lastGroup: item
+                }]
+              }
+            }
+          }
+        }
+        Object.keys(variablesRepeat).forEach(key => { // 遍历 variablesRepeat 确定需要插入的数组
+          const findVariables = this.variablesArr.find(item => item.name == key)
+          findVariables && findVariables.checked.forEach((subItem, subIndex) => {
+            variablesRepeat[key].forEach(group => {
+              group.repeatArr.forEach(item => {
+                if (subIndex > 0) {
+                  // 复制数据 重新设置id
+                  const repeatItem = this.$loadsh.cloneDeep(item)
+                  repeatItem.id = item.id + '-' + 'repeat-' + subIndex
+                  repeatItem.i = repeatItem.id
+                  repeatItem.repeatIndex = subIndex
+                  repeatItem.repeatVariable = key
+                  repeatItem.repeatValue = subItem
+                  repeatItem.y = group.lastGroup.y
+                  repeatItem.children && repeatItem.children.forEach(children => {
+                    children.id = children.id + '-' + 'repeat-' + subIndex
+                    children.repeatIndex = subIndex
+                    children.repeatVariable = key
+                    children.repeatValue = subItem
+                  })
+                  // 复制数据
+                  this.copyDataList.push(repeatItem)
+                } else {
+                  const findItem = this.copyDataList.find(chart => chart.id === item.id)
+                  this.$set(findItem, 'repeatIndex', 0)
+                  this.$set(findItem, 'repeatVariable', key)
+                  this.$set(findItem, 'repeatValue', subItem)
+                  findItem.children && findItem.children.forEach(children => {
+                    this.$set(children, 'repeatIndex', 0)
+                    this.$set(children, 'repeatVariable', key)
+                    this.$set(children, 'repeatValue', subItem)
+                  })
+                  this.$refs['chart' + findItem.id] && this.$refs['chart' + findItem.id][0] && this.$refs['chart' + findItem.id][0].getChartData()
+                }
+              })
+            })
+          })
+        })
+      })
     }
+
   },
   created () {
     this.firstInit = true
@@ -572,9 +697,11 @@ export default {
     },
     // 监听变量数组
     variablesArr: {
-      handler () {
+      handler (newVal, oldVal) {
         // 比较变量 图表是否显示/隐藏
         this.compareVariables()
+
+        this.repeatVariableFn()
       }
     },
     panelLock: {
@@ -673,6 +800,8 @@ export default {
           this.copyDataList = JSON.parse(JSON.stringify(tempList))
           // 比较变量 图表是否显示/隐藏
           this.compareVariables()
+
+          this.repeatVariableFn()
           tempList = null
           setTimeout(() => {
             this.gridLayoutShow = true

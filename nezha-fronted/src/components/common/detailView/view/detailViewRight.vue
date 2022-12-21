@@ -10,8 +10,9 @@
       <endpoint-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab" :targetTab="targetTab"></endpoint-tab>
 
       <!--terminal-log的记录和回放-->
-      <terminal-log-cmd-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'cmdTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.cmd" @changeTab="changeTab" :targetTab="targetTab"></terminal-log-cmd-tab>
-      <terminal-log-record-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'recordTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.record" @changeTab="changeTab" :targetTab="targetTab"></terminal-log-record-tab>
+      <terminal-log-cmd-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'cmdTab'" :from="from" :obj="obj" :tabs="hasTerminalLogTabs" @changeTab="changeTab" :targetTab="targetTab"></terminal-log-cmd-tab>
+      <terminal-log-sftp-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'sftpTab' && obj.protocol == 'SSH'" :from="from" :obj="obj" :tabs="hasTerminalLogTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-sftp-tab>
+      <terminal-log-record-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'recordTab'" :from="from" :obj="obj" :tabs="hasTerminalLogTabs" @changeTab="changeTab" :targetTab="targetTab"></terminal-log-record-tab>
       <terminal-log-monitor-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'monitorTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.monitor" @changeTab="changeTab" @exit="closeSubList" :targetTab="targetTab"></terminal-log-monitor-tab>
 
       <asset-tab :showTitle="false" v-if="from === fromRoute.dc && targetTab === 'asset'" :tabs="tabs.dc.asset" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab="targetTab"></asset-tab>
@@ -62,6 +63,7 @@ import endpointTab from '@/components/common/bottomBox/tabs/endpointTab'
 import endpointTabNew from '@/components/common/bottomBox/tabs/endpointTabNew'
 import panelTabNew from '@/components/common/bottomBox/tabs/panelTabNew'
 import terminalLogRecordTab from '@/components/common/bottomBox/tabs/terminalLogRecordTab'
+import terminalLogSftpTab from '@/components/common/bottomBox/tabs/terminalLogSftpTab'
 import terminalLogMonitorTab from '@/components/common/bottomBox/tabs/terminalLogMonitorTab'
 import terminalLogCMDTab from '@/components/common/bottomBox/tabs/terminalLogCMDTab'
 import operationLogTab from '@/components/common/bottomBox/tabs/operationLogTab'
@@ -83,6 +85,7 @@ export default {
     alertMessageTab,
     endpointTab,
     terminalLogRecordTab,
+    terminalLogSftpTab,
     terminalLogMonitorTab,
     operationLogTab,
     terminalLogTab,
@@ -133,15 +136,15 @@ export default {
         terminalLog: {
           monitor: [
             { prop: 'monitorTab', name: this.$t('config.terminallog.monitor.monitor'), active: true }
-          ],
-          cmd: [
-            { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: true },
-            { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: false }
-          ],
-          record: [
-            { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: false },
-            { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: true }
           ]
+          // cmd: [
+          //   { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: true },
+          //   { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: false }
+          // ],
+          // record: [
+          //   { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: false },
+          //   { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: true }
+          // ]
         },
         user: {
           operationLog: [
@@ -213,6 +216,17 @@ export default {
     }
   },
   computed: {
+    hasTerminalLogTabs () {
+      const hasSftp = this.obj && this.obj.protocol == 'SSH'
+      const tabs = [
+        { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd') },
+        { prop: 'recordTab', name: this.$t('config.terminallog.record.record') }
+      ]
+      if (hasSftp) {
+        tabs.splice(1, 0, { prop: 'sftpTab', name: 'SFTP ' })
+      }
+      return tabs
+    },
     hasLogConfig () {
       const config = this.obj.configs.find(c => c.type === 'logs')
       return config && config.enable === 1

@@ -60,11 +60,11 @@
           <template v-else-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
           <template v-else-if="item.prop === 'state'">{{scope.row.state ? scope.row.state.name : '-'}}</template>
           <template v-else-if="item.prop === 'endpointNum'">
-            <span style="cursor: pointer" @click="$emit('showBottomBox', 'endpointTab', scope.row)"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span></span>
+            <span style="cursor: pointer" @click.stop="$emit('showBottomBox', 'endpointTab', scope.row)" @dblclick.stop=""><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span></span>
           </template>
           <template v-else-if="item.prop === 'alertNum'">
             <!--          v-my-loading:ldsFacebook="scope.row.trendLoading"-->
-            <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)">
+            <span style="cursor: pointer" @click.stop="$emit('showBottomBox', 'alertMessageTab', scope.row)" @dblclick.stop="">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
               <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
@@ -104,7 +104,7 @@
             <span v-else> - </span>
           </template>
           <template v-else-if="item.prop === 'children'">
-            <div  @click="$emit('showBottomBox', 'assetSubTab', scope.row)" v-if="scope.row.childrenNum" style="cursor: pointer">
+            <div  @click.stop="$emit('showBottomBox', 'assetSubTab', scope.row)" v-if="scope.row.childrenNum" style="cursor: pointer" @dblclick.stop="">
               <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
               {{scope.row.childrenNum}}</div>
             <!--          <span v-else-if="scope.row.pid == -1">  <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i> 0 </span>-->

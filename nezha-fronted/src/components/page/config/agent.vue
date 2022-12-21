@@ -91,14 +91,14 @@
            <el-form-item label="CURL"  v-if="loadFinish" class="download-url">
             <el-input id="download-url-curl" :disabled="true" v-model="curlUrl">
               <el-popover :content="$t('overall.copySuccess')" disabled="false" placement="top" trigger="manual" v-model="curlVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('curl')"  style="cursor: pointer">
-                <i v-if="curlUrl" slot="reference" class="nz-icon nz-icon-override" @click="onCopy(curlUrl)" :title="$t('overall.copyText')"></i>
+                <i v-if="curlUrl" slot="reference" class="nz-icon nz-icon-override" @click="copyUrl(curlUrl)" :title="$t('overall.copyText')"></i>
               </el-popover>
             </el-input>
           </el-form-item>
           <el-form-item label="Wget"  v-if="loadFinish" class="download-url">
             <el-input id="download-url-wget" :disabled="true" v-model="wgetUrl" >
               <el-popover :content="$t('overall.copySuccess')" disabled="false" placement="top" trigger="manual" v-model="wgetVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('wget')" style="cursor: pointer">
-                <i v-if="wgetUrl" slot="reference" class="nz-icon nz-icon-override" @click="onCopy(wgetUrl)" :title="$t('overall.copyText')"></i>
+                <i v-if="wgetUrl" slot="reference" class="nz-icon nz-icon-override" @click="copyUrl(wgetUrl)" :title="$t('overall.copyText')"></i>
               </el-popover>
             </el-input>
           </el-form-item>
@@ -230,23 +230,28 @@ export default {
         }
       })
     },
-    copyUrl (id) {
-      const input = document.createElement('input')
-      const text = document.getElementById(id).value
-      document.body.appendChild(input)
-      input.setAttribute('value', text)
-      input.select()
-      if (document.execCommand('copy')) {
-        document.execCommand('copy')
-      }
-      document.body.removeChild(input)
-
-      if (id.indexOf('curl') != -1) {
-        this.curlVisible = true
-      } else {
-        this.wgetVisible = true
-      }
+    copyUrl (txt) {
+      this.$copyText(txt).then(() => {
+        this.$message.success({ message: this.$t('overall.copySuccess'), customClass: 'message-zindex' })
+      })
     },
+    // copyUrl (id) {
+    //   const input = document.createElement('input')
+    //   const text = document.getElementById(id).value
+    //   document.body.appendChild(input)
+    //   input.setAttribute('value', text)
+    //   input.select()
+    //   if (document.execCommand('copy')) {
+    //     document.execCommand('copy')
+    //   }
+    //   document.body.removeChild(input)
+
+    //   if (id.indexOf('curl') != -1) {
+    //     this.curlVisible = true
+    //   } else {
+    //     this.wgetVisible = true
+    //   }
+    // },
     popShow: function (where) {
       const self = this
       if (where == 'curl') {

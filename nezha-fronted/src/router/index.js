@@ -177,7 +177,7 @@ export default new Router({
           component: resolve => require(['@/components/page/config/monitor'], resolve)
         },
         {
-          path: '/terminal',
+          path: '/terminalSetting',
           component: resolve => require(['@/components/page/config/terminal'], resolve)
         },
         {
@@ -205,6 +205,10 @@ export default new Router({
           component: resolve => require(['@/components/page/config/template/chartTemp'], resolve)
         },
         {
+          path: '/dashboardTemp',
+          component: resolve => require(['@/components/page/config/template/dashboardTemp'], resolve)
+        },
+        {
           path: '/backup',
           component: resolve => require(['@/components/page/config/backups'], resolve)
         },
@@ -217,6 +221,14 @@ export default new Router({
           component: resolve => require(['@/components/page/tool/trace'], resolve)
         }
       ]
+    },
+    {
+      path: '/terminal',
+      component: resolve => require(['@/components/cli/terminal'], resolve),
+      meta: {
+        hideHeader: true,
+        hideMenu: true
+      }
     }
   ]
 })

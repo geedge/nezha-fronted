@@ -198,9 +198,7 @@ export default {
   },
   methods: {
     dateChange (val) {
-      console.log(val)
       const startTime = this.momentTz(this.momentStrToTimestamp(val))
-      console.log(this.stepSearchTime[1], this.stepSearchTime[0])
       const end = this.momentStrToTimestamp(val) + this.momentStrToTimestamp(this.stepSearchTime[1]) - this.momentStrToTimestamp(this.stepSearchTime[0])
       const endTime = this.momentTz(end, this.multipleTime)
       this.$set(this.searchTime, 0, startTime)

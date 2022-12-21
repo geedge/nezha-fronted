@@ -12,7 +12,7 @@
         <div class="container__form">
           <el-form label-width="120px" size="small" :model="editDc" label-position = "top" :rules="rules" ref="dcForm">
             <el-form-item :label='$t("overall.name")' prop="name">
-              <el-input placeholder="" maxlength="64" show-word-limit v-model.trim="editDc.name" size="small" id="dc-box-input-name"></el-input>
+              <el-input placeholder="" maxlength="64" show-word-limit v-model="editDc.name" size="small" id="dc-box-input-name"></el-input>
             </el-form-item>
             <el-form-item :label='$t("asset.location")' prop="location">
               <el-input placeholder="" maxlength="256" show-word-limit v-model="editDc.location" size="small" id="dc-box-input-location"></el-input>

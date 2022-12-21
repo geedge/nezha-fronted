@@ -2,7 +2,10 @@
   <div v-clickoutside="{obj:editPanel,func:clickOutside}" class="right-box right-box-panel">
     <!-- begin--标题-->
     <div class="right-box__header">
-      <div class="header__title">{{editPanel.id ? ($t("dashboard.panel.editPanelTitle")) : $t("dashboard.panel.createPanelTitle")}}</div>
+
+      <div class="header__title" v-if="from !== 'dashboardTemp'">{{editPanel.id ? $t("dashboard.panel.editPanelTitle") : $t("dashboard.panel.createPanelTitle")}}</div>
+      <div class="header__title" v-if="from === 'dashboardTemp'">{{editPanel.id ? $t("dashboard.panel.editPanelTempTitle") : $t("dashboard.panel.createPanelTempTitle")}}</div>
+
       <div class="header__operation">
         <span v-cancel="{obj: editPanel, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
@@ -11,9 +14,21 @@
     <div class="right-box__container">
       <div class="container__form">
         <el-form ref="form" :model="editPanel" :rules="rules" label-position = "top" label-width="120px" size="small">
+
+          <!-- name -->
           <el-form-item :label='$t("overall.name")' prop="name">
-            <el-input id="dc-box-input-name" v-model.trim="editPanel.name" maxlength="64" placeholder="" show-word-limit size="small" :disabled="isBottom"></el-input>
+            <el-input id="dc-box-input-name" v-model="editPanel.name" maxlength="64" placeholder="" show-word-limit size="small" :disabled="isBottom"></el-input>
           </el-form-item>
+
+          <!--varType-->
+          <el-form-item v-if="from==='dashboardTemp'" :label="$t('dashboard.panel.chartForm.varType')" class="item-receivers" prop="varType">
+            <el-select v-model="editPanel.varType" clearable :disabled="!!editPanel.id" popper-class="right-box-select-top prevent-clickoutside" placeholder="" size="small">
+              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
+                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+
           <!--remark-->
            <el-form-item :label='$t("overall.remark")' class="range-time" prop="remark">
             <el-input
@@ -27,15 +42,15 @@
 
           <!-- chartShare -->
           <el-form-item :label="$t('dashboard.panel.chartTooltip')" class="item-receivers" prop="chartShare">
-            <el-select v-model="editPanel.param.chartShare" clearable  placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
+            <el-select v-model="editPanel.param.chartShare" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
               <el-option value="none" label="Default">
-              <span class="panel-dropdown-label-txt" >{{$t('config.assetLabel.default')}}</span>
+                <span class="panel-dropdown-label-txt" >{{$t('config.assetLabel.default')}}</span>
               </el-option>
-            <el-option value="crosshair" label="Share crosshair">
-              <span class="panel-dropdown-label-txt" >{{$t('dashboard.panel.crosshair')}}</span>
+              <el-option value="crosshair" label="Share crosshair">
+                <span class="panel-dropdown-label-txt" >{{$t('dashboard.panel.crosshair')}}</span>
               </el-option>
               <el-option value="tooltip" label="Share tooltip">
-              <span class="panel-dropdown-label-txt" >{{$t('dashboard.panel.shareTooltip')}}</span>
+                <span class="panel-dropdown-label-txt" >{{$t('dashboard.panel.shareTooltip')}}</span>
               </el-option>
             </el-select>
             <div class="item-receivers-text">{{$t('dashboard.panel.chartTooltipText')}}</div>
@@ -306,9 +321,15 @@
                     </el-checkbox-group>
                   </el-form-item>
                   <el-form-item :label="$t('dashboard.panel.receivers')" class="item-receivers" prop="param.report.receivers">
-                    <el-select v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
-                      <el-option v-for="item in userData" :key="item.id" :label="item.name" :value="item.id">
-                      <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                    <el-select
+                    class="right-box__select"
+                    v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
+                      <el-option
+                      style="width: 620px"
+                      v-for="item in userData" :key="item.id"
+                      :label="item.name" :value="item.id">
+                      <span class="user-name" :title="item.name">{{item.name}}</span>
+                      <span class="user-username" :title="item.username">@{{item.username}}</span>
                       </el-option>
                     </el-select>
                   </el-form-item>
@@ -354,7 +375,8 @@ export default {
     panelType: {
       type: String,
       default: 'dashboard'
-    }
+    },
+    from: { type: String }
   },
   mixins: [editRigthBox],
   data () {
@@ -366,6 +388,9 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        varType: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         'param.report.range.unit': [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
@@ -438,9 +463,14 @@ export default {
       queryVariableList: [
         { name: 'label_names()', description: this.$t('dashboard.panel.label_names()') },
         { name: 'label_values(label)', description: this.$t('dashboard.panel.label_values(label)') },
-        { name: 'label_values(metric, label)', description: this.$t('dashboard.label_values(metric, label)') },
+        { name: 'label_values(metric, label)', description: this.$t('dashboard.panel.label_values(metric, label)') },
         { name: 'metrics(metric)', description: this.$t('dashboard.panel.metrics(metric)') },
         { name: 'query_result(query)', description: this.$t('dashboard.panel.query_result(query)') }
+      ],
+      varTypeArr: [
+        { name: this.$t('project.topology.none'), id: 0 },
+        { name: this.$t('asset.asset'), id: 1 },
+        { name: this.$t('asset.endpoint'), id: 2 }
       ]
     }
   },

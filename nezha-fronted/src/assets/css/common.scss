@@ -565,7 +565,7 @@ textarea {
 .el-dialog__header{
   color: $--color-text-primary;
 }
-#entranceHtml {
+#entrance {
   .el-icon-arrow-right {
     font-family: "nz-icon" !important;
     font-size: 16px;
@@ -575,6 +575,12 @@ textarea {
   }
   .el-icon-arrow-right:before {
     content: "\e6ad";
+  }
+  .el-icon-arrow-up{
+    font-family: nz-icon!important;
+  }
+  .el-icon-arrow-up:before{
+    content: "\e6af";
   }
   .el-icon-arrow-down{
     font-family: nz-icon!important;

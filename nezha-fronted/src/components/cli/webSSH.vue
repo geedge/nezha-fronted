@@ -31,15 +31,23 @@
               :popper-class="'popover-webshell'"
             >
             <div>
-             Session ID : {{item.uuid.slice(0,7).toLocaleUpperCase()}}
+             Session ID : {{item.terminal.uuid.slice(0,7).toLocaleUpperCase()}}
             </div>
             <span slot="reference"> <i class="nz-icon nz-icon-about" /></span>
           </el-popover>
-            <div :class="{'active-icon grey':item.circleColor == 1,'active-icon green':item.circleColor == 2,'active-icon red':item.circleColor == 3}"
-                 style="margin-top: 0px;"></div>{{item.title}}
           </span>
 
-          <my-console :fontSize="fontSize"    :idIndex="index" :isFullScreen="isFullScreen"    :ref="'console'+index" :terminal="item.terminal" @closeConsole="removeTab" @refreshConsoleTitle="refreshTabTitle"></my-console>
+          <my-console
+            :fontSize="fontSize"
+            :terminalType="item.terminal.terminalType"
+            :idIndex="index"
+            :isFullScreen="isFullScreen"
+            :ref="'console'+index"
+            :terminal="item.terminal"
+            @loginFail="loginFail"
+            @closeConsole="removeTab"
+            @refreshConsoleTitle="refreshTabTitle"
+          ></my-console>
 
         </el-tab-pane>
         <el-tab-pane key="add" name="addConsole" style="width: 20px">
@@ -59,13 +67,17 @@
         </el-tab-pane>
       </el-tabs>
       <div class="console-icon">
+        <div class="console-title-icon" style='right: 106px;display: inline;' @click="showFileState" v-show="fileList.length">
+          <i class="nz-icon nz-icon-a-filetransfer" :title="$t('terminal.filetransfer')"></i>
+          <span v-show="fileList.length>0" class="right-tip">{{fileList.length<=99?fileList.length:'99+'}}</span>
+        </div>
         <i @click="minScreen" class="nz-icon nz-icon-minus console-title-icon" style='right: 76px;' :title="$t('overall.shrink')"></i>
         <i @click="fullScreen" class="el-icon-full-screen console-title-icon" style='right: 46px;' v-if="!isFullScreen" :title="$t('dashboard.screen')"></i>
         <i @click="exitFullScreen" class="nz-icon nz-icon-exit-full-screen console-title-icon" style='right: 46px;' v-else :title="$t('dashboard.screen.exit')"></i>
         <i @click="closeConsole" class="nz-icon nz-icon-close console-title-icon" style='right: 16px;' :title="$t('overall.close')"></i>
       </div>
     </div>
-
+    <fileListState v-clickoutside="hideFileState" ref="fileListState"/>
     <div >
       <el-dialog :modal-append-to-body='false' :show-close="true" :title="uploadBox.title" :visible.sync="uploadBox.showUpload" @close="closeDialog" class="nz-dialog" width="500px" >
         <div >
@@ -255,21 +267,27 @@
 
 <script>
 import Console from './console'
+import fileListState from './fileListState'
 import uuidv1 from 'uuid/v1'
 import axios from 'axios'
 import { host, port } from '@/components/common/js/validate'
 export default {
   name: 'webSSH',
   components: {
-    'my-console': Console
+    'my-console': Console,
+    fileListState
   },
   computed: {
-    language () { return this.$store.getters.getLanguage }
+    language () { return this.$store.getters.getLanguage },
+    fileList () {
+      return this.$store.getters.getFileList
+    }
   },
   data () {
     const termFontSize = parseInt(localStorage.getItem('termFontSize'))
     return {
       selectValue: 'SSH',
+      fileListStateType: 'down',
       searchMetrics: [
         {
           value: 'SSH',
@@ -307,9 +325,9 @@ export default {
       isFullScreen: false,
       closeConfirmShow: false,
       closeRemember: false,
-      initConsoleHeight: 300, // 只读,初始化高度
-      consoleHeight: 250, // console高度
-      resizeConsoleHeight: 250, // resize后的高度，用于记录最大化、最小化前的高度
+      initConsoleHeight: 500, // 只读,初始化高度
+      consoleHeight: 450, // console高度
+      resizeConsoleHeight: 450, // resize后的高度，用于记录最大化、最小化前的高度
       currentTransform: 0,
       editableTabsValue: '-1', // 当前显示的console
       currentIndex: '-1',
@@ -510,6 +528,7 @@ export default {
           host: this.customConnect.host,
           port: this.customConnect.port,
           authType: this.customConnect.authType,
+          terminalType: this.customConnect.authProtocol,
           authUsername: encodeURIComponent(this.customConnect.authUsername),
           authPin: this.encode(this.customConnect.authPin),
           authPriKey: encodeURIComponent(this.customConnect.authPriKey),
@@ -519,9 +538,16 @@ export default {
           authProtocol: encodeURIComponent(this.customConnect.authProtocol)
         }
       }
-      this.editableTabsValue = newTabName
-      this.editableTabs.push(console)
-
+      if (id) {
+        this.$get('/asset/asset/' + id).then(res => {
+          console.terminal.terminalType = res.data.type.authProtocol
+          this.editableTabsValue = newTabName
+          this.editableTabs.push(console)
+        })
+      } else {
+        this.editableTabsValue = newTabName
+        this.editableTabs.push(console)
+      }
       setTimeout(function () {
         const tabScroll = document.getElementsByClassName('el-tabs__nav is-top')
         const tabViewWidth = document.getElementsByClassName('el-tabs__nav-scroll')
@@ -620,8 +646,22 @@ export default {
       this.$store.commit('removeConsole')
 
       if (this.editableTabs.length <= 0) {
-        this.closeConsole()
+        // this.closeConsole()
       }
+    },
+    loginFail (params) {
+      this.removeTab(params.name)
+      setTimeout(() => {
+        if (params.assetId) {
+          this.assetShowChange()
+        } else {
+          this.customConnect = {
+            authType: Number(params.authType),
+            ...params
+          }
+          this.customShow = true
+        }
+      })
     },
     /* 活动标签切换时触发 */
     beforeLeave (currentName, oldName) {
@@ -969,6 +1009,25 @@ export default {
         authProtocolPort: '',
         authProtocol: 1
       }
+    },
+    showFileState () {
+      let type = 'down'
+      const targetDiv = document.getElementById('shell-service')
+      let height = targetDiv.style.height
+      if (height) {
+        height = height.slice(0, -2)
+        if (height < 265) {
+          this.fileListStateType = type = 'up'
+        } else {
+          this.fileListStateType = type = 'down'
+        }
+      } else {
+        this.fileListStateType = type = 'down'
+      }
+      this.$refs.fileListState.fileStateShow(!this.$refs.fileListState.fileStateBox, type)
+    },
+    hideFileState () {
+      this.$refs.fileListState.fileStateShow(false, this.fileListStateType)
     }
   },
   watch: {
@@ -996,6 +1055,10 @@ export default {
           })
           const targetDiv = document.getElementById('shell-service')
           targetDiv.style.height = this.webSSHHeight
+          if (!this.webSSHHeight) {
+            this.initConsoleHeight = this.initConsoleHeight > (window.innerHeight * 0.4) ? this.initConsoleHeight : (window.innerHeight * 0.4)
+            targetDiv.style.height = this.initConsoleHeight + 'px'
+          }
         }
         this.$store.state.consoleShow = false
       }
@@ -1004,6 +1067,7 @@ export default {
   created () {
     // window.addEventListener('resize',this.windowChange);
     window.addEventListener('resize', this.debounce(this.windowChange, 1000), false)
+    this.initConsoleHeight = this.initConsoleHeight > (window.innerHeight * 0.4) ? this.initConsoleHeight : (window.innerHeight * 0.4)
   },
   mounted () {
 

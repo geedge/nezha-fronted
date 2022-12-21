@@ -42,3 +42,9 @@
   color: $--color-text-primary;
   text-align: center;
 }
+
+.agent{
+  .message-zindex{
+    z-index: 1000;
+  }
+}
