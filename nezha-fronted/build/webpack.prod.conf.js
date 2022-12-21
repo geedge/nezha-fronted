@@ -23,6 +23,7 @@ const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 const smp = new SpeedMeasurePlugin();
 
 
@@ -58,6 +59,7 @@ if (arg === 'html') {
       chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
     },
     plugins: [
+      new VueLoaderPlugin(),
       new webpack.ProvidePlugin({
         introJs: ['intro.js'],
       }),
@@ -230,6 +232,7 @@ if (arg === 'html') {
         },
         extraFiles: []
       }), */
+      new VueLoaderPlugin(),
       // http://vuejs.github.io/vue-loader/en/workflow/production.html
       new webpack.ProvidePlugin({
         introJs: ['intro.js']

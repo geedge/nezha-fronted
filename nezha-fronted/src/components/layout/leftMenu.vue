@@ -3,7 +3,7 @@
     <el-menu :collapse="isShrink" active-text-color="#ffffff" class="header-logo" text-color="#ffffff">
       <el-menu-item index="logo">
         <div id="home-to-overview" class="logo link">
-          <img alt="loading..." height="26" :src="logo?logo:require('../../assets/img/logo1-2.png')"/>
+          <img alt="loading..." height="26" :src="logo?logo:imgUrl"/>
           <span class="system-name">{{systemName && systemName !== 'undefined' ? systemName : $t('dashboard.overview.contentTitle')}}</span>
         </div>
       </el-menu-item>
@@ -33,12 +33,14 @@
 </template>
 
 <script>
+import imgUrl from '@/assets/img/logo1-2.png'
 export default {
   name: 'leftMenu',
   props: {
   },
   data () {
     return {
+      imgUrl,
       systemName: localStorage.getItem('nz-sys-name'),
       logo: ''
     }

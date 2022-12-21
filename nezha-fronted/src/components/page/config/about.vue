@@ -2,7 +2,7 @@
   <div class="about" v-my-loading='loading'>
     <div class="app">
        <div class="app-header">
-      <div class="header-logo"><img width="60" height="60" src="../../../assets/img/logo1-2.png"></div>
+      <div class="header-logo"><img width="60" height="60" :src="imgUrl"></div>
       <div class="header-title">
         <div class="app-name">{{version.nezha.name}}</div>
         <div class="app-version"><span class="about-label">{{$t("overall.version")}}&nbsp;&nbsp;&nbsp;</span><span>{{version.nezha.version}}</span></div>
@@ -38,10 +38,12 @@
   </div>
 </template>
 <script>
+import imgUrl from '@/assets/img/logo1-2.png'
 export default {
   name: 'about',
   data () {
     return {
+      imgUrl,
       noData: false,
       timeLineData: [],
       // language: '',

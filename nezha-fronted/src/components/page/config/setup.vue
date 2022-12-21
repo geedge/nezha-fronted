@@ -1,7 +1,7 @@
 <template>
   <div class="setup">
     <div class="logo-header">
-      <img height="30px" style="vertical-align: bottom; margin-top: 10px" src="../../../assets/img/logo1-2.png"/>
+      <img height="30px" style="vertical-align: bottom; margin-top: 10px" :src="imgUrl"/>
       <span class="logo-header-text">One-stop monitoring system</span>
       <div class="language-select">
       <el-dropdown :hide-on-click="false" >
@@ -185,11 +185,12 @@
 <script>
 import { getUUID } from '../../common/js/common'
 import { host, port } from '../../common/js/validate'
-
+import imgUrl from '@/assets/img/logo1-2.png'
 export default {
   name: 'setup',
   data () {
     return {
+      imgUrl,
       validateCode: '',
       language: 'en',
       step: 0,

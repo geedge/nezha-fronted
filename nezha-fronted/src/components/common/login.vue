@@ -28,7 +28,7 @@
       </svg>
     </div>
     <div class="login-main">
-      <div class="logo"><img src="../../assets/img/logo-big.png"></div>
+      <div class="logo"><img :src="imageUrl"></div>
       <div class='login-box'>
         <div class="login-label"></div>
         <div class="login-input" v-if="!verifyShow">
@@ -144,11 +144,13 @@ import QRCode from 'qrcodejs2'
 import bus from '@/libs/bus.js'
 import { SVG } from '@svgdotjs/svg.js'
 import { coordinatePoint } from '@/components/common/js/common'
+import imageUrl from '@/assets/img/logo-big.png'
 import { get } from '@/http'
 export default {
   name: 'login',
   data () {
     return {
+      imageUrl,
       loginData: {
         username: '',
         pin: '',

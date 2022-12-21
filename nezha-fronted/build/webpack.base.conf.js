@@ -35,6 +35,21 @@ const baseConfig = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
+      },{
+        test: /\.less$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'less-loader'
+        ]
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: file => (
+          /node_modules/.test(file) &&
+          !/\.vue\.js/.test(file)
+        )
       },
       {
         test: /\.(js)$/,
@@ -42,7 +57,6 @@ const baseConfig = {
         include: [
           resolve('src'),
           resolve('test'),
-          resolve('node_modules/webpack-dev-server/client'),
           resolve('node_modules/element-ui/packages/scrollbar'),
           resolve('node_modules/@interactjs'),
           resolve('node_modules/vue-grid-layout')
@@ -84,6 +98,20 @@ const baseConfig = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {
+        test: /\.pug$/,
+        oneOf: [
+          // this applies to `<template lang="pug">` in Vue components
+          {
+            resourceQuery: /^\?vue/,
+            use: ['pug-plain-loader']
+          },
+          // this applies to pug imports inside JavaScript
+          {
+            use: ['raw-loader', 'pug-plain-loader']
+          }
+        ]
       }
     ]
   },

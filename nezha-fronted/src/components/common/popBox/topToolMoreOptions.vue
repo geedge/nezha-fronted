@@ -12,7 +12,9 @@
           <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t("overall.locked") : $t("overall.unlocked")}}</div>
         </el-dropdown-item>
         <!-- import、export之前的内容 -->
-        <slot name="before"></slot>
+        <template>
+          <slot name="before"></slot>
+        </template>
         <el-dropdown-item v-has="permissions.import" v-if="importUrl">
           <div id="chart-import" @click="showImportBox(1)"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</div>
         </el-dropdown-item>
@@ -20,7 +22,9 @@
           <div id="chart-export" @click="showImportBox(2)"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</div>
         </el-dropdown-item>
         <!-- import、export之后的内容 -->
-        <slot name="after"></slot>
+        <template>
+          <slot name="after"></slot>
+        </template>
       </el-dropdown-menu>
 
       <el-dialog

@@ -49,7 +49,7 @@
          <i class="nz-icon-gear nz-icon"></i>
         </button>
       </div>
-      <div v-else slot-scope="scope" class="table-operation-items">
+      <div v-if="!isConfigurations" slot-scope="scope" class="table-operation-items">
         <button class="table-operation-item" :title="$t('overall.download')" v-has="'backup_download'" @click="downloadBackup(scope.row)"><i class="nz-icon nz-icon-download"></i></button>
         <el-dropdown size="medium" v-has="['backup_restore','backup_del']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">

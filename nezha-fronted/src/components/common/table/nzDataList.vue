@@ -14,7 +14,9 @@
               <search-input ref="searchInput" :from="from" :position='from' :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
 <!--              <search-box :from="from" :position='from' :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-box>-->
             </div>
-            <slot name="top-tool-right"></slot>
+            <template>
+              <slot name="top-tool-right"></slot>
+            </template>
             <button v-if="showLayout.indexOf('elementSet') > -1"  class="top-tool-btn table-column-setting"
                     type="button" @click="tools.showCustomTableTitle = true" :title="$t('overall.selectColumns')">
               <i class="nz-icon-gear nz-icon"></i>
