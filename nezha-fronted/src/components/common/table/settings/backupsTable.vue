@@ -38,9 +38,9 @@
     width="165px"
     >
       <div
+        v-if="isConfigurations"
         slot-scope="scope"
         class="table-operation-items"
-        v-if="isConfigurations"
       >
         <button class="table-operation-button" @click="backupNow(scope.row)" :title="$t('config.backup')">
          <i class="nz-icon-beifen nz-icon"></i>
@@ -49,8 +49,11 @@
          <i class="nz-icon-gear nz-icon"></i>
         </button>
       </div>
-
-      <div slot-scope="scope" v-else class="table-operation-items">
+      <div
+        v-if="!isConfigurations"
+        slot-scope="scope"
+        class="table-operation-items"
+      >
         <button class="table-operation-button" @click="Restore(scope.row)" v-if="scope.row" :title="$t('backup.RestoreNow')">
          <i class="nz-icon-shujubeifenhuifu nz-icon"></i>
         </button>
@@ -73,7 +76,7 @@
       </div>
     </el-table-column>
      <template slot="empty">
-        <div  v-if="!loading" class="table-no-data">
+        <div v-if="!loading" class="table-no-data">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#nz-icon-no-data-list"></use>
           </svg>

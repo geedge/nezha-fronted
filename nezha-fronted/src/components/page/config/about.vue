@@ -1,7 +1,12 @@
 <template>
-  <div class="about">
+  <div class="about" v-my-loading='loading'>
     <div class="app">
-      
+       <div class="app-header">
+      <div class="header-logo"><img width="60" height="60" src="../../../assets/img/logo1-2.png"></div>
+      <div class="header-title">
+        <div class="app-name">{{version.nezha.name}}</div>
+        <div class="app-version"><span class="about-label">{{$t("overall.version")}}&nbsp;&nbsp;&nbsp;</span><span>{{version.nezha.version}}</span></div>
+      </div>
     </div>
     <div class="app-component">
       <div class="component-content">
@@ -17,12 +22,12 @@
       <div class="time-line-body">
         <el-timeline>
           <el-timeline-item
-           v-for="(item) in activities"
-           :key="item.id"
+           v-for="(item, index) in activities"
+           :key="index"
            :timestamp="item.timestamp ? item.timestamp : ''"
             placement="top"
             >
-              <div class="about-summary" v-for="(val) in item.content" :key="val.id">
+              <div class="about-summary" v-for="(val,index) in item.content" :key="index">
                 <span class="dot"></span>
                 <div class="about-summary-text">{{language === "en" ? val.english :val.chinese}}</div>
               </div>
@@ -40,6 +45,7 @@ export default {
       noData: false,
       timeLineData: [],
       // language: '',
+      loading: false,
       version: {
         nezha: { name: '', version: '' },
         components: [{ name: '', version: '' }]
@@ -268,9 +274,11 @@ export default {
   },
   methods: {
     getVersion () {
+      this.loading = true
       this.$get('/about').then(response => {
         // this.language = localStorage.getItem('nz-language') || 'en'
         this.version = response.data
+        this.loading = false
       })
     }
   },

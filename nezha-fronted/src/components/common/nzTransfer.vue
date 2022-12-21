@@ -33,7 +33,7 @@
             :key="index"
           >
             <template slot-scope="scope" v-if="!item.slot">{{scope.row[item.prop].name || scope.row[item.prop]}}</template>
-            <slot :name="item.prop" v-else></slot>
+            <slot :name="item.prop" v-if="item.slot"></slot>
           </el-table-column>
         </el-table>
       </div>
@@ -84,7 +84,7 @@
             :key="index"
           >
             <template slot-scope="scope" v-if="!item.slot">{{scope.row[item.prop].name || scope.row[item.prop]}}</template>
-            <slot :name="item.prop" v-else></slot>
+            <slot :name="item.prop" v-if="item.slot"></slot>
           </el-table-column>
         </el-table>
       </div>
