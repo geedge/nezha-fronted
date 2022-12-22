@@ -31,6 +31,10 @@ const terminalFile = {
             state.externalTerminal = false
           }
         })
+        window.addEventListener('unload', () => {
+          state.externalTerminal = false
+          state.externalTerminalWindow.close()
+        })
       }
       if (state.externalTerminal) {
         state.externalTerminalWindow = window.open('/ui/terminal', 'terminal')
@@ -65,6 +69,17 @@ const terminalFile = {
       if (state.updateIndex == 10) {
         state.updateIndex = 1
       }
+    },
+    closeTerminal (state) {
+      if (state.externalTerminalWindow) {
+        state.externalTerminalWindow.close()
+      }
+      state.externalTerminal = false
+      state.messageFunction = false
+      state.fileList = []
+      state.uploadItem = {}
+      state.updateUuid = '' // 根据uuid的变化 判断页面是否需要刷新
+      state.updateIndex = 1
     }
   },
   getters: {

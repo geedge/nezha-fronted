@@ -181,6 +181,7 @@ const user = {
       localStorage.removeItem('nz-username')
       localStorage.removeItem('nz-token')
       localStorage.removeItem('nz-user-id')
+      store.commit('closeTerminal')
     }
   }
 }
