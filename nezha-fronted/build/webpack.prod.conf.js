@@ -24,7 +24,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
-const smp = new SpeedMeasurePlugin();
+// const smp = new SpeedMeasurePlugin();
 
 
 // const gitRevisionPlugin = new GitRevisionPlugin();
@@ -473,6 +473,6 @@ if (config.build.bundleAnalyzerReport) {
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
 
-webpackConfig = smp.wrap(webpackConfig);
+// webpackConfig = smp.wrap(webpackConfig);
 
 module.exports = webpackConfig
