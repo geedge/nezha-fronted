@@ -354,6 +354,9 @@
       height: 100%;
       border-color: transparent;
     }
+    .el-textarea__inner {
+      resize: none;
+    }
   }
   .comment-editor {
     border: 1px solid $--border-color-light;
@@ -377,6 +380,16 @@
     .ql-editor.ql-blank::before {
       font-style: normal;
       color: $--color-text-placeholder;
+    }
+    .textarea-button{
+      display: flex;
+      justify-content: flex-end;
+      padding-bottom: 10px;
+      padding-right: 10px;
+      .nz-btn.nz-btn-size-mini{
+        width: 74px;
+        height: 30px;
+      }
     }
   }
   #assetCommentTable {

@@ -172,17 +172,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.textarea-box >>>.el-textarea__inner {
-  resize: none;
-}
-.comment-editor>>>.textarea-button{
-  display: flex;
-  justify-content: flex-end;
-  padding-bottom: 10px;
-  padding-right: 10px;
-  .nz-btn.nz-btn-size-mini{
-    width: 74px;
-    height: 30px;
-  }
-}
+
 </style>
