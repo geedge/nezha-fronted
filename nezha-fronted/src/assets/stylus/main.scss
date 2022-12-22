@@ -645,19 +645,19 @@ li {
   position: absolute;
   display: inline-block;
 }
-.right-box-form-left.right-box-form /deep/ .el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label:before{
+.right-box-form-left.right-box-form  .el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label:before{
   display: none;
 }
-.right-box-form-left.right-box-form /deep/ .el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label:after{
+.right-box-form-left.right-box-form  .el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label:after{
   content: "*";
   color: #f56c6c;
   margin-left: 4px;
 }
 
-.right-box-form-left.right-box-form /deep/ .el-form-item.required-marker:not(.is-no-asterisk) .el-form-item__label:before{
+.right-box-form-left.right-box-form  .el-form-item.required-marker:not(.is-no-asterisk) .el-form-item__label:before{
   display: none;
 }
-.right-box-form-left.right-box-form /deep/ .el-form-item.required-marker:not(.is-no-asterisk) .el-form-item__label:after{
+.right-box-form-left.right-box-form  .el-form-item.required-marker:not(.is-no-asterisk) .el-form-item__label:after{
   content: "*";
   color: #f56c6c;
   margin-left: 4px;
@@ -1471,7 +1471,7 @@ li {
   .tag-edit-box-body {
     display: flex;
     box-sizing: border-box;
-    /deep/ .el-autocomplete{
+     .el-autocomplete{
       width: 100%;
     }
     .tag-edit {

@@ -96,7 +96,6 @@
     background: $--background-color-2;
     width: calc(100% - 22px);
     color: $--color-text-regular;
-    > div{text-transform:capitalize};
   }
   .file-name{
     width: 44%;
@@ -136,7 +135,7 @@
     display: flex;flex-direction: column;align-items: center;margin-left: 7px
   }
   .nz-arrow-up{
-    margin-bottom: 5px;
+    margin-bottom: 2px;
   }
   .nz-arrow-up.is-select{
     border-bottom:5px solid $--color-primary; /* 定义底部颜色 */

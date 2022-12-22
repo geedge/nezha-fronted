@@ -43,7 +43,7 @@
   padding: 20px 0;
   width: 100%;
   border-bottom: 1px dashed $--border-color-base;
-  /deep/ .nz-icon-minus {
+  .nz-icon-minus {
     padding: 0 4px;
   }
 }
@@ -91,10 +91,10 @@
   left: 0;
   z-index: 100;
 }
-/deep/ .el-color-picker{
+.el-color-picker{
   position: absolute;
 }
-.range /deep/ .el-color-picker{
+.range .el-color-picker{
   left: -17px;
 }
 .color-content{

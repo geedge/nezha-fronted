@@ -1,7 +1,7 @@
 <template>
   <div class="webTerminal">
     <div class="web-terminal-header">
-      <div>  <img alt="loading..." height="26" :src="logo?logo:require('../../assets/img/logo1-2.png')"/>Web terminal</div>
+      <div>  <img alt="loading..." height="26" :src="logo?logo:imageUrl"/>{{$t('terminal.title')}}</div>
       <div>
         <div class="console-title-icon" style='right: 106px;display: inline;position: absolute' @click="showFileState" v-show="fileList.length">
           <i class="nz-icon nz-icon-a-filetransfer" :title="$t('terminal.filetransfer')"></i>
@@ -18,6 +18,7 @@
 <script>
 import webSSHNew from '@/components/cli/webSSHNew'
 import fileListState from './fileListState'
+import imageUrl from '@/assets/img/logo1-2.png'
 export default {
   name: 'terminal',
   components: {
@@ -26,6 +27,7 @@ export default {
   },
   data () {
     return {
+      imageUrl,
       logo: '',
       fileListStateType: '',
       message: '',

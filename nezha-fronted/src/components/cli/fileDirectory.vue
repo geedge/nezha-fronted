@@ -23,7 +23,7 @@
         </el-input>
       </span>
       <div class="path-option">
-        <span style="margin-right: 5px">Show hide File: </span>
+        <span style="margin-right: 5px">{{$t('terminal.showFile')}}: </span>
         <el-switch  v-model="showHideFile"/>
         <i class="nz-icon nz-icon-a-newfolder" @click="newFolderBoxShow = true"></i>
         <i class="nz-icon nz-icon-upload" @click="uploadFile"></i>
@@ -408,13 +408,13 @@ export default {
           this.editPath = ''
           this.breadcrumb = res.data.path.split('/').filter(item => item)
           if (this.nameOrderType) {
-            this.orderBy('nameOrderType',this.nameOrderType , 'name')
+            this.orderBy('nameOrderType', this.nameOrderType, 'name')
           }
           if (this.sizeOrderType) {
-            this.orderBy('sizeOrderType',this.sizeOrderType , 'size')
+            this.orderBy('sizeOrderType', this.sizeOrderType, 'size')
           }
           if (this.dateOrderType) {
-            this.orderBy('dateOrderType',this.dateOrderType , 'cts')
+            this.orderBy('dateOrderType', this.dateOrderType, 'cts')
           }
         } else {
           this.$message.error(res.msg)
@@ -554,18 +554,32 @@ export default {
       }
       return '-'
     },
+    resetState (type) {
+      if (type == 'sizeOrderType') {
+        this.dateOrderType = 0
+        this.nameOrderType = 0
+      }
+      if (type == 'dateOrderType') {
+        this.sizeOrderType = 0
+        this.nameOrderType = 0
+      }
+      if (type == 'nameOrderType') {
+        this.sizeOrderType = 0
+        this.dateOrderType = 0
+      }
+    },
     orderBy (key, type, order) {
+      console.log(key, type, order)
       let orderType = type
       if (!orderType) {
         orderType = this[key] === 'asc' ? 'desc' : 'asc'
       }
-      this.sizeOrderType = 0
-      this.dateOrderType = 0
-      this.nameOrderType = 0
+      this.resetState(orderType)
       if (this[key] == orderType) {
         this[key] = 0
         this.fileList = this.oldFileList
       } else if (orderType == 'nameOrderType') {
+        console.log(3)
         this[key] = orderType
         let isDirArr = this.oldFileList.filter(item => item.isDir)
         let isRegArr = this.oldFileList.filter(item => !item.isDir)
@@ -578,6 +592,7 @@ export default {
           this.fileList = this.fileList.concat(isRegArr, isDirArr)
         }
       } else {
+        console.log(4)
         this[key] = orderType
         let isDirArr = this.oldFileList.filter(item => item.isDir)
         let isRegArr = this.oldFileList.filter(item => !item.isDir)

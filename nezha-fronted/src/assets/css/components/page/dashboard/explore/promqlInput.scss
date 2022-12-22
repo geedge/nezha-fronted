@@ -99,7 +99,7 @@
   .el-cascader-node {
     padding: 0;
   }
-  .el-cascader-menu:last-child .el-cascader-node, /deep/ .el-cascader-node__label {
+  .el-cascader-menu:last-child .el-cascader-node, .el-cascader-node__label {
     padding: 0;
   }
   .metric-selector-title{

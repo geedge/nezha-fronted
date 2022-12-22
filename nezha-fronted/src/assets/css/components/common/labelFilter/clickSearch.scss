@@ -50,7 +50,7 @@
   padding: 0;
   box-sizing: border-box;
 
-  /deep/ .el-checkbox__label {
+  .el-checkbox__label {
     max-width: 150px;
     text-overflow: ellipsis;
     white-space: nowrap;
