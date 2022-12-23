@@ -617,8 +617,11 @@ export default {
                 this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
                 this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
                 this.getData(this.filter)
+              }else {
+                this.chartListLoading = false
               }
             } else {
+              this.chartListLoading = false
               if (response.msg) {
                 console.error(response.msg)
                 this.$message.error(response.msg)
