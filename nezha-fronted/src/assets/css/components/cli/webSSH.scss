@@ -298,6 +298,9 @@ div.sp-header{
 
 .ani-webSHH-height {
   transition: height .25s ease-in;
+  .el-dialog .el-dialog__body{
+    padding-bottom: 0;
+  }
   .sub-list {
     background: $--background-color-1;
   }
@@ -309,7 +312,7 @@ div.sp-header{
     margin-top: 2px;
   }
   .custom .el-form-item {
-    width: calc(50% - 30px);
+    width: calc(50% - 10px);
     display: inline-block;
   }
   .custom .el-form-item:nth-child(even) {
