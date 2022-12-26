@@ -55,7 +55,8 @@ export default {
       colors: chartConfig.getBgColorList(),
       noData: false,
       dataSize: 20,
-      chartDot: 2
+      chartDot: 2,
+      theme: localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
     }
   },
   created () {
@@ -156,6 +157,7 @@ export default {
       }
 
       this.modifyOption('tooltip', 'position', this.defaultTooltipPosition)
+      this.modifyOption('tooltip', 'backgroundColor', this.theme == 'light' ? '#fff' : '#222329')
 
       if (this.tooltipFormatter) {
         this.modifyOption('tooltip', 'formatter', this.tooltipFormatter)
