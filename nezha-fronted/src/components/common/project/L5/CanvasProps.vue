@@ -758,7 +758,7 @@
     </el-tabs>
     <!--选中多个-->
     <keep-alive>
-      <div v-if="selection.pens" class="">
+      <div v-if="selection.pens && selection.pens.length > 1" class="">
       <el-collapse v-model="activeNames">
         <!--对齐方式-->
         <el-collapse-item :title="$t('project.topology.align')" name="1" v-if="selection.pens">
