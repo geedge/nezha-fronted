@@ -73,6 +73,13 @@
         height: 28px;
         width: 28px;
         line-height: 28px;
+        background: mix(#FFF, $--background-color-disabled, 45%);
+        border: 1px solid mix(#000, $--background-color-disabled, 85%);
+      }
+
+      .top-tool-btn.top-tool-btn--disabled{
+        background: mix(#FFF, $--background-color-disabled, 35%);
+        border: 1px solid mix(#000, $--background-color-disabled, 35%);
       }
 
       .el-pagination {
