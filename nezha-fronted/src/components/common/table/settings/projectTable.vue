@@ -198,6 +198,18 @@ export default {
       return function (username) {
         return localStorage.getItem('nz-username') === username
       }
+    },
+    showList () {
+      return !this.$store.getters.getShowTopoScreen
+    }
+  },
+  watch: {
+    showList: {
+      handler (val) {
+        if (val) {
+          this.$refs.dataTable.doLayout()
+        }
+      }
     }
   }
 }
