@@ -263,6 +263,7 @@ export default {
   },
   methods: {
     switchSearch (value) {
+      let flag = true
       if (value == 0) {
         this.typeData.forEach(t => {
           t.disabled = false
@@ -271,6 +272,7 @@ export default {
         if (this.editAssetMeta.type !== 'RADIO' &&
             this.editAssetMeta.type !== 'CHECKBOX' &&
             this.editAssetMeta.type !== 'SELECT') {
+          flag = false
           this.editAssetMeta.type = 'RADIO'
         }
         this.typeData.forEach(t => {
@@ -286,7 +288,7 @@ export default {
           t.disabled = false
         })
       }
-      this.selectType(this.editAssetMeta.type, false)
+      this.selectType(this.editAssetMeta.type, flag)
     },
     clickOutside () {
       this.esc(false)
