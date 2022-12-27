@@ -69,7 +69,7 @@
           </template>
           <template v-else>
             <!-- <button class="table-operation-item" @click="$emit('del',scope.row)" v-has="'system_apiKey_delete'"><i class="nz-icon nz-icon-delete"></i></button> -->
-           <div @click="tableOperation(scope.row)" v-has="'system_apiKey_delete'">
+           <div @click="tableOperation(scope.row)" v-has="'system_apiKey_delete'" >
               <delete-button
               ref="deleteButton"
               :forceDeleteShow="false"

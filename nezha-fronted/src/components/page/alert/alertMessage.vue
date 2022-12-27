@@ -34,7 +34,7 @@
         >
           <template v-slot:before>
             <div>
-              <el-dropdown-item :disabled="batchDeleteObjs.length==0">
+              <el-dropdown-item :disabled="batchDeleteObjs.length==0" :class="'nz-el-dropdown-menu-item'">
                 <delete-button
                   ref="deleteButton"
                   :single="false"
@@ -52,7 +52,7 @@
                   :type="'link'"
                 ></delete-button>
               </el-dropdown-item>
-              <el-dropdown-item :disabled="batchDeleteObjs.length==0">
+              <el-dropdown-item :disabled="batchDeleteObjs.length==0" :class="'nz-el-dropdown-menu-item'">
                 <div id="alert-msg-batch-ack" v-has="'alertMessage_expired'" @click="batchAck"><i class="nz-icon nz-icon-queren"></i>{{$t('overall.batchAck')}}</div>
               </el-dropdown-item>
             </div>

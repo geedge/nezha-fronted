@@ -657,9 +657,13 @@ textarea {
 }
 .nz-el-dropdown-menu-item{
   padding: 0 !important;
-  .asset-list-delete{
+  > div {
+    padding: 0px !important;
+  }
+  .nz-el-dropdown-item-del{
+    display: inline-block;
     width: 100%;
+    padding: 0 17px;
     box-sizing: border-box;
-    //padding: 0 17px;
   }
 }

@@ -164,7 +164,7 @@
                 $t("overall.delete")
               }}</span></el-dropdown-item
             > -->
-             <el-dropdown-item v-has="'alertSilence_expire'" :command="['delete', scope.row]">
+             <el-dropdown-item v-has="'alertSilence_expire'" :command="['delete', scope.row]" :class="'nz-el-dropdown-menu-item'">
                   <delete-button
                   ref="deleteButton"
                   :from="'alertSilence'"

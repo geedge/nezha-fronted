@@ -52,8 +52,16 @@ export default {
           break
         }
         case 'delete-rel': {
-          this.singleDelete = [row]
-          this.$refs.deleteButton.batchDelete()
+          // this.$emit('deleteRel', {
+          //   row: row,
+          //   url: this.api,
+          //   ...param
+          // })
+          this.$store.dispatch('deleteTableRel', {
+            row: row,
+            url: this.api,
+            ...param
+          })
           break
         }
         case 'ack': {
