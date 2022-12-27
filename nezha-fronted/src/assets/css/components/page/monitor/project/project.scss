@@ -161,6 +161,11 @@
           }
         }
       }
+      .el-dialog__wrapper{
+        .el-dialog__body>.upload-pic-row.el-row{
+          padding-right: 20px;
+        }
+      }
     }
   }
 }

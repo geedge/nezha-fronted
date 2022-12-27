@@ -325,7 +325,7 @@
 
               <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="imgUpload" :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
-                      style="margin-right: 20px">
+                      style="">
              {{$t('overall.save')}}
            </button>
             </span>
