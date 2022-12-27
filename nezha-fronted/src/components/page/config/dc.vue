@@ -36,6 +36,7 @@
           export-url="/dc/export"
           import-url="/dc/import"
           @afterImport="getTableData"
+          v-has="['dc_add','dc_edit']"
         >
         </top-tool-more-options>
       </template>
@@ -101,6 +102,7 @@
           export-url="/dc/export"
           import-url="/dc/import"
           @afterImport="getTableData"
+          v-has="['dc_add','dc_edit','dc_delete']"
         >
           <template v-slot:before>
             <div>

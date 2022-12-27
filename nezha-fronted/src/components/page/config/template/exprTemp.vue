@@ -24,6 +24,7 @@
           :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_edit'}"
           class="top-tool-export margin-l-10 margin-r-10"
           @afterImport="getTableData"
+          v-has="['expressionTemplate_add','expressionTemplate_edit','expressionTemplate_delete']"
         >
           <template v-slot:before>
             <div>

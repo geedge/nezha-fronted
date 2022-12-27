@@ -28,6 +28,7 @@
           export-url="/record/rule/export"
           import-url="/record/rule/import"
           @afterImport="getTableData"
+          v-has="['record_rule_add','record_rule_edit','record_rule_delete']"
         >
           <template v-slot:before>
             <div>

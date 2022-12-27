@@ -87,7 +87,7 @@
                 @afterImport="afterImport"
               >
                 <template v-slot:before>
-                  <el-dropdown-item>
+                  <el-dropdown-item v-has="'main_edit'">
                     <div id="panel-lock" @click="$store.dispatch('dispatchPanelLock',{flag:!panelLock})"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t('overall.locked') : $t('overall.unlocked')}}</div>
                   </el-dropdown-item>
                 </template>
@@ -95,7 +95,7 @@
                   <!-- <el-dropdown-item v-has="'main_add'">
                     <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{$t('overall.AddByTemplate')}}</div>
                   </el-dropdown-item>
-                  <el-dropdown-item v-has="'panel_view'">
+                  <el-dropdown-item v-has="'main_edit'">
                     <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
                   </el-dropdown-item> -->
                   <el-dropdown-item v-has="'panel_view'">

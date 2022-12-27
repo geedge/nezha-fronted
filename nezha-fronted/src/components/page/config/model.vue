@@ -27,6 +27,7 @@
           export-url="/asset/model/export"
           import-url="/asset/model/import"
           @afterImport="getTableData"
+          v-has="['model_add','model_edit','model_delete']"
         >
           <template v-slot:before>
             <div>
@@ -104,7 +105,7 @@ export default {
         id: '',
         name: '',
         // chartIds: '',
-        panelId:'',
+        panelId: '',
         sysObjectId: '',
         type: { id: '', name: '' },
         remark: ''

@@ -36,6 +36,7 @@
           export-url="/asset/asset/export"
           import-url="/asset/asset/import"
           @afterImport="getTableData"
+          v-has="['asset_add','asset_edit']"
         >
         </top-tool-more-options>
       </template>
@@ -108,6 +109,7 @@
           export-url="/asset/asset/export"
           import-url="/asset/asset/import"
           @afterImport="getTableData"
+          v-has="['asset_add','asset_edit','asset_delete']"
         >
           <template v-slot:before>
             <div>

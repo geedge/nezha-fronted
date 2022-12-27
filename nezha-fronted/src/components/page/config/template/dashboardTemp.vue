@@ -26,6 +26,7 @@
           :permissions="{import: 'dashboard_temp_add', export: 'dashboard_temp_edit'}"
           class="top-tool-export margin-r-10"
           @afterImport="getTableData"
+          v-has="['dashboard_temp_add','dashboard_temp_edit','dashboard_temp_delete']"
         >
           <template v-slot:before>
             <div>

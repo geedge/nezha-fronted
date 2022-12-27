@@ -18,7 +18,7 @@
 <!--        <detailViewTopSearch :selectValue.sync="selectValue" :detailSearchList="detailSearchList" @reload="reloadTable" />-->
       </template>
       <template v-slot:top-tool-right>
-        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('asset.createAsset')" class="top-tool-btn" @click.stop="add">
+        <button id="asset-create-asset" v-has="'monitor_module_add'" :title="$t('asset.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
        <top-tool-more-options
@@ -27,12 +27,13 @@
           id="model"
           :params="searchLabel"
           :params2="searchCheckBox"
-          :permissions="{import: 'monitor_endpoint_add', export: 'monitor_module_edit'}"
+          :permissions="{import: 'monitor_module_add', export: 'monitor_module_edit'}"
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="module"
           export-url="/monitor/module/export"
           import-url="/monitor/module/import"
           @afterImport="getTableData"
+          v-has="['monitor_module_add','monitor_module_edit']"
         >
         </top-tool-more-options>
       </template>
@@ -82,8 +83,7 @@
       @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'monitor_module_add'" :title="$t('overall.createModule')" class="top-tool-btn"
-                type="button" @click="add">
+        <button id="account-add" v-has="'monitor_module_add'" :title="$t('overall.createModule')" class="top-tool-btn" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
        <top-tool-more-options
@@ -92,12 +92,13 @@
           id="endpoint-template-list"
           :params="searchLabel"
           :params2="searchCheckBox"
-          :permissions="{import: 'monitor_endpoint_add', export: 'monitor_module_edit'}"
+          :permissions="{import: 'monitor_module_add', export: 'monitor_module_edit'}"
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="module"
           export-url="/monitor/module/export"
           import-url="/monitor/module/import"
           @afterImport="getTableData"
+          v-has="['monitor_module_add','monitor_module_edit','monitor_module_delete']"
         >
           <template v-slot:before>
             <div>

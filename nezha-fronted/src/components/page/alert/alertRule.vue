@@ -33,6 +33,7 @@
           export-url="/alert/rule/export"
           import-url="/alert/rule/import"
           @afterImport="getTableData"
+          v-has="['alertRule_add','alertRule_edit',]"
         >
         </top-tool-more-options>
       </template>
@@ -95,6 +96,7 @@
           export-url="/alert/rule/export"
           import-url="/alert/rule/import"
           @afterImport="getTableData"
+          v-has="['alertRule_add','alertRule_edit','alertRule_delete']"
         >
           <template v-slot:before>
             <div>

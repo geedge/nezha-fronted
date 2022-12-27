@@ -98,13 +98,13 @@
         </div>
         <!-- dashboardTemp -->
         <div v-else-if="from === fromRoute.dashboardTemp">
-          <button id="endpoint-create-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
+          <button v-has="'main_add'" id="endpoint-create-chart" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
-          <button id="panel-lock" :title='panelLock ? $t("overall.unlocked") : $t("overall.locked")'  class="top-tool-btn margin-r-10" @click="panelLockChange(!panelLock)" type="button">
+          <button v-has="'main_edit'" id="panel-lock" :title='panelLock ? $t("overall.unlocked") : $t("overall.locked")'  class="top-tool-btn margin-r-10" @click="panelLockChange(!panelLock)" type="button">
             <i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>
           </button>
-          <button @click="chartBySync" id="chart-sync"  :title="$t('overall.syncChart')" class="top-tool-btn margin-r-10" type="button">
+          <button v-has="'main_edit'" @click="chartBySync" id="chart-sync"  :title="$t('overall.syncChart')" class="top-tool-btn margin-r-10" type="button">
             <i class="nz-icon nz-icon-sync"></i>
           </button>
         </div>
@@ -617,7 +617,7 @@ export default {
                 this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
                 this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
                 this.getData(this.filter)
-              }else {
+              } else {
                 this.chartListLoading = false
               }
             } else {

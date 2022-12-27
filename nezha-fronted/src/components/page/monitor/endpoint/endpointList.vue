@@ -33,6 +33,7 @@
           export-url="/monitor/endpoint/export"
           import-url="/monitor/endpoint/import"
           @afterImport="getTableData"
+          v-has="['monitor_endpoint_add','monitor_endpoint_edit']"
         >
         </top-tool-more-options>
       </template>
@@ -101,6 +102,7 @@
           export-url="/monitor/endpoint/export"
           import-url="/monitor/endpoint/import"
           @afterImport="getTableData"
+          v-has="['monitor_endpoint_add','monitor_endpoint_edit','monitor_endpoint_delete']"
         >
           <template v-slot:before>
             <div>

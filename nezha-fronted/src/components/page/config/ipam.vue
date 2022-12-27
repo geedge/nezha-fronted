@@ -27,6 +27,7 @@
           export-url="/ipam/subnet/export"
           import-url="/ipam/subnet/import"
           @afterImport="getTableData"
+          v-has="['ipam_add','ipam_edit','ipam_delete']"
         >
           <template v-slot:before>
             <div>

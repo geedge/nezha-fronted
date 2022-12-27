@@ -106,13 +106,13 @@
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
           <button v-if="scope.row.alertRule" class="table-operation-item" @click="$emit('messageDetail', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
-          <el-dropdown v-has="['alertMessage_expired', 'alertSilence_add']" size="medium" trigger="click" @command="tableOperation">
+          <el-dropdown v-has="['alertMessage_delete','alertMessage_expired', 'alertSilence_add']" size="medium" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
             </div>
             <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
               <!--            <el-dropdown-item :command="['showText', scope.row]"><i class="nz-icon nz-icon-guzhangshuju"></i><span class="operation-dropdown-text">{{$t('alert.config.trbShot')}}</span></el-dropdown-item>-->
-              <el-dropdown-item v-has="'alertMessage_view'" :command="['delete', scope.row, 'singleDel']"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'alertMessage_delete'" :command="['delete', scope.row, 'singleDel']"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
               <!-- <el-dropdown-item v-has="'alertMessage_view'" :command="['delete', scope.row]">
                   <delete-button
                   ref="deleteButton"

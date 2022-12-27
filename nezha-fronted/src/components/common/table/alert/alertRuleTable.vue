@@ -81,7 +81,7 @@
             popper-class="schedEnableTitle nz-tooltip-bac"
           >
             <div>
-              <div class="margin-b-10">
+              <div class="margin-b-10" v-has="'alertRule_edit'">
                 {{$t('alert.config.schedEnable')}}
                 <el-switch
                   style="margin-left: 14px"

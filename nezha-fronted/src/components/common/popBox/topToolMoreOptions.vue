@@ -5,10 +5,10 @@
         <i class="nz-icon nz-icon-more2"></i>
       </button>
       <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
-        <el-dropdown-item  v-if="showLock">
+        <el-dropdown-item  v-if="showLock" v-has="'main_edit'">
           <div @click="editPanel" id="edit-bottom-panel"><i class="nz-icon nz-icon-edit"></i>{{$t('dashboard.panel.editPanelTitle')}}</div>
         </el-dropdown-item>
-        <el-dropdown-item  v-if="showLock">
+        <el-dropdown-item  v-if="showLock" v-has="'main_edit'">
           <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t("overall.locked") : $t("overall.unlocked")}}</div>
         </el-dropdown-item>
         <!-- import、export之前的内容 -->
