@@ -1,6 +1,6 @@
 <template>
   <div class="detail-view-top-search" style="line-height: 32px;">
-    <div class="search-detail-box" :class="[selectValue[item.key].length?'select-dropdown':'',detailSearchListCopy[key].dropShow?'show-my-dropdpwn':'']" v-for="(item,key) in detailSearchListCopy" :key='key' v-show="item.children.length">
+    <div class="search-detail-box" :class="[selectValue[item.key].length?'select-dropdown':'',detailSearchListCopy[key].dropShow?'show-my-dropdpwn':'']" v-for="(item,key) in detailSearchListCopy" :key='key' v-show="item.oldChildren.length">
       <span v-if="item.type === 'checkBox'">
             <el-dropdown
               :placement="'bottom-start'"

@@ -7,7 +7,7 @@
         placement="bottom-start"
         v-model="item.visible"
         v-clickoutside="close"
-        popper-class="no-style-class ping-popover panel-variables"
+        popper-class="no-style-class ping-popover panel-variables nz-el-dropdown-menu"
       >
         <ul class="pop-list-wrap">
           <li class="el-dropdown-menu__item" v-if="item.allOption">

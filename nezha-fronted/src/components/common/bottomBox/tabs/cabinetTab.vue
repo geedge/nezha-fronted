@@ -55,7 +55,7 @@
         >
           <template v-slot:before>
             <div>
-              <el-dropdown-item :disabled="batchDeleteObjs.length==0">
+              <el-dropdown-item :disabled="batchDeleteObjs.length==0" :class="'nz-el-dropdown-menu-item'">
                 <delete-button
                   ref="deleteButton"
                   :from="'cabinetTab'"

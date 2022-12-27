@@ -48,7 +48,9 @@ const store = new Vuex.Store({
     globalSearchId: '',
     isRouteLive: true,
     nowPath: '',
-    myEvent: new Event('resize')
+    myEvent: new Event('resize'),
+    deleteTableRel: {},
+    showDeleteTableRel: false
   },
   getters: {
     getGlobalSearchId (state) {
@@ -104,6 +106,12 @@ const store = new Vuex.Store({
     },
     i18nIsReady (state) {
       return state.i18nReady
+    },
+    getDeleteTableRel (state) {
+      return state.deleteTableRel
+    },
+    getShowDeleteTableRel (state) {
+      return state.showDeleteTableRel
     }
   },
   mutations: {
@@ -211,9 +219,25 @@ const store = new Vuex.Store({
     },
     i18nReady (state, ready) {
       state.i18nReady = ready
+    },
+    setDeleteTableRel (state, payload) {
+      state.deleteTableRel = payload
+    },
+    setShowDeleteTableRel (state, flag) {
+      state.showDeleteTableRel = flag
+      if (!flag) {
+        state.deleteTableRel = {}
+      }
     }
   },
   actions: {
+    deleteTableRel (store, payload) { // 删除列表行
+      store.commit('setDeleteTableRel', payload)
+      store.commit('setShowDeleteTableRel', true)
+    },
+    dispatchShowDeleteTableRel (store, flag) {
+      store.commit('setShowDeleteTableRel', flag)
+    }
   }
 })
 

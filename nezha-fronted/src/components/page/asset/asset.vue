@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <nzDetailView
       v-my-loading="detailViewLoading || tools.loading"
       v-if="detailType !== 'list'"
@@ -116,7 +116,7 @@
               <el-dropdown-item>
                 <div id="asset-batch-asset" v-has="'asset_edit'" @click="batchEdit"><i class="nz-icon nz-icon-batch-edit"></i>{{$t('overall.batchEdit')}}</div>
               </el-dropdown-item>
-              <el-dropdown-item :disabled="batchDeleteObjs.length==0">
+              <el-dropdown-item :disabled="batchDeleteObjs.length==0" :class="'nz-el-dropdown-menu-item'">
                 <delete-button
                   ref="deleteButton"
                   :single="false"

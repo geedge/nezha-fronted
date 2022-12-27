@@ -82,7 +82,7 @@
               </div>
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
                 <!-- <el-dropdown-item v-has="'system_notification_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
-                <el-dropdown-item v-has="'system_notification_delete'" :command="['delete', scope.row]">
+                <el-dropdown-item v-has="'system_notification_delete'" :command="['delete', scope.row]" :class="'nz-el-dropdown-menu-item'">
                   <delete-button
                   ref="deleteButton"
                   :from="'notifyMethod'"

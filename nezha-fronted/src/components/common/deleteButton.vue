@@ -7,7 +7,7 @@
     </div>
     <button v-if="this.type === 'btn'" class="table-operation-item delete-button" :id="id" @click="batchDelete" :title="$t('overall.delete')"><i class="nz-icon nz-icon-delete"></i></button>
     <div v-if="this.type === 'link'" :id="id" @click="batchDelete">
-      <span><i class="nz-icon nz-icon-delete" ></i>{{title}}</span>
+      <span class="nz-el-dropdown-item-del"><i class="nz-icon nz-icon-delete" ></i>{{title}}</span>
     </div>
     <el-dialog
       ref="batchDeleteDialog"
@@ -279,6 +279,13 @@ export default {
         case 'model' : return 'nz-icon monitorColor nz-icon-model'
       }
       return ' '
+    }
+  },
+  watch: {
+    dialogVisible (n) {
+      if (!n) {
+        this.$store.dispatch('dispatchShowDeleteTableRel', false)
+      }
     }
   }
 }

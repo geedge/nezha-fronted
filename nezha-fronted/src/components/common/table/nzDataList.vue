@@ -100,6 +100,18 @@
         @showFullscreen="showFullscreen"
       ></panel-chart>
     </el-dialog>
+    <delete-button
+      ref="deleteButton"
+      :from="'endpoint'"
+      :forceDeleteShow="forceDeleteShow"
+      :deleteTitle="'project.endpoint.endpoint'"
+      :type="'hide'"
+      :title="$t('overall.delete')"
+      :api="api"
+      :single="single"
+      :delete-objs="singleDelete"
+      @before="delFlag=true"
+    ></delete-button>
   </div>
 </template>
 
@@ -112,13 +124,15 @@ import bus from '@/libs/bus'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import lodash from 'lodash'
 import SearchBox from '@/components/common/searchBox/searchBox'
+import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'nzDataList',
   mixins: [routerPathParams],
   components: {
     SearchBox,
     bottomBox,
-    panelChart
+    panelChart,
+    deleteButton
   },
   props: {
     from: {
@@ -160,11 +174,22 @@ export default {
     },
     topologyChartInfo () {
       return this.$store.getters.getTopologyChartInfo
+    },
+    showDeleteTableRel () {
+      return this.$store.getters.getShowDeleteTableRel
+    },
+    deleteTableRel () {
+      return this.$store.getters.getDeleteTableRel
     }
   },
   data () {
     return {
       sign: '',
+      singleDelete: [],
+      api: '',
+      single: true,
+      forceDeleteShow: false,
+      delFlag: false,
       fromRoute: fromRoute,
       /* 二级页面相关 */
       bottomBox: {
@@ -189,6 +214,13 @@ export default {
     bus.$on('delTableRow', this.delTableRow)
   },
   methods: {
+    delTableRelRow (url, row, forceDeleteShow = false, single = false) {
+      this.api = url
+      this.singleDelete = [row]
+      this.forceDeleteShow = forceDeleteShow
+      this.single = single
+      this.$refs.deleteButton.batchDelete()
+    },
     delTableRow (ids) { // 接收一个 删除的id数组 判断当前底部弹窗id 是否包含 包含则关闭当前弹窗
       if (ids.indexOf(this.bottomBox.object.id) !== -1) {
         this.bottomBox = {
@@ -255,6 +287,11 @@ export default {
       deep: true,
       handler (n) {
         this.showLayout = [...n]
+      }
+    },
+    showDeleteTableRel (n) {
+      if (n) {
+        this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single)
       }
     }
   },
