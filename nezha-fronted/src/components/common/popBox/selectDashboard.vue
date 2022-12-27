@@ -77,7 +77,7 @@
                 <el-col>
                   <el-dropdown  placement="bottom-end" trigger="click" style="margin-right:10px">
                     <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
-                    <el-dropdown-menu class="right-box-select-top" slot="dropdown"  v-has="['main_edit', 'main_delete']">
+                    <el-dropdown-menu class="right-box-select-top nz-el-dropdown-menu" slot="dropdown"  v-has="['main_edit', 'main_delete']">
                       <el-dropdown-item>
                         <div @click="editPanel(data)" v-has="'main_edit'"><i  class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</div>
                       </el-dropdown-item>

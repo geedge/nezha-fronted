@@ -39,7 +39,7 @@
                   trigger="manual"
                   v-model="visible"
                   v-clickoutside="close"
-                  popper-class="no-style-class ping-popover"
+                  popper-class="no-style-class ping-popover nz-el-dropdown-menu"
                 >
                   <el-form-item style="margin-bottom:0px">
                     <ul class="pop-list-wrap">
