@@ -83,8 +83,9 @@
 }
 .nz-btn-style-light:hover {
   background-color: $--background-color-empty;
-  border-color: $--color-primary-light-5;
+  border-color: $--color-primary-light-5 !important;
   color: $--color-primary;
+  z-index: 10;
 }
 .nz-btn.nz-btn-style-normal:hover:not(.nz-btn-disabled) { /* 橙色按钮hover */
   background: $--button-primary-hover-background-color !important;
