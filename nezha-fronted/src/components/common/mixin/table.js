@@ -51,6 +51,11 @@ export default {
           }
           break
         }
+        case 'delete-rel': {
+          this.singleDelete = [row]
+          this.$refs.deleteButton.batchDelete()
+          break
+        }
         case 'ack': {
           this.$emit('acknowledge', row)
           break

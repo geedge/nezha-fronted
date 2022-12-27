@@ -1,10 +1,10 @@
 <template>
   <div>
-    <el-dropdown trigger="click" :size="size">
+    <el-dropdown trigger="click" :size="size" class="nz-el-dropdown">
       <button id="more" :class="triggerButtonClass" :title="$t('overall.more')">
         <i class="nz-icon nz-icon-more2"></i>
       </button>
-      <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
+      <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top nz-el-dropdown-menu">
         <el-dropdown-item  v-if="showLock">
           <div @click="editPanel" id="edit-bottom-panel"><i class="nz-icon nz-icon-edit"></i>{{$t('dashboard.panel.editPanelTitle')}}</div>
         </el-dropdown-item>

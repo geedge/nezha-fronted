@@ -30,7 +30,7 @@
           :permissions="{
             import: 'asset_add',
             export: 'asset_edit'
-          }"
+
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="asset"
           export-url="/asset/asset/export"

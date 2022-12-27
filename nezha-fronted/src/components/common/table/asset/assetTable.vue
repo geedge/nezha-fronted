@@ -165,23 +165,7 @@
               <el-dropdown-item v-if="!assetTab" v-has="'asset_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_connect'" :command="['cli', scope.row]" :disabled="!scope.row.authUsername"><i class="nz-icon nz-icon-cli"></i><span class="operation-dropdown-text">{{$t('config.system.terminal.terminal')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_add'" :command="['duplicate', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
-              <el-dropdown-item v-has="'asset_delete'" :command="['delete', scope.row]">
-                  <delete-button
-                  ref="deleteButton"
-                  :from="'asset'"
-                  :forceDeleteShow="true"
-                  :deleteTitle="'overall.asset'"
-                  :type="'link'"
-                  :title="$t('overall.delete')"
-                  id="asset-list-delete"
-                  v-has="'asset_delete'"
-                  :api="api"
-                  :single="true"
-                  :delete-objs="singleDelete"
-                  @before="delFlag=true"
-                  ></delete-button>
-              </el-dropdown-item>
-              <!-- <el-dropdown-item v-has="'asset_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
+              <el-dropdown-item v-has="'asset_delete'" :command="['delete-rel', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'asset']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_add'" :command="['topology', scope.row, 'asset']"><i class="nz-icon nz-icon-Topology"></i><span class="operation-dropdown-text">{{$t('overall.topology')}}</span></el-dropdown-item>
             </el-dropdown-menu>
@@ -205,6 +189,21 @@
       :type="alertLabelType"
       @tipHover='tipHover'
     ></alertLabel>
+    <delete-button
+      ref="deleteButton"
+      :from="'asset'"
+      :forceDeleteShow="true"
+      :deleteTitle="'overall.asset'"
+      :type="'hide'"
+      :title="$t('overall.delete')"
+      id="asset-list-delete"
+      class="asset-list-delete"
+      v-has="'asset_delete'"
+      :api="api"
+      :single="true"
+      :delete-objs="singleDelete"
+      @before="delFlag=true"
+    ></delete-button>
   </div>
 </template>
 

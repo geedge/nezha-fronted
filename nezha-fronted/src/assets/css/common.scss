@@ -641,3 +641,25 @@ textarea {
     transform: unset !important;
   }
 }
+.nz-el-dropdown-menu{
+  .el-dropdown-menu__item{
+    padding: 0;
+    > div {
+      padding: 0 17px;
+    }
+    .el-checkbox{
+      display: inline-block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0 5px 0 20px;
+    }
+  }
+}
+.nz-el-dropdown-menu-item{
+  padding: 0 !important;
+  .asset-list-delete{
+    width: 100%;
+    box-sizing: border-box;
+    //padding: 0 17px;
+  }
+}
