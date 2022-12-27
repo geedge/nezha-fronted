@@ -169,7 +169,10 @@
     height: 100%;
   }
   .el-input-group__append{
-    color: $--color-text-primary;
+    color: $--color-text-secondary !important;
+    background-color: $--right-box-sub-title-background-color;
+    border: 1px solid $--border-color-light;
+    border-left: none;
   }
 }
 .pop-tit{
