@@ -76,7 +76,7 @@ export default {
       const height = parseInt(consoleBox.offsetHeight)
       const winStyle = {
         width: width,
-        height: height - 100,
+        height: height,
         cols: this.term.cols, // cols和rows在resizeConsole方法已经设置
         rows: this.term.rows
       }
@@ -309,9 +309,8 @@ export default {
     enterStr (message) {
       if (this.terminalSocket && this.terminal.isLogin) {
         this.terminalSocket.send(message)
-        setTimeout(()=>{
-          this.terminalSocket.send('\n')
-        }, 100)
+        this.terminalSocket.send('\n')
+        this.term.scrollToBottom()
       }
     }
   },
