@@ -411,11 +411,13 @@ export default {
     },
     handleClick (el) {
       // this.$refs['console' + el.index][0].focusConsole()
-      setTimeout(() => {
-        this.$refs['console' + el.index][0].term.resize(225, 200)
-        this.$refs['console' + el.index][0].term.fit()
-        this.$refs['console' + el.index][0].focusConsole()
-      })
+      if (this.$refs['console' + el.index] && this.$refs['console' + el.index][0]) {
+        setTimeout(() => {
+          this.$refs['console' + el.index][0].term.resize(225, 200)
+          this.$refs['console' + el.index][0].term.fit()
+          this.$refs['console' + el.index][0].focusConsole()
+        })
+      }
     },
     windowChange () { // 窗口大小改变
       // alert('winChange');
