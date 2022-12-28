@@ -35,6 +35,7 @@
           @addSilence="addSilence"
           @reload="getTableData"
           @topology="topology"
+          @metricTarget="metricTarget"
           @selectionChange="selectionChange"
         ></endpoint-table>
       </template>
