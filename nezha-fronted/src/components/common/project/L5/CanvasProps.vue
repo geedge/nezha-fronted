@@ -770,21 +770,21 @@
         <!--排版-->
         <el-collapse-item :title="$t('project.topology.composing')" name="2" v-if="selection.pens">
           <div class="mt10">
-            <!--            <div class="flex middle mb10">-->
-            <!--              <label>{{$t('project.topology.maxWidth')}}：</label>-->
-            <!--              <div class="full pr10">-->
-            <!--                <el-input-number :precision="0" controls-position="right" type="number" class="input" size="small"-->
-            <!--                                 v-model.number="layout.maxWidth" ></el-input-number>-->
-            <!--              </div>-->
-            <!--            </div>-->
-            <div class="flex middle mb10">
-              <label>{{ $t('project.topology.maxCount') }}：</label>
-              <div class="full pr10">
-                <el-input-number :precision="0" type="number" controls-position="right" class="input" size="small"
-                                 v-model.number="layout.maxCount"
-                                 title=""></el-input-number>
-              </div>
-            </div>
+                        <div class="flex middle mb10">
+                          <label>{{$t('project.topology.maxWidth')}}：</label>
+                          <div class="full pr10">
+                            <el-input-number :precision="0" controls-position="right" type="number" class="input" size="small"
+                                             v-model.number="layout.maxWidth" ></el-input-number>
+                          </div>
+                        </div>
+<!--            <div class="flex middle mb10">-->
+<!--              <label>{{ $t('project.topology.maxCount') }}：</label>-->
+<!--              <div class="full pr10">-->
+<!--                <el-input-number :precision="0" type="number" controls-position="right" class="input" size="small"-->
+<!--                                 v-model.number="layout.maxCount"-->
+<!--                                 title=""></el-input-number>-->
+<!--              </div>-->
+<!--            </div>-->
             <div class="flex middle mb10">
               <label>{{ $t('project.topology.nodeWidth') }}：</label>
               <div class="full pr10">
@@ -806,13 +806,13 @@
                                  v-model.number="layout.spaceWidth" title=""></el-input-number>
               </div>
             </div>
-            <div class="flex middle mb10">
-              <label>{{ $t('project.topology.spaceHeight') }}：</label>
-              <div class="full pr10">
-                <el-input-number :precision="0" controls-position="right" type="number" class="input" size="small"
-                                 v-model.number="layout.spaceHeight" title=""></el-input-number>
-              </div>
-            </div>
+<!--            <div class="flex middle mb10">-->
+<!--              <label>{{ $t('project.topology.spaceHeight') }}：</label>-->
+<!--              <div class="full pr10">-->
+<!--                <el-input-number :precision="0" controls-position="right" type="number" class="input" size="small"-->
+<!--                                 v-model.number="layout.spaceHeight" title=""></el-input-number>-->
+<!--              </div>-->
+<!--            </div>-->
             <div class="flex middle">
               <label></label>
               <div class="full pr10">
@@ -1563,16 +1563,29 @@ export default {
 
     // 组件事件
     onNodesAlign (align) { // 对齐node
-      // alignNodes(getTopology(this.index).activeLayer.pens, getTopology(this.index).activeLayer.rect, align)
-      getTopology(this.index).updateProps()
+      getTopology(this.index).alignNodes(align, this.selection.pens)
+      setTimeout(() => {
+        getTopology(this.index).render()
+      }, 100)
     },
     onSpaceBetween () {
       // spaceBetween(getTopology(this.index).activeLayer.pens, getTopology(this.index).activeLayer.rect.width)
       getTopology(this.index).updateProps()
     },
     onLayout () { // 改变布局
-      // layout(getTopology(this.index).activeLayer.pens, this.layout)
-      getTopology(this.index).updateProps()
+      if (!this.layout.maxWidth || !this.layout.spaceWidth) {
+        return
+      }
+      if (this.layout.nodeWidth && this.layout.nodeHeight) {
+        this.selection.pens.forEach(item => {
+          item.width = this.layout.nodeWidth
+          item.height = this.layout.nodeHeight
+        })
+      }
+      getTopology(this.index).layout(this.selection.pens, this.layout.maxWidth, this.layout.spaceWidth)
+      setTimeout(() => {
+        getTopology(this.index).render()
+      }, 100)
     },
     onClickDash (number) { // 改变线型
       this.pen.dash = number

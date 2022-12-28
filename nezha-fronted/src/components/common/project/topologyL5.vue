@@ -2028,13 +2028,11 @@ export default {
             item.animatePlay = false
             item.fontColor = item.data.fontColor || '#222222'
           }
-          if (isPreview) {
-            const scale = getTopology(this.topologyIndex).store.data.scale
-            item.x = item.x / scale
-            item.y = item.y / scale
-            item.width = item.width / scale
-            item.height = item.height / scale
-          }
+          const scale = getTopology(this.topologyIndex).store.data.scale
+          item.x = item.x / scale
+          item.y = item.y / scale
+          item.width = item.width / scale
+          item.height = item.height / scale
           getTopology(this.topologyIndex)._setValue(item)
         })
         getTopology(this.topologyIndex).render(true)
@@ -2126,9 +2124,9 @@ export default {
             }
           })
         })
-        if (this.penToolTipScale == getTopology(this.topologyIndex).data().scale) {
-          getTopology(this.topologyIndex).data().scale = this.oldScale
-        }
+        // if (this.penToolTipScale == getTopology(this.topologyIndex).data().scale) {
+        //   getTopology(this.topologyIndex).data().scale = this.oldScale
+        // }
         this.$put('monitor/project/topo', { topo: JSON.stringify(topologyData), projectId: this.projectInfo.id }).then(res => {
           this.prevent_opt.save = false
           if (res.code === 200) {
@@ -2206,9 +2204,9 @@ export default {
           }
         })
       })
-      if (this.penToolTipScale == getTopology(this.topologyIndex).data().scale) {
-        getTopology(this.topologyIndex).data().scale = this.oldScale
-      }
+      // if (this.penToolTipScale == getTopology(this.topologyIndex).data().scale) {
+      //   getTopology(this.topologyIndex).data().scale = this.oldScale
+      // }
       this.$nextTick(() => {
         this.previewData = topologyData
         getTopology(this.topologyIndex).lock(1)
