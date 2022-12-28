@@ -11,7 +11,7 @@
     </div>
     <fileListState v-clickoutside="hideFileState" ref="fileListState"/>
     <webSSHNew ref="websshNew" />
-    <el-input :placeholder="'发送文本到所有SSH终端'" size="small"  class="shell-input" v-model="message" @keyup.enter.native="sendMessage"/>
+    <el-input :placeholder="placeholder" size="small"  class="shell-input" v-model="message" @keyup.enter.native="sendMessage" @focus="placeholderChange('focus')"  @blur="placeholderChange('blur')"/>
   </div>
 </template>
 
@@ -31,7 +31,8 @@ export default {
       logo: '',
       fileListStateType: '',
       message: '',
-      name: ''
+      name: '',
+      placeholder: this.$t('terminal.placeholder')
     }
   },
   computed: {
@@ -83,8 +84,18 @@ export default {
     hideFileState () {
       this.$refs.fileListState.fileStateShow(false, this.fileListStateType)
     },
+    placeholderChange (type) {
+      if (type == 'focus') {
+        this.placeholder = ''
+      }else {
+        this.placeholder = this.$t('terminal.placeholder')
+      }
+    },
     sendMessage () {
       this.$refs.websshNew.sendMessage(this.message)
+      setTimeout(() => {
+        this.message = ''
+      })
     }
   },
   beforeDestroy  () {

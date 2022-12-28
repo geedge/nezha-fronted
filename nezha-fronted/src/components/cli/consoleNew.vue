@@ -154,6 +154,7 @@ export default {
       }
       let url = ''
       this.terminal.height = document.body.clientHeight - 100
+      this.terminal.width = document.body.clientWidth
       if (this.terminal.type === 'asset') {
         url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.terminal.cols + '&rows=' + this.terminal.rows + '&token=' + token + '&assetId=' + this.terminal.assetId + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
       } else if (this.terminal.type === 'custom') {
@@ -240,7 +241,7 @@ export default {
 
       this.term.attach(this.terminalSocket)
       this.term._initialized = true
-      this.term.fit()// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
+      // this.term.fit()// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
       this.$nextTick(() => { // 解决进入全屏和退出全屏是底部隐藏
         this.setFontSize(this.fontSize)
       })

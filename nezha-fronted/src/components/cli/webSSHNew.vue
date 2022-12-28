@@ -14,7 +14,7 @@
         <!-- tab显示的内容 1 grey,2 green, 3 red-->
         <span slot="label" class="el-tabs__item-label">
           <div class="active-icon" :class="item.terminal.isLogin ? 'green-bg': 'red-bg'"></div>
-          <div class="el-tabs__item-label-name text-ellipsis">
+          <div class="el-tabs__item-label-name text-ellipsis" :title="item.terminal.userName">
             {{item.terminal.userName}}
           </div>
             <el-popover
@@ -409,8 +409,8 @@ export default {
         this.currentIndex = currentName
       }
     },
-    handleClick () {
-
+    handleClick (el) {
+      // this.$refs['console' + el.index][0].focusConsole()
     },
     windowChange () { // 窗口大小改变
       // alert('winChange');
@@ -579,7 +579,7 @@ export default {
           cols: 225,
           rows: 200,
           width: width,
-          height: this.consoleHeight,
+          height: document.body.clientHeight - 100,
           assetId: id,
           accountId: accountId,
           uuid: uuid,
