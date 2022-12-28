@@ -177,12 +177,12 @@ export default {
         },
         user: {
           operationLog: [
-            { prop: 'operationLogTab', name: this.$t('config.operationlog.operationlog'), active: true },
-            { prop: 'terminalLogTab', name: this.$t('config.terminallog.terminallog'), active: false }
+            { prop: 'operationLogTab', name: this.$t('profile.operationRecord'), active: true },
+            { prop: 'terminalLogTab', name: this.$t('overall.terminallog'), active: false }
           ],
           terminalLog: [
-            { prop: 'operationLogTab', name: this.$t('config.operationlog.operationlog'), active: false },
-            { prop: 'terminalLogTab', name: this.$t('config.terminallog.terminallog'), active: true }
+            { prop: 'operationLogTab', name: this.$t('profile.operationRecord'), active: false },
+            { prop: 'terminalLogTab', name: this.$t('overall.terminallog'), active: true }
           ]
           // module tab
         },
