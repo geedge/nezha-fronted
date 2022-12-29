@@ -415,6 +415,7 @@ export default {
         setTimeout(() => {
           this.$refs['console' + el.index][0].term.resize(225, 200)
           this.$refs['console' + el.index][0].term.fit()
+          this.$refs['console' + el.index][0].term.scrollToBottom()
           this.$refs['console' + el.index][0].focusConsole()
         })
       }
