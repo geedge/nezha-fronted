@@ -12,7 +12,7 @@
           <div class="item-progress">
             <div class="item-progress-top text-ellipsis">{{item.name}}</div>
             <div class="item-progress-middle">
-              <el-progress :show-text="false" :percentage="item.done" :color="customColorMethod.bind(item)"></el-progress>
+              <el-progress :show-text="false" :percentage="item.done" :color="customColorMethod(item.done, item)"></el-progress>
             </div>
             <div class="item-progress-bottom">
               <span>{{bytes(item.total, 0, 0)}}</span>
@@ -110,6 +110,9 @@ export default {
   methods: {
     bytes: chartDataFormat.getUnit(7).compute,
     customColorMethod (percentage, item) {
+      if (item.isError) {
+        return '#EC7F66'
+      }
       if (percentage < 100) {
         return '#3B92F1'
       } else {
@@ -156,6 +159,7 @@ export default {
           a.remove() // 将a标签移除
         }
       }, error => {
+        item.isError = true
         const $self = this
         const reader = new FileReader()
         reader.onload = function (event) {
@@ -228,6 +232,8 @@ export default {
         } else {
           this.$message.error(res.msg)
         }
+      }).catch(err => {
+        item.isError = true
       })
     },
     nextUpload (item, tid) {
@@ -235,13 +241,19 @@ export default {
       item.timer = setInterval(() => { // 上传 50-100
         item.tid = tid
         this.$get('/terminal/sftp/process/' + tid).then((res) => {
-          item.done = 50 + parseInt(res.data.done) / 2
-          item.speed = (item.fileLength + (item.done * 0.01 * item.total)) / ((new Date().getTime() - item.startTime) / 1000)
-          item.speed = this.bytes(item.speed, 0, 0) + '/s'
-          if (item.done === 100) {
-            item.isFinish = true
+          if (res.code == 200) {
+            item.done = 50 + parseInt(res.data.done) / 2
+            item.speed = (item.fileLength + (item.done * 0.01 * item.total)) / ((new Date().getTime() - item.startTime) / 1000)
+            item.speed = this.bytes(item.speed, 0, 0) + '/s'
+            if (item.done === 100) {
+              item.isFinish = true
+              clearInterval(item.timer)
+              // todo 上传成功后 刷新对应terminal
+              this.$store.dispatch('upDateConsole', item.uuid)
+            }
+          } else {
+            item.isError = true
             clearInterval(item.timer)
-            // todo 上传成功后 刷新对应terminal
             this.$store.dispatch('upDateConsole', item.uuid)
           }
         })
