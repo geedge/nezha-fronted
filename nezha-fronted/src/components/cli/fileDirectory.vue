@@ -297,7 +297,8 @@ export default {
         { name: 'dashboard.panel.chartForm.group', key: 'group' },
         { name: 'config.menus.perms', key: 'permissionsString' }
 
-      ]
+      ],
+      oldRenameStr: ''
     }
   },
   computed: {
@@ -470,7 +471,19 @@ export default {
       }, 300)
     },
     setRename () {
-      this.renameBox = false
+      const params = {
+        uuid:  this.uuid,
+        oldPath: this.fileDirectory + '/' + this.oldRenameStr,
+        newPath: this.fileDirectory + '/' + this.renameStr
+      }
+      this.$put('/terminal/sftp/rename', params).then(res => {
+        this.renameBox = false
+        if (res.code == 200) {
+          this.getSftpPath(this.fileDirectory)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     delFile () {
       const item = this.delObj
@@ -610,6 +623,7 @@ export default {
       switch (command) {
         case 'rename':
           this.renameStr = row.name
+          this.oldRenameStr = row.name
           this.renameBox = true
           break
         case 'download':
