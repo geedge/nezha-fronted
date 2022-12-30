@@ -1,5 +1,5 @@
 <template>
-  <el-popover :placement="placement" popper-class="'nz-pop nz-pop-select-panel right-box-select-top right-public-box-dropdown-top nz-pop-select-panel__dropdown'" transition="slide" v-model="popBox.show" :width="520" :disabled="disabled">
+  <el-popover :placement="placement" popper-class="'nz-pop nz-pop-select-panel right-box-select-top right-public-box-dropdown-top nz-pop-select-panel__dropdown'" transition="slide" v-model="popBox.show" :width="536" :disabled="disabled">
     <div class="panel-select-wrap">
       <div class="panel-select-left">
         <ul class="panel-select-list">

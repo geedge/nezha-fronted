@@ -9,7 +9,7 @@
       <div class="main-container">
         <div class="top-tools panel-top-tools" :class="showTopLine? 'panel-top-tools-bottom' : ''">
           <div v-if="panelData.length === 0" class="top-tool-left" style="margin-left: 10px;">
-            <button id="panel-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
+            <button id="panel-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("overall.addDashboard")}}</button>
           </div>
           <template v-else>
             <div class="top-tool-left" style="cursor: pointer;">
@@ -31,20 +31,13 @@
                 </template>
                 <!-- 按钮插槽 -->
                 <template slot="button">
-                  <span class="dashboard-select-add" v-has="'main_add'" :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd">
+                  <span class="dashboard-select-add" v-has="'main_add'" :title='$t("overall.addDashboard")' @click="toAdd">
                     <i class="nz-icon nz-icon-create-square"></i>&nbsp;{{$t('overall.addDashboard')}}
                   </span>
                   <!-- 通过dashboard模板创建 -->
-                  <el-dropdown v-has="['main_add']" trigger="click">
-                    <span :title='$t("dashboard.panel.addByTemplate")' class="dashboard-addBy-template">
-                      <i class="el-icon-more tool__icon"></i>
-                    </span>
-                    <el-dropdown-menu class="dashboard-addBy-template-menu">
-                      <el-dropdown-item @click.native="addByTemplate">
-                        <span>{{$t("dashboard.panel.addByTemplate")}}</span>
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
+                  <span v-has="'main_add'" @click="addByTemplate" :title='$t("dashboard.panel.addByTemplate")' class="dashboard-addBy-template">
+                    <i class="nz-icon nz-icon-template1"></i>
+                  </span>
                 </template>
               </select-dashboard>
             </div>
