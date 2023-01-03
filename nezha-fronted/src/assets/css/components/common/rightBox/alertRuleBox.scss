@@ -33,7 +33,7 @@
     background: $--border-color-light;
     border: $--border-color-light;
     .hide-icon{
-      width: 38px;
+      width: auto;
       .el-input__inner{
         border: none;
         text-align: center;
@@ -41,8 +41,9 @@
     }
   }
   .el-input-group__append {
-    background: $--border-color-light;
-    border: $--border-color-light;
+    border: 1px solid $--border-color-light;
+    background-color: $--right-box-sub-title-background-color;
+    border-left: none;
   }
   .alert-rule-split-title{
     background: $--background-color-base;
