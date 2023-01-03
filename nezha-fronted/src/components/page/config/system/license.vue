@@ -111,7 +111,7 @@
             <div  v-my-loading="item">
               <vueQr
                 style="width: 500px;height: 500px"
-                :text="qrCodeArr[index] || index"
+                :text="qrCodeArr[index] || String(index)"
                 :size="2000"
                 :margin="50"
               />
@@ -142,11 +142,11 @@
               width: qrWidth - 32 + 'px',
               height: qrWidth - 32 + 'px'
             }"
-            :text="qrCodeArr[index] || index"
+            :text="qrCodeArr[index] || String(index)"
             :size="2000"
             :margin="10"
           />
-          <div style="text-align: center"> {{index+1}} / {{qrCodeNum.length}}</div>
+          <div style="text-align:center;margin-right:32px;"> {{index+1}} / {{qrCodeNum.length}}</div>
         </div>
       </div>
     </el-dialog>
