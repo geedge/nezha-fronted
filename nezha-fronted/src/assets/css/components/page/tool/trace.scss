@@ -156,6 +156,11 @@
         .details{
           padding: 20px;
         }
+        #traceTable{
+          .el-table__body-wrapper{
+            height: auto !important;
+          }
+        }
       }
     }
   }
