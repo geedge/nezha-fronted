@@ -155,6 +155,7 @@
       .el-input-group__append{
         border: 1px solid $--border-color-light;
         background-color: $--right-box-sub-title-background-color;
+        border-left: none;
       }
     }
   }
