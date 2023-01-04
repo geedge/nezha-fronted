@@ -57,20 +57,7 @@
           </div>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item v-has="'backup_restore'" :command="['restore', scope.row]" disabled><i class="nz-icon-shujubeifenhuifu nz-icon"></i><span>{{$t('backup.RestoreNow')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'backup_del'" :command="['delete', scope.row]" :class="'nz-el-dropdown-menu-item'">
-                  <delete-button
-                    ref="deleteButton"
-                    :forceDeleteShow="false"
-                    id="backup-delete"
-                    :from="'backup'"
-                    :type="'link'"
-                    :title="$t('overall.delete')"
-                    :api="'/sys/backup'"
-                    :single="true"
-                    :delete-objs="singleDelete"
-                    @before="delFlag=true"
-                    ></delete-button>
-              </el-dropdown-item>
+            <el-dropdown-item v-has="'backup_del'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -92,12 +79,10 @@
 import { post, put } from '@/http'
 import axios from 'axios'
 import bus from '@/libs/bus'
-import deleteButton from '@/components/common/deleteButton'
 
 export default {
   name: 'backupsTable',
   mixins: [],
-  components: { deleteButton },
   props: {
     loading: Boolean,
     customTableTitle: Array,

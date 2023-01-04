@@ -52,11 +52,6 @@ export default {
           break
         }
         case 'delete-rel': {
-          // this.$emit('deleteRel', {
-          //   row: row,
-          //   url: this.api,
-          //   ...param
-          // })
           this.$store.dispatch('deleteTableRel', {
             row: row,
             url: this.api,

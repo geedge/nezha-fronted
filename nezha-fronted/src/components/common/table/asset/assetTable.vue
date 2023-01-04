@@ -196,7 +196,6 @@
 import table from '@/components/common/mixin/table'
 import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
 // import bus from '@/libs/bus'
-import deleteButton from '@/components/common/deleteButton'
 import copy from '@/components/common/copy'
 import alertLabel from '@/components/common/alert/alertLabel'
 import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
@@ -207,8 +206,7 @@ export default {
   components: {
     alertLabel: alertLabel,
     alertDaysInfo,
-    copy,
-    deleteButton
+    copy
   },
   props: {
     showOption: {

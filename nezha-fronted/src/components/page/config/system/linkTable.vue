@@ -71,21 +71,7 @@
                 <i class="nz-icon nz-icon-more3"></i>
               </div>
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
-                <!-- <el-dropdown-item v-has="'system_link_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
-                <el-dropdown-item v-has="'system_link_delete'" :command="['delete', scope.row]">
-                  <delete-button
-                  ref="deleteButton"
-                  :from="'link'"
-                  :forceDeleteShow="false"
-                  :type="'link'"
-                  :title="$t('overall.delete')"
-                  id="link-delete"
-                  :api="api"
-                  :single="true"
-                  :delete-objs="singleDelete"
-                  @before="delFlag=true"
-                  ></delete-button>
-              </el-dropdown-item>
+                <el-dropdown-item v-has="'system_link_delete'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -107,13 +93,11 @@
 import { tableCommon } from './systemCommon'
 import bus from '../../../../libs/bus'
 import table from '@/components/common/mixin/table'
-import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'linkTable',
   props: {
     loading: Boolean
   },
-  components: { deleteButton },
   mixins: [table, tableCommon],
   data () {
     return {

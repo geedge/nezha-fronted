@@ -87,7 +87,6 @@
 </template>
 
 <script>
-import bus from '@/libs/bus'
 export default {
   name: 'deleteButton',
   data () {
