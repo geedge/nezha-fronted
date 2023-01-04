@@ -22,12 +22,12 @@
           <!--password-->
           <el-form-item :label="$t('login.pin')" prop="pin">
             <el-input id="account-input-password" v-model="editUser.pin"  maxlength="64" placeholder=""
-                      show-word-limit size="small" type="password" @blur="pinBlur" autocomplete="new-password"></el-input>
+                      show-word-limit size="small" type="password" auto-complete="new-password"  @blur="pinBlur" autocomplete="new-password"></el-input>
           </el-form-item>
           <!--pinChange-->
           <el-form-item :label="$t('profile.confirmPassword')" label-width="200px" prop="pinChange">
             <el-input id="account-input-pinChange" v-model="editUser.pinChange"  maxlength="64" placeholder=""
-                      show-word-limit size="small" type="password"></el-input>
+                      show-word-limit size="small" type="password" auto-complete="new-password" ></el-input>
           </el-form-item>
           <!--mfaLevel-->
           <el-form-item :label="$t('profile.twoFactorAuthentication')" label-width="200px" prop="mfaTitle">

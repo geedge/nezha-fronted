@@ -8,69 +8,71 @@ const exceptClassName = ['prevent-clickoutside', 'config-dropdown', 'nz-pop', 'e
 export const clickoutside = {
   // 初始化指令
   bind (el, binding, vnode) {
-    if (!binding.expression) return
-    const unsavedChange = localStorage.getItem('nz-unnsaved-change')
-    let oldValue
-    try {
-      oldValue = JSON.parse(JSON.stringify(binding.value.obj))
-      el.__newValue__ = oldValue
-    } catch (e) {
+    setTimeout(() => {
+      if (!binding.expression) return
+      const unsavedChange = localStorage.getItem('nz-unsaved-change')
+      let oldValue
+      try {
+        oldValue = JSON.parse(JSON.stringify(binding.value.obj))
+        el.__newValue__ = oldValue
+      } catch (e) {
 
-    }
-    function documentHandler (e) {
-      if (el.contains(e.target)) {
-        return false
-      } else {
-        let flag = true
-        const path = e.path || (e.composedPath && e.composedPath())
-        // eslint-disable-next-line no-labels
-        top: for (let i = 0; i < path.length; i++) {
-          for (let j = 0; j < exceptClassName.length; j++) {
-            if (path[i].className && path[i].className.indexOf && path[i].className.indexOf(exceptClassName[j]) !== -1) {
-              flag = false
-              // eslint-disable-next-line no-labels
-              break top
+      }
+      function documentHandler (e) {
+        if (el.contains(e.target)) {
+          return false
+        } else {
+          let flag = true
+          const path = e.path || (e.composedPath && e.composedPath())
+          // eslint-disable-next-line no-labels
+          top: for (let i = 0; i < path.length; i++) {
+            for (let j = 0; j < exceptClassName.length; j++) {
+              if (path[i].className && path[i].className.indexOf && path[i].className.indexOf(exceptClassName[j]) !== -1) {
+                flag = false
+                // eslint-disable-next-line no-labels
+                break top
+              }
             }
           }
-        }
-        if (!flag) {
-          return false
-        }
-        if (oldValue) {
-          // const newValue = JSON.parse(JSON.stringify(binding.value.obj))
-          if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__) && !el.isShow) {
-            el.isShow = true
-            MessageBox.confirm(i18n.t('tip.confirmCancel'), {
-              confirmButtonText: i18n.t('tip.yes'),
-              cancelButtonText: i18n.t('tip.no'),
-              type: 'warning'
-            }).then(() => {
-              el.isShow = false
-              if (binding.value.func) {
-                binding.value.func()
-              }
-            }).catch(err => {
-              el.isShow = false
-              console.log(err)
-            })
-          } else if (!el.isShow) {
-            binding.value.func()
+          if (!flag) {
+            return false
           }
-        } else {
-          if (binding.arg) {
-            binding.value(e, binding.arg)
+          if (oldValue) {
+            console.log(oldValue, el.__newValue__)
+            // const newValue = JSON.parse(JSON.stringify(binding.value.obj))
+            if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__) && !el.isShow) {
+              el.isShow = true
+              MessageBox.confirm(i18n.t('tip.confirmCancel'), {
+                confirmButtonText: i18n.t('tip.yes'),
+                cancelButtonText: i18n.t('tip.no'),
+                type: 'warning'
+              }).then(() => {
+                el.isShow = false
+                if (binding.value.func) {
+                  binding.value.func()
+                }
+              }).catch(err => {
+                el.isShow = false
+              })
+            } else if (!el.isShow) {
+              binding.value.func()
+            }
           } else {
-            if (binding.value) {
-              binding.value(e)
+            if (binding.arg) {
+              binding.value(e, binding.arg)
+            } else {
+              if (binding.value) {
+                binding.value(e)
+              }
             }
           }
         }
       }
-    }
 
-    // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
-    el.__vueClickOutside__ = documentHandler
-    document.addEventListener('mousedown', documentHandler)
+      // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
+      el.__vueClickOutside__ = documentHandler
+      document.addEventListener('mousedown', documentHandler)
+    }, 100)
   },
   update (el, binding, vnode) {
     el.__newValue__ = binding.value.obj
@@ -208,27 +210,29 @@ function myLoadingFunctionUpdate (el, binding, vnode) {
 }
 export const cancelWithChange = {
   bind: function (el, binding) {
-    if (!binding.value || !binding.value.obj) return
-    const unsavedChange = localStorage.getItem('nz-unnsaved-change')
-    const oldValue = JSON.parse(JSON.stringify(binding.value.obj))
-    el.__newValue__ = oldValue
-    function domClick (e) {
-      if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__)) {
-        MessageBox.confirm(i18n.t('tip.confirmCancel'), {
-          confirmButtonText: i18n.t('tip.yes'),
-          cancelButtonText: i18n.t('tip.no'),
-          type: 'warning'
-        }).then(() => {
-          if (binding.value.func) {
-            binding.value.func()
-          }
-        })
-      } else {
-        binding.value.func()
+    setTimeout(() => {
+      if (!binding.value || !binding.value.obj) return
+      const unsavedChange = localStorage.getItem('nz-unsaved-change')
+      const oldValue = JSON.parse(JSON.stringify(binding.value.obj))
+      el.__newValue__ = oldValue
+      function domClick (e) {
+        if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__)) {
+          MessageBox.confirm(i18n.t('tip.confirmCancel'), {
+            confirmButtonText: i18n.t('tip.yes'),
+            cancelButtonText: i18n.t('tip.no'),
+            type: 'warning'
+          }).then(() => {
+            if (binding.value.func) {
+              binding.value.func()
+            }
+          })
+        } else {
+          binding.value.func()
+        }
       }
-    }
-    el.__vueDomClick__ = domClick
-    el.addEventListener('click', domClick)
+      el.__vueDomClick__ = domClick
+      el.addEventListener('click', domClick)
+    }, 100)
   },
   update (el, binding, vnode) {
     el.__newValue__ = binding.value.obj

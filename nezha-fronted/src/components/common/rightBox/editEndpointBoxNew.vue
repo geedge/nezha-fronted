@@ -337,7 +337,7 @@
                 </el-form-item>
 
                 <el-form-item v-if="authType === 1" :label='$t("login.pin")' class="half-form-item" prop="configs.0.config.basic_auth.password" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]" key="password">
-                  <el-input id="module-box-input-password" v-model="editEndpoint.configs[0].config.basic_auth.password" type="password" autocomplete="new-password" placeholder='' size="small"></el-input>
+                  <el-input id="module-box-input-password" v-model="editEndpoint.configs[0].config.basic_auth.password" type="password" auto-complete="new-password"  autocomplete="new-password" placeholder='' size="small"></el-input>
                 </el-form-item>
 
                 <!--authtype 2-->
@@ -694,7 +694,7 @@
                       <el-input id="module-box-input-uername" v-model="item.basic_auth.username" placeholder='' size="small"></el-input>
                     </el-form-item>
                     <el-form-item v-if="logsAuthType[index] === 1" :label='$t("login.pin")' class="half-form-item" :prop="'configs.1.config.'+index+'.basic_auth.password'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]" key="password">
-                      <el-input id="module-box-input-password" v-model="item.basic_auth.password" type="password" autocomplete="new-password" placeholder='' size="small"></el-input>
+                      <el-input id="module-box-input-password" v-model="item.basic_auth.password" type="password" auto-complete="new-password"  autocomplete="new-password" placeholder='' size="small"></el-input>
                     </el-form-item>
 
                     <!--authtype 2-->

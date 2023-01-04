@@ -37,11 +37,11 @@
               <template v-if="editData.authType === assetConstants.authTypeData.key">
                 <!-- Key支持私钥 -->
                 <el-form-item :label="$t('asset.privateKey')" prop="authPriKey">
-                  <el-input v-model="editData.authPriKey" size="small" type="password" autocomplete="new-password"/>
+                  <el-input v-model="editData.authPriKey" size="small" type="password" auto-complete="new-password"  autocomplete="new-password"/>
                 </el-form-item>
               </template>
               <el-form-item :label="$t('login.pin')" prop="authPin">
-                <el-input v-model="editData.authPin" size="small"  type="password" autocomplete="new-password"/>
+                <el-input v-model="editData.authPin" size="small"  type="password" auto-complete="new-password"  autocomplete="new-password"/>
               </el-form-item>
               <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
                 <el-input v-model="editData.authProtocolPort" size="small"/>

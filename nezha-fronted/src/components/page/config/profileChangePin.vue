@@ -4,13 +4,13 @@
       <div class="profile-change__Pin-from">
         <el-form :model="user" label-position = "top" label-width="150px" :rules="rules" ref="changePinForm">
           <el-form-item class="profile-change__Pin-input" :label="$t('profile.oldPassword')" prop="pin">
-            <el-input v-model="user.oldPin" type="password" size="small"/>
+            <el-input v-model="user.oldPin" type="password" auto-complete="new-password"  size="small"/>
           </el-form-item>
           <el-form-item class="profile-change__Pin-input" :label="$t('profile.newPassword')" prop="newPin">
-            <el-input v-model="user.newPin" type="password" size="small"/>
+            <el-input v-model="user.newPin" type="password" auto-complete="new-password"  size="small"/>
           </el-form-item>
           <el-form-item class="profile-change__Pin-input" :label="$t('profile.confirmPassword')" prop="confirmPin">
-            <el-input v-model="user.confirmPin" type="password" size="small"/>
+            <el-input v-model="user.confirmPin" type="password" auto-complete="new-password"  size="small"/>
           </el-form-item>
         </el-form>
       </div>

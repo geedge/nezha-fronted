@@ -13,7 +13,7 @@
           <el-input v-model="ldap.ldap_dn" id="system-ldap-ldap_dn"></el-input>
         </el-form-item>
         <el-form-item :label="$t('login.pin')" prop="ldap_password">
-          <el-input id="system-ldap-ldap_password" v-model="ldap.ldap_password" type="password"></el-input>
+          <el-input id="system-ldap-ldap_password" v-model="ldap.ldap_password" type="password" auto-complete="new-password" ></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.system.ldap.ou')" class="has-tip" prop="ldap_ou">
           <el-input v-model="ldap.ldap_ou" id="system-ldap-ldap_ou"></el-input>

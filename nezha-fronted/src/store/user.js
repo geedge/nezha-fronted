@@ -98,7 +98,7 @@ const user = {
       localStorage.setItem('nz-sys-default-cabinet-usize', res.data.defaultCabinetUsize)
       localStorage.setItem('nz-sys-max-terminal-num', res.data.maxTerminalNum)
       localStorage.setItem('nz-sys-asset-ping-switch', res.data.assetPingSwitch)
-      localStorage.setItem('nz-unnsaved-change', res.data.unsavedChange)
+      localStorage.setItem('nz-unsaved-change', res.data.unsavedChange)
       localStorage.setItem('nz-mfa-enable', Number(res.data.mfaAuthEnable) ? 1 : 0)
       store.commit('setLanguage', res.data.user.lang || defaultAppearance.language)
       store.commit('setTimeFormatMain', localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
