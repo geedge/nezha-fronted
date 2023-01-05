@@ -21,7 +21,7 @@
         <el-input  v-model="email.email_auth_account" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_account"> autocomplete="off"</el-input>
       </el-form-item>
       <el-form-item :label="$t('config.system.email.smtpPin')" class="has-tip" prop="email_auth_password">
-        <el-input v-model="email.email_auth_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
+        <el-input v-model="email.email_auth_password" type="password" auto-complete="new-password"  :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
         <div class="el-form-item__tip">{{$t("config.system.email.pinTip")}}</div>
       </el-form-item>
       <el-form-item :label="$t('config.system.email.sendAccount')" class="has-tip" prop="email_send_account">

@@ -12,10 +12,10 @@
       <div class="container__form">
         <el-form label-width="120px" size="small" :model="editGlobalization" label-position = "top" ref="globalizationForm">
           <el-form-item :label='$t("overall.name")' prop="name">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="editGlobalization.name" size="small" id="dc-box-input-name"></el-input>
+            <el-input placeholder="" maxlength="64" show-word-limit v-model="editGlobalization.name" size="small" id="i18n-box-input-name"></el-input>
           </el-form-item>
           <el-form-item :label='$t("config.menus.code")' prop="code">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="editGlobalization.code" size="small" id="dc-box-input-code"></el-input>
+            <el-input placeholder="" maxlength="64" show-word-limit v-model="editGlobalization.code" size="small" id="i18n-box-input-code"></el-input>
           </el-form-item>
           <el-form-item :label="$t('config.user.language')" prop="lang">
             <el-select id="account-input-language"
@@ -30,10 +30,10 @@
             </el-select>
           </el-form-item>
           <el-form-item :label='$t("overall.value")' prop="value">
-            <el-input placeholder="" maxlength="128" show-word-limit v-model="editGlobalization.value" size="small" id="dc-box-input-value"></el-input>
+            <el-input  type="textarea" placeholder="" maxlength="256" show-word-limit v-model="editGlobalization.value" size="small" id="i18n-box-input-value"></el-input>
           </el-form-item>
          <el-form-item :label='$t("overall.remark")' prop="remark">
-          <el-input placeholder="" maxlength="256" type="textarea" show-word-limit v-model="editGlobalization.remark" size="small" :rows="2" id="dc-box-input-value"></el-input>
+          <el-input placeholder="" maxlength="256" type="textarea" show-word-limit v-model="editGlobalization.remark" size="small" :rows="2" id="i18n-box-input-remark"></el-input>
          </el-form-item>
         </el-form>
       </div>

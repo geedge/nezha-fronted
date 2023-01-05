@@ -253,7 +253,7 @@
               <el-input  v-model="email.email_auth_account" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_account"> autocomplete="off"</el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.smtpPin')" class="has-tip" prop="email_auth_password">
-              <el-input v-model="email.email_auth_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
+              <el-input v-model="email.email_auth_password" type="password" auto-complete="new-password"  :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
               <div class="el-form-item__tip">{{$t("config.system.email.pinTip")}}</div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.sendAccount')" class="has-tip" prop="email_send_account">
@@ -319,7 +319,7 @@
               <el-input v-model="ldap.ldap_dn" id="system-ldap-ldap_dn"></el-input>
             </el-form-item>
             <el-form-item :label="$t('login.pin')" prop="ldap_password">
-              <el-input id="system-ldap-ldap_password" v-model="ldap.ldap_password" type="password"></el-input>
+              <el-input id="system-ldap-ldap_password" v-model="ldap.ldap_password" type="password" auto-complete="new-password" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.ou')" class="has-tip" prop="ldap_ou">
               <el-input v-model="ldap.ldap_ou" id="system-ldap-ldap_ou"></el-input>
@@ -368,7 +368,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('login.pin')" prop="pin">
-              <el-input id="system-reset-pin" v-model="reset.pin" type="password"></el-input>
+              <el-input id="system-reset-pin" v-model="reset.pin" type="password" auto-complete="new-password" ></el-input>
             </el-form-item>
             <el-form-item>
               <el-button v-has="'system_reset_edit'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="resetSys()">{{$t('overall.reset')}}</el-button>

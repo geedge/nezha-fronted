@@ -104,8 +104,8 @@
       ref="deleteButton"
       :from="'endpoint'"
       :forceDeleteShow="forceDeleteShow"
-      :deleteTitle="'project.endpoint.endpoint'"
-      :type="'hide'"
+      :deleteTitle="deleteTitle"
+      :type="'link'"
       :title="$t('overall.delete')"
       :api="api"
       :single="single"
@@ -122,7 +122,6 @@ import { bottomBoxWindow } from '@/components/common/js/tools'
 import panelChart from '@/components/chart/panelChart'
 import bus from '@/libs/bus'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
-import lodash from 'lodash'
 import SearchBox from '@/components/common/searchBox/searchBox'
 import deleteButton from '@/components/common/deleteButton'
 export default {
@@ -188,6 +187,7 @@ export default {
       singleDelete: [],
       api: '',
       single: true,
+      deleteTitle: '',
       forceDeleteShow: false,
       delFlag: false,
       fromRoute: fromRoute,
@@ -214,11 +214,12 @@ export default {
     bus.$on('delTableRow', this.delTableRow)
   },
   methods: {
-    delTableRelRow (url, row, forceDeleteShow = false, single = false) {
+    delTableRelRow (url, row, forceDeleteShow = false, single = false, deleteTitle = '') {
       this.api = url
       this.singleDelete = [row]
       this.forceDeleteShow = forceDeleteShow
       this.single = single
+      this.deleteTitle = deleteTitle
       this.$refs.deleteButton.batchDelete()
     },
     delTableRow (ids) { // 接收一个 删除的id数组 判断当前底部弹窗id 是否包含 包含则关闭当前弹窗
@@ -291,7 +292,7 @@ export default {
     },
     showDeleteTableRel (n) {
       if (n) {
-        this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single)
+        this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single, this.deleteTableRel.deleteTitle)
       }
     }
   },

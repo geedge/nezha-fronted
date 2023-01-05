@@ -68,23 +68,7 @@
           </div>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item v-has="'role_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
-            <!-- <el-dropdown-item v-has="'role_delete'" :command="['delete', scope.row]" :disabled="isBuiltIn(scope.row)"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
-            <el-dropdown-item v-has="'role_delete'" :command="['delete', scope.row]" :disabled="isBuiltIn(scope.row)" :class="'nz-el-dropdown-menu-item'">
-                  <delete-button
-                  ref="deleteButton"
-                  :from="'roles'"
-                  :forceDeleteShow="true"
-                  :deleteTitle="'config.roles.roles'"
-                  :type="'link'"
-                  :title="$t('overall.delete')"
-                  id="role-list-batch-delete"
-                  v-has="'role_delete'"
-                  :api="api"
-                  :single="true"
-                  :delete-objs="singleDelete"
-                  @before="delFlag=true"
-                  ></delete-button>
-              </el-dropdown-item>
+            <el-dropdown-item v-has="'role_delete'" :command="['delete-rel', scope.row, {forceDeleteShow:true, single:true, deleteTitle:'config.roles.roles'}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -103,12 +87,11 @@
 
 <script>
 import table from '@/components/common/mixin/table'
-import deleteButton from '@/components/common/deleteButton'
 import copy from '@/components/common/copy'
 export default {
   name: 'roleTable',
   mixins: [table],
-  components: { deleteButton, copy },
+  components: { copy },
   props: {
     loading: Boolean
   },

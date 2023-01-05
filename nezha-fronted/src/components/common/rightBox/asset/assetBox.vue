@@ -209,7 +209,7 @@
                 </el-form-item>
               </template>
               <el-form-item :label="$t('login.pin')" prop="authPin">
-                <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small" type="password"/>
+                <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small" type="password" auto-complete="new-password" />
               </el-form-item>
               <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
                 <el-input v-model="editAsset.authProtocolPort" size="small"/>
@@ -228,13 +228,13 @@
                 <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
               </el-form-item>
               <el-form-item :label="$t('login.pin')" prop="authPin">
-                <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small"  type="password"/>
+                <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small"  type="password" auto-complete="new-password" />
               </el-form-item>
               <el-form-item :label="$t('asset.usernamePrompt')" prop="authUserTip">
                 <el-input maxlength="64" show-word-limit v-model="editAsset.authUserTip" size="small"/>
               </el-form-item>
               <el-form-item :label="$t('asset.pinPrompt')" prop="authPinTip">
-                <el-input maxlength="64" show-word-limit v-model="editAsset.authPinTip" size="small"  type="password"/>
+                <el-input maxlength="64" show-word-limit v-model="editAsset.authPinTip" size="small"  type="password" auto-complete="new-password" />
               </el-form-item>
               <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
                 <el-input v-model="editAsset.authProtocolPort" size="small"/>
@@ -279,7 +279,7 @@
               <el-input maxlength="64" show-word-limit v-model="editAsset.clientUser" size="small"/>
               </el-form-item>
               <el-form-item :label="$t('login.pin')" prop="clientPin">
-                <el-input type="password" show-word-limit v-model="editAsset.clientPin" size="small"/>
+                <el-input type="password" auto-complete="new-password"  show-word-limit v-model="editAsset.clientPin" size="small"/>
               </el-form-item> -->
               <div v-if="editAsset.clientEnable === 1" v-show="talonShowTow">
                 <el-form-item :label="$t('asset.talon.token')" prop="clientToken">
@@ -531,8 +531,8 @@ export default {
                   this.editAsset.model = asset.model
                   this.editAsset.dcId = asset.dc ? asset.dc.id : ''
                   this.editAsset.cabinetId = asset.cabinet ? asset.cabinet.id : ''
-                  this.editAsset.cabinetStart = asset.cabinetStart
-                  this.editAsset.cabinetEnd = asset.cabinetEnd
+                  this.editAsset.cabinetStart = asset.cabinetStart || ''
+                  this.editAsset.cabinetEnd = asset.cabinetEnd || ''
                   if (!asset.cabinet) {
                     asset.cabinet = {}
                   }
@@ -558,8 +558,8 @@ export default {
                 this.editAsset.model = asset.model
                 this.editAsset.dcId = asset.dc ? asset.dc.id : ''
                 this.editAsset.cabinetId = asset.cabinet ? asset.cabinet.id : ''
-                this.editAsset.cabinetStart = asset.cabinetStart
-                this.editAsset.cabinetEnd = asset.cabinetEnd
+                this.editAsset.cabinetStart = asset.cabinetStart || ''
+                this.editAsset.cabinetEnd = asset.cabinetEnd || ''
                 if (!asset.cabinet) {
                   asset.cabinet = {}
                 }

@@ -255,6 +255,8 @@ export default {
         dcId: '',
         cabinetId: '',
         brandId: '',
+        cabinetStart: '',
+        cabinetEnd: '',
         brand: { id: '', name: '' },
         modelId: '',
         model: { id: '', name: '' },

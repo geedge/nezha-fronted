@@ -158,8 +158,8 @@
           <el-form-item
             :label='$t("login.pin")' prop="authPin"
             :rules="[{ required: customConnect.authType ===1, message:$t('validate.required'), trigger: 'change'},]"
-          >
-            <el-input v-model="customConnect.authPin" size="small" type="password" autocomplete="new-password"/>
+            >
+            <el-input v-model="customConnect.authPin" size="small" type="password" auto-complete="new-password"  autocomplete="new-password"/>
           </el-form-item>
           <el-form-item
             v-if="customConnect.authProtocol === 2"

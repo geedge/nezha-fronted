@@ -102,7 +102,7 @@
                   <el-input v-model="database.username"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('login.pin')" prop="pin" key="dbpassword" >
-                  <el-input v-model="database.pin" type="password" show-password ></el-input>
+                  <el-input v-model="database.pin" type="password" auto-complete="new-password"  show-password ></el-input>
                 </el-form-item>
               </el-form>
               <div class="setup-help">
@@ -125,7 +125,7 @@
                   <el-input v-model="redis.port"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('login.pin')" prop="pin" key="rdpassword" >
-                  <el-input v-model="redis.pin" type="password" show-password ></el-input>
+                  <el-input v-model="redis.pin" type="password" auto-complete="new-password"  show-password ></el-input>
                 </el-form-item>
               </el-form>
               <div class="setup-help">
@@ -145,7 +145,7 @@
                   <el-input v-model="system.username"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('login.pin')" prop="pin" key="syspassword" >
-                  <el-input v-model="system.pin" type="password" show-password ></el-input>
+                  <el-input v-model="system.pin" type="password" auto-complete="new-password"  show-password ></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('setup.system.federation')" prop="federationEnabled" key="sysprometheusFederationEnabled" >
                   <el-select v-model="system.federationEnabled" :placeholder="$t('el.select.placeholder')" style="width: 100%" >

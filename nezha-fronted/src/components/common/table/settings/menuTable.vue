@@ -67,19 +67,7 @@
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
-            <!-- <el-dropdown-item  v-has="'monitor_module_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item> -->
-            <el-dropdown-item v-has="'monitor_module_delete'" :command="['delete', scope.row]" :class="'nz-el-dropdown-menu-item'">
-                  <delete-button
-                  ref="deleteButton"
-                  :from="'menus'"
-                  :forceDeleteShow="false"
-                  id="menus-list-delete"
-                  :api="api"
-                  :single="true"
-                  :delete-objs="singleDelete"
-                  @before="delFlag=true"
-                  ></delete-button>
-              </el-dropdown-item>
+            <el-dropdown-item v-has="'monitor_module_delete'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -98,11 +86,9 @@
 
 <script>
 import table from '@/components/common/mixin/table'
-import deleteButton from '@/components/common/deleteButton'
 export default {
   name: 'menuTable',
   mixins: [table],
-  components: { deleteButton },
   props: {
     loading: Boolean
   },

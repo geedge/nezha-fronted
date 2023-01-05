@@ -65,7 +65,7 @@
               </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.terminallog.key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastElement">
-              <el-input v-model="monitor.metrics_storage_s3_secret_access_key" id="monitor-metrics_storage_s3_secret_access_key" type="password">
+              <el-input v-model="monitor.metrics_storage_s3_secret_access_key" id="monitor-metrics_storage_s3_secret_access_key" type="password" auto-complete="new-password" >
               </el-input>
             </el-form-item>
           </div>
@@ -101,7 +101,7 @@
               </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.terminallog.key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastElement">
-              <el-input v-model="monitor.logs_storage_s3_secret_access_key" id="monitor-logs_storage_s3_secret_access_key" type="password">
+              <el-input v-model="monitor.logs_storage_s3_secret_access_key" id="monitor-logs_storage_s3_secret_access_key" type="password" auto-complete="new-password" >
               </el-input>
             </el-form-item>
           </div>
