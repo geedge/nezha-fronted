@@ -93,13 +93,14 @@ const user = {
       localStorage.setItem(`nz-user-${res.data.user.id}-theme`, currentTheme)
       const body = document.getElementsByTagName('body')[0]
       body.setAttribute('class', `theme-${currentTheme}`)
-
+      console.log(res)
       localStorage.setItem('timezoneOffset', moment.tz(res.data.timezone || defaultAppearance.timezone).format('Z'))
       localStorage.setItem('nz-sys-default-cabinet-usize', res.data.defaultCabinetUsize)
       localStorage.setItem('nz-sys-max-terminal-num', res.data.maxTerminalNum)
       localStorage.setItem('nz-sys-asset-ping-switch', res.data.assetPingSwitch)
       localStorage.setItem('nz-unnsaved-change', res.data.unsavedChange)
       localStorage.setItem('nz-mfa-enable', Number(res.data.mfaAuthEnable) ? 1 : 0)
+      localStorage.setItem('nz-history-size', res.data.history_size ? res.data.history_size : 100)
       store.commit('setLanguage', res.data.user.lang || defaultAppearance.language)
       store.commit('setTimeFormatMain', localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
       // 获取可选语言

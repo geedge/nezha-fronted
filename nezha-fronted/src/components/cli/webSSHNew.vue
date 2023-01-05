@@ -1,15 +1,18 @@
 <template>
   <div class="ani-webSHH-height web-terminal-new" id="web-terminal-new">
-    <el-tabs :before-leave="beforeLeave"
-             @tab-click="handleClick"
-             @tab-remove="removeTab"
-             type="border-card"
-             v-model="editableTabsValue" >
-      <el-tab-pane :key="item.name"
-                   :label="item.title"
-                   :name="item.name"
-                   closable
-                   v-for="(item, index) in editableTabs"
+    <el-tabs
+      :before-leave="beforeLeave"
+      @tab-click="handleClick"
+      @tab-remove="removeTab"
+      type="border-card"
+      v-model="editableTabsValue"
+    >
+      <el-tab-pane
+        :key="item.name"
+        :label="item.title"
+        :name="item.name"
+        closable
+        v-for="(item, index) in editableTabs"
       >
         <!-- tab显示的内容 1 grey,2 green, 3 red-->
         <span slot="label" class="el-tabs__item-label">
@@ -64,6 +67,7 @@
           @loginFail="loginFail"
           @closeConsole="removeTab"
           @refreshConsoleTitle="refreshTabTitle"
+          @historyChange="(message)=>{$parent.historyChange(message)}"
         ></terminal>
 
       </el-tab-pane>
@@ -77,13 +81,13 @@
         >
           <div>
             <div class="popover-webshell-item"  @click="assetShowChange"><i class="nz-icon nz-icon-menu-assets" />{{$t('webshell.selAsset')}}</div>
-            <div  class="popover-webshell-item"  @click="customShow=true"><i class="nz-icon nz-icon-edit" />{{$t('webshell.custom')}}</div>
+            <div class="popover-webshell-item"  @click="customShow=true"><i class="nz-icon nz-icon-edit" />{{$t('webshell.custom')}}</div>
           </div>
           <span slot="reference" style="padding:8px;font-size:20px;font-weight:bold;">+</span>
         </el-popover>
       </el-tab-pane>
     </el-tabs>
-<!--弹窗-->
+    <!--弹窗-->
     <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog" width="620px">
       <div slot="title">{{$t('webshell.connect')}}</div>
       <div >
@@ -121,7 +125,7 @@
         </el-form>
       </div>
     </el-dialog>
-    <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px"destroy-on-close >
+    <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px" destroy-on-close>
       <div slot="title">{{$t('webshell.connect')}}</div>
       <div >
         <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules=" customConnect.authProtocol ===2 ? rulesCustom2: rulesCustom" ref="customConnect" v-my-loading="assetLoading" class="custom">
@@ -151,10 +155,10 @@
           >
             <el-input v-model="customConnect.authPriKey" size="small" autocomplete="new-password"/>
           </el-form-item>
-          <el-form-item :label='$t("login.pin")' prop="authPin"
-                        :rules="[
-                  { required: customConnect.authType ===1, message:$t('validate.required'), trigger: 'change'},
-                ]">
+          <el-form-item
+            :label='$t("login.pin")' prop="authPin"
+            :rules="[{ required: customConnect.authType ===1, message:$t('validate.required'), trigger: 'change'},]"
+          >
             <el-input v-model="customConnect.authPin" size="small" type="password" autocomplete="new-password"/>
           </el-form-item>
           <el-form-item
