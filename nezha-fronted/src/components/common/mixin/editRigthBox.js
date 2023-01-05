@@ -9,7 +9,9 @@ export default {
         emit: ''
       },
       closeMessage: null,
-      uuid: getUUID()
+      uuid: getUUID(),
+      isStable: 'instability',
+      stableTime: null
     }
   },
   mounted () {

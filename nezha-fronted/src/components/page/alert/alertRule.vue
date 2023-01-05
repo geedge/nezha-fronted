@@ -194,12 +194,13 @@ export default {
         alertName: '',
         linkObject: { id: '', name: '' },
         expr: '',
+        inr: 15,
         state: 1,
         type: 1,
         unit: 2,
         operator: '>',
         last: 60,
-        severityId: '',
+        severityId: 1,
         summary: '',
         description: '',
         method: [],
@@ -359,6 +360,7 @@ export default {
         if (response.code === 200) {
           this.object = {
             ...response.data,
+            expr: response.data.expression,
             method: response.data.method ? response.data.method.split(',').map(item => Number(item)) : [],
             schedDays: response.data.schedDays ? response.data.schedDays.split(',').map(item => Number(item)) : [],
             receiverShow: response.data.receiver ? response.data.receiver.split(',').map(item => Number(item)) : []

@@ -179,9 +179,9 @@ const panel = {
       store.commit('setPanelNowTimeType', playload.nowTimeType)
     },
     dispatchEditChart (store, playload) {
-      store.commit('setShowRightBox', true)
       store.commit('setChart', playload.chart)
       store.commit('setType', playload.type)
+      store.commit('setShowRightBox', true)
     },
     dispatchHeaderH (store, playload) {
       store.commit('setHeaderH', playload.headerH)

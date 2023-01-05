@@ -13,8 +13,8 @@ export const clickoutside = {
       const unsavedChange = localStorage.getItem('nz-unsaved-change')
       let oldValue
       try {
-        oldValue = JSON.parse(JSON.stringify(binding.value.obj))
-        el.__newValue__ = oldValue
+        el.__oldValue__ = JSON.parse(JSON.stringify(binding.value.obj))
+        el.__newValue__ =  el.__oldValue__
       } catch (e) {
 
       }
@@ -37,10 +37,9 @@ export const clickoutside = {
           if (!flag) {
             return false
           }
-          if (oldValue) {
-            console.log(oldValue, el.__newValue__)
+          if ( el.__oldValue__) {
             // const newValue = JSON.parse(JSON.stringify(binding.value.obj))
-            if (unsavedChange == 'on' && !isEqual(oldValue, el.__newValue__) && !el.isShow) {
+            if (unsavedChange == 'on' && !isEqual( el.__oldValue__, el.__newValue__) && !el.isShow) {
               el.isShow = true
               MessageBox.confirm(i18n.t('tip.confirmCancel'), {
                 confirmButtonText: i18n.t('tip.yes'),
@@ -75,6 +74,9 @@ export const clickoutside = {
     }, 100)
   },
   update (el, binding, vnode) {
+    if (binding.arg && binding.arg != 'stable') {
+      el.__oldValue__ = JSON.parse(JSON.stringify(binding.value.obj))
+    }
     el.__newValue__ = binding.value.obj
   },
   unbind (el, binding) {

@@ -1,5 +1,5 @@
 <template>
-  <div v-clickoutside="{obj: editAlertRule, func: clickOutside}" class="right-box right-box-alert-rule">
+  <div v-clickoutside="{obj: editAlertRule, func: clickOutside}" class="right-box right-box-alert-rule" ref="rightBox">
     <div class="right-box__header">
       <!-- begin--标题-->
       <div class="header__title">{{alertRule.id ? $t("alert.config.editAlertConfig") : $t("overall.createAlertRule")}}</div>
@@ -406,7 +406,7 @@ export default {
         }
       ],
       showMetrics: true,
-      showSnmpTrap: true,
+      showSnmpTrap: false,
       showTypeSelect: false,
       editAlertRule: {},
       rules: {
@@ -664,7 +664,13 @@ export default {
           this.showTypeSelect = !!this.editAlertRule.id // 当 edit 时禁用 type下拉框
           if (n.type === 1) {
             this.editAlertRule.type = 1
+            setTimeout(() => {
+              this.showSnmpTrap = true
+            }, 150)
           } else if (n.type === 2) {
+            setTimeout(() => {
+              this.showSnmpTrap = true
+            }, 150)
             this.showMetrics = false // showMetrics 为 false 时,展示 Logs label
             this.editAlertRule.type = 2
           } else if (n.type === 3) {
@@ -680,6 +686,10 @@ export default {
               }
             })
           })
+        } else {
+          setTimeout(() => {
+            this.showSnmpTrap = true
+          }, 150)
         }
       }
     }

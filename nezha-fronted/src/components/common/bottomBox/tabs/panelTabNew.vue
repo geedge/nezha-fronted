@@ -16,7 +16,7 @@
         <!-- asset -->
         <div v-if="from === fromRoute.asset" style="display: flex">
           <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'panel' + obj.id"></pick-time>
-          <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChart">
+          <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChartBefore">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
           <top-tool-more-options
@@ -244,16 +244,25 @@ export default {
           enable: {
             legend: true,
             valueMapping: false,
-            thresholds: false
+            thresholds: false,
+            visibility: false
           },
           thresholdShow: true,
-          thresholds: [{ value: undefined, color: randomcolor() }]
+          thresholds: [{ value: undefined, color: randomcolor() }],
+          showHeader: 1,
+          visibility: {
+            varName: '',
+            operator: 'equal',
+            varValue: '',
+            result: 'show'
+          }
         },
-        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
+        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
         panel: '',
         sync: 0,
         remark: '',
-        groupId: ''
+        groupId: '',
+        varType: ''
       },
       pageObj: {
         pageNo: 1,
@@ -347,9 +356,11 @@ export default {
     /* 图表相关操作--start */
     addChart () {
       this.chart = this.newChart()
-      this.$store.dispatch('dispatchEditChart', {
-        chart: '',
-        type: 'add'
+      this.chart.param.thresholds = [{ value: undefined, color: randomcolor() }]
+      this.chart.panelId = this.showPanel.id
+      this.chart.panelName = this.showPanel.name
+      this.$nextTick(() => {
+        this.$refs.addChartModal.isStable = 'stable'
       })
     },
     addChartByTemp () {
@@ -441,6 +452,9 @@ export default {
                 }
               })
             }
+            this.$nextTick(() => {
+              this.$refs.addChartModal.isStable = 'stable'
+            })
           } else {
             this.$message.error(res.msg)
           }
@@ -774,6 +788,12 @@ export default {
         }
       })
     },
+    addChartBefore () {
+      this.$store.dispatch('dispatchEditChart', {
+        chart: '',
+        type: 'add'
+      })
+    },
     disposeChart () {
       const chartInfo = this.$store.getters.getChart
       const groupId = this.$store.getters.getGroupId
@@ -882,6 +902,8 @@ export default {
       handler (n) {
         if (n) {
           this.disposeChart()
+        } else {
+          this.$refs.addChartModal.isStable = 'instability'
         }
       }
     },

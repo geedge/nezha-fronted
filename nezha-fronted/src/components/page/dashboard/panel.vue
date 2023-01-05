@@ -260,11 +260,12 @@ export default {
             result: 'show'
           }
         },
-        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
+        elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
         panel: '',
         sync: 0,
         remark: '',
-        groupId: ''
+        groupId: '',
+        varType: ''
       },
       pageObj: {
         pageNo: 1,
@@ -532,6 +533,9 @@ export default {
       this.chart.param.thresholds = [{ value: undefined, color: randomcolor() }]
       this.chart.panelId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
+      this.$nextTick(() => {
+        this.$refs.addChartModal.isStable = 'stable'
+      })
     },
     addChartByTemp () {
       this.chart = JSON.parse(JSON.stringify(this.blankChartTemp))
@@ -556,6 +560,9 @@ export default {
       this.chart.panelId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
       this.chart.isGroup = true
+      this.$nextTick(() => {
+        this.$refs.addChartModal.isStable = 'stable'
+      })
     },
     newChart () {
       return JSON.parse(JSON.stringify(this.blankChart))
@@ -607,6 +614,9 @@ export default {
                 }
               })
             }
+            this.$nextTick(() => {
+              this.$refs.addChartModal.isStable = 'stable'
+            })
           } else {
             this.$message.error(res.msg)
           }
@@ -1184,6 +1194,8 @@ export default {
       handler (n) {
         if (n) {
           this.disposeChart()
+        } else {
+          this.$refs.addChartModal.isStable = 'instability'
         }
       }
     },
