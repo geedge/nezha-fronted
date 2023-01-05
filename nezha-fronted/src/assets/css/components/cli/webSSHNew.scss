@@ -135,13 +135,102 @@
     font-size: 6px;
   }
   .shell-input{
+    position: relative;
     input {
       background: #1E1E1E !important;
       border: none;
       color: white;
+      padding-right: 53px;
     }
     input::input-placeholder{
       color: #7C7C7C;
+    }
+    .el-input__suffix{
+      right: 20px;
+      .el-input__suffix-inner{
+        height: 100%;
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+      }
+      i{
+        color: $--color-text-regular;
+        cursor: pointer;
+      }
+      i.active{
+        color: $--color-primary;
+      }
+    }
+  }
+
+  .web-terminal-history{
+    position: absolute;
+    bottom:  32px;
+    z-index: 9;
+    width: 100%;
+    background: #1E1E1E;
+    border-bottom: 1px solid rgba(0,0,0,0.50); 
+    .terminal-history-header{
+      box-sizing: border-box;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #B7B7B7;
+      height: 36px;
+      border-bottom: 1px solid #2F2F2F;
+      i{
+        font-size: 14px;
+        cursor: pointer;
+      }
+    }
+    .terminal-history-list-wrap{
+      padding: 10px 0;
+      box-sizing: border-box;
+      .terminal-history-list{
+        max-height: 160px;
+        overflow-y: auto;
+        line-height:normal;
+        &::-webkit-scrollbar-thumb{
+          background-color:#404040;
+          border:2px solid #222329;
+        }
+        .terminal-history-item{
+          padding: 0px 20px;
+          height: 20px;
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          &:hover{
+            background: #18171D;
+          }
+          .terminal-history-num{
+            width: 28px;
+            font-size: 14px;
+            color: #B7B7B7;
+            font-weight: 400;
+            flex-shrink: 0;
+            margin-right: 8px;
+          }
+          .terminal-history-text{
+            font-size: 14px;
+            color: #FFFFFF;
+            font-weight: 400;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-break: break-all;
+          }
+        }  
+      }
+    }
+    .terminal-history-empty{
+      line-height: 50px;
+      color: #B7B7B7;
+      font-size: 14px;
+      text-align: center;
     }
   }
 }

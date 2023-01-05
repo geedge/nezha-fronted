@@ -218,12 +218,12 @@ export default {
     })
   },
   methods: {
-    // 使用防抖是因为,防止标签输入框失去焦点校验和开始任务校验重复(连续两次message提示)
+    // 防止标签输入框失去焦点校验和开始任务校验重复(连续两次message提示)
     validateHost: bus.debounce(function () {
       this.$message.error(this.$t('validate.host'))
     },
     50),
-    // 使用防抖是因为,防止标签输入框失去焦点校验和开始任务校验重复(连续两次message提示)
+    // 防止标签输入框失去焦点校验和开始任务校验重复(连续两次message提示)
     validateDuplicate: bus.debounce(function () {
       this.$message.error(this.$t('ping.duplicate') + ' IP')
     },

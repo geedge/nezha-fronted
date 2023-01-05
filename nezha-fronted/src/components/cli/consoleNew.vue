@@ -133,9 +133,11 @@ export default {
           this.host = res.data.host
           this.create()
         } else {
-          this.terminal.uuid = res.data.uuid
-          this.terminal.userName = res.data.authUsername + '@' + res.data.host
-          this.host = res.data.host
+          if (res.data) {
+            this.terminal.uuid = res.data.uuid
+            this.terminal.userName = res.data.authUsername + '@' + res.data.host
+            this.host = res.data.host
+          }
           params.name = this.terminal.name
           this.$emit('loginFail', params)
           this.$message.error(res.msg)
@@ -311,7 +313,12 @@ export default {
         this.terminalSocket.send(message)
         this.terminalSocket.send('\n')
         this.term.scrollToBottom()
+        this.historyChange(message)
       }
+    },
+    // 新增历史记录
+    historyChange (message) {
+      this.$emit('historyChange', message)
     }
   },
   mounted () {
@@ -324,6 +331,3 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
-
-</style>

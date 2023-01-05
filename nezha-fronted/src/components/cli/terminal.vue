@@ -11,7 +11,29 @@
     </div>
     <fileListState v-clickoutside="hideFileState" ref="fileListState"/>
     <webSSHNew ref="websshNew" />
-    <el-input :placeholder="placeholder" size="small"  class="shell-input" v-model="message" @keyup.enter.native="sendMessage" @focus="placeholderChange('focus')"  @blur="placeholderChange('blur')"/>
+    <div class="shell-input">
+      <el-input ref="shellInput" :placeholder="placeholder" size="small" v-model="message" @keyup.enter.native="sendMessage" @focus="placeholderChange('focus')"  @blur="placeholderChange('blur')">
+        <i slot="suffix" class="nz-icon nz-icon-history" :class="{'active':visible}" :title="$t('terminal.history')" @click="toggleHistory"></i>
+      </el-input>
+      <transition name="el-zoom-in-bottom">
+        <div class="web-terminal-history" v-show="visible">
+          <div class="terminal-history-header">
+            <span>{{$t('terminal.history')}}</span>
+            <i class="nz-icon nz-icon-close" @click="visible=false"></i>
+          </div>
+          <div class="terminal-history-list-wrap" v-if="historyArr.length">
+            <!-- 历史命令记录 -->
+            <ul class="terminal-history-list">
+              <li class="terminal-history-item" v-for="(item,index) in historyArr" :key="index" @click="historyClick(item)">
+                <span class="terminal-history-num">{{index+1}}</span>
+                <span class="terminal-history-text">{{item}}</span>
+              </li>
+            </ul>
+          </div>
+          <div v-else class="terminal-history-empty">{{$t('terminal.noHistoricalRecord')}}</div>
+        </div>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -19,6 +41,7 @@
 import webSSHNew from '@/components/cli/webSSHNew'
 import fileListState from './fileListState'
 import imageUrl from '@/assets/img/logo1-2.png'
+import bus from '@/libs/bus'
 export default {
   name: 'terminal',
   components: {
@@ -32,7 +55,10 @@ export default {
       fileListStateType: '',
       message: '',
       name: '',
-      placeholder: this.$t('terminal.placeholder')
+      placeholder: this.$t('terminal.placeholder'),
+      visible: false,
+      // 历史命令记录
+      historyArr: []
     }
   },
   computed: {
@@ -49,6 +75,7 @@ export default {
       }
     })
     this.logo = localStorage.getItem('nz-sys-logo')
+    this.getHistory()
   },
   mounted () {
     const self = this
@@ -70,7 +97,7 @@ export default {
             self.$refs.websshNew.addConsole(asset.id, asset.manageIp, '', '', 'asset')
           })
         } catch (e) {
-          console.log(e)
+          // console.log(e)
         }
       }
     })
@@ -87,7 +114,7 @@ export default {
     placeholderChange (type) {
       if (type == 'focus') {
         this.placeholder = ''
-      }else {
+      } else {
         this.placeholder = this.$t('terminal.placeholder')
       }
     },
@@ -96,14 +123,33 @@ export default {
       setTimeout(() => {
         this.message = ''
       })
-    }
-  },
-  beforeDestroy  () {
-
+    },
+    // 获取历史输入命令
+    getHistory () {
+      const length = localStorage.getItem('nz-history-size') || 100
+      const historyArr = JSON.parse(localStorage.getItem('nz-history-terminal') || '[]')
+      historyArr.splice(length)
+      this.historyArr = historyArr
+    },
+    // 切换历史记录显示隐藏
+    toggleHistory () {
+      this.visible = !this.visible
+    },
+    // 点击历史记录
+    historyClick (value) {
+      this.visible = false
+      this.message = value
+      this.$nextTick(() => {
+        this.$refs.shellInput.focus()
+      })
+    },
+    // 新增历史记录
+    historyChange: bus.debounce(function (message) {
+      const historyArr = JSON.parse(localStorage.getItem('nz-history-terminal') || '[]')
+      historyArr.unshift(message)
+      localStorage.setItem('nz-history-terminal', JSON.stringify(historyArr))
+      this.getHistory()
+    }, 100)
   }
 }
 </script>
-
-<style scoped lang="scss">
-
-</style>
