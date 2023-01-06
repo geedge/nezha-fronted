@@ -582,7 +582,6 @@ export default {
       }
     },
     orderBy (key, type, order) {
-      console.log(key, type, order)
       let orderType = type
       if (!orderType) {
         orderType = this[key] === 'asc' ? 'desc' : 'asc'
@@ -592,7 +591,6 @@ export default {
         this[key] = 0
         this.fileList = this.oldFileList
       } else if (orderType == 'nameOrderType') {
-        console.log(3)
         this[key] = orderType
         let isDirArr = this.oldFileList.filter(item => item.isDir)
         let isRegArr = this.oldFileList.filter(item => !item.isDir)
@@ -605,7 +603,6 @@ export default {
           this.fileList = this.fileList.concat(isRegArr, isDirArr)
         }
       } else {
-        console.log(4)
         this[key] = orderType
         let isDirArr = this.oldFileList.filter(item => item.isDir)
         let isRegArr = this.oldFileList.filter(item => !item.isDir)

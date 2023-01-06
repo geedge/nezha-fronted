@@ -93,7 +93,6 @@ const user = {
       localStorage.setItem(`nz-user-${res.data.user.id}-theme`, currentTheme)
       const body = document.getElementsByTagName('body')[0]
       body.setAttribute('class', `theme-${currentTheme}`)
-      console.log(res)
       localStorage.setItem('timezoneOffset', moment.tz(res.data.timezone || defaultAppearance.timezone).format('Z'))
       localStorage.setItem('nz-sys-default-cabinet-usize', res.data.defaultCabinetUsize)
       localStorage.setItem('nz-sys-max-terminal-num', res.data.maxTerminalNum)
