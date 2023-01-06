@@ -12,8 +12,8 @@ export const chartTimeSeriesLineOption = {
   toolbox: {
     show: false,
     top: '0',
-    right: '18',
-    showTitle: false,
+    right: '36',
+    showTitle: true,
     feature: {
       dataZoom: {
         yAxisIndex: false,
@@ -51,7 +51,7 @@ export const chartTimeSeriesLineOption = {
   grid: {
     left: 20,
     right: 35,
-    top: 35,
+    top: 42,
     bottom: 15,
     containLabel: true
   },

@@ -331,49 +331,49 @@ export default {
         issueState: [
           {
             value: 1,
-            label: this.$t('issue.open')
+            label: i18n.t('issue.open')
           }, {
             value: 2,
-            label: this.$t('issue.hasBeenAssigned')
+            label: i18n.t('issue.hasBeenAssigned')
           }, {
             value: 3,
-            label: this.$t('issue.beingProcessed')
+            label: i18n.t('issue.beingProcessed')
           }, {
             value: 4,
-            label: this.$t('issue.hangUp')
+            label: i18n.t('issue.hangUp')
           }, {
             value: 5,
-            label: this.$t('issue.resolved')
+            label: i18n.t('issue.resolved')
           }, {
             value: 6,
-            label: this.$t('overall.close')
+            label: i18n.t('overall.close')
           }, {
             value: 7,
-            label: this.$t('overall.cancel')
+            label: i18n.t('overall.cancel')
           }
         ],
         silenceState: [
           {
             value: 1,
-            label: this.$t('silence.active')
+            label: i18n.t('silence.active')
           }, {
             value: 2,
-            label: this.$t('silence.pending')
+            label: i18n.t('silence.pending')
           }, {
             value: 3,
-            label: this.$t('silence.expired')
+            label: i18n.t('silence.expired')
           }
         ],
         priority: [
           {
             value: 1,
-            label: this.$t('dashboard.panel.chartForm.high')
+            label: i18n.t('dashboard.panel.chartForm.high')
           }, {
             value: 2,
-            label: this.$t('issue.middle')
+            label: i18n.t('issue.middle')
           }, {
             value: 3,
-            label: this.$t('issue.low')
+            label: i18n.t('issue.low')
           }
         ]
       }

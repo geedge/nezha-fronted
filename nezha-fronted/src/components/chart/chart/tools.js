@@ -2,6 +2,7 @@ import { chartType } from '@/components/common/js/constants'
 import chartBarOption from './options/chartBar'
 import chartPieOption from './options/chartPie'
 import lodash from 'lodash'
+import i18n from '@/components/common/i18n'
 import {
   chartTimeSeriesLineOption,
   chartTimeSeriesScatterOption,
@@ -14,6 +15,11 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 
 export function getOption (type) {
   let chartOption = null
+  chartTimeSeriesAreaOption.toolbox.feature.dataZoom.title = {
+    zoom: i18n.t('overall.toolBox.zoom'),
+    back: i18n.t('overall.toolBox.back')
+  }
+  chartTimeSeriesAreaOption.toolbox.feature.myStack.title = i18n.t('overall.toolBox.stack')
   switch (type) {
     case chartType.area: {
       chartOption = lodash.cloneDeep(chartTimeSeriesAreaOption)
