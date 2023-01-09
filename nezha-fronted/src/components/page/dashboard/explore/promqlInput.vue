@@ -567,11 +567,15 @@ export default {
   methods: {
     initCodeMirror () {
       const self = this
+      let baseUrl = this.$axios.defaults.baseURL
+      if (!baseUrl || baseUrl == '/') {
+        baseUrl = window.location.protocol + '//' + window.location.host
+      }
       const promQL = new PromQLExtension().setComplete(
         {
           completeStrategy: query(newCompleteStrategy({
             remote: {
-              url: this.$axios.defaults.baseURL + '/prom',
+              url: baseUrl + '/prom',
               fetchFn: this.fetchFn
             }
           }))
