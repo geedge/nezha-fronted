@@ -111,7 +111,11 @@ export default {
       if (this.$refs.menuTree && this.selectedIds && this.selectedIds.length > 0) {
         this.$refs.menuTree.setCheckedKeys(this.selectedIds, true)
         this.editRole.menuIds = this.$refs.menuTree.getCheckedKeys(true)
-        setTimeout(() => {
+        if (this.stableTime) {
+          clearTimeout(this.stableTime)
+          this.stableTime = null
+        }
+        this.stableTime = setTimeout(() => {
           this.isStable = 'stable'
         }, 100)
       } else {

@@ -116,6 +116,11 @@ export default {
       handler (n) {
         if (!n) {
           this.$refs.roleBox.isStable = 'instability'
+          clearTimeout(this.$refs.roleBox.stableTime)
+          if (this.$refs.roleBox.stableTime) {
+            clearTimeout(this.$refs.roleBox.stableTime)
+            this.$refs.roleBox.stableTime = null
+          }
         }
       }
     }

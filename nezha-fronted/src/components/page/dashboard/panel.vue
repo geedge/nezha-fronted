@@ -330,7 +330,8 @@ export default {
       mode: '',
       variables: [],
       variablesInit: false, // 判断variables 是否加载完成
-      snapshotVisible: false
+      snapshotVisible: false,
+      stableTime: null
     }
   },
   components: {
@@ -614,7 +615,7 @@ export default {
                 }
               })
             }
-            this.$nextTick(() => {
+            setTimeout(() => {
               this.$refs.addChartModal.isStable = 'stable'
             })
           } else {
@@ -1196,6 +1197,10 @@ export default {
           this.disposeChart()
         } else {
           this.$refs.addChartModal.isStable = 'instability'
+          if (this.stableTime) {
+            clearTimeout(this.stableTime)
+            this.stableTime = null
+          }
         }
       }
     },

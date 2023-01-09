@@ -74,7 +74,9 @@ export const clickoutside = {
   },
   update (el, binding, vnode) {
     if (binding.arg && binding.arg != 'stable') {
-      el.__oldValue__ = JSON.parse(JSON.stringify(binding.value.obj))
+      if (binding.value.obj.datasource !== '0') {
+        el.__oldValue__ = JSON.parse(JSON.stringify(binding.value.obj))
+      }
     }
     el.__newValue__ = binding.value.obj
   },
