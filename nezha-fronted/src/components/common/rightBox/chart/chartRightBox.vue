@@ -8,7 +8,7 @@
       <div class="header__title" v-if="from !== 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("overall.createChart")}}</div>
       <div class="header__title" v-if="from === 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTempTitle") : $t("dashboard.panel.createChartTempTitle")}}</div>
       <div class="header__operation">
-        <span v-cancel="{obj: editChart, func: clickOutside}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
+        <span v-cancel:[isStable]="{obj: editChart, func: clickOutside}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
 
@@ -96,7 +96,7 @@
     </div>
     <!--底部按钮-->
     <div class="right-box__footer">
-      <button id="chart-box-esc" v-cancel="{obj:editChart,func:esc}" class="footer__btn footer__btn--light">
+      <button id="chart-box-esc" v-cancel:[isStable]="{obj:editChart,func:esc}" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button v-if="showPanel.type && showPanel.type == 'model'" id="chart-box-Sync" v-has="'main_edit'" class="footer__btn">

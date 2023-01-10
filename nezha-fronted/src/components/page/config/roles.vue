@@ -52,7 +52,7 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <role-box v-if="rightBox.show" :copyFlag="copyFlag" :obj="object" @close="closeRightBox"></role-box>
+      <role-box ref="roleBox" v-if="rightBox.show" :copyFlag="copyFlag" :obj="object" @close="closeRightBox"></role-box>
     </transition>
   </div>
 </template>
@@ -77,7 +77,9 @@ export default {
       url: 'sys/role',
       tableId: 'rolesTable', // 需要分页的table的id，用于记录每页数量
       blankObject: { // 空白对象
-        name: ''
+        name: '',
+        remark: '',
+        menuIds: [312]
       },
       copyFlag: false,
       searchMsg: { // 给搜索框子组件传递的信息
@@ -107,6 +109,20 @@ export default {
     copy (u) {
       this.edit(u, true)
       this.copyFlag = true
+    }
+  },
+  watch: {
+    'rightBox.show': {
+      handler (n) {
+        if (!n) {
+          this.$refs.roleBox.isStable = 'instability'
+          clearTimeout(this.$refs.roleBox.stableTime)
+          if (this.$refs.roleBox.stableTime) {
+            clearTimeout(this.$refs.roleBox.stableTime)
+            this.$refs.roleBox.stableTime = null
+          }
+        }
+      }
     }
   }
 }

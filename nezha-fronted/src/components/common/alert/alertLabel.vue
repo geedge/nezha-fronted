@@ -451,7 +451,7 @@
           ></i
           >&nbsp;
           <span>{{
-            alertLabelData && alertLabelData.asset.name
+            alertLabelData && alertLabelData.asset
               ? alertLabelData.asset.name
               : "--"
           }}</span>
@@ -763,6 +763,13 @@ export default {
   computed: {
     calcPosition () {
       return function (position) {
+        if (this.$refs.alertLabels) {
+          this.heightList = this.$refs.alertLabels.getBoundingClientRect().height
+          this.boxWidth = this.$refs.alertLabels.getBoundingClientRect().width
+        } else {
+          this.heightList = 0
+          this.boxWidth = 0
+        }
         const clientHeight =
           document.body.clientHeight < document.documentElement.clientHeight
             ? document.body.clientHeight

@@ -129,11 +129,18 @@
           </el-pagination>
         </div>
       </div>
-      <div v-show="dialogQrType === 'all'" style="display: flex;flex-wrap: wrap;justify-content: center" v-my-loading="qrloading">
-        <div v-for="(item, index) in qrCodeNum" :key="index" :name="'qr-' + index" :style="{
-          width: qrWidth + 'px',
-          height: qrWidth + 'px'
-        }"
+      <div v-show="dialogQrType === 'all'" :style="{
+        'padding-left': paddingLeft + 'px'
+      }" v-my-loading="qrloading">
+        <div v-for="(item, index) in qrCodeNum"
+             :key="index"
+             :name="'qr-' + index"
+             :style="{
+               width: qrWidth + 'px',
+               height: qrWidth + 'px',
+               'text-align': 'center',
+               display: 'inline-block'
+             }"
              v-my-loading="item"
         >
           <!--            :logo-src="getSrc(index)"-->
@@ -195,7 +202,8 @@ export default {
       dialogQrType: 'item',
       boxWidth: '',
       boxHeight: '',
-      qrWidth: 10
+      qrWidth: 10,
+      paddingLeft: 0
     }
   },
   methods: {
@@ -413,6 +421,7 @@ export default {
         } else {
           this.qrWidth = this.boxWidth / row
         }
+        this.paddingLeft = (this.boxWidth - row * this.qrWidth) / 2
         resolve({ col, row })
       })
     }

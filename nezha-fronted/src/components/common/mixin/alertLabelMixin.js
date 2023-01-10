@@ -16,10 +16,10 @@ export default {
   methods: {
     // label 鼠标划入
     labelHover (item, type, loading, isUseType = true, e) {
-      clearTimeout(this.timer)
       if (this.labelToolTipDis(type)) {
         return
       }
+      clearTimeout(this.timer)
       if (isUseType) {
         if (e) {
           const dom = e.currentTarget

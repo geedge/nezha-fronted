@@ -1,9 +1,9 @@
 <template>
-  <div v-clickoutside="{obj: editRole, func: esc}" class="right-box right-box-role">
+  <div v-clickoutside:[isStable]="{obj: editRole, func: esc}" class="right-box right-box-role">
     <div class="right-box__header">
       <div class="header__title">{{editRole.id ? $t('config.roles.editRole') : $t('overall.createRole')}}</div>
       <div class="header__operation">
-        <span v-cancel="{obj: editRole, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
+        <span v-cancel:[isStable]="{obj: editRole, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
     </div>
     <div class="right-box__container right-box-container__left">
@@ -23,7 +23,17 @@
               <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light option-btn" style="margin-left: 0px;" @click="expandAllOrNone" :class="{'btn-active':expandAllFlag}">展开/收缩</button>
               <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light option-btn" @click="selectAllOrNone" :class="{'btn-active':selectAllFlag}"><span ><i class="nz-icon nz-icon-delete"></i></span></button>
             </div>-->
-            <el-tree :data="menus" :default-expand-all="expandAllFlag" :props="{label:labelFormatter}" :default-checked-keys="[312]" class="tree-border" node-key="id" ref="menuTree" show-checkbox id="role-box-input-menus">
+            <el-tree
+              :data="menus"
+              :default-expand-all="expandAllFlag"
+              :props="{label:labelFormatter}"
+              :default-checked-keys="[312]"
+              class="tree-border"
+              node-key="id"
+              ref="menuTree"
+              show-checkbox id="role-box-input-menus"
+              @check="checkChange"
+            >
               <div slot-scope="{ node, data }">
               <span>
                 <i v-if="data.type == '1'" class="el-icon-menu"></i>
@@ -37,7 +47,7 @@
       </div>
     </div>
     <div class="right-box__footer">
-      <button id="asset-edit-cancel" v-cancel="{obj: editRole, func: esc}" class="footer__btn footer__btn--light">
+      <button id="asset-edit-cancel" v-cancel:[isStable]="{obj: editRole, func: esc}" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button id="asset-edit-save" :class="{'footer__btn--disabled': prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn" @click="save">
@@ -100,6 +110,16 @@ export default {
       }
       if (this.$refs.menuTree && this.selectedIds && this.selectedIds.length > 0) {
         this.$refs.menuTree.setCheckedKeys(this.selectedIds, true)
+        this.editRole.menuIds = this.$refs.menuTree.getCheckedKeys(true)
+        if (this.stableTime) {
+          clearTimeout(this.stableTime)
+          this.stableTime = null
+        }
+        this.stableTime = setTimeout(() => {
+          this.isStable = 'stable'
+        }, 100)
+      } else {
+        this.isStable = 'stable'
       }
     })
   },
@@ -161,6 +181,11 @@ export default {
           $self.$refs.menuTree.store.nodesMap[t.id].expanded = $self.expandAllFlag
         })
       }
+    },
+    checkChange () {
+      setTimeout(() => {
+        this.editRole.menuIds = this.$refs.menuTree.getCheckedKeys(true)
+      })
     },
     save () {
       if (this.prevent_opt.save) { return } ;

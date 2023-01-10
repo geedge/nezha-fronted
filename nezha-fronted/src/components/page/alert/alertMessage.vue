@@ -53,7 +53,7 @@
                   :type="'link'"
                 ></delete-button>
               </el-dropdown-item>
-              <el-dropdown-item :disabled="batchDeleteObjs.length==0" :class="'nz-el-dropdown-menu-item'">
+              <el-dropdown-item :disabled="batchDeleteObjs.length==0">
                 <div id="alert-msg-batch-ack" v-has="'alertMessage_expired'" @click="batchAck"><i class="nz-icon nz-icon-queren"></i>{{$t('overall.batchAck')}}</div>
               </el-dropdown-item>
             </div>
