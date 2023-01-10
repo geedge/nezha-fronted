@@ -88,44 +88,39 @@
       </el-tab-pane>
     </el-tabs>
     <!--弹窗-->
-    <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog" width="620px">
-      <div slot="title">{{$t('webshell.connect')}}</div>
-      <div >
-        <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-my-loading="assetLoading" >
-          <el-form-item :label='$t("overall.asset")' prop="assetId" class="flex">
-            <el-dropdown trigger="click" class="header-el-dropdown">
-              <span class="el-dropdown-link">
-                <span>{{selectValue}}</span>
-                <span><i class="el-icon-arrow-down el-icon--right"></i></span>
-              </span>
-              <el-dropdown-menu style="width: 118px" class="el-dropdown__width right-box-select-top right-public-box-dropdown-top" placement="bottom-end" slot="dropdown">
-                <el-dropdown-item
-                  @click.native="selectAssetAuth(item.label, item.value)"
-                  v-for="item in searchMetrics"
-                  :key="item.value"><i class="nz-icon" :class="item.icon" style="margin-right: 5px"/>{{item.label}}</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-            <v-selectpage
-              ref="selectPage"
-              style="flex: 1"
-              data="asset/asset"
-              :params="selectPageParams"
-              :tb-columns="columns"
-              key-field="id"
-              show-field="manageIp"
-              search-field="manageIp"
-              v-model="assetContent.assetId"
-              size="small"
-              :language="language"
-              :placeholder="$t('dashboard.panel.chartForm.selectAsset')"
-              id="box-input-asset-id"
-              :result-format="resultFormat"></v-selectpage>
-            <button :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click.prevent="connect">Connect</button>
-          </el-form-item>
-        </el-form>
+    <el-dialog :modal-append-to-body='false' :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog webshell-selectAsset" width="620px">
+      <div slot="title">{{$t('webshell.selAsset')}}</div>
+      <selectTable ref="selectTable" v-model="assetContent.assetId" :params="selectPageParams" :columns="columns" :tableFormat="tableFormat" api="asset/asset" value-key="id" search-key="manageIp">
+        <template v-slot:searchLeft>
+          <el-dropdown trigger="click" class="header-el-dropdown">
+            <span class="el-dropdown-link">
+              <span>{{selectValue}}</span>
+              <span><i class="el-icon-arrow-down el-icon--right"></i></span>
+            </span>
+            <el-dropdown-menu style="width: 80px" class="el-dropdown__width right-box-select-top right-public-box-dropdown-top" placement="bottom-end" slot="dropdown">
+              <el-dropdown-item
+                @click.native="selectAssetAuth(item.label, item.value)"
+                v-for="item in searchMetrics"
+                :key="item.value"
+                style="padding:0px 10px"
+                >
+                <i class="nz-icon" :class="item.icon" style="margin-right: 5px"/>{{item.label}}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
+      </selectTable>
+      <div slot="footer">
+        <button class="footer__btn footer__btn--light" @click="assetShow=false">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button class="footer__btn" :class="{'webshell-btn-disable':!assetContent.assetId}" :disabled="prevent_opt.save||!assetContent.assetId" @click.prevent="connect">
+          <span>{{$t('webshell.connect')}}</span>
+        </button>
       </div>
     </el-dialog>
-    <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px" destroy-on-close>
+    <!-- 自定义连接 start -->
+    <el-dialog :modal-append-to-body='false' :show-close="true" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px" destroy-on-close>
       <div slot="title">{{$t('webshell.connect')}}</div>
       <div >
         <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules=" customConnect.authProtocol ===2 ? rulesCustom2: rulesCustom" ref="customConnect" v-my-loading="assetLoading" class="custom">
@@ -185,16 +180,19 @@
         </el-form>
       </div>
     </el-dialog>
+    <!-- 自定义连接 end -->
   </div>
 </template>
 
 <script>
 import terminal from './consoleNew'
+import selectTable from '@/components/common/selectTable'
 import { host, port } from '@/components/common/js/validate'
 export default {
   name: 'webSSH',
   components: {
-    terminal
+    terminal,
+    selectTable
   },
   computed: {
     language () { return this.$store.getters.getLanguage },
@@ -217,8 +215,8 @@ export default {
           label: 'SSH'
         },
         {
-          value: 'Telnet',
-          label: 'Telnet'
+          value: 'TELNET',
+          label: 'TELNET'
         }
       ],
       selectPageParams: {
@@ -259,34 +257,32 @@ export default {
         authProtocol: 1
       },
       columns: [
-        { title: 'ID', data: 'id' },
         {
-          title: 'Name',
-          data: function (row) {
-            if (row.name.length > 15) {
-              return row.name.substring(0, 12) + '...'
-            }
-            return row.name
-          }
-        },
-        { title: 'Manage Ip', data: 'manageIp' },
-        {
-          title: 'Type',
-          data: (row) => {
-            return row.type ? row.type.name : ''
-          }
-        },
-        {
-          title: 'Model',
-          data: (row) => {
-            return row.model ? row.model.name : ''
-          }
-        },
-        {
-          title: 'Datacenter',
-          data: (row) => {
-            return row.dc ? row.dc.name : ''
-          }
+          label: 'ID',
+          prop: 'id',
+          minWidth: 50
+        }, {
+          label: 'Name',
+          prop: 'name',
+          minWidth: 100
+        }, {
+          label: 'Manage Ip',
+          prop: 'manageIp',
+          minWidth: 135
+        }, {
+          label: 'Type',
+          prop: 'type'
+        }, {
+          label: 'Model',
+          prop: 'model',
+          minWidth: 120
+        }, {
+          label: 'Datacenter',
+          prop: 'dc',
+          minWidth: 96
+        }, {
+          label: 'Protocol',
+          prop: 'protocol'
         }
       ],
       rules: {
@@ -365,31 +361,53 @@ export default {
     }
   },
   methods: {
+    tableFormat (row, column, cellValue) {
+      let str
+      switch (column.property) {
+        case 'type':
+          str = row.type.name || '-'
+          break
+        case 'model':
+          str = row.model.name || '-'
+          break
+        case 'dc':
+          str = row.dc.name || '-'
+          break
+        case 'protocol':
+          str = this.selectPageParams.authProtocol == 1 ? 'SSH' : 'TELNET'
+          break
+        default:
+          str = cellValue || '-'
+          break
+      }
+      return str
+    },
     selectAssetAuth (val, label) {
-      this.$refs.selectPage.remove()
+      this.assetContent.assetId = ''
       if (val) {
         this.selectValue = val
         if (val === 'SSH') {
-          this.selectPageParams = { authProtocol: 1, pageNumber: 1 }
+          this.selectPageParams = { authProtocol: 1 }
         } else {
-          this.selectPageParams = { authProtocol: 2, pageNumber: 1 }
+          this.selectPageParams = { authProtocol: 2 }
         }
       } else {
         label = 'SSH'
-        this.selectPageParams = { authProtocol: 1, pageNumber: 1 }
+        this.selectPageParams = { authProtocol: 1 }
       }
-      setTimeout(() => {
-        this.$refs.selectPage.pageChange()
-      }, 100)
+      this.$nextTick(() => {
+        this.$refs.selectTable.pageChange(1)
+      })
     },
     assetShowChange () {
       this.assetShow = true
       this.selectValue = 'SSH'
-      this.selectPageParams = { authProtocol: 1, pageNumber: 1 }
-      if (this.$refs.selectPage) {
-        this.$refs.selectPage.remove()
-        this.$refs.selectPage.pageChange()
-      }
+      this.selectPageParams = { authProtocol: 1 }
+      this.$nextTick(() => {
+        this.$refs.selectTable.filter = ''
+        this.$refs.selectTable.pageChange(1)
+      })
+
       // this.getAssetData()
     },
     /* 活动标签切换时触发 */
@@ -500,17 +518,11 @@ export default {
     connect () {
       this.prevent_opt.save = true
       if (this.assetShow) {
-        this.$refs.assetConnect.validate((valid) => {
-          if (valid) {
-            this.$get('asset/asset/' + this.assetContent.assetId).then(res => {
-              const asset = res.data
-              this.addConsole(asset.id, asset.manageIp, '', '', 'asset')
-              this.assetShow = false
-              this.prevent_opt.save = false
-            })
-          } else {
-            this.prevent_opt.save = false
-          }
+        this.$get('asset/asset/' + this.assetContent.assetId).then(res => {
+          const asset = res.data
+          this.addConsole(asset.id, asset.manageIp, '', '', 'asset')
+          this.assetShow = false
+          this.prevent_opt.save = false
         })
       } else {
         this.$refs.customConnect.validate((valid) => {

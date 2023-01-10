@@ -26,10 +26,12 @@ const terminalFile = {
       if (!state.messageFunction) {
         state.messageFunction = true
         window.addEventListener('message', function (e) {
-          const data = JSON.parse(e.data) // e.data  里面有自己所传的所有参数  可以根据参数做自己的判断
-          if (data.close) {
-            state.externalTerminal = false
-          }
+          try {
+            const data = JSON.parse(e.data) // e.data  里面有自己所传的所有参数  可以根据参数做自己的判断
+            if (data.close) {
+              state.externalTerminal = false
+            }
+          } catch (error) {}
         })
         window.addEventListener('unload', () => {
           state.externalTerminal = false

@@ -96,6 +96,64 @@
       }
     }
   }
+
+  .webshell-selectAsset{
+    .el-dialog__header{
+      box-sizing: border-box;
+      height: 48px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      border-bottom: 1px solid $--web-ssh-border-bottom-color2;
+      .el-dialog__headerbtn{
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        display: flex;
+        align-items: center;
+      }
+    }
+    .header-el-dropdown{
+      width: 86px;
+      height: 32px;
+      line-height: 32px;
+      border: 1px solid $--border-color-light;
+      border-right: none;
+      box-sizing: border-box;
+      padding: 0 8px;
+      .el-dropdown-link{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        & span:first-of-type{
+          color: $--color-text-primary;
+        }
+        i.el-icon--right{
+          margin-left: 0;
+          color: #999;
+        }
+      }
+    }
+    .header-el-dropdown+.el-input{
+      border-radius: 0 2px 2px 0;
+    }
+    .el-dialog__footer{
+      padding: 15px 20px;
+      border-top: 1px solid $--web-ssh-border-bottom-color2;
+      .footer__btn{
+        margin: 0;
+        &.webshell-btn-disable{
+          background: $--background-color-base;
+          color: $--web-ssh-color-text-disable;
+          cursor: default;
+        }
+      }
+      .footer__btn--light{
+        margin-right: 10px;
+      }
+    }
+  }
 }
 
 .webTerminal{

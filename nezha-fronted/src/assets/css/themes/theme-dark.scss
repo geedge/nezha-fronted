@@ -235,6 +235,11 @@ $--alert-rule-color: $--background-color-base;
 /* webSSH */
 $--web-ssh-background-color: $--background-color-disabled;
 $--web-ssh-border-bottom-color: $--background-color-copy;
+$--web-ssh-border-bottom-color2: #19191C;
+$--web-ssh-color-text-disable: #666666;
+
+/* selectTable */
+$--select-table-border-color:rgba(0,0,0,0.18);
 
 /* 图表弹框 */
 $--chart-background-color: $--background-color-empty;

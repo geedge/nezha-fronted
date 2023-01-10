@@ -231,6 +231,11 @@ $--alert-rule-color: $--overview-icon-color;
 /* webSSH */
 $--web-ssh-background-color: $--color-text-label;
 $--web-ssh-border-bottom-color: transparent;
+$--web-ssh-border-bottom-color2: #E7EAED;
+$--web-ssh-color-text-disable: #BEBEBE;
+
+/* selectTable */
+$--select-table-border-color:rgba(0,0,0,0.03);
 
 /* 图表弹框 */
 $--chart-background-color: #dde4ed;

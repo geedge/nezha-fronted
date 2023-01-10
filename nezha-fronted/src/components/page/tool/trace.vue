@@ -221,13 +221,11 @@ export default {
     // 防止标签输入框失去焦点校验和开始任务校验重复(连续两次message提示)
     validateHost: bus.debounce(function () {
       this.$message.error(this.$t('validate.host'))
-    },
-    50),
+    }, 50),
     // 防止标签输入框失去焦点校验和开始任务校验重复(连续两次message提示)
     validateDuplicate: bus.debounce(function () {
       this.$message.error(this.$t('ping.duplicate') + ' IP')
-    },
-    50),
+    }, 50),
     // 添加标签之前
     beforeAddTag ({ tag, addTag }) {
       if (!ipv4.test(tag.text) && !ipv6.test(tag.text)) {
@@ -386,7 +384,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
