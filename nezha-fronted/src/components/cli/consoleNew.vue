@@ -107,42 +107,7 @@ export default {
       })
       this.term.open(terminalContainer)
       this.term.focus()
-      const params = {
-        width: this.terminal.width,
-        height: this.terminal.height,
-        cols: this.terminal.cols,
-        rows: this.terminal.rows,
-        host: this.$loadsh.get(this.terminal, 'custom.host', ''),
-        port: this.$loadsh.get(this.terminal, 'custom.port', ''),
-        assetId: this.$loadsh.get(this.terminal, 'assetId', ''),
-        accountId: this.$loadsh.get(this.terminal, 'accountId', ''),
-        authProtocol: this.$loadsh.get(this.terminal, 'custom.authProtocol', ''),
-        authProtocolPort: this.$loadsh.get(this.terminal, 'custom.authProtocolPort', ''),
-        authType: this.$loadsh.get(this.terminal, 'custom.authType', ''),
-        authUsername: this.$loadsh.get(this.terminal, 'custom.authUsername', ''),
-        authPin: this.$loadsh.get(this.terminal, 'custom.authPin', ''),
-        authPriKey: this.$loadsh.get(this.terminal, 'custom.authPriKey', ''),
-        authUserTip: this.$loadsh.get(this.terminal, 'custom.authUserTip', ''),
-        authPinTip: this.$loadsh.get(this.terminal, 'custom.authPinTip', '')
-      }
-      this.$post('/terminal/login', params).then(res => {
-        if (res.code == 200) {
-          this.terminal.uuid = res.data.uuid
-          this.$forceUpdate()
-          this.terminal.userName = res.data.authUsername + '@' + res.data.host
-          this.host = res.data.host
-          this.create()
-        } else {
-          if (res.data) {
-            this.terminal.uuid = res.data.uuid
-            this.terminal.userName = res.data.authUsername + '@' + res.data.host
-            this.host = res.data.host
-          }
-          params.name = this.terminal.name
-          this.$emit('loginFail', params)
-          this.$message.error(res.msg)
-        }
-      })
+      this.create()
     },
     create () {
       const that = this
@@ -172,6 +137,7 @@ export default {
       this.terminalSocket.onopen = () => {
         this.terminal.isLogin = true
         this.isInit = true
+        this.term.focus()
       }
       // 登录后，你输入的内容从后台服务返回
       this.term.on('data', function (data) {
@@ -288,9 +254,9 @@ export default {
     reconnect () {
       this.terminal.isLogin = false
       this.closeSocket()
-      this.term.off('selection')
-      this.term.off('data')
-      this.beforeCreate()
+      setTimeout(()=>{
+        this.beforeCreate()
+      },100)
     },
     closeFileDir () {
       this.showFileDir(false)

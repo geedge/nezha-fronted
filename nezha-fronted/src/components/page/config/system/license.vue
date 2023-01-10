@@ -436,6 +436,10 @@ export default {
   mounted () {
     this.licenseGetData()
     this.licenseGetStatus()
+    window.addEventListener('resize', this.getLayout)
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.getLayout)
   }
 }
 </script>

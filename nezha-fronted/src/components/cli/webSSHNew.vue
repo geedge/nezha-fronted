@@ -88,7 +88,7 @@
       </el-tab-pane>
     </el-tabs>
     <!--弹窗-->
-    <el-dialog :modal-append-to-body='false' :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog webshell-selectAsset" width="620px">
+    <el-dialog :modal-append-to-body='false' :z-index="1000" :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog webshell-selectAsset" width="620px">
       <div slot="title">{{$t('webshell.selAsset')}}</div>
       <selectTable ref="selectTable" v-model="assetContent.assetId" :params="selectPageParams" :columns="columns" :tableFormat="tableFormat" api="asset/asset" value-key="id" search-key="manageIp">
         <template v-slot:searchLeft>
@@ -114,13 +114,13 @@
         <button class="footer__btn footer__btn--light" @click="assetShow=false">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button class="footer__btn" :class="{'webshell-btn-disable':!assetContent.assetId}" :disabled="prevent_opt.save||!assetContent.assetId" @click.prevent="connect">
+        <button class="footer__btn" :class="{'webshell-btn-disable': !assetContent.assetId}" v-my-loading:circleMin="prevent_opt.save" :disabled="prevent_opt.save||!assetContent.assetId" @click.prevent="connect">
           <span>{{$t('webshell.connect')}}</span>
         </button>
       </div>
     </el-dialog>
     <!-- 自定义连接 start -->
-    <el-dialog :modal-append-to-body='false' :show-close="true" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px" destroy-on-close>
+    <el-dialog :modal-append-to-body='false' :show-close="true" :z-index="1000" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px" destroy-on-close>
       <div slot="title">{{$t('webshell.connect')}}</div>
       <div >
         <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules=" customConnect.authProtocol ===2 ? rulesCustom2: rulesCustom" ref="customConnect" v-my-loading="assetLoading" class="custom">
@@ -173,7 +173,7 @@
             <button id="asset-edit-cancel" @click="customShow=false" class="footer__btn footer__btn--light" type="button">
               <span>{{$t('overall.cancel')}}</span>
             </button>
-            <button id="asset-edit-save" :disabled="prevent_opt.save" class="footer__btn" @click.prevent="connect" type="button">
+            <button id="asset-edit-save" v-my-loading:circleMin="prevent_opt.save" :disabled="prevent_opt.save" class="footer__btn" @click.prevent="connect" type="button">
               <span>{{$t('webshell.connect')}}</span>
             </button>
           </div>
@@ -188,6 +188,7 @@
 import terminal from './consoleNew'
 import selectTable from '@/components/common/selectTable'
 import { host, port } from '@/components/common/js/validate'
+import { requestsArr } from '@/http'
 export default {
   name: 'webSSH',
   components: {
@@ -357,7 +358,8 @@ export default {
       assetContent: {
         assetId: ''
       },
-      customShow: false
+      customShow: false,
+      connectLoading: false
     }
   },
   methods: {
@@ -520,16 +522,12 @@ export default {
       if (this.assetShow) {
         this.$get('asset/asset/' + this.assetContent.assetId).then(res => {
           const asset = res.data
-          this.addConsole(asset.id, asset.manageIp, '', '', 'asset')
-          this.assetShow = false
-          this.prevent_opt.save = false
+          this.addConsole(asset.id, asset.manageIp, '', '', 'asset', asset)
         })
       } else {
         this.$refs.customConnect.validate((valid) => {
           if (valid) {
             this.addConsole('', this.customConnect.host, '', this.customConnect.port, 'custom')
-            this.customShow = false
-            this.prevent_opt.save = false
           } else {
             this.prevent_opt.save = false
           }
@@ -576,8 +574,10 @@ export default {
         authProtocolPort: '',
         authProtocol: 1
       }
+      this.prevent_opt.save = false
+      requestsArr.forEach(xhr => xhr.cancel('cancel'))
     },
-    addConsole (id, host, accountId, port, type) {
+    addConsole (id, host, accountId, port, type, asset) {
       if (!id) { id = '' }
       if (!host) { host = '' }
       if (!accountId) { accountId = '' }
@@ -609,7 +609,8 @@ export default {
           uuid: uuid,
           type: type,
           username: '',
-          isLogin: false
+          isLogin: false,
+          host: ''
         }
       }
       if (type === 'custom') {
@@ -627,19 +628,58 @@ export default {
           authProtocol: encodeURIComponent(this.customConnect.authProtocol)
         }
       }
-      if (id) {
-        this.$get('/asset/asset/' + id).then(res => {
-          console.terminal.terminalType = res.data.type.authProtocol
-          console.terminal.username = ''
-          this.editableTabsValue = newTabName
-          this.editableTabs.push(console)
-        })
-      } else {
-        console.terminal.username = ''
-        console.terminal.terminalType = this.customConnect.authProtocol
-        this.editableTabsValue = newTabName
-        this.editableTabs.push(console)
+      const terminal = console.terminal
+      const params = {
+        width: terminal.width,
+        height: terminal.height,
+        cols: terminal.cols,
+        rows: terminal.rows,
+        host: this.$loadsh.get(terminal, 'custom.host', ''),
+        port: this.$loadsh.get(terminal, 'custom.port', ''),
+        assetId: this.$loadsh.get(terminal, 'assetId', ''),
+        accountId: this.$loadsh.get(terminal, 'accountId', ''),
+        authProtocol: this.$loadsh.get(terminal, 'custom.authProtocol', ''),
+        authProtocolPort: this.$loadsh.get(terminal, 'custom.authProtocolPort', ''),
+        authType: this.$loadsh.get(terminal, 'custom.authType', ''),
+        authUsername: this.$loadsh.get(terminal, 'custom.authUsername', ''),
+        authPin: this.$loadsh.get(terminal, 'custom.authPin', ''),
+        authPriKey: this.$loadsh.get(terminal, 'custom.authPriKey', ''),
+        authUserTip: this.$loadsh.get(terminal, 'custom.authUserTip', ''),
+        authPinTip: this.$loadsh.get(terminal, 'custom.authPinTip', '')
       }
+      this.$post('/terminal/login', params).then(res => {
+        if (res.code == 200) {
+          terminal.uuid = res.data.uuid
+          this.$forceUpdate()
+          terminal.userName = res.data.authUsername + '@' + res.data.host
+          terminal.host = res.data.host
+          if (id) {
+            console.terminal.terminalType = asset.type.authProtocol
+            console.terminal.username = ''
+            this.editableTabsValue = newTabName
+            this.editableTabs.push(console)
+            this.assetShow = false
+          } else {
+            console.terminal.username = ''
+            console.terminal.terminalType = this.customConnect.authProtocol
+            this.editableTabsValue = newTabName
+            this.editableTabs.push(console)
+            this.customShow = false
+          }
+          this.prevent_opt.save = false
+        } else {
+          this.prevent_opt.save = false
+          if (res === 'cancel') return
+          if (res.data) {
+            terminal.uuid = res.data.uuid
+            terminal.userName = res.data.authUsername + '@' + res.data.host
+            this.host = res.data.host
+          }
+          params.name = terminal.name
+          // this.$emit('loginFail', params)
+          this.$message.error(res.msg)
+        }
+      })
     },
     duplicate (item, index) {
       if (item.terminal.assetId) {
@@ -685,10 +725,49 @@ export default {
       }
     },
     reconnect (item, index) {
-      this.$refs['console' + index][0].reconnect()
       if (this.$refs['popover' + index] && this.$refs['popover' + index][0]) {
         this.$refs['popover' + index][0].doClose()
       }
+      const terminal = item.terminal
+      const params = {
+        width: terminal.width,
+        height: terminal.height,
+        cols: terminal.cols,
+        rows: terminal.rows,
+        host: this.$loadsh.get(terminal, 'custom.host', ''),
+        port: this.$loadsh.get(terminal, 'custom.port', ''),
+        assetId: this.$loadsh.get(terminal, 'assetId', ''),
+        accountId: this.$loadsh.get(terminal, 'accountId', ''),
+        authProtocol: this.$loadsh.get(terminal, 'custom.authProtocol', ''),
+        authProtocolPort: this.$loadsh.get(terminal, 'custom.authProtocolPort', ''),
+        authType: this.$loadsh.get(terminal, 'custom.authType', ''),
+        authUsername: this.$loadsh.get(terminal, 'custom.authUsername', ''),
+        authPin: this.$loadsh.get(terminal, 'custom.authPin', ''),
+        authPriKey: this.$loadsh.get(terminal, 'custom.authPriKey', ''),
+        authUserTip: this.$loadsh.get(terminal, 'custom.authUserTip', ''),
+        authPinTip: this.$loadsh.get(terminal, 'custom.authPinTip', '')
+      }
+      this.$post('/terminal/login', params).then(res => {
+        if (res.code == 200) {
+          terminal.uuid = res.data.uuid
+          this.$forceUpdate()
+          terminal.userName = res.data.authUsername + '@' + res.data.host
+          terminal.host = res.data.host
+          this.prevent_opt.save = false
+          this.$refs['console' + index][0].reconnect()
+        } else {
+          this.prevent_opt.save = false
+          if (res === 'cancel') return
+          if (res.data) {
+            terminal.uuid = res.data.uuid
+            terminal.userName = res.data.authUsername + '@' + res.data.host
+            this.host = res.data.host
+          }
+          params.name = terminal.name
+          // this.$emit('loginFail', params)
+          this.$message.error(res.msg)
+        }
+      })
     },
     showFileDir (item, index) {
       this.$refs['console' + index][0].showFileDir(true)

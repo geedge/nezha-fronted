@@ -259,3 +259,46 @@ loading-hide{
   }
 }
 /** END of circle3 */
+/**===== circle3 =====*/
+.circleMin {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 50px;
+  width: 50px;
+  margin: -25px 0 0 -25px;
+  border: 4px rgba(0, 0, 0, 0.25) solid;
+  border-top: 4px black solid;
+  border-right: 4px black solid;
+  border-bottom: 4px black solid;
+  border-radius: 50%;
+  -webkit-animation: spinMin 1s infinite linear;
+  animation: spinMin 1s infinite linear;
+}
+
+@-webkit-keyframes spinMin {
+  from {
+    -webkit-transform: rotate(0deg) scale(0.4);
+    transform: rotate(0deg) scale(0.4);
+  }
+  to {
+    -webkit-transform: rotate(359deg) scale(0.4);
+    transform: rotate(359deg) scale(0.4);
+  }
+}
+@keyframes spinMin {
+  from {
+    -webkit-transform: rotate(0deg) scale(0.4);
+    transform: rotate(0deg) scale(0.4);
+    -webkit-transform: rotate(0deg) scale(0.4);
+    transform: rotate(0deg) scale(0.4);
+  }
+  to {
+    -webkit-transform: rotate(359deg) scale(0.4);
+    transform: rotate(359deg) scale(0.4);
+    -webkit-transform: rotate(359deg) scale(0.4);
+    transform: rotate(359deg) scale(0.4);
+  }
+}
+/** END of circle3 */
