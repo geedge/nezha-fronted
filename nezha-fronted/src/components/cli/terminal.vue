@@ -94,10 +94,10 @@ export default {
           const data = JSON.parse(e.data)
           self.$get('asset/asset/' + data.id).then(res => {
             const asset = res.data
-            self.$refs.websshNew.addConsole(asset.id, asset.manageIp, '', '', 'asset')
+            self.$refs.websshNew.addConsole(asset.id, asset.manageIp, '', '', 'asset', asset)
           })
         } catch (e) {
-          // console.log(e)
+          console.log(e)
         }
       }
     })

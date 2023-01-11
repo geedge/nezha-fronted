@@ -254,9 +254,9 @@ export default {
     reconnect () {
       this.terminal.isLogin = false
       this.closeSocket()
-      setTimeout(()=>{
+      setTimeout(() => {
         this.beforeCreate()
-      },100)
+      }, 100)
     },
     closeFileDir () {
       this.showFileDir(false)
@@ -276,8 +276,8 @@ export default {
     },
     enterStr (message) {
       if (this.terminalSocket && this.terminal.isLogin) {
-        this.terminalSocket.send(message)
-        this.terminalSocket.send('\n')
+        this.term.send(message)
+        this.term.send('\n')
         this.term.scrollToBottom()
         this.historyChange(message)
       }

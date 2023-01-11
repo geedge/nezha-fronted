@@ -654,7 +654,7 @@ export default {
           terminal.userName = res.data.authUsername + '@' + res.data.host
           terminal.host = res.data.host
           if (id) {
-            console.terminal.terminalType = asset.type.authProtocol
+            console.terminal.terminalType = asset ? asset.type.authProtocol : console.terminal.terminalType
             console.terminal.username = ''
             this.editableTabsValue = newTabName
             this.editableTabs.push(console)
@@ -689,7 +689,7 @@ export default {
         console.name = newTabName
         console.terminal.name = newTabName
         console.terminal.isLogin = false
-        this.editableTabs.push(console)
+        this.addConsole(item.terminal.assetId, item.terminal.host, '', '', 'asset')
       } else {
         this.customConnect = {
           ...item.terminal.custom,
