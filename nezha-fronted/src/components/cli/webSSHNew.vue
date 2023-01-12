@@ -575,9 +575,13 @@ export default {
         authProtocol: 1
       }
       this.prevent_opt.save = false
-      requestsArr.forEach(xhr => xhr.cancel('cancel'))
+      requestsArr.forEach(xhr => {
+        if (!xhr.parentWindow) {
+          xhr.cancel('cancel')
+        }
+      })
     },
-    addConsole (id, host, accountId, port, type, asset) {
+    addConsole (id, host, accountId, port, type, asset, father) {
       if (!id) { id = '' }
       if (!host) { host = '' }
       if (!accountId) { accountId = '' }
@@ -645,7 +649,8 @@ export default {
         authPin: this.$loadsh.get(terminal, 'custom.authPin', ''),
         authPriKey: this.$loadsh.get(terminal, 'custom.authPriKey', ''),
         authUserTip: this.$loadsh.get(terminal, 'custom.authUserTip', ''),
-        authPinTip: this.$loadsh.get(terminal, 'custom.authPinTip', '')
+        authPinTip: this.$loadsh.get(terminal, 'custom.authPinTip', ''),
+        parentWindow: !!father
       }
       this.$post('/terminal/login', params).then(res => {
         if (res.code == 200) {

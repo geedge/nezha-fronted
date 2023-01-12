@@ -24,7 +24,8 @@ axios.interceptors.request.use(
       config.id = id
       requestsArr.push({
         id,
-        cancel: source.cancel
+        cancel: source.cancel,
+        params: config.data
       }) // 将该实例添加到队列中
     }
     const token = localStorage.getItem('nz-token')
