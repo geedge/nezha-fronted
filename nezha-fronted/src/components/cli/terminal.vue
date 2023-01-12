@@ -13,7 +13,7 @@
     <webSSHNew ref="websshNew" />
     <div class="shell-input">
       <el-input ref="shellInput" :placeholder="placeholder" size="small" v-model="message" @keyup.enter.native="sendMessage" @focus="placeholderChange('focus')"  @blur="placeholderChange('blur')">
-        <i slot="suffix" class="nz-icon nz-icon-history" :class="{'active':visible}" :title="$t('terminal.history')" @click="toggleHistory"></i>
+        <i slot="suffix" class="nz-icon nz-icon-history no-style-class" :class="{'active':visible}" :title="$t('terminal.history')" @click="toggleHistory"></i>
       </el-input>
       <transition name="el-zoom-in-bottom">
         <div class="web-terminal-history no-style-class" v-show="visible" v-clickoutside="clickout">
