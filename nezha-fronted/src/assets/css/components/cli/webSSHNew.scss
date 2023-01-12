@@ -212,7 +212,7 @@
         font-size: 18px;
       }
       i{
-        color: $--color-text-regular;
+        color: #B7B7B7;
         cursor: pointer;
       }
       i.active{
@@ -255,6 +255,7 @@
           border:2px solid #222329;
         }
         .terminal-history-item{
+          width: 100%;
           padding: 0px 20px;
           height: 20px;
           box-sizing: border-box;
@@ -278,8 +279,8 @@
             font-weight: 400;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
             word-break: break-all;
+            white-space: pre;
           }
         }  
       }

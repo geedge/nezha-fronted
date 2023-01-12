@@ -261,7 +261,7 @@ export default {
         {
           label: 'ID',
           prop: 'id',
-          minWidth: 50
+          minWidth: 48
         }, {
           label: 'Name',
           prop: 'name',
@@ -269,21 +269,19 @@ export default {
         }, {
           label: 'Manage Ip',
           prop: 'manageIp',
-          minWidth: 135
+          minWidth: 132
         }, {
           label: 'Type',
-          prop: 'type'
+          prop: 'type',
+          minWidth: 86
         }, {
           label: 'Model',
           prop: 'model',
-          minWidth: 120
+          minWidth: 106
         }, {
           label: 'Datacenter',
           prop: 'dc',
-          minWidth: 96
-        }, {
-          label: 'Protocol',
-          prop: 'protocol'
+          minWidth: 94
         }
       ],
       rules: {
@@ -374,9 +372,6 @@ export default {
           break
         case 'dc':
           str = row.dc.name || '-'
-          break
-        case 'protocol':
-          str = this.selectPageParams.authProtocol == 1 ? 'SSH' : 'TELNET'
           break
         default:
           str = cellValue || '-'

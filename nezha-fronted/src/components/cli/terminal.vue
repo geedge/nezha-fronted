@@ -16,7 +16,7 @@
         <i slot="suffix" class="nz-icon nz-icon-history" :class="{'active':visible}" :title="$t('terminal.history')" @click="toggleHistory"></i>
       </el-input>
       <transition name="el-zoom-in-bottom">
-        <div class="web-terminal-history" v-show="visible">
+        <div class="web-terminal-history no-style-class" v-show="visible" v-clickoutside="clickout">
           <div class="terminal-history-header">
             <span>{{$t('terminal.history')}}</span>
             <i class="nz-icon nz-icon-close" @click="visible=false"></i>
@@ -103,6 +103,9 @@ export default {
     })
   },
   methods: {
+    clickout () {
+      this.visible = false
+    },
     showFileState () {
       let type = 'down'
       this.fileListStateType = type = 'down'
@@ -127,8 +130,9 @@ export default {
     // 获取历史输入命令
     getHistory () {
       const length = localStorage.getItem('nz-history-size') || 100
-      const historyArr = JSON.parse(localStorage.getItem('nz-history-terminal') || '[]')
-      historyArr.splice(length)
+      let historyArr = JSON.parse(localStorage.getItem('nz-history-terminal') || '[]')
+      // 截取最后n条
+      historyArr = historyArr.slice(-length)
       this.historyArr = historyArr
     },
     // 切换历史记录显示隐藏
@@ -146,7 +150,11 @@ export default {
     // 新增历史记录
     historyChange: bus.debounce(function (message) {
       const historyArr = JSON.parse(localStorage.getItem('nz-history-terminal') || '[]')
-      historyArr.unshift(message)
+      const lastItem = historyArr[historyArr.length - 1]
+      // 上一个命令 和 当前命令 trim 后内容完全一致，则不记录
+      if (!lastItem || (lastItem && lastItem.trim() != message.trim())) {
+        historyArr.push(message)
+      }
       localStorage.setItem('nz-history-terminal', JSON.stringify(historyArr))
       this.getHistory()
     }, 100)
