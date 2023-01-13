@@ -17,7 +17,8 @@
         :loading="tools.loading"
         :ringTableData='ringTableData'
         :configTableData='configTableData'
-        :servicesTableData='servicesTableData'>
+        :servicesTableData='servicesTableData'
+        @configval='configval'>
         </cortexDetailTable>
     </template>
   </nz-bottom-data-list>
@@ -59,6 +60,7 @@ export default {
   data () {
     return {
       tableId: 'cortexDetail',
+      configMode: 'defaults',
       configTableData: [],
       servicesTableData: [],
       ringTableData: [],
@@ -68,6 +70,10 @@ export default {
   mounted () {
   },
   methods: {
+    configval (val) {
+      this.configMode = val
+      this.getConfigTableData()
+    },
     async getIngesterTableData () {
       const response = await this.$get('agent/' + this.obj.id + '/cortex/ingester/ring')
       if (response.code === 200) {
@@ -81,7 +87,7 @@ export default {
       }
     },
     async getConfigTableData () {
-      const response = await this.$get('agent/' + this.obj.id + '/cortex/config?mode=defaults')
+      const response = await this.$get('agent/' + this.obj.id + '/cortex/config?mode=' + this.configMode)
       if (response.code === 200) {
         this.configTableData = response.data.conent.split(/\n/)
         this.configTableData.unshift('{')

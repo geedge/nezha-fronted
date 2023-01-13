@@ -78,8 +78,8 @@
                   </template>
                   <template slot-scope="scope" :column="item">
                     <span v-if="item.prop === 'name'">{{indexs? $t('cortex.storeGateway'):$t('cortex.ingester')}}</span>
-                    <span v-else-if="item.prop === 'registeredAt'">{{scope.row[item.prop]?momentTz(scope.row[item.prop]):'-'}}</span>
-                    <span v-else-if="item.prop === 'heartbeat'">{{scope.row[item.prop]?momentTz(scope.row[item.prop]):'-'}}</span>
+                    <!-- <span v-else-if="item.prop === 'registeredAt'">{{scope.row[item.prop]?momentTz(scope.row[item.prop]):'-'}}</span> -->
+                    <!-- <span v-else-if="item.prop === 'heartbeat'">{{scope.row[item.prop]?momentTz(scope.row[item.prop]):'-'}}</span> -->
                     <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
                     <template v-else>-</template>
                   </template>
@@ -90,9 +90,10 @@
     </div>
     <div class="cortex-config">
         <div class="cortex-title">{{$t('overall.configEndpoint')}}</div>
-        <div :class="`${configSwitch ? 'cortex-config-tab' : ''}`">
+        <div class="cortex-config-tab">
+          <!-- <div :class="`${configSwitch ? 'cortex-config-tab' : ''}`"> -->
+            <!-- v-if="configSwitch" -->
           <el-table
-            v-if="configSwitch"
             :data="configTableData"
             class="config-tab">
                 <el-table-column
@@ -105,14 +106,14 @@
                 >
                   <template #header>
                     <span style="padding-right: 7px;">{{$t('cortex.IncludeDefault')}}</span>
-                    <el-switch v-model="configSwitch" :active-value="1" :inactive-value="0" size="small" style="padding-right: 11px;"></el-switch>
+                    <el-switch v-model="configSwitch" :active-value="1" :inactive-value="0" @change="configSwitchCheck" size="small" style="padding-right: 11px;"></el-switch>
                   </template>
                   <template slot-scope="scope">
                     <span><pre>{{scope.row}}</pre></span>
                   </template>
                 </el-table-column>
           </el-table>
-           <el-table v-else class="config-switch-tab">
+           <!-- <el-table v-else class="config-switch-tab">
                 <el-table-column
                   type="index">
                 </el-table-column>
@@ -125,7 +126,7 @@
                     <el-switch v-model="configSwitch" :active-value="1" :inactive-value="0" size="small"></el-switch>
                   </template>
                 </el-table-column>
-          </el-table>
+          </el-table> -->
         </div>
     </div>
   </template>
@@ -148,6 +149,7 @@ export default {
   name: 'cortexDetailTable',
   props: {
     loading: Boolean,
+    configMode: String,
     ingesterTableData: Array,
     storeGatewayTableData: Array,
     configTableData: Array,
@@ -299,6 +301,13 @@ export default {
             colspan: 0
           }
         }
+      }
+    },
+    configSwitchCheck () {
+      if (this.configSwitch == 1) {
+        this.$emit('configval', 'defaults')
+      } else {
+        this.$emit('configval', 'diff')
       }
     }
   }
