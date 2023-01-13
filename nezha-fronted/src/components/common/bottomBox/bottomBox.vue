@@ -66,7 +66,8 @@
         <!--model 下滑-->
         <asset-tab v-if="(from === fromRoute.model) && targetTab === 'asset'" :tabs="tabs.model" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></asset-tab>
         <!-- agent 下滑-->
-        <scrape-endpoint v-if="from === fromRoute.agent && targetTab === 'agent'" :from="from" :obj="obj" :tabs="tabs.agent" @changeTab="changeTab" :targetTab.sync="targetTab"></scrape-endpoint>
+        <scrape-endpoint v-if="from === fromRoute.agent && targetTab === 'scrapeEndpoint'" :from="from" :obj="obj" :tabs="tabs.agent.scrapeEndpoint" @changeTab="changeTab" :targetTab.sync="targetTab"></scrape-endpoint>
+        <cortex-detail v-if="from === fromRoute.agent && targetTab === 'cortexDetail'" :from="from" :obj="obj" :tabs="tabs.agent.cortexDetail" @changeTab="changeTab" :targetTab.sync="targetTab"></cortex-detail>
         <!-- ipam -->
         <ip-details v-if="from === fromRoute.ipam && targetTab === 'ipam'" :from="from" :obj="obj" :tabs="tabs.ipam" @changeTab="changeTab" :targetTab.sync="targetTab"></ip-details>
         <!-- recordRule  下滑-->
@@ -107,6 +108,7 @@ import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
 import processBottomTab from '@/components/common/bottomBox/tabs/processBottomTab'
 import networkBottomTab from '@/components/common/bottomBox/tabs/networkBottomTab'
 import scrapeEndpoint from '@/components/common/bottomBox/tabs/scrapeEndpoint'
+import cortexDetail from '@/components/common/bottomBox/tabs/cortexDetail'
 import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
 import recordRuleEvalLog from '@/components/common/bottomBox/tabs/recordRuleEvalLog'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
@@ -116,6 +118,7 @@ export default {
   mixins: [routerPathParams],
   components: {
     scrapeEndpoint,
+    cortexDetail,
     LogBottomTab,
     processBottomTab,
     networkBottomTab,
@@ -245,9 +248,16 @@ export default {
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
           ]
         },
-        agent: [
-          { prop: 'agent', name: this.$t('config.agent.scrapeEndpoint'), active: true }
-        ],
+        agent: {
+          scrapeEndpoint: [
+            { prop: 'scrapeEndpoint', name: this.$t('config.agent.scrapeEndpoint'), active: true },
+            { prop: 'cortexDetail', name: this.$t('config.agent.cortexDetail'), active: false }
+          ],
+          cortexDetail: [
+            { prop: 'scrapeEndpoint', name: this.$t('config.agent.scrapeEndpoint'), active: false },
+            { prop: 'cortexDetail', name: this.$t('config.agent.cortexDetail'), active: true }
+          ]
+        },
         ipam: [
           { prop: 'ipam', name: this.$t('ipam.subnet.ipDetails'), active: true }
         ],
