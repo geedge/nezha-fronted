@@ -1,6 +1,6 @@
 #cortexDetail {
     .sub-container .nz-table-list{
-        height: 100%;
+        height: auto;
         min-height: 1169px !important;
     }
     #cortexDetailTable {
@@ -65,6 +65,7 @@
         .cortex-config {
             position: relative;
             flex: 1;
+            min-height: 436px !important;
             .cortex-config-tab {
                 position: absolute;
                 width: 100%;

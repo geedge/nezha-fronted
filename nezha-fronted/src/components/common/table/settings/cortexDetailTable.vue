@@ -98,7 +98,7 @@
             class="config-tab">
                 <el-table-column
                   type="index"
-                  :resizable="true">
+                  width="60">
                 </el-table-column>
                 <el-table-column
                   :resizable="true"
