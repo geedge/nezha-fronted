@@ -275,7 +275,8 @@
             style="margin-top: 2px"
             :controls="false"
             @change="change"
-            show-word-limit v-model="chartConfig.param.min"/>
+            show-word-limit
+            v-model="chartConfig.param.min"/>
         </el-form-item>
         <!--max-->
         <el-form-item :label="$t('dashboard.panel.chartForm.max')" class="form-item--half-width">
@@ -284,7 +285,8 @@
             style="margin-top: 2px"
             :controls="false"
             @change="change"
-            show-word-limit v-model="chartConfig.param.max"/>
+            show-word-limit
+            v-model="chartConfig.param.max"/>
         </el-form-item>
       </div>
       <div class="form-items--half-width-group">

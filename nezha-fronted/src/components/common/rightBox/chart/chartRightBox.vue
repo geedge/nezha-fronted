@@ -145,6 +145,7 @@ import systemChartConfig from '@/components/common/rightBox/chart/systemChartCon
 import panelChart from '@/components/chart/panelChart'
 import lodash from 'lodash'
 import bus from '@/libs/bus'
+import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 
 const rz = {
   methods: {
@@ -166,7 +167,7 @@ export default {
       default: false
     }
   },
-  mixins: [rz, editRigthBox],
+  mixins: [rz, editRigthBox, chartTypeShow],
   components: {
     selectPanel,
     chartConfig,
@@ -246,7 +247,7 @@ export default {
         if (!params.groupId) {
           params.groupId = 0
         }
-        if (params.type !== 'gauge') {
+        if (!this.isShowMinMax(params.type)) {
           delete params.param.min
           delete params.param.max
         }
@@ -370,8 +371,6 @@ export default {
           height: 4,
           unit: 2,
           type: 'line',
-          min: 0,
-          max: 100,
           elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1 }],
           param: {
             stack: 0,
@@ -432,8 +431,6 @@ export default {
             nullType: 'null',
             statistics: 'last',
             text: 'value',
-            min: 0,
-            max: 100,
             enable: {
               thresholds: false,
               legend: true,
@@ -549,12 +546,6 @@ export default {
           obj.groupId = ''
         }
         if (obj.param) {
-          if (!obj.param.min) {
-            obj.param.min = 0
-          }
-          if (!obj.param.max) {
-            obj.param.max = 100
-          }
           if (!obj.param.text && obj.param.display) {
             obj.param.text = obj.param.display
           }

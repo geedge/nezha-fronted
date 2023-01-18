@@ -137,15 +137,22 @@ export default {
         delete chartOption.tooltip.position
       }
       chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, decimals)
-      chartOption.yAxis.minInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'min')
-      chartOption.yAxis.maxInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
-      if (this.chartInfo.param.stack) {
-        chartOption.yAxis.maxInterval = chartOption.yAxis.maxInterval * (Math.ceil(chartOption.series.length / 5) + 1)
+
+      if (!this.chartInfo.param.min && !this.chartInfo.param.max) {
+        chartOption.yAxis.minInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'min')
+        chartOption.yAxis.maxInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
+        if (this.chartInfo.param.stack) {
+          chartOption.yAxis.maxInterval = chartOption.yAxis.maxInterval * (Math.ceil(chartOption.series.length / 5) + 1)
+        }
+        if (unit.type === 'Time' || unit.type === 'Date & Time') {
+          delete chartOption.yAxis.minInterval
+          delete chartOption.yAxis.maxInterval
+        }
+      } else {
+        chartOption.yAxis.min = this.chartInfo.param.min ? this.chartInfo.param.min : undefined
+        chartOption.yAxis.max = this.chartInfo.param.max ? this.chartInfo.param.max : undefined
       }
-      if (unit.type === 'Time') {
-        delete chartOption.yAxis.minInterval
-        delete chartOption.yAxis.maxInterval
-      }
+
       if (chartOption.toolbox.feature) {
         chartOption.toolbox.feature.myStack.iconStyle.borderColor = this.isStack ? this.toolboxIconColor.active : this.toolboxIconColor.inactive
         chartOption.toolbox.feature.myStack.onclick = this.stackEvent() // 自定义stack事件
@@ -177,6 +184,9 @@ export default {
         const self = this
         getChart(this.chartId).off('dataZoom')
         getChart(this.chartId).on('dataZoom', function (params) {
+          if (this.chartInfo.param.min || this.chartInfo.param.max) {
+            return
+          }
           if (params.batch[0].startValue) {
             const chartInfo = self.chartInfo
             const dataArg = self.$loadsh.cloneDeep(self.series)
@@ -468,10 +478,12 @@ export default {
         self.isStack = !self.isStack
         // 改变tooltip
         option.tooltip[0].formatter = self.tooltipFormatter(self.isStack)
-        if (!self.chartInfo.param.stack) {
-          option.yAxis.maxInterval = option.yAxis.maxInterval / (Math.ceil(option.series.length / 5) + 1)
-        } else {
-          option.yAxis.maxInterval = option.yAxis.maxInterval * (Math.ceil(option.series.length / 5) + 1)
+        if (!self.chartInfo.param.min && !self.chartInfo.param.max) {
+          if (!self.chartInfo.param.stack) {
+            option.yAxis.maxInterval = option.yAxis.maxInterval / (Math.ceil(option.series.length / 5) + 1)
+          } else {
+            option.yAxis.maxInterval = option.yAxis.maxInterval * (Math.ceil(option.series.length / 5) + 1)
+          }
         }
         myChart.setOption(option)
       }

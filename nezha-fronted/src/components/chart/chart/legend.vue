@@ -131,6 +131,9 @@ export default {
           chart.connect('timeSeriesGroup')
         }
         if (this.chartInfo.type !== 'pie' && this.chartInfo.type !== 'bar' && this.chartInfo.type !== 'treemap') {
+          if (this.chartInfo.param.min || this.chartInfo.param.max) {
+            return
+          }
           // 处理点击后的 Y轴
           const chartInfo = this.chartInfo
           const dataArg = this.series.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])

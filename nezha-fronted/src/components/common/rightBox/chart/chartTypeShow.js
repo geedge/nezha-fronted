@@ -219,6 +219,16 @@ export default {
           return true
         default: return false
       }
+    },
+    isShowMinMax (type) {
+      switch (type) {
+        case 'line':
+        case 'area':
+        case 'point':
+        case 'gauge':
+          return true
+        default: return false
+      }
     }
   }
 }
