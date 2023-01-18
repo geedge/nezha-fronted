@@ -1,5 +1,5 @@
 import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
-
+import { requestsArr } from '@/http'
 export default {
   components: {
     alertDaysInfo
@@ -28,7 +28,9 @@ export default {
       operationWidth: '165', // 操作列宽
       orderBy: null,
       severityDataWeight: this.$store.getters.severityDataWeight,
-      singleDelete: []
+      singleDelete: [],
+      trendPromise: [],
+      trendPromiseIndex: 0
     }
   },
   methods: {
@@ -162,8 +164,36 @@ export default {
       return row.ip + '-' + row.dc.id
     },
     cellMouseEnter (row, column, cell, event) {
-      // console.log(row, column, cell, event)
       cell.parentNode.classList.remove('nz-table-global-select')
+    },
+    renderTrend () {
+      const weekDays = this.getWeeksTime()
+      if (this.trendPromiseIndex < this.trendPromise.length) {
+        Promise.all(this.trendPromise[this.trendPromiseIndex]).then(response => {
+          response.forEach((res, index) => {
+            const item = this.tableData[index + this.trendPromiseIndex * 10]
+            if (!res.data) {
+              return
+            }
+            const alertDaysData = res.data.result ? res.data.result[0].values : []
+            const newWeekDays = JSON.parse(JSON.stringify(weekDays))
+            alertDaysData.forEach(alertDays => {
+              alertDays.values.forEach(time => {
+                const findItem = newWeekDays.find(days => days.time == time[0])
+                if (findItem) {
+                  findItem[alertDays.metric.priority] = time[1]
+                }
+              })
+            })
+            item.alertDaysData = newWeekDays
+            item.trendLoading = false
+          })
+          this.trendPromiseIndex++
+          this.renderTrend()
+        }).catch((msg) => {
+          console.log(msg)
+        })
+      }
     }
   },
   watch: {
@@ -184,6 +214,9 @@ export default {
     tableData: {
       immediate: true,
       handler (n) {
+        let trendArr = []
+        this.trendPromise = []
+        this.trendPromiseIndex = 0
         if (n && n.length) {
           const id = this.$store.getters.getGlobalSearchId
           if (id) {
@@ -198,40 +231,33 @@ export default {
             }, 500)
           }
           if (this.needAlertDaysData) {
-            const weekDays = this.getWeeksTime()
-            n.forEach(item => {
+            this.trendPromise = []
+            n.forEach((item, index) => {
               const params = {
                 type: 'total',
                 dimension: 'priority',
                 step: 'd'
               }
               params[this.trendKey] = item.id
-              setTimeout(() => {
-                this.$get('/stat/alertMessage/trend', params).then((res) => {
-                  if (!res.data) {
-                    return
-                  }
-                  const alertDaysData = res.data.result ? res.data.result[0].values : []
-                  const newWeekDays = JSON.parse(JSON.stringify(weekDays))
-                  alertDaysData.forEach(item => {
-                    item.values.forEach(time => {
-                      const findItem = newWeekDays.find(days => days.time == time[0])
-                      if (findItem) {
-                        findItem[item.metric.priority] = time[1]
-                      }
-                    })
-                  })
-                  setTimeout(() => {
-                    item.alertDaysData = newWeekDays
-                    item.trendLoading = false
-                  })
-                })
-              })
+              trendArr.push(this.$get('/stat/alertMessage/trend', params))
+              if (trendArr.length > 9) {
+                this.trendPromise.push(trendArr)
+                trendArr = []
+              }
             })
+            if (trendArr.length) {
+              this.trendPromise.push(trendArr)
+              trendArr = []
+            }
+            this.trendPromiseIndex = 0
+            this.renderTrend()
           }
         }
       }
     }
   //  document.querySelector("#header").scrollIntoView(true);
+  },
+  beforeDestroy () {
+    this.trendPromise = []
   }
 }
