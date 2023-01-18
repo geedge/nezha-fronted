@@ -2,6 +2,9 @@
   transform: rotate(0);
   transition: all linear .2s;
 }
+.nz-dropdown-icon{
+  color: $--color-text-disabled;
+}
 .arrow-down.arrow-up {
   transform: rotate(180deg);
 }

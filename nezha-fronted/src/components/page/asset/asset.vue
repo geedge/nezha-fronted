@@ -204,7 +204,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import assetTable from '@/components/common/table/asset/assetTable'
 import assetDetail from '@/components/common/detailView/list/asset/assetDetail'
-import clickSearch from '@/components/common/labelFilter/clickSearch'
+import clickSearch from '@/components/common/labelFilter/clickSearchNew'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
@@ -345,21 +345,27 @@ export default {
           label: this.$t('overall.dc'),
           key: 'dcIds',
           type: 'checkBox',
+          height: 'auto',
           children: [],
           show: false,
           showMore: false,
+          needMore: false,
           width: 0,
-          index: -1
+          index: -1,
+          hide: false
         },
         type: {
           label: this.$t('overall.type'),
           key: 'typeIds',
           type: 'checkBox',
           children: [],
+          height: 'auto',
           show: false,
           showMore: false,
+          needMore: false,
           width: 0,
-          index: -1
+          index: -1,
+          hide: false
         },
         ping: {
           label: 'Ping',
@@ -369,30 +375,39 @@ export default {
             { key: 'Down', value: 0, name: 'Down' },
             { key: 'Up', value: 1, name: 'Up' }
           ],
+          height: 'auto',
           show: false,
           showMore: false,
+          needMore: false,
           width: 0,
-          index: -1
+          index: -1,
+          hide: false
         },
         model: {
           label: this.$t('asset.model'),
           key: 'modelIds',
           type: 'checkBox',
+          height: 'auto',
           children: [],
           show: false,
           showMore: false,
+          needMore: false,
           width: 0,
-          index: -1
+          index: -1,
+          hide: false
         },
         assetLabel: {
           label: this.$t('overall.more'),
           key: 'fields',
           type: 'dropdownCheckBox',
           children: [],
+          height: 'auto',
           show: false,
           showMore: false,
+          needMore: false,
           width: 0,
-          index: -1
+          index: -1,
+          hide: false
         }
       },
       selectValue: {
@@ -414,7 +429,8 @@ export default {
           showMore: false,
           dropShow: false,
           width: 0,
-          index: -1
+          index: -1,
+          hide: false
         },
         type: {
           label: this.$t('overall.type'),
@@ -425,7 +441,8 @@ export default {
           showMore: false,
           dropShow: false,
           width: 0,
-          index: -1
+          index: -1,
+          hide: false
         },
         ping: {
           label: 'Ping',
@@ -439,7 +456,8 @@ export default {
           showMore: false,
           dropShow: false,
           width: 0,
-          index: -1
+          index: -1,
+          hide: false
         },
         model: {
           label: this.$t('asset.model'),
@@ -450,7 +468,8 @@ export default {
           showMore: false,
           dropShow: false,
           width: 0,
-          index: -1
+          index: -1,
+          hide: false
         },
         assetLabel: {
           label: this.$t('overall.more'),
@@ -461,7 +480,8 @@ export default {
           showMore: false,
           dropShow: false,
           width: 0,
-          index: -1
+          index: -1,
+          hide: false
         }
       },
       timer: '',
@@ -624,13 +644,17 @@ export default {
             const showData = response.data.list.filter(d => d.display === 1).map(item => {
               return { label: item.name, prop: item.name, show: false, allowed: true, type: 'label' }
             })
+            let fields = []
+            if (this.$route.query && this.$route.query.fields) {
+              fields = Object.keys(JSON.parse(this.$route.query.fields))
+            }
             searchableData.forEach(m => {
               if (m.param) {
                 const param = JSON.parse(m.param)
                 if (param.items) {
-                  // param.items.map(p => { return { ...p, id: p.name, metaId: m.id, num: metaData.find(meta => meta.id === m.id && meta.option === p.name).num } })
                   data.push({
                     ...m,
+                    isInit: fields.indexOf(m.id + '') !== -1,
                     children: param.items.map(p => {
                       const metaFind = metaData.find(meta => meta.id === m.id && meta.option === p.name)
                       return {
@@ -810,6 +834,8 @@ export default {
             this.detailSearchList.assetLabel.children = res
             this.titleSearchList.assetLabel.show = true
             this.detailSearchList.assetLabel.show = true
+            this.titleSearchList[key].hide = !res.length
+            this.detailSearchList[key].hide = !res.length
           })
         } else if (key === 'model') {
           this.getModelData(statistics[keys]).then(res => {
@@ -817,10 +843,14 @@ export default {
             this.detailSearchList.model.children = res
             this.titleSearchList.model.show = true
             this.detailSearchList.model.show = true
+            this.titleSearchList[key].hide = !res.length
+            this.detailSearchList[key].hide = !res.length
           })
         } else {
           this.titleSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
           this.detailSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
+          this.titleSearchList[key].hide = !this.titleSearchList[key].children.length
+          this.detailSearchList[key].hide = !this.detailSearchList[key].children.length
         }
         if (this.titleSearchList[key].children.length === 0) {
           // delete this.titleSearchList[key]

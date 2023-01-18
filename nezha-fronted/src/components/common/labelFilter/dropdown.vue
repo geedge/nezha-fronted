@@ -4,9 +4,10 @@
     class="nz-label-search"
   >
     <div class="nz-label-search__label">
-      <span>{{item.name}}:</span>
+      <span>{{item.name}}: </span>
     </div>
     <el-cascader
+      v-if="item.isInit"
       ref="cascader"
       v-bind="$attrs"
       v-model="cascaderData"
@@ -25,6 +26,9 @@
         <span class="search-content-num">({{data.num || 0 }})</span>
       </template>
     </el-cascader>
+    <div v-else style="padding: 0 5px 0 32px" @click="initCascader(item)" class="nz-dropdown-icon">
+      <i class="el-input__icon el-icon-arrow-down"/>
+    </div>
   </div>
 </template>
 
@@ -75,12 +79,19 @@ export default {
     },
     change (value) {
       this.$emit('change', value)
+    },
+    initCascader (item) {
+      item.isInit = true
+      this.$nextTick(() => {
+        this.$refs.cascader.dropDownVisible = true
+      })
     }
   },
   computed: {
     isHover () {
       if (this.ready) {
-        return this.$refs.cascader.inputHover
+        // return this.$refs.cascader.inputHover
+        return false
       } else {
         return false
       }
