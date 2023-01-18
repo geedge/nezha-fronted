@@ -351,6 +351,7 @@ export default {
         clearTimeout(this.scrollTopTimer)
         this.scrollTopTimer = null
       }
+      let i = 0
       this.scrollTopTimer = setTimeout(() => {
         this.copyDataList.forEach(item => {
           if (this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].$refs.chart && this.$refs['chart' + item.id][0].$refs.chart.$refs['chart' + item.id]) {
@@ -393,7 +394,10 @@ export default {
             // console.log(this.$refs['chart' + item.id][0].$el.offsetHeight, scrollTop,'scrollTop',windowHeight,mainOffsetTop + mainHeight / 4,(windowScrollTop + windowHeight))
             if ((mainOffsetTop + mainHeight / 4) < (windowScrollTop + windowHeight)) {
               item.loaded = true
-              this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].getChartData()
+              setTimeout(() => {
+                this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].getChartData()
+              }, i * 100)
+              i++
             }
           }
         })
