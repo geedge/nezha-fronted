@@ -151,7 +151,6 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        console.log(JSON.parse(JSON.stringify(n)))
         this.titleSearchListCopy = n
         this.needMore()
       }
@@ -207,9 +206,9 @@ export default {
         const oldInputWidth = item.inputWidth
         this.setEachCascWidth(value, type, item)
         /* 为实现动态宽度而改变输入框宽度，因为cascader组件的宽度是由它决定的 */
-        if (item.inputWidth !== oldInputWidth) {
+        if (item.inputWidth !== oldInputWidth && this.$refs[`${type}_${item.id}_cascader`][0].$el.querySelector('.el-input__inner')) {
           this.$refs[`${type}_${item.id}_cascader`][0].$el.querySelector('.el-input__inner').style.width = `${item.inputWidth}px`
-        } else if (!value.length) {
+        } else if (!value.length && this.$refs[`${type}_${item.id}_cascader`][0].$el.querySelector('.el-input__inner')) {
           this.$refs[`${type}_${item.id}_cascader`][0].$el.querySelector('.el-input__inner').style.width = ''
         }
 
@@ -274,7 +273,7 @@ export default {
           item.inputWidth = inputWidth
         }
       }
-      if (item.inputWidth !== oldInputWidth) {
+      if (item.inputWidth !== oldInputWidth && this.$refs[`${type}_${item.id}_cascader`][0].$el.querySelector('.el-input__inner')) {
         this.$nextTick(() => {
           this.$refs[`${type}_${item.id}_cascader`][0].$el.querySelector('.el-input__inner').style.width = `${item.inputWidth}px`
         })
@@ -306,7 +305,6 @@ export default {
     },
     changShowMore (type) {
       this.titleSearchListCopy[type].showMore = !this.titleSearchListCopy[type].showMore
-      console.log(this.titleSearchListCopy[type].showMore)
       if (this.titleSearchListCopy[type].showMore) {
         this.titleSearchListCopy[type].height = 'auto'
       } else {
@@ -317,7 +315,6 @@ export default {
       this.$nextTick(() => {
         Object.keys(this.titleSearchListCopy).forEach(type => {
           if (this.$refs[`search-items${type}`]) {
-            console.log(this.$refs[`search-items${type}`][0].$el.offsetHeight, type)
             if (this.$refs[`search-items${type}`][0].$el.offsetHeight > 40 && !this.titleSearchListCopy[type].showMore) {
               this.titleSearchListCopy[type].needMore = true
               this.titleSearchListCopy[type].height = '40px'

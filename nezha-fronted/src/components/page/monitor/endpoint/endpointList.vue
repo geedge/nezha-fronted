@@ -422,7 +422,10 @@ export default {
           show: false,
           showMore: false,
           width: 0,
-          index: -1
+          index: -1,
+          needMore: false,
+          height: 'auto',
+          hide: false
         },
         module: {
           label: this.$t('overall.module'),
@@ -432,7 +435,10 @@ export default {
           show: false,
           showMore: false,
           width: 0,
-          index: -1
+          index: -1,
+          needMore: false,
+          height: 'auto',
+          hide: false
         },
         state: {
           label: this.$t('overall.state'),
@@ -442,7 +448,10 @@ export default {
           show: false,
           showMore: false,
           width: 0,
-          index: -1
+          index: -1,
+          needMore: false,
+          height: 'auto',
+          hide: false
         }
         // type: {
         //   label: 'Type',
@@ -464,7 +473,10 @@ export default {
           show: false,
           showMore: false,
           width: 0,
-          index: -1
+          index: -1,
+          needMore: false,
+          height: 'auto',
+          hide: false
         },
         module: {
           label: this.$t('overall.module'),
@@ -474,7 +486,10 @@ export default {
           show: false,
           showMore: false,
           width: 0,
-          index: -1
+          index: -1,
+          needMore: false,
+          height: 'auto',
+          hide: false
         },
         state: {
           label: this.$t('overall.state'),
@@ -484,7 +499,10 @@ export default {
           show: false,
           showMore: false,
           width: 0,
-          index: -1
+          index: -1,
+          needMore: false,
+          height: 'auto',
+          hide: false
         }
         // type: {
         //   label: 'Type',
@@ -776,32 +794,44 @@ export default {
     },
     getSearchableStateData (data) {
       return new Promise(resolve => {
-        // this.$get('asset/model?pageSize=-1').then(response => {
-        if (data) {
-          this.modelData = data
-          const titleSearchData = {}
-          this.modelData.forEach(m => {
-            m.value = []
-            m.metaId = m.type
-            if (!titleSearchData[m.type]) {
-              titleSearchData[m.type] = { ...m, children: [], name: m.type, id: m.type }
-            }
-            if (m.id == '1') {
-              titleSearchData[m.type].children[0] = m
-            } else if (m.id == '0') {
-              titleSearchData[m.type].children[1] = m
-            } else if (m.id == '2') {
-              titleSearchData[m.type].children[2] = m
-            }
-          })
-          this.modelData.forEach(m => {
-            titleSearchData[m.type].children = titleSearchData[m.type].children.filter(item => item)
-          })
-          resolve(Object.keys(titleSearchData).map(b => titleSearchData[b]))
-          // this.titleSearchList.model.children = Object.keys(titleSearchData).map(b => titleSearchData[b])
-        }
-        resolve()
-        // })
+        setTimeout(()=>{
+          // this.$get('asset/model?pageSize=-1').then(response => {
+          let states = []
+          if (this.$route.query && this.$route.query.state) {
+            states = Object.keys(JSON.parse(this.$route.query.state))
+          }
+          if (data) {
+            this.modelData = data
+            const titleSearchData = {}
+            this.modelData.forEach(m => {
+              m.value = []
+              m.metaId = m.type
+              if (!titleSearchData[m.type]) {
+                titleSearchData[m.type] = {
+                  ...m,
+                  isInit: true,
+                  children: [],
+                  name: m.type,
+                  id: m.type
+                }
+              }
+              if (m.id == '1') {
+                titleSearchData[m.type].children[0] = m
+              } else if (m.id == '0') {
+                titleSearchData[m.type].children[1] = m
+              } else if (m.id == '2') {
+                titleSearchData[m.type].children[2] = m
+              }
+            })
+            this.modelData.forEach(m => {
+              titleSearchData[m.type].children = titleSearchData[m.type].children.filter(item => item)
+            })
+            resolve(Object.keys(titleSearchData).map(b => titleSearchData[b]))
+            // this.titleSearchList.model.children = Object.keys(titleSearchData).map(b => titleSearchData[b])
+          }
+          resolve()
+          // })
+        }, 100)
       })
     },
     setSearchData (statistics) {
@@ -818,10 +848,14 @@ export default {
             this.detailSearchList.state.children = res
             this.titleSearchList.state.show = true
             this.detailSearchList.state.show = true
+            this.titleSearchList[key].hide = !this.titleSearchList[key].children.length
+            this.detailSearchList[key].hide = !this.detailSearchList[key].children.length
           })
         } else {
           this.titleSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id, key: d.name, name: d.name } })
           this.detailSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id, key: d.name, name: d.name } })
+          this.titleSearchList[key].hide = !this.titleSearchList[key].children.length
+          this.detailSearchList[key].hide = !this.detailSearchList[key].children.length
         }
         this.titleSearchList[key].show = true
         this.detailSearchList[key].show = true

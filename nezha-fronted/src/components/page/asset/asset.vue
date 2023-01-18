@@ -345,13 +345,13 @@ export default {
           label: this.$t('overall.dc'),
           key: 'dcIds',
           type: 'checkBox',
-          height: 'auto',
           children: [],
           show: false,
           showMore: false,
-          needMore: false,
           width: 0,
           index: -1,
+          needMore: false,
+          height: 'auto',
           hide: false
         },
         type: {
