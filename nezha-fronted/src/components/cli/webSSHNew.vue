@@ -682,22 +682,21 @@ export default {
       })
     },
     duplicate (item, index) {
-      if (item.terminal.assetId) {
-        const newTabName = ++this.tabIndex + ''
-        this.editableTabsValue = newTabName
-        const console = JSON.parse(JSON.stringify(item))
-        console.name = newTabName
-        console.terminal.name = newTabName
-        console.terminal.isLogin = false
-        this.addConsole(item.terminal.assetId, item.terminal.host, '', '', 'asset')
-      } else {
-        this.customConnect = {
-          ...item.terminal.custom,
-          authType: Number(item.terminal.custom.authType),
-          authPin: atob(decodeURIComponent(item.terminal.custom.authPin))
-        }
-        this.customShow = true
+      const params = {
+        uuid: item.terminal.uuid,
+        ...item.terminal
       }
+      this.$post('/terminal/login/duplicate', params).then(res => {
+        if (res.code == 200) {
+          const newTabName = ++this.tabIndex + ''
+          const obj = JSON.parse(JSON.stringify(item))
+          obj.terminal.uuid = res.data.uuid
+          obj.name = newTabName
+          this.editableTabs.push(obj)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
       if (this.$refs['popover' + index] && this.$refs['popover' + index][0]) {
         this.$refs['popover' + index][0].doClose()
       }
