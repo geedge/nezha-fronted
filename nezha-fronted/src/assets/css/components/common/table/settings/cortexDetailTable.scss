@@ -1,13 +1,16 @@
 #cortexDetail {
-    .sub-container .nz-table-list{
-        height: auto;
-        min-height: 1169px !important;
+    .sub-container{
+        background: $--background-color-empty;
+        .nz-table-list{
+            height: auto;
+        }
     }
     #cortexDetailTable {
         display: flex;
         flex-direction: column;
         height: 100%;
-        min-height: 1144px !important;
+        padding-bottom: 17px !important;
+        min-height: 1141px !important;
         .has-gutter {
             th {
                 background: $--background-color-2;
@@ -69,7 +72,7 @@
             .cortex-config-tab {
                 position: absolute;
                 width: 100%;
-                height: calc(100% - 92px);
+                height: calc(100% - 61px);
                 .config-tab {
                     overflow: hidden;
                     .el-table__body-wrapper {
