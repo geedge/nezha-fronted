@@ -78,8 +78,6 @@
                   </template>
                   <template slot-scope="scope" :column="item">
                     <span v-if="item.prop === 'name'">{{indexs? $t('cortex.storeGateway'):$t('cortex.ingester')}}</span>
-                    <!-- <span v-else-if="item.prop === 'registeredAt'">{{scope.row[item.prop]?momentTz(scope.row[item.prop]):'-'}}</span> -->
-                    <!-- <span v-else-if="item.prop === 'heartbeat'">{{scope.row[item.prop]?momentTz(scope.row[item.prop]):'-'}}</span> -->
                     <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
                     <template v-else>-</template>
                   </template>
@@ -88,11 +86,9 @@
           </div>
         </div>
     </div>
-    <div class="cortex-config">
+    <div class="cortex-config" :style="configTableData.length < 25 ? `height:${configTableData.length * 27 + 102}px` : 'flex:1;min-height: 436px;'">
         <div class="cortex-title">{{$t('overall.configEndpoint')}}</div>
         <div class="cortex-config-tab">
-          <!-- <div :class="`${configSwitch ? 'cortex-config-tab' : ''}`"> -->
-            <!-- v-if="configSwitch" -->
           <el-table
             :data="configTableData"
             class="config-tab">
@@ -113,20 +109,6 @@
                   </template>
                 </el-table-column>
           </el-table>
-           <!-- <el-table v-else class="config-switch-tab">
-                <el-table-column
-                  type="index">
-                </el-table-column>
-                <el-table-column
-                  :resizable="true"
-                  class="data-column"
-                >
-                  <template #header>
-                    <span style="padding-right: 15px;">{{$t('cortex.includeDefaultValues')}}</span>
-                    <el-switch v-model="configSwitch" :active-value="1" :inactive-value="0" size="small"></el-switch>
-                  </template>
-                </el-table-column>
-          </el-table> -->
         </div>
     </div>
   </template>
