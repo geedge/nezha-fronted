@@ -7,7 +7,21 @@
           <i class="nz-icon nz-icon-a-filetransfer" :title="$t('terminal.filetransfer')"></i>
           <span v-show="fileList.length>0" class="right-tip">{{fileList.length<=99?fileList.length:'99+'}}</span>
         </div>
-        {{name}}</div>
+        <div class="personal" id="personal">
+          <el-dropdown trigger="click">
+            <div class="personal-avatar"><span>{{name ? name.substr(0, 1) : ''}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
+            <el-dropdown-menu  slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top" style="width: 142px; line-height: 36px;">
+              <div class="personal-dropdown">
+                <div class="personal-dropdown__username">{{name}}</div>
+                <div class="personal-dropdown__name">@{{name}}</div>
+              </div>
+              <el-dropdown-item>
+                <div id="header-to-logout" @click="logout"><i class="nz-icon nz-icon-exit"></i>{{$t('overall.signOut')}}</div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </div>
     </div>
     <fileListState v-clickoutside="hideFileState" ref="fileListState"/>
     <webSSHNew ref="websshNew" />
@@ -42,6 +56,7 @@ import webSSHNew from '@/components/cli/webSSHNew'
 import fileListState from './fileListState'
 import imageUrl from '@/assets/img/logo1-2.png'
 import bus from '@/libs/bus'
+import { mapActions } from 'vuex'
 export default {
   name: 'terminal',
   components: {
@@ -80,6 +95,7 @@ export default {
   mounted () {
     const self = this
     this.name = localStorage.getItem('nz-username')
+    this.username = localStorage.getItem('nz-username')
     window.onbeforeunload = () => {
       const opener = window.opener
       opener.postMessage(
@@ -103,6 +119,7 @@ export default {
     })
   },
   methods: {
+    ...mapActions(['logoutSuccess']),
     clickout () {
       this.visible = false
     },
@@ -157,7 +174,13 @@ export default {
       }
       localStorage.setItem('nz-history-terminal', JSON.stringify(historyArr))
       this.getHistory()
-    }, 100)
+    }, 100),
+    logout () {
+      this.$get('logout').then(() => {
+        this.logoutSuccess()
+        document.location.href = '/'
+      })
+    }
   }
 }
 </script>

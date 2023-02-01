@@ -159,7 +159,7 @@
     height: 24px;
   }
   .file-item:hover{
-    background: rgba(255,134,0,0.50);
+    background: $--table-row-hover-background-color;
     font-family: Roboto-Regular;
   }
   .my-loading-box{
@@ -184,6 +184,10 @@
       width: 200px;
       flex-shrink: 1;
     }
+  }
+  .icon {
+    width: 16px;
+    height: 16px;
   }
 }
 div.nz-arrow-up {

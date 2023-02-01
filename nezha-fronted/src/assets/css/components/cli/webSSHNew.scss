@@ -178,6 +178,23 @@
       width: 20px;
       margin-right: 10px;
     }
+    .personal-avatar {
+      cursor: pointer;
+      span {
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        text-align: center;
+        line-height: 24px;
+        background: $--profile-span-background-color;
+        font-size: 14px;
+        color: $--profile-span-color;
+        letter-spacing: 0;
+        font-weight: 500;
+        text-transform: capitalize;
+        border-radius: 100%;
+      }
+    }
   }
   .right-tip {
     position: absolute;
@@ -227,7 +244,7 @@
     z-index: 9;
     width: 100%;
     background: #1E1E1E;
-    border-bottom: 1px solid rgba(0,0,0,0.50); 
+    border-bottom: 1px solid rgba(0,0,0,0.50);
     .terminal-history-header{
       box-sizing: border-box;
       padding: 0 20px;
@@ -282,7 +299,7 @@
             word-break: break-all;
             white-space: pre;
           }
-        }  
+        }
       }
     }
     .terminal-history-empty{

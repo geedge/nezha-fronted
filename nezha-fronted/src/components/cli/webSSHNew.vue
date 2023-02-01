@@ -48,7 +48,7 @@
                 </div>
                 <div class="webshell-box-item webshell-box-bottom" @click="closeShell(item,index)">
                   <div >
-                    <i class="nz-icon nz-icon-close"/>
+                    <i class="nz-icon nz-icon-guanbi2"/>
                     {{$t('overall.close')}}
                   </div>
                 </div>
