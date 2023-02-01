@@ -96,6 +96,7 @@ export default {
     const self = this
     this.name = localStorage.getItem('nz-username')
     this.username = localStorage.getItem('nz-username')
+    window.opener.name = 'parent'
     window.onbeforeunload = () => {
       const opener = window.opener
       opener.postMessage(
@@ -178,7 +179,7 @@ export default {
     logout () {
       this.$get('logout').then(() => {
         this.logoutSuccess()
-        document.location.href = '/'
+        window.open('', window.opener.name)
       })
     }
   }
