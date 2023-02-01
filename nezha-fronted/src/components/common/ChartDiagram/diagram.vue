@@ -42,7 +42,7 @@
                   </el-collapse-item>
                 </el-collapse>
               </el-card>
-                <div class="upload-pic-box" @click="uploadPicChange" v-has="'topo_icon_save'">
+                <div class="upload-pic-box" @click="uploadPicChange">
                   <i class="el-icon-plus"></i>
                   <span>
                      {{ $t('overall.uploadCustomPicture') }}
@@ -297,8 +297,9 @@
              {{$t('project.topology.exit')}}
            </button>
 
-              <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="imgUpload"
-                      v-has="'topo_icon_save'" :disabled="prevent_opt.save"
+              <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal"
+                      @click="imgUpload"
+                      :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
                       style="margin-right: 20px">
              {{$t('overall.save')}}
