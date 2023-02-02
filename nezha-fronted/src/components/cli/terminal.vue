@@ -177,10 +177,14 @@ export default {
       this.getHistory()
     }, 100),
     logout () {
-      this.$get('logout').then(() => {
-        this.logoutSuccess()
-        window.open('', window.opener.name)
-      })
+      window.open('', window.opener.name)
+      const opener = window.opener
+      opener.postMessage(
+        JSON.stringify({
+          close: true,
+          isLogout: true
+        })
+      )
     }
   }
 }

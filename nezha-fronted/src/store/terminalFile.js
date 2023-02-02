@@ -1,3 +1,4 @@
+import { post, get } from '@/http'
 const terminalFile = {
   state: {
     fileList: [],
@@ -23,6 +24,7 @@ const terminalFile = {
     },
     setExternalTerminal (state, item) { // 第一次 关闭或者打开 termail
       state.externalTerminal = !state.externalTerminal
+      let self = this
       if (!state.messageFunction) {
         state.messageFunction = true
         window.addEventListener('message', function (e) {
@@ -30,6 +32,13 @@ const terminalFile = {
             const data = JSON.parse(e.data) // e.data  里面有自己所传的所有参数  可以根据参数做自己的判断
             if (data.close) {
               state.externalTerminal = false
+            }
+            if (data.isLogout) {
+              console.log(state, self)
+              get('logout').then(() => {
+                self.commit('logoutSuccess')
+                document.location.href = '/'
+              })
             }
           } catch (error) {}
         })
