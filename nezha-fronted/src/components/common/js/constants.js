@@ -264,10 +264,6 @@ export const chart = {
       label: i18n.t('dashboard.panel.chartForm.typeVal.gauge.label')
     },
     {
-      value: 'sankey',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.sankey.label')
-    },
-    {
       value: 'hexagon',
       label: i18n.t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
     },
@@ -307,7 +303,6 @@ export const chart = {
       value: 'group',
       label: i18n.t('dashboard.panel.chartForm.group')
     },
-
     {
       value: 'logs',
       label: i18n.t('overall.logs')
@@ -323,14 +318,6 @@ export const chart = {
     {
       value: 'pie',
       label: i18n.t('dashboard.panel.chartForm.typeVal.pie.label')
-    },
-    {
-      value: 'bubble',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.bubble.label')
-    },
-    {
-      value: 'rank',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.rank.label')
     },
     {
       value: 'log',
@@ -351,6 +338,22 @@ export const chart = {
     {
       value: 'clock',
       label: i18n.t('dashboard.panel.chartForm.typeVal.clock.label')
+    },
+    {
+      value: 'bubble',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.bubble.label')
+    },
+    {
+      value: 'rank',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.rank.label')
+    },
+    {
+      value: 'sankey',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.sankey.label')
+    },
+    {
+      value: 'funnel',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.funnel.label')
     }
   ]
 }
@@ -471,10 +474,7 @@ export const chartType = {
   table: 'table',
   stat: 'stat',
   gauge: 'gauge',
-  sankey: 'sankey',
   pie: 'pie',
-  bubble: 'bubble',
-  rank: 'rank',
   treemap: 'treemap',
   log: 'log',
   text: 'text',
@@ -487,7 +487,11 @@ export const chartType = {
   topology: 'topology',
   map: 'map',
   hexagon: 'hexagon',
-  topologyLink: 'topologyLink'
+  topologyLink: 'topologyLink',
+  bubble: 'bubble',
+  rank: 'rank',
+  sankey: 'sankey',
+  funnel: 'funnel'
 }
 
 export const chartLegendPlacement = {

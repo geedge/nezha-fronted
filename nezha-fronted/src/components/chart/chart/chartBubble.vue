@@ -173,7 +173,10 @@ export default {
             return d.y - d.r
           })
           .style('font-size', function (d) {
-            return d.r / 3 > 10 ? d.r / 3 : 0
+            let fontSize
+            fontSize = d.r / 4 > 10 ? d.r / 4 : 0
+            fontSize = fontSize > 30 ? 30 : fontSize
+            return fontSize
           })
           .style('border-radius', '50%')
           .html((d) => {

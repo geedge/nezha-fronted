@@ -294,7 +294,7 @@
         <el-form-item
           :label="$t('config.assetLabel.display')"
           class="form-item--half-width"
-          prop="param.nullType"
+          prop="param.text"
           v-if="isShowText(chartConfig.type)"
         >
           <el-select
@@ -895,6 +895,10 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.bubble.label')
         },
         {
+          id: 'funnel',
+          name: this.$t('dashboard.panel.chartForm.typeVal.funnel.label')
+        },
+        {
           id: 'rank',
           name: this.$t('dashboard.panel.chartForm.typeVal.rank.label')
         },
@@ -966,7 +970,8 @@ export default {
         case 'gauge':
         case 'bubble':
         case 'rank':
-          if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'hexagon' || this.oldType === 'bubble' || this.oldType === 'rank') {
+        case 'funnel':
+          if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'hexagon' || this.oldType === 'bubble' || this.oldType === 'rank' || this.oldType === 'funnel') {
             break
           }
           this.chartConfig.param = {

@@ -319,7 +319,7 @@
         <el-form-item
           :label="$t('config.assetLabel.display')"
           class="form-item--half-width"
-          prop="param.nullType"
+          prop="param.text"
           v-if="isShowText(chartConfig.type)"
         >
           <el-select
@@ -983,65 +983,7 @@ export default {
           name: this.$t('overall.hidden')
         }
       ],
-      chartTypeList: [
-        {
-          id: 'line',
-          name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
-        },
-        {
-          id: 'area',
-          name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
-        },
-        {
-          id: 'point',
-          name: this.$t('dashboard.panel.chartForm.typeVal.point.label')
-        },
-        {
-          id: 'stat',
-          name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
-        },
-        {
-          id: 'hexagon',
-          name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
-        },
-        {
-          id: 'bar',
-          name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
-        },
-        {
-          id: 'gauge',
-          name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
-        },
-        {
-          id: 'sankey',
-          name: this.$t('dashboard.panel.chartForm.typeVal.sankey.label')
-        },
-        {
-          id: 'treemap',
-          name: this.$t('dashboard.panel.chartForm.typeVal.treemap.label')
-        },
-        {
-          id: 'pie',
-          name: this.$t('dashboard.panel.chartForm.typeVal.pie.label')
-        },
-        {
-          id: 'bubble',
-          name: this.$t('dashboard.panel.chartForm.typeVal.bubble.label')
-        },
-        {
-          id: 'rank',
-          name: this.$t('dashboard.panel.chartForm.typeVal.rank.label')
-        },
-        {
-          id: 'log',
-          name: this.$t('dashboard.panel.chartForm.typeVal.log.label')
-        },
-        {
-          id: 'table',
-          name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
-        }
-
-      ]
+      chartTypeList: []
     }
   },
   methods: {
@@ -1119,7 +1061,8 @@ export default {
         case 'sankey':
         case 'bubble':
         case 'rank':
-          if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'sankey' || this.oldType === 'hexagon' || this.oldType === 'bubble' || this.oldType === 'rank') {
+        case 'funnel':
+          if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'sankey' || this.oldType === 'hexagon' || this.oldType === 'bubble' || this.oldType === 'rank' || this.oldType === 'funnel') {
             break
           }
           this.chartConfig.param = {

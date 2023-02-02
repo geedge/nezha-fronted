@@ -130,7 +130,8 @@ export default {
         if (isTimeSeries(this.chartInfo.type) && (this.isConnect && this.isConnect !== 'none')) {
           chart.connect('timeSeriesGroup')
         }
-        if (this.chartInfo.type !== 'pie' && this.chartInfo.type !== 'bar' && this.chartInfo.type !== 'treemap') {
+
+        if (this.chartInfo.type == 'line' || this.chartInfo.type == 'area' || this.chartInfo.type == 'point') {
           if (this.chartInfo.param.min || this.chartInfo.param.max) {
             return
           }

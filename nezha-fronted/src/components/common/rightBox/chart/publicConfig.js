@@ -244,18 +244,6 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
         },
         {
-          id: 'gauge',
-          name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
-        },
-        {
-          id: 'sankey',
-          name: this.$t('dashboard.panel.chartForm.typeVal.sankey.label')
-        },
-        {
-          id: 'treemap',
-          name: this.$t('dashboard.panel.chartForm.typeVal.treemap.label')
-        },
-        {
           id: 'pie',
           name: this.$t('dashboard.panel.chartForm.typeVal.pie.label')
         },
@@ -264,8 +252,24 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.bubble.label')
         },
         {
+          id: 'funnel',
+          name: this.$t('dashboard.panel.chartForm.typeVal.funnel.label')
+        },
+        {
           id: 'rank',
           name: this.$t('dashboard.panel.chartForm.typeVal.rank.label')
+        },
+        {
+          id: 'sankey',
+          name: this.$t('dashboard.panel.chartForm.typeVal.sankey.label')
+        },
+        {
+          id: 'gauge',
+          name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
+        },
+        {
+          id: 'treemap',
+          name: this.$t('dashboard.panel.chartForm.typeVal.treemap.label')
         },
         {
           id: 'table',
@@ -299,18 +303,6 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
         },
         {
-          id: 'gauge',
-          name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
-        },
-        {
-          id: 'sankey',
-          name: this.$t('dashboard.panel.chartForm.typeVal.sankey.label')
-        },
-        {
-          id: 'treemap',
-          name: this.$t('dashboard.panel.chartForm.typeVal.treemap.label')
-        },
-        {
           id: 'pie',
           name: this.$t('dashboard.panel.chartForm.typeVal.pie.label')
         },
@@ -319,8 +311,24 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.bubble.label')
         },
         {
+          id: 'funnel',
+          name: this.$t('dashboard.panel.chartForm.typeVal.funnel.label')
+        },
+        {
           id: 'rank',
           name: this.$t('dashboard.panel.chartForm.typeVal.rank.label')
+        },
+        {
+          id: 'sankey',
+          name: this.$t('dashboard.panel.chartForm.typeVal.sankey.label')
+        },
+        {
+          id: 'gauge',
+          name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
+        },
+        {
+          id: 'treemap',
+          name: this.$t('dashboard.panel.chartForm.typeVal.treemap.label')
         },
         {
           id: 'log',

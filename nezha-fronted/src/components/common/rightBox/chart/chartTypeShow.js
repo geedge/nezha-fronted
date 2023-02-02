@@ -55,8 +55,6 @@ export default {
         case 'treemap':
         case 'gauge':
         case 'pie':
-        case 'bubble':
-        case 'rank':
           return false
         default: return false
       }
@@ -77,6 +75,7 @@ export default {
         case 'bubble':
         case 'rank':
         case 'sankey':
+        case 'funnel':
           return true
         default: return false
       }
@@ -94,9 +93,6 @@ export default {
         case 'stat':
         case 'hexagon':
         case 'gauge':
-        case 'sankey':
-        case 'bubble':
-        case 'rank':
           return false
         default: return false
       }
@@ -111,11 +107,8 @@ export default {
         case 'stat':
         case 'hexagon':
         case 'gauge':
-        case 'sankey':
         case 'treemap':
         case 'pie':
-        case 'bubble':
-        case 'rank':
         case 'bar':
           return false
         default: return false
@@ -141,11 +134,12 @@ export default {
         case 'hexagon':
         case 'bar':
         case 'gauge':
-        case 'sankey':
         case 'treemap':
         case 'pie':
         case 'bubble':
         case 'rank':
+        case 'sankey':
+        case 'funnel':
           return true
         default: return false
       }
@@ -156,12 +150,9 @@ export default {
         case 'bar':
         case 'treemap':
         case 'pie':
-        case 'bubble':
-        case 'rank':
         case 'stat':
         case 'hexagon':
         case 'gauge':
-        case 'sankey':
           return false
         case 'line':
         case 'area':
@@ -176,12 +167,13 @@ export default {
         case 'bar':
         case 'treemap':
         case 'pie':
-        case 'bubble':
-        case 'rank':
         case 'stat':
         case 'hexagon':
         case 'gauge':
+        case 'bubble':
+        case 'rank':
         case 'sankey':
+        case 'funnel':
           return true
         case 'line':
         case 'area':
@@ -210,12 +202,13 @@ export default {
         case 'bar':
         case 'treemap':
         case 'pie':
-        case 'bubble':
-        case 'rank':
         case 'stat':
         case 'hexagon':
         case 'gauge':
+        case 'bubble':
+        case 'rank':
         case 'sankey':
+        case 'funnel':
           return true
         default: return false
       }

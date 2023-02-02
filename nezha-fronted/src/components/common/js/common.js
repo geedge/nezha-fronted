@@ -23,7 +23,7 @@ export function getChart (key) {
 }
 
 export function setChart (key, value) {
-  chartCache[`chart${key}`] && chartCache[`chart${key}`].dispose()
+  chartCache[`chart${key}`] && chartCache[`chart${key}`].dispose && chartCache[`chart${key}`].dispose()
   chartCache[`chart${key}`] = value
 }
 const hexagonCache = {}

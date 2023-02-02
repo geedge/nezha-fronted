@@ -67,18 +67,11 @@ export function getOption (type) {
 export function isTimeSeries (type) {
   return type === chartType.line || type === chartType.area || type === chartType.point
 }
-
 export function isHexagon (type) {
   return type === chartType.hexagon
 }
 export function isChartPie (type) {
   return type === chartType.pie
-}
-export function isChartBubble (type) {
-  return type === chartType.bubble
-}
-export function isChartRank (type) {
-  return type === chartType.rank
 }
 export function isChartBar (type) {
   return type === chartType.bar
@@ -86,7 +79,6 @@ export function isChartBar (type) {
 export function isUrl (type) {
   return type === chartType.url
 }
-
 export function isText (type) {
   return type === chartType.text
 }
@@ -123,15 +115,25 @@ export function isTable (type) {
 export function isGauge (type) {
   return type === chartType.gauge
 }
-export function isSankey (type) {
-  return type === chartType.sankey
-}
 export function isClock (type) {
   return type === chartType.clock
 }
 export function isTopology (type) {
   return type === chartType.topologyLink
 }
+export function isChartBubble (type) {
+  return type === chartType.bubble
+}
+export function isChartRank (type) {
+  return type === chartType.rank
+}
+export function isSankey (type) {
+  return type === chartType.sankey
+}
+export function isFunnel (type) {
+  return type === chartType.funnel
+}
+
 export function getGroupHeight (arr) {
   if (arr.length) {
     let lastItem = []
