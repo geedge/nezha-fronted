@@ -1,6 +1,5 @@
 <template>
   <div id="cortexDetailTable">
-  <template v-if="noData" height='100%'>
     <div class="cortex-service">
         <div class="cortex-title" style="margin-top: 0px;">{{$t('cortex.serviceStatus')}}</div>
         <el-table
@@ -111,21 +110,10 @@
           </el-table>
         </div>
     </div>
-  </template>
-  <div v-else class="table-no-data">
-    <div v-if="!loading">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#nz-icon-no-data-list"></use>
-      </svg>
-      <div class="table-no-data__title">No results found</div>
-    </div>
-    <div v-else>&nbsp;</div>
-  </div>
   </div>
 </template>
 
 <script>
-import lodash from 'lodash'
 import table from '@/components/common/mixin/table'
 export default {
   name: 'cortexDetailTable',
@@ -141,23 +129,10 @@ export default {
   mixins: [table],
   components: {},
   watch: {
-    loading: {
-      immediate: true,
-      deep: true,
-      handler (n) {
-        if (!n) {
-          // 判断是否有值
-          if (!lodash.isEmpty(this.ingesterTableData) || !lodash.isEmpty(this.storeGatewayTableData) || !lodash.isEmpty(this.configTableData) || !lodash.isEmpty(this.servicesTableData)) {
-            this.noData = true
-          }
-        }
-      }
-    }
   },
   data () {
     return {
       configSwitch: 1,
-      noData: false,
       ingesterTitle: [
         {
           label: this.$t('alert.alertName'),

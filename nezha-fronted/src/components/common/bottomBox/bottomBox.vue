@@ -68,6 +68,7 @@
         <!-- agent 下滑-->
         <scrape-endpoint v-if="from === fromRoute.agent && targetTab === 'scrapeEndpoint'" :from="from" :obj="obj" :tabs="tabs.agent.scrapeEndpoint" @changeTab="changeTab" :targetTab.sync="targetTab"></scrape-endpoint>
         <cortex-detail v-if="from === fromRoute.agent && targetTab === 'cortexDetail'" :from="from" :obj="obj" :tabs="tabs.agent.cortexDetail" @changeTab="changeTab" :targetTab.sync="targetTab"></cortex-detail>
+        <loki-status v-if="from === fromRoute.agent && targetTab === 'lokiStatus'" :from="from" :obj="obj" :tabs="tabs.agent.lokiStatus" @changeTab="changeTab" :targetTab.sync="targetTab"></loki-status>
         <!-- ipam -->
         <ip-details v-if="from === fromRoute.ipam && targetTab === 'ipam'" :from="from" :obj="obj" :tabs="tabs.ipam" @changeTab="changeTab" :targetTab.sync="targetTab"></ip-details>
         <!-- recordRule  下滑-->
@@ -109,6 +110,7 @@ import processBottomTab from '@/components/common/bottomBox/tabs/processBottomTa
 import networkBottomTab from '@/components/common/bottomBox/tabs/networkBottomTab'
 import scrapeEndpoint from '@/components/common/bottomBox/tabs/scrapeEndpoint'
 import cortexDetail from '@/components/common/bottomBox/tabs/cortexDetail'
+import lokiStatus from '@/components/common/bottomBox/tabs/lokiStatus'
 import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
 import recordRuleEvalLog from '@/components/common/bottomBox/tabs/recordRuleEvalLog'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
@@ -119,6 +121,7 @@ export default {
   components: {
     scrapeEndpoint,
     cortexDetail,
+    lokiStatus,
     LogBottomTab,
     processBottomTab,
     networkBottomTab,
@@ -251,11 +254,18 @@ export default {
         agent: {
           scrapeEndpoint: [
             { prop: 'scrapeEndpoint', name: this.$t('config.agent.scrapeEndpoint'), active: true },
-            { prop: 'cortexDetail', name: this.$t('config.agent.cortexDetail'), active: false }
+            { prop: 'cortexDetail', name: this.$t('config.agent.cortexDetail'), active: false },
+            { prop: 'lokiStatus', name: this.$t('config.agent.lokiStatus'), active: false }
           ],
           cortexDetail: [
             { prop: 'scrapeEndpoint', name: this.$t('config.agent.scrapeEndpoint'), active: false },
-            { prop: 'cortexDetail', name: this.$t('config.agent.cortexDetail'), active: true }
+            { prop: 'cortexDetail', name: this.$t('config.agent.cortexDetail'), active: true },
+            { prop: 'lokiStatus', name: this.$t('config.agent.lokiStatus'), active: false }
+          ],
+          lokiStatus: [
+            { prop: 'scrapeEndpoint', name: this.$t('config.agent.scrapeEndpoint'), active: false },
+            { prop: 'cortexDetail', name: this.$t('config.agent.cortexDetail'), active: false },
+            { prop: 'lokiStatus', name: this.$t('config.agent.lokiStatus'), active: true }
           ]
         },
         ipam: [
