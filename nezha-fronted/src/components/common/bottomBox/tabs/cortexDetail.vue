@@ -89,9 +89,7 @@ export default {
     async getConfigTableData () {
       const response = await this.$get('agent/' + this.obj.id + '/cortex/config?mode=' + this.configMode)
       if (response.code === 200) {
-        this.configTableData = response.data.conent.split(/\n/)
-        this.configTableData.unshift('{')
-        this.configTableData.push('}')
+        this.configTableData = response.data.content.split(/\n/)
       }
     },
     async getReadyTableData () {

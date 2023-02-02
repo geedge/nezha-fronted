@@ -86,7 +86,9 @@
            style="-moz-user-select:none;">
         <div v-if="fileDirectory !== '/'" @dblclick.prevent="backFileDirectory" class="file-item">
           <div class="text-ellipsis file-name">
-            <i class="nz-icon nz-icon-Folder colorFA901C" style="margin-right: 3px"/>
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href='#nz-icon-muluwenjian'></use>
+            </svg>
             ..
 <!--            {{$t('terminal.back')}}-->
           </div>
@@ -100,8 +102,10 @@
           @dblclick.prevent="selectFile(item)"
         >
           <div class="text-ellipsis file-name">
-            <i class="nz-icon" :class="selIcon(item)"/>
-            <i class="nz-icon nz-icon-link" v-if="item.isLink"/>
+<!--            <i class="nz-icon" :class=""/>-->
+            <svg class="icon" aria-hidden="true">
+              <use :xlink:href='selIcon(item)'></use>
+            </svg>
             {{item.name}} <span v-if="item.isLink">-> {{item.linkName}}</span>
           </div>
           <div class="text-ellipsis file-size">
@@ -232,7 +236,9 @@
     >
       <div v-if="fileInfo">
         <div class="file-info-item-header">
-          <i class="nz-icon" :class="selIcon(fileInfo)"/>
+          <svg class="icon" aria-hidden="true">
+            <use :xlink:href='selIcon(fileInfo)'></use>
+          </svg>
           {{fileInfo.name}}
         </div>
         <div v-for="item in fileAttr" :key="item.name" class="file-info-item">
@@ -505,23 +511,29 @@ export default {
     },
     selIcon (item) {
       // console.log(item)
-      const hz = item.name.split('.')[1]
+      let str = ''
       if (item.isDir) {
-        return 'nz-icon-Folder colorFA901C'
+        str = '#nz-icon-muluwenjian'
       }
       if (item.isReg) {
-        return 'nz-icon-File'
+        str = '#nz-icon-putongwenjian'
       }
       if (item.isFifo) {
-        return 'nz-icon-guandaowenjian'
+        str = '#nz-icon-guandaowenjian1'
       }
       if (item.isSock) {
-        return 'nz-icon-taojieziwenjian'
+        str = '#nz-icon-taojieziwenjian'
       }
       if (item.isBlk) {
-        return 'nz-icon-kuaishebeiwenjian'
+        str = '#nz-icon-zifushebeiwenjian1'
       }
-      return 'nz-icon-File'
+      if (item.isLink) {
+        str += 'lianjie'
+      }
+      if (str) {
+        return str
+      }
+      return '#nz-icon-muluwenjian'
     },
     selInfo (item, key) {
       if (key === 'isDir') {
