@@ -76,7 +76,7 @@
                     <div class="col-resize-area"></div>
                   </template>
                   <template slot-scope="scope" :column="item">
-                    <span v-if="item.prop === 'name'">{{indexs? $t('cortex.storeGateway'):$t('cortex.ingester')}}</span>
+                    <span v-if="item.prop === 'name'">{{indexs==0?$t('cortex.storeGateway'):(indexs==1?$t('cortex.ingester'):$t('cortex.compactor'))}}</span>
                     <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
                     <template v-else>-</template>
                   </template>

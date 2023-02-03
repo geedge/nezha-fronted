@@ -45,6 +45,11 @@
                     display: none;
                 }
             }
+            .ring-table{
+                .el-table__body-wrapper{
+                    border-left: 1px solid $--border-color-light;
+                }
+            }
         }
 
         .cortex-service,

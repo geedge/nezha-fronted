@@ -15,6 +15,7 @@
           <loki-status-table
           v-my-loading="tools.loading"
           :loading="tools.loading"
+          :ringTableData='ringTableData'
           :configTableData='configTableData'
           :servicesTableData='servicesTableData'
           @configval='configval'>
@@ -50,6 +51,7 @@ export default {
       async handler (n) {
         await this.getReadyTableData()
         await this.getConfigTableData()
+        await this.getCompactorTableData()
         this.getservicesTableData()
       }
     }
@@ -60,6 +62,7 @@ export default {
       configMode: 'defaults',
       configTableData: [],
       servicesTableData: [],
+      ringTableData: [],
       readyTableData: ''
     }
   },
@@ -74,6 +77,12 @@ export default {
       const response = await this.$get('agent/' + this.obj.id + '/loki/config?mode=' + this.configMode)
       if (response.code === 200) {
         this.configTableData = response.data.content.split(/\n/)
+      }
+    },
+    async getCompactorTableData () {
+      const response = await this.$get('agent/' + this.obj.id + '/loki/compactor/ring')
+      if (response.code === 200) {
+        this.ringTableData = response.data.list
       }
     },
     async getReadyTableData () {

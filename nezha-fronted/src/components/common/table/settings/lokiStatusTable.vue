@@ -51,6 +51,39 @@
             </el-table-column>
           </el-table>
       </div>
+      <div class="cortex-ring">
+        <div class="cortex-title">{{$t('cortex.ringStatus')}}</div>
+          <div class="cortex-ingester">
+             <el-table
+            :data="ringTableData"
+            :border='true'
+            :class="ringTableData.length == 0?'ring-table':''"
+            :span-method="(param)=>objectSpanMethod(param,ringTableData)"
+             >
+                <el-table-column
+                  v-for="(item, index) in ingesterTitle"
+                  :key="`col-${index}`"
+                  :fixed="item.fixed"
+                  :label="item.label"
+                  :min-width="`${item.minWidth}`"
+                  :prop="item.prop"
+                  :resizable="true"
+                  :width="`${item.width}`"
+                  class="data-column"
+                >
+                  <template slot="header">
+                    <span class="data-column__span">{{item.label}}</span>
+                    <div class="col-resize-area"></div>
+                  </template>
+                  <template slot-scope="scope" :column="item" class="123">
+                    <span v-if="item.prop === 'name'">{{$t('cortex.compactor')}}</span>
+                    <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+                    <template v-else>-</template>
+                  </template>
+                </el-table-column>
+            </el-table>
+          </div>
+    </div>
       <div class="cortex-config" :style="configTableData.length < 31 ? `height:${configTableData.length * 27 + 102}px` : 'flex:1;min-height: 436px;'">
           <div class="cortex-title">{{$t('overall.configEndpoint')}}</div>
           <div class="cortex-config-tab">
@@ -87,7 +120,8 @@ export default {
     loading: Boolean,
     configMode: String,
     configTableData: Array,
-    servicesTableData: Array
+    servicesTableData: Array,
+    ringTableData: Array
   },
   mixins: [table],
   components: {},
@@ -207,6 +241,22 @@ export default {
   mounted () {
   },
   methods: {
+    // 合并单元格
+    objectSpanMethod ({ row, column, rowIndex, columnIndex }, items) {
+      if (columnIndex === 0) {
+        if (rowIndex % items.length === 0) {
+          return {
+            rowspan: items.length,
+            colspan: 1
+          }
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          }
+        }
+      }
+    },
     configSwitchCheck () {
       if (this.configSwitch == 1) {
         this.$emit('configval', 'defaults')
