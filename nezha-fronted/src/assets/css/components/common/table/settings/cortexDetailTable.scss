@@ -1,11 +1,11 @@
-#cortexDetail {
+#cortexDetail,#lokiStatus {
     .sub-container{
         background: $--background-color-empty;
         .nz-table-list{
             height: auto;
         }
     }
-    #cortexDetailTable {
+    #cortexDetailTable,#lokiStatusTable {
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -43,6 +43,11 @@
                 margin-top: -1px;
                 .has-gutter {
                     display: none;
+                }
+            }
+            .ring-table{
+                .el-table__body-wrapper{
+                    border-left: 1px solid $--border-color-light;
                 }
             }
         }
@@ -128,15 +133,6 @@
                     display: none;
                 }
             }
-        }
-
-        .table-no-data {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
         }
     }
 }
