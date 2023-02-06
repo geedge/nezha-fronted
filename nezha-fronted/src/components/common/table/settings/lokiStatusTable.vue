@@ -84,7 +84,7 @@
             </el-table>
           </div>
     </div>
-      <div class="cortex-config" :style="configTableData.length < 31 ? `height:${configTableData.length * 27 + 102}px` : 'flex:1;min-height: 436px;'">
+      <div class="cortex-config" :style="configTableData.length < 26 ? `height:${configTableData.length * 27 + 102}px` : 'flex:1;min-height: 436px;'">
           <div class="cortex-title">{{$t('overall.configEndpoint')}}</div>
           <div class="cortex-config-tab">
             <el-table
