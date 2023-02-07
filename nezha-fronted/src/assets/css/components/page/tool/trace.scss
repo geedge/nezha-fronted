@@ -163,6 +163,7 @@
           th.el-table__expand-column{
             .arrow-expand{
               i.nz-icon{
+                cursor: pointer;
                 padding-left: 2px;
               }
             }

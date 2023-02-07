@@ -97,8 +97,10 @@ export default {
   },
   methods: {
     toggleRowExpansion () {
-      this.expandData = !this.expandData
-      this.toggleRowExpansionAll(this.tableData, this.expandData)
+      this.$nextTick(() => {
+        this.expandData = !this.expandData
+      })
+      this.toggleRowExpansionAll(this.tableData, !this.expandData)
     },
     toggleRowExpansionAll (data, isExpansion) {
       data.forEach((item) => {
