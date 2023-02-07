@@ -422,3 +422,12 @@ td.el-table__expanded-cell:hover {
   padding: 0 0 0 60px;
   background-color: $--background-color-base !important;
 }
+#pingTable{
+  th.el-table__expand-column{
+    .arrow-expand{
+      i.nz-icon{
+        padding-left: 2px;
+      }
+    }
+  }
+}

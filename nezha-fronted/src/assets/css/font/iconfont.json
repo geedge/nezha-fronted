@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "33991102",
+      "name": "全部收起",
+      "font_class": "quanbushouqi",
+      "unicode": "e7cc",
+      "unicode_decimal": 59340
+    },
+    {
+      "icon_id": "33991103",
+      "name": "全部展开",
+      "font_class": "quanbuzhankai",
+      "unicode": "e7cd",
+      "unicode_decimal": 59341
+    },
+    {
       "icon_id": "33693407",
       "name": "普通文件",
       "font_class": "putongwenjian",
