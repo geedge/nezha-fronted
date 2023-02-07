@@ -1,7 +1,11 @@
 <template>
-  <div style="padding:15px" :class="calcHeight(that.position,that)" :style="calcPosition(that.position,that)" class="alert-label__border" ref="alertLabels"
-       @mouseenter="tooltipHover(true)"
-       @mouseleave="tooltipHover(false)">
+  <div style="padding:15px"
+       :class="calcHeight(that.position,that)"
+       :style="calcPosition(that.position,that)"
+       class="alert-label__border response__popper"
+       ref="alertLabels"
+       @mouseenter="tipHover(true)"
+       @mouseleave="tipHover(false)">
     <slot name="default"/>
   </div>
 </template>
@@ -16,7 +20,11 @@ export default {
     that: {},
     detailList: Boolean,
     alertTableDialog: Boolean,
-    isTopoInfo: Boolean
+    isTopoInfo: Boolean,
+    width: {
+      type: Number,
+      default: 150
+    }
   },
   data () {
     return {
@@ -28,31 +36,62 @@ export default {
   computed: {
     calcPosition () {
       return function (position) {
-        const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
-        const leftOffSetView = this.detailList ? -80 : 10
-        const leftOffSet = this.detailList ? -80 : 10
-        const topOffSet = this.detailList ? 60 : 22
-        const topoOffset = this.isTopoInfo ? 155 : 0
-        if (position.top + this.heightList > clientHeight) {
-          return {
-            left: `${position.left + position.width + leftOffSet - topoOffset}px`,
-            top: `${position.top - this.heightList + topOffSet}px`
+        if (this.$refs.alertLabels) {
+          this.heightList = this.$refs.alertLabels.getBoundingClientRect().height
+          this.boxWidth = this.$refs.alertLabels.getBoundingClientRect().width
+        } else {
+          this.heightList = 0
+          this.boxWidth = 0
+        }
+        const clientHeight =
+          document.body.clientHeight < document.documentElement.clientHeight
+            ? document.body.clientHeight
+            : document.documentElement.clientHeight
+        const clientWidth =
+          document.body.clientWidth < document.documentElement.clientWidth
+            ? document.body.clientWidth
+            : document.documentElement.clientWidth
+        let leftOffSetView = 0
+        let leftOffSet = this.detailList ? -80 : 10
+        let topOffSet = this.detailList ? 60 : 22
+        let topOffSetView = 0
+        let labelPosition = {
+          top: 0,
+          left: 0,
+          right: 0,
+        }
+        if (this.alertTableDialog) {
+          let dialog = document.querySelector(
+            '#dialog-alert-massage .el-dialog'
+          )
+          if (!dialog) {
+            dialog = document.querySelector('#viewGraphDialog .el-dialog')
           }
-        } else if (this.alertTableDialog) {
-          const dialog = document.querySelector('#dialog-alert-massage .el-dialog')
           const dialogHeight = dialog.getBoundingClientRect()
-          if (dialogHeight) {
-            return {
-              left: `${position.left + position.width + 10 - dialogHeight.x}px`,
-              top: `${position.top - dialogHeight.y}px`
-            }
+          leftOffSet = leftOffSet - 3 * dialogHeight.x
+          leftOffSetView = dialogHeight.x
+          topOffSet = topOffSet - dialogHeight.y
+          topOffSetView = topOffSet
+        }
+        if (position.top > clientHeight / 2) {
+          labelPosition = {
+            left: `${position.left + position.width + leftOffSet}px`,
+            top: this.that.type === 'chartTopology' ? `${position.top - this.heightList - topOffSetView}px` : `${position.top - this.heightList - topOffSetView + position.height / 2}px`
           }
         } else {
-          return {
-            left: `${position.left + position.width + leftOffSet - topoOffset}px`,
-            top: `${position.top}px`
+          labelPosition = {
+            left: `${position.left + position.width + leftOffSet}px`,
+            top: this.that.type === 'chartTopology' ? `${position.top + topOffSet}px` : `${position.top + position.height / 2}px`
           }
         }
+        if (position.left > clientWidth / 2) {
+          delete labelPosition.left
+
+          labelPosition.right =
+            clientWidth - position.left - leftOffSetView + 'px'
+        }
+        labelPosition.width = this.width + 'px'
+        return labelPosition
       }
     },
     calcHeight () {
@@ -69,13 +108,23 @@ export default {
     }
   },
   methods: {
-    tooltipHover (show) {
-      if (show) {
-        clearTimeout(this.that.timeout)
-        this.that.timeout = null
-      } else {
-        this.that.loading = false
+    tooltipHover (item, flag, e) {
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.position.left = position.left
+        this.$set(this.position, 'left', position.left)
+        if (position.top > window.innerHeight / 2) {
+          this.$set(this.position, 'top', position.top - 55)
+        } else {
+          this.$set(this.position, 'top', position.top + 30)
+        }
+        // this.$set(item, 'alertNumtooltipShow', flag)
+        this.alertNumtooltipShow = flag
       }
+    },
+    tipHover (tipLoading) {
+      this.$emit('tipHover', tipLoading)
     }
   },
   mounted () {

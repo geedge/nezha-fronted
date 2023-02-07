@@ -670,3 +670,8 @@ textarea {
 .el-message__content{
   white-space:pre-line
 }
+.response__popper {
+  max-height: 500px;
+  overflow: hidden;
+  overflow-y: auto;
+}
