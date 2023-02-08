@@ -316,7 +316,9 @@ export default {
         let str = '<div class="nz-chart__tooltip">'
         // 区分左y轴右y轴
         params.forEach(item => {
-          item.yAxisIndex = self.series[item.seriesIndex].yAxisIndex
+          if (self.series[item.seriesIndex]) {
+            item.yAxisIndex = self.series[item.seriesIndex].yAxisIndex
+          }
         })
         // 排序先展示左y轴
         params.sort((a, b) => a.yAxisIndex - b.yAxisIndex)
