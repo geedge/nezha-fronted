@@ -1,68 +1,94 @@
 <template>
-  <el-table
-    id="roleTable"
-    ref="dataTable"
-    :data="tableData"
-    :height="height"
-    border
-    :default-sort="orderBy"
-    class="no-operation"
-    @header-dragend="dragend"
-    @sort-change="tableDataSort"
-    @selection-change="selectionChange"
-  >
-    <el-table-column
-      :resizable="false"
-      align="center"
-      type="selection"
-      width="55">
-    </el-table-column>
-    <el-table-column
-      v-for="(item, index) in customTableTitle"
-      v-if="item.show"
-      :key="`col-${index}`"
-      :fixed="item.fixed"
-      :label="item.label"
-      :min-width="`${item.minWidth}`"
-      :prop="item.prop"
-      :resizable="true"
-      :sortable="item.sortable"
-      :sort-orders="['ascending', 'descending']"
-      :width="`${item.width}`"
-      class="data-column"
-      :show-overflow-tooltip="item.ShowOverflowTooltip"
+  <div style="height: 100%">
+    <el-table
+      id="roleTable"
+      ref="dataTable"
+      :data="tableData"
+      :height="height"
+      border
+      :default-sort="orderBy"
+      class="no-operation"
+      @header-dragend="dragend"
+      @sort-change="tableDataSort"
+      @selection-change="selectionChange"
     >
-      <template slot="header">
-        <span class="data-column__span">{{item.label}}</span>
-        <div class="col-resize-area"></div>
-      </template>
-      <template slot-scope="scope" :column="item">
+      <el-table-column
+        :resizable="false"
+        align="center"
+        type="selection"
+        width="55">
+      </el-table-column>
+      <el-table-column
+        v-for="(item, index) in customTableTitle"
+        v-if="item.show"
+        :key="`col-${index}`"
+        :fixed="item.fixed"
+        :label="item.label"
+        :min-width="`${item.minWidth}`"
+        :prop="item.prop"
+        :resizable="true"
+        :sortable="item.sortable"
+        :sort-orders="['ascending', 'descending']"
+        :width="`${item.width}`"
+        class="data-column"
+      >
+        <template slot="header">
+          <span class="data-column__span">{{item.label}}</span>
+          <div class="col-resize-area"></div>
+        </template>
+        <template slot-scope="scope" :column="item">
         <span v-if="item.prop === 'time'">
                 {{scope.row[item.prop]}} ms
               </span>
-        <span v-else-if="item.prop === 'username'">{{formatUsername(scope.row)}}</span>
-        <span v-else-if="item.prop === 'createDate'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
-        <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-        <span v-else>-</span>
+          <span v-else-if="item.prop === 'username'">{{formatUsername(scope.row)}}</span>
+          <span v-else-if="item.prop === 'createDate'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+          <span v-else-if="item.prop === 'response'"  @mouseenter="labelHover(scope.row, 'response', true, false, $event)"
+                @mouseleave="labelHover(scope.row, 'response', false, false)">
+          <div class="text-ellipsis" style="width: 100%" >
+            {{scope.row[item.prop]}}
+          </div>
+        </span>
+          <span v-else-if="item.prop === 'params'"  @mouseenter="labelHover(scope.row, 'params', true, false, $event)"
+                @mouseleave="labelHover(scope.row, 'params', false, false)">
+          <div class="text-ellipsis" style="width: 100%" >
+            {{scope.row[item.prop]}}
+          </div>
+        </span>
+          <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <template slot="empty">
+        <div v-if="!loading" class="table-no-data">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#nz-icon-no-data-list"></use>
+          </svg>
+          <div class="table-no-data__title">No results found</div>
+        </div>
+        <div v-else>&nbsp;</div>
       </template>
-    </el-table-column>
-    <template slot="empty">
-      <div v-if="!loading" class="table-no-data">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#nz-icon-no-data-list"></use>
-        </svg>
-        <div class="table-no-data__title">No results found</div>
+    </el-table>
+    <nzTooltip
+      v-if="alertLabelShow"
+      :id="alertLabelId"
+      :that="alertLabelObj"
+      :width="200"
+      :type="alertLabelType"
+      @tipHover='tipHover'
+    >
+      <div style="word-break: break-all">
+        {{alertLabelObj[alertLabelType]}}
       </div>
-      <div v-else>&nbsp;</div>
-    </template>
-  </el-table>
+    </nzTooltip>
+  </div>
 </template>
 
 <script>
 import table from '@/components/common/mixin/table'
+import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'operationLog',
-  mixins: [table],
+  mixins: [table, alertLabelMixin],
   props: {
     loading: Boolean
   },
@@ -136,7 +162,7 @@ export default {
           prop: 'params',
           show: false,
           ShowOverflowTooltip: true,
-          minWidth: 80
+          minWidth: 100
         },
         {
           label: this.$t('config.operationlog.response'),

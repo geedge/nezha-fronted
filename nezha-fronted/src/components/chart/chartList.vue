@@ -557,6 +557,7 @@ export default {
       if (!this.panelLock) {
         return false
       }
+      this.copyDataList = JSON.parse(JSON.stringify(this.tempList))
       for (let i = 0; i < this.copyDataList.length; i++) {
         const item = this.copyDataList[i]
         if ((this.$loadsh.get(this.showHidden[item.id], 'visibility') && this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'hidden') && item.id !== -2) {
@@ -564,11 +565,11 @@ export default {
           i--
         }
       }
-      this.tempList.forEach(item => {
-        if ((!this.$loadsh.get(this.showHidden[item.id], 'visibility') || this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'show') && item.id !== -2 && !this.copyDataList.find(chart => chart.id === item.id)) {
-          this.copyDataList.push(item)
-        }
-      })
+      // this.tempList.forEach(item => {
+      //   if ((!this.$loadsh.get(this.showHidden[item.id], 'visibility') || this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'show') && item.id !== -2 && !this.copyDataList.find(chart => chart.id === item.id)) {
+      //     this.copyDataList.push(item)
+      //   }
+      // })
       this.onScroll(this.scrollTop)
     },
 
@@ -606,10 +607,12 @@ export default {
         for (let index = 0; index < arr.length; index++) { // 遍历找出所有需要 repeat的group 按照 name进行多次的分组
           const item = arr[index]
           const repeatVariable = this.$loadsh.get(item.param.repeat, 'variable')
-          if (item.type === 'group' && repeatVariable && this.$loadsh.get(this.showHidden[item.id], 'visibility') !== 'hidden') {
+          const repeatEnable = this.$loadsh.get(item.param.enable, 'repeat')
+          if (item.type === 'group' && repeatVariable && this.$loadsh.get(this.showHidden[item.id], 'visibility') !== 'hidden' && repeatEnable) {
             const itemPrev = arr[index - 1]
             const repeatPrevVariable = this.$loadsh.get(itemPrev.param.repeat, 'variable')
-            if (itemPrev && itemPrev.type === 'group' && repeatPrevVariable === repeatVariable) {
+            const repeatPrevEnable = this.$loadsh.get(item.param.enable, 'repeat')
+            if (itemPrev && itemPrev.type === 'group' && repeatPrevVariable === repeatVariable && repeatPrevEnable) {
               const arr = variablesRepeat[repeatVariable]
               arr[arr.length - 1].repeatArr.push(item)
               arr[arr.length - 1].lastGroup = item
@@ -800,8 +803,8 @@ export default {
           })
         }
         this.$nextTick(() => {
-          this.tempList = JSON.parse(JSON.stringify(tempList))
           this.copyDataList = JSON.parse(JSON.stringify(tempList))
+          this.tempList = JSON.parse(JSON.stringify(this.copyDataList))
           // 比较变量 图表是否显示/隐藏
           this.compareVariables()
 

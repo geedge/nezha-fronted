@@ -9,6 +9,12 @@
       @header-dragend="dragend"
     >
     <el-table-column type="expand">
+      <template #header>
+        <div class="arrow-expand" @click="toggleRowExpansion">
+            <i v-if="expandData" class="nz-icon nz-icon-quanbuzhankai"></i>
+            <i v-else class="nz-icon nz-icon-quanbushouqi"></i>
+        </div>
+      </template>
       <template slot-scope="{ row }">
         <div class="details">
           <pre>{{row.raw}}</pre>
@@ -85,10 +91,25 @@ export default {
           prop: 'time',
           sortable: true
         }
-      ]
+      ],
+      expandData: false
     }
   },
   methods: {
+    toggleRowExpansion () {
+      this.$nextTick(() => {
+        this.expandData = !this.expandData
+      })
+      this.toggleRowExpansionAll(this.tableData, !this.expandData)
+    },
+    toggleRowExpansionAll (data, isExpansion) {
+      data.forEach((item) => {
+        this.$refs.dataTable.toggleRowExpansion(item, isExpansion)
+        if (item.children !== undefined && item.children !== null) {
+          this.toggleRowExpansionAll(item.children, isExpansion)
+        }
+      })
+    }
   }
 }
 </script>

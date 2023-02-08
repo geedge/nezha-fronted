@@ -6,6 +6,7 @@
   "description": "",
   "glyphs": [
     {
+<<<<<<< HEAD
       "icon_id": "33998082",
       "name": "右纵轴",
       "font_class": "youzongzhou",
@@ -20,6 +21,8 @@
       "unicode_decimal": 59343
     },
     {
+=======
+>>>>>>> 61106c08d5bd1c9b7263e6b915880385934c3c7d
       "icon_id": "33991102",
       "name": "全部收起",
       "font_class": "quanbushouqi",

@@ -1,8 +1,9 @@
 import alertDaysInfo from '@/components/common/alert/alertDaysInfo'
-import { requestsArr } from '@/http'
+import nzTooltip from '@/components/common/alert/nzTooltip'
 export default {
   components: {
-    alertDaysInfo
+    alertDaysInfo,
+    nzTooltip
   },
   props: {
     tableData: {

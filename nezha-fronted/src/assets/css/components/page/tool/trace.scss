@@ -160,6 +160,14 @@
           .el-table__body-wrapper{
             height: calc(100% - 42px) !important;
           }
+          th.el-table__expand-column{
+            .arrow-expand{
+              i.nz-icon{
+                cursor: pointer;
+                padding-left: 2px;
+              }
+            }
+          }
         }
       }
     }

@@ -52,6 +52,7 @@ export default {
         await this.getReadyTableData()
         await this.getIngesterTableData()
         await this.getStoreGatewayTableData()
+        await this.getCompactorTableData()
         await this.getConfigTableData()
         this.getservicesTableData()
       }
@@ -82,6 +83,12 @@ export default {
     },
     async getStoreGatewayTableData () {
       const response = await this.$get('agent/' + this.obj.id + '/cortex/store-gateway/ring')
+      if (response.code === 200) {
+        this.ringTableData.push(response.data.list)
+      }
+    },
+    async getCompactorTableData () {
+      const response = await this.$get('agent/' + this.obj.id + '/cortex/compactor/ring')
       if (response.code === 200) {
         this.ringTableData.push(response.data.list)
       }
