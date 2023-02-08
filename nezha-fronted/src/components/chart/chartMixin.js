@@ -72,6 +72,17 @@ export default {
           }
           this.isNoData = false
           const s = lodash.cloneDeep(seriesTemplate)
+
+          // 设置右y轴
+          if (chartInfo.param.enable.rightYAxis) {
+            s.yAxisIndex = 0
+            chartInfo.param.rightYAxis && chartInfo.param.rightYAxis.elementNames.forEach(item => {
+              if (data.elements.name == item) {
+                s.yAxisIndex = 1
+              }
+            })
+          }
+
           if (s.param && s.param.nullType) {
             s.connectNulls = s.param.nullType !== 'null'
           } else {
@@ -81,23 +92,26 @@ export default {
             s.data = data.values
             s.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
             if (chartInfo.param.stack) { // 堆叠
-              s.stack = 'Total'
+              s.stack = 'Total' + s.yAxisIndex
             }
             if (chartInfo.param.enable && chartInfo.param.enable.thresholds && !lodash.isEmpty(chartInfo.param.thresholds) && chartInfo.param.thresholds.length) { // 阈值
               s.markLine = {
                 symbol: 'circle',
                 symbolSize: 5
               }
-              s.markLine.data = chartInfo.param.thresholds.map(threshold => {
-                return {
-                  yAxis: threshold.value || 0,
-                  lineStyle: {
-                    color: threshold.color,
-                    width: 2,
-                    type: 'dotted'
+              // Thresholds 只对左Y轴有效
+              if (s.yAxisIndex != 1) {
+                s.markLine.data = chartInfo.param.thresholds.map(threshold => {
+                  return {
+                    yAxis: threshold.value || 0,
+                    lineStyle: {
+                      color: threshold.color,
+                      width: 2,
+                      type: 'dotted'
+                    }
                   }
-                }
-              })
+                })
+              }
             }
             // 判断如果是面积图 颜色设为渐变色
             if (s.areaStyle && this.colorList.length) {

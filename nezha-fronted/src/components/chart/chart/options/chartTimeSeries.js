@@ -85,29 +85,56 @@ export const chartTimeSeriesLineOption = {
       show: false
     }
   },
-  yAxis: {
-    type: 'value',
-    splitLine: {
-      show: true,
-      lineStyle: {
-        color: '#d9d9d9',
-        opacity: 0.8,
-        width: 1
+  yAxis: [
+    {
+      name: '',
+      type: 'value',
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: '#d9d9d9',
+          opacity: 0.8,
+          width: 1
+        }
+      },
+      // 去掉y轴
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        show: true,
+        fontSize: 10
+        // formatter: 动态生成
       }
     },
-    // 去掉y轴
-    axisLine: {
-      show: false
-    },
-    axisTick: {
-      show: false
-    },
-    axisLabel: {
-      show: true,
-      fontSize: 10
-      // formatter: 动态生成
+    {
+      name: '',
+      type: 'value',
+      splitLine: {
+        show: false,
+        lineStyle: {
+          color: '#d9d9d9',
+          opacity: 0.8,
+          width: 1
+        }
+      },
+      // 去掉y轴
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        show: true,
+        fontSize: 10
+        // formatter: 动态生成
+      }
     }
-  },
+  ],
   series: [{
     name: '',
     type: 'line',

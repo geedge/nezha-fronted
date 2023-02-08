@@ -338,7 +338,6 @@ export default {
           id: 'table',
           name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
         }
-
       ],
       textList: [
         {
@@ -363,6 +362,20 @@ export default {
         {
           value: 'server',
           label: this.$t('dashboard.panel.chartForm.typeVal.server')
+        }
+      ],
+      timeSeriesTypeList: [
+        {
+          id: 'line',
+          name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
+        },
+        {
+          id: 'area',
+          name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
+        },
+        {
+          id: 'point',
+          name: this.$t('dashboard.panel.chartForm.typeVal.point.label')
         }
       ],
       isChoose: []
@@ -424,6 +437,11 @@ export default {
       } else if (!this.expressionName[index]) {
         this.expressionName[index] = this.expressionsShow[index].oldName
       } else {
+        this.chartConfig.param.rightYAxis && this.chartConfig.param.rightYAxis.elementNames.forEach((item, index) => {
+          if (item == this.expressionsShow[index].oldName) {
+            this.chartConfig.param.rightYAxis.elementNames[index] = this.expressionName[index]
+          }
+        })
         this.expressionsShow[index].oldName = this.expressionName[index]
       }
       this.$refs.chartForm.clearValidate('elements.' + (index - 1) + '.expression')
@@ -481,17 +499,15 @@ export default {
       } else {
         this.expressions.push(item.expression)
         this.expressionName.push(item.name)
-        this.expressionsShow.push(
-          {
-            show: true,
-            hideInput: true,
-            oldName: item.name,
-            error: '',
-            elementId: item.id,
-            legend: item.legend,
-            state: item.state
-          }
-        )
+        this.expressionsShow.push({
+          show: true,
+          hideInput: true,
+          oldName: item.name,
+          error: '',
+          elementId: item.id,
+          legend: item.legend,
+          state: item.state
+        })
       }
     },
     copyExpression (index) {
@@ -510,16 +526,20 @@ export default {
       )
       this.$nextTick(() => {
         this.expressions.forEach((ex, index) => {
-          if (ex) {
-            this.$refs[`promql-${index}`][0].metricChange(ex)
-            this.$refs[`promql-${index}`][0].promqlInputChange(ex)
-          }
+          this.$refs[`promql-${index}`][0].metricChange(ex)
+          this.$refs[`promql-${index}`][0].promqlInputChange(ex)
         })
       })
       this.expressionChange()
     },
     removeExpression (index) {
       if (this.expressionsShow.length > 1) {
+        this.chartConfig.param.rightYAxis && this.chartConfig.param.rightYAxis.elementNames.forEach((elementName, subIndex) => {
+          if (elementName == this.expressionName[index]) {
+            this.chartConfig.param.rightYAxis.elementNames.splice(subIndex, 1)
+          }
+        })
+
         this.expressions.splice(index, 1)
         this.expressionName.splice(index, 1)
         this.expressionsShow.splice(index, 1)
@@ -528,10 +548,8 @@ export default {
         })
         this.$nextTick(() => {
           this.expressions.forEach((ex, index) => {
-            if (ex) {
-              this.$refs[`promql-${index}`][0].metricChange(ex)
-              this.$refs[`promql-${index}`][0].promqlInputChange(ex)
-            }
+            this.$refs[`promql-${index}`][0].metricChange(ex)
+            this.$refs[`promql-${index}`][0].promqlInputChange(ex)
           })
         })
         this.expressionChange()

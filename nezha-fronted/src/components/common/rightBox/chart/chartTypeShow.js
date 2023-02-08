@@ -222,6 +222,15 @@ export default {
           return true
         default: return false
       }
+    },
+    isShowRightYAxis (type) {
+      switch (type) {
+        case 'line':
+        case 'area':
+        case 'point':
+          return true
+        default: return false
+      }
     }
   }
 }

@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "33998082",
+      "name": "右纵轴",
+      "font_class": "youzongzhou",
+      "unicode": "e7ce",
+      "unicode_decimal": 59342
+    },
+    {
+      "icon_id": "33998083",
+      "name": "左纵轴",
+      "font_class": "zuozongzhou",
+      "unicode": "e7cf",
+      "unicode_decimal": 59343
+    },
+    {
+      "icon_id": "33991102",
+      "name": "全部收起",
+      "font_class": "quanbushouqi",
+      "unicode": "e7cc",
+      "unicode_decimal": 59340
+    },
+    {
+      "icon_id": "33991103",
+      "name": "全部展开",
+      "font_class": "quanbuzhankai",
+      "unicode": "e7cd",
+      "unicode_decimal": 59341
+    },
+    {
       "icon_id": "33693407",
       "name": "普通文件",
       "font_class": "putongwenjian",

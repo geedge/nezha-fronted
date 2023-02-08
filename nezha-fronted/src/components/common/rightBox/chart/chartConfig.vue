@@ -42,11 +42,12 @@
             }">
               <i class="nz-icon nz-icon-arrow-down" :class="expressionsShow[index-1].show?'':'is-active'" @click.stop="showExpression(index)"></i>
               <el-input
+                style="width: 120px"
                 @mousedown.stop
                 v-model="expressionName[index-1]"
                 size="small"
                 @input="(val)=>{expressionNameInput(val,index-1)}"
-                @change="expressionNameChange(index-1)" style="width: 120px"
+                @change="expressionNameChange(index-1)"
                 @focus.stop="showInput(index-1,false)"
                 @blur="showInput(index-1,true)"
               />
@@ -136,8 +137,7 @@
             <el-option
               v-for="item in chartTypeList"
               :key="item.id"
-              :disabled="
-               item.id==='group' && chartConfig.isGroup"
+              :disabled="item.id==='group' && chartConfig.isGroup"
               :label="item.name"
               :value="item.id">
               <span class="panel-dropdown-label-txt" >{{item.name}}</span>
@@ -409,6 +409,133 @@
             :placeholder="'Default 2'"
             show-word-limit v-model="chartConfig.param.decimals"/>
         </el-form-item>
+      </div>
+
+      <!-- Right Y Axis   -->
+      <div v-if="isShowRightYAxis(chartConfig.type)">
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.panel.chartForm.rightYAxis')}}</span>
+          <el-switch
+            v-model="chartConfig.param.enable.rightYAxis"
+            size="small"
+            @change="change"
+          ></el-switch>
+        </div>
+        <transition name="el-zoom-in-top">
+          <div
+            v-if="chartConfig.param.enable.rightYAxis"
+            class="form-items--half-width-group"
+          >
+          <!-- Data Source -->
+            <el-form-item
+              :label="$t('dashboard.panel.chartForm.datasource')"
+              class="form-item--half-width"
+              prop="param.rightYAxis.elementNames"
+              :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
+            >
+              <el-select
+                v-model="chartConfig.param.rightYAxis.elementNames"
+                multiple
+                collapse-tags
+                placeholder=""
+                popper-class="right-box-select-top prevent-clickoutside"
+                size="small"
+                @change="change"
+              >
+                <el-option
+                  v-for="item in chartConfig.elements"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.name"
+                  >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <!-- type -->
+            <el-form-item
+              :label="$t('overall.type')"
+              class="form-item--half-width"
+              prop="param.rightYAxis.style"
+            >
+              <el-select
+                v-model="chartConfig.param.rightYAxis.style"
+                placeholder=""
+                popper-class="right-box-select-top prevent-clickoutside"
+                size="small"
+                @change="change"
+              >
+                <el-option
+                  v-for="item in timeSeriesTypeList"
+                  :key="item.value"
+                  :label="$t(item.name)"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <!-- unit -->
+            <el-form-item
+              :label="$t('dashboard.panel.chartForm.unit')"
+              class="form-item--half-width"
+              prop="param.rightYAxis.unit"
+            >
+              <el-cascader
+                v-model="chartConfig.param.rightYAxis.unit"
+                :options="unitOptions"
+                :props="{ expandTrigger: 'hover',emitPath:false }"
+                :show-all-levels="false"
+                filterable
+                popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
+                size="small"
+                style="width: 100%"
+                @change="unitSelected"
+              >
+              </el-cascader>
+            </el-form-item>
+            <!-- label -->
+            <el-form-item
+              :label="$t('alert.list.labels')"
+              class="form-item--half-width"
+              prop="param.rightYAxis.label"
+            >
+              <el-input
+                size="small"
+                v-model="chartConfig.param.rightYAxis.label"
+                placeholder=""
+                @change="change"
+              ></el-input>
+            </el-form-item>
+            <!--min-->
+            <el-form-item
+              :label="$t('dashboard.panel.chartForm.min')"
+              class="form-item--half-width"
+              prop="param.rightYAxis.min"
+              >
+              <el-input-number
+                size="small"
+                style="margin-top: 2px"
+                :controls="false"
+                @change="change"
+                show-word-limit
+                :placeholder="chartConfig.param.rightYAxis.min?'':'Auto'"
+                v-model="chartConfig.param.rightYAxis.min"/>
+            </el-form-item>
+            <!--max-->
+            <el-form-item
+              :label="$t('dashboard.panel.chartForm.max')"
+              class="form-item--half-width"
+              prop="param.rightYAxis.max"
+              >
+              <el-input-number
+                size="small"
+                style="margin-top: 2px"
+                :controls="false"
+                @change="change"
+                show-word-limit
+                :placeholder="chartConfig.param.rightYAxis.max?'':'Auto'"
+                v-model="chartConfig.param.rightYAxis.max"/>
+            </el-form-item>
+          </div>
+        </transition>
       </div>
 
       <div v-if="isShowLegend(chartConfig.type)">
@@ -1041,7 +1168,8 @@ export default {
               legend: true,
               valueMapping: false,
               thresholds: false,
-              visibility: false
+              visibility: false,
+              rightYAxis: false
             },
             showHeader: this.chartConfig.param.showHeader,
             visibility: {
@@ -1049,6 +1177,14 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
+            },
+            rightYAxis: {
+              elementNames: [],
+              style: 'line',
+              unit: 2,
+              label: '',
+              min: undefined,
+              max: undefined
             }
           }
           this.$nextTick(() => {

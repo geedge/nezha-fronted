@@ -4,7 +4,13 @@
     class="nz-chart__component nz-chart__component--time-series" @mouseenter="mouseEnterChart"
     @mouseleave="mouseLeaveChart"
   >
-    <div :id="`chart-canvas-${chartId}`" class="chart__canvas"></div>
+    <div class="chart__canvas" style="position:relative">
+      <div :id="`chart-canvas-${chartId}`"></div>
+      <!-- 右y轴name -->
+      <p class="rightYAxis-name" v-if="hasRightYAxis">
+        <span>{{chartInfo.param.rightYAxis.label}}</span>
+      </p>
+    </div>
     <chart-legend
       v-if="hasLegend"
       :chart-data="chartData"
@@ -43,7 +49,9 @@ export default {
   data () {
     return {
       stackTotalColor: null,
-      isStack: false
+      stackTotalColorRight: null,
+      isStack: false,
+      hasRightYAxis: false
     }
   },
   computed: {
@@ -136,21 +144,25 @@ export default {
         chartOption.tooltip.appendToBody = false
         delete chartOption.tooltip.position
       }
-      chartOption.yAxis.axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, decimals)
+      // 左y轴
+      chartOption.yAxis[0].axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, decimals)
 
-      if (!this.chartInfo.param.min && !this.chartInfo.param.max) {
-        chartOption.yAxis.minInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'min')
-        chartOption.yAxis.maxInterval = chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
-        if (this.chartInfo.param.stack) {
-          chartOption.yAxis.maxInterval = chartOption.yAxis.maxInterval * (Math.ceil(chartOption.series.length / 5) + 1)
-        }
-        if (unit.type === 'Time' || unit.type === 'Date & Time') {
-          delete chartOption.yAxis.minInterval
-          delete chartOption.yAxis.maxInterval
-        }
-      } else {
-        chartOption.yAxis.min = this.chartInfo.param.min ? this.chartInfo.param.min : undefined
-        chartOption.yAxis.max = this.chartInfo.param.max ? this.chartInfo.param.max : undefined
+      chartOption.yAxis[0].min = this.chartInfo.param.min ? this.chartInfo.param.min : undefined
+      chartOption.yAxis[0].max = this.chartInfo.param.max ? this.chartInfo.param.max : undefined
+
+      // 右y轴
+      if (this.chartInfo.param.enable.rightYAxis) {
+        // 如果全都为右y轴数据 则右y轴显示网格
+        const allRight = this.series.every(item => item.yAxisIndex == 1)
+        chartOption.yAxis[1].splitLine.show = allRight
+
+        const unit = chartDataFormat.getUnit(lodash.get(this, 'chartInfo.param.rightYAxis.unit', 2))
+        chartOption.yAxis[1].axisLabel.formatter = this.yAxisLabelFormatter(undefined, undefined, undefined, unit, decimals)
+        chartOption.yAxis[1].min = this.chartInfo.param.rightYAxis.min ? this.chartInfo.param.rightYAxis.min : undefined
+        chartOption.yAxis[1].max = this.chartInfo.param.rightYAxis.max ? this.chartInfo.param.rightYAxis.max : undefined
+
+        // 有右y轴数据则显示name
+        this.hasRightYAxis = this.series.some(item => item.yAxisIndex == 1)
       }
 
       if (chartOption.toolbox.feature) {
@@ -166,7 +178,6 @@ export default {
         myChart.clear()
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
-
         this.$store.commit('setCurrentMousemove', 0)
         if (this.isInit && !this.isFullscreen) {
           // timeSeries类型图表设置group 用于多表联动
@@ -181,72 +192,6 @@ export default {
             }
           })
         }
-        const self = this
-        getChart(this.chartId).off('dataZoom')
-        getChart(this.chartId).on('dataZoom', function (params) {
-          if (this.chartInfo.param.min || this.chartInfo.param.max) {
-            return
-          }
-          if (params.batch[0].startValue) {
-            const chartInfo = self.chartInfo
-            const dataArg = self.$loadsh.cloneDeep(self.series)
-            dataArg.forEach(item => {
-              item.data = item.data.filter(value => value[0] > params.batch[0].startValue && value[0] < params.batch[0].endValue)
-            })
-            const maxValueCopies = self.getMaxValue(dataArg, chartInfo)
-            const maxValue = maxValueCopies.maxValue
-            const copies = maxValueCopies.copies
-            const unit = maxValueCopies.unit
-            const option = {
-              yAxis: {
-                minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
-                maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
-              }
-            }
-            if (!maxValueCopies.copies) {
-              option.yAxis.min = 0
-              option.yAxis.max = 1
-            } else {
-              option.yAxis.max = undefined
-            }
-            if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
-              delete option.yAxis.maxInterval
-            }
-            getChart(self.chartId) && getChart(self.chartId).setOption({
-              yAxis: {
-                ...option.yAxis
-              }
-            })
-          } else {
-            // 处理点击后的 Y轴
-            const chartInfo = self.chartInfo
-            const dataArg = self.series
-            const maxValueCopies = self.getMaxValue(dataArg, chartInfo)
-            const maxValue = maxValueCopies.maxValue
-            const copies = maxValueCopies.copies
-            const unit = maxValueCopies.unit
-            const option = {
-              yAxis: {
-                minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
-                maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
-              }
-            }
-            if (!maxValueCopies.copies) {
-              option.yAxis.min = 0
-              option.yAxis.max = 1
-            } else {
-              option.yAxis.max = undefined
-            }
-            if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
-              delete option.yAxis.maxInterval
-            }
-            getChart(self.chartId) && getChart(self.chartId).setOption({
-              yAxis: {
-                ...option.yAxis
-              }
-            })
-          }
-        })
         this.isInit = false
       }, 200)
     },
@@ -369,86 +314,155 @@ export default {
       return function (params) {
         const decimals = self.chartInfo.param.decimals || 2
         let str = '<div class="nz-chart__tooltip">'
-        let sum = 0
-        let flag = true
-        params.forEach((item, i) => {
-          const nameArr = item.seriesName.split('-')
-          if (nameArr.length > 1) {
-            nameArr.splice(nameArr.length - 1, 1)
+        // 区分左y轴右y轴
+        params.forEach(item => {
+          item.yAxisIndex = self.series[item.seriesIndex].yAxisIndex
+        })
+        // 排序先展示左y轴
+        params.sort((a, b) => a.yAxisIndex - b.yAxisIndex)
+        // 分割
+        const rightYAxisIndex = params.findIndex(item => item.yAxisIndex == 1)
+        let leftYAxis = []
+        let rightYAxis = []
+        if (rightYAxisIndex != -1) {
+          leftYAxis = params.slice(0, rightYAxisIndex)
+          rightYAxis = params.slice(rightYAxisIndex)
+        } else {
+          leftYAxis = params
+        }
+        handler(leftYAxis, 'left')
+        handler(rightYAxis, 'right')
+        function handler (arr, type) {
+          if (!arr.length) {
+            return
           }
-          const seriesName = nameArr.join('-')
-          if (i === 0 && item.seriesName.indexOf('Previous') === -1) {
-            const value = bus.computeTimezone(item.data[0] * 1000)
-            const tData = new Date(value)
-            str += '<div class="tooltip-title" style="margin-bottom: 5px">'
-            str += bus.timeFormate(tData)
-            str += '</div>'
-          }
-          if (flag && item.seriesName.indexOf('Previous') !== -1) {
-            flag = false
-            const value = bus.computeTimezone(item.data[0] * 1000 - self.minusTime)
-            const tData = new Date(value)
-            str += '<div style="border: 1px solid #EEEEEE"></div>'
-            str += '<div class="tooltip-title" style="margin-top: 5px;margin-bottom: 5px">'
-            str += bus.timeFormate(tData)
-            str += '</div>'
-          }
-          const color = self.colorList[item.seriesIndex]
-          const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
-          let paramsDot = bus.countDecimals(item.data[1])
-          if (paramsDot < self.chartDot) {
-            paramsDot = self.chartDot
-          } else if (paramsDot > 6) {
-            paramsDot = 6
-          }
-          const val = formatScientificNotation(item.data[1], paramsDot)
-          sum += isNaN(self.numberWithEConvent(val)) ? 0 : parseFloat(self.numberWithEConvent(val))
-          let previousDom = ''
-          if (previousItem) {
-            const previousVal = formatScientificNotation(previousItem.data[1], paramsDot)
-            let minusVal = 0
-            let operator
-            if (previousVal <= val) {
-              minusVal = val - previousVal
-              operator = '+'
-            } else {
-              minusVal = previousVal - val
-              operator = '-'
+          let sum = 0
+          let flag = true
+          arr.forEach((item, i) => {
+            let unit = self.chartInfo.unit ? self.chartInfo.unit : 2
+            if (type == 'right') {
+              unit = lodash.get(self, 'chartInfo.param.rightYAxis.unit', 2)
             }
-            previousDom = `
-              <span>${operator}${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(minusVal, null, -1, decimals)}</span>
+            const nameArr = item.seriesName.split('-')
+            if (nameArr.length > 1) {
+              nameArr.splice(nameArr.length - 1, 1)
+            }
+            const seriesName = nameArr.join('-')
+            if (i === 0 && item.seriesName.indexOf('Previous') === -1 && type == 'left') {
+              const value = bus.computeTimezone(item.data[0] * 1000)
+              const tData = new Date(value)
+              str += '<div class="tooltip-title" style="margin-bottom: 5px">'
+              str += bus.timeFormate(tData)
+              str += '</div>'
+            }
+            // 两条y轴数据分割线
+            if (i == 0 && rightYAxisIndex != 0 && type == 'right') {
+              str += '<div style="border: 1px solid #EEEEEE;margin-top: 5px;margin-bottom: 5px"></div>'
+            }
+            if (item.seriesName.indexOf('Previous') === -1 && type == 'right') {
+              if (i == 0 && (rightYAxisIndex == 0 || (arr.some(item => item.seriesName.indexOf('Previous') !== -1)))) {
+                const value = bus.computeTimezone(item.data[0] * 1000)
+                const tData = new Date(value)
+                str += '<div class="tooltip-title" style="margin-bottom: 5px">'
+                str += bus.timeFormate(tData)
+                str += '</div>'
+              }
+            }
+            // Previous分割线
+            if (i !== 0 && flag && item.seriesName.indexOf('Previous') !== -1) {
+              str += '<div style="border: 1px solid #EEEEEE;margin-top: 5px;margin-bottom: 5px"></div>'
+            }
+            if (flag && item.seriesName.indexOf('Previous') !== -1) {
+              flag = false
+              const value = bus.computeTimezone(item.data[0] * 1000 - self.minusTime)
+              const tData = new Date(value)
+              str += '<div class="tooltip-title" style="margin-bottom: 5px">'
+              str += bus.timeFormate(tData)
+              str += '</div>'
+            }
+            const color = self.colorList[item.seriesIndex]
+            const previousItem = arr.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
+            let paramsDot = bus.countDecimals(item.data[1])
+            if (paramsDot < self.chartDot) {
+              paramsDot = self.chartDot
+            } else if (paramsDot > 6) {
+              paramsDot = 6
+            }
+            const val = formatScientificNotation(item.data[1], paramsDot)
+            sum += isNaN(self.numberWithEConvent(val)) ? 0 : parseFloat(self.numberWithEConvent(val))
+            let previousDom = ''
+            if (previousItem) {
+              const previousVal = formatScientificNotation(previousItem.data[1], paramsDot)
+              let minusVal = 0
+              let operator
+              if (previousVal <= val) {
+                minusVal = val - previousVal
+                operator = '+'
+              } else {
+                minusVal = previousVal - val
+                operator = '-'
+              }
+              previousDom = `
+              <span>${operator}${chartDataFormat.getUnit(unit).compute(minusVal, null, -1, decimals)}</span>
             `
-          }
-          str += `
+            }
+
+            let className = 'row__color-block'
+            if (item.yAxisIndex == 0) {
+              className = 'yAxis-icon nz-icon nz-icon-zuozongzhou'
+            } else if (item.yAxisIndex == 1) {
+              className = 'yAxis-icon nz-icon nz-icon-youzongzhou'
+            }
+
+            str += `
             <div class="tooltip__row">
               <div class="row__label">
-                <span class="row__color-block" style="background-color: ${color}"></span>
+                <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${seriesName}</span>
               </div>
               <div class="row__value">
-                <span>${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(val, null, -1, decimals)}</span>
+                <span>${chartDataFormat.getUnit(unit).compute(val, null, -1, decimals)}</span>
                 ${previousDom}
               </div>
             </div>
           `
-        })
-        if (hasTotal) {
-          if (!self.stackTotalColor) {
-            self.stackTotalColor = randomcolor()
-          }
-          sum = parseFloat(Number(sum).toFixed(2))
+          })
+          // 显示total
+          if (hasTotal) {
+            sum = parseFloat(Number(sum).toFixed(2))
+            let unit = self.chartInfo.unit ? self.chartInfo.unit : 2
+            let className = 'row__color-block'
+            let color = ''
+            if (type == 'left') {
+              // 判断是否开启rightYAxis 否则显示普通图标
+              if (self.series.some(item => item.yAxisIndex == 0)) {
+                className = 'yAxis-icon nz-icon nz-icon-zuozongzhou'
+              }
+              if (!self.stackTotalColor) {
+                self.stackTotalColor = randomcolor()
+              }
+              color = self.stackTotalColor
+            } else {
+              unit = lodash.get(self, 'chartInfo.param.rightYAxis.unit', 2)
+              className = 'yAxis-icon nz-icon nz-icon-youzongzhou'
+              if (!self.stackTotalColorRight) {
+                self.stackTotalColorRight = randomcolor()
+              }
+              color = self.stackTotalColorRight
+            }
 
-          str += `
+            str += `
             <div class="tooltip__row">
               <div class="row__label">
-                <span class="row__color-block" style="background-color: ${self.stackTotalColor}"></span>
+                <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${self.$t('dashboard.panel.chartTotal')}</span>
               </div>
               <div class="row__value">
-                <span>${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(sum, null, decimals)}</span>
+                <span>${chartDataFormat.getUnit(unit).compute(sum, null, decimals)}</span>
               </div>
             </div>
           `
+          }
         }
 
         str += '</div>'
@@ -473,18 +487,11 @@ export default {
         option.toolbox[0].feature.myStack.iconStyle.borderColor = self.isStack ? self.toolboxIconColor.inactive : self.toolboxIconColor.active
         // 切换stack状态
         option.series.forEach((s, i) => {
-          self.isStack ? (s.stack = i) : (s.stack = 'Total')
+          self.isStack ? (s.stack = i) : (s.stack = 'Total' + s.yAxisIndex)
         })
         self.isStack = !self.isStack
         // 改变tooltip
         option.tooltip[0].formatter = self.tooltipFormatter(self.isStack)
-        if (!self.chartInfo.param.min && !self.chartInfo.param.max) {
-          if (!self.chartInfo.param.stack) {
-            option.yAxis.maxInterval = option.yAxis.maxInterval / (Math.ceil(option.series.length / 5) + 1)
-          } else {
-            option.yAxis.maxInterval = option.yAxis.maxInterval * (Math.ceil(option.series.length / 5) + 1)
-          }
-        }
         myChart.setOption(option)
       }
     },
@@ -492,6 +499,22 @@ export default {
       setTimeout(() => {
         getChart(this.chartId) && getChart(this.chartId).resize()
       }, 100)
+    },
+    legendChange (isGrey) {
+      let flag = false
+      // 点击legend 如果右y轴数据有一个不是灰色 则显示右y轴name
+      isGrey.forEach((item, index) => {
+        if (this.series[index].yAxisIndex == 1 && item == false) {
+          flag = true
+        }
+      })
+      this.hasRightYAxis = flag
+
+      const myChart = getChart(this.chartId)
+      const option = myChart.getOption()
+      if (option.yAxis[1].min && option.yAxis[1].max) {
+        this.hasRightYAxis = true
+      }
     }
   },
   mounted () {
@@ -504,3 +527,25 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.rightYAxis-name{
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 100%;
+  margin-left: calc(50% - 18px);
+  font-size: 12px;
+  color:#666666;
+  pointer-events:none;
+  span{
+    transform: rotate(90deg);
+    font-family: sans-serif;
+  }
+}
+</style>

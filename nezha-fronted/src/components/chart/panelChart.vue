@@ -306,6 +306,7 @@ export default {
                 } else {
                   if (r.status === 'success') {
                     r.data.result.forEach(item => {
+                      item.elements = elements[rIndex - elements.length]
                       this.allDataLength++
                       item.values.forEach(values => {
                         values[0] = values[0] + this.minusTime / 1000

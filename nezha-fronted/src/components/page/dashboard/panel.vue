@@ -248,7 +248,8 @@ export default {
             legend: true,
             valueMapping: false,
             thresholds: false,
-            visibility: false
+            visibility: false,
+            rightYAxis: false
           },
           thresholdShow: true,
           thresholds: [{ value: undefined, color: randomcolor() }],
@@ -258,6 +259,14 @@ export default {
             operator: 'equal',
             varValue: '',
             result: 'show'
+          },
+          rightYAxis: {
+            elementNames: [],
+            style: 'line',
+            unit: 2,
+            label: '',
+            min: undefined,
+            max: undefined
           }
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
@@ -269,7 +278,7 @@ export default {
       },
       pageObj: {
         pageNo: 1,
-        pageSize: -1, // 此处获取所有数据，所以设置一个较大的值
+        pageSize: -1, // 此处获取所有数据
         total: 0
       },
       blankChartTemp: {
@@ -602,7 +611,16 @@ export default {
             } else {
               this.chart.param = {}
             }
-
+            if (!this.chart.param.rightYAxis) {
+              this.chart.param.rightYAxis = {
+                elementNames: [],
+                style: 'line',
+                unit: 2,
+                label: '',
+                min: undefined,
+                max: undefined
+              }
+            }
             if (!this.chart.groupId || this.chart.groupId == -1) {
               this.chart.groupId = ''
             }
