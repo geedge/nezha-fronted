@@ -14,38 +14,47 @@
         fontSize: item.fontSize,
       }"
     >
-      <div>
-        <span v-if="chartInfo.param.text==='all'">
-        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
-          {{item.legend}}<br/>
-          <template v-if="item.mapping && item.mapping.icon">
-            <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
-          </template>
-          <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
-        </span>
-        <span v-else>{{item.legend}}<br/><span>{{item.showValue}}</span></span>
-      </span>
-        <span v-if="chartInfo.param.text==='legend'">
-        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
-          {{item.legend}}<br/>
-          <template v-if="item.mapping && item.mapping.icon">
-            <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
-          </template>
-          <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
-        </span>
-        <span v-else>{{item.legend}}</span>
-      </span>
-        <span v-if="chartInfo.param.text==='value'|| !chartInfo.param.text">
-        <span v-if="item.mapping" :style="{color:item.mapping.color.text}">
-          <template v-if="item.mapping && item.mapping.icon">
-            <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
-          </template>
-          {{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}
-        </span>
-        <span v-else>{{item.showValue}}</span>
-      </span>
-        <span v-if="chartInfo.param.text==='none'"></span>
+      <div style="position: relative;z-index: 10;">
+        <!-- all -->
+        <template v-if="chartInfo.param.text==='all'">
+          <div v-if="item.mapping" :style="{color:item.mapping.color.text}">
+            <p>{{item.legend}}</p>
+            <template v-if="item.mapping && item.mapping.icon">
+              <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
+            </template>
+            <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+          </div>
+          <div v-else>
+            <p>{{item.legend}}</p>
+            <span>{{item.showValue}}</span>
+          </div>
+        </template>
+        <!-- legend -->
+        <template v-if="chartInfo.param.text==='legend'">
+          <div v-if="item.mapping" :style="{color:item.mapping.color.text}">
+            <template v-if="item.mapping && item.mapping.icon">
+              <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
+            </template>
+            <span>{{item.legend}}</span>
+          </div>
+          <div v-else>{{item.legend}}</div>
+        </template>
+        <!-- value -->
+        <template v-if="chartInfo.param.text==='value'|| !chartInfo.param.text">
+          <div v-if="item.mapping" :style="{color:item.mapping.color.text}">
+            <template v-if="item.mapping && item.mapping.icon">
+              <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
+            </template>
+            <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+          </div>
+          <div v-else>{{item.showValue}}</div>
+        </template>
+        <!-- none -->
+        <template v-if="chartInfo.param.text==='none'"></template>
       </div>
+
+      <!-- sparkline -->
+      <div class="sparkline" :id="`chart-canvas-${chartId}-${index}`" v-if="chartInfo.param.sparklineMode && chartInfo.param.sparklineMode !== 'none'"></div>
     </div>
     <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
       <div class="chart-canvas-tooltip-title tooltip-title">
@@ -73,7 +82,9 @@ import chartDataFormat from '@/components/chart/chartDataFormat'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import { initColor } from '@/components/chart/chart/tools'
 // import fontWidth from '@/components/chart/chart/options/fontWidth'
-
+import * as echarts from 'echarts'
+import chartSparklineOption from './options/chartSparkline'
+import lodash from 'lodash'
 export default {
   name: 'chart-stat',
   mixins: [chartMixin, chartFormat],
@@ -95,7 +106,9 @@ export default {
       fontSize: 12,
       customFontSize: '',
       minFontSzie: 12,
-      defaultUnit: 60 // 根据stat的长宽取 需要的字体 = (取最短的边 / defaultUnit) * fontSize 因为 需要的字体/fontSize = 实际宽 / defaultUnit
+      defaultUnit: 60, // 根据stat的长宽取 需要的字体 = (取最短的边 / defaultUnit) * fontSize 因为 需要的字体/fontSize = 实际宽 / defaultUnit
+      sparkline: {},
+      maxValue: 0
     }
   },
   methods: {
@@ -107,6 +120,11 @@ export default {
         }
         this.getLayout().then(layout => {
           this.renderStat(layout)
+          if (this.chartInfo.param.sparklineMode && this.chartInfo.param.sparklineMode !== 'none') {
+            this.$nextTick(() => {
+              this.drawChart()
+            })
+          }
         })
       })
     },
@@ -127,9 +145,8 @@ export default {
               height: '',
               legend: '',
               name: '',
-              mapping: {
-
-              }
+              mapping: {},
+              data: {}
             }
             stat.value = getMetricTypeValue(data.values, chartInfo.param.statistics)
             stat.label = data.metric
@@ -138,66 +155,27 @@ export default {
             stat.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
             stat.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(stat.value, null, -1, decimals)
             stat.mapping = this.selectMapping(stat.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
+            stat.data = data.values
             this.statData.push(stat)
             colorIndex++
           })
         })
+        let maxValue = 0
+        if (this.statData.length > 0) {
+          maxValue = 0
+          for (let j = 0; j < this.statData.length; j++) {
+            for (let i = 0; i < this.statData[j].data.length; i++) {
+              if (!isNaN(this.statData[j].data[i][1])) {
+                maxValue = (maxValue < Number(this.statData[j].data[i][1]) ? Number(this.statData[j].data[i][1]) : maxValue)
+              }
+            }
+          }
+        }
+        this.maxValue = maxValue
+
         this.$emit('chartIsNoData', this.isNoData)
         resolve()
       })
-    },
-    statMouseMove (e) {
-      const windowWidth = window.innerWidth// 窗口宽度
-      const windowHeight = window.innerHeight// 窗口高度
-      const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
-      if (box) {
-        const boxWidth = box.offsetWidth
-        const boxHeight = box.offsetHeight
-        if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-          this.tooltip.x = e.pageX + 15
-        } else {
-          this.tooltip.x = e.pageX - boxWidth - 15
-        }
-        if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
-          this.tooltip.y = e.pageY + 15
-        } else {
-          this.tooltip.y = e.pageY - boxHeight - 10
-        }
-      } else {
-        this.tooltip.y = e.pageY + 15
-        this.tooltip.x = e.pageX + 15
-      }
-    },
-    statMouseEnter (that, e) {
-      this.tooltip.title = this.$loadsh.cloneDeep(that.legend)
-      this.tooltip.value = this.$loadsh.cloneDeep(that.showValue)
-      this.tooltip.mapping = this.$loadsh.cloneDeep(that.mapping)
-      this.tooltip.show = true
-      this.$nextTick(() => {
-        const windowWidth = window.innerWidth// 窗口宽度
-        const windowHeight = window.innerHeight// 窗口高度
-        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
-        if (box) {
-          const boxWidth = box.offsetWidth
-          const boxHeight = box.offsetHeight
-          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-            this.tooltip.x = e.pageX + 15
-          } else {
-            this.tooltip.x = e.pageX - boxWidth - 15
-          }
-          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
-            this.tooltip.y = e.pageY + 15
-          } else {
-            this.tooltip.y = e.pageY - boxHeight - 10
-          }
-        } else {
-          this.tooltip.y = e.pageY + 15
-          this.tooltip.x = e.pageX + 15
-        }
-      })
-    },
-    statMouseleave (taht) {
-      this.tooltip.show = false
     },
     getLayout () {
       try {
@@ -327,6 +305,34 @@ export default {
       })
       this.isInit = false
     },
+    // 绘制图表
+    drawChart () {
+      this.statData.forEach((item, index) => {
+        const chart = this.sparkline[index] ? this.sparkline[index] : echarts.init(document.getElementById(`chart-canvas-${this.chartId}-${index}`))
+        const chartOption = lodash.cloneDeep(chartSparklineOption)
+        // sparkline 颜色和 字体颜色 保持一致
+        const theme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`) || 'light'
+        let color = theme === 'light' ? '#666666' : '#BEBEBE'
+        if (item.mapping) {
+          color = item.mapping.color.text
+        }
+        chartOption.series = [{
+          ...chartOption.series[0],
+          data: item.data,
+          lineStyle: {
+            color
+          }
+        }]
+        if (this.chartInfo.param.sparklineMode === 'area') {
+          chartOption.series[0].areaStyle = {
+            color
+          }
+        }
+        chartOption.yAxis.max = this.maxValue
+        chart.setOption(chartOption)
+        this.sparkline[index] = chart
+      })
+    },
     resize () {
       if (this.statTimer) {
         clearTimeout(this.statTimer)
@@ -335,8 +341,67 @@ export default {
       this.statTimer = setTimeout(() => {
         this.getLayout().then(layout => {
           this.renderStat(layout)
+
+          this.$nextTick(() => {
+            for (const key in this.sparkline) {
+              this.sparkline[key].resize()
+            }
+          })
         })
       }, 50)
+    },
+    statMouseMove (e) {
+      const windowWidth = window.innerWidth// 窗口宽度
+      const windowHeight = window.innerHeight// 窗口高度
+      const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+      if (box) {
+        const boxWidth = box.offsetWidth
+        const boxHeight = box.offsetHeight
+        if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+          this.tooltip.x = e.pageX + 15
+        } else {
+          this.tooltip.x = e.pageX - boxWidth - 15
+        }
+        if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+          this.tooltip.y = e.pageY + 15
+        } else {
+          this.tooltip.y = e.pageY - boxHeight - 10
+        }
+      } else {
+        this.tooltip.y = e.pageY + 15
+        this.tooltip.x = e.pageX + 15
+      }
+    },
+    statMouseEnter (that, e) {
+      this.tooltip.title = this.$loadsh.cloneDeep(that.legend)
+      this.tooltip.value = this.$loadsh.cloneDeep(that.showValue)
+      this.tooltip.mapping = this.$loadsh.cloneDeep(that.mapping)
+      this.tooltip.show = true
+      this.$nextTick(() => {
+        const windowWidth = window.innerWidth// 窗口宽度
+        const windowHeight = window.innerHeight// 窗口高度
+        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        if (box) {
+          const boxWidth = box.offsetWidth
+          const boxHeight = box.offsetHeight
+          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            this.tooltip.x = e.pageX + 15
+          } else {
+            this.tooltip.x = e.pageX - boxWidth - 15
+          }
+          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            this.tooltip.y = e.pageY + 15
+          } else {
+            this.tooltip.y = e.pageY - boxHeight - 10
+          }
+        } else {
+          this.tooltip.y = e.pageY + 15
+          this.tooltip.x = e.pageX + 15
+        }
+      })
+    },
+    statMouseleave () {
+      this.tooltip.show = false
     },
     setFontSize (item) {
       let fontSize = ''
@@ -362,10 +427,12 @@ export default {
   mounted () {
     this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart()
+  },
+  beforeDestroy () {
+    for (const key in this.sparkline) {
+      this.sparkline[key].dispose()
+      this.sparkline[key] = null
+    }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

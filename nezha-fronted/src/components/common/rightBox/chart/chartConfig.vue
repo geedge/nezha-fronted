@@ -398,9 +398,9 @@
         </el-form-item>
       </div>
 
-      <div class="form-items--half-width-group" v-if="isShowDecimals(chartConfig.type)">
+      <div class="form-items--half-width-group">
         <!--decimals-->
-        <el-form-item :label="$t('overall.decimal')" class="form-item--half-width">
+        <el-form-item :label="$t('overall.decimal')" class="form-item--half-width" v-if="isShowDecimals(chartConfig.type)">
           <el-input-number
             size="small"
             style="margin-top: 2px"
@@ -408,6 +408,23 @@
             @change="change"
             :placeholder="'Default 2'"
             show-word-limit v-model="chartConfig.param.decimals"/>
+        </el-form-item>
+        <!-- Sparkline mode -->
+        <el-form-item :label="$t('dashboard.panel.chartForm.sparklineMode')" class="form-item--half-width" v-if="isShowSparkline(chartConfig.type)">
+          <el-select
+            v-model="chartConfig.param.sparklineMode"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="change"
+          >
+            <el-option
+              v-for="item in sparklineTypeList"
+              :key="item.value"
+              :label="$t(item.name)"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </div>
 
@@ -1198,6 +1215,9 @@ export default {
         case 'bubble':
         case 'rank':
         case 'funnel':
+          if (this.oldType === 'stat') {
+            this.chartConfig.param.sparklineMode = 'line'
+          }
           if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'sankey' || this.oldType === 'hexagon' || this.oldType === 'bubble' || this.oldType === 'rank' || this.oldType === 'funnel') {
             break
           }
@@ -1221,7 +1241,8 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
-            }
+            },
+            sparklineMode: 'line'
           }
           break
         case 'bar':

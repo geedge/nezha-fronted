@@ -378,20 +378,25 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.point.label')
         }
       ],
-      isChoose: []
+      sparklineTypeList: [
+        {
+          id: 'line',
+          name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
+        },
+        {
+          id: 'area',
+          name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
+        },
+        {
+          id: 'none',
+          name: this.$t('project.topology.none')
+        }
+      ]
     }
   },
   mixins: [rz],
   methods: {
     isStat,
-    // 隐藏icon列表
-    closeChoose (index) {
-      this.$set(this.isChoose, index, false)
-    },
-    // 显示icon列表
-    chooseIcon (value, index) {
-      this.$set(this.isChoose, index, !value)
-    },
     // icon点击
     iconActive (item, subItem, index) {
       if (item.icon === subItem.value) {

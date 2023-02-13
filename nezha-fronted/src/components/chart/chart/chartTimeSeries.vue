@@ -529,25 +529,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.rightYAxis-name{
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 100%;
-  margin-left: calc(50% - 18px);
-  font-size: 12px;
-  color:#666666;
-  pointer-events:none;
-  span{
-    transform: rotate(90deg);
-    font-family: sans-serif;
-  }
-}
-</style>

@@ -251,6 +251,9 @@ export default {
           delete params.param.min
           delete params.param.max
         }
+        if (!this.isShowSparkline(params.type)) {
+          delete params.param.sparklineMode
+        }
         if (!params.x && !params.y && this.from === 'endpointQuery') { // endpointQuery 新增 放在最后
           params.x = 0
           params.y = 999

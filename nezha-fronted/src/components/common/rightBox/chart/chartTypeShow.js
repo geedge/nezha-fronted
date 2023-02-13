@@ -231,6 +231,13 @@ export default {
           return true
         default: return false
       }
+    },
+    isShowSparkline (type) {
+      switch (type) {
+        case 'stat':
+          return true
+        default: return false
+      }
     }
   }
 }

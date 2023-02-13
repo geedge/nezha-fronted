@@ -14,13 +14,13 @@
         <div
           v-for="(item, index) in legends"
           :key="index"
-          v-show="series[index].yAxisIndex!=1"
+          v-show="!isTimeSeries||series[index].yAxisIndex!=1"
           :class="{'row--inactive': isGrey[index]}"
           class="legend--table-row"
           @click="clickLegend(item.name, index)"
         >
           <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
-            <i v-if="series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
+            <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
             <span v-else :style="{background: item.color}" class="legend-shape"></span>
             <span>{{item.alias ? item.alias : item.name}}</span>
           </div>
@@ -30,13 +30,13 @@
         <div
           v-for="(item, index) in legends"
           :key="index+'right'"
-          v-show="series[index].yAxisIndex==1"
+          v-show="isTimeSeries&&series[index].yAxisIndex==1"
           :class="{'row--inactive': isGrey[index]}"
           class="legend--table-row"
           @click="clickLegend(item.name, index)"
         >
           <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
-            <i v-if="series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
+            <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
             <span v-else :style="{background: item.color}" class="legend-shape"></span>
             <span>{{item.alias ? item.alias : item.name}}</span>
           </div>
@@ -53,31 +53,31 @@
             <li
               v-for="(item, index) in legends"
               :key="index"
-              v-show="series[index].yAxisIndex!=1"
+              v-show="!isTimeSeries||series[index].yAxisIndex!=1"
               :class="{'legend-item--inactive': isGrey[index]}"
               :title="item.alias ? item.alias : item.name"
               class="legend-item"
               @click="clickLegend(item.name, index)"
             >
-              <i v-if="series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
+              <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
               <span v-else :style="{background: item.color}" class="legend-shape"></span>
               <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
             </li>
           </ul>
         </div>
         <!-- 右y轴legend -->
-        <div class="rightYAxis">
+        <div class="rightYAxis-legend">
           <ul>
             <li
               v-for="(item, index) in legends"
               :key="index+'right'"
-              v-show="series[index].yAxisIndex==1"
+              v-show="isTimeSeries&&series[index].yAxisIndex==1"
               :class="{'legend-item--inactive': isGrey[index]}"
               :title="item.alias ? item.alias : item.name"
               class="legend-item"
               @click="clickLegend(item.name, index)"
             >
-              <i v-if="series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
+              <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
               <span v-else :style="{background: item.color}" class="legend-shape"></span>
               <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
             </li>
@@ -91,13 +91,13 @@
       <div
         v-for="(item, index) in legends"
         :key="index"
-        v-show="series[index].yAxisIndex!=1"
+        v-show="!isTimeSeries||series[index].yAxisIndex!=1"
         :class="{'legend-item--inactive': isGrey[index]}"
         :title="item.alias ? item.alias : item.name"
         class="legend-item"
         @click="clickLegend(item.name, index)"
       >
-        <i v-if="series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
+        <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
         <span v-else :style="{background: item.color}" class="legend-shape"></span>
         <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
       </div>
@@ -105,13 +105,13 @@
       <div
         v-for="(item, index) in legends"
         :key="index+'right'"
-        v-show="series[index].yAxisIndex==1"
+        v-show="isTimeSeries&&series[index].yAxisIndex==1"
         :class="{'legend-item--inactive': isGrey[index]}"
         :title="item.alias ? item.alias : item.name"
         class="legend-item"
         @click="clickLegend(item.name, index)"
       >
-        <i v-if="series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
+        <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
         <span v-else :style="{background: item.color}" class="legend-shape"></span>
         <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
       </div>
@@ -125,7 +125,6 @@ import { getChart } from '@/components/common/js/common'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import { statisticsList } from '@/components/common/js/constants'
 import * as chart from 'echarts'
-import { isTimeSeries } from './tools'
 export default {
   name: 'chartLegend',
   props: {
@@ -151,6 +150,9 @@ export default {
     // timeSeries类型图表联动
     isConnect () {
       return this.$store.state.panel.isConnect
+    },
+    isTimeSeries () {
+      return this.chartInfo.type === 'line' || this.chartInfo.type === 'area' || this.chartInfo.type === 'point'
     }
   },
   methods: {
@@ -181,7 +183,7 @@ export default {
 
       if (echarts) {
         // 判断timeSeries类型图表 先取消多表联动
-        if (isTimeSeries(this.chartInfo.type) && (this.isConnect && this.isConnect !== 'none')) {
+        if (this.isTimeSeries && (this.isConnect && this.isConnect !== 'none')) {
           chart.disconnect('timeSeriesGroup')
         }
         if (!hasGrey) { // 1.除当前legend外全置灰
@@ -206,11 +208,11 @@ export default {
           })
           this.$set(this.isGrey, index, !this.isGrey[index])
         }
-        if (isTimeSeries(this.chartInfo.type)) {
+        if (this.isTimeSeries) {
           this.$parent.legendChange(this.isGrey)
         }
         // 判断timeSeries类型图表 建立多表联动
-        if (isTimeSeries(this.chartInfo.type) && (this.isConnect && this.isConnect !== 'none')) {
+        if (this.isTimeSeries && (this.isConnect && this.isConnect !== 'none')) {
           chart.connect('timeSeriesGroup')
         }
       }
@@ -350,17 +352,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.legend-box{
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-.rightYAxis{
-  display: flex;
-  justify-content: flex-end;
-  flex-grow: 1;
-}
-</style>
