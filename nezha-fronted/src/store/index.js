@@ -50,7 +50,9 @@ const store = new Vuex.Store({
     nowPath: '',
     myEvent: new Event('resize'),
     deleteTableRel: {},
-    showDeleteTableRel: false
+    showDeleteTableRel: false,
+    diagnosisTab: {}, // 故障诊断
+    showDiagnosisTab: false
   },
   getters: {
     getGlobalSearchId (state) {
@@ -112,6 +114,12 @@ const store = new Vuex.Store({
     },
     getShowDeleteTableRel (state) {
       return state.showDeleteTableRel
+    },
+    getDiagnosisTab (state) {
+      return state.diagnosisTab
+    },
+    getShowDiagnosisTab (state) {
+      return state.showDiagnosisTab
     }
   },
   mutations: {
@@ -228,6 +236,12 @@ const store = new Vuex.Store({
       if (!flag) {
         state.deleteTableRel = {}
       }
+    },
+    setDiagnosisTab (state, payload) {
+      state.diagnosisTab = payload
+    },
+    setShowDiagnosisTab (state, flag) {
+      state.showDiagnosisTab = flag
     }
   },
   actions: {
@@ -237,6 +251,13 @@ const store = new Vuex.Store({
     },
     dispatchShowDeleteTableRel (store, flag) {
       store.commit('setShowDeleteTableRel', flag)
+    },
+    diagnosisTab (store, payload) { // 故障诊断
+      store.commit('setDiagnosisTab', payload)
+      store.commit('setShowDiagnosisTab', true)
+    },
+    dispatchShowDiagnosisTab (store, flag) {
+      store.commit('setShowDiagnosisTab', flag)
     }
   }
 })

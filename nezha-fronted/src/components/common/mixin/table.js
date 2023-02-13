@@ -93,6 +93,14 @@ export default {
           this.$emit('metricTarget', row, param)
           break
         }
+        case 'diagnosis': {
+          this.$store.dispatch('diagnosisTab', {
+            row: row,
+            url: this.api,
+            ...param
+          })
+          break
+        }
         default:
           this.$emit(command, row, param)
           break

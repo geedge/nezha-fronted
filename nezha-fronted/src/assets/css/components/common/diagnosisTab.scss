@@ -1,0 +1,106 @@
+#diagnosisTab{
+    .el-dialog__header{
+        padding: 16px 20px;
+        .el-dialog__title{
+            font-size: 14px;
+            font-weight: 600;
+        }
+        border-bottom: 1px solid $--border-color-light;
+    }
+    .el-dialog__body{
+        padding: 0;
+        .dialog-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 30px;
+            padding-right: 38px;
+            border-bottom: 1px solid $--border-color-light;
+            background: $--background-color-base;
+            font-size: 12px;
+            color:$--color-text-regular;
+            .dialog-header-l{
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                i.nz-icon{
+                    font-size: 72px;
+                    color: #AEB8C2;
+                    margin-right: 11px;
+                }
+                .dialog-header-name{
+                    font-size: 14px;
+                    letter-spacing: 0;
+                    line-height: 22px;
+                    font-weight: 600;
+                    margin-bottom: 4px;
+                }
+                .dialog-header-item{
+                    text-transform: uppercase;
+                    color: $--color-text-secondary;
+                    span{
+                        margin-right: 10px;
+                    }
+                }
+            }
+        }
+        .diagnosis-table{
+            padding-left: 20px;
+            #diagnosisTable{
+                &::before{
+                    display: none;
+                }
+                .has-gutter{
+                    display: none;
+                }
+                .el-table__expand-icon{
+                    transform: rotate(90deg);
+                }
+                .el-table__expand-icon--expanded{
+                    color: $--color-primary;
+                    transform: rotate(270deg);
+                }
+                td.el-table__expanded-cell {
+                    padding: 15px 0 15px 45px;
+                    background-color: $--background-color-empty !important;
+                  }
+                td.el-table__expanded-cell:hover {
+                    padding: 15px 0 15px 45px;
+                    background-color: $--background-color-base !important;
+                  }
+                .expand-details{
+                    color: $--color-primary;
+                }
+                .el-table__body {
+                    tr{
+                        background: $--background-color-empty;
+                        td{
+                            border-color: $--border-color-light;
+                        }  
+                        &:nth-last-of-type(1){
+                            td{
+                                border-color: transparent;
+                            } 
+                        }
+                    }
+                }
+                &.el-table--enable-row-hover .el-table__body tr:hover>td{
+                    background-color: $--background-color-base !important;
+                }
+            }
+        }
+        .my-loading-box{
+            opacity: 1 !important;
+        }
+    }
+    .el-dialog__footer{
+        border-top: 1px solid $--border-color-light;
+        padding: 13px 20px;
+        margin-top: 0;
+        #diagnosis-cancel{
+            padding: 0 11px;
+            margin-right: 0;
+            font-weight: 600;
+        }
+    }
+}
