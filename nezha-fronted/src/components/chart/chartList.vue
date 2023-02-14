@@ -44,6 +44,7 @@
         @container-resized="containerResizedEvent"
       >
         <panel-chart
+          :variablesInit="variablesInit"
           :ref="'chart' + item.id"
           @edit-chart="$emit('edit-chart', item)"
           :chart-info="item"
@@ -79,7 +80,6 @@
       <panel-chart
         :ref="'chart-fullscreen' + fullscreen.chartInfo.id"
         :chart-info="fullscreen.chartInfo"
-        :variablesInit="variablesInit"
         :from="from"
         :filter="filter"
         :is-fullscreen="true"

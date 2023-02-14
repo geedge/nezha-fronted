@@ -44,47 +44,6 @@
         </div>
       </div>
     </template>
-    <!-- placement=bottom -->
-    <template v-else-if="chartInfo.param.legend.placement=='bottom'">
-      <div class="legend-box">
-        <div style="display:flex">
-          <!-- 左y轴legend -->
-          <ul>
-            <li
-              v-for="(item, index) in legends"
-              :key="index"
-              v-show="!isTimeSeries||series[index].yAxisIndex!=1"
-              :class="{'legend-item--inactive': isGrey[index]}"
-              :title="item.alias ? item.alias : item.name"
-              class="legend-item"
-              @click="clickLegend(item.name, index)"
-            >
-              <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
-              <span v-else :style="{background: item.color}" class="legend-shape"></span>
-              <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
-            </li>
-          </ul>
-        </div>
-        <!-- 右y轴legend -->
-        <div class="rightYAxis-legend">
-          <ul>
-            <li
-              v-for="(item, index) in legends"
-              :key="index+'right'"
-              v-show="isTimeSeries&&series[index].yAxisIndex==1"
-              :class="{'legend-item--inactive': isGrey[index]}"
-              :title="item.alias ? item.alias : item.name"
-              class="legend-item"
-              @click="clickLegend(item.name, index)"
-            >
-              <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
-              <span v-else :style="{background: item.color}" class="legend-shape"></span>
-              <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </template>
      <!-- 否则是普通形式 -->
     <template v-else>
       <!-- 左y轴legend -->

@@ -296,28 +296,42 @@ export default {
           query: encodeURIComponent(query)
         }
         this.$get(url, params).then(res => {
-          if (res.status === 'error') {
+          if (res.status === 'error' || !res.data.result.length) {
             resolve([])
             return
           }
-          const arr = res.data.result.map((metricData) => {
-            let text = metricData.metric.__name__ || ''
-            delete metricData.metric.__name__
-            text += '{'
-            const arr = []
-            Object.keys(metricData.metric).forEach(key => {
-              arr.push(key + '="' + metricData.metric[key] + '"')
+          const isObject = Object.prototype.toString.call(res.data.result[0]).toLowerCase() === '[object object]'
+          if (!isObject) {
+            resolve([
+              {
+                label: res.data.result[0],
+                value: res.data.result[0],
+                expandable: true
+              }
+            ])
+          } else {
+            const arr = res.data.result.map((metricData) => {
+              let text = ''
+              if (metricData.metric) {
+                text = metricData.metric.__name__ || ''
+                delete metricData.metric.__name__
+              }
+              text += '{'
+              const arr = []
+              Object.keys(metricData.metric).forEach(key => {
+                arr.push(key + '="' + metricData.metric[key] + '"')
+              })
+              text += arr.join(',')
+              text += '}'
+              text += ' ' + metricData.value[1] + ' ' + metricData.value[0] * 1000
+              return {
+                label: text,
+                value: text,
+                expandable: true
+              }
             })
-            text += arr.join(',')
-            text += '}'
-            text += ' ' + metricData.value[1] + ' ' + metricData.value[0] * 1000
-            return {
-              label: text,
-              value: text,
-              expandable: true
-            }
-          })
-          resolve(arr)
+            resolve(arr)
+          }
         })
       })
     },
