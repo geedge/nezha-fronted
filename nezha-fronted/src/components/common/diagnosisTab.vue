@@ -18,7 +18,7 @@
         <div class="dialog-header-l">
             <i class="nz-icon nz-icon-Diagnosis1"></i>
             <div>
-              <div class="dialog-header-name">{{$t('project.endpoint.endpointName')}}</div>
+              <div class="dialog-header-name">{{diagnosisTabData.row.name}}</div>
               <div v-html="suspendedStr(diagnosisTabData.row.configs[0].state)" class="dialog-header-item">
               </div>
             </div>
@@ -128,8 +128,8 @@ export default {
         {
           label: 'state',
           prop: 'state',
-          minWidth: 34,
-          width: 34
+          minWidth: 24,
+          width: 24
         }, {
           label: 'name',
           prop: 'item',
@@ -187,13 +187,13 @@ export default {
       let str = ''
       arr.forEach((item, index) => {
         if (index === 0) {
-          str += `<span><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> DC</span>`
+          str += `<div><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> DC</div>`
         }
         if (index === 1) {
-          str += `<span><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> ASSET</span>`
+          str += `<div><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> ASSET</div>`
         }
         if (index === 2) {
-          str += `<span><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> ENDPOINT</span>`
+          str += `<div><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> ENDPOINT</div>`
         }
       })
       return str
@@ -225,6 +225,7 @@ export default {
     dialogVisible (n) {
       if (!n) {
         this.$store.dispatch('dispatchShowDiagnosisTab', false)
+        this.elapsedTime = 0
       }
     }
   },

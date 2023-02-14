@@ -36,10 +36,17 @@
                     margin-bottom: 4px;
                 }
                 .dialog-header-item{
+                    display: flex;
                     text-transform: uppercase;
                     color: $--color-text-secondary;
-                    span{
+                    &>div{
+                        display: flex;
+                        align-items: center;
                         margin-right: 10px;
+                        .active-icon{
+                            width: 6px;
+                            height: 6px;
+                        }
                     }
                 }
             }
@@ -61,11 +68,11 @@
                     transform: rotate(270deg);
                 }
                 td.el-table__expanded-cell {
-                    padding: 15px 0 15px 45px;
+                    padding: 15px 0 15px 34px;
                     background-color: $--background-color-empty !important;
                   }
                 td.el-table__expanded-cell:hover {
-                    padding: 15px 0 15px 45px;
+                    padding: 15px 0 15px 34px;
                     background-color: $--background-color-base !important;
                   }
                 .expand-details{
@@ -76,7 +83,15 @@
                         background: $--background-color-empty;
                         td{
                             border-color: $--border-color-light;
-                        }  
+                            i.nz-icon{
+                                font-size: 14px;
+                            }
+                            &:nth-of-type(1){
+                                .cell{
+                                    padding-right: 0;
+                                }
+                            }
+                        } 
                         &:nth-last-of-type(1){
                             td{
                                 border-color: transparent;
