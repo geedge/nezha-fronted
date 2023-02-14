@@ -112,6 +112,11 @@
       :delete-objs="singleDelete"
       @before="delFlag=true"
     ></delete-button>
+    <diagnosis-tab
+      ref="diagnosisTab"
+      :api="diagnosisTabData.url"
+      :diagnosisTabData ="diagnosisTabData"
+    ></diagnosis-tab>
   </div>
 </template>
 
@@ -124,6 +129,7 @@ import bus from '@/libs/bus'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import SearchBox from '@/components/common/searchBox/searchBox'
 import deleteButton from '@/components/common/deleteButton'
+import diagnosisTab from '@/components/common/diagnosisTab'
 export default {
   name: 'nzDataList',
   mixins: [routerPathParams],
@@ -131,7 +137,8 @@ export default {
     SearchBox,
     bottomBox,
     panelChart,
-    deleteButton
+    deleteButton,
+    diagnosisTab
   },
   props: {
     from: {
@@ -179,6 +186,9 @@ export default {
     },
     deleteTableRel () {
       return this.$store.getters.getDeleteTableRel
+    },
+    diagnosisTab () {
+      return this.$store.getters.getDiagnosisTab
     }
   },
   data () {
@@ -207,7 +217,9 @@ export default {
         showCustomTableTitle: false // 自定义列弹框是否显示
       },
       showLayout: [],
-      timeRange: [new Date(), new Date()]
+      timeRange: [new Date(), new Date()],
+      // 故障诊断数据
+      diagnosisTabData: {}
     }
   },
   mounted () {
@@ -294,6 +306,9 @@ export default {
       if (n) {
         this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single, this.deleteTableRel.deleteTitle)
       }
+    },
+    diagnosisTab (n) {
+      this.diagnosisTabData = n
     }
   },
   beforeDestroy () {
