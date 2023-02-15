@@ -170,7 +170,15 @@ export default {
         const now = new Date(bus.computeTimezone(new Date().getTime()))
         const origin = new Date(bus.timeFormate(bus.formateTimeToTime(this.timeRange[1]), 'YYYY-MM-DD HH:mm:ss'))
         const numInterval = now.getTime() - origin.getTime()
-        if (numInterval >= 60000) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
+        let nowTimeType = this.$route.query.nowTimeType
+        if (!nowTimeType) {
+          nowTimeType = {
+            value: 1
+          }
+        } else {
+          nowTimeType = JSON.parse(nowTimeType)
+        }
+        if (numInterval >= 6 && nowTimeType.value !== -1) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
           startTime = bus.getNewTime(bus.formateTimeToTime(this.timeRange[0]), numInterval, 'YYYY-MM-DD HH:mm:ss')
           endTime = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
         } else {
@@ -306,6 +314,7 @@ export default {
                 } else {
                   if (r.status === 'success') {
                     r.data.result.forEach(item => {
+                      item.elements = elements[rIndex - elements.length]
                       this.allDataLength++
                       item.values.forEach(values => {
                         values[0] = values[0] + this.minusTime / 1000
@@ -470,7 +479,13 @@ export default {
           case 'logs': {
             this.chartData = []
             elements.forEach((element, index) => {
-              this.chartData.push(this.dataJson[this.chartInfo.id + '_' + index].data.result)
+              const data = this.dataJson[this.chartInfo.id + '_' + index].data.result.map(item => {
+                return {
+                  ...item,
+                  elements: element
+                }
+              })
+              this.chartData.push(data)
             })
             break
           }
