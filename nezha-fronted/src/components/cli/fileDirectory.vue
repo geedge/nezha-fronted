@@ -3,7 +3,7 @@
     <div class="file-directory-header">
         {{$t('terminal.sftp')}}
         <span class="header-option">
-          <i class="nz-icon nz-icon-upload" @click="uploadFile"></i>
+<!--          <i class="nz-icon nz-icon-upload" @click="uploadFile"></i>-->
           <i class="nz-icon nz-icon-close" @click="$emit('close')"></i>
         </span>
     </div>
@@ -22,7 +22,7 @@
           </span>
         </el-input>
       </span>
-      <div class="path-option">
+      <div class="path-option margin-r-15">
         <span style="margin-right: 5px">{{$t('terminal.showFile')}}: </span>
         <el-switch  v-model="showHideFile"/>
         <i class="nz-icon nz-icon-a-newfolder" @click="newFolderBoxShow = true"></i>
