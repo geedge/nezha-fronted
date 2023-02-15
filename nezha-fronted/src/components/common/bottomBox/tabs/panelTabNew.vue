@@ -53,7 +53,7 @@
         <!-- endpoint -->
         <div v-else-if="from === fromRoute.endpoint" style="display: flex">
           <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'panel' + obj.id"></pick-time>
-          <button id="endpoint-create-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
+          <button id="endpoint-create-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChartBefore">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
           <top-tool-more-options
@@ -98,7 +98,7 @@
         </div>
         <!-- dashboardTemp -->
         <div v-else-if="from === fromRoute.dashboardTemp">
-          <button v-has="'main_add'" id="endpoint-create-chart" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
+          <button v-has="'main_add'" id="endpoint-create-chart" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChartBefore">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
           <button v-has="'main_edit'" id="panel-lock" :title='panelLock ? $t("overall.unlocked") : $t("overall.locked")'  class="top-tool-btn margin-r-10" @click="panelLockChange(!panelLock)" type="button">
