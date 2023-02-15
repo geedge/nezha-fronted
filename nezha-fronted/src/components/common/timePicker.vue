@@ -106,7 +106,7 @@
             <div class="date-range-title">{{$t('timepicker.relatime')}}</div>
             <ul class="date-range-item">
               <li
-                v-for="(item, key) in timeData"
+                v-for="(item, key) in timeShowData"
                 @click="timeChange(item)"
                 :class="showTime.id === item.id ? 'activeLi' : ''"
                 :key="key"
@@ -182,11 +182,11 @@ export default {
         text: this.$t('dashboard.panel.lastOneHour')
       },
       timeData: [
-        // {
-        //   id: 0,
-        //   text: this.$t("dashboard.panel.customTimeRange"),
-        //   value: -1,
-        // },
+        {
+          id: 0,
+          text: this.$t('dashboard.panel.customTimeRange'),
+          value: -1
+        },
         {
           id: 12,
           text: this.$t('dashboard.panel.noDate'),
@@ -259,6 +259,7 @@ export default {
           value: 30
         }
       ],
+      timeShowData: [],
       nowTimeType: {
         id: 4,
         text: this.$t('dashboard.panel.lastOneHour'),
@@ -273,6 +274,8 @@ export default {
     }
   },
   mounted () {
+    this.timeShowData = JSON.parse(JSON.stringify(this.timeData))
+    this.timeShowData.shift()
     this.getItem()
     this.getUtcStr()
     this.getRangeHistoryArr()
@@ -419,10 +422,14 @@ export default {
       this.oldSearchTimeError[1] = false
     },
     setCustomTime (timeGroup, timeRange) {
+      console.log(timeGroup)
       if (timeGroup) {
         this.showTime = this.nowTimeType = this.timeData.find(
           (item) => item.id == timeGroup.id
         )
+        if (timeGroup.value == -1) {
+          this.isCustom = true
+        }
         if (this.showTime) {
           this.showTime = Object.assign({}, this.showTime)
           this.$set(this.searchTime, 0, timeGroup.start_time)
