@@ -103,6 +103,7 @@ export default {
           colorIndex++
         })
       })
+      this.funnelData.sort((a, b) => b.value - a.value)
       this.$emit('chartIsNoData', this.isNoData)
     },
     drawChart (customAnimate) {

@@ -4,6 +4,11 @@ import { getMetricTypeValue } from '@/components/common/js/tools'
 import { getChart, getMousePoint, setChart } from '@/components/common/js/common'
 import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import chartDataFormat from '@/components/chart/chartDataFormat'
+import {
+  chartTimeSeriesLineOption,
+  chartTimeSeriesAreaOption,
+  chartTimeSeriesScatterOption
+} from './chart/options/chartTimeSeries'
 export default {
   data () {
     return {
@@ -71,7 +76,7 @@ export default {
             return
           }
           this.isNoData = false
-          const s = lodash.cloneDeep(seriesTemplate)
+          let s = lodash.cloneDeep(seriesTemplate)
 
           // 设置右y轴
           if (chartInfo.param.enable.rightYAxis) {
@@ -81,6 +86,27 @@ export default {
                 s.yAxisIndex = 1
               }
             })
+          }
+
+          // 右y轴数据类型
+          if (s.yAxisIndex == 1) {
+            const style = chartInfo.param.rightYAxis.style
+            if (style == 'line') {
+              s = {
+                ...chartTimeSeriesLineOption.series[0],
+                yAxisIndex: s.yAxisIndex
+              }
+            } else if (style == 'area') {
+              s = {
+                ...chartTimeSeriesAreaOption.series[0],
+                yAxisIndex: s.yAxisIndex
+              }
+            } else if (style == 'point') {
+              s = {
+                ...chartTimeSeriesScatterOption.series[0],
+                yAxisIndex: s.yAxisIndex
+              }
+            }
           }
 
           if (s.param && s.param.nullType) {
