@@ -12,19 +12,21 @@
   >
     <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
     <template v-slot>
+      <div v-if="!loading" style="height:auto;">
         <cortexDetailTable
-        v-my-loading="tools.loading"
-        :loading="tools.loading"
         :ringTableData='ringTableData'
         :configTableData='configTableData'
         :servicesTableData='servicesTableData'
         @configval='configval'>
         </cortexDetailTable>
-    </template>
+      </div>
+      <loading v-else ref="loading"></loading>
+  </template>
   </nz-bottom-data-list>
 </template>
 
 <script>
+import loading from '@/components/common/loading'
 import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
@@ -35,7 +37,8 @@ export default {
   mixins: [dataListMixin, subDataListMixin],
   components: {
     nzBottomDataList,
-    cortexDetailTable
+    cortexDetailTable,
+    loading
   },
   props: {
     obj: Object,
@@ -49,6 +52,7 @@ export default {
       immediate: true,
       deep: true,
       async handler (n) {
+        this.loading = true
         await this.getReadyTableData()
         await this.getIngesterTableData()
         await this.getStoreGatewayTableData()
@@ -65,7 +69,8 @@ export default {
       configTableData: [],
       servicesTableData: [],
       ringTableData: [],
-      readyTableData: ''
+      readyTableData: '',
+      loading: false
     }
   },
   mounted () {
@@ -102,6 +107,7 @@ export default {
     async getReadyTableData () {
       const response = await this.$get('agent/' + this.obj.id + '/cortex/ready')
       if (response.code === 200) {
+        this.$refs.loading.startLoading()
         this.readyTableData = response.data.status
       }
     },
@@ -114,7 +120,8 @@ export default {
         })
         serObj.ready = this.readyTableData
         this.servicesTableData.push(serObj)
-        this.tools.loading = false
+        this.$refs.loading.endLoading()
+        this.loading = false
       }
     }
   }
