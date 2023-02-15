@@ -1118,7 +1118,9 @@ export default {
     },
     getPanelData () {
       this.variablesInit = true
-      this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
+      this.$nextTick(() => {
+        this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
+      })
     }
   },
   created () {

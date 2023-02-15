@@ -346,6 +346,9 @@ export default {
       }
     },
     onScroll (scrollTop = 0, groupTop = 0) {
+      if (!this.variablesInit) { // 变量未加载完成 不请求数据
+        return
+      }
       const self = this
       if (this.scrollTopTimer) {
         clearTimeout(this.scrollTopTimer)
@@ -557,7 +560,6 @@ export default {
       if (!this.panelLock) {
         return false
       }
-      this.copyDataList = JSON.parse(JSON.stringify(this.tempList))
       for (let i = 0; i < this.copyDataList.length; i++) {
         const item = this.copyDataList[i]
         if ((this.$loadsh.get(this.showHidden[item.id], 'visibility') && this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'hidden') && item.id !== -2) {
@@ -565,11 +567,11 @@ export default {
           i--
         }
       }
-      // this.tempList.forEach(item => {
-      //   if ((!this.$loadsh.get(this.showHidden[item.id], 'visibility') || this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'show') && item.id !== -2 && !this.copyDataList.find(chart => chart.id === item.id)) {
-      //     this.copyDataList.push(item)
-      //   }
-      // })
+      this.tempList.forEach(item => {
+        if ((!this.$loadsh.get(this.showHidden[item.id], 'visibility') || this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'show') && item.id !== -2 && !this.copyDataList.find(chart => chart.id === item.id)) {
+          this.copyDataList.push(item)
+        }
+      })
       this.onScroll(this.scrollTop)
     },
 
@@ -716,6 +718,7 @@ export default {
         if (!flag) {
           this.tempList.forEach(item => {
             if (!this.copyDataList.find(chart => chart.id === item.id)) {
+              item.y -= 0.03
               this.copyDataList.push(item)
             }
           })
@@ -746,7 +749,7 @@ export default {
           const position = getLayoutPosition(n)
           this.$store.commit('setChartLastPosition', position)
         }
-        let tempList = n.map(item => {
+        const tempList = n.map(item => {
           let param = ''
           let height = ''
           if (this.isPhone && item.type !== 'group') {
@@ -809,7 +812,6 @@ export default {
           this.compareVariables()
 
           this.repeatVariableFn()
-          tempList = null
           setTimeout(() => {
             this.gridLayoutShow = true
             if (!this.isGroup) {
