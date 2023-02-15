@@ -61,8 +61,7 @@
             </el-table-column>
             <el-table-column type="expand">
                 <template slot-scope="{ row }">
-                  <div class="expand-details">
-                    <pre>{{row.resolution}}</pre>
+                  <div class="expand-details" v-html="converterData(row.resolution)">
                   </div>
                 </template>
             </el-table-column>
@@ -90,6 +89,7 @@
 
 <script>
 import loading from '@/components/common/loading'
+import showdown from 'showdown'
 
 // 解决浏览器切换或者小化时定时器失效问题
 function create (f) {
@@ -155,6 +155,11 @@ export default {
           this.$message.error(response.msg)
         }
       })
+    },
+    // 给页面插入markdown数据
+    converterData (text) {
+      const converter = new showdown.Converter()
+      return converter.makeHtml(text)
     },
     // 补零
     zeroize (num) {
