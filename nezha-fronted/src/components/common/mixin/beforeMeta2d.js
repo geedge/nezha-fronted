@@ -3,7 +3,8 @@ export default {
     return {
       topoData: {},
       querysArray: {},
-      meta2dType: ''
+      meta2dType: '',
+      timeType: 1,
     }
   },
   mounted () {
@@ -26,6 +27,7 @@ export default {
         }
         this.topoData = res.topo
         this.querysArray = res.elements
+        this.timeType = res.timeType || 1
       })
     }
   }

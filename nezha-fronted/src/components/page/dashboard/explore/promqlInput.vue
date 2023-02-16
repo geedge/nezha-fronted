@@ -715,6 +715,7 @@ export default {
         this.oldcCodeLength = 0
         this.codeMirrorValue[this.index] = ''
         // this.expressionList[this.index] = ''
+        console.log(this.index)
         this.$set(this.expressionList, this.index, '')
         this.$emit('change', '')
       }
@@ -1182,6 +1183,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n, o) {
+        console.log(n)
         this.codeMirrorValue[this.index] = n[this.index]
         if (this.isTopo && this.firstInit) {
           setTimeout(() => {

@@ -8,7 +8,7 @@
         <meta2dCanvas />
       </el-tab-pane>
       <el-tab-pane label="data" name="data">
-        <meta2dData :querysArray="querysArray"/>
+        <meta2dData :querysArray.sync="querysArray" :timeType.sync="timeType"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -22,7 +22,8 @@ export default {
   name: 'meta2dProps',
   props: {
     selectPens: {},
-    querysArray: {}
+    querysArray: {},
+    timeType: {}
   },
   components: {
     meta2dElement,
@@ -61,13 +62,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .props-box {
-    width: 500px;
-    position: absolute;
-    height: calc(100% - 78px);
-    top: 61px;
-    padding: 0 !important;
-    box-sizing: border-box;
-    right: 0;
-  }
+
 </style>

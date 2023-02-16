@@ -1,0 +1,51 @@
+.meta2d-box {
+  .el-tab-pane{
+    height: 100%;
+  }
+  .props-box {
+    width: 500px;
+    position: absolute;
+    height: calc(100% - 78px);
+    top: 61px;
+    padding: 0 !important;
+    box-sizing: border-box;
+    right: 0;
+  }
+  .form-row-item{
+    vertical-align: top;
+    width: calc(50% - 15px);
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 5px;
+    margin-bottom: 10px;
+    .form-row-key{
+      margin-bottom: 5px;
+    }
+  }
+  .special-meta2d-select {
+   .el-input.el-input--prefix.el-input--suffix{
+      border: 1px solid $--border-color-light;
+      height: 28px;
+    }
+    .el-select--small{
+      width: 100%;
+    }
+    .el-input__inner{
+      display: none;
+    }
+  }
+  .form-row-item-full{
+    width: 100%;
+  }
+  .form-row-item:nth-of-type(even) {
+    /*margin-left: 10px;*/
+  }
+  .form-row-title{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  .form-row-content{
+    margin-bottom: 5px;
+  }
+}

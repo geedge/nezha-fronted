@@ -94,13 +94,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.topo-header {
-  height: 60px;
-  box-sizing: border-box;
-  padding: 14px 20px 14px 10px;
-  display: flex;
-  .tools-left{
-    display: flex;
-  }
-}
+
 </style>

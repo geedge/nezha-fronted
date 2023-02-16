@@ -851,41 +851,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .form-row-item{
-    vertical-align: top;
-    width: calc(50% - 15px);
-    display: inline-block;
-    box-sizing: border-box;
-    padding: 0 5px;
-    margin-bottom: 10px;
-    .form-row-key{
-      margin-bottom: 5px;
-    }
-  }
-  .special-meta2d-select {
-    /deep/ .el-input.el-input--prefix.el-input--suffix{
-      border: 1px solid #E7EAED;
-      height: 28px;
-    }
-    /deep/ .el-select--small{
-      width: 100%;
-    }
-    /deep/ .el-input__inner{
-      display: none;
-    }
-  }
-  .form-row-item-full{
-    width: 100%;
-  }
-  .form-row-item:nth-of-type(even) {
-    /*margin-left: 10px;*/
-  }
-  .form-row-title{
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-  }
-  .form-row-content{
-    margin-bottom: 5px;
-  }
+
 </style>
