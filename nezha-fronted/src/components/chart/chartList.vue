@@ -344,6 +344,13 @@ export default {
           this.$store.commit('setChartLastPosition', position)
         })
       }
+      this.copyDataList.forEach(item => {
+        this.tempList.forEach(subItem => {
+          if (item.id == subItem.id) {
+            subItem.y = item.y
+          }
+        })
+      })
     },
     onScroll (scrollTop = 0, groupTop = 0) {
       if (!this.variablesInit) { // 变量未加载完成 不请求数据
@@ -613,7 +620,7 @@ export default {
           if (item.type === 'group' && repeatVariable && this.$loadsh.get(this.showHidden[item.id], 'visibility') !== 'hidden' && repeatEnable) {
             const itemPrev = arr[index - 1]
             const repeatPrevVariable = this.$loadsh.get(itemPrev.param.repeat, 'variable')
-            const repeatPrevEnable = this.$loadsh.get(item.param.enable, 'repeat')
+            const repeatPrevEnable = this.$loadsh.get(itemPrev.param.enable, 'repeat')
             if (itemPrev && itemPrev.type === 'group' && repeatPrevVariable === repeatVariable && repeatPrevEnable) {
               const arr = variablesRepeat[repeatVariable]
               arr[arr.length - 1].repeatArr.push(item)
