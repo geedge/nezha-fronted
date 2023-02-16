@@ -968,8 +968,33 @@ export function getMetricTypeValue (queryItem, type) {
       const last = copy.sort((x, y) => { return parseFloat(y[0]) - parseFloat(x[0]) })[0][1]
       return last
     }
+    case 'last*': { // 最后一个非空值
+      copy.sort((x, y) => { return parseFloat(y[0]) - parseFloat(x[0]) })
+      let last = copy[0][1]
+      for (let idx = 0; idx < copy.length; idx++) {
+        const v = copy[idx][1]
+        if (v) {
+          last = v
+          break
+        }
+      }
+      return last
+    }
     case 'first': {
       const first = copy.sort((x, y) => { return parseFloat(y[0]) - parseFloat(x[0]) })[copy.length - 1][1]
+      return first
+    }
+    case 'first*': { // 第一个非空值
+      copy.sort((x, y) => { return parseFloat(y[0]) - parseFloat(x[0]) })
+      let first = copy[copy.length - 1][1]
+      let idx = copy.length - 1
+      while (idx >= 0) {
+        const v = copy[idx--][1]
+        if (v) {
+          first = v
+          break
+        }
+      }
       return first
     }
     case 'total': {

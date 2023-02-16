@@ -220,7 +220,9 @@ export const statisticsList = [
   { value: 'max', label: i18n.t('dashboard.panel.chartForm.max') },
   { value: 'avg', label: i18n.t('dashboard.panel.chartForm.statisticsVal.average') },
   { value: 'total', label: i18n.t('dashboard.panel.chartTotal') },
+  { value: 'first*', label: i18n.t('dashboard.panel.chartForm.statisticsVal.first*') },
   { value: 'first', label: i18n.t('dashboard.panel.chartForm.statisticsVal.first') },
+  { value: 'last*', label: i18n.t('dashboard.panel.chartForm.statisticsVal.last*') },
   { value: 'last', label: i18n.t('dashboard.panel.chartForm.statisticsVal.last') },
   { value: 'range', label: i18n.t('dashboard.panel.chartForm.valMapping.range') },
   { value: 'different', label: i18n.t('dashboard.panel.chartForm.statisticsVal.different') }

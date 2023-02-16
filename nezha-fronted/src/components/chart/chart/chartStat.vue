@@ -357,7 +357,7 @@ export default {
             }
           })
         })
-      }, 50)
+      }, 100)
     },
     statMouseMove (e) {
       const windowWidth = window.innerWidth// 窗口宽度

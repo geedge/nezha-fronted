@@ -617,11 +617,13 @@ export default {
           const item = arr[index]
           const repeatVariable = this.$loadsh.get(item.param.repeat, 'variable')
           const repeatEnable = this.$loadsh.get(item.param.enable, 'repeat')
-          if (item.type === 'group' && repeatVariable && this.$loadsh.get(this.showHidden[item.id], 'visibility') !== 'hidden' && repeatEnable) {
+          const visibility = this.$loadsh.get(this.showHidden[item.id], 'visibility') !== 'hidden'
+          if (item.type === 'group' && repeatVariable && repeatEnable && visibility) {
             const itemPrev = arr[index - 1]
             const repeatPrevVariable = this.$loadsh.get(itemPrev.param.repeat, 'variable')
             const repeatPrevEnable = this.$loadsh.get(itemPrev.param.enable, 'repeat')
-            if (itemPrev && itemPrev.type === 'group' && repeatPrevVariable === repeatVariable && repeatPrevEnable) {
+            const itemVisibility = this.$loadsh.get(this.showHidden[itemPrev.id], 'visibility') !== 'hidden'
+            if (itemPrev && itemPrev.type === 'group' && repeatPrevVariable === repeatVariable && repeatPrevEnable && itemVisibility) {
               const arr = variablesRepeat[repeatVariable]
               arr[arr.length - 1].repeatArr.push(item)
               arr[arr.length - 1].lastGroup = item
@@ -725,6 +727,9 @@ export default {
         if (!flag) {
           this.tempList.forEach(item => {
             if (!this.copyDataList.find(chart => chart.id === item.id)) {
+              delete item.repeatIndex
+              delete item.repeatVariable
+              delete item.repeatValue
               item.y -= 0.03
               this.copyDataList.push(item)
             }
