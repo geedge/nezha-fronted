@@ -460,9 +460,9 @@ export default {
         } else {
           editAsset.showSSH = false
         }
-        if (!editAsset.authType && this.editAsset.authUsername) {
+        if (!editAsset.authType && editAsset.authUsername) {
           editAsset.showTelnet = true
-        } else if (!editAsset.authType && !this.editAsset.authUsername) {
+        } else if (!editAsset.authType && !editAsset.authUsername) {
           editAsset.showTelnet = false
         }
         if (editAsset.type.snmpEnable === 1 && editAsset.snmpCredentialId) {
@@ -471,7 +471,7 @@ export default {
           editAsset.showSnmp = false
         }
         this.editAsset = editAsset
-        this.editAsset.brandAndModel = [this.editAsset.brand.id, this.editAsset.model.id]
+        this.editAsset.brandAndModel = [editAsset.brand.id, editAsset.model.id]
         this.editAsset.stateId = n.state ? n.state.id : 2
         this.editAsset.typeId = n.type ? n.type.id : ''
         this.$nextTick(() => {
