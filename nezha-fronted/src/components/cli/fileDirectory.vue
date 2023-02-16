@@ -379,8 +379,12 @@ export default {
         path: path + '/' + this.folder
       }
       this.$post('/terminal/sftp/mkdir', params).then(res => {
-        this.newFolderBoxShow = false
-        this.getSftpPath(this.fileDirectory)
+        if (res.code === 200) {
+          this.newFolderBoxShow = false
+          this.getSftpPath(this.fileDirectory)
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     },
     backFileDirectory () {
@@ -424,6 +428,7 @@ export default {
             this.orderBy('dateOrderType', this.dateOrderType, 'cts')
           }
         } else {
+          this.fileDirectoryLoading = false
           this.$message.error(res.msg)
           this.editPath = ''
         }
@@ -478,7 +483,7 @@ export default {
     },
     setRename () {
       const params = {
-        uuid:  this.uuid,
+        uuid: this.uuid,
         oldPath: this.fileDirectory + '/' + this.oldRenameStr,
         newPath: this.fileDirectory + '/' + this.renameStr
       }
