@@ -1,7 +1,7 @@
 <template>
   <div class="project">
-    <topologyL5 v-if="reloadFacade" ref="facade" :obj="currentProject" :topologyIndexF="topologyIndexF" targetTab.sync="panel" @changeTopologyIndexF="changeTopologyIndexF"/>
-
+<!--    <topologyL5 v-if="reloadFacade" ref="facade" :obj="currentProject" :topologyIndexF="topologyIndexF" targetTab.sync="panel" @changeTopologyIndexF="changeTopologyIndexF"/>-->
+    <meta2dMain :meta2dId="'projectId'" :topoData="topoData" :querysArray="querysArray" :projectName="currentProject.name"/>
     <transition name="el-zoom-in-bottom">
       <bottom-box
         v-if="bottomBox.showSubList"
@@ -44,14 +44,19 @@
 <script>
 import bus from '@/libs/bus'
 import topologyL5 from '@/components/common/project/topologyL5'
+import meta2dMain from '@/components/common/project/meta2d/meta2dMain'
+import beforeMeta2d from "@/components/common/mixin/beforeMeta2d";
 
 export default {
   name: 'project2',
+  mixins: [beforeMeta2d],
   components: {
-    topologyL5
+    topologyL5,
+    meta2dMain
   },
   data () {
     return {
+      meta2dType: 'project',
       rightBox: {
         module: { show: false },
         addEndpoint: { show: false },
