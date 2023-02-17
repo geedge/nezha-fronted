@@ -114,7 +114,6 @@
     ></delete-button>
     <diagnosis-tab
       ref="diagnosisTab"
-      :api="diagnosisTabData.url"
       :diagnosisTabData ="diagnosisTabData"
     ></diagnosis-tab>
   </div>
