@@ -439,7 +439,21 @@ export default {
             this.chart = JSON.parse(JSON.stringify(chartData))
             this.chart.panelId = this.showPanel.id
             this.chart.panelName = this.showPanel.name
-            this.chart.param = JSON.parse(this.chart.param)
+            if (this.chart.param) {
+              this.chart.param = JSON.parse(this.chart.param)
+            } else {
+              this.chart.param = {}
+            }
+            if (!this.chart.param.rightYAxis) {
+              this.chart.param.rightYAxis = {
+                elementNames: [],
+                style: 'line',
+                unit: 2,
+                label: '',
+                min: undefined,
+                max: undefined
+              }
+            }
             if (!this.chart.groupId || this.chart.groupId == -1) {
               this.chart.groupId = ''
             }
