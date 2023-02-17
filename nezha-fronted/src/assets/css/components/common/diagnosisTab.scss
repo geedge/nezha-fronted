@@ -37,7 +37,6 @@
                 }
                 .dialog-header-item{
                     display: flex;
-                    text-transform: uppercase;
                     color: $--color-text-secondary;
                     &>div{
                         display: flex;
@@ -75,6 +74,9 @@
                     padding: 15px 0 15px 34px;
                     background-color: $--background-color-base !important;
                   }
+                .el-table__body-wrapper{
+                    overflow-x: hidden;
+                }
                 .el-table__body {
                     tr{
                         background: $--background-color-empty;

@@ -19,7 +19,7 @@
             <i class="nz-icon nz-icon-Diagnosis1"></i>
             <div>
               <div class="dialog-header-name">{{diagnosisTabData.row.name}}</div>
-              <div v-html="suspendedStr(diagnosisTabData.row.configs[0].state)" class="dialog-header-item">
+              <div v-html="fragment" class="dialog-header-item">
               </div>
             </div>
         </div>
@@ -134,7 +134,14 @@ export default {
           label: 'name',
           prop: 'item',
           minWidth: 200
-        }]
+        }],
+      diagnoseUrl: '',
+      fragment: '', // 头部提示部分
+      agentState: {
+        UP: 'green-bg',
+        DOWN: 'red-bg',
+        UNAVAILABLE: 'gray-bg'
+      }
     }
   },
   props: {
@@ -145,7 +152,7 @@ export default {
       this.dialogVisible = false
     },
     getTableData () {
-      this.$get('monitor/endpoint/diagnose/' + this.diagnosisTabData.row.id).then(response => {
+      this.$get(this.diagnoseUrl + '/diagnose/' + this.diagnosisTabData.row.id).then(response => {
         if (response.code == 200) {
           this.tableData = response.data.list
           // 关闭定时器 取消任务
@@ -182,26 +189,66 @@ export default {
       }
       return time
     },
-    suspendedStr (status) { // 10进制转为2进制 分别给对应的状态
-      if (!status || status === 1 || status == 0) { return '' }
-      const arr = status.toString(2).split('')
-      while (arr.length < 4) {
-        arr.unshift('0')
-      }
-      arr.pop()
+    // 头部提示
+    suspendedStr (status, from) {
       let str = ''
-      arr.forEach((item, index) => {
-        if (index === 0) {
-          str += `<div><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> DC</div>`
+      if (from === 'endpoint') { // 10进制转为2进制 分别给对应的状态
+        let arr = []
+        if (!status || status === 1 || status == 0) {
+          while (arr.length < 3) {
+            arr.push('1')
+          }
+        } else {
+          arr = status.toString(2).split('')
+          while (arr.length < 4) {
+            arr.unshift('0')
+          }
+          arr.pop()
         }
-        if (index === 1) {
-          str += `<div><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> ASSET</div>`
+        arr.forEach((item, index) => {
+          if (index === 0) {
+            str += `<div><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> DC</div>`
+          }
+          if (index === 1) {
+            str += `<div><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> ASSET</div>`
+          }
+          if (index === 2) {
+            str += `<div><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> ENDPOINT</div>`
+          }
+        })
+      } else if (from === 'asset') {
+        status.forEach((item, index) => {
+          if (index === 0) {
+            str += `<div><i class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></i> Ping</div>`
+          }
+          if (index === 1) {
+            str += `<div><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : (item == '1' ? 'green-bg' : 'red-bg')}"></i> TALON</div>`
+          }
+        })
+      } else if (from === 'agent') {
+        console.log(status, 'status')
+        if (status.auth) {
+          str += `<div><i class="active-icon inline-block ${status.auth ? 'green-bg' : 'red-bg'}"></i> Auth</div>`
         }
-        if (index === 2) {
-          str += `<div><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></i> ENDPOINT</div>`
+        if (status.prometheus) {
+          str += `<div><i class="active-icon inline-block ${this.agentState[status.prometheus]}"></i> Prometheus</div>`
         }
-      })
-      return str
+        if (status.cortex) {
+          str += `<div><i class="active-icon inline-block ${this.agentState[status.cortex]}"></i> Cortex</div>`
+        }
+        if (status.loki) {
+          str += `<div><i class="active-icon inline-block ${this.agentState[status.loki]}"></i> Loki</div>`
+        }
+        if (status.snmp_exporter) {
+          str += `<div><i class="active-icon inline-block ${this.agentState[status.snmp_exporter]}"></i> SNMP exporter</div>`
+        }
+        if (status.blackbox_exporter) {
+          str += `<div><i class="active-icon inline-block ${this.agentState[status.blackbox_exporter]}"></i> Blackbox exporter</div>`
+        }
+      } else {
+        str = ''
+      }
+      this.fragment = str
     }
   },
   computed: {
@@ -212,6 +259,30 @@ export default {
   mounted () {
   },
   watch: {
+    diagnosisTabData: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        switch (n.from) {
+          case 'asset':
+            this.diagnoseUrl = '/asset'
+            this.suspendedStr([n.row.pingInfo.status, n.row.clientState], 'asset')
+            break
+          case 'endpoint':
+            this.diagnoseUrl = n.url
+            this.suspendedStr(n.row.configs[0].state, 'endpoint')
+            break
+          case 'agent':
+            console.log(n, 'diagnosisTabData')
+            this.diagnoseUrl = n.url
+            this.suspendedStr(JSON.parse(n.row.statusInfo), 'agent')
+            break
+          default:
+            this.diagnoseUrl = n.url
+            break
+        }
+      }
+    },
     // 展示弹窗
     showDiagnosisTab (n) {
       if (n) {
