@@ -100,7 +100,7 @@
 
         </span>
           <span class="float-right">
-          <button @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light"
+            <button @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light"
                   style="margin-right: 20px"
           >
              {{$t('overall.preview')}}
@@ -110,13 +110,13 @@
             >
              {{$t('project.topology.previewExit')}}
            </button>
-           <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="saveTopology"
+            <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="saveTopology"
                    :disabled="prevent_opt.save"
                    :class="{'nz-btn-disabled':prevent_opt.save}"
                    style="margin-right: 20px">
              {{$t('overall.save')}}
            </button>
-           <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-right: 20px" @click="cancelTopology">
+            <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-right: 20px" @click="cancelTopology">
              {{$t('project.topology.exit')}}
            </button>
          </span>

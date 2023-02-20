@@ -1,27 +1,56 @@
 <template>
-  <div class="topo-header">
-    <div v-if="!isChart"> {{project && project.name}} </div>
-    <div class="tools-left">
+  <div class="topo-header top-tools">
+    <div v-if="!isChart && !editFlag"> {{project && project.name}} </div>
+    <div class="tools-left" v-if="editFlag">
       <div class="tools-left-drag">
         <div
-          class="icon"
           draggable="true"
           @dragstart.stop="onDragstart($event)"
           @click="onTouchstart($event)"
         >
-          <div>Rectangle</div>
+          <i class="nz-icon nz-icon-zhengfangxing" />
         </div>
       </div>
       <div class="tools-left-draw" @click="setDrawPen()">
-        钢笔
+          <i  class="nz-icon nz-icon-compare" />
       </div>
     </div>
-    <div>
-      <button v-has="'project_edit'" v-if="!isChart" class="top-tool-btn margin-r-10" type="button" @click="editMeta2d" :title="$t('overall.edit')">
+    <div v-if="!editFlag" class="top-tool-right">
+      <pick-time
+        v-show="!editFlag"
+        ref="pickTime"
+        v-model="searchTime"
+        :refresh-data-func="dateChange"
+        :showTimePicker="false"
+        :use-chart-unit="false"
+        class="pickTime margin-r-10">
+      </pick-time>
+      <button v-has="'project_edit'" class="top-tool-btn margin-r-10" type="button" @click="editMeta2d()" :title="$t('overall.edit')">
         <i class="nz-icon nz-icon-edit"></i>
       </button>
-      <button v-has="'project_edit'" v-if="!isChart" class="top-tool-btn margin-r-10" type="button" @click="saveMeta2d" :title="$t('overall.edit')">
-        save
+      <button class="top-tool-btn" type="button" @click="changeScreen" :title="topoScreen? $t('dashboard.screen.exit') : $t('dashboard.screen')">
+        <i :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'" class="nz-icon"></i>
+      </button>
+    </div>
+    <div v-if="editFlag" class="top-tool-right float-right">
+      <button @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light"
+              style="margin-right: 20px"
+      >
+        {{$t('overall.preview')}}
+      </button>
+      <button v-if="isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="previewExit"
+              style="margin-right: 20px"
+      >
+        {{$t('project.topology.previewExit')}}
+      </button>
+      <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="saveMeta2d"
+              :disabled="prevent_opt.save"
+              :class="{'nz-btn-disabled':prevent_opt.save}"
+              style="margin-right: 20px">
+        {{$t('overall.save')}}
+      </button>
+      <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-right: 20px" @click="cancelTopology">
+        {{$t('project.topology.exit')}}
       </button>
     </div>
   </div>
@@ -31,6 +60,7 @@
 import topoUtil from '@/components/common/project/meta2d/js/topoUtil'
 import { getTopology, setTopology, dealImg, topologyImg } from '@/components/common/js/common'
 import { deepClone } from '@meta2d/core'
+import bus from "@/libs/bus";
 export default {
   name: 'meta2dHeader',
   mixins: [topoUtil],
@@ -40,11 +70,14 @@ export default {
       type: Boolean,
       default: false
     },
-    project: {}
+    project: {},
+    editFlag: {}
   },
   data () {
     return {
-      topoScreenState: ''
+      topoScreenState: '',
+      isPreview: false,
+      searchTime: bus.getTimezontDateRange(),
     }
   },
   computed: {
@@ -129,11 +162,29 @@ export default {
           type: 'error'
         })
       })
+    },
+    dateChange () {
+
+    },
+    changeScreen () {
+      this.$store.commit('setShowTopoScreen', !this.topoScreen)
+    },
+    previewTopology () {
+
+    },
+    previewExit () {
+
+    },
+    cancelTopology () {
+      this.$emit('exitEdit', true)
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-
+.tools-left-drag{
+  margin-left: 10px;
+  margin-right: 10px;
+}
 </style>

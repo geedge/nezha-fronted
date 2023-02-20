@@ -5,6 +5,10 @@
       <div v-else class="image-box image-box-null" />
     </div>
     <div class="image-select-box" v-if="selectBoxShow">
+      <div class="image-box-item" @click="selectImageChange({image: '', id: ''})">
+        <img  :src="imageNull" class="imag-src"/>
+        <div class="img-text text-ellipsis">kong</div>
+      </div>
       <div v-for="item in iconArray" :key="item.id" class="image-box-item" @click="selectImageChange(item)">
         <img  :src="item.image" class="imag-src"/>
         <div class="img-text text-ellipsis" :title="item.imageName">{{item.imageName}}</div>
@@ -26,7 +30,8 @@ export default {
       tools: [],
       imgageLoading: false,
       iconArray: [],
-      selectBoxShow: false
+      selectBoxShow: false,
+      imageNull: ''
     }
   },
   mounted () {

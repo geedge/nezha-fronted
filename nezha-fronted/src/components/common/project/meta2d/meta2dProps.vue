@@ -5,7 +5,7 @@
         <meta2dElement :selectPens.sync="selectPens" @change="change" :elements="elements"/>
       </el-tab-pane>
       <el-tab-pane label="canvas" name="canvas">
-        <meta2dCanvas :canvasProps="canvasProps" :meta2dId='meta2dId' ref ='meta2dCanvas'/>
+        <meta2dCanvas :canvasProps="canvasProps" :meta2dId='meta2dId' @changeActiveName="changeActiveName" ref ='meta2dCanvas'/>
       </el-tab-pane>
       <el-tab-pane label="data" name="data">
         <meta2dData :querysArray.sync="querysArray" :timeType.sync="timeType" ref="meta2dData"/>
@@ -41,14 +41,17 @@ export default {
   },
   watch: {
     selectPens (n) {
-      if (n.length === 1) {
+      if (n.length === 1 && this.isUpdate) {
         this.activeName = 'elements'
+      } else {
+        this.activeName = 'canvas'
       }
     }
   },
   data () {
     return {
       activeName: 'canvas',
+      isUpdate: true,
       canvasProps: {
         backGround: true
       },
@@ -75,7 +78,9 @@ export default {
         this.getQueryValues(this.$refs.meta2dData.elements, startTime, endTime)
       }
     },
-
+    changeActiveName () {
+      this.isUpdate = false
+    }
   }
 }
 </script>

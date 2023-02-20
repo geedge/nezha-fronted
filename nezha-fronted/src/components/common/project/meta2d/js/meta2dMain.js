@@ -14,6 +14,7 @@ import {
   myCubeAnchors
 } from '../../L5/services/canvas.js'
 import { getTopology, setTopology, dealImg, topologyImg } from '@/components/common/js/common'
+import bus from '@/libs/bus'
 export default {
   data () {
     return {
@@ -22,8 +23,6 @@ export default {
       prevFlag: false,
       meta2dLoading: true
     }
-  },
-  mounted () {
   },
   methods: {
     init () {
@@ -47,6 +46,11 @@ export default {
         }
         return true
       }
+      meta2d.beforeRemovePens = async (pens) => {
+        bus.$emit('changeSelectPens', [])
+        // 返回 true 允许 remove
+        return true
+      }
       // getTopology(this.topoData)).on('translate', this.topTranslate) // 平移·
       meta2d.on('active', this.pensActive) // 选中·
       // meta2d.on('scale', this.topoScale) // 缩放·
@@ -56,6 +60,7 @@ export default {
       meta2d.on('leave', this.penLeave) // 移出画笔·
       // meta2d.on('add', this.appPen) // 添加新画笔·
       meta2d.on('click', this.topoClick) // click画笔·
+
       setTopology(this.meta2dId, meta2d)
     },
     reload () {
@@ -89,11 +94,14 @@ export default {
       })
     },
     nodeInit (pen) { // 初始化节点参数
+      if (pen.data && pen.data.params) {
+        return
+      }
       pen.data = {
         params: { // 用于编辑时 重置为节点初始状态
-          background: '#22222200',
-          color: '#222222ff',
-          textColor: '#222222ff',
+          background: pen.background || '#22222200',
+          color: pen.color || '#222222ff',
+          textColor: pen.textColor || '#222222ff',
           image: ''
         },
         imageId: '',
@@ -112,33 +120,39 @@ export default {
           legends: [] // {legend: '' , alias}
         }
       }
-      pen.isNz = true
-      pen.background = '#22222200'
-      pen.textAlign = 'center'
-      pen.textBaseline = 'middle'
-      pen.color = '#222222ff'
-      pen.textColor = '#222222ff'
-      pen.image = ''
-      pen.imageId = ''
-      pen.imageRatio = false
-      pen.ratio = false
-      pen.rotate = 0
-      pen.globalAlpha = 1
-      pen.borderType = 0
-      pen.lineWidth = 1
-      pen.lineDash = []
-      pen.borderRadius = 0
+      pen.disableInput = pen.disableInput || true
+      pen.background = pen.background || '#22222200'
+      pen.textAlign = pen.textAlign || 'center'
+      pen.textBaseline = pen.textBaseline || 'middle'
+      pen.color = pen.color || '#222222ff'
+      pen.textColor = pen.textColor || '#222222ff'
+      pen.image = pen.image || ''
+      pen.imageId = pen.imageId || ''
+      pen.imageRatio = pen.imageRatio || false
+      pen.ratio = pen.ratio || false
+      pen.rotate = pen.rotate || 0
+      pen.globalAlpha = pen.globalAlpha || 1
+      pen.borderType = pen.borderType || 0
+      pen.lineWidth = pen.lineWidth || 1
+      pen.lineDash = pen.lineDash || []
+      pen.borderRadius = pen.borderRadius || 0
       pen.paddingTop = 5
       pen.paddingBottom = 5
       pen.paddingLeft = 5
       pen.paddingRight = 5
+      pen.visible = pen.visible || true
+      pen.isNz = true
+      pen.locked = pen.locked || 0
     },
     lineInit (pen) { // 初始化连线参数
+      if (pen.data && pen.data.params) {
+        return
+      }
       pen.data = {
         params: {
-          animateColor: '#FA901CFF',
-          borderColor: '#22222200',
-          color: '#222222FF'
+          animateColor: pen.animateColor || '#FA901CFF',
+          borderColor: pen.borderColor || '#22222200',
+          color: pen.color || '#222222FF'
         },
         valueMapping: [],
         legend: '',
@@ -146,27 +160,34 @@ export default {
         enable: {
           valueMapping: true,
           tooltip: true
-        },
+        }
       }
-      pen.disableInput = true
-      pen.lineAnimateType = 0
-      pen.animateSpan = 1
-      pen.animateReverse = false
-      pen.fromArrow = ''
-      pen.animateColor = '#FA901CFF'
-      pen.borderColor = '#22222200'
-      pen.borderWidth = 0
-      pen.color = '#222222ff'
-      pen.toArrow = ''
-      pen.borderType = 0
-      pen.lineWidth = 1
-      pen.lineDash = []
-      pen.isNz = true
+      pen.disableInput = pen.disableInput || true
+      pen.lineAnimateType = pen.lineAnimateType || 0
+      pen.animateSpan = pen.animateSpan || 1
+      pen.animateReverse = pen.animateReverse || false
+      pen.fromArrow = pen.fromArrow || ''
+      pen.animateColor = pen.animateColor || '#FA901CFF'
+      pen.borderColor = pen.borderColor || '#22222200'
+      pen.borderWidth = pen.borderWidth || 0
+      pen.color = pen.color || '#222222ff'
+      pen.toArrow = pen.toArrow || ''
+      pen.borderType = pen.borderType || 0
+      pen.lineWidth = pen.lineWidth || 1
+      pen.lineDash = pen.lineDash || []
+      pen.isNz = pen.isNz || true
+      pen.visible = pen.visible || true
+      pen.locked = pen.locked || 0
     },
     pensActive (pens, e) { // 选中节点
       this.selectPens = pens
+      setTimeout(() => {
+        this.$refs.meta2dProps.isUpdate = true
+      })
+      console.log(pens, 'active')
     },
     topoClick (params, e) { // 点击节点
+      console.log('click')
       if (!params.pen && this.$refs.meta2dProps) {
         this.$refs.meta2dProps.activeName = 'canvas'
         this.selectPens = []
@@ -200,5 +221,7 @@ export default {
         this.$emit('reload')
       }
     }
+  },
+  beforeDestroy () {
   }
 }
