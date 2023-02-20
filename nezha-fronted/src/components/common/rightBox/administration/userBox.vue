@@ -161,7 +161,7 @@ export default {
           { required: true, message: '', trigger: 'blur' }
         ],
         roleIds: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         email: [
           { type: 'email', message: this.$t('validate.email') }
@@ -175,7 +175,7 @@ export default {
           { validator: validatePin, trigger: 'blur' }
         ],
         roleIds: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         email: [
           { type: 'email', message: this.$t('validate.email') }

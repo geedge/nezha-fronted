@@ -277,7 +277,9 @@ export default {
     enterStr (message) {
       if (this.terminalSocket && this.terminal.isLogin) {
         this.term.send(message)
-        this.term.send('\n')
+        setTimeout(() => {
+          this.term.send('\n')
+        }, 100)
         this.term.scrollToBottom()
         this.historyChange(message)
       }

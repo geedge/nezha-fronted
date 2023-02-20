@@ -303,4 +303,62 @@
     background: #CECECE;
     margin-right: 10px;
   }
+  .el-carousel__item{
+    text-align: center;
+  }
+  .nz-license-footer{
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    .el-pagination{
+      font-size: 14px;
+      .btn-prev, .btn-next{
+        color: $--color-text-regular;
+        font-size: 14px;
+        margin: 0 5px;
+        border: none;
+        background-color: $--background-color-base !important;
+        border-radius: 50%;
+        height: 24px;
+        width: 24px;
+      }
+      .number {
+        font-size: 14px;
+        margin: 0px;
+        border: none;
+        background-color: transparent !important;
+      }
+      .number.active{
+        color: #FA901C;
+      }
+    }
+  }
+  .el-carousel__indicators.el-carousel__indicators--horizontal{
+    display: none;
+  }
+  .el-dialog__header {
+    border-bottom: 1px solid $--border-color-light;
+    height: 32px;
+    line-height: 32px;
+    .el-dialog__header-title {
+      font-weight: 600;
+    }
+    .top-tool-btn{
+      height: 32px;
+      width: 36px;
+      padding: 0;
+    }
+    .el-dialog__headerbtn{
+      line-height: 32px;
+    }
+  }
+  .el-dialog__body{
+
+  }
+  .el-button{
+    //background-color: $--background-color-1 !important;
+    background: $--background-color-empty;
+    border: 1px solid $--border-color-light;
+    border-color: $--border-color-light;
+  }
 }
