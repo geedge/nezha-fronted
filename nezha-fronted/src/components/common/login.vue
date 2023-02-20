@@ -55,9 +55,14 @@
         <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>
         <div class="login-license">
 <!--          <div v-if="!license.valid" class="license-info">INSTALLATION ID:&nbsp;{{license.token}}</div>-->
-          <div v-if="!license.valid" class="license-upload">
+<!--          <div v-if="!license.valid" class="license-upload">-->
+          <div class="license-upload" v-if="!license.valid">
 <!--            <button type="button" class="login-btn" @click="downloadMib"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.dowLicense')}}</button>-->
-            <button type="button" class="login-btn download-btn" @click="downloadLogin"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.downloadID')}}</button>
+            <button type="button" class="login-btn download-btn" @click="downloadLogin"><span style="margin-right: 5px"><i class="nz-icon nz-icon-download1"></i></span>{{$t('license.downloadID')}}
+            </button>
+            <button class="license-left-footer-download login-btn download-btn" @click.stop="openQrcode" style="margin-left: -4px;display: inline-block">
+              <i class="nz-icon nz-icon-erweima"></i>
+            </button>
           </div>
           <div class="license-upload" v-if="!license.valid">
             <el-upload
@@ -135,6 +140,71 @@
         </button>
       </div>
     </el-dialog>
+    <el-dialog :modal-append-to-body='false' :fullscreen="dialogQrType === 'all'" :show-close="true" :visible.sync="qrCodeShow" @close="closeQrCode" :title="'QR code'" class="nz-dialog overview" width="650px">
+      <div slot="title">
+        <span class="el-dialog__header-title">
+           QR code
+        </span>
+        <div style="float: right; margin-right: 25px">
+          <el-button-group>
+            <el-button class="top-tool-btn" :class="{active: dialogQrType == 'item' }" size="small" @click="dialogQrType = 'item'"><i class="nz-icon nz-icon-dangemoshi"/></el-button>
+            <el-button class="top-tool-btn" :class="{active: dialogQrType == 'all' }" size="small" @click="dialogQrType = 'all'"><i class="nz-icon nz-icon-duogemoshi"/></el-button>
+          </el-button-group>
+        </div>
+      </div>
+      <div v-show="dialogQrType === 'item'">
+        <el-carousel arrow="never" :autoplay="false" :height="'500px'" ref="carousel" v-my-loading="qrloading">
+          <el-carousel-item v-for="(item, index) in qrCodeNum" :key="index" :name="'qr-' + index"  style="width: 100%;height: 100%">
+            <!--            :logo-src="getSrc(index)"-->
+            <div  v-my-loading="item">
+              <vueQr
+                style="width: 500px;height: 500px"
+                :text="qrCodeArr[index] || String(index)"
+                :size="2000"
+                :margin="50"
+              />
+            </div>
+          </el-carousel-item>
+        </el-carousel>
+        <div class="nz-license-footer">
+          <el-pagination
+            @current-change="setActiveItem"
+            small
+            :page-size="1"
+            :current-page.sync="currentPage"
+            layout="prev, pager, next"
+            :total="qrCodeNum.length">
+          </el-pagination>
+        </div>
+      </div>
+      <div v-show="dialogQrType === 'all'" :style="{
+        'padding-left': paddingLeft + 'px'
+      }" v-my-loading="qrloading">
+        <div v-for="(item, index) in qrCodeNum"
+             :key="index"
+             :name="'qr-' + index"
+             :style="{
+               width: qrWidth + 'px',
+               height: qrWidth + 'px',
+               'text-align': 'center',
+               display: 'inline-block'
+             }"
+             v-my-loading="item"
+        >
+          <!--            :logo-src="getSrc(index)"-->
+          <vueQr
+            :style="{
+              width: qrWidth - 32 + 'px',
+              height: qrWidth - 32 + 'px'
+            }"
+            :text="qrCodeArr[index] || String(index)"
+            :size="2000"
+            :margin="10"
+          />
+          <div style="text-align:center;margin-right:32px;"> {{index+1}} / {{qrCodeNum.length}}</div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -145,9 +215,14 @@ import bus from '@/libs/bus.js'
 import { SVG } from '@svgdotjs/svg.js'
 import { coordinatePoint } from '@/components/common/js/common'
 import imageUrl from '@/assets/img/logo-big.png'
+import VueQr from '@/components/common/vueQR/packages/vue-qr'
 import { get } from '@/http'
+import SparkMD5 from 'spark-md5'
 export default {
   name: 'login',
+  components: {
+    VueQr
+  },
   data () {
     return {
       imageUrl,
@@ -185,7 +260,20 @@ export default {
       bgImg: '', // 背景图
       constellation: [],
       requestAnimationFrame: '',
-      speed: [-1.3, -1, -0.6, -0.3, 0.3, 0.6, 1, 1.3]
+      speed: [-1.3, -1, -0.6, -0.3, 0.3, 0.6, 1, 1.3],
+      stateItem: '',
+      endItem: '',
+      qrCodeShow: false,
+      qrCodeArr: [],
+      qrCodeNum: [], // 逐个加载 qr
+      totalQrCode: 10,
+      currentPage: 1,
+      qrloading: false,
+      dialogQrType: 'item',
+      boxWidth: '',
+      boxHeight: '',
+      qrWidth: 10,
+      paddingLeft: 0,
     }
   },
   methods: {
@@ -563,6 +651,119 @@ export default {
       } else {
         return false
       }
+    },
+    closeQrCode () {
+      this.qrCodeShow = false
+    },
+    openQrcode () {
+      this.qrCodeArr = []
+      this.qrCodeNum = []
+      this.qrCodeShow = true
+      this.qrloading = true
+      setTimeout(() => {
+        this.$get('/sys/license/token').then(res => {
+          this.totalQrCode = Math.ceil(res.data.length / (1024 + 512))
+          if (this.totalQrCode < 1) {
+            this.totalQrCode = 1
+          }
+          const total = this.totalQrCode < 10 ? ('0' + this.totalQrCode) : this.totalQrCode
+          const totalMD5 = SparkMD5.hashBinary(res.data).slice(0, 8)
+          const arr = []
+          for (let i = 0; i < this.totalQrCode; i++) {
+            const num = (1024 + 512)
+            let str1 = res.data.slice(num * i, num * (i + 1))
+            const index = i < 10 ? ('0' + (i + 1)) : (i + 1)
+            const md5 = SparkMD5.hashBinary(str1).slice(0, 8)
+            str1 = total + '' + index + totalMD5 + md5 + '' + str1
+            arr.push(str1)
+          }
+          this.qrCodeArr = []
+          this.qrCodeNum = arr.map(() => {
+            return true
+          })
+          arr.forEach((item, index) => {
+            setTimeout(() => {
+              this.qrCodeArr.push(item)
+              this.qrCodeNum[index] = false
+            }, index * 100)
+          })
+          this.getLayout(arr)
+          this.qrloading = false
+        }, error => {
+          const $self = this
+          const reader = new FileReader()
+          reader.onload = function (event) {
+            const responseText = reader.result
+            const exception = JSON.parse(responseText)
+            if (exception.message) {
+              $self.$message.error(exception.message)
+            } else {
+              console.error(error)
+            }
+          }
+          reader.readAsText(error.response.data)
+        })
+      }, 100)
+    },
+    getSrc (index) {
+      const cas = document.createElement('canvas')
+      const ctx = cas.getContext('2d')
+
+      cas.width = 100
+      cas.height = 100
+      ctx.font = 'normal bold 40px Roboto-Regular'
+      let text = index + 1 + ''
+      if (text.length < 2) {
+        text = '0' + text
+      }
+      ctx.fillText(text, 25, 65)
+      // 把画布的内容转换为base64编码格式的图片
+      const data = cas.toDataURL('image/png', 1)
+      return data
+    },
+    setActiveItem (currentPage) {
+      this.$refs.carousel.setActiveItem('qr-' + (currentPage - 1))
+    },
+    getLayout () {
+      try {
+        this.boxWidth = document.body.offsetWidth - 30 - 40
+        this.boxHeight = document.body.offsetHeight - 104 - 50
+      } catch (error) {}
+      return new Promise(resolve => {
+        let rateMax = 0
+        let col = 0
+        let row = 0
+        for (let i = 1; i <= this.qrCodeNum.length; i++) {
+          const cols = Math.ceil(this.qrCodeNum.length / i)
+          const w = this.boxWidth / i
+          const h = this.boxHeight / cols
+          const rate = w > h ? h / w : w / h
+          if (rate > rateMax) {
+            rateMax = rate
+            col = cols
+            row = i
+          }
+        }
+        if (this.qrCodeNum.length) {
+          while (col * row >= this.qrCodeNum.length) { // 避免出现空白
+            row--
+          }
+        }
+        row++
+        if (col === 1 || row === 1) { // 行 或 列有一个为1时 需要调换位置
+          const temp = col
+          col = row
+          row = temp
+        }
+        this.qrWidth = 10
+        if (this.boxHeight / col < this.boxWidth / row) {
+          this.qrWidth = this.boxHeight / col
+        } else {
+          this.qrWidth = this.boxWidth / row
+        }
+        this.paddingLeft = (this.boxWidth - row * this.qrWidth) / 2
+        resolve({ col, row })
+      })
     }
   },
   watch: {
