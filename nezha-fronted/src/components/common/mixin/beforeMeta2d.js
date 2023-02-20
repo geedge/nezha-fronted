@@ -2,32 +2,31 @@ export default {
   data () {
     return {
       topoData: {},
-      querysArray: {},
+      querysArray: [],
       meta2dType: '',
-      timeType: 1,
+      timeType: 1
     }
   },
-  mounted () {
-    if (this.meta2dType === 'project') {
-      setTimeout(() => {
-        const res = {
-          topo: {},
-          elements: [],
-          timeType: 4
+  watch: {
+    currentProject: {
+      handler (n) {
+        this.reload()
+      }
+    },
+    chart: {}
+  },
+  methods: {
+    reload () {
+      this.$get('monitor/project/topo', { projectId: this.currentProject.id }).then(res => {
+        if (res.data && res.data.topo) {
+          this.topoData = res.data.topo.topo || {}
+          this.querysArray = res.data.topo.elements || []
+          this.timeType = res.data.topo.timeType || 1
+        } else {
+          this.topoData = {}
+          this.querysArray = []
+          this.timeType = 1
         }
-        this.topoData = res.topo
-        this.querysArray = res.elements
-      })
-    } else {
-      setTimeout(() => {
-        const res = {
-          topo: {},
-          elements: [],
-          timeType: 4
-        }
-        this.topoData = res.topo
-        this.querysArray = res.elements
-        this.timeType = res.timeType || 1
       })
     }
   }

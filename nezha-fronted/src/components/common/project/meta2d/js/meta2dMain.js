@@ -19,7 +19,8 @@ export default {
     return {
       selectPens: [],
       editFlag: false,
-      prevFlag: false
+      prevFlag: false,
+      meta2dLoading: true
     }
   },
   mounted () {
@@ -37,7 +38,6 @@ export default {
       // meta2d.registerCanvasDraw(chartsPens())
       /* 画布绑定事件 */
       meta2d.beforeAddPens = (pens) => { // 添加画笔前
-        console.log(pens)
         if (pens.length === 1) {
           if (!pens[0].type) {
             this.nodeInit(pens[0])
@@ -57,24 +57,36 @@ export default {
       // meta2d.on('add', this.appPen) // 添加新画笔·
       meta2d.on('click', this.topoClick) // click画笔·
       setTopology(this.meta2dId, meta2d)
-      console.log(getTopology(this.meta2dId))
-      this.clacTopoData(this.topoData).then((data) => {
-        console.log(data)
-        meta2d.open(data)
-        meta2d.centerView()
-        meta2d.lock(1)
+    },
+    reload () {
+      const endTime = new Date().getTime()
+      const startTime = endTime - 60 * 5 * 1000
+      this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
+        this.clacTopoData(this.topoData, arr).then((data) => {
+          console.log(data)
+          getTopology(this.meta2dId).resize()
+          getTopology(this.meta2dId).open(data)
+          getTopology(this.meta2dId).centerView()
+          getTopology(this.meta2dId).lock(1)
+        })
       })
     },
-    clacTopoData (data) { // 主要处理 属性为原始属性 处理动画属性对原始属性的影响
+    clacTopoData (data, queryValues) { // 主要处理 属性为原始属性 处理动画属性对原始属性的影响
       return new Promise(resolve => {
         if (!data.pens) {
           data.pens = []
         }
+        data.pens.forEach(pen => {
+          if (pen.isNz) {
+            if (pen.data.legend) {
+
+            }
+          } else {
+            // 处理加载数据
+          }
+        })
         resolve(data)
       })
-    },
-    calcNode (node) { // 处理节点数据
-      node = { ...node, ...node.data.params }
     },
     nodeInit (pen) { // 初始化节点参数
       pen.data = {
@@ -87,7 +99,7 @@ export default {
         imageId: '',
         valueMapping: [],
         legend: '',
-        statistics: '',
+        statistic: '',
         enable: {
           valueMapping: true,
           tooltip: true
@@ -100,6 +112,7 @@ export default {
           legends: [] // {legend: '' , alias}
         }
       }
+      pen.isNz = true
       pen.background = '#22222200'
       pen.textAlign = 'center'
       pen.textBaseline = 'middle'
@@ -115,7 +128,10 @@ export default {
       pen.lineWidth = 1
       pen.lineDash = []
       pen.borderRadius = 0
-      console.log(pen)
+      pen.paddingTop = 5
+      pen.paddingBottom = 5
+      pen.paddingLeft = 5
+      pen.paddingRight = 5
     },
     lineInit (pen) { // 初始化连线参数
       pen.data = {
@@ -123,8 +139,16 @@ export default {
           animateColor: '#FA901CFF',
           borderColor: '#22222200',
           color: '#222222FF'
-        }
+        },
+        valueMapping: [],
+        legend: '',
+        statistic: '',
+        enable: {
+          valueMapping: true,
+          tooltip: true
+        },
       }
+      pen.disableInput = true
       pen.lineAnimateType = 0
       pen.animateSpan = 1
       pen.animateReverse = false
@@ -137,13 +161,12 @@ export default {
       pen.borderType = 0
       pen.lineWidth = 1
       pen.lineDash = []
+      pen.isNz = true
     },
     pensActive (pens, e) { // 选中节点
-      console.log(pens, 'active', e)
       this.selectPens = pens
     },
     topoClick (params, e) { // 点击节点
-      console.log(this.$refs.meta2dProps)
       if (!params.pen && this.$refs.meta2dProps) {
         this.$refs.meta2dProps.activeName = 'canvas'
         this.selectPens = []
@@ -156,7 +179,6 @@ export default {
       // console.log(pens)
     },
     updatePens (pen, key) { // 更新对应的节点
-      console.log(pen, key, 'update')
       // meta2d.setValue({ id: pen.id, text: 'new text' }, { render: false });
       const obj = { id: pen.id }
       obj[key] = pen[key]
@@ -165,12 +187,17 @@ export default {
       }
       getTopology(this.meta2dId).setValue(obj)
       if (key === 'lineAnimateType') {
-        console.log('lineAnimateType', 'start')
         if (!pen[key]) {
           getTopology(this.meta2dId).stopAnimate(pen.id)
           return
         }
         getTopology(this.meta2dId).startAnimate(pen.id)
+      }
+    },
+    exitEdit (isRefresh) {
+      this.editFlag = false
+      if (isRefresh) {
+        this.$emit('reload')
       }
     }
   }

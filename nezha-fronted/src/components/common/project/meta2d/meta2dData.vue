@@ -138,6 +138,10 @@ const rz = {
 export default {
   name: 'meta2dData',
   mixins: [promqlInputMixin, rz],
+  props: {
+    querysArray: {},
+    timeType: {}
+  },
   components: {
     draggable,
     promqlInput
@@ -197,11 +201,6 @@ export default {
       } else if (!this.expressionName[index]) {
         this.expressionName[index] = this.expressionsShow[index].oldName
       } else {
-        this.param.rightYAxis && this.param.rightYAxis.elementNames.forEach((item, index) => {
-          if (item == this.expressionsShow[index].oldName) {
-            this.param.rightYAxis.elementNames[index] = this.expressionName[index]
-          }
-        })
         this.expressionsShow[index].oldName = this.expressionName[index]
       }
       this.expressionChange()
@@ -293,12 +292,6 @@ export default {
     },
     removeExpression (index) {
       if (this.expressionsShow.length > 1) {
-        this.param.rightYAxis && this.param.rightYAxis.elementNames.forEach((elementName, subIndex) => {
-          if (elementName == this.expressionName[index]) {
-            this.param.rightYAxis.elementNames.splice(subIndex, 1)
-          }
-        })
-
         this.expressions.splice(index, 1)
         this.expressionName.splice(index, 1)
         this.expressionsShow.splice(index, 1)
@@ -330,10 +323,6 @@ export default {
     showError () {
     },
     hideError (key, index) {
-      if (!this.param[key] || !this.param[key].length) {
-        return
-      }
-      this.param[key][index].error = false
       this.$forceUpdate()
     },
     move () {
@@ -373,6 +362,8 @@ export default {
       this.expressions = []
       this.expressionsShow = []
       this.expressionName = []
+      this.elements = this.$loadsh.cloneDeep(this.querysArray)
+      this.dataTimeType = this.timeType
       if (!this.elements.length) {
         this.addExpression()
       } else {

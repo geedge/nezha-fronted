@@ -1,5 +1,5 @@
 <template>
-  <div class="pens-data">
+  <div class="pens-data right-box__container">
     <div v-if="pen.id">
 <!--      <el-input-number v-model="pen.x" @change="change('x')"/>-->
 <!--      node-->
@@ -256,7 +256,8 @@
                 Image
               </div>
               <div class="form-row-value">
-                <el-input  v-model="pen.image" size="small" @change="change('image')"/>
+<!--                <el-input  v-model="pen.image" size="small" @change="change('image')"/>-->
+                <meta2dSelectImage :selectImage="pen.image" @updateImage="updateImage"/>
               </div>
             </div>
             <div class="form-row-item">
@@ -347,44 +348,6 @@
               </div>
               <div class="form-row-value">
                 <el-input  maxlength="256" show-word-limit v-model="pen.text" size="small" :rows="4" type="textarea" @change="change('text')"/>
-              </div>
-            </div>
-          </div>
-
-          <!--         valueMapping -->
-          <div class="form-row-title">
-            Value mappings
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('valueMapping')"/>
-          </div>
-          <div v-show="elements.valueMapping" class="form-row-content">
-            <div class="form-row-item">
-              <div class="form-row-key">
-                color
-              </div>
-              <div class="form-row-value">
-                <nezhaColor
-                  :isTopo="true"
-                  :value-arr="[{name:'background',value: pen.background}]"
-                  @colorChange="colorChange"/>
-              </div>
-            </div>
-          </div>
-
-          <!--         tooltip -->
-          <div class="form-row-title">
-            tooltip
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('tooltip')"/>
-          </div>
-          <div v-show="elements.tooltip" class="form-row-content">
-            <div class="form-row-item">
-              <div class="form-row-key">
-                color
-              </div>
-              <div class="form-row-value">
-                <nezhaColor
-                  :isTopo="true"
-                  :value-arr="[{name:'background',value: pen.background}]"
-                  @colorChange="colorChange"/>
               </div>
             </div>
           </div>
@@ -699,16 +662,265 @@
           </div>
         </div>
       </div>
+
+      <!--         valueMapping -->
+      <div class="form-row-title">
+        Value mappings
+        <span>
+              <el-switch
+                v-model="pen.data.enable.valueMapping"
+                :active-value="true"
+                :inactive-value="false"
+                @change="change('data.enable.valueMapping')"
+              ></el-switch>
+              <i class="nz-icon nz-icon-arrow-down" @click="updateShow('valueMapping')"/>
+            </span>
+      </div>
+      <transition name="el-zoom-in-top">
+        <div class="el-form" v-show="elements.valueMapping">
+          <div  class="form-row-content">
+            <div class="form-row-item">
+              <div class="form-row-key">
+                Legend
+              </div>
+              <div class="form-row-value">
+                <el-select v-model="pen.data.legend" size="small">
+                  <el-option v-for="item in queryValues" :key="item.id" :value="item.id" :label='item.name'></el-option>
+                </el-select>
+              </div>
+            </div>
+            <div class="form-row-item">
+              <div class="form-row-key">
+                Statistics
+              </div>
+              <div class="form-row-value">
+                <el-select v-model="pen.data.statistic" size="small">
+                  <el-option v-for="item in statisticsList" :key="item.value" :value="item.value" :label='item.label'></el-option>
+                </el-select>
+              </div>
+            </div>
+            <div class="form-row-item form-row-item-full chart-config">
+              <el-row class="el-form">
+                <draggable
+                  v-model="pen.data.valueMapping"
+                  @end="change"
+                  :scroll-sensitivity="150"
+                  :options="{
+                    dragClass:'drag-valueMapping-class',
+                    fallbackClass:'fallback-class',
+                    forceFallback:true,
+                    ghostClass:'chart-ghost',
+                    chosenClass:'choose-class',
+                    scroll:true,
+                    filter: '.drag-disabled',
+                    animation: 150,
+                    handle: '.drag-sort'
+                  }">
+                  <div
+                    v-for="(item,index) in pen.data.valueMapping"
+                    :key="item.uid"
+                    :class="item.error? 'is-item-box-error' : ''"
+                  >
+                    <div class="chart-title chart-title-config">
+                  <span class="chart-title-content">
+                    <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showMapping(index)"></i>
+                    <span v-if="item.column && !item.show">{{item.column}}:</span>
+                    <span v-show="!item.show" class="title-content-left">
+                      <span v-if="item.type === 'value'">
+                        {{item.value}}
+                      </span>
+                      <span v-if="item.type === 'range'">
+                        [{{item.from}}，{{item.to}})
+                      </span>
+                      <span v-if="item.type === 'regx'">
+                        {{item.regx}}
+                      </span>
+                      <div class="prev-mapping-icon">
+                        <i :class="item.icon" :style="{ color: item.color.icon }"></i>
+                      </div>
+                      <div :style="{background:item.color.bac}" class="prev-mapping-box">
+                          <span :style="{color:item.color.text}">
+                            {{item.display || "T"}}
+                          </span>
+                        </div>
+                    </span>
+                  </span>
+                      <span>
+                    <span @click="addMapping('')" style="margin-right: 5px" :title="$t('tip.add')">
+                      <i class="nz-icon nz-icon-create-square"></i>
+                    </span>
+                    <span @click="copyMapping(index)" style="margin-right: 5px" :title="$t('overall.duplicate')">
+                      <i  class="nz-icon nz-icon-override"></i>
+                    </span>
+                    <span @click="removeMapping(index)" style="margin-right: 5px" :title="$t('overall.delete')">
+                      <i  class="nz-icon nz-icon-minus"></i>
+                    </span>
+                    <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
+                      <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
+                    </span>
+                  </span>
+                    </div>
+                    <transition-group appear tag="div" name="el-zoom-in-top">
+                      <el-row
+                        v-show="item.show"
+                        :key="1"
+                        class="thresholds-item"
+                      >
+                        <div>
+                          <el-select
+                            v-model="item.type"
+                            size="small"
+                            style="width: 100px"
+                            @change="(val)=>{mappingItemChange(index,val)}"
+                          >
+                            <el-option
+                              v-for="item in mappingTypeList"
+                              :value="item.value"
+                              :label="$t(item.label)"
+                              :key="item.value"/>
+                          </el-select>
+                        </div>
+                        <div
+                          v-if="item.type === 'value'"
+                          :prop="'param.valueMapping.' + index + '.value'"
+                          :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+                          class="thresholds-from-item"
+                          style="display: flex"
+                          key="value"
+                        >
+                          <el-input-number
+                            :controls="false"
+                            size="small"
+                            v-model.number="item.value"
+                            placeholder="value"
+                            @change="change('valueMapping', index)"
+                          ></el-input-number>
+                        </div>
+                        <div
+                          v-if="item.type === 'range'"
+                          :prop="'param.valueMapping.' + index + '.from'"
+                          :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+                          class="thresholds-from-item"
+                          key="from"
+                        >
+                          <el-input-number
+                            :controls="false"
+                            size="small"
+                            v-model.number="item.from"
+                            placeholder="from"
+                            @change="change('valueMapping', index)"
+                          ></el-input-number>
+                        </div>
+                        <div
+                          v-if="item.type === 'range'"
+                          :prop="'param.valueMapping.' + index + '.to'"
+                          :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+                          class="thresholds-from-item"
+                          key="to"
+                        >
+                          <el-input-number
+                            :controls="false"
+                            size="small"
+                            v-model.number="item.to"
+                            @change="change('valueMapping', index)"
+                            placeholder="to"
+                          ></el-input-number>
+                        </div>
+                        <div
+                          v-if="item.type === 'regx'"
+                          :prop="'param.valueMapping.' + index + '.regx'"
+                          :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
+                          class="thresholds-from-item"
+                          key="regx"
+                        >
+                          <el-input
+                            size="small"
+                            v-model="item.regx"
+                            placeholder="regx"
+                            @change="change('valueMapping', index)"
+                          ></el-input>
+                        </div>
+                      </el-row>
+                      <el-row v-show="item.show" :key="2" class="thresholds-item">
+                        <div>
+                          <div class='mapping-display'>{{$t('config.assetLabel.display')}}</div>
+                        </div>
+                        <div :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+                          <el-input v-model="item.display" style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)" class="mapping-display-input">
+                            <!--                              <el-dropdown trigger="click" slot="prefix" placement="top-start">-->
+                            <!--                                <div class="el-dropdown-link">-->
+                            <!--                                  <i v-if="item.icon" class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>-->
+                            <!--                                  <div v-else class="mapping-iconSelect" :title="$t('tip.add')">-->
+                            <!--                                    <i class="nz-icon nz-icon-create-square"></i>-->
+                            <!--                                  </div>-->
+                            <!--                                </div>-->
+                            <!--                                <el-dropdown-menu slot="dropdown" class="mapping-iconPop">-->
+                            <!--                                  <ul class="mapping-iconList">-->
+                            <!--                                    <li class="mapping-iconItem" :class="{active:item.icon===subItem.value}" v-for="subItem in mappingIconList" @click="iconActive(item,subItem,index)" :key="subItem.value">-->
+                            <!--                                      <i :class="subItem.value"></i>-->
+                            <!--                                    </li>-->
+                            <!--                                  </ul>-->
+                            <!--                                </el-dropdown-menu>-->
+                            <!--                              </el-dropdown>-->
+                          </el-input>
+                        </div>
+                        <nezhaColor
+                          :color-val="item.color"
+                          :single="false"
+                          :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'},{name:'border',value:item.color.icon,key:'icon'}]"
+                          @colorChange="(val,key)=>{valueMappingColorChange(val, key, index)}"
+                        />
+                      </el-row>
+                    </transition-group>
+                  </div>
+                </draggable>
+                <div @click="addMapping" class="thresholds-add">
+                  {{$t('overall.addMapping')}}
+                </div>
+              </el-row>
+
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!--         tooltip -->
+      <div class="form-row-title" v-if="pen.type !== 1">
+        tooltip
+        <i class="nz-icon nz-icon-arrow-down" @click="updateShow('tooltip')"/>
+      </div>
+      <div v-show="elements.tooltip" class="form-row-content" v-if="pen.type !== 1">
+        <div class="form-row-item">
+          <div class="form-row-key">
+            color
+          </div>
+          <div class="form-row-value">
+            <nezhaColor
+              :isTopo="true"
+              :value-arr="[{name:'background',value: pen.background}]"
+              @colorChange="colorChange"/>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import nezhaColor from '@/components/common/nezhaColor'
+import meta2dSelectImage from '@/components/common/project/meta2d/meta2dSelectImage'
+import { imageTemp } from '@/components/common/project/L5/services/canvas'
+import { dealImg, getUUID, topologyImg } from '@/components/common/js/common'
+import imgDefault from '@/components/common/project/L5/services/img'
+import { ColorReverse, randomcolor } from '@/components/common/js/radomcolor/randomcolor'
+import lodash from 'lodash'
+import draggable from 'vuedraggable'
 export default {
   name: 'meta2dElement', // node 和 line 所有组件均是分开创建的 修改相同属性时 需要同时修改
   components: {
-    nezhaColor
+    nezhaColor,
+    meta2dSelectImage,
+    draggable
   },
   props: {
     selectPens: {},
@@ -718,11 +930,15 @@ export default {
     selectPens: {
       immediate: true,
       handler (n) {
-        console.log(n, 'selectPens')
         this.pen = n[0]
         // todo 判断legend 是否还存在
         // this.$forceUpdate()
       }
+    }
+  },
+  computed: {
+    queryValues () {
+      return this.$store.getters.getQueryValues
     }
   },
   data () {
@@ -812,7 +1028,7 @@ export default {
           r: '5',
           name: 'circle',
           strokeColor: theme == 'light' ? 'black' : '#BEBEBE'
-        },
+        }
       ],
       lineAnimateOptions: [
         { id: 3, name: this.$t('project.topology.flow') },
@@ -821,7 +1037,22 @@ export default {
         // { id: 'comet', name: this.$t('project.topology.comet') },
         { id: 0, name: this.$t('project.topology.none') }
       ],
+      statisticsList: this.$CONSTANTS.statisticsList,
+      mappingTypeList: [
+        {
+          label: this.$t('overall.value'),
+          value: 'value'
+        }, {
+          label: this.$t('dashboard.panel.chartForm.valMapping.range'),
+          value: 'range'
+        }, {
+          label: this.$t('dashboard.panel.chartForm.valMapping.regx'),
+          value: 'regx'
+        }
+      ]
     }
+  },
+  mounted () {
   },
   methods: {
     change (key) {
@@ -831,11 +1062,32 @@ export default {
       }
       this.$emit('change', key)
     },
+    updateImage (image) {
+      this.pen.image = image.image
+      this.pen.imageId = image.id
+      this.change('image')
+    },
     colorChange (val, key) {
       this.pen.data.params[key] = val
       this.pen[key] = val
-      console.log(key, val)
       this.change(key)
+    },
+    valueMappingColorChange (val, key, index) {
+      if (key === 'thresholds') {
+        this.pen.data.thresholds[index].color = val
+      }
+      if (key === 'bac') {
+        this.pen.data.valueMapping[index].color.bac = val
+        this.$set(this.pen.data.valueMapping, index, this.pen.data.valueMapping[index])
+      }
+      if (key === 'text') {
+        this.pen.data.valueMapping[index].color.text = val
+        this.$set(this.pen.data.valueMapping, index, this.pen.data.valueMapping[index])
+      }
+      if (key === 'icon') {
+        this.pen.data.valueMapping[index].color.icon = val
+        this.$set(this.pen.data.valueMapping, index, this.pen.data.valueMapping[index])
+      }
     },
     updateShow (key) {
       this.elements[key] = !this.elements[key]
@@ -845,7 +1097,58 @@ export default {
       e.path[2].children[1].setAttribute('tabindex', '1')
     },
     inputBlur (e) {
+    },
+    addMapping () {
+      const bacColor = randomcolor()
+      const obj = {
+        type: 'value',
+        show: true,
+        value: undefined,
+        display: '',
+        color: {
+          bac: bacColor + 'FF',
+          text: ColorReverse(bacColor) + 'FF',
+          border: randomcolor() + 'FF'
+        },
+        uid: getUUID()
+      }
+      this.pen.data.valueMapping.push(obj)
+    },
+    copyMapping (index) {
+      const temp = lodash.cloneDeep(this.pen.data.valueMapping[index])
+      temp.uid = getUUID()
+      this.pen.data.valueMapping.push(temp)
+    },
+    removeMapping (index) {
+      this.pen.data.valueMapping.splice(index, 1)
+    },
+    showMapping (index) {
+      this.pen.data.valueMapping[index].show = !this.pen.data.valueMapping[index].show
+    },
+    mappingItemChange (index, type) {
+      const mapping = this.pen.data.valueMapping[index]
+      if (mapping.type === 'value') {
+        this.pen.data.valueMapping[index] = {
+          ...mapping,
+          value: undefined
+        }
+      }
+      if (mapping.type === 'range') {
+        this.pen.data.valueMapping[index] = {
+          ...mapping,
+          from: undefined,
+          to: undefined
+        }
+      }
+      if (mapping.type === 'regx') {
+        this.pen.data.valueMapping[index] = {
+          ...mapping,
+          regx: ''
+        }
+      }
+      this.$set(this.pen.data.valueMapping, index, this.pen.data.valueMapping[index])
     }
+
   }
 }
 </script>

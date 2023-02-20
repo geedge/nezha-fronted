@@ -1,10 +1,18 @@
 <template>
-  <div class="meta2d-box">
-    <meta2dHeader :meta2dId="meta2dId" :isChart="isChart" :projectName="projectName" @edit="editFlag = true"/>
+  <div class="meta2d-box" v-my-loading="meta2dLoading">
+    <meta2dHeader :meta2dId="meta2dId" :isChart="isChart" :project="project" @edit="editFlag = true" @exitEdit="exitEdit"/>
     <div class="meta2d-main" :class="isChart ? 'meta2d-chart': 'meta2d-project'">
       <div :id="meta2dId" style="height: 100%;width: 100%"></div>
     </div>
-    <meta2dProps ref="meta2dProps" :selectPens.sync="selectPens" :querysArray="querysArray" :timeType="timeType" @updatePens="updatePens" v-if="editFlag"/>
+    <meta2dProps
+      v-if="editFlag"
+      ref="meta2dProps"
+      :selectPens.sync="selectPens"
+      :querysArray="querysArray"
+      :timeType="timeType"
+      :meta2dId="meta2dId"
+      @updatePens="updatePens"
+    />
   </div>
 </template>
 
@@ -13,9 +21,10 @@ import meta2dHeader from '@/components/common/project/meta2d/meta2dHeader'
 import meta2dProps from '@/components/common/project/meta2d/meta2dProps'
 import meta2dMain from '@/components/common/project/meta2d/js/meta2dMain'
 import { getTopology, setTopology } from '@/components/common/js/common'
+import topoUtil from '@/components/common/project/meta2d/js/topoUtil'
 export default {
   name: 'meta2dMain',
-  mixins: [meta2dMain],
+  mixins: [meta2dMain, topoUtil],
   props: {
     meta2dId: {}, // 唯一id 不可重复
     topoData: {}, // topo图数据
@@ -25,7 +34,7 @@ export default {
     },
     querysArray: {},
     timeType: {},
-    projectName: {}
+    project: {}
   },
   components: {
     meta2dHeader,
@@ -35,6 +44,7 @@ export default {
     topoData: {
       immediate: true,
       handler () {
+        this.reload()
       }
     }
   },

@@ -13,7 +13,7 @@
   }
   .form-row-item{
     vertical-align: top;
-    width: calc(50% - 15px);
+    width: calc(50% - 3px);
     display: inline-block;
     box-sizing: border-box;
     padding: 0 5px;
@@ -47,5 +47,15 @@
   }
   .form-row-content{
     margin-bottom: 5px;
+  }
+  .right-box__container.pens-data{
+    overflow: unset;
+    overflow-y: unset;
+  }
+  .right-box__container .chart-config .thresholds-item .mapping-display-input input{
+    padding-left: 15px;
+  }
+  .right-box__container .el-form{
+    padding-top: 0;
   }
 }

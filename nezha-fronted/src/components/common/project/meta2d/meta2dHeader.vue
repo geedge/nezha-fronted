@@ -1,6 +1,6 @@
 <template>
   <div class="topo-header">
-    <div v-if="!isChart"> {{projectName}} </div>
+    <div v-if="!isChart"> {{project && project.name}} </div>
     <div class="tools-left">
       <div class="tools-left-drag">
         <div
@@ -20,6 +20,9 @@
       <button v-has="'project_edit'" v-if="!isChart" class="top-tool-btn margin-r-10" type="button" @click="editMeta2d" :title="$t('overall.edit')">
         <i class="nz-icon nz-icon-edit"></i>
       </button>
+      <button v-has="'project_edit'" v-if="!isChart" class="top-tool-btn margin-r-10" type="button" @click="saveMeta2d" :title="$t('overall.edit')">
+        save
+      </button>
     </div>
   </div>
 </template>
@@ -37,7 +40,7 @@ export default {
       type: Boolean,
       default: false
     },
-    projectName: {}
+    project: {}
   },
   data () {
     return {
@@ -54,14 +57,12 @@ export default {
   },
   methods: {
     editMeta2d () {
-      console.log()
       this.topoScreenState = JSON.parse(JSON.stringify(this.topoScreen))
       this.$store.commit('setShowTopoScreen', true)
       setTimeout(() => {
         this.topoResize(this.meta2dId)
         this.initEdit(this.meta2dId)
         this.$emit('edit')
-        console.log(getTopology(this.meta2dId).data())
       })
     },
     onDragstart (e) {
@@ -86,8 +87,48 @@ export default {
     },
     // 开启钢笔状态
     setDrawPen () {
-      console.log(123123123123)
       getTopology(this.meta2dId).drawLine('line')
+    },
+    saveMeta2d () {
+      if (this.isChart) {
+        this.saveChart()
+      } else {
+        this.saveProject()
+      }
+    },
+    saveChart () {
+
+    },
+    saveProject () {
+      const elements = this.$parent.$refs.meta2dProps.$refs.meta2dData.elements
+      console.log(elements)
+      const params = {
+        topo: getTopology(this.meta2dId).data(),
+        elements: elements,
+        timeType: ''
+      }
+
+      this.$put('monitor/project/topo', { topo: JSON.stringify(params), projectId: this.project.id }).then(res => {
+        this.prevent_opt.save = false
+        if (res.code === 200) {
+          this.$message({
+            message: this.$t('tip.saveSuccess'),
+            type: 'success'
+          })
+          this.$store.commit('setShowTopoScreen', this.topoScreenState)
+          this.$nextTick(() => {
+            getTopology(this.meta2dId).lock(1)
+            getTopology(this.meta2dId).resize()
+          })
+          this.$emit('exitEdit', true)
+        }
+      }).catch(res => {
+        this.prevent_opt.save = false
+        this.$message({
+          message: res.msg,
+          type: 'error'
+        })
+      })
     }
   }
 }
