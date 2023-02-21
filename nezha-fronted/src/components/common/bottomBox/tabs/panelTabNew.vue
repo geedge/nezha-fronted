@@ -245,7 +245,8 @@ export default {
             legend: true,
             valueMapping: false,
             thresholds: false,
-            visibility: false
+            visibility: false,
+            rightYAxis: false
           },
           thresholdShow: true,
           thresholds: [{ value: undefined, color: randomcolor() }],
@@ -255,6 +256,14 @@ export default {
             operator: 'equal',
             varValue: '',
             result: 'show'
+          },
+          rightYAxis: {
+            elementNames: [],
+            style: 'line',
+            unit: 2,
+            label: '',
+            min: undefined,
+            max: undefined
           }
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
@@ -596,13 +605,10 @@ export default {
     },
     // 公用操作
     getTableData (linkId) {
-      this.variablesInit = false
       if (this.from === this.fromRoute.alertRule) {
-        this.variablesInit = true
         this.getData(this.filter)
       } else {
         if (this.from === this.fromRoute.chartTemp) {
-          this.variablesInit = true
           if (this.obj.type === 'group') {
             this.$get('/visual/panel/chart', { ids: this.obj.id }).then(res => {
               this.panelDataList = res.data.list
@@ -619,6 +625,7 @@ export default {
             this.getData(this.filter)
           }
         } else if (this.from === this.fromRoute.dashboardTemp) {
+          
           this.$get('visual/panel', { type: 'template', ids: this.obj.id }).then(response => {
             if (response.code === 200) {
               this.panelData = response.data.list
