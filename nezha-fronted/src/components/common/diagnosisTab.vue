@@ -226,7 +226,6 @@ export default {
           }
         })
       } else if (from === 'agent') {
-        console.log(status, 'status')
         if (status.auth) {
           str += `<div><i class="active-icon inline-block ${status.auth ? 'green-bg' : 'red-bg'}"></i> Auth</div>`
         }
@@ -273,7 +272,6 @@ export default {
             this.suspendedStr(n.row.configs[0].state, 'endpoint')
             break
           case 'agent':
-            console.log(n, 'diagnosisTabData')
             this.diagnoseUrl = n.url
             this.suspendedStr(JSON.parse(n.row.statusInfo), 'agent')
             break
