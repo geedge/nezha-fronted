@@ -38,6 +38,12 @@
   .form-row-item-full{
     width: 100%;
   }
+  .form-row-value {
+    .el-select--small{
+      width: 100%;
+    }
+
+  }
   .form-row-item:nth-of-type(even) {
     /*margin-left: 10px;*/
   }
@@ -58,5 +64,21 @@
   }
   .right-box__container .el-form{
     padding-top: 0;
+  }
+  .pen-tools{
+    background: $--background-color-1;
+    margin-bottom: 10px;
+    border-radius: 2px;
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 10px
+  }
+  .promqlInput .el-cascader-menu{
+    width: 200px;
+  }
+  .element-item .el-row {
+    .el-cascader--small,.el-select--small {
+      width: 100%;
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { getTopology, setTopology, dealImg, topologyImg } from '@/components/common/js/common'
 import bus from '@/libs/bus'
 import axios from 'axios'
+import {getMetricTypeValue} from "@/components/common/js/tools";
 export default {
   methods: {
     topoResize (id) {
@@ -8,10 +9,9 @@ export default {
     },
     initEdit (id) {
       getTopology(id).lock(0)
-      getTopology(id).stopAnimate(getTopology(id).data.pens)
-      console.log(getTopology(id).data.pens)
-      if (getTopology(id).data.pens) {
-        getTopology(id).data.pens.forEach(item => {
+      getTopology(id).stopAnimate()
+      if (getTopology(id).data().pens) {
+        getTopology(id).data().pens.forEach(item => {
           this.calcNode(item)
         })
       }
@@ -19,7 +19,7 @@ export default {
       getTopology(id).centerView()
     },
     calcNode (node) { // 处理节点数据
-      node = { ...node, ...node.data.params }
+      node = { id: node.id, ...node.data.params }
       getTopology(this.meta2dId)._setValue(node)
     },
     getQueryValues (elements, startTime, endTime) {
@@ -29,7 +29,6 @@ export default {
         endTime = parseInt(endTime / 1000)
         startTime = parseInt(startTime / 1000)
         const urlPre = '/prom'
-        console.log(endTime, startTime)
         elements = elements.filter(item => item.state && item.expression)
         const requests = elements.map((element) => {
           // query_range
@@ -42,7 +41,6 @@ export default {
           return this.$get(query)
         })
         axios.all(requests).then((res) => {
-          console.log(res)
           const arr = []
           res.forEach((request, index) => {
             arr.push({
@@ -77,7 +75,8 @@ export default {
                   type: 'item',
                   id: rindex + elements[index].name + JSON.stringify(r.metric),
                   name: this.handleLegendAlias(legend, elements[index].legend, r.metric),
-                  values: r.values
+                  values: r.values,
+                  parent: elements[index].name
                 }
                 arr.push(obj)
               })
@@ -129,6 +128,69 @@ export default {
         }
         return aliasExpression
       }
-    }
+    },
+    clacTopoData (data, queryValues) { // 主要处理 属性为原始属性 处理动画属性对原始属性的影响
+      console.log(this.params)
+      return new Promise(resolve => { // 处理加载数据
+        if (!data.pens) {
+          data.pens = []
+        }
+        data.pens.forEach(pen => {
+          if (pen.isNz) {
+            if (pen.data.legend) {
+              const findItem = queryValues.find(query => query.name === pen.data.legend && query.parent === pen.data.parent)
+              pen.data.value = getMetricTypeValue(findItem.values, pen.data.statistic || 'last')
+              this.selectMapping(pen)
+            }
+          } else {
+            // 处理 le5le的数据
+          }
+        })
+        resolve(data)
+      })
+    },
+    selectMapping (pen) {
+      let mapping = ''
+      const show = pen.data.enable.valueMapping
+      const valueMapping = pen.data.valueMapping
+      const value = pen.data.value
+      if (show && valueMapping) {
+        valueMapping.forEach(item => {
+          if (item.type === 'value') {
+            if (value == item.value) {
+              mapping = item
+            }
+          }
+          if (item.type === 'range') {
+            if (value >= item.from && value < item.to) {
+              mapping = item
+            }
+          }
+          if (item.type === 'regx') {
+            const reg = new RegExp(item.regx)
+            if (reg.test(value)) {
+              mapping = item
+            }
+          }
+        })
+        if (mapping) {
+          this.drawPen(pen, mapping)
+        }
+      }
+    },
+    drawPen (pen, mapping) {
+      if (!pen.type) {
+        pen.background = mapping.color.bac
+        pen.color = mapping.color.border
+        pen.textColor = mapping.color.text
+      } else {
+        pen.animateColor = mapping.color.bac
+        pen.borderColor = mapping.color.border
+        pen.color = mapping.color.text
+        if (pen.lineAnimateType) {
+          pen.autoPlay = true
+        }
+      }
+    },
   }
 }

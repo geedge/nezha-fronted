@@ -1,13 +1,42 @@
 <template>
   <div class="pens-data right-box__container">
     <div class="form-row-box chart-config">
-      <div class="form-row-item">
+      <div class="form-row-item form-row-item-full">
         <div class="form-row-key">
           Time Range
         </div>
         <div class="form-row-value">
-          <el-select v-model="dataTimeType"/>
+          <el-select v-model="dataTimeType" size="small" style="width: 100%">
+            <el-option v-for="item in timeData" :key="item.id" :value="item.id" :label="$t(item.text)"></el-option>
+          </el-select>
         </div>
+        <el-row style="margin-top: 18px;display: flex">
+          <div class="form-row-item">
+            <div class="form-row-key">
+              Statistics
+            </div>
+            <div class="form-row-value">
+              <el-select v-model="dataStatistic" size="small">
+                <el-option v-for="item in statisticsList" :key="item.value" :value="item.value" :label='$t(item.label)'></el-option>
+              </el-select>
+            </div>
+          </div>
+          <div class="form-row-item">
+            <div class="form-row-key">
+              Unit
+            </div>
+            <div class="form-row-value">
+              <el-cascader :id="'columns-unit'" v-model="dataUnit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
+                           placeholder=""
+                           popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
+                           size="small"
+                           style="flex: 1"
+                           @change="unitSelected"
+              >
+              </el-cascader>
+            </div>
+          </div>
+        </el-row>
       </div>
       <div class="form-row-item form-row-item-full">
         <div
@@ -123,11 +152,12 @@
 <script>
 import promqlInput from '@/components/page/dashboard/explore/promqlInput'
 import promqlInputMixin from '@/components/common/mixin/promqlInput.js'
-import {isStat} from "@/components/chart/chart/tools";
-import {ColorReverse, randomcolor} from "@/components/common/js/radomcolor/randomcolor";
-import {getUUID, resetZIndex} from "@/components/common/js/common";
-import lodash from "lodash";
+import { isStat } from '@/components/chart/chart/tools'
+import { ColorReverse, randomcolor } from '@/components/common/js/radomcolor/randomcolor'
+import { getUUID, resetZIndex } from '@/components/common/js/common'
+import lodash from 'lodash'
 import draggable from 'vuedraggable'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 const rz = {
   methods: {
     rz (e) {
@@ -140,7 +170,7 @@ export default {
   mixins: [promqlInputMixin, rz],
   props: {
     querysArray: {},
-    timeType: {}
+    params: {},
   },
   components: {
     draggable,
@@ -160,7 +190,79 @@ export default {
         'O', 'P', 'Q', 'R', 'S', 'T',
         'U', 'V', 'W', 'X', 'Y', 'Z'
       ],
-      dataTimeType: 1
+      dataTimeType: 1,
+      dataStatistic: 'last',
+      dataUnit: 1,
+      statisticsList: this.$CONSTANTS.statisticsList,
+      unitOptions: chartDataFormat.unitOptions(),
+      timeData: [
+        {
+          id: 1,
+          text: this.$t('dashboard.panel.lastFiveMin'),
+          type: 'minute',
+          value: 5
+        },
+        {
+          id: 2,
+          text: this.$t('dashboard.panel.lastFifteenMin'),
+          type: 'minute',
+          value: 15
+        },
+        {
+          id: 3,
+          text: this.$t('dashboard.panel.lastThirtyMin'),
+          type: 'minute',
+          value: 30
+        },
+        {
+          id: 4,
+          text: this.$t('dashboard.panel.lastOneHour'),
+          type: 'hour',
+          value: 1
+        },
+        {
+          id: 5,
+          text: this.$t('dashboard.panel.lastThreeHour'),
+          type: 'hour',
+          value: 3
+        },
+        {
+          id: 6,
+          text: this.$t('dashboard.panel.lastSixHour'),
+          type: 'hour',
+          value: 6
+        },
+        {
+          id: 7,
+          text: this.$t('dashboard.panel.lastTwelveHour'),
+          type: 'hour',
+          value: 12
+        },
+        {
+          id: 8,
+          text: this.$t('dashboard.panel.lastTwentyFourHour'),
+          type: 'hour',
+          value: 24
+        },
+        {
+          id: 9,
+          text: this.$t('dashboard.panel.lastTwoDay'),
+          type: 'date',
+          value: 2
+        },
+        {
+          id: 10,
+          text: this.$t('dashboard.panel.lastSevenDay'),
+          type: 'date',
+          value: 7
+        },
+        {
+          id: 11,
+          text: this.$t('dashboard.panel.lastThirtyDay'),
+          type: 'date',
+          value: 30
+        }
+      ],
     }
   },
   mounted () {
@@ -176,6 +278,8 @@ export default {
             expression: expr,
             type: 'expert',
             legend: this.expressionsShow[i].legend,
+            unit: this.expressionsShow[i].unit || 1,
+            statistic: this.expressionsShow[i].statistic || 'last',
             name: this.expressionName[i],
             state: this.expressionsShow[i].state,
             orderNum: i
@@ -250,6 +354,8 @@ export default {
           oldName: expressionName,
           error: '',
           legend: '',
+          unit: 1,
+          statistic: 'last',
           elementId: '',
           state: 1
         })
@@ -264,6 +370,8 @@ export default {
           error: '',
           elementId: item.id,
           legend: item.legend,
+          unit: item.unit || 1,
+          statistic: item.statistic || 'last',
           state: item.state
         })
       }
@@ -363,7 +471,9 @@ export default {
       this.expressionsShow = []
       this.expressionName = []
       this.elements = this.$loadsh.cloneDeep(this.querysArray)
-      this.dataTimeType = this.timeType
+      this.dataTimeType = this.params.timeType || 1
+      this.dataStatistic = this.params.statistic || 'last'
+      this.dataUnit = this.params.unit || 1
       if (!this.elements.length) {
         this.addExpression()
       } else {

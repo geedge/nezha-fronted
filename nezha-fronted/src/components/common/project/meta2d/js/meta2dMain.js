@@ -14,7 +14,9 @@ import {
   myCubeAnchors
 } from '../../L5/services/canvas.js'
 import { getTopology, setTopology, dealImg, topologyImg } from '@/components/common/js/common'
+import { getMetricTypeValue } from '@/components/common/js/tools'
 import bus from '@/libs/bus'
+import topoUtil from '@/components/common/project/meta2d/js/topoUtil'
 export default {
   data () {
     return {
@@ -24,9 +26,13 @@ export default {
       meta2dLoading: true
     }
   },
+  mixins: [topoUtil],
   methods: {
     init () {
-      const meta2dOptions = {}
+      const meta2dOptions = {
+        minScale: 0.25,
+        maxScale: 2
+      }
       const meta2d = new Meta2d(this.meta2dId, meta2dOptions)
       meta2d.register(flowPens())
       meta2d.register(activityDiagram())
@@ -53,7 +59,6 @@ export default {
       }
       // getTopology(this.topoData)).on('translate', this.topTranslate) // 平移·
       meta2d.on('active', this.pensActive) // 选中·
-      // meta2d.on('scale', this.topoScale) // 缩放·
       // meta2d.on('translatePens', () => {}) // 移动画笔结束·
       // meta2d.on('translatingPens', () => {}) // 移动画笔进行中·
       meta2d.on('enter', this.penEnter) // 移入画笔·
@@ -68,29 +73,11 @@ export default {
       const startTime = endTime - 60 * 5 * 1000
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
         this.clacTopoData(this.topoData, arr).then((data) => {
-          console.log(data)
           getTopology(this.meta2dId).resize()
           getTopology(this.meta2dId).open(data)
           getTopology(this.meta2dId).centerView()
           getTopology(this.meta2dId).lock(1)
         })
-      })
-    },
-    clacTopoData (data, queryValues) { // 主要处理 属性为原始属性 处理动画属性对原始属性的影响
-      return new Promise(resolve => {
-        if (!data.pens) {
-          data.pens = []
-        }
-        data.pens.forEach(pen => {
-          if (pen.isNz) {
-            if (pen.data.legend) {
-
-            }
-          } else {
-            // 处理加载数据
-          }
-        })
-        resolve(data)
       })
     },
     nodeInit (pen) { // 初始化节点参数
@@ -102,12 +89,13 @@ export default {
           background: pen.background || '#22222200',
           color: pen.color || '#222222ff',
           textColor: pen.textColor || '#222222ff',
-          image: ''
         },
         imageId: '',
         valueMapping: [],
         legend: '',
-        statistic: '',
+        statistic: 'last',
+        parent: '',
+        value: '',
         enable: {
           valueMapping: true,
           tooltip: true
@@ -143,6 +131,7 @@ export default {
       pen.visible = pen.visible || true
       pen.isNz = true
       pen.locked = pen.locked || 0
+      pen.isBottom = true
     },
     lineInit (pen) { // 初始化连线参数
       if (pen.data && pen.data.params) {
@@ -156,7 +145,9 @@ export default {
         },
         valueMapping: [],
         legend: '',
-        statistic: '',
+        statistic: 'last',
+        parent: '',
+        value: '',
         enable: {
           valueMapping: true,
           tooltip: true
@@ -178,16 +169,15 @@ export default {
       pen.isNz = pen.isNz || true
       pen.visible = pen.visible || true
       pen.locked = pen.locked || 0
+      pen.isBottom = true
     },
     pensActive (pens, e) { // 选中节点
       this.selectPens = pens
       setTimeout(() => {
-        this.$refs.meta2dProps.isUpdate = true
+        this.$refs.meta2dProps && (this.$refs.meta2dProps.isUpdate = true)
       })
-      console.log(pens, 'active')
     },
     topoClick (params, e) { // 点击节点
-      console.log('click')
       if (!params.pen && this.$refs.meta2dProps) {
         this.$refs.meta2dProps.activeName = 'canvas'
         this.selectPens = []

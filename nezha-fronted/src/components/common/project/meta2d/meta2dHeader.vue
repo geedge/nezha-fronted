@@ -2,18 +2,12 @@
   <div class="topo-header top-tools">
     <div v-if="!isChart && !editFlag"> {{project && project.name}} </div>
     <div class="tools-left" v-if="editFlag">
-      <div class="tools-left-drag">
-        <div
-          draggable="true"
-          @dragstart.stop="onDragstart($event)"
-          @click="onTouchstart($event)"
-        >
-          <i class="nz-icon nz-icon-zhengfangxing" />
-        </div>
-      </div>
-      <div class="tools-left-draw" @click="setDrawPen()">
-          <i  class="nz-icon nz-icon-compare" />
-      </div>
+      <topology-top-tool
+        v-if="editFlag&&toolShow"
+        :meta2dId="meta2dId"
+        ref="topTool"
+       >
+      </topology-top-tool>
     </div>
     <div v-if="!editFlag" class="top-tool-right">
       <pick-time
@@ -60,10 +54,15 @@
 import topoUtil from '@/components/common/project/meta2d/js/topoUtil'
 import { getTopology, setTopology, dealImg, topologyImg } from '@/components/common/js/common'
 import { deepClone } from '@meta2d/core'
-import bus from "@/libs/bus";
+import bus from '@/libs/bus'
+import topologyTopTool from '@/components/common/project/meta2d/topologyTopTool'
+
 export default {
   name: 'meta2dHeader',
   mixins: [topoUtil],
+  components: {
+    topologyTopTool
+  },
   props: {
     meta2dId: {},
     isChart: {
@@ -71,13 +70,17 @@ export default {
       default: false
     },
     project: {},
-    editFlag: {}
+    editFlag: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
       topoScreenState: '',
       isPreview: false,
       searchTime: bus.getTimezontDateRange(),
+      toolShow: true
     }
   },
   computed: {
@@ -98,31 +101,10 @@ export default {
         this.$emit('edit')
       })
     },
-    onDragstart (e) {
-      const pen = {
-        name: 'rectangle',
-        text: '矩形',
-        width: 100,
-        height: 100
-      }
-      e.dataTransfer.setData('Text', JSON.stringify(pen))
-    },
-
-    // 支持鼠标单击添加图形
-    onTouchstart  (e) {
-      const pen = {
-        name: 'rectangle',
-        text: '矩形',
-        width: 100,
-        height: 100
-      }
-      getTopology(this.meta2dId).canvas.addCaches = deepClone([pen])
-    },
-    // 开启钢笔状态
-    setDrawPen () {
-      getTopology(this.meta2dId).drawLine('line')
-    },
     saveMeta2d () {
+      if (this.$refs.topTool.option.map) {
+        getTopology(this.meta2dId).hideMap()
+      }
       if (this.isChart) {
         this.saveChart()
       } else {
@@ -134,11 +116,15 @@ export default {
     },
     saveProject () {
       const elements = this.$parent.$refs.meta2dProps.$refs.meta2dData.elements
-      console.log(elements)
+      const timeType = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataTimeType
+      const unit = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataUnit
+      const statistic = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataStatistic
       const params = {
         topo: getTopology(this.meta2dId).data(),
         elements: elements,
-        timeType: ''
+        timeType: timeType || 1,
+        unit: unit || 1,
+        statistic: statistic || 'last',
       }
 
       this.$put('monitor/project/topo', { topo: JSON.stringify(params), projectId: this.project.id }).then(res => {
@@ -168,12 +154,36 @@ export default {
     },
     changeScreen () {
       this.$store.commit('setShowTopoScreen', !this.topoScreen)
+      this.$nextTick(() => {
+        getTopology(this.meta2dId).resize()
+        getTopology(this.meta2dId).centerView()
+      })
     },
     previewTopology () {
-
+      this.isPreview = true
+      const elements = this.$parent.$refs.meta2dProps.$refs.meta2dData.elements
+      const endTime = new Date().getTime()
+      const startTime = endTime - 60 * 5 * 1000
+      this.getQueryValues(elements, startTime, endTime).then(arr => {
+        this.clacTopoData(getTopology(this.meta2dId).data(), arr).then((data) => {
+          getTopology(this.meta2dId).resize()
+          getTopology(this.meta2dId).open(data)
+          getTopology(this.meta2dId).centerView()
+          getTopology(this.meta2dId).lock(1)
+        })
+      })
     },
     previewExit () {
-
+      this.isPreview = false
+      getTopology(this.meta2dId).lock(0)
+      getTopology(this.meta2dId).stopAnimate()
+      if (getTopology(this.meta2dId).data().pens) {
+        getTopology(this.meta2dId).data().pens.forEach(item => {
+          this.calcNode(item)
+        })
+      }
+      getTopology(this.meta2dId).render()
+      getTopology(this.meta2dId).centerView()
     },
     cancelTopology () {
       this.$emit('exitEdit', true)

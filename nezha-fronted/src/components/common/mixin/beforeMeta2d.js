@@ -4,7 +4,7 @@ export default {
       topoData: {},
       querysArray: [],
       meta2dType: '',
-      timeType: 1
+      params: {}
     }
   },
   watch: {
@@ -22,11 +22,19 @@ export default {
           if (res.data && res.data.topo) {
             this.topoData = res.data.topo.topo || {}
             this.querysArray = res.data.topo.elements || []
-            this.timeType = res.data.topo.timeType || 1
+            this.params = {
+              timeType: res.data.topo.timeType || 1,
+              unit: res.data.topo.unit || 1,
+              statistic: res.data.topo.statistic || 'last',
+            }
           } else {
             this.topoData = {}
             this.querysArray = []
-            this.timeType = 1
+            this.params = {
+              timeType: 1,
+              unit: 1,
+              statistic: 'last'
+            }
           }
         })
       }

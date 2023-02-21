@@ -8,7 +8,7 @@
         <meta2dCanvas :canvasProps="canvasProps" :meta2dId='meta2dId' @changeActiveName="changeActiveName" ref ='meta2dCanvas'/>
       </el-tab-pane>
       <el-tab-pane label="data" name="data">
-        <meta2dData :querysArray.sync="querysArray" :timeType.sync="timeType" ref="meta2dData"/>
+        <meta2dData :querysArray.sync="querysArray" :params.sync="params" ref="meta2dData"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -31,7 +31,7 @@ export default {
   props: {
     selectPens: {},
     querysArray: {},
-    timeType: {},
+    params: {},
     meta2dId: {}
   },
   components: {

@@ -677,26 +677,23 @@
             </span>
       </div>
       <transition name="el-zoom-in-top">
-        <div class="el-form" v-show="elements.valueMapping">
+        <div class="el-form" v-show="elements.valueMapping && pen.data.enable.valueMapping">
           <div  class="form-row-content">
-            <div class="form-row-item">
+            <div class="form-row-item form-row-item-full">
               <div class="form-row-key">
                 Legend
               </div>
               <div class="form-row-value">
-                <el-select v-model="pen.data.legend" size="small">
-                  <el-option v-for="item in queryValues" :key="item.id" :value="item.id" :label='item.name'></el-option>
-                </el-select>
-              </div>
-            </div>
-            <div class="form-row-item">
-              <div class="form-row-key">
-                Statistics
-              </div>
-              <div class="form-row-value">
-                <el-select v-model="pen.data.statistic" size="small">
-                  <el-option v-for="item in statisticsList" :key="item.value" :value="item.value" :label='item.label'></el-option>
-                </el-select>
+                <div style="display: inline-block;width: calc(50% - 3px)">
+                  <el-select v-model="pen.data.parent" size="small">
+                    <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
+                  </el-select>
+                </div>
+                <div style="display: inline-block;width: calc(50% - 3px)">
+                  <el-select v-model="pen.data.legend" size="small">
+                    <el-option v-for="item in queryValues.filter(query => (query.parent === pen.data.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'></el-option>
+                  </el-select>
+                </div>
               </div>
             </div>
             <div class="form-row-item form-row-item-full chart-config">

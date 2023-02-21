@@ -48,7 +48,7 @@
               handle: '.drag-sort'
             }">
             <div v-for="item in elements" :key="item.id" @click.stop="penActive(item)">
-              <div class="pen-tools" style="background: #999;margin-bottom: 10px;border-radius: 2px;display: flex;justify-content: space-between;padding: 3px 10px">
+              <div class="pen-tools" style="">
                 <span>
                   <i v-if="item.type !== 1" class="nz-icon nz-icon-zhengfangxing" />
                   <i v-else class="nz-icon nz-icon-compare" />
@@ -117,10 +117,14 @@ export default {
       this.canvasProps[key] = !this.canvasProps[key]
     },
     penActive (item) {
+      // bus.$emit('changeSelectPens', [])
       this.$emit('changeActiveName')
-      getTopology(this.meta2dId).active([item])
-      getTopology(this.meta2dId).setValue(item)
-      bus.$emit('changeSelectPens', [item])
+      this.$nextTick(() => {
+        getTopology(this.meta2dId).active([item])
+        getTopology(this.meta2dId).render()
+        // getTopology(this.meta2dId).setValue(item)
+        bus.$emit('changeSelectPens', [item])
+      })
     },
     penChange (item, key) {
       const obj = {
@@ -129,27 +133,29 @@ export default {
       if (key === 'visible') {
         obj.visible = !item.visible
         if (!item.visible) {
-          if (item.id === getTopology(this.meta2dId).store.active[0].id) {
+          if (getTopology(this.meta2dId).store.active.length && item.id === getTopology(this.meta2dId).store.active[0].id) {
             bus.$emit('changeSelectPens', [])
           }
         } else {
           this.$emit('changeActiveName')
           getTopology(this.meta2dId).active([item])
-          getTopology(this.meta2dId).setValue(item)
+          getTopology(this.meta2dId).render()
+          // getTopology(this.meta2dId).setValue(item)
           bus.$emit('changeSelectPens', [item])
         }
       }
       if (key === 'locked') {
         if (!item.locked) {
           obj.locked = 10
-          if (item.id === getTopology(this.meta2dId).store.active[0].id) {
+          if (getTopology(this.meta2dId).store.active.length && item.id === getTopology(this.meta2dId).store.active[0].id) {
             bus.$emit('changeSelectPens', [])
           }
         } else {
           obj.locked = 0
           this.$emit('changeActiveName')
           getTopology(this.meta2dId).active([item])
-          getTopology(this.meta2dId).setValue(item)
+          getTopology(this.meta2dId).render()
+          // getTopology(this.meta2dId).setValue(item)
           bus.$emit('changeSelectPens', [item])
         }
       }
@@ -163,7 +169,7 @@ export default {
       getTopology(this.meta2dId).addPen(obj, true)
     },
     delPen (item) {
-      if (item.id === getTopology(this.meta2dId).store.active[0].id) {
+      if (getTopology(this.meta2dId).store.active.length && item.id === getTopology(this.meta2dId).store.active[0].id) {
         bus.$emit('changeSelectPens', [])
       }
       getTopology(this.meta2dId).delete([item])
@@ -177,7 +183,6 @@ export default {
       this.bkImage = image.image
       this.bkImageId = image.id
       getTopology(this.meta2dId).setBackgroundImage(image.image)
-      console.log(getTopology(this.meta2dId).data())
     }
   }
 }

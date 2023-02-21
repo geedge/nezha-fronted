@@ -9,7 +9,7 @@
       ref="meta2dProps"
       :selectPens.sync="selectPens"
       :querysArray="querysArray"
-      :timeType="timeType"
+      :params="params"
       :meta2dId="meta2dId"
       @updatePens="updatePens"
     />
@@ -34,7 +34,7 @@ export default {
       default: false
     },
     querysArray: {},
-    timeType: {},
+    params: {},
     project: {}
   },
   components: {
