@@ -225,7 +225,7 @@ export default {
         switch (this.chartInfo.datasource) {
           case 'metrics':
           case 'logs': {
-            if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
+            if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp || this.from === fromRoute.integration) {
               setTimeout(() => {
                 this.chartData = [chartTempData.data.result]
                 this.chartData.forEach(item => {
@@ -668,6 +668,9 @@ export default {
     groupShow (flag) {
       if (this.chartInfo.type === 'group' && !flag) {
         this.chartData = lodash.get(this, 'chartInfo.children', [])
+      }
+      if (!this.chartInfo.param) {
+        this.chartInfo.param = {}
       }
       this.chartInfo.param.collapse = flag
       this.groupInit()

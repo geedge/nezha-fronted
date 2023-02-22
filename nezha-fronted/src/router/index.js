@@ -219,6 +219,10 @@ export default new Router({
         {
           path: '/trace',
           component: resolve => require(['@/components/page/tool/trace'], resolve)
+        },
+        {
+          path: '/integration',
+          component: resolve => require(['@/components/page/integration/integration'], resolve)
         }
       ]
     },

@@ -43,11 +43,6 @@
             </div>
 
             <div class="top-tool-right">
-             <!-- <div class="top-tool-search margin-r-20">
-               <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
-                 <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>
-               </el-input>
-             </div> -->
 
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id"></pick-time>
 
@@ -141,9 +136,7 @@
         @close="closeChartBox"
         @reload="panelReload"
         @reloadOnlyPanel="panelReloadOnlyPanel"
-        @delete-chart="delChart"
         @on-create-success="createSuccess"
-        @on-delete-success="delChartOk"
       ></chart-right-box>
     </transition>
     <transition name="right-box">
@@ -324,7 +317,6 @@ export default {
         panelId: 0,
         start_time: '',
         end_time: '',
-        searchName: '',
         id: 4
       },
       panelId: 0,
@@ -396,8 +388,6 @@ export default {
         return false
       }
       this.variablesInit = false
-      this.filter.searchName = ''
-      // this.$refs.searchInput.select();
       this.showPanel = val
       this.variables = this.$loadsh.get(this, 'showPanel.param.variables', []) || []
       this.showPanel.type = 'dashboard'
@@ -643,12 +633,8 @@ export default {
       }
     },
     closeChartBox (refresh) {
-      // this.rightBox.chart.show = false
       this.chart = {}
       this.$store.dispatch('clearPanel')
-      /* if (refresh) {
-         this.getData(this.filter)
-      } */
     },
     closeChartTempBox (refresh) {
       this.rightBox.chartTemp.show = false
@@ -698,10 +684,6 @@ export default {
         this.$store.dispatch('clearPanel')
       })
     },
-    delChartOk () {
-      this.filter.panelId = this.showPanel.id
-      this.getData(this.filter)
-    },
     // 图表创建成功，回调panel页面，进行图表的刷新
     createSuccess (msg, data, params, panel) {
       this.filter.panelId = this.showPanel.id
@@ -740,7 +722,6 @@ export default {
           this.dataList = response.data.list.map(item => {
             return {
               ...item,
-              hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
               loaded: false
             }
           })
@@ -926,11 +907,6 @@ export default {
       this.pageObj.pageSize = val
       this.getTableData()
     },
-    search: function () {
-      if (this.$refs.chartList) {
-        // this.$refs.chartList.searchCharts(this.filter.searchName)
-      }
-    },
     // 滚动事件触发下拉加载
     onScroll () {
       const _self = this
@@ -941,24 +917,6 @@ export default {
       }, 300, function () {
         _self.showTopLine = _self.scrollbarWrap.scrollTop > 10
       }))
-    },
-    focusInput () {
-      let classVal = document.getElementById('queryPanel').parentElement.getAttribute('class')
-      classVal = classVal.replace('query-input-inactive', 'query-input-active')
-      document.getElementById('queryPanel').parentElement.setAttribute('class', classVal)
-      this.$refs.queryPanel.focus()
-    },
-    blurInput () {
-      if (!this.filter.searchName || this.filter.searchName == '') {
-        setTimeout(function () {
-          let classVal = document.getElementById('queryPanel').parentElement.getAttribute('class')
-          classVal = classVal.replace('query-input-active', 'query-input-inactive')
-          document.getElementById('queryPanel').parentElement.setAttribute('class', classVal)
-        }, 100)
-      }
-    },
-    clearInput () {
-      this.$refs.queryPanel.focus()
     },
     tableListEnter () {
       this.tableHover = true
@@ -1196,12 +1154,6 @@ export default {
         }
       }
     },
-    'filter.searchName': function (n, o) {
-      const temp = this
-      setTimeout(function () {
-        temp.search()
-      }, 1000)
-    },
     searchTime: {
       immediate: true,
       deep: true,
@@ -1271,6 +1223,8 @@ export default {
     this.$store.commit('setCurrentMousemove', 0)
     this.$store.commit('setConnect', 'none')
     echarts.disconnect('timeSeriesGroup')
+
+    this.$store.commit('setMode', '')
   }
 }
 </script>

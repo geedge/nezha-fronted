@@ -16,6 +16,7 @@
         :multipleTime="multipleTime"
         :showAllData="showAllData"
         @chartIsNoData="chartIsNoData"
+        :from="from"
       ></chart-time-series>
       <chart-pie
         :ref="'chart' + chartInfo.id"

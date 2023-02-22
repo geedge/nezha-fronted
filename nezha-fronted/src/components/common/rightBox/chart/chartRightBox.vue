@@ -33,7 +33,7 @@
         <!--panel-->
         <el-form-item
           class="form-item--half-width"
-          v-if="showPanel.type !== fromRoute.project && showPanel.type !== fromRoute.asset && showPanel.type !== fromRoute.endpoint && showPanel.type !== fromRoute.model && from!=='chartTemp' && from!=='dashboardTemp'"
+          v-if="showPanel.type !== fromRoute.project && showPanel.type !== fromRoute.asset && showPanel.type !== fromRoute.endpoint && showPanel.type !== fromRoute.model && from!=='dashboardTemp'"
           :label="$t('overall.dashboard')"
           prop="panelName"
         >
@@ -48,14 +48,6 @@
             </template>
           </select-panel>
         </el-form-item>
-          <!--   varType   -->
-          <el-form-item :label="$t('dashboard.panel.chartForm.varType')" class="form-item--half-width" v-if="from === 'chartTemp'">
-            <el-select id="chart-box-varType" v-model="editChart.varType" :disabled="!!editChart.id" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" clearable placeholder="" size="small" value-key="chartType">
-              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
-                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
         <!--group-->
         <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="form-item--half-width" prop="group">
           <el-select id="chart-box-group" v-model="editChart.groupId" :disabled="editChart.type==='group'" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">

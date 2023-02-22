@@ -42,6 +42,7 @@ export default {
     chartLegend: legend
   },
   props: {
+    from: String,
     multipleTime: {},
     minusTime: {}
   },
@@ -113,6 +114,10 @@ export default {
         this.isStack = this.chartInfo.param.stack
       } catch (e) {}
       const chartOption = lodash.cloneDeep(chartOptions)
+      // 防止tootip超出内容区域
+      if (this.from === 'integration' || this.from === 'dashboardTemp') {
+        chartOption.tooltip.appendToBody = false
+      }
       if (this.chartInfo.isAlertMessage) {
         chartOption.title = {
           show: true,

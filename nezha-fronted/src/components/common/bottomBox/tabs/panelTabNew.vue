@@ -138,7 +138,6 @@
     </nz-bottom-data-list>
 
     <transition name="right-box">
-     <!-- <chart-box v-if="rightBox.chart.show" ref="addChartModal" :chart="chart" :from="from" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box> -->
       <chart-right-box
         v-if="chartRightBoxShow"
         v-my-loading="rightBox.loading"
@@ -150,9 +149,7 @@
         @close="closeRightBox"
         @reload="panelReload"
         @reloadOnlyPanel="panelReloadOnlyPanel"
-        @delete-chart="delChart"
         @on-create-success="createSuccess"
-        @on-delete-success="delChartOk"
       ></chart-right-box>
     </transition>
     <transition name="right-box">
@@ -279,13 +276,11 @@ export default {
       searchLabel: {}, // 搜索参数
       // ---图表相关参数--start
       dataList: [], // 数据列表
-      // searchName: '', //  搜索名称
       filter: { // 过滤条件
         // productId: 0,
         panelId: 0,
         start_time: '',
-        end_time: '',
-        searchName: ''
+        end_time: ''
       },
       showPanel: {
         name: '',
@@ -505,10 +500,9 @@ export default {
       this.chart.panelId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
       this.chart.isGroup = true
-      this.rightBox.chart.show = true
-    },
-    delChartOk () {
-      this.getData(this.filter)
+      this.$nextTick(() => {
+        this.$refs.addChartModal.isStable = 'stable'
+      })
     },
     // 图表创建成功，回调panel页面，进行图表的刷新
     createSuccess (msg, data, params) {
@@ -535,7 +529,6 @@ export default {
             this.dataList = response.data.list.map(item => {
               return {
                 ...item,
-                hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
                 loaded: false
               }
             })
@@ -596,13 +589,10 @@ export default {
     },
     // 公用操作
     getTableData (linkId) {
-      this.variablesInit = false
       if (this.from === this.fromRoute.alertRule) {
-        this.variablesInit = true
         this.getData(this.filter)
       } else {
         if (this.from === this.fromRoute.chartTemp) {
-          this.variablesInit = true
           if (this.obj.type === 'group') {
             this.$get('/visual/panel/chart', { ids: this.obj.id }).then(res => {
               this.panelDataList = res.data.list
@@ -706,11 +696,6 @@ export default {
       this.pageObj.pageSize = val
       this.getTableData(this.obj.id)
     },
-    search () {
-      if (this.$refs.chartList) {
-        this.$refs.chartList.searchCharts(this.filter.searchName)
-      }
-    },
     // 滚动事件触发下拉加载
     onScroll () {
       const _self = this
@@ -719,24 +704,6 @@ export default {
         // _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop)
         _self.$refs.chartList.onScroll(_self.scrollbarWrap.scrollTop)
       }, 300))
-    },
-    focusInput () {
-      let classVal = document.getElementById('queryPanel').parentElement.getAttribute('class')
-      classVal = classVal.replace('query-input-inactive', 'query-input-active')
-      document.getElementById('queryPanel').parentElement.setAttribute('class', classVal)
-      this.$refs.queryPanel.focus()
-    },
-    blurInput () {
-      if (!this.filter.searchName || this.filter.searchName == '') {
-        setTimeout(function () {
-          let classVal = document.getElementById('queryPanel').parentElement.getAttribute('class')
-          classVal = classVal.replace('query-input-active', 'query-input-inactive')
-          document.getElementById('queryPanel').parentElement.setAttribute('class', classVal)
-        }, 100)
-      }
-    },
-    clearInput () {
-      this.$refs.queryPanel.focus()
     },
     syncChart () {
       if (this.from == this.fromRoute.asset || this.from == this.fromRoute.model) {
@@ -891,12 +858,6 @@ export default {
     })
   },
   watch: {
-    'filter.searchName' (n, o) {
-      const temp = this
-      setTimeout(function () {
-        temp.search()
-      }, 1000)
-    },
     obj: {
       immediate: true,
       handler (n, o) {

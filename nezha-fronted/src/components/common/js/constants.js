@@ -446,7 +446,8 @@ export const fromRoute = {
   expressionTemplate: 'expressionTemplate',
   backups: 'backups',
   ping: 'ping',
-  trace: 'trace'
+  trace: 'trace',
+  integration: 'integration'
 }
 
 export const chartdatasource = [

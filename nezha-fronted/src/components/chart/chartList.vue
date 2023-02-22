@@ -69,13 +69,13 @@
     </div>
     <!-- 全屏查看 -->
     <el-dialog
+      class="nz-dialog chart-fullscreen"
       v-if="fullscreen.visible"
       :visible.sync="fullscreen.visible"
       :show-close="false"
-      class="nz-dialog chart-fullscreen"
       destroy-on-close
       fullscreen
-      :modal-append-to-body="false"
+      :append-to-body="true"
     >
       <panel-chart
         :ref="'chart-fullscreen' + fullscreen.chartInfo.id"
