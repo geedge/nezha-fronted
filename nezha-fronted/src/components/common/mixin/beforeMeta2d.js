@@ -23,7 +23,7 @@ export default {
             this.topoData = res.data.topo.topo || {}
             this.querysArray = res.data.topo.elements || []
             this.params = {
-              timeType: res.data.topo.timeType || 1,
+              timeType: res.data.topo.timeType || 5,
               unit: res.data.topo.unit || 1,
               statistic: res.data.topo.statistic || 'last',
             }
@@ -31,7 +31,7 @@ export default {
             this.topoData = {}
             this.querysArray = []
             this.params = {
-              timeType: 1,
+              timeType: 5,
               unit: 1,
               statistic: 'last'
             }

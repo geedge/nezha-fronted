@@ -1,6 +1,6 @@
 <template>
-  <div class="meta2d-box list-page" v-my-loading="meta2dLoading">
-    <meta2dHeader :meta2dId="meta2dId" :isChart="isChart" :project="project" :editFlag="editFlag" @edit="editFlag = true" @exitEdit="exitEdit"/>
+  <div class="meta2d-box list-page" v-my-loading="meta2dLoading" ref="meta2dBox">
+    <meta2dHeader :meta2dId="meta2dId" :isChart="isChart" :project="project" :editFlag="editFlag" @edit="editFlag = true" @exitEdit="exitEdit" @reload="reload"/>
     <div class="meta2d-main" :class="isChart ? 'meta2d-chart': 'meta2d-project'">
       <div :id="meta2dId" style="height: 100%;width: 100%"></div>
     </div>
@@ -13,14 +13,20 @@
       :meta2dId="meta2dId"
       @updatePens="updatePens"
     />
-    <meta2dTooltip
+    <div
+      v-show="position.show && !editFlag"
+      @mouseleave="tooltipOut"
+      @mouseenter="tooltipOver"
       style="position: absolute"
       :style="{
         top: position.top + 'px',
-        left: position.top + 'px',
+        left: position.left + 'px',
       }"
-      :params="chartParams"
-    />
+    >
+      <meta2dTooltip
+        :params="chartParams"
+      />
+    </div>
   </div>
 </template>
 
@@ -62,14 +68,18 @@ export default {
   mounted () {
     this.init()
     bus.$on('changeSelectPens', this.pensActive)
+    this.$refs.meta2dBox.addEventListener('mousemove', this.mousemove)
   },
   methods: {
-
+    mousemove (e) {
+      window.ePosition = e
+    }
   },
   beforeDestroy () {
     getTopology(this.meta2dId).destroy()
     setTopology(this.meta2dId, null)
     bus.$off('changeSelectPens', this.pensActive)
+    this.$refs.meta2dBox.removeEventListener('mousemove', this.mousemove)
   }
 
 }

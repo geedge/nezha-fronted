@@ -25,14 +25,16 @@ export default {
       meta2dLoading: true,
       position: {
         top: 50,
-        left: 0
+        left: 0,
+        show: false
       },
+      timer3: null,
       chartParams: {
         chartType: 'line',
         content: '',
         legends: [],
         title: '',
-        titleShow: true,
+        titleShow: true
       }
     }
   },
@@ -80,7 +82,8 @@ export default {
     },
     reload () {
       const endTime = new Date().getTime()
-      const startTime = endTime - 60 * 5 * 1000
+      const startTime = endTime - 60 * this.params.timeType * 1000
+      console.log(startTime)
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
         console.log(arr)
         this.clacTopoData(this.topoData, arr).then((data) => {
@@ -184,6 +187,7 @@ export default {
     },
     pensActive (pens, e) { // 选中节点
       this.selectPens = pens
+
       setTimeout(() => {
         this.$refs.meta2dProps && (this.$refs.meta2dProps.isUpdate = true)
       })
@@ -194,20 +198,76 @@ export default {
         this.selectPens = []
       }
     },
-    penEnter (pen) { // 移入节点
-      console.log(pen, 'penEnter')
-      if (!pen.type) {
+    penEnter (pen, e) { // 移入节点
+      console.log(pen, e, 'penEnter')
+      console.log(getTopology(this.meta2dId).getPenRect(pen))
+      if (this.timer3) {
+        clearTimeout(this.timer3)
+        this.timer3 = null
+      }
+      this.position.show = false
+      if (!pen.type && pen.data.enable.tooltip) {
+        if (!pen.data.tooltip.legends.length) {
+          return
+        }
         this.chartParams = {
           ...pen.data.tooltip,
           unit: this.params.unit,
           statistic: this.params.statistic
         }
-        // this.chartParams.type = 'line'
-        // this.chartParams.values = pens.data.values
+        this.timer3 = setTimeout(() => {
+          let ePosition = window.ePosition
+          console.log(this.meta2dId, ePosition)
+          let boxWidth = this.$refs.meta2dBox.offsetWidth
+          let boxHeight = this.$refs.meta2dBox.offsetHeight
+          this.position.left = ePosition.layerX
+          this.position.top = ePosition.layerY
+          this.$nextTick(() => {
+            if ((boxWidth / 2) > ePosition.layerX) {
+              this.position.left = ePosition.layerX + 20
+            } else {
+              this.position.left = ePosition.layerX - 20 - 400
+            }
+            if (boxHeight > (ePosition.layerY + 300)) {
+              this.position.top = ePosition.layerY + 50
+            } else {
+              this.position.top = ePosition.layerY - 300
+            }
+            ePosition = null
+            boxWidth = null
+            boxHeight = null
+          })
+          this.position.show = true
+          clearTimeout(this.timer3)
+        }, 100)
       }
     },
-    penLeave (pens) { // 移出节点
-      // console.log(pens)
+    penLeave () {
+      if (!this.timer3) {
+        this.timer3 = setTimeout(() => {
+          this.position.show = false
+          this.timer3 = null
+        }, 50)
+      } else {
+        clearTimeout(this.timer3)
+        this.timer3 = null
+        this.timer3 = setTimeout(() => {
+          this.position.show = false
+          this.timer3 = null
+        }, 50)
+      }
+    },
+    tooltipOver () {
+      console.log('tooltipOver')
+      clearTimeout(this.timer3)
+      this.timer3 = null
+    },
+    tooltipOut () {
+      console.log('tooltipOut')
+      this.timer3 = setTimeout(() => {
+        this.position.show = false
+        this.timer3 = null
+      }, 50)
     },
     updatePens (pen, key) { // 更新对应的节点
       // meta2d.setValue({ id: pen.id, text: 'new text' }, { render: false });

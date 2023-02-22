@@ -81,4 +81,65 @@
       width: 100%;
     }
   }
+  .meta2d-image-box{
+    position: relative;
+    .image-box {
+      width: 30px;
+      height: 30px;
+    }
+    .image-box-null {
+      border: 1px solid $--border-color-base-focus;
+      box-sizing: border-box;
+      border-radius: 2px;
+    }
+    .image-select-box {
+      text-align: center;
+      width: 225px;
+      z-index: 1;
+      padding: 0px 0px 0px 0px;
+      position: absolute;
+      top: 26px;
+      background: $--background-color-empty;
+      border: 1px solid $--border-color-light;
+      border-radius: 4px;
+      left: 0;
+      .el-card {
+        border: none;
+      }
+      .el-card__body {
+        padding: 0;
+      }
+      .el-collapse-item {
+        margin-bottom: 2px;
+      }
+      .image-box-item {
+        width: 30px;
+        height: 30px;
+        margin: 5px 10px 10px 0;
+        flex-direction: column;
+        align-items: center;
+        display: inline-block;
+        position: relative;
+        .image-src{
+          width: 30px;
+          height: 30px;
+        }
+        .image-text {
+          width: 100%;
+          height: 20px;
+          line-height: 20px;
+          font-size: 12px;
+          text-align: center;
+        }
+        .delIcon{
+          position: absolute;
+          right: -6px;
+          top: -8px;
+        }
+      }
+      .upload-pic-box{
+        width: 100%;
+      }
+    }
+  }
 }

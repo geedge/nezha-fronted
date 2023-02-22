@@ -150,7 +150,7 @@ export default {
       })
     },
     dateChange () {
-
+      this.$emit('reload')
     },
     changeScreen () {
       this.$store.commit('setShowTopoScreen', !this.topoScreen)

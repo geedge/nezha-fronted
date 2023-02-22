@@ -12,8 +12,8 @@
 <!--        <img  :src="item.image" class="imag-src"/>-->
 <!--        <div class="img-text text-ellipsis" :title="item.imageName">{{item.imageName}}</div>-->
 <!--      </div>-->
-      <div style="height: 450px"  v-my-loading="imgageLoading">
-        <el-card shadow="hover" style="height:420px;width:100%;overflow-y: auto"
+      <div style="height: 350px"  v-my-loading="imgageLoading">
+        <el-card shadow="hover" style="height:320px;width:100%;overflow-y: auto"
                  class="project-topology-add-node">
           <el-collapse v-model="activeNames" v-for="(item, index) in tools" :key="index" class="collapse-box">
             <el-collapse-item :title="item.group" :name="item.group">
@@ -165,56 +165,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.meta2d-image-box{
-  position: relative;
-  .image-box {
-    width: 30px;
-    height: 30px;
-  }
-  .image-box-null {
-    border: 1px solid #999999;
-    box-sizing: border-box;
-    border-radius: 2px;
-  }
-  .image-select-box {
-    text-align: center;
-    width: 225px;
-    z-index: 1;
-    padding: 5px 0px 0px 0px;
-    position: absolute;
-    top: 26px;
-    background: #ffffff;
-    border: 1px solid #999999;
-    border-radius: 4px;
-    left: 0;
-    /deep/ .el-card__body {
-      padding: 0;
-    }
-    .image-box-item {
-      width: 30px;
-      height: 50px;
-      margin: 0 10px 10px 0;
-      flex-direction: column;
-      align-items: center;
-      display: inline-block;
-      position: relative;
-      .image-src{
-        width: 30px;
-        height: 30px;
-      }
-      .image-text {
-        width: 100%;
-        height: 20px;
-        line-height: 20px;
-        font-size: 12px;
-        text-align: center;
-      }
-      .delIcon{
-        position: absolute;
-        right: 0;
-        top: 0;
-      }
-    }
-  }
-}
+
 </style>

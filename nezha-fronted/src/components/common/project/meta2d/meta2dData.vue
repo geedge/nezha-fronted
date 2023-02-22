@@ -7,36 +7,36 @@
         </div>
         <div class="form-row-value">
           <el-select v-model="dataTimeType" size="small" style="width: 100%">
-            <el-option v-for="item in timeData" :key="item.id" :value="item.id" :label="$t(item.text)"></el-option>
+            <el-option v-for="item in timeData" :key="item.id" :value="item.value" :label="$t(item.text)"></el-option>
           </el-select>
         </div>
-        <el-row style="margin-top: 18px;display: flex">
-          <div class="form-row-item">
-            <div class="form-row-key">
-              Statistics
-            </div>
-            <div class="form-row-value">
-              <el-select v-model="dataStatistic" size="small">
-                <el-option v-for="item in statisticsList" :key="item.value" :value="item.value" :label='$t(item.label)'></el-option>
-              </el-select>
-            </div>
-          </div>
-          <div class="form-row-item">
-            <div class="form-row-key">
-              Unit
-            </div>
-            <div class="form-row-value">
-              <el-cascader :id="'columns-unit'" v-model="dataUnit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
-                           placeholder=""
-                           popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
-                           size="small"
-                           style="flex: 1"
-                           @change="unitSelected"
-              >
-              </el-cascader>
-            </div>
-          </div>
-        </el-row>
+<!--        <el-row style="margin-top: 18px;display: flex">-->
+<!--          <div class="form-row-item">-->
+<!--            <div class="form-row-key">-->
+<!--              Statistics-->
+<!--            </div>-->
+<!--            <div class="form-row-value">-->
+<!--              <el-select v-model="dataStatistic" size="small">-->
+<!--                <el-option v-for="item in statisticsList" :key="item.value" :value="item.value" :label='$t(item.label)'></el-option>-->
+<!--              </el-select>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="form-row-item">-->
+<!--            <div class="form-row-key">-->
+<!--              Unit-->
+<!--            </div>-->
+<!--            <div class="form-row-value">-->
+<!--              <el-cascader :id="'columns-unit'" v-model="dataUnit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable-->
+<!--                           placeholder=""-->
+<!--                           popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"-->
+<!--                           size="small"-->
+<!--                           style="flex: 1"-->
+<!--                           @change="unitSelected"-->
+<!--              >-->
+<!--              </el-cascader>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </el-row>-->
       </div>
       <div class="form-row-item form-row-item-full">
         <div
@@ -139,6 +139,33 @@
                       <el-input maxlength="512" show-word-limit size="small" type="text" v-model="expressionsShow[index-1].legend" @change="expressionChange"></el-input>
                     </el-col>
                   </el-row>
+                  <el-row style="margin-top: 18px;display: flex">
+                    <div class="form-row-item">
+                      <div class="form-row-key">
+                        Statistics
+                      </div>
+                      <div class="form-row-value">
+                        <el-select v-model="expressionsShow[index-1].statistic" size="small">
+                          <el-option v-for="item in statisticsList" :key="item.value" :value="item.value" :label='$t(item.label)'></el-option>
+                        </el-select>
+                      </div>
+                    </div>
+                    <div class="form-row-item">
+                      <div class="form-row-key">
+                        Unit
+                      </div>
+                      <div class="form-row-value">
+                        <el-cascader :id="'columns-unit'" v-model="expressionsShow[index-1].unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
+                                     placeholder=""
+                                     popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
+                                     size="small"
+                                     style="flex: 1"
+                                     @change="unitSelected"
+                        >
+                        </el-cascader>
+                      </div>
+                    </div>
+                  </el-row>
                 </el-row>
               </transition>
             </el-row>
@@ -190,7 +217,7 @@ export default {
         'O', 'P', 'Q', 'R', 'S', 'T',
         'U', 'V', 'W', 'X', 'Y', 'Z'
       ],
-      dataTimeType: 1,
+      dataTimeType: 5,
       dataStatistic: 'last',
       dataUnit: 1,
       statisticsList: this.$CONSTANTS.statisticsList,
@@ -218,51 +245,51 @@ export default {
           id: 4,
           text: this.$t('dashboard.panel.lastOneHour'),
           type: 'hour',
-          value: 1
+          value: 60
         },
         {
           id: 5,
           text: this.$t('dashboard.panel.lastThreeHour'),
           type: 'hour',
-          value: 3
+          value: 3 * 60
         },
         {
           id: 6,
           text: this.$t('dashboard.panel.lastSixHour'),
           type: 'hour',
-          value: 6
+          value: 6 * 60
         },
         {
           id: 7,
           text: this.$t('dashboard.panel.lastTwelveHour'),
           type: 'hour',
-          value: 12
+          value: 12 * 60
         },
         {
           id: 8,
           text: this.$t('dashboard.panel.lastTwentyFourHour'),
           type: 'hour',
-          value: 24
+          value: 24 * 60
         },
         {
           id: 9,
           text: this.$t('dashboard.panel.lastTwoDay'),
           type: 'date',
-          value: 2
+          value: 2 * 24 * 60
         },
         {
           id: 10,
           text: this.$t('dashboard.panel.lastSevenDay'),
           type: 'date',
-          value: 7
+          value: 7 * 24 * 60
         },
         {
           id: 11,
           text: this.$t('dashboard.panel.lastThirtyDay'),
           type: 'date',
-          value: 30
+          value: 30 * 24 * 60
         }
-      ],
+      ]
     }
   },
   mounted () {

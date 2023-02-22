@@ -684,12 +684,12 @@
                 Legend
               </div>
               <div class="form-row-value">
-                <div style="display: inline-block;width: calc(50% - 3px)">
+                <div style="display: inline-block;width: calc(20% - 3px)">
                   <el-select v-model="pen.data.parent" size="small">
                     <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
                   </el-select>
                 </div>
-                <div style="display: inline-block;width: calc(50% - 3px)">
+                <div style="display: inline-block;width: calc(80% - 3px)">
                   <el-select v-model="pen.data.legend" size="small">
                     <el-option v-for="item in queryValues.filter(query => (query.parent === pen.data.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'></el-option>
                   </el-select>
@@ -882,17 +882,31 @@
       </transition>
 
       <!--         tooltip -->
-      <div class="form-row-title" v-if="pen.type !== 1">
-        tooltip
-        <i class="nz-icon nz-icon-arrow-down" @click="updateShow('tooltip')"/>
+      <div class="form-row-title">
+        Tooltip
+        <span>
+              <el-switch
+                v-model="pen.data.enable.tooltip"
+                :active-value="true"
+                :inactive-value="false"
+                @change="change('data.enable.tooltip')"
+              ></el-switch>
+              <i class="nz-icon nz-icon-arrow-down" @click="updateShow('tooltip')"/>
+            </span>
       </div>
-      <div v-show="elements.tooltip" class="form-row-content" v-if="pen.type !== 1">
+      <transition name="el-zoom-in-top">
+         <div v-show="elements.tooltip" class="form-row-content" v-if="pen.type !== 1">
         <div class="form-row-item form-row-item-full">
           <div class="form-row-key">
             Title
           </div>
-          <div class="form-row-value">
-            <el-input v-model="pen.data.tooltip.title" />
+          <div class="form-row-value" style="display: flex">
+            <el-input v-model="pen.data.tooltip.title" size="small" style="flex: 1"/>
+            <!-- 显示头部 -->
+            <div class="choose-header-btn" @click="pen.data.tooltip.titleShow = !pen.data.tooltip.titleShow" :title="$t('overall.visible')">
+              <i class="nz-icon nz-icon-mimakejian" v-if="pen.data.tooltip.titleShow"></i>
+              <i class="nz-icon nz-icon-mimabukejian" v-else></i>
+            </div>
           </div>
         </div>
         <div class="form-row-item form-row-item-full">
@@ -908,28 +922,36 @@
             Content
           </div>
           <div class="form-row-value">
-            <el-input v-model="pen.data.tooltip.content" />
+            <el-input  maxlength="256" show-word-limit v-model="pen.data.tooltip.content" size="small" :rows="4" type="textarea"/>
           </div>
         </div>
-        <div class="form-row-item form-row-item-full">
-          <div class="form-row-key">
+        <div class="form-row-item form-row-item-full chart-config">
+          <div class="form-row-key" style="margin-bottom: 5px">
             Legends
           </div>
-          <div class="form-row-value" v-for="legend in pen.data.tooltip.legends" :key="legend.parent + legend.legend">
-            <div style="display: inline-block;width: calc(50% - 3px)">
-              <el-select v-model="legend.parent" size="small">
+          <div class="form-row-value" style="margin-bottom: 10px" v-for="legend in pen.data.tooltip.legends" :key="legend.parent + legend.legend">
+            <div style="display: inline-block;width: calc(20% - 3px)">
+              <el-select v-model="legend.parent" size="small" style="width: 100%">
                 <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
               </el-select>
             </div>
-            <div style="display: inline-block;width: calc(50% - 3px)">
-              <el-select v-model="legend.legend" size="small">
+            <div style="display: inline-block;width: calc(40% - 3px)">
+              <el-select v-model="legend.legend" size="small" style="width: 100%">
                 <el-option v-for="item in queryValues.filter(query => (query.parent === legend.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'></el-option>
               </el-select>
             </div>
+            <div style="display: inline-block;width: calc(40% - 3px)">
+              <el-input v-model="legend.alias" size="small" style="width: 100%">
+                <template slot="prepend">Alias</template>
+              </el-input>
+            </div>
           </div>
-          <div @click="addTooltipLegend()"> jia</div>
+          <div @click="addTooltipLegend" class="thresholds-add">
+            {{$t('overall.addTooltipLegend')}}
+          </div>
         </div>
       </div>
+      </transition>
     </div>
   </div>
 </template>

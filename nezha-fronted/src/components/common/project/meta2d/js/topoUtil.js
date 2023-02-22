@@ -2,6 +2,7 @@ import { getTopology, setTopology, dealImg, topologyImg } from '@/components/com
 import bus from '@/libs/bus'
 import axios from 'axios'
 import { getMetricTypeValue } from '@/components/common/js/tools'
+import chartDataFormat from "@/components/chart/chartDataFormat";
 export default {
   methods: {
     topoResize (id) {
@@ -74,7 +75,7 @@ export default {
                 const obj = {
                   type: 'item',
                   id: rindex + elements[index].name + JSON.stringify(r.metric),
-                  name: this.handleLegendAlias(legend, elements[index].legend, r.metric),
+                  name: this.handleLegendAlias(legend, elements[index].legend, r.metric) || legend,
                   values: r.values,
                   metric: r.metric || {},
                   elements: elements[index],
@@ -138,11 +139,12 @@ export default {
         }
         data.pens.forEach(pen => {
           if (pen.isNz) {
-            if (pen.data.legend) {
+            if (pen.data.legend && pen.data.enable.valueMapping) {
               const findItem = queryValues.find(query => query.name === pen.data.legend && query.parent === pen.data.parent)
               console.log(findItem)
               if (findItem) {
-                pen.data.value = getMetricTypeValue(findItem.values, this.params.statistic || 'last')
+                pen.data.value = getMetricTypeValue(findItem.values, findItem.elements.statistic || 'last')
+                pen.data.showValue = chartDataFormat.getUnit(findItem.elements.unit).compute(pen.data.value, null, 2)
                 this.selectMapping(pen)
               }
             }
@@ -158,6 +160,7 @@ export default {
       const show = pen.data.enable.valueMapping
       const valueMapping = pen.data.valueMapping
       const value = pen.data.value
+      const showValue = pen.data.showValue
       if (show && valueMapping) {
         valueMapping.forEach(item => {
           if (item.type === 'value') {
@@ -172,7 +175,9 @@ export default {
           }
           if (item.type === 'regx') {
             const reg = new RegExp(item.regx)
-            if (reg.test(value)) {
+            if (reg.test(showValue)) {
+              mapping = item
+            } else if (reg.test(value)) {
               mapping = item
             }
           }
