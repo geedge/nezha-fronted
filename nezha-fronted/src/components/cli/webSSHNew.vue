@@ -692,6 +692,7 @@ export default {
           const obj = JSON.parse(JSON.stringify(item))
           obj.terminal.uuid = res.data.uuid
           obj.name = newTabName
+          this.editableTabsValue = newTabName
           this.editableTabs.push(obj)
         } else {
           this.$message.error(res.msg)
