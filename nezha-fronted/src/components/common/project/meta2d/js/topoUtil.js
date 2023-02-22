@@ -1,7 +1,7 @@
 import { getTopology, setTopology, dealImg, topologyImg } from '@/components/common/js/common'
 import bus from '@/libs/bus'
 import axios from 'axios'
-import {getMetricTypeValue} from "@/components/common/js/tools";
+import { getMetricTypeValue } from '@/components/common/js/tools'
 export default {
   methods: {
     topoResize (id) {
@@ -76,6 +76,8 @@ export default {
                   id: rindex + elements[index].name + JSON.stringify(r.metric),
                   name: this.handleLegendAlias(legend, elements[index].legend, r.metric),
                   values: r.values,
+                  metric: r.metric || {},
+                  elements: elements[index],
                   parent: elements[index].name
                 }
                 arr.push(obj)
@@ -130,7 +132,6 @@ export default {
       }
     },
     clacTopoData (data, queryValues) { // 主要处理 属性为原始属性 处理动画属性对原始属性的影响
-      console.log(this.params)
       return new Promise(resolve => { // 处理加载数据
         if (!data.pens) {
           data.pens = []
@@ -139,8 +140,11 @@ export default {
           if (pen.isNz) {
             if (pen.data.legend) {
               const findItem = queryValues.find(query => query.name === pen.data.legend && query.parent === pen.data.parent)
-              pen.data.value = getMetricTypeValue(findItem.values, pen.data.statistic || 'last')
-              this.selectMapping(pen)
+              console.log(findItem)
+              if (findItem) {
+                pen.data.value = getMetricTypeValue(findItem.values, this.params.statistic || 'last')
+                this.selectMapping(pen)
+              }
             }
           } else {
             // 处理 le5le的数据
@@ -191,6 +195,6 @@ export default {
           pen.autoPlay = true
         }
       }
-    },
+    }
   }
 }

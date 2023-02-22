@@ -13,6 +13,14 @@
       :meta2dId="meta2dId"
       @updatePens="updatePens"
     />
+    <meta2dTooltip
+      style="position: absolute"
+      :style="{
+        top: position.top + 'px',
+        left: position.top + 'px',
+      }"
+      :params="chartParams"
+    />
   </div>
 </template>
 
@@ -20,6 +28,7 @@
 import meta2dHeader from '@/components/common/project/meta2d/meta2dHeader'
 import meta2dProps from '@/components/common/project/meta2d/meta2dProps'
 import meta2dMain from '@/components/common/project/meta2d/js/meta2dMain'
+import meta2dTooltip from '@/components/common/project/meta2d/meta2dTooltip'
 import { getTopology, setTopology } from '@/components/common/js/common'
 import topoUtil from '@/components/common/project/meta2d/js/topoUtil'
 import bus from '@/libs/bus'
@@ -39,7 +48,8 @@ export default {
   },
   components: {
     meta2dHeader,
-    meta2dProps
+    meta2dProps,
+    meta2dTooltip
   },
   watch: {
     topoData: {

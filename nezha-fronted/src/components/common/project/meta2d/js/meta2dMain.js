@@ -14,7 +14,6 @@ import {
   myCubeAnchors
 } from '../../L5/services/canvas.js'
 import { getTopology, setTopology, dealImg, topologyImg } from '@/components/common/js/common'
-import { getMetricTypeValue } from '@/components/common/js/tools'
 import bus from '@/libs/bus'
 import topoUtil from '@/components/common/project/meta2d/js/topoUtil'
 export default {
@@ -23,7 +22,18 @@ export default {
       selectPens: [],
       editFlag: false,
       prevFlag: false,
-      meta2dLoading: true
+      meta2dLoading: true,
+      position: {
+        top: 50,
+        left: 0
+      },
+      chartParams: {
+        chartType: 'line',
+        content: '',
+        legends: [],
+        title: '',
+        titleShow: true,
+      }
     }
   },
   mixins: [topoUtil],
@@ -72,6 +82,7 @@ export default {
       const endTime = new Date().getTime()
       const startTime = endTime - 60 * 5 * 1000
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
+        console.log(arr)
         this.clacTopoData(this.topoData, arr).then((data) => {
           getTopology(this.meta2dId).resize()
           getTopology(this.meta2dId).open(data)
@@ -88,7 +99,7 @@ export default {
         params: { // 用于编辑时 重置为节点初始状态
           background: pen.background || '#22222200',
           color: pen.color || '#222222ff',
-          textColor: pen.textColor || '#222222ff',
+          textColor: pen.textColor || '#222222ff'
         },
         imageId: '',
         valueMapping: [],
@@ -183,8 +194,17 @@ export default {
         this.selectPens = []
       }
     },
-    penEnter (pens) { // 移入节点
-      // console.log(pens)
+    penEnter (pen) { // 移入节点
+      console.log(pen, 'penEnter')
+      if (!pen.type) {
+        this.chartParams = {
+          ...pen.data.tooltip,
+          unit: this.params.unit,
+          statistic: this.params.statistic
+        }
+        // this.chartParams.type = 'line'
+        // this.chartParams.values = pens.data.values
+      }
     },
     penLeave (pens) { // 移出节点
       // console.log(pens)

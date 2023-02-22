@@ -887,16 +887,47 @@
         <i class="nz-icon nz-icon-arrow-down" @click="updateShow('tooltip')"/>
       </div>
       <div v-show="elements.tooltip" class="form-row-content" v-if="pen.type !== 1">
-        <div class="form-row-item">
+        <div class="form-row-item form-row-item-full">
           <div class="form-row-key">
-            color
+            Title
           </div>
           <div class="form-row-value">
-            <nezhaColor
-              :isTopo="true"
-              :value-arr="[{name:'background',value: pen.background}]"
-              @colorChange="colorChange"/>
+            <el-input v-model="pen.data.tooltip.title" />
           </div>
+        </div>
+        <div class="form-row-item form-row-item-full">
+          <div class="form-row-key">
+            Type
+          </div>
+          <div class="form-row-value">
+            <el-input v-model="pen.data.tooltip.chartType" />
+          </div>
+        </div>
+        <div class="form-row-item form-row-item-full">
+          <div class="form-row-key">
+            Content
+          </div>
+          <div class="form-row-value">
+            <el-input v-model="pen.data.tooltip.content" />
+          </div>
+        </div>
+        <div class="form-row-item form-row-item-full">
+          <div class="form-row-key">
+            Legends
+          </div>
+          <div class="form-row-value" v-for="legend in pen.data.tooltip.legends" :key="legend.parent + legend.legend">
+            <div style="display: inline-block;width: calc(50% - 3px)">
+              <el-select v-model="legend.parent" size="small">
+                <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
+              </el-select>
+            </div>
+            <div style="display: inline-block;width: calc(50% - 3px)">
+              <el-select v-model="legend.legend" size="small">
+                <el-option v-for="item in queryValues.filter(query => (query.parent === legend.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'></el-option>
+              </el-select>
+            </div>
+          </div>
+          <div @click="addTooltipLegend()"> jia</div>
         </div>
       </div>
     </div>
@@ -1144,6 +1175,13 @@ export default {
         }
       }
       this.$set(this.pen.data.valueMapping, index, this.pen.data.valueMapping[index])
+    },
+    addTooltipLegend () {
+      this.pen.data.tooltip.legends.push({
+        parent: '',
+        legend: '',
+        alias: ''
+      })
     }
 
   }
