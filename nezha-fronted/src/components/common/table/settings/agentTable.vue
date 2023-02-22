@@ -86,6 +86,7 @@
             <el-dropdown-item v-has="'agent_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'agent_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'agent_delete'" :command="['delete-rel', scope.row, {forceDeleteShow:true, single:true}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'agent_add'" :command="['diagnosis', scope.row,{from:'agent'}]"><i class="nz-icon nz-icon-diagnosis"></i><span class="operation-dropdown-text">{{$t('overall.diagnosis')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>

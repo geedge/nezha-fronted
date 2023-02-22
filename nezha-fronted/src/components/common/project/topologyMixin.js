@@ -170,17 +170,9 @@ export default {
       this.getNodesArr()
     },
     topoScale (num) {
-      this.moduleId = ''
-      getTopology(this.topologyIndex).centerView()
-      this.showNodeTools('')
-      this.popDataShowUpdate('', false)
-      if (!this.editTopologyFlag) {
-        getTopology(this.topologyIndex)
-      }
       if (this.$refs.topTool) {
         this.$refs.topTool.scaleNum = parseInt(num * 100)
       }
-      this.getNodesArr()
     },
     topoClick (pointAndPen) {
       this.showNodeTools('')

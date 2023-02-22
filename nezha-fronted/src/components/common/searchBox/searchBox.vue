@@ -373,7 +373,7 @@ export default {
       }
     },
     changeSearchStr () {
-      console.log(this.searchStr, 'changeSearchStr')
+      // console.log(this.searchStr, 'changeSearchStr')
       const arr = this.searchStr.split(':')
       if (arr.length > 1) {
         this.setValueList(arr[1])
@@ -475,7 +475,7 @@ export default {
       const findItem = this.selectArr.find(item => item.key === this.editTagObj.key)
       if (findItem) {
         this.selectArr.splice(this.editTagIndex, 1)
-        console.log(findItem, this.editDialogObj.value)
+        // console.log(findItem, this.editDialogObj.value)
         findItem.value = findItem.value.concat(this.editDialogObj.value)
         findItem.value = findItem.value.filter(function (item, index) {
           return findItem.value.indexOf(item) === index // 因为indexOf 只能查找到第一个
@@ -487,9 +487,9 @@ export default {
     },
     querySearch (queryString, cb) {
       const restaurants = this.oldSearchList.map(item => { return { value: item.name } })
-      console.log(restaurants)
+      // console.log(restaurants)
       const results = queryString ? restaurants.filter(name => name.value.indexOf(queryString) !== -1) : restaurants
-      console.log(results)
+      // console.log(results)
       cb(results)
     },
     handleSelect () {
@@ -508,7 +508,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        console.log(n)
+        // console.log(n)
         this.searchList = n.searchLabelList || []
         this.oldSearchList = n.searchLabelList || []
       }

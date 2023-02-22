@@ -136,7 +136,12 @@ export default {
           minWidth: 200
         }],
       diagnoseUrl: '',
-      fragment: '' // 头部提示部分
+      fragment: '', // 头部提示部分
+      agentState: {
+        UP: 'green-bg',
+        DOWN: 'red-bg',
+        UNAVAILABLE: 'gray-bg'
+      }
     }
   },
   props: {
@@ -214,12 +219,31 @@ export default {
       } else if (from === 'asset') {
         status.forEach((item, index) => {
           if (index === 0) {
-            str += `<div><i class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></i> PING</div>`
+            str += `<div><i class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></i> Ping</div>`
           }
           if (index === 1) {
             str += `<div><i class="active-icon inline-block ${item == '0' ? 'gray-bg' : (item == '1' ? 'green-bg' : 'red-bg')}"></i> TALON</div>`
           }
         })
+      } else if (from === 'agent') {
+        if (status.auth) {
+          str += `<div><i class="active-icon inline-block ${status.auth ? 'green-bg' : 'red-bg'}"></i> Auth</div>`
+        }
+        if (status.prometheus) {
+          str += `<div><i class="active-icon inline-block ${this.agentState[status.prometheus]}"></i> Prometheus</div>`
+        }
+        if (status.cortex) {
+          str += `<div><i class="active-icon inline-block ${this.agentState[status.cortex]}"></i> Cortex</div>`
+        }
+        if (status.loki) {
+          str += `<div><i class="active-icon inline-block ${this.agentState[status.loki]}"></i> Loki</div>`
+        }
+        if (status.snmp_exporter) {
+          str += `<div><i class="active-icon inline-block ${this.agentState[status.snmp_exporter]}"></i> SNMP exporter</div>`
+        }
+        if (status.blackbox_exporter) {
+          str += `<div><i class="active-icon inline-block ${this.agentState[status.blackbox_exporter]}"></i> Blackbox exporter</div>`
+        }
       } else {
         str = ''
       }
@@ -246,6 +270,10 @@ export default {
           case 'endpoint':
             this.diagnoseUrl = n.url
             this.suspendedStr(n.row.configs[0].state, 'endpoint')
+            break
+          case 'agent':
+            this.diagnoseUrl = n.url
+            this.suspendedStr(JSON.parse(n.row.statusInfo), 'agent')
             break
           default:
             this.diagnoseUrl = n.url

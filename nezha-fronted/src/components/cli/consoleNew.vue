@@ -8,7 +8,7 @@
 </style>
 <template>
     <div :id="'ternimalContainer'+idIndex" class="console">
-      <div :id="'terminal'+idIndex" style="height: 100%"></div>
+      <div :id="'terminal'+idIndex" style="height: 100%;width: 100%"></div>
       <fileDirectory :host="host" v-clickoutside="closeFileDir" :uuid="terminal.uuid" v-show="fileDirectoryShow" @close="showFileDir(false)" :fileDirectoryShow="fileDirectoryShow" ref="fileDirectory"/>
     </div>
 </template>
@@ -72,8 +72,8 @@ export default {
     },
     resizeServiceConsole () {
       const consoleBox = document.getElementById('ternimalContainer' + this.idIndex)
-      const width = document.body.clientWidth// 可视宽度
-      const height = parseInt(consoleBox.offsetHeight)
+      const width = document.body.clientWidth - 10// 可视宽度
+      const height = parseInt(consoleBox.offsetHeight) - 10
       const winStyle = {
         width: width,
         height: height,
@@ -100,13 +100,13 @@ export default {
       rows = parseInt(rows)
       const terminalContainer = document.getElementById('terminal' + this.idIndex)
       this.term = new Terminal({
-        rows: rows, // 15行大概300px高，无法设置heigh，只能设置rows
         cursorStyle: 'block', // 光标样式  null | 'block' | 'underline' | 'bar'
         disableStdin: false, // 是否应禁用输入
-        fontSize: this.fontSize
+        fontSize: 16
       })
       this.term.open(terminalContainer)
       this.term.focus()
+      this.term.fit()
       this.create()
     },
     create () {
@@ -122,10 +122,11 @@ export default {
       let url = ''
       this.terminal.height = document.body.clientHeight - 100
       this.terminal.width = document.body.clientWidth
+      console.log(this.term.cols, this.term.cols)
       if (this.terminal.type === 'asset') {
-        url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.terminal.cols + '&rows=' + this.terminal.rows + '&token=' + token + '&assetId=' + this.terminal.assetId + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
+        url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.term.cols + '&rows=' + this.term.rows + '&token=' + token + '&assetId=' + this.terminal.assetId + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
       } else if (this.terminal.type === 'custom') {
-        url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.terminal.cols + '&rows=' + this.terminal.rows + '&token=' + token + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
+        url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.term.cols + '&rows=' + this.term.rows + '&token=' + token + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
         Object.keys(this.terminal.custom).forEach(key => {
           if (this.terminal.custom[key]) {
             url += '&' + key + '=' + this.terminal.custom[key]
@@ -211,7 +212,7 @@ export default {
       this.term._initialized = true
       // this.term.fit()// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
       this.$nextTick(() => { // 解决进入全屏和退出全屏是底部隐藏
-        this.setFontSize(this.fontSize)
+        // this.setFontSize(this.fontSize)
       })
     },
 
@@ -277,7 +278,9 @@ export default {
     enterStr (message) {
       if (this.terminalSocket && this.terminal.isLogin) {
         this.term.send(message)
-        this.term.send('\n')
+        setTimeout(() => {
+          this.term.send('\n')
+        }, 100)
         this.term.scrollToBottom()
         this.historyChange(message)
       }

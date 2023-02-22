@@ -432,8 +432,7 @@ export default {
       // this.$refs['console' + el.index][0].focusConsole()
       if (this.$refs['console' + el.index] && this.$refs['console' + el.index][0]) {
         setTimeout(() => {
-          this.$refs['console' + el.index][0].term.resize(225, 200)
-          this.$refs['console' + el.index][0].term.fit()
+          this.$refs['console' + el.index][0].resize()
           this.$refs['console' + el.index][0].term.scrollToBottom()
           this.$refs['console' + el.index][0].focusConsole()
         })
@@ -443,7 +442,9 @@ export default {
       // alert('winChange');
       if (this.editableTabs && this.editableTabs.length > 0) {
         this.editableTabs.forEach((tab, index) => {
-          this.$refs['console' + index][0].resize()
+          if (tab.name === this.editableTabsValue) {
+            this.$refs['console' + index][0].resize()
+          }
         })
       }
     },
@@ -692,6 +693,7 @@ export default {
           const obj = JSON.parse(JSON.stringify(item))
           obj.terminal.uuid = res.data.uuid
           obj.name = newTabName
+          this.editableTabsValue = newTabName
           this.editableTabs.push(obj)
         } else {
           this.$message.error(res.msg)
