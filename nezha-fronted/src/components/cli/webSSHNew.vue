@@ -442,7 +442,9 @@ export default {
       // alert('winChange');
       if (this.editableTabs && this.editableTabs.length > 0) {
         this.editableTabs.forEach((tab, index) => {
-          this.$refs['console' + index][0].resize()
+          if (tab.name === this.editableTabsValue) {
+            this.$refs['console' + index][0].resize()
+          }
         })
       }
     },
