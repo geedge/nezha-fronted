@@ -5,7 +5,7 @@
         <img :src="selectImage"  class="image-box">
       </div>
       <div v-else class="image-box image-box-null" />
-      <i class="nz-icon nz-icon-close" style="position: absolute;top: 0;right: 0;font-size: 10px" @click.stop="selectImageChange({image: '', id: ''})"/>
+      <i class="nz-icon nz-icon-close" style="position: absolute;top: -7px;left: 25px;font-size: 10px" @click.stop="selectImageChange({image: '', id: ''})"/>
     </div>
     <div class="image-select-box" v-if="selectBoxShow">
 <!--      <div v-for="item in iconArray" :key="item.id" class="image-box-item" @click="selectImageChange(item)">-->

@@ -47,7 +47,6 @@ export default {
     params: {
       immediate: true,
       handler (n) {
-        console.log(n, this.querysArray)
         this.chartInfo.type = this.params.chartType || 'line'
         const chartData = []
         const elements = []
@@ -67,16 +66,11 @@ export default {
             }
           }
         })
-        console.log(chartData)
         if (chartData.length && this.$refs.panelChart) {
           this.chartInfo.elements = elements
-          console.log(elements)
           this.$refs.panelChart.chartData = chartData
           this.$refs.panelChart.loading = false
           this.$nextTick(() => {
-            console.log(this.$refs.panelChart)
-            console.log(this.$refs.panelChart.$refs.chart)
-            console.log(this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id])
             this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id].initChart()
           })
         }

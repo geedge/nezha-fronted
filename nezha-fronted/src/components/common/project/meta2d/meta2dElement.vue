@@ -342,12 +342,51 @@
                 </el-select>
               </div>
             </div>
-            <div class="form-row-item  form-row-item-full">
+            <div class="form-row-item form-row-item-full">
+              <div class="form-row-key">
+                Source
+              </div>
+              <div class="form-row-value">
+                <el-select :placeholder="$t('el.select.placeholder')" :popper-append-to-body="true"
+                           class="right-box-row-with-btn no-style-class" popper-class="chart-box-dropdown-small right-box-select-top right-public-box-dropdown-top"
+                           size="mini"
+                           v-model="pen.data.source" value-key="chartType" @change="change('data.source')">
+                  <el-option :label="'Text'" :value="'text'">
+                    <span class="panel-dropdown-label-txt">{{ 'Text' }}</span>
+                  </el-option>
+                  <el-option :label="'Legend'" :value="'legend'">
+                    <span class="panel-dropdown-label-txt">{{ 'Legend' }}</span>
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+            <div class="form-row-item  form-row-item-full" v-if="pen.data.source !== 'legend'">
               <div class="form-row-key">
                Content
               </div>
               <div class="form-row-value">
                 <el-input  maxlength="256" show-word-limit v-model="pen.text" size="small" :rows="4" type="textarea" @change="change('text')"/>
+              </div>
+            </div>
+            <div class="form-row-item  form-row-item-full" v-if="pen.data.source === 'legend'">
+              <div class="form-row-value">
+                <div class="form-row-item form-row-item-full">
+                  <div class="form-row-key">
+                    Legend
+                  </div>
+                  <div class="form-row-value">
+                    <div style="display: inline-block;width: calc(20% - 3px)">
+                      <el-select v-model="pen.data.textParent" size="small">
+                        <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
+                      </el-select>
+                    </div>
+                    <div style="display: inline-block;width: calc(80% - 3px)">
+                      <el-select v-model="pen.data.textLegend" size="small">
+                        <el-option v-for="item in queryValues.filter(query => (query.parent === pen.data.textParent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'></el-option>
+                      </el-select>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1109,6 +1148,18 @@ export default {
       if (key === 'lineDash') {
         const val = this.pen.borderType
         this.pen.lineDash = val ? (val == 1 ? [5, 5] : ((val == 2 ? [10, 10] : [10, 10, 2, 10]))) : []
+      }
+      if (key === 'text') {
+        this.pen.data.text = this.pen.text
+      }
+      if (key === 'data.source') {
+        key = 'text'
+        if (this.pen.data.source === 'text') {
+          this.pen.text = this.pen.data.text
+        }
+        if (this.pen.data.source === 'legend') {
+          this.pen.text = this.pen.data.textValue
+        }
       }
       this.$emit('change', key)
     },
