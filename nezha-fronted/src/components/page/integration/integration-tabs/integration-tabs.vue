@@ -6,8 +6,8 @@
     <div class="integration-tabs-content">
       <configuration v-if="tabId==='configuration'" :configuration="detailsObj.configuration"></configuration>
       <dashboard v-if="tabId==='dashboard'" :dashboardTemplate="detailsObj.dashboardTemplate"></dashboard>
-      <alert v-if="tabId==='alert'"></alert>
-      <metric v-if="tabId==='metric'"></metric>
+      <alert v-if="tabId==='alert'" :moduleId="detailsObj.id"></alert>
+      <metric v-if="tabId==='metric'" :moduleId="detailsObj.id"></metric>
     </div>
   </div>
 </template>
@@ -20,9 +20,7 @@ import metric from './metric.vue'
 export default {
   name: 'integration-tabs',
   props: {
-    detailsObj: {
-      type: Object
-    }
+    detailsObj: Object
   },
   components: {
     configuration,

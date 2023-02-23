@@ -7,6 +7,7 @@
       :is-group="isGroup(chartInfo.type)"
       :isExportHtml="isExportHtml"
       :isError="isError"
+      :from="from"
       :chartData="chartData"
       :chart-info="chartInfo"
       :showAllData.sync="showAllData"

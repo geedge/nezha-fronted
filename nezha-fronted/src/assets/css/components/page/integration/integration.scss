@@ -193,6 +193,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-sizing: border-box;
       h3{
         font-family: Roboto-Medium;
         font-size: 14px;
@@ -200,14 +201,23 @@
         font-weight: 600;
       }
       .nz-btn{
+        width: 80px;
         height: 30px;
         padding: 0 10px;
-        border-radius: 4px;
+        border-radius: 4px;                                                 
+        background-color: $--color-primary;
+        border: none !important;
         i{
           font-size: 16px;
         }
         span{
           font-size: 14px;
+        }
+        &.no-choose{
+          cursor: default;
+          background: $--background-color-base;
+          color: $--web-ssh-color-text-disable;
+          pointer-events: none;
         }
       }
     }
@@ -215,6 +225,8 @@
       box-sizing: border-box;
       padding: 30px;
       padding-top: 15px;
+      padding-right: 10px;
+      margin-right: 20px;
       height: 100%;
       overflow-y: auto;
       .integration-configuration-title{
@@ -278,6 +290,40 @@
       .right-box.right-box-chart{
         top: 0;
         height: 100%;
+      }
+    }
+
+    .integration-alert{
+      height: 100%;
+      box-sizing: border-box;
+      padding: 30px;
+      padding-top: 0;
+      .list-page{
+        height: calc(100% - 60px);
+        .nz-table-list{
+          padding: 0;
+          height: 100%;
+          .gutter{
+            position: unset;
+          }
+        }
+      }
+    }
+
+    .integration-metric{
+      height: 100%;
+      box-sizing: border-box;
+      padding: 30px;
+      padding-top: 20px;
+      .list-page{
+        height: 100%;
+        .nz-table-list{
+          padding: 0;
+          height: 100%;
+          .gutter{
+            position: unset;
+          }
+        }
       }
     }
   }

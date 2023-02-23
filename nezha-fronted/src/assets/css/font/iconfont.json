@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "34168331",
+      "name": "Integration",
+      "font_class": "Integration",
+      "unicode": "e7d0",
+      "unicode_decimal": 59344
+    },
+    {
       "icon_id": "34053254",
       "name": "编组 2",
       "font_class": "Diagnosis1",

@@ -3,7 +3,7 @@
     <!-- NZ-talon -->
     <p class="integration-title" style="margin-top:10px;">NZ-talon</p>
     <ul class="integration-list">
-      <li class="integration-item" @click="details">
+      <li class="integration-item">
         <img class="integration-icon" src="https://static.datadoghq.com/static/images/logos/azure_avatar.svg" alt="">
         <h2 class="integration-name">NZ-talontalontalontalontalontalontalontalontalontalon</h2>
         <p class="integration-remark">Check content name check contentname check content Check content name name check content name check content namecheck content namecheck content namecheck content name</p>
@@ -33,11 +33,11 @@
       <!-- introduce -->
       <div class="integration-dialog-top">
         <div class="integration-dialog-top-logo">
-          <img src="https://static.datadoghq.com/static/images/logos/azure_avatar.svg" alt="">
+          <img :src="detailsObj.icon" alt="">
         </div>
         <div class="integration-dialog-introduce">
-          <h2 class="integration-name">Azure Usage and Quotas</h2>
-          <p class="integration-remark">Azure Usage and Quotas allows you to keep track of your current usages and limits limilimitslimitstslimitslimitslimitslimitslimitslimitslimitslimitslimitslimitslimitslimitslimitslimitslimitslimitslimits.</p>
+          <h2 class="integration-name">{{detailsObj.name}}</h2>
+          <p class="integration-remark">{{detailsObj.remark}}</p>
         </div>
       </div>
       <!-- tabs -->
@@ -66,7 +66,6 @@ export default {
     async getDataList () {
       const res = await this.$get('/integration/module', { pageSize: -1 })
       this.dataList = res.data.list
-      console.log(res)
     },
     // 详情
     details (val) {

@@ -491,7 +491,7 @@ export default {
     // 比较变量 图表是否显示/隐藏
     compareVariables () {
       // 防止group中的chartList执行
-      if (this.groupInfo) {
+      if (this.isGroup) {
         return
       }
       const isRegExp = (v) => {
@@ -585,7 +585,7 @@ export default {
     // group设置repeat 便利变量重复渲染图表
     repeatVariableFn () {
       // 防止group中的chartList执行
-      if (this.groupInfo) {
+      if (this.isGroup) {
         return
       }
       // 先删除掉复制的数据

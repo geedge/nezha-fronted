@@ -1,7 +1,7 @@
 <template>
   <div class="integration-dashboard">
     <div class="integration-tool" style="padding: 0 10px;">
-      <h3>Dashboard name</h3>
+      <h3>{{showPanel.name}}</h3>
 
       <top-tool-more-options
         type='integration'
@@ -16,7 +16,7 @@
         @afterImport="afterImport"
       >
         <template>
-          <button class="nz-btn el-button--small nz-btn-style-normal" :class="{'nz-btn-disabled':prevent_opt.import}" @click="importFn">
+          <button class="nz-btn el-button--small nz-btn-style-normal" @click="importFn">
             <i class="nz-icon nz-icon-upload"></i>
             <span>{{$t('overall.importExcel')}}</span>
           </button>
@@ -57,6 +57,7 @@ import bus from '../../../../libs/bus'
 import { fromRoute } from '@/components/common/js/constants'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import panelVariables from '@/components/common/panel/panelVariables'
+import chartDataFormat from '@/components/chart/chartDataFormat'
 export default {
   name: 'integration-dashboard',
   props: {
@@ -73,7 +74,6 @@ export default {
   data () {
     return {
       fromRoute,
-      showTopBtn: false, // top按钮
       chartListLoading: true,
       searchTime: bus.getTimezontDateRange(),
       panel: { // 新增panel
@@ -87,9 +87,10 @@ export default {
       },
       showPanel: {
         name: '',
-        type: 'dashboard',
+        type: 'integration',
         id: null
       },
+      showTopLine: false,
       nowTimeType: {},
       scrollbarWrap: null,
       variables: [],
@@ -110,24 +111,46 @@ export default {
     onScroll () {
       const _self = this
       this.scrollbarWrap.addEventListener('scroll', bus.debounce(function () {
-        _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50
         _self.$refs.chartList.onScroll(_self.scrollbarWrap.scrollTop)
-      }, 300))
+      }, 300, function () {
+        _self.showTopLine = _self.scrollbarWrap.scrollTop > 10
+      }))
+    },
+    getUnitValue (type) {
+      const unitsList = []
+      chartDataFormat.unitOptions().forEach((item, index) => {
+        item.children.forEach((n, i) => {
+          unitsList.push({ ...n, type: item.label })
+        })
+      })
+      const findItem = unitsList.find(item => item.label.replace(/\s*/g, '') == type.replace(/\s*/g, ''))
+      return findItem ? findItem.value : 2
     },
     getData () {
-      // if (!this.hasButton('panel_view')) {
-      //   return
-      // }
-      this.dataList = this.showPanel.charts.map(item => {
-        return {
-          ...item,
-          span: Number(item.span),
-          height: Number(item.height),
-          x: Number(item.x),
-          y: Number(item.y),
-          loaded: false
-        }
+      if (!this.hasButton('panel_view')) {
+        return
+      }
+      let num = 0
+      this.showPanel.charts.forEach(item => {
+        item.id = ++num
+        item.span = Number(item.span)
+        item.height = Number(item.height)
+        item.x = Number(item.x)
+        item.y = Number(item.y)
+        item.type = item.type.split(' ')[0].toLowerCase()
+        item.unit = this.getUnitValue(item.unit)
+        item.loaded = false
+        item.children && item.children.forEach(subItem => {
+          subItem.id = ++num
+          subItem.span = Number(subItem.span)
+          subItem.height = Number(subItem.height)
+          subItem.x = Number(subItem.x)
+          subItem.y = Number(subItem.y)
+          subItem.type = subItem.type.split(' ')[0].toLowerCase()
+          subItem.unit = this.getUnitValue(subItem.unit)
+        })
       })
+      this.dataList = this.showPanel.charts
       this.chartListLoading = false
     },
     // 公用操作
@@ -150,6 +173,7 @@ export default {
   },
   mounted () {
     this.scrollbarWrap = this.$refs.dashboardScrollbar
+    this.onScroll()
     this.getTableData()
   },
   watch: {
