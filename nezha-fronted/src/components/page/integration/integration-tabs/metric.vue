@@ -61,16 +61,18 @@ export default {
           label: this.$t('overall.name'),
           prop: 'name',
           minWidth: 180
-        }, {
+        },
+        {
           label: this.$t('overall.remark'),
           prop: 'remark',
           show: true,
           minWidth: 250
-        }, {
-          label: this.$t('alert.config.unit'),
-          prop: 'unit',
-          width: 150
         }
+        // {
+        //   label: this.$t('alert.config.unit'),
+        //   prop: 'unit',
+        //   width: 150
+        // }
       ],
       loading: false,
       tableData: [],

@@ -405,7 +405,7 @@ export default {
             if ((mainOffsetTop + mainHeight / 4) < (windowScrollTop + windowHeight)) {
               item.loaded = true
               setTimeout(() => {
-                this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].getChartData()
+                this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].getChartData()
               }, i * 100)
               i++
             }

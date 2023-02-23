@@ -93,32 +93,37 @@ export default {
           label: this.$t('alert.alertName'),
           prop: 'name',
           minWidth: 150
-        }, {
+        },
+        {
           label: this.$t('overall.type'),
           prop: 'type',
           show: true,
           minWidth: 90
-        }, {
+        },
+        {
           label: this.$t('config.exprTemp.expression'),
           prop: 'expr',
           minWidth: 180
-        }, {
-          label: this.$t('alert.config.threshold'),
-          prop: 'threshold',
-          minWidth: 100
-        }, {
+        },
+        // {
+        //   label: this.$t('alert.config.threshold'),
+        //   prop: 'threshold',
+        //   minWidth: 100
+        // },
+        {
           label: this.$t('alert.summary'),
           prop: 'summary',
           minWidth: 160
-        }, {
-          label: this.$t('alert.severity'),
-          prop: 'severity',
-          minWidth: 100
-        }, {
-          label: this.$t('asset.snmpCredential'),
-          prop: '',
-          minWidth: 150
         }
+        // {
+        //   label: this.$t('alert.severity'),
+        //   prop: 'severity',
+        //   minWidth: 100
+        // }, {
+        //   label: this.$t('asset.snmpCredential'),
+        //   prop: '',
+        //   minWidth: 150
+        // }
       ],
       loading: false,
       tableData: [],
