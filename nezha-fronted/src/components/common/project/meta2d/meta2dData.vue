@@ -3,7 +3,7 @@
     <div class="form-row-box chart-config">
       <div class="form-row-item form-row-item-full">
         <div class="form-row-key">
-          Time Range
+          {{$t('project.topology.timeRange')}}
         </div>
         <div class="form-row-value">
           <el-select v-model="dataTimeType" size="small" style="width: 100%">
@@ -142,7 +142,7 @@
                   <el-row style="margin-top: 18px;display: flex">
                     <div class="form-row-item">
                       <div class="form-row-key">
-                        Statistics
+                        {{$t('dashboard.panel.chartForm.statistics')}}
                       </div>
                       <div class="form-row-value">
                         <el-select v-model="expressionsShow[index-1].statistic" size="small">
@@ -152,7 +152,7 @@
                     </div>
                     <div class="form-row-item">
                       <div class="form-row-key">
-                        Unit
+                        {{$t('dashboard.panel.chartForm.unit')}}
                       </div>
                       <div class="form-row-value">
                         <el-cascader :id="'columns-unit'" v-model="expressionsShow[index-1].unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable

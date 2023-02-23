@@ -7,7 +7,7 @@
         <div class="form-row-box">
           <!--        Position  -->
           <div class="form-row-title">
-            Position
+            {{$t('project.topology.position')}}
             <i class="nz-icon nz-icon-arrow-down" @click="updateShow('position')"/>
           </div>
           <div v-show="elements.position" class="form-row-content">
@@ -51,7 +51,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Width
+                <div>{{ $t('dashboard.panel.chartForm.width') }}</div>
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -70,7 +70,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Height
+                <div>{{ $t('dashboard.panel.chartForm.high') }}</div>
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -89,7 +89,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Lock aspect Ratio
+                {{$t('project.topology.lockRatio')}}
               </div>
               <div class="form-row-value">
                 <el-switch
@@ -102,7 +102,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Rotate
+                {{ $t('project.topology.rotate') }}（°）
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -125,13 +125,13 @@
 
           <!--         Border -->
           <div class="form-row-title">
-            Border
+            {{ $t('project.topology.border') }}
             <i class="nz-icon nz-icon-arrow-down" @click="updateShow('border')"/>
           </div>
           <div v-show="elements.border" class="form-row-content">
             <div class="form-row-item ">
               <div class="form-row-key">
-                Type
+                {{$t('overall.type')}}
               </div>
               <div class="form-row-value">
                 <el-select :popper-append-to-body="true" v-model="pen.borderType" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
@@ -162,7 +162,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Width
+                {{ $t('dashboard.panel.chartForm.width') }}
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -182,7 +182,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                color
+                {{ $t('project.topology.color') }}
               </div>
               <div class="form-row-value">
                 <nezhaColor
@@ -193,7 +193,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Radius
+                {{ $t('project.topology.radius') }}
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -215,13 +215,13 @@
 
           <!--         backGround -->
           <div class="form-row-title">
-            BackGround
+            {{$t('project.topology.bac')}}
             <i class="nz-icon nz-icon-arrow-down" @click="updateShow('backGround')"/>
           </div>
           <div v-show="elements.backGround" class="form-row-content">
             <div class="form-row-item">
               <div class="form-row-key">
-                color
+                {{$t('project.topology.color')}}
               </div>
               <div class="form-row-value">
                 <nezhaColor
@@ -232,7 +232,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                opacity
+                {{$t('project.topology.opacity')}}
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -253,7 +253,7 @@
               </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Image
+                {{$t('project.topology.image')}}
               </div>
               <div class="form-row-value">
 <!--                <el-input  v-model="pen.image" size="small" @change="change('image')"/>-->
@@ -262,7 +262,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                是否保留长宽比
+                {{$t('project.topology.imageRatio')}}
               </div>
               <div class="form-row-value">
                 <el-switch
@@ -277,13 +277,13 @@
 
           <!--         text -->
           <div class="form-row-title">
-            text
+            {{$t('project.topology.text')}}
             <i class="nz-icon nz-icon-arrow-down" @click="updateShow('text')"/>
           </div>
           <div v-show="elements.text" class="form-row-content">
             <div class="form-row-item">
               <div class="form-row-key">
-                color
+                {{$t('project.topology.color')}}
               </div>
               <div class="form-row-value">
                 <nezhaColor
@@ -294,7 +294,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                fontSize
+                {{$t('project.topology.fontSize')}}
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -314,7 +314,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Align text
+                {{ $t('project.topology.textAlign') }}
               </div>
               <div class="form-row-value">
                 <el-select :placeholder="$t('el.select.placeholder')" :popper-append-to-body="true"
@@ -329,7 +329,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Vertical text
+                {{ $t('project.topology.textBaseline') }}
               </div>
               <div class="form-row-value">
                 <el-select :placeholder="$t('el.select.placeholder')" :popper-append-to-body="true"
@@ -344,7 +344,7 @@
             </div>
             <div class="form-row-item form-row-item-full">
               <div class="form-row-key">
-                Source
+                {{$t('profile.source')}}
               </div>
               <div class="form-row-value">
                 <el-select :placeholder="$t('el.select.placeholder')" :popper-append-to-body="true"
@@ -352,17 +352,17 @@
                            size="mini"
                            v-model="pen.data.source" value-key="chartType" @change="change('data.source')">
                   <el-option :label="'Text'" :value="'text'">
-                    <span class="panel-dropdown-label-txt">{{ 'Text' }}</span>
+                    <span class="panel-dropdown-label-txt">{{ $t('project.topology.text') }}</span>
                   </el-option>
                   <el-option :label="'Legend'" :value="'legend'">
-                    <span class="panel-dropdown-label-txt">{{ 'Legend' }}</span>
+                    <span class="panel-dropdown-label-txt">{{ $t('dashboard.panel.chartForm.legend') }}</span>
                   </el-option>
                 </el-select>
               </div>
             </div>
             <div class="form-row-item  form-row-item-full" v-if="pen.data.source !== 'legend'">
               <div class="form-row-key">
-               Content
+                {{$t('dashboard.panel.chartForm.content')}}
               </div>
               <div class="form-row-value">
                 <el-input  maxlength="256" show-word-limit v-model="pen.text" size="small" :rows="4" type="textarea" @change="change('text')"/>
@@ -372,7 +372,7 @@
               <div class="form-row-value">
                 <div class="form-row-item form-row-item-full">
                   <div class="form-row-key">
-                    Legend
+                    {{ $t('dashboard.panel.chartForm.legend') }}
                   </div>
                   <div class="form-row-value">
                     <div style="display: inline-block;width: calc(20% - 3px)">
@@ -397,13 +397,13 @@
         <div class="form-row-box">
           <!--        Line  -->
           <div class="form-row-title">
-            Line
+            {{$t('project.topology.line')}}
             <i class="nz-icon nz-icon-arrow-down" @click="updateShow('line')"/>
           </div>
           <div v-show="elements.line" class="form-row-content">
             <div class="form-row-item">
               <div class="form-row-key">
-                style
+                {{$t('project.topology.style')}}
               </div>
               <div class="form-row-value">
                 <el-select :popper-append-to-body="true" v-model="pen.borderType" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
@@ -434,7 +434,7 @@
             </div>
             <div class="form-row-item special-meta2d-select">
               <div class="form-row-key">
-                Type
+                {{$t('overall.type')}}
               </div>
               <div class="form-row-value">
                 <el-select :popper-append-to-body="true" v-model="pen.lineName" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
@@ -465,7 +465,7 @@
             </div>
             <div class="form-row-item special-meta2d-select">
               <div class="form-row-key">
-                From
+                {{$t('project.topology.fromArrow')}}
               </div>
               <div class="form-row-value">
                 <el-select :popper-append-to-body="true" v-model="pen.fromArrow" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
@@ -515,7 +515,7 @@
             </div>
             <div class="form-row-item special-meta2d-select">
               <div class="form-row-key">
-                To
+                {{$t('project.topology.toArrow')}}
               </div>
               <div class="form-row-value">
                 <el-select :popper-append-to-body="true" v-model="pen.toArrow" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
@@ -565,7 +565,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                color
+                {{$t('project.topology.color')}}
               </div>
               <div class="form-row-value">
                 <nezhaColor
@@ -576,7 +576,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                width
+                {{ $t('dashboard.panel.chartForm.width') }}
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -596,7 +596,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                border color
+                {{$t('project.topology.borderColor')}}
               </div>
               <div class="form-row-value">
                 <nezhaColor
@@ -607,7 +607,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                borderWidth
+                {{$t('project.topology.borderWidth')}}
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -629,13 +629,13 @@
 
           <!--        lineAnimate  -->
           <div class="form-row-title">
-            Animate
+            {{$t('project.topology.animate')}}
             <i class="nz-icon nz-icon-arrow-down" @click="updateShow('lineAnimate')"/>
           </div>
           <div v-show="elements.lineAnimate" class="form-row-content">
             <div class="form-row-item">
               <div class="form-row-key">
-                Type
+                {{$t('overall.type')}}
               </div>
               <div class="form-row-value">
                 <el-select
@@ -655,7 +655,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Speed (0 - 10)
+                {{$t('project.topology.speed')}} (0 - 10)
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -676,7 +676,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                color
+                {{$t('project.topology.color')}}
               </div>
               <div class="form-row-value">
                 <nezhaColor
@@ -687,7 +687,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Reverse
+                {{$t('project.topology.reverse')}}
               </div>
               <div class="form-row-value">
                 <el-switch
@@ -704,7 +704,7 @@
 
       <!--         valueMapping -->
       <div class="form-row-title">
-        Value mappings
+        {{$t('dashboard.panel.chartForm.valueMapping')}}
         <span>
               <el-switch
                 v-model="pen.data.enable.valueMapping"
@@ -720,7 +720,7 @@
           <div  class="form-row-content">
             <div class="form-row-item form-row-item-full">
               <div class="form-row-key">
-                Legend
+                {{$t('dashboard.panel.chartForm.legend')}}
               </div>
               <div class="form-row-value">
                 <div style="display: inline-block;width: calc(20% - 3px)">
@@ -922,7 +922,7 @@
 
       <!--         tooltip -->
       <div class="form-row-title">
-        Tooltip
+        {{$t('project.topology.tooltip')}}
         <span>
               <el-switch
                 v-model="pen.data.enable.tooltip"
@@ -937,7 +937,7 @@
          <div v-show="elements.tooltip" class="form-row-content" v-if="pen.type !== 1">
         <div class="form-row-item form-row-item-full">
           <div class="form-row-key">
-            Title
+            {{$t('project.topology.title')}}
           </div>
           <div class="form-row-value" style="display: flex">
             <el-input v-model="pen.data.tooltip.title" size="small" style="flex: 1"/>
@@ -950,7 +950,7 @@
         </div>
         <div class="form-row-item form-row-item-full">
           <div class="form-row-key">
-            Type
+            {{$t('overall.type')}}
           </div>
           <div class="form-row-value">
             <el-input v-model="pen.data.tooltip.chartType" />
@@ -958,7 +958,7 @@
         </div>
         <div class="form-row-item form-row-item-full">
           <div class="form-row-key">
-            Content
+            {{$t('dashboard.panel.chartForm.content')}}
           </div>
           <div class="form-row-value">
             <el-input  maxlength="256" show-word-limit v-model="pen.data.tooltip.content" size="small" :rows="4" type="textarea"/>
@@ -966,7 +966,7 @@
         </div>
         <div class="form-row-item form-row-item-full chart-config">
           <div class="form-row-key" style="margin-bottom: 5px">
-            Legends
+            {{$t('project.topology.legends')}}
           </div>
           <div class="form-row-value" style="margin-bottom: 10px" v-for="legend in pen.data.tooltip.legends" :key="legend.parent + legend.legend">
             <div style="display: inline-block;width: calc(20% - 3px)">

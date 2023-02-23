@@ -26,7 +26,7 @@
       <CanvasContextMenu :meta2dId="meta2dId" :selectPens.sync="selectPens"></CanvasContextMenu>
     </div>
     <div
-      v-show="position.show && !editFlag"
+      v-show="position.show && (!editFlag || isPreview )"
       @mouseleave="tooltipOut"
       @mouseenter="tooltipOver"
       style="position: absolute"

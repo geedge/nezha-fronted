@@ -1,6 +1,6 @@
 <template>
   <div class="tool-top" id="tool-top"  @mouseup="changeDrawLineFlag(false)">
-    <div id="tools-left-drag" class="top-tool-item" :title="'add node'" :class="dragstartFlag ? 'is-active-meta2d' : ''">
+    <div id="tools-left-drag" class="top-tool-item" :title="$t('project.topology.addNode')" :class="dragstartFlag ? 'is-active-meta2d' : ''">
       <div
         draggable="true"
         @mousedown="changeState('dragstartFlag')"
@@ -13,7 +13,7 @@
          class="top-tool-item"
          :class="drawLineFlag ? 'is-active-meta2d' : ''"
          @click="changeState('drawLineFlag')"
-         :title="'add line'">
+         :title="$t('project.topology.addLine')">
       <i  class="nz-icon nz-icon-compare" />
     </div>
     <div id="undo"
@@ -71,7 +71,7 @@
       </el-switch>
     </div>
     <div  class="top-tool-item top-tool-item-switch">
-      <label>{{$t('Thumbnail')}}</label>
+      <label>{{$t('project.topology.thumbnail')}}</label>
       <el-switch
         v-model="option.map"
         :active-value="true"
@@ -165,7 +165,7 @@ export default {
     onDragstart (e) {
       const pen = {
         name: 'rectangle',
-        text: '矩形',
+        text: 'rectangle',
         width: 100,
         height: 100
       }
@@ -176,7 +176,7 @@ export default {
     onTouchstart  (e) {
       const pen = {
         name: 'rectangle',
-        text: '矩形',
+        text: 'rectangle',
         width: 100,
         height: 100
       }

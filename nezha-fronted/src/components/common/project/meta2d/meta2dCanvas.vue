@@ -3,13 +3,13 @@
     <div class="form-row-box">
       <!--         backGround -->
       <div class="form-row-title">
-        BackGround
+        {{$t('project.topology.bac')}}
         <i class="nz-icon nz-icon-arrow-down" @click="updateShow('backGround')"/>
       </div>
       <div v-show="canvasProps.backGround" class="form-row-content">
         <div class="form-row-item">
           <div class="form-row-key">
-            Background
+            {{$t('project.topology.color')}}
           </div>
           <div class="form-row-value">
             <nezhaColor
@@ -20,7 +20,7 @@
         </div>
         <div class="form-row-item">
           <div class="form-row-key">
-            Image
+            {{$t('project.topology.image')}}
           </div>
           <div class="form-row-value">
             <!--                <el-input  v-model="pen.image" size="small" @change="change('image')"/>-->
@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="form-row-title">
-        Elements
+        {{$t('project.topology.elements')}}
       </div>
       <div class="form-row-content">
         <div class="form-row-item form-row-item-full">
@@ -52,6 +52,12 @@
                 <span>
                   <i v-if="item.type !== 1" class="nz-icon nz-icon-zhengfangxing" />
                   <i v-else class="nz-icon nz-icon-compare" />
+                  <span v-if="item.data.source!=='legend'" style="margin-left: 5px">
+                     {{item.name}}
+                  </span>
+                  <span v-else style="margin-left: 5px">
+                     {{item.name}}
+                  </span>
                 </span>
                 <span>
                     <span @click.stop="penChange(item, 'locked')" class="pen-tools-item">
