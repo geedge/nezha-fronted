@@ -953,7 +953,10 @@
             {{$t('overall.type')}}
           </div>
           <div class="form-row-value">
-            <el-input v-model="pen.data.tooltip.chartType" />
+<!--            <el-input v-model="pen.data.tooltip.chartType" />-->
+            <el-select v-model="pen.data.tooltip.chartType" size="small" style="width: 100%">
+              <el-option v-for="item in chartType" :key="item.id" :value="item.id" :label='item.name'></el-option>
+            </el-select>
           </div>
         </div>
         <div class="form-row-item form-row-item-full">
@@ -1035,6 +1038,11 @@ export default {
     return {
       theme: theme,
       pen: {},
+      chartType: [
+        { id: 'line', name: 'Line' },
+        { id: 'area', name: 'Area' },
+        { id: 'text', name: 'Text' }
+      ],
       penDash: [
         { d: 'M5 14 l85 0', 'stroke-dasharray': '', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },
         { d: 'M5 14 l85 0', 'stroke-dasharray': '5,5', strokeColor: theme == 'light' ? 'black' : '#BEBEBE' },

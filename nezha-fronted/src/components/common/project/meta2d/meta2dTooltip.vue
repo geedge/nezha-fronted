@@ -47,6 +47,9 @@ export default {
     params: {
       immediate: true,
       handler (n) {
+        if (this.params.chartType == 'text') {
+          return
+        }
         this.chartInfo.type = this.params.chartType || 'line'
         const chartData = []
         const elements = []
