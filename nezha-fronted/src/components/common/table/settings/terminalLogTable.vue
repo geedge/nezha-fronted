@@ -89,9 +89,9 @@
       :width="operationWidth"
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
-      <div slot-scope="scope" class="table-operation-items">
+      <div slot-scope="scope" class="table-operation-items" :key="scope.row.status + scope.row.uuid">
         <template v-if="scope.row.status == 0">
-          <button :title="$t('config.terminallog.monitor.monitor')" v-has="'terminal_monitor'" class="table-operation-item" @click="showBottomBox('monitorTab', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
+          <button :title="$t('config.terminallog.monitor.monitor')" v-has="'terminal_view'" class="table-operation-item" @click="showBottomBox('monitorTab', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
           <el-dropdown size="medium" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
