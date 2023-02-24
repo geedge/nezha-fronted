@@ -127,9 +127,6 @@ export default {
       return findItem ? findItem.value : 2
     },
     getData () {
-      if (!this.hasButton('panel_view')) {
-        return
-      }
       let num = 0
       this.showPanel.charts.forEach(item => {
         item.id = ++num

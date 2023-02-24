@@ -107,16 +107,29 @@ export default {
       this.$emit('chartIsNoData', this.isNoData)
     },
     drawChart (customAnimate) {
+      let funnelData = lodash.cloneDeep(this.funnelData)
+      const everyZeor = funnelData.every(item => item.value == 0)
+      // 判断值是否全部为0
+      if (everyZeor) {
+        funnelData = funnelData.map(item => {
+          return {
+            ...item,
+            value: 100
+          }
+        })
+      } else {
+        funnelData = funnelData.filter(item => item.value !== 0)
+      }
       this.$nextTick(() => {
         const options = {
           chart: {
             width: '85%',
             height: '85%',
-            bottomPinch: this.funnelData.length > 1 ? 1 : 0,
+            bottomPinch: funnelData.length > 1 ? 1 : 0,
             customAnimate: customAnimate === true || this.isInit
           },
           block: {
-            dynamicHeight: true,
+            dynamicHeight: false,
             highlight: true
           },
           label: {
@@ -136,7 +149,6 @@ export default {
         }
 
         const myChart = new D3Funnel(document.getElementById(`chart-canvas-${this.chartId}`))
-        const funnelData = lodash.cloneDeep(this.funnelData)
         myChart.draw(funnelData, options)
         setChart(this.chartId, myChart)
         this.isInit = false
