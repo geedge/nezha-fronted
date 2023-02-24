@@ -138,6 +138,7 @@ export default {
           data.pens = []
         }
         data.pens.forEach(pen => {
+          pen.isBottom = false
           if (pen.isNz) {
             if (pen.data.legend && pen.data.enable.valueMapping) {
               const findItem = queryValues.find(query => query.name === pen.data.legend && query.parent === pen.data.parent)
@@ -152,7 +153,7 @@ export default {
               if (findItem) {
                 const value = getMetricTypeValue(findItem.values, findItem.elements.statistic || 'last')
                 pen.data.textValue = chartDataFormat.getUnit(findItem.elements.unit).compute(value, null, 2)
-                pen.text =  pen.data.textValue
+                pen.text = pen.data.textValue
               }
             }
           } else {

@@ -194,6 +194,7 @@ export default {
       pen.visible = pen.visible || true
       pen.locked = pen.locked || 0
       pen.isBottom = true
+      pen.autoPlay = true
     },
     pensActive (pens, e) { // 选中节点
       this.selectPens = pens

@@ -129,7 +129,7 @@
             <i class="nz-icon nz-icon-arrow-down" @click="updateShow('border')"/>
           </div>
           <div v-show="elements.border" class="form-row-content">
-            <div class="form-row-item ">
+            <div class="form-row-item special-meta2d-select">
               <div class="form-row-key">
                 {{$t('overall.type')}}
               </div>
@@ -401,7 +401,7 @@
             <i class="nz-icon nz-icon-arrow-down" @click="updateShow('line')"/>
           </div>
           <div v-show="elements.line" class="form-row-content">
-            <div class="form-row-item">
+            <div class="form-row-item special-meta2d-select">
               <div class="form-row-key">
                 {{$t('project.topology.style')}}
               </div>
@@ -1222,6 +1222,7 @@ export default {
         uid: getUUID()
       }
       this.pen.data.valueMapping.push(obj)
+      this.change('data.valueMapping')
     },
     copyMapping (index) {
       const temp = lodash.cloneDeep(this.pen.data.valueMapping[index])
