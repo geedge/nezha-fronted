@@ -158,14 +158,14 @@
 
   @include when(without-controls) {
     .el-input__inner {
-      padding-left: 15px;
+      padding-left: 10px;
       padding-right: 15px;
     }
   }
 
   @include when(controls-right) {
     .el-input__inner {
-      padding-left: 15px;
+      padding-left: 10px;
       padding-right: #{$--input-height + 10};
     }
 
