@@ -235,7 +235,7 @@
               </div>
             </div>
             <div v-if="editAsset.showTelnet">
-              <el-form-item :label="$t('profile.username')" prop="authUsername" :rules=" { required: editAsset.showSSH, message: $t('validate.required'), trigger: 'change' }">
+              <el-form-item :label="$t('profile.username')" prop="authUsername" :rules=" { required: editAsset.showTelnet, message: $t('validate.required'), trigger: 'change' }">
                 <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
               </el-form-item>
               <el-form-item :label="$t('login.pin')" prop="authPin" :rules=" { required: !editAsset.id, message: $t('validate.required'), trigger: 'change' }">
