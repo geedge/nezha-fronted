@@ -1,19 +1,34 @@
 <template>
-  <div class="tool-top" id="tool-top">
-    <div id="tools-left-drag" class="top-tool-item" :title="'add node'">
+  <div class="tool-top" id="tool-top"  @mouseup="changeDrawLineFlag(false)">
+    <div id="tools-left-drag" class="top-tool-item" :title="$t('project.topology.addNode')" :class="dragstartFlag ? 'is-active-meta2d' : ''">
       <div
         draggable="true"
+        @mousedown="changeState('dragstartFlag')"
         @dragstart.stop="onDragstart($event)"
-        @click="onTouchstart($event)"
       >
         <i class="nz-icon nz-icon-zhengfangxing" />
       </div>
     </div>
-    <div id="tools-left-draw" class="top-tool-item" @click="setDrawPen()" :title="'add line'">
+    <div id="tools-left-draw"
+         class="top-tool-item"
+         :class="drawLineFlag ? 'is-active-meta2d' : ''"
+         @click="changeState('drawLineFlag')"
+         :title="$t('project.topology.addLine')">
       <i  class="nz-icon nz-icon-compare" />
     </div>
-    <div id="undo" :class="['top-tool-item',]"  @click="undo"> <i class="nz-icon nz-icon-revoke" :title="$t('overall.revocation')"/> </div>
-    <div id="redo" :class="['top-tool-item',]" @click="redo"> <i class="nz-icon nz-icon-revoke1"  :title="$t('overall.redo')"/> </div>
+    <div id="undo"
+         class="top-tool-item"
+         :class="undoFlag ? '' : 'is-active-meta2d' "
+         @click="undo">
+      <i class="nz-icon nz-icon-revoke" :title="$t('overall.revocation')"/>
+    </div>
+    <div id="redo"
+         class="top-tool-item"
+         :class="redoFlag ? '' : 'is-active-meta2d' "
+         @click="redo"
+    >
+      <i class="nz-icon nz-icon-revoke1"  :title="$t('overall.redo')"/>
+    </div>
     <!--<div> 保存为图片 </div>-->
     <div class="top-tool-item" @click="del" :title="$t('overall.delete')">  <i class="nz-icon nz-icon-delete"/> </div>
     <div class="top-tool-item top-tool-item-scale">
@@ -56,7 +71,7 @@
       </el-switch>
     </div>
     <div  class="top-tool-item top-tool-item-switch">
-      <label>{{$t('Thumbnail')}}</label>
+      <label>{{$t('project.topology.thumbnail')}}</label>
       <el-switch
         v-model="option.map"
         :active-value="true"
@@ -86,6 +101,8 @@ export default {
         rule: false,
         map: false
       },
+      dragstartFlag: false,
+      drawLineFlag: false,
       scaleNum: 100,
       penLineType: [
         { d: 'M5 14 a100,50 0 0,1 85,0', 'stroke-dasharray': '', name: 'curve' },
@@ -100,12 +117,34 @@ export default {
         { d: 'M5 14 l85 0', fill: '#000000', stroke: '', 'stroke-width': '', cx: '10', cy: '14', r: '5', name: 'circleSolid' },
         { d: 'M5 14 l85 0', fill: '#ffffff', stroke: '#000000', 'stroke-width': '1', cx: '10', cy: '14', r: '5', name: 'circle' }
       ],
-      redoFlag: false
+      redoFlag: false,
+      undoFlag: false,
+      store: {}
     }
   },
   props: {
     meta2dId: {
       require: true
+    }
+  },
+  computed: {
+  },
+  watch: {
+    'store.historyIndex': {
+      handler (n) {
+        const historyIndex = this.store.historyIndex
+        const histories = this.store.histories
+        if (historyIndex < histories.length - 1) {
+          this.redoFlag = true
+        } else {
+          this.redoFlag = false
+        }
+        if (historyIndex > -1 && !this.$loadsh.isNull(historyIndex)) {
+          this.undoFlag = true
+        } else {
+          this.undoFlag = false
+        }
+      }
     }
   },
   mounted () {
@@ -118,12 +157,15 @@ export default {
       }
     })
     getTopology(this.meta2dId).on('scale', this.topoScale) // 缩放·
+    this.store = getTopology(this.meta2dId).store
+    bus.$on('changeDrawState', this.waiveDraw)
   },
   methods: {
+    getTopology,
     onDragstart (e) {
       const pen = {
         name: 'rectangle',
-        text: '矩形',
+        text: 'rectangle',
         width: 100,
         height: 100
       }
@@ -134,15 +176,35 @@ export default {
     onTouchstart  (e) {
       const pen = {
         name: 'rectangle',
-        text: '矩形',
+        text: 'rectangle',
         width: 100,
         height: 100
       }
       getTopology(this.meta2dId).canvas.addCaches = deepClone([pen])
     },
-    // 开启钢笔状态
-    setDrawPen () {
-      getTopology(this.meta2dId).drawLine('line')
+    changeDrawLineFlag () {
+      if (this.dragstartFlag) {
+        this.dragstartFlag = false
+      }
+    },
+    // 变更状态
+    changeState (key) {
+      if (key === 'dragstartFlag') {
+        this.dragstartFlag = !this.dragstartFlag
+      }
+      if (key === 'drawLineFlag') {
+        this.drawLineFlag = !this.drawLineFlag
+        if (this.drawLineFlag) { // 开启钢笔
+          getTopology(this.meta2dId).drawLine('line')
+        } else {
+          getTopology(this.meta2dId).drawLine()
+        }
+      }
+    },
+    waiveDraw () {
+      this.drawLineFlag = false
+      getTopology(this.meta2dId).drawLine()
+      this.dragstartFlag = false
     },
     changeOption (key) {
       // getTopology(this.meta2dId).data[key] = this.option[key]
@@ -165,12 +227,13 @@ export default {
     undo () { // 撤销
       getTopology(this.meta2dId).undo()
       // getTopology(this.meta2dId).inactive()
-      bus.$emit('changeSelectPens', [])
+      // bus.$emit('changeSelectPens', [])
     },
     redo () { // 重做
       getTopology(this.meta2dId).redo()
+      // getTopology(this.meta2dId).render()
       // getTopology(this.meta2dId).inactive()
-      bus.$emit('changeSelectPens', [])
+      // bus.$emit('changeSelectPens', [])
     },
     centerView () { // 居中显示
       getTopology(this.meta2dId).centerView()
@@ -213,3 +276,8 @@ export default {
   }
 }
 </script>
+<style scoped lang="scss">
+  .is-active-meta2d {
+    background: #0000ff;
+  }
+</style>

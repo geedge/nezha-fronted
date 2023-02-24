@@ -35,12 +35,18 @@ export default {
         legends: [],
         title: '',
         titleShow: true
-      }
+      },
+      contextmenu: {
+        left: null,
+        top: null,
+        bottom: null
+      },
+      setContextmenu: true
     }
   },
   mixins: [topoUtil],
   methods: {
-    init () {
+    init: function () {
       const meta2dOptions = {
         minScale: 0.25,
         maxScale: 2
@@ -55,6 +61,7 @@ export default {
       // meta2d.registerCanvasDraw(chartsPens())
       /* 画布绑定事件 */
       meta2d.beforeAddPens = (pens) => { // 添加画笔前
+        bus.$emit('changeDrawState')
         if (pens.length === 1) {
           if (!pens[0].type) {
             this.nodeInit(pens[0])
@@ -69,7 +76,7 @@ export default {
         // 返回 true 允许 remove
         return true
       }
-      // getTopology(this.topoData)).on('translate', this.topTranslate) // 平移·
+      meta2d.on('translate', this.topTranslate) // 平移·
       meta2d.on('active', this.pensActive) // 选中·
       // meta2d.on('translatePens', () => {}) // 移动画笔结束·
       // meta2d.on('translatingPens', () => {}) // 移动画笔进行中·
@@ -77,15 +84,13 @@ export default {
       meta2d.on('leave', this.penLeave) // 移出画笔·
       // meta2d.on('add', this.appPen) // 添加新画笔·
       meta2d.on('click', this.topoClick) // click画笔·
-
       setTopology(this.meta2dId, meta2d)
     },
     reload () {
+      this.position.show = false
       const endTime = new Date().getTime()
       const startTime = endTime - 60 * this.params.timeType * 1000
-      console.log(startTime)
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
-        console.log(arr)
         this.clacTopoData(this.topoData, arr).then((data) => {
           getTopology(this.meta2dId).resize()
           getTopology(this.meta2dId).open(data)
@@ -110,6 +115,11 @@ export default {
         statistic: 'last',
         parent: '',
         value: '',
+        source: 'text',
+        textParent: '',
+        textLegend: '',
+        text: pen.text || '',
+        textValue: '',
         enable: {
           valueMapping: true,
           tooltip: true
@@ -184,6 +194,7 @@ export default {
       pen.visible = pen.visible || true
       pen.locked = pen.locked || 0
       pen.isBottom = true
+      pen.autoPlay = true
     },
     pensActive (pens, e) { // 选中节点
       this.selectPens = pens
@@ -198,9 +209,10 @@ export default {
         this.selectPens = []
       }
     },
+    topTranslate () {
+      this.setContextmenu = false
+    },
     penEnter (pen, e) { // 移入节点
-      console.log(pen, e, 'penEnter')
-      console.log(getTopology(this.meta2dId).getPenRect(pen))
       if (this.timer3) {
         clearTimeout(this.timer3)
         this.timer3 = null
@@ -217,7 +229,6 @@ export default {
         }
         this.timer3 = setTimeout(() => {
           let ePosition = window.ePosition
-          console.log(this.meta2dId, ePosition)
           let boxWidth = this.$refs.meta2dBox.offsetWidth
           let boxHeight = this.$refs.meta2dBox.offsetHeight
           this.position.left = ePosition.layerX
@@ -258,12 +269,10 @@ export default {
       }
     },
     tooltipOver () {
-      console.log('tooltipOver')
       clearTimeout(this.timer3)
       this.timer3 = null
     },
     tooltipOut () {
-      console.log('tooltipOut')
       this.timer3 = setTimeout(() => {
         this.position.show = false
         this.timer3 = null
@@ -287,8 +296,44 @@ export default {
     },
     exitEdit (isRefresh) {
       this.editFlag = false
+      this.position.show = false
       if (isRefresh) {
         this.$emit('reload')
+      }
+    },
+    beforeEdit () {
+      this.editFlag = true
+      this.contextmenu = {
+        left: null,
+        top: null,
+        bottom: null
+      }
+      this.position.show = false
+    },
+    onContextMenu (event) {
+      if (!this.setContextmenu) {
+        return
+      }
+      event.preventDefault()
+      event.stopPropagation()
+
+      if (event.clientY + 360 < document.body.clientHeight) {
+        this.contextmenu = {
+          left: event.clientX + 'px',
+          top: event.clientY + 'px'
+        }
+      } else {
+        this.contextmenu = {
+          left: event.clientX + 'px',
+          bottom: document.body.clientHeight - event.clientY + 'px'
+        }
+      }
+    },
+    contextmenuNone () {
+      this.contextmenu = {
+        left: null,
+        top: null,
+        bottom: null
       }
     }
   },

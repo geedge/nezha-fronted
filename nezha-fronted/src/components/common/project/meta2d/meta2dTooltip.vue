@@ -1,6 +1,6 @@
 <template>
-  <div class="tooltip-box" style="width: 400px;height: 300px">
-    <div v-if="params.titleShow && params.title">{{params.title}}</div>
+  <div class="tooltip-box" style="width: 400px;height: 300px;display: flex;flex-direction: column">
+    <div v-if="params.titleShow && params.title" style="margin-bottom: 5px">{{params.title}}</div>
 
     <div
       v-if="params.chartType === 'text'"
@@ -9,6 +9,7 @@
     </div>
     <panelChart
       v-else
+      style="flex: 1"
       ref="panelChart"
       :chart-info="chartInfo"
       :show-header="false"
@@ -47,37 +48,45 @@ export default {
     params: {
       immediate: true,
       handler (n) {
-        console.log(n, this.querysArray)
+        if (this.params.chartType == 'text') {
+          return
+        }
         this.chartInfo.type = this.params.chartType || 'line'
         const chartData = []
         const elements = []
         const obj = {}
         this.params.legends.forEach(item => {
           const findItem = this.queryValues.find(query => query.name === item.legend && query.parent === item.parent)
+          // if (findItem) {
+          //   // chartData.push([findItem])
+          //   if (obj[findItem.elements.name]) {
+          //     chartData[obj[findItem.elements.name].index].push(findItem)
+          //   } else {
+          //     chartData.push([findItem])
+          //     obj[findItem.elements.name] = {
+          //       index: chartData.length - 1
+          //     }
+          //     elements.push(findItem.elements)
+          //   }
+          // }
           if (findItem) {
-            // chartData.push([findItem])
-            if (obj[findItem.elements.name]) {
-              chartData[obj[findItem.elements.name].index].push(findItem)
-            } else {
-              chartData.push([findItem])
-              obj[findItem.elements.name] = {
-                index: chartData.length - 1
-              }
-              elements.push(findItem.elements)
+            chartData.push([findItem])
+            const element = {
+              ...findItem.elements
             }
+            if (item.alias) {
+              element.legend = item.alias
+            }
+            elements.push(element)
           }
         })
-        console.log(chartData)
         if (chartData.length && this.$refs.panelChart) {
           this.chartInfo.elements = elements
-          console.log(elements)
           this.$refs.panelChart.chartData = chartData
           this.$refs.panelChart.loading = false
           this.$nextTick(() => {
-            console.log(this.$refs.panelChart)
-            console.log(this.$refs.panelChart.$refs.chart)
-            console.log(this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id])
             this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id].initChart()
+            this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id].resize()
           })
         }
       }

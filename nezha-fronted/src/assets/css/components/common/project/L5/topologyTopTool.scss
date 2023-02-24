@@ -36,6 +36,9 @@
     line-height: 14px;
     margin-right: 10px;
   }
+  .is-active-meta2d.top-tool-item {
+    background: $--background-color-disabled;
+  }
   .top-tool-item-scale {
     margin-left: 40px;
     padding: 0;

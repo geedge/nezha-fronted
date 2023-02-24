@@ -8,23 +8,22 @@
 
   & > div {
     line-height: 2.2;
-    a {
-      color: $--color-text-primary;
+    color: $--color-text-primary;
+    &:hover {
+      color: $--color-primary;
+    }
+    span {
       display: block;
       padding: 0 0.2rem;
       text-decoration: none;
       cursor: pointer;
-
-      &:hover {
-        color: #1890ff;
-      }
 
       &.flex {
         display: flex;
       }
 
       &.disabled {
-        color: #ccc;
+        color: $--color-text-disabled;
         cursor: default;
       }
     }

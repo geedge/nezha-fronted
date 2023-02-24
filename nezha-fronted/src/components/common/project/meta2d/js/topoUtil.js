@@ -2,7 +2,7 @@ import { getTopology, setTopology, dealImg, topologyImg } from '@/components/com
 import bus from '@/libs/bus'
 import axios from 'axios'
 import { getMetricTypeValue } from '@/components/common/js/tools'
-import chartDataFormat from "@/components/chart/chartDataFormat";
+import chartDataFormat from '@/components/chart/chartDataFormat'
 export default {
   methods: {
     topoResize (id) {
@@ -138,14 +138,22 @@ export default {
           data.pens = []
         }
         data.pens.forEach(pen => {
+          pen.isBottom = false
           if (pen.isNz) {
             if (pen.data.legend && pen.data.enable.valueMapping) {
               const findItem = queryValues.find(query => query.name === pen.data.legend && query.parent === pen.data.parent)
-              console.log(findItem)
               if (findItem) {
                 pen.data.value = getMetricTypeValue(findItem.values, findItem.elements.statistic || 'last')
                 pen.data.showValue = chartDataFormat.getUnit(findItem.elements.unit).compute(pen.data.value, null, 2)
                 this.selectMapping(pen)
+              }
+            }
+            if (pen.data.source === 'legend' && pen.data.textParent && pen.data.textLegend) {
+              const findItem = queryValues.find(query => query.name === pen.data.textLegend && query.parent === pen.data.textParent)
+              if (findItem) {
+                const value = getMetricTypeValue(findItem.values, findItem.elements.statistic || 'last')
+                pen.data.textValue = chartDataFormat.getUnit(findItem.elements.unit).compute(value, null, 2)
+                pen.text = pen.data.textValue
               }
             }
           } else {
