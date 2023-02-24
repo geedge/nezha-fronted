@@ -194,21 +194,32 @@
               </div>
             </div>
             <div v-if="editAsset.showSSH">
-              <el-form-item :label="$t('asset.authType')" prop="authType">
+              <el-form-item
+                :label="$t('asset.authType')"
+                prop="authType"
+                :rules="[
+                  { required: editAsset.showSSH, message: $t('validate.required'), trigger: 'change' }
+                 ]">
                 <el-select v-model="editAsset.authType" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value" clearable>
                   <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="$t(type.label)" :value="type.value"/>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('profile.username')" prop="authUsername">
+              <el-form-item :label="$t('profile.username')" prop="authUsername" :rules="[
+                  { required: editAsset.showSSH, message: $t('validate.required'), trigger: 'change' }
+                 ]">
                 <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
               </el-form-item>
               <!-- Key支持私钥 -->
-              <template v-if="editAsset.authType === assetConstants.authTypeData.key">
+              <template v-if="editAsset.authType === assetConstants.authTypeData.key" :rules="[
+                  { required: editAsset.showSSH, message: $t('validate.required'), trigger: 'change' }
+                 ]">
                 <el-form-item :label="$t('asset.privateKey')" prop="authPriKey">
                   <el-input v-model="editAsset.authPriKey" size="small"/>
                 </el-form-item>
               </template>
-              <el-form-item :label="$t('login.pin')" prop="authPin">
+              <el-form-item :label="$t('login.pin')" prop="authPin" :rules="[
+                  { required: editAsset.showSSH && editAsset.authType != assetConstants.authTypeData.key && !editAsset.id, message: $t('validate.required'), trigger: 'change' }
+                 ]">
                 <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small" type="password" auto-complete="new-password" />
               </el-form-item>
               <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
@@ -224,10 +235,10 @@
               </div>
             </div>
             <div v-if="editAsset.showTelnet">
-              <el-form-item :label="$t('profile.username')" prop="authUsername">
+              <el-form-item :label="$t('profile.username')" prop="authUsername" :rules=" { required: editAsset.showSSH, message: $t('validate.required'), trigger: 'change' }">
                 <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
               </el-form-item>
-              <el-form-item :label="$t('login.pin')" prop="authPin">
+              <el-form-item :label="$t('login.pin')" prop="authPin" :rules=" { required: !editAsset.id, message: $t('validate.required'), trigger: 'change' }">
                 <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small"  type="password" auto-complete="new-password" />
               </el-form-item>
               <el-form-item :label="$t('asset.usernamePrompt')" prop="authUserTip">
@@ -460,9 +471,9 @@ export default {
         } else {
           editAsset.showSSH = false
         }
-        if (!editAsset.authType && editAsset.authUsername) {
+        if (editAsset.type && editAsset.type.authProtocol == assetConstants.authProtocolData.telnet && editAsset.authType) {
           editAsset.showTelnet = true
-        } else if (!editAsset.authType && !editAsset.authUsername) {
+        } else {
           editAsset.showTelnet = false
         }
         if (editAsset.type.snmpEnable === 1 && editAsset.snmpCredentialId) {
@@ -736,8 +747,12 @@ export default {
         this.editAsset.brandId = parseInt(this.editAsset.brandAndModel[0])
         this.editAsset.modelId = parseInt(this.editAsset.brandAndModel[1])
       }
-      if (this.editAsset.type.authProtocol !== assetConstants.authProtocolData.ssh) {
+      if (this.editAsset.type.authProtocol != assetConstants.authProtocolData.ssh) {
         this.editAsset.authType = ''
+      }
+      console.log(this.editAsset.type.authProtocol, assetConstants.authProtocolData.telnet, this.editAsset.showTelnet)
+      if (this.editAsset.type.authProtocol == assetConstants.authProtocolData.telnet && this.editAsset.showTelnet) {
+        this.editAsset.authType = 1
       }
       this.$refs.form.validate((valid) => {
         if (valid) {
