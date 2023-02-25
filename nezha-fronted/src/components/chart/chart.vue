@@ -250,7 +250,7 @@ import chartTopology from './chart/chartTopology'
 import chartBubble from './chart/chartBubble'
 import chartRank from './chart/chartRank'
 import chartSankey from './chart/chartSankey'
-import chartFunnel from './chart/chartFunnel'
+import chartFunnel from './chart/chartFunnelNew'
 import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable, isGauge, isClock, isTopology, isChartBubble, isChartRank, isSankey, isFunnel } from './chart/tools'
 import lodash from 'lodash'
 
