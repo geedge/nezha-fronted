@@ -200,7 +200,7 @@
                 :rules="[
                   { required: editAsset.showSSH, message: $t('validate.required'), trigger: 'change' }
                  ]">
-                <el-select v-model="editAsset.authType" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value" clearable>
+                <el-select @change="selectAuthType" v-model="editAsset.authType" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value" clearable>
                   <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="$t(type.label)" :value="type.value"/>
                 </el-select>
               </el-form-item>
@@ -210,15 +210,15 @@
                 <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
               </el-form-item>
               <!-- Key支持私钥 -->
-              <template v-if="editAsset.authType === assetConstants.authTypeData.key" :rules="[
-                  { required: editAsset.showSSH, message: $t('validate.required'), trigger: 'change' }
-                 ]">
-                <el-form-item :label="$t('asset.privateKey')" prop="authPriKey">
+              <template v-if="editAsset.authType === assetConstants.authTypeData.key">
+                <el-form-item :label="$t('asset.privateKey')" prop="authPriKey" :key="'authPriKey'"
+                              :rules="[{ required: requiredPriKey, message: $t('validate.required'), trigger: 'change' }]"
+                >
                   <el-input v-model="editAsset.authPriKey" size="small"/>
                 </el-form-item>
               </template>
               <el-form-item :label="$t('login.pin')" prop="authPin" :rules="[
-                  { required: editAsset.showSSH && editAsset.authType != assetConstants.authTypeData.key && !editAsset.id, message: $t('validate.required'), trigger: 'change' }
+                  { required: editAsset.showSSH && editAsset.authType != assetConstants.authTypeData.key && requiredPin, message: $t('validate.required'), trigger: 'change' }
                  ]">
                 <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small" type="password" auto-complete="new-password" />
               </el-form-item>
@@ -238,7 +238,7 @@
               <el-form-item :label="$t('profile.username')" prop="authUsername" :rules=" { required: editAsset.showTelnet, message: $t('validate.required'), trigger: 'change' }">
                 <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
               </el-form-item>
-              <el-form-item :label="$t('login.pin')" prop="authPin" :rules=" { required: !editAsset.id, message: $t('validate.required'), trigger: 'change' }">
+              <el-form-item :label="$t('login.pin')" prop="authPin" :rules=" { required: requiredPin, message: $t('validate.required'), trigger: 'change' }">
                 <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small"  type="password" auto-complete="new-password" />
               </el-form-item>
               <el-form-item :label="$t('asset.usernamePrompt')" prop="authUserTip">
@@ -354,6 +354,8 @@ export default {
     const vm = this
     return {
       assetConstants,
+      requiredPin: true,
+      requiredPriKey: true,
       judgeTypes: true,
       showAllTalonOption: false,
       showAddressOption: true,
@@ -468,8 +470,12 @@ export default {
         const editAsset = JSON.parse(JSON.stringify(n))
         if (editAsset.authType) {
           editAsset.showSSH = true
+          this.requiredPin = false
+          this.requiredPriKey = false
         } else {
           editAsset.showSSH = false
+          this.requiredPin = true
+          this.requiredPriKey = true
         }
         if (editAsset.type && editAsset.type.authProtocol == assetConstants.authProtocolData.telnet && editAsset.authType) {
           editAsset.showTelnet = true
@@ -520,6 +526,7 @@ export default {
               this.editAsset.authProtocolPort = 23
             }
           }
+          // this.requiredPin = true
         }
       }
     },
@@ -750,7 +757,6 @@ export default {
       if (this.editAsset.type.authProtocol != assetConstants.authProtocolData.ssh) {
         this.editAsset.authType = ''
       }
-      console.log(this.editAsset.type.authProtocol, assetConstants.authProtocolData.telnet, this.editAsset.showTelnet)
       if (this.editAsset.type.authProtocol == assetConstants.authProtocolData.telnet && this.editAsset.showTelnet) {
         this.editAsset.authType = 1
       }
@@ -926,6 +932,15 @@ export default {
           callback(new Error(this.$t('validate.required')))
         }
       }, 100)
+    },
+    selectAuthType () {
+      if (this.editAsset.authType != this.obj.authType) {
+        if (this.editAsset.authType == 1) {
+          this.requiredPin = true
+        } else {
+          this.requiredPriKey = true
+        }
+      }
     }
   }
 }
