@@ -377,6 +377,10 @@
     .text-too-long {
       display: none;
     }
+    .ql-editor{
+      padding: 12px 10px;
+    }
+
     .ql-editor.ql-blank::before {
       font-style: normal;
       color: $--color-text-placeholder;
