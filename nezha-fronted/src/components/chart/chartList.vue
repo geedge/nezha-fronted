@@ -44,6 +44,7 @@
         @container-resized="containerResizedEvent"
       >
         <panel-chart
+          :variablesInit="variablesInit"
           :ref="'chart' + item.id"
           @edit-chart="$emit('edit-chart', item)"
           :chart-info="item"
@@ -68,18 +69,17 @@
     </div>
     <!-- 全屏查看 -->
     <el-dialog
+      class="nz-dialog chart-fullscreen"
       v-if="fullscreen.visible"
       :visible.sync="fullscreen.visible"
       :show-close="false"
-      class="nz-dialog chart-fullscreen"
       destroy-on-close
       fullscreen
-      :modal-append-to-body="false"
+      :append-to-body="true"
     >
       <panel-chart
         :ref="'chart-fullscreen' + fullscreen.chartInfo.id"
         :chart-info="fullscreen.chartInfo"
-        :variablesInit="variablesInit"
         :from="from"
         :filter="filter"
         :is-fullscreen="true"
@@ -344,8 +344,18 @@ export default {
           this.$store.commit('setChartLastPosition', position)
         })
       }
+      this.copyDataList.forEach(item => {
+        this.tempList.forEach(subItem => {
+          if (item.id == subItem.id) {
+            subItem.y = item.y
+          }
+        })
+      })
     },
     onScroll (scrollTop = 0, groupTop = 0) {
+      if (!this.variablesInit) { // 变量未加载完成 不请求数据
+        return
+      }
       const self = this
       if (this.scrollTopTimer) {
         clearTimeout(this.scrollTopTimer)
@@ -395,7 +405,7 @@ export default {
             if ((mainOffsetTop + mainHeight / 4) < (windowScrollTop + windowHeight)) {
               item.loaded = true
               setTimeout(() => {
-                this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0].getChartData()
+                this.$refs['chart' + item.id] && this.$refs['chart' + item.id][0] && this.$refs['chart' + item.id][0].getChartData()
               }, i * 100)
               i++
             }
@@ -481,7 +491,7 @@ export default {
     // 比较变量 图表是否显示/隐藏
     compareVariables () {
       // 防止group中的chartList执行
-      if (this.groupInfo) {
+      if (this.isGroup) {
         return
       }
       const isRegExp = (v) => {
@@ -557,7 +567,6 @@ export default {
       if (!this.panelLock) {
         return false
       }
-      this.copyDataList = JSON.parse(JSON.stringify(this.tempList))
       for (let i = 0; i < this.copyDataList.length; i++) {
         const item = this.copyDataList[i]
         if ((this.$loadsh.get(this.showHidden[item.id], 'visibility') && this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'hidden') && item.id !== -2) {
@@ -565,18 +574,18 @@ export default {
           i--
         }
       }
-      // this.tempList.forEach(item => {
-      //   if ((!this.$loadsh.get(this.showHidden[item.id], 'visibility') || this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'show') && item.id !== -2 && !this.copyDataList.find(chart => chart.id === item.id)) {
-      //     this.copyDataList.push(item)
-      //   }
-      // })
+      this.tempList.forEach(item => {
+        if ((!this.$loadsh.get(this.showHidden[item.id], 'visibility') || this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'show') && item.id !== -2 && !this.copyDataList.find(chart => chart.id === item.id)) {
+          this.copyDataList.push(item)
+        }
+      })
       this.onScroll(this.scrollTop)
     },
 
     // group设置repeat 便利变量重复渲染图表
     repeatVariableFn () {
       // 防止group中的chartList执行
-      if (this.groupInfo) {
+      if (this.isGroup) {
         return
       }
       // 先删除掉复制的数据
@@ -608,11 +617,13 @@ export default {
           const item = arr[index]
           const repeatVariable = this.$loadsh.get(item.param.repeat, 'variable')
           const repeatEnable = this.$loadsh.get(item.param.enable, 'repeat')
-          if (item.type === 'group' && repeatVariable && this.$loadsh.get(this.showHidden[item.id], 'visibility') !== 'hidden' && repeatEnable) {
+          const visibility = this.$loadsh.get(this.showHidden[item.id], 'visibility') !== 'hidden'
+          if (item.type === 'group' && repeatVariable && repeatEnable && visibility) {
             const itemPrev = arr[index - 1]
             const repeatPrevVariable = this.$loadsh.get(itemPrev.param.repeat, 'variable')
-            const repeatPrevEnable = this.$loadsh.get(item.param.enable, 'repeat')
-            if (itemPrev && itemPrev.type === 'group' && repeatPrevVariable === repeatVariable && repeatPrevEnable) {
+            const repeatPrevEnable = this.$loadsh.get(itemPrev.param.enable, 'repeat')
+            const itemVisibility = this.$loadsh.get(this.showHidden[itemPrev.id], 'visibility') !== 'hidden'
+            if (itemPrev && itemPrev.type === 'group' && repeatPrevVariable === repeatVariable && repeatPrevEnable && itemVisibility) {
               const arr = variablesRepeat[repeatVariable]
               arr[arr.length - 1].repeatArr.push(item)
               arr[arr.length - 1].lastGroup = item
@@ -716,6 +727,10 @@ export default {
         if (!flag) {
           this.tempList.forEach(item => {
             if (!this.copyDataList.find(chart => chart.id === item.id)) {
+              delete item.repeatIndex
+              delete item.repeatVariable
+              delete item.repeatValue
+              item.y -= 0.03
               this.copyDataList.push(item)
             }
           })
@@ -746,7 +761,7 @@ export default {
           const position = getLayoutPosition(n)
           this.$store.commit('setChartLastPosition', position)
         }
-        let tempList = n.map(item => {
+        const tempList = n.map(item => {
           let param = ''
           let height = ''
           if (this.isPhone && item.type !== 'group') {
@@ -809,7 +824,6 @@ export default {
           this.compareVariables()
 
           this.repeatVariableFn()
-          tempList = null
           setTimeout(() => {
             this.gridLayoutShow = true
             if (!this.isGroup) {
