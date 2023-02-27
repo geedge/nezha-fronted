@@ -1,6 +1,6 @@
 <template>
   <div class="tooltip-box" style="width: 400px;height: 300px;display: flex;flex-direction: column">
-    <div v-if="params.titleShow && params.title" style="margin-bottom: 5px">{{params.title}}</div>
+    <div v-if="params.titleShow && params.title" style="margin-bottom: 5px" class="tooltip-box-title">{{params.title}}</div>
 
     <div
       v-if="params.chartType === 'text'"

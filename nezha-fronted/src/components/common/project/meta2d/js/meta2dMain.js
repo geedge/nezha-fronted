@@ -218,6 +218,7 @@ export default {
         this.timer3 = null
       }
       this.position.show = false
+      console.log(pen)
       if (!pen.type && pen.data.enable.tooltip) {
         if (!pen.data.tooltip.legends.length) {
           return
