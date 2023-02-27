@@ -24,7 +24,7 @@
               </template>
               <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons image-box-item">
                 <img :src="btn.image" v-if="btn.image" class="image-src" @click.stop="selectImageChange(btn)">
-                <div class="img-text text-ellipsis" :title="item.imageName">{{item.imageName}}</div>
+<!--                <div class="img-text text-ellipsis" :title="item.imageName">{{item.imageName}}</div>-->
                 <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click.stop="tooltipDelete(btn)"></i>
               </div>
             </el-collapse-item>
@@ -116,6 +116,7 @@ export default {
   data () {
     return {
       tools: [],
+      title: this.$t('overall.uploadCustomPicture'),
       imgageLoading: false,
       iconArray: [],
       selectBoxShow: false,
@@ -367,5 +368,18 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .image-box-item{
+
+  }
+.image-box-item {
+
+}
+  .image-box-item:hover {
+    border-color: #fa901c;
+    .delIcon {
+      display: inline-block;
+      color: #fa901c;
+    }
+  }
 
 </style>

@@ -23,13 +23,13 @@
     <div class="line"></div>
     <div>
       <span @click="undo()" class="flex" :class="{disabled:!( historyIndex > -1 && !isNull(historyIndex))}">
-        <span class="full">{{$t('project.topology.undo')}}</span>
+        <span class="full">{{$t('overall.undo')}}</span>
         <span class="ml50">Ctrl + Z</span>
       </span>
     </div>
     <div>
       <span @click="redo()" class="flex" :class="{disabled: historyIndex >= historiesLength - 1 }">
-        <span class="full">{{$t('project.topology.redo')}}</span>
+        <span class="full">{{$t('overall.redo')}}</span>
         <span class="ml50">Shift + Z</span>
       </span>
     </div>

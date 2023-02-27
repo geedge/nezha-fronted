@@ -84,6 +84,10 @@
   }
   .meta2d-image-box{
     position: relative;
+    .el-collapse-item__content{
+      display: flex;
+      flex-wrap: wrap;
+    }
     .image-box {
       width: 30px;
       height: 30px;
@@ -114,16 +118,19 @@
         margin-bottom: 2px;
       }
       .image-box-item {
-        width: 30px;
-        height: 30px;
-        margin: 5px 10px 10px 0;
         flex-direction: column;
         align-items: center;
         display: inline-block;
         position: relative;
+        width: 47px;
+        height: 47px;
+        margin: 0;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid transparent;
         .image-src{
-          width: 30px;
-          height: 30px;
+          width: 31px;
+          height: 31px;
         }
         .image-text {
           width: 100%;
@@ -134,8 +141,16 @@
         }
         .delIcon{
           position: absolute;
-          right: -6px;
-          top: -8px;
+          right: 0;
+          top: -5px;
+          display: none;
+        }
+      }
+      .image-box-item:hover {
+        border-color: $--color-primary;
+        .delIcon {
+          display: inline-block;
+          color: $--color-primary;
         }
       }
       .upload-pic-box{
