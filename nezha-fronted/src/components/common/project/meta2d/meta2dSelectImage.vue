@@ -335,35 +335,23 @@ export default {
               })
               if (group) {
                 group.children.push({
-                  ...imageTemp,
-                  data: {
-                    ...imageTemp.data,
-                    text: res.data.imageName,
-                    image: data.data,
-                    imageId: res.data.id,
-                    unit: this.uploadPic.unit,
-                    rect: {
-                      width: data.width,
-                      height: data.height
-                    }
-                  }
+                  text: res.data.imageName,
+                  imageName: res.data.imageName,
+                  image: data.data,
+                  imageId: res.data.id,
+                  id: res.data.id,
+                  unit: this.uploadPic.unit,
                 })
               } else {
                 this.tools.push({
                   group: this.uploadPic.unit,
                   children: [{
-                    ...imageTemp,
-                    data: {
-                      ...imageTemp.data,
-                      text: res.data.imageName,
-                      image: data.data,
-                      imageId: res.data.id,
-                      unit: this.uploadPic.unit,
-                      rect: {
-                        width: data.width,
-                        height: data.height
-                      }
-                    }
+                    text: res.data.imageName,
+                    imageName: res.data.imageName,
+                    image: data.data,
+                    imageId: res.data.id,
+                    id: res.data.id,
+                    unit: this.uploadPic.unit
                   }]
                 })
               }
