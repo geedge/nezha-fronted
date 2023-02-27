@@ -105,7 +105,7 @@
       :from="'endpoint'"
       :forceDeleteShow="forceDeleteShow"
       :deleteTitle="deleteTitle"
-      :type="'link'"
+      type=""
       :title="$t('overall.delete')"
       :api="api"
       :single="single"
