@@ -27,9 +27,7 @@
               <div class="col-resize-area"></div>
             </template>
             <template slot-scope="scope" :column="item">
-              <template v-if="item.prop === 'type'">
-              </template>
-              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+              <span v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <template v-else>-</template>
             </template>
           </el-table-column>
@@ -67,12 +65,12 @@ export default {
           prop: 'remark',
           show: true,
           minWidth: 250
+        },
+        {
+          label: this.$t('overall.type'),
+          prop: 'type',
+          width: 150
         }
-        // {
-        //   label: this.$t('alert.config.unit'),
-        //   prop: 'unit',
-        //   width: 150
-        // }
       ],
       loading: false,
       tableData: [],
