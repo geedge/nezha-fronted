@@ -156,10 +156,10 @@ export default {
             readonly: true,
             disabled: false
           }, {
-            id: 17,
+            id: 'state',
             name: this.$t('overall.state'),
-            type: 'terminalStatus',
-            label: 'state',
+            type: 'select',
+            label: 'terminalStatus',
             readonly: true,
             disabled: false
           }
