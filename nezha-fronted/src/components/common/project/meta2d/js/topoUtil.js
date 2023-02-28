@@ -206,6 +206,7 @@ export default {
         pen.animateColor = mapping.color.bac
         pen.borderColor = mapping.color.border
         pen.color = mapping.color.text
+        console.log(!!pen.lineAnimateType)
         if (pen.lineAnimateType) {
           pen.autoPlay = true
         }
