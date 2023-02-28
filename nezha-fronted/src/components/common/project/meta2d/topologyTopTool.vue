@@ -1,10 +1,13 @@
 <template>
   <div class="tool-top" id="tool-top"  @mouseup="changeDrawLineFlag(false)">
-    <div id="tools-left-drag" class="top-tool-item" :title="$t('project.topology.addNode')" :class="dragstartFlag ? 'is-active-meta2d' : ''">
+    <div id="tools-left-drag"
+         class="top-tool-item"
+         :title="$t('project.topology.addNode')"
+         :class="dragstartFlag ? 'is-active-meta2d' : ''"
+         draggable="true"
+         @mousedown="changeState('dragstartFlag')"
+         @dragstart.stop="onDragstart($event)">
       <div
-        draggable="true"
-        @mousedown="changeState('dragstartFlag')"
-        @dragstart.stop="onDragstart($event)"
       >
         <i class="nz-icon nz-icon-zhengfangxing" />
       </div>

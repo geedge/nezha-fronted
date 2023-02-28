@@ -58,6 +58,15 @@
     justify-content: space-between;
     margin-bottom: 15px;
     text-transform: initial;
+    .nz-icon-arrow-down{
+      display: inline-block;
+      transition: transform .3s;
+    }
+    .nz-icon-arrow-down.is-rotate{
+      transform: rotate(
+          -90deg
+      );
+    }
   }
   .form-row-content{
     margin-bottom: 5px;
@@ -162,6 +171,11 @@
       .upload-pic-box{
         width: 100%;
       }
+    }
+  }
+  .nz-color {
+    .vc-input__input {
+      font-size: 14px;
     }
   }
 }

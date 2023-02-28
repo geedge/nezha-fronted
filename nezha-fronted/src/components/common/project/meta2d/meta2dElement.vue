@@ -8,7 +8,7 @@
           <!--        Position  -->
           <div class="form-row-title">
             {{$t('project.topology.position')}}
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('position')"/>
+            <i class="nz-icon nz-icon-arrow-down"  :class="elements.position?'':'is-rotate'" @click="updateShow('position')"/>
           </div>
           <div v-show="elements.position" class="form-row-content">
             <div class="form-row-item">
@@ -126,7 +126,7 @@
           <!--         Border -->
           <div class="form-row-title">
             {{ $t('project.topology.border') }}
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('border')"/>
+            <i class="nz-icon nz-icon-arrow-down" :class="elements.border?'':'is-rotate'" @click="updateShow('border')"/>
           </div>
           <div v-show="elements.border" class="form-row-content">
             <div class="form-row-item special-meta2d-select">
@@ -216,7 +216,7 @@
           <!--         backGround -->
           <div class="form-row-title">
             {{$t('project.topology.bac')}}
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('backGround')"/>
+            <i class="nz-icon nz-icon-arrow-down" :class="elements.backGround?'':'is-rotate'" @click="updateShow('backGround')"/>
           </div>
           <div v-show="elements.backGround" class="form-row-content">
             <div class="form-row-item">
@@ -278,7 +278,7 @@
           <!--         text -->
           <div class="form-row-title">
             {{$t('project.topology.text')}}
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('text')"/>
+            <i class="nz-icon nz-icon-arrow-down" :class="elements.text?'':'is-rotate'" @click="updateShow('text')"/>
           </div>
           <div v-show="elements.text" class="form-row-content">
             <div class="form-row-item">
@@ -398,7 +398,7 @@
           <!--        Line  -->
           <div class="form-row-title">
             {{$t('project.topology.line')}}
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('line')"/>
+            <i class="nz-icon nz-icon-arrow-down" :class="elements.line?'':'is-rotate'" @click="updateShow('line')"/>
           </div>
           <div v-show="elements.line" class="form-row-content">
             <div class="form-row-item special-meta2d-select">
@@ -712,7 +712,7 @@
                 :inactive-value="false"
                 @change="change('data.enable.valueMapping')"
               ></el-switch>
-              <i class="nz-icon nz-icon-arrow-down" @click="updateShow('valueMapping')"/>
+              <i class="nz-icon nz-icon-arrow-down" :class="elements.valueMapping&& pen.data.enable.valueMapping?'':'is-rotate'" @click="updateShow('valueMapping')"/>
             </span>
       </div>
       <transition name="el-zoom-in-top">
@@ -930,7 +930,7 @@
                 :inactive-value="false"
                 @change="change('data.enable.tooltip')"
               ></el-switch>
-              <i class="nz-icon nz-icon-arrow-down" @click="updateShow('tooltip')"/>
+              <i class="nz-icon nz-icon-arrow-down" :class="elements.tooltip&& pen.data.enable.tooltip?'':'is-rotate'" @click="updateShow('tooltip')"/>
             </span>
       </div>
       <transition name="el-zoom-in-top">
