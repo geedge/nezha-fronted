@@ -223,6 +223,15 @@ export default {
         if (!pen.data.tooltip.legends.length) {
           return
         }
+        let positionShow = false
+        pen.data.tooltip.legends.forEach(item=>{
+          if (item.legend) {
+            positionShow = true
+          }
+        })
+        if (!positionShow) {
+          return;
+        }
         this.chartParams = {
           ...pen.data.tooltip,
           unit: this.params.unit,
