@@ -116,6 +116,16 @@ export default {
         this.$emit('colorChange', color.hex, this.keyName)
       }
     },
+    update () {
+      if (!this.isTopo) {
+        this.keyName = this.valueArr[0].name
+        this.colors = this.valueArr[0].value || randomcolor() + 'FF'
+        this.$emit('colorChange', this.colors, this.keyName)
+      } else {
+        this.keyName = this.valueArr[0].name
+        this.colors = this.valueArr[0].value
+      }
+    },
     changeColor () {
       this.showColorPicker = !this.showColorPicker
       if (this.showColorPicker) {
