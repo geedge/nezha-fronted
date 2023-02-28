@@ -674,6 +674,9 @@ textarea {
     box-sizing: border-box;
   }
 }
+.el-dialog__header{
+  position: relative;
+}
 .el-message__content{
   white-space:pre-line
 }
