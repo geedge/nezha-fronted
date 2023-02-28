@@ -585,6 +585,7 @@ export default {
       return '-'
     },
     resetState (type) {
+      console.log(type)
       if (type == 'sizeOrderType') {
         this.dateOrderType = 0
         this.nameOrderType = 0
@@ -603,7 +604,7 @@ export default {
       if (!orderType) {
         orderType = this[key] === 'asc' ? 'desc' : 'asc'
       }
-      this.resetState(orderType)
+      this.resetState(key)
       if (this[key] == orderType) {
         this[key] = 0
         this.fileList = this.oldFileList

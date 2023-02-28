@@ -551,6 +551,10 @@ export default {
           val.val = selectItem.name
           val.valnum = selectItem.id
           val.valString = ''
+        } else if (val.type == 'terminalStatus' && selectItem.searchType == 'terminalStatus') {
+          val.val = selectItem.label
+          val.valnum = selectItem.id
+          val.valString = ''
         } else if (val.type == 'assetType' && selectItem.searchType == 'assetType') {
           val.val = selectItem.name
           val.valnum = selectItem.id
@@ -957,6 +961,8 @@ export default {
               objectInfo.type = val.valnum
             } else if (val.label === 'assetState') {
               objectInfo.stateIds = val.valnum
+            }else if (val.label === 'terminalStatus') {
+              objectInfo.state = val.valnum
             } else if (val.label === 'assetType') {
               objectInfo.typeIds = val.valnum
             } else if (val.label === 'credentialType') {
@@ -1010,6 +1016,8 @@ export default {
             objectInfo.projectIds = val.valnum
           } else if (val.label === 'assetState') {
             objectInfo.stateIds = val.valnum
+          } else if (val.label === 'terminalStatus') {
+            objectInfo.state = val.valnum
           } else if (val.label === 'assetType') {
             objectInfo.typeIds = val.valnum
           } else if (val.type === 'brand') {
