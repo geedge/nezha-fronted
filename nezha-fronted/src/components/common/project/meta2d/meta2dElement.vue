@@ -1,5 +1,5 @@
 <template>
-  <div class="pens-data right-box__container">
+  <div class="pens-data right-box__container" :key="pen.id">
     <div v-if="pen.id">
 <!--      <el-input-number v-model="pen.x" @change="change('x')"/>-->
 <!--      node-->
@@ -186,6 +186,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenColor'"
                   :isTopo="true"
                   :value-arr="[{name:'color',value: pen.color}]"
                   @colorChange="colorChange"/>
@@ -225,6 +226,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenBackground'"
                   :isTopo="true"
                   :value-arr="[{name:'background',value: pen.background}]"
                   @colorChange="colorChange"/>
@@ -287,6 +289,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenTextColor'"
                   :isTopo="true"
                   :value-arr="[{name:'textColor',value: pen.textColor}]"
                   @colorChange="colorChange"/>
@@ -569,6 +572,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenColor'"
                   :isTopo="true"
                   :value-arr="[{name:'color',value: pen.color}]"
                   @colorChange="colorChange"/>
@@ -600,6 +604,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenBorderColor'"
                   :isTopo="true"
                   :value-arr="[{name:'borderColor',value: pen.borderColor}]"
                   @colorChange="colorChange"/>
@@ -655,14 +660,14 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                {{$t('project.topology.speed')}} (0 - 10)
+                {{$t('project.topology.speed')}} (1 - 10)
               </div>
               <div class="form-row-value">
                 <el-input-number
                   @focus="inputFocus"
                   @blur="inputBlur"
                   :step="1"
-                  :min="0"
+                  :min="1"
                   :max="10"
                   :precision="0"
                   controls-position="right"
@@ -680,6 +685,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenAnimateColor'"
                   :isTopo="true"
                   :value-arr="[{name:'animateColor',value: pen.animateColor}]"
                   @colorChange="colorChange"/>
@@ -1023,6 +1029,7 @@ export default {
       immediate: true,
       handler (n) {
         this.pen = n[0]
+        this.nzColorUpdate()
         // todo 判断legend 是否还存在
         // this.$forceUpdate()
       }
@@ -1038,6 +1045,7 @@ export default {
     return {
       theme: theme,
       pen: {},
+      refsArr: ['nezhaColorPenColor', 'nezhaColorPenBackground', 'nezhaColorPenTextColor', 'nezhaColorPenBorderColor', 'nezhaColorPenAnimateColor'],
       chartType: [
         { id: 'line', name: 'Line' },
         { id: 'area', name: 'Area' },
@@ -1169,6 +1177,9 @@ export default {
           this.pen.text = this.pen.data.textValue
         }
       }
+      if (key === 'lineAnimateType') {
+        this.pen.autoPlay = false
+      }
       this.$emit('change', key)
     },
     updateImage (image) {
@@ -1263,6 +1274,13 @@ export default {
         parent: '',
         legend: '',
         alias: ''
+      })
+    },
+    nzColorUpdate () {
+      this.refsArr.forEach(item => {
+        if (this.$refs[item]) {
+          this.$refs[item].update()
+        }
       })
     }
 

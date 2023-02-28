@@ -282,12 +282,6 @@ export default {
           text: this.$t('dashboard.panel.lastSevenDay'),
           type: 'date',
           value: 7 * 24 * 60
-        },
-        {
-          id: 11,
-          text: this.$t('dashboard.panel.lastThirtyDay'),
-          type: 'date',
-          value: 30 * 24 * 60
         }
       ]
     }

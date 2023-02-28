@@ -178,7 +178,7 @@ export default {
         }
       }
       pen.disableInput = pen.disableInput || true
-      pen.lineAnimateType = pen.lineAnimateType || 0
+      pen.lineAnimateType = pen.lineAnimateType || undefined
       pen.animateSpan = pen.animateSpan || 1
       pen.animateReverse = pen.animateReverse || false
       pen.fromArrow = pen.fromArrow || ''
@@ -222,6 +222,15 @@ export default {
       if (!pen.type && pen.data.enable.tooltip) {
         if (!pen.data.tooltip.legends.length) {
           return
+        }
+        let positionShow = false
+        pen.data.tooltip.legends.forEach(item=>{
+          if (item.legend) {
+            positionShow = true
+          }
+        })
+        if (!positionShow) {
+          return;
         }
         this.chartParams = {
           ...pen.data.tooltip,
@@ -286,7 +295,14 @@ export default {
       if (key === 'lineName') {
         getTopology(this.meta2dId).updateLineType(pen, pen[key])
       }
-      getTopology(this.meta2dId).setValue(obj)
+      if (key === 'lineAnimateType') {
+        if (!pen[key]) {
+          obj.autoPlay = false
+        } else {
+          obj.autoPlay = true
+        }
+      }
+      getTopology(this.meta2dId).setValue(obj) // 更新pen
       if (key === 'lineAnimateType') {
         if (!pen[key]) {
           getTopology(this.meta2dId).stopAnimate(pen.id)
