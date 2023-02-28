@@ -989,7 +989,7 @@
             </div>
           </div>
           <div @click="addTooltipLegend" class="thresholds-add">
-            {{$t('overall.addTooltipLegend')}}
+           <i class="nz-icon nz-icon-add" /> {{$t('overall.addTooltipLegend')}}
           </div>
         </div>
       </div>

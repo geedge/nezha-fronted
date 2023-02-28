@@ -2,6 +2,11 @@
   .el-tab-pane{
     height: 100%;
   }
+  .el-switch{
+    .el-switch__core {
+      background-color: $--el-switch-background;
+    }
+  }
   .props-box {
     width: 500px;
     position: absolute;
@@ -9,7 +14,7 @@
     top: 61px;
     padding: 0 !important;
     box-sizing: border-box;
-    right: 0;
+    right: -1px;
     background: $--background-color-empty;
   }
   .form-row-item{
@@ -52,7 +57,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
-    text-transform: capitalize;
+    text-transform: initial;
   }
   .form-row-content{
     margin-bottom: 5px;
