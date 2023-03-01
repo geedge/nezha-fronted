@@ -58,7 +58,7 @@
           </el-form-item>
         <!--group-->
         <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="form-item--half-width" prop="group">
-          <el-select id="chart-box-group" v-model="editChart.groupId" :disabled="editChart.type==='group'" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
+          <el-select id="chart-box-group" v-model="editChart.groupId" :disabled="editChart.type==='group'" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside el-option-width303" size="small" value-key="chartType">
             <el-option v-for="item in groupArr" :key="item.id" :label="item.name" :value="item.id">
               <span class="panel-dropdown-label-txt" >{{item.name}}</span>
             </el-option>
