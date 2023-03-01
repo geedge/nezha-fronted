@@ -57,6 +57,7 @@ export default {
           this.getTableData()
         }).catch(res => {
           this.$refs.loading.endLoading()
+          this.loading = false
         })
       }
     }

@@ -58,6 +58,7 @@ export default {
         }).catch(res => {
           this.ringTableData.push([])
           this.$refs.loading.endLoading()
+          this.loading = false
         })
       }
     }
