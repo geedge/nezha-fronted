@@ -58,6 +58,7 @@ export default {
         }).catch(res => {
           this.$refs.loading.endLoading()
           this.loading = false
+          this.$message.error(res.msg)
         })
       }
     }
@@ -107,7 +108,7 @@ export default {
             this.readyTableData = response.data.status
             resolve()
           } else {
-            reject()
+            reject(response)
           }
         })
       })

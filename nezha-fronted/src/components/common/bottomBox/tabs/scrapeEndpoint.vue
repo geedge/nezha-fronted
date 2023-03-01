@@ -85,7 +85,7 @@ export default {
       }, 500)
     },
     obj: {
-      immediate: true,
+      // immediate: true,
       deep: true,
       handler (n, o) {
         if (n) {
@@ -124,40 +124,45 @@ export default {
         this.$set(this.searchLabel, 'agentId', this.obj.id)
         this.$set(this.searchLabel, 'type', this.obj.type)
         this.$get(this.url, { ...this.searchLabel }).then(response => {
-          this.tools.loading = false
-          this.tableData = response.data.activeTargets.map(item => {
-            const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'dc', 'project', 'parent_asset', 'user']
-            buildIn.forEach(label => {
-              if (label === 'dc') {
-                item[label] = {
-                  id: item.labels['datacenter' + '_id'],
-                  position: {},
-                  loading: false
+          if (response.code === 200) {
+            this.tools.loading = false
+            this.tableData = response.data.activeTargets.map(item => {
+              const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'dc', 'project', 'parent_asset', 'user']
+              buildIn.forEach(label => {
+                if (label === 'dc') {
+                  item[label] = {
+                    id: item.labels['datacenter' + '_id'],
+                    position: {},
+                    loading: false
+                  }
+                } else {
+                  item[label] = {
+                    id: item.labels[label + '_id'],
+                    position: {},
+                    loading: false
+                  }
                 }
-              } else {
-                item[label] = {
-                  id: item.labels[label + '_id'],
-                  position: {},
-                  loading: false
-                }
-              }
+              })
+              return item
             })
-            return item
-          })
-          const globalSearchId = this.$store.getters.getGlobalSearchId
-          let detailViewRightObj = ''
-          if (globalSearchId) {
-            detailViewRightObj = this.tableData.find(item => item.id === globalSearchId)
+            const globalSearchId = this.$store.getters.getGlobalSearchId
+            let detailViewRightObj = ''
+            if (globalSearchId) {
+              detailViewRightObj = this.tableData.find(item => item.id === globalSearchId)
+            } else {
+              detailViewRightObj = this.tableData[0]
+            }
+            this.detailViewRightObj = this.$loadsh.cloneDeep(detailViewRightObj)
+            this.inputDateQuery = this.handlerTableData(this.tableData)
+            this.pageObj.total = this.tableData.length
+            if (!this.scrollbarWrap) {
+              this.$nextTick(() => {
+                this.handleCurrentChange()
+              })
+            }
           } else {
-            detailViewRightObj = this.tableData[0]
-          }
-          this.detailViewRightObj = this.$loadsh.cloneDeep(detailViewRightObj)
-          this.inputDateQuery = this.handlerTableData(this.tableData)
-          this.pageObj.total = this.tableData.length
-          if (!this.scrollbarWrap) {
-            this.$nextTick(() => {
-              this.handleCurrentChange()
-            })
+            this.tools.loading = false
+            this.$message.error(response.msg)
           }
         })
       }, 500)
