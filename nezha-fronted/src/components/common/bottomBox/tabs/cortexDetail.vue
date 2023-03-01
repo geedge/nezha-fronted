@@ -49,12 +49,13 @@ export default {
       immediate: true,
       deep: true,
       async handler (n) {
-        await this.getReadyTableData()
-        await this.getIngesterTableData()
-        await this.getStoreGatewayTableData()
-        await this.getCompactorTableData()
-        await this.getConfigTableData()
-        this.getservicesTableData()
+        this.tools.loading = true
+        this.getReadyTableData().then(res => {
+          this.getTableData()
+        }).catch(res => {
+          this.ringTableData.push([])
+          this.tools.loading = false
+        })
       }
     }
   },
@@ -71,6 +72,13 @@ export default {
   mounted () {
   },
   methods: {
+    async getTableData () {
+      await this.getCompactorTableData()
+      await this.getservicesTableData()
+      await this.getIngesterTableData()
+      await this.getStoreGatewayTableData()
+      this.getConfigTableData()
+    },
     configval (val) {
       this.configMode = val
       this.getConfigTableData()
@@ -98,12 +106,19 @@ export default {
       if (response.code === 200) {
         this.configTableData = response.data.content.split(/\n/)
       }
+      this.tools.loading = false
     },
     async getReadyTableData () {
-      const response = await this.$get('agent/' + this.obj.id + '/cortex/ready')
-      if (response.code === 200) {
-        this.readyTableData = response.data.status
-      }
+      return new Promise((resolve, reject) => {
+        this.$get('agent/' + this.obj.id + '/cortex/ready').then(response => {
+          if (response.code === 200) {
+            this.readyTableData = response.data.status
+            resolve()
+          } else {
+            reject()
+          }
+        })
+      })
     },
     async getservicesTableData () {
       const response = await this.$get('agent/' + this.obj.id + '/cortex/services')
@@ -114,7 +129,6 @@ export default {
         })
         serObj.ready = this.readyTableData
         this.servicesTableData.push(serObj)
-        this.tools.loading = false
       }
     }
   }

@@ -49,10 +49,12 @@ export default {
       immediate: true,
       deep: true,
       async handler (n) {
-        await this.getReadyTableData()
-        await this.getConfigTableData()
-        await this.getCompactorTableData()
-        this.getservicesTableData()
+        this.tools.loading = true
+        this.getReadyTableData().then(res => {
+          this.getTableData()
+        }).catch(res => {
+          this.tools.loading = false
+        })
       }
     }
   },
@@ -69,6 +71,11 @@ export default {
   mounted () {
   },
   methods: {
+    async getTableData () {
+      await this.getservicesTableData()
+      await this.getCompactorTableData()
+      this.getConfigTableData()
+    },
     configval (val) {
       this.configMode = val
       this.getConfigTableData()
@@ -78,6 +85,7 @@ export default {
       if (response.code === 200) {
         this.configTableData = response.data.content.split(/\n/)
       }
+      this.tools.loading = false
     },
     async getCompactorTableData () {
       const response = await this.$get('agent/' + this.obj.id + '/loki/compactor/ring')
@@ -86,10 +94,16 @@ export default {
       }
     },
     async getReadyTableData () {
-      const response = await this.$get('agent/' + this.obj.id + '/loki/ready')
-      if (response.code === 200) {
-        this.readyTableData = response.data.status
-      }
+      return new Promise((resolve, reject) => {
+        this.$get('agent/' + this.obj.id + '/loki/ready').then(response => {
+          if (response.code === 200) {
+            this.readyTableData = response.data.status
+            resolve()
+          } else {
+            reject()
+          }
+        })
+      })
     },
     async getservicesTableData () {
       const response = await this.$get('agent/' + this.obj.id + '/loki/services')
@@ -100,7 +114,6 @@ export default {
         })
         serObj.ready = this.readyTableData
         this.servicesTableData.push(serObj)
-        this.tools.loading = false
       }
     }
   }
