@@ -57,7 +57,7 @@
       <agent-box v-if="rightBox.show" :agent="object" @close="closeRightBox"></agent-box>
     </transition>
     <el-dialog :title="$t('guide.downloadAgent')" :visible.sync="showAgentDownload" :append-to-body="false" class="nz-dialog agent-dialog no-transform-dialog" width="800px" @close="closeDialog">
-      <div v-if="showAgentDownload" class="agent-box">
+      <div class="agent-box">
         <el-form v-model="agentParam" class="right-box-form right-box-form-left" label-position = "top" label-width="120px" size="small" style="width: 100%">
           <div class="right-box-sub-title">{{$t('overall.download')}}</div>
           <div style="margin-bottom: 20px;width: 100%"></div>
@@ -207,6 +207,11 @@ export default {
   },
   methods: {
     toDownloadAgent: function () {
+      this.agentParam = {
+        osType: 'centos',
+        dc: '',
+        type: 1
+      }
       this.getAllDc()
       this.showAgentDownload = true
       this.token = localStorage.getItem('nz-token')

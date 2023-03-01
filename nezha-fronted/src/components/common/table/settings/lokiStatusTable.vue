@@ -57,7 +57,6 @@
              <el-table
             :data="ringTableData"
             :border='true'
-            :class="ringTableData.length == 0?'ring-table':''"
             :span-method="(param)=>objectSpanMethod(param,ringTableData)"
              >
                 <el-table-column

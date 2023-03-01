@@ -11,8 +11,8 @@
                     </div>
                     <div class="list_box_content" v-if="history_once.length>0">
                         <ul>
-                            <li v-for="(val,ind) in history_once" @click="select_history(ind,$event)" :key="ind" :id="'search-history-pick-'+ind">
-                                <span v-for="(item,key) in val" :key="key">
+                            <li v-for="(val,ind) in history_once" @click="select_history(ind,$event)" :key="ind" :id="'search-history-pick-'+ind" >
+                                <span v-for="(item,key) in val" :key="key" :title="item.name + ':' + (item.val ? (item.val+' ') :  ' ')">
                                     <span class="name">{{item.name}}: </span>
                                     <span class="value" v-if="item.val">{{item.val+' '}}</span>
                                     <span class="value" v-else>{{' '}}</span>
