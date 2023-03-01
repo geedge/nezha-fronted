@@ -302,6 +302,10 @@ export default {
           obj.autoPlay = true
         }
       }
+      if (key === 'x' || key === 'y' || key === 'width' || key === 'height') {
+        const findPen = getTopology(this.meta2dId).getPenRect(pen)
+        obj[key] = findPen[key]
+      }
       getTopology(this.meta2dId).setValue(obj) // 更新pen
       if (key === 'lineAnimateType') {
         if (!pen[key]) {
