@@ -218,19 +218,18 @@ export default {
         this.timer3 = null
       }
       this.position.show = false
-      console.log(pen)
       if (!pen.type && pen.data.enable.tooltip) {
         if (!pen.data.tooltip.legends.length) {
           return
         }
         let positionShow = false
-        pen.data.tooltip.legends.forEach(item=>{
+        pen.data.tooltip.legends.forEach(item => {
           if (item.legend) {
             positionShow = true
           }
         })
         if (!positionShow) {
-          return;
+          return
         }
         this.chartParams = {
           ...pen.data.tooltip,
@@ -259,6 +258,7 @@ export default {
             boxHeight = null
           })
           this.position.show = true
+          // this.$refs.meta2dTooltip.$refs.panelChart && (this.$refs.meta2dTooltip.$refs.panelChart.loading = false)
           clearTimeout(this.timer3)
         }, 100)
       }

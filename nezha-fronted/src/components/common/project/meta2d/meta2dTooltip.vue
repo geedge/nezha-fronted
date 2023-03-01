@@ -85,6 +85,7 @@ export default {
           this.$refs.panelChart.chartData = chartData
           this.$refs.panelChart.loading = false
           this.$nextTick(() => {
+            this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id].chartLoading = true
             this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id].initChart()
             this.$refs.panelChart.$refs.chart.$refs['chart' + this.chartInfo.id].resize()
           })

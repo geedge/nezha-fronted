@@ -202,7 +202,7 @@
                   @blur="inputBlur"
                   :step="1"
                   :min="0"
-                  :precision="0"
+                  :precision="1"
                   controls-position="right"
                   size="small"
                   name="globalAlpha"
