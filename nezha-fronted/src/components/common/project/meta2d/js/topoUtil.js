@@ -9,6 +9,8 @@ export default {
       getTopology(id).resize()
     },
     initEdit (id) {
+      bus.$emit('changeSelectPens', [])
+      getTopology(id).active([])
       getTopology(id).lock(0)
       getTopology(id).stopAnimate()
       if (getTopology(id).data().pens) {
@@ -204,6 +206,7 @@ export default {
         pen.animateColor = mapping.color.bac
         pen.borderColor = mapping.color.border
         pen.color = mapping.color.text
+        console.log(!!pen.lineAnimateType)
         if (pen.lineAnimateType) {
           pen.autoPlay = true
         }

@@ -674,6 +674,12 @@ textarea {
     box-sizing: border-box;
   }
 }
+.el-option-width303 {
+  width: 303px !important;
+}
+.el-dialog__header{
+  position: relative;
+}
 .el-message__content{
   white-space:pre-line
 }
@@ -681,4 +687,8 @@ textarea {
   max-height: 500px;
   overflow: hidden;
   overflow-y: auto;
+}
+
+.message-zindex{
+  z-index: 5000 !important;
 }

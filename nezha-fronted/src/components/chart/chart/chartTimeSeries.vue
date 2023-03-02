@@ -3,6 +3,7 @@
     :class="legendPlacement"
     class="nz-chart__component nz-chart__component--time-series" @mouseenter="mouseEnterChart"
     @mouseleave="mouseLeaveChart"
+    v-my-loading="chartLoading"
   >
     <div class="chart__canvas" style="position:relative">
       <div :id="`chart-canvas-${chartId}`"></div>
@@ -52,7 +53,8 @@ export default {
       stackTotalColor: null,
       stackTotalColorRight: null,
       isStack: false,
-      hasRightYAxis: false
+      hasRightYAxis: false,
+      chartLoading: false
     }
   },
   computed: {
@@ -197,6 +199,7 @@ export default {
             }
           })
         }
+        this.chartLoading = false
         this.isInit = false
       }, 200)
     },

@@ -53,12 +53,14 @@ export default {
       deep: true,
       async handler (n) {
         this.loading = true
-        await this.getReadyTableData()
-        await this.getIngesterTableData()
-        await this.getStoreGatewayTableData()
-        await this.getCompactorTableData()
-        await this.getConfigTableData()
-        this.getservicesTableData()
+        this.getReadyTableData().then(res => {
+          this.getTableData()
+        }).catch(res => {
+          this.ringTableData.push([])
+          this.$refs.loading.endLoading()
+          this.loading = false
+          this.$message.error(res.msg)
+        })
       }
     }
   },
@@ -76,6 +78,13 @@ export default {
   mounted () {
   },
   methods: {
+    async getTableData () {
+      await this.getCompactorTableData()
+      await this.getservicesTableData()
+      await this.getIngesterTableData()
+      await this.getStoreGatewayTableData()
+      this.getConfigTableData()
+    },
     configval (val) {
       this.configMode = val
       this.getConfigTableData()
@@ -103,13 +112,22 @@ export default {
       if (response.code === 200) {
         this.configTableData = response.data.content.split(/\n/)
       }
+      this.$refs.loading.endLoading()
+      this.loading = false
     },
     async getReadyTableData () {
-      const response = await this.$get('agent/' + this.obj.id + '/cortex/ready')
-      if (response.code === 200) {
-        this.$refs.loading.startLoading()
-        this.readyTableData = response.data.status
-      }
+      return new Promise((resolve, reject) => {
+        this.$get('agent/' + this.obj.id + '/cortex/ready').then(response => {
+          if (response.code === 200) {
+            this.$refs.loading.startLoading()
+            this.readyTableData = response.data.status
+            resolve()
+          } else {
+            reject(response)
+          }
+        })
+      })
+
     },
     async getservicesTableData () {
       const response = await this.$get('agent/' + this.obj.id + '/cortex/services')
@@ -120,8 +138,6 @@ export default {
         })
         serObj.ready = this.readyTableData
         this.servicesTableData.push(serObj)
-        this.$refs.loading.endLoading()
-        this.loading = false
       }
     }
   }

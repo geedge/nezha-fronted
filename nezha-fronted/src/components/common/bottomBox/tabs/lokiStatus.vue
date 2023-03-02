@@ -53,10 +53,13 @@ export default {
       deep: true,
       async handler (n) {
         this.loading = true
-        await this.getReadyTableData()
-        await this.getConfigTableData()
-        await this.getCompactorTableData()
-        this.getservicesTableData()
+        this.getReadyTableData().then(res => {
+          this.getTableData()
+        }).catch(res => {
+          this.$refs.loading.endLoading()
+          this.loading = false
+          this.$message.error(res.msg)
+        })
       }
     }
   },
@@ -74,6 +77,11 @@ export default {
   mounted () {
   },
   methods: {
+    async getTableData () {
+      await this.getservicesTableData()
+      await this.getCompactorTableData()
+      this.getConfigTableData()
+    },
     configval (val) {
       this.configMode = val
       this.getConfigTableData()
@@ -83,6 +91,8 @@ export default {
       if (response.code === 200) {
         this.configTableData = response.data.content.split(/\n/)
       }
+      this.$refs.loading.endLoading()
+      this.loading = false
     },
     async getCompactorTableData () {
       const response = await this.$get('agent/' + this.obj.id + '/loki/compactor/ring')
@@ -91,11 +101,17 @@ export default {
       }
     },
     async getReadyTableData () {
-      const response = await this.$get('agent/' + this.obj.id + '/loki/ready')
-      if (response.code === 200) {
-        this.$refs.loading.startLoading()
-        this.readyTableData = response.data.status
-      }
+      return new Promise((resolve, reject) => {
+        this.$get('agent/' + this.obj.id + '/loki/ready').then(response => {
+          if (response.code === 200) {
+            this.$refs.loading.startLoading()
+            this.readyTableData = response.data.status
+            resolve()
+          } else {
+            reject(response)
+          }
+        })
+      })
     },
     async getservicesTableData () {
       const response = await this.$get('agent/' + this.obj.id + '/loki/services')
@@ -106,8 +122,6 @@ export default {
         })
         serObj.ready = this.readyTableData
         this.servicesTableData.push(serObj)
-        this.$refs.loading.endLoading()
-        this.loading = false
       }
     }
   }

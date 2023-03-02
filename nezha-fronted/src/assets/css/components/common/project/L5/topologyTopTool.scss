@@ -29,15 +29,17 @@
 
   .top-tool-item {
     cursor: pointer;
-    background: $--background-color-empty;
-    border: 1px solid $--border-color-base;
+    background: $--background-color-base;
+    border: 1px solid $--border-color-light;
     border-radius: 2px;
     padding: 8px 11px;
     line-height: 14px;
     margin-right: 10px;
   }
   .is-active-meta2d.top-tool-item {
-    background: $--background-color-disabled;
+    background: mix(#FFF, $--background-color-disabled, 35%);
+    border: 1px solid mix(#000, $--background-color-disabled, 35%);
+    color: $--color-text-disabled;
   }
   .top-tool-item-scale {
     margin-left: 40px;

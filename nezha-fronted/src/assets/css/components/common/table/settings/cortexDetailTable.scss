@@ -45,17 +45,19 @@
                     display: none;
                 }
             }
-            .ring-table{
-                .el-table__body-wrapper{
-                    border-left: 1px solid $--border-color-light;
-                }
-            }
         }
 
         .cortex-service,
         .cortex-ring {
             .el-table {
                 border-left: none;
+                .el-table__empty-block{
+                    .el-table__empty-text{
+                        display: block;
+                        width: 100%;
+                        border-left: 1px solid $--border-color-light;
+                    }
+                }
                 .el-table__header-wrapper:hover {
                     th {
                         border-right-color: transparent !important;

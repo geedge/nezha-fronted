@@ -3,6 +3,9 @@
   box-sizing: border-box;
   padding: 14px 20px 14px 10px;
   display: flex;
+  > div {
+    color: $--color-text-primary
+  }
   .tools-left{
     display: flex;
   }

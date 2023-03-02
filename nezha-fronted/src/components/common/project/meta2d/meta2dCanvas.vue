@@ -4,7 +4,7 @@
       <!--         backGround -->
       <div class="form-row-title">
         {{$t('project.topology.bac')}}
-        <i class="nz-icon nz-icon-arrow-down" @click="updateShow('backGround')"/>
+        <i class="nz-icon nz-icon-arrow-down" :class="canvasProps.backGround?'':'is-rotate'" @click="updateShow('backGround')"/>
       </div>
       <div v-show="canvasProps.backGround" class="form-row-content">
         <div class="form-row-item">
@@ -13,6 +13,7 @@
           </div>
           <div class="form-row-value">
             <nezhaColor
+              ref="backgroundNezhaColor"
               :isTopo="true"
               :value-arr="[{name:'bac',value: background}]"
               @colorChange="backgroundChange"/>
@@ -60,18 +61,18 @@
                   </span>
                 </span>
                 <span>
-                    <span @click.stop="penChange(item, 'locked')" class="pen-tools-item">
+                    <span @click.stop="penChange(item, 'locked')" class="pen-tools-item" :title="!item.locked?$t('overall.locked'): $t('overall.unlocked')">
                     <i  class="nz-icon nz-icon-lock" v-if="item.locked"/>
                     <i  class="nz-icon nz-icon-unlock" v-if="!item.locked"/>
                   </span>
-                  <span @click.stop="penChange(item, 'visible')" class="pen-tools-item">
+                  <span @click.stop="penChange(item, 'visible')" class="pen-tools-item" :title="!item.visible?$t('overall.visible'): $t('overall.invisible')">
                     <i  class="nz-icon nz-icon-mimakejian1" v-if="item.visible"/>
                     <i  class="nz-icon nz-icon-mimabukejian" v-if="!item.visible"/>
                   </span>
-                  <span @click.stop="copyPen(item)" class="pen-tools-item">
+                  <span @click.stop="copyPen(item)" class="pen-tools-item" :title="$t('overall.duplicate')">
                     <i  class="nz-icon nz-icon-override"/>
                   </span>
-                  <span @click.stop="delPen(item)" class="pen-tools-item">
+                  <span @click.stop="delPen(item)" class="pen-tools-item" :title="$t('overall.delete')">
                     <i  class="nz-icon nz-icon-minus"/>
                   </span>
                   <span style="cursor: grab;" class="drag-sort pen-tools-item" :title="$t('dashboard.panel.chartForm.sort')">
@@ -117,6 +118,7 @@ export default {
     this.elements = getTopology(this.meta2dId).store.data.pens
     this.background = getTopology(this.meta2dId).store.data.background || '#ffffff00'
     this.bkImage = getTopology(this.meta2dId).store.data.bkImage || ''
+    this.$refs.backgroundNezhaColor.colors = this.background
   },
   methods: {
     updateShow (key) {
@@ -138,7 +140,7 @@ export default {
       }
       if (key === 'visible') {
         obj.visible = !item.visible
-        if (!item.visible) {
+        if (item.visible) {
           if (getTopology(this.meta2dId).store.active.length && item.id === getTopology(this.meta2dId).store.active[0].id) {
             bus.$emit('changeSelectPens', [])
           }
@@ -151,7 +153,7 @@ export default {
         }
       }
       if (key === 'locked') {
-        if (!item.locked) {
+        if (item.locked) {
           obj.locked = 10
           if (getTopology(this.meta2dId).store.active.length && item.id === getTopology(this.meta2dId).store.active[0].id) {
             bus.$emit('changeSelectPens', [])

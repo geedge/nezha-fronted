@@ -461,6 +461,9 @@ export default {
             if (!this.chart.groupId || this.chart.groupId == -1) {
               this.chart.groupId = ''
             }
+            if (this.chart.type === 'stat' && !this.chart.param.sparklineMode) {
+              this.chart.param.sparklineMode = 'none'
+            }
             if (this.chart.type == 'table') {
               const arr = this.chart.param.indexs ? this.chart.param.indexs.split(',') : []
               this.chart.param.tags = arr.map((item) => {
@@ -618,7 +621,6 @@ export default {
             this.getData(this.filter)
           }
         } else if (this.from === this.fromRoute.dashboardTemp) {
-          
           this.$get('visual/panel', { type: 'template', ids: this.obj.id }).then(response => {
             if (response.code === 200) {
               this.panelData = response.data.list

@@ -11,8 +11,8 @@
                     </div>
                     <div class="list_box_content" v-if="history_once.length>0">
                         <ul>
-                            <li v-for="(val,ind) in history_once" @click="select_history(ind,$event)" :key="ind" :id="'search-history-pick-'+ind">
-                                <span v-for="(item,key) in val" :key="key">
+                            <li v-for="(val,ind) in history_once" @click="select_history(ind,$event)" :key="ind" :id="'search-history-pick-'+ind" >
+                                <span v-for="(item,key) in val" :key="key" :title="item.name + ':' + (item.val ? (item.val+' ') :  ' ')">
                                     <span class="name">{{item.name}}: </span>
                                     <span class="value" v-if="item.val">{{item.val+' '}}</span>
                                     <span class="value" v-else>{{' '}}</span>
@@ -551,6 +551,10 @@ export default {
           val.val = selectItem.name
           val.valnum = selectItem.id
           val.valString = ''
+        } else if (val.type == 'terminalStatus' && selectItem.searchType == 'terminalStatus') {
+          val.val = selectItem.label
+          val.valnum = selectItem.id
+          val.valString = ''
         } else if (val.type == 'assetType' && selectItem.searchType == 'assetType') {
           val.val = selectItem.name
           val.valnum = selectItem.id
@@ -957,6 +961,8 @@ export default {
               objectInfo.type = val.valnum
             } else if (val.label === 'assetState') {
               objectInfo.stateIds = val.valnum
+            }else if (val.label === 'terminalStatus') {
+              objectInfo.state = val.valnum
             } else if (val.label === 'assetType') {
               objectInfo.typeIds = val.valnum
             } else if (val.label === 'credentialType') {
@@ -1010,6 +1016,8 @@ export default {
             objectInfo.projectIds = val.valnum
           } else if (val.label === 'assetState') {
             objectInfo.stateIds = val.valnum
+          } else if (val.label === 'terminalStatus') {
+            objectInfo.state = val.valnum
           } else if (val.label === 'assetType') {
             objectInfo.typeIds = val.valnum
           } else if (val.type === 'brand') {

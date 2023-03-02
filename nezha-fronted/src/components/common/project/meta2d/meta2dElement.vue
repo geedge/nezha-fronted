@@ -1,5 +1,5 @@
 <template>
-  <div class="pens-data right-box__container">
+  <div class="pens-data right-box__container" :key="pen.id">
     <div v-if="pen.id">
 <!--      <el-input-number v-model="pen.x" @change="change('x')"/>-->
 <!--      node-->
@@ -8,7 +8,7 @@
           <!--        Position  -->
           <div class="form-row-title">
             {{$t('project.topology.position')}}
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('position')"/>
+            <i class="nz-icon nz-icon-arrow-down"  :class="elements.position?'':'is-rotate'" @click="updateShow('position')"/>
           </div>
           <div v-show="elements.position" class="form-row-content">
             <div class="form-row-item">
@@ -126,7 +126,7 @@
           <!--         Border -->
           <div class="form-row-title">
             {{ $t('project.topology.border') }}
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('border')"/>
+            <i class="nz-icon nz-icon-arrow-down" :class="elements.border?'':'is-rotate'" @click="updateShow('border')"/>
           </div>
           <div v-show="elements.border" class="form-row-content">
             <div class="form-row-item special-meta2d-select">
@@ -186,6 +186,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenColor'"
                   :isTopo="true"
                   :value-arr="[{name:'color',value: pen.color}]"
                   @colorChange="colorChange"/>
@@ -201,7 +202,7 @@
                   @blur="inputBlur"
                   :step="1"
                   :min="0"
-                  :precision="0"
+                  :precision="1"
                   controls-position="right"
                   size="small"
                   name="globalAlpha"
@@ -216,7 +217,7 @@
           <!--         backGround -->
           <div class="form-row-title">
             {{$t('project.topology.bac')}}
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('backGround')"/>
+            <i class="nz-icon nz-icon-arrow-down" :class="elements.backGround?'':'is-rotate'" @click="updateShow('backGround')"/>
           </div>
           <div v-show="elements.backGround" class="form-row-content">
             <div class="form-row-item">
@@ -225,6 +226,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenBackground'"
                   :isTopo="true"
                   :value-arr="[{name:'background',value: pen.background}]"
                   @colorChange="colorChange"/>
@@ -278,7 +280,7 @@
           <!--         text -->
           <div class="form-row-title">
             {{$t('project.topology.text')}}
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('text')"/>
+            <i class="nz-icon nz-icon-arrow-down" :class="elements.text?'':'is-rotate'" @click="updateShow('text')"/>
           </div>
           <div v-show="elements.text" class="form-row-content">
             <div class="form-row-item">
@@ -287,6 +289,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenTextColor'"
                   :isTopo="true"
                   :value-arr="[{name:'textColor',value: pen.textColor}]"
                   @colorChange="colorChange"/>
@@ -398,7 +401,7 @@
           <!--        Line  -->
           <div class="form-row-title">
             {{$t('project.topology.line')}}
-            <i class="nz-icon nz-icon-arrow-down" @click="updateShow('line')"/>
+            <i class="nz-icon nz-icon-arrow-down" :class="elements.line?'':'is-rotate'" @click="updateShow('line')"/>
           </div>
           <div v-show="elements.line" class="form-row-content">
             <div class="form-row-item special-meta2d-select">
@@ -569,6 +572,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenColor'"
                   :isTopo="true"
                   :value-arr="[{name:'color',value: pen.color}]"
                   @colorChange="colorChange"/>
@@ -600,6 +604,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenBorderColor'"
                   :isTopo="true"
                   :value-arr="[{name:'borderColor',value: pen.borderColor}]"
                   @colorChange="colorChange"/>
@@ -655,14 +660,14 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                {{$t('project.topology.speed')}} (0 - 10)
+                {{$t('project.topology.speed')}} (1 - 10)
               </div>
               <div class="form-row-value">
                 <el-input-number
                   @focus="inputFocus"
                   @blur="inputBlur"
                   :step="1"
-                  :min="0"
+                  :min="1"
                   :max="10"
                   :precision="0"
                   controls-position="right"
@@ -680,6 +685,7 @@
               </div>
               <div class="form-row-value">
                 <nezhaColor
+                  :ref="'nezhaColorPenAnimateColor'"
                   :isTopo="true"
                   :value-arr="[{name:'animateColor',value: pen.animateColor}]"
                   @colorChange="colorChange"/>
@@ -712,7 +718,7 @@
                 :inactive-value="false"
                 @change="change('data.enable.valueMapping')"
               ></el-switch>
-              <i class="nz-icon nz-icon-arrow-down" @click="updateShow('valueMapping')"/>
+              <i class="nz-icon nz-icon-arrow-down" :class="elements.valueMapping&& pen.data.enable.valueMapping?'':'is-rotate'" @click="updateShow('valueMapping')"/>
             </span>
       </div>
       <transition name="el-zoom-in-top">
@@ -930,7 +936,7 @@
                 :inactive-value="false"
                 @change="change('data.enable.tooltip')"
               ></el-switch>
-              <i class="nz-icon nz-icon-arrow-down" @click="updateShow('tooltip')"/>
+              <i class="nz-icon nz-icon-arrow-down" :class="elements.tooltip&& pen.data.enable.tooltip?'':'is-rotate'" @click="updateShow('tooltip')"/>
             </span>
       </div>
       <transition name="el-zoom-in-top">
@@ -989,7 +995,7 @@
             </div>
           </div>
           <div @click="addTooltipLegend" class="thresholds-add">
-            {{$t('overall.addTooltipLegend')}}
+           <i class="nz-icon nz-icon-add" /> {{$t('overall.addTooltipLegend')}}
           </div>
         </div>
       </div>
@@ -1023,6 +1029,7 @@ export default {
       immediate: true,
       handler (n) {
         this.pen = n[0]
+        this.nzColorUpdate()
         // todo 判断legend 是否还存在
         // this.$forceUpdate()
       }
@@ -1038,6 +1045,7 @@ export default {
     return {
       theme: theme,
       pen: {},
+      refsArr: ['nezhaColorPenColor', 'nezhaColorPenBackground', 'nezhaColorPenTextColor', 'nezhaColorPenBorderColor', 'nezhaColorPenAnimateColor'],
       chartType: [
         { id: 'line', name: 'Line' },
         { id: 'area', name: 'Area' },
@@ -1169,6 +1177,9 @@ export default {
           this.pen.text = this.pen.data.textValue
         }
       }
+      if (key === 'lineAnimateType') {
+        this.pen.autoPlay = false
+      }
       this.$emit('change', key)
     },
     updateImage (image) {
@@ -1263,6 +1274,13 @@ export default {
         parent: '',
         legend: '',
         alias: ''
+      })
+    },
+    nzColorUpdate () {
+      this.refsArr.forEach(item => {
+        if (this.$refs[item]) {
+          this.$refs[item].update()
+        }
       })
     }
 

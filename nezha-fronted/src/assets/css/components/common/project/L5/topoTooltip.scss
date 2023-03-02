@@ -8,7 +8,9 @@
   height: 100%;
   box-sizing: border-box;
   border: 1px solid $--border-color-light;
-
+  .tooltip-box-title {
+    color: $--color-text-primary
+  }
   .tooltip-box-chart {
     max-height: 400px;
     min-height: 200px;

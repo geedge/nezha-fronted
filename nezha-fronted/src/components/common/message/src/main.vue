@@ -2,11 +2,11 @@
   <transition name="el-message-fade" @after-leave="handleAfterLeave">
     <div
       :class="[
-        'el-message',
+        'el-message message-zindex',
         type && !iconClass ? `el-message--${ type }` : '',
         center ? 'is-center' : '',
         showClose ? 'is-closable' : '',
-        customClass
+        customClass,
       ]"
       :style="positionStyle"
       v-show="visible"
