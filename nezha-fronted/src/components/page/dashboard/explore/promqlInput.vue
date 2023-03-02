@@ -91,6 +91,7 @@
             :id="inputId"
             v-model="expressionList[index]"
             size="small" :rows="1"
+            autosize
             class="not-fixed-height no-resize"
             type="textarea"
             show-word-limit maxlength="256"
@@ -264,6 +265,7 @@
                 v-model="expressionList[index]"
                 v-if="type === 'log'"
                 @input="metricKeyDown"
+                autosize
                 type="textarea"
                 :maxlength="styleType === 3 ? 512 : 4096"
                 show-word-limit
