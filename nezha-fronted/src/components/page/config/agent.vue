@@ -312,10 +312,16 @@ export default {
         if (add) {
           if (add === 'agent') {
             this.add()
+            const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
+            delete newQuery.add
+            this.$router.replace({ query: newQuery })
           }
         }
         if (download) {
           this.toDownloadAgent()
+          const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
+          delete newQuery.download
+          this.$router.replace({ query: newQuery })
         }
       }
     }

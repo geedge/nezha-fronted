@@ -985,10 +985,16 @@ export default {
           if (add === 'endpoint') {
             this.add()
           }
+          const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
+          delete newQuery.add
+          this.$router.replace({ query: newQuery })
         }
         if (importEndpoint) {
           this.$nextTick(() => {
             this.$refs.export.showImportBox(1)
+            const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
+            delete newQuery.importEndpoint
+            this.$router.replace({ query: newQuery })
           })
         }
       }

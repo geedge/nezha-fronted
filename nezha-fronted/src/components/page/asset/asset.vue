@@ -1007,11 +1007,17 @@ export default {
         if (add) {
           if (add === 'asset') {
             this.add()
+            const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
+            delete newQuery.add
+            this.$router.replace({ query: newQuery })
           }
         }
         if (importAsset) {
           this.$nextTick(() => {
             this.$refs.export.showImportBox(1)
+            const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
+            delete newQuery.importAsset
+            this.$router.replace({ query: newQuery })
           })
         }
       }

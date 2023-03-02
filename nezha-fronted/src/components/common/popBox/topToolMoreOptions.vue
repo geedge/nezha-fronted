@@ -329,6 +329,7 @@ export default {
         { name: 'JSON', value: 3 }
       ],
       suffix: '.xlsx',
+      faildSuffix: '.xlsx',
       panel: {},
       rightBox: { // 面板弹出框相关
         panel: { show: false },
@@ -355,6 +356,8 @@ export default {
         this.importFileList = [fileList[fileList.length - 1]]
       }
       this.importFile = this.importFileList[0]
+      const arr = this.importFile.name.split('.')
+      this.faildSuffix = '.' + arr[arr.length - 1] // 获取文件后缀名
       this.validateFile()
     },
     validateFile () {
@@ -688,7 +691,7 @@ export default {
       const blob = new Blob([uInt8Array])
       link.style.display = 'none'
       link.href = URL.createObjectURL(blob)
-      link.setAttribute('download', 'failed_records' + '-' + this.getTimeString() + '.json')
+      link.setAttribute('download', 'failed_records' + '-' + this.getTimeString() + this.faildSuffix)
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)

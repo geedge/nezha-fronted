@@ -312,6 +312,9 @@ export default {
           if (add === 'cabinet') {
             this.addCabinet()
           }
+          const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
+          delete newQuery.add
+          this.$router.replace({ query: newQuery })
         }
       }
     },
