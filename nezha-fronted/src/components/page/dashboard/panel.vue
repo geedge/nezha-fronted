@@ -1187,8 +1187,10 @@ export default {
               this.addChartBefore()
             }
             if (add === 'panel') {
-              this.toAdd()
             }
+            const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
+            delete newQuery.add
+            this.$router.replace({ query: newQuery })
           }
         })
       }

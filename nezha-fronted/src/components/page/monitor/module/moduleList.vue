@@ -597,6 +597,9 @@ export default {
           if (add === 'module') {
             this.add()
           }
+          const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
+          delete newQuery.add
+          this.$router.replace({ query: newQuery })
         }
       }
     }
