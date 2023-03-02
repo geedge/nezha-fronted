@@ -229,7 +229,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('dispatchHomeLoading', true)
-        this.$post('visual/panel/chart/syncTmpl', { pid: row.id }).then(res => {
+        this.$post('visual/panel/syncTmpl', { tmplId: row.id }).then(res => {
           this.$store.dispatch('dispatchHomeLoading', false)
           if (res.code === 200) {
             this.getTableData()
