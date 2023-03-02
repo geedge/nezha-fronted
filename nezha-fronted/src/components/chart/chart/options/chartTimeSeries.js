@@ -140,9 +140,9 @@ export const chartTimeSeriesLineOption = {
     type: 'line',
     symbol: 'emptyCircle', // 去掉点
     connectNulls: true,
-    symbolSize: [0, 0],
+    symbolSize: [2, 2],
     smooth: 0.2, // 曲线变平滑
-    // showSymbol: false,
+    showSymbol: false,
     data: [],
     lineStyle: {
       width: 1,
@@ -163,6 +163,7 @@ export const chartTimeSeriesScatterOption = {
   series: [{
     name: '',
     type: 'scatter',
-    data: []
+    data: [],
+    z: 9
   }]
 }

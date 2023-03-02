@@ -1,12 +1,12 @@
 <template>
   <div class="integration">
     <!-- NZ-talon -->
-    <p class="integration-title" style="margin-top:10px;">NZ-talon</p>
+    <p class="integration-title" style="margin-top:10px;">{{talon.name}}</p>
     <ul class="integration-list">
-      <li class="integration-item">
-        <img class="integration-icon" src="https://static.datadoghq.com/static/images/logos/azure_avatar.svg" alt="">
-        <h2 class="integration-name">NZ-talontalontalontalontalontalontalontalontalontalon</h2>
-        <p class="integration-remark">Check content name check contentname check content Check content name name check content name check content namecheck content namecheck content namecheck content name</p>
+      <li class="integration-item" @click="talonDetail">
+        <img class="integration-icon" :src="talon.icon" alt="">
+        <h2 class="integration-name">{{talon.name}}</h2>
+        <p class="integration-remark">{{talon.remark}}</p>
         <div class="integration-internal">{{$t('integration.internal')}}</div>
       </li>
     </ul>
@@ -23,6 +23,7 @@
     <!-- 集成详情 -->
     <el-dialog
       class="integration-dialog"
+      :class="type=='internal'?'integration-dialog-internal':''"
       v-if="dialogVisible"
       :visible.sync="dialogVisible"
       :show-close="true"
@@ -42,7 +43,7 @@
       </div>
       <!-- tabs -->
       <div class="integration-dialog-content">
-        <integration-tabs :detailsObj="detailsObj"></integration-tabs>
+        <integration-tabs  :type="type" :detailsObj="detailsObj"></integration-tabs>
       </div>
     </el-dialog>
   </div>
@@ -58,7 +59,14 @@ export default {
   data () {
     return {
       dialogVisible: false,
+      talon: {
+        icon: 'https://static.datadoghq.com/static/images/logos/azure_avatar.svg',
+        name: 'NZ-TALON',
+        remark: this.$t('integration.talonRemark')
+      },
+      // 模块列表
       dataList: [],
+      type: '',
       detailsObj: {}
     }
   },
@@ -67,8 +75,15 @@ export default {
       const res = await this.$get('/integration/module', { pageSize: -1 })
       this.dataList = res.data.list
     },
+    // talon 详情
+    talonDetail () {
+      this.type = 'internal'
+      this.detailsObj = this.talon
+      this.dialogVisible = true
+    },
     // 详情
     details (val) {
+      this.type = 'module'
       this.detailsObj = val
       this.dialogVisible = true
     },

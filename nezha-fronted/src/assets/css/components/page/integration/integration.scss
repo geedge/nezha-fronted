@@ -250,7 +250,6 @@
       }
       .integration-configuration-pre{
         width: 100%;
-        // max-height: 295px;
         overflow-y: auto;
         box-sizing: border-box;
         padding: 14px;
@@ -261,7 +260,6 @@
         overflow-wrap: break-word;
         word-break: break-word;
         white-space: pre-wrap;
-        margin-top: 6px;
       }
     }
 
@@ -322,6 +320,103 @@
           height: 100%;
           .gutter{
             position: unset;
+          }
+        }
+      }
+    }
+  }
+}
+
+.integration-dialog.integration-dialog-internal{
+  .integration-tabs-nav{
+    .integration-tabs-nav-item{
+      width: 168px;
+    }
+  }
+  .integration-manual,.integration-automatic{
+    padding: 30px;
+    padding-top: 15px;
+    padding-right: 10px;
+    margin-right: 20px;
+    box-sizing: border-box;
+    height: 100%;
+    overflow-y: auto;
+    .integration-install{
+      font-size: 16px;
+      color: $--color-text-primary;
+      font-weight: 600;
+    }
+    .install-step{
+      padding-top: 15px;
+      width: 100%;
+      display: flex;
+      .step-num{
+        width: 20px;
+        height: 20px;
+        box-sizing: border-box;
+        border: 1px solid $--border-color-light;
+        border-radius: 2px;
+        font-size: 12px;
+        text-align: center;
+        line-height: 20px;
+        color: $--color-text-primary;
+        margin-right: 12px;
+      }
+      .step-right{
+        flex: 1;
+        h4{
+          font-size: 14px;
+          line-height: 20px;
+          margin-bottom: 12px;
+          color: $--color-text-regular;
+          font-weight: normal;
+        }
+        p{
+          font-size: 14px;
+          line-height: 20px;
+          margin-bottom: 8px;
+          color: $--color-text-regular;
+          display: flex;
+          align-items: center;
+          &>.dot{
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: $--color-text-primary;
+            margin-right: 6px;
+          }
+        }
+        .talon-select{
+          color: $--color-text-regular;
+          display: flex;
+          align-items: center;
+          &>span{
+            margin-right: 8px;
+          }
+          .el-select{
+            width: 220px;
+          }
+          .nz-btn{
+            margin-left: 18px;
+          }
+        }
+        .command-box{
+          // width: 800px;
+          width: 100%;
+          line-height: 32px;
+          .el-input__inner{
+            color: $--color-text-primary;
+            border-color: $--border-color-light;
+            cursor: text;
+          }
+          .el-input__suffix{
+            .el-input__suffix-inner{
+              cursor: pointer;
+              i{
+                color: $--color-text-regular;
+              }
+            }
           }
         }
       }

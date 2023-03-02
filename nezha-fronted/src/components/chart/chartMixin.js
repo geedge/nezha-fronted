@@ -92,21 +92,13 @@ export default {
           if (s.yAxisIndex == 1) {
             const style = chartInfo.param.rightYAxis.style
             if (style == 'line') {
-              s = {
-                ...chartTimeSeriesLineOption.series[0],
-                yAxisIndex: s.yAxisIndex
-              }
+              s = lodash.cloneDeep(chartTimeSeriesLineOption.series[0])
             } else if (style == 'area') {
-              s = {
-                ...chartTimeSeriesAreaOption.series[0],
-                yAxisIndex: s.yAxisIndex
-              }
+              s = lodash.cloneDeep(chartTimeSeriesAreaOption.series[0])
             } else if (style == 'point') {
-              s = {
-                ...chartTimeSeriesScatterOption.series[0],
-                yAxisIndex: s.yAxisIndex
-              }
+              s = lodash.cloneDeep(chartTimeSeriesScatterOption.series[0])
             }
+            s.yAxisIndex = 1
           }
 
           if (s.param && s.param.nullType) {

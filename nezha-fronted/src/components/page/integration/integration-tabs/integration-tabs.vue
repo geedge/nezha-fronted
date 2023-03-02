@@ -4,6 +4,10 @@
       <li class="integration-tabs-nav-item" :class="{active:tabId===item.id}"  v-for="item in tabs" :key="item.id" @click="tabChange(item.id)">{{item.name}}</li>
     </ul>
     <div class="integration-tabs-content">
+      <!-- internal -->
+      <manual v-if="tabId==='manual'"></manual>
+      <automatic v-if="tabId==='automatic'"></automatic>
+      <!-- module -->
       <configuration v-if="tabId==='configuration'" :configuration="detailsObj.configuration"></configuration>
       <dashboard v-if="tabId==='dashboard'" :dashboardTemplate="detailsObj.dashboardTemplate"></dashboard>
       <alert v-if="tabId==='alert'" :moduleId="detailsObj.id"></alert>
@@ -13,6 +17,8 @@
 </template>
 
 <script>
+import manual from './manual.vue'
+import automatic from './automatic.vue'
 import configuration from './configuration.vue'
 import dashboard from './dashboard.vue'
 import alert from './alert.vue'
@@ -20,9 +26,12 @@ import metric from './metric.vue'
 export default {
   name: 'integration-tabs',
   props: {
-    detailsObj: Object
+    detailsObj: Object,
+    type: String
   },
   components: {
+    manual,
+    automatic,
     configuration,
     dashboard,
     alert,
@@ -30,20 +39,36 @@ export default {
   },
   data () {
     return {
-      tabs:
-      [
-        { id: 'configuration', name: this.$t('project.module.configs') },
-        { id: 'dashboard', name: this.$t('overall.dashboard') },
-        { id: 'alert', name: this.$t('overall.alert') },
-        { id: 'metric', name: this.$t('overall.metric') }
-      ],
-      tabId: 'configuration'
+      tabs: [],
+      tabId: ''
     }
   },
   methods: {
     tabChange (id) {
       if (this.tabId === id) { return }
       this.tabId = id
+    }
+  },
+  watch: {
+    type: {
+      immediate: true,
+      handler (val) {
+        if (val === 'internal') {
+          this.tabId = 'manual'
+          this.tabs = [
+            { id: 'manual', name: this.$t('integration.manualInstallation') },
+            { id: 'automatic', name: this.$t('integration.automaticInstallation') }
+          ]
+        } else if (val === 'module') {
+          this.tabId = 'configuration'
+          this.tabs = [
+            { id: 'configuration', name: this.$t('project.module.configs') },
+            { id: 'dashboard', name: this.$t('overall.dashboard') },
+            { id: 'alert', name: this.$t('overall.alert') },
+            { id: 'metric', name: this.$t('overall.metric') }
+          ]
+        }
+      }
     }
   }
 }

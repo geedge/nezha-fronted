@@ -232,7 +232,7 @@ export default {
     },
     copyUrl (txt) {
       this.$copyText(txt).then(() => {
-        this.$message.success({ message: this.$t('overall.copySuccess'), customClass: 'message-zindex' })
+        this.$message.success({ message: this.$t('overall.copySuccess') })
       })
     },
     // copyUrl (id) {
