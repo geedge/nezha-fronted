@@ -543,18 +543,6 @@ export default {
       this.chart.panelId = this.showPanel.id
       this.rightBox.chartTemp.show = true
     },
-    chartBySync () {
-      this.$store.dispatch('dispatchHomeLoading', true)
-      this.$post('visual/panel/chart/syncTmpl', { panelId: this.showPanel.id }).then(res => {
-        this.$store.dispatch('dispatchHomeLoading', false)
-        if (res.code === 200) {
-          this.getData(this.filter)
-          this.$message.success(this.$t('tip.syncSuccess'))
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    },
     addGroupItem (groupId) {
       this.chart = this.newChart()
       this.chart.groupId = groupId

@@ -139,15 +139,22 @@ export default {
   },
   methods: {
     chartBySync (row) {
-      this.$store.dispatch('dispatchHomeLoading', true)
-      this.$post('visual/panel/chart/syncTmpl', { models: [row.id] }).then(res => {
-        this.$store.dispatch('dispatchHomeLoading', false)
-        if (res.code === 200) {
-          this.getTableData()
-          this.$message.success(this.$t('tip.syncSuccess'))
-        } else {
-          this.$message.error(res.msg)
-        }
+      this.$confirm(this.$t('tip.syncTip'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('dispatchHomeLoading', true)
+        this.$post('visual/panel/syncTmpl', { model: row.id }).then(res => {
+          this.$store.dispatch('dispatchHomeLoading', false)
+          if (res.code === 200) {
+            this.getTableData()
+            this.$message.success(this.$t('tip.syncSuccess'))
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }).catch(() => {
       })
     }
   },
