@@ -33,7 +33,7 @@
       <i class="nz-icon nz-icon-revoke1"  :title="$t('overall.redo')"/>
     </div>
     <!--<div> 保存为图片 </div>-->
-    <div class="top-tool-item" @click="del" :title="$t('overall.delete')">  <i class="nz-icon nz-icon-delete"/> </div>
+    <div class="top-tool-item top-tool-item-delete" @click="del" :title="$t('overall.delete')">  <i class="nz-icon nz-icon-delete"/> </div>
     <div class="top-tool-item top-tool-item-scale">
       <span class="scale-number">
           <span class="scale-number-minus scale-number-symbol" @click="changeScale(-25)">-</span>

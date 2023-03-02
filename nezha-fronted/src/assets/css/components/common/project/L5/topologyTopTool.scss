@@ -41,6 +41,11 @@
     border: 1px solid mix(#000, $--background-color-disabled, 35%);
     color: $--color-text-disabled;
   }
+  .top-tool-item-delete:active{
+    background: mix(#FFF, $--background-color-disabled, 35%);
+    border: 1px solid mix(#000, $--background-color-disabled, 35%);
+    color: $--color-text-disabled;
+  }
   .top-tool-item-scale {
     margin-left: 40px;
     padding: 0;
