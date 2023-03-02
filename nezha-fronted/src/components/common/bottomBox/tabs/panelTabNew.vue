@@ -88,14 +88,14 @@
           </top-tool-more-options>
         </div>
         <!-- chartTemp -->
-        <div v-else-if="from === fromRoute.chartTemp">
+        <!-- <div v-else-if="from === fromRoute.chartTemp">
           <button id="panel-lock" :title='panelLock ? $t("overall.unlocked") : $t("overall.locked")'  class="top-tool-btn margin-r-10" @click="panelLockChange(!panelLock)" type="button">
             <i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>
           </button>
           <button @click="chartBySync" id="chart-sync"  :title="$t('overall.syncChart')" class="top-tool-btn margin-r-10" type="button">
             <i class="nz-icon nz-icon-sync"></i>
           </button>
-        </div>
+        </div> -->
         <!-- dashboardTemp -->
         <div v-else-if="from === fromRoute.dashboardTemp">
           <button v-has="'main_add'" id="endpoint-create-chart" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChartBefore">
@@ -766,12 +766,8 @@ export default {
     chartBySync () {
       this.$store.dispatch('dispatchHomeLoading', true)
       const params = {}
-      if (this.from === 'chartTemp') {
-        params.pid = this.obj.id
-      } else {
-        params.panelId = this.showPanel.id
-      }
-      this.$post('visual/panel/chart/syncTmpl', params).then(res => {
+      params.tmplId = this.showPanel.id
+      this.$post('visual/panel/syncTmpl', params).then(res => {
         this.$store.dispatch('dispatchHomeLoading', false)
         if (res.code === 200) {
           this.getTableData(this.obj.id)
