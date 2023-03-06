@@ -28,6 +28,7 @@
       :visible.sync="dialogVisible"
       :show-close="true"
       :append-to-body="false"
+      :close-on-click-modal="clickModalClose"
       :z-index="1000"
       @close="closeDialog"
     >
@@ -43,7 +44,7 @@
       </div>
       <!-- tabs -->
       <div class="integration-dialog-content">
-        <integration-tabs  :type="type" :detailsObj="detailsObj"></integration-tabs>
+        <integration-tabs ref="tabs" :type="type" :detailsObj="detailsObj"></integration-tabs>
       </div>
     </el-dialog>
   </div>
@@ -51,6 +52,7 @@
 
 <script>
 import integrationTabs from './integration-tabs/integration-tabs.vue'
+import bus from '../../../libs/bus'
 export default {
   name: 'integration',
   components: {
@@ -67,8 +69,15 @@ export default {
       // 模块列表
       dataList: [],
       type: '',
-      detailsObj: {}
+      detailsObj: {},
+      clickModalClose: true
     }
+  },
+  created () {
+    this.getDataList()
+    bus.$on('clickModalClose', (val) => {
+      this.clickModalClose = val
+    })
   },
   methods: {
     async getDataList () {
@@ -92,8 +101,8 @@ export default {
       this.dialogVisible = false
     }
   },
-  created () {
-    this.getDataList()
+  beforeDestroy () {
+    bus.$off('clickModalClose')
   }
 }
 </script>

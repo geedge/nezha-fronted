@@ -150,6 +150,8 @@ export default {
           const exception = JSON.parse(responseText)
           if (exception.message) {
             $self.$message.error(exception.message)
+          } else if (exception.msg) {
+            $self.$message.error(exception.msg)
           } else {
             console.error(error)
           }
@@ -190,6 +192,8 @@ export default {
           const exception = JSON.parse(responseText)
           if (exception.message) {
             $self.$message.error(exception.message)
+          } else if (exception.msg) {
+            $self.$message.error(exception.msg)
           } else {
             console.error(error)
           }

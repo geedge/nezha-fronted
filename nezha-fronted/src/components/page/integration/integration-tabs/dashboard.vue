@@ -3,25 +3,10 @@
     <div class="integration-tool" style="padding: 0 10px;">
       <h3>{{showPanel.name}}</h3>
 
-      <top-tool-more-options
-        type='integration'
-        ref="topTool"
-        id="integration-dashboard-tool"
-        :params="filter"
-        :params-type="'template'"
-        class="top-tool-export margin-r-10"
-        export-url="/visual/panel/export"
-        import-url="/visual/panel/import"
-        export-file-name="dashboard-temp"
-        @afterImport="afterImport"
-      >
-        <template>
-          <button class="nz-btn el-button--small nz-btn-style-normal" @click="importFn">
-            <i class="nz-icon nz-icon-upload"></i>
-            <span>{{$t('overall.importExcel')}}</span>
-          </button>
-        </template>
-      </top-tool-more-options>
+      <button class="nz-btn el-button--small nz-btn-style-normal" @click="importFn">
+        <i class="nz-icon nz-icon-upload"></i>
+        <span>{{$t('overall.importExcel')}}</span>
+      </button>
     </div>
 
     <div class="dashboard-container">
@@ -46,6 +31,11 @@
         </div>
       </div>
     </div>
+
+    <!-- dashboard模板 -->
+    <transition name="right-box">
+      <dashboardTempBox v-if="rightBox.dashboardTemp.show" :from="fromRoute.integration" @close="closeDashboardTempBox"></dashboardTempBox>
+    </transition>
   </div>
 </template>
 
@@ -55,13 +45,13 @@ import { chartCache } from '@/components/common/js/common'
 import chartList from '@/components/chart/chartList'
 import bus from '../../../../libs/bus'
 import { fromRoute } from '@/components/common/js/constants'
-import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import panelVariables from '@/components/common/panel/panelVariables'
+import dashboardTempBox from '@/components/common/rightBox/dashboardTempBox'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 export default {
   name: 'integration-dashboard',
   props: {
-    dashboardTemplate: String
+    tempId: Number
   },
   computed: {
     chartRightBoxShow () {
@@ -75,6 +65,9 @@ export default {
     return {
       fromRoute,
       chartListLoading: true,
+      rightBox: { // 面板弹出框相关
+        dashboardTemp: { show: false }
+      },
       searchTime: bus.getTimezontDateRange(),
       panel: { // 新增panel
         id: '',
@@ -83,7 +76,10 @@ export default {
       panelData: [],
       // ---图表相关参数--start
       dataList: [], // 数据列表
-      filter: {
+      filter: { // 过滤条件
+        panelId: -1,
+        start_time: '',
+        end_time: ''
       },
       showPanel: {
         name: '',
@@ -99,13 +95,19 @@ export default {
   },
   components: {
     chartList,
-    topToolMoreOptions,
-    panelVariables // 处理panel变量的组件
+    panelVariables, // 处理panel变量的组件
+    dashboardTempBox
   },
   methods: {
     importFn () {
+      this.rightBox.dashboardTemp.show = true
+      bus.$emit('clickModalClose', false)
     },
-    afterImport () {
+    closeDashboardTempBox (refresh) {
+      this.rightBox.dashboardTemp.show = false
+      setTimeout(() => {
+        bus.$emit('clickModalClose', true)
+      }, 100)
     },
     // 滚动事件触发下拉加载
     onScroll () {
@@ -126,40 +128,41 @@ export default {
       const findItem = unitsList.find(item => item.label.replace(/\s*/g, '') == type.replace(/\s*/g, ''))
       return findItem ? findItem.value : 2
     },
-    getData () {
-      let num = 0
-      this.showPanel.charts.forEach(item => {
-        item.id = ++num
-        item.span = Number(item.span)
-        item.height = Number(item.height)
-        item.x = Number(item.x)
-        item.y = Number(item.y)
-        item.type = item.type.split(' ')[0].toLowerCase()
-        item.unit = this.getUnitValue(item.unit)
-        item.loaded = false
-        item.children && item.children.forEach(subItem => {
-          subItem.id = ++num
-          subItem.span = Number(subItem.span)
-          subItem.height = Number(subItem.height)
-          subItem.x = Number(subItem.x)
-          subItem.y = Number(subItem.y)
-          subItem.type = subItem.type.split(' ')[0].toLowerCase()
-          subItem.unit = this.getUnitValue(subItem.unit)
-        })
+    getData (params) {
+      this.dataList = []
+      this.chartListLoading = true
+      this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
+        if (response.code === 200) {
+          this.chartListLoading = false
+          this.dataList = response.data.list.map(item => {
+            return {
+              ...item,
+              loaded: false
+            }
+          })
+        }
       })
-      this.dataList = this.showPanel.charts
-      this.chartListLoading = false
     },
     // 公用操作
     getTableData () {
-      this.panelData = JSON.parse(this.dashboardTemplate)
-      if (this.panelData.length > 0) {
-        this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
-        this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
-        this.getData()
-      } else {
+      this.$get('visual/panel', { type: 'template', ids: this.tempId }).then(response => {
+        if (response.code === 200) {
+          this.panelData = response.data.list
+          if (this.panelData.length > 0) {
+            this.filter.panelId = this.panelData[0].id
+            this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
+            this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
+            this.getData(this.filter)
+          }
+        }
         this.chartListLoading = false
-      }
+      }).catch((error) => {
+        this.chartListLoading = false
+        if (error) {
+          console.error(error)
+          this.$message.error(error.toString())
+        }
+      })
     },
     getPanelData () {
       this.variablesInit = true
