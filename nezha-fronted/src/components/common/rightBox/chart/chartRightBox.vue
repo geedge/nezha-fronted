@@ -137,7 +137,7 @@
 <script>
 import { fromRoute } from '@/components/common/js/constants'
 import editRigthBox from '@/components/common/mixin/editRigthBox'
-import { resetZIndex, getUUID } from '@/components/common/js/common'
+import { resetZIndex, getUUID, s8 } from '@/components/common/js/common'
 import selectPanel from '@/components/common/popBox/selectPanel'
 import chartConfig from '@/components/common/rightBox/chart/chartConfig'
 import otherChartConfig from '@/components/common/rightBox/chart/otherChartConfig'
@@ -382,7 +382,7 @@ export default {
               valueMapping: false,
               visibility: false
             },
-            thresholds: [{ value: undefined, color: '#eeeeeeff' }],
+            thresholds: [{ id: s8(), value: undefined, color: '#eeeeeeff' }],
             showHeader: this.editChart.param.showHeader,
             visibility: {
               varName: '',
@@ -541,6 +541,10 @@ export default {
         }
         if (obj.param && !obj.param.thresholds) {
           obj.param.thresholds = []
+        } else if (obj.param && obj.param.thresholds) {
+          obj.param.thresholds.forEach(item => {
+            item.id = s8()
+          })
         }
         if (obj.groupId === -1) {
           obj.groupId = ''

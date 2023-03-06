@@ -21,7 +21,7 @@
       <el-row v-if="!single" class="color-tab">
         <div v-for="item in valueArr" :key="item.key" :class="[keyName==item.name?'color-active':'']" @click.stop="colorTabChange(item)">{{item.name}}</div>
       </el-row>
-      <sketch v-model="colors" :disableAlpha="disableAlpha" @input.stop="updateValue" :presetColors="presetColors"/>
+      <sketch v-model="colors" :disableAlpha="disableAlpha" @input="updateValue" :presetColors="presetColors"/>
     </div>
   </span>
 </template>
