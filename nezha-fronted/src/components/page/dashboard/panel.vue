@@ -389,7 +389,7 @@ export default {
       }
       this.variablesInit = false
       this.showPanel = val
-      this.variables = this.$loadsh.get(this, 'showPanel.param.variables', []) || []
+      this.variables = this.$loadsh.cloneDeep(this.$loadsh.get(this, 'showPanel.param.variables', []) || [])
       this.showPanel.type = 'dashboard'
       this.filter.panelId = this.showPanel.id
       this.panelId = this.showPanel.id

@@ -149,5 +149,8 @@
   .nz-icon{
     color: $--color-text-regular;
   }
+ .activeLi .nz-icon {
+   color: $--color-primary;
+ }
 }
 
