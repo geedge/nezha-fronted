@@ -19,7 +19,7 @@
 
     <div v-if="showColorPicker" class="vue-color right-box-select-top" :style="{top:position.y+'px',left:position.x+'px'}" ref="colorBox">
       <el-row v-if="!single" class="color-tab">
-        <div v-for="item in valueArr" :key="item.key" :class="[keyName==item.name?'color-active':'']" @click="colorTabChange(item)">{{item.name}}</div>
+        <div v-for="item in valueArr" :key="item.key" :class="[keyName==item.name?'color-active':'']" @click.stop="colorTabChange(item)">{{item.name}}</div>
       </el-row>
       <sketch v-model="colors" :disableAlpha="disableAlpha" @input="updateValue" :presetColors="presetColors"/>
     </div>

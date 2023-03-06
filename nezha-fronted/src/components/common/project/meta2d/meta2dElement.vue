@@ -134,7 +134,7 @@
                 {{$t('overall.type')}}
               </div>
               <div class="form-row-value">
-                <el-select :popper-append-to-body="true" v-model="pen.borderType" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
+                <el-select :popper-append-to-body="false" v-model="pen.borderType" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
                            @change="(val)=>{change('lineDash', val)}">
                   <div slot="prefix">
                     <div class="icon-item">
@@ -409,7 +409,7 @@
                 {{$t('project.topology.style')}}
               </div>
               <div class="form-row-value">
-                <el-select :popper-append-to-body="true" v-model="pen.borderType" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
+                <el-select :popper-append-to-body="false" v-model="pen.borderType" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
                            @change="(val)=>{change('lineDash', val)}">
                   <div slot="prefix">
                     <div class="icon-item">
@@ -440,7 +440,7 @@
                 {{$t('overall.type')}}
               </div>
               <div class="form-row-value">
-                <el-select :popper-append-to-body="true" v-model="pen.lineName" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
+                <el-select :popper-append-to-body="false" v-model="pen.lineName" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
                            @change="change('lineName')">
                   <div slot="prefix">
                     <div class="icon-item">
@@ -471,7 +471,7 @@
                 {{$t('project.topology.fromArrow')}}
               </div>
               <div class="form-row-value">
-                <el-select :popper-append-to-body="true" v-model="pen.fromArrow" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
+                <el-select :popper-append-to-body="false" v-model="pen.fromArrow" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
                            @change="change('fromArrow')">
                   <div slot="prefix">
                     <div class="icon-item">
@@ -521,7 +521,7 @@
                 {{$t('project.topology.toArrow')}}
               </div>
               <div class="form-row-value">
-                <el-select :popper-append-to-body="true" v-model="pen.toArrow" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
+                <el-select :popper-append-to-body="false" v-model="pen.toArrow" size="small" popper-class="right-box-select-top right-public-box-dropdown-top"
                            @change="change('toArrow')">
                   <div slot="prefix">
                     <div class="icon-item">

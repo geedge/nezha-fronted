@@ -457,7 +457,9 @@
       width: calc(100% - 70px);
     }
   }
-
+  .el-select-dropdown__item {
+    height: 30px;
+  }
   .icon-item {
     width: 75%;
     height: 100%;
