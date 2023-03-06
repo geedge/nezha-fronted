@@ -1,7 +1,7 @@
 <template>
   <div v-clickoutside="{obj: editDashboard, func: esc}" class="right-box right-box-dashboard-temp">
     <div class="right-box__header">
-      <div class="header__title">{{from==='integration'?$t("overall.tempImport"):$t("dashboard.panel.createPanelTitle")}}</div>
+      <div class="header__title">{{$t("dashboard.panel.createPanelTitle")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editDashboard, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
@@ -278,7 +278,7 @@ export default {
           this.$post(this.url, params).then(response => {
             this.prevent_opt.save = false
             if (response.code === 200) {
-              this.$message({ duration: 1000, type: 'success', message: this.from === 'integration' ? this.$t('overall.result.successfully') : this.$t('tip.saveSuccess') })
+              this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
               this.esc(true)
             } else {
               this.$message.error(response.msg)
