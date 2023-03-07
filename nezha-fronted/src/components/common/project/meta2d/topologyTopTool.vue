@@ -1,12 +1,9 @@
 <template>
   <div class="tool-top" id="tool-top"  @mouseup="changeDrawLineFlag(false)">
     <div id="tools-left-drag"
-         class="top-tool-item"
+         class="top-tool-item top-tool-item-delete"
          :title="$t('project.topology.addNode')"
-         :class="dragstartFlag ? 'is-active-meta2d' : ''"
-         draggable="true"
-         @mousedown="changeState('dragstartFlag')"
-         @dragstart.stop="onDragstart($event)">
+         @click="addNode">
       <div
       >
         <i class="nz-icon nz-icon-juxing" />
@@ -184,6 +181,20 @@ export default {
         height: 100
       }
       getTopology(this.meta2dId).canvas.addCaches = deepClone([pen])
+    },
+    addNode () {
+      const data = getTopology(this.meta2dId).data()
+      const offestX = data.x
+      const offestY = data.y
+      const pen = {
+        name: 'rectangle',
+        text: 'rectangle',
+        width: 100,
+        height: 100,
+        x: 100 - offestX,
+        y: 100 - offestY
+      }
+      getTopology(this.meta2dId).addPen(pen , true)
     },
     changeDrawLineFlag () {
       if (this.dragstartFlag) {

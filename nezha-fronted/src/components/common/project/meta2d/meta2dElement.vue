@@ -1213,8 +1213,8 @@ export default {
       this.elements[key] = !this.elements[key]
     },
     inputFocus (e) {
-      e.path[2].children[0].setAttribute('tabindex', '0')
-      e.path[2].children[1].setAttribute('tabindex', '1')
+      e.path[2].children[0].setAttribute('tabindex', '-10')
+      e.path[2].children[1].setAttribute('tabindex', '-11')
     },
     inputBlur (e) {
     },

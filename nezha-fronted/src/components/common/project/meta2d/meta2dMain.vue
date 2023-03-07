@@ -1,5 +1,5 @@
 <template>
-  <div class="meta2d-box list-page" v-my-loading="meta2dLoading" ref="meta2dBox">
+  <div class="meta2d-box list-page" :class="editFlag ? 'topology-dialog' : ''" v-my-loading="meta2dLoading" ref="meta2dBox">
     <meta2dHeader
       ref="header"
       :meta2dId="meta2dId"
@@ -14,7 +14,7 @@
       <div :id="meta2dId" style="height: 100%;width: 100%"></div>
     </div>
     <meta2dProps
-      v-if="editFlag"
+      v-if="editFlag && !isPreview"
       ref="meta2dProps"
       :selectPens.sync="selectPens"
       :querysArray="querysArray"

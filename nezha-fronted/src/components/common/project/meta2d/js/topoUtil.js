@@ -18,8 +18,8 @@ export default {
           this.calcNode(item)
         })
       }
-      getTopology(id).render()
       getTopology(id).centerView()
+      getTopology(id).render()
     },
     calcNode (node) { // 处理节点数据
       node = { id: node.id, ...node.data.params }

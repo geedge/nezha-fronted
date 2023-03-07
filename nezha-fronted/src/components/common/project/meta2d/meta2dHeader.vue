@@ -159,6 +159,7 @@ export default {
       this.$nextTick(() => {
         getTopology(this.meta2dId).resize()
         getTopology(this.meta2dId).centerView()
+        getTopology(this.meta2dId).translate(0, 0)
       })
     },
     previewTopology () {
@@ -188,6 +189,10 @@ export default {
       getTopology(this.meta2dId).centerView()
     },
     cancelTopology () {
+      this.$store.commit('setShowTopoScreen', this.topoScreenState)
+      if (this.$refs.topTool.option.map) {
+        getTopology(this.meta2dId).hideMap()
+      }
       this.$emit('exitEdit', true)
     }
   }

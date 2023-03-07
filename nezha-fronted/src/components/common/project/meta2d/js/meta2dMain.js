@@ -63,6 +63,7 @@ export default {
       meta2d.beforeAddPens = (pens) => { // 添加画笔前
         bus.$emit('changeDrawState')
         const name = 'elements - ' + meta2d.store.data.pens.length
+        console.log('123123123123')
         if (pens.length === 1) {
           if (!pens[0].type) {
             this.nodeInit(pens[0], name)
