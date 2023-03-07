@@ -113,6 +113,9 @@ export default {
       }
       this.from === fromRoute.chartTemp && className.push('chart-temp')
       return className.join(' ')
+    },
+    showDeleteTableRel () {
+      return this.$store.getters.getShowDeleteTableRel
     }
   },
   data () {
@@ -138,6 +141,11 @@ export default {
       setTimeout(() => {
         this.searchInputShow = true
       }, 100)
+    },
+    showDeleteTableRel (n) {
+      if (!n) {
+        this.$parent.getTableData()
+      }
     }
   },
   methods: {
