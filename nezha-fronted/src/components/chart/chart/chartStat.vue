@@ -336,7 +336,7 @@ export default {
         this.getLayout().then(layout => {
           this.renderStat(layout)
         })
-      }, 50)
+      }, 100)
     },
     setFontSize (item) {
       let fontSize = ''
