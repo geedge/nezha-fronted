@@ -24,7 +24,6 @@
             {{$t('project.topology.image')}}
           </div>
           <div class="form-row-value">
-            <!--                <el-input  v-model="pen.image" size="small" @change="change('image')"/>-->
             <meta2dSelectImage :selectImage="bkImage" :imgId="bkImageId" @updateImage="updateImage"/>
           </div>
         </div>
@@ -50,11 +49,15 @@
             }">
             <div v-for="(item, index) in elements" :key="item.id" @click.stop="penActive(item)">
               <div class="pen-tools pen-item" style="">
-                <span>
-                  <i v-if="item.type !== 1" class="nz-icon nz-icon-juxing" />
+                <span class="hide-input">
+                  <i v-if="item.type !== 1" class="nz-icon nz-icon-juxing" style="margin-right: 3px"/>
                   <i v-else class="nz-icon nz-icon-xiantiao" />
-                  <span v-if="item.type !== 1" style="margin-left: 8px">element - {{index}}</span>
-                  <span v-else style="margin-left: 5px">element - {{index}}</span>
+                  <el-input
+                    :title="item.nzName"
+                    style="width: 120px"
+                    @focus="focusName"
+                    v-model="item.nzName"
+                    size="small"/>
                 </span>
                 <span>
                     <span @click.stop="penChange(item, 'locked')" class="pen-tools-item" :title="!item.locked?$t('overall.locked'): $t('overall.unlocked')">
@@ -109,11 +112,15 @@ export default {
     }
   },
   mounted () {
+    getTopology(this.meta2dId).store.data.pens.forEach((pen, index) => {
+      if (!pen.nzName) {
+        pen.nzName = 'element - ' + index
+      }
+    })
     this.elements = getTopology(this.meta2dId).store.data.pens
     this.background = getTopology(this.meta2dId).store.data.background || '#ffffff00'
     this.bkImage = getTopology(this.meta2dId).store.data.bkImage || ''
     this.bkImageId = this.params.bkImageId || ''
-    console.log(this.bkImageId)
     this.$refs.backgroundNezhaColor.colors = this.background
   },
   methods: {
@@ -187,6 +194,9 @@ export default {
       this.bkImage = image.image
       this.bkImageId = image.id
       getTopology(this.meta2dId).setBackgroundImage(image.image)
+    },
+    focusName (event) {
+      console.log(event)
     }
   }
 }
