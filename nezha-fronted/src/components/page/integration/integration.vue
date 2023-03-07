@@ -44,7 +44,7 @@
       </div>
       <!-- tabs -->
       <div class="integration-dialog-content">
-        <integration-tabs ref="tabs" :type="type" :detailsObj="detailsObj"></integration-tabs>
+        <integration-tabs :type="type" :detailsObj="detailsObj"></integration-tabs>
       </div>
     </el-dialog>
   </div>

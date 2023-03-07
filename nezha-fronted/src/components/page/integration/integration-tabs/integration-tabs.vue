@@ -9,7 +9,7 @@
       <automatic v-if="tabId==='automatic'"></automatic>
       <!-- module -->
       <configuration v-if="tabId==='configuration'" :configuration="detailsObj.configuration"></configuration>
-      <dashboard ref="dashboard" v-if="tabId==='dashboard'" :tempId="detailsObj.tempId"></dashboard>
+      <dashboard v-if="tabId==='dashboard'" :tempId="detailsObj.tempId"></dashboard>
       <alert v-if="tabId==='alert'" :moduleId="detailsObj.id"></alert>
       <metric v-if="tabId==='metric'" :moduleId="detailsObj.id"></metric>
     </div>

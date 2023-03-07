@@ -188,7 +188,7 @@ div.v-selectpage div.sp-input-container div.sp-button {
   display: inline-block;
   box-sizing: border-box;
   padding: 0;
-  width: 24px;
+  width: 26px;
   height: 100%;
   border: 0;
   border-top-right-radius: 0;
@@ -201,22 +201,45 @@ div.v-selectpage div.sp-input-container div.sp-button {
 
 div.v-selectpage div.sp-input-container div.sp-button span.sp-caret {
   position: absolute;
-  top: 50%;
-  right: 12px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto; 
   display: inline-block;
-  margin-top: -1px;
-  margin-left: 2px;
+  transition: transform 0.3s ease;
+  transform: rotate(180deg);
+
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'element-icons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: baseline;
+  display: inline-block;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+div.v-selectpage div.sp-input-container div.sp-button span.sp-caret::before {
+  content: "\e6e1";
+}
+
+div.v-selectpage div.sp-input-container div.sp-button span.sp-caret::after {
+  content: "";
+  height: 100%;
   width: 0;
-  height: 0;
-  border-top: 4px dashed;
-  border-right: 4px solid transparent;
-  border-left: 4px solid transparent;
+  display: inline-block;
   vertical-align: middle;
-  transition: transform .2s ease;
 }
 
 div.v-selectpage div.sp-input-container div.sp-button.open span.sp-caret {
-  transform: rotate(180deg);
+  transform: rotate(0);
 }
 
 div.sp-header {

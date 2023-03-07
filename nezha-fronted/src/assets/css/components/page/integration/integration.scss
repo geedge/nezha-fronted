@@ -398,6 +398,15 @@
           .el-select{
             width: 220px;
           }
+          .v-selectpage{
+            width: 640px;
+            .sp-base.sp-input{
+              height: 32px;
+            }
+            .sp-icon-close{
+              display: none;
+            }
+          }
           .nz-btn{
             margin-left: 18px;
           }

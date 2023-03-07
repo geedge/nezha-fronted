@@ -8,11 +8,19 @@
         <h4>{{$t('integration.selectAsset')}}</h4>
         <div class="talon-select">
           <span>{{$t('asset.asset')}}</span>
-          <el-select v-model="assetId" class="right-box-row-with-btn" popper-class="right-box-select-top right-public-box-dropdown-top" placeholder="" :popper-append-to-body="false" size="small">
-            <el-option v-for="item in assetList" :key="item.name" :label="item.name" :value="item.id">
-              <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-            </el-option>
-          </el-select>
+          <v-selectpage
+            :data="assetList"
+            :tb-columns="assetColumns"
+            :multiple="false"
+            :language="language"
+            key-field="id"
+            show-field="name"
+            :width="640"
+            v-model="assetId"
+            class="form-control"
+            :result-format="resultFormat"
+          >
+          </v-selectpage>
         </div>
       </div>
     </div>
@@ -39,7 +47,39 @@ export default {
     return {
       loadFinish: false,
       assetId: '',
-      assetList: []
+      assetList: [],
+      // asset表头
+      assetColumns: [
+        { title: 'id', data: 'id' },
+        {
+          title: this.$t('overall.name'),
+          data: function (row) {
+            if (row.name.length > 15) {
+              return row.name.substring(0, 12) + '...'
+            }
+            return row.name
+          }
+        },
+        { title: 'Manage Ip', data: 'manageIp' },
+        {
+          title: this.$t('overall.type'),
+          data: (row) => {
+            return row.type ? row.type.name : ''
+          }
+        },
+        {
+          title: this.$t('asset.model'),
+          data: (row) => {
+            return row.model ? row.model.name : ''
+          }
+        },
+        {
+          title: this.$t('overall.dc'),
+          data: (row) => {
+            return row.dc ? row.dc.name : ''
+          }
+        }
+      ]
     }
   },
   created () {
@@ -51,6 +91,7 @@ export default {
     })
   },
   computed: {
+    language () { return this.$store.getters.getLanguage },
     curlUrl () {
       return 'curl -o- -k -H "Authorization:' + this.token + '" ' + this.ipAddr + '/asset/talon/' + this.assetId + '/install.sh | sudo -E bash'
     }
@@ -64,11 +105,19 @@ export default {
         if (response.code === 200) {
           this.assetList = response.data.list
           if (this.assetList && this.assetList.length > 0) {
-            this.assetId = this.assetList[0].id
+            this.assetId = String(this.assetList[0].id)
             this.loadFinish = true
           }
         }
       })
+    },
+    resultFormat (resp) {
+      if (resp && resp.data) {
+        const assetData = {}
+        assetData.list = resp.data.list
+        assetData.totalRow = resp.data.total
+        return assetData
+      }
     },
     copyUrl (txt) {
       this.$copyText(txt).then(() => {
