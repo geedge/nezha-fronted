@@ -186,12 +186,12 @@
     padding: 0 10px;
     line-height: 28px;
     border: 1px solid $--border-color-light;
-    .nz-icon-close {
+    .nz-icon-circle-close {
       display: none;
     }
   }
   .image-input:hover {
-    .nz-icon-close {
+    .nz-icon-circle-close {
       display: inline-block;
     }
   }

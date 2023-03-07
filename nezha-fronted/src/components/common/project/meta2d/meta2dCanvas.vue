@@ -149,7 +149,7 @@ export default {
         }
       }
       if (key === 'locked') {
-        if (item.locked) {
+        if (!item.locked) {
           obj.locked = 10
           if (getTopology(this.meta2dId).store.active.length && item.id === getTopology(this.meta2dId).store.active[0].id) {
             bus.$emit('changeSelectPens', [])
