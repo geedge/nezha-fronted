@@ -76,7 +76,7 @@ export default {
             checked: [],
             checkAll: false,
             visible: false,
-            isIndeterminate: false
+            isIndeterminate: true
           }
         })
         this.getLabelData()
