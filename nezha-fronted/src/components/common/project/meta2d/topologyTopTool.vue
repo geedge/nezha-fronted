@@ -9,7 +9,7 @@
          @dragstart.stop="onDragstart($event)">
       <div
       >
-        <i class="nz-icon nz-icon-zhengfangxing" />
+        <i class="nz-icon nz-icon-juxing" />
       </div>
     </div>
     <div id="tools-left-draw"
@@ -17,7 +17,7 @@
          :class="drawLineFlag ? 'is-active-meta2d' : ''"
          @click="changeState('drawLineFlag')"
          :title="$t('project.topology.addLine')">
-      <i  class="nz-icon nz-icon-compare" />
+      <i  class="nz-icon nz-icon-xiantiao" />
     </div>
     <div id="undo"
          class="top-tool-item"

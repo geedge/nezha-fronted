@@ -142,6 +142,7 @@ export default {
         data.pens.forEach(pen => {
           pen.isBottom = false
           if (pen.isNz) {
+
             if (pen.data.legend && pen.data.enable.valueMapping) {
               const findItem = queryValues.find(query => query.name === pen.data.legend && query.parent === pen.data.parent)
               if (findItem) {

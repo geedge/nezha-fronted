@@ -155,7 +155,7 @@ export default {
       pen.visible = pen.visible || true
       pen.isNz = true
       pen.locked = pen.locked || 0
-      pen.isBottom = true
+      pen.isBottom = false
     },
     lineInit (pen) { // 初始化连线参数
       if (pen.data && pen.data.params) {
@@ -178,7 +178,7 @@ export default {
         }
       }
       pen.disableInput = pen.disableInput || true
-      pen.lineAnimateType = pen.lineAnimateType || undefined
+      pen.lineAnimateType = pen.lineAnimateType || 0
       pen.animateSpan = pen.animateSpan || 1
       pen.animateReverse = pen.animateReverse || false
       pen.fromArrow = pen.fromArrow || ''
@@ -193,8 +193,8 @@ export default {
       pen.isNz = pen.isNz || true
       pen.visible = pen.visible || true
       pen.locked = pen.locked || 0
-      pen.isBottom = true
-      pen.autoPlay = true
+      pen.isBottom = false
+      pen.autoPlay = false
     },
     pensActive (pens, e) { // 选中节点
       this.selectPens = pens

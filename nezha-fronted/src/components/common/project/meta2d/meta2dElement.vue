@@ -259,7 +259,7 @@
               </div>
               <div class="form-row-value">
 <!--                <el-input  v-model="pen.image" size="small" @change="change('image')"/>-->
-                <meta2dSelectImage :selectImage="pen.image" @updateImage="updateImage"/>
+                <meta2dSelectImage :selectImage="pen.image" :imgId="pen.imageId" @updateImage="updateImage"/>
               </div>
             </div>
             <div class="form-row-item">

@@ -119,12 +119,14 @@ export default {
       const timeType = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataTimeType
       const unit = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataUnit
       const statistic = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataStatistic
+      const bkImageId = this.$parent.$refs.meta2dProps.$refs.meta2dCanvas.bkImageId
       const params = {
         topo: getTopology(this.meta2dId).data(),
         elements: elements,
         timeType: timeType || 1,
         unit: unit || 1,
         statistic: statistic || 'last',
+        bkImageId: bkImageId || ''
       }
 
       this.$put('monitor/project/topo', { topo: JSON.stringify(params), projectId: this.project.id }).then(res => {

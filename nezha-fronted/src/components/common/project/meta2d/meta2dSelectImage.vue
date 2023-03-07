@@ -1,11 +1,10 @@
 <template>
   <div class="meta2d-image-box" v-clickoutside="changeSelectBoxShow">
     <div @click="selectBoxShow = !selectBoxShow" style="position: relative">
-      <div v-if="selectImage" class="image-box">
-        <img :src="selectImage"  class="image-box">
+      <div class="image-input">
+        <span v-if="imageName">{{unit}} / {{imageName}}</span>
+        <i class="nz-icon nz-icon-circle-close" style="position: absolute;top: 2px;right: 10px;font-size: 8px" @click.stop="selectImageChange({image: '', id: ''})"/>
       </div>
-      <div v-else class="image-box image-box-null" />
-      <i class="nz-icon nz-icon-close" style="position: absolute;top: -7px;left: 25px;font-size: 10px" @click.stop="selectImageChange({image: '', id: ''})"/>
     </div>
     <div class="image-select-box" v-if="selectBoxShow">
 <!--      <div v-for="item in iconArray" :key="item.id" class="image-box-item" @click="selectImageChange(item)">-->
@@ -111,7 +110,8 @@ import { imageTemp } from '@/components/common/project/L5/services/canvas'
 export default {
   name: 'meta2dSelectImage',
   props: {
-    selectImage: {}
+    selectImage: {},
+    imgId: {}
   },
   data () {
     return {
@@ -129,6 +129,8 @@ export default {
         name: '',
         unit: ''
       },
+      unit: '',
+      imageName: ''
     }
   },
   mounted () {
@@ -151,6 +153,13 @@ export default {
           this.iconArray = [...res.data.list]
           this.iconArray.forEach((item, index) => {
             item.image = res2[index].data
+            if (this.imgId == item.id) {
+              this.unit = item.unit
+              this.imageName = item.imageName
+            } else if (this.selectImage === item.image) {
+              this.unit = item.unit
+              this.imageName = item.imageName
+            }
             const group = this.tools.find(tool => tool.group === item.unit)
             if (group) {
               group.children.push({
@@ -187,6 +196,8 @@ export default {
       this.selectBoxShow = false
     },
     selectImageChange (item) {
+      this.unit = item.unit
+      this.imageName = item.imageName
       this.$emit('updateImage', item)
     },
     tooltipDelete (item) {

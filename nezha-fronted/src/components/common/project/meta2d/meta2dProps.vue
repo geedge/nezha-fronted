@@ -5,7 +5,7 @@
         <meta2dElement :selectPens.sync="selectPens" @change="change" :elements="elements"/>
       </el-tab-pane>
       <el-tab-pane :label="$t('project.topology.canvas')" name="canvas">
-        <meta2dCanvas :canvasProps="canvasProps" :meta2dId='meta2dId' @changeActiveName="changeActiveName" ref ='meta2dCanvas'/>
+        <meta2dCanvas :canvasProps="canvasProps"  :params.sync="params" :meta2dId='meta2dId' @changeActiveName="changeActiveName" ref ='meta2dCanvas'/>
       </el-tab-pane>
       <el-tab-pane :label="$t('project.topology.data')" name="data">
         <meta2dData :querysArray.sync="querysArray" :params.sync="params" ref="meta2dData"/>
