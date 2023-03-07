@@ -259,7 +259,7 @@
               </div>
               <div class="form-row-value">
 <!--                <el-input  v-model="pen.image" size="small" @change="change('image')"/>-->
-                <meta2dSelectImage :selectImage="pen.image" @updateImage="updateImage"/>
+                <meta2dSelectImage :selectImage="pen.image" :imgId="pen.imageId" @updateImage="updateImage"/>
               </div>
             </div>
             <div class="form-row-item">
@@ -1213,8 +1213,8 @@ export default {
       this.elements[key] = !this.elements[key]
     },
     inputFocus (e) {
-      e.path[2].children[0].setAttribute('tabindex', '0')
-      e.path[2].children[1].setAttribute('tabindex', '1')
+      e.path[2].children[0].setAttribute('tabindex', '-10')
+      e.path[2].children[1].setAttribute('tabindex', '-11')
     },
     inputBlur (e) {
     },

@@ -62,11 +62,13 @@ export default {
       /* 画布绑定事件 */
       meta2d.beforeAddPens = (pens) => { // 添加画笔前
         bus.$emit('changeDrawState')
+        const name = 'elements - ' + meta2d.store.data.pens.length
+        console.log('123123123123')
         if (pens.length === 1) {
           if (!pens[0].type) {
-            this.nodeInit(pens[0])
+            this.nodeInit(pens[0], name)
           } else {
-            this.lineInit(pens[0])
+            this.lineInit(pens[0], name)
           }
         }
         return true
@@ -99,7 +101,7 @@ export default {
         })
       })
     },
-    nodeInit (pen) { // 初始化节点参数
+    nodeInit (pen, name) { // 初始化节点参数
       if (pen.data && pen.data.params) {
         return
       }
@@ -132,6 +134,7 @@ export default {
           legends: [] // {legend: '' , alias}
         }
       }
+      pen.nzName = name
       pen.disableInput = pen.disableInput || true
       pen.background = pen.background || '#22222200'
       pen.textAlign = pen.textAlign || 'center'
@@ -155,9 +158,9 @@ export default {
       pen.visible = pen.visible || true
       pen.isNz = true
       pen.locked = pen.locked || 0
-      pen.isBottom = true
+      pen.isBottom = false
     },
-    lineInit (pen) { // 初始化连线参数
+    lineInit (pen, name) { // 初始化连线参数
       if (pen.data && pen.data.params) {
         return
       }
@@ -177,8 +180,9 @@ export default {
           tooltip: true
         }
       }
+      pen.nzName = name
       pen.disableInput = pen.disableInput || true
-      pen.lineAnimateType = pen.lineAnimateType || undefined
+      pen.lineAnimateType = pen.lineAnimateType || 0
       pen.animateSpan = pen.animateSpan || 1
       pen.animateReverse = pen.animateReverse || false
       pen.fromArrow = pen.fromArrow || ''
@@ -193,8 +197,8 @@ export default {
       pen.isNz = pen.isNz || true
       pen.visible = pen.visible || true
       pen.locked = pen.locked || 0
-      pen.isBottom = true
-      pen.autoPlay = true
+      pen.isBottom = false
+      pen.autoPlay = false
     },
     pensActive (pens, e) { // 选中节点
       this.selectPens = pens

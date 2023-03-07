@@ -18,8 +18,8 @@ export default {
           this.calcNode(item)
         })
       }
-      getTopology(id).render()
       getTopology(id).centerView()
+      getTopology(id).render()
     },
     calcNode (node) { // 处理节点数据
       node = { id: node.id, ...node.data.params }
@@ -141,6 +141,9 @@ export default {
         }
         data.pens.forEach(pen => {
           pen.isBottom = false
+          if (!pen.nzName) {
+            pen.nzName = ''
+          }
           if (pen.isNz) {
             if (pen.data.legend && pen.data.enable.valueMapping) {
               const findItem = queryValues.find(query => query.name === pen.data.legend && query.parent === pen.data.parent)

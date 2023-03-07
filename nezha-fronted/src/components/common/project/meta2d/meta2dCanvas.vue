@@ -24,8 +24,7 @@
             {{$t('project.topology.image')}}
           </div>
           <div class="form-row-value">
-            <!--                <el-input  v-model="pen.image" size="small" @change="change('image')"/>-->
-            <meta2dSelectImage :selectImage="bkImage" @updateImage="updateImage"/>
+            <meta2dSelectImage :selectImage="bkImage" :imgId="bkImageId" @updateImage="updateImage"/>
           </div>
         </div>
       </div>
@@ -48,17 +47,17 @@
               animation: 150,
               handle: '.drag-sort'
             }">
-            <div v-for="item in elements" :key="item.id" @click.stop="penActive(item)">
-              <div class="pen-tools" style="">
-                <span>
-                  <i v-if="item.type !== 1" class="nz-icon nz-icon-zhengfangxing" />
-                  <i v-else class="nz-icon nz-icon-compare" />
-                  <span v-if="item.data.source!=='legend'" style="margin-left: 5px">
-                     {{item.name}}
-                  </span>
-                  <span v-else style="margin-left: 5px">
-                     {{item.name}}
-                  </span>
+            <div v-for="(item, index) in elements" :key="item.id" @click.stop="penActive(item)">
+              <div class="pen-tools pen-item" style="">
+                <span class="hide-input">
+                  <i v-if="item.type !== 1" class="nz-icon nz-icon-juxing" style="margin-right: 3px"/>
+                  <i v-else class="nz-icon nz-icon-xiantiao" />
+                  <el-input
+                    :title="item.nzName"
+                    style="width: 120px"
+                    @focus="focusName"
+                    v-model="item.nzName"
+                    size="small"/>
                 </span>
                 <span>
                     <span @click.stop="penChange(item, 'locked')" class="pen-tools-item" :title="!item.locked?$t('overall.locked'): $t('overall.unlocked')">
@@ -74,9 +73,6 @@
                   </span>
                   <span @click.stop="delPen(item)" class="pen-tools-item" :title="$t('overall.delete')">
                     <i  class="nz-icon nz-icon-minus"/>
-                  </span>
-                  <span style="cursor: grab;" class="drag-sort pen-tools-item" :title="$t('dashboard.panel.chartForm.sort')">
-                    <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
                   </span>
                 </span>
               </div>
@@ -99,7 +95,8 @@ export default {
   name: 'meta2dCanvas',
   props: {
     canvasProps: {},
-    meta2dId: {}
+    meta2dId: {},
+    params: {}
   },
   components: {
     draggable,
@@ -115,9 +112,15 @@ export default {
     }
   },
   mounted () {
+    getTopology(this.meta2dId).store.data.pens.forEach((pen, index) => {
+      if (!pen.nzName) {
+        pen.nzName = 'element - ' + index
+      }
+    })
     this.elements = getTopology(this.meta2dId).store.data.pens
     this.background = getTopology(this.meta2dId).store.data.background || '#ffffff00'
     this.bkImage = getTopology(this.meta2dId).store.data.bkImage || ''
+    this.bkImageId = this.params.bkImageId || ''
     this.$refs.backgroundNezhaColor.colors = this.background
   },
   methods: {
@@ -153,7 +156,7 @@ export default {
         }
       }
       if (key === 'locked') {
-        if (item.locked) {
+        if (!item.locked) {
           obj.locked = 10
           if (getTopology(this.meta2dId).store.active.length && item.id === getTopology(this.meta2dId).store.active[0].id) {
             bus.$emit('changeSelectPens', [])
@@ -191,6 +194,9 @@ export default {
       this.bkImage = image.image
       this.bkImageId = image.id
       getTopology(this.meta2dId).setBackgroundImage(image.image)
+    },
+    focusName (event) {
+      console.log(event)
     }
   }
 }

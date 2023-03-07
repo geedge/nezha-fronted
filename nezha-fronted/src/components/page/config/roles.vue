@@ -76,6 +76,7 @@ export default {
     return {
       url: 'sys/role',
       tableId: 'rolesTable', // 需要分页的table的id，用于记录每页数量
+      detailType: 'list',
       blankObject: { // 空白对象
         name: '',
         remark: '',

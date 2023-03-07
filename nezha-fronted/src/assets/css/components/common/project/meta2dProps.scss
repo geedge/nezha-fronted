@@ -82,12 +82,21 @@
     padding-top: 0;
   }
   .pen-tools{
-    background: $--background-color-1;
+    background: $--background-color-empty;
+    border: 1px solid $--border-color-light;
     margin-bottom: 10px;
     border-radius: 2px;
     display: flex;
     justify-content: space-between;
-    padding: 3px 10px
+    padding: 3px 10px;
+    .hide-input {
+      .el-input__inner {
+        border-color: transparent;
+      }
+      .el-input__inner:focus {
+        border-color: $--border-color-base-focus;
+      }
+    }
   }
   .promqlInput .el-cascader-menu{
     width: 200px;
@@ -176,6 +185,22 @@
   .nz-color {
     .vc-input__input {
       font-size: 14px;
+    }
+  }
+  .image-input {
+    width: 100%;
+    height: 32px;
+    box-sizing: border-box;
+    padding: 0 10px;
+    line-height: 28px;
+    border: 1px solid $--border-color-light;
+    .nz-icon-circle-close {
+      display: none;
+    }
+  }
+  .image-input:hover {
+    .nz-icon-circle-close {
+      display: inline-block;
     }
   }
 }

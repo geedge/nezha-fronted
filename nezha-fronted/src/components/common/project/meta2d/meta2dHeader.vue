@@ -119,12 +119,14 @@ export default {
       const timeType = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataTimeType
       const unit = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataUnit
       const statistic = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataStatistic
+      const bkImageId = this.$parent.$refs.meta2dProps.$refs.meta2dCanvas.bkImageId
       const params = {
         topo: getTopology(this.meta2dId).data(),
         elements: elements,
         timeType: timeType || 1,
         unit: unit || 1,
         statistic: statistic || 'last',
+        bkImageId: bkImageId || ''
       }
 
       this.$put('monitor/project/topo', { topo: JSON.stringify(params), projectId: this.project.id }).then(res => {
@@ -157,6 +159,7 @@ export default {
       this.$nextTick(() => {
         getTopology(this.meta2dId).resize()
         getTopology(this.meta2dId).centerView()
+        getTopology(this.meta2dId).translate(0, 0)
       })
     },
     previewTopology () {
@@ -186,6 +189,10 @@ export default {
       getTopology(this.meta2dId).centerView()
     },
     cancelTopology () {
+      this.$store.commit('setShowTopoScreen', this.topoScreenState)
+      if (this.$refs.topTool.option.map) {
+        getTopology(this.meta2dId).hideMap()
+      }
       this.$emit('exitEdit', true)
     }
   }

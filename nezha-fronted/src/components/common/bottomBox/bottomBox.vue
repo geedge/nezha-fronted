@@ -76,6 +76,8 @@
         <recordRulesQuery v-if="from === fromRoute.recordRule && targetTab === 'Metrics'" :from="from" :obj="obj" :tabs="tabs.recordRule.Metrics" @changeTab="changeTab" :targetTab.sync="targetTab"></recordRulesQuery>
         <!--alertRule Tab-->
         <alertMessageTabNew v-if="from === fromRoute.alertSilence && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
+        <!--roles Tab-->
+        <roles-tab v-if="from === fromRoute.role && targetTab === 'roles'" :from="from" :obj="obj"  :tabs="tabs.role" @changeTab="changeTab" :targetTab.sync="targetTab"></roles-tab>
         <!--issue Tab-->
         <!-- <issueTab v-if="from === fromRoute.issue && targetTab === 'issue'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></issueTab> -->
       </div>
@@ -111,6 +113,7 @@ import networkBottomTab from '@/components/common/bottomBox/tabs/networkBottomTa
 import scrapeEndpoint from '@/components/common/bottomBox/tabs/scrapeEndpoint'
 import cortexDetail from '@/components/common/bottomBox/tabs/cortexDetail'
 import lokiStatus from '@/components/common/bottomBox/tabs/lokiStatus'
+import rolesTab from '@/components/common/bottomBox/tabs/rolesTab'
 import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
 import recordRuleEvalLog from '@/components/common/bottomBox/tabs/recordRuleEvalLog'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
@@ -146,7 +149,8 @@ export default {
     recordRulesQuery,
     issueTab,
     commentsBottomTab,
-    vsysBottomTab
+    vsysBottomTab,
+    rolesTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -283,6 +287,9 @@ export default {
         },
         alertSilence: [
           { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
+        ],
+        role: [
+          { prop: 'userTab', name: this.$t('config.operationlog.username'), active: true }
         ],
         issue: [
           // { prop: 'issue', name: this.$t('overall.issue'), active: true }
