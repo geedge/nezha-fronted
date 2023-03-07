@@ -16,6 +16,7 @@
           <!-- dashboardTemplate -->
           <el-form-item :label="$t('upload.template')" prop="tmplId">
             <v-selectpage
+              :disabled="from==='integration'"
               :data="templateList"
               :tb-columns="ChartSearchShowFields"
               :multiple="false"
@@ -75,6 +76,7 @@ import bus from '@/libs/bus'
 import editRigthBox from '../mixin/editRigthBox'
 export default {
   props: {
+    from: String
   },
   mixins: [editRigthBox],
   data () {
@@ -224,11 +226,16 @@ export default {
     }, 50),
     // 获取dashboard模板列表
     getDashboardTempData () {
-      this.$get('visual/panel', { type: 'template', pageSize: -1 }).then(response => {
-        if (response.code === 200) {
-          this.templateList = response.data.list
-        }
-      })
+      if (this.from === 'integration') {
+        this.editDashboard.tmplId = String(this.$parent.tempId)
+        this.templateList = this.$loadsh.cloneDeep(this.$parent.panelData)
+      } else {
+        this.$get('visual/panel', { type: 'template', pageSize: -1 }).then(response => {
+          if (response.code === 200) {
+            this.templateList = response.data.list
+          }
+        })
+      }
     },
     // 根据选中模板vartype请求数据
     getTableData () {
@@ -265,7 +272,7 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           // 模板varType ≠ 0时link有效且必填
-          if (this.templateType == 0) {
+          if (!this.templateType) {
             delete params.link
           }
           this.$post(this.url, params).then(response => {
