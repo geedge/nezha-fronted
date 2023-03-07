@@ -961,7 +961,7 @@ export default {
               objectInfo.type = val.valnum
             } else if (val.label === 'assetState') {
               objectInfo.stateIds = val.valnum
-            }else if (val.label === 'terminalStatus') {
+            } else if (val.label === 'terminalStatus') {
               objectInfo.state = val.valnum
             } else if (val.label === 'assetType') {
               objectInfo.typeIds = val.valnum
@@ -1544,11 +1544,11 @@ export default {
           if (this.inTransform) {
             const position = inputListDom.getBoundingClientRect()
             this.selectDom.top = position.top + 36 + 'px'
-            this.selectDom.left = position.left + 'px'
+            this.selectDom.left = position.left - 31 + 'px'
           } else {
             const position = inputListDom.getBoundingClientRect()
             this.selectDom.top = position.top + 36 + 'px'
-            this.selectDom.left = position.left + 'px'
+            this.selectDom.left = position.left - 31 + 'px'
           }
         })
       }
