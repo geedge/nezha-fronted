@@ -91,6 +91,9 @@
     }
   }
 }
+.panel-time-picker-popper {
+  z-index: 9999999 !important;
+}
 .panel-time-picker-popper[x-placement^=bottom] .popper__arrow {
   left: 85% !important;
 }
