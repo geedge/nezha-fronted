@@ -152,6 +152,9 @@ export default {
     },
     variablesArr () {
       return this.$store.state.panel.variablesArr
+    },
+    isShrink () {
+      return this.$store.getters.getIsShrink
     }
   },
   data () {
@@ -704,6 +707,13 @@ export default {
     window.removeEventListener('resize', this.resize)
   },
   watch: {
+    isShrink: {
+      handler () {
+        setTimeout(() => {
+          this.resize()
+        }, 200)
+      }
+    },
     // 监听查看模式变化
     '$store.state.panel.mode': {
       immediate: true,
