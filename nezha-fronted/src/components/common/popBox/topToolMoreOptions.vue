@@ -108,7 +108,7 @@
           <div class="export-box">
             <span class="export-title">{{$t('export.records')}}</span>
             <el-radio-group v-model="importBox.record"  size="small">
-              <el-radio-button :label="item.value" v-for="(item,index) in recordArr" :key="index" :disabled="item.value==='records'&&!deleteObjs.length">
+              <el-radio-button :label="item.value" v-for="(item,index) in recordArr" :key="index" :disabled="(item.value==='records'&&!deleteObjs.length) || (item.value==='all'&&assetOrEndpoint)">
                 {{item.name}}
                 <span v-if="item.value==='records'&&deleteObjs.length">({{deleteObjs.length}})</span>
               </el-radio-button>
@@ -276,13 +276,17 @@ export default {
     exportBoxShow: {
       type: Boolean, default: false
     },
-    type:String
+    type: String
   },
   computed: {
     language () { return this.$store.getters.getLanguage },
     // 判断是否是dashboard
     isDashboard () {
       return this.importUrl === '/visual/panel/import'
+    },
+    // asset，endpoint dashboard导出选项不支持 all data
+    assetOrEndpoint () {
+      return this.paramsType === 'asset' || this.paramsType === 'endpoint'
     },
     // 是否同步更新关联的dashboard
     showSyncDashboard () {
@@ -648,7 +652,7 @@ export default {
       if (this.paramsType) {
         params.type = this.paramsType
       }
-      if (params.from == 'asset') {
+      if (this.assetOrEndpoint) {
         delete params.type
         delete params.from
       }
@@ -702,6 +706,10 @@ export default {
     showImportBox (type) {
       this.importBox.show = true
       this.importBox.type = type
+
+      if (this.assetOrEndpoint) {
+        this.importBox.record = 'current'
+      }
       // isDashboard 只支持JSON
       if (this.isDashboard) {
         this.importBox.format = 3

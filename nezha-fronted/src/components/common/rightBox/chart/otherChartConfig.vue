@@ -18,10 +18,11 @@
           class="form-item--half-width"
           prop="type"
         >
+        <!-- group 类型编辑时，类型不允许修改 -->
           <el-select
             id="chart-box-type"
             v-model="chartConfig.type"
-            :disabled="!!(chartConfig.type==='group'&&chartConfig.children&&chartConfig.children.length)"
+            :disabled="!!(chartConfig.type==='group'&&chartConfig.id)"
             :placeholder="$t('el.select.placeholder')"
             popper-class="right-box-select-top prevent-clickoutside"
             size="small"

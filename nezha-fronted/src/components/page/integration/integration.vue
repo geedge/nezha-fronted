@@ -11,7 +11,7 @@
       </li>
     </ul>
     <!-- Available Integration -->
-    <p class="integration-title" style="margin-top:20px;">{{$t('integration.availableIntegration')}}</p>
+    <p class="integration-title" v-if="dataList.length" style="margin-top:20px;">{{$t('integration.availableIntegration')}}</p>
     <ul class="integration-list">
       <li class="integration-item" v-for="item in dataList" :key="item.id" @click="details(item)">
         <img class="integration-icon" :src="item.icon" alt="">

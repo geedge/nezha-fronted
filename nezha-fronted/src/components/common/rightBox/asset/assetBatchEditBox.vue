@@ -194,17 +194,18 @@
           <!-- 选择资产，穿梭框 -->
           <div class="form__sub-title">{{$t('overall.select')}}</div>
           <div style="position: relative">
-            <nz-transfer ref="transfer"
-                         :showError="showError"
-                         style="margin-bottom: 20px;"
-                         :page-obj="transfer.pageObj"
-                         :search-msg="transfer.searchMsg"
-                         :table-data="transfer.tableData"
-                         :tableTitle="transfer.tableTitle"
-                         @pageNo="pageNoChange"
-                         @search="search"
-                         @leftToRight="addAsset"
-                         @rightToLeft="removeAsset">
+            <nz-transfer
+              ref="transfer"
+              :showError="showError"
+              style="margin-bottom: 20px;"
+              :page-obj="transfer.pageObj"
+              :search-msg="transfer.searchMsg"
+              :table-data="transfer.tableData"
+              :tableTitle="transfer.tableTitle"
+              @pageNo="pageNoChange"
+              @search="search"
+              @leftToRight="addAsset"
+              @rightToLeft="removeAsset">
               <template v-slot:title>{{$t('overall.selected')}}</template>
             </nz-transfer>
             <div v-if="showError" class="el-form-item__error">{{$t('validate.required')}}</div>
@@ -446,6 +447,10 @@ export default {
       if (this.editData.editType === assetConstants.editTypeData.account) {
         searchLabel.authProtocol = this.editData.authProtocol
       }
+      // type为SNMP时 筛选掉不支持SNMP的资产
+      if (this.editData.editType === assetConstants.editTypeData.snmpCredential) {
+        searchLabel.snmpEnable = 1
+      }
       this.$get(this.url, { ...searchLabel, ...this.transfer.pageObj }).then(response => {
         this.$refs.transfer.endLoading()
         if (response.code === 200) {
@@ -489,7 +494,7 @@ export default {
         if (n !== assetConstants.editTypeData.account) {
           this.editData.authProtocol = 1
         } else {
-          this.getTableData()
+          // this.getTableData()
         }
       }
     }
