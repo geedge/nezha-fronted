@@ -60,6 +60,9 @@
 .el-pagination .el-pager li.active {
   background-color: $--color-primary;
   border-radius: 2px;
+  &+li{
+    border-left: 1px solid rgba(154,154,154,0.20);
+  }
 }
 .el-pager li:hover, .el-pagination .btn-next:hover, .el-pagination .btn-prev:hover {
   color: $--color-text-regular;
