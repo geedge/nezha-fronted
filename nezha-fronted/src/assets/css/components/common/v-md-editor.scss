@@ -1,0 +1,26 @@
+.v-md-editor-preview{
+  .github-markdown-body{
+    padding: 0;
+    h1,h2{
+      border-color: $--border-color-light;
+    }
+    h1,h2,h3,h4,h5{
+      color: $--color-text-primary;
+    }
+    h6{
+      color: $--color-text-regular;
+    }
+    .v-md-pre-wrapper{
+      border-radius: 2px;
+      background: transparent;
+      pre{
+        border-radius: 2px;
+        border: 1px solid $--border-color-light;
+        background: $--pre-background-color;
+      }
+      code{
+        color: $--color-text-regular;
+      }
+    }
+  }
+}

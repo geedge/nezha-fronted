@@ -1,11 +1,10 @@
 <template>
   <div class="integration-configuration">
-    <div class="integration-configuration-pre" v-html="converterData()"></div>
+    <v-md-preview :text="configuration"></v-md-preview>
   </div>
 </template>
 
 <script>
-import showdown from 'showdown'
 export default {
   name: 'integration-configuration',
   props: {
@@ -16,11 +15,7 @@ export default {
     }
   },
   methods: {
-    // 给页面插入markdown数据
-    converterData () {
-      const converter = new showdown.Converter()
-      return converter.makeHtml(this.configuration)
-    }
+
   }
 }
 </script>
