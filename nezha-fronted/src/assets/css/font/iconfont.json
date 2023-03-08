@@ -6,6 +6,69 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "8990443",
+      "name": "竖向分布",
+      "font_class": "shuxiangfenbu",
+      "unicode": "e786",
+      "unicode_decimal": 59270
+    },
+    {
+      "icon_id": "8990444",
+      "name": "横向分布",
+      "font_class": "hengxiangfenbu",
+      "unicode": "e787",
+      "unicode_decimal": 59271
+    },
+    {
+      "icon_id": "8990445",
+      "name": "底部对齐",
+      "font_class": "dibuduiqi",
+      "unicode": "e788",
+      "unicode_decimal": 59272
+    },
+    {
+      "icon_id": "8990446",
+      "name": "竖向居中对齐",
+      "font_class": "shuxiangjuzhongduiqi",
+      "unicode": "e789",
+      "unicode_decimal": 59273
+    },
+    {
+      "icon_id": "8990447",
+      "name": "顶部对齐",
+      "font_class": "dingbuduiqi",
+      "unicode": "e78c",
+      "unicode_decimal": 59276
+    },
+    {
+      "icon_id": "8990449",
+      "name": "左对齐",
+      "font_class": "zuoduiqi",
+      "unicode": "e78d",
+      "unicode_decimal": 59277
+    },
+    {
+      "icon_id": "8990453",
+      "name": "横向居中对齐",
+      "font_class": "hengxiangjuzhongduiqi",
+      "unicode": "e78e",
+      "unicode_decimal": 59278
+    },
+    {
+      "icon_id": "8990454",
+      "name": "右对齐",
+      "font_class": "youduiqi",
+      "unicode": "e79a",
+      "unicode_decimal": 59290
+    },
+    {
+      "icon_id": "8990724",
+      "name": "排除顶层图形",
+      "font_class": "paichudingcengtuxing",
+      "unicode": "e79b",
+      "unicode_decimal": 59291
+    },
+    {
       "icon_id": "34318397",
       "name": "矩形",
       "font_class": "juxing",

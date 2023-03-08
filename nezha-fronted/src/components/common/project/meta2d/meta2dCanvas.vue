@@ -1,54 +1,55 @@
 <template>
-  <div class="pens-data">
+  <div class="pens-data pens-canvas">
     <div class="form-row-box">
-      <!--         backGround -->
-      <div class="form-row-title">
-        {{$t('project.topology.bac')}}
-        <i class="nz-icon nz-icon-arrow-down" :class="canvasProps.backGround?'':'is-rotate'" @click="updateShow('backGround')"/>
-      </div>
-      <div v-show="canvasProps.backGround" class="form-row-content">
-        <div class="form-row-item">
-          <div class="form-row-key">
-            {{$t('project.topology.color')}}
+      <div>
+        <!--         backGround -->
+        <div class="form-row-title">
+          {{$t('project.topology.bac')}}
+          <i class="nz-icon nz-icon-arrow-down" :class="canvasProps.backGround?'':'is-rotate'" @click="updateShow('backGround')"/>
+        </div>
+        <div v-show="canvasProps.backGround" class="form-row-content">
+          <div class="form-row-item">
+            <div class="form-row-key">
+              {{$t('project.topology.color')}}
+            </div>
+            <div class="form-row-value">
+              <nezhaColor
+                ref="backgroundNezhaColor"
+                :isTopo="true"
+                :value-arr="[{name:'bac',value: background}]"
+                @colorChange="backgroundChange"/>
+            </div>
           </div>
-          <div class="form-row-value">
-            <nezhaColor
-              ref="backgroundNezhaColor"
-              :isTopo="true"
-              :value-arr="[{name:'bac',value: background}]"
-              @colorChange="backgroundChange"/>
+          <div class="form-row-item">
+            <div class="form-row-key">
+              {{$t('project.topology.image')}}
+            </div>
+            <div class="form-row-value">
+              <meta2dSelectImage :selectImage="bkImage" :imgId="bkImageId" @updateImage="updateImage"/>
+            </div>
           </div>
         </div>
-        <div class="form-row-item">
-          <div class="form-row-key">
-            {{$t('project.topology.image')}}
-          </div>
-          <div class="form-row-value">
-            <meta2dSelectImage :selectImage="bkImage" :imgId="bkImageId" @updateImage="updateImage"/>
+
+        <!--         align -->
+        <div class="form-row-title" v-if="selectPenArrId.length > 1">
+          {{$t('project.topology.align')}}
+        </div>
+        <div v-if="selectPenArrId.length > 1" class="form-row-content">
+          <div class="form-row-item form-row-item-full" style="display: flex">
+            <label class="hover pointer mr10 iconLabel" v-for="item in nodesAlign" :title="item.desc" :key="item.value">
+              <i class="nz-icon" :class="item.icon"
+                 @click="onNodesAlign(item.value)"></i>
+            </label>
           </div>
         </div>
+        <div class="form-row-title">
+          {{$t('project.topology.elements')}}
+        </div>
       </div>
-      <div class="form-row-title">
-        {{$t('project.topology.elements')}}
-      </div>
-      <div class="form-row-content">
+      <div class="form-row-content form-row-element">
         <div class="form-row-item form-row-item-full">
-          <draggable
-            v-model="elements"
-            :scroll-sensitivity="150"
-            :options="{
-              dragClass:'drag-chart-class',
-              fallbackClass:'fallback-class',
-              forceFallback:true,
-              ghostClass:'chart-ghost',
-              chosenClass:'choose-class',
-              scroll:true,
-              filter: '.drag-disabled',
-              animation: 150,
-              handle: '.drag-sort'
-            }">
-            <div v-for="(item, index) in elements" :key="item.id" @click.stop="penActive(item)">
-              <div class="pen-tools pen-item" style="">
+          <div v-for="(item, index) in elements" :key="item.id" @click.stop="penActive(item)">
+            <div class="pen-tools pen-item" :class="selectPenArrId.indexOf(item.id) !== -1 ? 'is-active' : ''">
                 <span class="hide-input">
                   <i v-if="item.type !== 1" class="nz-icon nz-icon-juxing" style="margin-right: 3px"/>
                   <i v-else class="nz-icon nz-icon-xiantiao" />
@@ -59,7 +60,7 @@
                     v-model="item.nzName"
                     size="small"/>
                 </span>
-                <span>
+              <span>
                     <span @click.stop="penChange(item, 'locked')" class="pen-tools-item" :title="!item.locked?$t('overall.locked'): $t('overall.unlocked')">
                     <i  class="nz-icon nz-icon-lock" v-if="item.locked"/>
                     <i  class="nz-icon nz-icon-unlock" v-if="!item.locked"/>
@@ -75,10 +76,18 @@
                     <i  class="nz-icon nz-icon-minus"/>
                   </span>
                 </span>
-              </div>
+            </div>
           </div>
-          </draggable>
         </div>
+      </div>
+      <div style="display: flex;padding: 10px 0; justify-content: space-between">
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="addNode"
+                style="margin-right: 20px">
+          {{$t('add element')}}
+        </button>
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-if="selectPenArrId.length" style="margin-right: 20px" @click="clearSelection">
+          {{$t('Clear selection')}}
+        </button>
       </div>
     </div>
   </div>
@@ -103,12 +112,58 @@ export default {
     nezhaColor,
     meta2dSelectImage
   },
+  computed: {
+    selectPenArrId () {
+      console.log(this.selectPenArr)
+      return this.selectPenArr.active.map(item => item.id)
+    }
+  },
   data () {
     return {
       elements: [],
       background: '#ffffff00',
       bkImage: '',
-      bkImageId: ''
+      bkImageId: '',
+      selectPenArr: {},
+      nodesAlign: [// 对齐方式
+        {
+          value: 'left',
+          desc: this.$t('overall.left'),
+          icon: 'nz-icon-zuoduiqi'
+        }, {
+          value: 'right',
+          desc: this.$t('dashboard.panel.chartForm.alignList.right'),
+          icon: 'nz-icon-youduiqi'
+        }, {
+          value: 'top',
+          desc: this.$t('project.topology.topOffsetY'),
+          icon: 'nz-icon-dingbuduiqi'
+        }, {
+          value: 'bottom',
+          desc: this.$t('project.topology.bottomOffsetY'),
+          icon: 'nz-icon-dibuduiqi'
+        }, {
+          value: 'center',
+          desc: this.$t('project.topology.center'),
+          icon: 'nz-icon-shuxiangjuzhongduiqi'
+        }, {
+          value: 'middle',
+          desc: this.$t('project.topology.middleOffsetY'),
+          icon: 'nz-icon-hengxiangjuzhongduiqi'
+        }, {
+          value: 'same',
+          desc: '相同大小',
+          icon: 'nz-icon-paichudingcengtuxing'
+        }, {
+          value: 'rectCenter',
+          desc: '水平等距分布',
+          icon: 'nz-icon-hengxiangfenbu'
+        }, {
+          value: 'rectMiddle',
+          desc: '垂直等距分布',
+          icon: 'nz-icon-shuxiangfenbu'
+        }
+      ]
     }
   },
   mounted () {
@@ -117,6 +172,7 @@ export default {
         pen.nzName = 'element - ' + index
       }
     })
+    this.selectPenArr = getTopology(this.meta2dId).store
     this.elements = getTopology(this.meta2dId).store.data.pens
     this.background = getTopology(this.meta2dId).store.data.background || '#ffffff00'
     this.bkImage = getTopology(this.meta2dId).store.data.bkImage || ''
@@ -129,6 +185,7 @@ export default {
     },
     penActive (item) {
       // bus.$emit('changeSelectPens', [])
+      console.log(getTopology(this.meta2dId).store)
       this.$emit('changeActiveName')
       this.$nextTick(() => {
         getTopology(this.meta2dId).active([item])
@@ -197,6 +254,57 @@ export default {
     },
     focusName (event) {
       console.log(event)
+    },
+    onNodesAlign (value) {
+      const pens = getTopology(this.meta2dId).store.active
+      switch (value) {
+        case 'left' :
+        case 'right' :
+        case 'top' :
+        case 'bottom' :
+        case 'center' :
+        case 'middle' :
+          getTopology(this.meta2dId).alignNodes(value, pens)
+          break
+        case 'rectCenter' :
+          getTopology(this.meta2dId).spaceBetween(pens)
+          break
+        case 'rectMiddle' :
+          getTopology(this.meta2dId).spaceBetweenColumn(pens)
+          break
+        case 'same' :
+          const findPen = getTopology(this.meta2dId).getPenRect(pens[0])
+          const height = findPen.height
+          const width = findPen.width
+          pens.forEach(item => {
+            const obj = {
+              id: item.id,
+              width: width,
+              height: height
+            }
+            getTopology(this.meta2dId)._setValue(obj)
+          })
+          getTopology(this.meta2dId).render()
+          break
+      }
+    },
+    addNode () {
+      const data = getTopology(this.meta2dId).data()
+      const offestX = data.x
+      const offestY = data.y
+      const pen = {
+        name: 'rectangle',
+        text: 'rectangle',
+        width: 100,
+        height: 100,
+        x: 100 - offestX,
+        y: 100 - offestY
+      }
+      getTopology(this.meta2dId).addPen(pen, true)
+    },
+    clearSelection () {
+      getTopology(this.meta2dId).active([])
+      bus.$emit('changeSelectPens', [])
     }
   }
 }
