@@ -228,6 +228,9 @@
   .bottom-box__top .my-loading-box {
     height: calc(100% + 20px) !important;
   }
+  .my-loading-parent--relative{
+    height: calc(100% - 20px) !important;
+  }
 }
 .asset-detail .sub-container .nz-table-list {
   height: 100%;
