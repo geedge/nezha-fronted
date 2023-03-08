@@ -123,8 +123,8 @@ export default {
         text: pen.text || '',
         textValue: '',
         enable: {
-          valueMapping: true,
-          tooltip: true
+          valueMapping: false,
+          tooltip: false
         },
         tooltip: {
           title: '',
@@ -176,8 +176,8 @@ export default {
         parent: '',
         value: '',
         enable: {
-          valueMapping: true,
-          tooltip: true
+          valueMapping: false,
+          tooltip: false
         }
       }
       pen.nzName = name

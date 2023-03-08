@@ -3,7 +3,7 @@
     <div @click="selectBoxShow = !selectBoxShow" style="position: relative">
       <div class="image-input">
         <span v-if="imageName">{{unit}} / {{imageName}}</span>
-        <i class="nz-icon nz-icon-circle-close" style="position: absolute;top: 2px;right: 10px;font-size: 8px" @click.stop="selectImageChange({image: '', id: ''})"/>
+        <i class="el-icon-circle-close" style="position: absolute;top: 10px;right: 10px;font-size: 14px" @click.stop="selectImageChange({image: '', id: ''})"/>
       </div>
     </div>
     <div class="image-select-box" v-if="selectBoxShow">

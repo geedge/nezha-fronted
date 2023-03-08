@@ -940,7 +940,7 @@
             </span>
       </div>
       <transition name="el-zoom-in-top">
-         <div v-show="elements.tooltip" class="form-row-content" v-if="pen.type !== 1">
+         <div v-show="elements.tooltip && pen.data.enable.tooltip" class="form-row-content" v-if="pen.type !== 1">
         <div class="form-row-item form-row-item-full">
           <div class="form-row-key">
             {{$t('project.topology.title')}}

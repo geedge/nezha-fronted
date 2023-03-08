@@ -75,6 +75,18 @@
     overflow: unset;
     overflow-y: unset;
   }
+  .pens-canvas.pens-data{
+    height: 100%;
+    .form-row-box {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      .form-row-element {
+        flex: 1;
+        overflow-y: auto;
+      }
+    }
+  }
   .right-box__container .chart-config .thresholds-item .mapping-display-input input{
     padding-left: 15px;
   }
@@ -89,12 +101,24 @@
     display: flex;
     justify-content: space-between;
     padding: 3px 10px;
+    &.is-active {
+      background: $--table-row-hover-background-color;
+      border: 1px solid $--table-row-hover-background-color;
+      color: $--color-primary;
+      .el-input__inner {
+        color: $--color-primary;
+      }
+    }
     .hide-input {
       .el-input__inner {
         border-color: transparent;
+        height: 26px;
+        line-height: 26px;
+        padding: 0 10px;
       }
       .el-input__inner:focus {
         border-color: $--border-color-base-focus;
+        color: $--color-text-regular;
       }
     }
   }
@@ -194,12 +218,12 @@
     padding: 0 10px;
     line-height: 28px;
     border: 1px solid $--border-color-light;
-    .nz-icon-circle-close {
+    .el-icon-circle-close {
       display: none;
     }
   }
   .image-input:hover {
-    .nz-icon-circle-close {
+    .el-icon-circle-close {
       display: inline-block;
     }
   }
