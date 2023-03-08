@@ -158,6 +158,8 @@
     <transition name="right-box">
       <chart-temp-box v-if="rightBox.chartTemp.show" :from="from" :obj="chart" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @on-create-success="createSuccess"></chart-temp-box>
     </transition>
+    <!-- 快照进度 -->
+    <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="searchTime" :snapshotVisible.sync="snapshotVisible"></snapshotProgress>
   </div>
 </template>
 
@@ -178,6 +180,8 @@ import { randomcolor } from '@/components/common/js/radomcolor/randomcolor'
 import htmlToPdfMixin from '@/components/common/mixin/htmlToPdfMixin'
 import exportHtmlMixin from '@/components/common/mixin/exportHtml'
 import panelVariables from '@/components/common/panel/panelVariables'
+import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
+
 export default {
   name: 'panelTabNew',
   mixins: [subDataListMixin, detailViewRightMixin, htmlToPdfMixin, exportHtmlMixin],
@@ -307,7 +311,8 @@ export default {
       nowTimeType: {},
       chartDetailInfo: {},
       variables: [],
-      variablesInit: false
+      variablesInit: false,
+      snapshotVisible: false
     }
   },
   components: {
@@ -316,7 +321,8 @@ export default {
     nzBottomDataList,
     topToolMoreOptions,
     chartTempBox,
-    panelVariables // 处理panel变量的组件
+    panelVariables, // 处理panel变量的组件
+    snapshotProgress // 快照进度
   },
   methods: {
     // 刷新
@@ -851,7 +857,7 @@ export default {
       if (type === 'PDF') {
         this.htmlToPdf()
       } else {
-        this.exportToHtml(this.obj.name)
+        this.snapshotVisible = true
       }
     },
     getPanelData () {
