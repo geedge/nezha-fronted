@@ -20,7 +20,7 @@
               </template>
             </select-asset-type>
           </el-form-item>
-          <el-form-item v-if="editAsset.type && editAsset.type.vm === 1" :label="$t('asset.parent')" prop="pid">
+          <el-form-item v-if="editAsset.type && editAsset.type.vm === 1" :label="$t('asset.parent')" prop="pid" key="pid">
             <el-select
               v-model="editAsset.pid"
               class="right-box__select"
@@ -50,7 +50,7 @@
           <el-form-item :label="$t('config.system.basic.num')" prop="number">
             <el-input  maxlength="128" show-word-limit v-model="editAsset.number" size="small"/>
           </el-form-item>
-          <el-form-item :label="$t('asset.brandAndModel')" class="placeholder-emphasize" prop="brandAndModel">
+          <el-form-item :label="$t('asset.brandAndModel')" class="placeholder-emphasize is-required" prop="brandAndModel">
             <div @click="judgeType">
               <el-cascader
               ref="cascader"
@@ -403,7 +403,8 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         brandAndModel: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+          // { required: true, message: this.$t('validate.required'), trigger: ['blur', 'change'] },
+          { validator: this.validCascader, trigger: ['blur', 'change'] }
         ],
         dcId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
@@ -413,11 +414,11 @@ export default {
           { validator: port, trigger: 'blur' }
         ],
         sn: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         location: [
-          // { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-          { validator: this.checkLocation, trigger: 'blur' }
+          // { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          { validator: this.checkLocation, trigger: 'change' }
         ],
         clientToken: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
@@ -596,6 +597,7 @@ export default {
             }
           }
         }
+        this.$refs.form.clearValidate()
         this.editAsset.brandAndModel = [this.editAsset.brand.id, this.editAsset.model.id]
       }
     }
@@ -932,6 +934,13 @@ export default {
           callback(new Error(this.$t('validate.required')))
         }
       }, 100)
+    },
+    validCascader (rule, value, callback) {
+      if (this.editAsset.brandAndModel[0] == '' || this.editAsset.brandAndModel.length == 0) {
+        callback(new Error(this.$t('validate.required')))
+      } else {
+        callback()
+      }
     },
     selectAuthType () {
       if (this.editAsset.authType != this.obj.authType) {
