@@ -96,9 +96,9 @@ export default {
       this.topoScreenState = JSON.parse(JSON.stringify(this.topoScreen))
       this.$store.commit('setShowTopoScreen', true)
       setTimeout(() => {
-        this.topoResize(this.meta2dId)
-        this.initEdit(this.meta2dId)
         this.$emit('edit')
+        this.initEdit(this.meta2dId)
+        this.topoResize(this.meta2dId)
       })
     },
     saveMeta2d () {
