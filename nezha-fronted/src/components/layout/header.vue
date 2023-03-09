@@ -181,8 +181,8 @@ export default {
     logout () {
       this.$get('logout').then(() => {
         this.logoutSuccess()
-        // document.location.href = '/'
-        this.$router.push('/login')
+        window.location.href = '/'
+        // this.$router.push('/login')
       })
     },
     showPinDialog () {
