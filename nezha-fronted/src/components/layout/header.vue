@@ -181,7 +181,8 @@ export default {
     logout () {
       this.$get('logout').then(() => {
         this.logoutSuccess()
-        document.location.href = '/'
+        // document.location.href = '/'
+        this.$router.push('/login')
       })
     },
     showPinDialog () {
@@ -202,6 +203,7 @@ export default {
     initEvent () {
       bus.$on('login', () => {
         this.username = localStorage.getItem('nz-username')
+        this.name = localStorage.getItem('nz-username')
         // this.refreshLang()
       })
       // if (window.history && window.history.pushState) {
