@@ -83,6 +83,9 @@ const newcn = {
   profile: {
     username: '用户名'
   },
+  license: {
+    downloadID: '下载c2v文件'
+  },
   overall: {
     system: '系统',
     back: '返回',

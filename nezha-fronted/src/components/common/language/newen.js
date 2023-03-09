@@ -91,6 +91,9 @@ const newen = {
   profile: {
     username: 'User name'
   },
+  license: {
+    downloadID: 'Download c2v file'
+  },
   overall: {
     system: 'System',
     back: 'Back',

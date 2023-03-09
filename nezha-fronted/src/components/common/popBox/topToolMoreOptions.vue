@@ -650,7 +650,6 @@ export default {
         params.type = this.paramsType
       }
       if (this.assetOrEndpoint) {
-        delete params.type
         delete params.from
       }
       axios.get(url, { responseType: 'blob', params: params }).then(res => {
