@@ -7,6 +7,7 @@ export default {
   methods: {
     topoResize (id) {
       getTopology(id).resize()
+      getTopology(id).centerView()
     },
     initEdit (id) {
       bus.$emit('changeSelectPens', [])
@@ -18,7 +19,6 @@ export default {
           this.calcNode(item)
         })
       }
-      getTopology(id).centerView()
       getTopology(id).render()
     },
     calcNode (node) { // 处理节点数据
@@ -143,6 +143,9 @@ export default {
           pen.isBottom = false
           if (!pen.nzName) {
             pen.nzName = ''
+          }
+          if (!pen.moduleId) {
+            pen.moduleId = ''
           }
           if (pen.isNz) {
             if (pen.data.legend && pen.data.enable.valueMapping) {

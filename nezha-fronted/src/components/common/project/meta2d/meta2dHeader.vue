@@ -95,9 +95,9 @@ export default {
     editMeta2d () {
       this.topoScreenState = JSON.parse(JSON.stringify(this.topoScreen))
       this.$store.commit('setShowTopoScreen', true)
+      this.$emit('edit')
+      this.initEdit(this.meta2dId)
       setTimeout(() => {
-        this.$emit('edit')
-        this.initEdit(this.meta2dId)
         this.topoResize(this.meta2dId)
       })
     },
@@ -187,8 +187,10 @@ export default {
       }
       getTopology(this.meta2dId).render()
       getTopology(this.meta2dId).centerView()
+      this.$emit('getNodesArr')
     },
     cancelTopology () {
+      this.isPreview = false
       this.$store.commit('setShowTopoScreen', this.topoScreenState)
       if (this.$refs.topTool.option.map) {
         getTopology(this.meta2dId).hideMap()

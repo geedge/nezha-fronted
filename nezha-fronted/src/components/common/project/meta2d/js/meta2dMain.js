@@ -41,7 +41,44 @@ export default {
         top: null,
         bottom: null
       },
-      setContextmenu: true
+      popDataShow: {
+        endpoint: false,
+        asset: false,
+        total: false,
+        other: false,
+        info: false,
+        alert: false,
+        main: false
+      },
+      projectInfo: {
+        title: '',
+        id: '',
+        remark: '',
+        alertStat: [1, 2, 3],
+        moduleMum: 6,
+        loading: true
+      },
+      setContextmenu: true,
+      modules: [],
+      allModules: [],
+      popData: [
+        {
+          top: '-41px',
+          left: '-23px',
+          className: 'nz-icon-endpoint',
+          id: 'endpoint',
+          title: this.$t('project.topology.endpoint')
+        },
+        { top: '-41px', left: '22px', className: 'nz-icon-asset', id: 'asset', title: this.$t('asset.asset') },
+        { top: '-2px', left: '45px', className: '', id: 'other', title: '' },
+        { top: '37px', left: '22px', className: '', id: 'other', title: '' },
+        { top: '37px', left: '-23px', className: 'nz-icon-info-normal', id: 'info', title: this.$t('project.topology.info') },
+        { top: '-2px', left: '-45px', className: 'nz-icon-gaojing', id: 'alert', title: this.$t('project.topology.alert') }
+      ],
+      nodesArr: [],
+      offsetX: 0,
+      offsetY: 0,
+      moduleId: ''
     }
   },
   mixins: [topoUtil],
@@ -79,6 +116,7 @@ export default {
         return true
       }
       meta2d.on('translate', this.topTranslate) // 平移·
+      meta2d.on('scale', this.topoScale) // 缩放·
       meta2d.on('active', this.pensActive) // 选中·
       // meta2d.on('translatePens', () => {}) // 移动画笔结束·
       // meta2d.on('translatingPens', () => {}) // 移动画笔进行中·
@@ -94,10 +132,12 @@ export default {
       const startTime = endTime - 60 * this.params.timeType * 1000
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
         this.clacTopoData(this.topoData, arr).then((data) => {
+          this.getModule()
           getTopology(this.meta2dId).resize()
           getTopology(this.meta2dId).open(data)
           getTopology(this.meta2dId).centerView()
           getTopology(this.meta2dId).lock(1)
+          this.getNodesArr()
         })
       })
     },
@@ -135,6 +175,7 @@ export default {
         }
       }
       pen.nzName = name
+      pen.moduleId = ''
       pen.disableInput = pen.disableInput || true
       pen.background = pen.background || '#22222200'
       pen.textAlign = pen.textAlign || 'center'
@@ -181,6 +222,7 @@ export default {
         }
       }
       pen.nzName = name
+      pen.moduleId = ''
       pen.disableInput = pen.disableInput || true
       pen.lineAnimateType = pen.lineAnimateType || 0
       pen.animateSpan = pen.animateSpan || 1
@@ -202,7 +244,7 @@ export default {
     },
     pensActive (pens, e) { // 选中节点
       this.selectPens = pens
-
+      this.modulesDiff(pens[0])
       setTimeout(() => {
         this.$refs.meta2dProps && (this.$refs.meta2dProps.isUpdate = true)
       })
@@ -212,9 +254,21 @@ export default {
         this.$refs.meta2dProps.activeName = 'canvas'
         this.selectPens = []
       }
+      this.showNodeTools()
+      this.popDataShowUpdate('', true)
     },
     topTranslate () {
       this.setContextmenu = false
+      this.offsetX = getTopology(this.meta2dId).store.data.x
+      this.offsetY = getTopology(this.meta2dId).store.data.y
+      this.showNodeTools()
+      this.popDataShowUpdate('', true)
+    },
+    topoScale () {
+      this.offsetX = getTopology(this.meta2dId).store.data.x
+      this.offsetY = getTopology(this.meta2dId).store.data.y
+      this.showNodeTools()
+      this.popDataShowUpdate('', true)
     },
     penEnter (pen, e) { // 移入节点
       if (this.timer3) {
@@ -360,7 +414,120 @@ export default {
         top: null,
         bottom: null
       }
-    }
+    },
+    // 获取module
+    getModule () {
+      this.projectInfo.loading = true
+      this.$get('/monitor/module?pageSize=-1&projectIds=' + this.project.id).then(response => {
+        if (response.code === 200) {
+          this.projectInfo.loading = false
+          this.allModules = JSON.parse(JSON.stringify(response.data.list))
+          // this.modulesDiff()
+        }
+      })
+    },
+    // 摘除已选择的module 置灰
+    modulesDiff (pen) {
+      this.modules = this.allModules
+      if (getTopology(this.meta2dId) && getTopology(this.meta2dId).store.data.pens) {
+        getTopology(this.meta2dId).store.data.pens.forEach(item => {
+          if (!item.type && item.moduleId) {
+            const findItem = this.modules.find(item1 => item.moduleId == item1.id)
+            if (findItem && pen && findItem.id !== pen.moduleId) {
+              findItem.disabled = true
+            } else {
+              findItem.disabled = false
+            }
+          }
+        })
+      }
+    },
+    // 显示module的工具
+    showNodeTools (index, pen) {
+      this.nodesArr.forEach((item, i) => {
+        item.moduleData.show = i == index
+      })
+    },
+    // 具体内容点击
+    nodeTools (node, tool) {
+      this.moduleId = node.moduleId
+      this.moduleName = node.moduleName
+      if (tool.id === 'total') {
+        this.popDataShowUpdate('', false, node)
+        return
+      }
+      const timer = setTimeout(() => {
+        this.popDataShowUpdate(tool.id, false, node)
+        clearTimeout(timer)
+      }, 100)
+    },
+    selpopIs (pen, state) { // 判断是否有图表
+      let flag = true
+      if (state.id === 'other') {
+        flag = false
+      }
+      if (state.id === 'total' && pen.data.expressArr.length === 0) {
+        flag = false
+      }
+      return flag
+    },
+    getNodesArr () {
+      if (!getTopology(this.meta2dId)) return
+      this.offsetX = getTopology(this.meta2dId).data().x
+      this.offsetY = getTopology(this.meta2dId).data().y
+      this.nodesArr = getTopology(this.meta2dId).store.data.pens.filter(item => {
+        item.moduleData = {
+          moduleId: '',
+          moduleName: '',
+          show: false,
+          error: false,
+          expressArr: [],
+          expressAllArr: [],
+          state: {
+            error: false,
+            asset: 0,
+            alert: 0,
+            endpoint: 0
+          }
+        }
+        if (!item.type && item.moduleId) {
+          this.$get('stat/module/abnormal', { moduleId: item.moduleId }).then(res=>{
+            if (res.code == 200) {
+              const module = res.data.list[0]
+              item.moduleData.state.error = item.moduleData.error = !module.state
+              item.moduleData.state.asset = !!module.asset
+              item.moduleData.state.alert = !!module.alert
+              item.moduleData.state.endpoint = !!module.endpoint
+            }
+          })
+        }
+        return !item.type && item.moduleId
+      })
+    },
+    popDataShowUpdate (key, flag, node) { // key 显示对应的弹窗 flag是否不显示工具栏
+      this.popDataShow = {
+        endpoint: false,
+        asset: false,
+        total: false,
+        other: false,
+        info: false,
+        alert: false,
+        main: false
+      }
+      if (key === 'total') {
+        this.chartDataInfo = { ...node.data, ...this.chartGetData.find(item => item.id === node.id) }
+      }
+      this.$nextTick(() => {
+        this.popDataShow[key] = true
+      })
+      if (flag) { // 处理关闭后 缩放后显示工具按钮的问题
+        this.moduleId = ''
+        this.showNodeTools()
+      }
+      if (key === 'asset' || key === 'alert' || key === 'endpoint') {
+        this.showNodeTools()
+      }
+    },
   },
   beforeDestroy () {
   }

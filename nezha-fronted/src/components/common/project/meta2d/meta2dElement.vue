@@ -5,6 +5,15 @@
 <!--      node-->
       <div v-if="!pen.type">
         <div class="form-row-box">
+          <!--        Module  -->
+          <div class="form-row-title">
+            {{$t('overall.module')}}
+          </div>
+          <div v-show="elements.position" class="form-row-content">
+            <el-select v-model="pen.moduleId" @change="change('moduleId')" size="small">
+              <el-option v-for="item in modules" :value="item.id" :key="item.id" :label="item.name" :disabled="item.disabled"/>
+            </el-select>
+          </div>
           <!--        Position  -->
           <div class="form-row-title">
             {{$t('project.topology.position')}}
@@ -1022,7 +1031,8 @@ export default {
   },
   props: {
     selectPens: {},
-    elements: {}
+    elements: {},
+    modules: {}
   },
   watch: {
     selectPens: {

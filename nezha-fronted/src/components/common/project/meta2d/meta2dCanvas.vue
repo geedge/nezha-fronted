@@ -124,7 +124,9 @@ export default {
       background: '#ffffff00',
       bkImage: '',
       bkImageId: '',
-      selectPenArr: {},
+      selectPenArr: {
+        active: []
+      },
       nodesAlign: [// 对齐方式
         {
           value: 'left',
@@ -163,7 +165,7 @@ export default {
           desc: '垂直等距分布',
           icon: 'nz-icon-shuxiangfenbu'
         }
-      ]
+      ],
     }
   },
   mounted () {

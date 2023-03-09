@@ -235,12 +235,6 @@
               <div class="content">No data</div>
             </div>
           </div>
-          <!--endpoint-->
-          <transition name="right-box">
-            <endpointTable v-if="popDataShow.endpoint" :moduleId="moduleId" :moduleName="moduleName" :projectId="projectInfo.id"
-                           @close="popDataShowUpdate('',true)">endpoint
-            </endpointTable>
-          </transition>
           <div v-if="!fromOverView&&!editTopologyFlag&&!fromPrev" class="right-bottom-zoom">
             <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)" :title="$t('overall.enlargement')"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
             <div class="zoom-option" @click="zoomMap(-0.25)" :title="$t('overall.shrink')"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
@@ -257,6 +251,12 @@
     <!--<li>3.选中元素 按下Delete键或者Backspace可以删除元素</li>-->
     <!--</ul>-->
     <!--</div>-->
+    <!--endpoint-->
+    <transition name="right-box">
+      <endpointTable v-if="popDataShow.endpoint" :moduleId="moduleId" :moduleName="moduleName" :projectId="projectInfo.id"
+                     @close="popDataShowUpdate('',true)">endpoint
+      </endpointTable>
+    </transition>
     <!--asset-->
     <transition name="right-box">
       <assetTable v-if="popDataShow.asset" :moduleId="moduleId" :moduleName="moduleName" :projectId="projectInfo.id"
