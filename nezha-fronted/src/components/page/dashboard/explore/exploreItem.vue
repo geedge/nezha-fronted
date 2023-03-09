@@ -7,7 +7,7 @@
           <span @click="split"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
         </div>
         <!-- 顶部工具栏 -->
-        <div class="top-tools" style="z-index: 1">
+        <div class="top-tools" style="z-index: 2001;position:relative;">
           <el-row class="block-col-2" style="width: 300px;">
             <el-col>
               <el-dropdown trigger="click">
