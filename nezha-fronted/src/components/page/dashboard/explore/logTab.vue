@@ -602,6 +602,9 @@ export default {
         this.tableData = tableData
         this.tableChartData = tableChartData
       }
+    },
+    limit (n) {
+      this.$emit('limitChange', n)
     }
   },
   destroyed () {
