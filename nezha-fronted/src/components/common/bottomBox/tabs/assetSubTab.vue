@@ -79,6 +79,11 @@ export default {
     assetBox,
     alertSilenceBox
   },
+  computed: {
+    externalTerminal () {
+      return this.$store.getters.getExternalTerminal
+    }
+  },
   data () {
     return {
       url: '/asset/asset',
@@ -220,7 +225,12 @@ export default {
         host: row.manageIp,
         port: row.authProtocolPort
       }
-      this.$store.commit('addConsole', consoleParam)
+      if (!this.externalTerminal) {
+        this.$store.dispatch('dispatchExternalTerminal', consoleParam)
+      } else {
+        this.$store.dispatch('dispatchOpenExternalTerminalWindow', consoleParam)
+      }
+      // this.$store.commit('addConsole', consoleParam)
     },
     getTableData (params) {
       if (params && Object.keys(params).length > 0) {
