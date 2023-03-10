@@ -180,8 +180,9 @@ export default {
     },
     logout () {
       this.$get('logout').then(() => {
+        window.location.href = '/'
         this.logoutSuccess()
-        window.location.href = '/ui/login'
+        sessionStorage.removeItem('nz-previous-page')
       })
     },
     showPinDialog () {
