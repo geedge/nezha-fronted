@@ -180,6 +180,7 @@ export default {
     },
     logout () {
       this.$get('logout').then(() => {
+        this.$router.replace({ path: '/', query: {} }).catch(err => {})
         this.logoutSuccess()
         window.location.href = '/'
         // this.$router.push('/login')
