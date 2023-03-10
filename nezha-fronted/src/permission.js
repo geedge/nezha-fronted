@@ -149,7 +149,7 @@ router.beforeEach((to, from, next) => {
               resolve()
             } else {
               localStorage.removeItem('nz-token')
-              sessionStorage.setItem('nz-previous-page', to.fullPath + '5')
+              sessionStorage.setItem('nz-previous-page', to.fullPath)
               next({ path: '/login' })
             }
           })
@@ -180,7 +180,7 @@ router.beforeEach((to, from, next) => {
     if (loginWhiteList.indexOf(to.path) !== -1) {
       next()
     } else {
-      sessionStorage.setItem('nz-previous-page', to.fullPath + '6')
+      sessionStorage.setItem('nz-previous-page', to.fullPath)
       next({ path: '/login' })
     }
   }

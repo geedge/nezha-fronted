@@ -103,11 +103,11 @@ axios.interceptors.response.use(
       return response
     }
     if (licenceErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.pathname) == -1) {
-      sessionStorage.setItem('nz-previous-page', router.currentRoute.fullPath + '1')
+      sessionStorage.setItem('nz-previous-page', router.currentRoute.fullPath)
       window.location.href = '/'
     } else if (response.status === 200) {
       if (accountErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.pathname) == -1) {
-        sessionStorage.setItem('nz-previous-page', router.currentRoute.fullPath + '2')
+        sessionStorage.setItem('nz-previous-page', router.currentRoute.fullPath)
         window.location.href = '/'
       }
     } else {
