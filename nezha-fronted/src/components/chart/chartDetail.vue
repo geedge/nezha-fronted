@@ -102,7 +102,7 @@
           <div class="basic-info-table-list">
             <div class="basic-info-table-title">{{$t('overall.module')}}</div>
             <div class="basic-info-table-value">
-              <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>&nbsp;
+              <i class="nz-icon nz-icon-overview-module monitorColor"/>&nbsp;
               <span>{{chartDetail && chartDetail.module ? chartDetail.module.name : '--'}}</span>
             </div>
           </div>
@@ -169,6 +169,7 @@ import trendMixin from '../common/alert/trendMixins'
 export default {
   name: 'chartDetail',
   props: {
+    from: String,
     chartDetail: Object,
     chartInfo: Object
   },
@@ -224,30 +225,38 @@ export default {
           dimension: 'priority',
           step: 'd'
         }
-        if (this.chartInfo.type === 'assetInfo') {
-          params.assetId = this.chartDetail.id
-        } else if (this.chartInfo.type === 'endpointInfo') {
-          params.endpointId = this.chartDetail.id
-        }
-        this.$get('/stat/alertMessage/trend', params).then((res) => {
-          if (!res.data) {
-            return
+        const newWeekDays = JSON.parse(JSON.stringify(weekDays))
+        // dashboardTemp示例数据不请求接口
+        if (this.from !== 'dashboardTemp') {
+          if (this.chartInfo.type === 'assetInfo') {
+            params.assetId = this.chartDetail.id
+          } else if (this.chartInfo.type === 'endpointInfo') {
+            params.endpointId = this.chartDetail.id
           }
-          const alertDaysData = res.data.result ? res.data.result[0].values : []
-          const newWeekDays = JSON.parse(JSON.stringify(weekDays))
-          alertDaysData.forEach(item => {
-            item.values.forEach(time => {
-              const findItem = newWeekDays.find(days => days.time == time[0])
-              if (findItem) {
-                findItem[item.metric.priority] = time[1]
-              }
+          this.$get('/stat/alertMessage/trend', params).then((res) => {
+            if (!res.data) {
+              return
+            }
+            const alertDaysData = res.data.result ? res.data.result[0].values : []
+            alertDaysData.forEach(item => {
+              item.values.forEach(time => {
+                const findItem = newWeekDays.find(days => days.time == time[0])
+                if (findItem) {
+                  findItem[item.metric.priority] = time[1]
+                }
+              })
+            })
+            setTimeout(() => {
+              this.alertDaysData = newWeekDays
+              this.trendLoading = false
             })
           })
+        } else {
           setTimeout(() => {
             this.alertDaysData = newWeekDays
             this.trendLoading = false
           })
-        })
+        }
       })
     }
   }

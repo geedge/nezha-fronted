@@ -161,6 +161,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :from="from"
       ></chart-asset-info>
       <chart-endpoint-info
         :ref="'chart' + chartInfo.id"
@@ -170,6 +171,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :from="from"
       ></chart-endpoint-info>
       <chart-table
         :ref="'chart' + chartInfo.id"

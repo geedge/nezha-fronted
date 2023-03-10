@@ -1,5 +1,5 @@
 <template>
-  <chart-detail :chart-info="chartInfo" :chart-detail="chartData"></chart-detail>
+  <chart-detail :chart-info="chartInfo" :chart-detail="chartData" :from="from"></chart-detail>
 </template>
 
 <script>
@@ -10,6 +10,7 @@ export default {
     chartDetail
   },
   props: {
+    from: String,
     chartInfo: Object,
     chartData: Object
   },
