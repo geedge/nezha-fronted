@@ -1,6 +1,8 @@
 <template>
   <div class="integration-configuration">
-    <v-md-preview :text="configuration"></v-md-preview>
+    <div class="integration-configuration-scroll">
+      <v-md-preview :text="configuration"></v-md-preview>
+    </div>
   </div>
 </template>
 

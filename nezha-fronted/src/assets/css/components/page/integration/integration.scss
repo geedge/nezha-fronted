@@ -224,10 +224,15 @@
     .integration-configuration{
       box-sizing: border-box;
       padding: 30px;
-      padding-right: 10px;
-      margin-right: 20px;
+      padding-right: 0;
       height: 100%;
-      overflow-y: auto;
+      .integration-configuration-scroll{
+        box-sizing: border-box;
+        padding-right: 10px;
+        margin-right: 20px;
+        height: 100%;
+        overflow-y: auto;
+      }
       .integration-configuration-title{
         font-family: Roboto-Medium;
         font-size: 14px;
