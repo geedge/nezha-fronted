@@ -180,10 +180,9 @@ export default {
     },
     logout () {
       this.$get('logout').then(() => {
-        this.$router.replace({ path: '/', query: {} }).catch(err => {})
+        sessionStorage.setItem('nz-is-logout', '1')
         this.logoutSuccess()
         document.location.href = '/'
-        sessionStorage.setItem('nz-is-logout', '1')
         // this.$router.push('/login')
       })
     },

@@ -70,6 +70,8 @@ import { chartType, fromRoute } from '@/components/common/js/constants'
 import bus from '@/libs/bus'
 import axios from 'axios'
 import chartTempData from '@/components/chart/chartTempData'
+import assetInfoData from '@/components/chart/assetInfoData'
+import endpointInfoData from '@/components/chart/endpointInfoData'
 import logsData from '@/components/chart/logsData'
 import lodash from 'lodash'
 
@@ -342,21 +344,36 @@ export default {
           case 'system': {
             this.chartInfo.elements = this.chartInfo.param.datasource
             if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
+              let tempData
+              if (this.chartInfo.type === 'assetInfo') {
+                tempData = this.$loadsh.cloneDeep(assetInfoData.data)
+              } else if (this.chartInfo.type === 'endpointInfo') {
+                tempData = this.$loadsh.cloneDeep(endpointInfoData.data)
+              } else {
+                tempData = [chartTempData.data.result]
+              }
               setTimeout(() => {
-                this.chartData = [chartTempData.data.result]
+                this.chartData = tempData
                 this.loading = false
               }, 100)
               return
             }
+            // assetInfo or endpointInfo
+            let linkId = ''
+            if (this.from == 'panel') {
+              linkId = this.chartInfo.panel.link
+            } else {
+              linkId = this.chartDetailInfo.id
+            }
             if (this.chartInfo.type === 'assetInfo') {
-              this.$get('asset/asset/' + this.chartDetailInfo.id).then(res => {
+              this.$get('asset/asset/' + linkId).then(res => {
                 this.chartData = res.data
                 this.loading = false
               })
               break
             }
             if (this.chartInfo.type === 'endpointInfo') {
-              this.$get('monitor/endpoint/' + this.chartDetailInfo.id).then(res => {
+              this.$get('monitor/endpoint/' + linkId).then(res => {
                 this.chartData = res.data
                 this.loading = false
               })
