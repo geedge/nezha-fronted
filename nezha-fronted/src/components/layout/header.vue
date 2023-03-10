@@ -182,7 +182,9 @@ export default {
       this.$get('logout').then(() => {
         this.$router.replace({ path: '/', query: {} }).catch(err => {})
         this.logoutSuccess()
-        window.location.href = '/'
+        document.location.href = '/'
+        sessionStorage.setItem('nz-is-logout', '1')
+        // this.$router.push('/login')
       })
     },
     showPinDialog () {
