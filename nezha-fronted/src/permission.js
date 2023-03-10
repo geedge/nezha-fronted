@@ -180,8 +180,6 @@ router.beforeEach((to, from, next) => {
     if (loginWhiteList.indexOf(to.path) !== -1) {
       next()
     } else {
-      console.log(to.path)
-      console.log(from.path)
       sessionStorage.setItem('nz-previous-page', to.fullPath)
       next({ path: '/login' })
     }

@@ -152,12 +152,13 @@ const user = {
             sessionStorage.removeItem('nz-previous-page')
           })
         } else {
-          sessionStorage.removeItem('nz-previous-page')
           router.push({
             path: path[0],
             query: {
               t: +new Date()
             }
+          }).then(() => {
+            sessionStorage.removeItem('nz-previous-page')
           })
         }
       })
