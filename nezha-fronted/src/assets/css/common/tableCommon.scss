@@ -22,6 +22,9 @@
     &>div {
       background-color: $--background-color-empty;
     }
+    .nz-table-list>div{
+      height: 100%;
+    }
   }
   .main-list.main-list-with-sub {
     height: 50%;
