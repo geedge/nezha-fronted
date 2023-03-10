@@ -147,7 +147,10 @@ const user = {
         if (sessionStorage.getItem('nz-previous-page') && noJumpPath.indexOf(sessionStorage.getItem('nz-previous-page')) === -1) {
           const route = sessionStorage.getItem('nz-previous-page')
           router.push({
-            path: route
+            path: route,
+            query: {
+              t: +new Date()
+            }
           }).then(() => {
             sessionStorage.removeItem('nz-previous-page')
           })
