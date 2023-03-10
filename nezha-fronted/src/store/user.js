@@ -144,7 +144,7 @@ const user = {
           })
         }
         // 登录成功后跳回到原来页面
-        if (sessionStorage.getItem('nz-previous-page') && noJumpPath.indexOf(sessionStorage.getItem('nz-previous-page')) === -1) {
+        if (sessionStorage.getItem('nz-previous-page') && noJumpPath.indexOf(sessionStorage.getItem('nz-previous-page')) === -1 && !sessionStorage.getItem('nz-is-logout')) {
           const route = sessionStorage.getItem('nz-previous-page')
           router.push({
             path: route,
@@ -153,9 +153,11 @@ const user = {
             }
           }).then(() => {
             sessionStorage.removeItem('nz-previous-page')
+            sessionStorage.removeItem('nz-is-logout')
           })
         } else {
           sessionStorage.removeItem('nz-previous-page')
+          sessionStorage.removeItem('nz-is-logout')
           router.push({
             path: path[0],
             query: {

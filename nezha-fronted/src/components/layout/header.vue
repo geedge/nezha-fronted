@@ -181,8 +181,9 @@ export default {
     logout () {
       this.$get('logout').then(() => {
         this.logoutSuccess()
-        // document.location.href = '/'
-        this.$router.push('/login')
+        document.location.href = '/'
+        sessionStorage.setItem('nz-is-logout', '1')
+        // this.$router.push('/login')
       })
     },
     showPinDialog () {
