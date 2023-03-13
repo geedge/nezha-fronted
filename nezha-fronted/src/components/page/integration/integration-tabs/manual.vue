@@ -22,8 +22,8 @@
       <div class="step-right">
         <h4>{{$t('integration.uploadTalon')}}</h4>
         <div class="command-box">
-          <el-input :disabled="true" :value="uploadCommand" size="small">
-            <i slot="suffix" class="nz-icon nz-icon-override" @click="copyUrl(uploadCommand)" :title="$t('overall.copyText')"></i>
+          <el-input :disabled="true" :value="newCommand" size="small">
+            <i slot="suffix" class="nz-icon nz-icon-override" @click="copyUrl(newCommand)" :title="$t('overall.copyText')"></i>
           </el-input>
         </div>
         <h4 style="margin-top:15px">{{$t('integration.installed')}}</h4>
@@ -75,8 +75,8 @@
       <div class="step-right">
         <h4>{{$t('integration.uploadTalon')}}</h4>
         <div class="command-box">
-          <el-input :disabled="true" :value="uploadCommand" size="small">
-            <i slot="suffix" class="nz-icon nz-icon-override" @click="copyUrl(uploadCommand)" :title="$t('overall.copyText')"></i>
+          <el-input :disabled="true" :value="upgradeCommand" size="small">
+            <i slot="suffix" class="nz-icon nz-icon-override" @click="copyUrl(upgradeCommand)" :title="$t('overall.copyText')"></i>
           </el-input>
         </div>
       </div>
@@ -104,7 +104,8 @@ export default {
           name: 'redHat'
         }
       ],
-      uploadCommand: 'rpm -ivh nz-talon*.rpm',
+      newCommand: 'rpm -ivh nz-talon*.rpm',
+      upgradeCommand: 'rpm -Uvh nz-talon*.rpm',
       tokenCommand: 'cat /opt/nezha/nz-talon/config/token.auth'
 
     }

@@ -105,10 +105,10 @@ export default {
         if (response.code === 200) {
           this.assetList = response.data.list
           if (this.assetList && this.assetList.length > 0) {
-            this.$nextTick(() => {
+            setTimeout(() => {
               this.assetId = String(this.assetList[0].id)
               this.loadFinish = true
-            })
+            }, 100)
           }
         }
       })
