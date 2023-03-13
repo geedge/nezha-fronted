@@ -42,6 +42,8 @@
       :title="title"
       :visible.sync="uploadPicShow"
       width="auto"
+      :append-to-body="true"
+      :modal-append-to-body="false"
       @close="uploadPicShow = false"
       destroy-on-close>
       <el-row class="upload-pic-row">
