@@ -86,7 +86,8 @@ export default {
     init: function () {
       const meta2dOptions = {
         minScale: 0.25,
-        maxScale: 2
+        maxScale: 2,
+        autoAnchor: false
       }
       const meta2d = new Meta2d(this.meta2dId, meta2dOptions)
       meta2d.register(flowPens())
