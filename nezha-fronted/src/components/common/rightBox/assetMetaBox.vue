@@ -463,6 +463,12 @@ export default {
         return
       }
       this.editAssetMeta.param.items.splice(index, 1)
+      // 'param.items.'+ index + '.name'
+      const arr = []
+      this.editAssetMeta.param.items.forEach((item, index) => {
+        arr.push('param.items.' + index + '.name')
+      })
+      this.$refs.editAssetMetaForm.clearValidate(arr)
       this.$forceUpdate()
     },
     copyParam (index) {
