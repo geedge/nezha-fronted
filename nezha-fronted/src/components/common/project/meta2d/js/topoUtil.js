@@ -140,7 +140,7 @@ export default {
           data.pens = []
         }
         data.pens.forEach(pen => {
-          pen.isBottom = false
+          pen.isBottom = true
           if (!pen.nzName) {
             pen.nzName = ''
           }
