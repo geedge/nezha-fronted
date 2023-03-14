@@ -1,5 +1,5 @@
 <template>
-  <div class="explore list-page">
+  <div class="explore list-page" :class="'nz-explore-' + tabIndex">
     <div class="main-list">
       <div class="main-container explore-split-box">
         <!-- 关闭按钮 -->
@@ -3559,7 +3559,9 @@ export default {
   },
   methods: {
     jumpClick (id) {
-      document.querySelector(id).scrollIntoView(true)
+      const dom = document.getElementsByClassName('nz-explore-' + this.tabIndex)[0]
+      console.log(dom)
+      dom.querySelector(id).scrollIntoView(true)
     },
     selectMetricsLogs (val, icon, label) {
       if (val) {
