@@ -3560,7 +3560,6 @@ export default {
   methods: {
     jumpClick (id) {
       const dom = document.getElementsByClassName('nz-explore-' + this.tabIndex)[0]
-      console.log(dom)
       dom.querySelector(id).scrollIntoView(true)
     },
     selectMetricsLogs (val, icon, label) {

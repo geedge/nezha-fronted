@@ -122,7 +122,6 @@ export default {
       let url = ''
       this.terminal.height = document.body.clientHeight - 100
       this.terminal.width = document.body.clientWidth
-      console.log(this.term.cols, this.term.cols)
       if (this.terminal.type === 'asset') {
         url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.term.cols + '&rows=' + this.term.rows + '&token=' + token + '&assetId=' + this.terminal.assetId + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
       } else if (this.terminal.type === 'custom') {
