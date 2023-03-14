@@ -44,7 +44,7 @@
       <div :id="meta2dId" style="height: 100%;width: 100%"></div>
     </div>
     <meta2dProps
-      v-if="editFlag || isPreview"
+      v-if="editFlag && !isPreview"
       ref="meta2dProps"
       :modules="modules"
       :selectPens.sync="selectPens"

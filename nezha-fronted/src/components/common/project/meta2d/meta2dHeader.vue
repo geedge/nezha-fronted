@@ -3,7 +3,7 @@
     <div v-if="!isChart && !editFlag"> {{project && project.name}} </div>
     <div class="tools-left" v-if="editFlag">
       <topology-top-tool
-        v-if="editFlag&&toolShow"
+        v-if="editFlag&&toolShow&&!isPreview"
         :meta2dId="meta2dId"
         ref="topTool"
        >
@@ -117,18 +117,11 @@ export default {
     saveProject () {
       const elements = this.$parent.$refs.meta2dProps.$refs.meta2dData.elements
       const timeType = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataTimeType
-      const unit = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataUnit
-      const statistic = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataStatistic
-      const bkImageId = this.$parent.$refs.meta2dProps.$refs.meta2dCanvas.bkImageId
       const params = {
-        topo: getTopology(this.meta2dId).data(),
-        elements: elements,
-        timeType: timeType || 1,
-        unit: unit || 1,
-        statistic: statistic || 'last',
-        bkImageId: bkImageId || ''
+        ...getTopology(this.meta2dId).data()
       }
-
+      params.elements = elements
+      params.timeType = timeType
       this.$put('monitor/project/topo', { topo: JSON.stringify(params), projectId: this.project.id }).then(res => {
         this.prevent_opt.save = false
         if (res.code === 200) {
@@ -163,6 +156,7 @@ export default {
       })
     },
     previewTopology () {
+      console.log(getTopology(this.meta2dId).data())
       this.isPreview = true
       const elements = this.$parent.$refs.meta2dProps.$refs.meta2dData.elements
       const endTime = new Date().getTime()

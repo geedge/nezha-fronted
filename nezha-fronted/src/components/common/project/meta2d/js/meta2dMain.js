@@ -100,8 +100,7 @@ export default {
       /* 画布绑定事件 */
       meta2d.beforeAddPens = (pens) => { // 添加画笔前
         bus.$emit('changeDrawState')
-        const name = 'elements - ' + meta2d.store.data.pens.length
-        console.log('123123123123')
+        const name = 'elements-' + meta2d.store.data.pens.length
         if (pens.length === 1) {
           if (!pens[0].type) {
             this.nodeInit(pens[0], name)
@@ -146,6 +145,9 @@ export default {
       if (pen.data && pen.data.params) {
         return
       }
+      if (name) {
+        pen.text = name
+      }
       pen.data = {
         params: { // 用于编辑时 重置为节点初始状态
           background: pen.background || '#22222200',
@@ -161,7 +163,7 @@ export default {
         source: 'text',
         textParent: '',
         textLegend: '',
-        text: pen.text || '',
+        text: pen.text  || '',
         textValue: '',
         enable: {
           valueMapping: false,
@@ -205,6 +207,9 @@ export default {
     lineInit (pen, name) { // 初始化连线参数
       if (pen.data && pen.data.params) {
         return
+      }
+      if (name) {
+        pen.text = name
       }
       pen.data = {
         params: {

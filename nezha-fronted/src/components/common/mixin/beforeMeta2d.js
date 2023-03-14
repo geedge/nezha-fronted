@@ -20,20 +20,19 @@ export default {
       if (this.currentProject.id) {
         this.$get('monitor/project/topo', { projectId: this.currentProject.id }).then(res => {
           if (res.data && res.data.topo) {
-            this.topoData = res.data.topo.topo || {}
+            this.topoData = res.data.topo || {}
+            if (res.data.topo.topo) {
+              this.topoData = res.data.topo.topo || {}
+            }
             this.querysArray = res.data.topo.elements || []
             this.params = {
-              timeType: res.data.topo.timeType || 5,
-              unit: res.data.topo.unit || 1,
-              statistic: res.data.topo.statistic || 'last',
+              timeType: res.data.topo.timeType || 5
             }
           } else {
             this.topoData = {}
             this.querysArray = []
             this.params = {
-              timeType: 5,
-              unit: 1,
-              statistic: 'last'
+              timeType: 5
             }
           }
         })
