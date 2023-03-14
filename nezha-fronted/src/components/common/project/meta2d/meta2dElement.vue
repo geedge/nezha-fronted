@@ -10,7 +10,7 @@
             {{$t('overall.module')}}
           </div>
           <div v-show="elements.position" class="form-row-content">
-            <el-select v-model="pen.moduleId" @change="change('moduleId')" size="small">
+            <el-select v-model="pen.moduleId" @change="change('moduleId')" size="small" clearable>
               <el-option v-for="item in modules" :value="item.id" :key="item.id" :label="item.name" :disabled="item.disabled"/>
             </el-select>
           </div>

@@ -305,7 +305,9 @@ export default {
       getTopology(this.meta2dId).addPen(pen, true)
     },
     clearSelection () {
-      getTopology(this.meta2dId).active([])
+      // getTopology(this.meta2dId).active([])
+      getTopology(this.meta2dId).inactive()
+      getTopology(this.meta2dId).render()
       bus.$emit('changeSelectPens', [])
     }
   }
