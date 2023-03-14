@@ -3,7 +3,7 @@
     <div style="display: flex;justify-content: space-between;align-items: center;margin-bottom: 10px;">
       <span>{{dataJson.type == 1 ? 'Metric expression' : 'Log expression'}}</span>
       <span>
-       <chart-unit v-model="chartUnit" class="margin-r-10"></chart-unit>
+       <chart-unit v-if="showMetrics" v-model="chartUnitType" ref="chartUnit" class="margin-r-10"></chart-unit>
       </span>
     </div>
     <div v-for="(item, index) in dataJson.data" :key = 'index' style="display: flex;margin-bottom: 10px">
