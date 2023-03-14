@@ -4331,6 +4331,7 @@ export default {
         })
         if (!temp) {
           this.showIntroduce = true
+          this.saveDisabled = true
         }
       }
     }
