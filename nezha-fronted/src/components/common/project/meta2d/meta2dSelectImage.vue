@@ -235,7 +235,7 @@ export default {
       this.$delete('monitor/project/topo/iconUnit?unit=' + item.group).then(res => {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
-          this.tools = this.tools.filter(group => group.group !== item.unit)
+          this.tools = this.tools.filter(group => group.group !== item.group)
         } else {
           this.$message.error(res.msg)
         }
