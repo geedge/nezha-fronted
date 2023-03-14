@@ -4242,6 +4242,10 @@ export default {
       return letter
     },
     exportToHtml (name) {
+      if (this.showIntroduce) {
+        this.$message.error(this.$t('explore.queryExpression'))
+        return
+      }
       const params = {
         type: this.showMetrics ? 1 : 2,
         start: this.momentStrToTimestamp(this.filterTime[0]) / 1000,
