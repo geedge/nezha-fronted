@@ -1,7 +1,7 @@
 <template>
   <div class="pop-custom" :class="{'pop-custom-top' : tableClass || operationTrue}" v-clickoutside="esc">
-    <div class="pop-title">{{$t('overall.selectColumns')}}</div>
-    <div class="pop-box custom-labels">
+    <div class="pop-title" @click.stop>{{$t('overall.selectColumns')}}</div>
+    <div class="pop-box custom-labels" @click.stop>
       <div style="height: 100%; overflow: auto;">
         <!--NotSet 为true不可设置-->
         <div
@@ -19,7 +19,7 @@
 
       </div>
     </div>
-    <div class="custom-bottom-btns">
+    <div class="custom-bottom-btns" @click.stop>
       <button v-if="isCancel" :id="tableId+'-element-set-none'" class="nz-btn nz-btn-size-small nz-btn-style-light is-cancel" type="button" @click.stop="batchHandler(false)">
         <span class="top-tool-btn-txt">{{$t('overall.clear')}}</span>
       </button>
