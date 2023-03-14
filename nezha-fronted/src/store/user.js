@@ -1,7 +1,7 @@
 import { post, get } from '@/http'
 import router from '../router'
 import bus from '../libs/bus'
-import { returnMenuCode, sortByOrderNum } from '@/permission'
+import { returnMenuCode, sortByOrderNum, permissionWhiteList, hasMenu } from '@/permission'
 import moment from 'moment-timezone'
 import { theme } from '@/components/common/js/constants'
 
@@ -144,8 +144,13 @@ const user = {
           })
         }
         // 登录成功后跳回到原来页面
-        if (sessionStorage.getItem('nz-previous-page') && noJumpPath.indexOf(sessionStorage.getItem('nz-previous-page')) === -1 && !sessionStorage.getItem('nz-is-logout')) {
-          const route = sessionStorage.getItem('nz-previous-page')
+        if (sessionStorage.getItem('nz-previous-page') && noJumpPath.indexOf(sessionStorage.getItem('nz-previous-page')) === -1) {
+          let route = sessionStorage.getItem('nz-previous-page')
+          // 没权限则跳转默认页面
+          const pathStr = route.split('?')[0]
+          if (permissionWhiteList.indexOf(pathStr) === -1 && !hasMenu(store.getters.menuList, pathStr)) {
+            route = path[0]
+          }
           router.push({
             path: route,
             query: {
@@ -153,16 +158,15 @@ const user = {
             }
           }).then(() => {
             sessionStorage.removeItem('nz-previous-page')
-            sessionStorage.removeItem('nz-is-logout')
           })
         } else {
-          sessionStorage.removeItem('nz-previous-page')
-          sessionStorage.removeItem('nz-is-logout')
           router.push({
             path: path[0],
             query: {
               t: +new Date()
             }
+          }).then(() => {
+            sessionStorage.removeItem('nz-previous-page')
           })
         }
       })

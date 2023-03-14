@@ -273,7 +273,7 @@ export default {
       boxWidth: '',
       boxHeight: '',
       qrWidth: 10,
-      paddingLeft: 0,
+      paddingLeft: 0
     }
   },
   methods: {
@@ -781,6 +781,11 @@ export default {
       document.getElementById('login-bgimg').style['background-image'] = `url(${this.bgImg})`
     } else {
       // this.initStar()
+    }
+
+    if (sessionStorage.getItem('nz-is-logout')) {
+      sessionStorage.removeItem('nz-previous-page')
+      sessionStorage.removeItem('nz-is-logout')
     }
   },
   beforeDestroy () {
