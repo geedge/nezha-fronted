@@ -24,8 +24,8 @@ export default new Router({
       component: resolve => require(['@/components/layout/home'], resolve),
       children: [
         {
-          path: '/panel',
-          component: resolve => require(['@/components/page/dashboard/panel'], resolve)
+          path: '/dashboard',
+          component: resolve => require(['@/components/page/dashboard/dashboard'], resolve)
         },
         {
           path: '/explore',
