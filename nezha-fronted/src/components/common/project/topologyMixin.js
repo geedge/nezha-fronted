@@ -171,7 +171,7 @@ export default {
     },
     topoScale (num) {
       this.moduleId = ''
-      getTopology(this.topologyIndex).centerView()
+      // getTopology(this.topologyIndex).centerView()
       this.showNodeTools('')
       this.popDataShowUpdate('', false)
       if (!this.editTopologyFlag) {
