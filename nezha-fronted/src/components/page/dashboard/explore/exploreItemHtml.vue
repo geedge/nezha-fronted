@@ -22,7 +22,7 @@
       <template v-if="showMetrics">
         <el-collapse-item name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
           <div class="chart-room">
-            <chart ref="exploreChart" :unit="chartUnit" :timeRange="filterTime"></chart>
+            <chart ref="exploreChart" :unit="chartUnitType" :timeRange="filterTime"></chart>
           </div>
         </el-collapse-item>
         <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
@@ -94,7 +94,7 @@
       <template v-else>
         <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
           <div class="chart-room">
-            <chart ref="logChart" :unit="chartUnit" v-my-loading="chartLoading" :timeRange="filterTime"></chart>
+            <chart ref="logChart" :unit="chartUnitType" v-my-loading="chartLoading" :timeRange="filterTime"></chart>
           </div>
         </el-collapse-item>
         <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
@@ -136,7 +136,7 @@ export default {
         pageSize: 20,
         total: 0
       },
-      chartUnit: 1,
+      chartUnitType: 1,
       filterTime: [],
       tools: {
         loading: false, // 是否显示table加载动画
@@ -162,7 +162,8 @@ export default {
     } else {
       this.showMetrics = false
     }
-    this.chartUnit = this.dataJson.unit || 1
+    this.chartUnitType = this.dataJson.unit || 1
+    this.$refs.chartUnit.unit = this.dataJson.unit || 1
     this.expressionChange()
   },
   methods: {
@@ -229,7 +230,7 @@ export default {
                     values: ['', val]
                   }
                 }
-                this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.values[0][1], null, 2))
+                this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnitType || 2).compute(result.values[0][1], null, 2))
 
                 this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000)))
                 for (const key in metrics) {
@@ -557,7 +558,7 @@ export default {
     }
   },
   watch: {
-    chartUnit: {
+    chartUnitType: {
       handler (n, o) {
         this.expressionChange()
       }
