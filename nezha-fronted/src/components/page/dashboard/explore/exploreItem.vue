@@ -132,7 +132,7 @@
                   <!-- 自定义table列 -->
                   <transition name="el-zoom-in-top">
                     <element-set
-                      @click.stop
+                      @click.stop="()=>{}"
                       v-if="tools.showCustomTableTitle"
                       :tableId="tableId"
                       ref="customTableTitle"
