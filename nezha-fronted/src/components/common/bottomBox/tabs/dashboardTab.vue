@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width-height chart-list panel-tab-new asset-detail" v-my-loading="panelTabLoading">
+  <div class="full-width-height chart-list dashboard-tab asset-detail" v-my-loading="dashboardLoading">
     <nz-bottom-data-list
       :showTitle='showTitle'
       :obj='obj'
@@ -15,7 +15,7 @@
       <template v-slot:top-tool-right>
         <!-- asset -->
         <div v-if="from === fromRoute.asset" style="display: flex">
-          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'panel' + obj.id"></pick-time>
+          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'dashboard' + obj.id"></pick-time>
           <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChartBefore">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
@@ -28,8 +28,8 @@
             :permissions="{import: 'main_add', export: 'main_edit'}"
             class="top-tool-export margin-r-10"
             export-file-name="asset-charts"
-            export-url="/visual/panel/export"
-            import-url="/visual/panel/import"
+            export-url="/visual/dashboard/export"
+            import-url="/visual/dashboard/import"
             @afterImport="getTableData"
             :link="obj"
             :showLock="from === fromRoute.asset"
@@ -44,7 +44,7 @@
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
               </el-dropdown-item> -->
-              <el-dropdown-item v-has="'panel_view'">
+              <el-dropdown-item v-has="'dashboard_view'">
                 <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
               </el-dropdown-item>
             </template>
@@ -52,7 +52,7 @@
         </div>
         <!-- endpoint -->
         <div v-else-if="from === fromRoute.endpoint" style="display: flex">
-          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'panel' + obj.id"></pick-time>
+          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'dashboard' + obj.id"></pick-time>
           <button id="endpoint-create-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChartBefore">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
@@ -67,8 +67,8 @@
             :showLock="from === fromRoute.endpoint"
             class="top-tool-export margin-r-10"
             export-file-name="endpoint-charts"
-            export-url="/visual/panel/export"
-            import-url="/visual/panel/import"
+            export-url="/visual/dashboard/export"
+            import-url="/visual/dashboard/import"
             @afterImport="getTableData"
             :exportBoxShow="true"
             @export="exportType"
@@ -81,7 +81,7 @@
               <el-dropdown-item v-has="'main_edit'">
                 <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
               </el-dropdown-item> -->
-              <el-dropdown-item v-has="'panel_view'">
+              <el-dropdown-item v-has="'dashboard_view'">
                 <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
               </el-dropdown-item>
             </template>
@@ -117,7 +117,7 @@
             <chart-list
               ref="chartList"
               name="panel"
-              :panelId="showPanel.id"
+              :dashboardId="showPanel.id"
               :class="{'show-top':showTopBtn}"
               :data-list="dataList"
               :nowTimeType="nowTimeType"
@@ -180,7 +180,7 @@ import panelVariables from '@/components/common/panel/panelVariables'
 import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
 
 export default {
-  name: 'panelTabNew',
+  name: 'dashboardTab',
   mixins: [subDataListMixin, detailViewRightMixin, htmlToPdfMixin, exportHtmlMixin],
   props: {
     from: String,
@@ -206,10 +206,10 @@ export default {
   data () {
     return {
       fromRoute,
-      tableId: 'panelTabNew',
+      tableId: 'dashboardTab',
       pdfId: 'pdfDom',
-      htmlTitle: 'panel',
-      panelTabLoading: false,
+      htmlTitle: 'dashboard',
+      dashboardLoading: false,
       showTopBtn: false, // top按钮
       visible: false,
       chartListLoading: true,
@@ -291,7 +291,7 @@ export default {
       dataList: [], // 数据列表
       filter: { // 过滤条件
         // productId: 0,
-        panelId: 0,
+        dashboardId: 0,
         start_time: '',
         end_time: ''
       },
@@ -303,7 +303,7 @@ export default {
       blankChartTemp: {
         varType: 1,
         pid: '',
-        panelId: null,
+        dashboardId: null,
         varIds: []
       },
       // removeModal: false, // 删除弹出
@@ -348,10 +348,10 @@ export default {
       this.getTableData(clearShowPanel)
     },
     panelReloadOnlyPanel () { // 仅刷新panel数据
-      if (!this.hasButton('panel_view')) {
+      if (!this.hasButton('dashboard_view')) {
         return
       }
-      this.$get('visual/panel?pageSize=-1').then(response => {
+      this.$get('visual/dashboard?pageSize=-1').then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
           for (let i = 0; i < this.panelData.length; i++) {
@@ -367,7 +367,7 @@ export default {
     addChart () {
       this.chart = this.newChart()
       this.chart.param.thresholds = [{ value: undefined, color: randomcolor() }]
-      this.chart.panelId = this.showPanel.id
+      this.chart.dashboardId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
       this.$nextTick(() => {
         this.$refs.addChartModal.isStable = 'stable'
@@ -375,7 +375,7 @@ export default {
     },
     addChartByTemp () {
       this.chart = JSON.parse(JSON.stringify(this.blankChartTemp))
-      this.chart.panelId = this.showPanel.id
+      this.chart.dashboardId = this.showPanel.id
       if (this.from === fromRoute.endpoint) {
         this.chart.varType = 2
       }
@@ -400,7 +400,7 @@ export default {
       if (refresh) {
         this.refresh()
         if (this.from === fromRoute.chartTemp) {
-          this.$get('/visual/panel/chart', { ids: this.obj.id }).then(res => {
+          this.$get('/visual/dashboard/chart', { ids: this.obj.id }).then(res => {
             res.data.list.forEach(item => {
               if (!item.children) {
                 item.children = []
@@ -408,7 +408,7 @@ export default {
             })
             this.panelDataList = res.data.list
             if (this.panelDataList.length > 0) {
-              this.showPanel.id = this.filter.panelId = 0
+              this.showPanel.id = this.filter.dashboardId = 0
               this.getData(this.filter)
             } else {
               this.chartListLoading = false
@@ -426,7 +426,7 @@ export default {
         this.chart = JSON.parse(JSON.stringify(data))
         this.chart.x = 0
         this.chart.y = 0
-        this.chart.panelId = this.showPanel.id
+        this.chart.dashboardId = this.showPanel.id
         this.chart.panelName = this.showPanel.name
         this.chart.id = ''
         this.chart.elements.forEach((item) => {
@@ -442,12 +442,12 @@ export default {
         }
       } else {
         this.rightBox.loading = true
-        this.$get('visual/panel/chart/' + data.id).then(res => {
+        this.$get('visual/dashboard/chart/' + data.id).then(res => {
           this.rightBox.loading = false
           if (res.code === 200) {
             const chartData = res.data
             this.chart = JSON.parse(JSON.stringify(chartData))
-            this.chart.panelId = this.showPanel.id
+            this.chart.dashboardId = this.showPanel.id
             this.chart.panelName = this.showPanel.name
             if (this.chart.param) {
               this.chart.param = JSON.parse(this.chart.param)
@@ -495,7 +495,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('visual/panel/chart?ids=' + data.id).then(response => {
+        this.$delete('visual/dashboard/chart?ids=' + data.id).then(response => {
           if (response.code === 200) {
             this.$message({
               duration: 2000,
@@ -515,7 +515,7 @@ export default {
     addGroupItem (groupId) {
       this.chart = this.newChart()
       this.chart.groupId = groupId
-      this.chart.panelId = this.showPanel.id
+      this.chart.dashboardId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
       this.chart.isGroup = true
       this.$nextTick(() => {
@@ -528,7 +528,7 @@ export default {
     },
     // 获取数据,用在子页面
     getData (params) {
-      if (!this.hasButton('panel_view')) {
+      if (!this.hasButton('dashboard_view')) {
         return
       }
       this.chartListLoading = true
@@ -541,7 +541,7 @@ export default {
         params.from = this.from
       }
       if (this.from !== 'chartTemp') {
-        this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
+        this.$get('visual/dashboard/chart?dashboardId=' + params.dashboardId + '&groupId=0' + '&pageSize=-1').then(response => {
           if (response.code === 200) {
             this.chartListLoading = false
             this.dataList = response.data.list.map(item => {
@@ -569,7 +569,7 @@ export default {
         this.setSearchTime(nowTimeType.type, nowTimeType.value)
         this.filter.start_time = bus.timeFormate(this.searchTime[0])
         this.filter.end_time = bus.timeFormate(this.searchTime[1])
-        this.filter.panelId = this.showPanel.id
+        this.filter.dashboardId = this.showPanel.id
         this.getData(this.filter)
         this.$store.dispatch('dispatchPanelTime', {
           time: this.searchTime,
@@ -612,10 +612,10 @@ export default {
       } else {
         if (this.from === this.fromRoute.chartTemp) {
           if (this.obj.type === 'group') {
-            this.$get('/visual/panel/chart', { ids: this.obj.id }).then(res => {
+            this.$get('/visual/dashboard/chart', { ids: this.obj.id }).then(res => {
               this.panelDataList = res.data.list
               if (this.panelDataList.length > 0) {
-                this.showPanel.id = this.filter.panelId = 0
+                this.showPanel.id = this.filter.dashboardId = 0
                 this.getData(this.filter)
               }
             })
@@ -623,15 +623,15 @@ export default {
           }
           this.panelDataList = [this.obj]
           if (this.panelDataList.length > 0) {
-            this.showPanel.id = this.filter.panelId = 0
+            this.showPanel.id = this.filter.dashboardId = 0
             this.getData(this.filter)
           }
         } else if (this.from === this.fromRoute.dashboardTemp) {
-          this.$get('visual/panel', { type: 'template', ids: this.obj.id }).then(response => {
+          this.$get('visual/dashboard', { type: 'template', ids: this.obj.id }).then(response => {
             if (response.code === 200) {
               this.panelData = response.data.list
               if (this.panelData.length > 0) {
-                this.filter.panelId = this.panelData[0].id
+                this.filter.dashboardId = this.panelData[0].id
                 this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
                 this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
                 this.getData(this.filter)
@@ -644,12 +644,12 @@ export default {
             }
           })
         } else {
-          this.$get('visual/panel', { type: this.from, link: linkId || this.obj.id }).then(response => {
+          this.$get('visual/dashboard', { type: this.from, link: linkId || this.obj.id }).then(response => {
             if (response.code === 200) {
               this.panelData = response.data.list
               if (this.panelData.length > 0) {
-                // this.showPanel.id = this.filter.panelId = this.panelData[0].id
-                this.filter.panelId = this.panelData[0].id
+                // this.showPanel.id = this.filter.dashboardId = this.panelData[0].id
+                this.filter.dashboardId = this.panelData[0].id
                 this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
                 this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
                 this.getData(this.filter)
@@ -773,7 +773,7 @@ export default {
       this.$store.dispatch('dispatchHomeLoading', true)
       const params = {}
       params.tmplId = this.showPanel.id
-      this.$post('visual/panel/syncTmpl', params).then(res => {
+      this.$post('visual/dashboard/syncTmpl', params).then(res => {
         this.$store.dispatch('dispatchHomeLoading', false)
         if (res.code === 200) {
           this.getTableData(this.obj.id)
@@ -907,7 +907,7 @@ export default {
         }
       }
     },
-    // 监听图表联动配置panelId
+    // 监听图表联动配置
     'showPanel.param.chartShare': {
       handler (value) {
         // 每次切换联动模式 tooltip设置显示

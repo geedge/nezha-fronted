@@ -61,7 +61,7 @@
             ></el-autocomplete>
           </el-form-item>
           <!-- DashboardTemplate  -->
-          <el-form-item :label="$t('model.dashboardtemplate')" prop="panelId" ref="dashboardTemplate">
+          <el-form-item :label="$t('model.dashboardtemplate')" prop="dashboardId" ref="dashboardTemplate">
             <v-selectpage
             :data="dashboardList"
             :tb-columns="DashboardSearchShowFields"
@@ -72,10 +72,10 @@
             title="DashboardSearch"
             key-field="id"
             :width="634"
-            v-model="editModule.panelId"
+            v-model="editModule.dashboardId"
             show-field="name"
             class="form-control"
-            @values="(data) => {editModule.panelId = data.map(d => d.id).join(',')}"
+            @values="(data) => {editModule.dashboardId = data.map(d => d.id).join(',')}"
             :result-format="resultFormat"
             ></v-selectpage>
           </el-form-item>
@@ -1109,7 +1109,7 @@ export default {
           }
           if (valid) {
             this.prevent_opt.save = true
-            params.panelId = this.editModule.panelId !== '' ? Number(this.editModule.panelId) : null
+            params.dashboardId = this.editModule.dashboardId !== '' ? Number(this.editModule.dashboardId) : null
             if (this.editModule.id) {
               this.$put('monitor/module', params).then(response => {
                 if (response.code === 200) {
@@ -1502,7 +1502,7 @@ export default {
     },
     /* 获取Dashboard列表数据 */
     DashboardTemplateList () {
-      this.$get('visual/panel', { pageSize: -1, varType: 2, type: 'template' }).then(res => {
+      this.$get('visual/dashboard', { pageSize: -1, varType: 2, type: 'template' }).then(res => {
         this.dashboardList = res.data.list
       })
     },
@@ -1579,7 +1579,7 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editModule = JSON.parse(JSON.stringify(n))
-        this.editModule.panelId = n.panelId ? n.panelId + '' : ''
+        this.editModule.dashboardId = n.dashboardId ? n.dashboardId + '' : ''
         this.activeName = 'Basic'
         this.activeNameLogs = this.editModule.configs[1].config.map(() => 'Basic')
         this.logsCopyValue = this.editModule.configs[1].config.map(() => '')

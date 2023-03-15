@@ -45,7 +45,7 @@
       }
     }
   }
-  & > .bottom-panel {
+  & > .bottom-dashboard {
     padding: 15px 10px 0px 10px !important;
   }
 }
@@ -190,7 +190,7 @@
   transition: 0.4s height;
 }
 
-.bottom-panel {
+.bottom-dashboard {
   background-color: $--background-color-empty;
   height: calc(100% - 30px);
 }

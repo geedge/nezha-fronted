@@ -360,8 +360,8 @@ export default {
             }
             // assetInfo or endpointInfo
             let linkId = ''
-            if (this.from == 'panel') {
-              linkId = this.chartInfo.panel.link
+            if (this.from == 'dashboard') {
+              linkId = this.chartInfo.varId
             } else {
               linkId = this.chartDetailInfo.id
             }
@@ -722,7 +722,7 @@ export default {
     },
     chartSync () {
       this.loading = true
-      this.$post('visual/panel/chart/syncTmpl', { ids: [this.chartInfo.id] }).then(res => {
+      this.$post('visual/dashboard/chart/syncTmpl', { ids: [this.chartInfo.id] }).then(res => {
         if (res.code === 200) {
           this.$message.success(this.$t('tip.syncSuccess'))
           this.$emit('refreshPanel')

@@ -31,7 +31,7 @@ const store = new Vuex.Store({
     consoleParam: {}, // 新开console窗口参数
     linkData: [], // 导航数据
     projectFilter: {
-      panelId: 0,
+      dashboardId: 0,
       start_time: '',
       end_time: '',
       searchName: ''

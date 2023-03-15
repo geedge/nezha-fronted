@@ -45,7 +45,7 @@
 import bus from '@/libs/bus'
 import topologyL5 from '@/components/common/project/topologyL5'
 import meta2dMain from '@/components/common/project/meta2d/meta2dMain'
-import beforeMeta2d from "@/components/common/mixin/beforeMeta2d";
+import beforeMeta2d from '@/components/common/mixin/beforeMeta2d'
 
 export default {
   name: 'project2',
@@ -370,29 +370,6 @@ export default {
       this.rightBox.addEndpoint.show = true
     },
 
-    // 查看endpoint详情
-    detailEndpoint (endpoint) {
-      this.endpoint = Object.assign({}, endpoint)
-      this.bottomBox.targetTab = 'panel'
-      this.bottomBox.showSubList = true
-    },
-    delEndpoint (endpoint) {
-      this.$confirm(this.$t('tip.confirmDelete'), {
-        confirmButtonText: this.$t('tip.yes'),
-        cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
-      }).then(() => {
-        this.$delete('endpoint?ids=' + endpoint.id).then(response => {
-          if (response.code === 200) {
-            this.delFlag = true
-            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.getEndpointTableData()
-          } else {
-            this.$message.error(response.msg)
-          }
-        })
-      })
-    },
     jumpToAlertMsg (endpoint) {
       if (!this.hasButton('project_endpoint_alerts_view')) {
         return

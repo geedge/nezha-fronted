@@ -12,7 +12,7 @@
             <div class="tooltip--row">
               <div class="legend-value legend-value-asset">
                 <div class="map-asset">
-                  <div class="progress-title">{{$t('panel.assetOk')}}</div>
+                  <div class="progress-title">{{$t('dashboard.assetOk')}}</div>
                   <div class="success-progress progress-box">
                     <div class="top-progress" :style="{width: (dcStat.asset.ok / dcStat.asset.total) * 100 + '%' }"></div>
                     <div style="width: 100%" class="bottom-progress"></div>
@@ -20,7 +20,7 @@
                   <div class="success-progress progress-content">{{dcStat.asset.ok}}</div>
                 </div>
                 <div class="map-asset">
-                  <div class="progress-title">{{$t('panel.assetAlarm')}}</div>
+                  <div class="progress-title">{{$t('dashboard.assetAlarm')}}</div>
                   <div class="error-progress progress-box">
                     <div class="top-progress" :style="{width: (dcStat.asset.alarm / dcStat.asset.total) * 100 + '%'}"></div>
                     <div style="width: 100%" class="bottom-progress"></div>
@@ -31,7 +31,7 @@
               <div class="partition"></div>
               <div class="legend-value legend-value-agent">
                 <div class="map-asset">
-                  <div class="progress-title">{{$t('overall.agent')}} {{$t('config.agent.up')}}}</div>
+                  <div class="progress-title">{{$t('overall.agent')}} {{$t('config.agent.up')}}</div>
                   <div class="success-progress progress-box">
                     <div class="top-progress" :style="{width: (dcStat.agent.up / (dcStat.agent.up + dcStat.agent.down)) * 100 + '%'}"></div>
                     <div style="width: 100%" class="bottom-progress"></div>

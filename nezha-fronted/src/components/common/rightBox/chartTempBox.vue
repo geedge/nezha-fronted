@@ -43,7 +43,7 @@
               :data="chartTempArr"
               :tb-columns="ChartSearchShowFields"
               :params="{
-                varType: 2, panelId: 0,
+                varType: 2, dashboardId: 0,
                 returnChildren:0,groupId:0,
               }"
               :multiple="false"
@@ -111,7 +111,7 @@ export default {
     return {
       fromRoute,
       editChartTemp: {},
-      url: 'visual/panel/chart/fromTmpl',
+      url: 'visual/dashboard/chart/fromTmpl',
       rules: { // 表单校验规则
         varType: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
@@ -330,7 +330,7 @@ export default {
       // dc, brand, model, type
     },
     getChartTempData () {
-      this.$get('visual/panel/chart', { pageSize: -1, panelId: 0, returnChildren: 0, varType: this.editChartTemp.varType, groupId: 0 }).then(response => {
+      this.$get('visual/dashboard/chart', { pageSize: -1, dashboardId: 0, returnChildren: 0, varType: this.editChartTemp.varType, groupId: 0 }).then(response => {
         if (response.code === 200) {
           this.chartTempArr = response.data.list
         }

@@ -284,7 +284,7 @@ const cn = {
       singleStatErrorTip: '仅支持返回单个系列/表的查询',
       panelForm: {
         panelName: '面板名称',
-        panelId: 'ID'
+        dashboardId: 'ID'
       },
       createChartTitle: '新增图表',
       createChartTempTitle: '新增图表模板',

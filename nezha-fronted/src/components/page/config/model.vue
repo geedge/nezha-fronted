@@ -105,7 +105,7 @@ export default {
         id: '',
         name: '',
         // chartIds: '',
-        panelId: '',
+        dashboardId: '',
         sysObjectId: '',
         type: { id: '', name: '' },
         remark: ''
@@ -145,7 +145,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('dispatchHomeLoading', true)
-        this.$post('visual/panel/syncTmpl', { model: row.id }).then(res => {
+        this.$post('visual/dashboard/syncTmpl', { model: row.id }).then(res => {
           this.$store.dispatch('dispatchHomeLoading', false)
           if (res.code === 200) {
             this.getTableData()

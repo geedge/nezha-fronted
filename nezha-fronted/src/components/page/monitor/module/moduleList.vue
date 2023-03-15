@@ -195,7 +195,7 @@ export default {
         name: '',
         endpointNameTmpl: '{{module.name}}-{{asset.name}}',
         port: '',
-        panelId: '',
+        dashboardId: '',
         metricsEnable: 1,
         configs: [
           {
@@ -480,7 +480,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('dispatchHomeLoading', true)
-        this.$post('visual/panel/syncTmpl', { module: row.id }).then(res => {
+        this.$post('visual/dashboard/syncTmpl', { module: row.id }).then(res => {
           this.$store.dispatch('dispatchHomeLoading', false)
           if (res.code === 200) {
             this.getTableData()

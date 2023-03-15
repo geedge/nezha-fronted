@@ -263,7 +263,7 @@ export default {
     // 新增收藏
     addStarred: bus.debounceFn(function (data) {
       const params = {
-        type: 'panel',
+        type: 'dashboard',
         tid: data.id
       }
       this.$post('/sys/user/starred', params).then(async response => {
@@ -290,7 +290,7 @@ export default {
     300, true),
     // 删除收藏
     delStarred: bus.debounceFn(function (data) {
-      this.$delete('/sys/user/starred?type=panel&tid=' + data.id).then(async response => {
+      this.$delete('/sys/user/starred?type=dashboard&tid=' + data.id).then(async response => {
         if (response.code === 200) {
           data.starred = 0
           // 更新panelData收藏状态
@@ -345,7 +345,7 @@ export default {
           }
         })
       }
-      this.$put('visual/panel/tree', toUpdate)
+      this.$put('visual/dashboard/tree', toUpdate)
     },
     deletePanel (data) {
       this.$emit('deletePanel', data)

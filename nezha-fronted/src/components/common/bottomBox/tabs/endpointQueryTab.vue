@@ -106,12 +106,13 @@
     </pl-table>
     <button :class="{'to-top-is-hover': tools.tableHover}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn" id="endpoint-list-totop" :title="$t('overall.backToTop')"><i class="nz-icon nz-icon-top"></i></button>
 
-    <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
-               :title="$t('project.endpoint.dialogTitle')"
-               :visible.sync="graphShow"
-               width="90%"
-               :modal-append-to-body="false"
-               @close="dialogClose">
+    <el-dialog
+      class="line-chart-block-modal nz-dialog endpoint-dialog"
+      :title="$t('project.endpoint.dialogTitle')"
+      :visible.sync="graphShow"
+      width="90%"
+      :modal-append-to-body="false"
+      @close="dialogClose">
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
@@ -216,7 +217,7 @@ export default {
       }
     },
     createSuccess (type, response, param, panel) {
-      this.$confirm(this.$t('dashboard.metric.goPanelTip'), this.$t('tip.saveSuccess'), {
+      this.$confirm(this.$t('dashboard.metric.goDashboardTip'), this.$t('tip.saveSuccess'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
         type: 'success'
@@ -225,7 +226,7 @@ export default {
         this.$store.state.showPanel.id = panel.id
         this.$store.state.showPanel.name = panel.name
         this.$router.push({
-          path: '/panel',
+          path: '/dashboard',
           query: {
             t: +new Date()
           }

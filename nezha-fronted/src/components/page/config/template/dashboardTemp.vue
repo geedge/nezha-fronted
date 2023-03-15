@@ -18,8 +18,8 @@
           :delete-objs="batchDeleteObjs"
           ref="export"
           id="dashboard-template-list"
-          export-url="/visual/panel/export"
-          import-url="/visual/panel/import"
+          export-url="/visual/dashboard/export"
+          import-url="/visual/dashboard/import"
           export-file-name="dashboard-temp"
           :params="searchLabel"
           :paramsType="'template'"
@@ -100,7 +100,7 @@ export default {
   data () {
     return {
       detailType: 'list',
-      url: 'visual/panel',
+      url: 'visual/dashboard',
       tableId: 'dashboardTemp',
       orderBy: 'id',
       /* 搜素相关 */
@@ -133,7 +133,7 @@ export default {
   },
   methods: {
     add () {
-      if (!this.hasButton('panel_view')) {
+      if (!this.hasButton('dashboard_view')) {
         return
       }
       this.rightBox.show = true
@@ -163,7 +163,7 @@ export default {
       }
     },
     edit (u) {
-      this.$get('visual/panel/' + u.id).then(res => {
+      this.$get('visual/dashboard/' + u.id).then(res => {
         if (res.code === 200) {
           this.object = res.data
           if (!this.$loadsh.get(this.object, 'param.report', '')) {
@@ -211,7 +211,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$post('/visual/panel/duplicate/' + u.id).then(res => {
+        this.$post('/visual/dashboard/duplicate/' + u.id).then(res => {
           if (res.code === 200) {
             this.getTableData()
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -229,7 +229,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('dispatchHomeLoading', true)
-        this.$post('visual/panel/syncTmpl', { tmplId: row.id }).then(res => {
+        this.$post('visual/dashboard/syncTmpl', { tmplId: row.id }).then(res => {
           this.$store.dispatch('dispatchHomeLoading', false)
           if (res.code === 200) {
             this.getTableData()

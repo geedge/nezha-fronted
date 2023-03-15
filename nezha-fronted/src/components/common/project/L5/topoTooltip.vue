@@ -74,11 +74,11 @@ export default {
   data () {
     return {
       tempDom: { height: 250, width: '' },
-      chartDataTemp: { id: 8832, prev: null, next: null, panelId: 0, title: '123', span: 12, height: 0, createAt: '2021-01-27 07:36:19', unit: 2, weight: 0, pid: null, buildIn: null, seq: null, param: { last: 0, legendValue: { total: 'off', min: 'off', avg: 'off', last: 'off', max: 'off' }, threshold: '', url: '', nullType: 'null' }, sync: null, asset: null, isLoaded: true, from: '__vue_devtool_undefined__', draggable: true, resizable: true, editable: true },
+      chartDataTemp: { id: 8832, prev: null, next: null, dashboardId: 0, title: '123', span: 12, height: 0, createAt: '2021-01-27 07:36:19', unit: 2, weight: 0, pid: null, buildIn: null, seq: null, param: { last: 0, legendValue: { total: 'off', min: 'off', avg: 'off', last: 'off', max: 'off' }, threshold: '', url: '', nullType: 'null' }, sync: null, asset: null, isLoaded: true, from: '__vue_devtool_undefined__', draggable: true, resizable: true, editable: true },
       chartData: {},
       filter: {
         end_time: bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss'),
-        panelId: 0,
+        dashboardId: 0,
         searchName: '',
         start_time: bus.timeFormate(bus.getOffsetTimezoneData(-1), 'YYYY-MM-DD HH:mm:ss')
       }
@@ -126,13 +126,13 @@ export default {
       if (len === 0) {
         this.$nextTick(() => {
           if (this.$refs['editChart' + chartItem.type]) {
-            this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.panelId, this.filter, [])
+            this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.dashboardId, this.filter, [])
           }
         })
       } else {
-        const panelTime = localStorage.getItem('panelTime') ? JSON.parse(localStorage.getItem('panelTime')) : ['', '']
-        const endTime = panelTime[1] || bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
-        const startTime = panelTime[0] || bus.timeFormate(bus.getOffsetTimezoneData(-1), 'YYYY-MM-DD HH:mm:ss')
+        const dashboardTime = localStorage.getItem('dashboardTime') ? JSON.parse(localStorage.getItem('dashboardTime')) : ['', '']
+        const endTime = dashboardTime[1] || bus.timeFormate(bus.getOffsetTimezoneData(), 'YYYY-MM-DD HH:mm:ss')
+        const startTime = dashboardTime[0] || bus.timeFormate(bus.getOffsetTimezoneData(-1), 'YYYY-MM-DD HH:mm:ss')
         const step = bus.getStep(startTime, endTime)
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {
@@ -368,7 +368,7 @@ export default {
                   singleStatRlt: singleStatRlt,
                   legend: legend,
                   tableData: tableData,
-                  panelId: this.filter.panelId,
+                  dashboardId: this.filter.dashboardId,
                   filter: this.filter,
                   filterType: filterType,
                   errorMsg: errorMsg
@@ -376,10 +376,10 @@ export default {
                 if (chartItem.type === 'table') { // 表格
                   if (filterType === 'showFullScreen') { // 全屏查询
                     this.$refs['editChart' + chartItem.type].setData(chartItem, tableData,
-                      this.filter.panelId, this.filter, filterType, errorMsg)
+                      this.filter.dashboardId, this.filter, filterType, errorMsg)
                   } else {
                     this.$refs['editChart' + chartItem.type].setData(chartItem, tableData,
-                      this.filter.panelId, this.filter, '', errorMsg)
+                      this.filter.dashboardId, this.filter, '', errorMsg)
                   }
                 } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4 || chartItem.type == 'pie') {
                   if (series.length && chartItem.type === 4) { // 曲线汇总
@@ -387,18 +387,18 @@ export default {
                   }
                   if (filterType === 'showFullScreen') { // 全屏查询
                     this.$refs['editChart' + chartItem.type].setData(chartItem, series,
-                      this.filter.panelId, this.filter, legend, filterType, errorMsg)
+                      this.filter.dashboardId, this.filter, legend, filterType, errorMsg)
                   } else {
                     this.$refs['editChart' + chartItem.type].setData(chartItem, series,
-                      this.filter.panelId, this.filter, legend, '', errorMsg)
+                      this.filter.dashboardId, this.filter, legend, '', errorMsg)
                   }
                 } else if (chartItem.type === 'singleStat') {
                   if (filterType === 'showFullScreen') { // 全屏查询
                     this.$refs['editChart' + chartItem.type].setData(chartItem, singleStatRlt,
-                      this.filter.panelId, this.filter, filterType, errorMsg)
+                      this.filter.dashboardId, this.filter, filterType, errorMsg)
                   } else {
                     this.$refs['editChart' + chartItem.type].setData(chartItem, singleStatRlt,
-                      this.filter.panelId, this.filter, '', errorMsg)
+                      this.filter.dashboardId, this.filter, '', errorMsg)
                   }
                 }
               }
@@ -407,27 +407,27 @@ export default {
               if (this.$refs['editChart' + chartItem.type]) {
                 if (type === 'table') {
                   if (filterType === 'showFullScreen') { // table的全屏查询
-                    this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.panelId,
+                    this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.dashboardId,
                       this.filter, filterType)
                   } else {
-                    this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.panelId,
+                    this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.dashboardId,
                       this.filter)
                   }
                 } else if (type === 'line' || type === 'bar' || type === 'stackArea' || chartItem.type === 4 || chartItem.type === 'pie') {
                   if (filterType === 'showFullScreen') { // table的全屏查询
-                    this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.panelId,
+                    this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.dashboardId,
                       this.filter, filterType)
                   } else {
-                    this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.panelId,
+                    this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.dashboardId,
                       this.filter)
                   }
                 } else if (chartItem.type === 'singleStat') {
                   if (filterType === 'showFullScreen') { // 全屏查询
                     this.$refs['editChart' + chartItem.type].setData(chartItem, '',
-                      this.filter.panelId, this.filter, filterType)
+                      this.filter.dashboardId, this.filter, filterType)
                   } else {
                     this.$refs['editChart' + chartItem.type].setData(chartItem, '',
-                      this.filter.panelId, this.filter)
+                      this.filter.dashboardId, this.filter)
                   }
                 }
               }

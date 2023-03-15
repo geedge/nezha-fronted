@@ -18,7 +18,7 @@
               :data="moduleList"
               :tb-columns="ChartSearchShowFields"
               :params="{
-                varType: 2, panelId: 0,
+                varType: 2, dashboardId: 0,
                 returnChildren:0,groupId:0,
               }"
               :multiple="true"
@@ -37,7 +37,7 @@
               :data="assetDataList"
               :tb-columns="columns"
               :params="{
-                varType: 2, panelId: 0,
+                varType: 2, dashboardId: 0,
                 returnChildren:0,groupId:0,
               }"
               :multiple="true"

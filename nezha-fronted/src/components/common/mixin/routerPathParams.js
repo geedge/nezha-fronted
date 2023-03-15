@@ -149,6 +149,7 @@ export default {
             }
           } else {
             delete params.selectObj
+            delete params.targetTab
           }
           this.$router.replace({ path: path, query: params }).catch(err => {})
         } else if (from === 'nzDetailList' && this.detailViewRightObj) {

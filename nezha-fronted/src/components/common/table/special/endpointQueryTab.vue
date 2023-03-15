@@ -72,16 +72,13 @@
       ></panel-chart>
     </el-dialog>
     <transition name="right-box">
-      <chart-box :chart="chart" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'endpointQuery'}" @close="rightBox.show = false" @on-create-success="createSuccess" @reload="getPanelData" @reloadOnlyPanel="getPanelData" box-class="save-chart-box" from="project_endpoint_query" ref="addChartModal" v-if="rightBox.show" style="z-index: 2900" :fromEndpoint="true"></chart-box>
-    </transition>
-    <transition name="right-box">
       <chart-right-box
         v-if="chartRightBoxShow"
         v-my-loading="rightBox.loading"
         ref="addChartModal"
         :chart="chart"
         :showPanel="{}"
-        :from="fromRoute.panel"
+        :from="fromRoute.dashboard"
         :panel-data="panelData"
         @close="closeChartBox"
         @on-create-success="createSuccess"
@@ -93,7 +90,6 @@
 <script>
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import bus from '../../../../libs/bus'
-import chart from '@/components/page/dashboard/overview/chart'
 import { sameLabels, fromRoute } from '@/components/common/js/constants'
 import metaData from '@/components/common/metaData'
 import panelChart from '@/components/chart/panelChart'
@@ -102,7 +98,6 @@ import lineData from '@/components/chart/defaultLineData'
 export default {
   name: 'endpointQueryTab',
   components: {
-    chart,
     metaData,
     panelChart,
     chartRightBox
@@ -168,7 +163,13 @@ export default {
         pageNo: 1,
         total: 0
       },
-      metaDataList: []
+      metaDataList: [],
+      letter: [
+        'A', 'B', 'C', 'D', 'E', 'F', 'G',
+        'H', 'I', 'J', 'K', 'L', 'M', 'N',
+        'O', 'P', 'Q', 'R', 'S', 'T',
+        'U', 'V', 'W', 'X', 'Y', 'Z'
+      ]
     }
   },
   methods: {
@@ -215,7 +216,7 @@ export default {
     },
     getPanelData () { // 获取panel数据
       return new Promise((resolve, reject) => {
-        this.$get('visual/panel?pageNo=1&pageSize=-1').then(response => {
+        this.$get('visual/dashboard?pageNo=1&pageSize=-1').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list
             resolve()
@@ -362,6 +363,9 @@ export default {
           element.expression = endpoint.element
           chartInfo.elements.push(element)
         }
+        chartInfo.elements.forEach((item, index) => {
+          item.name = this.transformNumToLetter(index)
+        })
         this.showFullscreen(true, chartInfo)
       })
     },
@@ -379,7 +383,7 @@ export default {
       })
     },
     createSuccess (panel) {
-      this.$confirm(this.$t('dashboard.metric.goPanelTip'), this.$t('tip.saveSuccess'), {
+      this.$confirm(this.$t('dashboard.metric.goDashboardTip'), this.$t('tip.saveSuccess'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
         type: 'success'
@@ -388,7 +392,7 @@ export default {
         this.$store.state.showPanel.id = panel.id
         this.$store.state.showPanel.name = panel.name
         this.$router.push({
-          path: '/panel',
+          path: '/dashboard',
           query: {
             t: +new Date()
           }
@@ -429,6 +433,16 @@ export default {
       /* if (refresh) {
          this.getData(this.filter)
       } */
+    },
+    transformNumToLetter (num) { // 相当于26进制 获取idaddExpression
+      const self = this
+      let letter = ''
+      const loopNum = parseInt(num / 26)
+      if (loopNum > 0) {
+        letter += this.transformNumToLetter(loopNum - 1)
+      }
+      letter += self.letter[num % 26]
+      return letter
     }
   },
   computed: {
