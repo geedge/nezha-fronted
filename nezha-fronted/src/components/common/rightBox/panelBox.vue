@@ -381,7 +381,7 @@ export default {
   mixins: [editRigthBox],
   data () {
     return {
-      url: 'visual/panel',
+      url: 'visual/dashboard',
       editPanel: {},
       isShow: 0,
       userData: [],

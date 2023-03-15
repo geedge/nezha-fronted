@@ -4183,7 +4183,7 @@ export default {
       this.rightBox.show = true
     },
     createSuccess (panel) { // 添加chart成功
-      this.$confirm(this.$t('dashboard.metric.goPanelTip'), this.$t('tip.saveSuccess'), {
+      this.$confirm(this.$t('dashboard.metric.goDashboardTip'), this.$t('tip.saveSuccess'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
         type: 'success'
@@ -4191,7 +4191,7 @@ export default {
         bus.$emit('menu-change', 'panel')
         this.$store.commit('panelShowPanelChange', panel)
         this.$router.push({
-          path: '/panel',
+          path: '/dashboard',
           query: {
             t: +new Date()
           }
@@ -4199,7 +4199,7 @@ export default {
       })
     },
     getPanelData () { // 获取panel数据
-      this.$get('visual/panel?pageNo=1&pageSize=-1').then(response => {
+      this.$get('visual/dashboard?pageNo=1&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
         }

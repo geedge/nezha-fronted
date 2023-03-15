@@ -600,7 +600,7 @@ export const chartResizeTool = {
       if (data.height != originalData.height || data.span != originalData.span) {
         originalData.height = data.height
         originalData.span = data.span
-        vm.$put('/visual/panel/chart/modify', originalData)
+        vm.$put('/visual/dashboard/chart/modify', originalData)
       }
       // 关闭背景阴影
       shadow.classList.remove('resize-shadow-active')

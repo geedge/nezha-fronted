@@ -106,13 +106,13 @@ export default {
       })
       const params = {
         format: 'html',
-        panelId: this.showPanel.id,
+        dashboardId: this.showPanel.id,
         start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[0])),
         end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[1])),
         vars: vars
       }
       // 创建任务
-      const res = await this.$post('/visual/panel/snapshot/task', params)
+      const res = await this.$post('/visual/dashboard/snapshot/task', params)
       if (res.code === 200) {
         this.tid = res.data.tid
         this.getResult()
@@ -123,7 +123,7 @@ export default {
       this.task = setInterval(async () => {
         if (this.process < 100) {
           try {
-            const res = await this.$get('/visual/panel/snapshot/result/' + this.tid)
+            const res = await this.$get('/visual/dashboard/snapshot/result/' + this.tid)
             this.total = res.data.taskId.total
             this.done = res.data.taskId.done
             this.process = parseFloat(res.data.taskId.process)
@@ -137,7 +137,7 @@ export default {
     },
     // 导出快照
     downloadSnapshot () {
-      this.$get('/visual/panel/snapshot/download/' + this.tid, {}, 'blob').then(res => {
+      this.$get('/visual/dashboard/snapshot/download/' + this.tid, {}, 'blob').then(res => {
         const self = this
         const fileName = this.showPanel.name
         if (res.type == 'application/json') {
@@ -204,7 +204,7 @@ export default {
   beforeDestroy () {
     this.clearTimer()
     if (this.tid) {
-      this.$get('/visual/panel/snapshot/cancel/' + this.tid)
+      this.$get('/visual/dashboard/snapshot/cancel/' + this.tid)
     }
   }
 }

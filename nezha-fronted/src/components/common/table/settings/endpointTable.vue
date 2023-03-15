@@ -11,7 +11,7 @@
       @cell-mouse-enter="cellMouseEnter"
       @sort-change="tableDataSort"
       @selection-change="selectionChange"
-      @row-dblclick="(row)=>{$emit('showBottomBox', 'panelTab', row)}"
+      @row-dblclick="(row)=>{$emit('showBottomBox', 'dashboardTab', row)}"
     >
       <el-table-column
         :resizable="false"
@@ -169,7 +169,7 @@
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
           <button v-if="endpointTab"  class="table-operation-item" v-has="'monitor_endpoint_edit'" @click="$emit('edit', scope.row)" :title="$t('overall.edit')"><i class="nz-icon nz-icon-edit"></i></button>
-          <button v-else class="table-operation-item"  @click="$emit('showBottomBox', 'panelTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+          <button v-else class="table-operation-item"  @click="$emit('showBottomBox', 'dashboardTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown size="medium" v-has="['monitor_endpoint_edit','monitor_endpoint_delete','alertSilence_add']" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>

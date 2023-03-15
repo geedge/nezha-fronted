@@ -79,7 +79,7 @@ export default {
   mixins: [editRigthBox],
   data () {
     return {
-      url: '/visual/panel/fromTmpl',
+      url: '/visual/dashboard/fromTmpl',
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
@@ -224,7 +224,7 @@ export default {
     }, 50),
     // 获取dashboard模板列表
     getDashboardTempData () {
-      this.$get('visual/panel', { type: 'template', pageSize: -1 }).then(response => {
+      this.$get('visual/dashboard', { type: 'template', pageSize: -1 }).then(response => {
         if (response.code === 200) {
           this.templateList = response.data.list
         }

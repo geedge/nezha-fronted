@@ -45,7 +45,7 @@
             <button @click="dropdownHandler(dropdownShow)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
             <i class="nz-icon nz-icon-arrow-down"></i>
             <transition name="el-zoom-in-top">
-              <div v-if="dropdownShow" class="endpoint-query-dropdown el-popover" style="right: 11px;top: 33px;">
+              <div v-if="dropdownShow" class="endpoint-query-dropdown el-popover" style="right: 11px;top: 33px;z-index: 1000;">
                 <span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span>
                 <el-switch v-model="hideSameLabels" size="small"></el-switch>
               </div>

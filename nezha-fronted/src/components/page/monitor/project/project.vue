@@ -1,6 +1,6 @@
 <template>
   <div class="project">
-    <topologyL5 v-if="reloadFacade" ref="facade" :obj="currentProject" :topologyIndexF="topologyIndexF" targetTab.sync="panel" @changeTopologyIndexF="changeTopologyIndexF"/>
+    <topologyL5 v-if="reloadFacade" ref="facade" :obj="currentProject" :topologyIndexF="topologyIndexF" @changeTopologyIndexF="changeTopologyIndexF"/>
 
     <transition name="el-zoom-in-bottom">
       <bottom-box
@@ -365,29 +365,6 @@ export default {
       this.rightBox.addEndpoint.show = true
     },
 
-    // 查看endpoint详情
-    detailEndpoint (endpoint) {
-      this.endpoint = Object.assign({}, endpoint)
-      this.bottomBox.targetTab = 'panel'
-      this.bottomBox.showSubList = true
-    },
-    delEndpoint (endpoint) {
-      this.$confirm(this.$t('tip.confirmDelete'), {
-        confirmButtonText: this.$t('tip.yes'),
-        cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
-      }).then(() => {
-        this.$delete('endpoint?ids=' + endpoint.id).then(response => {
-          if (response.code === 200) {
-            this.delFlag = true
-            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.getEndpointTableData()
-          } else {
-            this.$message.error(response.msg)
-          }
-        })
-      })
-    },
     jumpToAlertMsg (endpoint) {
       if (!this.hasButton('project_endpoint_alerts_view')) {
         return

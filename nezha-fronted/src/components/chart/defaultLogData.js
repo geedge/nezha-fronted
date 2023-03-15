@@ -3,7 +3,7 @@ const data = {
   loaded: true,
   showHeader: true,
   name: '',
-  panelId: 1244,
+  dashboardId: 1244,
   groupId: 0,
   span: 4,
   height: 4,
@@ -42,7 +42,7 @@ const data = {
   y: 12,
   elements: [],
   sync: null,
-  panel: {
+  dashboard: {
     id: 1244,
     name: 'testnodata',
     createBy: null,
@@ -59,7 +59,7 @@ const data = {
   group: {
     id: 0,
     name: null,
-    panelId: null,
+    dashboardId: null,
     groupId: null,
     span: null,
     height: null,
@@ -77,7 +77,7 @@ const data = {
     y: null,
     elements: null,
     sync: null,
-    panel: null,
+    dashboard: null,
     group: null,
     children: null,
     chartNums: null,

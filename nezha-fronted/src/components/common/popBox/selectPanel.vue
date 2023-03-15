@@ -132,7 +132,7 @@ export default {
         })
       }
 
-      this.$put('visual/panel/tree', toUpdate)
+      this.$put('visual/dashboard/tree', toUpdate)
     },
     deletePanel (data) {
       this.$emit('deletePanel', data)

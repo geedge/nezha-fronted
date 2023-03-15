@@ -64,8 +64,8 @@
                   </template>
           </copy>
          </template>
-         <template v-else-if="item.prop === 'panel'">
-          {{scope.row.panel ? scope.row.panel.name : '-'}}
+         <template v-else-if="item.prop === 'dashboard'">
+          {{scope.row.dashboard ? scope.row.dashboard.name : '-'}}
          </template>
         <span v-else-if="item.prop === 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <template v-else-if="item.prop === 'assetNum'">
@@ -156,7 +156,7 @@ export default {
           show: true
         }, {
           label: this.$t('model.dashboardtemplate'),
-          prop: 'panel',
+          prop: 'dashboard',
           minWidth: 200,
           show: false
         }, {

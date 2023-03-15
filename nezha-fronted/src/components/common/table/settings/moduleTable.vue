@@ -76,8 +76,8 @@
             />
           </span>
         </template>
-        <template v-else-if="item.prop === 'panel'">
-          {{scope.row.panel ? scope.row.panel.name : '-'}}
+        <template v-else-if="item.prop === 'dashboard'">
+          {{scope.row.dashboard ? scope.row.dashboard.name : '-'}}
         </template>
         <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -167,7 +167,7 @@ export default {
           sortable: 'custom'
         }, {
           label: this.$t('model.dashboardtemplate'),
-          prop: 'panel',
+          prop: 'dashboard',
           minWidth: 150,
           show: false
         }, {

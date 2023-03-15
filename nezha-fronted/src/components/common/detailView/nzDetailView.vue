@@ -52,7 +52,7 @@
               v-if="detailViewRightObj"
               :from="from"
               :obj="detailViewRightObj"
-              :target-tab="'panelTab'"
+              :target-tab="'dashboardTab'"
             />
           </div>
         </div>

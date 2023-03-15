@@ -18,12 +18,12 @@
           :delete-objs="batchDeleteObjs"
           ref="export"
           id="expression-template-list"
-          export-url="/visual/panel/export"
-          import-url="/visual/panel/import"
+          export-url="/visual/dashboard/export"
+          import-url="/visual/dashboard/import"
           export-file-name="chart-temp"
           :params="searchLabel"
           :params2="{
-            panelId:0,
+            dashboardId:0,
             returnChildren: 0,
             groupId: 0
           }"
@@ -130,7 +130,7 @@ export default {
   },
   data () {
     return {
-      url: 'visual/panel/chart',
+      url: 'visual/dashboard/chart',
       tableId: 'chartTemp',
       orderBy: 'id',
       /* 搜素相关 */
@@ -208,7 +208,7 @@ export default {
   methods: {
     add () {
       this.object = this.newObject()
-      this.object.panelId = 0
+      this.object.dashboardId = 0
       this.object.panelName = 'template'
       this.object.param.thresholds = [{ value: undefined, color: randomcolor() }]
       this.rightBox.show = true
@@ -218,7 +218,7 @@ export default {
         this.object = JSON.parse(JSON.stringify(data))
         this.object.x = 0
         this.object.y = 0
-        this.object.panelId = this.showPanel.id
+        this.object.dashboardId = this.showPanel.id
         this.object.panelName = this.showPanel.name
         this.object.id = ''
         this.object.elements.forEach((item) => {
@@ -237,12 +237,12 @@ export default {
         this.object = {}
         this.rightBox.show = true
         this.rightBox.loading = true
-        this.$get('visual/panel/chart/' + data.id).then(res => {
+        this.$get('visual/dashboard/chart/' + data.id).then(res => {
           this.rightBox.loading = false
           if (res.code === 200) {
             const chartData = res.data
             this.object = JSON.parse(JSON.stringify(chartData))
-            this.object.panelId = this.showPanel.id
+            this.object.dashboardId = this.showPanel.id
             this.object.panelName = this.showPanel.name
             this.object.param = JSON.parse(this.object.param)
             if (!this.object.groupId || this.object.groupId == -1) {
@@ -281,7 +281,7 @@ export default {
     },
     chartBySync (row) {
       this.$store.dispatch('dispatchHomeLoading', true)
-      this.$post('visual/panel/chart/syncTmpl', { pid: row.id }).then(res => {
+      this.$post('visual/dashboard/chart/syncTmpl', { pid: row.id }).then(res => {
         this.$store.dispatch('dispatchHomeLoading', false)
         if (res.code === 200) {
           this.getTableData()
@@ -306,7 +306,7 @@ export default {
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
       this.updatePath({ ...this.searchLabel, ...this.searchCheckBox, switchTab: this.switchTab })
-      this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox, panelId: 0, returnChildren: 0, groupId: 0 }).then(response => {
+      this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox, dashboardId: 0, returnChildren: 0, groupId: 0 }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {

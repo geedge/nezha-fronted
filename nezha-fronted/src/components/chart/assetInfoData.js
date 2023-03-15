@@ -21,9 +21,7 @@ const data = {
       name: 'ADC-Serve'
     },
     fields: [],
-    cabinet: {
-      name: '机柜'
-    },
+    cabinet: null,
     pingInfo: {
       status: 0,
       rtt: null

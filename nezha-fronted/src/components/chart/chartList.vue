@@ -107,7 +107,7 @@ export default {
   name: 'chartList',
   props: {
     // TODO isModel
-    panelId: {},
+    dashboardId: {},
     chartDetailInfo: Object,
     timeRange: Array, // 时间范围
     isGroup: Boolean,
@@ -231,7 +231,7 @@ export default {
           findItem.h = newH
           // bus.$emit('groupMove', this.copyDataList, this.groupInfo)
         }
-        this.$put('/visual/panel/chart/modify', {
+        this.$put('/visual/dashboard/chart/modify', {
           id: i,
           span: newW,
           height: newH
@@ -338,11 +338,11 @@ export default {
         }
       })
       const params = {
-        panelId: this.panelId,
+        dashboardId: this.dashboardId,
         charts: charts
       }
       if (charts && charts.length) {
-        this.$put('/visual/panel/chart/weights', params).then(() => {
+        this.$put('/visual/dashboard/chart/weights', params).then(() => {
           const position = getLayoutPosition(this.copyDataList)
           this.$store.commit('setChartLastPosition', position)
         })
@@ -480,11 +480,11 @@ export default {
         }
       })
       const chartParams = {
-        panelId: this.panelId,
+        dashboardId: this.dashboardId,
         charts: charts
       }
       if (charts && charts.length) {
-        this.$put('/visual/panel/chart/weights', chartParams).then(() => {
+        this.$put('/visual/dashboard/chart/weights', chartParams).then(() => {
           if (params.cb) {
             params.cb()
           }

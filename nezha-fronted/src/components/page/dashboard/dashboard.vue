@@ -1,5 +1,5 @@
 <template>
-  <div class="panel list-page" v-my-loading="panelTabLoading">
+  <div class="panel list-page" v-my-loading="dashboardLoading">
     <div class="main-list">
       <div>
         <transition name="el-zoom-in-center">
@@ -9,7 +9,7 @@
       <div class="main-container">
         <div class="top-tools panel-top-tools" :class="showTopLine? 'panel-top-tools-bottom' : ''">
           <div v-if="panelData.length === 0" class="top-tool-left" style="margin-left: 10px;">
-            <button id="panel-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("overall.addDashboard")}}</button>
+            <button id="dashboard-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" v-has="'main_add'" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("overall.addDashboard")}}</button>
           </div>
           <template v-else>
             <div class="top-tool-left" style="cursor: pointer;">
@@ -73,8 +73,8 @@
                 :paramsType="'dashboard'"
                 class="top-tool-export"
                 export-file-name="chart"
-                export-url="/visual/panel/export"
-                import-url="/visual/panel/import"
+                export-url="/visual/dashboard/export"
+                import-url="/visual/dashboard/import"
                 :exportBoxShow="true"
                 @export="exportType"
                 @afterImport="afterImport"
@@ -91,7 +91,7 @@
                   <el-dropdown-item v-has="'main_edit'">
                     <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
                   </el-dropdown-item> -->
-                  <el-dropdown-item v-has="'panel_view'">
+                  <el-dropdown-item v-has="'dashboard_view'">
                     <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
                   </el-dropdown-item>
                 </template>
@@ -106,13 +106,13 @@
               <chart-list
                 ref="chartList"
                 :variablesInit="variablesInit"
-                name="panel"
-                :panelId="showPanel.id"
+                name="dashboard"
+                :dashboardId="showPanel.id"
                 :class="{'show-top':showTopBtn, 'is-dashboard': true}"
                 :data-list="dataList"
                 :is-export-html="false"
                 :nowTimeType="nowTimeType"
-                :from="fromRoute.panel"
+                :from="fromRoute.dashboard"
                 :time-range="searchTime"
                 @edit-chart="editChart"
                 @on-refresh-time="refreshTime"
@@ -135,7 +135,7 @@
         v-my-loading="rightBox.loading"
         ref="addChartModal"
         :chart="chart"
-        :from="fromRoute.panel"
+        :from="fromRoute.dashboard"
         :panel-data="panelData"
         :show-panel="showPanel"
         @close="closeChartBox"
@@ -147,14 +147,14 @@
       ></chart-right-box>
     </transition>
     <transition name="right-box">
-      <chart-temp-box v-if="rightBox.chartTemp.show" :from="fromRoute.panel" :obj="chart" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess"></chart-temp-box>
+      <chart-temp-box v-if="rightBox.chartTemp.show" :from="fromRoute.dashboard" :obj="chart" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess"></chart-temp-box>
     </transition>
     <transition name="right-box">
-      <panel-box v-if="rightBox.panel.show" :from="fromRoute.panel" ref="panelBox" :obj="panel" @close="closePanelBox" @reload="panelReload" @reloadForDel="panelReloadForDel" ></panel-box>
+      <panel-box v-if="rightBox.panel.show" :from="fromRoute.dashboard" ref="panelBox" :obj="panel" @close="closePanelBox" @reload="panelReload" @reloadForDel="panelReloadForDel" ></panel-box>
     </transition>
     <!-- dashboard模板 -->
     <transition name="right-box">
-      <dashboardTempBox v-if="rightBox.dashboardTemp.show" :from="fromRoute.panel" @close="closeDashboardTempBox"></dashboardTempBox>
+      <dashboardTempBox v-if="rightBox.dashboardTemp.show" :from="fromRoute.dashboard" @close="closeDashboardTempBox"></dashboardTempBox>
     </transition>
     <!-- 快照进度 -->
     <snapshotProgress v-if="snapshotVisible" :showPanel="showPanel" :searchTime="searchTime" :snapshotVisible.sync="snapshotVisible"></snapshotProgress>
@@ -183,14 +183,14 @@ import dashboardTempBox from '@/components/common/rightBox/dashboardTempBox'
 // import FileSaver from 'file-saver'
 // import chartData from './testData'
 export default {
-  name: 'panel',
+  name: 'dashboard',
   mixins: [routerPathParams, htmlToPdfMixin, exportHtmlMixin],
   data () {
     return {
       fromRoute,
       pdfId: 'pdfDom',
-      htmlTitle: 'panel',
-      panelTabLoading: false,
+      htmlTitle: 'dashboard',
+      dashboardLoading: false,
       overScroll10: false,
       isLoading: true,
       showTopBtn: false, // top按钮
@@ -210,7 +210,7 @@ export default {
       showPanel: { // panel下拉列表
         id: '',
         name: '',
-        type: 'panel'
+        type: 'dashboard'
       },
       panel: { // 新增panel
         id: '',
@@ -275,7 +275,7 @@ export default {
       blankChartTemp: {
         varType: 1,
         pid: '',
-        panelId: '',
+        dashboardId: '',
         varIds: []
       },
       panelData: [],
@@ -312,13 +312,13 @@ export default {
       // ---图表相关参数--start
       dataList: [], // 数据列表
       filter: { // 过滤条件
-        panelId: 0,
+        dashboardId: 0,
         start_time: '',
         end_time: '',
         searchName: '',
         id: 4
       },
-      panelId: 0,
+      dashboardId: 0,
       // ---图表相关参数--end
       scrollbarWrap: null,
       batchDeleteObjs: [],
@@ -392,17 +392,17 @@ export default {
       this.showPanel = val
       this.variables = this.$loadsh.cloneDeep(this.$loadsh.get(this, 'showPanel.param.variables', []) || [])
       this.showPanel.type = 'dashboard'
-      this.filter.panelId = this.showPanel.id
-      this.panelId = this.showPanel.id
+      this.filter.dashboardId = this.showPanel.id
+      this.dashboardId = this.showPanel.id
       const param = {
-        panelId: this.panelId,
+        dashboardId: this.dashboardId,
         nowTimeType: JSON.stringify(this.nowTimeType),
         searchTime: JSON.stringify(this.searchTime),
         mode: this.mode
       }
       // this.getTableData()
       // this.getData(this.filter)
-      const path = this.fromRoute.panel
+      const path = this.fromRoute.dashboard
       this.updatePath(param, path)
       this.dateChange()
       this.$refs.chartList.cleanData()
@@ -414,7 +414,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('visual/panel?ids=' + u.id).then(response => {
+        this.$delete('visual/dashboard?ids=' + u.id).then(response => {
           if (response.code === 200) {
             this.$message({
               duration: 1000,
@@ -422,12 +422,12 @@ export default {
               message: this.$t('tip.deleteSuccess')
             })
             const param = {
-              panelId: 0,
+              dashboardId: 0,
               nowTimeType: JSON.stringify(this.nowTimeType),
               searchTime: JSON.stringify(this.searchTime),
               mode: this.mode
             }
-            const path = this.fromRoute.panel
+            const path = this.fromRoute.dashboard
             this.updatePath(param, path)
             this.getTableData(true)
           } else {
@@ -440,7 +440,7 @@ export default {
       })
     },
     edit (u) {
-      this.$get('visual/panel/' + u.id).then(res => {
+      this.$get('visual/dashboard/' + u.id).then(res => {
         if (res.code === 200) {
           this.panel = res.data
           if (!this.$loadsh.get(this.panel, 'param.report', '')) {
@@ -484,9 +484,10 @@ export default {
       // this.panel = Object.assign({}, u)
     },
     toAdd () {
-      if (!this.hasButton('panel_view')) {
+      if (!this.hasButton('dashboard_view')) {
         return
       }
+      console.log(this.rightBox.panel.show)
       this.rightBox.panel.show = true
       // 关闭selectDashboard弹框
       this.$refs.selectDashboard && this.$refs.selectDashboard.esc()
@@ -512,7 +513,6 @@ export default {
           chartShare: 'none'
         }
       }
-      // this.$refs.panelBox.setTitle(this.$t('dashboard.panel.createPanelTitle'))
     },
     panelReload (clearShowPanel) {
       this.getTableData(clearShowPanel)
@@ -532,7 +532,7 @@ export default {
     addChart () {
       this.chart = this.newChart()
       this.chart.param.thresholds = [{ value: undefined, color: randomcolor() }]
-      this.chart.panelId = this.showPanel.id
+      this.chart.dashboardId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
       this.$nextTick(() => {
         this.$refs.addChartModal.isStable = 'stable'
@@ -540,13 +540,13 @@ export default {
     },
     addChartByTemp () {
       this.chart = JSON.parse(JSON.stringify(this.blankChartTemp))
-      this.chart.panelId = this.showPanel.id
+      this.chart.dashboardId = this.showPanel.id
       this.rightBox.chartTemp.show = true
     },
     addGroupItem (groupId) {
       this.chart = this.newChart()
       this.chart.groupId = groupId
-      this.chart.panelId = this.showPanel.id
+      this.chart.dashboardId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
       this.chart.isGroup = true
       this.$nextTick(() => {
@@ -562,7 +562,7 @@ export default {
         this.chart = JSON.parse(JSON.stringify(data))
         this.chart.x = 0
         this.chart.y = 0
-        this.chart.panelId = this.showPanel.id
+        this.chart.dashboardId = this.showPanel.id
         this.chart.panelName = this.showPanel.name
         this.chart.id = ''
         this.chart.elements.forEach((item) => {
@@ -578,12 +578,12 @@ export default {
         }
       } else {
         this.rightBox.loading = true
-        this.$get('visual/panel/chart/' + data.id).then(res => {
+        this.$get('visual/dashboard/chart/' + data.id).then(res => {
           this.rightBox.loading = false
           if (res.code === 200) {
             const chartData = res.data
             this.chart = JSON.parse(JSON.stringify(chartData))
-            this.chart.panelId = this.showPanel.id
+            this.chart.dashboardId = this.showPanel.id
             this.chart.panelName = this.showPanel.name
             if (this.chart.param) {
               this.chart.param = JSON.parse(this.chart.param)
@@ -639,7 +639,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('visual/panel/chart?ids=' + data.id).then(response => {
+        this.$delete('visual/dashboard/chart?ids=' + data.id).then(response => {
           if (response.code === 200) {
             this.$message({
               duration: 2000,
@@ -669,18 +669,18 @@ export default {
       })
     },
     delChartOk () {
-      this.filter.panelId = this.showPanel.id
+      this.filter.dashboardId = this.showPanel.id
       this.getData(this.filter)
     },
     // 图表创建成功，回调panel页面，进行图表的刷新
     createSuccess (msg, data, params, panel) {
-      this.filter.panelId = this.showPanel.id
+      this.filter.dashboardId = this.showPanel.id
       this.getData(this.filter)
       this.$store.dispatch('clearPanel')
     },
     // 获取数据,用在子页面
     getData (params) {
-      if (!this.hasButton('panel_view')) {
+      if (!this.hasButton('dashboard_view')) {
         return
       }
       this.dataList = []
@@ -704,7 +704,7 @@ export default {
           delete le5leObservers[key]
         })
       }
-      this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
+      this.$get('visual/dashboard/chart?dashboardId=' + params.dashboardId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.chartListLoading = false
           this.dataList = response.data.list.map(item => {
@@ -733,12 +733,12 @@ export default {
       // this.getTableData()
       this.getData(this.filter)
       const param = {
-        panelId: this.panelId,
+        dashboardId: this.dashboardId,
         nowTimeType: JSON.stringify(this.nowTimeType),
         searchTime: JSON.stringify(this.searchTime),
         mode: this.mode
       }
-      const path = this.fromRoute.panel
+      const path = this.fromRoute.dashboard
       this.updatePath(param, path)
       this.$store.dispatch('dispatchPanelTime', {
         time: this.searchTime,
@@ -779,10 +779,10 @@ export default {
       })
     },
     panelReloadOnlyPanel () { // 仅刷新panel数据
-      if (!this.hasButton('panel_view')) {
+      if (!this.hasButton('dashboard_view')) {
         return
       }
-      this.$get('visual/panel?pageSize=-1').then(response => {
+      this.$get('visual/dashboard?pageSize=-1').then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
           for (let i = 0; i < this.panelData.length; i++) {
@@ -797,7 +797,7 @@ export default {
 
     getTableData (clearShowPanel) {
       const vm = this
-      this.$get('visual/panel?type=dashboard&pageSize=-1').then(response => {
+      this.$get('visual/dashboard?type=dashboard&pageSize=-1').then(response => {
         if (response.code === 200) {
           let isInitData = false
           this.panelData = JSON.parse(JSON.stringify(response.data.list))
@@ -810,17 +810,17 @@ export default {
             }
             if (!this.showPanel.id) {
               this.showPanel = response.data.list[0]
-              this.filter.panelId = this.showPanel.id
+              this.filter.dashboardId = this.showPanel.id
               this.getData(this.filter)
               isInitData = true
             } else {
               handler(response.data.list)
-              this.filter.panelId = this.showPanel.id
+              this.filter.dashboardId = this.showPanel.id
             }
             this.isLoading = false
           } else {
             this.showPanel.id = ''
-            this.filter.panelId = ''
+            this.filter.dashboardId = ''
             this.isLoading = !response.data.list.length === 0
           }
           this.pageObj.total = response.data.total
@@ -1049,12 +1049,12 @@ export default {
       }
       this.$store.commit('setMode', this.mode)
       const param = {
-        panelId: this.panelId,
+        dashboardId: this.dashboardId,
         nowTimeType: JSON.stringify(this.nowTimeType),
         searchTime: JSON.stringify(this.searchTime),
         mode: this.mode
       }
-      const path = this.fromRoute.panel
+      const path = this.fromRoute.dashboard
       this.updatePath(param, path)
       this.$store.dispatch('dispatchPanelTime', {
         time: this.searchTime,
@@ -1077,12 +1077,12 @@ export default {
         this.mode = ''
         this.$store.commit('setMode', this.mode)
         const param = {
-          panelId: this.panelId,
+          dashboardId: this.dashboardId,
           nowTimeType: JSON.stringify(this.nowTimeType),
           searchTime: JSON.stringify(this.searchTime),
           mode: this.mode
         }
-        const path = this.fromRoute.panel
+        const path = this.fromRoute.dashboard
         this.updatePath(param, path)
       }
     },
@@ -1095,15 +1095,15 @@ export default {
     const searchKeys = {
       // key: path 键
       // value: vue set 参数
-      panelId: { target: this, propertyName: 'panelId', type: 'number' },
+      dashboardId: { target: this, propertyName: 'dashboardId', type: 'number' },
       searchTime: { target: this, propertyName: 'searchTime', type: 'jsonParse' },
       nowTimeType: { target: this, propertyName: 'nowTimeType', type: 'jsonParse' },
       mode: { target: this, propertyName: 'mode', type: 'string' }
     }
     this.initQueryFromPath(searchKeys)
     setTimeout(() => {
-      this.showPanel.id = this.panelId
-      this.filter.panelId = this.panelId
+      this.showPanel.id = this.dashboardId
+      this.filter.dashboardId = this.dashboardId
     })
     // 设置查看模式
     this.$store.commit('setMode', this.mode)
@@ -1174,7 +1174,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        localStorage.setItem('panelTime', JSON.stringify(n))
+        localStorage.setItem('dashboardTime', JSON.stringify(n))
       }
     },
     chartRightBoxShow: {
@@ -1208,10 +1208,12 @@ export default {
         const add = this.$route.query.add
         this.$nextTick(() => {
           if (add) {
+            console.log(add)
             if (add === 'chart') {
               this.addChartBefore()
             }
-            if (add === 'panel') {
+            if (add === 'dashboard') {
+              this.toAdd()
             }
             const newQuery = JSON.parse(JSON.stringify(this.$route.query)) // 深拷贝
             delete newQuery.add
@@ -1232,7 +1234,7 @@ export default {
     if (this.scrollbarWrap) {
       this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
     }
-    localStorage.removeItem('panelTime')
+    localStorage.removeItem('dashboardTime')
     if (!document.onmousemove) { // 添加鼠标移动事件监听
       document.onmousemove = null
     }

@@ -673,9 +673,9 @@ export default {
           })
         })
       }
-      const panelTime = localStorage.getItem('panelTime') ? JSON.parse(localStorage.getItem('panelTime')) : ['', '']
-      const endTime = panelTime[1] || this.filterTime[1]
-      const startTime = panelTime[0] || this.filterTime[0]
+      const dashboardTime = localStorage.getItem('dashboardTime') ? JSON.parse(localStorage.getItem('dashboardTime')) : ['', '']
+      const endTime = dashboardTime[1] || this.filterTime[1]
+      const startTime = dashboardTime[0] || this.filterTime[0]
       const step = bus.getStep(startTime, endTime)
       data.pens && data.pens.forEach((item, index) => {
         this.chartGetData.push({ id: item.id, res: [] })

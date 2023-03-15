@@ -78,7 +78,7 @@
         ref="addChartModal"
         :chart="chart"
         :showPanel="{}"
-        :from="fromRoute.panel"
+        :from="fromRoute.dashboard"
         :panel-data="panelData"
         @close="closeChartBox"
         @on-create-success="createSuccess"
@@ -210,7 +210,7 @@ export default {
     },
     getPanelData () { // 获取panel数据
       return new Promise((resolve, reject) => {
-        this.$get('visual/panel?pageNo=1&pageSize=-1').then(response => {
+        this.$get('visual/dashboard?pageNo=1&pageSize=-1').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list
             resolve()
@@ -374,7 +374,7 @@ export default {
       })
     },
     createSuccess (panel) {
-      this.$confirm(this.$t('dashboard.metric.goPanelTip'), this.$t('tip.saveSuccess'), {
+      this.$confirm(this.$t('dashboard.metric.goDashboardTip'), this.$t('tip.saveSuccess'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
         type: 'success'
@@ -383,7 +383,7 @@ export default {
         this.$store.state.showPanel.id = panel.id
         this.$store.state.showPanel.name = panel.name
         this.$router.push({
-          path: '/panel',
+          path: '/dashboard',
           query: {
             t: +new Date()
           }

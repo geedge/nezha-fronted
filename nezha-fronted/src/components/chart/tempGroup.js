@@ -1,7 +1,7 @@
 const group = {
   id: -2,
   name: 'groupTemp',
-  panelId: 1346,
+  dashboardId: 1346,
   groupId: 0,
   span: 12,
   height: 1,
@@ -21,9 +21,9 @@ const group = {
   y: 0,
   elements: null,
   sync: null,
-  panel: {
+  dashboard: {
     id: 1346,
-    name: 'panel-newChart',
+    name: 'dashboard-newChart',
     createBy: null,
     type: null,
     link: null,
@@ -38,7 +38,7 @@ const group = {
   group: {
     id: 0,
     name: null,
-    panelId: null,
+    dashboardId: null,
     groupId: null,
     span: null,
     height: null,
@@ -56,7 +56,7 @@ const group = {
     y: null,
     elements: null,
     sync: null,
-    panel: null,
+    dashboard: null,
     group: null,
     children: null,
     chartNums: null,

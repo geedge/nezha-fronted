@@ -50,7 +50,7 @@
       <template v-if="activeIndex === 4">
         <div class="desc-text">{{$t('guide.visualizationTip')}}</div>
         <div class="guide__btn-group">
-          <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('panel')">{{$t('dashboard.panel.createPanelTitleSec')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('dashboard')">{{$t('dashboard.panel.createPanelTitleSec')}}</button>
           <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('chart')">{{$t('overall.createChart')}}</button>
         </div>
       </template>
@@ -107,11 +107,11 @@ export default {
           permissionCode: 'project_view'
         },
         {
-          route: '/panel',
+          route: '/dashboard',
           title: this.$t('guide.visualization'),
           icon: 'nz-icon nz-icon-visualization',
           tip: this.$t('guide.visualizationTip'),
-          permissionCode: 'panel_view'
+          permissionCode: 'dashboard_view'
         },
         {
           route: '/alertRule',
@@ -288,16 +288,16 @@ export default {
           })
           break
         }
-        case 'panel': {
+        case 'dashboard': {
           if (!this.hasButton('main_add')) {
             return
           }
           this.$emit('close')
           this.$router.push({
-            path: '/panel',
+            path: '/dashboard',
             query: {
               t: +new Date(),
-              add: 'panel'
+              add: 'dashboard'
             }
           })
           break
@@ -308,7 +308,7 @@ export default {
           }
           this.$emit('close')
           this.$router.push({
-            path: '/panel',
+            path: '/dashboard',
             query: {
               t: +new Date(),
               add: 'chart'

@@ -130,7 +130,7 @@ export default {
       type: Object
     },
     // 看板id
-    panelId: {
+    dashboardId: {
       type: Number,
       default: 0
     },
@@ -179,7 +179,7 @@ export default {
         xAxis: [],
         theData: [] // series数据组
       },
-      panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
+      panelIdInner: '', // 看板id=dashboardId,原写作chart,由set_data获取
       firstLoad: false, // 是否第一次加载
       chartType: 'table', // 图表类型
       screenModal: false,
@@ -357,7 +357,7 @@ export default {
       this.screenPageObj.pageSize = this.pageObj.pageSize
     },
     // 设置数据, filter区分
-    setData (chartItem, seriesItem, panelId, filter, area, errorMsg) {
+    setData (chartItem, seriesItem, dashboardId, filter, area, errorMsg) {
       if (filter) {
         this.stableFilter = filter
       }
@@ -416,7 +416,7 @@ export default {
         })
         this.firstShow = true // 展示操作按键
 
-        this.panelIdInner = panelId
+        this.panelIdInner = dashboardId
         this.storedTableData = seriesItem
         this.storedScreanTableData = seriesItem
         this.storedTableData = Object.assign([], this.storedTableData.reverse())

@@ -293,7 +293,7 @@ const en = {
       singleStatErrorTip: 'Only queries that return single series/table is supported',
       panelForm: {
         panelName: 'Panel name', // "面板名称"
-        panelId: 'ID' // ID
+        dashboardId: 'ID' // ID
       },
       // 图表-侧滑框
       createChartTitle: 'New chart', // "新增图表"
