@@ -1,8 +1,35 @@
 <template>
   <div class="pens-data right-box__container" :key="pen.id">
     <div v-if="pen.id">
-<!--      <el-input-number v-model="pen.x" @change="change('x')"/>-->
-<!--      node-->
+      <div class="form-row-box">
+        <div class="form-row-content">
+          <div class="form-row-item">
+            <div class="form-row-key">
+              {{$t('asset.id')}}
+            </div>
+            <div class="form-row-value">
+              <el-input
+                size="small"
+                class="input"
+                v-model.number="pen.id"
+                readonly
+                @change="change('id')"></el-input>
+            </div>
+          </div>
+          <div class="form-row-item">
+            <div class="form-row-key">
+              {{$t('overall.name')}}
+            </div>
+            <div class="form-row-value">
+              <el-input
+                size="small"
+                class="input"
+                v-model.number="pen.nzName"
+                @change="change('nzName')"></el-input>
+            </div>
+          </div>
+        </div>
+      </div>
       <div v-if="!pen.type">
         <div class="form-row-box">
           <!--        Module  -->

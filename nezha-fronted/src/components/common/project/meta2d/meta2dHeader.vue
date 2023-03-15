@@ -171,6 +171,10 @@ export default {
       })
     },
     previewExit () {
+      if (this.$refs.topTool && this.$refs.topTool.option.map) {
+        this.$refs.topTool.option.map = false
+        getTopology(this.meta2dId).hideMap()
+      }
       this.isPreview = false
       getTopology(this.meta2dId).lock(0)
       getTopology(this.meta2dId).stopAnimate()
@@ -186,7 +190,7 @@ export default {
     cancelTopology () {
       this.isPreview = false
       this.$store.commit('setShowTopoScreen', this.topoScreenState)
-      if (this.$refs.topTool.option.map) {
+      if (this.$refs.topTool && this.$refs.topTool.option.map) {
         getTopology(this.meta2dId).hideMap()
       }
       this.$emit('exitEdit', true)
