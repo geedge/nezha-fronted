@@ -25,11 +25,13 @@ export default {
     const result = await this.$http.get(url) // 获取本地的config.json 判断是否需要清空localStorage 以及设备的宽 和 axios的baseUrl
     this.$axios.defaults.baseURL = result.body.baseUrl
     const version = result.body.version
+    const baseUrl = result.body.baseUrl
+    localStorage.setItem('nz-baseURL', baseUrl)
     const defaultWindowWidth = result.body.width || 1024
     if (version !== localStorage.getItem('nz-version')) {
       localStorage.clear()
-      localStorage.clear()
       localStorage.setItem('nz-version', version)
+      localStorage.setItem('nz-baseURL', baseUrl)
       herfSpiltArr[2] = herfSpiltArr[2] + '?t=' + new Date().getTime()
       window.location.href = herfSpiltArr[0] + '//' + herfSpiltArr[2]
     }
