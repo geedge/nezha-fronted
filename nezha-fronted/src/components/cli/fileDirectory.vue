@@ -585,7 +585,6 @@ export default {
       return '-'
     },
     resetState (type) {
-      console.log(type)
       if (type == 'sizeOrderType') {
         this.dateOrderType = 0
         this.nameOrderType = 0

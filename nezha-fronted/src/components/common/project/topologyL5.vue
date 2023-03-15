@@ -676,6 +676,7 @@ export default {
     initPens (data) {
       // 获取对应的值 给节点 连线添加对应动画
       this.lineName = data.lineName ? data.lineName : this.lineName
+      getTopology(this.topologyIndex).setOptions({ drawingLineName: this.lineName })
       this.chartGetData = []
       const axiosArr = []
       const promiseArr = []
@@ -2058,6 +2059,7 @@ export default {
       // this.topologyData.data[key]=this.colorRGBtoHex(val);
       // getTopology(this.index).data[key]=val;
       // getTopology(this.index).render();
+      getTopology(this.topologyIndex).store.data.lineName = val
       getTopology(this.topologyIndex).setOptions({ drawingLineName: val })
     },
     notModuleIDArrChange (id) {
