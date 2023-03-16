@@ -8,7 +8,8 @@
   height: 100%;
   width: 100%;
   position: absolute;
-  z-index: 2000;
+  // z-index: 2000;
+  z-index: 1000;
   background-color: $--background-color-empty;
   opacity: 0.8;
   margin: 0;

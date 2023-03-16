@@ -660,6 +660,7 @@ export default {
     initPens (data) {
       // 获取对应的值 给节点 连线添加对应动画
       this.lineName = data.lineName ? data.lineName : this.lineName
+      getTopology(this.topologyIndex).setOptions({ drawingLineName: this.lineName })
       this.chartGetData = []
       const axiosArr = []
       const promiseArr = []
@@ -673,9 +674,9 @@ export default {
           })
         })
       }
-      const panelTime = localStorage.getItem('panelTime') ? JSON.parse(localStorage.getItem('panelTime')) : ['', '']
-      const endTime = panelTime[1] || this.filterTime[1]
-      const startTime = panelTime[0] || this.filterTime[0]
+      const dashboardTime = localStorage.getItem('dashboardTime') ? JSON.parse(localStorage.getItem('dashboardTime')) : ['', '']
+      const endTime = dashboardTime[1] || this.filterTime[1]
+      const startTime = dashboardTime[0] || this.filterTime[0]
       const step = bus.getStep(startTime, endTime)
       data.pens && data.pens.forEach((item, index) => {
         this.chartGetData.push({ id: item.id, res: [] })
@@ -1635,9 +1636,8 @@ export default {
       // this.topologyData.data[key]=this.colorRGBtoHex(val);
       // getTopology(this.index).data[key]=val;
       // getTopology(this.index).render();
-      const dataOption = getTopology(this.topologyIndex).data()
-      dataOption[key] = this.lineName
-      getTopology(this.topologyIndex).render()
+      getTopology(this.topologyIndex).store.data.lineName = val
+      getTopology(this.topologyIndex).setOptions({ drawingLineName: val })
     },
     notModuleIDArrChange (id) {
       this.notModuleIDArr = this.notModuleIDArr.filter(item => item.id !== id)

@@ -47,7 +47,7 @@
               :data="assetList"
               :tb-columns="columns"
               :params="{
-                varType: 2, panelId: 0,
+                varType: 2, dashboardId: 0,
                 returnChildren:0,groupId:0,
               }"
               @values="renderEndpoint"
@@ -89,7 +89,7 @@
 <!--              :language="language"-->
 <!--              :multiple="true"-->
 <!--              :params="{-->
-<!--                varType: 2, panelId: 0,-->
+<!--                varType: 2, dashboardId: 0,-->
 <!--                returnChildren:0,groupId:0,-->
 <!--              }"-->
 <!--              :result-format="resultFormat"-->
@@ -1471,7 +1471,7 @@ export default {
     },
     /* 获取chart列表数据 */
     ChartTemplateList () {
-      this.$get('visual/panel/chart', { pageSize: -1, varType: 2, panelId: 0, returnChildren: 0, groupId: 0 }).then(res => {
+      this.$get('visual/dashboard/chart', { pageSize: -1, varType: 2, dashboardId: 0, returnChildren: 0, groupId: 0 }).then(res => {
         this.chartTempList = res.data.list
       })
     },

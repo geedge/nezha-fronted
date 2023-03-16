@@ -13,7 +13,7 @@
 
             <div style="display: flex;flex-direction: column">
 <!--              <i class="nz-icon nz-icon-arrow-down"/>-->
-              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right" v-if="!dataJson.type"> {{dataJson.panel.data.name}} </div>
+              <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right" v-if="!dataJson.type"> {{dataJson.dashboard.data.name}} </div>
               <div style="font-size: 18px;font-weight: 600;color: #333;margin-bottom: 3px;text-align: right" v-if="dataJson.type"> Explore </div>
               <span>  {{dateFormat(dataJson.start * 1000)}} - {{dateFormat(dataJson.end * 1000)}} ({{dataJson.timezone}})</span>
             </div>
@@ -21,14 +21,14 @@
           <div v-if="!dataJson.type" id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow:hidden; overflow-y: auto;height: calc(100% - 60px);display: flex;flex-direction: column'>
             <chartList
               ref="chartList"
-              name="panel"
-              :panelId="'export'"
+              name="dashboard"
+              :dashboardId="'export'"
               :class="{'show-top': true}"
               :data-list="dataJson.charts.data.list"
               :dataJson = "dataJson.chartsData"
               :is-export-html="true"
               :nowTimeType="nowTimeType"
-              :from="'panel'"
+              :from="'dashboard'"
               :time-range="searchTime"
               @edit-chart="editChart"
               @on-refresh-time="refreshTime"

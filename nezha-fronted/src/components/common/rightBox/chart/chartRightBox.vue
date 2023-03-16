@@ -226,7 +226,7 @@ export default {
       const arr = [this.$refs.chartForm.validate()]
       arr.push(this.$refs['childrenFrom' + this.editChart.datasource].$refs.chartForm.validate())
       Promise.all(arr).then(res => {
-        this.editChart.panelId = this.panelId
+        this.editChart.dashboardId = this.dashboardId
         const params = JSON.parse(JSON.stringify(this.editChart))
         if (params.param.valueMapping) {
           params.param.valueMapping.forEach(item => {
@@ -279,19 +279,19 @@ export default {
           params.param.datasource[0].filter = params.param.datasource[0].filter.filter(item => item.value)
         }
         if (params.id) { // 修改
-          this.$put('visual/panel/chart', params).then(response => {
+          this.$put('visual/dashboard/chart', params).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
               if (resetFlag) {
                 bus.$emit('creat-chart-success', {
                   ...params,
                   cb: function () {
-                    self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                    self.$emit('on-create-success', { id: this.dashboardId, name: this.panelName })
                     self.esc(true)
                   }
                 })
               } else {
-                self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                self.$emit('on-create-success', { id: this.dashboardId, name: this.panelName })
                 self.esc(true)
               }
             } else {
@@ -299,19 +299,19 @@ export default {
             }
           })
         } else { // 新增
-          this.$post('visual/panel/chart', params).then(response => {
+          this.$post('visual/dashboard/chart', params).then(response => {
             if (response.code === 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
               if (resetFlag) {
                 bus.$emit('creat-chart-success', {
                   ...params,
                   cb: function () {
-                    self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                    self.$emit('on-create-success', { id: this.dashboardId, name: this.panelName })
                     self.esc(true)
                   }
                 })
               } else {
-                self.$emit('on-create-success', { id: this.panelId, name: this.panelName })
+                self.$emit('on-create-success', { id: this.dashboardId, name: this.panelName })
                 self.esc(true)
               }
             } else {
@@ -327,9 +327,9 @@ export default {
     selectPanel (panel) {
       this.panelName = panel.name
       this.editChart.panelName = panel.name
-      this.panelId = panel.id
+      this.dashboardId = panel.id
       this.editChart.groupId = ''
-      this.$get('visual/panel/chart?panelId=' + this.panelId + '&pageSize=-1').then(response => {
+      this.$get('visual/dashboard/chart?dashboardId=' + this.dashboardId + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.groupArr = []
           response.data.list.forEach((item, index) => {
@@ -347,7 +347,7 @@ export default {
       this.$emit('reloadOnlyPanel')
     },
     getGroupList () {
-      this.$get('visual/panel/chart?panelId=' + this.panelId + '&pageSize=-1').then(response => {
+      this.$get('visual/dashboard/chart?dashboardId=' + this.dashboardId + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.groupArr = []
           response.data.list.forEach((item, index) => {
@@ -520,7 +520,7 @@ export default {
       deep: true,
       handler () {
         if (this.showPanel && (this.showPanel.id || this.from === 'chartTemp')) {
-          this.panelId = this.showPanel.id
+          this.dashboardId = this.showPanel.id
           this.panelName = this.showPanel.name
           this.editChart.panelName = this.showPanel.name
         }

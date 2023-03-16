@@ -11,10 +11,10 @@
           <template v-if="from == $CONSTANTS.fromRoute.asset">{{obj.host}}</template>
           <template v-if="from == $CONSTANTS.fromRoute.rule">{{obj.alertName}}</template>
           <template v-if="from == $CONSTANTS.fromRoute.endpoint"><div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{obj ? obj.id : ''}}</div></template>
-        </div><div :id="from+'-change-panelordetail'"
-        @click="changeTab(from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.endpoint? 'panel' : 'detail')" class="sub-list-tab">{{$t("overall.detail")}}</div><div
-        class="sub-list-tab sub-list-tab-active">{{$t("alert.alertMessage")}}</div><div v-if="from == $CONSTANTS.fromRoute.asset" :id="from+'-change-modules'"
-        @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'">{{$t("asset.endpoint")}}</div>
+        </div>
+        <div :id="from+'-change-panelordetail'" @click="changeTab(from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.endpoint? 'dashboard' : 'detail')" class="sub-list-tab">{{$t("overall.detail")}}</div>
+        <div class="sub-list-tab sub-list-tab-active">{{$t("alert.alertMessage")}}</div>
+        <div v-if="from == $CONSTANTS.fromRoute.asset" :id="from+'-change-modules'" @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'">{{$t("asset.endpoint")}}</div>
         <div @click="changeTab('endpointQuery')" class="sub-list-tab" v-has="'project_endpoint_query_chart_view'" v-if="from == $CONSTANTS.fromRoute.endpoint" :id="from+'-change-endpoint'">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">

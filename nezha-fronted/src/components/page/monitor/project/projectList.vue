@@ -59,8 +59,9 @@
     <transition name="right-box">
       <projectBox v-if="rightBox.show" :project="object" @close="closeRightBox"></projectBox>
     </transition>
-    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
-</transition>
+    <transition name="right-box">
+      <alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+    </transition>
   </div>
 </template>
 <script>

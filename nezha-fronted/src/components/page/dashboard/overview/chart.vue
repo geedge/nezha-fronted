@@ -7,7 +7,7 @@
     <div class="chart-body" ref="chartBody" :id="chartId" ></div>
     <div class="chart-no-data" v-show="noData">No Data</div>
 
-    <div class="legend-container legend-container-screen" id="legendArea" ref="legendArea" v-show="legend.length>0">
+    <div class="legend-container legend-container-screen" :id="'legendArea' + chartId" ref="legendArea" v-show="legend.length>0">
       <div v-for="(item, index) in legend" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':item.isGray}" :key="'legend_' + item.name+'_'+index">
         <span class="legend-shape" :style="{background:(item.isGray?'#D3D3D3':getBgColor(index))}"></span>{{item.alias?item.alias:item.name}}
       </div>
@@ -222,7 +222,7 @@ export default {
             height = 700
             width = 1200
           } else {
-            const legendHeight = document.querySelector('#legendArea').offsetHeight || 30
+            const legendHeight = document.querySelector('#legendArea' + this.chartId).offsetHeight || 30
             height = this.$el.clientHeight - legendHeight
             width = this.$el.clientWidth
           }

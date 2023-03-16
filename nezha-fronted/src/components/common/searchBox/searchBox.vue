@@ -480,7 +480,6 @@ export default {
         findItem.value = findItem.value.filter(function (item, index) {
           return findItem.value.indexOf(item) === index // 因为indexOf 只能查找到第一个
         })
-        console.log(findItem.value)
       } else {
         this.selectArr[this.editTagIndex] = this.$loadsh.cloneDeep(this.editTagObj)
       }

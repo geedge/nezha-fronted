@@ -1,5 +1,5 @@
 <template>
-  <div class="explore list-page">
+  <div class="explore list-page" :class="'nz-explore-' + tabIndex">
     <div class="main-list">
       <div class="main-container explore-split-box">
         <!-- 关闭按钮 -->
@@ -132,7 +132,7 @@
                   <!-- 自定义table列 -->
                   <transition name="el-zoom-in-top">
                     <element-set
-                      @click.stop
+                      @click.stop="()=>{}"
                       v-if="tools.showCustomTableTitle"
                       :tableId="tableId"
                       ref="customTableTitle"
@@ -3559,7 +3559,8 @@ export default {
   },
   methods: {
     jumpClick (id) {
-      document.querySelector(id).scrollIntoView(true)
+      const dom = document.getElementsByClassName('nz-explore-' + this.tabIndex)[0]
+      dom.querySelector(id).scrollIntoView(true)
     },
     selectMetricsLogs (val, icon, label) {
       if (val) {
@@ -4183,7 +4184,7 @@ export default {
       this.rightBox.show = true
     },
     createSuccess (panel) { // 添加chart成功
-      this.$confirm(this.$t('dashboard.metric.goPanelTip'), this.$t('tip.saveSuccess'), {
+      this.$confirm(this.$t('dashboard.metric.goDashboardTip'), this.$t('tip.saveSuccess'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
         type: 'success'
@@ -4191,7 +4192,7 @@ export default {
         bus.$emit('menu-change', 'panel')
         this.$store.commit('panelShowPanelChange', panel)
         this.$router.push({
-          path: '/panel',
+          path: '/dashboard',
           query: {
             t: +new Date()
           }
@@ -4199,7 +4200,7 @@ export default {
       })
     },
     getPanelData () { // 获取panel数据
-      this.$get('visual/panel?pageNo=1&pageSize=-1').then(response => {
+      this.$get('visual/dashboard?pageNo=1&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
         }
@@ -4242,6 +4243,10 @@ export default {
       return letter
     },
     exportToHtml (name) {
+      if (this.showIntroduce) {
+        this.$message.error(this.$t('explore.queryExpression'))
+        return
+      }
       const params = {
         type: this.showMetrics ? 1 : 2,
         start: this.momentStrToTimestamp(this.filterTime[0]) / 1000,
@@ -4327,6 +4332,7 @@ export default {
         })
         if (!temp) {
           this.showIntroduce = true
+          this.saveDisabled = true
         }
       }
     }

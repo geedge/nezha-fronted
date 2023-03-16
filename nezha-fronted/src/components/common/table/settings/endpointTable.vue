@@ -11,7 +11,7 @@
       @cell-mouse-enter="cellMouseEnter"
       @sort-change="tableDataSort"
       @selection-change="selectionChange"
-      @row-dblclick="(row)=>{$emit('showBottomBox', 'panelTab', row)}"
+      @row-dblclick="(row)=>{$emit('showBottomBox', 'dashboardTab', row)}"
     >
       <el-table-column
         :resizable="false"
@@ -102,7 +102,7 @@
                 @mouseleave="labelHover1(scope.row, item.prop, false, $event, true)">
             [{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'logs' : ''}}]
           </span>
-            <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop">
+          <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop" @tipHover="tipHover($event,scope.row, item.prop,)" >
               <div name="default">
                 <span class="copy-value-content" :title="$t('overall.duplicate')"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row))"></i></span>
                 <pre class="copy-value-content__pre">{{JSON.stringify(clConfigs(scope.row),null,2)}}</pre>
@@ -169,7 +169,7 @@
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
           <button v-if="endpointTab"  class="table-operation-item" v-has="'monitor_endpoint_edit'" @click="$emit('edit', scope.row)" :title="$t('overall.edit')"><i class="nz-icon nz-icon-edit"></i></button>
-          <button v-else class="table-operation-item"  @click="$emit('showBottomBox', 'panelTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+          <button v-else class="table-operation-item"  @click="$emit('showBottomBox', 'dashboardTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown size="medium" v-has="['monitor_endpoint_edit','monitor_endpoint_delete','alertSilence_add']" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
               <i class="nz-icon nz-icon-more3"></i>
@@ -343,7 +343,7 @@ export default {
       if (slow) {
         item[type].timeout = setTimeout(() => {
           this.$set(item[type], 'loading', loading)
-        }, 200)
+        }, 500)
       } else {
         if (item[type].timeout) {
           clearTimeout(item[type].timeout)
@@ -352,6 +352,13 @@ export default {
         this.$set(item[type], 'loading', loading)
       }
       // this.$set(this.tableData,index,item);// 调用父组件
+    },
+    tipHover (tipLoading, item, type) {
+      if (item[type].timeout) {
+        clearTimeout(item[type].timeout)
+        item[type].timeout = null
+      }
+      this.$set(item[type], 'loading', tipLoading)
     },
     labelHoverConfigs (item, type, loading, e, slow) {
       if (e) {
@@ -425,8 +432,11 @@ export default {
     right: 8px;
     top: 4px;
   }
+  .alert-label__border.alert-label{
+    width: auto !important;
+  }
   .copy-value-content__pre {
-    width: 500px;
+    width: auto;
     height: 200px;
     margin-top: 20px;
     overflow-y: scroll;

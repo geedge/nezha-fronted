@@ -220,7 +220,7 @@ export default {
       type: Object
     },
     // 看板id
-    panelId: {
+    dashboardId: {
       type: Number,
       default: 0
     },
@@ -254,7 +254,7 @@ export default {
       return function (from, type) {
         let code = ''
         switch (from) {
-          case this.$CONSTANTS.fromRoute.panel:
+          case this.$CONSTANTS.fromRoute.dashboard:
             if (type == 'chartToEdit') {
               code = ''
             }
@@ -286,7 +286,7 @@ export default {
         xAxis: [],
         theData: [] // series数据组
       },
-      panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
+      panelIdInner: '', // 看板id=dashboardId,原写作chart,由set_data获取
       chartName: '',
       firstLoad: false, // 是否第一次加载
       divFirstShow: false,
@@ -1018,9 +1018,9 @@ export default {
         delete option.yAxis.maxInterval
       }
       if (this.fromTopo) {
-        const panelTime = localStorage.getItem('panelTime') ? JSON.parse(localStorage.getItem('panelTime')) : ['', '']
-        if (panelTime[0]) {
-          const numInterval = new Date(panelTime[1]).getTime() - new Date(panelTime[0]).getTime()
+        const dashboardTime = localStorage.getItem('dashboardTime') ? JSON.parse(localStorage.getItem('dashboardTime')) : ['', '']
+        if (dashboardTime[0]) {
+          const numInterval = new Date(dashboardTime[1]).getTime() - new Date(dashboardTime[0]).getTime()
           if (numInterval >= 60 * 60 * 1000) {
             option.xAxis.minInterval = 20 * 60 * 1000
           } else if (numInterval >= 30 * 60 * 1000 && numInterval < 60 * 60 * 1000) {
@@ -1460,7 +1460,7 @@ export default {
       }
     },
     // 设置数据, filter区分
-    setData (chartItem, seriesItem, panelId, filter, legend, area, errorMsg) {
+    setData (chartItem, seriesItem, dashboardId, filter, legend, area, errorMsg) {
       legend && this.setColor(legend.length)
       legend && legend.forEach((t, i) => { t.color = this.bgColorList[i] })
       this.filter.from = filter.from
@@ -1486,7 +1486,7 @@ export default {
         this.$refs['localLoading' + this.chartIndex].startLoading()
         this.divFirstShow = true
         this.firstShow = true // 展示操作按键
-        this.panelIdInner = panelId
+        this.panelIdInner = dashboardId
         this.data = chartItem
         this.seriesItem = seriesItem
         this.seriesItemScreen = seriesItem
@@ -2125,9 +2125,9 @@ export default {
         let minInterval = ''
         let splitNumber = ''
         if (this.fromTopo) {
-          const panelTime = localStorage.getItem('panelTime') ? JSON.parse(localStorage.getItem('panelTime')) : ['', '']
-          if (panelTime[0]) {
-            const numInterval = new Date(panelTime[1]).getTime() - new Date(panelTime[0]).getTime()
+          const dashboardTime = localStorage.getItem('dashboardTime') ? JSON.parse(localStorage.getItem('dashboardTime')) : ['', '']
+          if (dashboardTime[0]) {
+            const numInterval = new Date(dashboardTime[1]).getTime() - new Date(dashboardTime[0]).getTime()
             if (numInterval >= 60 * 60 * 1000) {
               minInterval = 20 * 60 * 1000
             } else if (numInterval >= 30 * 60 * 1000 && numInterval < 60 * 60 * 1000) {

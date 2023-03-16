@@ -31,7 +31,7 @@
             :data="chartlList"
             :tb-columns="ChartSearchShowFields"
             :params="{
-              varType: 1, panelId: 0,
+              varType: 1, dashboardId: 0,
                returnChildren:0,groupId:0,
             }"
             :multiple="true"
@@ -47,7 +47,7 @@
             ></v-selectpage>
           </el-form-item> -->
            <!-- DashboardTemplate -->
-           <el-form-item :label="$t('model.dashboardtemplate')" prop="panelId" ref="dashboardTemplate">
+           <el-form-item :label="$t('model.dashboardtemplate')" prop="dashboardId" ref="dashboardTemplate">
             <v-selectpage
             :data="dashboardList"
             :tb-columns="DashboardSearchShowFields"
@@ -58,10 +58,10 @@
             title="DashboardSearch"
             key-field="id"
             :width="634"
-            v-model="editModel.panelId"
+            v-model="editModel.dashboardId"
             show-field="name"
             class="form-control"
-            @values="(data) => {editModel.panelId = data.map(d => d.id).join(',')}"
+            @values="(data) => {editModel.dashboardId = data.map(d => d.id).join(',')}"
             :result-format="resultFormat"
             ></v-selectpage>
           </el-form-item>
@@ -159,7 +159,7 @@ export default {
       handler (n) {
         this.isEdit = true
         this.editModel = JSON.parse(JSON.stringify(n))
-        this.editModel.panelId = n.panelId ? n.panelId + '' : ''
+        this.editModel.dashboardId = n.dashboardId ? n.dashboardId + '' : ''
       }
     }
   },
@@ -183,7 +183,7 @@ export default {
         if (valid) {
           const params = {
             ...this.editModel,
-            panelId: this.editModel.panelId == '' ? null : Number(this.editModel.panelId)
+            dashboardId: this.editModel.dashboardId == '' ? null : Number(this.editModel.dashboardId)
           }
           if (this.editModel.id) {
             this.$put(this.url, params).then(res => {
@@ -258,13 +258,13 @@ export default {
     },
     // /* 获取chart列表数据 */
     // ChartTemplateList () {
-    //   this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0, groupId: 0, returnChildren: 0 }).then(res => {
+    //   this.$get('visual/dashboard/chart', { pageSize: -1, varType: 1, dashboardId: 0, groupId: 0, returnChildren: 0 }).then(res => {
     //     this.chartlList = res.data.list
     //   })
     // },
     /* 获取Dashboard列表数据 */
     DashboardTemplateList () {
-      this.$get('visual/panel', { pageSize: -1, varType: 1, type: 'template' }).then(res => {
+      this.$get('visual/dashboard', { pageSize: -1, varType: 1, type: 'template' }).then(res => {
         this.dashboardList = res.data.list
       })
     },

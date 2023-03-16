@@ -6,7 +6,7 @@
       </button>
       <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top nz-el-dropdown-menu">
         <el-dropdown-item  v-if="showLock" v-has="'main_edit'">
-          <div @click="editPanel" id="edit-bottom-panel"><i class="nz-icon nz-icon-edit"></i>{{$t('dashboard.panel.editPanelTitle')}}</div>
+          <div @click="editPanel" id="edit-bottom-dashboard"><i class="nz-icon nz-icon-edit"></i>{{$t('dashboard.panel.editPanelTitle')}}</div>
         </el-dropdown-item>
         <el-dropdown-item  v-if="showLock" v-has="'main_edit'">
           <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t("overall.locked") : $t("overall.unlocked")}}</div>
@@ -282,7 +282,7 @@ export default {
     language () { return this.$store.getters.getLanguage },
     // 判断是否是dashboard
     isDashboard () {
-      return this.importUrl === '/visual/panel/import'
+      return this.importUrl === '/visual/dashboard/import'
     },
     // asset，endpoint dashboard导出选项不支持 all data
     assetOrEndpoint () {
@@ -382,8 +382,8 @@ export default {
         url = '/monitor/module/cancelImport'
       } else if (this.importUrl.indexOf('rule') > -1) {
         url = '/alert/rule/cancelImport'
-      } else if (this.importUrl.indexOf('panel') > -1) {
-        url = 'visual/panel/cancelImport'
+      } else if (this.importUrl.indexOf('dashboard') > -1) {
+        url = 'visual/dashboard/cancelImport'
       } else if (this.importUrl.indexOf('tmpl') > -1) {
         url = '/expression/tmpl/cancelImport'
       } else if (this.importUrl.indexOf('dc/cabinet') > -1) {
@@ -492,8 +492,8 @@ export default {
       } else if (this.importUrl.indexOf('asset') > -1) {
         url = '/asset/asset/template'
         param.type = 'asset'
-      } else if (this.importUrl.indexOf('panel') > -1) {
-        url = 'visual/panel/template'
+      } else if (this.importUrl.indexOf('dashboard') > -1) {
+        url = 'visual/dashboard/template'
         param.type = this.paramsType
       } else if (this.importUrl.indexOf('endpoint') > -1) {
         url = '/monitor/endpoint/template'
@@ -539,7 +539,7 @@ export default {
           }
         })
       }
-      if (this.exportUrl.indexOf('panel') > -1) {
+      if (this.exportUrl.indexOf('dashboard') > -1) {
         if (this.paramsType !== 'template') {
           params.pageSize = -1
         }
@@ -548,8 +548,8 @@ export default {
         delete params.id
         delete params.searchName
         delete params.value
-        params.ids = params.panelId
-        delete params.panelId
+        params.ids = params.dashboardId
+        delete params.dashboardId
       }
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
@@ -573,13 +573,13 @@ export default {
         })
       }
       params.pageSize = -1
-      if (this.exportUrl.indexOf('panel') > -1) {
+      if (this.exportUrl.indexOf('dashboard') > -1) {
         delete params.start_time
         delete params.end_time
         delete params.id
         delete params.searchName
         delete params.value
-        delete params.panelId
+        delete params.dashboardId
       }
       // if (this.importUrl.indexOf('endpoint') > -1){
       //   delete params.moduleId
@@ -606,13 +606,13 @@ export default {
         })
       }
       params.pageSize = -1
-      if (this.exportUrl.indexOf('panel') > -1) {
+      if (this.exportUrl.indexOf('dashboard') > -1) {
         delete params.start_time
         delete params.end_time
         delete params.id
         delete params.searchName
         delete params.value
-        delete params.panelId
+        delete params.dashboardId
       }
       // if (this.importUrl.indexOf('endpoint') > -1){
       //   delete params.moduleId
@@ -747,7 +747,7 @@ export default {
       return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds
     },
     editPanel () {
-      this.$get('visual/panel/' + this.params.panelId).then(res => {
+      this.$get('visual/dashboard/' + this.params.dashboardId).then(res => {
         if (res.code === 200) {
           this.panel = res.data
           if (!this.$loadsh.get(this.panel, 'param.report', '')) {

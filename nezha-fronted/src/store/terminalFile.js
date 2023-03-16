@@ -34,7 +34,6 @@ const terminalFile = {
               state.externalTerminal = false
             }
             if (data.isLogout) {
-              console.log(state, self)
               get('logout').then(() => {
                 self.commit('logoutSuccess')
                 document.location.href = '/'

@@ -66,7 +66,7 @@
                 :data="assetList"
                 :tb-columns="columns"
                 :params="{
-                  varType: 1, panelId: 0,
+                  varType: 1, dashboardId: 0,
                    returnChildren:0,groupId:0,
                 }"
                 :multiple="true"
@@ -278,7 +278,7 @@ export default {
   methods: {
     /* 获取asset列表数据 */
     assetTemplateList () {
-      this.$get('asset/asset', { pageSize: -1, varType: 1, panelId: 0, groupId: 0 }).then(res => {
+      this.$get('asset/asset', { pageSize: -1, varType: 1, dashboardId: 0, groupId: 0 }).then(res => {
         this.assetList = res.data.list
       })
     },

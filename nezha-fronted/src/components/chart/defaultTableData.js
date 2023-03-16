@@ -2,7 +2,7 @@ const TableData = {
   id: 697356,
   name: 'Table',
   loaded: true,
-  panelId: 1479,
+  dashboardId: 1479,
   groupId: 0,
   span: 4.0,
   height: 3.0,
@@ -41,7 +41,7 @@ const TableData = {
   y: 10.0,
   elements: [],
   sync: null,
-  panel: {
+  dashboard: {
     id: 1479,
     name: 'Chart Component Configuration Test',
     createBy: null,
@@ -58,7 +58,7 @@ const TableData = {
   group: {
     id: 0,
     name: null,
-    panelId: null,
+    dashboardId: null,
     groupId: null,
     span: null,
     height: null,
@@ -76,7 +76,7 @@ const TableData = {
     y: null,
     elements: null,
     sync: null,
-    panel: null,
+    dashboard: null,
     group: null,
     children: null,
     chartNums: null,

@@ -15,13 +15,13 @@ export default {
       })
       const params = {
         format: 'html',
-        panelId: this.showPanel.id,
+        dashboardId: this.showPanel.id,
         start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[0])),
         end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[1])),
         vars: vars
       }
       this.$store.dispatch('dispatchHomeLoading', true)
-      this.$get('/visual/panel/snapshot', params, 'blob').then(res => {
+      this.$get('/visual/dashboard/snapshot', params, 'blob').then(res => {
         this.$store.dispatch('dispatchHomeLoading', false)
         const self = this
         let fileName = name
