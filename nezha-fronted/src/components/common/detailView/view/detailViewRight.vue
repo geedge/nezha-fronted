@@ -169,7 +169,7 @@ export default {
         },
         endpoint: {
           endpointTabTitle: [
-            { prop: 'dashboardTab', name: this.$t('overall.detail') },
+            { prop: 'dashboardTab', name: this.$t('overall.dashboard') },
             { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
             { prop: 'endpointQuery', name: this.$t('overall.metric') },
             { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label') }
