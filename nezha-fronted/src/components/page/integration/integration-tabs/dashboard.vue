@@ -18,8 +18,8 @@
             <chart-list
               ref="chartList"
               :variablesInit="variablesInit"
-              name="panel"
-              :panelId="showPanel.id"
+              name="dashboard"
+              :dashboardId="showPanel.id"
               :data-list="dataList"
               :is-export-html="false"
               :nowTimeType="nowTimeType"
@@ -77,7 +77,7 @@ export default {
       // ---图表相关参数--start
       dataList: [], // 数据列表
       filter: { // 过滤条件
-        panelId: -1,
+        dashboardId: -1,
         start_time: '',
         end_time: ''
       },
@@ -131,7 +131,7 @@ export default {
     getData (params) {
       this.dataList = []
       this.chartListLoading = true
-      this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
+      this.$get('visual/dashboard/chart?dashboardId=' + params.dashboardId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.chartListLoading = false
           this.dataList = response.data.list.map(item => {
@@ -145,11 +145,11 @@ export default {
     },
     // 公用操作
     getTableData () {
-      this.$get('visual/panel', { type: 'template', ids: this.tempId }).then(response => {
+      this.$get('visual/dashboard', { type: 'template', ids: this.tempId }).then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
           if (this.panelData.length > 0) {
-            this.filter.panelId = this.panelData[0].id
+            this.filter.dashboardId = this.panelData[0].id
             this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
             this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
             this.getData(this.filter)
@@ -177,7 +177,7 @@ export default {
     this.getTableData()
   },
   watch: {
-    // 监听图表联动配置panelId
+    // 监听图表联动配置
     'showPanel.param.chartShare': {
       handler (value) {
         // 每次切换联动模式 tooltip设置显示
