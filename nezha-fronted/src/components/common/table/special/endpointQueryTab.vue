@@ -376,6 +376,9 @@ export default {
         chart.panelName = ''
         this.chart = chart
         this.graphShow = false
+        if (!this.chart.groupId) {
+          this.chart.groupId = undefined
+        }
         this.$store.dispatch('dispatchEditChart', {
           chart: this.chart,
           type: 'add'
