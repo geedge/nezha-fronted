@@ -5,8 +5,8 @@
     </transition>
 
     <div class="right-box__header">
-      <div class="header__title" v-if="from !== 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("overall.createChart")}}</div>
-      <div class="header__title" v-if="from === 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTempTitle") : $t("dashboard.panel.createChartTempTitle")}}</div>
+      <div class="header__title" v-if="from !== 'chartTemp'">{{editChart.id ? $t("dashboard.dashboard.editChartTitle") : $t("overall.createChart")}}</div>
+      <div class="header__title" v-if="from === 'chartTemp'">{{editChart.id ? $t("dashboard.dashboard.editChartTempTitle") : $t("dashboard.dashboard.createChartTempTitle")}}</div>
       <div class="header__operation">
         <span v-cancel:[isStable]="{obj: editChart, func: clickOutside}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
@@ -49,7 +49,7 @@
           </select-panel>
         </el-form-item>
         <!--group-->
-        <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="form-item--half-width" prop="group">
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.group')" class="form-item--half-width" prop="group">
           <el-select id="chart-box-group" v-model="editChart.groupId" :disabled="editChart.type==='group'" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside el-option-width303" size="small" value-key="chartType">
             <el-option v-for="item in groupArr" :key="item.id" :label="item.name" :value="item.id">
               <span class="panel-dropdown-label-txt" >{{item.name}}</span>
@@ -68,7 +68,7 @@
 
         <!--title-->
         <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.chartForm.dataConfig')}}</span>
+          <span>{{$t('dashboard.dashboard.chartForm.dataConfig')}}</span>
         </div>
         <el-tabs v-model="editChart.datasource" @tab-click="datasourceChange" type="card">
           <el-tab-pane :label="$t('overall.metrics')" name="metrics">

@@ -134,7 +134,7 @@ export default {
           icon: 'nz-icon-zuoduiqi'
         }, {
           value: 'right',
-          desc: this.$t('dashboard.panel.chartForm.alignList.right'),
+          desc: this.$t('dashboard.dashboard.chartForm.alignList.right'),
           icon: 'nz-icon-youduiqi'
         }, {
           value: 'top',

@@ -193,7 +193,7 @@
                 v-model="assetContent.assetId"
                 size="small"
                 :language="language"
-                :placeholder="$t('dashboard.panel.chartForm.selectAsset')"
+                :placeholder="$t('dashboard.dashboard.chartForm.selectAsset')"
                 id="box-input-asset-id"
                 :result-format="resultFormat"></v-selectpage>
               <button :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click.prevent="connect">Connect</button>

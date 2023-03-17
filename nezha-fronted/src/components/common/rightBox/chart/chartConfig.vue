@@ -70,7 +70,7 @@
               <span @click="removeExpression(index - 1)" class="nz-icon-minus-medium" style="margin-right: 5px" :title="$t('overall.delete')">
                 <i class="nz-icon nz-icon-minus"></i>
               </span>
-              <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
+              <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.dashboard.chartForm.sort')">
                 <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
               </span>
             </span>
@@ -97,10 +97,10 @@
               </el-form-item>
               <el-row style="margin-top: 18px;display: flex">
                 <el-col class="legend-title">
-                  <span class="legend-title__span">{{$t('dashboard.panel.chartForm.legend')}}&nbsp;</span>
+                  <span class="legend-title__span">{{$t('dashboard.dashboard.chartForm.legend')}}&nbsp;</span>
                   <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
-                    <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
-                    <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.panel.chartForm.legendTip')}}</div> -->
+                    <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
+                    <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
                     <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                   </el-popover>
                 </el-col>
@@ -116,7 +116,7 @@
 
       <!--title-->
       <div class="form__sub-title" >
-        <span>{{$t('dashboard.panel.chartForm.displayConfig')}}</span>
+        <span>{{$t('dashboard.dashboard.chartForm.displayConfig')}}</span>
       </div>
       <div class="form-items--half-width-group">
         <!-- type -->
@@ -148,7 +148,7 @@
         <!-- unit -->
         <el-form-item
           v-show="!isTable(chartConfig.type)&&!isLog(chartConfig.type)"
-          :label="$t('dashboard.panel.chartForm.unit')"
+          :label="$t('dashboard.dashboard.chartForm.unit')"
           class="form-item--half-width"
           prop="unit"
         >
@@ -169,7 +169,7 @@
         <!-- index -->
         <el-form-item
           v-show="isTable(chartConfig.type)"
-          :label="$t('dashboard.panel.chartForm.tableIndex')"
+          :label="$t('dashboard.dashboard.chartForm.tableIndex')"
           class="form-item--half-width"
           prop="param.index"
         >
@@ -198,7 +198,7 @@
 
         <!--width-->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.width')"
+          :label="$t('dashboard.dashboard.chartForm.width')"
           class="form-item--half-width"
           prop="span">
           <el-select
@@ -223,7 +223,7 @@
 
         <!--height-->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.high')"
+          :label="$t('dashboard.dashboard.chartForm.high')"
           class="form-item--half-width"
           prop="height">
           <!-- 由px改为span -->
@@ -250,7 +250,7 @@
 
         <!--stack-->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.stack')"
+          :label="$t('dashboard.dashboard.chartForm.stack')"
           class="form-item--half-width"
           prop="param.stack"
           v-if="isStackShow(chartConfig.type)"
@@ -274,7 +274,7 @@
         <!--statistics-->
         <el-form-item
           v-if="isStatisticsShow(chartConfig.type)"
-          :label="$t('dashboard.panel.chartForm.statistics')"
+          :label="$t('dashboard.dashboard.chartForm.statistics')"
           class="form-item--half-width"
           prop="param.statistics"
         >
@@ -294,7 +294,7 @@
 
         <!--   nullType     -->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.nullType')"
+          :label="$t('dashboard.dashboard.chartForm.nullType')"
           class="form-item--half-width"
           prop="param.nullType"
           v-if="isShowNullType(chartConfig.type)"
@@ -342,7 +342,7 @@
 
       <div class="form-items--half-width-group" v-if="isShowMinMax(chartConfig.type)">
         <!--min-->
-        <el-form-item :label="$t('dashboard.panel.chartForm.min')" class="form-item--half-width">
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.min')" class="form-item--half-width">
           <el-input-number
             size="small"
             style="margin-top: 2px"
@@ -353,7 +353,7 @@
             v-model="chartConfig.param.min"/>
         </el-form-item>
         <!--max-->
-        <el-form-item :label="$t('dashboard.panel.chartForm.max')" class="form-item--half-width">
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.max')" class="form-item--half-width">
           <el-input-number
             size="small"
             style="margin-top: 2px"
@@ -367,10 +367,10 @@
 
       <div class="form-items--half-width-group" v-if="isSankey(chartConfig.type)" key="sankey">
         <!--Source label-->
-        <el-form-item class="form-item--half-width" :label="$t('dashboard.panel.chartForm.sourceLabel')" prop="param.sourceLabel"
+        <el-form-item class="form-item--half-width" :label="$t('dashboard.dashboard.chartForm.sourceLabel')" prop="param.sourceLabel"
           :rules="[
             { required: true, message: $t('validate.required'), trigger: 'blur'},
-            { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.panel.matchRegex'), trigger: 'blur'},
+            { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.dashboard.matchRegex'), trigger: 'blur'},
             { validator: labelValidator,trigger: 'blur'},
           ]"
         >
@@ -382,10 +382,10 @@
             v-model="chartConfig.param.sourceLabel"/>
         </el-form-item>
         <!--Target label-->
-        <el-form-item class="form-item--half-width" :label="$t('dashboard.panel.chartForm.targetLabel')" prop="param.targetLabel"
+        <el-form-item class="form-item--half-width" :label="$t('dashboard.dashboard.chartForm.targetLabel')" prop="param.targetLabel"
           :rules="[
             { required: true, message: $t('validate.required'), trigger: 'blur'},
-            { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.panel.matchRegex'), trigger: 'blur'},
+            { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.dashboard.matchRegex'), trigger: 'blur'},
             { validator: labelValidator,trigger: 'blur'},
           ]"
         >
@@ -410,7 +410,7 @@
             show-word-limit v-model="chartConfig.param.decimals"/>
         </el-form-item>
         <!-- Sparkline mode -->
-        <el-form-item :label="$t('dashboard.panel.chartForm.sparklineMode')" class="form-item--half-width" v-if="isShowSparkline(chartConfig.type)">
+        <el-form-item :label="$t('dashboard.dashboard.chartForm.sparklineMode')" class="form-item--half-width" v-if="isShowSparkline(chartConfig.type)">
           <el-select
             v-model="chartConfig.param.sparklineMode"
             placeholder=""
@@ -431,7 +431,7 @@
       <!-- Right Y Axis   -->
       <div v-if="isShowRightYAxis(chartConfig.type)">
         <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.chartForm.rightYAxis')}}</span>
+          <span>{{$t('dashboard.dashboard.chartForm.rightYAxis')}}</span>
           <el-switch
             v-model="chartConfig.param.enable.rightYAxis"
             size="small"
@@ -445,7 +445,7 @@
           >
           <!-- Data Source -->
             <el-form-item
-              :label="$t('dashboard.panel.chartForm.datasource')"
+              :label="$t('dashboard.dashboard.chartForm.datasource')"
               class="form-item--half-width"
               prop="param.rightYAxis.elementNames"
               :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
@@ -491,7 +491,7 @@
             </el-form-item>
             <!-- unit -->
             <el-form-item
-              :label="$t('dashboard.panel.chartForm.unit')"
+              :label="$t('dashboard.dashboard.chartForm.unit')"
               class="form-item--half-width"
               prop="param.rightYAxis.unit"
             >
@@ -523,7 +523,7 @@
             </el-form-item>
             <!--min-->
             <el-form-item
-              :label="$t('dashboard.panel.chartForm.min')"
+              :label="$t('dashboard.dashboard.chartForm.min')"
               class="form-item--half-width"
               prop="param.rightYAxis.min"
               >
@@ -538,7 +538,7 @@
             </el-form-item>
             <!--max-->
             <el-form-item
-              :label="$t('dashboard.panel.chartForm.max')"
+              :label="$t('dashboard.dashboard.chartForm.max')"
               class="form-item--half-width"
               prop="param.rightYAxis.max"
               >
@@ -558,7 +558,7 @@
       <div v-if="isShowLegend(chartConfig.type)">
         <!--legendConfig-->
         <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.chartForm.legend')}}</span>
+          <span>{{$t('dashboard.dashboard.chartForm.legend')}}</span>
           <el-switch v-model="chartConfig.param.enable.legend" size="small" @change="change"></el-switch>
         </div>
         <transition name="el-zoom-in-top">
@@ -567,7 +567,7 @@
             class="form-items--half-width-group"
           >
             <el-form-item
-              :label="$t('dashboard.panel.chartForm.legendPosition')"
+              :label="$t('dashboard.dashboard.chartForm.legendPosition')"
               class="form-item--half-width"
               prop="param.legend.placement"
             >
@@ -588,7 +588,7 @@
               </el-select>
             </el-form-item>
             <el-form-item
-              :label="$t('dashboard.panel.chartForm.legendValues')"
+              :label="$t('dashboard.dashboard.chartForm.legendValues')"
               class="form-item--half-width"
               prop="param.legend.values"
               v-if="isShowLegendVlaues(chartConfig.type)"
@@ -617,7 +617,7 @@
 
         <!--thresholdConfig-->
         <div class="form__sub-title" v-if="isThresholdConfig(chartConfig.type)">
-          <span>{{$t('dashboard.panel.chartForm.thresholds')}}</span>
+          <span>{{$t('dashboard.dashboard.chartForm.thresholds')}}</span>
           <el-switch
             v-model="chartConfig.param.enable.thresholds"
             size="small"
@@ -666,7 +666,7 @@
       <!--      table column-->
       <div v-if="isTable(chartConfig.type)">
         <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.chartForm.columns')}}</span>
+          <span>{{$t('dashboard.dashboard.chartForm.columns')}}</span>
         </div>
         <draggable
           v-model="chartConfig.param.columns"
@@ -703,7 +703,7 @@
                 <span style="margin-right: 5px" class="nz-icon-minus-medium" :title="$t('overall.delete')">
                   <i @click="removeColumns(index)" class="nz-icon nz-icon-minus"></i>
                 </span>
-                <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
+                <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.dashboard.chartForm.sort')">
                   <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
                 </span>
               </span>
@@ -717,7 +717,7 @@
                   <el-input size="small" v-model="item.title" @change="change('columns',index)"></el-input>
                 </el-form-item>
                 <div>
-                  <div class='mapping-display'>{{$t('dashboard.panel.chartForm.unit')}}</div>
+                  <div class='mapping-display'>{{$t('dashboard.dashboard.chartForm.unit')}}</div>
                 </div>
                 <el-cascader :id="'columns-unit' + index" v-model="item.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
                   placeholder=""
@@ -760,7 +760,7 @@
       <!--      valueMapping  -->
       <div v-if="isShowValueMapping(chartConfig.type) || isTable(chartConfig.type)">
         <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.chartForm.valueMapping')}}</span>
+          <span>{{$t('dashboard.dashboard.chartForm.valueMapping')}}</span>
           <el-switch
             v-model="chartConfig.param.enable.valueMapping"
             size="small"
@@ -823,7 +823,7 @@
                     <span @click="removeMapping(index)" style="margin-right: 5px" :title="$t('overall.delete')">
                       <i  class="nz-icon nz-icon-minus"></i>
                     </span>
-                    <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
+                    <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.dashboard.chartForm.sort')">
                       <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
                     </span>
                   </span>
@@ -972,7 +972,7 @@
       <!-- visibility -->
       <div v-if="params.type === 'group'">
         <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.showHidden')}}</span>
+          <span>{{$t('dashboard.dashboard.showHidden')}}</span>
           <el-switch
             v-model="chartConfig.param.enable.visibility"
             size="small"
@@ -986,7 +986,7 @@
           >
             <!-- Variable name -->
             <el-form-item
-              :label="$t('dashboard.panel.variableName')"
+              :label="$t('dashboard.dashboard.variableName')"
               class="form-item--half-width"
               prop="param.visibility.varName"
               :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
@@ -1047,7 +1047,7 @@
             </el-form-item>
             <!-- Result -->
             <el-form-item
-              :label="$t('dashboard.panel.chartForm.result')"
+              :label="$t('dashboard.dashboard.chartForm.result')"
               class="form-item--half-width"
               prop="param.visibility.result"
               :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"

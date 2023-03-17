@@ -91,7 +91,7 @@
               <div class="radar-line"></div>
             </div>
             <div class="tools-header-right-content">
-              <div class="tools-header-right-title right-content-text">{{$t('dashboard.panel.chartForm.statistics')}}</div>
+              <div class="tools-header-right-title right-content-text">{{$t('dashboard.dashboard.chartForm.statistics')}}</div>
               <div class="right-content-text right-content-box" >
                 <span class="margin-l-5">{{$t('asset.total')}}:<span class="margin-l-10 margin-r-30">{{total}}</span></span>
                 <span>{{$t('ping.done')}}:<span class="margin-l-10 margin-r-30">{{done}}</span></span>

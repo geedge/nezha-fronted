@@ -216,27 +216,27 @@ export const alertMessage = {
 }
 
 export const statisticsList = [
-  { value: 'min', label: i18n.t('dashboard.panel.chartForm.min') },
-  { value: 'max', label: i18n.t('dashboard.panel.chartForm.max') },
-  { value: 'avg', label: i18n.t('dashboard.panel.chartForm.statisticsVal.average') },
-  { value: 'total', label: i18n.t('dashboard.panel.chartTotal') },
-  { value: 'first*', label: i18n.t('dashboard.panel.chartForm.statisticsVal.first*') },
-  { value: 'first', label: i18n.t('dashboard.panel.chartForm.statisticsVal.first') },
-  { value: 'last*', label: i18n.t('dashboard.panel.chartForm.statisticsVal.last*') },
-  { value: 'last', label: i18n.t('dashboard.panel.chartForm.statisticsVal.last') },
-  { value: 'range', label: i18n.t('dashboard.panel.chartForm.valMapping.range') },
-  { value: 'different', label: i18n.t('dashboard.panel.chartForm.statisticsVal.different') }
+  { value: 'min', label: i18n.t('dashboard.dashboard.chartForm.min') },
+  { value: 'max', label: i18n.t('dashboard.dashboard.chartForm.max') },
+  { value: 'avg', label: i18n.t('dashboard.dashboard.chartForm.statisticsVal.average') },
+  { value: 'total', label: i18n.t('dashboard.dashboard.chartTotal') },
+  { value: 'first*', label: i18n.t('dashboard.dashboard.chartForm.statisticsVal.first*') },
+  { value: 'first', label: i18n.t('dashboard.dashboard.chartForm.statisticsVal.first') },
+  { value: 'last*', label: i18n.t('dashboard.dashboard.chartForm.statisticsVal.last*') },
+  { value: 'last', label: i18n.t('dashboard.dashboard.chartForm.statisticsVal.last') },
+  { value: 'range', label: i18n.t('dashboard.dashboard.chartForm.valMapping.range') },
+  { value: 'different', label: i18n.t('dashboard.dashboard.chartForm.statisticsVal.different') }
 ]
 
 export const alignList = [
   { value: 'left', label: i18n.t('project.topology.left') },
   { value: 'center', label: i18n.t('project.topology.center') },
-  { value: 'right', label: i18n.t('dashboard.panel.chartForm.alignList.right') }
+  { value: 'right', label: i18n.t('dashboard.dashboard.chartForm.alignList.right') }
 ]
 
 export const lockList = [
-  { value: 1, label: i18n.t('dashboard.panel.chartForm.lockList.on') },
-  { value: 0, label: i18n.t('dashboard.panel.chartForm.lockList.off') }
+  { value: 1, label: i18n.t('dashboard.dashboard.chartForm.lockList.on') },
+  { value: 0, label: i18n.t('dashboard.dashboard.chartForm.lockList.off') }
 ]
 
 export const chart = {
@@ -247,63 +247,63 @@ export const chart = {
   type: [
     {
       value: 'line',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.line.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.line.label')
     },
     {
       value: 'stackArea',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.stackArea.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.stackArea.label')
     },
     {
       value: 'area',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.stackArea.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.stackArea.label')
     },
     {
       value: 'point',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.point.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.point.label')
     },
     {
       value: 'gauge',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.gauge.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.gauge.label')
     },
     {
       value: 'hexagon',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.hexagonFigure.label')
     },
     {
       value: 'stat',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.singleStat.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.singleStat.label')
     },
     {
       value: 'bar',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.bar.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.bar.label')
     },
     {
       value: 'singleStat',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.singleStat.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.singleStat.label')
     },
     {
       value: 'pie',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.pie.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.pie.label')
     },
     {
       value: 'table',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.table.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.table.label')
     },
     {
       value: 'alertList',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.alertList.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.alertList.label')
     },
     {
       value: 'text',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.text.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.text.label')
     },
     {
       value: 'url',
-      label: i18n.t('dashboard.panel.chartForm.url')
+      label: i18n.t('dashboard.dashboard.chartForm.url')
     },
     {
       value: 'group',
-      label: i18n.t('dashboard.panel.chartForm.group')
+      label: i18n.t('dashboard.dashboard.chartForm.group')
     },
     {
       value: 'logs',
@@ -311,57 +311,57 @@ export const chart = {
     },
     {
       value: 'diagram',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.diagram.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.diagram.label')
     },
     {
       value: 'treemap',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.treemap.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.treemap.label')
     },
     {
       value: 'pie',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.pie.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.pie.label')
     },
     {
       value: 'log',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.log.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.log.label')
     },
     {
       value: 'table',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.table.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.table.label')
     },
     {
       value: 'map',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.map.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.map.label')
     },
     {
       value: 'topology',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.topology.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.topology.label')
     },
     {
       value: 'clock',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.clock.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.clock.label')
     },
     {
       value: 'bubble',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.bubble.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.bubble.label')
     },
     {
       value: 'rank',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.rank.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.rank.label')
     },
     {
       value: 'sankey',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.sankey.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.sankey.label')
     },
     {
       value: 'funnel',
-      label: i18n.t('dashboard.panel.chartForm.typeVal.funnel.label')
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.funnel.label')
     }
   ]
 }
 
 export const intervalList = [
-  { value: -1, label: i18n.t('dashboard.panel.chartForm.lockList.off') },
+  { value: -1, label: i18n.t('dashboard.dashboard.chartForm.lockList.off') },
   { value: 30, label: '30s' },
   { value: 60, label: '1m' },
   { value: 300, label: '5m' },

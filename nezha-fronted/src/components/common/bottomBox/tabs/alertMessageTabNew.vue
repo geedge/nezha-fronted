@@ -468,7 +468,7 @@ export default {
             time: this.searchTime,
             nowTimeType: {
               id: 4,
-              text: this.$t('dashboard.panel.lastOneHour'),
+              text: this.$t('dashboard.dashboard.lastOneHour'),
               type: 'hour',
               value: 1
             }

@@ -197,7 +197,7 @@ export default {
             { prop: 'dashboardTab', name: this.$t('overall.dashboard') },
             { prop: 'alertMessageTab', name: this.$t('overall.alert') },
             { prop: 'endpointTab', name: this.$t('asset.endpoint') },
-            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label') }
+            { prop: 'log', name: this.$t('dashboard.dashboard.chartForm.typeVal.log.label') }
           ]
         },
         module: {
@@ -211,7 +211,7 @@ export default {
             { prop: 'dashboardTab', name: this.$t('overall.dashboard') },
             { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
             { prop: 'Metrics', name: this.$t('overall.metric') },
-            { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label') }
+            { prop: 'log', name: this.$t('dashboard.dashboard.chartForm.typeVal.log.label') }
           ]
         },
         chartTemp: {
@@ -316,7 +316,7 @@ export default {
         { prop: 'dashboardTab', name: this.$t('overall.dashboard') },
         { prop: 'alertMessageTab', name: this.$t('overall.alert') },
         { prop: 'endpointTab', name: this.$t('asset.endpoint') },
-        { prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label') }
+        { prop: 'log', name: this.$t('dashboard.dashboard.chartForm.typeVal.log.label') }
       ]
       if (hasSub) {
         tabs.push({ prop: 'assetSubTab', name: this.$t('overall.assetSubTab') })
@@ -339,7 +339,7 @@ export default {
         { prop: 'Metrics', name: this.$t('overall.metric') }
       ]
       if (hasLog) {
-        tabs.push({ prop: 'log', name: this.$t('dashboard.panel.chartForm.typeVal.log.label') })
+        tabs.push({ prop: 'log', name: this.$t('dashboard.dashboard.chartForm.typeVal.log.label') })
       }
       return tabs
     }
