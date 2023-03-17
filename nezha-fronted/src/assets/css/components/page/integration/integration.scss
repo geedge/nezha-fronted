@@ -143,6 +143,7 @@
           letter-spacing: 0;
           line-height: 16px;
           font-weight: 400;
+          word-break: keep-all;
         }
       }
     }
@@ -257,6 +258,14 @@
         overflow-wrap: break-word;
         word-break: break-word;
         white-space: pre-wrap;
+      }
+      blockquote{
+        font-size: 13px;
+        font-weight: 600;
+        padding: 3px 15px;
+        border: 1px solid $--border-color-light;
+        margin-bottom: -1px;
+        background: $--alert-rule-background-color;
       }
     }
 
