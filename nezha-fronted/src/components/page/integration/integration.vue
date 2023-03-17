@@ -1,5 +1,5 @@
 <template>
-  <div class="integration">
+  <div class="integration" v-my-loading='loading'>
     <!-- NZ-talon -->
     <p class="integration-title" style="margin-top:10px;">{{talon.name}}</p>
     <ul class="integration-list">
@@ -70,10 +70,12 @@ export default {
       dataList: [],
       type: '',
       detailsObj: {},
-      clickModalClose: true
+      clickModalClose: true,
+      loading: false
     }
   },
   created () {
+    this.loading = true
     this.getDataList()
     bus.$on('clickModalClose', (val) => {
       this.clickModalClose = val
@@ -83,6 +85,7 @@ export default {
     async getDataList () {
       const res = await this.$get('/integration/module', { pageSize: -1 })
       this.dataList = res.data.list
+      this.loading = false
     },
     // talon 详情
     talonDetail () {
