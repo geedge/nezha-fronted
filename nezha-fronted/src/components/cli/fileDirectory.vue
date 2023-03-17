@@ -300,7 +300,7 @@ export default {
         { name: 'backup.size', key: 'size' },
         { name: 'terminal.modifyTime', key: 'uts' },
         { name: 'Owner', key: 'Owner' },
-        { name: 'dashboard.panel.chartForm.group', key: 'group' },
+        { name: 'dashboard.dashboard.chartForm.group', key: 'group' },
         { name: 'config.menus.perms', key: 'permissionsString' }
 
       ],
@@ -558,7 +558,7 @@ export default {
       //   { name: 'backup.size', key: 'size' },
       //   { name: 'terminal.modifyTime', key: 'uts' },
       //   { name: 'Owner', key: 'Owner' },
-      //   { name: 'dashboard.panel.chartForm.group', key: 'group' },
+      //   { name: 'dashboard.dashboard.chartForm.group', key: 'group' },
       //   { name: 'config.menus.perms', key: 'permissionsString' }
       //
       // ]

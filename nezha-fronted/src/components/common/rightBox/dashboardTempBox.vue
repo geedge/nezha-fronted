@@ -1,7 +1,7 @@
 <template>
   <div v-clickoutside="{obj: editDashboard, func: esc}" class="right-box right-box-dashboard-temp">
     <div class="right-box__header">
-      <div class="header__title">{{$t("dashboard.panel.createPanelTitle")}}</div>
+      <div class="header__title">{{$t("dashboard.dashboard.createPanelTitle")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editDashboard, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
@@ -103,7 +103,7 @@ export default {
           }
         },
         {
-          title: this.$t('dashboard.panel.chartForm.varType'),
+          title: this.$t('dashboard.dashboard.chartForm.varType'),
           data: function (row) {
             let str
             switch (row.varType) {

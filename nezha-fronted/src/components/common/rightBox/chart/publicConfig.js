@@ -72,10 +72,10 @@ export default {
           label: this.$t('overall.value'),
           value: 'value'
         }, {
-          label: this.$t('dashboard.panel.chartForm.valMapping.range'),
+          label: this.$t('dashboard.dashboard.chartForm.valMapping.range'),
           value: 'range'
         }, {
-          label: this.$t('dashboard.panel.chartForm.valMapping.regx'),
+          label: this.$t('dashboard.dashboard.chartForm.valMapping.regx'),
           value: 'regx'
         }
       ],
@@ -221,114 +221,114 @@ export default {
       metricsChartTypeList: [
         {
           id: 'line',
-          name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.line.label')
         },
         {
           id: 'area',
-          name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.stackArea.label')
         },
         {
           id: 'point',
-          name: this.$t('dashboard.panel.chartForm.typeVal.point.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.point.label')
         },
         {
           id: 'stat',
-          name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.singleStat.label')
         },
         {
           id: 'hexagon',
-          name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.hexagonFigure.label')
         },
         {
           id: 'bar',
-          name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.bar.label')
         },
         {
           id: 'gauge',
-          name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.gauge.label')
         },
         {
           id: 'sankey',
-          name: this.$t('dashboard.panel.chartForm.typeVal.sankey.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.sankey.label')
         },
         {
           id: 'treemap',
-          name: this.$t('dashboard.panel.chartForm.typeVal.treemap.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.treemap.label')
         },
         {
           id: 'pie',
-          name: this.$t('dashboard.panel.chartForm.typeVal.pie.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.pie.label')
         },
         {
           id: 'bubble',
-          name: this.$t('dashboard.panel.chartForm.typeVal.bubble.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.bubble.label')
         },
         {
           id: 'rank',
-          name: this.$t('dashboard.panel.chartForm.typeVal.rank.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.rank.label')
         },
         {
           id: 'table',
-          name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.table.label')
         }
 
       ],
       logChartTypeList: [
         {
           id: 'line',
-          name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.line.label')
         },
         {
           id: 'area',
-          name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.stackArea.label')
         },
         {
           id: 'point',
-          name: this.$t('dashboard.panel.chartForm.typeVal.point.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.point.label')
         },
         {
           id: 'stat',
-          name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.singleStat.label')
         },
         {
           id: 'hexagon',
-          name: this.$t('dashboard.panel.chartForm.typeVal.hexagonFigure.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.hexagonFigure.label')
         },
         {
           id: 'bar',
-          name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.bar.label')
         },
         {
           id: 'gauge',
-          name: this.$t('dashboard.panel.chartForm.typeVal.gauge.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.gauge.label')
         },
         {
           id: 'sankey',
-          name: this.$t('dashboard.panel.chartForm.typeVal.sankey.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.sankey.label')
         },
         {
           id: 'treemap',
-          name: this.$t('dashboard.panel.chartForm.typeVal.treemap.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.treemap.label')
         },
         {
           id: 'pie',
-          name: this.$t('dashboard.panel.chartForm.typeVal.pie.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.pie.label')
         },
         {
           id: 'bubble',
-          name: this.$t('dashboard.panel.chartForm.typeVal.bubble.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.bubble.label')
         },
         {
           id: 'rank',
-          name: this.$t('dashboard.panel.chartForm.typeVal.rank.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.rank.label')
         },
         {
           id: 'log',
-          name: this.$t('dashboard.panel.chartForm.typeVal.log.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.log.label')
         },
         {
           id: 'table',
-          name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.table.label')
         }
 
       ],
@@ -340,7 +340,7 @@ export default {
           label: this.$t('overall.value'),
           value: 'value'
         }, {
-          label: this.$t('dashboard.panel.chartForm.legend'),
+          label: this.$t('dashboard.dashboard.chartForm.legend'),
           value: 'legend'
         }, {
           label: this.$t('project.topology.none'),
@@ -350,11 +350,11 @@ export default {
       timeType: [
         {
           value: 'local',
-          label: this.$t('dashboard.panel.chartForm.typeVal.local')
+          label: this.$t('dashboard.dashboard.chartForm.typeVal.local')
         },
         {
           value: 'server',
-          label: this.$t('dashboard.panel.chartForm.typeVal.server')
+          label: this.$t('dashboard.dashboard.chartForm.typeVal.server')
         }
       ],
       isChoose: []

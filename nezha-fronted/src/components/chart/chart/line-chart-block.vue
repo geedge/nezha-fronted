@@ -24,7 +24,7 @@
               :close-delay=10
               trigger="hover"
               popper-class="chart-warring-popper">
-            <div class="moreTitle">{{$t('dashboard.panel.moreTitle')}}{{$t('dashboard.panel.showAll')}}{{seriesItem.length}}</div>
+            <div class="moreTitle">{{$t('dashboard.dashboard.moreTitle')}}{{$t('dashboard.dashboard.showAll')}}{{seriesItem.length}}</div>
             <span slot="reference" class="panel-info-corner panel-info-corner--error"  @click="loadMore">
               <i class="nz-icon nz-icon-warning fa"></i>
               <span class="panel-info-corner-inner"></span>
@@ -138,7 +138,7 @@
               :close-delay=10
               trigger="hover"
               popper-class="chart-warring-popper">
-            <div class="moreTitle">{{$t('dashboard.panel.moreTitle')}}{{$t('dashboard.panel.showAll')}}{{seriesItemScreen.length}}</div>
+            <div class="moreTitle">{{$t('dashboard.dashboard.moreTitle')}}{{$t('dashboard.dashboard.showAll')}}{{seriesItemScreen.length}}</div>
             <span slot="reference" class="panel-info-corner panel-info-corner--error"  @click="loadScreenMore">
               <i class="nz-icon nz-icon-warning fa-model"></i>
               <span class="panel-info-corner-inner"></span>
@@ -879,7 +879,7 @@ export default {
               str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
               str += '<div style="line-height: 18px; font-size: 12px;padding-left:0px;">'
               str += `<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${self.stackTotalColor};}'></span>`
-              str += self.$t('dashboard.panel.chartTotal')
+              str += self.$t('dashboard.dashboard.chartTotal')
               str += '</div>'
               str += '<div style="padding-left: 10px;">'
               str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, self.chartDot)
@@ -1164,7 +1164,7 @@ export default {
                       sum = parseFloat(Number(sum).toFixed(6))
                       str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                       str += '<div style="line-height: 18px; font-size: 12px;padding-left:20px;">'
-                      str += self.$t('dashboard.panel.chartTotal')
+                      str += self.$t('dashboard.dashboard.chartTotal')
                       str += '</div>'
                       str += '<div style="padding-left: 10px;">'
                       str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, self.chartDot)
@@ -1382,7 +1382,7 @@ export default {
                       sum = parseFloat(Number(sum).toFixed(6))
                       str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                       str += '<div style="line-height: 18px; font-size: 12px;padding-left:20px;">'
-                      str += self.$t('dashboard.panel.chartTotal')
+                      str += self.$t('dashboard.dashboard.chartTotal')
                       str += '</div>'
                       str += '<div style="padding-left: 10px;">'
                       str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, self.chartDot)
@@ -1571,7 +1571,7 @@ export default {
       this.$refs.pickTime.$refs.multipleTime.searchTime = []
       this.$refs.pickTime.$refs.multipleTime.showTime = {
         id: 12,
-        text: this.$t('dashboard.panel.noDate')
+        text: this.$t('dashboard.dashboard.noDate')
       }
       this.$refs.pickTime.$refs.multipleTime.showDropdown = false
     },
@@ -1595,7 +1595,7 @@ export default {
       this.$refs.pickTime.$refs.multipleTime.searchTime = []
       this.$refs.pickTime.$refs.multipleTime.showTime = {
         id: 12,
-        text: this.$t('dashboard.panel.noDate')
+        text: this.$t('dashboard.dashboard.noDate')
       }
       this.$refs.pickTime.$refs.multipleTime.showDropdown = false
       this.$refs.pickTime.$refs.timePicker.setCustomTime(this.stableFilter)

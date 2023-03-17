@@ -24,7 +24,7 @@
           </template>
           <template v-slot:tail>
             <div class="panel-select-tail">
-              <span id="panel-list-toadd" v-has="'asset_label_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="addGroup"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{ $t('buttons.add') }}</span>
+              <span id="panel-list-toadd" v-has="'asset_label_add'" :title='$t("dashboard.dashboard.createDashboardTitleSec")' class="panel-select-add" @click="addGroup"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{ $t('buttons.add') }}</span>
             </div>
           </template>
         </select-group>
@@ -143,7 +143,7 @@ export default {
             disabled: false
           }
           // , {
-          //   name: this.$t('dashboard.panel.chartForm.group'),
+          //   name: this.$t('dashboard.dashboard.chartForm.group'),
           //   type: 'group',
           //   label: 'group',
           //   readonly: true,

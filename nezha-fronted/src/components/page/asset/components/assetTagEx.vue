@@ -49,7 +49,7 @@
         <my-date-picker
           size="small"
           :type="param.interval?'daterange':'date'"
-          :range-separator="$t('dashboard.panel.to')"
+          :range-separator="$t('dashboard.dashboard.to')"
           :placeholder="$t('alert.silence.selectTime')"
           :start-placeholder="$t('overall.startTime')"
           :end-placeholder="$t('overall.endTime')"
@@ -62,7 +62,7 @@
         <el-time-picker
           size="small"
           :is-range="param.interval"
-          :range-separator="$t('dashboard.panel.to')"
+          :range-separator="$t('dashboard.dashboard.to')"
           :placeholder="$t('alert.silence.selectTime')"
           :start-placeholder="$t('overall.startTime')"
           :end-placeholder="$t('overall.endTime')"
@@ -73,7 +73,7 @@
         <my-date-picker
           size="small"
           :type="param.interval?'datetimerange':'datetime'"
-          :range-separator="$t('dashboard.panel.to')"
+          :range-separator="$t('dashboard.dashboard.to')"
           :placeholder="$t('alert.silence.selectTime')"
           :start-placeholder="$t('overall.startTime')"
           :end-placeholder="$t('overall.endTime')"

@@ -128,7 +128,7 @@ export default {
             label: 'name',
             disabled: false
           }, {
-            name: this.$t('dashboard.panel.chartForm.group'),
+            name: this.$t('dashboard.dashboard.chartForm.group'),
             type: 'input',
             label: 'gname',
             disabled: false

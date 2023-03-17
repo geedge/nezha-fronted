@@ -21,7 +21,7 @@
 
           <!--value mapping-->
           <el-row class="form-row-title">
-            {{ $t('dashboard.panel.chartForm.thresholds') }}
+            {{ $t('dashboard.dashboard.chartForm.thresholds') }}
             <span v-if="selection.pen.data.valueMappingSort !=='desc'" class="title__label"
             >（0:Ok > … >{{
                 selection.pen.data.valueMapping.length
@@ -63,7 +63,7 @@
                   <template>
                     <!--chart aggregation-->
                     <el-col class="legend-title">
-                      {{ $t('dashboard.panel.chartForm.aggregation') }}&nbsp;
+                      {{ $t('dashboard.dashboard.chartForm.aggregation') }}&nbsp;
                     </el-col>
                     <el-col style="width: calc(100% - 120px)">
                       <el-select v-model="selection.pen.data.aggregation" :placeholder="$t('el.select.placeholder')"
@@ -172,7 +172,7 @@
           </transition>
           <!--tooltip-->
           <el-row class="form-row-title" :style="{'margin-top': '10px'}">
-            {{ $t('dashboard.panel.chartForm.tooltip') }}
+            {{ $t('dashboard.dashboard.chartForm.tooltip') }}
             <el-form-item class="float-right" prop="type" style="height: 100%;">
               <el-switch
                 v-model="selection.pen.data.tooltipShow"
@@ -194,7 +194,7 @@
                           show-word-limit type="textarea" size="small" :rows="2"/>
               </el-form-item>
               <!--chart unit-->
-              <el-form-item v-show="selection.pen.data.type !='text'" :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item"
+              <el-form-item v-show="selection.pen.data.type !='text'" :label="$t('dashboard.dashboard.chartForm.unit')" class="half-form-item"
                             prop="unit">
                 <el-cascader v-model="selection.pen.data.unit"
                              :options="unitOptions"
@@ -242,9 +242,9 @@
                 <el-row style="margin-top: 10px">
                   <template>
                     <el-col class="legend-title">
-                      {{ $t('dashboard.panel.chartForm.legend') }}&nbsp;
+                      {{ $t('dashboard.dashboard.chartForm.legend') }}&nbsp;
                       <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
-                        <div :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{ $t('dashboard.panel.chartForm.legendTip') }}</div>
+                        <div :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{ $t('dashboard.dashboard.chartForm.legendTip') }}</div>
                         <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"
                            @mouseover="rz"></i>
                       </el-popover>
@@ -324,7 +324,7 @@
               </div>
 
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
-                <div>{{ $t('dashboard.panel.chartForm.width') }}</div>
+                <div>{{ $t('dashboard.dashboard.chartForm.width') }}</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -345,7 +345,7 @@
               </div>
 
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
-                <div>{{ $t('dashboard.panel.chartForm.high') }}</div>
+                <div>{{ $t('dashboard.dashboard.chartForm.high') }}</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -1122,19 +1122,19 @@ export default {
       chartTypeList: [
         {
           id: 'line',
-          name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.line.label')
         },
         {
           id: 'stackArea',
-          name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.stackArea.label')
         }
         // {
         //   id: 'bar',
-        //   name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
+        //   name: this.$t('dashboard.dashboard.chartForm.typeVal.bar.label')
         // },
         // {
         //   id: 'table',
-        //   name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
+        //   name: this.$t('dashboard.dashboard.chartForm.typeVal.table.label')
         // }
       ],
       aggregationList: [
@@ -1207,7 +1207,7 @@ export default {
           desc: this.$t('overall.left')
         }, {
           value: 'right',
-          desc: this.$t('dashboard.panel.chartForm.alignList.right')
+          desc: this.$t('dashboard.dashboard.chartForm.alignList.right')
         }, {
           value: 'top',
           desc: this.$t('project.topology.topOffsetY')
@@ -1381,7 +1381,7 @@ export default {
         },
         {
           id: 'right',
-          name: this.$t('dashboard.panel.chartForm.alignList.right')
+          name: this.$t('dashboard.dashboard.chartForm.alignList.right')
         }
       ],
       textBaselineOptions: [

@@ -1,7 +1,7 @@
 <template>
   <div v-clickoutside="{obj: editChartTemp, func: esc}" class="right-box right-box-chart-temp">
     <div class="right-box__header">
-      <div class="header__title">{{editChartTemp.id ? $t('dashboard.panel.createChartByTemp') :$t('dashboard.panel.createChartByTemp')}}</div>
+      <div class="header__title">{{editChartTemp.id ? $t('dashboard.dashboard.createChartByTemp') :$t('dashboard.dashboard.createChartByTemp')}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editChartTemp, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
       </div>
@@ -10,7 +10,7 @@
       <div class="container__form">
         <el-form ref="userForm" :model="editChartTemp" :rules="rules" label-position="top" label-width="120px">
           <!--type-->
-          <el-form-item v-if="from !== fromRoute.endpoint" :label="$t('dashboard.panel.chartForm.varType')" prop="varType">
+          <el-form-item v-if="from !== fromRoute.endpoint" :label="$t('dashboard.dashboard.chartForm.varType')" prop="varType">
             <el-select id="chart-box-group"
               v-model="editChartTemp.varType"
               class="right-box__select"
@@ -263,11 +263,11 @@ export default {
         if (this.from !== fromRoute.endpoint) { // 来自endpoint时不校验
           if (this.editChartTemp.varType === 1) {
             if (this.from !== fromRoute.asset) { // 来自asset且type=1时不校验
-              this.$message.error(this.$t('dashboard.panel.chartForm.selectAsset'))
+              this.$message.error(this.$t('dashboard.dashboard.chartForm.selectAsset'))
               return
             }
           } else {
-            this.$message.error(this.$t('dashboard.panel.chartForm.selectEndpoint'))
+            this.$message.error(this.$t('dashboard.dashboard.chartForm.selectEndpoint'))
             return
           }
         }

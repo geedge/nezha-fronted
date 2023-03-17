@@ -442,7 +442,7 @@ export default {
             <div class="tooltip__row">
               <div class="row__label">
                 <span class="row__color-block" style="background-color: ${self.stackTotalColor}"></span>
-                <span>${self.$t('dashboard.panel.chartTotal')}</span>
+                <span>${self.$t('dashboard.dashboard.chartTotal')}</span>
               </div>
               <div class="row__value">
                 <span>${chartDataFormat.getUnit(self.chartInfo.unit ? self.chartInfo.unit : 2).compute(sum, null, decimals)}</span>

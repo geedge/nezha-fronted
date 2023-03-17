@@ -58,7 +58,7 @@
         </template>
         <template v-else-if="item.prop === 'priority'">
            <div v-if="scope.row[item.prop] == 1">
-            {{ $t('dashboard.panel.chartForm.high') }}
+            {{ $t('dashboard.dashboard.chartForm.high') }}
            </div>
            <div v-else-if="scope.row[item.prop] == 2">
             {{ $t('issue.middle') }}
