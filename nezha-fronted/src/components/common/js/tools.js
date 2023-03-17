@@ -13,6 +13,7 @@ export const clickoutside = {
       const unsavedChange = localStorage.getItem('nz-unsaved-change')
       try {
         el.__oldValue__ = JSON.parse(JSON.stringify(binding.value.obj))
+        el.__oldData__ = JSON.parse(JSON.stringify(binding.value.oldData))
         el.__newValue__ = el.__oldValue__
       } catch (e) {
 
@@ -38,7 +39,8 @@ export const clickoutside = {
           }
           if (el.__oldValue__) {
             // const newValue = JSON.parse(JSON.stringify(binding.value.obj))
-            if (unsavedChange == 'on' && !isEqual(el.__oldValue__, el.__newValue__) && !el.isShow) {
+            const oldData = el.__oldData__ || el.__oldValue__
+            if (unsavedChange == 'on' && !isEqual(oldData, el.__newValue__) && !el.isShow) {
               el.isShow = true
               MessageBox.confirm(i18n.t('tip.confirmCancel'), {
                 confirmButtonText: i18n.t('tip.yes'),
@@ -79,6 +81,7 @@ export const clickoutside = {
       }
     }
     el.__newValue__ = binding.value.obj
+    el.__oldData__  = binding.value.oldData
   },
   unbind (el, binding) {
     // 解除事件监听
