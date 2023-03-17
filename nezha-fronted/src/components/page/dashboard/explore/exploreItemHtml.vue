@@ -27,7 +27,7 @@
         </el-collapse-item>
         <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
           <div slot="title" class="explore-table-title">
-            {{$t('dashboard.panel.chartForm.typeVal.table.label')}}
+            {{$t('dashboard.dashboard.chartForm.typeVal.table.label')}}
             <i
               class="nz-icon-gear nz-icon"
               style="position: absolute;right: 10px;top: 8px"

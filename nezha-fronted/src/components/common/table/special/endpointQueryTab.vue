@@ -22,7 +22,7 @@
         :min-width="1000"
         column-key="element"
         :show-overflow-tooltip="true"
-        :label="$t('dashboard.panel.chartForm.element')">
+        :label="$t('dashboard.dashboard.chartForm.element')">
         <template v-slot="scope">
           <el-popover trigger="hover" placement="right">
             <meta-data :metaDataList="metaDataList" :metaName="scope.row.metricTip.metric" />
@@ -376,6 +376,9 @@ export default {
         chart.panelName = ''
         this.chart = chart
         this.graphShow = false
+        if (!this.chart.groupId) {
+          this.chart.groupId = undefined
+        }
         this.$store.dispatch('dispatchEditChart', {
           chart: this.chart,
           type: 'add'

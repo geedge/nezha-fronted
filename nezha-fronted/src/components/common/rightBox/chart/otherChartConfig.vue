@@ -9,7 +9,7 @@
     >
       <!--title-->
       <div class="form__sub-title">
-        <span>{{$t('dashboard.panel.chartForm.displayConfig')}}</span>
+        <span>{{$t('dashboard.dashboard.chartForm.displayConfig')}}</span>
       </div>
       <div class="form-items--half-width-group">
         <!-- type -->
@@ -39,7 +39,7 @@
           </el-select>
         </el-form-item>
         <!--Default collapse-->
-        <el-form-item class="form-item--half-width" v-if="isGroup(chartConfig.type)" :label='$t("dashboard.panel.chartForm.collapse")' prop="param.collapse">
+        <el-form-item class="form-item--half-width" v-if="isGroup(chartConfig.type)" :label='$t("dashboard.dashboard.chartForm.collapse")' prop="param.collapse">
           <el-switch
             id="chart-box-collapse"
             v-model="chartConfig.param.collapse"
@@ -52,7 +52,7 @@
       <div class="form-items--half-width-group" v-if="!isGroup(chartConfig.type)">
         <!--width-->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.width')"
+          :label="$t('dashboard.dashboard.chartForm.width')"
           class="form-item--half-width"
           prop="span">
           <el-select
@@ -77,7 +77,7 @@
 
         <!--height-->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.high')"
+          :label="$t('dashboard.dashboard.chartForm.high')"
           class="form-item--half-width"
           prop="height">
           <!-- 由px改为span -->
@@ -104,7 +104,7 @@
 
         <!-- timeType -->
         <el-form-item
-          :label="$t('dashboard.panel.chartForm.timeType')"
+          :label="$t('dashboard.dashboard.chartForm.timeType')"
           class="form-item--half-width"
           v-if="chartConfig.type === 'clock'"
           prop="type"
@@ -130,11 +130,11 @@
       </div>
       <!--content-->
       <div v-if="contentShow(chartConfig.type)" class="form__sub-title">
-        <span>{{$t('dashboard.panel.chartForm.content')}}</span>
+        <span>{{$t('dashboard.dashboard.chartForm.content')}}</span>
         <span style="cursor: pointer" v-if="isDiagram(chartConfig.type)"><i class="nz-icon nz-icon-edit" @click="topologyDialogChange(true)"></i></span>
       </div>
       <!--url-->
-      <el-form-item v-if="isUrl(chartConfig.type)" :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url">
+      <el-form-item v-if="isUrl(chartConfig.type)" :label='$t("dashboard.dashboard.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url">
         <el-input id="chart-box-url" v-model="chartConfig.param.url" maxlength="1024" show-word-limit size="small" :rows="2" type="textarea" @change="change"></el-input>
       </el-form-item>
       <!--topoData-->
@@ -154,7 +154,7 @@
       <!-- visibility -->
       <div v-if="params.type === 'group'">
         <div class="form__sub-title">
-          <span>{{$t('dashboard.panel.showHidden')}}</span>
+          <span>{{$t('dashboard.dashboard.showHidden')}}</span>
           <el-switch
             v-model="chartConfig.param.enable.visibility"
             size="small"
@@ -168,7 +168,7 @@
           >
             <!-- Variable name -->
             <el-form-item
-              :label="$t('dashboard.panel.variableName')"
+              :label="$t('dashboard.dashboard.variableName')"
               class="form-item--half-width"
               prop="param.visibility.varName"
               :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
@@ -229,7 +229,7 @@
             </el-form-item>
             <!-- Result -->
             <el-form-item
-              :label="$t('dashboard.panel.chartForm.result')"
+              :label="$t('dashboard.dashboard.chartForm.result')"
               class="form-item--half-width"
               prop="param.visibility.result"
               :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
@@ -265,7 +265,7 @@
           >
             <!-- variable -->
             <el-form-item
-              :label="$t('dashboard.panel.variableName')"
+              :label="$t('dashboard.dashboard.variableName')"
               class="form-item--half-width"
               prop="param.repeat.variable"
               :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}"
@@ -320,31 +320,31 @@ export default {
       chartTypeList: [
         {
           id: 'url',
-          name: this.$t('dashboard.panel.chartForm.url')
+          name: this.$t('dashboard.dashboard.chartForm.url')
         },
         {
           id: 'text',
-          name: this.$t('dashboard.panel.chartForm.typeVal.text.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.text.label')
         },
         {
           id: 'diagram',
-          name: this.$t('dashboard.panel.chartForm.typeVal.diagram.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.diagram.label')
         },
         {
           id: 'group',
-          name: this.$t('dashboard.panel.chartForm.group')
+          name: this.$t('dashboard.dashboard.chartForm.group')
         },
         {
           id: 'map',
-          name: this.$t('dashboard.panel.chartForm.typeVal.map.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.map.label')
         },
         {
           id: 'topology',
-          name: this.$t('dashboard.panel.chartForm.typeVal.topology.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.topology.label')
         },
         {
           id: 'clock',
-          name: this.$t('dashboard.panel.chartForm.typeVal.clock.label')
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.clock.label')
         }
       ]
     }

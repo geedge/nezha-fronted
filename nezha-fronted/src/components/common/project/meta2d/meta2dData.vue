@@ -101,7 +101,7 @@
               <span @click="removeExpression(index - 1)" class="nz-icon-minus-medium" style="margin-right: 5px" :title="$t('overall.delete')">
                 <i class="nz-icon nz-icon-minus"></i>
               </span>
-              <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
+              <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.dashboard.chartForm.sort')">
                 <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
               </span>
             </span>
@@ -128,10 +128,10 @@
                   </div>
                   <el-row style="margin-top: 18px;display: flex">
                     <el-col class="legend-title">
-                      <span class="legend-title__span">{{$t('dashboard.panel.chartForm.legend')}}&nbsp;</span>
+                      <span class="legend-title__span">{{$t('dashboard.dashboard.chartForm.legend')}}&nbsp;</span>
                       <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
-                        <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
-                        <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.panel.chartForm.legendTip')}}</div> -->
+                        <div style="white-space: normal" :style="{'word-break':language!=='zh'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div>
+                        <!-- <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.dashboard.chartForm.legendTip')}}</div> -->
                         <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                       </el-popover>
                     </el-col>
@@ -142,7 +142,7 @@
                   <el-row style="margin-top: 18px;display: flex">
                     <div class="form-row-item">
                       <div class="form-row-key">
-                        {{$t('dashboard.panel.chartForm.statistics')}}
+                        {{$t('dashboard.dashboard.chartForm.statistics')}}
                       </div>
                       <div class="form-row-value">
                         <el-select v-model="expressionsShow[index-1].statistic" size="small">
@@ -152,7 +152,7 @@
                     </div>
                     <div class="form-row-item">
                       <div class="form-row-key">
-                        {{$t('dashboard.panel.chartForm.unit')}}
+                        {{$t('dashboard.dashboard.chartForm.unit')}}
                       </div>
                       <div class="form-row-value">
                         <el-cascader :id="'columns-unit'" v-model="expressionsShow[index-1].unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
@@ -197,7 +197,7 @@ export default {
   mixins: [promqlInputMixin, rz],
   props: {
     querysArray: {},
-    params: {},
+    params: {}
   },
   components: {
     draggable,
@@ -225,61 +225,61 @@ export default {
       timeData: [
         {
           id: 1,
-          text: this.$t('dashboard.panel.lastFiveMin'),
+          text: this.$t('dashboard.dashboard.lastFiveMin'),
           type: 'minute',
           value: 5
         },
         {
           id: 2,
-          text: this.$t('dashboard.panel.lastFifteenMin'),
+          text: this.$t('dashboard.dashboard.lastFifteenMin'),
           type: 'minute',
           value: 15
         },
         {
           id: 3,
-          text: this.$t('dashboard.panel.lastThirtyMin'),
+          text: this.$t('dashboard.dashboard.lastThirtyMin'),
           type: 'minute',
           value: 30
         },
         {
           id: 4,
-          text: this.$t('dashboard.panel.lastOneHour'),
+          text: this.$t('dashboard.dashboard.lastOneHour'),
           type: 'hour',
           value: 60
         },
         {
           id: 5,
-          text: this.$t('dashboard.panel.lastThreeHour'),
+          text: this.$t('dashboard.dashboard.lastThreeHour'),
           type: 'hour',
           value: 3 * 60
         },
         {
           id: 6,
-          text: this.$t('dashboard.panel.lastSixHour'),
+          text: this.$t('dashboard.dashboard.lastSixHour'),
           type: 'hour',
           value: 6 * 60
         },
         {
           id: 7,
-          text: this.$t('dashboard.panel.lastTwelveHour'),
+          text: this.$t('dashboard.dashboard.lastTwelveHour'),
           type: 'hour',
           value: 12 * 60
         },
         {
           id: 8,
-          text: this.$t('dashboard.panel.lastTwentyFourHour'),
+          text: this.$t('dashboard.dashboard.lastTwentyFourHour'),
           type: 'hour',
           value: 24 * 60
         },
         {
           id: 9,
-          text: this.$t('dashboard.panel.lastTwoDay'),
+          text: this.$t('dashboard.dashboard.lastTwoDay'),
           type: 'date',
           value: 2 * 24 * 60
         },
         {
           id: 10,
-          text: this.$t('dashboard.panel.lastSevenDay'),
+          text: this.$t('dashboard.dashboard.lastSevenDay'),
           type: 'date',
           value: 7 * 24 * 60
         }

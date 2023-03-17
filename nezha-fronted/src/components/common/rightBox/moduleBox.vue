@@ -349,7 +349,7 @@
                     <!-- fileName -->
                     <el-form-item
                       v-if='item.type === "file"'
-                      :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.panel.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.dashboard.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
                       :prop="'configs.1.config.'+ index +'.fileName'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                       key="fileName"
@@ -359,7 +359,7 @@
                     <!-- unit -->
                     <el-form-item
                       v-if='item.type === "journal"'
-                      :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.panel.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.dashboard.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
                       :prop="'configs.1.config.'+ index +'.unit'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                       key="unit"
@@ -369,7 +369,7 @@
                     <!-- listenAddress -->
                     <el-form-item
                       v-if='item.type === "syslog"'
-                      :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.panel.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :label='item.type === "file" ? $t("config.terminallog.path"):( item.type === "journal" ? $t("dashboard.dashboard.chartForm.unit") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
                       :prop="'configs.1.config.'+ index +'.listenAddress'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                       key="listenAddress"

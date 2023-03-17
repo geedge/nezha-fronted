@@ -88,7 +88,7 @@
       @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
-        <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch" :title="$t('dashboard.panel.chartForm.filter')">
+        <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch" :title="$t('dashboard.dashboard.chartForm.filter')">
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
         <button id="asset-create-asset" v-has="'asset_add'" :title="$t('asset.createAsset')" class="top-tool-btn" @click.stop="add">

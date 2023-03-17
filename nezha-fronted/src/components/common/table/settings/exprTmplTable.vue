@@ -108,7 +108,7 @@ export default {
           show: true,
           sortable: 'custom'
         }, {
-          label: this.$t('dashboard.panel.chartForm.group'),
+          label: this.$t('dashboard.dashboard.chartForm.group'),
           prop: 'gname',
           show: true,
           sortable: 'custom'

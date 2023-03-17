@@ -3,8 +3,8 @@
     <!-- begin--标题-->
     <div class="right-box__header">
 
-      <div class="header__title" v-if="from !== 'dashboardTemp'">{{editPanel.id ? $t("dashboard.panel.editPanelTitle") : $t("dashboard.panel.createPanelTitle")}}</div>
-      <div class="header__title" v-if="from === 'dashboardTemp'">{{editPanel.id ? $t("dashboard.panel.editPanelTempTitle") : $t("dashboard.panel.createPanelTempTitle")}}</div>
+      <div class="header__title" v-if="from !== 'dashboardTemp'">{{editPanel.id ? $t("dashboard.dashboard.editPanelTitle") : $t("dashboard.dashboard.createPanelTitle")}}</div>
+      <div class="header__title" v-if="from === 'dashboardTemp'">{{editPanel.id ? $t("dashboard.dashboard.editPanelTempTitle") : $t("dashboard.dashboard.createPanelTempTitle")}}</div>
 
       <div class="header__operation">
         <span v-cancel="{obj: editPanel, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
@@ -21,7 +21,7 @@
           </el-form-item>
 
           <!--varType-->
-          <el-form-item v-if="from==='dashboardTemp'" :label="$t('dashboard.panel.chartForm.varType')" class="item-receivers" prop="varType">
+          <el-form-item v-if="from==='dashboardTemp'" :label="$t('dashboard.dashboard.chartForm.varType')" class="item-receivers" prop="varType">
             <el-select v-model="editPanel.varType" clearable :disabled="!!editPanel.id" popper-class="right-box-select-top prevent-clickoutside" placeholder="" size="small">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
@@ -41,19 +41,19 @@
           </el-form-item>
 
           <!-- chartShare -->
-          <el-form-item :label="$t('dashboard.panel.chartTooltip')" class="item-receivers" prop="chartShare">
+          <el-form-item :label="$t('dashboard.dashboard.chartTooltip')" class="item-receivers" prop="chartShare">
             <el-select v-model="editPanel.param.chartShare" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
               <el-option value="none" label="Default">
                 <span class="panel-dropdown-label-txt" >{{$t('config.assetLabel.default')}}</span>
               </el-option>
               <el-option value="crosshair" label="Share crosshair">
-                <span class="panel-dropdown-label-txt" >{{$t('dashboard.panel.crosshair')}}</span>
+                <span class="panel-dropdown-label-txt" >{{$t('dashboard.dashboard.crosshair')}}</span>
               </el-option>
               <el-option value="tooltip" label="Share tooltip">
-                <span class="panel-dropdown-label-txt" >{{$t('dashboard.panel.shareTooltip')}}</span>
+                <span class="panel-dropdown-label-txt" >{{$t('dashboard.dashboard.shareTooltip')}}</span>
               </el-option>
             </el-select>
-            <div class="item-receivers-text">{{$t('dashboard.panel.chartTooltipText')}}</div>
+            <div class="item-receivers-text">{{$t('dashboard.dashboard.chartTooltipText')}}</div>
           </el-form-item>
 
           <!-- variable -->
@@ -61,7 +61,7 @@
             class="variable-box"
           >
             <div class="form__sub-title" style="margin-bottom:0px">
-              <span>{{$t('dashboard.panel.variables')}}</span>
+              <span>{{$t('dashboard.dashboard.variables')}}</span>
             </div>
             <draggable
               v-model="editPanel.param.variables"
@@ -101,7 +101,7 @@
                     <span @click="removeVariable(index)" class="nz-icon-minus-medium" style="margin-right: 6px" :title="$t('overall.delete')">
                       <i  class="nz-icon nz-icon-minus"></i>
                     </span>
-                    <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
+                    <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.dashboard.chartForm.sort')">
                       <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
                     </span>
                   </span>
@@ -112,7 +112,7 @@
                     <el-form-item class="form-item--half-width" :label='$t("overall.name")' :prop="'param.variables.' + index + '.name'"
                       :rules="[
                       { required: true, message: $t('validate.required'), trigger: 'blur'},
-                      { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.panel.matchRegex'), trigger: 'blur'},
+                      { pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: $t('dashboard.dashboard.matchRegex'), trigger: 'blur'},
                       { validator: variableValidator,trigger: 'blur'},
                       ]"
                     >
@@ -133,7 +133,7 @@
                     <!-- Query expression -->
                     <el-form-item class="query-expression" v-if="item.type==='query'" :prop="'param.variables.' + index + '.expression'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="expression" style="width: 100%;" >
                       <div slot="label">
-                        <span>{{$t('dashboard.panel.queryExpression')}}</span>
+                        <span>{{$t('dashboard.dashboard.queryExpression')}}</span>
                         <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside">
                           <table class="query-variable-table" width="640" cellspacing="5">
                             <thead>
@@ -155,19 +155,19 @@
                       <el-input v-model="item.expression" placeholder="labels_names()" size="small"/>
                     </el-form-item>
                     <!-- Regex -->
-                    <el-form-item v-if="item.type==='query'" :label="$t('dashboard.panel.regex')" :prop="'param.variables.' + index + '.regex'" key="regex" style="width: 100%;" >
+                    <el-form-item v-if="item.type==='query'" :label="$t('dashboard.dashboard.regex')" :prop="'param.variables.' + index + '.regex'" key="regex" style="width: 100%;" >
                       <el-input v-model="item.regex" placeholder="/.*-(?<text>.*)-(?<value>.*)-.*/" size="small"/>
                     </el-form-item>
                     <!-- Custom values -->
-                    <el-form-item v-if="item.type==='custom'" :label="$t('dashboard.panel.customValues')" :prop="'param.variables.' + index + '.customOptions'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="customOptions" style="width: 100%;" >
+                    <el-form-item v-if="item.type==='custom'" :label="$t('dashboard.dashboard.customValues')" :prop="'param.variables.' + index + '.customOptions'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="customOptions" style="width: 100%;" >
                       <el-input v-model="item.customOptions" placeholder="1,10,myKey:myValue" size="small"/>
                     </el-form-item>
                     <!-- Multi-value -->
                     <el-form-item class="form-item--half-width" :prop="'param.variables.' + index + '.multi'" style="margin-bottom: 0px">
                       <div slot="label">
-                        <span>{{$t('dashboard.panel.multi')}}</span>
+                        <span>{{$t('dashboard.dashboard.multi')}}</span>
                         <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside multiTip">
-                          <span>{{$t('dashboard.panel.multiTip')}}</span>
+                          <span>{{$t('dashboard.dashboard.multiTip')}}</span>
                           <span slot="reference">
                             <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                           </span>
@@ -184,9 +184,9 @@
                     <!-- All option -->
                     <el-form-item class="form-item--half-width" :prop="'param.variables.' + index + '.allOption'" style="margin-bottom: 0px">
                       <div slot="label">
-                        <span>{{$t('dashboard.panel.allOption')}}</span>
+                        <span>{{$t('dashboard.dashboard.allOption')}}</span>
                         <el-popover placement="top" trigger="hover" popper-class="prevent-clickoutside allOptionTip">
-                          <span>{{$t('dashboard.panel.allOptionTip')}}</span>
+                          <span>{{$t('dashboard.dashboard.allOptionTip')}}</span>
                           <span slot="reference">
                             <i class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                           </span>
@@ -204,14 +204,14 @@
                 </transition>
               </el-row>
             </draggable>
-            <div @click="addVariable()" class="add-variable">{{$t('dashboard.panel.addVariable')}}</div>
+            <div @click="addVariable()" class="add-variable">{{$t('dashboard.dashboard.addVariable')}}</div>
           </div>
 
           <!--   Report  -->
           <div>
             <el-form-item class="item-report">
               <div class="form__sub-title">
-                <span>{{$t('dashboard.panel.report')}}</span>
+                <span>{{$t('dashboard.dashboard.report')}}</span>
                 <el-switch v-model="editPanel.param.report.enable" size="small"></el-switch>
               </div>
             </el-form-item>
@@ -248,11 +248,11 @@
                             type="datetime">
                          </my-date-picker>
                     </el-form-item>
-                  <el-form-item :label='$t("dashboard.panel.period")' class="range-time" prop="param.report.range.unit">
+                  <el-form-item :label='$t("dashboard.dashboard.period")' class="range-time" prop="param.report.range.unit">
                     <el-radio-group v-model="editPanel.param.report.range.unit" size="small">
-                      <el-radio-button label="day">{{ $t("dashboard.panel.prevDay") }}</el-radio-button>
-                      <el-radio-button label="week">{{ $t("dashboard.panel.prevWeek") }}</el-radio-button>
-                      <el-radio-button label="month">{{ $t("dashboard.panel.prevMonth") }}</el-radio-button>
+                      <el-radio-button label="day">{{ $t("dashboard.dashboard.prevDay") }}</el-radio-button>
+                      <el-radio-button label="week">{{ $t("dashboard.dashboard.prevWeek") }}</el-radio-button>
+                      <el-radio-button label="month">{{ $t("dashboard.dashboard.prevMonth") }}</el-radio-button>
                     </el-radio-group>
                   </el-form-item>
                   <el-form-item
@@ -320,7 +320,7 @@
                       >{{ item }}</el-checkbox-button>
                     </el-checkbox-group>
                   </el-form-item>
-                  <el-form-item :label="$t('dashboard.panel.receivers')" class="item-receivers" prop="param.report.receivers">
+                  <el-form-item :label="$t('dashboard.dashboard.receivers')" class="item-receivers" prop="param.report.receivers">
                     <el-select
                     class="right-box__select"
                     v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
@@ -461,11 +461,11 @@ export default {
         ? localStorage.getItem('nz-default-dateFormat')
         : 'YYYY-MM-DD HH:ss:mm',
       queryVariableList: [
-        { name: 'label_names()', description: this.$t('dashboard.panel.label_names()') },
-        { name: 'label_values(label)', description: this.$t('dashboard.panel.label_values(label)') },
-        { name: 'label_values(metric, label)', description: this.$t('dashboard.panel.label_values(metric, label)') },
-        { name: 'metrics(metric)', description: this.$t('dashboard.panel.metrics(metric)') },
-        { name: 'query_result(query)', description: this.$t('dashboard.panel.query_result(query)') }
+        { name: 'label_names()', description: this.$t('dashboard.dashboard.label_names()') },
+        { name: 'label_values(label)', description: this.$t('dashboard.dashboard.label_values(label)') },
+        { name: 'label_values(metric, label)', description: this.$t('dashboard.dashboard.label_values(metric, label)') },
+        { name: 'metrics(metric)', description: this.$t('dashboard.dashboard.metrics(metric)') },
+        { name: 'query_result(query)', description: this.$t('dashboard.dashboard.query_result(query)') }
       ],
       varTypeArr: [
         { name: this.$t('project.topology.none'), id: 0 },

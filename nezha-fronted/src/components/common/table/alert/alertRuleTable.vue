@@ -248,7 +248,7 @@ export default {
           width: 120,
           sortable: 'custom'
         }, {
-          label: this.$t('dashboard.panel.receivers'),
+          label: this.$t('dashboard.dashboard.receivers'),
           prop: 'receivers',
           show: false,
           minWidth: 100

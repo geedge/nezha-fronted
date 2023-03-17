@@ -119,7 +119,7 @@ export default {
             disabled: false
           },
           {
-            name: this.$t('dashboard.panel.chartForm.varType'),
+            name: this.$t('dashboard.dashboard.chartForm.varType'),
             type: 'select',
             label: 'dashboardVarType',
             readonly: true,

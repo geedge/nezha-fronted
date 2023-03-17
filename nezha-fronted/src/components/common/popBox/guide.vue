@@ -50,7 +50,7 @@
       <template v-if="activeIndex === 4">
         <div class="desc-text">{{$t('guide.visualizationTip')}}</div>
         <div class="guide__btn-group">
-          <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('dashboard')">{{$t('dashboard.panel.createPanelTitleSec')}}</button>
+          <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('dashboard')">{{$t('dashboard.dashboard.createDashboardTitleSec')}}</button>
           <button :class="{'guide__btn--disabled': !hasButton('main_add')}" class="guide__btn" type="button" @click="jumpAndOpen('chart')">{{$t('overall.createChart')}}</button>
         </div>
       </template>

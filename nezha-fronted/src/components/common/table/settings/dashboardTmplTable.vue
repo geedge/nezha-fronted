@@ -110,7 +110,7 @@ export default {
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('dashboard.panel.chartForm.varType'),
+          label: this.$t('dashboard.dashboard.chartForm.varType'),
           prop: 'varType',
           show: true,
           minWidth: 200,

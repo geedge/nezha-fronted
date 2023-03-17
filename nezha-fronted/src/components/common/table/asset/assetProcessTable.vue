@@ -134,7 +134,7 @@ export default {
           minWidth: 120,
           sortable: 'custom'
         }, {
-          label: this.$t('dashboard.panel.chartForm.group'),
+          label: this.$t('dashboard.dashboard.chartForm.group'),
           prop: 'group',
           show: false,
           minWidth: 120,
