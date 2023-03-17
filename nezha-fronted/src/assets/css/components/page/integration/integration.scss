@@ -263,8 +263,9 @@
         font-size: 13px;
         font-weight: 600;
         padding: 3px 15px;
-        border: 1px solid $--border-color-light;
         margin-bottom: -1px;
+        color: $--color-text-regular;
+        border: 1px solid $--border-color-light;
         background: $--alert-rule-background-color;
       }
     }
