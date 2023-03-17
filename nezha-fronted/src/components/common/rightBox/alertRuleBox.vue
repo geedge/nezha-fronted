@@ -102,7 +102,7 @@
             </el-input>
           </el-form-item>
           <!--unit-->
-          <el-form-item v-if="showSnmpTrap" :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
+          <el-form-item v-if="showSnmpTrap" :label="$t('dashboard.dashboard.chartForm.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
                          placeholder=""
                          popper-class="no-style-class dc-dropdown  unit-popper-class"
@@ -292,7 +292,7 @@
             </el-select>
           </el-form-item>
           <!--receiver-->
-          <el-form-item :label="$t('dashboard.panel.receivers')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
+          <el-form-item :label="$t('dashboard.dashboard.receivers')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-select
               id="alert-box-input-receiver"
               v-model="editAlertRule.receiverShow"

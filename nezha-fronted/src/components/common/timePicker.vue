@@ -14,14 +14,14 @@
         <div class="calendar-popover-text">
           {{ searchTime[0] }}
         </div>
-        <div class="calendar-popover-text">{{ $t("dashboard.panel.to") }}</div>
+        <div class="calendar-popover-text">{{ $t("dashboard.dashboard.to") }}</div>
         <div class="calendar-popover-text">
           {{ searchTime[1] }}
         </div>
       </div>
       <div class="calendar-popover-text" v-else>
     <el-tooltip class="item" effect="light"  placement="bottom">
-      <div slot="content"> {{searchTime[0]}}<br/><p style="text-align:center">{{$t("dashboard.panel.to")}} </p>{{searchTime[1]}}</div>
+      <div slot="content"> {{searchTime[0]}}<br/><p style="text-align:center">{{$t("dashboard.dashboard.to")}} </p>{{searchTime[1]}}</div>
       <div class="time-no-data">{{ showTime.text }}</div>
     </el-tooltip>
         <!-- <div class="time-no-data">{{ showTime.text }}</div> -->
@@ -57,7 +57,7 @@
             >
             </my-date-picker>
 <!--            @change="dateChange(whoChoose)"-->
-            <div class="content-title">{{$t('dashboard.panel.chartForm.valMapping.from')}}</div>
+            <div class="content-title">{{$t('dashboard.dashboard.chartForm.valMapping.from')}}</div>
             <div  tabindex="1" class="content-input" :class="oldSearchTimeError[0] ? 'input-error' : ''">
               <el-input   @focus="searchTimeValue = oldSearchTime[0]"  v-model="oldSearchTime[0]" @change="dateInputChange('start',oldSearchTime[0])" size="mini"> </el-input>
               <div @click="myDatePickerShow()" class="nz-icon-box">
@@ -65,7 +65,7 @@
               </div>
               <div class="input-hint">{{inputError}}</div>
             </div>
-            <div class="content-title">{{$t('dashboard.panel.to')}}</div>
+            <div class="content-title">{{$t('dashboard.dashboard.to')}}</div>
             <div tabindex="2" class="content-input" :class="oldSearchTimeError[1] ? 'input-error' : ''">
               <el-input  @focus="searchTimeValue = oldSearchTime[1]" v-model="oldSearchTime[1]" @change="dateInputChange('end',oldSearchTime[1])" size="mini"> </el-input>
               <div  @click="myDatePickerShow()" class="nz-icon-box">
@@ -93,7 +93,7 @@
                 @click="historyChange(item)"
               >
                 {{ momentTz(item.start) }}
-                {{ $t("dashboard.panel.to") }}
+                {{ $t("dashboard.dashboard.to") }}
                 {{ momentTz(item.end) }}
               </div>
             </div>
@@ -179,82 +179,82 @@ export default {
       inputError: this.$t('date.formatError'),
       showTime: {
         id: 4,
-        text: this.$t('dashboard.panel.lastOneHour')
+        text: this.$t('dashboard.dashboard.lastOneHour')
       },
       timeData: [
         {
           id: 0,
-          text: this.$t('dashboard.panel.customTimeRange'),
+          text: this.$t('dashboard.dashboard.customTimeRange'),
           value: -1
         },
         {
           id: 12,
-          text: this.$t('dashboard.panel.noDate'),
+          text: this.$t('dashboard.dashboard.noDate'),
           value: 0
         },
         {
           id: 1,
-          text: this.$t('dashboard.panel.lastFiveMin'),
+          text: this.$t('dashboard.dashboard.lastFiveMin'),
           type: 'minute',
           value: 5
         },
         {
           id: 2,
-          text: this.$t('dashboard.panel.lastFifteenMin'),
+          text: this.$t('dashboard.dashboard.lastFifteenMin'),
           type: 'minute',
           value: 15
         },
         {
           id: 3,
-          text: this.$t('dashboard.panel.lastThirtyMin'),
+          text: this.$t('dashboard.dashboard.lastThirtyMin'),
           type: 'minute',
           value: 30
         },
         {
           id: 4,
-          text: this.$t('dashboard.panel.lastOneHour'),
+          text: this.$t('dashboard.dashboard.lastOneHour'),
           type: 'hour',
           value: 1
         },
         {
           id: 5,
-          text: this.$t('dashboard.panel.lastThreeHour'),
+          text: this.$t('dashboard.dashboard.lastThreeHour'),
           type: 'hour',
           value: 3
         },
         {
           id: 6,
-          text: this.$t('dashboard.panel.lastSixHour'),
+          text: this.$t('dashboard.dashboard.lastSixHour'),
           type: 'hour',
           value: 6
         },
         {
           id: 7,
-          text: this.$t('dashboard.panel.lastTwelveHour'),
+          text: this.$t('dashboard.dashboard.lastTwelveHour'),
           type: 'hour',
           value: 12
         },
         {
           id: 8,
-          text: this.$t('dashboard.panel.lastTwentyFourHour'),
+          text: this.$t('dashboard.dashboard.lastTwentyFourHour'),
           type: 'hour',
           value: 24
         },
         {
           id: 9,
-          text: this.$t('dashboard.panel.lastTwoDay'),
+          text: this.$t('dashboard.dashboard.lastTwoDay'),
           type: 'date',
           value: 2
         },
         {
           id: 10,
-          text: this.$t('dashboard.panel.lastSevenDay'),
+          text: this.$t('dashboard.dashboard.lastSevenDay'),
           type: 'date',
           value: 7
         },
         {
           id: 11,
-          text: this.$t('dashboard.panel.lastThirtyDay'),
+          text: this.$t('dashboard.dashboard.lastThirtyDay'),
           type: 'date',
           value: 30
         }
@@ -262,7 +262,7 @@ export default {
       timeShowData: [],
       nowTimeType: {
         id: 4,
-        text: this.$t('dashboard.panel.lastOneHour'),
+        text: this.$t('dashboard.dashboard.lastOneHour'),
         type: 'hour',
         value: 1
       }
@@ -342,7 +342,7 @@ export default {
       this.searchTime[1] = this.momentTz(item.end)
       this.showTime = this.nowTimeType = {
         id: 0,
-        text: this.searchTime[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + this.searchTime[1],
+        text: this.searchTime[0] + ' ' + this.$t('dashboard.dashboard.to') + ' ' + this.searchTime[1],
         value: -1
       }
       this.showDropdown()
@@ -364,7 +364,7 @@ export default {
       this.searchTime = this.$loadsh.cloneDeep(this.oldSearchTime)
       this.showTime = this.nowTimeType = {
         id: 0,
-        text: this.searchTime[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + this.searchTime[1],
+        text: this.searchTime[0] + ' ' + this.$t('dashboard.dashboard.to') + ' ' + this.searchTime[1],
         value: -1
       }
       this.isCustom = true
@@ -439,7 +439,7 @@ export default {
         } else {
           // const time = this.searchTime.splice(' ')
           // this.showTime = this.nowTimeType = {
-          //   text: time[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + time[1]
+          //   text: time[0] + ' ' + this.$t('dashboard.dashboard.to') + ' ' + time[1]
           // }
           // this.$set(this.searchTime, 0, bus.timeFormate(time[0]))
           // this.$set(this.searchTime, 1, bus.timeFormate(time[1]))
@@ -447,7 +447,7 @@ export default {
           this.$set(this.searchTime, 1, bus.timeFormate(timeGroup.end_time))
           this.showTime = this.nowTimeType = {
             id: 4,
-            text: this.$t('dashboard.panel.lastOneHour'),
+            text: this.$t('dashboard.dashboard.lastOneHour'),
             type: 'hour',
             value: 1
           }
@@ -468,7 +468,7 @@ export default {
       } else {
         this.showTime = this.nowTimeType = {
           id: 4,
-          text: this.$t('dashboard.panel.lastOneHour'),
+          text: this.$t('dashboard.dashboard.lastOneHour'),
           type: 'hour',
           value: 1
         }

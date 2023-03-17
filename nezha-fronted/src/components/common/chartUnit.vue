@@ -5,7 +5,7 @@
       class="top-tool-btn top-tool-btn--text"
       style="border-radius: 2px 0 0 2px; border-right: none;"
       @click="openSeletor"
-    >{{$t('dashboard.panel.chartForm.unit')}}</button>
+    >{{$t('dashboard.dashboard.chartForm.unit')}}</button>
     <el-cascader :id="id+'-unit-input'" ref="unitSelector" v-model="unit"
                  :options="chartUnits"
                  :props="{ expandTrigger: 'click' ,emitPath:false}"

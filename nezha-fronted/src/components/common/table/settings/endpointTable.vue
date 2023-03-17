@@ -136,7 +136,7 @@
             <span style="width: auto;display: inline-block;cursor: pointer"
                   @mouseenter="labelHoverConfigs(scope.row, 1, true, $event)"
                   @mouseleave="labelHoverConfigs(scope.row, 1, false, $event)">
-           <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('dashboard.panel.chartForm.typeVal.log.label')}} </span>
+           <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('dashboard.dashboard.chartForm.typeVal.log.label')}} </span>
            <span v-if="scope.row.configs[1].state===0 || !scope.row.configs[1].state">
              <span class="active-icon red-bg inline-block"></span>
            </span>

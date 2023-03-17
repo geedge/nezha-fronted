@@ -282,7 +282,7 @@ const cn = {
       createPanelTitleSec: '新增面板',
       editPanelTitle: '面板',
       singleStatErrorTip: '仅支持返回单个系列/表的查询',
-      panelForm: {
+      dashboardForm: {
         panelName: '面板名称',
         dashboardId: 'ID'
       },

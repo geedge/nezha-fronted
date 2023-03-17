@@ -35,7 +35,7 @@
                     <i class="nz-icon nz-icon-create-square"></i>&nbsp;{{$t('overall.addDashboard')}}
                   </span>
                   <!-- 通过dashboard模板创建 -->
-                  <span v-has="'main_add'" @click="addByTemplate" :title='$t("dashboard.panel.addByTemplate")' class="dashboard-addBy-template">
+                  <span v-has="'main_add'" @click="addByTemplate" :title='$t("dashboard.dashboard.addByTemplate")' class="dashboard-addBy-template">
                     <i class="nz-icon nz-icon-template1"></i>
                   </span>
                 </template>
@@ -301,7 +301,7 @@ export default {
             disabled: false
           },
           {
-            name: this.$t('dashboard.panel.chartForm.varType'),
+            name: this.$t('dashboard.dashboard.chartForm.varType'),
             type: 'select',
             label: 'varType',
             disabled: false

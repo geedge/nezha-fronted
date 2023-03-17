@@ -1,6 +1,6 @@
 <template>
   <div class="multiple-time-box">
-    <div :class="showDropdown?'compare-box':''" :title="$t('dashboard.panel.customTimeRange')"><i class="nz-icon nz-icon-compare" @click="changeShowDropdown" /></div>
+    <div :class="showDropdown?'compare-box':''" :title="$t('dashboard.dashboard.customTimeRange')"><i class="nz-icon nz-icon-compare" @click="changeShowDropdown" /></div>
     <transition>
       <div v-show="showDropdown" id="panel-calender" class="calendar" style="position: relative">
         <my-date-picker prefix-icon=" " size="mini" ref="calendar"
@@ -23,14 +23,14 @@
                 <el-col :span="24" class="calendar-popover-text">{{searchTime[0]}}</el-col>
               </el-row>
               <el-row  :gutter="10" class="calendar-popover">
-                <el-col :span="24" class="calendar-popover-text">{{$t('dashboard.panel.to')}}</el-col>
+                <el-col :span="24" class="calendar-popover-text">{{$t('dashboard.dashboard.to')}}</el-col>
               </el-row>
               <el-row  :gutter="10" class="calendar-popover">
                 <el-col :span="24" class="calendar-popover-text">{{searchTime[1]}}</el-col>
               </el-row>
             </template>
             <template v-else>
-              <div class="time-no-data">{{$t("dashboard.panel.noDate")}}</div>
+              <div class="time-no-data">{{$t("dashboard.dashboard.noDate")}}</div>
             </template>
             <div  class="el-dropdown-link" slot="reference">
               <i class="nz-icon nz-icon-time" style="width:20px;"></i>
@@ -73,88 +73,88 @@ export default {
       step: '',
       showTime: {
         id: 12,
-        text: this.$t('dashboard.panel.noDate')
+        text: this.$t('dashboard.dashboard.noDate')
       },
       timeData: [
         {
           id: 0,
-          text: this.$t('dashboard.panel.customTimeRange')
+          text: this.$t('dashboard.dashboard.customTimeRange')
         },
         {
           id: 12,
-          text: this.$t('dashboard.panel.noDate')
+          text: this.$t('dashboard.dashboard.noDate')
 
         },
         {
           id: 1,
-          text: this.$t('dashboard.panel.beforeFiveMin'),
+          text: this.$t('dashboard.dashboard.beforeFiveMin'),
           type: 'minute',
           value: 5
         },
         {
           id: 2,
-          text: this.$t('dashboard.panel.beforeFifteenMin'),
+          text: this.$t('dashboard.dashboard.beforeFifteenMin'),
           type: 'minute',
           value: 15
         },
         {
           id: 3,
-          text: this.$t('dashboard.panel.beforeThirtyMin'),
+          text: this.$t('dashboard.dashboard.beforeThirtyMin'),
           type: 'minute',
           value: 30
         },
         {
           id: 4,
-          text: this.$t('dashboard.panel.beforeOneHour'),
+          text: this.$t('dashboard.dashboard.beforeOneHour'),
           type: 'hour',
           value: 1
         },
         {
           id: 5,
-          text: this.$t('dashboard.panel.beforeThreeHour'),
+          text: this.$t('dashboard.dashboard.beforeThreeHour'),
           type: 'hour',
           value: 3
         },
         {
           id: 6,
-          text: this.$t('dashboard.panel.beforeSixHour'),
+          text: this.$t('dashboard.dashboard.beforeSixHour'),
           type: 'hour',
           value: 6
         },
         {
           id: 7,
-          text: this.$t('dashboard.panel.beforeTwelveHour'),
+          text: this.$t('dashboard.dashboard.beforeTwelveHour'),
           type: 'hour',
           value: 12
         },
         {
           id: 8,
-          text: this.$t('dashboard.panel.beforeTwentyFourHour'),
+          text: this.$t('dashboard.dashboard.beforeTwentyFourHour'),
           type: 'hour',
           value: 24
         },
         {
           id: 9,
-          text: this.$t('dashboard.panel.beforeTwoDay'),
+          text: this.$t('dashboard.dashboard.beforeTwoDay'),
           type: 'date',
           value: 2
         },
         {
           id: 10,
-          text: this.$t('dashboard.panel.beforeSevenDay'),
+          text: this.$t('dashboard.dashboard.beforeSevenDay'),
           type: 'date',
           value: 7
         },
         {
           id: 11,
-          text: this.$t('dashboard.panel.beforeThirtyDay'),
+          text: this.$t('dashboard.dashboard.beforeThirtyDay'),
           type: 'date',
           value: 30
         }
       ],
       nowTimeType: {
         id: 4,
-        text: this.$t('dashboard.panel.beforeOneHour'),
+        text: this.$t('dashboard.dashboard.beforeOneHour'),
         type: 'hour',
         value: 1
       },
@@ -205,9 +205,9 @@ export default {
       this.$set(this.searchTime, 1, endTime)
 
       // let timerPicker = document.querySelector('#timePickerContent');
-      // timerPicker.innerText = this.searchTime[0]+" "+this.$t("dashboard.panel.to")+" "+this.searchTime[1];
+      // timerPicker.innerText = this.searchTime[0]+" "+this.$t("dashboard.dashboard.to")+" "+this.searchTime[1];
       this.$set(this.showTime, 'id', 0)
-      this.$set(this.showTime, 'text', this.searchTime[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + this.searchTime[1])
+      this.$set(this.showTime, 'text', this.searchTime[0] + ' ' + this.$t('dashboard.dashboard.to') + ' ' + this.searchTime[1])
       this.$set(this.showTime, 'type', '')
       this.$set(this.showTime, 'value', '')
       /*
@@ -215,7 +215,7 @@ export default {
             if(tipElementList && tipElementList.length===3){
               console.log('-0-0-0',tipElementList);
               tipElementList[0].innerHTML = this.searchTime[0];
-              tipElementList[1].innerHTML = this.$t("dashboard.panel.to");
+              tipElementList[1].innerHTML = this.$t("dashboard.dashboard.to");
               tipElementList[2].innerHTML = this.searchTime[1];
               console.log('-0-0-2',tipElementList);
             } */
@@ -311,7 +311,7 @@ export default {
         setTimeout(() => {
           this.showTime = this.nowTimeType = {
             id: 12,
-            text: this.$t('dashboard.panel.noDate')
+            text: this.$t('dashboard.dashboard.noDate')
           }
         }, 500)
         this.$emit('change', this.searchTime)
@@ -319,7 +319,7 @@ export default {
         this.searchTime = []
         this.showTime = this.nowTimeType = {
           id: 4,
-          text: this.$t('dashboard.panel.beforeOneHour'),
+          text: this.$t('dashboard.dashboard.beforeOneHour'),
           type: 'hour',
           value: 1
         }

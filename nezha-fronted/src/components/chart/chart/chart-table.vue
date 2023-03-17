@@ -60,7 +60,7 @@
             <el-table-column :label="$t('overall.time')" min-width="100" prop="time"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
             <el-table-column :show-overflow-tooltip="true" prop="element"
-                             :label="$t('dashboard.panel.chartForm.element')" min-width="260"
+                             :label="$t('dashboard.dashboard.chartForm.element')" min-width="260"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
@@ -93,7 +93,7 @@
             <el-table-column :label="$t('overall.time')" min-width="100" prop="time"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
             <el-table-column :show-overflow-tooltip="true" prop="element"
-                             :label="$t('dashboard.panel.chartForm.element')" min-width="420"
+                             :label="$t('dashboard.dashboard.chartForm.element')" min-width="420"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
