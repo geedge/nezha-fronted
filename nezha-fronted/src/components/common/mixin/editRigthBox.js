@@ -11,7 +11,8 @@ export default {
       closeMessage: null,
       uuid: getUUID(),
       isStable: 'instability',
-      stableTime: null
+      stableTime: null,
+      oldData: {}
     }
   },
   mounted () {
