@@ -385,7 +385,7 @@ export default {
               const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
               this.iconArray.push({
                 ...iconInfo.data.list[0],
-                image: `monitor/project/topo/icon/${res.data.id}/0`
+                image: `/monitor/project/topo/icon/${res.data.id}/0`
               })
               if (group) {
                 group.children.push({
