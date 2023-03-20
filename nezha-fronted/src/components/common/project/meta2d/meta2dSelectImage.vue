@@ -22,7 +22,7 @@
                 </div>
               </template>
               <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons image-box-item">
-                <img :src="baseUrl + btn.image + '?token=' + token" v-if="btn.image" class="image-src" @click.stop="selectImageChange(btn)">
+                <img :src="btn.image" v-if="btn.image" class="image-src" @click.stop="selectImageChange(btn)">
 <!--                <div class="img-text text-ellipsis" :title="item.imageName">{{item.imageName}}</div>-->
                 <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click.stop="tooltipDelete(btn)"></i>
               </div>
