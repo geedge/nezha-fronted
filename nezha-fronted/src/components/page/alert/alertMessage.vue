@@ -289,7 +289,7 @@ export default {
             disabled: false
           }, {
             name: this.$t('overall.acknowledge'),
-            type: 'selectString',
+            type: 'select',
             label: 'ack',
             readonly: true,
             disabled: false
@@ -527,6 +527,25 @@ export default {
           val: ''
         },
         jsonKey: 'val'
+      },
+      ack: {
+        target: this.searchLabel,
+        isSearchInput: true,
+        propertyName: 'acknowledge',
+        type: 'string',
+        defaultJson: {
+          id: 4,
+          label: 'ack',
+          name: this.$t('overall.acknowledge'),
+          val: '',
+          valnum: '',
+          valString: '',
+          listStr: 'ack',
+          type: 'select',
+          readonly: true,
+          disabled: false
+        },
+        jsonKey: 'valnum'
       },
       dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'string', target2: this.selectValue, type2: 'array' },
       moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'string', target2: this.selectValue, type2: 'array' },
