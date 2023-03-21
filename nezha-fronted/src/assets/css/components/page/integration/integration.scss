@@ -326,6 +326,9 @@
         .nz-table-list{
           padding: 0;
           height: 100%;
+          .metric-remark{
+            word-break: keep-all;
+          }
           .gutter{
             position: unset;
           }

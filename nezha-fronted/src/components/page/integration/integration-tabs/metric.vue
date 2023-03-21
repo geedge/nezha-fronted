@@ -27,7 +27,8 @@
               <div class="col-resize-area"></div>
             </template>
             <template slot-scope="scope" :column="item">
-              <span v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+              <span v-if="item.prop == 'remark'" class="metric-remark">{{$t(scope.row[item.prop])}}</span>
+              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <template v-else>-</template>
             </template>
           </el-table-column>
