@@ -243,8 +243,9 @@ export default {
           delete params.param.min
           delete params.param.max
         }
-        if (!this.isShowSparkline(params.type)) {
+        if (!this.isStat(params.type)) {
           delete params.param.sparklineMode
+          delete params.param.comparison
         }
         if (!params.x && !params.y && this.from === 'endpointQuery') { // endpointQuery 新增 放在最后
           params.x = 0

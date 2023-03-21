@@ -14,19 +14,19 @@
         fontSize: item.fontSize,
       }"
     >
-      <div style="position: relative;z-index: 10;">
+      <div style="maxWidth:100%;position: relative;z-index: 10;">
         <!-- all -->
         <template v-if="chartInfo.param.text==='all'">
           <div v-if="item.mapping" :style="{color:item.mapping.color.text}">
-            <p>{{item.legend}}</p>
+            <p style="white-space: nowrap;">{{item.legend}}</p>
             <template v-if="item.mapping && item.mapping.icon">
               <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
             </template>
-            <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+            <span style="white-space: nowrap;">{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
           </div>
           <div v-else>
-            <p>{{item.legend}}</p>
-            <span>{{item.showValue}}</span>
+            <p style="white-space: nowrap;">{{item.legend}}</p>
+            <span style="white-space: nowrap;">{{item.showValue}}</span>
           </div>
         </template>
         <!-- legend -->
@@ -35,9 +35,9 @@
             <template v-if="item.mapping && item.mapping.icon">
               <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
             </template>
-            <span>{{item.legend}}</span>
+            <span style="white-space: nowrap;">{{item.legend}}</span>
           </div>
-          <div v-else>{{item.legend}}</div>
+          <div v-else style="white-space: nowrap;">{{item.legend}}</div>
         </template>
         <!-- value -->
         <template v-if="chartInfo.param.text==='value'|| !chartInfo.param.text">
@@ -45,12 +45,30 @@
             <template v-if="item.mapping && item.mapping.icon">
               <i :class="item.mapping.icon" :style="{color: item.mapping.color.icon,fontSize:'1em'}"></i>
             </template>
-            <span>{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
+            <span style="white-space: nowrap;">{{handleDisplay(item.mapping.display, { ...item.label, value: item.showValue })}}</span>
           </div>
-          <div v-else>{{item.showValue}}</div>
+          <div v-else style="white-space: nowrap;">{{item.showValue}}</div>
         </template>
         <!-- none -->
         <template v-if="chartInfo.param.text==='none'"></template>
+
+        <!-- comparison -->
+        <template v-if="comparisonShow(item)">
+          <div class="comparison-text" :style="{fontSize: parseInt(item.fontSize)/2>12?parseInt(item.fontSize)/2+'px':'12px'}">
+            <span v-if="chartInfo.param.comparison==='hour'">{{$t('dashboard.hourComparison')}}</span>
+            <span v-if="chartInfo.param.comparison==='day'">{{$t('dashboard.dayComparison')}}</span>
+            <span v-if="chartInfo.param.comparison==='week'">{{$t('dashboard.weekComparison')}}</span>
+            <span v-if="chartInfo.param.comparison==='month'">{{$t('dashboard.monthComparison')}}</span>
+            <span style="white-space: nowrap;">
+              <!-- number -->
+              <span :class="item.comparison.startsWith('+')?'comparison-increase':'comparison-decrease'">&nbsp;{{item.comparison}}</span>
+              <!-- icon -->
+              <i v-if="item.comparison.startsWith('+')" class="nz-icon nz-icon-shangsheng comparison-increase"></i>
+              <i v-else-if="item.comparison=='-'||item.comparison=='0%'" class="nz-icon nz-icon-xiajiang1"></i>
+              <i v-else class="nz-icon nz-icon-xiajiang1 comparison-decrease"></i>
+            </span>
+          </div>
+        </template>
       </div>
 
       <!-- sparkline -->
@@ -91,6 +109,7 @@ export default {
   data () {
     return {
       statData: [],
+      previousData: [],
       boxWidth: 0,
       boxHeight: 0,
       boxPadding: 2,
@@ -130,6 +149,7 @@ export default {
     },
     initStatData (chartInfo, originalDatas) {
       this.statData = []
+      this.previousData = []
       const decimals = this.chartInfo.param.decimals || 2
       return new Promise(resolve => {
         let colorIndex = 0
@@ -156,10 +176,16 @@ export default {
             stat.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(stat.value, null, -1, decimals)
             stat.mapping = this.selectMapping(stat.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
             stat.data = data.values
-            this.statData.push(stat)
+            // 判断是否是对比的数据
+            if (expressionIndex < chartInfo.elements.length) {
+              this.statData.push(stat)
+            } else {
+              this.previousData.push(stat)
+            }
             colorIndex++
           })
         })
+        // 计算最大值
         let maxValue = 0
         if (this.statData.length > 0) {
           maxValue = 0
@@ -172,6 +198,35 @@ export default {
           }
         }
         this.maxValue = maxValue
+
+        // 计算同比变化量
+        if (this.chartInfo.param.comparison && this.chartInfo.param.comparison !== 'none') {
+          this.statData.forEach(item => {
+            const previousName = 'Previous ' + item.name
+            const findItem = this.previousData.find((subItem) => previousName === subItem.name)
+            if (!findItem) {
+              item.comparison = '-'
+              return
+            }
+            const value = Number(item.value)
+            const previousValue = Number(findItem.value)
+            let comparison
+            if (isNaN(value) || isNaN(previousValue)) {
+              comparison = '-'
+            } else if (value == 0 && previousValue == 0) {
+              comparison = '0%'
+            } else if (value == 0 || previousValue == 0) {
+              comparison = '-'
+            } else {
+              comparison = parseFloat(((value - previousValue) / previousValue * 100).toFixed(2))
+              if (comparison > 0) {
+                comparison = '+' + comparison
+              }
+              comparison += '%'
+            }
+            item.comparison = comparison
+          })
+        }
 
         this.$emit('chartIsNoData', this.isNoData)
         resolve()
@@ -431,6 +486,25 @@ export default {
         }
       }
       return len
+    },
+    comparisonShow (item) {
+      const minWidth = 145
+      let minHeight
+      switch (this.chartInfo.param.text) {
+        case 'all':
+          minHeight = 64
+          break
+        case 'legend':
+          minHeight = 40
+          break
+        case 'value':
+          minHeight = 40
+          break
+        case 'none':
+          minHeight = 24
+          break
+      }
+      return this.chartInfo.param.comparison && this.chartInfo.param.comparison !== 'none' && item.height > minHeight && item.width > minWidth
     }
   },
   mounted () {

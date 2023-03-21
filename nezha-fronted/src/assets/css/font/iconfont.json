@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "20226387",
+      "name": "下降",
+      "font_class": "xiajiang1",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "20226386",
+      "name": "上升",
+      "font_class": "shangsheng",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
       "icon_id": "8990443",
       "name": "竖向分布",
       "font_class": "shuxiangfenbu",

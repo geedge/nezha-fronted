@@ -410,7 +410,7 @@
             show-word-limit v-model="chartConfig.param.decimals"/>
         </el-form-item>
         <!-- Sparkline mode -->
-        <el-form-item :label="$t('dashboard.panel.chartForm.sparklineMode')" class="form-item--half-width" v-if="isShowSparkline(chartConfig.type)">
+        <el-form-item :label="$t('dashboard.chartForm.sparklineMode')" class="form-item--half-width" v-if="isStat(chartConfig.type)">
           <el-select
             v-model="chartConfig.param.sparklineMode"
             placeholder=""
@@ -420,6 +420,26 @@
           >
             <el-option
               v-for="item in sparklineTypeList"
+              :key="item.value"
+              :label="$t(item.name)"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+
+      <div class="form-items--half-width-group">
+        <!-- comparison -->
+        <el-form-item :label="$t('dashboard.chartForm.comparison')" class="form-item--half-width" v-if="isStat(chartConfig.type)">
+          <el-select
+            v-model="chartConfig.param.comparison"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="change"
+          >
+            <el-option
+              v-for="item in comparisonTypeList"
               :key="item.value"
               :label="$t(item.name)"
               :value="item.id"
@@ -1216,8 +1236,9 @@ export default {
         case 'bubble':
         case 'rank':
         case 'funnel':
-          if (this.oldType === 'stat') {
-            this.chartConfig.param.sparklineMode = 'line'
+          if (type === 'stat') {
+            if (!this.chartConfig.param.sparklineMode) { this.chartConfig.param.sparklineMode = 'line' }
+            if (!this.chartConfig.param.comparison) { this.chartConfig.param.comparison = 'none' }
           }
           if (this.oldType === 'stat' || this.oldType === 'gauge' || this.oldType === 'sankey' || this.oldType === 'hexagon' || this.oldType === 'bubble' || this.oldType === 'rank' || this.oldType === 'funnel') {
             break
@@ -1243,7 +1264,8 @@ export default {
               varValue: '',
               result: 'show'
             },
-            sparklineMode: 'line'
+            sparklineMode: 'line',
+            comparison: 'none'
           }
           break
         case 'bar':

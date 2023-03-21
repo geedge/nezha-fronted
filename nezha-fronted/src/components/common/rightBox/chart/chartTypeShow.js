@@ -232,7 +232,7 @@ export default {
         default: return false
       }
     },
-    isShowSparkline (type) {
+    isStat (type) {
       switch (type) {
         case 'stat':
           return true

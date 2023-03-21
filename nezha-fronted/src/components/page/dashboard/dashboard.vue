@@ -486,7 +486,6 @@ export default {
       if (!this.hasButton('dashboard_view')) {
         return
       }
-      console.log(this.rightBox.panel.show)
       this.rightBox.panel.show = true
       // 关闭selectDashboard弹框
       this.$refs.selectDashboard && this.$refs.selectDashboard.esc()
@@ -602,8 +601,9 @@ export default {
             if (!this.chart.groupId || this.chart.groupId == -1) {
               this.chart.groupId = ''
             }
-            if (this.chart.type === 'stat' && !this.chart.param.sparklineMode) {
-              this.chart.param.sparklineMode = 'none'
+            if (this.chart.type === 'stat') {
+              if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }
+              if (!this.chart.param.comparison) { this.chart.param.comparison = 'none' }
             }
             if (this.chart.type == 'table') {
               const arr = this.chart.param.indexs ? this.chart.param.indexs.split(',') : []

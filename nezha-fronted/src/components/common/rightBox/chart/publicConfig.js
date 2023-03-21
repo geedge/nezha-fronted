@@ -391,6 +391,28 @@ export default {
           id: 'none',
           name: this.$t('project.topology.none')
         }
+      ],
+      comparisonTypeList: [
+        {
+          id: 'none',
+          name: this.$t('project.topology.none')
+        },
+        {
+          id: 'hour',
+          name: this.$t('dashboard.chartForm.comparison.hour')
+        },
+        {
+          id: 'day',
+          name: this.$t('dashboard.chartForm.comparison.day')
+        },
+        {
+          id: 'week',
+          name: this.$t('dashboard.chartForm.comparison.week')
+        },
+        {
+          id: 'month',
+          name: this.$t('dashboard.chartForm.comparison.month')
+        }
       ]
     }
   },

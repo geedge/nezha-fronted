@@ -65,7 +65,7 @@
 import chartHeader from '@/components/chart/chartHeader'
 import ChartScreenHeader from '@/components/chart/ChartScreenHeader'
 import chart from '@/components/chart/chart'
-import { isChartPie, isTimeSeries, getGroupHeight, isGroup } from './chart/tools'
+import { isStat, isTimeSeries, getGroupHeight, isGroup } from './chart/tools'
 import { chartType, fromRoute } from '@/components/common/js/constants'
 import bus from '@/libs/bus'
 import axios from 'axios'
@@ -269,9 +269,6 @@ export default {
                   query += '&direction=forward'
                 }
               }
-              // if (isChartPie(this.chartInfo.type)) {
-              //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
-              // }
               query += `&query=${encodeURIComponent(this.variablesReplace(element.expression))}`
               return this.$get(query)
             })
@@ -292,14 +289,58 @@ export default {
                 if (this.chartInfo.datasource === 'logs') {
                   query += '&format=1'
                 }
-                // if (isChartPie(this.chartInfo.type)) {
-                //   query += `&statistics=${this.chartInfo.param.statistics || 'last'}`
-                // }
                 query += `&query=${encodeURIComponent(element.expression)}`
                 return this.$get(query)
               })
               requests = requests.concat(multipleRequests)
             }
+
+            // stat图表开启对比
+            if (isStat(this.chartInfo.type)) {
+              let comparisonSt // 比较开始时间
+              let comparisonEt // 比较结束时间
+              const oneDay = 86400
+              switch (this.chartInfo.param.comparison) {
+                case 'none': {
+                  break
+                }
+                case 'hour': { // 比较一小时前
+                  comparisonSt = startTime - 3600
+                  comparisonEt = endTime - 3600
+                  break
+                }
+                case 'day': { // 比较一天前
+                  comparisonSt = startTime - oneDay
+                  comparisonEt = endTime - oneDay
+                  break
+                }
+                case 'week': { // 比较一星期前
+                  comparisonSt = startTime - (oneDay * 7)
+                  comparisonEt = endTime - (oneDay * 7)
+                  break
+                }
+                case 'month': { // 比较一个月前
+                  comparisonSt = startTime - (oneDay * 30)
+                  comparisonEt = endTime - (oneDay * 30)
+                  break
+                }
+              }
+              if (comparisonSt && comparisonEt) {
+                const comparisonRequests = elements.map((element) => {
+                  let query = `${urlPre}/api/v1/query_range?start=${comparisonSt}&end=${comparisonEt}&step=${step}`
+                  if (element.filter) {
+                    query += `&filter=${element.filter}`
+                  }
+                  if (this.chartInfo.datasource === 'logs') {
+                    query += '&format=1'
+                  }
+                  query += `&query=${encodeURIComponent(element.expression)}`
+                  return this.$get(query)
+                })
+                requests = requests.concat(comparisonRequests)
+              }
+            }
+
             const chartData = []
             axios.all(requests).then((res) => {
               res.forEach((r, rIndex) => {
@@ -314,7 +355,7 @@ export default {
                     chartData.push({ error: r.msg || r.error || r })
                     this.isError = true
                   }
-                } else {
+                } else if (isTimeSeries(this.chartInfo.type)) {
                   if (r.status === 'success') {
                     r.data.result.forEach(item => {
                       item.elements = elements[rIndex - elements.length]
@@ -322,6 +363,17 @@ export default {
                       item.values.forEach(values => {
                         values[0] = values[0] + this.minusTime / 1000
                       })
+                    })
+                    chartData.push(r.data.result)
+                  } else {
+                    chartData.push({ error: r.msg || r.error || r })
+                    this.isError = true
+                  }
+                } else if (isStat(this.chartInfo.type)) { // stat图表开启对比
+                  if (r.status === 'success') {
+                    r.data.result.forEach(item => {
+                      item.elements = elements[rIndex - elements.length]
+                      this.allDataLength++
                     })
                     chartData.push(r.data.result)
                   } else {

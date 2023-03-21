@@ -93,9 +93,9 @@ export default new Vue({
       const thirtyDay = 2592000000
       if (numInterval < oneDay) { // 小于1天，step为15s
         step = '15s'
-      } else if (numInterval < sevenDay) { // 小于7天，step为15s
+      } else if (numInterval < sevenDay) { // 小于7天，step为5m
         step = '5m'
-      } else if (numInterval < thirtyDay) { // 小于30天，step为15s
+      } else if (numInterval < thirtyDay) { // 小于30天，step为10m
         step = '10m'
       } else {
         step = '30m'
