@@ -208,9 +208,6 @@ export default {
       if (pen.data && pen.data.params) {
         return
       }
-      if (name) {
-        pen.text = name
-      }
       pen.data = {
         params: {
           animateColor: pen.animateColor || '#FA901CFF',

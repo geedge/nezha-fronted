@@ -15,7 +15,7 @@
         <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 100px">
           <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
-        <button id="asset-filter" :class="[dataListLayout.indexOf('clickSearch') > -1?'is-focus':'' ]" class="top-tool-btn margin-r-10" @click.stop="showClickSearch" :title="$t('dashboard.panel.chartForm.filter')">
+        <button id="asset-filter" :class="[dataListLayout.indexOf('clickSearch') > -1?'is-focus':'' ]" class="top-tool-btn margin-r-10" @click.stop="showClickSearch" :title="$t('dashboard.dashboard.chartForm.filter')">
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
         <pick-time v-model="searchTime" sign="message" :default-pick="10" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
@@ -289,7 +289,7 @@ export default {
             disabled: false
           }, {
             name: this.$t('overall.acknowledge'),
-            type: 'selectString',
+            type: 'select',
             label: 'ack',
             readonly: true,
             disabled: false
@@ -528,6 +528,25 @@ export default {
         },
         jsonKey: 'val'
       },
+      ack: {
+        target: this.searchLabel,
+        isSearchInput: true,
+        propertyName: 'acknowledge',
+        type: 'string',
+        defaultJson: {
+          id: 4,
+          label: 'ack',
+          name: this.$t('overall.acknowledge'),
+          val: '',
+          valnum: '',
+          valString: '',
+          listStr: 'ack',
+          type: 'select',
+          readonly: true,
+          disabled: false
+        },
+        jsonKey: 'valnum'
+      },
       dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'string', target2: this.selectValue, type2: 'array' },
       moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'string', target2: this.selectValue, type2: 'array' },
       projectIds: { target: this.searchCheckBox, propertyName: 'projectIds', type: 'string', target2: this.selectValue, type2: 'array' },
@@ -681,7 +700,7 @@ export default {
             time: this.searchTimeDialog,
             nowTimeType: {
               id: 4,
-              text: this.$t('dashboard.panel.lastOneHour'),
+              text: this.$t('dashboard.dashboard.lastOneHour'),
               type: 'hour',
               value: 1
             }

@@ -213,14 +213,27 @@ export default {
           this.licenseMark = res.data.license
           this.licenseList = res.data.license.hasp
           this.licenseList.production_date = bus.timeFormate(bus.computeTimezone(this.licenseList.production_date * 1000))
-          this.licenseList.feature.map(e => {
+          let expData = {}
+          this.licenseList.feature.forEach(e => {
             if (e.id === '20001') {
-              this.expData = e
-              this.expData.license.exp_date = bus.timeFormate(bus.computeTimezone(this.expData.license.exp_date * 1000))
-              this.stateItem = bus.timeFormate(bus.computeTimezone(e.license.time_start * 1000))
-              this.endItem = bus.timeFormate(bus.computeTimezone(e.license.time_start * 1000)) + bus.timeFormate(bus.computeTimezone(e.license.end_time * 1000))
+              if (!expData.id) {
+                expData = e
+              }
+              if (expData.license) {
+                if (expData.license.license_type != 'perpetual') {
+                  expData.license.license_type = e.license.license_type
+                }
+                if (expData.license.exp_date < e.license.exp_date) {
+                  expData.license.exp_date = e.license.exp_date
+                }
+                if (e.license.license_type == 'trial' && (e.license.time_start + e.license.end_time > expData.license.exp_date)) {
+                  expData.license.exp_date = e.license.time_start + e.license.end_time
+                }
+              }
             }
           })
+          expData.license.exp_date = bus.timeFormate(bus.computeTimezone(expData.license.exp_date * 1000))
+          this.expData = expData
         } else {
           this.$message.error(res.msg)
         }

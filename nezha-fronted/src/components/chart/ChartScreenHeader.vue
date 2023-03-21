@@ -20,7 +20,7 @@
        :close-delay=10
        trigger="hover"
        popper-class="chart-warring-popper">
-        <div class="moreTitle" @click="loadMore">{{$t('dashboard.panel.moreTitle')}}{{$t('dashboard.panel.showAll')}}{{allDataLength}}</div>
+        <div class="moreTitle" @click="loadMore">{{$t('dashboard.dashboard.moreTitle')}}{{$t('dashboard.dashboard.showAll')}}{{allDataLength}}</div>
         <span slot="reference" class="panel-info-corner panel-info-corner--error"  @click="loadMore">
           <i class="nz-icon nz-icon-warning fa"></i>
           <span class="panel-info-corner-inner"></span>

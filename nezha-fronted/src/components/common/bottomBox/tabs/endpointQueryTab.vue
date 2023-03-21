@@ -80,7 +80,7 @@
         :min-width="1000"
         column-key="element"
         :show-overflow-tooltip="true"
-        :label="$t('dashboard.panel.chartForm.element')">
+        :label="$t('dashboard.dashboard.chartForm.element')">
         <template v-slot="scope">
           <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
             <div>
@@ -407,7 +407,7 @@ export default {
       this.$refs.pickTime.$refs.multipleTime.searchTime = []
       this.$refs.pickTime.$refs.multipleTime.showTime = {
         id: 12,
-        text: this.$t('dashboard.panel.noDate')
+        text: this.$t('dashboard.dashboard.noDate')
       }
       this.$refs.pickTime.$refs.multipleTime.showDropdown = false
       this.$nextTick(() => {
@@ -419,7 +419,7 @@ export default {
       this.$refs.pickTime.$refs.multipleTime.searchTime = []
       this.$refs.pickTime.$refs.multipleTime.showTime = {
         id: 12,
-        text: this.$t('dashboard.panel.noDate')
+        text: this.$t('dashboard.dashboard.noDate')
       }
       this.$refs.pickTime.$refs.multipleTime.showDropdown = false
       this.graphShow = false

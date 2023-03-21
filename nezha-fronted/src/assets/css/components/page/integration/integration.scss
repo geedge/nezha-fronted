@@ -143,6 +143,7 @@
           letter-spacing: 0;
           line-height: 16px;
           font-weight: 400;
+          word-break: keep-all;
         }
       }
     }
@@ -258,6 +259,15 @@
         word-break: break-word;
         white-space: pre-wrap;
       }
+      blockquote{
+        font-size: 13px;
+        font-weight: 600;
+        padding: 3px 15px;
+        margin-bottom: -1px;
+        color: $--color-text-regular;
+        border: 1px solid $--border-color-light;
+        background: $--alert-rule-background-color;
+      }
     }
 
     .integration-dashboard{
@@ -316,6 +326,9 @@
         .nz-table-list{
           padding: 0;
           height: 100%;
+          .metric-remark{
+            word-break: keep-all;
+          }
           .gutter{
             position: unset;
           }

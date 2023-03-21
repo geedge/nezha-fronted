@@ -634,7 +634,7 @@ export default {
               if (this.panelData.length > 0) {
                 this.filter.dashboardId = this.panelData[0].id
                 this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
-                this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
+                this.variables = this.$loadsh.cloneDeep(this.$loadsh.get(this, 'showPanel.param.variables', []) || [])
                 this.getData(this.filter)
               }
             }
@@ -652,7 +652,7 @@ export default {
                 // this.showPanel.id = this.filter.dashboardId = this.panelData[0].id
                 this.filter.dashboardId = this.panelData[0].id
                 this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
-                this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
+                this.variables = this.$loadsh.cloneDeep(this.$loadsh.get(this, 'showPanel.param.variables', []) || [])
                 this.getData(this.filter)
               } else {
                 this.chartListLoading = false

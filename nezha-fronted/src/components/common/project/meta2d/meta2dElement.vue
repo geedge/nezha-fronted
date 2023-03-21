@@ -87,7 +87,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                <div>{{ $t('dashboard.panel.chartForm.width') }}</div>
+                <div>{{ $t('dashboard.dashboard.chartForm.width') }}</div>
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -106,7 +106,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                <div>{{ $t('dashboard.panel.chartForm.high') }}</div>
+                <div>{{ $t('dashboard.dashboard.chartForm.high') }}</div>
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -198,7 +198,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                {{ $t('dashboard.panel.chartForm.width') }}
+                {{ $t('dashboard.dashboard.chartForm.width') }}
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -394,14 +394,14 @@
                     <span class="panel-dropdown-label-txt">{{ $t('project.topology.text') }}</span>
                   </el-option>
                   <el-option :label="'Legend'" :value="'legend'">
-                    <span class="panel-dropdown-label-txt">{{ $t('dashboard.panel.chartForm.legend') }}</span>
+                    <span class="panel-dropdown-label-txt">{{ $t('dashboard.dashboard.chartForm.legend') }}</span>
                   </el-option>
                 </el-select>
               </div>
             </div>
             <div class="form-row-item  form-row-item-full" v-if="pen.data.source !== 'legend'">
               <div class="form-row-key">
-                {{$t('dashboard.panel.chartForm.content')}}
+                {{$t('dashboard.dashboard.chartForm.content')}}
               </div>
               <div class="form-row-value">
                 <el-input  maxlength="256" show-word-limit v-model="pen.text" size="small" :rows="4" type="textarea" @change="change('text')"/>
@@ -411,7 +411,7 @@
               <div class="form-row-value">
                 <div class="form-row-item form-row-item-full">
                   <div class="form-row-key">
-                    {{ $t('dashboard.panel.chartForm.legend') }}
+                    {{ $t('dashboard.dashboard.chartForm.legend') }}
                   </div>
                   <div class="form-row-value">
                     <div style="display: inline-block;width: calc(20% - 3px)">
@@ -616,7 +616,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                {{ $t('dashboard.panel.chartForm.width') }}
+                {{ $t('dashboard.dashboard.chartForm.width') }}
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -746,7 +746,7 @@
 
       <!--         valueMapping -->
       <div class="form-row-title">
-        {{$t('dashboard.panel.chartForm.valueMapping')}}
+        {{$t('dashboard.dashboard.chartForm.valueMapping')}}
         <span>
               <el-switch
                 v-model="pen.data.enable.valueMapping"
@@ -762,7 +762,7 @@
           <div  class="form-row-content">
             <div class="form-row-item form-row-item-full">
               <div class="form-row-key">
-                {{$t('dashboard.panel.chartForm.legend')}}
+                {{$t('dashboard.dashboard.chartForm.legend')}}
               </div>
               <div class="form-row-value">
                 <div style="display: inline-block;width: calc(20% - 3px)">
@@ -833,7 +833,7 @@
                     <span @click="removeMapping(index)" style="margin-right: 5px" :title="$t('overall.delete')">
                       <i  class="nz-icon nz-icon-minus"></i>
                     </span>
-                    <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.panel.chartForm.sort')">
+                    <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.dashboard.chartForm.sort')">
                       <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
                     </span>
                   </span>
@@ -1003,7 +1003,7 @@
         </div>
         <div class="form-row-item form-row-item-full">
           <div class="form-row-key">
-            {{$t('dashboard.panel.chartForm.content')}}
+            {{$t('dashboard.dashboard.chartForm.content')}}
           </div>
           <div class="form-row-value">
             <el-input  maxlength="256" show-word-limit v-model="pen.data.tooltip.content" size="small" :rows="4" type="textarea"/>
@@ -1111,7 +1111,7 @@ export default {
         },
         {
           id: 'right',
-          name: this.$t('dashboard.panel.chartForm.alignList.right')
+          name: this.$t('dashboard.dashboard.chartForm.alignList.right')
         }
       ],
       textBaselineOptions: [
@@ -1185,10 +1185,10 @@ export default {
           label: this.$t('overall.value'),
           value: 'value'
         }, {
-          label: this.$t('dashboard.panel.chartForm.valMapping.range'),
+          label: this.$t('dashboard.dashboard.chartForm.valMapping.range'),
           value: 'range'
         }, {
-          label: this.$t('dashboard.panel.chartForm.valMapping.regx'),
+          label: this.$t('dashboard.dashboard.chartForm.valMapping.regx'),
           value: 'regx'
         }
       ]

@@ -1,7 +1,7 @@
 <template>
   <div class="chart-room" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart" ref="chartRoom" :style="{overflow: chartType == 'map' ? 'hidden' : ''}" :id="chartType == 'map' ? 'map' : ''">
     <loading  ref="loading"></loading>
-    <div class="showMore" v-if="legendAll.length !== legend.length"><i class="nz-icon nz-icon-jinggao"></i>{{$t("dashboard.panel.moreTitle")}} <span class="moreChart" @click="showMore">{{$t("dashboard.panel.showAll")+legendAll.length}}</span></div>
+    <div class="showMore" v-if="legendAll.length !== legend.length"><i class="nz-icon nz-icon-jinggao"></i>{{$t("dashboard.dashboard.moreTitle")}} <span class="moreChart" @click="showMore">{{$t("dashboard.dashboard.showAll")+legendAll.length}}</span></div>
     <div class="chart-header">{{chartTitle}}</div>
 
     <div class="chart-body" ref="chartBody" :id="chartId" ></div>

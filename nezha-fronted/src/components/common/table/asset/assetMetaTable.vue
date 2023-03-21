@@ -145,7 +145,7 @@ export default {
           width: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('dashboard.panel.chartForm.group'),
+          label: this.$t('dashboard.dashboard.chartForm.group'),
           prop: 'group',
           show: true,
           width: 200,

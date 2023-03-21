@@ -291,7 +291,7 @@ const en = {
       createPanelTitleSec: 'New panel', // "新增面板"
       editPanelTitle: 'Edit panel', // "面板"
       singleStatErrorTip: 'Only queries that return single series/table is supported',
-      panelForm: {
+      dashboardForm: {
         panelName: 'Panel name', // "面板名称"
         dashboardId: 'ID' // ID
       },

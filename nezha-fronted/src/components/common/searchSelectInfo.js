@@ -250,43 +250,43 @@ export default {
         chartType: [
           {
             value: 'line',
-            label: i18n.t('dashboard.panel.chartForm.typeVal.line.label')
+            label: i18n.t('dashboard.dashboard.chartForm.typeVal.line.label')
           },
           {
             value: 'stackArea',
-            label: i18n.t('dashboard.panel.chartForm.typeVal.stackArea.label')
+            label: i18n.t('dashboard.dashboard.chartForm.typeVal.stackArea.label')
           },
           {
             value: 'bar',
-            label: i18n.t('dashboard.panel.chartForm.typeVal.bar.label')
+            label: i18n.t('dashboard.dashboard.chartForm.typeVal.bar.label')
           },
           {
             value: 'singleStat',
-            label: i18n.t('dashboard.panel.chartForm.typeVal.singleStat.label')
+            label: i18n.t('dashboard.dashboard.chartForm.typeVal.singleStat.label')
           },
           {
             value: 'pie',
-            label: i18n.t('dashboard.panel.chartForm.typeVal.pie.label')
+            label: i18n.t('dashboard.dashboard.chartForm.typeVal.pie.label')
           },
           {
             value: 'table',
-            label: i18n.t('dashboard.panel.chartForm.typeVal.table.label')
+            label: i18n.t('dashboard.dashboard.chartForm.typeVal.table.label')
           },
           {
             value: 'alertList',
-            label: i18n.t('dashboard.panel.chartForm.typeVal.alertList.label')
+            label: i18n.t('dashboard.dashboard.chartForm.typeVal.alertList.label')
           },
           {
             value: 'text',
-            label: i18n.t('dashboard.panel.chartForm.typeVal.text.label')
+            label: i18n.t('dashboard.dashboard.chartForm.typeVal.text.label')
           },
           {
             value: 'url',
-            label: i18n.t('dashboard.panel.chartForm.url')
+            label: i18n.t('dashboard.dashboard.chartForm.url')
           },
           {
             value: 'group',
-            label: i18n.t('dashboard.panel.chartForm.group')
+            label: i18n.t('dashboard.dashboard.chartForm.group')
           }
         ],
         terminalStatus: [
@@ -367,7 +367,7 @@ export default {
         priority: [
           {
             value: 1,
-            label: i18n.t('dashboard.panel.chartForm.high')
+            label: i18n.t('dashboard.dashboard.chartForm.high')
           }, {
             value: 2,
             label: i18n.t('issue.middle')

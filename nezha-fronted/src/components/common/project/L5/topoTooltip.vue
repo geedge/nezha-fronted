@@ -222,7 +222,7 @@ export default {
                           singleStatRlt = bus.getSingleStatRlt(statistics, response.data.result[0].values)
                         }
                       } else if (response.data.result.length > 1) {
-                        singleStatRlt = this.$t('dashboard.panel.singleStatErrorTip')
+                        singleStatRlt = this.$t('dashboard.dashboard.singleStatErrorTip')
                       }
                     } else {
                       response.data.result.forEach((queryItem, resIndex) => {

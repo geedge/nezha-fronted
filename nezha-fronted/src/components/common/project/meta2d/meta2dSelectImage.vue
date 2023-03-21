@@ -132,10 +132,14 @@ export default {
         unit: ''
       },
       unit: '',
-      imageName: ''
+      imageName: '',
+      baseUrl: '',
+      token: ''
     }
   },
   mounted () {
+    this.baseUrl = localStorage.getItem('nz-baseURL')
+    this.token = localStorage.getItem('nz-token')
     this.imageInit()
   },
   methods: {
@@ -143,55 +147,91 @@ export default {
       this.$get('monitor/project/topo/icon').then(res => {
         this.imgageLoading = true
         this.tools = []
-        let imgArr = []
-        let promiseArr = []
-        res.data.list.forEach((item, index) => {
+        // res.data.list.forEach((item, index) => {
+        //   item.imageName = item.name
+        //   delete item.name
+        //   promiseArr.push(topologyImg['img' + item.id] || dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
+        //   imgArr.push({ ...item })
+        // })
+        this.iconArray = [...res.data.list]
+        this.iconArray.forEach((item, index) => {
           item.imageName = item.name
-          delete item.name
-          promiseArr.push(topologyImg['img' + item.id] || dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
-          imgArr.push({ ...item })
-        })
-        Promise.all(promiseArr).then((res2, header) => {
-          this.iconArray = [...res.data.list]
-          this.iconArray.forEach((item, index) => {
-            item.image = res2[index].data
-            if (this.imgId == item.id) {
-              this.unit = item.unit
-              this.imageName = item.imageName
-            } else if (this.selectImage === item.image) {
-              this.unit = item.unit
-              this.imageName = item.imageName
-            }
-            const group = this.tools.find(tool => tool.group === item.unit)
-            if (group) {
-              group.children.push({
+          item.image = `/monitor/project/topo/icon/${item.id}/0`
+          if (this.imgId == item.id) {
+            this.unit = item.unit
+            this.imageName = item.imageName
+          } else if (this.selectImage === item.image) {
+            this.unit = item.unit
+            this.imageName = item.imageName
+          }
+          const group = this.tools.find(tool => tool.group === item.unit)
+          if (group) {
+            group.children.push({
+              text: item.imageName,
+              imageName: item.imageName,
+              image: item.image,
+              imageId: item.id,
+              id: item.id,
+              unit: item.unit
+            })
+          } else {
+            this.tools.push({
+              group: item.unit,
+              children: [{
                 text: item.imageName,
                 imageName: item.imageName,
-                image: res2[index].data,
+                image: item.image,
                 imageId: item.id,
                 id: item.id,
-                unit: item.unit,
-              })
-            } else {
-              this.tools.push({
-                group: item.unit,
-                children: [{
-                  text: item.imageName,
-                  imageName: item.imageName,
-                  image: res2[index].data,
-                  imageId: item.id,
-                  id: item.id,
-                  unit: item.unit,
-                }]
-              })
-            }
-          })
-
-          this.imgInit = true
-          this.imgageLoading = false
-          imgArr = null
-          promiseArr = null
+                unit: item.unit
+              }]
+            })
+          }
         })
+
+        this.imgInit = true
+        this.imgageLoading = false
+        // Promise.all(promiseArr).then((res2, header) => {
+        //   this.iconArray = [...res.data.list]
+        //   this.iconArray.forEach((item, index) => {
+        //     item.image = res2[index].data
+        //     if (this.imgId == item.id) {
+        //       this.unit = item.unit
+        //       this.imageName = item.imageName
+        //     } else if (this.selectImage === item.image) {
+        //       this.unit = item.unit
+        //       this.imageName = item.imageName
+        //     }
+        //     const group = this.tools.find(tool => tool.group === item.unit)
+        //     if (group) {
+        //       group.children.push({
+        //         text: item.imageName,
+        //         imageName: item.imageName,
+        //         image: res2[index].data,
+        //         imageId: item.id,
+        //         id: item.id,
+        //         unit: item.unit,
+        //       })
+        //     } else {
+        //       this.tools.push({
+        //         group: item.unit,
+        //         children: [{
+        //           text: item.imageName,
+        //           imageName: item.imageName,
+        //           image: res2[index].data,
+        //           imageId: item.id,
+        //           id: item.id,
+        //           unit: item.unit,
+        //         }]
+        //       })
+        //     }
+        //   })
+        //
+        //   this.imgInit = true
+        //   this.imgageLoading = false
+        //   imgArr = null
+        //   promiseArr = null
+        // })
       })
     },
     changeSelectBoxShow () {
@@ -345,16 +385,16 @@ export default {
               const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
               this.iconArray.push({
                 ...iconInfo.data.list[0],
-                image: data.data
+                image: `/monitor/project/topo/icon/${res.data.id}/0`
               })
               if (group) {
                 group.children.push({
                   text: res.data.imageName,
                   imageName: res.data.imageName,
-                  image: data.data,
+                  image: `/monitor/project/topo/icon/${res.data.id}/0`,
                   imageId: res.data.id,
                   id: res.data.id,
-                  unit: this.uploadPic.unit,
+                  unit: this.uploadPic.unit
                 })
               } else {
                 this.tools.push({
@@ -362,7 +402,7 @@ export default {
                   children: [{
                     text: res.data.imageName,
                     imageName: res.data.imageName,
-                    image: data.data,
+                    image: `/monitor/project/topo/icon/${res.data.id}/0`,
                     imageId: res.data.id,
                     id: res.data.id,
                     unit: this.uploadPic.unit
@@ -375,7 +415,7 @@ export default {
           this.$message.error(res.msg)
         }
       })
-    },
+    }
   }
 }
 </script>

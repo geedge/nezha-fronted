@@ -181,7 +181,7 @@ export default {
           minWidth: 150
         },
         {
-          label: this.$t('dashboard.panel.chartForm.typeVal.server'),
+          label: this.$t('dashboard.dashboard.chartForm.typeVal.server'),
           prop: 'ts',
           show: false,
           minWidth: 150

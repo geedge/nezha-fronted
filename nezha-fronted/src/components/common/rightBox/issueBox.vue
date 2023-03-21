@@ -259,7 +259,7 @@ export default {
       priorityData: [
         {
           id: 1,
-          value: this.$t('dashboard.panel.chartForm.high')
+          value: this.$t('dashboard.dashboard.chartForm.high')
         }, {
           id: 2,
           value: this.$t('issue.middle')
