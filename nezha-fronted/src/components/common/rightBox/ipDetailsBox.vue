@@ -25,7 +25,7 @@
             <el-select
               v-model="editipDetails.state"
               class="right-box__select"
-              popper-class="right-box-select-top prevent-clickoutside"
+              popper-class="right-box-select-top prevent-clickoutside right-box-select-width"
               size="small"
               :placeholder="$t('el.select.placeholder')"
               value-key="id">

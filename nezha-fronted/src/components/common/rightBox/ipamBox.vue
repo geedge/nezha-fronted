@@ -50,7 +50,7 @@
           </div>
           <el-form-item :label="$t('overall.dc')" prop="dc.name">
             <div class="right-box-form-content">
-              <el-select id="prom-box-input-dc" v-model="editipam.dc" placeholder="" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
+              <el-select id="prom-box-input-dc" v-model="editipam.dc" placeholder="" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside right-box-select-width" size="small" value-key="id">
                 <el-option v-for="item in dcData" :id="'prom-edit-dc-op-'+item.id" :key="item.id" :label="item.name" :value="item">
                   <span class="config-dropdown-label-txt">{{item.name}}</span>
                 </el-option>
