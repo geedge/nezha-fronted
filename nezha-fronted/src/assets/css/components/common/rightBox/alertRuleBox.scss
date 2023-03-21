@@ -80,6 +80,15 @@
   .ͼ2 .cm-content{
     caret-color:$--color-text-regular;
   }
+  .alert-box-threshold {
+      .hide-icon {
+        .el-input__inner{
+          text-align: center;
+          padding: 0;
+          border:1px solid $--border-color-light;
+        }
+      }
+  }
 }
 .severity-item{
   color: $--color-text-secondary;

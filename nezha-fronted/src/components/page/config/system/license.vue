@@ -220,7 +220,7 @@ export default {
                 expData = e
               }
               if (expData.license) {
-                if (expData.license.license_type != 'expiration') {
+                if (expData.license.license_type != 'perpetual') {
                   expData.license.license_type = e.license.license_type
                 }
                 if (expData.license.exp_date < e.license.exp_date) {
