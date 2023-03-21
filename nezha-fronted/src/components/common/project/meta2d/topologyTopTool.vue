@@ -9,13 +9,22 @@
         <i class="nz-icon nz-icon-juxing" />
       </div>
     </div>
-    <div id="tools-left-draw"
-         class="top-tool-item"
-         :class="drawLineFlag ? 'is-active-meta2d' : ''"
-         @click="changeState('drawLineFlag')"
-         :title="$t('project.topology.addLine')">
-      <i  class="nz-icon nz-icon-xiantiao" />
+    <div id="tools-left-addline"
+         class="top-tool-item top-tool-item-delete"
+         :title="$t('project.topology.addNode')"
+         @click="addLine">
+      <div
+      >
+        <i class="nz-icon nz-icon-xiantiao" />
+      </div>
     </div>
+<!--    <div id="tools-left-draw"-->
+<!--         class="top-tool-item"-->
+<!--         :class="drawLineFlag ? 'is-active-meta2d' : ''"-->
+<!--         @click="changeState('drawLineFlag')"-->
+<!--         :title="$t('project.topology.addLine')">-->
+<!--      <i  class="nz-icon nz-icon-xiantiao" />-->
+<!--    </div>-->
     <div id="undo"
          class="top-tool-item"
          :class="undoFlag ? '' : 'is-active-meta2d' "
@@ -85,8 +94,8 @@
 <script>
 import { getTopology } from '../../js/common'
 import bus from '@/libs/bus'
-import { deepClone } from '@meta2d/core'
-
+import { deepClone, s8 } from '@meta2d/core'
+import lineData from './js/defaultPenLineData'
 export default {
   name: 'topologyTopTool',
   data () {
@@ -193,6 +202,30 @@ export default {
         height: 100,
         x: 100 - offestX,
         y: 100 - offestY
+      }
+      getTopology(this.meta2dId).addPen(pen , true)
+    },
+    addLine () {
+      const data = getTopology(this.meta2dId).data()
+      const offestX = data.x
+      const offestY = data.y
+      const penId = s8()
+      lineData.anchors[0].id = s8()
+      lineData.anchors[1].id = s8()
+      lineData.anchors[0].penId = penId
+      lineData.anchors[1].penId = s8()
+      const pen = {
+        ...lineData,
+        id: penId,
+        nzName: 'elements-' + getTopology(this.meta2dId).store.data.pens.length,
+        type: 1,
+        x: 100 - offestX,
+        y: 100 - offestY,
+        width: 150,
+        length: 150,
+        lineName: 'line',
+        ex: 100 - offestX + 150,
+        ey: 100 - offestY
       }
       getTopology(this.meta2dId).addPen(pen , true)
     },
