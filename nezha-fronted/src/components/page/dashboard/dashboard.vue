@@ -70,7 +70,6 @@
                 export-file-name="chart"
                 export-url="/visual/dashboard/export"
                 import-url="/visual/dashboard/import"
-                :exportBoxShow="true"
                 @export="exportType"
                 @afterImport="afterImport"
               >
@@ -325,8 +324,6 @@ export default {
       batchDeleteObjs: [],
       nowTimeType: {},
       showTopLine: false,
-      // 导出html 以及 pdf的弹窗
-      exportBoxShow: false,
       // 查看模式
       mode: '',
       variables: [],

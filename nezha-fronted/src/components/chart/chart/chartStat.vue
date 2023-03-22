@@ -11,7 +11,7 @@
         background:item.mapping ? item.mapping.color.bac : (statData.length===1 ? '' : colorList[index]),
         height:item.height+'px',
         width:item.width + 'px',
-        fontSize: item.fontSize,
+        fontSize: item.fontSize + 'px',
       }"
     >
       <div style="maxWidth:100%;z-index: 10;">
@@ -54,7 +54,7 @@
 
         <!-- comparison -->
         <template v-if="comparisonShow(item)">
-          <div :class="{'comparison-text-center':chartInfo.param.text==='none'}" class="comparison-text" :style="{fontSize: parseInt(item.fontSize)/3>12?parseInt(item.fontSize)/3+'px':'12px'}">
+          <div :class="{'comparison-text-center':chartInfo.param.text==='none'}" class="comparison-text" :style="{fontSize:item.fontSize>=36?'16px':'12px'}">
             <span v-if="chartInfo.param.comparison==='hour'">{{$t('dashboard.hourComparison')}}</span>
             <span v-if="chartInfo.param.comparison==='day'">{{$t('dashboard.dayComparison')}}</span>
             <span v-if="chartInfo.param.comparison==='week'">{{$t('dashboard.weekComparison')}}</span>
@@ -356,7 +356,7 @@ export default {
         }
         item.scale = scale < 1 ? 1 : parseFloat(scale)
         fontSize = fontSize > 12 ? fontSize : this.minFontSzie
-        item.fontSize = fontSize + 'px'
+        item.fontSize = fontSize
       })
       this.isInit = false
     },

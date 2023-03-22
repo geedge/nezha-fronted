@@ -273,9 +273,6 @@ export default {
       default: ''
     },
     deleteObjs: Array,
-    exportBoxShow: {
-      type: Boolean, default: false
-    },
     type: String
   },
   computed: {
@@ -721,18 +718,6 @@ export default {
         this.importBox.title = this.$t('overall.importExcel')
       } else if (type == 2) { // export
         this.importBox.title = this.$t('overall.exportExcel')
-        // if (this.exportBoxShow) {
-        //   this.formatArr = [
-        //     { name: 'XLSX', value: 1 },
-        //     { name: 'CSV', value: 2 },
-        //     { name: 'JSON', value: 3 },
-        //     { name: 'PDF', value: 4 },
-        //     { name: 'Html', value: 5 }]
-        // } else {
-        //   this.formatArr = [{ name: 'XLSX', value: 1 },
-        //     { name: 'CSV', value: 2 },
-        //     { name: 'JSON', value: 3 }]
-        // }
       }
     },
     getTimeString () {

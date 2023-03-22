@@ -33,7 +33,6 @@
             @afterImport="getTableData"
             :link="obj"
             :showLock="from === fromRoute.asset"
-            :exportBoxShow="true"
             @export="exportType"
             @panelLockChange="panelLockChange"
           >
@@ -70,7 +69,6 @@
             export-url="/visual/dashboard/export"
             import-url="/visual/dashboard/import"
             @afterImport="getTableData"
-            :exportBoxShow="true"
             @export="exportType"
             @panelLockChange="panelLockChange"
           >
