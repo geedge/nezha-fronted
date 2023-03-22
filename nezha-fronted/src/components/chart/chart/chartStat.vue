@@ -14,7 +14,7 @@
         fontSize: item.fontSize,
       }"
     >
-      <div style="maxWidth:100%;position: relative;z-index: 10;">
+      <div style="maxWidth:100%;z-index: 10;">
         <!-- all -->
         <template v-if="chartInfo.param.text==='all'">
           <div v-if="item.mapping" :style="{color:item.mapping.color.text}">
@@ -54,7 +54,7 @@
 
         <!-- comparison -->
         <template v-if="comparisonShow(item)">
-          <div class="comparison-text" :style="{fontSize: parseInt(item.fontSize)/2>12?parseInt(item.fontSize)/2+'px':'12px'}">
+          <div :class="{'comparison-text-center':chartInfo.param.text==='none'}" class="comparison-text" :style="{fontSize: parseInt(item.fontSize)/3>12?parseInt(item.fontSize)/3+'px':'12px'}">
             <span v-if="chartInfo.param.comparison==='hour'">{{$t('dashboard.hourComparison')}}</span>
             <span v-if="chartInfo.param.comparison==='day'">{{$t('dashboard.dayComparison')}}</span>
             <span v-if="chartInfo.param.comparison==='week'">{{$t('dashboard.weekComparison')}}</span>
@@ -492,13 +492,13 @@ export default {
       let minHeight
       switch (this.chartInfo.param.text) {
         case 'all':
-          minHeight = 64
+          minHeight = 72
           break
         case 'legend':
-          minHeight = 40
+          minHeight = 56
           break
         case 'value':
-          minHeight = 40
+          minHeight = 56
           break
         case 'none':
           minHeight = 24

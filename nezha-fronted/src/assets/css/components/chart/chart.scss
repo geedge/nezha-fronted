@@ -544,6 +544,12 @@
       text-align: center;
       color: $--color-text-secondary;
       word-break: normal;
+      position: absolute;
+      left: 0;
+      right: 0;
+      &.comparison-text-center{
+        transform: translateY(-50%);
+      }
       .nz-icon{
         font-size: 1em;
         color: $--color-text-regular;
@@ -552,7 +558,6 @@
         color: #19be6b;
       }
       .comparison-decrease{
-        // color: #ed4014;
         color: #eb1010;
       }
     }
