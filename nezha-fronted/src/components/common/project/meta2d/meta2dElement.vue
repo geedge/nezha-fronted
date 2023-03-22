@@ -28,19 +28,20 @@
                 @change="change('nzName')"></el-input>
             </div>
           </div>
+          <div class="form-row-item">
+            <div class="form-row-key">
+              {{$t('overall.module')}}
+            </div>
+            <div class="form-row-value">
+              <el-select v-model="pen.moduleId" @change="change('moduleId')" size="small" clearable>
+                <el-option v-for="item in modules" :value="item.id" :key="item.id" :label="item.name" :disabled="item.disabled"/>
+              </el-select>
+            </div>
+          </div>
         </div>
       </div>
       <div v-if="!pen.type">
         <div class="form-row-box">
-          <!--        Module  -->
-          <div class="form-row-title">
-            {{$t('overall.module')}}
-          </div>
-          <div v-show="elements.position" class="form-row-content">
-            <el-select v-model="pen.moduleId" @change="change('moduleId')" size="small" clearable>
-              <el-option v-for="item in modules" :value="item.id" :key="item.id" :label="item.name" :disabled="item.disabled"/>
-            </el-select>
-          </div>
           <!--        Position  -->
           <div class="form-row-title">
             {{$t('project.topology.position')}}
@@ -414,12 +415,12 @@
                     {{ $t('dashboard.dashboard.chartForm.legend') }}
                   </div>
                   <div class="form-row-value">
-                    <div style="display: inline-block;width: calc(20% - 3px)">
+                    <div style="display: inline-block;width: calc(30% - 3px)">
                       <el-select v-model="pen.data.textParent" size="small">
                         <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
                       </el-select>
                     </div>
-                    <div style="display: inline-block;width: calc(80% - 3px)">
+                    <div style="display: inline-block;width: calc(70% - 13px);margin-left: 10px">
                       <el-select v-model="pen.data.textLegend" size="small">
                         <el-option v-for="item in queryValues.filter(query => (query.parent === pen.data.textParent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'></el-option>
                       </el-select>
@@ -765,12 +766,12 @@
                 {{$t('dashboard.dashboard.chartForm.legend')}}
               </div>
               <div class="form-row-value">
-                <div style="display: inline-block;width: calc(20% - 3px)">
+                <div style="display: inline-block;width: calc(30% - 3px)">
                   <el-select v-model="pen.data.parent" size="small">
                     <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
                   </el-select>
                 </div>
-                <div style="display: inline-block;width: calc(80% - 3px)">
+                <div style="display: inline-block;width: calc(70% - 13px);margin-left: 10px">
                   <el-select v-model="pen.data.legend" size="small">
                     <el-option v-for="item in queryValues.filter(query => (query.parent === pen.data.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'></el-option>
                   </el-select>
@@ -984,7 +985,7 @@
           <div class="form-row-value" style="display: flex">
             <el-input v-model="pen.data.tooltip.title" size="small" style="flex: 1"/>
             <!-- 显示头部 -->
-            <div class="choose-header-btn" @click="pen.data.tooltip.titleShow = !pen.data.tooltip.titleShow" :title="$t('overall.visible')">
+            <div class="choose-header-btn" style="margin-left: 10px;" @click="pen.data.tooltip.titleShow = !pen.data.tooltip.titleShow" :title="$t('overall.visible')">
               <i class="nz-icon nz-icon-mimakejian" v-if="pen.data.tooltip.titleShow"></i>
               <i class="nz-icon nz-icon-mimabukejian" v-else></i>
             </div>
@@ -1013,18 +1014,18 @@
           <div class="form-row-key" style="margin-bottom: 5px">
             {{$t('project.topology.legends')}}
           </div>
-          <div class="form-row-value" style="margin-bottom: 10px" v-for="legend in pen.data.tooltip.legends" :key="legend.parent + legend.legend">
-            <div style="display: inline-block;width: calc(20% - 3px)">
+          <div class="form-row-value" style="margin-bottom: 10px;display: flex;justify-content: space-between" v-for="legend in pen.data.tooltip.legends" :key="legend.parent + legend.legend">
+            <div style="display: inline-block;width: calc(20% - 10px)">
               <el-select v-model="legend.parent" size="small" style="width: 100%">
                 <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
               </el-select>
             </div>
-            <div style="display: inline-block;width: calc(40% - 3px)">
+            <div style="display: inline-block;width: calc(40% - 10px)">
               <el-select v-model="legend.legend" size="small" style="width: 100%">
                 <el-option v-for="item in queryValues.filter(query => (query.parent === legend.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'></el-option>
               </el-select>
             </div>
-            <div style="display: inline-block;width: calc(40% - 3px)">
+            <div style="display: inline-block;width: calc(40% - 10px)">
               <el-input v-model="legend.alias" size="small" style="width: 100%">
                 <template slot="prepend">Alias</template>
               </el-input>

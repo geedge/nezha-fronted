@@ -59,6 +59,8 @@ $--border-color-light-hover: darken($--border-color-light, 10%);
 $--border-color-light-focus: darken($--border-color-light, 20%);
 // 深色边框
 $--explore-border-color-bottom: #DEDEDE;
+// 选中边框
+$--border-select-color: #FBCF9F;
 
 /* 5.提示色 */
 // 正常绿色(覆盖element-ui内置变量)

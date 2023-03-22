@@ -52,6 +52,7 @@
         }
         .diagnosis-table{
             padding-left: 20px;
+            padding-top: 10px;
             #diagnosisTable{
                 &::before{
                     display: none;
@@ -79,6 +80,12 @@
                 }
                 .el-table__body {
                     tr{
+                        &.expanded{
+                            background-color: $--background-color-base;
+                            td{
+                                border-bottom: none;
+                            }
+                        }
                         background: $--background-color-empty;
                         td{
                             border-color: $--border-color-light;
