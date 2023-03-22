@@ -54,14 +54,26 @@
                   <i v-if="item.type !== 1" class="nz-icon nz-icon-juxing" style="margin-right: 3px"/>
                   <i v-else class="nz-icon nz-icon-xiantiao" />
                   <el-input
+                    :ref="'hideInput' + index"
+                    v-if="editFlag[index]"
                     :title="item.nzName"
-                    style="width: 120px"
-                    @focus="focusName"
+                    style="width: 290px"
+                    @blur="blurName(index)"
+                    @keydown.enter.native="blurName(index)"
                     v-model="item.nzName"
-                    size="small"/>
+                    size="small"
+                  >
+                    <span slot="suffix">
+                      {{$t('terminal.confirm')}}
+                    </span>
+                  </el-input>
+                  <span class="hide-input-nzName text-ellipsis" v-if="!editFlag[index]">
+                    {{item.nzName}}
+                  </span>
+                  <i @click="changeEditFlag(index)" v-if="!editFlag[index]"  class="nz-icon nz-icon-shuru"/>
                 </span>
               <span>
-                    <span @click.stop="penChange(item, 'locked')" class="pen-tools-item" :title="!item.locked?$t('overall.locked'): $t('overall.unlocked')">
+                  <span @click.stop="penChange(item, 'locked')" class="pen-tools-item" :title="!item.locked?$t('overall.locked'): $t('overall.unlocked')">
                     <i  class="nz-icon nz-icon-lock" v-if="item.locked"/>
                     <i  class="nz-icon nz-icon-unlock" v-if="!item.locked"/>
                   </span>
@@ -166,6 +178,7 @@ export default {
           icon: 'nz-icon-shuxiangfenbu'
         }
       ],
+      editFlag: []
     }
   },
   mounted () {
@@ -254,8 +267,19 @@ export default {
       this.bkImageId = image.id
       getTopology(this.meta2dId).setBackgroundImage(image.image)
     },
-    focusName (event) {
-      console.log(event)
+    blurName (index) {
+      this.editFlag[index] = false
+      this.$set(this.editFlag, index, false)
+      // console.log(event)
+    },
+    changeEditFlag (index) {
+      this.editFlag[index] = true
+      this.$set(this.editFlag, index, true)
+      this.$nextTick(() => {
+        if (this.$refs['hideInput' + index] && this.$refs['hideInput' + index][0]) {
+          this.$refs['hideInput' + index][0].focus()
+        }
+      })
     },
     onNodesAlign (value) {
       const pens = getTopology(this.meta2dId).store.active
@@ -309,6 +333,16 @@ export default {
       getTopology(this.meta2dId).inactive()
       getTopology(this.meta2dId).render()
       bus.$emit('changeSelectPens', [])
+    }
+  },
+  watch: {
+    elements: {
+      handler () {
+        this.editFlag = []
+        this.elements.forEach(() => {
+          this.editFlag.push(false)
+        })
+      }
     }
   }
 }
