@@ -3,8 +3,8 @@
     <!-- begin--标题-->
     <div class="right-box__header">
 
-      <div class="header__title" v-if="from !== 'dashboardTemp'">{{editPanel.id ? $t("dashboard.dashboard.editPanelTitle") : $t("dashboard.dashboard.createPanelTitle")}}</div>
-      <div class="header__title" v-if="from === 'dashboardTemp'">{{editPanel.id ? $t("dashboard.dashboard.editPanelTempTitle") : $t("dashboard.dashboard.createPanelTempTitle")}}</div>
+      <div class="header__title" v-if="from !== 'dashboardTemp'">{{editPanel.id ? $t("dashboard.dashboard.editDashboardTitle") : $t("dashboard.dashboard.createDashboardTitle")}}</div>
+      <div class="header__title" v-if="from === 'dashboardTemp'">{{editPanel.id ? $t("dashboard.dashboard.editDashboardTempTitle") : $t("dashboard.dashboard.createDashboardTempTitle")}}</div>
 
       <div class="header__operation">
         <span v-cancel="{obj: editPanel, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>

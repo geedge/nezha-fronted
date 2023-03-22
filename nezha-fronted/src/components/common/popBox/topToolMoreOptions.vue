@@ -6,7 +6,7 @@
       </button>
       <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top nz-el-dropdown-menu">
         <el-dropdown-item  v-if="showLock" v-has="'main_edit'">
-          <div @click="editPanel" id="edit-bottom-dashboard"><i class="nz-icon nz-icon-edit"></i>{{$t('dashboard.dashboard.editPanelTitle')}}</div>
+          <div @click="editPanel" id="edit-bottom-dashboard"><i class="nz-icon nz-icon-edit"></i>{{$t('dashboard.dashboard.editDashboardTitle')}}</div>
         </el-dropdown-item>
         <el-dropdown-item  v-if="showLock" v-has="'main_edit'">
           <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t("overall.locked") : $t("overall.unlocked")}}</div>
