@@ -11,8 +11,8 @@
     <el-table-column type="expand">
       <template #header>
         <div class="arrow-expand" @click="toggleRowExpansion">
-            <i v-if="expandData" class="nz-icon nz-icon-quanbuzhankai"></i>
-            <i v-else class="nz-icon nz-icon-quanbushouqi"></i>
+            <i v-if="expandData" class="nz-icon nz-icon-quanbuzhankai1"></i>
+            <i v-else class="nz-icon nz-icon-quanbushouqi1"></i>
         </div>
       </template>
       <template slot-scope="{ row }">

@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "34724146",
+      "name": "全部展开",
+      "font_class": "quanbuzhankai1",
+      "unicode": "e7d7",
+      "unicode_decimal": 59351
+    },
+    {
+      "icon_id": "34724147",
+      "name": "全部收起",
+      "font_class": "quanbushouqi1",
+      "unicode": "e7d8",
+      "unicode_decimal": 59352
+    },
+    {
       "icon_id": "34708233",
       "name": "Diagnosis result",
       "font_class": "a-Diagnosisresult",
