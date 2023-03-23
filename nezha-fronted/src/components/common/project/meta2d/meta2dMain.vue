@@ -2,6 +2,7 @@
   <div class="meta2d-box list-page" :class="editFlag ? 'topology-dialog' : ''" v-my-loading="meta2dLoading" ref="meta2dBox" v-clickoutside="showNodeTools">
     <meta2dHeader
       ref="header"
+      v-if="!isPreview"
       :meta2dId="meta2dId"
       :isChart="isChart"
       :project="project"
@@ -12,7 +13,7 @@
       @getNodesArr="getNodesArr"
     />
     <div class="meta2d-main" :class="isChart ? 'meta2d-chart': 'meta2d-project'" @contextmenu="onContextMenu($event)" style="position: relative">
-      <div v-for="(item,index) in nodesArr" v-if="!editFlag&&!isPreview"
+      <div v-for="(item,index) in nodesArr" v-if="!editFlag"
            :key="index"
            v-show="(item.y + offsetY - 48 > -20) && (item.x + item.width/2 + offsetX - 24 > - 20)"
            :style="{position: 'absolute',top:item.y + offsetY - 48 + 'px',left:item.x + item.width/2 + offsetX - 24 +'px', 'z-index': 10}"
@@ -44,7 +45,7 @@
       <div :id="meta2dId" style="height: 100%;width: 100%"></div>
     </div>
     <meta2dProps
-      v-if="editFlag && !isPreview"
+      v-if="editFlag"
       ref="meta2dProps"
       :modules="modules"
       :selectPens.sync="selectPens"
@@ -53,11 +54,11 @@
       :meta2dId="meta2dId"
       @updatePens="updatePens"
     />
-    <div class="context-menu" v-if="contextmenu.left && editFlag && !isPreview" :style="this.contextmenu">
+    <div class="context-menu" v-if="contextmenu.left && editFlag " :style="this.contextmenu">
       <CanvasContextMenu :meta2dId="meta2dId" :selectPens.sync="selectPens"></CanvasContextMenu>
     </div>
     <div
-      v-show="position.show && (!editFlag || isPreview )"
+      v-show="position.show && (!editFlag)"
       @mouseleave="tooltipOut"
       @mouseenter="tooltipOver"
       style="position: absolute"
@@ -128,11 +129,12 @@ export default {
     querysArray: {},
     params: {},
     project: {},
+    isPreview: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
-    isPreview () {
-      return this.$refs.header && this.$refs.header.isPreview
-    },
   },
   components: {
     meta2dHeader,
@@ -172,8 +174,8 @@ export default {
     }
   },
   beforeDestroy () {
-    getTopology(this.meta2dId).destroy()
-    setTopology(this.meta2dId, null)
+    // getTopology(this.meta2dId).destroy()
+    // setTopology(this.meta2dId, null)
     bus.$off('changeSelectPens', this.pensActive)
     this.$refs.meta2dBox.removeEventListener('mousemove', this.mousemove)
     this.$refs.meta2dBox.removeEventListener('mouseup', this.mouseup)

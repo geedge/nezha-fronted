@@ -132,9 +132,11 @@ export default {
       const startTime = endTime - 60 * this.params.timeType * 1000
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
         this.clacTopoData(this.topoData, arr).then((data) => {
+          console.log(data)
           this.getModule()
-          getTopology(this.meta2dId).resize()
+          console.log(this.meta2dId, getTopology(this.meta2dId))
           getTopology(this.meta2dId).open(data)
+          getTopology(this.meta2dId).resize()
           getTopology(this.meta2dId).centerView()
           getTopology(this.meta2dId).lock(1)
           this.getNodesArr()

@@ -95,10 +95,10 @@
       <div style="display: flex;padding: 10px 0; justify-content: space-between">
         <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="addNode"
                 style="margin-right: 20px">
-          {{$t('add element')}}
+          {{$t('project.topology.addNode')}}
         </button>
         <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-if="selectPenArrId.length" style="margin-right: 20px" @click="clearSelection">
-          {{$t('Clear selection')}}
+          {{$t('project.topology.clearSelection')}}
         </button>
       </div>
     </div>

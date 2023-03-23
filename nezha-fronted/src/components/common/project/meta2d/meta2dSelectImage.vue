@@ -1,42 +1,71 @@
 <template>
-  <div class="meta2d-image-box" v-clickoutside="changeSelectBoxShow">
-    <div @click="selectBoxShow = !selectBoxShow" style="position: relative">
+  <div class="meta2d-image-box">
+    <div @click="changeSelectBoxShow(true)" style="position: relative">
       <div class="image-input">
         <span v-if="imageName">{{unit}} / {{imageName}}</span>
         <i class="el-icon-circle-close" style="position: absolute;top: 10px;right: 10px;font-size: 14px" @click.stop="selectImageChange({image: '', id: ''})"/>
       </div>
     </div>
-    <div class="image-select-box" v-if="selectBoxShow">
-<!--      <div v-for="item in iconArray" :key="item.id" class="image-box-item" @click="selectImageChange(item)">-->
-<!--        <img  :src="item.image" class="imag-src"/>-->
-<!--        <div class="img-text text-ellipsis" :title="item.imageName">{{item.imageName}}</div>-->
-<!--      </div>-->
-      <div style="height: 350px"  v-my-loading="imgageLoading">
-        <el-card shadow="hover" style="height:320px;width:100%;overflow-y: auto"
+<!--    <div class="image-select-box" v-if="selectBoxShow">-->
+<!--     -->
+<!--    </div>-->
+    <!--selectImg-->
+    <el-dialog
+      :title="$t('project.topology.image')"
+      custom-class="nz-select-img-dialog nz-new-dialog"
+      :visible.sync="selectBoxShow"
+      width="auto"
+      :append-to-body="true"
+      :modal-append-to-body="false"
+      @close="changeSelectBoxShow(false)"
+      destroy-on-close
+    >
+      <div class="image-select-box" style="width: 650px;height:446px;margin-top: 10px"  v-my-loading="imgageLoading">
+        <el-card shadow="hover" style="height:446px;width:100%;overflow-y: auto"
                  class="project-topology-add-node">
-          <el-collapse v-model="activeNames" v-for="(item, index) in tools" :key="index" class="collapse-box">
-            <el-collapse-item :title="item.group" :name="item.group">
-              <template slot="title">
-                <div style="display: flex;width: 100%;">
-                   <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click.stop="tooltipDeleteTitle(item)" :title="$t('overall.delete')"></i>
-                </div>
-              </template>
-              <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons image-box-item">
-                <img :src="btn.image" v-if="btn.image" class="image-src" @click.stop="selectImageChange(btn)">
-<!--                <div class="img-text text-ellipsis" :title="item.imageName">{{item.imageName}}</div>-->
-                <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click.stop="tooltipDelete(btn)"></i>
+          <div  v-for="(item, index) in tools" :key="index" class="collapse-box">
+            <div :title="item.group" :name="item.group">
+              <div class="nz-collapse-header" :class="item.show ? 'is-active' : ''" @click.stop="selectGroup(item)">
+                <span class="nz-icon-caret-right-box">
+                  <i class="nz-icon nz-icon-caret-right" :class="item.show ? 'rotate90': ''" />
+                </span>
+                <div class="text-ellipsis nz-collapse-header-content">{{item.group}}</div>
+                <i class="nz-icon nz-icon-delete title-delete" @click.stop="tooltipDeleteTitle(item)" :title="$t('overall.delete')" />
+                <span class="title-all">{{item.children.length}}</span>
               </div>
-            </el-collapse-item>
-          </el-collapse>
+              <transition name="el-zoom-in-top">
+                <div v-show="item.show" class="nz-collapse-body">
+                  <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons image-box-item" :class="btn.id === selectImgId ? 'is-select':''">
+                    <img :src="baseUrl + btn.image" v-if="btn.image" class="image-src" @click.stop="selectImageChange(btn)">
+                    <div class="img-text text-ellipsis" :title="btn.imageName">{{btn.imageName}}</div>
+                    <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click.stop="tooltipDelete(btn)"></i>
+                  </div>
+                </div>
+              </transition>
+            </div>
+          </div>
         </el-card>
-        <div class="upload-pic-box" @click="uploadPicChange">
+      </div>
+      <div slot="footer" class="nz-select-img-dialog-footer">
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-light"  @click="uploadPicChange">
           <i class="el-icon-plus"></i>
           <span>
-                     {{ $t('overall.uploadCustomPicture') }}
-                  </span>
-        </div>
+             {{ $t('overall.uploadCustomPicture') }}
+          </span>
+        </button>
+        <span>
+          <button class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-right: 20px" @click="changeSelectBoxShow(false)">
+             {{$t('overall.cancel')}}
+          </button>
+
+          <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="changImage" :disabled="prevent_opt.save"
+                      :class="{'nz-btn-disabled':prevent_opt.save}"
+                      style="">
+             {{$t('el.datepicker.confirm')}}
+          </button>
+        </span>
       </div>
-    </div>
+    </el-dialog>
     <!--Custom picture-->
     <el-dialog
       :title="title"
@@ -106,9 +135,6 @@
 </template>
 
 <script>
-import { dealImg, topologyImg } from '@/components/common/js/common'
-import { imageTemp } from '@/components/common/project/L5/services/canvas'
-
 export default {
   name: 'meta2dSelectImage',
   props: {
@@ -131,6 +157,8 @@ export default {
         name: '',
         unit: ''
       },
+      selectImgId: '',
+      selectImg: '',
       unit: '',
       imageName: '',
       baseUrl: '',
@@ -147,12 +175,6 @@ export default {
       this.$get('monitor/project/topo/icon').then(res => {
         this.imgageLoading = true
         this.tools = []
-        // res.data.list.forEach((item, index) => {
-        //   item.imageName = item.name
-        //   delete item.name
-        //   promiseArr.push(topologyImg['img' + item.id] || dealImg(`monitor/project/topo/icon/${item.id}/1`, item.id))
-        //   imgArr.push({ ...item })
-        // })
         this.iconArray = [...res.data.list]
         this.iconArray.forEach((item, index) => {
           item.imageName = item.name
@@ -177,6 +199,7 @@ export default {
           } else {
             this.tools.push({
               group: item.unit,
+              show: false,
               children: [{
                 text: item.imageName,
                 imageName: item.imageName,
@@ -188,59 +211,42 @@ export default {
             })
           }
         })
-
+        const findItem = this.tools.find(group => group.group === this.unit)
+        if (findItem) {
+          findItem.show = true
+        }
         this.imgInit = true
         this.imgageLoading = false
-        // Promise.all(promiseArr).then((res2, header) => {
-        //   this.iconArray = [...res.data.list]
-        //   this.iconArray.forEach((item, index) => {
-        //     item.image = res2[index].data
-        //     if (this.imgId == item.id) {
-        //       this.unit = item.unit
-        //       this.imageName = item.imageName
-        //     } else if (this.selectImage === item.image) {
-        //       this.unit = item.unit
-        //       this.imageName = item.imageName
-        //     }
-        //     const group = this.tools.find(tool => tool.group === item.unit)
-        //     if (group) {
-        //       group.children.push({
-        //         text: item.imageName,
-        //         imageName: item.imageName,
-        //         image: res2[index].data,
-        //         imageId: item.id,
-        //         id: item.id,
-        //         unit: item.unit,
-        //       })
-        //     } else {
-        //       this.tools.push({
-        //         group: item.unit,
-        //         children: [{
-        //           text: item.imageName,
-        //           imageName: item.imageName,
-        //           image: res2[index].data,
-        //           imageId: item.id,
-        //           id: item.id,
-        //           unit: item.unit,
-        //         }]
-        //       })
-        //     }
-        //   })
-        //
-        //   this.imgInit = true
-        //   this.imgageLoading = false
-        //   imgArr = null
-        //   promiseArr = null
-        // })
       })
     },
-    changeSelectBoxShow () {
-      this.selectBoxShow = false
+    changeSelectBoxShow (flag) {
+      this.selectBoxShow = flag
+      this.selectImgId = this.imgId
+      const findItem = this.tools.find(group => {
+        group.show = false
+        return group.group === this.unit
+      })
+      if (findItem) {
+        findItem.show = true
+        findItem.children.forEach(item=>{
+          if (item.id === this.selectImgId) {
+            this.selectImg = item
+          }
+        })
+      }
+    },
+    selectGroup (item) {
+      item.show = !item.show
     },
     selectImageChange (item) {
-      this.unit = item.unit
-      this.imageName = item.imageName
-      this.$emit('updateImage', item)
+      this.selectImgId = item.id
+      this.selectImg = item
+    },
+    changImage () {
+      this.unit = this.selectImg.unit
+      this.imageName = this.selectImg.imageName
+      this.$emit('updateImage', this.selectImg)
+      this.changeSelectBoxShow(false)
     },
     tooltipDelete (item) {
       this.$confirm(this.$t('tip.confirmDelete'), {
@@ -380,37 +386,7 @@ export default {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.$get('monitor/project/topo/icon', { id: res.data.id }).then(iconInfo => {
-            dealImg(`monitor/project/topo/icon/${res.data.id}/1`, res.data.id).then((data, header) => {
-              const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
-              this.iconArray.push({
-                ...iconInfo.data.list[0],
-                image: `/monitor/project/topo/icon/${res.data.id}/0`
-              })
-              if (group) {
-                group.children.push({
-                  text: res.data.imageName,
-                  imageName: res.data.imageName,
-                  image: `/monitor/project/topo/icon/${res.data.id}/0`,
-                  imageId: res.data.id,
-                  id: res.data.id,
-                  unit: this.uploadPic.unit
-                })
-              } else {
-                this.tools.push({
-                  group: this.uploadPic.unit,
-                  children: [{
-                    text: res.data.imageName,
-                    imageName: res.data.imageName,
-                    image: `/monitor/project/topo/icon/${res.data.id}/0`,
-                    imageId: res.data.id,
-                    id: res.data.id,
-                    unit: this.uploadPic.unit
-                  }]
-                })
-              }
-            })
-          })
+          this.imageInit()
         } else {
           this.$message.error(res.msg)
         }
@@ -421,18 +397,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .image-box-item{
-
-  }
-.image-box-item {
-
-}
-  .image-box-item:hover {
-    border-color: #fa901c;
-    .delIcon {
-      display: inline-block;
-      color: #fa901c;
-    }
-  }
 
 </style>

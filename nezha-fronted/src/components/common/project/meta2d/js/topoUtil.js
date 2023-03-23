@@ -10,6 +10,10 @@ export default {
       getTopology(id).centerView()
     },
     initEdit (id) {
+      const endTime = new Date().getTime()
+      const startTime = endTime - 60 * this.params.timeType * 1000
+      const elements = getTopology(id).data().elements
+      this.getQueryValues(elements, startTime, endTime)
       bus.$emit('changeSelectPens', [])
       getTopology(id).inactive()
       getTopology(id).lock(0)

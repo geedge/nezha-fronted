@@ -38,6 +38,28 @@
         ref="editEndpointBox">
       </edit-endpoint-box>
     </transition>
+    <el-dialog
+      :title="'123'"
+      :visible.sync="isPreview.show"
+      fullscreen
+      custom-class="nz-new-dialog meta2d-preview"
+      :append-to-body="true"
+      :modal-append-to-body="false"
+      @close="isPreview.show = false"
+      destroy-on-close
+    >
+      <div v-if="isPreview.show" style="width: 100%;height: 100%">
+        <meta2dMain
+          :meta2dId="'projectIdIsPreview'"
+          :is-preview="true"
+          :name="'preview'"
+          :topoData="isPreview.topoData"
+          :querysArray="isPreview.querysArray"
+          :project="isPreview.currentProject"
+          :params="isPreview.params"
+        />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -46,6 +68,7 @@ import bus from '@/libs/bus'
 import topologyL5 from '@/components/common/project/topologyL5'
 import meta2dMain from '@/components/common/project/meta2d/meta2dMain'
 import beforeMeta2d from '@/components/common/mixin/beforeMeta2d'
+import { clearTopology } from '@/components/common/js/common'
 
 export default {
   name: 'project2',
@@ -61,6 +84,13 @@ export default {
         module: { show: false },
         addEndpoint: { show: false },
         editEndpoint: { show: false }
+      },
+      isPreview: {
+        show: false,
+        topoData: {},
+        querysArray: {},
+        currentProject: {},
+        params: {},
       },
       /* 二级页面相关 */
       bottomBox: {
@@ -556,6 +586,9 @@ export default {
       bus.$on('alert-message-change', () => {
         this.getEndpointTableData()
       })
+      bus.$on('showMeta2dPreview', (params) => {
+        this.isPreview = params
+      })
     },
     messageStyle (e) {
       if (e.column.label == 'Alerts' || e.column.label == this.$t('overall.alert')) {
@@ -668,6 +701,8 @@ export default {
     bus.$off('module-list-change')
     bus.$off('endpoint-list-change')
     bus.$off('alert-message-change')
+    bus.$off('showMeta2dPreview')
+    clearTopology()
     if (this.scrollbarWrap) {
       this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
     }
