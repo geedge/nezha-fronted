@@ -3,11 +3,33 @@
   margin-top: 5px;
 }
 .ping{
+  .top-tools{
+    padding: 10px 0 0 0 !important;
+    -webkit-box-shadow:0 1px 2px rgba(0,0,0,.06);-moz-box-shadow:0 1px 2px rgba(0,0,0,.06);
+    box-shadow:0 1px 2px rgba(0,0,0,.06);
+    z-index: 1;
+  }
   .top-tool-left{
+    box-sizing:border-box;
+    padding: 20px 0 0px 20px;
     // align-items: center;
+    .tools-header{
+      height: 148px;
+      margin-top: 38px;
+      box-shadow: unset;
+      .tools-header-left>span{
+        margin-right: 10px !important;
+      }
+      .tools-header-center{
+        width: 391px;
+      }
+      .tools-header-right .right-content-text{
+        margin-bottom: 15px;
+      }
+    }
   }
   .ipInput{
-    width:280px;
+    width:240px;
     min-height: 36px;
     max-height: 128px;
   }
@@ -134,6 +156,14 @@
     .data-wrap{
       height: 100%;
       overflow: hidden;
+      &>span{
+        display: block;
+        font-size: 14px;
+        color: $--color-text-regular;
+        letter-spacing: 0;
+        font-weight: 400;
+        margin: 30px 0 11px 0;
+      }
       .data-top{
         width: 100%;
         padding-left: 15px;
@@ -263,6 +293,7 @@
   }
   // 雷达
   .radar {
+    box-sizing: border-box;
     /*margin-left: 50px;*/
     width: 92px;
 

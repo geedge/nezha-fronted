@@ -124,6 +124,7 @@
       </div>
       <!-- 存在任务id时展示表格 -->
       <div class="data-wrap" v-show="tid!==undefined">
+        <span>{{$t('ping.results')}}</span>
         <div class="data-bottom">
           <trace-table
             ref="dataTable"
