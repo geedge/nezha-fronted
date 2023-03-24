@@ -336,6 +336,16 @@
     margin-right: 5px;
   }
 }
+.nz-select-img-dialog {
+  .upload-pic-row {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 20px;
+    .el-autocomplete{
+      width: 100%;
+    }
+  }
+}
 .nz-new-dialog{
   .el-dialog__header{
     padding: 16px 20px;

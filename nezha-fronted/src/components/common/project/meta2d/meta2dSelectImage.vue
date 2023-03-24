@@ -70,34 +70,14 @@
     <el-dialog
       :title="title"
       :visible.sync="uploadPicShow"
-      width="auto"
+      custom-class="nz-select-img-dialog nz-new-dialog"
+      width="452px"
       :append-to-body="true"
       :modal-append-to-body="false"
       @close="uploadPicShow = false"
       destroy-on-close>
-      <el-row class="upload-pic-row">
-        <el-col :span="4" class="upload-pic-label">{{ $t('overall.name') }}</el-col>
-        <el-col :span="20">
-          <el-input maxlength="64" show-word-limit v-model="uploadPic.name" size="small"  :placeholder="$t('project.topology.placeholderImg')"></el-input>
-        </el-col>
-      </el-row>
-      <el-row class="upload-pic-row">
-        <el-col :span="4" class="upload-pic-label">{{ $t('overall.folder') }}</el-col>
-        <el-col :span="20">
-          <el-autocomplete
-            popper-class="right-box-select-top right-public-box-dropdown-top"
-            :maxlength="64" show-word-limit
-            class="inline-input"
-            v-model="uploadPic.unit"
-            :fetch-suggestions="querySearch"
-            size="small"
-          ></el-autocomplete>
-        </el-col>
-      </el-row>
-
-      <el-row class="upload-pic-row">
-        <el-col :span="4" class="upload-pic-label"> </el-col>
-        <el-col :span="20">
+      <el-row class="upload-pic-row" style="margin-top: 20px;margin-bottom: 20px;">
+        <el-col :span="24">
           <div class="upload-body">
             <el-upload
               drag
@@ -116,7 +96,26 @@
           </div>
         </el-col>
       </el-row>
-      <div class="upload-pic-row" style="text-align: center">
+      <el-row class="upload-pic-row">
+        <el-col :span="4" class="upload-pic-label" style="text-align: left">{{ $t('overall.name') }}</el-col>
+        <el-col :span="20">
+          <el-input maxlength="64" show-word-limit v-model="uploadPic.name" size="small"  :placeholder="$t('project.topology.placeholderImg')"></el-input>
+        </el-col>
+      </el-row>
+      <el-row class="upload-pic-row" style="margin-bottom: 30px">
+        <el-col :span="4" class="upload-pic-label" style="text-align: left">{{ $t('overall.folder') }}</el-col>
+        <el-col :span="20">
+          <el-autocomplete
+            popper-class="right-box-select-top right-public-box-dropdown-top"
+            :maxlength="64" show-word-limit
+            class="inline-input"
+            v-model="uploadPic.unit"
+            :fetch-suggestions="querySearch"
+            size="small"
+          ></el-autocomplete>
+        </el-col>
+      </el-row>
+      <div slot="footer" class="upload-pic-row" style="text-align: right;margin-bottom: 0;width: 100%">
             <span>
                <button class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-right: 20px" @click="uploadPicShow=false">
              {{$t('project.topology.exit')}}
