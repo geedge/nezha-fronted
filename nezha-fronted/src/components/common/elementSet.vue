@@ -1,5 +1,5 @@
 <template>
-  <div class="pop-custom" :class="{'pop-custom-top' : tableClass || operationTrue}" v-clickoutside="esc">
+  <div class="pop-custom" :class="{'pop-custom-top' : tableClass || operationTrue}" v-clickoutside="esc" @click.stop>
     <div class="pop-title" @click.stop>{{$t('overall.selectColumns')}}</div>
     <div class="pop-box custom-labels" @click.stop>
       <div style="height: 100%; overflow: auto;">
