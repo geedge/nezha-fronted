@@ -253,7 +253,7 @@ export default {
       const config = this.obj.configs.find(c => c.type === 'logs')
       const hasLog = config && config.enable === 1
       const tabs = [
-        { prop: 'dashboardTab', name: this.$t('overall.detail') },
+        { prop: 'dashboardTab', name: this.$t('overall.dashboard') },
         { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
         { prop: 'endpointQuery', name: this.$t('overall.metrics') }
       ]
