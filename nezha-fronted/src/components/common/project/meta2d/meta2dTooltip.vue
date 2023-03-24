@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import panelChart from '@/components/chart/panelChart'
 import defaultLineData from '@/components/chart/defaultLineData'
 import topoUtil from '@/components/common/project/meta2d/js/topoUtil'
 
@@ -34,7 +33,7 @@ export default {
     }
   },
   components: {
-    panelChart
+    panelChart: () => import('@/components/chart/panelChart')
   },
   data () {
     return {

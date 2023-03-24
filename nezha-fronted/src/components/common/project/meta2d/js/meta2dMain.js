@@ -125,6 +125,7 @@ export default {
       // meta2d.on('add', this.appPen) // 添加新画笔·
       meta2d.on('click', this.topoClick) // click画笔·
       setTopology(this.meta2dId, meta2d)
+      this.reload()
     },
     reload () {
       this.position.show = false
@@ -132,12 +133,17 @@ export default {
       const startTime = endTime - 60 * this.params.timeType * 1000
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
         this.clacTopoData(this.topoData, arr).then((data) => {
-          console.log(data)
+          if (!getTopology(this.meta2dId)) {
+            return
+          }
           this.getModule()
-          console.log(this.meta2dId, getTopology(this.meta2dId))
-          getTopology(this.meta2dId).open(data)
           getTopology(this.meta2dId).resize()
-          getTopology(this.meta2dId).centerView()
+          getTopology(this.meta2dId).open(data)
+          if (this.isChart) {
+            getTopology(this.meta2dId).fitView(20)
+          } else {
+            getTopology(this.meta2dId).centerView()
+          }
           getTopology(this.meta2dId).lock(1)
           this.getNodesArr()
         })

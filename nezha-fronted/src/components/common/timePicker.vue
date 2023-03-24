@@ -376,8 +376,6 @@ export default {
         'date-range-history' + this.sign,
         JSON.stringify(this.rangeHistory)
       )
-
-      console.log(this.sign)
       this.$set(this.searchTime, 2, '')
       this.showDropdown()
       this.getRangeHistoryArr()

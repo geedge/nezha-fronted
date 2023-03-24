@@ -157,14 +157,18 @@ export default {
   },
   watch: {
     topoData: {
-      immediate: true,
+      immediate: false,
       handler () {
-        this.reload()
+        if (!this.isChart) {
+          this.reload()
+        }
       }
     }
   },
   mounted () {
-    this.init()
+    setTimeout(() => {
+      this.init()
+    })
     bus.$on('changeSelectPens', this.pensActive)
     this.$refs.meta2dBox.addEventListener('mousemove', this.mousemove)
     // this.$refs.meta2dBox.addEventListener('mousedown', this.mousedown)
@@ -182,11 +186,13 @@ export default {
     },
     zoomMap (num) {
       getTopology(this.meta2dId).scale(getTopology(this.meta2dId).store.data.scale + num)
-    },
+    }
   },
   beforeDestroy () {
-    getTopology(this.meta2dId).clear()
-    setTopology(this.meta2dId, null)
+    if (getTopology(this.meta2dId)) {
+      getTopology(this.meta2dId).clear()
+      setTopology(this.meta2dId, null)
+    }
     bus.$off('changeSelectPens', this.pensActive)
     this.$refs.meta2dBox.removeEventListener('mousemove', this.mousemove)
     this.$refs.meta2dBox.removeEventListener('mouseup', this.mouseup)

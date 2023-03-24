@@ -126,7 +126,6 @@ export default {
   },
   computed: {
     selectPenArrId () {
-      console.log(this.selectPenArr)
       return this.selectPenArr.active.map(item => item.id)
     }
   },
@@ -200,7 +199,6 @@ export default {
     },
     penActive (item) {
       // bus.$emit('changeSelectPens', [])
-      console.log(getTopology(this.meta2dId).store)
       this.$emit('changeActiveName')
       this.$nextTick(() => {
         getTopology(this.meta2dId).active([item])

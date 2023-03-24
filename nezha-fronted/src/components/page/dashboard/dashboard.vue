@@ -1180,7 +1180,6 @@ export default {
         const add = this.$route.query.add
         this.$nextTick(() => {
           if (add) {
-            console.log(add)
             if (add === 'chart') {
               this.addChartBefore()
             }
