@@ -406,7 +406,7 @@ function timeCompute (value, unit, dot = 0) {
     return `${value.toFixed(dot)} ${unit}`
   }
   const units = [
-    { unit: 'ns', ascii: 1 },
+    { unit: 'ns', ascii: 1000 },
     { unit: 'us', ascii: 1000 },
     { unit: 'ms', ascii: 1000 },
     { unit: 's', ascii: 60 },

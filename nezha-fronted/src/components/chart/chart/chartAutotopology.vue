@@ -91,7 +91,10 @@ export default {
       })
     },
     toProject (projectInfo) { // 跳转对应project页面
-      this.$store.commit('currentProjectChange', projectInfo)
+      this.$store.commit('currentProjectChange', {
+        id: projectInfo.id,
+        name: projectInfo.name
+      })
       this.jumpTo('project')
     },
     jumpTo (data, id) {
@@ -114,7 +117,7 @@ export default {
     },
     resize () {
       this.allProject.forEach((item, index) => {
-        this.$refs['topology' + index][0] && this.$refs['topology' + index][0].winResize()
+        this.$refs['topology' + index][0] && this.$refs['topology' + index][0].topoResize()
       })
     }
   },
