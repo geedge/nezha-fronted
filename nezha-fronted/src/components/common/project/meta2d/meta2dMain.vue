@@ -99,6 +99,10 @@
                   @close="popDataShowUpdate('',true)">
       </alertTable>
     </transition>
+    <div v-if="!editFlag&&showZoom" class="right-bottom-zoom">
+      <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)" :title="$t('overall.enlargement')"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
+      <div class="zoom-option" @click="zoomMap(-0.25)" :title="$t('overall.shrink')"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
+    </div>
   </div>
 </template>
 
@@ -132,6 +136,10 @@ export default {
     isPreview: {
       type: Boolean,
       default: false
+    },
+    showZoom: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -171,7 +179,10 @@ export default {
       setTimeout(() => {
         this.setContextmenu = true
       }, 100)
-    }
+    },
+    zoomMap (num) {
+      getTopology(this.meta2dId).scale(getTopology(this.meta2dId).store.data.scale + num)
+    },
   },
   beforeDestroy () {
     getTopology(this.meta2dId).clear()
