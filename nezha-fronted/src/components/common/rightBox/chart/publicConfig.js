@@ -386,15 +386,17 @@ export default {
       if (this.expressions.length) {
         this.chartConfig.elements = []
         this.expressions.forEach((expr, i) => {
-          this.chartConfig.elements.push({
-            id: this.expressionsShow[i].elementId,
-            expression: expr,
-            type: 'expert',
-            legend: this.expressionsShow[i].legend,
-            name: this.expressionName[i],
-            state: this.expressionsShow[i].state,
-            orderNum: i
-          })
+          if (this.expressionsShow[i]) {
+            this.chartConfig.elements.push({
+              id: this.expressionsShow[i].elementId,
+              expression: expr,
+              type: 'expert',
+              legend: this.expressionsShow[i].legend,
+              name: this.expressionName[i],
+              state: this.expressionsShow[i].state,
+              orderNum: i
+            })
+          }
         })
       } else {
         this.chartConfig.elements = []
@@ -500,14 +502,6 @@ export default {
           elementId: ''
         }
       )
-      this.$nextTick(() => {
-        this.expressions.forEach((ex, index) => {
-          if (ex) {
-            this.$refs[`promql-${index}`][0].metricChange(ex)
-            this.$refs[`promql-${index}`][0].promqlInputChange(ex)
-          }
-        })
-      })
       this.expressionChange()
     },
     removeExpression (index) {
@@ -517,14 +511,6 @@ export default {
         this.expressionsShow.splice(index, 1)
         this.chartConfig.elements.forEach((item, index) => {
           this.$refs.chartForm.validateField('elements.' + index + '.expression')
-        })
-        this.$nextTick(() => {
-          this.expressions.forEach((ex, index) => {
-            if (ex) {
-              this.$refs[`promql-${index}`][0].metricChange(ex)
-              this.$refs[`promql-${index}`][0].promqlInputChange(ex)
-            }
-          })
         })
         this.expressionChange()
       }
