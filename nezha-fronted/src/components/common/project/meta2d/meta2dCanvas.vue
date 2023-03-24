@@ -51,7 +51,7 @@
           <div v-for="(item, index) in elements" :key="item.id" @click.stop="penActive(item)">
             <div class="pen-tools pen-item" :class="selectPenArrId.indexOf(item.id) !== -1 ? 'is-active' : ''">
                 <span class="hide-input">
-                  <i v-if="item.type !== 1" class="nz-icon nz-icon-juxing" style="margin-right: 3px"/>
+                  <i v-if="item.type !== 1" class="nz-icon nz-icon-image" style="margin-right: 3px"/>
                   <i v-else class="nz-icon nz-icon-xiantiao" />
                   <el-input
                     :ref="'hideInput' + index"

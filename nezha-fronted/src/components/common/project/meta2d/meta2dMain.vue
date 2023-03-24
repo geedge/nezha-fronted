@@ -174,8 +174,8 @@ export default {
     }
   },
   beforeDestroy () {
-    // getTopology(this.meta2dId).destroy()
-    // setTopology(this.meta2dId, null)
+    getTopology(this.meta2dId).clear()
+    setTopology(this.meta2dId, null)
     bus.$off('changeSelectPens', this.pensActive)
     this.$refs.meta2dBox.removeEventListener('mousemove', this.mousemove)
     this.$refs.meta2dBox.removeEventListener('mouseup', this.mouseup)

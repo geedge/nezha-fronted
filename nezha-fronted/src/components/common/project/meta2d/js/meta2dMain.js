@@ -165,7 +165,7 @@ export default {
         source: 'text',
         textParent: '',
         textLegend: '',
-        text: pen.text  || '',
+        text: pen.text || '',
         textValue: '',
         enable: {
           valueMapping: false,
@@ -496,7 +496,7 @@ export default {
           }
         }
         if (!item.type && item.moduleId) {
-          this.$get('stat/module/abnormal', { moduleId: item.moduleId }).then(res=>{
+          this.$get('stat/module/abnormal', { moduleId: item.moduleId }).then(res => {
             if (res.code == 200) {
               const module = res.data.list[0]
               item.moduleData.state.error = item.moduleData.error = !module.state
@@ -532,7 +532,7 @@ export default {
       if (key === 'asset' || key === 'alert' || key === 'endpoint') {
         this.showNodeTools()
       }
-    },
+    }
   },
   beforeDestroy () {
   }

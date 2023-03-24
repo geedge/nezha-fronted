@@ -36,7 +36,7 @@
               <transition name="el-zoom-in-top">
                 <div v-show="item.show" class="nz-collapse-body">
                   <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons image-box-item" :class="btn.id === selectImgId ? 'is-select':''">
-                    <img :src="baseUrl + btn.image" v-if="btn.image" class="image-src" @click.stop="selectImageChange(btn)">
+                    <img :src="btn.image" v-if="btn.image" class="image-src" @click.stop="selectImageChange(btn)">
                     <div class="img-text text-ellipsis" :title="btn.imageName">{{btn.imageName}}</div>
                     <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click.stop="tooltipDelete(btn)"></i>
                   </div>
