@@ -597,7 +597,15 @@ export default {
             })
           }
         }
-        this.editChart = obj
+        if (obj.elements && obj.elements.length) {
+          obj.elements.forEach((item, index) => {
+            item.orderNum = index
+            delete item.seq
+            delete item.buildIn
+            delete item.chartId
+          })
+        }
+        this.editChart = this.$loadsh.cloneDeep(obj)
         this.oldData = this.$loadsh.cloneDeep(obj)
         if (this.stableTime) {
           clearTimeout(this.stableTime)
