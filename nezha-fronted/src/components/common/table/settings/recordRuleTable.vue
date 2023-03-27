@@ -87,7 +87,7 @@
         </template>
 
         <template v-else-if="item.prop === 'remark'">
-          <template>{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</template>
+          <span class="el-table-remark">{{scope.row[item.prop] ? scope.row[item.prop] : '-'}}</span>
         </template>
         <template v-else-if="item.prop === 'state'">
            <div v-if="scope.row[item.prop] == '1'">

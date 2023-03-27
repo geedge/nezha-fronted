@@ -597,3 +597,10 @@
   line-height: 1;
   height: 16px;
 }
+
+.nz-table-list .el-table__body{
+  .el-table-remark{
+    word-wrap: break-word;
+    word-break: keep-all
+  }
+}

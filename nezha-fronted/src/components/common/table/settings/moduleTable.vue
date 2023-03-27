@@ -80,7 +80,7 @@
           {{scope.row.dashboard ? scope.row.dashboard.name : '-'}}
         </template>
         <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>
-        <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+        <span v-else-if="scope.row[item.prop]" :class="item.prop === 'remark'? 'el-table-remark':''">{{scope.row[item.prop]}}</span>
         <span v-else>-</span>
       </template>
     </el-table-column>

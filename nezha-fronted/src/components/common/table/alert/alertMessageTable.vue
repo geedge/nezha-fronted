@@ -51,11 +51,7 @@
             </div>
           </template>
           <template v-else-if="item.prop === 'description'">
-            <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-            <span v-else>-</span>
-          </template>
-          <template v-else-if="item.prop === 'remark'">
-            <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+            <span v-if="scope.row[item.prop]" class="el-table-remark">{{scope.row[item.prop]}}</span>
             <span v-else>-</span>
           </template>
           <span v-else-if="item.prop === 'severityId'&&scope.row['severity']" class="severity">

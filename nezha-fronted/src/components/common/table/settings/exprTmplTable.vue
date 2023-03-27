@@ -49,7 +49,7 @@
                   </template>
               </copy>
           </template>
-        <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
+        <span v-else-if="scope.row[item.prop]" :class="item.prop === 'remark'? 'el-table-remark':''">{{scope.row[item.prop] || '-'}}</span>
         <template v-else>-</template>
       </template>
     </el-table-column>

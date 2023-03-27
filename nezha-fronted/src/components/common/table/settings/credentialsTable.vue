@@ -61,9 +61,9 @@
           <template v-else>-</template>
         </template>
         <template v-if="item.prop === 'remark'">
-          <template v-if="scope.row.remark">
+          <span v-if="scope.row.remark" class="el-table-remark">
             {{scope.row.remark}}
-          </template>
+          </span>
           <template v-else>-</template>
         </template>
       </template>
