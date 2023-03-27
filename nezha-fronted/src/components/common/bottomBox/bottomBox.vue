@@ -257,7 +257,8 @@ export default {
     },
     assetTabs () {
       const hasSub = this.obj && this.obj.childrenNum
-      const hasProcess = this.obj && this.obj.clientState == '1'
+      // const hasProcess = this.obj && this.obj.clientState == '1'
+      const hasProcess = false
       const hasVays = this.obj && this.obj.model.tsgAppliance == '1'
       const tabs = [
         { prop: 'panelTab', name: this.$t('overall.dashboard') },
