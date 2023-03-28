@@ -12,7 +12,7 @@ export default {
     initEdit (id) {
       const endTime = new Date().getTime()
       const startTime = endTime - 60 * this.params.timeType * 1000
-      const elements = getTopology(id).data().elements
+      const elements = getTopology(id).data().elements || []
       this.getQueryValues(elements, startTime, endTime)
       bus.$emit('changeSelectPens', [])
       getTopology(id).inactive()
@@ -143,13 +143,23 @@ export default {
         if (!data.pens) {
           data.pens = []
         }
-        data.pens.forEach(pen => {
+        data.pens.forEach((pen, index) => {
           pen.isBottom = true
           if (!pen.nzName) {
             pen.nzName = ''
           }
           if (!pen.moduleId) {
             pen.moduleId = ''
+          }
+          if (pen.icon) {
+            pen.iconFamily = 'nz-icon'
+          }
+          if (!pen.nzName) {
+            if (!pen.type) {
+              this.nodeInit(pen, 'element-' + index)
+            } else {
+              this.lineInit(pen, 'element-' + index)
+            }
           }
           if (pen.isNz) {
             if (pen.data.legend && pen.data.enable.valueMapping) {
