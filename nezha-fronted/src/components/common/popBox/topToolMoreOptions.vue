@@ -753,7 +753,9 @@ export default {
                   },
                   receivers: []
                 },
-                chartShare: 'none'
+                chartShare: 'none',
+                defaultTimeRange: 4,
+                refresh: 0
               }
             }
           }

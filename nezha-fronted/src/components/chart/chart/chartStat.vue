@@ -54,7 +54,7 @@
 
         <!-- comparison -->
         <template v-if="comparisonShow(item)">
-          <div :class="{'comparison-text-center':chartInfo.param.text==='none'}" class="comparison-text" :style="{fontSize:item.fontSize>=36?'16px':'12px'}">
+          <div :class="{'comparison-text-center':chartInfo.param.text==='none'}" class="comparison-text" :style="{fontSize:item.comparisonFont+'px'}">
             <span v-if="chartInfo.param.comparison==='hour'">{{$t('dashboard.hourComparison')}}</span>
             <span v-if="chartInfo.param.comparison==='day'">{{$t('dashboard.dayComparison')}}</span>
             <span v-if="chartInfo.param.comparison==='week'">{{$t('dashboard.weekComparison')}}</span>
@@ -357,6 +357,14 @@ export default {
         item.scale = scale < 1 ? 1 : parseFloat(scale)
         fontSize = fontSize > 12 ? fontSize : this.minFontSzie
         item.fontSize = fontSize
+
+        if (fontSize > 36) {
+          item.comparisonFont = 16
+        } else if (fontSize > 24) {
+          item.comparisonFont = 14
+        } else {
+          item.comparisonFont = 12
+        }
       })
       this.isInit = false
     },

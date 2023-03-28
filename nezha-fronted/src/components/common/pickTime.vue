@@ -9,11 +9,11 @@
         <span><slot name="added-text"></slot></span>
       </button>
       <button id="browser-go" class="top-tool-btn top-tool-btn--dropdown" @click="dropdownHandler(dropdownShow)" :title="$t('el.datepicker.selectTime')">
-        <span class="select-refresh-time-label" v-if="interval !== -1">{{interLabel}}</span>
+        <span class="select-refresh-time-label" v-if="interval">{{interLabel}}</span>
         <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px;"></i>
         <transition name="el-zoom-in-top">
           <ul v-show="dropdownShow" class="el-dropdown-menu el-popper el-dropdown-menu--mini nz-dropdown" v-clickoutside="dropdownHandler">
-            <li v-for="i in $CONSTANTS.intervalList" :key="i.value + i.label" :style="{color:interval === i.value || interval.value === i.value ? theme.themeColor : ''}" class="el-dropdown-menu__item dropdown-content" @click="selectInterval(i)">
+            <li v-for="i in $CONSTANTS.intervalList" :key="i.value + i.label" :style="{color:interval === i.value || interval.value === i.value ? theme.themeColor : ''}" class="el-dropdown-menu__item dropdown-content" @click="selectInterval(i,true)">
               {{$t(i.label)}}
             </li>
           </ul>
@@ -67,7 +67,8 @@ export default {
     defaultPick: Number,
     showEmpty: { type: Boolean, default: false },
     id: String,
-    sign: [Number, String]
+    sign: [Number, String],
+    from: String
   },
   data () {
     return {
@@ -89,19 +90,26 @@ export default {
     this.$emit('change', this.searchTime)
   },
   methods: {
-    selectInterval (val) {
+    selectInterval (val, route) {
       this.visible = false
       clearInterval(this.intervalTimer)
       this.interval = val.value
       this.interLabel = val.label
-      if (!this.showTimePicker && val && val.value != -1) {
+      if (!this.showTimePicker && val && val.value != 0) {
         this.intervalTimer = setInterval(() => {
           this.$emit('change', this.searchTime)
           this.refreshDataFunc()
         }, val.value * 1000)
         return
       }
-      if (val && val.value != -1) {
+      // refresh拼接到地址栏参数中
+      if (this.from === 'dashboard' && route) {
+        const newQuery = JSON.parse(JSON.stringify(this.$route.query))
+        if (val.label == newQuery.refresh) return
+        val.value ? newQuery.refresh = val.label : delete newQuery.refresh
+        this.$router.replace({ query: newQuery })
+      }
+      if (val && val.value != 0) {
         const start = new Date(this.searchTime[1])
         const now = bus.getOffsetTimezoneData()
         const interval = Math.floor((now - start.getTime()) / 1000) // 计算当前结束时间到现在的间隔（秒）
@@ -144,7 +152,7 @@ export default {
       this.searchTime = time
       setTimeout(() => {
         this.$emit('change', this.searchTime)
-        this.refreshDataFunc()
+        this.refreshDataFunc(true)
       }, 100)
     },
     antiShake () {

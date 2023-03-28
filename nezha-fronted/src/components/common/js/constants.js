@@ -361,7 +361,7 @@ export const chart = {
 }
 
 export const intervalList = [
-  { value: -1, label: i18n.t('dashboard.dashboard.chartForm.lockList.off') },
+  { value: 0, label: i18n.t('dashboard.dashboard.chartForm.lockList.off') },
   { value: 30, label: '30s' },
   { value: 60, label: '1m' },
   { value: 300, label: '5m' },

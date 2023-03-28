@@ -181,7 +181,7 @@ export default {
         } else {
           nowTimeType = JSON.parse(nowTimeType)
         }
-        if (numInterval >= 6 && nowTimeType.value !== -1) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
+        if (numInterval >= 60000 && nowTimeType.value !== -1) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变
           startTime = bus.getNewTime(bus.formateTimeToTime(this.timeRange[0]), numInterval, 'YYYY-MM-DD HH:mm:ss')
           endTime = bus.timeFormate(now, 'YYYY-MM-DD HH:mm:ss')
         } else {

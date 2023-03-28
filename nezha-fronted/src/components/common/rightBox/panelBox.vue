@@ -13,7 +13,7 @@
     <!-- begin--表单-->
     <div class="right-box__container">
       <div class="container__form">
-        <el-form ref="form" :model="editPanel" :rules="rules" label-position = "top" label-width="120px" size="small">
+        <el-form ref="form" :model="editPanel" :rules="rules" label-position = "top" label-width="120px">
 
           <!-- name -->
           <el-form-item :label='$t("overall.name")' prop="name">
@@ -34,7 +34,8 @@
             <el-input
               v-model="editPanel.remark"
               maxlength="256"
-              size="small" :rows="2"
+              size="small"
+              :rows="2"
               show-word-limit
               type="textarea">
             </el-input>
@@ -42,7 +43,7 @@
 
           <!-- chartShare -->
           <el-form-item :label="$t('dashboard.dashboard.chartTooltip')" class="item-receivers" prop="chartShare">
-            <el-select v-model="editPanel.param.chartShare" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
+            <el-select v-model="editPanel.param.chartShare" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
               <el-option value="none" label="Default">
                 <span class="panel-dropdown-label-txt" >{{$t('config.assetLabel.default')}}</span>
               </el-option>
@@ -54,6 +55,34 @@
               </el-option>
             </el-select>
             <div class="item-receivers-text">{{$t('dashboard.dashboard.chartTooltipText')}}</div>
+          </el-form-item>
+
+          <!-- defaultTimeRange -->
+          <el-form-item :label="$t('dashboard.defaultTimeRange')" class="item-receivers" prop="defaultTimeRange">
+            <el-select v-model="editPanel.param.defaultTimeRange" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
+              <el-option
+                v-for="item in timeData"
+                :value="item.id"
+                :label="item.text"
+                :key="item.id"
+              >
+                <span class="panel-dropdown-label-txt">{{item.text}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+        <!-- Auto refresh -->
+          <el-form-item :label="$t('dashboard.autoRefresh')" class="item-receivers" prop="refresh">
+            <el-select v-model="editPanel.param.refresh" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
+              <el-option
+                v-for="item in intervalList"
+                :value="item.value"
+                :label="item.label"
+                :key="item.value"
+              >
+                <span class="panel-dropdown-label-txt">{{item.label}}</span>
+              </el-option>
+            </el-select>
           </el-form-item>
 
           <!-- variable -->
@@ -471,6 +500,27 @@ export default {
         { name: this.$t('project.topology.none'), id: 0 },
         { name: this.$t('asset.asset'), id: 1 },
         { name: this.$t('asset.endpoint'), id: 2 }
+      ],
+      timeData: [
+        { id: 1, text: this.$t('dashboard.dashboard.lastFiveMin'), type: 'minute', value: 5 },
+        { id: 2, text: this.$t('dashboard.dashboard.lastFifteenMin'), type: 'minute', value: 15 },
+        { id: 3, text: this.$t('dashboard.dashboard.lastThirtyMin'), type: 'minute', value: 30 },
+        { id: 4, text: this.$t('dashboard.dashboard.lastOneHour'), type: 'hour', value: 1 },
+        { id: 5, text: this.$t('dashboard.dashboard.lastThreeHour'), type: 'hour', value: 3 },
+        { id: 6, text: this.$t('dashboard.dashboard.lastSixHour'), type: 'hour', value: 6 },
+        { id: 7, text: this.$t('dashboard.dashboard.lastTwelveHour'), type: 'hour', value: 12 },
+        { id: 8, text: this.$t('dashboard.dashboard.lastTwentyFourHour'), type: 'hour', value: 24 },
+        { id: 9, text: this.$t('dashboard.dashboard.lastTwoDay'), type: 'date', value: 2 },
+        { id: 10, text: this.$t('dashboard.dashboard.lastSevenDay'), type: 'date', value: 7 },
+        { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 }
+      ],
+      intervalList: [
+        { value: 0, label: this.$t('dashboard.dashboard.chartForm.lockList.off') },
+        { value: 30, label: '30s' },
+        { value: 60, label: '1m' },
+        { value: 300, label: '5m' },
+        { value: 900, label: '15m' },
+        { value: 1800, label: '30m' }
       ]
     }
   },
@@ -596,6 +646,8 @@ export default {
             receivers: this.editPanel.param.report.receivers
           },
           chartShare: this.editPanel.param.chartShare,
+          defaultTimeRange: this.editPanel.param.defaultTimeRange,
+          refresh: this.editPanel.param.refresh,
           variables
         }
       }
@@ -689,6 +741,9 @@ export default {
             item.uid = getUUID()
           })
         }
+        if (!this.editPanel.param.chartShare) this.$set(this.editPanel.param, 'chartShare', 'none')
+        if (!this.editPanel.param.defaultTimeRange) this.$set(this.editPanel.param, 'defaultTimeRange', 4)
+        if (!this.editPanel.param.refresh) this.$set(this.editPanel.param, 'refresh', 0)
       }
     },
     'editPanel.param.report.schedule.stime': {

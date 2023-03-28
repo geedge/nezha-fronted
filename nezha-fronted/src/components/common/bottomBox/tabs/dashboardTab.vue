@@ -36,12 +36,6 @@
             @panelLockChange="panelLockChange"
           >
             <template v-slot:after>
-              <!-- <el-dropdown-item v-has="'main_add'">
-                <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
-              </el-dropdown-item>
-              <el-dropdown-item v-has="'main_edit'">
-                <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-              </el-dropdown-item> -->
               <el-dropdown-item v-has="'dashboard_view'">
                 <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
               </el-dropdown-item>
@@ -71,27 +65,12 @@
             @panelLockChange="panelLockChange"
           >
             <template v-slot:after>
-              <!-- <el-dropdown-item v-has="'main_add'">
-                <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
-              </el-dropdown-item>
-              <el-dropdown-item v-has="'main_edit'">
-                <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-              </el-dropdown-item> -->
               <el-dropdown-item v-has="'dashboard_view'">
                 <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
               </el-dropdown-item>
             </template>
           </top-tool-more-options>
         </div>
-        <!-- chartTemp -->
-        <!-- <div v-else-if="from === fromRoute.chartTemp">
-          <button id="panel-lock" :title='panelLock ? $t("overall.unlocked") : $t("overall.locked")'  class="top-tool-btn margin-r-10" @click="panelLockChange(!panelLock)" type="button">
-            <i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>
-          </button>
-          <button @click="chartBySync" id="chart-sync"  :title="$t('overall.syncChart')" class="top-tool-btn margin-r-10" type="button">
-            <i class="nz-icon nz-icon-sync"></i>
-          </button>
-        </div> -->
         <!-- dashboardTemp -->
         <div v-else-if="from === fromRoute.dashboardTemp">
           <button v-has="'main_add'" id="endpoint-create-chart" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChartBefore">
@@ -288,8 +267,7 @@ export default {
       filter: { // 过滤条件
         // productId: 0,
         dashboardId: 0,
-        start_time: '',
-        end_time: ''
+        from: this.from
       },
       showPanel: {
         name: '',
@@ -312,7 +290,28 @@ export default {
       chartDetailInfo: {},
       variables: [],
       variablesInit: false,
-      snapshotVisible: false
+      snapshotVisible: false,
+      timeData: [
+        { id: 1, text: this.$t('dashboard.dashboard.lastFiveMin'), type: 'minute', value: 5 },
+        { id: 2, text: this.$t('dashboard.dashboard.lastFifteenMin'), type: 'minute', value: 15 },
+        { id: 3, text: this.$t('dashboard.dashboard.lastThirtyMin'), type: 'minute', value: 30 },
+        { id: 4, text: this.$t('dashboard.dashboard.lastOneHour'), type: 'hour', value: 1 },
+        { id: 5, text: this.$t('dashboard.dashboard.lastThreeHour'), type: 'hour', value: 3 },
+        { id: 6, text: this.$t('dashboard.dashboard.lastSixHour'), type: 'hour', value: 6 },
+        { id: 7, text: this.$t('dashboard.dashboard.lastTwelveHour'), type: 'hour', value: 12 },
+        { id: 8, text: this.$t('dashboard.dashboard.lastTwentyFourHour'), type: 'hour', value: 24 },
+        { id: 9, text: this.$t('dashboard.dashboard.lastTwoDay'), type: 'date', value: 2 },
+        { id: 10, text: this.$t('dashboard.dashboard.lastSevenDay'), type: 'date', value: 7 },
+        { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 }
+      ],
+      intervalList: [
+        { value: 0, label: this.$t('dashboard.dashboard.chartForm.lockList.off') },
+        { value: 30, label: '30s' },
+        { value: 60, label: '1m' },
+        { value: 300, label: '5m' },
+        { value: 900, label: '15m' },
+        { value: 1800, label: '30m' }
+      ]
     }
   },
   components: {
@@ -529,14 +528,6 @@ export default {
         return
       }
       this.chartListLoading = true
-      if (params.start_time === '' || params.end_time === '') {
-        const now = bus.getTimezontDateRange()
-        const endTimeTmp = bus.timeFormate(now[1].getTime(), 'YYYY-MM-DD HH:mm:ss')
-        const startTimeTmp = bus.timeFormate(now[0].getTime(), 'YYYY-MM-DD HH:mm:ss')
-        params.start_time = startTimeTmp
-        params.end_time = endTimeTmp
-        params.from = this.from
-      }
       if (this.from !== 'chartTemp') {
         this.$get('visual/dashboard/chart?dashboardId=' + params.dashboardId + '&groupId=0' + '&pageSize=-1').then(response => {
           if (response.code === 200) {
@@ -559,13 +550,10 @@ export default {
     /* 时间条件查询--start */
     // 选择日期变化
     dateChange (val) {
-      // this.searchTime = [...val];
       if (this.$refs.pickTime) {
         const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.setSearchTime(nowTimeType.type, nowTimeType.value)
-        this.filter.start_time = bus.timeFormate(this.searchTime[0])
-        this.filter.end_time = bus.timeFormate(this.searchTime[1])
         this.filter.dashboardId = this.showPanel.id
         this.getData(this.filter)
         this.$store.dispatch('dispatchPanelTime', {
@@ -603,28 +591,13 @@ export default {
       }
     },
     // 公用操作
-    getTableData (linkId) {
+    async getTableData (linkId) {
       if (this.from === this.fromRoute.alertRule) {
         this.getData(this.filter)
       } else {
-        if (this.from === this.fromRoute.chartTemp) {
-          if (this.obj.type === 'group') {
-            this.$get('/visual/dashboard/chart', { ids: this.obj.id }).then(res => {
-              this.panelDataList = res.data.list
-              if (this.panelDataList.length > 0) {
-                this.showPanel.id = this.filter.dashboardId = 0
-                this.getData(this.filter)
-              }
-            })
-            return
-          }
-          this.panelDataList = [this.obj]
-          if (this.panelDataList.length > 0) {
-            this.showPanel.id = this.filter.dashboardId = 0
-            this.getData(this.filter)
-          }
-        } else if (this.from === this.fromRoute.dashboardTemp) {
-          this.$get('visual/dashboard', { type: 'template', ids: this.obj.id }).then(response => {
+        if (this.from === this.fromRoute.dashboardTemp) {
+          try {
+            const response = await this.$get('visual/dashboard', { type: 'template', ids: this.obj.id })
             if (response.code === 200) {
               this.panelData = response.data.list
               if (this.panelData.length > 0) {
@@ -634,18 +607,18 @@ export default {
                 this.getData(this.filter)
               }
             }
-          }).catch((error) => {
+          } catch (error) {
             if (error) {
               console.error(error)
               this.$message.error(error.toString())
             }
-          })
+          }
         } else {
-          this.$get('visual/dashboard', { type: this.from, link: linkId || this.obj.id }).then(response => {
+          try {
+            const response = await this.$get('visual/dashboard', { type: this.from, link: linkId || this.obj.id })
             if (response.code === 200) {
               this.panelData = response.data.list
               if (this.panelData.length > 0) {
-                // this.showPanel.id = this.filter.dashboardId = this.panelData[0].id
                 this.filter.dashboardId = this.panelData[0].id
                 this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
                 this.variables = this.$loadsh.cloneDeep(this.$loadsh.get(this, 'showPanel.param.variables', []) || [])
@@ -666,12 +639,12 @@ export default {
                 this.$message.error(response)
               }
             }
-          }).catch((error) => {
+          } catch (error) {
             if (error) {
               console.error(error)
               this.$message.error(error.toString())
             }
-          })
+          }
         }
       }
     },
@@ -702,14 +675,6 @@ export default {
       this.searchTime = [startTime, endTime]
       // 刷新数据
       this.dateChange()
-    },
-    pageNo (val) {
-      this.pageObj.pageNo = val
-      this.getTableData(this.obj.id)
-    },
-    pageSize (val) {
-      this.pageObj.pageSize = val
-      this.getTableData(this.obj.id)
     },
     // 滚动事件触发下拉加载
     onScroll () {
@@ -855,6 +820,35 @@ export default {
       this.$nextTick(() => {
         this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
       })
+    },
+    // 时间选择器设置默认时间范围
+    setDefaultTimeRange () {
+      this.$nextTick(() => {
+        let nowTimeType = this.$loadsh.cloneDeep(this.timeData[3])
+        const defaultTimeRange = this.$loadsh.get(this.showPanel, 'param.defaultTimeRange')
+        if (defaultTimeRange) {
+          nowTimeType = this.timeData.find(item => item.id == defaultTimeRange)
+        }
+        this.nowTimeType = this.$loadsh.cloneDeep(nowTimeType)
+        // 刷新时间范围
+        this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType)
+        this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+        this.$store.dispatch('dispatchPanelTime', {
+          time: this.searchTime,
+          nowTimeType: this.nowTimeType
+        })
+      })
+    },
+    // 设置默认刷新
+    setDefaultRefresh () {
+      this.$nextTick(() => {
+        let refresh = this.$loadsh.cloneDeep(this.intervalList[0])
+        const defaultRefresh = this.$loadsh.get(this.showPanel, 'param.refresh')
+        if (defaultRefresh) {
+          refresh = this.intervalList.find(item => item.value == defaultRefresh)
+        }
+        this.$refs.pickTime.selectInterval(refresh)
+      })
     }
   },
   mounted () {
@@ -872,36 +866,22 @@ export default {
     obj: {
       immediate: true,
       handler (n, o) {
-        setTimeout(() => {
+        setTimeout(async () => {
           if (n && n.id) {
             this.searchLabel = {}
-            this.getTableData(n.id)
             if (this.from === fromRoute.asset) {
               this.searchLabel.assetIds = n.id
             }
+            this.getTableData(n.id)
           }
           this.chartDetailInfo = n
         }, 500)
       }
     },
-    chartRightBoxShow: {
-      immediate: false,
-      deep: true,
-      handler (n) {
-        if (n) {
-          this.disposeChart()
-        } else {
-          this.$refs.addChartModal.isStable = 'instability'
-        }
-      }
-    },
-    delChartFlag: {
-      immediate: false,
-      deep: true,
-      handler (n) {
-        if (n) {
-          this.disposeChart()
-        }
+    showPanel: {
+      handler () {
+        this.setDefaultTimeRange()
+        this.setDefaultRefresh()
       }
     },
     // 监听图表联动配置
@@ -926,6 +906,26 @@ export default {
         } else {
           this.$store.commit('setConnect', value)
           echarts.disconnect('timeSeriesGroup')
+        }
+      }
+    },
+    chartRightBoxShow: {
+      immediate: false,
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.disposeChart()
+        } else {
+          this.$refs.addChartModal.isStable = 'instability'
+        }
+      }
+    },
+    delChartFlag: {
+      immediate: false,
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.disposeChart()
         }
       }
     }

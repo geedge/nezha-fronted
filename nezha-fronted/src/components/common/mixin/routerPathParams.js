@@ -53,7 +53,9 @@ export default {
         if (!from) {
           const detailType = this.detailType === 'list' ? 'dataList' : 'detailList'
           localStorage.setItem('detail-view-' + this.tableId, this.detailType)
-          params.detailType = this.detailType
+          if (this.detailType) {
+            params.detailType = this.detailType
+          }
           if (this.detailType === 'list' && this.$refs[detailType]) {
             params.bottomBox = this.$refs[detailType].bottomBox.showSubList
             params.targetTab = this.$refs[detailType].bottomBox.targetTab

@@ -158,7 +158,9 @@ export default {
               repeat: 1
             }
           },
-          chartShare: 'none'
+          chartShare: 'none',
+          defaultTimeRange: 4,
+          refresh: 0
         }
       }
     },
@@ -184,7 +186,9 @@ export default {
                   },
                   receivers: []
                 },
-                chartShare: 'none'
+                chartShare: 'none',
+                defaultTimeRange: 4,
+                refresh: 0
               }
             }
           }

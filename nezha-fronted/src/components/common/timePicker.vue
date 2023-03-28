@@ -6,7 +6,7 @@
     v-clickoutside="changeDropdownFlag"
   >
 
-    <div @click="showDropdown" class="date-range-text">
+    <div @click="showDropdown(true)" class="date-range-text">
       <div class="calendar-popover-text">
         <i class="nz-icon nz-icon-time"></i>
       </div>
@@ -182,82 +182,19 @@ export default {
         text: this.$t('dashboard.dashboard.lastOneHour')
       },
       timeData: [
-        {
-          id: 0,
-          text: this.$t('dashboard.dashboard.customTimeRange'),
-          value: -1
-        },
-        {
-          id: 12,
-          text: this.$t('dashboard.dashboard.noDate'),
-          value: 0
-        },
-        {
-          id: 1,
-          text: this.$t('dashboard.dashboard.lastFiveMin'),
-          type: 'minute',
-          value: 5
-        },
-        {
-          id: 2,
-          text: this.$t('dashboard.dashboard.lastFifteenMin'),
-          type: 'minute',
-          value: 15
-        },
-        {
-          id: 3,
-          text: this.$t('dashboard.dashboard.lastThirtyMin'),
-          type: 'minute',
-          value: 30
-        },
-        {
-          id: 4,
-          text: this.$t('dashboard.dashboard.lastOneHour'),
-          type: 'hour',
-          value: 1
-        },
-        {
-          id: 5,
-          text: this.$t('dashboard.dashboard.lastThreeHour'),
-          type: 'hour',
-          value: 3
-        },
-        {
-          id: 6,
-          text: this.$t('dashboard.dashboard.lastSixHour'),
-          type: 'hour',
-          value: 6
-        },
-        {
-          id: 7,
-          text: this.$t('dashboard.dashboard.lastTwelveHour'),
-          type: 'hour',
-          value: 12
-        },
-        {
-          id: 8,
-          text: this.$t('dashboard.dashboard.lastTwentyFourHour'),
-          type: 'hour',
-          value: 24
-        },
-        {
-          id: 9,
-          text: this.$t('dashboard.dashboard.lastTwoDay'),
-          type: 'date',
-          value: 2
-        },
-        {
-          id: 10,
-          text: this.$t('dashboard.dashboard.lastSevenDay'),
-          type: 'date',
-          value: 7
-        },
-        {
-          id: 11,
-          text: this.$t('dashboard.dashboard.lastThirtyDay'),
-          type: 'date',
-          value: 30
-        }
+        { id: 0, text: this.$t('dashboard.dashboard.customTimeRange'), value: -1 },
+        { id: 12, text: this.$t('dashboard.dashboard.noDate'), value: 0 },
+        { id: 1, text: this.$t('dashboard.dashboard.lastFiveMin'), type: 'minute', value: 5 },
+        { id: 2, text: this.$t('dashboard.dashboard.lastFifteenMin'), type: 'minute', value: 15 },
+        { id: 3, text: this.$t('dashboard.dashboard.lastThirtyMin'), type: 'minute', value: 30 },
+        { id: 4, text: this.$t('dashboard.dashboard.lastOneHour'), type: 'hour', value: 1 },
+        { id: 5, text: this.$t('dashboard.dashboard.lastThreeHour'), type: 'hour', value: 3 },
+        { id: 6, text: this.$t('dashboard.dashboard.lastSixHour'), type: 'hour', value: 6 },
+        { id: 7, text: this.$t('dashboard.dashboard.lastTwelveHour'), type: 'hour', value: 12 },
+        { id: 8, text: this.$t('dashboard.dashboard.lastTwentyFourHour'), type: 'hour', value: 24 },
+        { id: 9, text: this.$t('dashboard.dashboard.lastTwoDay'), type: 'date', value: 2 },
+        { id: 10, text: this.$t('dashboard.dashboard.lastSevenDay'), type: 'date', value: 7 },
+        { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 }
       ],
       timeShowData: [],
       nowTimeType: {
@@ -345,7 +282,7 @@ export default {
         text: this.searchTime[0] + ' ' + this.$t('dashboard.dashboard.to') + ' ' + this.searchTime[1],
         value: -1
       }
-      this.showDropdown()
+      this.showDropdown(false)
       this.setSearchTime('', '', this.searchTime)
       this.$emit('change', this.searchTime)
     },
@@ -377,20 +314,19 @@ export default {
         JSON.stringify(this.rangeHistory)
       )
 
-      console.log(this.sign)
       this.$set(this.searchTime, 2, '')
-      this.showDropdown()
+      this.showDropdown(false)
       this.getRangeHistoryArr()
       this.setSearchTime('', '', this.searchTime)
       this.$emit('change', this.searchTime)
     },
-    showDropdown () {
+    showDropdown (value) {
       const timeTemp = this.$loadsh.cloneDeep(this.searchTime)
       this.oldSearchTime[0] = timeTemp[0]
       this.oldSearchTime[1] = timeTemp[1]
       this.oldSearchTimeError[0] = false
       this.oldSearchTimeError[1] = false
-      this.dropdownFlag = !this.dropdownFlag
+      this.dropdownFlag = value
     },
     dateInputChange (type, v) {
       const timeFormatMain = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
@@ -520,13 +456,25 @@ export default {
           }
         } else {
           this.isCustom = false
-          this.showDropdown()
+          this.showDropdown(false)
           if (this.showEmpty && id === 12) {
             this.searchTime = ['', '']
           }
           this.$emit('change', this.searchTime)
         }
       }
+    },
+    setTimeRange (nowTimeType) {
+      this.isCustom = false
+      this.nowTimeType = nowTimeType
+      this.$set(this.showTime, 'id', nowTimeType.id)
+      this.$set(this.showTime, 'text', nowTimeType.text)
+      this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      const timeTemp = this.$loadsh.cloneDeep(this.searchTime)
+      this.oldSearchTime[0] = timeTemp[0]
+      this.oldSearchTime[1] = timeTemp[1]
+      this.oldSearchTimeError[0] = false
+      this.oldSearchTimeError[1] = false
     },
     getCurrentTime () {
       return this.searchTime
@@ -617,11 +565,14 @@ export default {
         }
       }
     },
-    sign (n) {
-      if (n) {
-        this.rangeHistory = localStorage.getItem('date-range-history' + this.sign)
-          ? JSON.parse(localStorage.getItem('date-range-history' + this.sign))
-          : []
+    sign: {
+      handler (n, o) {
+        if (n) {
+          this.rangeHistory = localStorage.getItem('date-range-history' + this.sign)
+            ? JSON.parse(localStorage.getItem('date-range-history' + this.sign))
+            : []
+          this.getRangeHistoryArr()
+        }
       }
     }
   },

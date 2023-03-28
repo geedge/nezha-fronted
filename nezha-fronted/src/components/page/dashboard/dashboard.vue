@@ -7,7 +7,7 @@
         </transition>
       </div>
       <div class="main-container">
-        <div class="top-tools panel-top-tools" :class="showTopLine? 'panel-top-tools-bottom' : ''">
+        <div class="top-tools panel-top-tools" :class="showTopLine? 'panel-top-tools-bottom' : ''" style="z-index: 1001;">
           <div v-if="panelData.length === 0" class="top-tool-left" style="margin-left: 10px;">
             <button id="dashboard-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" v-has="'main_add'" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("overall.addDashboard")}}</button>
           </div>
@@ -44,7 +44,7 @@
 
             <div class="top-tool-right">
 
-              <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id"></pick-time>
+              <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id" :from="fromRoute.dashboard"></pick-time>
 
               <!-- 切换查看模式 -->
               <button class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
@@ -313,10 +313,7 @@ export default {
       // ---图表相关参数--start
       dataList: [], // 数据列表
       filter: { // 过滤条件
-        dashboardId: 0,
-        start_time: '',
-        end_time: '',
-        id: 4
+        dashboardId: 0
       },
       dashboardId: 0,
       // ---图表相关参数--end
@@ -329,7 +326,28 @@ export default {
       variables: [],
       variablesInit: false, // 判断variables 是否加载完成
       snapshotVisible: false,
-      stableTime: null
+      stableTime: null,
+      timeData: [
+        { id: 1, text: this.$t('dashboard.dashboard.lastFiveMin'), type: 'minute', value: 5 },
+        { id: 2, text: this.$t('dashboard.dashboard.lastFifteenMin'), type: 'minute', value: 15 },
+        { id: 3, text: this.$t('dashboard.dashboard.lastThirtyMin'), type: 'minute', value: 30 },
+        { id: 4, text: this.$t('dashboard.dashboard.lastOneHour'), type: 'hour', value: 1 },
+        { id: 5, text: this.$t('dashboard.dashboard.lastThreeHour'), type: 'hour', value: 3 },
+        { id: 6, text: this.$t('dashboard.dashboard.lastSixHour'), type: 'hour', value: 6 },
+        { id: 7, text: this.$t('dashboard.dashboard.lastTwelveHour'), type: 'hour', value: 12 },
+        { id: 8, text: this.$t('dashboard.dashboard.lastTwentyFourHour'), type: 'hour', value: 24 },
+        { id: 9, text: this.$t('dashboard.dashboard.lastTwoDay'), type: 'date', value: 2 },
+        { id: 10, text: this.$t('dashboard.dashboard.lastSevenDay'), type: 'date', value: 7 },
+        { id: 11, text: this.$t('dashboard.dashboard.lastThirtyDay'), type: 'date', value: 30 }
+      ],
+      intervalList: [
+        { value: 0, label: this.$t('dashboard.dashboard.chartForm.lockList.off') },
+        { value: 30, label: '30s' },
+        { value: 60, label: '1m' },
+        { value: 300, label: '5m' },
+        { value: 900, label: '15m' },
+        { value: 1800, label: '30m' }
+      ]
     }
   },
   components: {
@@ -379,30 +397,6 @@ export default {
     refreshPanel () {
       this.getData(this.filter)
     },
-    // 面板相关操作
-    panelChange (val) {
-      if (!val) {
-        return false
-      }
-      this.variablesInit = false
-      this.showPanel = val
-      this.variables = this.$loadsh.cloneDeep(this.$loadsh.get(this, 'showPanel.param.variables', []) || [])
-      this.showPanel.type = 'dashboard'
-      this.filter.dashboardId = this.showPanel.id
-      this.dashboardId = this.showPanel.id
-      const param = {
-        dashboardId: this.dashboardId,
-        nowTimeType: JSON.stringify(this.nowTimeType),
-        searchTime: JSON.stringify(this.searchTime),
-        mode: this.mode
-      }
-      // this.getTableData()
-      // this.getData(this.filter)
-      const path = this.fromRoute.dashboard
-      this.updatePath(param, path)
-      this.dateChange()
-      this.$refs.chartList.cleanData()
-    },
 
     del (u) {
       this.$confirm(this.$t('tip.confirmDelete'), {
@@ -410,22 +404,22 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('visual/dashboard?ids=' + u.id).then(response => {
+        this.$delete('visual/dashboard?ids=' + u.id).then(async (response) => {
           if (response.code === 200) {
             this.$message({
               duration: 1000,
               type: 'success',
               message: this.$t('tip.deleteSuccess')
             })
-            const param = {
-              dashboardId: 0,
-              nowTimeType: JSON.stringify(this.nowTimeType),
-              searchTime: JSON.stringify(this.searchTime),
-              mode: this.mode
+            // 判断删除的是否是当前面板
+            if (this.showPanel.id == u.id) {
+              const param = { t: +new Date() }
+              const path = this.fromRoute.dashboard
+              this.updatePath(param, path)
+              this.getTableData(true)
+            } else {
+              this.getTableData(false)
             }
-            const path = this.fromRoute.dashboard
-            this.updatePath(param, path)
-            this.getTableData(true)
           } else {
             this.$message.error(response.msg)
             this.$store.dispatch('clearPanel')
@@ -457,7 +451,9 @@ export default {
                   },
                   receivers: []
                 },
-                chartShare: 'none'
+                chartShare: 'none',
+                defaultTimeRange: 4,
+                refresh: 0
               }
             }
           }
@@ -505,7 +501,9 @@ export default {
               repeat: 1
             }
           },
-          chartShare: 'none'
+          chartShare: 'none',
+          defaultTimeRange: 4,
+          refresh: 0
         }
       }
     },
@@ -685,13 +683,6 @@ export default {
       }
       this.dataList = []
       this.chartListLoading = true
-      if (params.start_time === '' || params.end_time === '') {
-        const now = bus.getTimezontDateRange()
-        const endTimeTmp = bus.timeFormate(now[1].getTime(), this.panelDateFormatTime)
-        const startTimeTmp = bus.timeFormate(now[0].getTime(), this.panelDateFormatTime)
-        params.start_time = startTimeTmp
-        params.end_time = endTimeTmp
-      }
       if (le5leData) {
         Object.keys(le5leData).forEach(key => {
           le5leData[key] = null
@@ -717,32 +708,51 @@ export default {
       })
     },
 
+    // 面板相关操作
+    panelChange (val) {
+      if (!val) {
+        return false
+      }
+      // 切换面板 重置参数
+      const param = {
+        dashboardId: val.id
+      }
+      this.mode = ''
+      this.$store.commit('setMode', this.mode)
+      const path = this.fromRoute.dashboard
+      this.updatePath(param, path)
+      setTimeout(() => {
+        this.variablesInit = false
+        this.showPanel = val
+        this.variables = this.$loadsh.cloneDeep(this.$loadsh.get(this, 'showPanel.param.variables', []) || [])
+        this.showPanel.type = 'dashboard'
+        this.filter.dashboardId = this.showPanel.id
+        this.dashboardId = this.showPanel.id
+        this.getData(this.filter)
+        this.$refs.chartList.cleanData()
+      })
+    },
+
     /* 图表相关操作--end */
     /* 时间条件查询--start */
     // 选择日期变化
-    dateChange (val) {
+    dateChange (route) {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
-      this.filter.start_time = bus.timeFormate(this.searchTime[0], this.panelDateFormatTime)
-      this.filter.end_time = bus.timeFormate(this.searchTime[1], this.panelDateFormatTime)
-      this.filter.end_time = bus.timeFormate(this.searchTime[1], this.panelDateFormatTime)
-      this.filter.value = this.searchTime[2]
-      this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
-      // this.getTableData()
       this.getData(this.filter)
-      const param = {
-        dashboardId: this.dashboardId,
-        nowTimeType: JSON.stringify(this.nowTimeType),
-        searchTime: JSON.stringify(this.searchTime),
-        mode: this.mode
-      }
-      const path = this.fromRoute.dashboard
-      this.updatePath(param, path)
       this.$store.dispatch('dispatchPanelTime', {
         time: this.searchTime,
         nowTimeType: this.nowTimeType
       })
+      // 选择时间范围时更新路由
+      if (route) {
+        const param = { ...this.$route.query }
+        param.nowTimeType = JSON.stringify(this.nowTimeType)
+        param.searchTime = JSON.stringify(this.searchTime)
+        const path = this.fromRoute.dashboard
+        this.updatePath(param, path)
+      }
     },
     setSearchTime (type, val, nowTimeType) { // 设置searchTime
       if (type === 'minute') {
@@ -794,58 +804,60 @@ export default {
       })
     },
 
-    getTableData (clearShowPanel) {
+    async getTableData (clearShowPanel) {
       const vm = this
-      this.$get('visual/dashboard?type=dashboard&pageSize=-1').then(response => {
-        if (response.code === 200) {
-          let isInitData = false
-          this.panelData = JSON.parse(JSON.stringify(response.data.list))
-          if (response.data.list.length > 0) {
-            if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
-              this.showPanel = JSON.parse(JSON.stringify(this.$store.state.showPanel))
-            }
-            if (clearShowPanel) {
-              this.showPanel.id = ''
-            }
-            if (!this.showPanel.id) {
-              this.showPanel = response.data.list[0]
-              this.filter.dashboardId = this.showPanel.id
-              this.getData(this.filter)
-              isInitData = true
-            } else {
-              handler(response.data.list)
-              this.filter.dashboardId = this.showPanel.id
-            }
-            this.isLoading = false
-          } else {
-            this.showPanel.id = ''
-            this.filter.dashboardId = ''
-            this.isLoading = !response.data.list.length === 0
-          }
-          this.pageObj.total = response.data.total
-          if (!isInitData && (this.panel.id === '' || this.panel.id === this.showPanel.id)) {
-            this.getData(this.filter)
-          }
-          this.$store.state.showPanel.id = 0
-          this.$store.state.showPanel.name = ''
-          this.$store.state.showPanel.type = 'dashboard'
-        } else {
-          if (response.msg) {
-            this.$message.error(response.msg)
-          } else if (response.error) {
-            this.$message.error(response.error)
-          } else {
-            this.$message.error(response)
-          }
-        }
-        this.variables = this.$loadsh.get(this, 'showPanel.param.variables', []) || []
-      }).catch((error) => {
+      let response
+      try {
+        response = await this.$get('visual/dashboard?type=dashboard&pageSize=-1')
+      } catch (error) {
         // console.log('error................'+JSON.stringify(error));
         if (error) {
           console.error(error)
           this.$message.error(error.toString())
         }
-      })
+      }
+      if (response.code === 200) {
+        let isInitData = false
+        this.panelData = JSON.parse(JSON.stringify(response.data.list))
+        if (response.data.list.length > 0) {
+          if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
+            this.showPanel = JSON.parse(JSON.stringify(this.$store.state.showPanel))
+          }
+          if (clearShowPanel) {
+            this.showPanel.id = ''
+          }
+          if (!this.showPanel.id) {
+            this.showPanel = response.data.list[0]
+            this.filter.dashboardId = this.showPanel.id
+            this.getData(this.filter)
+            isInitData = true
+          } else {
+            handler(response.data.list)
+            this.filter.dashboardId = this.showPanel.id
+          }
+          this.isLoading = false
+        } else {
+          this.showPanel.id = ''
+          this.filter.dashboardId = ''
+          this.isLoading = !response.data.list.length === 0
+        }
+        this.pageObj.total = response.data.total
+        if (!isInitData && (this.panel.id === '' || this.panel.id === this.showPanel.id)) {
+          this.getData(this.filter)
+        }
+        this.$store.state.showPanel.id = 0
+        this.$store.state.showPanel.name = ''
+        this.$store.state.showPanel.type = 'dashboard'
+      } else {
+        if (response.msg) {
+          this.$message.error(response.msg)
+        } else if (response.error) {
+          this.$message.error(response.error)
+        } else {
+          this.$message.error(response)
+        }
+      }
+      this.variables = this.$loadsh.get(this, 'showPanel.param.variables', []) || []
 
       function handler (panelData) {
         panelData.forEach(panel => {
@@ -886,14 +898,6 @@ export default {
       this.searchTime = [startTime, endTime]
       // 刷新数据
       this.dateChange()
-    },
-    pageNo (val) {
-      this.pageObj.pageNo = val
-      this.getTableData()
-    },
-    pageSize (val) {
-      this.pageObj.pageSize = val
-      this.getTableData()
     },
     // 滚动事件触发下拉加载
     onScroll () {
@@ -1024,18 +1028,9 @@ export default {
         this.mode = ''
       }
       this.$store.commit('setMode', this.mode)
-      const param = {
-        dashboardId: this.dashboardId,
-        nowTimeType: JSON.stringify(this.nowTimeType),
-        searchTime: JSON.stringify(this.searchTime),
-        mode: this.mode
-      }
+      const param = { ...this.$route.query, mode: this.mode }
       const path = this.fromRoute.dashboard
       this.updatePath(param, path)
-      this.$store.dispatch('dispatchPanelTime', {
-        time: this.searchTime,
-        nowTimeType: this.nowTimeType
-      })
     },
     // 按ESC键退出查看模式
     escExit (e) {
@@ -1052,12 +1047,8 @@ export default {
         // 默认模式
         this.mode = ''
         this.$store.commit('setMode', this.mode)
-        const param = {
-          dashboardId: this.dashboardId,
-          nowTimeType: JSON.stringify(this.nowTimeType),
-          searchTime: JSON.stringify(this.searchTime),
-          mode: this.mode
-        }
+        const param = { ...this.$route.query }
+        delete param.mode
         const path = this.fromRoute.dashboard
         this.updatePath(param, path)
       }
@@ -1067,9 +1058,40 @@ export default {
       this.$nextTick(() => {
         this.$refs.chartList.onScroll(this.scrollbarWrap.scrollTop)
       })
+    },
+    // 时间选择器设置默认时间范围
+    setDefaultTimeRange () {
+      this.$nextTick(() => {
+        if (this.$route.query.searchTime) return
+        let nowTimeType = this.$loadsh.cloneDeep(this.timeData[3])
+        const defaultTimeRange = this.$loadsh.get(this.showPanel, 'param.defaultTimeRange')
+        if (defaultTimeRange) {
+          nowTimeType = this.timeData.find(item => item.id == defaultTimeRange)
+        }
+        this.nowTimeType = this.$loadsh.cloneDeep(nowTimeType)
+        // 刷新时间范围
+        this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType)
+        this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+        this.$store.dispatch('dispatchPanelTime', {
+          time: this.searchTime,
+          nowTimeType: this.nowTimeType
+        })
+      })
+    },
+    // 设置默认刷新
+    setDefaultRefresh () {
+      this.$nextTick(() => {
+        if (this.$route.query.refresh) return
+        let refresh = this.$loadsh.cloneDeep(this.intervalList[0])
+        const defaultRefresh = this.$loadsh.get(this.showPanel, 'param.refresh')
+        if (defaultRefresh) {
+          refresh = this.intervalList.find(item => item.value == defaultRefresh)
+        }
+        this.$refs.pickTime.selectInterval(refresh)
+      })
     }
   },
-  created () {
+  async created () {
     const searchKeys = {
       // key: path 键
       // value: vue set 参数
@@ -1079,24 +1101,27 @@ export default {
       mode: { target: this, propertyName: 'mode', type: 'string' }
     }
     this.initQueryFromPath(searchKeys)
-    setTimeout(() => {
-      this.showPanel.id = this.dashboardId
-      this.filter.dashboardId = this.dashboardId
-    })
+    this.showPanel.id = this.dashboardId
+    this.filter.dashboardId = this.dashboardId
     // 设置查看模式
     this.$store.commit('setMode', this.mode)
+    await this.getTableData()
     if (this.nowTimeType.type) {
       this.setSearchTime(this.nowTimeType.type, this.nowTimeType.value, this.nowTimeType)
-      this.filter.start_time = bus.timeFormate(this.searchTime[0], this.panelDateFormatTime)
-      this.filter.end_time = bus.timeFormate(this.searchTime[1], this.panelDateFormatTime)
-      this.filter.end_time = bus.timeFormate(this.searchTime[1], this.panelDateFormatTime)
-      this.filter.value = this.searchTime[2]
     }
-    this.getTableData()
+    if (this.nowTimeType) {
+      this.nowTimeType.start_time = this.searchTime[0]
+      this.nowTimeType.end_time = this.searchTime[1]
+      this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowTimeType)
+    }
     this.$store.dispatch('dispatchPanelTime', {
       time: this.searchTime,
       nowTimeType: this.nowTimeType
     })
+    if (this.$route.query.refresh) {
+      const refresh = this.intervalList.find(item => item.label == this.$route.query.refresh)
+      this.$refs.pickTime.selectInterval(refresh)
+    }
   },
   mounted () {
     // 监听键盘ESC事件
@@ -1106,17 +1131,14 @@ export default {
     this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
     document.querySelector('#tableList').addEventListener('mouseleave', this.tableListLeave)
-    if (this.nowTimeType) {
-      this.nowTimeType.start_time = this.searchTime[0]
-      this.nowTimeType.end_time = this.searchTime[1]
-      setTimeout(() => {
-        if (this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker) {
-          this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowTimeType)
-        }
-      }, 100)
-    }
   },
   watch: {
+    showPanel: {
+      handler () {
+        this.setDefaultTimeRange()
+        this.setDefaultRefresh()
+      }
+    },
     // 监听图表联动配置
     'showPanel.param.chartShare': {
       handler (value) {
@@ -1180,7 +1202,6 @@ export default {
         const add = this.$route.query.add
         this.$nextTick(() => {
           if (add) {
-            console.log(add)
             if (add === 'chart') {
               this.addChartBefore()
             }
