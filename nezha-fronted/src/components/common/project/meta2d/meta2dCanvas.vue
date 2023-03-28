@@ -51,7 +51,7 @@
           <div v-for="(item, index) in elements" :key="item.id" @click.stop="penActive(item)">
             <div class="pen-tools pen-item" :class="selectPenArrId.indexOf(item.id) !== -1 ? 'is-active' : ''">
                 <span class="hide-input">
-                  <i v-if="item.type !== 1" class="nz-icon nz-icon-juxing" style="margin-right: 3px"/>
+                  <i v-if="item.type !== 1" class="nz-icon nz-icon-image" style="margin-right: 3px"/>
                   <i v-else class="nz-icon nz-icon-xiantiao" />
                   <el-input
                     :ref="'hideInput' + index"
@@ -95,10 +95,10 @@
       <div style="display: flex;padding: 10px 0; justify-content: space-between">
         <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="addNode"
                 style="margin-right: 20px">
-          {{$t('add element')}}
+          {{$t('project.topology.addNode')}}
         </button>
         <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-if="selectPenArrId.length" style="margin-right: 20px" @click="clearSelection">
-          {{$t('Clear selection')}}
+          {{$t('project.topology.clearSelection')}}
         </button>
       </div>
     </div>
@@ -126,7 +126,6 @@ export default {
   },
   computed: {
     selectPenArrId () {
-      console.log(this.selectPenArr)
       return this.selectPenArr.active.map(item => item.id)
     }
   },
@@ -200,7 +199,6 @@ export default {
     },
     penActive (item) {
       // bus.$emit('changeSelectPens', [])
-      console.log(getTopology(this.meta2dId).store)
       this.$emit('changeActiveName')
       this.$nextTick(() => {
         getTopology(this.meta2dId).active([item])

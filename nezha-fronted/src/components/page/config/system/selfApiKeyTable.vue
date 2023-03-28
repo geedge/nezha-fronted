@@ -52,9 +52,9 @@
             <template v-if="item.prop == 'createAt'">
               {{scope.row[item.prop]?utcTimeToTimezoneStr(scope.row[item.prop]):'-'}}
             </template>
-             <template v-if="item.prop == 'remark'">
+             <span v-if="item.prop == 'remark'" class="el-table-remark">
               {{scope.row[item.prop]?scope.row[item.prop]:'-'}}
-            </template>
+            </span>
         </template>
       </el-table-column>
       <el-table-column

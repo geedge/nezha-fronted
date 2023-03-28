@@ -3,7 +3,7 @@
     <div v-if="!isChart && !editFlag"> {{project && project.name}} </div>
     <div class="tools-left" v-if="editFlag">
       <topology-top-tool
-        v-if="editFlag&&toolShow&&!isPreview"
+        v-if="editFlag&&toolShow"
         :meta2dId="meta2dId"
         ref="topTool"
        >
@@ -27,16 +27,16 @@
       </button>
     </div>
     <div v-if="editFlag" class="top-tool-right float-right">
-      <button @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light"
+      <button @click="previewTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light"
               style="margin-right: 20px"
       >
         {{$t('overall.preview')}}
       </button>
-      <button v-if="isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="previewExit"
-              style="margin-right: 20px"
-      >
-        {{$t('project.topology.previewExit')}}
-      </button>
+<!--      <button v-if="isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="previewExit"-->
+<!--              style="margin-right: 20px"-->
+<!--      >-->
+<!--        {{$t('project.topology.previewExit')}}-->
+<!--      </button>-->
       <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="saveMeta2d"
               :disabled="prevent_opt.save"
               :class="{'nz-btn-disabled':prevent_opt.save}"
@@ -56,12 +56,14 @@ import { getTopology, setTopology, dealImg, topologyImg } from '@/components/com
 import { deepClone } from '@meta2d/core'
 import bus from '@/libs/bus'
 import topologyTopTool from '@/components/common/project/meta2d/topologyTopTool'
+import meta2dMainOther from '@/components/common/project/meta2d/meta2dMain'
 
 export default {
   name: 'meta2dHeader',
   mixins: [topoUtil],
   components: {
-    topologyTopTool
+    topologyTopTool,
+    meta2dMainOther
   },
   props: {
     meta2dId: {},
@@ -78,9 +80,12 @@ export default {
   data () {
     return {
       topoScreenState: '',
-      isPreview: false,
       searchTime: bus.getTimezontDateRange(),
-      toolShow: true
+      toolShow: true,
+      topoData: {},
+      querysArray: {},
+      currentProject: {},
+      params: {}
     }
   },
   computed: {
@@ -156,26 +161,44 @@ export default {
       })
     },
     previewTopology () {
-      console.log(getTopology(this.meta2dId).data())
-      this.isPreview = true
       const elements = this.$parent.$refs.meta2dProps.$refs.meta2dData.elements
-      const endTime = new Date().getTime()
-      const startTime = endTime - 60 * 5 * 1000
-      this.getQueryValues(elements, startTime, endTime).then(arr => {
-        this.clacTopoData(getTopology(this.meta2dId).data(), arr).then((data) => {
-          getTopology(this.meta2dId).resize()
-          getTopology(this.meta2dId).open(data)
-          getTopology(this.meta2dId).centerView()
-          getTopology(this.meta2dId).lock(1)
-        })
-      })
+      const timeType = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataTimeType
+      const topoData = {
+        ...getTopology(this.meta2dId).data()
+      }
+      topoData.elements = elements
+      topoData.timeType = timeType
+      const params = {
+        topoData,
+        querysArray: topoData.elements || [],
+        params: {
+          timeType: topoData.timeType || 5
+        },
+        currentProject: {
+          id: this.project.id
+        },
+        show: true
+      }
+      bus.$emit('showMeta2dPreview', params)
+      // console.log(getTopology(this.meta2dId).data())
+      // const elements = this.$parent.$refs.meta2dProps.$refs.meta2dData.elements
+      // const endTime = new Date().getTime()
+      // const startTime = endTime - 60 * 5 * 1000
+      // this.getQueryValues(elements, startTime, endTime).then(arr => {
+      //   this.clacTopoData(getTopology(this.meta2dId).data(), arr).then((data) => {
+      //     getTopology(this.meta2dId).resize()
+      //     getTopology(this.meta2dId).open(data)
+      //     getTopology(this.meta2dId).centerView()
+      //     getTopology(this.meta2dId).lock(1)
+      //   })
+      // })
     },
     previewExit () {
       if (this.$refs.topTool && this.$refs.topTool.option.map) {
         this.$refs.topTool.option.map = false
         getTopology(this.meta2dId).hideMap()
       }
-      this.isPreview = false
+      // this.isPreview = false
       getTopology(this.meta2dId).lock(0)
       getTopology(this.meta2dId).stopAnimate()
       if (getTopology(this.meta2dId).data().pens) {
@@ -188,12 +211,15 @@ export default {
       this.$emit('getNodesArr')
     },
     cancelTopology () {
-      this.isPreview = false
+      // this.isPreview = false
       this.$store.commit('setShowTopoScreen', this.topoScreenState)
       if (this.$refs.topTool && this.$refs.topTool.option.map) {
         getTopology(this.meta2dId).hideMap()
       }
       this.$emit('exitEdit', true)
+    },
+    reload () {
+
     }
   }
 }

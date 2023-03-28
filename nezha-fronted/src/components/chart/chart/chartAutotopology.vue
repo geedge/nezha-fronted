@@ -2,16 +2,21 @@
   <div v-my-loading="topologyLoading" class="overview">
     <transition name = "el-zoom-in-center">
       <div v-if="allProject&&allProject.length>0" style="width: 100%;height: 100%;position: relative">
-        <el-carousel :interval="5000" :trigger="'click'" arrow="hover">
-          <el-carousel-item v-for="(item,index) in allProject" :key="index">
+        <el-carousel :interval="5000" :trigger="'click'" :autoplay="false" arrow="hover">
+          <el-carousel-item v-for="(item,index) in allProject" :key="index" style="min-height: 10px;min-width: 10px">
             <div class="maskLayer" @click="toProject(item)"></div>
 <!--            <span class="project-name">{{item.name}}</span>-->
-            <topology
-              :fromOverView="true"
-              :from-chart="true"
-              :obj="item"
+            <meta2dMain
+              :meta2dId="'autoTopology' + item.id + (isFullscreen ? 'screen' : '')"
+              :topoData="item.topoData"
+              :isPreview="true"
+              :querysArray="item.querysArray"
+              :project="item"
+              :params="item.params"
+              :show-zoom="false"
+              class="meta2d-chart"
+              :is-chart="true"
               :ref="'topology' + index"
-              :topologyIndexF="isFullscreen?('screen'+chartInfo.id+'-'+index):(chartInfo.id+'-'+index)"
             />
           </el-carousel-item>
         </el-carousel>
@@ -23,7 +28,7 @@
 
 <script>
 import axios from 'axios'
-import topology from '@/components/common/project/topologyL5'
+import meta2dMain from '@/components/common/project/meta2d/meta2dMain'
 import chartMixin from '@/components/chart/chartMixin'
 import bus from '@/libs/bus'
 export default {
@@ -36,7 +41,7 @@ export default {
   },
   mixins: [chartMixin],
   components: {
-    topology
+    meta2dMain
   },
   methods: {
     initChart () {
@@ -64,6 +69,14 @@ export default {
             this.topologyLoading = false
           }
           res2.forEach((item, index) => {
+            item.topoData = item.topo || {}
+            if (item.topo.topo) {
+              item.topoData = item.topo.topo || {}
+            }
+            item.querysArray = item.topo.elements || []
+            item.params = {
+              timeType: item.topo.timeType || 5
+            }
             // temp.push(item)
             setTimeout(() => {
               this.allProject.push(item)
@@ -78,7 +91,10 @@ export default {
       })
     },
     toProject (projectInfo) { // 跳转对应project页面
-      this.$store.commit('currentProjectChange', projectInfo)
+      this.$store.commit('currentProjectChange', {
+        id: projectInfo.id,
+        name: projectInfo.name
+      })
       this.jumpTo('project')
     },
     jumpTo (data, id) {
@@ -101,7 +117,7 @@ export default {
     },
     resize () {
       this.allProject.forEach((item, index) => {
-        this.$refs['topology' + index][0] && this.$refs['topology' + index][0].winResize()
+        this.$refs['topology' + index][0] && this.$refs['topology' + index][0].topoResize()
       })
     }
   },
@@ -114,6 +130,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.meta2d-chart {
+  /deep/.meta2d-project {
+    height: 100%;
+    border: none;
+  }
+}
 </style>

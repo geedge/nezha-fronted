@@ -19,6 +19,7 @@ export default {
     reload () {
       if (this.currentProject.id) {
         this.$get('monitor/project/topo', { projectId: this.currentProject.id }).then(res => {
+
           if (res.data && res.data.topo) {
             this.topoData = res.data.topo || {}
             if (res.data.topo.topo) {

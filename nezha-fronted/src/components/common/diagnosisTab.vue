@@ -16,7 +16,7 @@
       <!-- 头部 -->
       <div class="dialog-header" style="vertical-align:top;">
         <div class="dialog-header-l">
-            <i class="nz-icon nz-icon-Diagnosis1"></i>
+            <i class="nz-icon nz-icon-a-Diagnosisresult"></i>
             <div>
               <div class="dialog-header-name">{{diagnosisTabData.row.name}}</div>
               <div v-html="fragment" class="dialog-header-item">

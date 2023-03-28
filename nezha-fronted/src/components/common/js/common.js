@@ -48,6 +48,15 @@ export function setTopology (key, value) {
     delete topologyCache[`topology${key}`]
   }
 }
+export function clearTopology () {
+  Object.keys(topologyCache).forEach(key => {
+    if (topologyCache[`topology${key}`]) {
+      topologyCache[`topology${key}`].destroy()
+      topologyCache[`topology${key}`] = null
+      delete topologyCache[`topology${key}`]
+    }
+  })
+}
 
 export function clearTopologyCache () {
   topologyCache = {}

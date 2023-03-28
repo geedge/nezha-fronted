@@ -28,7 +28,7 @@
                 @change="change('nzName')"></el-input>
             </div>
           </div>
-          <div class="form-row-item">
+          <div class="form-row-item form-row-item-full">
             <div class="form-row-key">
               {{$t('overall.module')}}
             </div>
@@ -50,7 +50,7 @@
           <div v-show="elements.position" class="form-row-content">
             <div class="form-row-item">
               <div class="form-row-key">
-                X
+                {{$t('topology.position.x')}}
               </div>
               <div class="form-row-value">
                 <el-input-number
@@ -69,7 +69,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                Y
+                {{$t('topology.position.y')}}
               </div>
               <div class="form-row-value">
                 <el-input-number

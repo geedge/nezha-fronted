@@ -126,7 +126,7 @@
               </div>
               <div class="mib-browser-detail-row">
                 <div>Description</div>
-                <div>{{currentWalk.description}}</div>
+                <div class="el-table-remark">{{currentWalk.description}}</div>
               </div>
             </div>
           </div>

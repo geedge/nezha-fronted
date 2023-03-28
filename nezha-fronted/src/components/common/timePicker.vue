@@ -313,7 +313,6 @@ export default {
         'date-range-history' + this.sign,
         JSON.stringify(this.rangeHistory)
       )
-
       this.$set(this.searchTime, 2, '')
       this.showDropdown(false)
       this.getRangeHistoryArr()

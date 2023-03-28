@@ -236,7 +236,7 @@ export default {
             disabled: false
           }, {
             name: this.$t('overall.acknowledge'),
-            type: 'selectString',
+            type: 'select',
             label: 'ack',
             readonly: true,
             disabled: false

@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "34724146",
+      "name": "全部展开",
+      "font_class": "quanbuzhankai1",
+      "unicode": "e7d7",
+      "unicode_decimal": 59351
+    },
+    {
+      "icon_id": "34724147",
+      "name": "全部收起",
+      "font_class": "quanbushouqi1",
+      "unicode": "e7d8",
+      "unicode_decimal": 59352
+    },
+    {
+      "icon_id": "34708233",
+      "name": "Diagnosis result",
+      "font_class": "a-Diagnosisresult",
+      "unicode": "e7d6",
+      "unicode_decimal": 59350
+    },
+    {
+      "icon_id": "34702402",
+      "name": "Unlock",
+      "font_class": "Unlock1",
+      "unicode": "e7d4",
+      "unicode_decimal": 59348
+    },
+    {
+      "icon_id": "34702403",
+      "name": "image",
+      "font_class": "image",
+      "unicode": "e7d5",
+      "unicode_decimal": 59349
+    },
+    {
       "icon_id": "20226387",
       "name": "下降",
       "font_class": "xiajiang1",
