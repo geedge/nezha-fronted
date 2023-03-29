@@ -3,7 +3,7 @@
     <div @click="changeSelectBoxShow(true)" style="position: relative">
       <div class="image-input">
         <span v-if="imageName">{{unit}} / {{imageName}}</span>
-        <i class="el-icon-circle-close" style="position: absolute;top: 10px;right: 10px;font-size: 14px" @click.stop="selectImageChange({image: '', id: ''})"/>
+        <i class="el-icon-circle-close" style="position: absolute;top: 10px;right: 10px;font-size: 14px" @click.stop="selectImageChange({image: '', id: ''}, true)"/>
       </div>
     </div>
 <!--    <div class="image-select-box" v-if="selectBoxShow">-->
@@ -252,9 +252,12 @@ export default {
     selectGroup (item) {
       item.show = !item.show
     },
-    selectImageChange (item) {
+    selectImageChange (item, isChange) {
       this.selectImgId = item.id
       this.selectImg = item
+      if (isChange) {
+        this.changImage()
+      }
     },
     changImage () {
       this.unit = this.selectImg.unit

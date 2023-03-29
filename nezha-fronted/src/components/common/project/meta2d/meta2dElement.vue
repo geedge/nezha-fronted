@@ -1233,6 +1233,11 @@ export default {
         this.pen.image = ''
         this.change('icon')
       }
+      if (!image.id) {
+        this.pen.image = image.image
+        this.pen.icon = ''
+        this.change('image')
+      }
     },
     colorChange (val, key) {
       this.pen.data.params[key] = val

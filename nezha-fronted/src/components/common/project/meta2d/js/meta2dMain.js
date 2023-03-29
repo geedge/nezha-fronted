@@ -407,9 +407,11 @@ export default {
         obj[key] = findPen[key]
       }
       if (key === 'image') {
+        obj.imageId = pen[key]
         obj.icon = ''
       }
       if (key === 'icon') {
+        obj.imageId = pen[key]
         obj.image = ''
       }
       getTopology(this.meta2dId).setValue(obj) // 更新pen
