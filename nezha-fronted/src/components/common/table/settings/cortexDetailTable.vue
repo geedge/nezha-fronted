@@ -76,7 +76,7 @@
                     <div class="col-resize-area"></div>
                   </template>
                   <template slot-scope="scope" :column="item">
-                    <span v-if="item.prop === 'name'">{{indexs==0?$t('cortex.storeGateway'):(indexs==1?$t('cortex.ingester'):$t('cortex.compactor'))}}</span>
+                    <span v-if="item.prop === 'name'">{{indexs==0?'Store gateway':(indexs==1?'Ingester':$t('cortex.compactor'))}}</span>
                     <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
                     <template v-else>-</template>
                   </template>
@@ -135,7 +135,7 @@ export default {
       configSwitch: 1,
       ingesterTitle: [
         {
-          label: this.$t('alert.alertName'),
+          label: 'Name',
           prop: 'name',
           minWidth: 145
         },
@@ -145,96 +145,96 @@ export default {
           minWidth: 145
         },
         {
-          label: this.$t('cortex.availabilityZone'),
+          label: 'Availability zone',
           prop: 'zone',
           minWidth: 180
         },
         {
-          label: this.$t('overall.state'),
+          label: 'State',
           prop: 'state',
           minWidth: 150
         },
         {
-          label: this.$t('overall.address'),
+          label: 'Address',
           prop: 'address',
           minWidth: 180
         }, {
-          label: this.$t('cortex.registeredAt'),
+          label: 'Registered at',
           prop: 'registeredAt',
           minWidth: 210
         }, {
-          label: this.$t('cortex.lastHeartbeat'),
+          label: 'Last heartbeat',
           prop: 'heartbeat',
           minWidth: 210
         }, {
-          label: this.$t('asset.talon.token'),
+          label: 'Token',
           prop: 'tokens',
           minWidth: 180
         }, {
-          label: this.$t('cortex.ownership'),
+          label: 'Ownership',
           prop: 'ownership',
           minWidth: 180
         }],
       serviceTitle: [
         {
-          label: this.$t('cortex.ready'),
+          label: 'Ready',
           prop: 'ready',
           minWidth: 180
         },
         {
-          label: this.$t('cortex.distributorService'),
+          label: 'Distributor service',
           prop: 'distributor-service',
           minWidth: 180
         },
         {
-          label: this.$t('cortex.ingesterService'),
+          label: 'Ingester service',
           prop: 'ingester-service',
           minWidth: 180
         },
         {
-          label: this.$t('cortex.memberlist'),
+          label: 'Member list KV',
           prop: 'memberlist-kv',
           minWidth: 180
         },
         {
-          label: this.$t('cortex.querier'),
+          label: 'Querier',
           prop: 'querier',
           minWidth: 180
         },
         {
-          label: this.$t('cortex.queryFrontend'),
+          label: 'Query frontend',
           prop: 'query-frontend',
           minWidth: 180
         }
       ],
       serviceTitleSub: [
         {
-          label: this.$t('cortex.queryFrontendTripperware'),
+          label: 'Query frontend tripperware',
           prop: 'query-frontend-tripperware',
           minWidth: 180
         },
         {
-          label: this.$t('cortex.ring'),
+          label: 'Ring',
           prop: 'ring',
           minWidth: 180
         },
         {
-          label: this.$t('project.topology.rule'),
+          label: 'Ruler',
           prop: 'ruler',
           minWidth: 180
         },
         {
-          label: this.$t('asset.server'),
+          label: 'Server',
           prop: 'server',
           minWidth: 180
         },
         {
-          label: this.$t('cortex.storeGateway'),
+          label: 'Store gateway',
           prop: 'store-gateway',
           minWidth: 180
         },
         {
-          label: this.$t('cortex.storeQueryable'),
+          label: 'Store queryable',
           prop: 'store-queryable',
           minWidth: 180
         }
