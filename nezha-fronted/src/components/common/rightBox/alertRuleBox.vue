@@ -10,7 +10,7 @@
     </div>
 
     <!-- begin--表单-->
-    <div class="right-box__container">
+    <div class="right-box__container alert-box-threshold">
       <div class="container__form">
         <el-form ref="alertRuleForm" :model="editAlertRule" :rules="rules" label-position = "top" label-width="120px">
           <!--name-->
@@ -18,10 +18,10 @@
             <el-input id="alert-box-input-name" ref="alertName" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--type-->
-          <el-form-item :label="$t('overall.type')" prop="type" class="half-form-item">
+          <el-form-item :label="$t('overall.type')" prop="type">
             <el-select
               v-model="editAlertRule.type"
-              class="right-box__select half-form-item"
+              class="right-box__select"
               popper-class="right-box-select-top prevent-clickoutside"
               size="small"
               :disabled="showTypeSelect"
@@ -33,21 +33,11 @@
                 :value="item.value"></el-option>
             </el-select>
           </el-form-item>
-          <!--severity-->
-          <el-form-item :label="$t('alert.severity')" class="severity-box half-form-item" prop="severityId">
-            <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
-              <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
-                <div style="display: flex;justify-content: space-between;padding: 5px;line-height: 23px">
-                  <div><i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}</div>
-                  <div class="severity-item text-ellipsis" :title="item.remark">{{item.remark}}</div>
-                </div>
-              </el-option>
-            </el-select>
-            <i v-if="editAlertRule.severityId" :style="{color:severityData.length > 0 && severityData.find(severity => severity.id ===  editAlertRule.severityId).color,'font-size':'12px'}" class="nz-icon nz-icon-circle severity-circle"></i>
-          </el-form-item>
+
+          <div class="alert-rule-split-title">{{$t('alert.config.condition')}}</div>
           <!--expr-->
           <el-form-item  v-if="showSnmpTrap" :label='$t("config.exprTemp.expression")' prop="expr">
-              <template v-if="showMetrics">
+              <div v-if="showMetrics" key="metric">
                 <el-row style="line-height: 32px;">
                   <promql-input
                     v-if="showMetrics"
@@ -64,8 +54,8 @@
                     @change="metricChange"
                   ></promql-input>
                 </el-row>
-              </template>
-              <template v-else>
+              </div>
+              <div v-else key="log">
                 <el-row style="line-height: 32px;">
                   <promql-input
                     v-if="!showMetrics"
@@ -80,37 +70,49 @@
                     @change="metricChange"
                   ></promql-input>
                 </el-row>
-              </template>
-           </el-form-item>
-          <el-form-item label="OID" prop="expr" v-if="!showSnmpTrap">
+              </div>
+            </el-form-item>
+          <el-form-item label="OID" prop="expr" v-if="!showSnmpTrap" key="OID">
             <el-input id="alert-box-input-oid" v-model="editAlertRule.expr" size="small" type="text"></el-input>
           </el-form-item>
           <!--threshold-->
-          <el-form-item
-            v-if="showSnmpTrap"
-            :label="$t('alert.config.threshold')"
-            prop="threshold" class="half-form-item alert-box-threshold"
-            style="display: inline-block;"
-            :rules="[
-              { required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' },
-              { validator: nzNumber, trigger: 'blur' }
-             ]">
-            <el-input id="alert-box-input-threshold" v-model="editAlertRule.threshold" placeholder="" size="small" type="text" :disabled="!showSnmpTrap">
-              <el-select id="alert-box-input-operator" slot="prepend" v-model="editAlertRule.operator" class="hide-icon" popper-class="prevent-clickoutside" size="small" :disabled="!showSnmpTrap">
-                <el-option v-for="item in operators" :id="'operator-'+item.key" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-input>
-          </el-form-item>
-          <!--unit-->
-          <el-form-item v-if="showSnmpTrap" :label="$t('dashboard.dashboard.chartForm.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
-            <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
-                         placeholder=""
-                         popper-class="no-style-class dc-dropdown  unit-popper-class"
-                         size="small"
-                         :disabled="!showSnmpTrap"
-                         style="width: 100%"
-            >
-            </el-cascader>
+          <el-form-item :label="$t('alert.config.threshold')" key="threshold">
+            <div class="threshold-list">
+                <el-form-item v-for="(item,index) of editAlertRule.condition" :key="index" :prop="'condition.' + index + '.value'"
+                  :rules="[
+                    { required: true, message: $t('validate.required'), trigger: 'blur'},
+                    { validator: thresholdValidator, trigger: 'blur' , item:item},
+                  ]"
+                >
+                  <div class="threshold-item">
+                    <div class="threshold-item-left" :style="{background:item.color}" >{{item.name}}</div>
+                    <div class="threshold-item-center">
+                      <span>{{$t('alert.config.when')}} Result</span>
+                      <el-select :disabled="!showSnmpTrap" :value="item.operator" @change="operatorChange(item,index,$event)" class="hide-icon" popper-class="prevent-clickoutside" size="small">
+                        <el-option v-for="subItem in operators" :id="'operator-'+subItem.key" :key="subItem.value" :label="subItem.label" :value="subItem.value"></el-option>
+                      </el-select>
+                    </div>
+                    <el-input v-model="item.value" :placeholder="item.operator==='=~'?$t('alert.config.enterRegular'):$t('alert.config.enterThreshold')" size="small" type="text" style="flex:1"/>
+                  </div>
+                </el-form-item>
+                <el-form-item prop="timeout" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" style="margin-bottom:0;">
+                  <div class="threshold-item">
+                    <div class="threshold-item-left" style="margin-right:15px">{{$t('alert.config.normal')}}</div>
+                    <el-input-number
+                      size="small"
+                      placeholder="N"
+                      :min="15"
+                      v-model="editAlertRule.timeout"
+                      :controls="false"
+                      style="width:80px"
+                    />
+                    <div class="threshold-item-msg" style="margin-left:8px">
+                      <span v-if="showSnmpTrap">{{$t('alert.config.detectionNormal')}}</span>
+                      <span v-else>{{$t('alert.config.secondNormal')}}</span>
+                    </div>
+                  </div>
+                </el-form-item>
+            </div>
           </el-form-item>
           <!--inr-->
           <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.inr')" prop="inr"  class="half-form-item">
@@ -118,21 +120,46 @@
           </el-form-item>
           <!--last-->
           <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.for')" prop="last"  class="half-form-item alert-box-duration" :rules=" [
-          { required: showSnmpTrap, message: this.$t('validate.required'), trigger: 'change' },
-        ]">
+            { required: showSnmpTrap, message: this.$t('validate.required'), trigger: 'change' },
+            ]"
+          >
             <el-input id="alert-box-input-last" :controls="false" v-model.number="editAlertRule.last" placeholder="" size="small" :disabled="!showSnmpTrap" type="text">
               <template slot="append">{{$t('alert.config.second')}}</template>
             </el-input>
           </el-form-item>
-          <!--autoExpired-->
-          <el-form-item :label="$t('alert.config.autoExpired')" prop="autoExpired" class="half-form-item">
+          <!--unit-->
+          <el-form-item v-if="showSnmpTrap" :label="$t('dashboard.dashboard.chartForm.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
+            <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
+              placeholder=""
+              popper-class="no-style-class dc-dropdown  unit-popper-class"
+              size="small"
+              :disabled="!showSnmpTrap"
+              style="width: 100%"
+            >
+            </el-cascader>
+          </el-form-item>
+
+          <!-- notification -->
+          <div class="alert-rule-split-title">{{ $t('alert.config.notificationConfig') }}</div>
+          <!--summary-->
+          <el-form-item :label="$t('alert.summary')" prop="summary">
+            <el-input id="alert-box-input-summary" v-model="editAlertRule.summary" maxlength="512" placeholder="" rows="2" show-word-limit size="small" type="textarea"></el-input>
+          </el-form-item>
+          <!--description-->
+          <el-form-item :label="$t('overall.remark')" prop="description">
+            <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="256" placeholder="" rows="2" show-word-limit size="small" type="textarea"></el-input>
+          </el-form-item>
+          <!--notifyActive-->
+          <el-form-item :label="$t('alert.config.notifyActive')" prop="notifyActive" class="half-form-item">
             <el-select
-              id="alert-box-input-autoExpired"
-              v-model="editAlertRule.autoExpired"
+              id="alert-box-input-notifyActive"
+              v-model="editAlertRule.notifyActive"
               class="right-box__select half-form-item"
               placeholder=""
-              popper-class="prevent-clickoutside right-box-select-top "
+              :popper-append-to-body="false"
+              popper-class="prevent-clickoutside right-box-select-top"
               size="small"
+              @change="receiverAndNotifyValidate"
             >
               <el-option
                 :label="$t('overall.enabled')"
@@ -144,19 +171,61 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!--timeout-->
-          <el-form-item :label="$t('alert.config.timeout')" prop="timeout"  class="half-form-item">
-            <el-input id="alert-box-input-timeout" v-model.number="editAlertRule.timeout" placeholder="" size="small" type="text"></el-input>
-            <template slot="append">{{$t('alert.config.second')}}</template>
+          <!--notifyExpired-->
+          <el-form-item :label="$t('alert.config.notifyExpired')" prop="notifyExpired" class="half-form-item">
+            <el-select
+              id="alert-box-input-notifyExpired"
+              v-model="editAlertRule.notifyExpired"
+              class="right-box__select half-form-item"
+              placeholder=""
+              :popper-append-to-body="false"
+              popper-class="prevent-clickoutside right-box-select-top"
+              size="small"
+              @change="receiverAndNotifyValidate"
+            >
+              <el-option
+                :label="$t('overall.enabled')"
+                :value="1">
+              </el-option>
+              <el-option
+                :label="$t('overall.disabled')"
+                :value="0">
+              </el-option>
+            </el-select>
           </el-form-item>
-          <!--summary-->
-          <el-form-item :label="$t('alert.summary')" prop="summary">
-            <el-input id="alert-box-input-summary" v-model="editAlertRule.summary" maxlength="512" placeholder="" rows="2" show-word-limit size="small" type="textarea"></el-input>
+          <!--receiver-->
+          <el-form-item :label="$t('alert.receiver')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
+            <el-select
+              id="alert-box-input-receiver"
+              v-model.trim="editAlertRule.receiverShow"
+              class="right-box__select"
+              filterable
+              multiple
+              placeholder=""
+              popper-class="prevent-clickoutside right-box-select-top"
+              size="small"
+              value-key="userId"
+              @change="receiverShowChange"
+            >
+              <el-option
+                style="width: 620px"
+                v-for="item in userData"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+                <span class="user-name" :title="item.name">{{item.name}}</span><span class="user-username" :title="item.username">@{{item.username}}</span>
+              </el-option>
+            </el-select>
           </el-form-item>
-          <!--description-->
-          <el-form-item :label="$t('overall.remark')" prop="description">
-            <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="256" placeholder="" rows="2" show-word-limit size="small" type="textarea"></el-input>
+          <!--notify-->
+          <el-form-item :label="$t('alert.notify')" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'change' }]" class="notify-box" prop="method" >
+            <el-select id="alert-box-input-notify" v-model="editAlertRule.method" class="right-box__select" multiple placeholder="" :popper-append-to-body="false" popper-class="right-box-select-top prevent-clickoutside" size="small">
+              <el-option v-for="item in notifyData" :id="'alert-severity-'+item.value" :key="'notify' + item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
+
+          <!-- effective -->
           <div class="alert-rule-split-title">{{ $t('alert.config.effectiveConfig') }}</div>
           <!--state-->
           <el-form-item :label="$t('overall.state')" prop="state" class="half-form-item">
@@ -245,82 +314,6 @@
                 minTime: editAlertRule.schedStime
               }">
             </el-time-picker>
-          </el-form-item>
-          <div class="alert-rule-split-title">{{ $t('alert.config.notificationConfig') }}</div>
-          <!--notifyActive-->
-          <el-form-item :label="$t('alert.config.notifyActive')" prop="notifyActive" class="half-form-item">
-            <el-select
-              id="alert-box-input-notifyActive"
-              v-model="editAlertRule.notifyActive"
-              class="right-box__select half-form-item"
-              placeholder=""
-              :popper-append-to-body="false"
-              popper-class="prevent-clickoutside right-box-select-top"
-              size="small"
-              @change="receiverAndNotifyValidate"
-            >
-              <el-option
-                :label="$t('overall.enabled')"
-                :value="1">
-              </el-option>
-              <el-option
-                :label="$t('overall.disabled')"
-                :value="0">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <!--notifyExpired-->
-          <el-form-item :label="$t('alert.config.notifyExpired')" prop="notifyExpired" class="half-form-item">
-            <el-select
-              id="alert-box-input-notifyExpired"
-              v-model="editAlertRule.notifyExpired"
-              class="right-box__select half-form-item"
-              placeholder=""
-              :popper-append-to-body="false"
-              popper-class="prevent-clickoutside right-box-select-top"
-              size="small"
-              @change="receiverAndNotifyValidate"
-            >
-              <el-option
-                :label="$t('overall.enabled')"
-                :value="1">
-              </el-option>
-              <el-option
-                :label="$t('overall.disabled')"
-                :value="0">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <!--receiver-->
-          <el-form-item :label="$t('dashboard.dashboard.receivers')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
-            <el-select
-              id="alert-box-input-receiver"
-              v-model="editAlertRule.receiverShow"
-              class="right-box__select"
-              filterable
-              multiple
-              placeholder=""
-              popper-class="prevent-clickoutside right-box-select-top"
-              size="small"
-              value-key="userId"
-              @change="receiverShowChange"
-            >
-              <el-option
-                style="width: 620px"
-                v-for="item in userData"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-                <span class="user-name" :title="item.name">{{item.name}}</span><span class="user-username" :title="item.username">@{{item.username}}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <!--notify-->
-          <el-form-item :label="$t('alert.notify')" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'change' }]" class="notify-box" prop="method" >
-            <el-select id="alert-box-input-notify" v-model="editAlertRule.method" class="right-box__select" multiple placeholder="" :popper-append-to-body="false" popper-class="right-box-select-top prevent-clickoutside" size="small">
-              <el-option v-for="item in notifyData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select>
           </el-form-item>
           <div class="alert-rule-split-title">{{ $t('overall.more') }}</div>
           <el-form-item :label="$t('alert.config.trbShot')" prop="trbShot">
@@ -455,12 +448,15 @@ export default {
         {
           label: '<=',
           value: '<='
+        },
+        {
+          label: '=~',
+          value: '=~'
         }
       ],
       unitOptions: chartDataFormat.unitOptions(),
 
       userData: [],
-      severityData: [],
       notifyData: [],
       MetricsType: 1,
       weekList: [
@@ -491,6 +487,15 @@ export default {
   },
   methods: {
     nzNumber: nzNumber,
+    thresholdValidator (rule, value, callback) {
+      if (rule.item.operator === '=~' || !value) {
+        callback()
+      } else if (isNaN(Number(value))) {
+        callback(new Error(this.$t('validate.number')))
+      } else {
+        callback()
+      }
+    },
     clickOutside () {
       this.esc(false)
     },
@@ -504,10 +509,20 @@ export default {
       if (this.editAlertRule.type !== 3) {
         this.editAlertRule.expr = this.expressions[0]
       }
+      // 处理condition 删除掉不需要的属性
+      const condition = this.editAlertRule.condition.map(item => {
+        return {
+          id: item.id,
+          weight: item.weight,
+          operator: item.operator,
+          value: item.value
+        }
+      })
       const params = {
         ...this.editAlertRule,
         method: this.editAlertRule.method.join(','),
-        type: this.editAlertRule.type
+        type: this.editAlertRule.type,
+        condition
       }
       if (this.editAlertRule.trbShot && this.editAlertRule.trbShot == '<div  class="editor-core ql-container ql-snow"><div class="ql-editor"><p><br></p></div></div>') {
         this.editAlertRule.trbShot = ''
@@ -575,16 +590,6 @@ export default {
     metricChange (val) {
       this.editAlertRule.expr = val
     },
-    getSeverityData () {
-      this.$get('alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
-        if (response.code == 200) {
-          this.severityData = response.data.list
-          if (!this.editAlertRule.id && this.severityData.length > 0) {
-            this.editAlertRule.severityId = this.severityData[0].id
-          }
-        }
-      })
-    },
     getNotifyData () {
       this.$get('alert/notify/method', { pageNo: 1, pageSize: -1 }).then(response => {
         if (response.code == 200) {
@@ -610,9 +615,6 @@ export default {
       }
     },
     selectAlertRuleMetric (val) {
-      if (!this.editAlertRule.operator) {
-        this.editAlertRule.operator = '>'
-      }
       if (val === 1) {
         this.showSnmpTrap = false // showSnmpTrap 为 true 时显示 expr,threshold,unit
         this.showMetrics = true
@@ -633,23 +635,31 @@ export default {
       } else if (val === 3) {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
         this.showMetrics = false
-        // this.editAlertRule.inr = ''
-        // this.editAlertRule.last = '15'
-        // this.editAlertRule.unit = 2
-        // this.editAlertRule.operator = '>'
-        // this.editAlertRule.threshold = ''
         if (!this.editAlertRule.last) {
           this.editAlertRule.last = 60
         }
+        // type为3时 只能输入正则
+        this.editAlertRule.condition.forEach((item, index) => {
+          item.operator = '=~'
+          item.value = ''
+          this.$refs.alertRuleForm.clearValidate('condition.' + index + '.value') // 移除from表单的 condition 验证
+        })
       }
     },
     afterInitRich () {
       this.$refs.alertName.focus()
+    },
+    // 比较符号变化
+    operatorChange (item, index, value) {
+      if (item.operator === '=~' || value === '=~') {
+        item.value = ''
+        this.$refs.alertRuleForm.clearValidate('condition.' + index + '.value') // 移除from表单的 condition 验证
+      }
+      item.operator = value
     }
   },
   mounted () {
     this.getUserList()
-    this.getSeverityData()
     this.getNotifyData()
   },
   watch: {
@@ -659,6 +669,37 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editAlertRule = JSON.parse(JSON.stringify(n))
+        // 获取缓存中的告警等级列表
+        const severityData = JSON.parse(localStorage.getItem('nz-severityDataWeight'))
+        // 给condition赋值
+        if (this.editAlertRule.condition && this.editAlertRule.condition.length) {
+          this.$set(this.editAlertRule, 'condition', severityData.map(item => {
+            item = {
+              ...item,
+              value: '',
+              operator: '>'
+            }
+            this.editAlertRule.condition.forEach(subItem => {
+              if (item.id === subItem.id) {
+                item = {
+                  ...item,
+                  operator: subItem.operator,
+                  value: subItem.value
+                }
+              }
+            })
+            return item
+          }))
+        } else {
+          this.$set(this.editAlertRule, 'condition', severityData.map(item => {
+            return {
+              ...item,
+              value: '',
+              operator: '>'
+            }
+          }))
+        }
+
         if (this.editAlertRule.id || this.editAlertRule.name) {
           this.expressions = [this.editAlertRule.expr]
           this.showTypeSelect = !!this.editAlertRule.id // 当 edit 时禁用 type下拉框

@@ -200,14 +200,14 @@ export default {
         unit: 2,
         operator: '>',
         last: 60,
-        severityId: 1,
+        // severityId: '',
         summary: '',
         description: '',
         method: [],
         name: '',
-        threshold: '',
+        // threshold: '',
         receiver: [],
-        autoExpired: 1,
+        // autoExpired: 1,
         schedEnable: 0,
         schedDays: '',
         schedStime: '00:00',
@@ -215,7 +215,8 @@ export default {
         notifyActive: 0,
         notifyExpired: 0,
         timeout: 300,
-        trbShot: ''
+        trbShot: '',
+        condition: []
       },
       blankSilenceObject: {
         id: '',
@@ -235,33 +236,38 @@ export default {
       silenceBoxShow: false,
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
-        searchLabelList: [{
-          id: 1,
-          name: 'ID',
-          type: 'input',
-          label: 'ids',
-          disabled: false
-        }, {
-          id: 2,
-          name: this.$t('alert.alertName'),
-          type: 'input',
-          label: 'name',
-          disabled: false
-        }, {
-          id: 4,
-          name: this.$t('alert.severity'),
-          type: 'severity',
-          label: 'severityIds',
-          readonly: true,
-          disabled: false
-        }, {
-          id: 5,
-          name: this.$t('overall.type'),
-          type: 'alertTypes',
-          label: 'type',
-          readonly: true,
-          disabled: false
-        }]
+        searchLabelList: [
+          {
+            id: 1,
+            name: 'ID',
+            type: 'input',
+            label: 'ids',
+            disabled: false
+          },
+          {
+            id: 2,
+            name: this.$t('alert.alertName'),
+            type: 'input',
+            label: 'name',
+            disabled: false
+          },
+          // {
+          //   id: 4,
+          //   name: this.$t('alert.severity'),
+          //   type: 'severity',
+          //   label: 'severityIds',
+          //   readonly: true,
+          //   disabled: false
+          // },
+          {
+            id: 5,
+            name: this.$t('overall.type'),
+            type: 'alertTypes',
+            label: 'type',
+            readonly: true,
+            disabled: false
+          }
+        ]
       },
       searchTime: bus.getTimezontDateRange(),
       needAlertDaysData: true,
@@ -406,25 +412,25 @@ export default {
         },
         jsonKey: 'val'
       },
-      severityIds: {
-        target: this.searchLabel,
-        isSearchInput: true,
-        propertyName: 'severityIds',
-        type: 'string',
-        defaultJson: {
-          disabled: false,
-          id: 4,
-          label: 'severityIds',
-          name: 'Priority',
-          readonly: true,
-          type: 'severity',
-          val: '',
-          valnum: '',
-          valString: '',
-          listStr: 'severitySelect'
-        },
-        jsonKey: 'valnum'
-      },
+      // severityIds: {
+      //   target: this.searchLabel,
+      //   isSearchInput: true,
+      //   propertyName: 'severityIds',
+      //   type: 'string',
+      //   defaultJson: {
+      //     disabled: false,
+      //     id: 4,
+      //     label: 'severityIds',
+      //     name: 'Priority',
+      //     readonly: true,
+      //     type: 'severity',
+      //     val: '',
+      //     valnum: '',
+      //     valString: '',
+      //     listStr: 'severitySelect'
+      //   },
+      //   jsonKey: 'valnum'
+      // },
       type: {
         target: this.searchLabel,
         isSearchInput: true,

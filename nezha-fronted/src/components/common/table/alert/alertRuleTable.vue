@@ -193,61 +193,71 @@ export default {
           show: true,
           width: 80,
           sortable: 'custom'
-        }, {
+        },
+        {
           label: this.$t('alert.alertName'),
           prop: 'name',
           show: true,
           minWidth: 200,
           sortable: 'custom'
-        }, {
+        },
+        {
           label: this.$t('overall.type'),
           prop: 'type',
           show: true,
           minWidth: 200,
           sortable: 'custom'
-        }, {
+        },
+        {
           label: this.$t('alert.config.expr'),
           prop: 'expr',
           minWidth: 200,
           show: true
-        }, {
-          label: this.$t('alert.config.operator'),
-          prop: 'operator',
-          minWidth: 100,
-          show: true
-        }, {
-          label: this.$t('alert.config.threshold'),
-          prop: 'threshold',
-          minWidth: 100,
-          show: true
-        }, {
+        },
+        // {
+        //   label: this.$t('alert.config.operator'),
+        //   prop: 'operator',
+        //   minWidth: 100,
+        //   show: true
+        // }, {
+        //   label: this.$t('alert.config.threshold'),
+        //   prop: 'threshold',
+        //   minWidth: 100,
+        //   show: true
+        // },
+        {
           label: this.$t('alert.config.for'),
           prop: 'last',
           minWidth: 100,
           show: true
-        }, {
-          label: this.$t('alert.severity'),
-          prop: 'severity',
-          show: true,
-          minWidth: 100,
-          sortable: 'custom'
-        }, {
+        },
+        // {
+        //   label: this.$t('alert.severity'),
+        //   prop: 'severity',
+        //   show: true,
+        //   minWidth: 100,
+        //   sortable: 'custom'
+        // },
+        {
           label: this.$t('alert.summary'),
           prop: 'summary',
           minWidth: 200,
           show: true
-        }, {
+        },
+        {
           label: this.$t('overall.remark'),
           prop: 'description',
           minWidth: 200,
           show: true
-        }, {
+        },
+        {
           label: this.$t('overall.alert'),
           prop: 'alertNum',
           show: true,
           width: 120,
           sortable: 'custom'
-        }, {
+        },
+        {
           label: this.$t('dashboard.dashboard.receivers'),
           prop: 'receivers',
           show: false,
@@ -258,7 +268,8 @@ export default {
           prop: 'method',
           show: false,
           minWidth: 100
-        }, {
+        },
+        {
           label: this.$t('overall.state'),
           prop: 'state',
           show: true,
