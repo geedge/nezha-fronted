@@ -323,8 +323,3 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
-  .is-active-meta2d {
-    background: #0000ff;
-  }
-</style>

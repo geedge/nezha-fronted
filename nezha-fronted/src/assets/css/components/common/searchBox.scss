@@ -1,0 +1,100 @@
+#nz-search-box{
+    .search-box-input {
+      border: 1px solid #E7EAED;
+      white-space: nowrap;
+      width: 400px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      .search-box-input-content{
+        width: calc(100% - 30px);
+        white-space: nowrap;
+        overflow-y: auto;
+        display: flex;
+        align-items: center;
+        .el-input__inner{
+          border: none;
+        }
+        .search-box-tag{
+          display: inline-flex;
+          font-size: 12px;
+          border: 1px solid #e1e4e8;
+          background: #eaecef;
+          height: 20px;
+          padding: 0 8px 0 8px;
+          border-radius: 2px;
+          margin: 2px 4px 2px 4px;
+          align-items: center;
+        }
+        .el-input--mini {
+          display: inline-block;
+          min-width: 100px;
+          width: auto;
+          max-width: 170px;
+          flex: 1;
+        }
+      }
+      .nz-icon-search{
+        display: inline-block;
+        height: 100%;
+        line-height: 1;
+        margin-left: 5px;
+      }
+    }
+    .search-box-tag{
+      display: flex;
+    }
+    .search-item{
+      border-bottom: 1px solid #e1e4e8;
+      font-size: 12px;
+      position: relative;
+    }
+    .search-item.search-item-select {
+      background: #1da1f2;
+      color: #333;
+      .content-remark{
+        color: #fff;
+      }
+    }
+    .icon-k,.icon-s, .icon-v{
+      display: inline-block;
+      width: 26px;
+      height: 100%;
+      line-height: 27px;
+      text-align: center;
+      margin-right: 5px;
+    }
+    .icon-k{
+      color: #ff8f44;
+      background: #fff4ec;
+    }
+    .icon-s{
+      color: #4276e5;
+      background: #eaf1ff;
+    }
+    .icon-v{
+      color: #a884f3;
+      background: #f7f3ff;
+    }
+    .el-popper{
+      padding: 0;
+    }
+    .tag-box{
+      padding: 5px 0px;
+      min-width: 75px;
+      .tag-box-content{
+        display: flex;
+        flex-direction: column;
+      }
+      .search-box-tag{
+        display: inline !important;
+        margin-bottom: 5px !important;
+      }
+    }
+    .content-remark{
+      position: absolute;
+      left: 300px;
+      top: 5px;
+      color: #999;
+    }
+  }

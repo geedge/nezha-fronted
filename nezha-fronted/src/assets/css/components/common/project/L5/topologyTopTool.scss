@@ -37,7 +37,8 @@
     margin-right: 10px;
   }
   .is-active-meta2d.top-tool-item {
-    background: mix(#FFF, $--background-color-disabled, 35%);
+    // background: mix(#FFF, $--background-color-disabled, 35%);
+    background: #0000ff;
     border: 1px solid mix(#000, $--background-color-disabled, 35%);
     color: $--color-text-disabled;
   }

@@ -7,6 +7,7 @@ const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+// const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 const { VueLoaderPlugin } = require('vue-loader')
@@ -16,6 +17,7 @@ const PORT = process.env.PORT && Number(process.env.PORT)
 const devStart = process.env.npm_lifecycle_event
 const indexHtml = devStart === 'dev' ? 'src/entrance/app/index.html' : 'src/entrance/exportHtml/exportHtml.html'
 let devWebpackConfig = ''
+// const smp = new SpeedMeasurePlugin()
 devWebpackConfig = merge(baseWebpackConfig, {
   mode: 'development',
   module: {
@@ -108,7 +110,7 @@ module.exports = new Promise((resolve, reject) => {
           ? utils.createNotifierCallback()
           : undefined
       }))
-
+      // devWebpackConfig = smp.wrap(devWebpackConfig)
       resolve(devWebpackConfig)
     }
   })

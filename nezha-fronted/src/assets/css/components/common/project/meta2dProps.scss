@@ -92,6 +92,11 @@
         overflow-y: auto;
       }
     }
+    .pen-tools-item {
+      margin-right: 5px;
+      font-size:17px;
+      cursor: pointer;
+    }
   }
   .right-box__container .chart-config .thresholds-item .mapping-display-input input{
     padding-left: 15px;

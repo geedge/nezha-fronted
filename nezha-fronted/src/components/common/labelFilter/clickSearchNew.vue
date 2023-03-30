@@ -328,8 +328,3 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
-  .search-items{
-    overflow: hidden;
-  }
-</style>

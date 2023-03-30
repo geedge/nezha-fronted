@@ -128,23 +128,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.comment-editor>>>.textarea-button{
-  display: flex;
-  justify-content: flex-end;
-  padding-bottom: 10px;
-  padding-right: 10px;
-  .nz-btn.nz-btn-size-mini{
-    width: 74px;
-    height: 30px;
-  }
-}
-#assetCommentTable>>>.descriptions-content {
-  .ql-container.ql-snow{
-    border: unset;
-  }
-  .ql-editor{
-    padding: 0;
-  }
-}
-</style>

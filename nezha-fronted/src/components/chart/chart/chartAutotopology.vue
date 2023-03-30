@@ -129,12 +129,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.meta2d-chart {
-  /deep/.meta2d-project {
-    height: 100%;
-    border: none;
-  }
-}
-</style>
