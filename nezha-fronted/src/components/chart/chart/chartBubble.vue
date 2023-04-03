@@ -108,7 +108,7 @@ export default {
     },
     drawBubbleChart () {
       this.$nextTick(() => {
-        d3.select(`#bubble-svg-${this.chartId}`).selectAll('g').remove()// 清空作图区域
+        d3.select(`#bubble-svg-${this.chartId}`).selectAll('g').remove() // 清空作图区域
         const svg = document.getElementById(`bubble-svg-${this.chartId}`)
         if (!svg) {
           return false
@@ -282,6 +282,9 @@ export default {
   mounted () {
     this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart()
+  },
+  beforeDestroy () {
+    d3.select(`#bubble-svg-${this.chartId}`).selectAll('g').remove() // 清空作图区域
   }
 }
 </script>

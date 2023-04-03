@@ -115,7 +115,7 @@ export default {
 
     drawRankChart () {
       this.$nextTick(() => {
-        d3.select(`#rank-svg-${this.chartId}`).selectAll('g').remove()// 清空作图区域
+        d3.select(`#rank-svg-${this.chartId}`).selectAll('g').remove() // 清空作图区域
         // 获取svg宽高 初始化画布
         const svgDom = document.getElementById(`rank-svg-${this.chartId}`)
         if (!svgDom) {
@@ -294,6 +294,9 @@ export default {
   mounted () {
     this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart()
+  },
+  beforeDestroy () {
+    d3.select(`#rank-svg-${this.chartId}`).selectAll('g').remove() // 清空作图区域
   }
 }
 </script>
