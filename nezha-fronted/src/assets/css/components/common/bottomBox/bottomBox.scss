@@ -338,6 +338,25 @@
   }
 }
 
+#recordRuleEvalLogTable{
+  .active-icon {
+    margin-left: 5px !important;
+  }
+  .schedEnableTitle .week-item{
+    width: 32px;
+    border-radius: 2px;
+    padding-left: 3px;
+  }
+}
+
+.alertRuleEvalLogTable{
+  .schedEnableTitle .week-item{
+    width: 32px;
+    border-radius: 2px;
+    padding-left: 3px;
+  }
+}
+
 // comments
 #commentBottomTab {
   .sub-container .nz-table-list {

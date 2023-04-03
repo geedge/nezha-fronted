@@ -289,15 +289,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  .delete-button{
-    margin-right: 10px;
-    opacity: 0.7;
-    border-radius: 2px;
-  }
-  .delete-button-light.delete-button{
-    border-radius: 2px;
-    opacity: 1;
-  }
-</style>

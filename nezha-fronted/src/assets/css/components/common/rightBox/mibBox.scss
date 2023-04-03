@@ -13,4 +13,46 @@
     background-color: $--background-color-empty;
     border: 1px solid $--border-color-light;
   }
+  .right-box-form-row{
+    margin-top:0;
+    width: 100%;
+  }
+  .add-required .el-form-item__label:before{
+    content: '*';
+    color: #F56C6C;
+    margin-right: 4px;
+  }
+  .mib-upload .el-upload{
+    width: 100%;
+  }
+  .mib-upload .el-upload-dragger{
+    width: 100% !important;
+  }
+  /*去除上传文件动画start*/
+  /*.upload-demo {*/
+  /*  display: flex;*/
+  /*}*/
+  .el-list-enter-active,
+  .el-list-leave-active {
+    transition: none !important;
+  }
+  .nz-tab {
+    margin-bottom: 22px !important;
+    margin-left: 13px !important;
+  }
+  .el-list-enter,
+  .el-list-leave-active {
+    opacity: 0 !important;
+  }
+  .el-upload-list {
+    height: 40px !important;
+  }
+  .el-upload .nz-icon-upload{
+    font-size: 67px;
+    color: #c0c4cc;
+    margin: 40px 0 16px;
+    line-height: 50px;
+    display: inline-block;
+  }
+  /*去除上传文件动画end*/
 }
