@@ -3,7 +3,7 @@
     <div @click="changeSelectBoxShow(true)" style="position: relative">
       <div class="image-input">
         <span v-if="imageName">{{unit}} / {{imageName}}</span>
-        <i class="el-icon-circle-close" style="position: absolute;top: 10px;right: 10px;font-size: 14px" @click.stop="selectImageChange({image: '', id: ''})"/>
+        <i class="el-icon-circle-close" style="position: absolute;top: 10px;right: 10px;font-size: 14px" @click.stop="selectImageChange({image: '', id: ''}, true)"/>
       </div>
     </div>
 <!--    <div class="image-select-box" v-if="selectBoxShow">-->
@@ -23,20 +23,21 @@
       <div class="image-select-box" style="width: 650px;height:446px;margin-top: 10px"  v-my-loading="imgageLoading">
         <el-card shadow="hover" style="height:446px;width:100%;overflow-y: auto"
                  class="project-topology-add-node">
-          <div  v-for="(item, index) in tools" :key="index" class="collapse-box">
+          <div  v-for="(item, index) in tools" :key="index" class="collapse-box" v-if="item.group !== 'General' || showDefault">
             <div :title="item.group" :name="item.group">
               <div class="nz-collapse-header" :class="item.show ? 'is-active' : ''" @click.stop="selectGroup(item)">
                 <span class="nz-icon-caret-right-box">
                   <i class="nz-icon nz-icon-caret-right" :class="item.show ? 'rotate90': ''" />
                 </span>
                 <div class="text-ellipsis nz-collapse-header-content">{{item.group}}</div>
-                <i class="nz-icon nz-icon-delete title-delete" @click.stop="tooltipDeleteTitle(item)" :title="$t('overall.delete')" />
+                <i class="nz-icon nz-icon-delete title-delete" v-if="item.group!== 'General'" @click.stop="tooltipDeleteTitle(item)" :title="$t('overall.delete')" />
                 <span class="title-all">{{item.children.length}}</span>
               </div>
               <transition name="el-zoom-in-top">
                 <div v-show="item.show" class="nz-collapse-body">
                   <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons image-box-item" :class="btn.id === selectImgId ? 'is-select':''">
                     <img :src="btn.image" v-if="btn.image" class="image-src" @click.stop="selectImageChange(btn)">
+                    <i v-if="btn.nzClassName" class="nz-icon image-src" :class="btn.nzClassName" style="font-size: 40px" @click.stop="selectImageChange(btn)"/>
                     <div class="img-text text-ellipsis" :title="btn.imageName">{{btn.imageName}}</div>
                     <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click.stop="tooltipDelete(btn)"></i>
                   </div>
@@ -134,15 +135,21 @@
 </template>
 
 <script>
+import { Tools } from '@/components/common/project/meta2d/js/defaultIcon'
 export default {
   name: 'meta2dSelectImage',
   props: {
     selectImage: {},
-    imgId: {}
+    icon: {},
+    imgId: {},
+    showDefault: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
-      tools: [],
+      tools: [...Tools],
       title: this.$t('overall.uploadCustomPicture'),
       imgageLoading: false,
       iconArray: [],
@@ -167,13 +174,21 @@ export default {
   mounted () {
     this.baseUrl = localStorage.getItem('nz-baseURL')
     this.token = localStorage.getItem('nz-token')
+    if (this.icon) {
+      const iconId = this.icon.charCodeAt().toString(16)
+      const findItem = this.tools[0].children.find(item => item.id === iconId)
+      if (findItem) {
+        this.unit = findItem.unit
+        this.imageName = findItem.name
+      }
+    }
     this.imageInit()
   },
   methods: {
     imageInit () { // 加载所有图片
       this.$get('monitor/project/topo/icon').then(res => {
         this.imgageLoading = true
-        this.tools = []
+        this.tools = [...Tools]
         this.iconArray = [...res.data.list]
         this.iconArray.forEach((item, index) => {
           item.imageName = item.name
@@ -227,7 +242,7 @@ export default {
       })
       if (findItem) {
         findItem.show = true
-        findItem.children.forEach(item=>{
+        findItem.children.forEach(item => {
           if (item.id === this.selectImgId) {
             this.selectImg = item
           }
@@ -237,9 +252,12 @@ export default {
     selectGroup (item) {
       item.show = !item.show
     },
-    selectImageChange (item) {
+    selectImageChange (item, isChange) {
       this.selectImgId = item.id
       this.selectImg = item
+      if (isChange) {
+        this.changImage()
+      }
     },
     changImage () {
       this.unit = this.selectImg.unit

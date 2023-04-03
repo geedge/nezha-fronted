@@ -428,6 +428,12 @@
         line-height: 20px;
         margin-top: 5px;
         color: $--color-text-primary;
+        .ql-container.ql-snow{
+          border: unset !important;
+        }
+        .ql-editor{
+          padding: 0 !important;
+        }
       }
     }
     .descriptions-info:hover {
@@ -442,6 +448,17 @@
   .search-icon-btn {
     .el-icon-search {
       color: $--color-text-regular;
+    }
+  }
+  .top-tool-right>.el-input.el-input--small.el-input-group{
+    position: relative;
+    .search-icon-btn{
+      height: 100%;
+      padding: 0 3px;
+      background-color: transparent;
+      border: 0;
+      position: absolute;
+      right: 0;
     }
   }
 }

@@ -158,16 +158,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.top-tool-right>.el-input.el-input--small.el-input-group{
-  position: relative;
-  .search-icon-btn{
-    height: 100%;
-    padding: 0 3px;
-    background-color: transparent;
-    border: 0;
-    position: absolute;
-    right: 0;
-  }
-}
-</style>

@@ -76,6 +76,7 @@
   padding-left: 15px;
   padding-right: 80px;
   background: $--background-color-empty;
+  overflow: hidden;
   div.el-skeleton{
     display: flex !important;
     align-items: center !important;

@@ -456,10 +456,3 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
-  /deep/ .el-dialog__body{
-    padding: 20px !important;
-    height: calc(100% - 40px);
-    width: calc(100% - 40px);
-  }
-</style>

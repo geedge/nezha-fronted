@@ -213,7 +213,7 @@ export default {
       lineData.anchors[0].id = s8()
       lineData.anchors[1].id = s8()
       lineData.anchors[0].penId = penId
-      lineData.anchors[1].penId = s8()
+      lineData.anchors[1].penId = penId
       const pen = {
         ...lineData,
         id: penId,
@@ -323,8 +323,3 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
-  .is-active-meta2d {
-    background: #0000ff;
-  }
-</style>

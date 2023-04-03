@@ -224,10 +224,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.tools-left-drag{
-  margin-left: 10px;
-  margin-right: 10px;
-}
-</style>

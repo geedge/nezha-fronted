@@ -112,6 +112,11 @@ const baseConfig = {
             use: ['raw-loader', 'pug-plain-loader']
           }
         ]
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: ['cache-loader', 'babel-loader']
       }
     ]
   },

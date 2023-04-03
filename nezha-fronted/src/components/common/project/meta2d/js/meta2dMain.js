@@ -1,21 +1,16 @@
-import { Meta2d, registerNode } from '@meta2d/core'
+import { Meta2d, registerNode, s8 } from '@meta2d/core'
 import { flowPens } from '@meta2d/flow-diagram'
 import { activityDiagram } from '@meta2d/activity-diagram'
 import { classPens } from '@meta2d/class-diagram'
 import { sequencePens, sequencePensbyCtx } from '@meta2d/sequence-diagram'
 // import { chartsPens } from '@meta2d/le5le-charts'
 import {
-  Tools,
-  canvasRegister,
-  imageTemp,
-  onChangeAnimate,
-  onChangeAnimateLine,
-  myCubec,
-  myCubeAnchors
+  disposeTopoOldData
 } from '../../L5/services/canvas.js'
 import { getTopology, setTopology, dealImg, topologyImg } from '@/components/common/js/common'
 import bus from '@/libs/bus'
 import topoUtil from '@/components/common/project/meta2d/js/topoUtil'
+import lineData from '@/components/common/project/meta2d/js/defaultPenLineData'
 export default {
   data () {
     return {
@@ -153,8 +148,12 @@ export default {
       if (pen.data && pen.data.params) {
         return
       }
-      if (name) {
+      if (name && !pen.text) {
         pen.text = name
+      }
+      if (pen.data && pen.data.imageId) {
+        pen.imageId = pen.data.imageId
+        pen.image = `/monitor/project/topo/icon/${pen.data.imageId}/0`
       }
       pen.data = {
         params: { // 用于编辑时 重置为节点初始状态
@@ -187,6 +186,7 @@ export default {
       }
       pen.nzName = name
       pen.moduleId = ''
+      pen.iconFamily = 'nz-icon'
       pen.disableInput = pen.disableInput || true
       pen.background = pen.background || '#22222200'
       pen.textAlign = pen.textAlign || 'center'
@@ -211,10 +211,41 @@ export default {
       pen.isNz = true
       pen.locked = pen.locked || 0
       pen.isBottom = false
+      if (pen.rect) {
+        pen.x = pen.rect.x
+        pen.y = pen.rect.y
+        pen.height = pen.rect.height
+        pen.width = pen.rect.width
+        delete pen.rect
+        delete pen.textRect
+      }
     },
     lineInit (pen, name) { // 初始化连线参数
       if (pen.data && pen.data.params) {
         return
+      }
+      if (pen.from && pen.to) {
+        const width = pen.from.x - pen.to.x
+        const height = pen.from.y - pen.to.y
+        const from = pen.from
+        const to = pen.to
+        pen.lineName = pen.name
+        pen.name = 'line'
+        pen.borderType = 0
+        pen.anchors = lineData.anchors
+        const penId = pen.id
+        pen.anchors[0].connectTo = from.id
+        pen.anchors[1].connectTo = to.id
+        pen.anchors[0].anchorId = from.anchorIndex + ''
+        pen.anchors[1].anchorId = to.anchorIndex + ''
+        pen.anchors[0].id = s8()
+        pen.anchors[1].id = s8()
+        pen.anchors[0].penId = penId
+        pen.anchors[1].penId = penId
+        pen.x = width > 0 ? to.x : from.x
+        pen.y = height > 0 ? to.y : from.y
+        pen.width = Math.abs(to.x - from.x)
+        pen.height = Math.abs(to.y - from.y)
       }
       pen.data = {
         params: {
@@ -374,6 +405,14 @@ export default {
       if (key === 'x' || key === 'y' || key === 'width' || key === 'height') {
         const findPen = getTopology(this.meta2dId).getPenRect(pen)
         obj[key] = findPen[key]
+      }
+      if (key === 'image') {
+        obj.imageId = pen[key]
+        obj.icon = ''
+      }
+      if (key === 'icon') {
+        obj.imageId = pen[key]
+        obj.image = ''
       }
       getTopology(this.meta2dId).setValue(obj) // 更新pen
       if (key === 'lineAnimateType') {

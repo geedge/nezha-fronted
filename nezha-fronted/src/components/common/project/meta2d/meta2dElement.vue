@@ -28,7 +28,7 @@
                 @change="change('nzName')"></el-input>
             </div>
           </div>
-          <div class="form-row-item form-row-item-full">
+          <div class="form-row-item form-row-item-full" v-if="!pen.type">
             <div class="form-row-key">
               {{$t('overall.module')}}
             </div>
@@ -296,7 +296,7 @@
               </div>
               <div class="form-row-value">
 <!--                <el-input  v-model="pen.image" size="small" @change="change('image')"/>-->
-                <meta2dSelectImage :selectImage="pen.image" :imgId="pen.imageId" @updateImage="updateImage"/>
+                <meta2dSelectImage :selectImage="pen.image" :imgId="pen.imageId" :icon="pen.icon" @updateImage="updateImage"/>
               </div>
             </div>
             <div class="form-row-item">
@@ -1219,11 +1219,25 @@ export default {
         this.pen.autoPlay = false
       }
       this.$emit('change', key)
+      this.$forceUpdate()
     },
     updateImage (image) {
-      this.pen.image = image.image
       this.pen.imageId = image.id
-      this.change('image')
+      if (image.image) {
+        this.pen.image = image.image
+        this.pen.icon = ''
+        this.change('image')
+      }
+      if (image.icon) {
+        this.pen.icon = image.icon
+        this.pen.image = ''
+        this.change('icon')
+      }
+      if (!image.id) {
+        this.pen.image = image.image
+        this.pen.icon = ''
+        this.change('image')
+      }
     },
     colorChange (val, key) {
       this.pen.data.params[key] = val

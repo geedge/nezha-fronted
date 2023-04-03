@@ -345,11 +345,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.pen-tools-item {
-  margin-right: 5px;
-  fontSize:17px;
-  cursor: pointer;
-}
-</style>

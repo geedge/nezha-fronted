@@ -11,7 +11,10 @@
   height: 100%;
 }
 .meta2d-chart{
-
+  .meta2d-project {
+    height: 100% !important;
+    border: none !important;
+  }
 }
 .meta2d-project{
   height: calc(100% - 78px);

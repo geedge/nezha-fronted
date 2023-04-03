@@ -181,7 +181,6 @@ export default {
   methods: {
     getGroup () {
       this.$get('asset/field/group', { pageSize: -1 }).then(response => {
-        this.tools.loading = false
         if (response.code == 200) {
           this.groupData = [this.groupData[0]]
           this.groupData = this.groupData.concat(response.data.list)
@@ -217,6 +216,7 @@ export default {
         this.tools.loading = false
         if (response.code == 200) {
           this.tableData = response.data.list
+          this.tools.loading = false
           this.pageObj.total = response.data.total
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
           if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {

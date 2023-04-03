@@ -197,7 +197,9 @@
     }
   }
   .el-dialog__body{
-
+    padding: 20px !important;
+    height: calc(100% - 40px) !important;
+    width: calc(100% - 40px) !important;
   }
   .el-button{
     //background-color: $--background-color-1 !important;
