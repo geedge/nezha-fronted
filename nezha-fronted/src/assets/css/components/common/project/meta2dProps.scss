@@ -113,14 +113,14 @@
     justify-content: space-between;
     padding: 3px 10px;
     cursor: pointer;
-    .nz-icon-shuru {
+    .nz-icon-edit1 {
       display: none;
     }
     &:hover{
       background: $--background-color-empty;
       border: 1px solid $--border-select-color;
       color: $--color-primary;
-      .nz-icon-shuru {
+      .nz-icon-edit1 {
         display: inline-block;
       }
     }
@@ -196,10 +196,17 @@
     .el-icon-circle-close {
       display: none;
     }
+    .image-input-message {
+      width: 100%;
+      display: inline-block;
+    }
   }
   .image-input:hover {
     .el-icon-circle-close {
       display: inline-block;
+    }
+    .image-input-message {
+      width: calc(100% - 20px);
     }
   }
   .thresholds-from-item {
