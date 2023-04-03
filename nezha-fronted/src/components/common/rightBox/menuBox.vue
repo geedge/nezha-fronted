@@ -250,10 +250,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .form-item-title{
-    position: absolute;
-    left: -120px;
-  }
-
-</style>

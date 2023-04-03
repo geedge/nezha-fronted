@@ -253,11 +253,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .colorEF7458{
-    color: #EF7458;
-  }
-  .color23BF9A{
-    color: #23BF9A;
-  }
-</style>

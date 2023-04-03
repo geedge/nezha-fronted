@@ -510,21 +510,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  /deep/ .nz-meta-group-box{
-    min-width: 220px;
-  }
-  .asset-meta-param-row{
-    text-align: center;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .asset-meta-param-row:last-child{
-    margin-bottom: 0;
-  }
-  .meta-option-box{
-
-  }
-</style>
