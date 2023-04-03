@@ -190,12 +190,22 @@ export default {
   },
   beforeDestroy () {
     if (getTopology(this.meta2dId)) {
-      getTopology(this.meta2dId).clear()
+      getTopology(this.meta2dId).off('translate', this.topTranslate) // 平移·
+      getTopology(this.meta2dId).off('scale', this.topoScale) // 缩放·
+      getTopology(this.meta2dId).off('active', this.pensActive) // 选中·
+      getTopology(this.meta2dId).off('translatePens', () => {}) // 移动画笔结束·
+      getTopology(this.meta2dId).off('translatingPens', () => {}) // 移动画笔进行中·
+      getTopology(this.meta2dId).off('enter', this.penEnter) // 移入画笔·
+      getTopology(this.meta2dId).off('leave', this.penLeave) // 移出画笔·
+      getTopology(this.meta2dId).off('add', this.appPen) // 添加新画笔·
+      getTopology(this.meta2dId).off('click', this.topoClick) // click画笔·
+      getTopology(this.meta2dId).destroy()
       setTopology(this.meta2dId, null)
     }
     bus.$off('changeSelectPens', this.pensActive)
     this.$refs.meta2dBox.removeEventListener('mousemove', this.mousemove)
     this.$refs.meta2dBox.removeEventListener('mouseup', this.mouseup)
+    window.removeEventListener('click', this.contextmenuNone)
   }
 
 }

@@ -136,8 +136,7 @@ export default {
 
     drawSankeyChart () {
       this.$nextTick(() => {
-        // 清空作图区域
-        d3.select(`#sankey-svg-${this.chartId}`).selectAll('g').remove()
+        d3.select(`#sankey-svg-${this.chartId}`).selectAll('g').remove() // 清空作图区域
 
         // 获取svg宽高 初始化画布
         const svgDom = document.getElementById(`sankey-svg-${this.chartId}`)
@@ -395,6 +394,9 @@ export default {
   mounted () {
     this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart()
+  },
+  beforeDestroy () {
+    d3.select(`#sankey-svg-${this.chartId}`).selectAll('g').remove() // 清空作图区域
   }
 }
 </script>
