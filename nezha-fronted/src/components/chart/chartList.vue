@@ -863,15 +863,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.chart-list {
-  flex: 1;
-  height: auto !important;
-  width: 100%;
-  border-top: 1px solid transparent;
-  box-sizing: border-box;
-}
-.group-hide-header {
-  height: 40px!important;
-}
-</style>

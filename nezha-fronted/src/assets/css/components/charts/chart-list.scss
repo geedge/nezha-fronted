@@ -1,11 +1,11 @@
 .charts__chart-list {
   .chartBox {
-    float:left;
+    float: left;
     padding: 0 10px 10px 0;
-    position:relative;
+    position: relative;
     box-sizing: border-box;
   }
-  .no-data{
+  .no-data {
     height: 1189px;
     width: 100%;
     position: relative;
@@ -26,13 +26,24 @@
       font-weight: 400;
       margin-left: -29px;
       top: 52.5%;
-      left: 50%
+      left: 50%;
     }
   }
-  .list-width{
+  .list-width {
     width: 100%;
     padding: 0 10px 5px 10px;
     box-sizing: border-box;
-    overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
+    overflow: hidden; /*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
+  }
+}
+.chart-list {
+  flex: 1;
+  height: auto !important;
+  width: 100%;
+  border-top: 1px solid transparent;
+  box-sizing: border-box;
+  
+  .group-hide-header {
+    height: 40px !important;
   }
 }

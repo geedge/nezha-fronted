@@ -1257,16 +1257,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.view-mode{
-  margin-right: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.view-mode .el-icon-monitor{
-  display: flex;
-  align-items: center;
-  font-size: 20px;
-}
-</style>

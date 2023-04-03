@@ -1,0 +1,54 @@
+#endpointTable {
+    .bagEF7458 {
+        background: #ef7458;
+        color: #fff;
+    }
+    .bag23BF9A {
+        background: #23bf9a;
+        color: #fff;
+    }
+    .configs-endpoint {
+        border-radius: 4px;
+        padding: 2px 7px;
+        color: #3c92f1;
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+    .configs-endpoint.metrics {
+        color: #3c92f1;
+    }
+    .configs-endpoint.logs {
+        color: #25bf9a;
+    }
+    .colorEF7458 {
+        color: #ef7458;
+    }
+    .color23BF9A {
+        color: #23bf9a;
+    }
+    .inline-block {
+        display: inline-block;
+    }
+    .pointer {
+        cursor: pointer;
+    }
+    .endpoint-cell-left {
+        margin-right: 5px;
+    }
+    .copy-value-content {
+        position: absolute;
+        right: 8px;
+        top: 4px;
+    }
+    .alert-label__border.alert-label {
+        width: auto !important;
+    }
+    .copy-value-content__pre {
+        width: auto;
+        height: 200px;
+        margin-top: 20px;
+        overflow-y: scroll;
+        overflow-x: scroll;
+    }
+}

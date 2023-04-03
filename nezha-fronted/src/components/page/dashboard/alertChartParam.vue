@@ -1,4 +1,5 @@
 <template>
+  <div id="alertChartParam">
     <el-form :model="parameters" ref="alertChartParam" size="small" label-position="top" label-width="200px" class="alert-chart-param-form alert-chart__padding-top">
       <el-form-item :label="$t('overall.select')" >
         <el-cascader
@@ -31,6 +32,7 @@
         </el-select>
       </el-form-item>
     </el-form>
+  </div>
 </template>
 
 <script>
@@ -180,27 +182,25 @@ export default {
 }
 </script>
 
-<style scoped>
-.alert-chart-param-form .form-item{
+<style>
+#alertChartParam .alert-chart-param-form .form-item{
   width: 100%;
 }
-.alert-chart__padding-top.alert-chart-param-form {
+#alertChartParam .alert-chart__padding-top.alert-chart-param-form {
   padding-top: 0;
 }
-.severity-circle{
+#alertChartParam .severity-circle{
   position: absolute;
   left: 10px;
   top: 0;
 }
-.severity-box{
+#alertChartParam .severity-box{
   position: relative;
 }
-.severity-box /deep/ .el-select .el-input__inner{
+#alertChartParam .severity-box /deep/ .el-select .el-input__inner{
   padding-left: 25px;
 }
-</style>
-<style>
-  .alert-form-pop{
+.alert-form-pop{
     z-index:3000 !important;
   }
   .alert-form-pop .el-cascader-panel {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="emailError">
     <div v-if="type==='text'">
       <el-input v-model="inputValue" size="small" maxlength="128"/>
     </div>
@@ -168,8 +168,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.emailError /deep/ .el-input__inner{
+<style>
+#emailError .emailError /deep/ .el-input__inner{
   border-color: #F56C6C;
 }
 </style>

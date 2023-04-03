@@ -65,8 +65,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.template-tab{
+<style>
+.temp .template-tab{
   height: 100%;
 }
 </style>
