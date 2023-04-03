@@ -7,7 +7,7 @@
         </transition>
       </div>
       <div class="main-container">
-        <div class="top-tools panel-top-tools" :class="showTopLine? 'panel-top-tools-bottom' : ''" style="z-index: 1001;">
+        <div class="top-tools panel-top-tools" :class="showTopLine? 'panel-top-tools-bottom' : ''">
           <div v-if="panelData.length === 0" class="top-tool-left" style="margin-left: 10px;">
             <button id="dashboard-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" v-has="'main_add'" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("overall.addDashboard")}}</button>
           </div>
@@ -22,10 +22,12 @@
                 style="display: inline-block;padding: 0"
                 @deletePanel="del"
                 @editPanel="edit"
-                @selectDashboard="panelChange">
+                @selectDashboard="panelChange"
+                @startPlay="startPlay"
+                >
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
-                  <span :title="showPanel.name  + ' (' + showPanel.chartNum +' charts)' " class="show-panel-name">{{showPanel.name}}</span>
+                  <span :title="showPanel.name  + ' (' + (showPanel.chartNum || 0) +' charts)' " class="show-panel-name">{{showPanel.name||$t('overall.notFound')}}</span>
                   <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred===1" class="nz-icon nz-icon-a-xingzhuang2" :title ="$t('overall.starred')"></i>
                   <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang" :title ="$t('overall.unstarred')"></i>
                 </template>
@@ -43,6 +45,8 @@
             </div>
 
             <div class="top-tool-right">
+              <!-- 仪表盘轮播 -->
+              <playlist v-if="playListControls" :playlistObj="playlistObj" @stopPlaylist="stopPlaylist" @changePlay="panelChange"></playlist>
 
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id" :from="fromRoute.dashboard"></pick-time>
 
@@ -79,12 +83,6 @@
                   </el-dropdown-item>
                 </template>
                 <template v-slot:after>
-                  <!-- <el-dropdown-item v-has="'main_add'">
-                    <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{$t('overall.AddByTemplate')}}</div>
-                  </el-dropdown-item>
-                  <el-dropdown-item v-has="'main_edit'">
-                    <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
-                  </el-dropdown-item> -->
                   <el-dropdown-item v-has="'dashboard_view'">
                     <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
                   </el-dropdown-item>
@@ -172,6 +170,7 @@ import exportHtmlMixin from '@/components/common/mixin/exportHtml'
 import panelVariables from '@/components/common/panel/panelVariables'
 import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
 import dashboardTempBox from '@/components/common/rightBox/dashboardTempBox'
+import playlist from '@/components/common/playlist'
 // import FileSaver from 'file-saver'
 // import chartData from './testData'
 export default {
@@ -347,7 +346,9 @@ export default {
         { value: 300, label: '5m' },
         { value: 900, label: '15m' },
         { value: 1800, label: '30m' }
-      ]
+      ],
+      playListControls: false, // 显示隐藏轮播按钮
+      playlistObj: {} // 轮播仪表盘配置
     }
   },
   components: {
@@ -359,7 +360,8 @@ export default {
     chartRightBox,
     panelVariables, // 处理panel变量的组件
     snapshotProgress, // 快照进度
-    dashboardTempBox // dashboard模板
+    dashboardTempBox, // dashboard模板
+    playlist
   },
   computed: {
     chartRightBoxShow () {
@@ -373,6 +375,16 @@ export default {
     }
   },
   methods: {
+    // 开始轮播列表
+    startPlay (data) {
+      this.playListControls = true
+      this.playlistObj = data
+    },
+    // 结束轮播列表
+    stopPlaylist () {
+      this.playListControls = false
+      this.playlistObj = {}
+    },
     closeDashboardTempBox (refresh) {
       this.rightBox.dashboardTemp.show = false
       if (refresh) {
@@ -404,7 +416,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('visual/dashboard?ids=' + u.id).then(async (response) => {
+        this.$delete('visual/dashboard?ids=' + u.id).then((response) => {
           if (response.code === 200) {
             this.$message({
               duration: 1000,
@@ -416,6 +428,7 @@ export default {
               const param = { t: +new Date() }
               const path = this.fromRoute.dashboard
               this.updatePath(param, path)
+              this.stopPlaylist()
               this.getTableData(true)
             } else {
               this.getTableData(false)
@@ -709,9 +722,12 @@ export default {
     },
 
     // 面板相关操作
-    panelChange (val) {
+    panelChange (val, type) {
       if (!val) {
         return false
+      }
+      if (type === 'select') { // 选择面板 则停止仪表盘轮播
+        this.stopPlaylist()
       }
       // 切换面板 重置参数
       const param = {

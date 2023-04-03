@@ -66,19 +66,32 @@
   }
   .top-tool-btn-group {
     display: flex;
-    .top-tool-btn:not(:last-of-type):not(:first-of-type) {
-      border-left: none;
-      border-radius: 0;
-    }
     .top-tool-btn:first-of-type:not(:last-of-type) {
+      border-right-color: transparent;
       border-radius: $--button-border-radius 0 0 $--button-border-radius;
+      &:focus+.top-tool-btn{
+        border-left-color: transparent !important;
+      }
+    }
+    .top-tool-btn:not(:last-of-type):not(:first-of-type) {
+      border-right-color: transparent;
+      border-radius: 0;
+      &:focus+.top-tool-btn{
+        border-left-color: transparent !important;
+      }
     }
     .top-tool-btn:last-of-type:not(:first-of-type) {
       border-radius: 0 $--button-border-radius $--button-border-radius 0;
-      border-left: none;
     }
     .top-tool-btn {
       background-color: $--background-color-empty;
+    }
+  }
+  .top-tool-btn-group.playlist{
+    margin-right: 10px;
+    .top-tool-btn.stopPlaylist{
+      width: 92px;
+      padding: 0 5px;
     }
   }
   .top-tool-btn {

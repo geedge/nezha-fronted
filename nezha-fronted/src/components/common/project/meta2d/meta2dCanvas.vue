@@ -70,7 +70,7 @@
                   <span class="hide-input-nzName text-ellipsis" v-if="!editFlag[index]">
                     {{item.nzName}}
                   </span>
-                  <i @click="changeEditFlag(index)" v-if="!editFlag[index]"  class="nz-icon nz-icon-shuru"/>
+                  <i @click="changeEditFlag(index)" v-if="!editFlag[index]"  class="nz-icon nz-icon-edit1"/>
                 </span>
               <span>
                   <span @click.stop="penChange(item, 'locked')" class="pen-tools-item" :title="!item.locked?$t('overall.locked'): $t('overall.unlocked')">

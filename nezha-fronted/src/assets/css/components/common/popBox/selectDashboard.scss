@@ -24,21 +24,27 @@
 .tree--node > span:last-of-type > span > i {
   font-weight: normal !important;
 }
-.select-panel-tree {
+.select-dashboard-tree {
   height: 350px;
   overflow: auto;
 }
-.select-panel-tree .el-tree-node__content {
+.select-dashboard-tree .el-tree-node__content {
   height: 34px;
   line-height: 34px;
 }
-.select-panel-tree .el-tree-node__content:hover {
+.select-dashboard-tree .el-tree-node__content:hover {
   color: $--color-primary;
 }
-.select-panel-tree .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+.select-dashboard-tree .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
   background-color: $--background-color-base;
   font-weight: bold;
   color: $--color-primary;
+}
+.select-dashboard-tree.playlistTree .el-tree-node:focus>.el-tree-node__content{
+  background-color: transparent;
+}
+.select-dashboard-tree.playlistTree .el-tree-node>.el-tree-node__content:hover{
+  background-color: $--background-color-base;
 }
 .tree--node {
   display: flex;
@@ -71,12 +77,12 @@
   color: #D96D7A;
 }
 
-.panel-select-wrap{
+.dashboard-select-wrap{
   width: 100%;
   height: 402px;
   display: flex;
   justify-content: space-between;
-  .panel-select-left{
+  .dashboard-select-left{
     width: 196px;
     height: 100%;
     box-sizing: border-box;
@@ -85,9 +91,9 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    .panel-select-list{
+    .dashboard-select-list{
       width: 100%;
-      .panel-select-item{
+      .dashboard-select-item{
         font-family: Roboto-Regular;
         font-size: 14px;
         font-weight: 400;
@@ -106,14 +112,14 @@
           color: $--color-text-regular;
         }
       }
-      .panel-select-item:hover{
+      .dashboard-select-item:hover{
         color: $--color-primary; 
         background: $--background-color-base;
         i{
           color: $--color-primary;
         }
       }
-      .panel-select-item.active{
+      .dashboard-select-item.active{
         color: $--color-primary;  
         background: $--background-color-base;
         i{
@@ -167,9 +173,60 @@
     flex: 1;
     width: calc(100% - 196px);
     padding-top: 0;
-    .panel-select-header{
+    .dashboard-select-header{
       margin-top: 12px;
       margin-bottom: 8px;
+      box-sizing: border-box;
+      padding: 0 12px;
+      display: flex;
+      .el-input{
+        flex: 1;
+        .el-input__inner {
+          border: 1px solid $--button-icon-border-color;
+        }
+        .el-input__inner:hover {
+          border: 1px solid $--button-icon-hover-border-color;
+        }
+        .el-input__inner:focus {
+          border: 1px solid $--button-icon-active-border-color;
+        }
+      }
+      .top-tool-btn {
+        height: 32px;
+        width: 36px;
+        cursor: pointer;
+        border: 1px solid $--button-icon-border-color;
+        outline: none;
+        border-radius: $--button-border-radius;
+        background-color: $--background-color-empty;
+        transition:all .2s;
+        color: $--button-icon-color;
+        i {
+          font-size: 14px;
+          color: $--button-icon-color;
+        }
+      }
+      .top-tool-btn.top-tool-btn--text {
+        padding: 0 8px;
+        width: unset;
+        color: $--color-text-regular;
+      }
+      .top-tool-btn:hover:not(.nz-btn-disabled) {
+        background-color: $--button-icon-hover-background-color;
+        border: 1px solid $--button-icon-hover-border-color;
+        color: $--button-icon-hover-color;
+        i {
+          color: $--button-icon-hover-color;
+        }
+      }
+      .top-tool-btn:focus:not(.nz-btn-disabled), .top-tool-btn.is-focus {
+        background-color: $--button-icon-active-background-color;
+        border: 1px solid $--button-icon-active-border-color !important;
+        color: $--button-icon-active-color;
+        i {
+          color: $--button-icon-active-color;
+        }
+      }
     }
   }
   .nz-icon-xingzhuang{
@@ -184,5 +241,16 @@
   .highlight-keyword{
     color:$--color-primary;
     background: none;
+  }
+  .nz-icon-bofang{
+    color: $--color-text-regular;
+  }
+}
+
+.right-box-playlist{
+  .el-input-group__append{
+    background-color: $--right-box-sub-title-background-color;
+    border: 1px solid $--border-color-light;
+    border-left: none;
   }
 }

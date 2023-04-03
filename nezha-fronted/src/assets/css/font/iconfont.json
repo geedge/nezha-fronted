@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "34816567",
+      "name": "下一播放",
+      "font_class": "xiayibofang",
+      "unicode": "e7dc",
+      "unicode_decimal": 59356
+    },
+    {
+      "icon_id": "34816568",
+      "name": "上一播放",
+      "font_class": "shangyibofang",
+      "unicode": "e7dd",
+      "unicode_decimal": 59357
+    },
+    {
+      "icon_id": "34801441",
+      "name": "播放",
+      "font_class": "bofang",
+      "unicode": "e7da",
+      "unicode_decimal": 59354
+    },
+    {
+      "icon_id": "34801442",
+      "name": "Playlists",
+      "font_class": "Playlists",
+      "unicode": "e7db",
+      "unicode_decimal": 59355
+    },
+    {
+      "icon_id": "34764401",
+      "name": "edit",
+      "font_class": "edit1",
+      "unicode": "e7d9",
+      "unicode_decimal": 59353
+    },
+    {
       "icon_id": "34724146",
       "name": "全部展开",
       "font_class": "quanbuzhankai1",

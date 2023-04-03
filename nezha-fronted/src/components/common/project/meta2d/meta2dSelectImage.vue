@@ -2,7 +2,7 @@
   <div class="meta2d-image-box">
     <div @click="changeSelectBoxShow(true)" style="position: relative">
       <div class="image-input">
-        <span v-if="imageName">{{unit}} / {{imageName}}</span>
+        <span v-if="imageName" class="image-input-message text-ellipsis">{{unit}} / {{imageName}}</span>
         <i class="el-icon-circle-close" style="position: absolute;top: 10px;right: 10px;font-size: 14px" @click.stop="selectImageChange({image: '', id: ''}, true)"/>
       </div>
     </div>
