@@ -680,6 +680,17 @@ textarea {
 .el-option-width303 {
   width: 303px !important;
 }
+
+.el-select-multiple-width640 {
+  width: 640px !important;
+  .el-input{
+    width: 640px !important;
+  }
+  .el-select__tags{
+    width: 608px !important;
+  }
+}
+
 .el-dialog__header{
   position: relative;
 }

@@ -40,7 +40,7 @@
               :placeholder="$t('el.select.placeholder')"
               popper-class="right-box-select-top prevent-clickoutside"
               size="small"
-              style="width:100%"
+              class="el-select-multiple-width640"
             >
               <el-option
                 v-for="item in dashboardList"
