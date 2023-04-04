@@ -272,6 +272,10 @@ export default {
           params.y += 1
           resetFlag = true
         }
+        if (params.groupId) { // group 内部坐标不能包含小数
+          params.x = parseInt(params.x)
+          params.y = parseInt(params.y)
+        }
         delete params.panel
         if (params.type === 'table') {
           delete params.param.tags
