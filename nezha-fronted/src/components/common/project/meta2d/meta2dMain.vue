@@ -120,6 +120,7 @@ import endpointTable from '@/components/common/project/popData/endpointTable'
 import { getTopology, setTopology } from '@/components/common/js/common'
 import topoUtil from '@/components/common/project/meta2d/js/topoUtil'
 import bus from '@/libs/bus'
+import { globalStore } from '@meta2d/core'
 export default {
   name: 'meta2dMain',
   mixins: [meta2dMain, topoUtil],
@@ -199,7 +200,12 @@ export default {
       getTopology(this.meta2dId).off('leave', this.penLeave) // 移出画笔·
       getTopology(this.meta2dId).off('add', this.appPen) // 添加新画笔·
       getTopology(this.meta2dId).off('click', this.topoClick) // click画笔·
-      getTopology(this.meta2dId).destroy()
+      getTopology(this.meta2dId).destroy(true)
+      for (const k in globalStore) {
+        if (!globalStore[k]) {
+          delete globalStore[k]
+        }
+      }
       setTopology(this.meta2dId, null)
     }
     bus.$off('changeSelectPens', this.pensActive)
