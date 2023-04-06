@@ -5,8 +5,8 @@
     </ul>
     <div class="integration-tabs-content">
       <!-- internal -->
-      <manual v-if="tabId==='manual'"></manual>
       <automatic v-if="tabId==='automatic'"></automatic>
+      <manual v-if="tabId==='manual'"></manual>
       <!-- module -->
       <configuration v-if="tabId==='configuration'" :configuration="detailsObj.configuration"></configuration>
       <dashboard v-if="tabId==='dashboard'" :tempId="detailsObj.tempId"></dashboard>
@@ -54,10 +54,10 @@ export default {
       immediate: true,
       handler (val) {
         if (val === 'internal') {
-          this.tabId = 'manual'
+          this.tabId = 'automatic'
           this.tabs = [
-            { id: 'manual', name: this.$t('integration.manualInstallation') },
-            { id: 'automatic', name: this.$t('integration.automaticInstallation') }
+            { id: 'automatic', name: this.$t('integration.automaticInstallation') },
+            { id: 'manual', name: this.$t('integration.manualInstallation') }
           ]
         } else if (val === 'module') {
           this.tabId = 'configuration'
