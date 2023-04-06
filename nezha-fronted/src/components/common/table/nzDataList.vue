@@ -40,7 +40,7 @@
           <!-- 顶部分页组件，当打开底部上滑框时出现 -->
           <!-- <div v-if="showLayout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>-->
         </div>
-        <div v-if="showLayout.indexOf('clickSearch') > -1" class="search-box">
+        <div v-show="bottomBox.mainResizeShow" v-if="showLayout.indexOf('clickSearch') > -1" class="search-box">
           <slot name="search"></slot>
         </div>
         <div v-show="bottomBox.mainResizeShow" :style="{ height: nzTableHeight }" class="nz-table-list">
