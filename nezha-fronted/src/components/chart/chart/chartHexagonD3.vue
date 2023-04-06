@@ -442,9 +442,6 @@ export default {
     // eslint-disable-next-line vue/no-mutating-props
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
-    try {
-      this.isStack = this.chartInfo.param.stack
-    } catch (e) {}
     this.chartInfo.loaded && this.initChart(this.chartOption)
   },
   beforeDestroy () {

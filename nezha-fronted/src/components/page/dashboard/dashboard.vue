@@ -155,7 +155,7 @@
 
 <script>
 import * as echarts from 'echarts'
-import { chartCache } from '@/components/common/js/common'
+import { chartCache, clearTopology } from '@/components/common/js/common'
 import { data as le5leData, observers as le5leObservers } from 'le5le-store/store/data.js'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import bus from '../../../libs/bus'
@@ -173,6 +173,7 @@ import panelVariables from '@/components/common/panel/panelVariables'
 import snapshotProgress from '@/components/common/snapshotProgress/snapshotProgress.vue'
 import dashboardTempBox from '@/components/common/rightBox/dashboardTempBox'
 import playlist from '@/components/common/playlist'
+
 // import FileSaver from 'file-saver'
 // import chartData from './testData'
 export default {
@@ -747,6 +748,7 @@ export default {
       if (!val) {
         return false
       }
+      clearTopology()
       const param = {
         dashboardId: val.id
       }
@@ -774,6 +776,7 @@ export default {
     /* 时间条件查询--start */
     // 选择日期变化
     dateChange (route) {
+      clearTopology()
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
@@ -1282,6 +1285,8 @@ export default {
     echarts.disconnect('timeSeriesGroup')
 
     this.$store.commit('setMode', '')
+
+    clearTopology()
   }
 }
 </script>
