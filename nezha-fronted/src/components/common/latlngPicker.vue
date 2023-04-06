@@ -70,8 +70,8 @@ export default {
       this.map = new maplibregl.Map({
         container: mapId,
         style: mapStyle,
-        maxZoom: 7,
-        minZoom: 1,
+        maxZoom: this.mapParam.maxZoom || 7,
+        minZoom: this.mapParam.minZoom || 1,
         renderWorldCopies: false,
         maxBounds: [[-179, -85], [179, 85]],
         hash: false,
