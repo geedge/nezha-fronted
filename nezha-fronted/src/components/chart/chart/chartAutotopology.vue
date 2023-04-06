@@ -2,7 +2,7 @@
   <div v-my-loading="topologyLoading" class="overview">
     <transition name = "el-zoom-in-center">
       <div v-if="allProject&&allProject.length>0" style="width: 100%;height: 100%;position: relative">
-        <el-carousel :interval="5000" :trigger="'click'" :autoplay="false" arrow="hover">
+        <el-carousel :interval="5000" :trigger="'click'" :autoplay="true" arrow="hover">
           <el-carousel-item v-for="(item,index) in allProject" :key="index" style="min-height: 10px;min-width: 10px">
             <div class="maskLayer" @click="toProject(item)"></div>
 <!--            <span class="project-name">{{item.name}}</span>-->

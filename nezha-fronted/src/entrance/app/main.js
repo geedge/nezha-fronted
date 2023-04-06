@@ -5,6 +5,7 @@ import '@/assets/css/main.scss'
 import '@/assets/css/animate.css'
 import '@/assets/css/font/iconfont.js'
 import 'intro.js/introjs.css'
+import Pace from 'pace-js'
 import ElementUI from 'element-ui'
 import i18n from '@/components/common/i18n'
 import VueIntro from 'vue-introjs'
@@ -48,12 +49,24 @@ import VMdPreview from '@kangc/v-md-editor/lib/preview'
 import '@kangc/v-md-editor/lib/style/preview.css'
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
 import '@kangc/v-md-editor/lib/theme/style/github.css'
+// Pace.on("done", function() {
+//   $self.isShowAuth = false;
+//   Pace.off("done");
+// })
 // highlightjs
 import hljs from 'highlight.js'
+
+// Pace.start();
 VMdPreview.use(githubTheme, {
   Hljs: hljs
 })
+Pace.options = {
+  minTime: 0.1,
+  ghostTime: 0.1,
+  restartOnRequestAfter: 0.1
+}
 Vue.use(VMdPreview)
+Vue.use(Pace)
 
 Vue.use(VueIntro)
 Vue.use(htmlToPdf)
