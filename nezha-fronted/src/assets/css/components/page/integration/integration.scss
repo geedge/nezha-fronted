@@ -114,13 +114,14 @@
     .integration-dialog-top{
       display: flex;
       align-items: center;
-      padding-bottom: 20px;
+      padding-bottom: 21px;
       margin: 0 30px;
       .integration-dialog-top-logo{
         line-height: 0;
         img{
           width: 72px;
           height: auto;
+          padding-left: 10px;
         }
       }
       .integration-dialog-introduce{
@@ -160,7 +161,7 @@
   .integration-tabs-nav{
     margin:0 30px;
     height: 42px;
-    box-sizing: border-box;
+    box-sizing: content-box !important;
     border-bottom: 1px solid $--border-color-light;
     display: flex;
     .integration-tabs-nav-item{
@@ -170,8 +171,10 @@
       font-family: Roboto-Regular;
       font-size: 14px;
       color: $--color-text-regular;
-      font-weight: 400;
+      font-weight: 600;
       line-height: 42px;
+      padding-left: 7px;
+      padding-right: 7px;
       position: relative;
     }
     .integration-tabs-nav-item.active{
@@ -203,14 +206,16 @@
         font-weight: 600;
       }
       .nz-btn{
-        width: 80px;
-        height: 30px;
+        width: 82px;
+        height: 32px;
+        line-height: 32px;
         padding: 0 10px;
         border-radius: 4px;                                                 
         background-color: $--color-primary;
         border: none !important;
-        i{
-          font-size: 16px;
+        i.nz-icon{
+          font-size: 14px;
+          padding-right: 6px;
         }
         span{
           font-size: 14px;
@@ -346,46 +351,45 @@
   }
   .integration-manual,.integration-automatic{
     padding: 30px;
-    padding-top: 15px;
+    padding-top: 23px;
     padding-right: 10px;
     margin-right: 20px;
     box-sizing: border-box;
     height: 100%;
     overflow-y: auto;
     .integration-install{
-      font-size: 16px;
+      font-size: 14px;
       color: $--color-text-primary;
-      font-weight: 600;
+      font-weight: 400;
     }
     .install-step{
-      padding-top: 15px;
+      padding-top: 20px;
       width: 100%;
       display: flex;
       .step-num{
         width: 20px;
         height: 20px;
-        box-sizing: border-box;
-        border: 1px solid $--border-color-light;
-        border-radius: 2px;
+        border-radius: 50%;
+        margin-right: 8px;
+        color: #FFFFFF;
+        background: $--color-primary;
         font-size: 12px;
         text-align: center;
         line-height: 20px;
-        color: $--color-text-primary;
-        margin-right: 12px;
       }
       .step-right{
         flex: 1;
         h4{
           font-size: 14px;
           line-height: 20px;
-          margin-bottom: 12px;
-          color: $--color-text-regular;
+          margin-bottom: 10px;
+          color: $--color-text-primary;
           font-weight: normal;
         }
         p{
           font-size: 14px;
           line-height: 20px;
-          margin-bottom: 8px;
+          margin-bottom: 10px;
           color: $--color-text-regular;
           display: flex;
           align-items: center;
@@ -394,8 +398,11 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: $--color-text-primary;
+            background: $--color-text-regular;
             margin-right: 6px;
+          }
+          &>span{
+            color: $--color-text-regular;
           }
         }
         .talon-select{
@@ -403,22 +410,36 @@
           display: flex;
           align-items: center;
           &>span{
-            margin-right: 8px;
+            margin-right: 10px;
           }
           .el-select{
-            width: 220px;
+            width: 310px;
+            .el-input__inner{
+              color: $--color-text-primary;
+            }
           }
           .v-selectpage{
-            width: 640px;
+            width: 310px;
             .sp-base.sp-input{
               height: 32px;
+              &>span{
+                color: $--color-text-primary;
+              }
             }
             .sp-icon-close{
               display: none;
             }
           }
           .nz-btn{
-            margin-left: 18px;
+            width: 106px;
+            height: 32px;
+            margin-left: 10px;
+            line-height: 32px;
+            i.nz-icon{
+              font-size: 14px;
+              padding-right: 6px;
+              vertical-align: baseline;
+            }
           }
         }
         .command-box{
@@ -426,14 +447,21 @@
           width: 100%;
           line-height: 32px;
           .el-input__inner{
-            color: $--color-text-primary;
+            height: 36px !important;
+            line-height: 36px !important;
+            padding-left: 12px;
+            color: $--color-text-regular;
             border-color: $--border-color-light;
+            background: $--select-page-hover-background-color !important;
             cursor: text;
           }
           .el-input__suffix{
+            top: 2px;
+            right: 13px;
             .el-input__suffix-inner{
               cursor: pointer;
-              i{
+              i.nz-icon{
+                font-size: 14px;
                 color: $--color-text-regular;
               }
             }

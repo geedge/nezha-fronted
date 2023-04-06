@@ -33,7 +33,7 @@
             <i slot="suffix" class="nz-icon nz-icon-override" @click="copyUrl(curlUrl)" :title="$t('overall.copyText')"></i>
           </el-input>
         </div>
-        <h4 style="margin-top:15px">{{$t('integration.autoRemark')}}</h4>
+        <h4 style="margin-top:10px">{{$t('integration.autoRemark')}}</h4>
       </div>
     </div>
   </div>
@@ -83,7 +83,9 @@ export default {
     }
   },
   created () {
-    this.getAssetList()
+    this.$nextTick(() => {
+      this.getAssetList()
+    })
     this.token = localStorage.getItem('nz-token')
     axios.get('/healthy').then(response => {
       const url = response.request.responseURL
@@ -105,10 +107,10 @@ export default {
         if (response.code === 200) {
           this.assetList = response.data.list
           if (this.assetList && this.assetList.length > 0) {
-            setTimeout(() => {
-              this.assetId = String(this.assetList[0].id)
-              this.loadFinish = true
-            }, 100)
+            // setTimeout(() => {
+            this.assetId = String(this.assetList[0].id)
+            this.loadFinish = true
+            // }, 100)
           }
         }
       })

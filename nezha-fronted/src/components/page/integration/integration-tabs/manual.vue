@@ -13,7 +13,9 @@
               <span class="panel-dropdown-label-txt" >{{item.label}}</span>
             </el-option>
           </el-select>
-          <button :class="{'nz-btn-disabled':newDownloadFlag}" :disabled="newDownloadFlag" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="newDownload">{{$t('overall.download')}}</button>
+          <button :class="{'nz-btn-disabled':newDownloadFlag}" :disabled="newDownloadFlag" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="newDownload">
+            <i class="nz-icon nz-icon-download"></i>{{$t('overall.download')}}
+          </button>
         </div>
       </div>
     </div>
@@ -26,7 +28,7 @@
             <i slot="suffix" class="nz-icon nz-icon-override" @click="copyUrl(newCommand)" :title="$t('overall.copyText')"></i>
           </el-input>
         </div>
-        <h4 style="margin-top:15px">{{$t('integration.installed')}}</h4>
+        <h4 style="margin-top:20px">{{$t('integration.installed')}}</h4>
         <div class="command-box">
           <el-input :disabled="true" :value="tokenCommand" size="small">
             <i slot="suffix" class="nz-icon nz-icon-override" @click="copyUrl(tokenCommand)" :title="$t('overall.copyText')"></i>
@@ -54,7 +56,7 @@
     </div>
 
     <!-- Upgrade installation -->
-    <h3 class="integration-install" style="margin-top:3px;">{{$t('integration.upgradeInstallation')}}</h3>
+    <h3 class="integration-install" style="margin-top:20px;">{{$t('integration.upgradeInstallation')}}</h3>
     <div class="install-step">
       <div class="step-num">1</div>
       <div class="step-right">
@@ -66,7 +68,9 @@
               <span class="panel-dropdown-label-txt" >{{item.label}}</span>
             </el-option>
           </el-select>
-          <button :class="{'nz-btn-disabled':upDownloadFlag}" :disabled="upDownloadFlag" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="upDownload">{{$t('overall.download')}}</button>
+          <button :class="{'nz-btn-disabled':upDownloadFlag}" :disabled="upDownloadFlag" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="upDownload">
+            <i class="nz-icon nz-icon-download"></i>{{$t('overall.download')}}
+          </button>
         </div>
       </div>
     </div>
