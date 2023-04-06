@@ -160,7 +160,7 @@ export default {
 </script>
 
 <style>
-#nz-message .el-message{
+#nz-message.el-message{
   min-width: 180px;
 }
 #nz-message .progress{

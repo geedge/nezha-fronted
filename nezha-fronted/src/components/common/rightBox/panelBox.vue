@@ -44,15 +44,9 @@
           <!-- chartShare -->
           <el-form-item :label="$t('dashboard.dashboard.chartTooltip')" class="item-receivers" prop="chartShare">
             <el-select v-model="editPanel.param.chartShare" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
-              <el-option value="none" label="Default">
-                <span class="panel-dropdown-label-txt" >{{$t('config.assetLabel.default')}}</span>
-              </el-option>
-              <el-option value="crosshair" label="Share crosshair">
-                <span class="panel-dropdown-label-txt" >{{$t('dashboard.dashboard.crosshair')}}</span>
-              </el-option>
-              <el-option value="tooltip" label="Share tooltip">
-                <span class="panel-dropdown-label-txt" >{{$t('dashboard.dashboard.shareTooltip')}}</span>
-              </el-option>
+              <el-option value="none" :label="$t('config.assetLabel.default')"></el-option>
+              <el-option value="crosshair" :label="$t('dashboard.dashboard.crosshair')"></el-option>
+              <el-option value="tooltip" :label="$t('dashboard.dashboard.shareTooltip')"></el-option>
             </el-select>
             <div class="item-receivers-text">{{$t('dashboard.dashboard.chartTooltipText')}}</div>
           </el-form-item>

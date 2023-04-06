@@ -46,48 +46,50 @@
 
             <div class="top-tool-right">
               <!-- 仪表盘轮播 -->
-              <playlist v-if="playListControls" :playlistObj="playlistObj" @stopPlaylist="stopPlaylist" @changePlay="panelChange"></playlist>
+              <playlist v-if="playListControls" :playlistObj="playlistObj" :panelData="panelData" @stopPlaylist="stopPlaylist" @changePlay="panelChange"></playlist>
 
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id" :from="fromRoute.dashboard"></pick-time>
 
-              <!-- 切换查看模式 -->
-              <button class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
-                <i class="nz-icon nz-icon-moshiqiehuan"></i>
-              </button>
+              <template v-if="!playListControls">
+                <!-- 切换查看模式 -->
+                <button class="top-tool-btn view-mode" :title="$t('overall.viewMode')" @click="cycle">
+                  <i class="nz-icon nz-icon-moshiqiehuan"></i>
+                </button>
 
-              <!-- 新增图表 -->
-              <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChartBefore">
-                <i class="nz-icon-create-square nz-icon"></i>
-              </button>
+                <!-- 新增图表 -->
+                <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChartBefore">
+                  <i class="nz-icon-create-square nz-icon"></i>
+                </button>
 
-             <top-tool-more-options
-                :delete-objs="batchDeleteObjs"
-                ref="topTool"
-                id="panel"
-                :params="filter"
-                :permissions="{
-                  import: 'main_add',
-                  export: 'main_edit'
-                }"
-                :paramsType="'dashboard'"
-                class="top-tool-export"
-                export-file-name="chart"
-                export-url="/visual/dashboard/export"
-                import-url="/visual/dashboard/import"
-                @export="exportType"
-                @afterImport="afterImport"
-              >
-                <template v-slot:before>
-                  <el-dropdown-item v-has="'main_edit'">
-                    <div id="panel-lock" @click="$store.dispatch('dispatchPanelLock',{flag:!panelLock})"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t('overall.locked') : $t('overall.unlocked')}}</div>
-                  </el-dropdown-item>
-                </template>
-                <template v-slot:after>
-                  <el-dropdown-item v-has="'dashboard_view'">
-                    <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
-                  </el-dropdown-item>
-                </template>
-              </top-tool-more-options>
+              <top-tool-more-options
+                  :delete-objs="batchDeleteObjs"
+                  ref="topTool"
+                  id="panel"
+                  :params="filter"
+                  :permissions="{
+                    import: 'main_add',
+                    export: 'main_edit'
+                  }"
+                  :paramsType="'dashboard'"
+                  class="top-tool-export"
+                  export-file-name="chart"
+                  export-url="/visual/dashboard/export"
+                  import-url="/visual/dashboard/import"
+                  @export="exportType"
+                  @afterImport="afterImport"
+                >
+                  <template v-slot:before>
+                    <el-dropdown-item v-has="'main_edit'">
+                      <div id="panel-lock" @click="$store.dispatch('dispatchPanelLock',{flag:!panelLock})"><i :class="{'nz-icon nz-icon-lock':!panelLock,'nz-icon nz-icon-unlock':panelLock}"></i>{{!panelLock ? $t('overall.locked') : $t('overall.unlocked')}}</div>
+                    </el-dropdown-item>
+                  </template>
+                  <template v-slot:after>
+                    <el-dropdown-item v-has="'dashboard_view'">
+                      <div id="chart-export-html" @click="exportType"><i class="nz-icon nz-icon-kuaizhao"></i>{{ $t('overall.snapshoot') }}</div>
+                    </el-dropdown-item>
+                  </template>
+                </top-tool-more-options>
+              </template>
             </div>
           </template>
         </div>
@@ -376,12 +378,31 @@ export default {
   },
   methods: {
     // 开始轮播列表
-    startPlay (data) {
-      this.playListControls = true
+    async startPlay (data) {
       this.playlistObj = data
+      let mode = data.mode
+      if (!mode || mode == 'normal') {
+        mode = ''
+      }
+      this.mode = mode
+      this.$store.commit('setMode', this.mode)
+      this.playListControls = true
     },
     // 结束轮播列表
     stopPlaylist () {
+      this.clearPlaylist()
+      const param = { ...this.$route.query }
+      if (param.mode) {
+        delete param.mode
+        const path = this.fromRoute.dashboard
+        this.updatePath(param, path)
+      }
+    },
+    clearPlaylist () {
+      if (this.mode) {
+        this.mode = ''
+        this.$store.commit('setMode', this.mode)
+      }
       this.playListControls = false
       this.playlistObj = {}
     },
@@ -425,10 +446,10 @@ export default {
             })
             // 判断删除的是否是当前面板
             if (this.showPanel.id == u.id) {
+              this.clearPlaylist()
               const param = { t: +new Date() }
               const path = this.fromRoute.dashboard
               this.updatePath(param, path)
-              this.stopPlaylist()
               this.getTableData(true)
             } else {
               this.getTableData(false)
@@ -726,15 +747,15 @@ export default {
       if (!val) {
         return false
       }
-      if (type === 'select') { // 选择面板 则停止仪表盘轮播
-        this.stopPlaylist()
-      }
-      // 切换面板 重置参数
       const param = {
         dashboardId: val.id
       }
-      this.mode = ''
-      this.$store.commit('setMode', this.mode)
+      if (type === 'select') {
+        // 切换面板 则停止仪表盘轮播
+        this.clearPlaylist()
+      } else {
+        param.mode = this.mode
+      }
       const path = this.fromRoute.dashboard
       this.updatePath(param, path)
       setTimeout(() => {
@@ -1050,13 +1071,20 @@ export default {
     },
     // 按ESC键退出查看模式
     escExit (e) {
+      // 轮播时禁止esc
+      if (this.playListControls) {
+        return
+      }
       const message = document.querySelectorAll('.el-message-box__wrapper')
       const showMessage = message.length && Array.from(message).some(item => {
         return item.style.display !== 'none'
       })
-      const showFullscreen = document.querySelector('.chart-fullscreen')
+      const dialog = document.querySelectorAll('.el-dialog__wrapper')
+      const showDialog = dialog.length && Array.from(dialog).some(item => {
+        return item.style.display !== 'none'
+      })
       // 防止ESC键冲突
-      if (showMessage || showFullscreen) {
+      if (showMessage || showDialog) {
         return false
       }
       if (e.keyCode === 27 && this.mode) {

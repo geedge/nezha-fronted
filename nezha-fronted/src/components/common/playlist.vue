@@ -21,30 +21,39 @@
 </template>
 
 <script>
+import bus from '@/libs/bus'
 export default {
   name: 'playlist',
   props: {
     playlistObj: {
       type: Object
+    },
+    panelData: {
+      type: Array
     }
   },
   data () {
     return {
-      dashboardList: [], // 轮播仪表盘列表
       timer: null,
-      currentIndex: 0
+      currentIndex: 0,
+      playlistDashboard: [] // 轮播仪表盘列表
     }
   },
   watch: {
+    panelData: {
+      handler () {
+        this.getPlaylistDashboard()
+      }
+    },
     playlistObj: {
       immediate: true,
       async handler () {
         this.currentIndex = 0
+        this.getPlaylistDashboard()
         if (this.timer) {
           clearInterval(this.timer)
           this.timer = null
         }
-        await this.getDashboard()
         this.startPlay()
       }
     }
@@ -92,7 +101,7 @@ export default {
       this.$emit('stopPlaylist')
     },
     changePlay () {
-      let data = this.dashboardList[this.currentIndex]
+      let data = this.$loadsh.cloneDeep(this.playlistDashboard[this.currentIndex])
       if (!data) {
         data = {
           id: this.playlistObj.dashboardIds[this.currentIndex],
@@ -101,13 +110,12 @@ export default {
       }
       this.$emit('changePlay', data)
     },
-    async getDashboard () {
-      this.dashboardList = []
-      const ids = this.playlistObj.dashboardIds.join(',')
-      const res = await this.$get('visual/dashboard?ids=' + ids)
+    getPlaylistDashboard () {
+      this.playlistDashboard = []
+      const arr = bus.flatten(this.panelData)
       this.playlistObj.dashboardIds.forEach(id => {
-        const findItem = res.data.list.find(item => item.id == id)
-        this.dashboardList.push(findItem)
+        const findItem = arr.find(item => item.id == id)
+        this.playlistDashboard.push(findItem)
       })
     }
   },

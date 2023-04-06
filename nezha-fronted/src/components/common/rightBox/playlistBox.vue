@@ -51,6 +51,14 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <!-- mode -->
+          <el-form-item :label="$t('dashboard.mode')" prop="mode">
+            <el-select v-model="editPlaylist.mode" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside right-box-select-width" size="small" style="width:100%">
+              <el-option value="normal" :label="$t('dashboard.metric.normal')"></el-option>
+              <el-option value="tv" label="tv"></el-option>
+              <el-option value="se" label="se"></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
     </div>
@@ -67,6 +75,7 @@
 
 <script>
 import editRigthBox from '../mixin/editRigthBox'
+import bus from '@/libs/bus'
 export default {
   name: 'playlistBox',
   props: {
@@ -111,24 +120,7 @@ export default {
     },
     async getDashboard () {
       const res = await this.$get('visual/dashboard?type=dashboard&pageSize=-1')
-      this.dashboardList = this.flatten(res.data.list)
-    },
-    // 数组对象扁平化
-    flatten (arr) {
-      const tempArr = this.$loadsh.cloneDeep(arr)
-      // 递归调用
-      function handler (tempArr) {
-        const newArr = []
-        tempArr.forEach(element => {
-          newArr.push(element)
-          if (element.children) {
-            newArr.push.apply(newArr, handler(element.children))
-            delete element.children
-          }
-        })
-        return newArr
-      }
-      return handler(tempArr)
+      this.dashboardList = bus.flatten(res.data.list)
     },
     save () {
       if (this.prevent_opt.save) {

@@ -223,13 +223,13 @@ export default {
           break
         }
         case 'create': { // 我的创建
-          const flatArr = this.flatten(this.panelData)
+          const flatArr = bus.flatten(this.panelData)
           this.otherData = flatArr.filter(item => item.createBy == userId)
           break
         }
         case 'browse': { // 最近浏览
           const browseArr = JSON.parse(localStorage.getItem(`nz-view-dashboard-${userId}`) || '[]')
-          const flatArr = this.flatten(this.panelData)
+          const flatArr = bus.flatten(this.panelData)
           const tempArr = []
           // 比对id获取最近浏览的数据
           browseArr.forEach(item => {
@@ -278,7 +278,8 @@ export default {
       this.playlistObj = {
         name: '',
         intvl: undefined,
-        dashboardIds: []
+        dashboardIds: [],
+        mode: 'normal'
       }
       this.playlistVisible = true
     },
@@ -289,7 +290,8 @@ export default {
         id: res.data.id,
         name: res.data.name,
         intvl: res.data.intvl,
-        dashboardIds: res.data.dashboardIds
+        dashboardIds: res.data.dashboardIds,
+        mode: res.data.mode || 'normal'
       }
       this.playlistObj.dashboardIds = JSON.parse(this.playlistObj.dashboardIds)
       this.playlistVisible = true
@@ -323,34 +325,17 @@ export default {
     // 获取收藏的列表
     async getStarred () {
       // 1: 已收藏 0：未收藏
-      const flatArr = this.flatten(this.panelData) // 数组对象扁平化
+      const flatArr = bus.flatten(this.panelData) // 数组对象扁平化
       this.starredList = flatArr.filter(item => {
         return item.starred === 1
       })
-    },
-    // 数组对象扁平化
-    flatten (arr) {
-      const tempArr = JSON.parse(JSON.stringify(arr))
-      // 递归调用
-      function handler (tempArr) {
-        const newArr = []
-        tempArr.forEach(element => {
-          newArr.push(element)
-          if (element.children) {
-            newArr.push.apply(newArr, handler(element.children))
-            delete element.children
-          }
-        })
-        return newArr
-      }
-      return handler(tempArr)
     },
     // 存储最近浏览的面板
     setBrowse () {
       const userId = localStorage.getItem('nz-user-id')
       // 获取最近浏览id数组
       let browseArr = JSON.parse(localStorage.getItem(`nz-view-dashboard-${userId}`) || '[]')
-      const flatArr = this.flatten(this.panelData)
+      const flatArr = bus.flatten(this.panelData)
       // 若最近浏览的数据已被删除 则截取掉
       for (let i = 0; i < browseArr.length; i++) {
         const flag = flatArr.some(item => {
@@ -471,13 +456,13 @@ export default {
     },
     // 确认选择某个节点，与父组件交互
     selectDashboard (data, checked, child) {
-      if (this.currentTab === 'playlist') return
-      this.$emit('selectDashboard', data, 'select')
       if (this.currentTab === 'all') {
         this.$refs.panelTree && this.$refs.panelTree.setCurrentKey(data)
       } else {
         this.$refs.otherTree && this.$refs.otherTree.setCurrentKey(data)
       }
+      if (this.currentTab === 'playlist') return
+      this.$emit('selectDashboard', data, 'select')
       this.esc()
     }
   }
