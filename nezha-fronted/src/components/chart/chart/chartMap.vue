@@ -125,7 +125,7 @@ export default {
               container: mapId,
               style: mapStyle,
               maxZoom: mapConfig.maxZoom || 7,
-              minZoom: mapConfig.minZoom || 7,
+              minZoom: mapConfig.minZoom || 1,
               renderWorldCopies: false,
               maxBounds: [[-179, -85], [179, 85]],
               hash: false,
