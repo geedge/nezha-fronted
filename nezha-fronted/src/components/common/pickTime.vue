@@ -16,6 +16,9 @@
             <li v-for="i in $CONSTANTS.intervalList" :key="i.value + i.label" :style="{color:interval === i.value || interval.value === i.value ? theme.themeColor : ''}" class="el-dropdown-menu__item dropdown-content" @click="selectInterval(i,true)">
               {{$t(i.label)}}
             </li>
+            <li :key="-1" style="display: none" class="el-dropdown-menu__item dropdown-content" @click="selectInterval({label: 10, value: 10},true)">
+              {{$t(10)}}
+            </li>
           </ul>
         </transition>
       </button>

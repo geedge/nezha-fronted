@@ -1,4 +1,4 @@
-import { Meta2d, registerNode, s8 } from '@meta2d/core'
+import { registerNode, s8 } from '@meta2d/core'
 import { flowPens } from '@meta2d/flow-diagram'
 import { activityDiagram } from '@meta2d/activity-diagram'
 import { classPens } from '@meta2d/class-diagram'
@@ -84,7 +84,7 @@ export default {
         maxScale: 2,
         autoAnchor: false
       }
-      const meta2d = new Meta2d(this.meta2dId, meta2dOptions)
+      const meta2d = new window.Meta2d(this.meta2dId, meta2dOptions)
       meta2d.register(flowPens())
       meta2d.register(activityDiagram())
       meta2d.register(classPens())
