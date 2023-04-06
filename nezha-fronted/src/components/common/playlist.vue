@@ -1,22 +1,12 @@
 <template>
   <div class="top-tool-btn-group playlist">
-    <el-tooltip
-      effect="light"
-      placement="bottom"
-      :content="$t('dashboard.previous')">
-      <button class="top-tool-btn previous" @click="goPrevious">
-        <i class="nz-icon nz-icon-shangyibofang"></i>
-      </button>
-    </el-tooltip>
+    <button class="top-tool-btn previous" :title="$t('dashboard.previous')" @click="goPrevious">
+      <i class="nz-icon nz-icon-shangyibofang"></i>
+    </button>
     <button class="top-tool-btn stopPlaylist" @click="stopPlaylist">{{$t('dashboard.stopPlaylist')}}</button>
-    <el-tooltip
-      effect="light"
-      placement="bottom"
-      :content="$t('dashboard.next')">
-      <button class="top-tool-btn next" @click="goNext">
-        <i class="nz-icon nz-icon-xiayibofang"></i>
-      </button>
-    </el-tooltip>
+    <button class="top-tool-btn next" :title="$t('dashboard.next')" @click="goNext">
+      <i class="nz-icon nz-icon-xiayibofang"></i>
+    </button>
   </div>
 </template>
 
