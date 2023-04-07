@@ -464,7 +464,7 @@ export default {
             str += `
             <div class="tooltip__row">
               <div class="row__label">
-                <span class="row__color-block" style="background-color: ${self.stackTotalColor}"></span>
+                <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${self.$t('dashboard.dashboard.chartTotal')}</span>
               </div>
               <div class="row__value">
