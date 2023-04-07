@@ -192,7 +192,7 @@ export default {
         this.iconArray = [...res.data.list]
         this.iconArray.forEach((item, index) => {
           item.imageName = item.name
-          item.image = `topology/icon/0/${item.unit}/${item.name}`
+          item.image = `/topology/icon/0/${item.unit}/${item.name}`
           if (this.imgId == item.id) {
             this.unit = item.unit
             this.imageName = item.imageName

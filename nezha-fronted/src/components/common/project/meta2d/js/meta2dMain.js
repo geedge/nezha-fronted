@@ -73,7 +73,8 @@ export default {
       nodesArr: [],
       offsetX: 0,
       offsetY: 0,
-      moduleId: ''
+      moduleId: '',
+      iconArray: []
     }
   },
   mixins: [topoUtil],
@@ -120,6 +121,9 @@ export default {
       // meta2d.on('add', this.appPen) // 添加新画笔·
       meta2d.on('click', this.topoClick) // click画笔·
       setTopology(this.meta2dId, meta2d)
+      this.$get('/topology/icon').then(res => {
+        this.iconArray = [...res.data.list]
+      })
       this.reload()
     },
     reload () {
@@ -152,8 +156,11 @@ export default {
         pen.text = name
       }
       if (pen.data && pen.data.imageId) {
+        const imageInfo = this.iconArray.find(item => item.id === pen.data.imageId)
         pen.imageId = pen.data.imageId
-        pen.image = `/monitor/project/topo/icon/${pen.data.imageId}/0`
+        if (imageInfo) {
+          pen.image = `/topology/icon/0/${imageInfo.unit}/${imageInfo.name}`
+        }
       }
       pen.data = {
         params: { // 用于编辑时 重置为节点初始状态
