@@ -83,9 +83,7 @@ export default {
     }
   },
   created () {
-    this.$nextTick(() => {
-      this.getAssetList()
-    })
+    this.getAssetList()
     this.token = localStorage.getItem('nz-token')
     axios.get('/healthy').then(response => {
       const url = response.request.responseURL
@@ -107,10 +105,10 @@ export default {
         if (response.code === 200) {
           this.assetList = response.data.list
           if (this.assetList && this.assetList.length > 0) {
-            // setTimeout(() => {
-            this.assetId = String(this.assetList[0].id)
-            this.loadFinish = true
-            // }, 100)
+            this.$nextTick(() => {
+              this.assetId = String(this.assetList[0].id)
+              this.loadFinish = true
+            })
           }
         }
       })
