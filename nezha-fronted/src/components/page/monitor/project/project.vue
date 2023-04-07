@@ -57,6 +57,7 @@
           :querysArray="isPreview.querysArray"
           :project="isPreview.currentProject"
           :params="isPreview.params"
+          :iconArray="iconArray"
         />
       </div>
     </el-dialog>
@@ -620,7 +621,9 @@ export default {
     setTimeout(() => {
       this.ready = true
     }, 300)
-
+    this.$get('/topology/icon').then(res => {
+      this.iconArray = [...res.data.list]
+    })
     this.initEvent()
   },
   computed: {

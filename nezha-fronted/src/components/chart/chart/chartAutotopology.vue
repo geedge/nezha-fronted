@@ -17,6 +17,7 @@
               :show-zoom="false"
               class="meta2d-chart"
               :is-chart="true"
+              :iconArray="iconArray"
               :ref="'topology' + index"
             />
           </el-carousel-item>
@@ -37,7 +38,8 @@ export default {
   data () {
     return {
       topologyLoading: false,
-      allProject: []
+      allProject: [],
+      iconArray: []
     }
   },
   mixins: [chartMixin],
@@ -136,6 +138,9 @@ export default {
   },
   mounted () {
     // this.queryAllProjectData()
+    this.$get('/topology/icon').then(res => {
+      this.iconArray = [...res.data.list]
+    })
   },
   beforeDestroy () {
     this.allProject = []

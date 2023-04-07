@@ -74,7 +74,6 @@ export default {
       offsetX: 0,
       offsetY: 0,
       moduleId: '',
-      iconArray: []
     }
   },
   mixins: [topoUtil],
@@ -121,9 +120,6 @@ export default {
       // meta2d.on('add', this.appPen) // 添加新画笔·
       meta2d.on('click', this.topoClick) // click画笔·
       setTopology(this.meta2dId, meta2d)
-      this.$get('/topology/icon').then(res => {
-        this.iconArray = [...res.data.list]
-      })
       this.reload()
     },
     reload () {
