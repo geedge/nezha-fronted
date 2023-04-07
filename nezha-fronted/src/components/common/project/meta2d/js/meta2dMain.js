@@ -73,7 +73,7 @@ export default {
       nodesArr: [],
       offsetX: 0,
       offsetY: 0,
-      moduleId: ''
+      moduleId: '',
     }
   },
   mixins: [topoUtil],
@@ -152,8 +152,11 @@ export default {
         pen.text = name
       }
       if (pen.data && pen.data.imageId) {
+        const imageInfo = this.iconArray.find(item => item.id === pen.data.imageId)
         pen.imageId = pen.data.imageId
-        pen.image = `/monitor/project/topo/icon/${pen.data.imageId}/0`
+        if (imageInfo) {
+          pen.image = `/topology/icon/0/${imageInfo.unit}/${imageInfo.name}`
+        }
       }
       pen.data = {
         params: { // 用于编辑时 重置为节点初始状态

@@ -415,6 +415,7 @@
           .el-select{
             width: 310px;
             .el-input__inner{
+              font-size: 14px;
               color: $--color-text-primary;
             }
           }
@@ -450,6 +451,7 @@
             height: 36px !important;
             line-height: 36px !important;
             padding-left: 12px;
+            font-size: 14px;
             color: $--color-text-regular;
             border-color: $--border-color-light;
             background: $--select-page-hover-background-color !important;

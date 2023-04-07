@@ -126,6 +126,12 @@ export default {
   mixins: [meta2dMain, topoUtil],
   props: {
     meta2dId: {}, // 唯一id 不可重复
+    iconArray: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
     topoData: {}, // topo图数据
     isChart: {
       type: Boolean,

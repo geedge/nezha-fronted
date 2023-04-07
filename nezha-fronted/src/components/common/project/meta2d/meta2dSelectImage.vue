@@ -36,7 +36,7 @@
               <transition name="el-zoom-in-top">
                 <div v-show="item.show" class="nz-collapse-body">
                   <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons image-box-item" :class="btn.id === selectImgId ? 'is-select':''">
-                    <img :src="btn.image" v-if="btn.image" class="image-src" @click.stop="selectImageChange(btn)">
+                    <img :src="baseUrl + btn.image" v-if="btn.image" class="image-src" @click.stop="selectImageChange(btn)">
                     <i v-if="btn.nzClassName" class="nz-icon image-src" :class="btn.nzClassName" style="font-size: 40px" @click.stop="selectImageChange(btn)"/>
                     <div class="img-text text-ellipsis" :title="btn.imageName">{{btn.imageName}}</div>
                     <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click.stop="tooltipDelete(btn)"></i>
@@ -167,12 +167,12 @@ export default {
       selectImg: '',
       unit: '',
       imageName: '',
-      baseUrl: '',
+      baseUrl: 'http://192.168.44.22/',
       token: ''
     }
   },
   mounted () {
-    this.baseUrl = localStorage.getItem('nz-baseURL')
+    // this.baseUrl = localStorage.getItem('nz-baseURL')
     this.token = localStorage.getItem('nz-token')
     if (this.icon) {
       const iconId = this.icon.charCodeAt().toString(16)
@@ -186,13 +186,13 @@ export default {
   },
   methods: {
     imageInit () { // 加载所有图片
-      this.$get('monitor/project/topo/icon').then(res => {
+      this.$get('/topology/icon').then(res => {
         this.imgageLoading = true
         this.tools = [...Tools]
         this.iconArray = [...res.data.list]
         this.iconArray.forEach((item, index) => {
           item.imageName = item.name
-          item.image = `/monitor/project/topo/icon/${item.id}/0`
+          item.image = `/topology/icon/0/${item.unit}/${item.name}`
           if (this.imgId == item.id) {
             this.unit = item.unit
             this.imageName = item.imageName
@@ -284,7 +284,7 @@ export default {
       })
     },
     delImg (item) {
-      this.$delete('monitor/project/topo/icon?ids=' + item.imageId).then(res => {
+      this.$delete('topology/icon?ids=' + item.imageId).then(res => {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
           const findItem = this.tools.find(group => group.group === item.unit)
@@ -295,7 +295,7 @@ export default {
       })
     },
     delCollpseTitle (item) {
-      this.$delete('monitor/project/topo/iconUnit?unit=' + item.group).then(res => {
+      this.$delete('/topology/unit?unit=' + item.group).then(res => {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
           this.tools = this.tools.filter(group => group.group !== item.group)
@@ -398,7 +398,7 @@ export default {
       form.append('unit', this.uploadPic.unit)
       form.append('width', this.imgWidth)
       form.append('height', this.imgHeight)
-      this.$post('monitor/project/topo/icon', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
+      this.$post('/topology/icon', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
         this.imageSave = false
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })

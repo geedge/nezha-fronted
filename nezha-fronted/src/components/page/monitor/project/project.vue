@@ -1,7 +1,7 @@
 <template>
   <div class="project">
 <!--    <topologyL5 v-if="reloadFacade" ref="facade" :obj="currentProject" :topologyIndexF="topologyIndexF" targetTab.sync="panel" @changeTopologyIndexF="changeTopologyIndexF"/>-->
-    <meta2dMain :meta2dId="'projectId'" :topoData="topoData" :querysArray="querysArray" :project="currentProject" :params="params" @reload="reload"/>
+    <meta2dMain :meta2dId="'projectId'" :topoData="topoData" :querysArray="querysArray" :project="currentProject" :params="params" :iconArray="iconArray" @reload="reload"/>
     <transition name="el-zoom-in-bottom">
       <bottom-box
         v-if="bottomBox.showSubList"
@@ -57,6 +57,7 @@
           :querysArray="isPreview.querysArray"
           :project="isPreview.currentProject"
           :params="isPreview.params"
+          :iconArray="iconArray"
         />
       </div>
     </el-dialog>
@@ -620,7 +621,9 @@ export default {
     setTimeout(() => {
       this.ready = true
     }, 300)
-
+    this.$get('/topology/icon').then(res => {
+      this.iconArray = [...res.data.list]
+    })
     this.initEvent()
   },
   computed: {
