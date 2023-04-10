@@ -454,8 +454,9 @@ export default {
     this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
   },
   beforeDestroy () {
-    // getChart(this.chartId) && getChart(this.chartId).dispose()
-    // setChart(this.chartId, null)
+    try {
+      getChart(this.chartId) && getChart(this.chartId).getZr().off('mousemove')
+    } catch (error) {}
     getChart(this.chartId) && setChart(this.chartId, null)
   }
 }
