@@ -137,7 +137,7 @@ export default {
     }
   },
   mounted () {
-    // this.queryAllProjectData()
+    this.queryAllProjectData()
     this.$get('/topology/icon').then(res => {
       this.iconArray = [...res.data.list]
     })

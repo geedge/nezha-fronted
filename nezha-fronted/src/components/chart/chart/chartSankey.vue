@@ -59,7 +59,8 @@ export default {
         value: 0,
         mapping: {},
         show: false
-      }
+      },
+      svg: null
     }
   },
   methods: {
@@ -136,8 +137,7 @@ export default {
 
     drawSankeyChart () {
       this.$nextTick(() => {
-        d3.select(`#sankey-svg-${this.chartId}`).selectAll('g').remove() // 清空作图区域
-
+        this.dispose()
         // 获取svg宽高 初始化画布
         const svgDom = document.getElementById(`sankey-svg-${this.chartId}`)
         if (!svgDom) {
@@ -147,8 +147,8 @@ export default {
         const height = svgDom.getBoundingClientRect().height
         const margin1 = 100
         const margin2 = 50
-        const svg = d3.select(`#sankey-svg-${this.chartId}`)
-        const chart = svg.append('g').attr('transform', `translate(${margin2}, ${margin2})`)
+        this.svg = d3.select(`#sankey-svg-${this.chartId}`)
+        const chart = this.svg.append('g').attr('transform', `translate(${margin2}, ${margin2})`)
 
         // 创建桑基图生成器
         const sankey = d3Sankey
@@ -389,6 +389,18 @@ export default {
       setTimeout(() => {
         this.drawSankeyChart()
       }, 50)
+    },
+    dispose () {
+      if (this.svg) {
+        this.svg.selectAll('path').on('mouseover', null)
+        this.svg.selectAll('path').on('mousemove', null)
+        this.svg.selectAll('path').on('mouseleave', null)
+        this.svg.selectAll('.node').on('mouseover', null)
+        this.svg.selectAll('.node').on('mousemove', null)
+        this.svg.selectAll('.node').on('mouseleave', null)
+        this.svg.selectAll('g').remove()
+        this.svg = null
+      }
     }
   },
   mounted () {
@@ -396,7 +408,7 @@ export default {
     this.chartInfo.loaded && this.initChart()
   },
   beforeDestroy () {
-    d3.select(`#sankey-svg-${this.chartId}`).selectAll('g').remove() // 清空作图区域
+    this.dispose()
   }
 }
 </script>

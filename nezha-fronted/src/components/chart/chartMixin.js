@@ -439,18 +439,18 @@ export default {
           this.initChart(this.chartOption)
         }
       }
-    },
-    'chartInfo.loaded': {
-      immediate: true,
-      deep: true,
-      handler (n) {
-        if (n) {
-          this.initChart && this.initChart(this.chartOption)
-        }
-      }
     }
+    // 'chartInfo.loaded': {
+    //   immediate: true,
+    //   deep: true,
+    //   handler (n) {
+    //     if (n) {
+    //       this.initChart && this.initChart(this.chartOption)
+    //     }
+    //   }
+    // }
   },
-  mounted () {
+  created () {
     this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
   },
   beforeDestroy () {
