@@ -45,7 +45,7 @@ export default {
         mapping: {},
         show: false
       },
-      svgDom: null,
+      svg: null,
       spaceBetweenHexa: 3,
       hexagonTimer: null
     }
@@ -53,21 +53,19 @@ export default {
   methods: {
     hexbin,
     initChart () {
-      this.clearCache().then(() => {
-        if (this.timer) {
-          clearTimeout(this.timer)
-          this.timer = null
-        }
-        this.timer = setTimeout(() => {
-          this.initHexagonData(this.chartInfo, this.chartData).then(() => {
-            this.getLayout().then(layout => {
-              this.initHexagon(layout)
-            }).catch(() => {
+      if (this.timer) {
+        clearTimeout(this.timer)
+        this.timer = null
+      }
+      this.timer = setTimeout(() => {
+        this.initHexagonData(this.chartInfo, this.chartData).then(() => {
+          this.getLayout().then(layout => {
+            this.initHexagon(layout)
+          }).catch(() => {
 
-            })
           })
-        }, 200)
-      })
+        })
+      }, 200)
     },
     initHexagonData (chartInfo, originalDatas) {
       this.HexagonData = []
@@ -135,7 +133,8 @@ export default {
       const dom = document.getElementById(`chart-canvas-${this.chartId}`)
       const child = document.getElementById('svgHex' + this.chartId)
       if (dom && child) {
-        dom.removeChild(child)
+        this.clearCache()
+        // dom.removeChild(child)
       }
       if (dom) {
         const hexaRadius = layout.radius
@@ -164,13 +163,11 @@ export default {
       const hexbin = this.hexbin()
         .radius(hexaRadius)
         .extent([[0, 0], [width, height]])
-
-      const svg = d3.create('svg')
+      this.svg = d3.create('svg')
         .attr('id', 'svgHex' + this.chartId)
         .attr('width', width)
         .attr('height', height)
         .on('mousemove', this.hexagonMove)
-      this.svgDom = 'svgHex' + this.chartId
       for (let i = 0; i < data.length; i++) {
         const point = data[i]
         const col = point.x
@@ -179,15 +176,15 @@ export default {
         const vals = self.getCenter(hexaRadius, row, col) // Gets the Center coordinates with given row and column
         const x = vals[0]
         const y = vals[1]
-        const g = svg.append('g')
+        const g = this.svg.append('g')
         const hexa = self.drawHexagon(g, hexaRadius, spaceBetweenHexa, x, y, hexbin) // Draws hexagon
         hexa.attr('fill', color) // Paints hexagon
         g.on('mouseenter', self.hexagonOver.bind(self, point))
         g.on('mouseleave', self.hexagonOut.bind(self, point))
-        self.drawText(svg, vals, point, color, hexaRadius, g) // 文本
+        self.drawText(this.svg, vals, point, color, hexaRadius, g) // 文本
         data[i].fcolor = color
       }
-      return svg.node()
+      return this.svg.node()
     },
     hexagonOver (that, e) { // 移入六边形
       this.tooltip.title = that.alias
@@ -414,13 +411,13 @@ export default {
       })
     },
     clearCache () {
-      return new Promise(resolve => {
-        // if (this.svgDom) {
-        //   const dom = document.getElementById(this.svgDom)
-        //   dom.off('mousemove', this.hexagonMove)
-        // }
-        resolve()
-      })
+      if (this.svg) {
+        this.svg.on('mousemove', null)
+        this.svg.selectAll('g').on('mouseenter', null)
+        this.svg.selectAll('g').on('mouseleave', null)
+        this.svg.remove()
+        this.svg = null
+      }
     },
     resize () {
       if (this.hexagonTimer) {
@@ -436,23 +433,22 @@ export default {
       }, 50)
     }
   },
-  created () {
-  },
   mounted () {
     // eslint-disable-next-line vue/no-mutating-props
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
-    try {
-      this.isStack = this.chartInfo.param.stack
-    } catch (e) {}
     this.chartInfo.loaded && this.initChart(this.chartOption)
   },
   beforeDestroy () {
+    if (this.timer) {
+      clearTimeout(this.timer)
+      this.timer = null
+    }
+    if (this.hexagonTimer) {
+      clearTimeout(this.hexagonTimer)
+      this.hexagonTimer = null
+    }
     this.clearCache()
   }
 }
 </script>
-
-<style scoped>
-
-</style>

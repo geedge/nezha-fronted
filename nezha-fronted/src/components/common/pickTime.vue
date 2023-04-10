@@ -152,12 +152,12 @@ export default {
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
           this.refreshDataFunc()
-          this.timer = ''
+          this.timer = null
         }, 200)
       } else {
         this.timer = setTimeout(() => {
           this.refreshDataFunc()
-          this.timer = ''
+          this.timer = null
         }, 200)
       }
     }
@@ -170,6 +170,12 @@ export default {
     }
   },
   beforeDestroy () {
+    if (this.timer) {
+      this.timer = setTimeout(() => {
+        this.refreshDataFunc()
+        this.timer = null
+      }, 200)
+    }
     if (this.intervalTimer) {
       clearInterval(this.intervalTimer)
       this.intervalTimer = null

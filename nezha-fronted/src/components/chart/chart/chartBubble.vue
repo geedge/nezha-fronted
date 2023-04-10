@@ -58,7 +58,8 @@ export default {
         value: 0,
         mapping: {},
         show: false
-      }
+      },
+      svg: null
     }
   },
   methods: {
@@ -108,13 +109,14 @@ export default {
     },
     drawBubbleChart () {
       this.$nextTick(() => {
-        d3.select(`#bubble-svg-${this.chartId}`).selectAll('g').remove()// 清空作图区域
-        const svg = document.getElementById(`bubble-svg-${this.chartId}`)
-        if (!svg) {
+        this.dispose()
+        this.svg = d3.select(`#bubble-svg-${this.chartId}`)
+        const svgDom = document.getElementById(`bubble-svg-${this.chartId}`)
+        if (!svgDom) {
           return false
         }
-        const width = svg.getBoundingClientRect().width
-        const height = svg.getBoundingClientRect().height
+        const width = svgDom.getBoundingClientRect().width
+        const height = svgDom.getBoundingClientRect().height
         // 定义布局方式
         const pack = d3.pack()
           .size([width, height])
@@ -137,7 +139,7 @@ export default {
             return b.value - a.value
           })
         const nodes = pack(data).descendants()
-        const bubbles = d3.select(`#bubble-svg-${this.chartId}`).selectAll('.bubble')
+        const bubbles = this.svg.selectAll('.bubble')
           .data(nodes)
           .enter()
           .filter(function (d) {
@@ -173,7 +175,10 @@ export default {
             return d.y - d.r
           })
           .style('font-size', function (d) {
-            return d.r / 3 > 10 ? d.r / 3 : 0
+            let fontSize
+            fontSize = d.r / 4 > 10 ? d.r / 4 : 0
+            fontSize = fontSize > 30 ? 30 : fontSize
+            return fontSize
           })
           .style('border-radius', '50%')
           .html((d) => {
@@ -233,11 +238,6 @@ export default {
             `
       }
     },
-    resize () {
-      setTimeout(() => {
-        this.drawBubbleChart()
-      }, 50)
-    },
     bubbleEnter (e, node) { // 移入气泡
       this.tooltip.title = node.data.alias
       this.tooltip.value = node.data.showValue
@@ -274,11 +274,28 @@ export default {
         this.tooltip.y = e.pageY + 15
         this.tooltip.x = e.pageX + 15
       }
+    },
+    resize () {
+      setTimeout(() => {
+        this.drawBubbleChart()
+      }, 50)
+    },
+    dispose () {
+      if (this.svg) {
+        this.svg.selectAll('.bubble').on('mouseenter', null)
+        this.svg.selectAll('.bubble').on('mousemove', null)
+        this.svg.selectAll('.bubble').on('mouseleave', null)
+        this.svg.selectAll('g').remove()
+        this.svg = null
+      }
     }
   },
   mounted () {
     this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart()
+  },
+  beforeDestroy () {
+    this.dispose()
   }
 }
 </script>
