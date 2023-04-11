@@ -1,7 +1,7 @@
 <template>
   <div class="integration-tabs">
     <ul class="integration-tabs-nav">
-      <li class="integration-tabs-nav-item" :class="{active:tabId===item.id}"  v-for="item in tabs" :key="item.id" @click="tabChange(item.id)">{{item.name}}</li>
+      <li class="integration-tabs-nav-item" :class="{active:tabId===item.id}"  v-for="item in filterTabs" :key="item.id" @click="tabChange(item.id)">{{item.name}}</li>
     </ul>
     <div class="integration-tabs-content">
       <!-- internal -->
@@ -10,7 +10,7 @@
       <!-- module -->
       <configuration v-if="tabId==='configuration'" :configuration="detailsObj.configuration"></configuration>
       <dashboard v-if="tabId==='dashboard'" :tempId="detailsObj.tempId"></dashboard>
-      <alert v-if="tabId==='alert'" :moduleId="detailsObj.id"></alert>
+<!--      <alert v-if="tabId==='alert'" :moduleId="detailsObj.id"></alert>-->
       <metric v-if="tabId==='metric'" :moduleId="detailsObj.id"></metric>
     </div>
   </div>
@@ -36,6 +36,11 @@ export default {
     dashboard,
     alert,
     metric
+  },
+  computed: {
+    filterTabs () {
+      return this.tabs.filter(item=> item.id !== 'alert')
+    }
   },
   data () {
     return {
