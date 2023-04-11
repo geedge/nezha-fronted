@@ -7,7 +7,7 @@
         <img class="integration-icon" :src="talon.icon" alt="">
         <h2 class="integration-name">{{talon.name}}</h2>
         <p class="integration-remark">{{talon.remark}}</p>
-        <div class="integration-internal">{{$t('integration.internal')}}</div>
+<!--        <div class="integration-internal">{{$t('integration.internal')}}</div>-->
       </li>
     </ul>
     <!-- Available Integration -->
