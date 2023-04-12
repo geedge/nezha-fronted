@@ -37,20 +37,20 @@
           <span v-else>--</span>
         </div>
       </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">{{$t('alert.severity')}}</div>
-        <div class="alert-label-value">
-          <div
-            v-for="priority in alertRuleData.condition"
-            :key="priority.id"
-            class="search-item-value alert-label-value-prioity text-ellipsis"
-            :style="{background:priority.color}"
-            :title="priority.name + (position.operator || '>') + (priority.value || '-')"
-          >
-            {{priority.name}} {{position.operator || '>'}} {{priority.value || '-'}}
-          </div>
-        </div>
-      </div>
+<!--      <div class="alert-label-box">-->
+<!--        <div class="alert-label-title">{{$t('alert.severity')}}</div>-->
+<!--        <div class="alert-label-value">-->
+<!--          <div-->
+<!--            v-for="priority in alertRuleData.condition"-->
+<!--            :key="priority.id"-->
+<!--            class="search-item-value alert-label-value-prioity text-ellipsis"-->
+<!--            :style="{background:priority.color}"-->
+<!--            :title="priority.name + (position.operator || '>') + (priority.value || '-')"-->
+<!--          >-->
+<!--            {{priority.name}} {{position.operator || '>'}} {{priority.value || '-'}}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('alert.config.expr')}}</div>
         <div class="alert-label-value">{{alertRuleData.expr ? (alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)) : '--'}}</div>

@@ -63,20 +63,20 @@
             <div class="search-item-value" v-html="getPathContent(item.key)">
             </div>
           </div>
-          <div class="search-item-value-box" v-else-if="obj.type === 'alertrule'&&item.key==='severityId'" style="display: flex;width: calc(100% - 150px)">
-<!--            <i v-if="item.icon&&getPathContent(item.key)!=='&#45;&#45;'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>-->
-<!--            <div class="search-item-value" v-html="getPathContent(item.key)">-->
+<!--          <div class="search-item-value-box" v-else-if="obj.type === 'alertrule'&&item.key==='severityId'" style="display: flex;width: calc(100% - 150px)">-->
+<!--&lt;!&ndash;            <i v-if="item.icon&&getPathContent(item.key)!=='&#45;&#45;'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="search-item-value" v-html="getPathContent(item.key)">&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--            <div-->
+<!--              v-for="priority in alertLabelData.condition"-->
+<!--              :key="priority.id"-->
+<!--              class="search-item-value alert-label-value-prioity text-ellipsis"-->
+<!--              :style="{background:priority.color}"-->
+<!--              :title="priority.name + (position.operator || '>') + (priority.value || '-')"-->
+<!--            >-->
+<!--              {{priority.name}} {{position.operator || '>'}} {{priority.value || '-'}}-->
 <!--            </div>-->
-            <div
-              v-for="priority in alertLabelData.condition"
-              :key="priority.id"
-              class="search-item-value alert-label-value-prioity text-ellipsis"
-              :style="{background:priority.color}"
-              :title="priority.name + (position.operator || '>') + (priority.value || '-')"
-            >
-              {{priority.name}} {{position.operator || '>'}} {{priority.value || '-'}}
-            </div>
-          </div>
+<!--          </div>-->
           <div style="cursor: pointer" v-else-if="item.key === 'alertNum'">
             <i :class="Number(getPathContent(item.key)) ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
             <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
@@ -400,12 +400,14 @@ export default {
           }, {
             key: 'type',
             label: this.$t('overall.type')
-          }, {
-            key: 'severityId',
-            label: this.$t('alert.severity'),
-            color: this.severityColor,
-            icon: 'nz-icon nz-icon-circle fz12'
-          }, {
+          },
+          // {
+          //   key: 'severityId',
+          //   label: this.$t('alert.severity'),
+          //   color: this.severityColor,
+          //   icon: 'nz-icon nz-icon-circle fz12'
+          // },
+          {
             key: 'expr',
             label: this.$t('alert.config.expr')
           }, {

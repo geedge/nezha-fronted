@@ -29,6 +29,7 @@
 
   .top-tool-item {
     cursor: pointer;
+    color: $--button-icon-color;
     background-color: $--background-color-empty;
     border: 1px solid $--button-icon-border-color;
     border-radius: 2px;
@@ -39,11 +40,19 @@
   .top-tool-item:active{
     background-color: $--button-icon-active-background-color;
     border: 1px solid $--button-icon-active-border-color !important;
-    color: $--color-primary;
+    color: $--color-primary !important;
+    .nz-icon {
+      color: $--color-primary;
+    }
   }
   .top-tool-item.nz-btn-disabled {
+    color: $--button-icon-color !important;
     background-color: $--background-color-empty !important;
     border: 1px solid $--button-icon-border-color !important;
+    .nz-icon {
+      color: $--color-text-regular;
+    }
+
   }
   .is-active-meta2d.top-tool-item {
     //background: mix(#FFF, $--background-color-disabled, 35%);
