@@ -70,8 +70,8 @@ export default {
       this.map = new maplibregl.Map({
         container: mapId,
         style: mapStyle,
-        maxZoom: 7,
-        minZoom: 1,
+        maxZoom: this.mapParam.maxZoom || 7,
+        minZoom: this.mapParam.minZoom || 1,
         renderWorldCopies: false,
         maxBounds: [[-179, -85], [179, 85]],
         hash: false,
@@ -220,30 +220,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  .latlng .input-box{
-    width: 100%;
-    display: flex;
-  }
-  .latlng .input-box .input-box-item{
-    margin-right: 20px;
-    flex: 1;
-  }
-  .latlng .input-box .el-input,.latlng .input-box .el-input-number{
-    width: 100%;
-  }
-</style>
-
-<style>
-  .latlng .map-config-dialog .el-dialog{
-    height: 45%;
-  }
-  .latlng .map-config-dialog .el-dialog__body{
-    height: calc(100% - 48px) !important;
-
-  }
-  .latlng .input-box .el-input .el-input-group__prepend{
-    padding:0px 5px!important;
-  }
-</style>

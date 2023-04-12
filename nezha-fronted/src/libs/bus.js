@@ -234,6 +234,48 @@ export default new Vue({
     getOffsetTimezoneData (offset = 0) {
       return new Date(this.computeTimezone(new Date().getTime())).setHours(new Date(this.computeTimezone(new Date().getTime())).getHours() + offset)
     },
+
+    UTCTimeToConfigTimezone (utcTime) {
+      let offset = localStorage.getItem('nz-sys-timezone')
+      offset = moment.tz(offset).format('Z')
+      if (offset && offset !== 'undefined') {
+        let time = utcTime
+        if (typeof time === 'string' && /(\d+?-){2}\d+?\s(\d+?:)*\d+/.test(time)) {
+          time = new Date(time).getTime()
+        }
+        offset = Number.parseInt(offset)
+        time += offset * 60 * 60 * 1000
+        return time
+      } else {
+        return utcTime
+      }
+    },
+    configTimezoneToUTCTime: function (configTime) {
+      let offset = localStorage.getItem('nz-sys-timezone')
+      offset = moment.tz(offset).format('Z')
+      if (offset && offset !== 'undefined') {
+        let time = configTime
+        if (typeof time === 'string' && /(\d+?-){2}\d+?\s(\d+?:)*\d+/.test(time)) {
+          time = new Date(time).getTime()
+        }
+        offset = Number.parseInt(offset)
+        time -= offset * 60 * 60 * 1000
+        return time
+      } else {
+        return configTime
+      }
+    },
+    countDecimals (value) {
+      if ((value || value === 0) && Math.floor(value) !== value) {
+        const arr = value.toString().split('.')
+        if (Math.abs(arr[0] > 0) || arr.length < 2) {
+          return 2
+        }
+        const dot = arr[1].split('0').length + 1
+        return dot || 2
+      }
+      return 2
+    },
     debounce (fn, delay, fn1) {
       // 记录上一次的延时器
       let timer = null
@@ -276,47 +318,22 @@ export default new Vue({
         }
       }
     },
-
-    UTCTimeToConfigTimezone (utcTime) {
-      let offset = localStorage.getItem('nz-sys-timezone')
-      offset = moment.tz(offset).format('Z')
-      if (offset && offset !== 'undefined') {
-        let time = utcTime
-        if (typeof time === 'string' && /(\d+?-){2}\d+?\s(\d+?:)*\d+/.test(time)) {
-          time = new Date(time).getTime()
-        }
-        offset = Number.parseInt(offset)
-        time += offset * 60 * 60 * 1000
-        return time
-      } else {
-        return utcTime
+    // 数组对象扁平化
+    flatten (arr) {
+      const tempArr = this.$loadsh.cloneDeep(arr)
+      // 递归调用
+      function handler (tempArr) {
+        const newArr = []
+        tempArr.forEach(element => {
+          newArr.push(element)
+          if (element.children) {
+            newArr.push.apply(newArr, handler(element.children))
+            delete element.children
+          }
+        })
+        return newArr
       }
-    },
-    configTimezoneToUTCTime: function (configTime) {
-      let offset = localStorage.getItem('nz-sys-timezone')
-      offset = moment.tz(offset).format('Z')
-      if (offset && offset !== 'undefined') {
-        let time = configTime
-        if (typeof time === 'string' && /(\d+?-){2}\d+?\s(\d+?:)*\d+/.test(time)) {
-          time = new Date(time).getTime()
-        }
-        offset = Number.parseInt(offset)
-        time -= offset * 60 * 60 * 1000
-        return time
-      } else {
-        return configTime
-      }
-    },
-    countDecimals (value) {
-      if ((value || value === 0) && Math.floor(value) !== value) {
-        const arr = value.toString().split('.')
-        if (Math.abs(arr[0] > 0) || arr.length < 2) {
-          return 2
-        }
-        const dot = arr[1].split('0').length + 1
-        return dot || 2
-      }
-      return 2
+      return handler(tempArr)
     }
   },
   created () {

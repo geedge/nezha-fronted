@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="globalization">
     <nz-data-list
       ref="dataList"
       :api="url"
@@ -136,8 +136,8 @@ export default {
   }
 }
 </script>
-<style scoped>
-/deep/ td .nz-icon-gear:before{
+<style>
+#globalization /deep/ td .nz-icon-gear:before{
   color: #606266;
 }
 </style>

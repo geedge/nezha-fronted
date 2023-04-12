@@ -8,6 +8,7 @@
         showClose ? 'is-closable' : '',
         customClass,
       ]"
+      id="nz-message"
       :style="positionStyle"
       v-show="visible"
       @mouseenter="clearTimer"
@@ -158,13 +159,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
-.el-message{
+<style>
+#nz-message.el-message{
   min-width: 180px;
 }
-
-.progress{
+#nz-message .progress{
   height: 4px;
   position: absolute;
   left: 0;

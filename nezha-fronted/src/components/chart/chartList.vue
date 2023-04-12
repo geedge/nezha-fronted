@@ -1,4 +1,5 @@
 <template>
+  <div id="chart-list">
   <div :id='`chartList${(isGroup ? "Group" : "") + timestamp}`' class="chart-list" v-my-loading="gridLayoutLoading" ref="layoutBox">
     <grid-layout
       ref="layout"
@@ -90,6 +91,7 @@
         @showFullscreen="showFullscreen"
       ></panel-chart>
     </el-dialog>
+  </div>
   </div>
 </template>
 
@@ -862,16 +864,15 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.chart-list {
+<style>
+#chart-list .chart-list {
   flex: 1;
   height: auto !important;
   width: 100%;
   border-top: 1px solid transparent;
   box-sizing: border-box;
 }
-.group-hide-header {
-  height: 40px!important;
-}
+#chart-list .group-hide-header {
+    height: 40px !important;
+  }
 </style>

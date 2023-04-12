@@ -120,11 +120,18 @@ import endpointTable from '@/components/common/project/popData/endpointTable'
 import { getTopology, setTopology } from '@/components/common/js/common'
 import topoUtil from '@/components/common/project/meta2d/js/topoUtil'
 import bus from '@/libs/bus'
+import { globalStore } from '@meta2d/core'
 export default {
   name: 'meta2dMain',
   mixins: [meta2dMain, topoUtil],
   props: {
     meta2dId: {}, // 唯一id 不可重复
+    iconArray: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
     topoData: {}, // topo图数据
     isChart: {
       type: Boolean,
@@ -190,17 +197,32 @@ export default {
   },
   beforeDestroy () {
     if (getTopology(this.meta2dId)) {
-      getTopology(this.meta2dId).clear()
+      getTopology(this.meta2dId).off('translate', this.topTranslate) // 平移·
+      getTopology(this.meta2dId).off('scale', this.topoScale) // 缩放·
+      getTopology(this.meta2dId).off('active', this.pensActive) // 选中·
+      getTopology(this.meta2dId).off('translatePens', () => {}) // 移动画笔结束·
+      getTopology(this.meta2dId).off('translatingPens', () => {}) // 移动画笔进行中·
+      getTopology(this.meta2dId).off('enter', this.penEnter) // 移入画笔·
+      getTopology(this.meta2dId).off('leave', this.penLeave) // 移出画笔·
+      getTopology(this.meta2dId).off('add', this.appPen) // 添加新画笔·
+      getTopology(this.meta2dId).off('click', this.topoClick) // click画笔·
+      if (this.isChart) {
+        getTopology(this.meta2dId).destroy()
+      } else {
+        getTopology(this.meta2dId).destroy(true)
+        for (const k in globalStore) {
+          if (!globalStore[k]) {
+            delete globalStore[k]
+          }
+        }
+      }
       setTopology(this.meta2dId, null)
     }
     bus.$off('changeSelectPens', this.pensActive)
     this.$refs.meta2dBox.removeEventListener('mousemove', this.mousemove)
     this.$refs.meta2dBox.removeEventListener('mouseup', this.mouseup)
+    window.removeEventListener('click', this.contextmenuNone)
   }
 
 }
 </script>
-
-<style scoped lang="scss">
-
-</style>

@@ -191,17 +191,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .colorEF7458{
-    color: #EF7458;
-  }
-  .color23BF9A{
-    color: #23BF9A;
-  }
-  .color969dea{
-    color: #969dea;
-  }
-  .endpoint-num, .alert-num{
-    cursor: pointer;
-  }
-</style>

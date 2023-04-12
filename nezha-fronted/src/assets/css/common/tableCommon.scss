@@ -423,6 +423,7 @@
     position: absolute;
     bottom: 1px;
     height: 48px;
+    z-index: 1;
     width: calc(100% - 20px);
   }
 }

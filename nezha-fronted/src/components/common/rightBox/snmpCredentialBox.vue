@@ -233,13 +233,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .right-box-credential .half-form-item {
-    width: calc(50% - 20px);
-  }
-  .right-box-credential .half-form-item:nth-child(odd) {
-    width: calc(50% - 15px);
-    margin-left: 15px;
-
-  }
-</style>

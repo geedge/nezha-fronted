@@ -5,6 +5,7 @@ import '@/assets/css/main.scss'
 import '@/assets/css/animate.css'
 import '@/assets/css/font/iconfont.js'
 import 'intro.js/introjs.css'
+import Pace from 'pace-js'
 import ElementUI from 'element-ui'
 import i18n from '@/components/common/i18n'
 import VueIntro from 'vue-introjs'
@@ -21,6 +22,7 @@ import plTable from 'pl-table'
 import VueClipboard from 'vue-clipboard2'
 import 'pl-table/themes/index.css'
 import { post, get, put, del } from '@/http.js'
+import { Meta2d } from '@meta2d/core'
 import { clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet, cancelWithChange, myLoading } from '@/components/common/js/tools.js'
 import * as tools from '@/components/common/js/tools.js'
 import * as constants from '@/components/common/js/constants.js'
@@ -48,12 +50,25 @@ import VMdPreview from '@kangc/v-md-editor/lib/preview'
 import '@kangc/v-md-editor/lib/style/preview.css'
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
 import '@kangc/v-md-editor/lib/theme/style/github.css'
+// Pace.on("done", function() {
+//   $self.isShowAuth = false;
+//   Pace.off("done");
+// })
 // highlightjs
 import hljs from 'highlight.js'
+
+// Pace.start();
 VMdPreview.use(githubTheme, {
   Hljs: hljs
 })
+Pace.options = {
+  minTime: 0.1,
+  ghostTime: 0.1,
+  restartOnRequestAfter: 0.1
+}
+window.Meta2d = Meta2d
 Vue.use(VMdPreview)
+Vue.use(Pace)
 
 Vue.use(VueIntro)
 Vue.use(htmlToPdf)

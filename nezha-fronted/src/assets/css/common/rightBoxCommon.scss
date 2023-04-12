@@ -386,3 +386,19 @@
     color: $--color-text-primary;
   }
 }
+.right-box-credential .half-form-item {
+  width: calc(50% - 20px);
+}
+.right-box-credential .half-form-item:nth-child(odd) {
+  width: calc(50% - 15px);
+  margin-left: 15px;
+
+}
+.right-box.right-box-alert-expr{
+  .metric-selector-title{
+    margin-left: 0 !important;
+  }
+  .query-row  .metric-selector-input-box {
+    width: calc(100% - 120px) !important;
+  }
+}

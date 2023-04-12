@@ -4,7 +4,8 @@ export default {
       topoData: {},
       querysArray: [],
       meta2dType: '',
-      params: {}
+      params: {},
+      iconArray: []
     }
   },
   watch: {

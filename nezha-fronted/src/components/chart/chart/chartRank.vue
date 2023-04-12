@@ -64,7 +64,8 @@ export default {
         mapping: {},
         rank: 0,
         show: false
-      }
+      },
+      svg: null
     }
   },
   methods: {
@@ -115,7 +116,7 @@ export default {
 
     drawRankChart () {
       this.$nextTick(() => {
-        d3.select(`#rank-svg-${this.chartId}`).selectAll('g').remove()// 清空作图区域
+        this.dispose()
         // 获取svg宽高 初始化画布
         const svgDom = document.getElementById(`rank-svg-${this.chartId}`)
         if (!svgDom) {
@@ -128,7 +129,7 @@ export default {
         const margin = 40
         // 计算svg高度
         const height = this.rankData.length * (barHeight + margin) + margin
-        const svg = d3.select(`#rank-svg-${this.chartId}`).attr('height', height)
+        this.svg = d3.select(`#rank-svg-${this.chartId}`).attr('height', height)
         const bodyX = 50
         const bodyWidth = width - 3 * bodyX
 
@@ -151,7 +152,7 @@ export default {
         // 柱子最小宽度
         const minWidth = 2
         // 渲染柱形
-        const bars = svg.append('g')
+        const bars = this.svg.append('g')
           .attr('transform', `translate(${bodyX})`)
           .selectAll()
           .data(rankData)
@@ -174,7 +175,7 @@ export default {
         bars.exit().remove()
 
         // 文本标签
-        svg.append('g')
+        this.svg.append('g')
           .attr('transform', `translate(${bodyX})`)
           .selectAll()
           .data(rankData)
@@ -203,7 +204,7 @@ export default {
           .style('overflow', 'visible')
 
         // 生成标签和矩形
-        svg.append('g')
+        this.svg.append('g')
           .attr('transform', `translate(${bodyX})`)
           .selectAll('text')
           .data(rankData)
@@ -283,17 +284,31 @@ export default {
         this.tooltip.x = e.pageX + 15
       }
     },
-
     resize () {
       setTimeout(() => {
         this.drawRankChart()
       }, 50)
+    },
+    dispose () {
+      if (this.svg) {
+        this.svg.selectAll('rect').on('mouseenter', null)
+        this.svg.selectAll('rect').on('mousemove', null)
+        this.svg.selectAll('rect').on('mouseleave', null)
+        this.svg.selectAll('foreignObject').on('mouseenter', null)
+        this.svg.selectAll('foreignObject').on('mousemove', null)
+        this.svg.selectAll('foreignObject').on('mouseleave', null)
+        this.svg.selectAll('g').remove()
+        this.svg = null
+      }
     }
 
   },
   mounted () {
     this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart()
+  },
+  beforeDestroy () {
+    this.dispose()
   }
 }
 </script>

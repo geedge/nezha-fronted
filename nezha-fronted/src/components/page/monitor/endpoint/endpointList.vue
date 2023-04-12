@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="endpoint-list">
     <nzDetailView
       v-my-loading="detailViewLoading || tools.loading"
       v-if="detailType !== 'list'"
@@ -1008,14 +1008,14 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .endpoint-list{
+<style>
+  #endpoint-list .endpoint-list{
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
   }
-  .dataList{
+  #endpoint-list .dataList{
     flex: 1;
     width: 100%;
   }

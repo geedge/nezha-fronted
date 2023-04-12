@@ -1,4 +1,11 @@
 .login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-image: url("../../assets/img/login-background.png");
+  background-size: cover;
   .model {
     height: 100%;
     width: 100%;
@@ -361,4 +368,141 @@
     border: 1px solid $--border-color-light;
     border-color: $--border-color-light;
   }
+}
+.license-upload .el-upload-list{
+  display: none;
+}
+.cls-1{
+  fill: #150F29;
+}
+.cls-2{
+  fill: #201B33;
+}
+.star-cloud{
+  width: 70%;
+  height: 70%;
+  position: absolute;
+  opacity: 0.9;
+}
+.star-cloud1{
+  right: 0;
+  top: 0;
+  transform: translate(40%, -50%);
+}
+.star-cloud2{
+  left: 5%;
+  bottom: 0;
+  transform: translate(-60%, -10%);
+  width: 60%;
+  height: 60%;
+}
+.star-cloud3{
+  right: 0;
+  bottom: 0;
+  transform: translate(50%, 15%);
+}
+.constellation{
+  position: absolute;
+  transform-origin: 0 0;
+  /*transition: all 0.95s linear;*/
+  -webkit-animation: constellationAnimat var(--twinkle-duration) ease-in-out infinite;
+  animation: constellationAnimat var(--twinkle-duration) ease-in-out infinite;
+}
+.constellation1 {
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
+}
+.constellation2 {
+  -webkit-animation-delay: -2s;
+  animation-delay: -2s;
+}
+.constellation3 {
+  -webkit-animation-delay: -3s;
+  animation-delay: -3s;
+}
+.constellation4 {
+  -webkit-animation-delay: -4s;
+  animation-delay: -4s;
+}
+:root {
+  --twinkle-duration: 4s;
+}
+.stars-wrapper {
+  position: absolute;
+  pointer-events: none;
+  width: 100vw;
+  height: 100vh;
+  /*background: -webkit-gradient(linear, left top, left bottom, from(#16161d), to(#07011D));*/
+  background: #07011D;
+  overflow: hidden;
+  z-index: 1;
+}
+.stars0,
+.stars1,
+.stars2,
+.stars3{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  -webkit-animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+  animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+  z-index: 1;
+}
+.stars1 {
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
+}
+.stars2 {
+  -webkit-animation-delay: -2s;
+  animation-delay: -2s;
+}
+.stars3 {
+  -webkit-animation-delay: -3s;
+  animation-delay: -3s;
+}
+@-webkit-keyframes twinkle {
+  25% {
+    opacity: 0;
+  }
+}
+@keyframes twinkle {
+  25% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes constellationAnimat {
+  25% {
+    opacity: 0.5;
+  }
+}
+@keyframes constellationAnimat {
+  25%{
+    opacity: 0.7;
+  }
+  /*50%{*/
+  /*  opacity: 1;*/
+  /*}*/
+  /*75%{*/
+  /*  opacity: 0.5;*/
+  /*}*/
+  /*100%{*/
+  /*  opacity: 1;*/
+  /*}*/
+}
+.star {
+  fill: white;
+}
+.star:nth-child(3n) {
+  opacity: 0.8;
+}
+.star:nth-child(7n) {
+  opacity: 0.6;
+}
+.star:nth-child(13n) {
+  opacity: 0.4;
+}
+.star:nth-child(19n) {
+  opacity: 0.2;
 }

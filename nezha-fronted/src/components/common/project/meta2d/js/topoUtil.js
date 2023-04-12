@@ -151,6 +151,10 @@ export default {
           if (!pen.moduleId) {
             pen.moduleId = ''
           }
+          if (pen.data && pen.data.moduleId) {
+            pen.moduleId = pen.data.moduleId
+            delete pen.data.moduleId
+          }
           if (pen.icon) {
             pen.iconFamily = 'nz-icon'
           }

@@ -1,4 +1,4 @@
-import { Meta2d, registerNode, s8 } from '@meta2d/core'
+import { registerNode, s8 } from '@meta2d/core'
 import { flowPens } from '@meta2d/flow-diagram'
 import { activityDiagram } from '@meta2d/activity-diagram'
 import { classPens } from '@meta2d/class-diagram'
@@ -73,7 +73,7 @@ export default {
       nodesArr: [],
       offsetX: 0,
       offsetY: 0,
-      moduleId: ''
+      moduleId: '',
     }
   },
   mixins: [topoUtil],
@@ -84,7 +84,7 @@ export default {
         maxScale: 2,
         autoAnchor: false
       }
-      const meta2d = new Meta2d(this.meta2dId, meta2dOptions)
+      const meta2d = new window.Meta2d(this.meta2dId, meta2dOptions)
       meta2d.register(flowPens())
       meta2d.register(activityDiagram())
       meta2d.register(classPens())
@@ -152,8 +152,11 @@ export default {
         pen.text = name
       }
       if (pen.data && pen.data.imageId) {
+        const imageInfo = this.iconArray.find(item => item.id === pen.data.imageId)
         pen.imageId = pen.data.imageId
-        pen.image = `/monitor/project/topo/icon/${pen.data.imageId}/0`
+        if (imageInfo) {
+          pen.image = `/topology/icon/0/${imageInfo.unit}/${imageInfo.name}`
+        }
       }
       pen.data = {
         params: { // 用于编辑时 重置为节点初始状态

@@ -327,8 +327,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  /deep/ .active-icon {
-    margin-left: 5px;
-  }
-</style>

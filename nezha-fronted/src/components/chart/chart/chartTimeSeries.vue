@@ -78,6 +78,10 @@ export default {
       } catch (e) {
         return ''
       }
+    },
+    // timeSeries类型图表联动
+    isConnect () {
+      return this.$store.state.panel.isConnect
     }
   },
   watch: {
@@ -189,15 +193,14 @@ export default {
         if (this.isInit && !this.isFullscreen) {
           // timeSeries类型图表设置group 用于多表联动
           myChart.group = 'timeSeriesGroup'
-          myChart.getZr().on('mousemove', params => {
-            if (this.$store.state.panel.isConnect !== 'crosshair') {
-              return false
-            }
-            // crosshair 模式才会执行
-            if (this.$store.state.panel.currentMousemove !== this.chartId) {
-              this.$store.commit('setCurrentMousemove', this.chartId)
-            }
-          })
+          if (this.isConnect === 'crosshair') {
+            myChart.getZr().on('mousemove', params => {
+              // crosshair 模式才会执行
+              if (this.$store.state.panel.currentMousemove !== this.chartId) {
+                this.$store.commit('setCurrentMousemove', this.chartId)
+              }
+            })
+          }
         }
         this.chartLoading = false
         this.isInit = false
@@ -464,7 +467,7 @@ export default {
             str += `
             <div class="tooltip__row">
               <div class="row__label">
-                <span class="row__color-block" style="background-color: ${self.stackTotalColor}"></span>
+                <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${self.$t('dashboard.dashboard.chartTotal')}</span>
               </div>
               <div class="row__value">

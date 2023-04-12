@@ -124,8 +124,8 @@ export default {
             this.map = new maplibregl.Map({
               container: mapId,
               style: mapStyle,
-              maxZoom: 7,
-              minZoom: 1,
+              maxZoom: mapConfig.maxZoom || 7,
+              minZoom: mapConfig.minZoom || 1,
               renderWorldCopies: false,
               maxBounds: [[-179, -85], [179, 85]],
               hash: false,
@@ -161,12 +161,7 @@ export default {
                 }
               }
             })
-            this.map.on('load', function () {
-              self.loadDataCenterMapData()
-              self.map.addControl(new maplibregl.NavigationControl(), 'bottom-right')
-              const mapboxglInner = document.getElementsByClassName('mapboxgl-ctrl-attrib-inner')
-              mapboxglInner[0].innerHTML = '<span>&copy; MapTiler</span> <span>&copy; OpenStreetMap contributors</span>'
-            })
+            this.map.on('load', this.mapLoad)
             maplibregl.addProtocol('nzMap', (params, callback) => { // 切片显示接口 防止跨域的问题
               fetch(`${params.url.split('://')[1]}`)
                 .then(t => {
@@ -187,6 +182,12 @@ export default {
           }
         })
       })
+    },
+    mapLoad () {
+      this.loadDataCenterMapData()
+      this.map.addControl(new maplibregl.NavigationControl(), 'bottom-right')
+      const mapboxglInner = document.getElementsByClassName('mapboxgl-ctrl-attrib-inner')
+      mapboxglInner[0].innerHTML = '<span>&copy; MapTiler</span> <span>&copy; OpenStreetMap contributors</span>'
     },
     loadDataCenterMapData () {
       const self = this
@@ -222,34 +223,35 @@ export default {
             }
           })
           this.renderPoint(dcStats)
-          self.map.on('mouseenter', 'pointLayer', function (param) {
-            const point = param.point
-            const event = param.originalEvent
-            const boxWidth = window.innerWidth / 2
-            const boxHeight = window.innerHeight / 2
-            self.tooltip.x = event.clientX + point.x - event.layerX + 15
-            self.tooltip.y = event.clientY + point.y - event.layerY + 15
-            if (self.tooltip.x > boxWidth) {
-              self.tooltip.x = self.tooltip.x - 200 - 15
-            }
-            if (self.tooltip.y > boxHeight) {
-              self.tooltip.y = self.tooltip.y - 160 - 15
-            }
-            self.dcStat = {
-              ...param.features[0].properties,
-              asset: JSON.parse(param.features[0].properties.asset),
-              agent: JSON.parse(param.features[0].properties.agent)
-            }
-            self.tooltip.show = true
-          })
-
-          self.map.on('mouseleave', 'pointLayer', function () {
-            self.tooltip.show = false
-            self.dcStat = ''
-          })
+          self.map.on('mouseenter', 'pointLayer', self.pointEnter)
+          self.map.on('mouseleave', 'pointLayer', self.pointLeave)
           self.pointAnimation(0)
         })
       })
+    },
+    pointEnter (param) {
+      const point = param.point
+      const event = param.originalEvent
+      const boxWidth = window.innerWidth / 2
+      const boxHeight = window.innerHeight / 2
+      this.tooltip.x = event.clientX + point.x - event.layerX + 15
+      this.tooltip.y = event.clientY + point.y - event.layerY + 15
+      if (this.tooltip.x > boxWidth) {
+        this.tooltip.x = this.tooltip.x - 200 - 15
+      }
+      if (this.tooltip.y > boxHeight) {
+        this.tooltip.y = this.tooltip.y - 160 - 15
+      }
+      this.dcStat = {
+        ...param.features[0].properties,
+        asset: JSON.parse(param.features[0].properties.asset),
+        agent: JSON.parse(param.features[0].properties.agent)
+      }
+      this.tooltip.show = true
+    },
+    pointLeave () {
+      this.tooltip.show = false
+      this.dcStat = ''
     },
     renderPoint (dcStats) {
       const arr = []
@@ -327,12 +329,11 @@ export default {
       clearTimeout(this.timer)
       this.timer = null
     }
+    this.map.off('load', this.mapLoad)
+    this.map.off('mouseenter', 'pointLayer', this.pointEnter)
+    this.map.off('mouseleave', 'pointLayer', this.pointLeave)
     this.map && this.map.remove()
     this.map = null
   }
 }
 </script>
-
-<style scoped>
-
-</style>

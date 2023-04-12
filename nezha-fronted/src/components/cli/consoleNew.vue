@@ -1,11 +1,3 @@
-<style scoped>
-  .console{
-    height: 100%;
-    padding:5px 5px;
-    background-color: black;
-    position: relative;
-  }
-</style>
 <template>
     <div :id="'ternimalContainer'+idIndex" class="console">
       <div :id="'terminal'+idIndex" style="height: 100%;width: 100%"></div>

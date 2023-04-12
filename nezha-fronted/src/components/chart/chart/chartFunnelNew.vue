@@ -58,7 +58,8 @@ export default {
         value: 0,
         mapping: {},
         show: false
-      }
+      },
+      svg: null
     }
   },
   methods: {
@@ -122,7 +123,7 @@ export default {
         funnelData = funnelData.filter(item => item.value !== 0)
       }
       this.$nextTick(() => {
-        d3.select(`#funnel-svg-${this.chartId}`).selectAll('g').remove()// 清空作图区域
+        this.dispose()
         // 获取svg宽高 初始化画布
         const svgDom = document.getElementById(`funnel-svg-${this.chartId}`)
         if (!svgDom) {
@@ -153,8 +154,8 @@ export default {
           return d
         }
         )
-        const svg = d3.select(`#funnel-svg-${this.chartId}`)
-        const chart = svg.append('g').attr('width', chartWidth).attr('height', chartHeight).attr('transform', `translate(${margin}, ${margin})`)
+        this.svg = d3.select(`#funnel-svg-${this.chartId}`)
+        const chart = this.svg.append('g').attr('width', chartWidth).attr('height', chartHeight).attr('transform', `translate(${margin}, ${margin})`)
 
         // 渲染梯形
         const trapezoids = chart
@@ -290,11 +291,6 @@ export default {
               `
       }
     },
-    resize () {
-      setTimeout(() => {
-        this.drawChart()
-      }, 50)
-    },
     chartEnter (e, data) {
       this.tooltip.title = data.alias
       this.tooltip.value = data.showValue
@@ -367,11 +363,31 @@ export default {
             (Math.round((t - B) * p) + B)
 
       return `#${converted.toString(16).slice(1)}`
+    },
+    resize () {
+      setTimeout(() => {
+        this.drawChart()
+      }, 50)
+    },
+    dispose () {
+      if (this.svg) {
+        this.svg.selectAll('.trap').on('mouseover', null)
+        this.svg.selectAll('.trap').on('mousemove', null)
+        this.svg.selectAll('.trap').on('mouseleave', null)
+        this.svg.selectAll('foreignObject').on('mouseover', null)
+        this.svg.selectAll('foreignObject').on('mousemove', null)
+        this.svg.selectAll('foreignObject').on('mouseleave', null)
+        this.svg.selectAll('g').remove()
+        this.svg = null
+      }
     }
   },
   mounted () {
     this.colorList = initColor(20)
     this.chartInfo.loaded && this.initChart(true)
+  },
+  beforeDestroy () {
+    this.dispose()
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%">
+  <div style="height: 100%" id="asset-batch-table">
     <nzDetailView
       v-my-loading="detailViewLoading || tools.loading"
       v-if="detailType !== 'list'"
@@ -1025,12 +1025,12 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .list-page /deep/ .main-container{
+<style>
+  #asset-batch-table .list-page /deep/ .main-container{
     display: flex;
     flex-direction: column;
   }
-  /deep/ .nz-table-list{
+  #asset-batch-table /deep/ .nz-table-list{
     flex: 1;
   }
 </style>

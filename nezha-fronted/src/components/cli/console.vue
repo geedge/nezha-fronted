@@ -1,11 +1,3 @@
-<style scoped>
-  .console{
-    height:270px;
-    padding:5px 5px;
-    background-color: black;
-    position: relative;
-  }
-</style>
 <template>
     <div :id="'ternimalContainer'+idIndex" class="console">
       <div class="ternimal-header">
@@ -386,6 +378,3 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
-
-</style>

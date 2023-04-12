@@ -2,11 +2,12 @@
   <div v-my-loading="topologyLoading" class="overview">
     <transition name = "el-zoom-in-center">
       <div v-if="allProject&&allProject.length>0" style="width: 100%;height: 100%;position: relative">
-        <el-carousel :interval="5000" :trigger="'click'" :autoplay="false" arrow="hover">
+        <el-carousel :interval="5000" :trigger="'click'" :autoplay="true" arrow="hover" @change="carouselChange">
           <el-carousel-item v-for="(item,index) in allProject" :key="index" style="min-height: 10px;min-width: 10px">
             <div class="maskLayer" @click="toProject(item)"></div>
 <!--            <span class="project-name">{{item.name}}</span>-->
             <meta2dMain
+              v-if="item.isLoad"
               :meta2dId="'autoTopology' + item.id + (isFullscreen ? 'screen' : '')"
               :topoData="item.topoData"
               :isPreview="true"
@@ -16,6 +17,7 @@
               :show-zoom="false"
               class="meta2d-chart"
               :is-chart="true"
+              :iconArray="iconArray"
               :ref="'topology' + index"
             />
           </el-carousel-item>
@@ -36,7 +38,8 @@ export default {
   data () {
     return {
       topologyLoading: false,
-      allProject: []
+      allProject: [],
+      iconArray: []
     }
   },
   mixins: [chartMixin],
@@ -47,11 +50,18 @@ export default {
     initChart () {
       this.queryAllProjectData()
     },
+    carouselChange (index) {
+      this.allProject.forEach(item => {
+        item.isLoad = false
+      })
+      this.allProject[index].isLoad = true
+    },
     queryAllProjectData () {
       this.isInit = false
       this.$get('monitor/project', { pageSize: -1 }).then(res => {
         this.topologyLoading = true
         this.allProject = []
+        this.timeArray = []
         let axiosAll = []
         let temp = []
         if (res.data.list.length === 0) {
@@ -77,10 +87,15 @@ export default {
             item.params = {
               timeType: item.topo.timeType || 5
             }
-            // temp.push(item)
-            setTimeout(() => {
-              this.allProject.push(item)
-            }, index * 200)
+            if (index === 0) {
+              item.isLoad = true
+            } else {
+              item.isLoad = false
+            }
+            this.allProject.push(item)
+            // setTimeout(() => {
+            //   item.isLoad = true
+            // }, index * 200)
           })
           // temp.push(res2[2])
           // this.allProject = JSON.parse(JSON.stringify(temp))
@@ -122,7 +137,10 @@ export default {
     }
   },
   mounted () {
-    // this.queryAllProjectData()
+    this.queryAllProjectData()
+    this.$get('/topology/icon').then(res => {
+      this.iconArray = [...res.data.list]
+    })
   },
   beforeDestroy () {
     this.allProject = []

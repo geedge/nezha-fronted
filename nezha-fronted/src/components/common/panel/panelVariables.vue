@@ -1,5 +1,5 @@
 <template>
-  <div style="" class="panel-variables-box">
+  <div style="z-index: 1001;" class="panel-variables-box">
     <div v-for="(item,index) in labelArr" :key="index" v-if="item.show" class="panel-variables-content" style="display: flex">
       <div class="variable-key" :title="item.name">{{item.name}}</div>
       <el-popover
@@ -8,6 +8,10 @@
         v-model="item.visible"
         v-clickoutside="close"
         popper-class="no-style-class ping-popover panel-variables nz-el-dropdown-menu"
+        :append-to-body="false"
+        :popper-options="{
+          forceAbsolute: true
+        }"
       >
         <ul class="pop-list-wrap">
           <li class="el-dropdown-menu__item" v-if="item.allOption">
@@ -425,7 +429,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>
