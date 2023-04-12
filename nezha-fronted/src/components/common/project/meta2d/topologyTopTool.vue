@@ -27,13 +27,13 @@
 <!--    </div>-->
     <div id="undo"
          class="top-tool-item"
-         :class="undoFlag ? '' : 'is-active-meta2d' "
+         :class="undoFlag ? '' : 'nz-btn-disabled' "
          @click="undo">
       <i class="nz-icon nz-icon-revoke" :title="$t('overall.revocation')"/>
     </div>
     <div id="redo"
          class="top-tool-item"
-         :class="redoFlag ? '' : 'is-active-meta2d' "
+         :class="redoFlag ? '' : 'nz-btn-disabled' "
          @click="redo"
     >
       <i class="nz-icon nz-icon-revoke1"  :title="$t('overall.redo')"/>

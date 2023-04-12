@@ -28,7 +28,7 @@
               @change="selectAlertRuleMetric">
               <el-option
                 v-for="item in searchMetrics"
-                :key="item.value"
+                :key="editAlertRule.type+ '-' + item.value"
                 :label="item.label"
                 :value="item.value"></el-option>
             </el-select>
@@ -78,7 +78,7 @@
           <!--threshold-->
           <el-form-item :label="$t('alert.config.threshold')" key="threshold">
             <div class="threshold-list">
-                <el-form-item v-for="(item,index) of editAlertRule.condition" :key="index" :prop="'condition.' + index + '.value'"
+                <el-form-item v-for="(item,index) of editAlertRule.condition" :key="'threshold-list' + index" :prop="'condition.' + index + '.value'"
                   :rules="[
                     { required: true, message: $t('validate.required'), trigger: 'blur'},
                     { validator: thresholdValidator, trigger: 'blur' , item:item},
@@ -89,7 +89,7 @@
                     <div class="threshold-item-center">
                       <span>{{$t('alert.config.when')}} Result</span>
                       <el-select :disabled="!showSnmpTrap" :value="item.operator" @change="operatorChange(item,index,$event)" class="hide-icon" popper-class="prevent-clickoutside" size="small">
-                        <el-option v-for="subItem in operators" :id="'operator-'+subItem.key" :key="subItem.value" :label="subItem.label" :value="subItem.value"></el-option>
+                        <el-option v-for="subItem in operators" :id="'operator-'+subItem.key" :key="'Result' + subItem.value" :label="subItem.label" :value="subItem.value"></el-option>
                       </el-select>
                     </div>
                     <el-input v-model="item.value" :placeholder="item.operator==='=~'?$t('alert.config.enterRegular'):$t('alert.config.enterThreshold')" size="small" type="text" style="flex:1"/>
@@ -209,8 +209,8 @@
             >
               <el-option
                 style="width: 620px"
-                v-for="item in userData"
-                :key="item.id"
+                v-for="(item, index) in userData"
+                :key="'receiver' + index + item.id"
                 :label="item.name"
                 :value="item.id">
                 <span class="user-name" :title="item.name">{{item.name}}</span><span class="user-username" :title="item.username">@{{item.username}}</span>
@@ -284,7 +284,7 @@
             >
               <el-option
                 v-for="item in weekList"
-                :key="item.value"
+                :key="'schedDays' + item.value"
                 :label="item.label"
                 :value="item.value">
               </el-option>
@@ -532,6 +532,7 @@ export default {
           params.receiver = this.editAlertRule.receiverShow.join(',')
           params.schedDays = this.editAlertRule.schedDays.join(',')
           params.trbShot = this.$refs.richTextEditor.getContent()
+          params.condition = JSON.stringify(params.condition)
           if (this.editAlertRule.id) {
             this.$put('alert/rule', params).then(response => {
               this.prevent_opt.save = false
@@ -668,11 +669,13 @@ export default {
       immediate: true,
       handler (n, o) {
         this.isEdit = true
-        this.editAlertRule = JSON.parse(JSON.stringify(n))
+        const obj = this.$loadsh.cloneDeep(n)
+        this.editAlertRule = this.$loadsh.cloneDeep(obj)
         // 获取缓存中的告警等级列表
         const severityData = JSON.parse(localStorage.getItem('nz-severityDataWeight'))
         // 给condition赋值
         if (this.editAlertRule.condition && this.editAlertRule.condition.length) {
+          this.editAlertRule.condition = JSON.parse(this.editAlertRule.condition)
           this.$set(this.editAlertRule, 'condition', severityData.map(item => {
             item = {
               ...item,
@@ -723,7 +726,7 @@ export default {
           this.$nextTick(() => {
             this.expressions.forEach((ex, index) => {
               if (ex) {
-                this.$refs.promql.metricChange(ex)
+                this.$refs.promql && this.$refs.promql.metricChange(ex)
               }
             })
           })
