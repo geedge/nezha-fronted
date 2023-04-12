@@ -97,7 +97,7 @@
                 </el-form-item>
                 <el-form-item prop="timeout" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" style="margin-bottom:0;">
                   <div class="threshold-item">
-                    <div class="threshold-item-left" style="margin-right:15px">{{$t('alert.config.normal')}}</div>
+                    <div class="threshold-item-left" style="margin-right:24px">{{$t('alert.config.normal')}}</div>
                     <el-input-number
                       size="small"
                       placeholder="N"
