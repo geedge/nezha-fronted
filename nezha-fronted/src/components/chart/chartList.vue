@@ -706,6 +706,9 @@ export default {
     }
   },
   beforeDestroy () {
+    bus.$off('groupMove', this.changeGroupHeight)
+    bus.$off('creat-chart-success', this.createChartSuccess)
+    bus.$off('groupChildMove', this.moveChart)
     window.removeEventListener('resize', this.resize)
   },
   watch: {

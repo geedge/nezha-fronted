@@ -297,6 +297,7 @@ export default {
   },
   beforeDestroy () {
     bus.$off('login')
+    bus.$off('link-data-change')
   },
   destroyed () {
     window.removeEventListener('popstate', this.cancel, false)

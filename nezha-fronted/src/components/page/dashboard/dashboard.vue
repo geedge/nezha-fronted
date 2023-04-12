@@ -1266,6 +1266,7 @@ export default {
   beforeDestroy () {
     // 移除键盘ESC事件
     document.removeEventListener('keydown', this.escExit)
+    bus.$off('refreshPanel')
     this.$store.dispatch('dispatchPanelLock', { flag: true })
     if (document.querySelector('#tableList')) {
       document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)

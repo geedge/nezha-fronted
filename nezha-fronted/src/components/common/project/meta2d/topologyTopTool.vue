@@ -169,6 +169,9 @@ export default {
     this.store = getTopology(this.meta2dId).store
     bus.$on('changeDrawState', this.waiveDraw)
   },
+  beforeDestroy () {
+    bus.$off('changeDrawState')
+  },
   methods: {
     getTopology,
     onDragstart (e) {
@@ -203,7 +206,7 @@ export default {
         x: 100 - offestX,
         y: 100 - offestY
       }
-      getTopology(this.meta2dId).addPen(pen , true)
+      getTopology(this.meta2dId).addPen(pen, true)
     },
     addLine () {
       const data = getTopology(this.meta2dId).data()
@@ -227,7 +230,7 @@ export default {
         ex: 100 - offestX + 150,
         ey: 100 - offestY
       }
-      getTopology(this.meta2dId).addPen(pen , true)
+      getTopology(this.meta2dId).addPen(pen, true)
     },
     changeDrawLineFlag () {
       if (this.dragstartFlag) {

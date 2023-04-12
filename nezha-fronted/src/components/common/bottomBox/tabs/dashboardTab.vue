@@ -931,6 +931,7 @@ export default {
     }
   },
   beforeDestroy () {
+    bus.$off('refreshPanel')
     document.querySelector('#tableList') && document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)
     document.querySelector('#tableList') && document.querySelector('#tableList').removeEventListener('mouseleave', this.tableListLeave)
     this.scrollbarWrap && this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
