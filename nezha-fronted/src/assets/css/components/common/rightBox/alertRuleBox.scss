@@ -1,65 +1,81 @@
 .right-box-alert-rule {
-  .severity-circle{
+  .severity-circle {
     position: absolute;
     left: 10px;
     top: 0;
   }
-  .severity-box{
+
+  .severity-box {
     position: relative;
   }
-  .severity-box .el-select .el-input__inner{
+
+  .severity-box .el-select .el-input__inner {
     padding-left: 25px;
   }
+
   .half-form-item {
     width: calc(50% - 5px);
     display: inline-block;
-    .el-form-item__content,.el-select{
+
+    .el-form-item__content, .el-select {
       width: 100%;
     }
   }
+
   .alert-box-duration.half-form-item {
     .el-form-item__content {
       line-height: 31px !important;
     }
   }
-  .right-box-alert-rule .right-box__container .el-form-item__content .el-input-group--prepend{
+
+  .right-box-alert-rule .right-box__container .el-form-item__content .el-input-group--prepend {
     width: 100%;
   }
-  .rich-text-editor{
+
+  .rich-text-editor {
     line-height: 24px;
   }
-  .el-input-group__prepend{
+
+  .el-input-group__prepend {
     position: relative;
     background: $--border-color-light;
     border: $--border-color-light;
-    .hide-icon{
+
+    .hide-icon {
       width: auto;
-      .el-input__inner{
+
+      .el-input__inner {
         border: none;
         text-align: center;
       }
     }
   }
+
   .el-input-group__append {
     border: 1px solid $--border-color-light;
     background-color: $--right-box-sub-title-background-color;
     border-left: none;
   }
-  .alert-rule-split-title{
-    background: $--background-color-base;
+
+  .alert-rule-split-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    margin-bottom: 20px;
+    line-height: 32px;
     font-size: 14px;
+    font-weight: bold;
     color: $--color-text-primary;
-    letter-spacing: 0;
-    font-weight: 400;
-    line-height: 24px;
-    padding-left: 10px;
-    margin-bottom: 10px;
-    height: 24px;
+    background-color: $--right-box-sub-title-background-color;
+    border: 1px solid $--right-box-sub-title-border-color;
   }
+
   .el-form-item__content .el-input-group.el-input-group--prepend {
     vertical-align: middle;
     width: 100%;
   }
+
   .query-row .metric-selector-input-box {
     width: calc(100% - 120px) !important;
   }
@@ -67,37 +83,93 @@
   .el-input-number--small {
     width: 100%;
   }
+
   .el-tag--mini.el-tag--light {
     background-color: $--alert-rule-background-color;
     border-color: $--border-color-light;
+
     .el-tag__close {
       color: $--alert-rule-color;
     }
+
     .el-tag__close:hover {
       color: #FFFFFF;
     }
   }
-  .ͼ2 .cm-content{
-    caret-color:$--color-text-regular;
+
+  .ͼ2 .cm-content {
+    caret-color: $--color-text-regular;
   }
+
   .alert-box-threshold {
-      .hide-icon {
-        .el-input__inner{
+    .hide-icon {
+      .el-input__inner {
+        text-align: center;
+        padding: 0;
+        border: 1px solid $--border-color-light;
+      }
+    }
+
+    .threshold-list {
+      border: 1px solid $--border-color-light;
+      padding: 16px;
+
+      .threshold-item {
+        display: flex;
+        align-items: center;
+        line-height: 1;
+
+        .threshold-item-left {
+          width: 64px;
+          height: 26px;
+          border-radius: 4px;
+          background-color: $--color-success;
+          color: #fff;
           text-align: center;
-          padding: 0;
-          border:1px solid $--border-color-light;
+          line-height: 26px;
+        }
+
+        .threshold-item-center {
+          margin: 0 24px;
+          color: $--color-text-regular;
+          font-size: 14px;
+        }
+
+        .threshold-item-msg {
+          color: $--color-text-regular;
+          font-size: 14px;
+        }
+
+        .hide-icon {
+          width: 38px;
+
+          .el-input__inner {
+            border: none;
+            text-align: center;
+          }
         }
       }
+
+      .el-form-item__content {
+        line-height: 31px !important;
+      }
+
+      .el-form-item__error {
+        padding-top: 2px;
+      }
+    }
   }
-}
-.severity-item{
-  color: $--color-text-secondary;
-  font-size: 12px;
-  max-width: 120px;
-  overflow: hidden;
-}
-.text-ellipsis{
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap
+
+  .severity-item {
+    color: $--color-text-secondary;
+    font-size: 12px;
+    max-width: 120px;
+    overflow: hidden;
+  }
+
+  .text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+  }
 }

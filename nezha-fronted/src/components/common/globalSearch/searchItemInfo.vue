@@ -63,6 +63,11 @@
             <div class="search-item-value" v-html="getPathContent(item.key)">
             </div>
           </div>
+          <div class="search-item-value-box" v-else-if="obj.type === 'alertrule'&&item.key==='severityId'">
+<!--            <i v-if="item.icon&&getPathContent(item.key)!=='&#45;&#45;'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>-->
+<!--            <div class="search-item-value" v-html="getPathContent(item.key)">-->
+<!--            </div>-->
+          </div>
           <div style="cursor: pointer" v-else-if="item.key === 'alertNum'">
             <i :class="Number(getPathContent(item.key)) ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
             <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
@@ -488,7 +493,26 @@ export default {
         this.$get('/alert/rule/' + this.obj.id).then((res) => {
           if (res.msg === 'success') {
             this.loading = false
-            this.severityColor = this.severityData.find(item => res.data.severityId == item.id).color
+            // // this.severityColor = this.severityData.find(item => res.data.severityId == item.id).color
+            // this.severityColor = 'blue'
+            res.data.condition = JSON.parse(res.data.condition)
+            res.data.condition = this.severityData.map(item => {
+              item = {
+                ...item,
+                value: '',
+                operator: '>'
+              }
+              res.data.condition.forEach(subItem => {
+                if (item.id === subItem.id) {
+                  item = {
+                    ...item,
+                    operator: subItem.operator,
+                    value: subItem.value
+                  }
+                }
+              })
+              return item
+            })
             this.alertLabelData = res.data
           } else {
             this.$message.error(res.msg)
@@ -587,8 +611,9 @@ export default {
       if (key === 'trbShot' && this.obj.type === 'alertrule') {
         // str = ''
       }
-      if (key === 'severityId' && this.obj.type === 'alertrule' && this.alertLabelData.severityId) {
-        str = this.severityData.find(item => this.alertLabelData.severityId == item.id).name
+      if (key === 'severityId' && this.obj.type === 'alertrule') {
+        // str = this.severityData.find(item => this.alertLabelData.severityId == item.id).name
+        // str = 'p1'
       }
       return str || '--'
     },

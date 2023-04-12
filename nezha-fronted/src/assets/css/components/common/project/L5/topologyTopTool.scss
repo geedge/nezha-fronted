@@ -29,22 +29,31 @@
 
   .top-tool-item {
     cursor: pointer;
-    background: $--background-color-base;
-    border: 1px solid $--border-color-light;
+    background-color: $--background-color-empty;
+    border: 1px solid $--button-icon-border-color;
     border-radius: 2px;
     padding: 8px 11px;
     line-height: 14px;
     margin-right: 10px;
   }
+  .top-tool-item:active{
+    background-color: $--button-icon-active-background-color;
+    border: 1px solid $--button-icon-active-border-color !important;
+    color: $--color-primary;
+  }
+  .top-tool-item.nz-btn-disabled {
+    background-color: $--background-color-empty !important;
+    border: 1px solid $--button-icon-border-color !important;
+  }
   .is-active-meta2d.top-tool-item {
-    background: mix(#FFF, $--background-color-disabled, 35%);
-    border: 1px solid mix(#000, $--background-color-disabled, 35%);
-    color: $--color-text-disabled;
+    //background: mix(#FFF, $--background-color-disabled, 35%);
+    //border: 1px solid mix(#000, $--background-color-disabled, 35%);
+    //color: $--color-text-disabled;
   }
   .top-tool-item-delete:active{
-    background: mix(#FFF, $--background-color-disabled, 35%);
-    border: 1px solid mix(#000, $--background-color-disabled, 35%);
-    color: $--color-text-disabled;
+    //background: mix(#FFF, $--background-color-disabled, 35%);
+    //border: 1px solid mix(#000, $--background-color-disabled, 35%);
+    //color: $--color-text-disabled;
   }
   .top-tool-item-scale {
     margin-left: 40px;
@@ -125,8 +134,9 @@
     }
   }
   .top-tool-item-disabled {
-    color: #CECECE;
-    opacity: 0.3;
+    background-image: none;
+    opacity: .6;
+    cursor: default !important;
   }
   .tool-item-active {
     background: #1a1a1a;
