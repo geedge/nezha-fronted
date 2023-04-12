@@ -164,6 +164,7 @@ export default {
     }
     this.chartUnit = this.dataJson.unit || 1
     this.expressionChange()
+    window.addEventListener('resize', this.logsCollapseChange)
   },
   methods: {
     logsCollapseChange (activeNames, a, b) {
@@ -562,6 +563,9 @@ export default {
         this.expressionChange()
       }
     }
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.logsCollapseChange)
   }
 }
 </script>
