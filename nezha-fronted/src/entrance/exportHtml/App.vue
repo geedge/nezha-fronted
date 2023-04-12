@@ -82,6 +82,7 @@ export default {
     const localOffset = this.dataJson.timezone || moment.tz.guess()
     this.dataJson.timezone = localOffset
     localStorage.setItem('nz-sys-timezone', localOffset)
+    localStorage.setItem('nz-default-dateFormat', 'YYYY-MM-DD HH:mm:ss')
     if (window.dataJson && (
       navigator.userAgent.match(/Mobi/i) ||
       navigator.userAgent.match(/Android/i) ||
