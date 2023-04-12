@@ -213,7 +213,7 @@ export default {
       pen.visible = pen.visible || true
       pen.isNz = true
       pen.locked = pen.locked || 0
-      pen.isBottom = false
+      pen.isBottom = true
       if (pen.rect) {
         pen.x = pen.rect.x
         pen.y = pen.rect.y
@@ -284,7 +284,7 @@ export default {
       pen.isNz = pen.isNz || true
       pen.visible = pen.visible || true
       pen.locked = pen.locked || 0
-      pen.isBottom = false
+      pen.isBottom = true
       pen.autoPlay = false
     },
     pensActive (pens, e) { // 选中节点

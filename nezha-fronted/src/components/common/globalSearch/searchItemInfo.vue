@@ -70,9 +70,8 @@
             <div
               v-for="priority in alertLabelData.condition"
               :key="priority.id"
-              class="search-item-value text-ellipsis"
+              class="search-item-value alert-label-value-prioity text-ellipsis"
               :style="{background:priority.color}"
-              style="display: inline-block;text-align: center;padding: 2px 5px; border-radius: 2px;margin-right: 5px;width: 80px"
               :title="priority.name + (position.operator || '>') + (priority.value || '-')"
             >
               {{priority.name}} {{position.operator || '>'}} {{priority.value || '-'}}

@@ -964,7 +964,7 @@
       </transition>
 
       <!--         tooltip -->
-      <div class="form-row-title">
+      <div class="form-row-title" v-if="pen.type !== 1">
         {{$t('project.topology.tooltip')}}
         <span>
               <el-switch
@@ -1014,7 +1014,7 @@
           <div class="form-row-key" style="margin-bottom: 5px">
             {{$t('project.topology.legends')}}
           </div>
-          <div class="form-row-value" style="margin-bottom: 10px;display: flex;justify-content: space-between" v-for="legend in pen.data.tooltip.legends" :key="legend.parent + legend.legend">
+          <div class="form-row-value" style="margin-bottom: 10px;display: flex;justify-content: space-between" v-for="(legend, index) in pen.data.tooltip.legends" :key="legend.parent + legend.legend">
             <div style="display: inline-block;width: calc(20% - 10px)">
               <el-select v-model="legend.parent" size="small" style="width: 100%">
                 <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
@@ -1030,6 +1030,7 @@
                 <template slot="prepend">Alias</template>
               </el-input>
             </div>
+            <i class="nz-icon nz-icon-minus" @click="removeTooltipLegend(index)" style="line-height: 32px"/>
           </div>
           <div @click="addTooltipLegend" class="thresholds-add">
            <i class="nz-icon nz-icon-add" /> {{$t('overall.addTooltipLegend')}}
@@ -1327,6 +1328,9 @@ export default {
         legend: '',
         alias: ''
       })
+    },
+    removeTooltipLegend (index) {
+      this.pen.data.tooltip.legends.splice(index, 1)
     },
     nzColorUpdate () {
       this.refsArr.forEach(item => {
