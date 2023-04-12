@@ -49,13 +49,13 @@
           <el-tooltip :disabled="!scope.row.etts" effect="light" placement="right">
             <div slot="content">
               {{$t('overall.endTime')}}<br/>
-              {{utcTimeToTimezoneStr(scope.row.etts)}}
+              {{timeFormat(scope.row.etts)}}
             </div>
             <span>{{getDuration(scope.row)}}</span>
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'stts'">
-          {{utcTimeToTimezoneStr(scope.row[item.prop])}}
+          {{timeFormat(scope.row[item.prop])}}
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <template v-else>-</template>
@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import bus from '@/libs/bus'
 import table from '@/components/common/mixin/table'
 import { calcDurationByStringTimeMs } from '@/components/common/js/tools'
 export default {
@@ -114,6 +115,9 @@ export default {
   computed: {
   },
   methods: {
+    timeFormat (timestamp) {
+      return bus.timeFormate(bus.computeTimezone(timestamp))
+    },
     getDuration (record) {
       if (record.etts) {
         return calcDurationByStringTimeMs(record.stts, record.etts)
