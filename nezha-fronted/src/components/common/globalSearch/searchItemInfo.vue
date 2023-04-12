@@ -63,10 +63,20 @@
             <div class="search-item-value" v-html="getPathContent(item.key)">
             </div>
           </div>
-          <div class="search-item-value-box" v-else-if="obj.type === 'alertrule'&&item.key==='severityId'">
+          <div class="search-item-value-box" v-else-if="obj.type === 'alertrule'&&item.key==='severityId'" style="display: flex;width: calc(100% - 150px)">
 <!--            <i v-if="item.icon&&getPathContent(item.key)!=='&#45;&#45;'" class="nz-icon" :class="searchItemClass(item)" :style="searchItemStyle(item)"/>-->
 <!--            <div class="search-item-value" v-html="getPathContent(item.key)">-->
 <!--            </div>-->
+            <div
+              v-for="priority in alertLabelData.condition"
+              :key="priority.id"
+              class="search-item-value text-ellipsis"
+              :style="{background:priority.color}"
+              style="display: inline-block;text-align: center;padding: 2px 5px; border-radius: 2px;margin-right: 5px;width: 80px"
+              :title="priority.name + (position.operator || '>') + (priority.value || '-')"
+            >
+              {{priority.name}} {{position.operator || '>'}} {{priority.value || '-'}}
+            </div>
           </div>
           <div style="cursor: pointer" v-else-if="item.key === 'alertNum'">
             <i :class="Number(getPathContent(item.key)) ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
@@ -513,6 +523,7 @@ export default {
               })
               return item
             })
+            console.log(res.data.condition)
             this.alertLabelData = res.data
           } else {
             this.$message.error(res.msg)

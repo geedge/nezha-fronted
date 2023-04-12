@@ -39,7 +39,18 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('alert.severity')}}</div>
-        <div class="alert-label-value"><i class="nz-icon nz-icon-circle" :style="{color:severityColor,'font-size':'12px','margin-right':'5px'}"></i>{{alertRuleData.severityId ? severityData.find(s => alertRuleData.severityId === s.id).name : '--'}}</div>
+        <div class="alert-label-value">
+          <div
+            v-for="priority in alertRuleData.condition"
+            :key="priority.id"
+            class="search-item-value text-ellipsis"
+            :style="{background:priority.color}"
+            style="display: inline-block;text-align: center;padding: 2px 5px; border-radius: 2px;margin-right: 5px;width: 80px"
+            :title="priority.name + (position.operator || '>') + (priority.value || '-')"
+          >
+            {{priority.name}} {{position.operator || '>'}} {{priority.value || '-'}}
+          </div>
+        </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('alert.config.expr')}}</div>
@@ -178,6 +189,24 @@ export default {
     this.$get('/alert/rule/' + this.id).then((res) => {
       if (res.msg === 'success') {
         this.loading = false
+        res.data.condition = JSON.parse(res.data.condition)
+        res.data.condition = this.severityData.map(item => {
+          item = {
+            ...item,
+            value: '',
+            operator: '>'
+          }
+          res.data.condition.forEach(subItem => {
+            if (item.id === subItem.id) {
+              item = {
+                ...item,
+                operator: subItem.operator,
+                value: subItem.value
+              }
+            }
+          })
+          return item
+        })
         this.alertRuleData = res.data
         this.severityDataColor()
         this.alertColor = this.returnColor(res.data.alert)
