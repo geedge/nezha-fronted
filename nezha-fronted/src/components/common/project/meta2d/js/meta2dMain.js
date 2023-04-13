@@ -434,6 +434,9 @@ export default {
       }
     },
     beforeEdit () {
+      const endTime = new Date().getTime()
+      const startTime = endTime - 60 * this.params.timeType * 1000
+      this.getQueryValues(this.querysArray, startTime, endTime)
       this.editFlag = true
       this.contextmenu = {
         left: null,

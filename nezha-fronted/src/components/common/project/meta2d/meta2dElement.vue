@@ -767,12 +767,12 @@
               </div>
               <div class="form-row-value">
                 <div style="display: inline-block;width: calc(30% - 3px)">
-                  <el-select v-model="pen.data.parent" size="small">
+                  <el-select v-model="pen.data.parent" size="small" clearable @change="penDataParentChange">
                     <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
                   </el-select>
                 </div>
                 <div style="display: inline-block;width: calc(70% - 13px);margin-left: 10px">
-                  <el-select v-model="pen.data.legend" size="small">
+                  <el-select v-model="pen.data.legend" size="small" clearable>
                     <el-option v-for="item in queryValues.filter(query => (query.parent === pen.data.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'></el-option>
                   </el-select>
                 </div>
@@ -1016,12 +1016,12 @@
           </div>
           <div class="form-row-value" style="margin-bottom: 10px;display: flex;justify-content: space-between" v-for="(legend, index) in pen.data.tooltip.legends" :key="legend.parent + legend.legend">
             <div style="display: inline-block;width: calc(20% - 10px)">
-              <el-select v-model="legend.parent" size="small" style="width: 100%">
+              <el-select v-model="legend.parent" size="small" style="width: 100%" clearable @change="legendParentChange(legend)">
                 <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
               </el-select>
             </div>
             <div style="display: inline-block;width: calc(40% - 10px)">
-              <el-select v-model="legend.legend" size="small" style="width: 100%">
+              <el-select v-model="legend.legend" size="small" style="width: 100%" clearable>
                 <el-option v-for="item in queryValues.filter(query => (query.parent === legend.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'></el-option>
               </el-select>
             </div>
@@ -1338,6 +1338,12 @@ export default {
           this.$refs[item].update()
         }
       })
+    },
+    penDataParentChange () {
+      this.pen.data.legend = ''
+    },
+    legendParentChange (legend) {
+      legend.legend = ''
     }
 
   }
