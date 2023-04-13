@@ -43,6 +43,9 @@ export default {
     } else {
       this.dateFormatStr = 'YYYY-MM-DD'
     }
+    if (window.dataJson) {
+      this.severityDataWeight = JSON.parse(localStorage.getItem('nz-severityData'))
+    }
   },
   methods: {
     showPriority (daysData) {
