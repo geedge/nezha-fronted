@@ -35,7 +35,7 @@
               </div>
               <transition name="el-zoom-in-top">
                 <div v-show="item.show" class="nz-collapse-body">
-                  <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons image-box-item" :class="btn.id === selectImgId ? 'is-select':''">
+                  <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons image-box-item" :class="btn.id == selectImgId ? 'is-select':''">
                     <img :src="baseUrl + btn.image" v-if="btn.image" class="image-src" @click.stop="selectImageChange(btn)">
                     <i v-if="btn.nzClassName" class="nz-icon image-src" :class="btn.nzClassName" style="font-size: 40px" @click.stop="selectImageChange(btn)"/>
                     <div class="img-text text-ellipsis" :title="btn.imageName">{{btn.imageName}}</div>
@@ -87,7 +87,7 @@
               :show-file-list="true"
               :on-change="beforeAvatarUpload"
               :auto-upload="false"
-              accept=".jpg,.png"
+              accept=".jpg,.png,.gif"
               :limit="1"
               :id="'upload-pic-show'">
               <!--<div slot="tip" class="el-upload__tip" >{{$t('overall.importTipImg')}}</div>-->
@@ -180,6 +180,7 @@ export default {
       if (findItem) {
         this.unit = findItem.unit
         this.imageName = findItem.name
+        this.selectImgId = findItem.id
       }
     }
     this.imageInit()
@@ -196,9 +197,11 @@ export default {
           if (this.imgId == item.id) {
             this.unit = item.unit
             this.imageName = item.imageName
+            this.selectImgId = item.id
           } else if (this.selectImage === item.image) {
             this.unit = item.unit
             this.imageName = item.imageName
+            this.selectImgId = item.id
           }
           const group = this.tools.find(tool => tool.group === item.unit)
           if (group) {
@@ -208,7 +211,8 @@ export default {
               image: item.image,
               imageId: item.id,
               id: item.id,
-              unit: item.unit
+              unit: item.unit,
+              type: item.type
             })
           } else {
             this.tools.push({
@@ -220,7 +224,8 @@ export default {
                 image: item.image,
                 imageId: item.id,
                 id: item.id,
-                unit: item.unit
+                unit: item.unit,
+                type: item.type
               }]
             })
           }
@@ -235,7 +240,7 @@ export default {
     },
     changeSelectBoxShow (flag) {
       this.selectBoxShow = flag
-      this.selectImgId = this.imgId
+      // this.selectImgId = this.imgId
       const findItem = this.tools.find(group => {
         group.show = false
         return group.group === this.unit
@@ -262,6 +267,7 @@ export default {
     changImage () {
       this.unit = this.selectImg.unit
       this.imageName = this.selectImg.imageName
+      this.selectImgId = this.selectImg.id
       this.$emit('updateImage', this.selectImg)
       this.changeSelectBoxShow(false)
     },
@@ -331,7 +337,8 @@ export default {
     },
     beforeAvatarUpload (file, fileList) {
       const this_ = this
-      const isJPG = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png')
+      console.log(file.raw.type)
+      const isJPG = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png' || file.raw.type === 'image/gif')
       const isLt2M = (file.size / 1024 / 1024) < 2
       if (!isJPG) {
         this.$message.error(this_.$t('project.topology.imgFormat'))

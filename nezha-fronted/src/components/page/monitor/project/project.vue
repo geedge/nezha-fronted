@@ -42,6 +42,7 @@
       :title="'123'"
       :visible.sync="isPreview.show"
       fullscreen
+      class="no-transform-dialog"
       custom-class="nz-new-dialog meta2d-preview"
       :append-to-body="true"
       :modal-append-to-body="false"

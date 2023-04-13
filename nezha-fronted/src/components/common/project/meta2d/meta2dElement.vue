@@ -1226,16 +1226,19 @@ export default {
       this.pen.imageId = image.id
       if (image.image) {
         this.pen.image = image.image
+        this.pen.name = image.type || 'png'
         this.pen.icon = ''
         this.change('image')
       }
       if (image.icon) {
         this.pen.icon = image.icon
+        this.pen.name = ''
         this.pen.image = ''
         this.change('icon')
       }
       if (!image.id) {
         this.pen.image = image.image
+        this.pen.name = ''
         this.pen.icon = ''
         this.change('image')
       }
