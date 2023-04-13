@@ -210,7 +210,30 @@ export default {
       this.showBasicInfo = !this.showBasicInfo
     },
     init () {
-      if (window.dataJson) { return }
+      if (window.dataJson) {
+        this.severityDataWeight = JSON.parse(localStorage.getItem('nz-severityData'))
+        const weekDays = this.getWeeksTime()
+        const res = this.chartDetail.alertMessageTrend
+        if (!res.result) {
+          return
+        }
+        const alertDaysData = res.result ? res.result[0].values : []
+        const newWeekDays = JSON.parse(JSON.stringify(weekDays))
+        alertDaysData.forEach(item => {
+          item.values.forEach(time => {
+            const findItem = newWeekDays.find(days => days.time == time[0])
+            if (findItem) {
+              findItem[item.metric.priority] = time[1]
+            }
+          })
+        })
+        setTimeout(() => {
+          this.alertDaysData = newWeekDays
+          console.log(this.alertDaysData)
+          this.trendLoading = false
+        })
+        return
+      }
       this.loading = true
       const weekDays = this.getWeeksTime()
       if (this.trendTimer) {
