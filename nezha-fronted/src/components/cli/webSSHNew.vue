@@ -75,13 +75,14 @@
         <el-popover
           slot="label"
           placement="bottom-start"
+          ref="tabPaneAdd"
           width="150"
           trigger="hover"
           :popper-class="'popover-webshell'"
         >
           <div>
             <div class="popover-webshell-item"  @click="assetShowChange"><i class="nz-icon nz-icon-menu-assets" />{{$t('webshell.selAsset')}}</div>
-            <div class="popover-webshell-item"  @click="customShow=true"><i class="nz-icon nz-icon-edit" />{{$t('webshell.custom')}}</div>
+            <div class="popover-webshell-item"  @click="customShowChange"><i class="nz-icon nz-icon-edit" />{{$t('webshell.custom')}}</div>
           </div>
           <span slot="reference" style="padding:8px;font-size:20px;font-weight:bold;">+</span>
         </el-popover>
@@ -404,8 +405,16 @@ export default {
         this.$refs.selectTable.filter = ''
         this.$refs.selectTable.pageChange(1)
       })
-
+      if (this.$refs.tabPaneAdd) {
+        this.$refs.tabPaneAdd.doClose()
+      }
       // this.getAssetData()
+    },
+    customShowChange () {
+      this.customShow = true
+      if (this.$refs.tabPaneAdd) {
+        this.$refs.tabPaneAdd.doClose()
+      }
     },
     /* 活动标签切换时触发 */
     beforeLeave (currentName, oldName) {

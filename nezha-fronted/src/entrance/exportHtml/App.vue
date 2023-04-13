@@ -92,6 +92,9 @@ export default {
       document.body.style.minWidth = 'unset'
     }
     document.body.style.minWidth = 'unset'
+    const arr = [{ id: 1, name: 'P1', color: '#eb1010', weight: 1, remark: 'Critical, alert that can cause business paralysis' }, { id: 2, name: 'P2', color: '#f89984', weight: 2, remark: 'Major, alert that requires urgent attention, but does not affect the business yet' }, { id: 3, name: 'P3', color: '#f7ba78', weight: 3, remark: 'Minor, alert that need to be dealt with, but not urgent' }]
+    localStorage.setItem('nz-severityData', JSON.stringify(arr))
+    localStorage.setItem('nz-severityDataWeight', JSON.stringify(arr))
   },
   mounted () {
     if (this.$refs.dashboardScrollbar) {
