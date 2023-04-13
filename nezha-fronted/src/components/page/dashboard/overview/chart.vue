@@ -545,6 +545,7 @@ export default {
       }
       this.chart && this.chart.setOption(option)
       this.chart.resize()
+      this.resize()
     },
     chartInit () {
       this.chart = echarts.init(document.getElementById(this.chartId))
