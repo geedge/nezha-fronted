@@ -89,9 +89,10 @@
                     <div class="threshold-item-center">
                       <span>{{$t('alert.config.when')}} Result</span>
                       <el-select :disabled="!showSnmpTrap" :value="item.operator" @change="operatorChange(item,index,$event)" class="hide-icon" popper-class="prevent-clickoutside" size="small">
-                        <el-option v-for="subItem in operators" :id="'operator-'+subItem.key" :key="'Result' + subItem.value" :label="subItem.label" :value="subItem.value"></el-option>
+                        <el-option v-for="subItem in filterOperators" :id="'operator-'+subItem.key" :key="'Result' + subItem.value" :label="subItem.label" :value="subItem.value"></el-option>
                       </el-select>
                     </div>
+                    {{$t('alert.config.enterRegular')}}
                     <el-input v-model="item.value" :placeholder="item.operator==='=~'?$t('alert.config.enterRegular'):$t('alert.config.enterThreshold')" size="small" type="text" style="flex:1"/>
                   </div>
                 </el-form-item>
@@ -354,6 +355,16 @@ export default {
     richTextEditor
   },
   mixins: [editRigthBox, promqlInputMixin],
+  computed: {
+    filterOperators () {
+      console.log(this.editAlertRule.type)
+      if (this.editAlertRule.type != 3) {
+        return this.operators.filter(item => item.value !== '=~')
+      } else {
+        return this.operators.filter(item => item.value == '=~')
+      }
+    }
+  },
   data () {
     const nzOid = (rule, value, callback) => {
       if (this.editAlertRule.type === 3) {
@@ -624,6 +635,12 @@ export default {
         this.$nextTick(() => {
           this.showSnmpTrap = true
         })
+        // type为1时 不能输入正则
+        this.editAlertRule.condition.forEach((item, index) => {
+          item.operator = '>'
+          item.value = ''
+          this.$refs.alertRuleForm.clearValidate('condition.' + index + '.value') // 移除from表单的 condition 验证
+        })
       } else if (val === 2) {
         this.showMetrics = false
         this.expressions = ['']
@@ -633,6 +650,12 @@ export default {
           this.showSnmpTrap = true
         })
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
+        // type为2时 不能输入正则
+        this.editAlertRule.condition.forEach((item, index) => {
+          item.operator = '>'
+          item.value = ''
+          this.$refs.alertRuleForm.clearValidate('condition.' + index + '.value') // 移除from表单的 condition 验证
+        })
       } else if (val === 3) {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
         this.showMetrics = false
