@@ -443,12 +443,12 @@
                   <div class="form-row-value">
                     <div style="display: inline-block;width: calc(30% - 3px)">
                       <el-select v-model="pen.data.textParent" size="small">
-                        <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name'></el-option>
+                        <el-option v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name' :title="item.name" style="width: 133px"></el-option>
                       </el-select>
                     </div>
                     <div style="display: inline-block;width: calc(70% - 13px);margin-left: 10px">
                       <el-select v-model="pen.data.textLegend" size="small">
-                        <el-option v-for="item in queryValues.filter(query => (query.parent === pen.data.textParent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'></el-option>
+                        <el-option v-for="item in queryValues.filter(query => (query.parent === pen.data.textParent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name' :title="item.name" style="width: 302px"> </el-option>
                       </el-select>
                     </div>
                   </div>
