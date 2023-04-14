@@ -312,6 +312,32 @@
                 ></el-switch>
               </div>
             </div>
+            <div class="form-row-item">
+              <div class="form-row-key">
+                {{$t('水平反转')}}
+              </div>
+              <div class="form-row-value">
+                <el-switch
+                  v-model="pen.flipX"
+                  :active-value="true"
+                  :inactive-value="false"
+                  @change="change('flipX')"
+                ></el-switch>
+              </div>
+            </div>
+            <div class="form-row-item">
+              <div class="form-row-key">
+                {{$t('垂直反转')}}
+              </div>
+              <div class="form-row-value">
+                <el-switch
+                  v-model="pen.flipY"
+                  :active-value="true"
+                  :inactive-value="false"
+                  @change="change('flipY')"
+                ></el-switch>
+              </div>
+            </div>
             </div>
 
           <!--         text -->

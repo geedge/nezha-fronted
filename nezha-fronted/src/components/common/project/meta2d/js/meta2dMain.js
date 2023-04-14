@@ -214,6 +214,8 @@ export default {
       pen.isNz = true
       pen.locked = pen.locked || 0
       pen.isBottom = true
+      pen.flipX = pen.flipX || false
+      pen.flipY = pen.flipY || false
       if (pen.rect) {
         pen.x = pen.rect.x
         pen.y = pen.rect.y
