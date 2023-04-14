@@ -11,7 +11,7 @@ export default {
     },
     initEdit (id) {
       const endTime = new Date().getTime()
-      const startTime = endTime - 60 * this.params.timeType * 1000
+      const startTime = endTime - 60 * getTopology(id).data().timeType * 1000
       const elements = getTopology(id).data().elements || []
       this.getQueryValues(elements, startTime, endTime)
       bus.$emit('changeSelectPens', [])
@@ -30,6 +30,7 @@ export default {
       getTopology(this.meta2dId)._setValue(node)
     },
     getQueryValues (elements, startTime, endTime) {
+      console.log(elements)
       this.meta2dLoading = true
       return new Promise(resolve => {
         const step = bus.getStep(startTime, endTime)
