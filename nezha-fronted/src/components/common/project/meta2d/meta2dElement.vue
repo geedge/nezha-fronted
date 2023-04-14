@@ -314,7 +314,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                {{$t('水平反转')}}
+                {{$t('project.topology.flipX')}}
               </div>
               <div class="form-row-value">
                 <el-switch
@@ -327,7 +327,7 @@
             </div>
             <div class="form-row-item">
               <div class="form-row-key">
-                {{$t('垂直反转')}}
+                {{$t('project.topology.flipY')}}
               </div>
               <div class="form-row-value">
                 <el-switch
