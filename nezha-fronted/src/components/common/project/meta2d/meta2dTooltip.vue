@@ -81,7 +81,8 @@ export default {
             elements.push(element)
           }
         })
-        if (chartData.length && this.$refs.panelChart) {
+        console.log(chartData)
+        if (chartData && this.$refs.panelChart) {
           this.chartInfo.elements = elements
           this.$refs.panelChart.chartData = chartData
           this.$refs.panelChart.loading = false
