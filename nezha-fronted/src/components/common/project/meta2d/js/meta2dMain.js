@@ -73,7 +73,7 @@ export default {
       nodesArr: [],
       offsetX: 0,
       offsetY: 0,
-      moduleId: '',
+      moduleId: ''
     }
   },
   mixins: [topoUtil],
@@ -510,8 +510,14 @@ export default {
     },
     // 具体内容点击
     nodeTools (node, tool) {
+      const findItem = this.allModules.find(item => item.id == node.moduleId)
+      if (findItem) {
+        this.moduleName = findItem.name
+      } else {
+        this.$message.error(this.$t('MODULE_NOTFOUND'))
+        return
+      }
       this.moduleId = node.moduleId
-      this.moduleName = node.moduleName
       if (tool.id === 'total') {
         this.popDataShowUpdate('', false, node)
         return
