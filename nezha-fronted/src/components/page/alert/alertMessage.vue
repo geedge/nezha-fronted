@@ -718,26 +718,37 @@ export default {
     queryDate () {
       this.chartLoading = true
       let chartInfo = {}
+      const severityData = JSON.parse(localStorage.getItem('nz-severityDataWeight'))
+      const conditionArr = JSON.parse(this.currentMsg.alertRule.condition)
+      console.log(this.currentMsg.alertRule.condition, this.severityData)
       if (this.currentMsg.alertRule.type === 1 || this.currentMsg.alertRule.type === 3) {
         chartInfo = lodash.cloneDeep(lineData)
         chartInfo.elements = [{}]
-        if (!isNaN(this.currentMsg.alertRule.threshold)) {
+        if (conditionArr.length) {
           chartInfo.param.enable.thresholds = true
-          chartInfo.param.thresholds = [{
-            value: this.currentMsg.alertRule.threshold,
-            color: '#d64f40'
-          }]
+          chartInfo.param.thresholds = conditionArr.map(item => {
+            const findItem = severityData.find(severity => severity.id === item.id)
+            if (findItem) {
+              item.color = findItem.color
+              item.label = findItem.name
+            }
+            return item
+          }).filter(item => item.value)
         }
         chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
       } else if (this.currentMsg.alertRule.type === 2) {
         chartInfo = lodash.cloneDeep(logData)
         chartInfo.elements = [{}]
-        if (!isNaN(this.currentMsg.alertRule.threshold)) {
+        if (conditionArr.length) {
           chartInfo.param.enable.thresholds = true
-          chartInfo.param.thresholds = [{
-            value: this.currentMsg.alertRule.threshold,
-            color: '#d64f40'
-          }]
+          chartInfo.param.thresholds = conditionArr.map(item => {
+            const findItem = severityData.find(severity => severity.id === item.id)
+            if (findItem) {
+              item.color = findItem.color
+              item.label = findItem.name
+            }
+            return item
+          }).filter(item => item.value)
         }
         chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\r|\n+/g, ''))
       }
