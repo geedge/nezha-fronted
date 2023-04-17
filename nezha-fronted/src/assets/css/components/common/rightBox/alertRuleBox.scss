@@ -117,7 +117,10 @@
     .threshold-list {
       border: 1px solid $--border-color-light;
       padding: 16px;
-
+      margin-bottom: 16px;
+      .threshold-list-content {
+        margin-bottom: 0;
+      }
       .threshold-item {
         display: flex;
         align-items: center;
