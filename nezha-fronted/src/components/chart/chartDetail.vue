@@ -230,7 +230,6 @@ export default {
         })
         setTimeout(() => {
           this.alertDaysData = newWeekDays
-          console.log(this.alertDaysData)
           this.trendLoading = false
         })
         return

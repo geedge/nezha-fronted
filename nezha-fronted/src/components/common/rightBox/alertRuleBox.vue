@@ -364,7 +364,6 @@ export default {
   mixins: [editRigthBox, promqlInputMixin],
   computed: {
     filterOperators () {
-      console.log(this.editAlertRule.type)
       if (this.editAlertRule.type != 3) {
         return this.operators.filter(item => item.value !== '=~')
       } else {

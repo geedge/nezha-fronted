@@ -81,7 +81,6 @@ export default {
             elements.push(element)
           }
         })
-        console.log(chartData)
         if (chartData && this.$refs.panelChart) {
           this.chartInfo.elements = elements
           this.$refs.panelChart.chartData = chartData

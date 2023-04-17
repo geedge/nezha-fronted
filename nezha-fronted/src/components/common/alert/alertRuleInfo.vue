@@ -40,13 +40,13 @@
             <span v-else>--</span>
           </div>
         </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">{{$t('alert.severity')}}</div>
-          <div class="alert-label-value"><i class="nz-icon nz-icon-circle" :style="{color:severityColor,'font-size':'12px','margin-right':'5px'}"></i>{{alertRuleData.severityId ? severityData.find(s => alertRuleData.severityId === s.id).name : '--'}}</div>
-        </div>
+<!--        <div class="alert-label-box">-->
+<!--          <div class="alert-label-title">{{$t('alert.severity')}}</div>-->
+<!--          <div class="alert-label-value"><i class="nz-icon nz-icon-circle" :style="{color:severityColor,'font-size':'12px','margin-right':'5px'}"></i>{{alertRuleData.severityId ? severityData.find(s => alertRuleData.severityId === s.id).name : '&#45;&#45;'}}</div>-->
+<!--        </div>-->
         <div class="alert-label-box">
           <div class="alert-label-title">{{$t('alert.config.expr')}}</div>
-          <div class="alert-label-value">{{alertRuleData.expr ? (alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)) : '--'}}</div>
+          <div class="alert-label-value">{{alertRuleData.expr ? alertRuleData.expr : '--'}}</div>
         </div>
         <div class="alert-label-box">
           <div class="alert-label-title">{{$t('alert.alertNum')}}</div>

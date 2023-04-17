@@ -720,7 +720,6 @@ export default {
       let chartInfo = {}
       const severityData = JSON.parse(localStorage.getItem('nz-severityDataWeight'))
       const conditionArr = JSON.parse(this.currentMsg.alertRule.condition)
-      console.log(this.currentMsg.alertRule.condition, this.severityData)
       if (this.currentMsg.alertRule.type === 1 || this.currentMsg.alertRule.type === 3) {
         chartInfo = lodash.cloneDeep(lineData)
         chartInfo.elements = [{}]
