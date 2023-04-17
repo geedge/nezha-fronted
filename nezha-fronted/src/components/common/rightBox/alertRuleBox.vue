@@ -92,7 +92,6 @@
                         <el-option v-for="subItem in filterOperators" :id="'operator-'+subItem.key" :key="'Result' + subItem.value" :label="subItem.label" :value="subItem.value"></el-option>
                       </el-select>
                     </div>
-                    {{$t('alert.config.enterRegular')}}
                     <el-input v-model="item.value" :placeholder="item.operator==='=~'?$t('alert.config.enterRegular'):$t('alert.config.enterThreshold')" size="small" type="text" style="flex:1"/>
                   </div>
                 </el-form-item>
