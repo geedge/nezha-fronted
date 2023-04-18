@@ -13,7 +13,7 @@
   >
     <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
     <template v-slot:top-tool-right>
-      <el-input v-model="matchContent" class="margin-r-10" placeholder="" size="small" @keyup.enter.native="queryLogData()">
+      <el-input v-model="matchContent" class="margin-r-10" placeholder="" size="small" @keyup.enter.native="dateChange()">
         <el-select slot="prepend" v-model="matchSymbol" class="symbol-select" size="small" style="width: 60px;">
           <el-option value="|=">
             <span style="font-family: Inter-Regular">|=</span>
@@ -28,7 +28,7 @@
             <span style="font-family: Inter-Regular">!~</span>
           </el-option>
         </el-select>
-        <button  slot="suffix" class="search-icon-btn"><i class="el-icon-search" @click="queryLogData()"></i></button>
+        <button  slot="suffix" class="search-icon-btn"><i class="el-icon-search" @click="dateChange()"></i></button>
       </el-input>
       <pick-time id="explore" ref="pickTime" v-model="filterTime" :refresh-data-func="queryLogData" :sign="sign" :use-chart-unit="false" :use-refresh="false">
         <template slot="added-text">{{$t('overall.query')}}</template>
@@ -113,6 +113,9 @@ export default {
         }
         reader.readAsText(error.response.data)
       })
+    },
+    dateChange () {
+      this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.refresh()
     },
     queryLogData (limit = 100) { // log的chart和table是一个请求
       this.loading = true
