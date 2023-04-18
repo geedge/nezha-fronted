@@ -34,7 +34,7 @@
               </span>
             </el-popover>
           </div>
-          <el-input size="mini" v-model="searchStr" @focus="searchInputFocus" @keydown.native="keydown" @keyup.native="keyup" ref="searchStr" @keypress="keypress" :readonly="inputReadonly" @input="changeSearchStr"></el-input>
+          <el-input size="mini" v-model="searchStr" @focus="searchInputFocus" @keydown.native="keydown" @keyup.native="keyup" ref="searchStr" @keypress.native="keypress" :readonly="inputReadonly" @input="changeSearchStr"></el-input>
         </div>
       </div>
       <div class="search-content">
@@ -119,6 +119,7 @@ export default {
       selectArr: [], // 已被选择的条件
       key: '', // 当前被选中的 key
       symbol: false, // 当前被选中的 symbol
+      selectSymbolValue: '', // 当前被选中的 symbol 的值
       value: '', // 当前被选中的 value
       keyShow: false, // key 的下拉
       symbolShow: false, // symbol 的下拉 显示根据key的类型 自定义的不包含 大于小于
@@ -209,6 +210,8 @@ export default {
       // console.log(e, 'keydown')
       if (e.keyCode == 8 && !this.searchStr && this.selectArr.length) {
         this.selectArr.pop()
+      } else if (e.keyCode == 8) {
+        console.log(this.oldSearchStr, this.searchStr)
       }
       // 5
       if (e.keyCode == 38) { // 向上
@@ -289,6 +292,7 @@ export default {
     },
     selectSymbol (item) {
       this.symbol = true
+      this.selectSymbolValue = item.value
       switch (item.value) {
         case '=' :
           this.$refs.searchStr.focus()
@@ -412,6 +416,7 @@ export default {
           key,
           value: [value]
         })
+        this.setSearchList()
       }
     },
     removeSelectArr (index) {

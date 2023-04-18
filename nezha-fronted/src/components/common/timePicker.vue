@@ -546,6 +546,10 @@ export default {
       } else {
         this.isPopoverDisabled = false
       }
+    },
+    refresh () {
+      this.setSearchTime(this.nowTimeType.type, this.nowTimeType.value, this.searchTime)
+      this.$emit('change', this.searchTime)
     }
   },
   watch: {
@@ -557,6 +561,7 @@ export default {
           if (showTime) {
             this.showTime = Object.assign({}, showTime)
             this.searchTime = this.$parent.searchTime
+            this.nowTimeType = this.showTime
           }
           if (this.showEmpty && this.defaultPick === 12) {
             this.searchTime = []
