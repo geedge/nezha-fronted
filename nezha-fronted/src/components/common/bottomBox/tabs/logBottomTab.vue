@@ -30,7 +30,7 @@
         </el-select>
         <button  slot="suffix" class="search-icon-btn"><i class="el-icon-search" @click="dateChange()"></i></button>
       </el-input>
-      <pick-time id="explore" ref="pickTime" v-model="filterTime" :refresh-data-func="queryLogData" :sign="sign" :use-chart-unit="false" :use-refresh="false">
+      <pick-time id="explore" ref="pickTime" v-model="filterTime" :refresh-data-func="getData" :sign="sign" :use-chart-unit="false" :use-refresh="false">
         <template slot="added-text">{{$t('overall.query')}}</template>
       </pick-time>
     </template>
@@ -72,7 +72,8 @@ export default {
       matchSymbol: '|=',
       matchContent: '',
       loading: true,
-      endpointLoading: false
+      endpointLoading: false,
+      limit: 100
     }
   },
   methods: {
@@ -117,8 +118,14 @@ export default {
     dateChange () {
       this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.refresh()
     },
-    queryLogData (limit = 100) { // log的chart和table是一个请求
+    getData () {
+      this.queryLogData()
+    },
+    queryLogData (limit) { // log的chart和table是一个请求
       this.loading = true
+      if (limit) {
+        this.limit = limit
+      }
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {
@@ -127,7 +134,7 @@ export default {
             this.matchContent && (expr = `${item} ${this.matchSymbol} "${this.matchContent}"`)
             const statTime = bus.formateTimeToTime(this.filterTime[0])
             const endTime = bus.formateTimeToTime(this.filterTime[1])
-            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(expr) + '&start=' + this.$stringTimeParseToUnix(statTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&limit=' + limit))
+            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + encodeURIComponent(expr) + '&start=' + this.$stringTimeParseToUnix(statTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&limit=' + this.limit))
           }
         })
         axios.all(requestArr).then(res => {
