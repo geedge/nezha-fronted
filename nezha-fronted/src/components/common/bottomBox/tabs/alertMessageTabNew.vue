@@ -164,7 +164,10 @@ export default {
             this.state = '2'
           }
           this.searchLabel = {}
-          this.getTableData()
+          // this.getTableData()
+          setTimeout(() => {
+            this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.refresh()
+          }, 100)
         }
       }
     },
