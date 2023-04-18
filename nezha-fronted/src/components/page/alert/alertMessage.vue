@@ -18,7 +18,7 @@
         <button id="asset-filter" :class="[dataListLayout.indexOf('clickSearch') > -1?'is-focus':'' ]" class="top-tool-btn margin-r-10" @click.stop="showClickSearch" :title="$t('dashboard.dashboard.chartForm.filter')">
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
-        <pick-time ref="pickTime" v-model="searchTime" sign="message" :default-pick="10" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
+        <pick-time ref="pickTime" v-model="searchTime" sign="message" :default-pick="10" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
         <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcel')" class="top-tool-btn margin-r-10" type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
         </button>
@@ -868,6 +868,9 @@ export default {
           this.$refs.messageChart.resize()
         })
       }
+    },
+    dateChange () {
+      this.getTableData()
     },
     getTableData (state) {
       if (state) {

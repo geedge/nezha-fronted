@@ -19,7 +19,7 @@
         <el-select v-model="state" class="margin-r-10" size="small" value-key="value" :disabled="from === fromRoute.alertSilence" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 110px">
           <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
-        <pick-time ref="pickTime" v-model="searchTimeHeader" :default-pick="10" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false" :sign="sign"></pick-time>
+        <pick-time ref="pickTime" v-model="searchTimeHeader" :default-pick="10" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="false" :sign="sign"></pick-time>
       </template>
       <template v-slot>
         <alertMessageTable
@@ -341,6 +341,9 @@ export default {
           }
         })
       })
+    },
+    dateChange () {
+      this.getTableData()
     },
     getTableData (state) {
       if (state) {
