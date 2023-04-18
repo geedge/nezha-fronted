@@ -136,181 +136,179 @@ export default {
     },
 
     drawSankeyChart () {
-      this.$nextTick(() => {
-        this.dispose()
-        // 获取svg宽高 初始化画布
-        const svgDom = document.getElementById(`sankey-svg-${this.chartId}`)
-        if (!svgDom) {
-          return false
-        }
-        const width = svgDom.getBoundingClientRect().width
-        const height = svgDom.getBoundingClientRect().height
-        const margin1 = 100
-        const margin2 = 50
-        this.svg = d3.select(`#sankey-svg-${this.chartId}`)
-        const chart = this.svg.append('g').attr('transform', `translate(${margin2}, ${margin2})`)
+      this.dispose()
+      // 获取svg宽高 初始化画布
+      const svgDom = document.getElementById(`sankey-svg-${this.chartId}`)
+      if (!svgDom) {
+        return false
+      }
+      const width = svgDom.getBoundingClientRect().width
+      const height = svgDom.getBoundingClientRect().height
+      const margin1 = 100
+      const margin2 = 50
+      this.svg = d3.select(`#sankey-svg-${this.chartId}`)
+      const chart = this.svg.append('g').attr('transform', `translate(${margin2}, ${margin2})`)
 
-        // 创建桑基图生成器
-        const sankey = d3Sankey
-          .sankey()
-          .nodeWidth(20)
-          .nodePadding(20)
-          .size([width - 2 * margin1, height - 2 * margin2])
-          .nodeId((d) => d.node)
-        const nodesData = lodash.cloneDeep(this.nodesData)
-        const linksData = lodash.cloneDeep(this.linksData)
+      // 创建桑基图生成器
+      const sankey = d3Sankey
+        .sankey()
+        .nodeWidth(20)
+        .nodePadding(20)
+        .size([width - 2 * margin1, height - 2 * margin2])
+        .nodeId((d) => d.node)
+      const nodesData = lodash.cloneDeep(this.nodesData)
+      const linksData = lodash.cloneDeep(this.linksData)
 
-        // 判断数据是否全部为0
-        let allZero = false
-        if (linksData.every(item => item.value == 0)) {
-          linksData.forEach(item => {
-            item.value = 100 // 目的是显示图表 与值大小无关
-          })
-          allZero = true
-        }
-
-        const { nodes, links } = sankey({
-          nodes: nodesData,
-          links: linksData
+      // 判断数据是否全部为0
+      let allZero = false
+      if (linksData.every(item => item.value == 0)) {
+        linksData.forEach(item => {
+          item.value = 100 // 目的是显示图表 与值大小无关
         })
+        allZero = true
+      }
 
-        // 设置节点颜色
-        nodes.forEach((item, index) => {
-          if (index >= 20) {
-            const colorRandom = randomcolor()
-            this.colorList.push(colorRandom)
-          }
-          const mapping = this.selectMapping(item.value, this.chartInfo.param.valueMapping, this.chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
-          item.mapping = mapping
-          item.background = mapping ? mapping.color.bac : this.colorList[index]
-          const decimals = this.chartInfo.param.decimals || 2
-          item.showValue = chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(!allZero ? item.value : 0, null, -1, decimals)
-        })
-
-        // 创建一个连线绘制组，绑定连线数据(links)
-        chart
-          .append('g')
-          .attr('fill', 'none')
-          .selectAll()
-          .data(links)
-          .join('path')
-          .attr('linkNodes', (d) => { // 设置与当前连线相连的节点(必须以字母开头)
-            return 'i-' + d.source.index + ' ' + 'i-' + d.target.index
-          })
-          .attr('d', d3Sankey.sankeyLinkHorizontal())
-          .attr('stroke', (d) => {
-            return d.source.background
-          })
-          .attr('stroke-width', (d) => d.width || 1)
-          .style('stroke-opacity', '0.5')
-          .attr('cursor', 'pointer')
-          .style('transition', 'all 0.3s')
-
-        // 创建一个节点绘制组，绑定节点数据(nodes)。
-        chart
-          .append('g')
-          .selectAll()
-          .data(nodes)
-          .join('g')
-          .attr('class', 'node')
-          .attr('linkNodes', (d) => { // 设置与当前节点相连的节点(必须以字母开头)
-            let nodeStr = ''
-            d.targetLinks.forEach(link => {
-              nodeStr += 'i-' + link.source.index + ' '
-            })
-            nodeStr += 'i-' + d.index
-            d.sourceLinks.forEach(link => {
-              nodeStr += ' ' + 'i-' + link.target.index
-            })
-
-            return nodeStr
-          })
-          .attr('index', (d) => { // 设置标识(必须以字母开头)
-            return 'i-' + d.index
-          })
-          .append('rect')
-          .attr('fill', (d, i) => {
-            return d.background
-          })
-          .attr('x', (d) => d.x0)
-          .attr('y', (d) => d.y0)
-          .attr('height', (d) => d.y1 - d.y0 || 2)
-          .attr('width', (d) => d.x1 - d.x0)
-          .attr('cursor', 'pointer')
-          .style('transition', 'all 0.3s')
-
-        // 节点添加文字
-        chart
-          .selectAll('.node')
-          .append('foreignObject')
-          // .attr('width', 20)
-          .attr('height', function (d) { return d.y1 - d.y0 })
-          .attr('x', function (d) { return d.x0 + 30 })
-          .attr('y', function (d) { return d.y0 })
-          .style('overflow', 'visible')
-          .style('cursor', 'pointer')
-          .style('transition', 'all 0.3s')
-          .html((d) => {
-            return this.sankeyFormatterLabel(d)
-          })
-
-        // 划过连线
-        chart.selectAll('path')
-          .on('mouseover', (e, d) => {
-            chart.selectAll('.node, path').style('fill-opacity', '0.1').style('stroke-opacity', '0.1')
-            chart.selectAll('.node').selectAll('foreignObject').style('opacity', '0.1')
-            const hoverNodes = d3.select(e.target).style('stroke-opacity', '0.8').attr('linkNodes').split(' ')
-            hoverNodes.forEach((index) => {
-              chart.selectAll('[index=' + index + ']').style('fill-opacity', '1').selectAll('foreignObject').style('opacity', '1')
-            })
-            // 显示悬浮框
-            this.tooltip.title = d.source.node + '  ——>  ' + d.target.node
-            this.tooltip.value = d.showValue
-            this.tooltip.mapping = ''
-            this.tooltip.show = true
-            this.setPosition(e)
-          })
-          .on('mousemove', (e) => {
-            if (this.tooltip.show) {
-              this.setPosition(e)
-            }
-          })
-          .on('mouseleave', () => {
-            chart.selectAll('.node, path').style('fill-opacity', '1').style('stroke-opacity', '0.5')
-            chart.selectAll('.node').selectAll('foreignObject').style('opacity', '1')
-            // 隐藏悬浮框
-            this.tooltip.show = false
-          })
-
-        // 划过节点
-        chart.selectAll('.node')
-          .on('mouseover', (e, d) => {
-            chart.selectAll('.node, path').style('fill-opacity', '0.1').style('stroke-opacity', '0.1')
-            chart.selectAll('.node').selectAll('foreignObject').style('opacity', '0.1')
-            chart.selectAll('[linkNodes~=' + 'i-' + d.index + ']')
-              .style('fill-opacity', '1')
-              .style('stroke-opacity', '0.8')
-              .selectAll('foreignObject')
-              .style('opacity', '1')
-            // 显示悬浮框
-            this.tooltip.title = d.node
-            this.tooltip.value = d.showValue
-            this.tooltip.mapping = d.mapping
-            this.tooltip.show = true
-            this.setPosition(e)
-          })
-          .on('mousemove', (e) => {
-            if (this.tooltip.show) {
-              this.setPosition(e)
-            }
-          })
-          .on('mouseleave', () => {
-            chart.selectAll('.node, path').style('fill-opacity', '1').style('stroke-opacity', '0.5')
-            chart.selectAll('.node').selectAll('foreignObject').style('opacity', '1')
-            // 隐藏悬浮框
-            this.tooltip.show = false
-          })
+      const { nodes, links } = sankey({
+        nodes: nodesData,
+        links: linksData
       })
+
+      // 设置节点颜色
+      nodes.forEach((item, index) => {
+        if (index >= 20) {
+          const colorRandom = randomcolor()
+          this.colorList.push(colorRandom)
+        }
+        const mapping = this.selectMapping(item.value, this.chartInfo.param.valueMapping, this.chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
+        item.mapping = mapping
+        item.background = mapping ? mapping.color.bac : this.colorList[index]
+        const decimals = this.chartInfo.param.decimals || 2
+        item.showValue = chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(!allZero ? item.value : 0, null, -1, decimals)
+      })
+
+      // 创建一个连线绘制组，绑定连线数据(links)
+      chart
+        .append('g')
+        .attr('fill', 'none')
+        .selectAll()
+        .data(links)
+        .join('path')
+        .attr('linkNodes', (d) => { // 设置与当前连线相连的节点(必须以字母开头)
+          return 'i-' + d.source.index + ' ' + 'i-' + d.target.index
+        })
+        .attr('d', d3Sankey.sankeyLinkHorizontal())
+        .attr('stroke', (d) => {
+          return d.source.background
+        })
+        .attr('stroke-width', (d) => d.width || 1)
+        .style('stroke-opacity', '0.5')
+        .attr('cursor', 'pointer')
+        .style('transition', 'all 0.3s')
+
+      // 创建一个节点绘制组，绑定节点数据(nodes)。
+      chart
+        .append('g')
+        .selectAll()
+        .data(nodes)
+        .join('g')
+        .attr('class', 'node')
+        .attr('linkNodes', (d) => { // 设置与当前节点相连的节点(必须以字母开头)
+          let nodeStr = ''
+          d.targetLinks.forEach(link => {
+            nodeStr += 'i-' + link.source.index + ' '
+          })
+          nodeStr += 'i-' + d.index
+          d.sourceLinks.forEach(link => {
+            nodeStr += ' ' + 'i-' + link.target.index
+          })
+
+          return nodeStr
+        })
+        .attr('index', (d) => { // 设置标识(必须以字母开头)
+          return 'i-' + d.index
+        })
+        .append('rect')
+        .attr('fill', (d, i) => {
+          return d.background
+        })
+        .attr('x', (d) => d.x0)
+        .attr('y', (d) => d.y0)
+        .attr('height', (d) => d.y1 - d.y0 || 2)
+        .attr('width', (d) => d.x1 - d.x0)
+        .attr('cursor', 'pointer')
+        .style('transition', 'all 0.3s')
+
+      // 节点添加文字
+      chart
+        .selectAll('.node')
+        .append('foreignObject')
+      // .attr('width', 20)
+        .attr('height', function (d) { return d.y1 - d.y0 })
+        .attr('x', function (d) { return d.x0 + 30 })
+        .attr('y', function (d) { return d.y0 })
+        .style('overflow', 'visible')
+        .style('cursor', 'pointer')
+        .style('transition', 'all 0.3s')
+        .html((d) => {
+          return this.sankeyFormatterLabel(d)
+        })
+
+      // 划过连线
+      chart.selectAll('path')
+        .on('mouseover', (e, d) => {
+          chart.selectAll('.node, path').style('fill-opacity', '0.1').style('stroke-opacity', '0.1')
+          chart.selectAll('.node').selectAll('foreignObject').style('opacity', '0.1')
+          const hoverNodes = d3.select(e.target).style('stroke-opacity', '0.8').attr('linkNodes').split(' ')
+          hoverNodes.forEach((index) => {
+            chart.selectAll('[index=' + index + ']').style('fill-opacity', '1').selectAll('foreignObject').style('opacity', '1')
+          })
+          // 显示悬浮框
+          this.tooltip.title = d.source.node + '  ——>  ' + d.target.node
+          this.tooltip.value = d.showValue
+          this.tooltip.mapping = ''
+          this.tooltip.show = true
+          this.setPosition(e)
+        })
+        .on('mousemove', (e) => {
+          if (this.tooltip.show) {
+            this.setPosition(e)
+          }
+        })
+        .on('mouseleave', () => {
+          chart.selectAll('.node, path').style('fill-opacity', '1').style('stroke-opacity', '0.5')
+          chart.selectAll('.node').selectAll('foreignObject').style('opacity', '1')
+          // 隐藏悬浮框
+          this.tooltip.show = false
+        })
+
+      // 划过节点
+      chart.selectAll('.node')
+        .on('mouseover', (e, d) => {
+          chart.selectAll('.node, path').style('fill-opacity', '0.1').style('stroke-opacity', '0.1')
+          chart.selectAll('.node').selectAll('foreignObject').style('opacity', '0.1')
+          chart.selectAll('[linkNodes~=' + 'i-' + d.index + ']')
+            .style('fill-opacity', '1')
+            .style('stroke-opacity', '0.8')
+            .selectAll('foreignObject')
+            .style('opacity', '1')
+            // 显示悬浮框
+          this.tooltip.title = d.node
+          this.tooltip.value = d.showValue
+          this.tooltip.mapping = d.mapping
+          this.tooltip.show = true
+          this.setPosition(e)
+        })
+        .on('mousemove', (e) => {
+          if (this.tooltip.show) {
+            this.setPosition(e)
+          }
+        })
+        .on('mouseleave', () => {
+          chart.selectAll('.node, path').style('fill-opacity', '1').style('stroke-opacity', '0.5')
+          chart.selectAll('.node').selectAll('foreignObject').style('opacity', '1')
+          // 隐藏悬浮框
+          this.tooltip.show = false
+        })
     },
 
     setPosition (e) {

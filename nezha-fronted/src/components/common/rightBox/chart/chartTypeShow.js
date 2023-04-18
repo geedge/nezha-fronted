@@ -55,6 +55,7 @@ export default {
         case 'treemap':
         case 'gauge':
         case 'pie':
+        case 'doughnut':
           return false
         default: return false
       }
@@ -72,6 +73,7 @@ export default {
         case 'treemap':
         case 'gauge':
         case 'pie':
+        case 'doughnut':
         case 'bubble':
         case 'rank':
         case 'sankey':
@@ -87,6 +89,7 @@ export default {
         case 'point':
         case 'treemap':
         case 'pie':
+        case 'doughnut':
         case 'bar':
           return true
         case 'table':
@@ -109,6 +112,7 @@ export default {
         case 'gauge':
         case 'treemap':
         case 'pie':
+        case 'doughnut':
         case 'bar':
           return false
         default: return false
@@ -136,6 +140,7 @@ export default {
         case 'gauge':
         case 'treemap':
         case 'pie':
+        case 'doughnut':
         case 'bubble':
         case 'rank':
         case 'sankey':
@@ -150,6 +155,7 @@ export default {
         case 'bar':
         case 'treemap':
         case 'pie':
+        case 'doughnut':
         case 'stat':
         case 'hexagon':
         case 'gauge':
@@ -167,6 +173,7 @@ export default {
         case 'bar':
         case 'treemap':
         case 'pie':
+        case 'doughnut':
         case 'stat':
         case 'hexagon':
         case 'gauge':
@@ -202,6 +209,7 @@ export default {
         case 'bar':
         case 'treemap':
         case 'pie':
+        case 'doughnut':
         case 'stat':
         case 'hexagon':
         case 'gauge':

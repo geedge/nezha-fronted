@@ -286,6 +286,10 @@ export const chart = {
       label: i18n.t('dashboard.dashboard.chartForm.typeVal.pie.label')
     },
     {
+      value: 'doughnut',
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.doughnut.label')
+    },
+    {
       value: 'table',
       label: i18n.t('dashboard.dashboard.chartForm.typeVal.table.label')
     },
@@ -318,16 +322,8 @@ export const chart = {
       label: i18n.t('dashboard.dashboard.chartForm.typeVal.treemap.label')
     },
     {
-      value: 'pie',
-      label: i18n.t('dashboard.dashboard.chartForm.typeVal.pie.label')
-    },
-    {
       value: 'log',
       label: i18n.t('dashboard.dashboard.chartForm.typeVal.log.label')
-    },
-    {
-      value: 'table',
-      label: i18n.t('dashboard.dashboard.chartForm.typeVal.table.label')
     },
     {
       value: 'map',
@@ -478,6 +474,7 @@ export const chartType = {
   stat: 'stat',
   gauge: 'gauge',
   pie: 'pie',
+  doughnut: 'doughnut',
   treemap: 'treemap',
   log: 'log',
   text: 'text',

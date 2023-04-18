@@ -135,6 +135,7 @@ export default {
         case 'stat' :
         case 'gauge' :
         case 'pie' :
+        case 'doughnut' :
         case 'treemap' :
         case 'log' :
         case 'hexagon' :

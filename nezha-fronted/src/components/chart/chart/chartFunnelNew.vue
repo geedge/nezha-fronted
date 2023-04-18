@@ -122,119 +122,115 @@ export default {
       } else {
         funnelData = funnelData.filter(item => item.value !== 0)
       }
-      this.$nextTick(() => {
-        this.dispose()
-        // 获取svg宽高 初始化画布
-        const svgDom = document.getElementById(`funnel-svg-${this.chartId}`)
-        if (!svgDom) {
-          return false
+      this.dispose()
+      // 获取svg宽高 初始化画布
+      const svgDom = document.getElementById(`funnel-svg-${this.chartId}`)
+      if (!svgDom) {
+        return false
+      }
+      const width = svgDom.getBoundingClientRect().width
+      const height = svgDom.getBoundingClientRect().height
+      const margin = 20
+      const chartWidth = width - margin * 2
+      const chartHeight = height - margin * 2
+
+      // 每个块的高度
+      const trapezoidPadding = 2
+      const trapezoidsHeight = (chartHeight - trapezoidPadding * (funnelData.length - 1)) / funnelData.length
+
+      const scale = d3.scaleLinear()
+        .domain([0, d3.max(funnelData, (d) => d.value)])
+        .range([0, chartWidth * 0.8])
+
+      // 数据处理
+      funnelData = funnelData.map((d, i, array) => {
+        d.index = i
+        if (i !== array.length - 1) {
+          d.nextValue = array[i + 1].value
+        } else {
+          d.nextValue = 0
         }
-        const width = svgDom.getBoundingClientRect().width
-        const height = svgDom.getBoundingClientRect().height
-        const margin = 20
-        const chartWidth = width - margin * 2
-        const chartHeight = height - margin * 2
+        return d
+      }
+      )
+      this.svg = d3.select(`#funnel-svg-${this.chartId}`)
+      const chart = this.svg.append('g').attr('width', chartWidth).attr('height', chartHeight).attr('transform', `translate(${margin}, ${margin})`)
 
-        // 每个块的高度
-        const trapezoidPadding = 2
-        const trapezoidsHeight = (chartHeight - trapezoidPadding * (funnelData.length - 1)) / funnelData.length
+      // 渲染梯形
+      const trapezoids = chart
+        .append('g')
+        .attr('class', 'traps')
+        .attr('transform', 'translate(' + chartWidth / 2 + ',0)')
+        .selectAll('.trap')
+        .data(funnelData)
+      trapezoids.enter()
+        .append('polygon')
+        .attr('class', (d) => 'trap  trap-' + d.index)
+        .merge(trapezoids)
+        .attr('points', (d) => getPoints(scale(d.value), scale(d.nextValue), trapezoidsHeight))
+        .attr('transform', (d, i) => 'translate(0,' + i * (trapezoidPadding + trapezoidsHeight) + ')')
+        .attr('fill', (d) => d.background)
+        .style('opacity', 0)
+        .transition('opacity').duration(animate === true ? 600 : 0)
+        .style('opacity', 1)
+        .style('cursor', 'pointer')
+      trapezoids.exit()
+        .remove()
 
-        const scale = d3.scaleLinear()
-          .domain([0, d3.max(funnelData, (d) => d.value)])
-          .range([0, chartWidth * 0.8])
+      // 绑定交互事件
+      chart.selectAll('.trap')
+        .on('mouseover', (e, d) => {
+          // 划过变色
+          d3.select(e.target).transition('fill').attr('fill', this.shade(d.background, 0.2))
+          this.chartEnter(e, d)
+        })
+        .on('mousemove', this.chartMove)
+        .on('mouseleave', (e, d) => {
+          d3.select(e.target).transition('fill').attr('fill', d.background)
+          this.chartLeave()
+        })
 
-        // 数据处理
-        funnelData = funnelData.map((d, i, array) => {
-          d.index = i
-          if (i !== array.length - 1) {
-            d.nextValue = array[i + 1].value
-          } else {
-            d.nextValue = 0
-          }
-          return d
+      function getPoints (topWidth, bottomWidth, height) {
+        const points = []
+        points.push(-topWidth / 2 + ',' + 0)
+        points.push(topWidth / 2 + ',' + 0)
+        if (bottomWidth === 0) {
+          points.push(0 + ',' + height)
+        } else {
+          points.push(bottomWidth / 2 + ',' + height)
+          points.push(-bottomWidth / 2 + ',' + height)
         }
-        )
-        this.svg = d3.select(`#funnel-svg-${this.chartId}`)
-        const chart = this.svg.append('g').attr('width', chartWidth).attr('height', chartHeight).attr('transform', `translate(${margin}, ${margin})`)
+        return points.join(' ')
+      }
 
-        // 渲染梯形
-        const trapezoids = chart
-          .append('g')
-          .attr('class', 'traps')
-          .attr('transform', 'translate(' + chartWidth / 2 + ',0)')
-          .selectAll('.trap')
-          .data(funnelData)
-        trapezoids.enter()
-          .append('polygon')
-          .attr('class', (d) => 'trap  trap-' + d.index)
-          .merge(trapezoids)
-          .attr('points', (d) => getPoints(scale(d.value), scale(d.nextValue), trapezoidsHeight))
-          .attr('transform', (d, i) => 'translate(0,' + i * (trapezoidPadding + trapezoidsHeight) + ')')
-          .attr('fill', (d) => d.background)
-          .style('opacity', 0)
-          .transition('opacity').duration(animate === true || this.isInit ? 600 : 0)
-          .style('opacity', 1)
-          .style('cursor', 'pointer')
-        trapezoids.exit()
-          .remove()
+      // 渲染文本标签
+      const texts = chart.select('.traps')
+        .selectAll('.foreign')
+        .data(funnelData)
+      texts.enter()
+        .append('foreignObject')
+        .attr('class', 'foreign')
+        .merge(texts)
+        .html((d) => this.formatterLabel(d, trapezoidsHeight))
+        .attr('x', 0)
+        .attr('y', (d, i) => i * (trapezoidPadding + trapezoidsHeight) + trapezoidsHeight / 2)
+      // 绑定交互事件
+        .on('mouseover', (e, d) => {
+          chart.select('.trap-' + d.index).transition('fill').attr('fill', this.shade(d.background, 0.2))
+          this.chartEnter(e, d)
+        })
+        .on('mousemove', this.chartMove)
+        .on('mouseleave', (e, d) => {
+          chart.select('.trap-' + d.index).transition('fill').attr('fill', d.background)
+          this.chartLeave()
+        })
+        .style('opacity', 0)
+        .transition('opacity').duration(animate === true ? 600 : 0)
+        .style('opacity', 1)
+      texts.exit()
+        .remove()
 
-        // 绑定交互事件
-        chart.selectAll('.trap')
-          .on('mouseover', (e, d) => {
-            // 划过变色
-            d3.select(e.target).transition('fill').attr('fill', this.shade(d.background, 0.2))
-            this.chartEnter(e, d)
-          })
-          .on('mousemove', this.chartMove)
-          .on('mouseleave', (e, d) => {
-            d3.select(e.target).transition('fill').attr('fill', d.background)
-            this.chartLeave()
-          })
-
-        function getPoints (topWidth, bottomWidth, height) {
-          const points = []
-          points.push(-topWidth / 2 + ',' + 0)
-          points.push(topWidth / 2 + ',' + 0)
-          if (bottomWidth === 0) {
-            points.push(0 + ',' + height)
-          } else {
-            points.push(bottomWidth / 2 + ',' + height)
-            points.push(-bottomWidth / 2 + ',' + height)
-          }
-          return points.join(' ')
-        }
-
-        // 渲染文本标签
-        const texts = chart.select('.traps')
-          .selectAll('.label')
-          .data(funnelData)
-        texts.enter()
-          .append('foreignObject')
-          .attr('class', 'label')
-          .merge(texts)
-          .html((d) => this.formatterLabel(d, trapezoidsHeight))
-          .attr('x', 0)
-          .attr('y', (d, i) => i * (trapezoidPadding + trapezoidsHeight) + trapezoidsHeight / 2)
-          // 绑定交互事件
-          .on('mouseover', (e, d) => {
-            chart.select('.trap-' + d.index).transition('fill').attr('fill', this.shade(d.background, 0.2))
-            this.chartEnter(e, d)
-          })
-          .on('mousemove', this.chartMove)
-          .on('mouseleave', (e, d) => {
-            chart.select('.trap-' + d.index).transition('fill').attr('fill', d.background)
-            this.chartLeave()
-          })
-          .style('overflow', 'visible')
-          .style('position', 'relative')
-          .style('opacity', 0)
-          .transition('opacity').duration(animate === true || this.isInit ? 600 : 0)
-          .style('opacity', 1)
-        texts.exit()
-          .remove()
-
-        this.isInit = false
-      })
+      this.isInit = false
     },
     // 处理label
     formatterLabel   (data, height) {
@@ -257,7 +253,7 @@ export default {
         if (height < 32) {
           return ''
         }
-        return `<div class="funnel-label-wrap">
+        return `<div class="foreign-label-wrap">
                   <p class="funnel-label" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                     <span>${str}</span>
                   </p>
@@ -271,7 +267,7 @@ export default {
         if (height < 16) {
           return ''
         }
-        return `<div class="funnel-label-wrap">
+        return `<div class="foreign-label-wrap">
                   <p class="funnel-label" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                     <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                     <span>${str}</span>
@@ -282,7 +278,7 @@ export default {
         if (height < 16) {
           return ''
         }
-        return `<div class="funnel-label-wrap">
+        return `<div class="foreign-label-wrap">
                   <p class="funnel-label" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                     <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                     <span>${valueStr}</span>

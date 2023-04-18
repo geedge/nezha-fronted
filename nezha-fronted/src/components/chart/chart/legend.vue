@@ -139,6 +139,10 @@ export default {
         this.clickLegendTreemap(legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight)
         return
       }
+      if (this.chartInfo.type === 'doughnut') {
+        this.clickLegendDoughnut(legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight)
+        return
+      }
 
       if (echarts) {
         // 判断timeSeries类型图表 先取消多表联动
@@ -227,6 +231,16 @@ export default {
           series: data
         })
       }
+    },
+    clickLegendDoughnut (legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight) {
+      if (!hasGrey) { // 1.除当前legend外全置灰
+        this.isGrey = this.isGrey.map((g, i) => i !== index)
+      } else if (currentIsTheOnlyOneHighlight) { // 2.全高亮
+        this.isGrey = this.isGrey.map(() => false)
+      } else { // 对应高亮
+        this.$set(this.isGrey, index, !this.isGrey[index])
+      }
+      this.$emit('clickLegendDoughnut', this.isGrey)
     },
     // 四舍五入保留2位小数（不够位数，则用0替补）
     keepTwoDecimalFull (num) {

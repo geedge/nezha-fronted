@@ -15,7 +15,7 @@ const chartPieOption = {
   series: [
     {
       type: 'pie',
-      radius: '55%',
+      radius: '60%',
       center: ['50%', '50%'],
       avoidLabelOverlap: false,
       zlevel: 1,

@@ -715,25 +715,40 @@
   stroke: $--color-text-primary;;
 }
 
-.text-ellipsis{
+.no-events{
+  pointer-events: none !important;
+  *{
+    pointer-events: none !important;
+  }
+}
+
+.foreign{
+  overflow: visible;
+  .foreign-label-wrap{
+    white-space: nowrap;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.funnel-label{
+  cursor: pointer;
+  pointer-events: auto;
+  line-height: 16px;
+  color: $--color-text-primary;
+}
+
+.doughnut-label{
+  cursor: pointer;
+  pointer-events: auto;
+  font-size: 12px;
+  line-height: 14px;
+  color: #000000;
+  max-width: 200px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-}
-
-.funnel-label-wrap{
-  white-space: nowrap;
-  position: absolute;
-  transform: translate(-50%,-50%);
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .funnel-label{
-    cursor: pointer;
-    width: min-content;
-    pointer-events: auto;
-    line-height: 16px;
-    color: $--color-text-primary;
-  }
 }

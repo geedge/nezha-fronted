@@ -115,114 +115,112 @@ export default {
     },
 
     drawRankChart () {
-      this.$nextTick(() => {
-        this.dispose()
-        // 获取svg宽高 初始化画布
-        const svgDom = document.getElementById(`rank-svg-${this.chartId}`)
-        if (!svgDom) {
-          return false
-        }
-        const width = svgDom.getBoundingClientRect().width
-        // 柱子高度
-        const barHeight = 24
-        // 柱子间隔
-        const margin = 40
-        // 计算svg高度
-        const height = this.rankData.length * (barHeight + margin) + margin
-        this.svg = d3.select(`#rank-svg-${this.chartId}`).attr('height', height)
-        const bodyX = 50
-        const bodyWidth = width - 3 * bodyX
+      this.dispose()
+      // 获取svg宽高 初始化画布
+      const svgDom = document.getElementById(`rank-svg-${this.chartId}`)
+      if (!svgDom) {
+        return false
+      }
+      const width = svgDom.getBoundingClientRect().width
+      // 柱子高度
+      const barHeight = 24
+      // 柱子间隔
+      const margin = 40
+      // 计算svg高度
+      const height = this.rankData.length * (barHeight + margin) + margin
+      this.svg = d3.select(`#rank-svg-${this.chartId}`).attr('height', height)
+      const bodyX = 50
+      const bodyWidth = width - 3 * bodyX
 
-        // 从大到小排序
-        let rankData = lodash.cloneDeep(this.rankData)
-        rankData.sort((a, b) => b.value - a.value)
-        rankData = rankData.map((item, index) => {
-          return {
-            rank: index,
-            background: item.mapping ? item.mapping.color.bac : this.colorList[index],
-            ...item
+      // 从大到小排序
+      let rankData = lodash.cloneDeep(this.rankData)
+      rankData.sort((a, b) => b.value - a.value)
+      rankData = rankData.map((item, index) => {
+        return {
+          rank: index,
+          background: item.mapping ? item.mapping.color.bac : this.colorList[index],
+          ...item
+        }
+      })
+
+      // 尺度转换
+      const scaleX = d3.scaleLinear()
+        .domain([0, d3.max(rankData, (d) => parseFloat(d.value))])
+        .range([0, bodyWidth])
+
+      // 柱子最小宽度
+      const minWidth = 2
+      // 渲染柱形
+      const bars = this.svg.append('g')
+        .attr('transform', `translate(${bodyX})`)
+        .selectAll()
+        .data(rankData)
+      bars.enter()
+        .append('rect')
+        .merge(bars)
+        .attr('x', 0)
+        .attr('y', (d) => {
+          return (d.rank * barHeight) + (d.rank + 1) * margin
+        })
+        .attr('height', barHeight)
+        .attr('fill', (d) => d.background)
+        .attr('width', (d) => {
+          return scaleX(d.value) > minWidth ? scaleX(d.value) : minWidth
+        })
+        .style('cursor', 'pointer')
+        .on('mouseenter', this.rankEnter)
+        .on('mousemove', this.rankMove)
+        .on('mouseleave', this.rankLeave)
+      bars.exit().remove()
+
+      // 文本标签
+      this.svg.append('g')
+        .attr('transform', `translate(${bodyX})`)
+        .selectAll()
+        .data(rankData)
+        .enter()
+        .append('foreignObject')
+        .on('mouseenter', this.rankEnter)
+        .on('mousemove', this.rankMove)
+        .on('mouseleave', this.rankLeave)
+        .html((d) => {
+          return this.rankFormatterLabel(d)
+        })
+        .attr('x', (d) => {
+          let x = 0
+          if (scaleX(d.value) > minWidth) {
+            x = scaleX(d.value) + 10
+          } else {
+            x = minWidth + 10
+          }
+          return x
+        })
+        .attr('y', (d) => {
+          return (d.rank * barHeight) + (d.rank + 1) * margin
+        })
+        .attr('height', barHeight)
+        .style('cursor', 'pointer')
+        .style('overflow', 'visible')
+
+      // 生成标签和矩形
+      this.svg.append('g')
+        .attr('transform', `translate(${bodyX})`)
+        .selectAll('text')
+        .data(rankData)
+        .enter()
+        .append('text')
+        .attr('class', 'chart-label-text')
+        .attr('x', 4)
+        .attr('y', d => {
+          return (d.rank * barHeight) + (d.rank + 1) * margin - 12
+        })
+        .text(d => {
+          if (this.chartInfo.param.text !== 'all' && this.chartInfo.param.text !== 'legend') {
+            return ''
+          } else {
+            return d.alias
           }
         })
-
-        // 尺度转换
-        const scaleX = d3.scaleLinear()
-          .domain([0, d3.max(rankData, (d) => parseFloat(d.value))])
-          .range([0, bodyWidth])
-
-        // 柱子最小宽度
-        const minWidth = 2
-        // 渲染柱形
-        const bars = this.svg.append('g')
-          .attr('transform', `translate(${bodyX})`)
-          .selectAll()
-          .data(rankData)
-        bars.enter()
-          .append('rect')
-          .merge(bars)
-          .attr('x', 0)
-          .attr('y', (d) => {
-            return (d.rank * barHeight) + (d.rank + 1) * margin
-          })
-          .attr('height', barHeight)
-          .attr('fill', (d) => d.background)
-          .attr('width', (d) => {
-            return scaleX(d.value) > minWidth ? scaleX(d.value) : minWidth
-          })
-          .style('cursor', 'pointer')
-          .on('mouseenter', this.rankEnter)
-          .on('mousemove', this.rankMove)
-          .on('mouseleave', this.rankLeave)
-        bars.exit().remove()
-
-        // 文本标签
-        this.svg.append('g')
-          .attr('transform', `translate(${bodyX})`)
-          .selectAll()
-          .data(rankData)
-          .enter()
-          .append('foreignObject')
-          .on('mouseenter', this.rankEnter)
-          .on('mousemove', this.rankMove)
-          .on('mouseleave', this.rankLeave)
-          .html((d) => {
-            return this.rankFormatterLabel(d)
-          })
-          .attr('x', (d) => {
-            let x = 0
-            if (scaleX(d.value) > minWidth) {
-              x = scaleX(d.value) + 10
-            } else {
-              x = minWidth + 10
-            }
-            return x
-          })
-          .attr('y', (d) => {
-            return (d.rank * barHeight) + (d.rank + 1) * margin
-          })
-          .attr('height', barHeight)
-          .style('cursor', 'pointer')
-          .style('overflow', 'visible')
-
-        // 生成标签和矩形
-        this.svg.append('g')
-          .attr('transform', `translate(${bodyX})`)
-          .selectAll('text')
-          .data(rankData)
-          .enter()
-          .append('text')
-          .attr('class', 'chart-label-text')
-          .attr('x', 4)
-          .attr('y', d => {
-            return (d.rank * barHeight) + (d.rank + 1) * margin - 12
-          })
-          .text(d => {
-            if (this.chartInfo.param.text !== 'all' && this.chartInfo.param.text !== 'legend') {
-              return ''
-            } else {
-              return d.alias
-            }
-          })
-      })
     },
 
     // 处理label

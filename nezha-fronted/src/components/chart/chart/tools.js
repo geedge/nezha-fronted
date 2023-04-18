@@ -73,6 +73,9 @@ export function isHexagon (type) {
 export function isChartPie (type) {
   return type === chartType.pie
 }
+export function isDoughnut (type) {
+  return type === chartType.doughnut
+}
 export function isChartBar (type) {
   return type === chartType.bar
 }

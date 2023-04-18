@@ -27,6 +27,15 @@
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
       ></chart-pie>
+      <chart-doughnut
+        :ref="'chart' + chartInfo.id"
+        v-if="isDoughnut(chartInfo.type)"
+        :chart-data="chartData"
+        :chart-info="chartInfo"
+        :chart-option="chartOption"
+        :is-fullscreen="isFullscreen"
+        @chartIsNoData="chartIsNoData"
+      ></chart-doughnut>
       <chart-bar
         :ref="'chart' + chartInfo.id"
         v-if="isChartBar(chartInfo.type)"
@@ -239,6 +248,7 @@ import chartGroup from './chart/chartGroup'
 import chartLog from './chart/chartLog'
 import chartNoData from './chart/chartNoData'
 import chartPie from './chart/chartPie'
+import chartDoughnut from './chart/chartDoughnut'
 import chartStat from './chart/chartStat'
 import chartTable from './chart/chartTable'
 import chartText from './chart/chartText'
@@ -253,7 +263,7 @@ import chartBubble from './chart/chartBubble'
 import chartRank from './chart/chartRank'
 import chartSankey from './chart/chartSankey'
 import chartFunnel from './chart/chartFunnelNew'
-import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable, isGauge, isClock, isTopology, isChartBubble, isChartRank, isSankey, isFunnel } from './chart/tools'
+import { getOption, isTimeSeries, isHexagon, isUrl, isText, isChartPie, isDoughnut, isChartBar, isTreemap, isLog, isStat, isDiagram, isGroup, isAutotopology, isMap, isAssetInfo, isEndpointInfo, isTable, isGauge, isClock, isTopology, isChartBubble, isChartRank, isSankey, isFunnel } from './chart/tools'
 import lodash from 'lodash'
 
 export default {
@@ -271,6 +281,7 @@ export default {
     chartLog,
     chartNoData,
     chartPie,
+    chartDoughnut,
     chartStat,
     chartTable,
     chartText,
@@ -342,6 +353,7 @@ export default {
     isTimeSeries,
     isHexagon,
     isChartPie,
+    isDoughnut,
     isChartBar,
     isUrl,
     isText,

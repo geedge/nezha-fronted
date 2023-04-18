@@ -108,86 +108,84 @@ export default {
       this.$emit('chartIsNoData', this.isNoData)
     },
     drawBubbleChart () {
-      this.$nextTick(() => {
-        this.dispose()
-        this.svg = d3.select(`#bubble-svg-${this.chartId}`)
-        const svgDom = document.getElementById(`bubble-svg-${this.chartId}`)
-        if (!svgDom) {
-          return false
-        }
-        const width = svgDom.getBoundingClientRect().width
-        const height = svgDom.getBoundingClientRect().height
-        // 定义布局方式
-        const pack = d3.pack()
-          .size([width, height])
-          .padding(6)
+      this.dispose()
+      this.svg = d3.select(`#bubble-svg-${this.chartId}`)
+      const svgDom = document.getElementById(`bubble-svg-${this.chartId}`)
+      if (!svgDom) {
+        return false
+      }
+      const width = svgDom.getBoundingClientRect().width
+      const height = svgDom.getBoundingClientRect().height
+      // 定义布局方式
+      const pack = d3.pack()
+        .size([width, height])
+        .padding(6)
         // 如果数据全为0 则设置默认值（否则图表不显示）
-        let bubbleData = lodash.cloneDeep(this.bubbleData)
-        if (bubbleData.every(item => item.value == 0)) {
-          bubbleData = bubbleData.map(item => {
-            return {
-              ...item,
-              value: 100 // 目的是显示气泡 与值大小无关
-            }
-          })
-        }
-        const data = d3.hierarchy({ children: bubbleData })
-          .sum(function (d) {
-            return d.value || 0
-          })
-          .sort(function (a, b) {
-            return b.value - a.value
-          })
-        const nodes = pack(data).descendants()
-        const bubbles = this.svg.selectAll('.bubble')
-          .data(nodes)
-          .enter()
-          .filter(function (d) {
-            return !d.children
-          })
-          .append('g')
-          .attr('class', 'bubble')
+      let bubbleData = lodash.cloneDeep(this.bubbleData)
+      if (bubbleData.every(item => item.value == 0)) {
+        bubbleData = bubbleData.map(item => {
+          return {
+            ...item,
+            value: 100 // 目的是显示气泡 与值大小无关
+          }
+        })
+      }
+      const data = d3.hierarchy({ children: bubbleData })
+        .sum(function (d) {
+          return d.value || 0
+        })
+        .sort(function (a, b) {
+          return b.value - a.value
+        })
+      const nodes = pack(data).descendants()
+      const bubbles = this.svg.selectAll('.bubble')
+        .data(nodes)
+        .enter()
+        .filter(function (d) {
+          return !d.children
+        })
+        .append('g')
+        .attr('class', 'bubble')
 
-        bubbles.append('circle')
-          .style('fill', function (d) {
-            return d.data.background
-          })
-          .attr('cx', function (d) {
-            return d.x
-          })
-          .attr('cy', function (d) {
-            return d.y
-          })
-          .attr('r', function (d) {
-            return d.r
-          })
-        bubbles.append('foreignObject')
-          .attr('width', function (d) {
-            return d.r * 2
-          })
-          .attr('height', function (d) {
-            return d.r * 2
-          })
-          .attr('x', function (d) {
-            return d.x - d.r
-          })
-          .attr('y', function (d) {
-            return d.y - d.r
-          })
-          .style('font-size', function (d) {
-            let fontSize
-            fontSize = d.r / 4 > 10 ? d.r / 4 : 0
-            fontSize = fontSize > 30 ? 30 : fontSize
-            return fontSize
-          })
-          .style('border-radius', '50%')
-          .html((d) => {
-            return this.bubbleFormatterLabel(d)
-          })
-        bubbles.on('mouseenter', this.bubbleEnter)
-        bubbles.on('mousemove', this.bubbleMove)
-        bubbles.on('mouseleave', this.bubbleLeave)
-      })
+      bubbles.append('circle')
+        .style('fill', function (d) {
+          return d.data.background
+        })
+        .attr('cx', function (d) {
+          return d.x
+        })
+        .attr('cy', function (d) {
+          return d.y
+        })
+        .attr('r', function (d) {
+          return d.r
+        })
+      bubbles.append('foreignObject')
+        .attr('width', function (d) {
+          return d.r * 2
+        })
+        .attr('height', function (d) {
+          return d.r * 2
+        })
+        .attr('x', function (d) {
+          return d.x - d.r
+        })
+        .attr('y', function (d) {
+          return d.y - d.r
+        })
+        .style('font-size', function (d) {
+          let fontSize
+          fontSize = d.r / 4 > 10 ? d.r / 4 : 0
+          fontSize = fontSize > 30 ? 30 : fontSize
+          return fontSize
+        })
+        .style('border-radius', '50%')
+        .html((d) => {
+          return this.bubbleFormatterLabel(d)
+        })
+      bubbles.on('mouseenter', this.bubbleEnter)
+      bubbles.on('mousemove', this.bubbleMove)
+      bubbles.on('mouseleave', this.bubbleLeave)
     },
     // 处理label
     bubbleFormatterLabel (node) {
