@@ -180,8 +180,11 @@ export default {
       if (this.trendPromiseIndex < this.trendPromise.length) {
         Promise.all(this.trendPromise[this.trendPromiseIndex]).then(response => {
           response.forEach((res, index) => {
-            const arr = res.responseURL.split('=')
-            const id = arr[arr.length - 1]
+            const arr = res.responseURL && res.responseURL.split('=')
+            let id = ''
+            if (arr) {
+              id = arr[arr.length - 1]
+            }
             const item = this.tableData.find(row => row.id == id)
             if (!res.data) {
               return
@@ -204,7 +207,7 @@ export default {
           this.trendPromiseIndex++
           this.renderTrend()
         }).catch((msg) => {
-          console.log(msg)
+          // console.log(msg)
         })
       }
     }

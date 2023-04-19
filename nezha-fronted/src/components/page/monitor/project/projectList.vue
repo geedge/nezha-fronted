@@ -134,6 +134,7 @@ export default {
   },
   methods: {
     getTableData (params) {
+      console.log('213123123')
       if (params && Object.keys(params).length > 0) {
         for (const key in params) {
           this.$set(this.searchLabel, key, params[key])
@@ -194,6 +195,17 @@ export default {
           }
         }
       })
+    },
+    delCallBack (id) {
+      console.log(id, 'id')
+      if (id.indexOf(this.$store.state.currentProject.id) !== -1) {
+        console.log(123, id)
+        this.$store.commit('currentProjectChange', {
+          id: '',
+          name: '',
+          remark: ''
+        })
+      }
     }
   },
   computed: {
