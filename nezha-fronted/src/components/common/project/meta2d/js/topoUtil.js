@@ -30,7 +30,6 @@ export default {
       getTopology(this.meta2dId)._setValue(node)
     },
     getQueryValues (elements, startTime, endTime) {
-      console.log(elements)
       this.meta2dLoading = true
       return new Promise(resolve => {
         const step = bus.getStep(startTime, endTime)
@@ -155,6 +154,15 @@ export default {
           if (pen.data && pen.data.moduleId) {
             pen.moduleId = pen.data.moduleId
             delete pen.data.moduleId
+          }
+
+          if (!isNaN(pen.imageId) && pen.imageId) {
+            const imageInfo = this.iconArray.find(item => item.id === pen.imageId)
+            if (imageInfo) {
+              pen.image = `/topology/icon/0/${imageInfo.unit}/${imageInfo.name}`
+            } else {
+              pen.image = ''
+            }
           }
           if (pen.icon) {
             pen.iconFamily = 'nz-icon'

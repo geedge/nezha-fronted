@@ -156,6 +156,8 @@ export default {
         pen.imageId = pen.data.imageId
         if (imageInfo) {
           pen.image = `/topology/icon/0/${imageInfo.unit}/${imageInfo.name}`
+        } else {
+          pen.image = ''
         }
       }
       pen.data = {
