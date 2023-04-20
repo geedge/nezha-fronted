@@ -211,7 +211,7 @@ export default {
       if (e.keyCode == 8 && !this.searchStr && this.selectArr.length) {
         this.selectArr.pop()
       } else if (e.keyCode == 8) {
-        console.log(this.oldSearchStr, this.searchStr)
+        // console.log(this.oldSearchStr, this.searchStr)
       }
       // 5
       if (e.keyCode == 38) { // 向上
@@ -250,18 +250,6 @@ export default {
         this.$refs.searchStr.focus()
         return
       }
-      // 2 3
-      const index = this.searchStr.indexOf(':')
-      if (index === -1) {
-        this.symbol = false
-        this.inputReadonly = false
-        this.contentShow('key')
-      } else if (index === this.searchStr.length - 1 && !this.symbol) {
-        this.contentShow('symbol')
-      } else {
-        this.symbol = true
-        this.contentShow('value')
-      }
       // 4
       if (e.keyCode == 13 && index !== -1 && this.symbol) {
         this.addSelectArr(this.searchStr)
@@ -283,7 +271,7 @@ export default {
       if (index === -1) {
         this.symbol = false
         this.contentShow('key')
-      } else if (index === this.searchStr.length - 1 && !this.symbol) {
+      } else if ((index == this.searchStr.length - 1) && !this.symbol) {
         this.contentShow('symbol')
       } else {
         this.symbol = true
@@ -338,6 +326,53 @@ export default {
       this.setValueList('')
       this.contentShow('value')
     },
+    delSymbol () {
+      const length = this.searchStr.length
+      switch (this.selectSymbolValue) {
+        case '=' :
+          this.$refs.searchStr.focus()
+          break
+        case '≠' :
+          this.searchStr = this.searchStr.substring(1)
+          this.$refs.searchStr.focus()
+          break
+        case '>=' :
+          // this.searchStr = this.searchStr + '>='
+          // this.$refs.searchStr.focus()
+          break
+        case '<=' :
+          // this.searchStr = this.searchStr + '<='
+          // this.$refs.searchStr.focus()
+          break
+        case '>' :
+          // this.searchStr = this.searchStr + '>'
+          // this.$refs.searchStr.focus()
+          break
+        case '<' :
+          // this.searchStr = this.searchStr + '<'
+          // this.$refs.searchStr.focus()
+          break
+        case 'wildcard' :
+          this.searchStr = this.searchStr.substring(1)
+          this.$refs.searchStr.focus()
+          break
+        case 'not wildcard' :
+          this.searchStr = this.searchStr.substring(2)
+          this.$refs.searchStr.focus()
+          break
+        case 'exist' :
+          // this.selectValue('*')
+          // this.$refs.searchStr.focus()
+          break
+        case 'not exist' :
+          this.searchStr = this.searchStr.substring(2)
+          // this.searchStr = '-' + this.searchStr + '*'
+          // this.selectValue('*')
+          this.$refs.searchStr.focus()
+          break
+      }
+      this.selectSymbolValue = ''
+    },
     selectValue (value) {
       this.searchStr = this.searchStr + value
       this.addSelectArr(this.searchStr)
@@ -352,8 +387,16 @@ export default {
       this.keyShow = false // key 的下拉
       this.symbolShow = false // symbol 的下拉
       this.valueShow = false // value 的下拉
-      if (key) {
-        this[key + 'Show'] = true
+      console.log(key)
+      if (key === 'symbol') {
+        this.setSymBolList()
+        this.symbolShow = true
+      }
+      if (key === 'key') {
+        this.keyShow = true
+      }
+      if (key === 'value') {
+        this.valueShow = true
       }
       const keyStr = this.searchStr.split(':')[0]
       // console.log(keyStr, this.searchStr.split(':'))
@@ -515,6 +558,28 @@ export default {
         // console.log(n)
         this.searchList = n.searchLabelList || []
         this.oldSearchList = n.searchLabelList || []
+      }
+    },
+    searchStr: {
+      handler (n, o) {
+        console.log(n, o)
+        // 2 3
+        const index = this.searchStr.indexOf(':')
+        if (index === -1) {
+          this.symbol = false
+          this.inputReadonly = false
+          this.contentShow('key')
+        } else if (index === this.searchStr.length - 1 && !this.symbol) {
+          this.contentShow('symbol')
+        } else {
+          this.symbol = true
+          this.contentShow('value')
+        }
+        if (n.indexOf(':') === -1 && o.indexOf(':') !== -1) {
+          this.symbol = false
+          this.delSymbol()
+        }
+        // if (n.indexOf(':'))
       }
     }
   }
