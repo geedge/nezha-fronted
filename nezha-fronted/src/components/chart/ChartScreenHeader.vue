@@ -136,6 +136,7 @@ export default {
         case 'gauge' :
         case 'pie' :
         case 'doughnut' :
+        case 'rose' :
         case 'treemap' :
         case 'log' :
         case 'hexagon' :

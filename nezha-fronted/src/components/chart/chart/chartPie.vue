@@ -2,7 +2,7 @@
   <div
     :class="legendPlacement"
     ref="pie-chart-box"
-    class="nz-chart__component nz-chart__component--time-series" @mouseenter="mouseEnterChart"
+    class="nz-chart__component" @mouseenter="mouseEnterChart"
     @mouseleave="mouseLeaveChart"
   >
     <div :id="`chart-canvas-${chartId}`" class="chart__canvas"></div>

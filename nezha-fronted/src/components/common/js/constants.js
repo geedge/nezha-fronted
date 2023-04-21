@@ -290,6 +290,10 @@ export const chart = {
       label: i18n.t('dashboard.dashboard.chartForm.typeVal.doughnut.label')
     },
     {
+      value: 'rose',
+      label: i18n.t('dashboard.dashboard.chartForm.typeVal.rose.label')
+    },
+    {
       value: 'table',
       label: i18n.t('dashboard.dashboard.chartForm.typeVal.table.label')
     },
@@ -475,6 +479,7 @@ export const chartType = {
   gauge: 'gauge',
   pie: 'pie',
   doughnut: 'doughnut',
+  rose: 'rose',
   treemap: 'treemap',
   log: 'log',
   text: 'text',

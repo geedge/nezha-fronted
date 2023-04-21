@@ -139,8 +139,8 @@ export default {
         this.clickLegendTreemap(legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight)
         return
       }
-      if (this.chartInfo.type === 'doughnut') {
-        this.clickLegendDoughnut(legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight)
+      if (this.chartInfo.type === 'doughnut' || this.chartInfo.type === 'rose') {
+        this.clickLegendD3(legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight)
         return
       }
 
@@ -232,7 +232,7 @@ export default {
         })
       }
     },
-    clickLegendDoughnut (legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight) {
+    clickLegendD3 (legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight) {
       if (!hasGrey) { // 1.除当前legend外全置灰
         this.isGrey = this.isGrey.map((g, i) => i !== index)
       } else if (currentIsTheOnlyOneHighlight) { // 2.全高亮
@@ -240,7 +240,7 @@ export default {
       } else { // 对应高亮
         this.$set(this.isGrey, index, !this.isGrey[index])
       }
-      this.$emit('clickLegendDoughnut', this.isGrey)
+      this.$emit('clickLegendD3', this.isGrey)
     },
     // 四舍五入保留2位小数（不够位数，则用0替补）
     keepTwoDecimalFull (num) {

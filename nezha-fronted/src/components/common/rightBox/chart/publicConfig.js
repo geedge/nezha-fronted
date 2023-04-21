@@ -252,6 +252,10 @@ export default {
           name: this.$t('dashboard.dashboard.chartForm.typeVal.doughnut.label')
         },
         {
+          id: 'rose',
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.rose.label')
+        },
+        {
           id: 'bubble',
           name: this.$t('dashboard.dashboard.chartForm.typeVal.bubble.label')
         },
@@ -313,6 +317,10 @@ export default {
         {
           id: 'doughnut',
           name: this.$t('dashboard.dashboard.chartForm.typeVal.doughnut.label')
+        },
+        {
+          id: 'rose',
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.rose.label')
         },
         {
           id: 'bubble',

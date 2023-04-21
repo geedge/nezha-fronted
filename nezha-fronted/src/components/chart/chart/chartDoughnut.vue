@@ -2,16 +2,16 @@
   <div
     :class="legendPlacement"
     ref="doughnut-chart-box"
-    class="nz-chart__component nz-chart__component--time-series"
+    class="nz-chart__component"
   >
-    <div :id="`chart-canvas-${chartId}`" class="chart__canvas"></div>
+    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" style="overflow: hidden;"></div>
     <chart-legend
       v-if="hasLegend"
       :chart-data="chartData"
       :chart-info="chartInfo"
       :legends="legends"
       :is-fullscreen="isFullscreen"
-      @clickLegendDoughnut="clickLegendDoughnut"
+      @clickLegendD3="clickLegendD3"
     ></chart-legend>
     <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
       <div class="chart-canvas-tooltip-title tooltip-title">
@@ -120,7 +120,7 @@ export default {
           const mapping = this.selectMapping(value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
           const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
           this.doughnutData.push({
-            value: value,
+            value: Number(value),
             realValue: value,
             showValue: showValue,
             name: legend.name,
@@ -141,7 +141,6 @@ export default {
       this.$emit('chartIsNoData', this.isNoData)
     },
     drawDoughnutChart (animate) {
-      this.dispose()
       const svgDom = document.getElementById(`chart-canvas-${this.chartId}`)
       if (!svgDom) {
         return false
@@ -160,8 +159,17 @@ export default {
 
       const width = svgDom.getBoundingClientRect().width
       const height = svgDom.getBoundingClientRect().height
-      this.svg = d3.select(`#chart-canvas-${this.chartId}`).append('svg').attr('height', height).attr('width', width).attr('viewBox', [-width / 2, -height / 2, width, height]).style('display', 'block')
-      const chart = this.svg.append('g')
+      let chart
+      if (this.svg) {
+        chart = this.svg.select('g')
+      } else {
+        this.svg = d3.select(`#chart-canvas-${this.chartId}`).append('svg').style('display', 'block')
+        chart = this.svg.append('g')
+      }
+      this.svg
+        .attr('width', width)
+        .attr('height', height)
+        .attr('viewBox', [-width / 2, -height / 2, width, height])
 
       const outerRadius = (Math.min(width, height) / 2) * 0.6 // outer radius of pie, in pixels
       const innerRadius = outerRadius * 0.67 // inner radius of pie, in pixels (non-zero for donut)
@@ -174,15 +182,15 @@ export default {
       const arcs = pie(doughnutData)
 
       function doughnutOver (e, d) {
-        d3.select(chart.selectAll('path').nodes()[d.index])
+        chart.select('.path-' + d.index)
           .transition()
           .attr('d', d3.arc()
             .innerRadius(innerRadius)
-            .outerRadius(outerRadius * 1.05)
+            .outerRadius(outerRadius * 1.06)
           )
       }
       function doughnutOut (e, d) {
-        d3.select(chart.selectAll('path').nodes()[d.index])
+        chart.select('.path-' + d.index)
           .transition()
           .attr('d', d3.arc()
             .innerRadius(innerRadius)
@@ -190,28 +198,30 @@ export default {
           )
       }
 
-      const that = this
       // 图形
       chart.selectAll('path')
-        .data(arcs)
+        .data(arcs.filter(function (d) {
+          return d.data.value
+        }))
         .join('path')
         .attr('fill', d => d.data.background)
         .attr('d', arc)
+        .attr('class', (d) => 'path-' + d.index)
         .style('cursor', 'pointer')
         .classed('no-events', true)
         .on('mouseover', doughnutOver)
         .on('mouseout', doughnutOut)
-        .on('mouseenter', that.doughnutEnter)
-        .on('mousemove', that.doughnutMove)
-        .on('mouseleave', that.doughnutLeave)
+        .on('mouseenter', this.doughnutEnter)
+        .on('mousemove', this.doughnutMove)
+        .on('mouseleave', this.doughnutLeave)
         .transition().duration(animate === true ? 600 : 0)
-        .attrTween('d', (d) => {
+        .attrTween('d', function (d) {
           let currentArc = this._current
           if (!currentArc) {
             currentArc = { startAngle: 0, endAngle: 0 }
           }
           const i = d3.interpolate(currentArc, d)
-          this._current = i(0) // 当饼图更新时，从当前角度过渡到新角度
+          this._current = i(1) // 当饼图更新时，从当前角度过渡到新角度
           return function (t) {
             return arc(i(t))
           }
@@ -243,8 +253,9 @@ export default {
           d3.select(this).classed('no-events', false)
         })
     },
+
     // 处理label
-    formatterLabel   ({ data }) {
+    formatterLabel ({ data }) {
       let str = ''
       let valueStr = ''
       if (this.chartInfo.param.text === 'all') {
@@ -327,7 +338,7 @@ export default {
         this.tooltip.x = e.pageX + 15
       }
     },
-    clickLegendDoughnut (isGrey) {
+    clickLegendD3 (isGrey) {
       const data = this.doughnutData.filter((item, i) => !isGrey[i])
       this.selectData = this.$loadsh.cloneDeep(data)
       this.drawDoughnutChart(true)

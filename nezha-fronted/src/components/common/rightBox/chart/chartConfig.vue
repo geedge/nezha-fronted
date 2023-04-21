@@ -1272,7 +1272,8 @@ export default {
         case 'treemap':
         case 'pie':
         case 'doughnut':
-          if (this.oldType === 'bar' || this.oldType === 'treemap' || this.oldType === 'pie' || this.oldType === 'doughnut') {
+        case 'rose':
+          if (this.oldType === 'bar' || this.oldType === 'treemap' || this.oldType === 'pie' || this.oldType === 'doughnut' || this.oldType === 'rose') {
             break
           }
           this.chartConfig.param = {

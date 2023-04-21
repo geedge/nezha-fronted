@@ -721,7 +721,6 @@
     pointer-events: none !important;
   }
 }
-
 .foreign{
   overflow: visible;
   .foreign-label-wrap{
@@ -733,15 +732,13 @@
     align-items: center;
   }
 }
-
 .funnel-label{
   cursor: pointer;
   pointer-events: auto;
   line-height: 16px;
   color: $--color-text-primary;
 }
-
-.doughnut-label{
+.doughnut-label,.rose-label{
   cursor: pointer;
   pointer-events: auto;
   font-size: 12px;

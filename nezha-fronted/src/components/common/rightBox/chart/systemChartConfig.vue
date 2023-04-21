@@ -895,6 +895,10 @@ export default {
           name: this.$t('dashboard.dashboard.chartForm.typeVal.doughnut.label')
         },
         {
+          id: 'rose',
+          name: this.$t('dashboard.dashboard.chartForm.typeVal.rose.label')
+        },
+        {
           id: 'bubble',
           name: this.$t('dashboard.dashboard.chartForm.typeVal.bubble.label')
         },
@@ -1006,7 +1010,8 @@ export default {
         case 'treemap':
         case 'pie':
         case 'doughnut':
-          if (this.oldType === 'bar' || this.oldType === 'treemap' || this.oldType === 'pie' || this.oldType === 'doughnut') {
+        case 'rose':
+          if (this.oldType === 'bar' || this.oldType === 'treemap' || this.oldType === 'pie' || this.oldType === 'doughnut' || this.oldType === 'rose') {
             break
           }
           this.chartConfig.param = {
