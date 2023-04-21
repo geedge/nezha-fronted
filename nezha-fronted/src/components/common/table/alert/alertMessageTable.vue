@@ -249,7 +249,8 @@ export default {
       tableDataInitNum: 0,
       alertRuleShow: false,
       alertRuleId: '',
-      alertRuleObj: ''
+      alertRuleObj: '',
+      timeRule: ''
     }
   },
   computed: {
@@ -518,7 +519,7 @@ export default {
     },
     // alertName鼠标划入
     alertMessageHover (item, loading, e) {
-      clearTimeout(this.timer)
+      clearTimeout(this.timeRule)
       if (e) {
         const dom = e.currentTarget
         const position = dom.getBoundingClientRect()
@@ -527,13 +528,13 @@ export default {
         this.alertRuleObj = item
       }
       this.$set(item.alertRule, 'loading', loading)
-      this.timer = setTimeout(() => {
+      this.timeRule = setTimeout(() => {
         this.alertRuleShow = loading
       }, 500)
       this.flag = loading
     },
     tipHoverRule (tipLoading) {
-      clearTimeout(this.timer)
+      clearTimeout(this.timeRule)
       if (this.flag === false) {
         this.alertRuleShow = tipLoading
       }
