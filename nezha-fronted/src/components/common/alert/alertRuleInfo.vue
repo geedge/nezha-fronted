@@ -100,6 +100,15 @@ export default {
     that: {},
     severityData: Array
   },
+  watch: {
+    id: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        this.init()
+      }
+    },
+  },
   data () {
     return {
       loading: true,
@@ -181,52 +190,58 @@ export default {
     },
     tipHoverRule (tipLoading) {
       this.$emit('tipHoverRule', tipLoading)
+    },
+    init () {
+      if (!this.id) {
+        return
+      }
+      this.$get('/alert/rule/' + this.id).then((res) => {
+        if (res.msg === 'success') {
+          this.loading = false
+          this.alertRuleData = res.data
+          this.severityDataColor()
+          this.alertColor = this.returnColor(res.data.alert)
+          const weekDays = this.getWeeksTime()
+          if (this.trendTimer) {
+            clearTimeout(this.trendTimer)
+            this.trendTimer = null
+          }
+          this.trendTimer = setTimeout(() => {
+            this.trendLoading = true
+            const params = {
+              type: 'total',
+              dimension: 'priority',
+              step: 'd'
+            }
+            params['rule' + 'Id'] = this.id
+            this.$get('/stat/alertMessage/trend', params).then((res) => {
+              if (!res.data) {
+                return
+              }
+              const alertDaysData = res.data.result ? res.data.result[0].values : []
+              const newWeekDays = JSON.parse(JSON.stringify(weekDays))
+              alertDaysData.forEach(item => {
+                item.values.forEach(time => {
+                  const findItem = newWeekDays.find(days => days.time == time[0])
+                  if (findItem) {
+                    findItem[item.metric.priority] = time[1]
+                  }
+                })
+              })
+              setTimeout(() => {
+                this.alertDaysData = newWeekDays
+                this.trendLoading = false
+              })
+            })
+          })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     }
   },
   mounted () {
-    this.$get('/alert/rule/' + this.id).then((res) => {
-      if (res.msg === 'success') {
-        this.loading = false
-        this.alertRuleData = res.data
-        this.severityDataColor()
-        this.alertColor = this.returnColor(res.data.alert)
-        const weekDays = this.getWeeksTime()
-        if (this.trendTimer) {
-          clearTimeout(this.trendTimer)
-          this.trendTimer = null
-        }
-        this.trendTimer = setTimeout(() => {
-          this.trendLoading = true
-          const params = {
-            type: 'total',
-            dimension: 'priority',
-            step: 'd'
-          }
-          params['rule' + 'Id'] = this.id
-          this.$get('/stat/alertMessage/trend', params).then((res) => {
-            if (!res.data) {
-              return
-            }
-            const alertDaysData = res.data.result ? res.data.result[0].values : []
-            const newWeekDays = JSON.parse(JSON.stringify(weekDays))
-            alertDaysData.forEach(item => {
-              item.values.forEach(time => {
-                const findItem = newWeekDays.find(days => days.time == time[0])
-                if (findItem) {
-                  findItem[item.metric.priority] = time[1]
-                }
-              })
-            })
-            setTimeout(() => {
-              this.alertDaysData = newWeekDays
-              this.trendLoading = false
-            })
-          })
-        })
-      } else {
-        this.$message.error(res.msg)
-      }
-    })
+
   }
 }
 
