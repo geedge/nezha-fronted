@@ -38,7 +38,7 @@
         </div>
         <div class="content-box">
           <span class="content-title">{{ $t('overall.remark') }}</span>
-          <span class="content-text">{{moduleInfo.remark?moduleInfo.remark:'--'}}</span>
+          <span class="content-text" :title="moduleInfo.remark?moduleInfo.remark:'--'">{{moduleInfo.remark?moduleInfo.remark:'--'}}</span>
         </div>
       </div>
     </div>

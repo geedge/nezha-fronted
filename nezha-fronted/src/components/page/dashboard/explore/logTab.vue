@@ -82,7 +82,7 @@
         </el-table-column>
       </el-table>
       <template v-if="exploreItem">
-        <div v-if="exploreLogTable" class="table-no-data">
+        <div v-if="exploreLogTable && !tableData.length" class="table-no-data">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#nz-icon-no-data-list"></use>
           </svg>
@@ -91,7 +91,7 @@
         <div v-else>&nbsp;</div>
       </template>
       <template v-else>
-        <div v-if="loadingBottom" class="table-no-data">
+        <div v-if="loadingBottom && !tableData.length" class="table-no-data">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#nz-icon-no-data-list"></use>
           </svg>

@@ -33,7 +33,7 @@ router.beforeEach((to, from, next) => {
             localStorage.setItem('nz-sys-timezone', res.data.timezone || '')
             localStorage.setItem('nz-sys-bgImg', res.data.system_bgImg || '')
             localStorage.setItem('nz-default-theme', res.data.theme || '')
-            localStorage.setItem('nz-default-dateFormat', res.data.dateFormat || '')
+            localStorage.setItem('nz-default-dateFormat', res.data.dateFormat || 'YYYY-MM-DD HH:mm:ss')
             changeFavicon(res.data.system_favicon)
           }
           resolve()
