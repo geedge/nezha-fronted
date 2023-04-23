@@ -2,7 +2,7 @@
   <el-table
       id="traceTable"
       ref="dataTable"
-      :height="'calc(100% - 10px)'"
+      :height="'calc(100% - 80px)'"
       :data="tableData"
       :row-key="rowKey"
       border

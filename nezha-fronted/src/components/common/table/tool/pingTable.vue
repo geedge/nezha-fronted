@@ -2,7 +2,7 @@
   <el-table
       id="pingTable"
       ref="dataTable"
-      :height="'calc(100% - 10px)'"
+      :height="'calc(100% - 80px)'"
       :row-key="rowKey"
       :data="tableData"
       border
