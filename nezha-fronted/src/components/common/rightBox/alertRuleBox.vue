@@ -76,12 +76,20 @@
             <el-input id="alert-box-input-oid" v-model="editAlertRule.expr" size="small" type="text"></el-input>
           </el-form-item>
           <!--threshold-->
-          <el-form-item :label="$t('alert.config.threshold')" key="threshold">
-            <div class="threshold-list">
+          <div class="threshold-list">
+              <el-form-item
+                :label="$t('alert.config.threshold')"
+                key="threshold"
+                class="threshold-list-content"
+                prop="condition"
+                :rules="[
+                { required: true, message: $t('validate.required'), trigger: 'blur'},
+                { validator: conditionValidator, trigger: 'change'},
+            ]">
                 <el-form-item v-for="(item,index) of editAlertRule.condition" :key="'threshold-list' + index" :prop="'condition.' + index + '.value'"
                   :rules="[
-                    { required: true, message: $t('validate.required'), trigger: 'blur'},
                     { validator: thresholdValidator, trigger: 'blur' , item:item},
+                    { validator: showError, trigger: 'blur' , item:item},
                   ]"
                 >
                   <div class="threshold-item">
@@ -89,13 +97,14 @@
                     <div class="threshold-item-center">
                       <span>{{$t('alert.config.when')}} Result</span>
                       <el-select :disabled="!showSnmpTrap" :value="item.operator" @change="operatorChange(item,index,$event)" class="hide-icon" popper-class="prevent-clickoutside" size="small">
-                        <el-option v-for="subItem in operators" :id="'operator-'+subItem.key" :key="'Result' + subItem.value" :label="subItem.label" :value="subItem.value"></el-option>
+                        <el-option v-for="subItem in filterOperators" :id="'operator-'+subItem.key" :key="'Result' + subItem.value" :label="subItem.label" :value="subItem.value"></el-option>
                       </el-select>
                     </div>
-                    <el-input v-model="item.value" :placeholder="item.operator==='=~'?$t('alert.config.enterRegular'):$t('alert.config.enterThreshold')" size="small" type="text" style="flex:1"/>
+                    <el-input v-model="item.value" @change="thresholdBlur" :placeholder="item.operator==='=~'?$t('alert.config.enterRegular'):$t('alert.config.enterThreshold')" size="small" type="text" style="flex:1"/>
                   </div>
                 </el-form-item>
-                <el-form-item prop="timeout" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" style="margin-bottom:0;">
+              </el-form-item>
+              <el-form-item class="hide-error" prop="timeout" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" style="margin-bottom:0;">
                   <div class="threshold-item">
                     <div class="threshold-item-left" style="margin-right:24px">{{$t('alert.config.normal')}}</div>
                     <el-input-number
@@ -112,8 +121,7 @@
                     </div>
                   </div>
                 </el-form-item>
-            </div>
-          </el-form-item>
+          </div>
           <!--inr-->
           <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.inr')" prop="inr"  class="half-form-item">
             <el-input-number :min="15" :max="86400" id="alert-box-input-inr" :controls="false" v-model="editAlertRule.inr" :placeholder="$t('alert.config.inrPlaceholder')" size="small" type="text" :disabled="!showSnmpTrap"></el-input-number>
@@ -354,6 +362,15 @@ export default {
     richTextEditor
   },
   mixins: [editRigthBox, promqlInputMixin],
+  computed: {
+    filterOperators () {
+      if (this.editAlertRule.type != 3) {
+        return this.operators.filter(item => item.value !== '=~')
+      } else {
+        return this.operators.filter(item => item.value == '=~')
+      }
+    }
+  },
   data () {
     const nzOid = (rule, value, callback) => {
       if (this.editAlertRule.type === 3) {
@@ -496,6 +513,39 @@ export default {
         callback()
       }
     },
+    thresholdBlur () {
+      this.$refs.alertRuleForm.validateField('condition')
+    },
+    conditionValidator (rule, value, callback) {
+      let flag = true
+      if (value.length) {
+        value.forEach(item => {
+          if (item.value) {
+            flag = false
+          }
+        })
+      }
+      if (flag) {
+        this.conditionValidatorError = true
+        this.editAlertRule.condition.forEach((item, index) => {
+          this.$refs.alertRuleForm.validateField('condition.' + index + '.value') // 移除from表单的 condition 验证
+        })
+        callback(new Error())
+      } else {
+        this.conditionValidatorError = false
+        this.editAlertRule.condition.forEach((item, index) => {
+          this.$refs.alertRuleForm.validateField('condition.' + index + '.value') // 移除from表单的 condition 验证
+        })
+        callback()
+      }
+    },
+    showError (rule, value, callback) {
+      if (this.conditionValidatorError) {
+        callback(new Error(this.$t('alert.config.thresholdOnly')))
+      } else {
+        callback()
+      }
+    },
     clickOutside () {
       this.esc(false)
     },
@@ -517,7 +567,7 @@ export default {
           operator: item.operator,
           value: item.value
         }
-      })
+      }).filter(item => item.value)
       const params = {
         ...this.editAlertRule,
         method: this.editAlertRule.method.join(','),
@@ -624,6 +674,13 @@ export default {
         this.$nextTick(() => {
           this.showSnmpTrap = true
         })
+        // type为1时 不能输入正则
+        this.editAlertRule.condition.forEach((item, index) => {
+          item.operator = '>'
+          item.value = ''
+          this.$refs.alertRuleForm.clearValidate('condition.' + index + '.value') // 移除from表单的 condition 验证
+        })
+        this.$refs.alertRuleForm.clearValidate('condition') // 移除from表单的 condition 验证
       } else if (val === 2) {
         this.showMetrics = false
         this.expressions = ['']
@@ -633,6 +690,13 @@ export default {
           this.showSnmpTrap = true
         })
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
+        // type为2时 不能输入正则
+        this.editAlertRule.condition.forEach((item, index) => {
+          item.operator = '>'
+          item.value = ''
+          this.$refs.alertRuleForm.clearValidate('condition.' + index + '.value') // 移除from表单的 condition 验证
+        })
+        this.$refs.alertRuleForm.clearValidate('condition') // 移除from表单的 condition 验证
       } else if (val === 3) {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
         this.showMetrics = false
@@ -645,6 +709,7 @@ export default {
           item.value = ''
           this.$refs.alertRuleForm.clearValidate('condition.' + index + '.value') // 移除from表单的 condition 验证
         })
+        this.$refs.alertRuleForm.clearValidate('condition') // 移除from表单的 condition 验证
       }
     },
     afterInitRich () {
@@ -654,8 +719,9 @@ export default {
     operatorChange (item, index, value) {
       if (item.operator === '=~' || value === '=~') {
         item.value = ''
-        this.$refs.alertRuleForm.clearValidate('condition.' + index + '.value') // 移除from表单的 condition 验证
+        this.$refs.alertRuleForm.clearValidate('condition.' + index + '.value') // 移除from表单的 condition 其中一个的验证
       }
+      this.$refs.alertRuleForm.clearValidate('condition') // 移除from表单的 condition 验证
       item.operator = value
     }
   },

@@ -11,7 +11,7 @@ export default {
     },
     initEdit (id) {
       const endTime = new Date().getTime()
-      const startTime = endTime - 60 * this.params.timeType * 1000
+      const startTime = endTime - 60 * getTopology(id).data().timeType * 1000
       const elements = getTopology(id).data().elements || []
       this.getQueryValues(elements, startTime, endTime)
       bus.$emit('changeSelectPens', [])
@@ -154,6 +154,15 @@ export default {
           if (pen.data && pen.data.moduleId) {
             pen.moduleId = pen.data.moduleId
             delete pen.data.moduleId
+          }
+
+          if (!isNaN(pen.imageId) && pen.imageId) {
+            const imageInfo = this.iconArray.find(item => item.id === pen.imageId)
+            if (imageInfo) {
+              pen.image = `/topology/icon/0/${imageInfo.unit}/${imageInfo.name}`
+            } else {
+              pen.image = ''
+            }
           }
           if (pen.icon) {
             pen.iconFamily = 'nz-icon'

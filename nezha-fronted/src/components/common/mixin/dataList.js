@@ -51,7 +51,8 @@ export default {
   },
   provide () {
     return {
-      getTableData: this.getTableData
+      getTableData: this.getTableData,
+      delCallBack: this.delCallBack
     }
   },
   methods: {

@@ -139,6 +139,9 @@ export function get (url, params, responseType) {
           headers: response.headers
         })
       }
+      if (url.indexOf('/stat/alertMessage/trend') !== -1) {
+        response.data.responseURL = response.request.responseURL
+      }
       resolve(response.data)
     }).catch(err => {
       if (err.response) {

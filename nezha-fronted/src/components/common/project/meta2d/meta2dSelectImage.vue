@@ -337,7 +337,6 @@ export default {
     },
     beforeAvatarUpload (file, fileList) {
       const this_ = this
-      console.log(file.raw.type)
       const isJPG = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png' || file.raw.type === 'image/gif')
       const isLt2M = (file.size / 1024 / 1024) < 2
       if (!isJPG) {

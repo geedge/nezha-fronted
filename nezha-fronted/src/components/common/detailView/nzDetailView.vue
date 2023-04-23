@@ -78,6 +78,22 @@
         @showFullscreen="showFullscreen"
       ></panel-chart>
     </el-dialog>
+    <delete-button
+      ref="deleteButton"
+      :from="'endpoint'"
+      :forceDeleteShow="forceDeleteShow"
+      :deleteTitle="deleteTitle"
+      type=''
+      :title="$t('overall.delete')"
+      :api="api"
+      :single="single"
+      :delete-objs="singleDelete"
+      @before="delFlag=true"
+    ></delete-button>
+    <diagnosis-tab
+      ref="diagnosisTab"
+      :diagnosisTabData ="diagnosisTabData"
+    ></diagnosis-tab>
   </div>
 </template>
 
@@ -86,12 +102,16 @@ import { fromRoute } from '@/components/common/js/constants'
 import { bottomBoxWindow } from '@/components/common/js/tools'
 import detailViewRight from '@/components/common/detailView/view/detailViewRight'
 import panelChart from '@/components/chart/panelChart'
+import deleteButton from '@/components/common/deleteButton'
+import diagnosisTab from '@/components/common/diagnosisTab'
 
 export default {
   name: 'nzDataList',
   components: {
     detailViewRight,
-    panelChart
+    panelChart,
+    deleteButton,
+    diagnosisTab
   },
   props: {
     from: {
@@ -138,6 +158,15 @@ export default {
     },
     topologyChartInfo () {
       return this.$store.getters.getTopologyChartInfo
+    },
+    showDeleteTableRel () {
+      return this.$store.getters.getShowDeleteTableRel
+    },
+    deleteTableRel () {
+      return this.$store.getters.getDeleteTableRel
+    },
+    diagnosisTab () {
+      return this.$store.getters.getDiagnosisTab
     }
   },
   data () {
@@ -159,7 +188,12 @@ export default {
         showCustomTableTitle: false // 自定义列弹框是否显示
       },
       showLayout: [],
-      timeRange: [new Date(), new Date()]
+      timeRange: [new Date(), new Date()],
+      single: true,
+      deleteTitle: '',
+      forceDeleteShow: false,
+      singleDelete: [],
+      diagnosisTabData: {}
     }
   },
   methods: {
@@ -197,6 +231,27 @@ export default {
     },
     showFullscreen (flag) {
       this.$store.commit('setTopologyShow', flag)
+    },
+    delTableRelRow (url, row, forceDeleteShow = false, single = false, deleteTitle = '') {
+      this.api = url
+      this.singleDelete = [row]
+      this.forceDeleteShow = forceDeleteShow
+      this.single = single
+      this.deleteTitle = deleteTitle
+      this.$refs.deleteButton.batchDelete()
+    },
+    delTableRow (ids) { // 接收一个 删除的id数组 判断当前底部弹窗id 是否包含 包含则关闭当前弹窗
+      if (ids.indexOf(this.bottomBox.object.id) !== -1) {
+        this.bottomBox = {
+          object: {},
+          mainResizeShow: true, // dom高度改变时是否展示|隐藏
+          subResizeShow: true,
+          isFullScreen: false, // 全屏状态
+          showSubList: false, // 是否显示二级列表
+          targetTab: '', // 显示二级列表中的哪个页签
+          inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
+        }
+      }
     }
   },
   watch: {
@@ -210,6 +265,14 @@ export default {
       handler (n) {
         this.showLayout = [...n]
       }
+    },
+    showDeleteTableRel (n) {
+      if (n) {
+        this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single, this.deleteTableRel.deleteTitle)
+      }
+    },
+    diagnosisTab (n) {
+      this.diagnosisTabData = n
     }
   }
 }

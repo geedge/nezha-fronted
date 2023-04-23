@@ -40,13 +40,13 @@
             <span v-else>--</span>
           </div>
         </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">{{$t('alert.severity')}}</div>
-          <div class="alert-label-value"><i class="nz-icon nz-icon-circle" :style="{color:severityColor,'font-size':'12px','margin-right':'5px'}"></i>{{alertRuleData.severityId ? severityData.find(s => alertRuleData.severityId === s.id).name : '--'}}</div>
-        </div>
+<!--        <div class="alert-label-box">-->
+<!--          <div class="alert-label-title">{{$t('alert.severity')}}</div>-->
+<!--          <div class="alert-label-value"><i class="nz-icon nz-icon-circle" :style="{color:severityColor,'font-size':'12px','margin-right':'5px'}"></i>{{alertRuleData.severityId ? severityData.find(s => alertRuleData.severityId === s.id).name : '&#45;&#45;'}}</div>-->
+<!--        </div>-->
         <div class="alert-label-box">
           <div class="alert-label-title">{{$t('alert.config.expr')}}</div>
-          <div class="alert-label-value">{{alertRuleData.expr ? (alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)) : '--'}}</div>
+          <div class="alert-label-value">{{alertRuleData.expr ? alertRuleData.expr : '--'}}</div>
         </div>
         <div class="alert-label-box">
           <div class="alert-label-title">{{$t('alert.alertNum')}}</div>
@@ -99,6 +99,15 @@ export default {
     detailList: Boolean,
     that: {},
     severityData: Array
+  },
+  watch: {
+    id: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        this.init()
+      }
+    },
   },
   data () {
     return {
@@ -181,52 +190,58 @@ export default {
     },
     tipHoverRule (tipLoading) {
       this.$emit('tipHoverRule', tipLoading)
+    },
+    init () {
+      if (!this.id) {
+        return
+      }
+      this.$get('/alert/rule/' + this.id).then((res) => {
+        if (res.msg === 'success') {
+          this.loading = false
+          this.alertRuleData = res.data
+          this.severityDataColor()
+          this.alertColor = this.returnColor(res.data.alert)
+          const weekDays = this.getWeeksTime()
+          if (this.trendTimer) {
+            clearTimeout(this.trendTimer)
+            this.trendTimer = null
+          }
+          this.trendTimer = setTimeout(() => {
+            this.trendLoading = true
+            const params = {
+              type: 'total',
+              dimension: 'priority',
+              step: 'd'
+            }
+            params['rule' + 'Id'] = this.id
+            this.$get('/stat/alertMessage/trend', params).then((res) => {
+              if (!res.data) {
+                return
+              }
+              const alertDaysData = res.data.result ? res.data.result[0].values : []
+              const newWeekDays = JSON.parse(JSON.stringify(weekDays))
+              alertDaysData.forEach(item => {
+                item.values.forEach(time => {
+                  const findItem = newWeekDays.find(days => days.time == time[0])
+                  if (findItem) {
+                    findItem[item.metric.priority] = time[1]
+                  }
+                })
+              })
+              setTimeout(() => {
+                this.alertDaysData = newWeekDays
+                this.trendLoading = false
+              })
+            })
+          })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     }
   },
   mounted () {
-    this.$get('/alert/rule/' + this.id).then((res) => {
-      if (res.msg === 'success') {
-        this.loading = false
-        this.alertRuleData = res.data
-        this.severityDataColor()
-        this.alertColor = this.returnColor(res.data.alert)
-        const weekDays = this.getWeeksTime()
-        if (this.trendTimer) {
-          clearTimeout(this.trendTimer)
-          this.trendTimer = null
-        }
-        this.trendTimer = setTimeout(() => {
-          this.trendLoading = true
-          const params = {
-            type: 'total',
-            dimension: 'priority',
-            step: 'd'
-          }
-          params['rule' + 'Id'] = this.id
-          this.$get('/stat/alertMessage/trend', params).then((res) => {
-            if (!res.data) {
-              return
-            }
-            const alertDaysData = res.data.result ? res.data.result[0].values : []
-            const newWeekDays = JSON.parse(JSON.stringify(weekDays))
-            alertDaysData.forEach(item => {
-              item.values.forEach(time => {
-                const findItem = newWeekDays.find(days => days.time == time[0])
-                if (findItem) {
-                  findItem[item.metric.priority] = time[1]
-                }
-              })
-            })
-            setTimeout(() => {
-              this.alertDaysData = newWeekDays
-              this.trendLoading = false
-            })
-          })
-        })
-      } else {
-        this.$message.error(res.msg)
-      }
-    })
+
   }
 }
 

@@ -69,6 +69,7 @@
     >
       <meta2dTooltip
         ref="meta2dTooltip"
+        :meta2dId="meta2dId"
         :params="chartParams"
       />
     </div>
