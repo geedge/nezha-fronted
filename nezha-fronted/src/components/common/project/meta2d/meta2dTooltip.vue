@@ -25,6 +25,7 @@ export default {
   name: 'meta2dTooltip',
   props: {
     params: {},
+    meta2dId: {}
   },
   mixins: [topoUtil],
   computed: {
@@ -51,6 +52,7 @@ export default {
           return
         }
         this.chartInfo.type = this.params.chartType || 'line'
+        this.chartInfo.id = this.meta2dId + 'meta2DTooltip'
         const chartData = []
         const elements = []
         const obj = {}
@@ -79,7 +81,7 @@ export default {
             elements.push(element)
           }
         })
-        if (chartData.length && this.$refs.panelChart) {
+        if (chartData && this.$refs.panelChart) {
           this.chartInfo.elements = elements
           this.$refs.panelChart.chartData = chartData
           this.$refs.panelChart.loading = false

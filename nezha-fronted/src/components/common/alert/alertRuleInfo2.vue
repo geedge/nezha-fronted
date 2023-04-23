@@ -53,7 +53,7 @@
 <!--      </div>-->
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('alert.config.expr')}}</div>
-        <div class="alert-label-value">{{alertRuleData.expr ? (alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)) : '--'}}</div>
+        <div class="alert-label-value">{{alertRuleData.expr ? alertRuleData.expr : '--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('alert.alertNum')}}</div>

@@ -73,7 +73,7 @@ export default {
       nodesArr: [],
       offsetX: 0,
       offsetY: 0,
-      moduleId: '',
+      moduleId: ''
     }
   },
   mixins: [topoUtil],
@@ -156,6 +156,8 @@ export default {
         pen.imageId = pen.data.imageId
         if (imageInfo) {
           pen.image = `/topology/icon/0/${imageInfo.unit}/${imageInfo.name}`
+        } else {
+          pen.image = ''
         }
       }
       pen.data = {
@@ -214,6 +216,8 @@ export default {
       pen.isNz = true
       pen.locked = pen.locked || 0
       pen.isBottom = true
+      pen.flipX = pen.flipX || false
+      pen.flipY = pen.flipY || false
       if (pen.rect) {
         pen.x = pen.rect.x
         pen.y = pen.rect.y
@@ -436,9 +440,9 @@ export default {
       }
     },
     beforeEdit () {
-      const endTime = new Date().getTime()
-      const startTime = endTime - 60 * this.params.timeType * 1000
-      this.getQueryValues(this.querysArray, startTime, endTime)
+      // const endTime = new Date().getTime()
+      // const startTime = endTime - 60 * this.params.timeType * 1000
+      // this.getQueryValues(this.querysArray, startTime, endTime)
       this.editFlag = true
       this.contextmenu = {
         left: null,
@@ -508,8 +512,14 @@ export default {
     },
     // 具体内容点击
     nodeTools (node, tool) {
+      const findItem = this.allModules.find(item => item.id == node.moduleId)
+      if (findItem) {
+        this.moduleName = findItem.name
+      } else {
+        this.$message.error(this.$t('MODULE_NOTFOUND'))
+        return
+      }
       this.moduleId = node.moduleId
-      this.moduleName = node.moduleName
       if (tool.id === 'total') {
         this.popDataShowUpdate('', false, node)
         return
