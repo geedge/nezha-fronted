@@ -55,7 +55,7 @@ dev_build:
     # echo '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">' >> ./static/git-log.html
     # echo "</head>" >> ./static/git-log.html
     # echo "<pre>" >> ./static/git-log.html
-    - "git log -100 --pretty=format:'%ad : %s' >> ./static/git-log.log"
+    - "git log -100 --pretty=format:'%ad : %s' >> ./static/gui-log.html"
     # echo "</pre></html>" >> ./static/git-log.html
     - zip -q -r $FILE_NAME ./*
 
