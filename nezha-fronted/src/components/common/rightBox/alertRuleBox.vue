@@ -330,7 +330,7 @@
             :label="$t('overall.dashboard')"
             prop="dashboard"
           >
-            <select-panel ref="selectPanel" :disabled="false" :filter-panel="filterPanel" :chart-box="true" :panel-lock="true" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel">
+            <select-panel @setPanelName="setPanelName" ref="selectPanel" :disabled="false" :filter-panel="filterPanel" :chart-box="true" :panel-lock="true" :show-panel="showPanel" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel">
               <template v-slot:header>
                 <div class="panel-select-header">
                   <el-input id="chart-box-panelname" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="small" style="width: 596px"></el-input>
@@ -340,7 +340,7 @@
 <!--                <el-input placeholder="" size="small" clearable v-model="panelName" :disabled="false"></el-input>-->
                 <div class="alert-rule-box-dashboard">
                   <div class="text-ellipsis alert-rule-box-dashboard-name">{{panelName}}</div>
-                  <i class="nz-icon nz-icon-guanbi2"/>
+                  <i class="nz-icon nz-icon-guanbi2" @click.stop="clearDashboard()"/>
                 </div>
               </template>
             </select-panel>
@@ -528,7 +528,7 @@ export default {
       panelName: '',
       showPanel: { // panel下拉列表
         id: '',
-        name: '',
+        name: ''
       }
     }
   },
@@ -682,6 +682,12 @@ export default {
       this.$get('visual/dashboard?pageNo=1&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
+          setTimeout(() => {
+            this.showPanel = {
+              id: this.editAlertRule.dashboardId,
+              name: ''
+            }
+          }, 100)
         }
       })
     },
@@ -765,6 +771,19 @@ export default {
       }
       this.$refs.alertRuleForm.clearValidate('condition') // 移除from表单的 condition 验证
       item.operator = value
+    },
+    clearDashboard () {
+      this.panelName = ''
+      this.editAlertRule.dashboardId = ''
+      this.showPanel = {
+        id: '',
+        name: ''
+      }
+    },
+    setPanelName (node) {
+      if (node) {
+        this.panelName = node.data.name
+      }
     }
   },
   mounted () {
@@ -779,6 +798,9 @@ export default {
       handler (n, o) {
         this.isEdit = true
         const obj = this.$loadsh.cloneDeep(n)
+        if (!obj.dashboardId) {
+          obj.dashboardId = ''
+        }
         this.editAlertRule = this.$loadsh.cloneDeep(obj)
         this.showPanel.id = this.editAlertRule.dashboardId
         // 获取缓存中的告警等级列表

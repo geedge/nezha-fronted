@@ -76,6 +76,7 @@ export default {
     },
     showPanel: {
       immediate: true,
+      deep: true,
       handler (n) {
         if (n) {
           this.panel = JSON.parse(JSON.stringify(n))
@@ -153,6 +154,11 @@ export default {
     setDefault () {
       this.$refs.panelTree && this.$refs.panelTree.setCurrentKey(this.showPanel)
       this.$refs.panelTree && this.$refs.panelTree.filter(this.filterPanel)
+      this.$emit('setPanelName', this.$refs.panelTree && this.$refs.panelTree.getNode(this.showPanel))
+      if (!this.showPanel.id) {
+        this.$refs.panelTree && this.$refs.panelTree.setCurrentKey(null)
+        this.$refs.panelTree && this.$refs.panelTree.filter(this.filterPanel)
+      }
     }
   }
 }

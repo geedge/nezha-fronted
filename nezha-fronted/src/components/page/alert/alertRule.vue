@@ -192,6 +192,7 @@ export default {
       blankObject: {
         id: '',
         alertName: '',
+        dashboardId: '',
         linkObject: { id: '', name: '' },
         expr: '',
         inr: 15,
