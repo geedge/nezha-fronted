@@ -51,16 +51,23 @@
       display: flex;
       flex-direction: column;
 
-      .nz-chart {
+      .info-box-left-top {
         height: 36%;
         margin-bottom: 20px;
         border: 1px solid $--border-color-light;
         flex: none;
+        .nz-chart{
+          height: 100%;
+        }
       }
-
+      .nz-chart{
+        height: 100%;
+        padding-bottom: 0;
+      }
       .alert-message-info-tab {
         height: 61.8%;
         flex: 1;
+        flex-shrink: 0;
 
         .alert-label-header-title3 {
           display: none;
@@ -401,6 +408,49 @@
       .alert-message-info-tab {
         .el-tabs.el-tabs--card.el-tabs--top {
           .el-tabs__content {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            .el-tab-pane {
+              height: 100%;
+              width: 100%;
+              .vue-grid-layout {
+                padding-bottom: 0;
+              }
+            }
+            .alert-message-info-dashboard {
+              height: 100%;
+              width: 100%;
+              overflow: hidden;
+              box-sizing: border-box;
+              .integration-dashboard{
+                box-sizing: border-box;
+                height: 100%;
+                .dashboard-container{
+                  height: 100%;
+                  .table-list{
+                    height: 100%;
+                    .no-data {
+                      text-align: center;
+                      position: absolute;
+                      width: 100%;
+                      top: 50%;
+                      margin-top: -54px;
+                      .no-data-div {
+                        color: $--color-text-regular;
+                      }
+                    }
+                  }
+                }
+                .right-box.right-box-dashboard-temp{
+                  top: 0;
+                  height: 100%;
+                  z-index: 2001;
+                }
+              }
+            }
+
             #pane-alertRule{
               .alert-rule-nfo{
                 .alert-rule-box{

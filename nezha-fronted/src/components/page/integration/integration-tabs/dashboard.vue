@@ -1,9 +1,9 @@
 <template>
   <div class="integration-dashboard">
     <div class="integration-tool" style="padding: 0 10px;">
-      <h3>{{showPanel.name}}</h3>
+      <h3 v-if="showName">{{showPanel.name}}</h3>
 
-      <button class="nz-btn el-button--small nz-btn-style-normal" @click="importFn">
+      <button class="nz-btn el-button--small nz-btn-style-normal" @click="importFn" v-if="showImport">
         <i class="nz-icon nz-icon-upload"></i>
         <span>{{$t('overall.importExcel')}}</span>
       </button>
@@ -18,13 +18,15 @@
             <chart-list
               ref="chartList"
               :variablesInit="variablesInit"
+              :timeRange="time"
               name="dashboard"
               :dashboardId="showPanel.id"
               :data-list="dataList"
               :is-export-html="false"
               :nowTimeType="nowTimeType"
-              :from="fromRoute.integration"
+              :from="from"
               :time-range="searchTime"
+              :show-tool="false"
               :loading="chartListLoading"
             ></chart-list>
           </div>
@@ -51,7 +53,24 @@ import chartDataFormat from '@/components/chart/chartDataFormat'
 export default {
   name: 'integration-dashboard',
   props: {
-    tempId: Number
+    tempId: Number,
+    showImport: {
+      type: Boolean,
+      default: true
+    },
+    showName: {
+      type: Boolean,
+      default: true
+    },
+    urlType: {
+      type: String,
+      default: 'template'
+    },
+    time: {},
+    from: {
+      type: String,
+      default: fromRoute.integration
+    }
   },
   computed: {
     chartRightBoxShow () {
@@ -145,7 +164,7 @@ export default {
     },
     // 公用操作
     getTableData () {
-      this.$get('visual/dashboard', { type: 'template', ids: this.tempId }).then(response => {
+      this.$get('visual/dashboard', { type: this.urlType, ids: this.tempId }).then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
           if (this.panelData.length > 0) {
@@ -174,9 +193,22 @@ export default {
   mounted () {
     this.scrollbarWrap = this.$refs.dashboardScrollbar
     this.onScroll()
-    this.getTableData()
+    // this.getTableData()
   },
   watch: {
+    urlType: { // 判断请求的是temp 还是正常访问
+      immediate: true,
+      handler () {}
+    },
+    time: { // 时间范围
+      immediate: true,
+      handler () {
+        if (this.time) {
+          this.getTableData()
+          this.searchTime = this.time
+        }
+      }
+    },
     // 监听图表联动配置
     'showPanel.param.chartShare': {
       handler (value) {

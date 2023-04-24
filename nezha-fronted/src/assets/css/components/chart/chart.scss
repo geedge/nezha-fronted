@@ -16,7 +16,7 @@
   display: flex;
   position: relative;
   flex-direction: column;
-  &:hover .chart-header.chart-header--float{
+  &:hover > .chart-header.chart-header--float{
     background-color: $--chart-title-hover-background-color;
     height: 39px;
     opacity: 1;

@@ -9,7 +9,7 @@
       <manual v-if="tabId==='manual'"></manual>
       <!-- module -->
       <configuration v-if="tabId==='configuration'" :configuration="detailsObj.configuration"></configuration>
-      <dashboard v-if="tabId==='dashboard'" :tempId="detailsObj.tempId"></dashboard>
+      <dashboard v-if="tabId==='dashboard'" :tempId="detailsObj.tempId" :time="time"></dashboard>
 <!--      <alert v-if="tabId==='alert'" :moduleId="detailsObj.id"></alert>-->
       <metric v-if="tabId==='metric'" :moduleId="detailsObj.id"></metric>
     </div>
@@ -45,7 +45,8 @@ export default {
   data () {
     return {
       tabs: [],
-      tabId: ''
+      tabId: '',
+      time: [0, 15]
     }
   },
   methods: {

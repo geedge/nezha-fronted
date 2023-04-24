@@ -387,7 +387,6 @@ export default {
       this.keyShow = false // key 的下拉
       this.symbolShow = false // symbol 的下拉
       this.valueShow = false // value 的下拉
-      console.log(key)
       if (key === 'symbol') {
         this.setSymBolList()
         this.symbolShow = true
@@ -562,7 +561,6 @@ export default {
     },
     searchStr: {
       handler (n, o) {
-        console.log(n, o)
         // 2 3
         const index = this.searchStr.indexOf(':')
         if (index === -1) {

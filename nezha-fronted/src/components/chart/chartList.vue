@@ -768,10 +768,10 @@ export default {
           // 当前设备是移动设备
           this.isPhone = true
         }
+        this.noData = !n || n.length < 1
         this.gridLayoutShow = false
         this.firstInit = true
         this.gridLayoutLoading = true
-        this.noData = !n || n.length < 1
         if (!this.isGroup) {
           const position = getLayoutPosition(n)
           this.$store.commit('setChartLastPosition', position)

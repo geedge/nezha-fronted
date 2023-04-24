@@ -23,25 +23,28 @@
     <!-- 数据查询后传入chart组件，chart组件内不查询，只根据接传递的数据来渲染 -->
     <div class="alert-message-info-box">
       <div class="info-box-left">
-        <chart
-          ref="chart"
-          v-if="chartInfo.alertRule && chartInfo.alertRule.type !== 3"
-          :chart-data="chartData"
-          :chart-info="chartInfo"
-          :panelLock="panelLock"
-          :filter="filter"
-          :from="from"
-          @refreshLogs="refreshLogs"
-          :show-header="showHeader"
-          :isError="isError"
-          :loading="loading"
-          :minusTime="minusTime"
-          :multipleTime="multipleTime"
-          :isFullscreen="isFullscreen"
-          :showAllData="showAllData"
-        ></chart>
+        <div class="info-box-left-top">
+          <chart
+            ref="chart"
+            v-if="chartInfo.alertRule && chartInfo.alertRule.type !== 3"
+            :chart-data="chartData"
+            :chart-info="chartInfo"
+            :panelLock="panelLock"
+            :filter="filter"
+            :from="from"
+            @refreshLogs="refreshLogs"
+            :show-header="showHeader"
+            :isError="isError"
+            :loading="loading"
+            :minusTime="minusTime"
+            :multipleTime="multipleTime"
+            :isFullscreen="isFullscreen"
+            :showAllData="showAllData"
+          ></chart>
+        </div>
         <alertMessageInfoTab
           class="alert-message-info-tab"
+          :time="time"
           :noData="tabNoData"
           :infoData="infoData" />
       </div>

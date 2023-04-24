@@ -5,6 +5,9 @@
         <div v-if="item.key === 'detail' && activeName === 'detail'">
           <alert-message-info-detail :info-data="infoData"/>
         </div>
+        <div v-else-if="item.key === 'dashboard' && activeName === 'dashboard'" class="alert-message-info-dashboard">
+          <dashboard :temp-id="infoData.alertRule.dashboardId" :showImport="false" :showName="false" :url-type="'dashboard'" :time="timeRange" :from="fromRoute.dashboard"></dashboard>
+        </div>
         <div v-else-if="(activeName === item.key) && infoData[item.key]" class="no-position-alert-label">
 <!--          <searchItemInfo :obj="findData(item.key)" :severityData="severityData" :fa-loading="false"></searchItemInfo>-->
           <alertLabel
@@ -42,6 +45,8 @@ import alertMessageInfoDetail from '@/components/common/alert/alertMessageInfoDe
 import searchItemInfo from '@/components/common/globalSearch/searchItemInfo'
 import alertLabel from '@/components/common/alert/alertLabel3'
 import alertRuleInfo from '@/components/common/alert/alertRuleInfo2'
+import dashboard from '@/components/page/integration/integration-tabs/dashboard'
+import { fromRoute } from '@/components/common/js/constants'
 // import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
 export default {
   name: 'alertMessageInfoTab',
@@ -49,7 +54,8 @@ export default {
     alertMessageInfoDetail,
     searchItemInfo,
     alertLabel,
-    alertRuleInfo
+    alertRuleInfo,
+    dashboard
   },
   // mixins: [alertLabelMixin],
   props: {
@@ -59,7 +65,8 @@ export default {
     nodata: {
       type: Boolean,
       default: false
-    }
+    },
+    time: {}
   },
   computed: {
     severityData () {
@@ -68,6 +75,7 @@ export default {
   },
   data () {
     return {
+      fromRoute,
       activeName: 'detail',
       cardNames: [{
         key: 'detail',
@@ -91,7 +99,8 @@ export default {
       }, {
         key: 'project',
         label: this.$t('project.project.projectName')
-      }]
+      }],
+      timeRange: []
     }
   },
   watch: {
@@ -108,12 +117,28 @@ export default {
               this.cardNames.push(item)
             }
           })
+          // && n.alertRule.dashboardId
+          if (n.alertRule) {
+            n.alertRule.dashboardId = 1487
+            this.cardNames.push({
+              key: 'dashboard',
+              label: this.$t('dashboard')
+            })
+          }
           if (n.alertRule && n.alertRule.trbShot && n.alertRule.trbShot != '<div  class="editor-core ql-container ql-snow"><div class="ql-editor"><p><br></p></div></div>') {
             this.cardNames.push({
               key: 'trbShot',
               label: this.$t('alert.config.trbShot')
             })
           }
+        }
+      }
+    },
+    time: {
+      immediate: true,
+      handler (n) {
+        if (n && n.length) {
+          this.timeRange = [n[0] * 1000, n[1] * 1000]
         }
       }
     }
