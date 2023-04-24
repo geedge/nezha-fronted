@@ -172,4 +172,27 @@
     text-overflow: ellipsis;
     white-space: nowrap
   }
+  .alert-rule-box-dashboard {
+    height: 32px;
+    width: 100%;
+    border: 1px solid $--border-color-light;
+    line-height: 30px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    position: relative;
+  }
+  .alert-rule-box-dashboard-name {
+    width: calc(100% - 25px);
+  }
+  .nz-icon-guanbi2 {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    display: none;
+  }
+  .alert-rule-box-dashboard:hover {
+   .nz-icon-guanbi2 {
+     display: inline-block;
+   }
+  }
 }

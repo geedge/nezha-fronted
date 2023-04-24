@@ -79,6 +79,7 @@ export default {
       handler (n) {
         if (n) {
           this.panel = JSON.parse(JSON.stringify(n))
+          this.setDefault()
         }
       }
     }
@@ -148,6 +149,10 @@ export default {
       this.$emit('selectPanel', data)
       this.$refs.panelTree.setCurrentKey(data)
       this.esc()
+    },
+    setDefault () {
+      this.$refs.panelTree && this.$refs.panelTree.setCurrentKey(this.showPanel)
+      this.$refs.panelTree && this.$refs.panelTree.filter(this.filterPanel)
     }
   }
 }

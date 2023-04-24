@@ -316,6 +316,27 @@
             </el-time-picker>
           </el-form-item>
           <div class="alert-rule-split-title">{{ $t('overall.more') }}</div>
+          <!--panel-->
+          <el-form-item
+            class="form-item--half-width"
+            :label="$t('overall.dashboard')"
+            prop="dashboard"
+          >
+            <select-panel ref="selectPanel" :disabled="false" :filter-panel="filterPanel" :chart-box="true" :panel-lock="true" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel">
+              <template v-slot:header>
+                <div class="panel-select-header">
+                  <el-input id="chart-box-panelname" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="small" style="width: 596px"></el-input>
+                </div>
+              </template>
+              <template v-slot:trigger>
+<!--                <el-input placeholder="" size="small" clearable v-model="panelName" :disabled="false"></el-input>-->
+                <div class="alert-rule-box-dashboard">
+                  <div class="text-ellipsis alert-rule-box-dashboard-name">{{panelName}}</div>
+                  <i class="nz-icon nz-icon-guanbi2"/>
+                </div>
+              </template>
+            </select-panel>
+          </el-form-item>
           <el-form-item :label="$t('alert.config.trbShot')" prop="trbShot">
             <rich-text-editor ref="richTextEditor" :edit-data="editAlertRule.trbShot" @after-init="afterInitRich"></rich-text-editor>
           </el-form-item>
@@ -343,6 +364,7 @@ import { noSpecialChar, nzNumber } from '../js/validate'
 import editRigthBox from '../mixin/editRigthBox'
 import richTextEditor from '@/components/chart/richTextEditor'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
+import selectPanel from '@/components/common/popBox/selectPanel'
 
 export default {
   name: 'alertRuleBox',
@@ -351,7 +373,8 @@ export default {
   },
   components: {
     'promql-input': promqlInput,
-    richTextEditor
+    richTextEditor,
+    selectPanel
   },
   mixins: [editRigthBox, promqlInputMixin],
   data () {
@@ -482,7 +505,14 @@ export default {
           value: 7,
           label: this.$t('week.Sat')
         }
-      ]
+      ],
+      panelData: [],
+      filterPanel: '',
+      panelName: '',
+      showPanel: { // panel下拉列表
+        id: '',
+        name: '',
+      }
     }
   },
   methods: {
@@ -598,6 +628,18 @@ export default {
         }
       })
     },
+    getDashboard () {
+      this.$get('visual/dashboard?pageNo=1&pageSize=-1').then(response => {
+        if (response.code === 200) {
+          this.panelData = response.data.list
+        }
+      })
+    },
+    selectPanel (dashboard) {
+      this.panelName = dashboard.name
+      this.editAlertRule.panelName = dashboard.name
+      this.editAlertRule.dashboardId = dashboard.id
+    },
     receiverShowChange (val) {
       this.editAlertRule.receiver = [...this.editAlertRule.receiverShow].join(',')
       this.$refs.alertRuleForm.validateField('receiver')
@@ -662,6 +704,7 @@ export default {
   mounted () {
     this.getUserList()
     this.getNotifyData()
+    this.getDashboard()
   },
   watch: {
     alertRule: {
@@ -671,6 +714,7 @@ export default {
         this.isEdit = true
         const obj = this.$loadsh.cloneDeep(n)
         this.editAlertRule = this.$loadsh.cloneDeep(obj)
+        this.showPanel.id = this.editAlertRule.dashboardId
         // 获取缓存中的告警等级列表
         const severityData = JSON.parse(localStorage.getItem('nz-severityDataWeight'))
         // 给condition赋值
