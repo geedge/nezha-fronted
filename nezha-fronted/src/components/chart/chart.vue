@@ -18,18 +18,9 @@
         @chartIsNoData="chartIsNoData"
         :from="from"
       ></chart-time-series>
-      <chart-pie
-        :ref="'chart' + chartInfo.id"
-        v-if="isChartPie(chartInfo.type)"
-        :chart-data="chartData"
-        :chart-info="chartInfo"
-        :chart-option="chartOption"
-        :is-fullscreen="isFullscreen"
-        @chartIsNoData="chartIsNoData"
-      ></chart-pie>
       <chart-doughnut
         :ref="'chart' + chartInfo.id"
-        v-if="isDoughnut(chartInfo.type)"
+        v-if="isChartPie(chartInfo.type)||isDoughnut(chartInfo.type)"
         :chart-data="chartData"
         :chart-info="chartInfo"
         :chart-option="chartOption"

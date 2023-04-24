@@ -215,9 +215,7 @@ export default {
       }
       // 图形
       chart.selectAll('path')
-        .data(arcs.filter(function (d) {
-          return d.data.value
-        }))
+        .data(arcs)
         .join('path')
         .attr('fill', d => d.data.background)
         .attr('d', arc)
@@ -231,16 +229,7 @@ export default {
         .on('mouseleave', this.roseLeave)
         .transition().duration(animate === true ? 600 : 0)
         .attrTween('d', function (d) {
-          let currentArc = this._current
-          if (!currentArc) {
-            currentArc = { startAngle: 0, endAngle: 0 }
-          }
-          const i = d3.interpolate(currentArc, d)
-          this._current = i(1) // 当饼图更新时，从当前角度过渡到新角度
-          const arc = d3.arc()
-            .innerRadius(innerRadius)
-            .outerRadius(scale(d.value))
-            .cornerRadius(radius)
+          const i = d3.interpolate({ startAngle: 0, endAngle: 0 }, d)
           return function (t) {
             return arc(i(t))
           }
@@ -267,6 +256,7 @@ export default {
           return d.endAngle - d.startAngle > 0.25 ? this.formatterLabel(d) : ''
         })
         .transition('opacity').duration(animate === true ? 600 : 0)
+        .delay(200)
         .style('opacity', 1)
         .on('end', function () {
           d3.select(this).classed('no-events', false)
