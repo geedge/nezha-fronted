@@ -524,7 +524,6 @@ export default {
               })
               return item
             })
-            console.log(res.data.condition)
             this.alertLabelData = res.data
           } else {
             this.$message.error(res.msg)

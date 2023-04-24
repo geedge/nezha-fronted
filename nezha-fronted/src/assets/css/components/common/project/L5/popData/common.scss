@@ -143,6 +143,7 @@
     width: 120px;
     display: inline-block;
     padding: 3px 0;
+    vertical-align: middle;
   }
   .content-text {
     width: 175px;
@@ -150,6 +151,10 @@
     font-size: 12px;
     display: inline-block;
     padding: 3px 5px;
+    vertical-align: middle;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
   }
   .module-type {
     border: 1px solid #DCDCDC;

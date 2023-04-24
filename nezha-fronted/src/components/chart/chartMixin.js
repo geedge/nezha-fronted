@@ -119,9 +119,20 @@ export default {
               }
               // Thresholds 只对左Y轴有效
               if (s.yAxisIndex != 1) {
+                chartInfo.param.thresholds = chartInfo.param.thresholds.reverse()
                 s.markLine.data = chartInfo.param.thresholds.map(threshold => {
                   return {
                     yAxis: threshold.value || 0,
+                    label: {
+                      show: true,
+                      formatter () {
+                        if (threshold.label) {
+                          return threshold.label
+                        } else {
+                          return threshold.value || 0
+                        }
+                      }
+                    },
                     lineStyle: {
                       color: threshold.color,
                       width: 2,

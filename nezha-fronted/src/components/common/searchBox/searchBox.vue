@@ -34,7 +34,7 @@
               </span>
             </el-popover>
           </div>
-          <el-input size="mini" v-model="searchStr" @focus="searchInputFocus" @keydown.native="keydown" @keyup.native="keyup" ref="searchStr" @keypress="keypress" :readonly="inputReadonly" @input="changeSearchStr"></el-input>
+          <el-input size="mini" v-model="searchStr" @focus="searchInputFocus" @keydown.native="keydown" @keyup.native="keyup" ref="searchStr" @keypress.native="keypress" :readonly="inputReadonly" @input="changeSearchStr"></el-input>
         </div>
       </div>
       <div class="search-content">
@@ -119,6 +119,7 @@ export default {
       selectArr: [], // 已被选择的条件
       key: '', // 当前被选中的 key
       symbol: false, // 当前被选中的 symbol
+      selectSymbolValue: '', // 当前被选中的 symbol 的值
       value: '', // 当前被选中的 value
       keyShow: false, // key 的下拉
       symbolShow: false, // symbol 的下拉 显示根据key的类型 自定义的不包含 大于小于
@@ -209,6 +210,8 @@ export default {
       // console.log(e, 'keydown')
       if (e.keyCode == 8 && !this.searchStr && this.selectArr.length) {
         this.selectArr.pop()
+      } else if (e.keyCode == 8) {
+        // console.log(this.oldSearchStr, this.searchStr)
       }
       // 5
       if (e.keyCode == 38) { // 向上
@@ -247,18 +250,6 @@ export default {
         this.$refs.searchStr.focus()
         return
       }
-      // 2 3
-      const index = this.searchStr.indexOf(':')
-      if (index === -1) {
-        this.symbol = false
-        this.inputReadonly = false
-        this.contentShow('key')
-      } else if (index === this.searchStr.length - 1 && !this.symbol) {
-        this.contentShow('symbol')
-      } else {
-        this.symbol = true
-        this.contentShow('value')
-      }
       // 4
       if (e.keyCode == 13 && index !== -1 && this.symbol) {
         this.addSelectArr(this.searchStr)
@@ -280,7 +271,7 @@ export default {
       if (index === -1) {
         this.symbol = false
         this.contentShow('key')
-      } else if (index === this.searchStr.length - 1 && !this.symbol) {
+      } else if ((index == this.searchStr.length - 1) && !this.symbol) {
         this.contentShow('symbol')
       } else {
         this.symbol = true
@@ -289,6 +280,7 @@ export default {
     },
     selectSymbol (item) {
       this.symbol = true
+      this.selectSymbolValue = item.value
       switch (item.value) {
         case '=' :
           this.$refs.searchStr.focus()
@@ -334,6 +326,53 @@ export default {
       this.setValueList('')
       this.contentShow('value')
     },
+    delSymbol () {
+      const length = this.searchStr.length
+      switch (this.selectSymbolValue) {
+        case '=' :
+          this.$refs.searchStr.focus()
+          break
+        case '≠' :
+          this.searchStr = this.searchStr.substring(1)
+          this.$refs.searchStr.focus()
+          break
+        case '>=' :
+          // this.searchStr = this.searchStr + '>='
+          // this.$refs.searchStr.focus()
+          break
+        case '<=' :
+          // this.searchStr = this.searchStr + '<='
+          // this.$refs.searchStr.focus()
+          break
+        case '>' :
+          // this.searchStr = this.searchStr + '>'
+          // this.$refs.searchStr.focus()
+          break
+        case '<' :
+          // this.searchStr = this.searchStr + '<'
+          // this.$refs.searchStr.focus()
+          break
+        case 'wildcard' :
+          this.searchStr = this.searchStr.substring(1)
+          this.$refs.searchStr.focus()
+          break
+        case 'not wildcard' :
+          this.searchStr = this.searchStr.substring(2)
+          this.$refs.searchStr.focus()
+          break
+        case 'exist' :
+          // this.selectValue('*')
+          // this.$refs.searchStr.focus()
+          break
+        case 'not exist' :
+          this.searchStr = this.searchStr.substring(2)
+          // this.searchStr = '-' + this.searchStr + '*'
+          // this.selectValue('*')
+          this.$refs.searchStr.focus()
+          break
+      }
+      this.selectSymbolValue = ''
+    },
     selectValue (value) {
       this.searchStr = this.searchStr + value
       this.addSelectArr(this.searchStr)
@@ -348,8 +387,16 @@ export default {
       this.keyShow = false // key 的下拉
       this.symbolShow = false // symbol 的下拉
       this.valueShow = false // value 的下拉
-      if (key) {
-        this[key + 'Show'] = true
+      console.log(key)
+      if (key === 'symbol') {
+        this.setSymBolList()
+        this.symbolShow = true
+      }
+      if (key === 'key') {
+        this.keyShow = true
+      }
+      if (key === 'value') {
+        this.valueShow = true
       }
       const keyStr = this.searchStr.split(':')[0]
       // console.log(keyStr, this.searchStr.split(':'))
@@ -412,6 +459,7 @@ export default {
           key,
           value: [value]
         })
+        this.setSearchList()
       }
     },
     removeSelectArr (index) {
@@ -510,6 +558,28 @@ export default {
         // console.log(n)
         this.searchList = n.searchLabelList || []
         this.oldSearchList = n.searchLabelList || []
+      }
+    },
+    searchStr: {
+      handler (n, o) {
+        console.log(n, o)
+        // 2 3
+        const index = this.searchStr.indexOf(':')
+        if (index === -1) {
+          this.symbol = false
+          this.inputReadonly = false
+          this.contentShow('key')
+        } else if (index === this.searchStr.length - 1 && !this.symbol) {
+          this.contentShow('symbol')
+        } else {
+          this.symbol = true
+          this.contentShow('value')
+        }
+        if (n.indexOf(':') === -1 && o.indexOf(':') !== -1) {
+          this.symbol = false
+          this.delSymbol()
+        }
+        // if (n.indexOf(':'))
       }
     }
   }

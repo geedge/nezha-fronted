@@ -131,7 +131,7 @@ export default {
       type: Boolean
     }
   },
-  inject: ['getTableData'],
+  inject: ['getTableData', 'delCallBack'],
   methods: {
     batchDelete: function () {
       if (!this.single) {
@@ -215,6 +215,9 @@ export default {
             return this.idStr.indexOf(item.id) !== -1
           })
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+          if (this.delCallBack) {
+            this.delCallBack(this.idStr)
+          }
           // this.$emit('after')
         } else {
           this.$message.error(res.msg)

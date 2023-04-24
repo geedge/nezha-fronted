@@ -180,7 +180,12 @@ export default {
       if (this.trendPromiseIndex < this.trendPromise.length) {
         Promise.all(this.trendPromise[this.trendPromiseIndex]).then(response => {
           response.forEach((res, index) => {
-            const item = this.tableData[index + this.trendPromiseIndex * 10]
+            const arr = res.responseURL && res.responseURL.split('=')
+            let id = ''
+            if (arr) {
+              id = arr[arr.length - 1]
+            }
+            const item = this.tableData.find(row => row.id == id)
             if (!res.data) {
               return
             }
@@ -194,13 +199,15 @@ export default {
                 }
               })
             })
-            item.alertDaysData = newWeekDays
-            item.trendLoading = false
+            if (item) {
+              item.alertDaysData = newWeekDays
+              item.trendLoading = false
+            }
           })
           this.trendPromiseIndex++
           this.renderTrend()
         }).catch((msg) => {
-          console.log(msg)
+          // console.log(msg)
         })
       }
     }
@@ -247,7 +254,7 @@ export default {
                 dimension: 'priority',
                 step: 'd'
               }
-              params[this.trendKey] = item.id
+              params[this.trendKey] = item.id // 添加其他参数 这个要放在最后 用于获取对应的id
               trendArr.push(this.$get('/stat/alertMessage/trend', params))
               if (trendArr.length > 9) {
                 this.trendPromise.push(trendArr)

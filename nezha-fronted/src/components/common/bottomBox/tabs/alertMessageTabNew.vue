@@ -19,7 +19,7 @@
         <el-select v-model="state" class="margin-r-10" size="small" value-key="value" :disabled="from === fromRoute.alertSilence" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 110px">
           <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
-        <pick-time v-model="searchTimeHeader" :default-pick="10" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false" :sign="sign"></pick-time>
+        <pick-time ref="pickTime" v-model="searchTimeHeader" :default-pick="10" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="false" :sign="sign"></pick-time>
       </template>
       <template v-slot>
         <alertMessageTable
@@ -164,7 +164,10 @@ export default {
             this.state = '2'
           }
           this.searchLabel = {}
-          this.getTableData()
+          // this.getTableData()
+          setTimeout(() => {
+            this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.refresh()
+          }, 100)
         }
       }
     },
@@ -341,6 +344,9 @@ export default {
           }
         })
       })
+    },
+    dateChange () {
+      this.getTableData()
     },
     getTableData (state) {
       if (state) {
@@ -630,7 +636,8 @@ export default {
       if (this.$refs.dataTable) {
         this.$refs.dataTable.$refs.dataTable.bodyWrapper.scrollTop = 0
       }
-      this.getTableData()
+      // this.getTableData()
+      this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.refresh()
     },
     fillProject (module) {
       this.$get('project', { id: module.projectId }).then(response => {
@@ -667,26 +674,36 @@ export default {
     queryDate () {
       this.chartLoading = true
       let chartInfo = {}
+      const severityData = JSON.parse(localStorage.getItem('nz-severityDataWeight'))
+      const conditionArr = JSON.parse(this.currentMsg.alertRule.condition)
       if (this.currentMsg.alertRule.type === 1 || this.currentMsg.alertRule.type === 3) {
         chartInfo = lodash.cloneDeep(lineData)
         chartInfo.elements = [{}]
-        if (!isNaN(this.currentMsg.alertRule.threshold)) {
+        if (conditionArr.length) {
           chartInfo.param.enable.thresholds = true
-          chartInfo.param.thresholds = [{
-            value: this.currentMsg.alertRule.threshold,
-            color: '#d64f40'
-          }]
+          chartInfo.param.thresholds = conditionArr.map(item => {
+            const findItem = severityData.find(severity => severity.id === item.id)
+            if (findItem) {
+              item.color = findItem.color
+              item.label = findItem.name
+            }
+            return item
+          }).filter(item => item.value)
         }
         chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
       } else if (this.currentMsg.alertRule.type === 2) {
         chartInfo = lodash.cloneDeep(logData)
         chartInfo.elements = [{}]
-        if (!isNaN(this.currentMsg.alertRule.threshold)) {
+        if (conditionArr.length) {
           chartInfo.param.enable.thresholds = true
-          chartInfo.param.thresholds = [{
-            value: this.currentMsg.alertRule.threshold,
-            color: '#d64f40'
-          }]
+          chartInfo.param.thresholds = conditionArr.map(item => {
+            const findItem = severityData.find(severity => severity.id === item.id)
+            if (findItem) {
+              item.color = findItem.color
+              item.label = findItem.name
+            }
+            return item
+          }).filter(item => item.value)
         }
         chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\r|\n+/g, ''))
       }

@@ -31,6 +31,10 @@
   .right-box-alert-rule .right-box__container .el-form-item__content .el-input-group--prepend {
     width: 100%;
   }
+  .right-box__container .el-form-item__content .input-box .el-textarea .el-input__count {
+    right: 6px;
+
+  }
 
   .rich-text-editor {
     line-height: 24px;
@@ -113,7 +117,10 @@
     .threshold-list {
       border: 1px solid $--border-color-light;
       padding: 16px;
-
+      margin-bottom: 16px;
+      .threshold-list-content {
+        margin-bottom: 0;
+      }
       .threshold-item {
         display: flex;
         align-items: center;

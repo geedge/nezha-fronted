@@ -750,6 +750,12 @@ export default {
       },
       // deep: true,
       immediate: true
+    },
+    chartData: {
+      immediate: true,
+      handler (n) {
+        this.initChart()
+      }
     }
   },
   created () {

@@ -139,7 +139,7 @@ export default {
         this.clickLegendTreemap(legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight)
         return
       }
-      if (this.chartInfo.type === 'doughnut' || this.chartInfo.type === 'rose') {
+      if (this.chartInfo.type === 'pie' || this.chartInfo.type === 'doughnut' || this.chartInfo.type === 'rose') {
         this.clickLegendD3(legendName, index, hasGrey, curIsGrey, currentIsTheOnlyOneHighlight)
         return
       }
