@@ -27,6 +27,10 @@ export default {
       type: Boolean,
       default: false
     },
+    showTool: {
+      type: Boolean,
+      default: true
+    },
     hiddenText: { // 隐藏图表的悬浮文字
       type: String
     }

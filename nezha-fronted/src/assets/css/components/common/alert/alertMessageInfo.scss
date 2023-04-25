@@ -427,6 +427,9 @@
               .integration-dashboard{
                 box-sizing: border-box;
                 height: 100%;
+                .nz-chart__component.nz-chart__component--bottom .legend-container {
+                  max-height: 60px;
+                }
                 .dashboard-container{
                   height: 100%;
                   .table-list{

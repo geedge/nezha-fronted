@@ -71,7 +71,7 @@
            <i class="nz-icon nz-icon-maxview tool__icon"></i>
         </div>
       </span>
-      <span class="chart-header__tool" v-if="!chartInfo.repeatIndex&&from!=='integration'">
+      <span class="chart-header__tool" v-if="!chartInfo.repeatIndex && from!=='integration' && showTool">
         <el-dropdown v-clickoutside="clickos" v-has="['main_edit','main_delete','main_add']" trigger="click">
           <i class="el-icon-more tool__icon" @click.stop="dropdownMenuShow = !dropdownMenuShow" :title="$t('overall.more')"></i>
           <el-dropdown-menu style="display: none" class="temp-dropdown"></el-dropdown-menu>

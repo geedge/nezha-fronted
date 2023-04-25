@@ -26,7 +26,7 @@
               :nowTimeType="nowTimeType"
               :from="from"
               :time-range="searchTime"
-              :show-tool="false"
+              :showTool="false"
               :loading="chartListLoading"
             ></chart-list>
           </div>
@@ -152,13 +152,13 @@ export default {
       this.chartListLoading = true
       this.$get('visual/dashboard/chart?dashboardId=' + params.dashboardId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
-          this.chartListLoading = false
           this.dataList = response.data.list.map(item => {
             return {
               ...item,
               loaded: false
             }
           })
+          this.chartListLoading = false
         }
       })
     },

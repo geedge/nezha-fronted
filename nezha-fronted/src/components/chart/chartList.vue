@@ -54,6 +54,7 @@
           @groupShow="groupShow"
           :isExportHtml="isExportHtml"
           :dataJson="dataJson"
+          :showTool="showTool"
           :chart-detail-info="chartDetailInfo"
           :hiddenText="showHidden[item.id]&&showHidden[item.id].hiddenText"
           @refreshPanel="refreshPanel"
@@ -127,6 +128,10 @@ export default {
       }
     },
     variablesInit: {
+      type: Boolean,
+      default: true
+    },
+    showTool: {
       type: Boolean,
       default: true
     }

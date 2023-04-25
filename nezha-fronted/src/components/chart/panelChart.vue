@@ -18,6 +18,7 @@
       @edit-chart="$emit('edit-chart', chartInfo)"
       @refresh="refresh"
       @sync="chartSync"
+      :showTool="showTool"
       @groupShow="groupShow"
       @showFullscreen="showFullscreen"
     ></chart-header>
@@ -103,6 +104,10 @@ export default {
       type: Object
     },
     variablesInit: {
+      type: Boolean,
+      default: true
+    },
+    showTool: {
       type: Boolean,
       default: true
     },
