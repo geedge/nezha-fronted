@@ -3,6 +3,9 @@
     <div v-for="(data, type, index) in titleSearchListCopy" v-if="!(data.children&&data.children.length === 0&&type==='assetLabel')" v-cloak :key="index" ref="searchContentBox" :class="{'search-content-box-height': data.length == 0}" class="search-content-box">
       <div class="search-title">{{data.label}}:</div>
       <el-skeleton v-if="data.type === 'checkBox'" :class="skeletonClass(data)" :loading="!data.show" :rows="1" class="search-items">
+        <template slot="template">
+          <el-skeleton-item variant="p" style="padding-right:65px;position: absolute;" />
+        </template>
         <template>
           <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValue[data.key]" @change="selectValue.change === 0 && selectValue.change++">
             <template v-for="(item, j) in data.children">
@@ -10,14 +13,18 @@
             </template>
           </el-checkbox-group>
         </template>
-        <span v-show="contentWidth < data.width"
-              :style="{top: `${moreBtnTop(data.type)}px`}"
-              class="search-more"
-              @click="changShowMore(type)">
-              {{$t('overall.more')}}<i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
+        <span
+          v-show="contentWidth < data.width"
+          :style="{top: `${moreBtnTop(data.type)}px`}"
+          class="search-more"
+          @click="changShowMore(type)">
+          {{$t('overall.more')}}<i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
         </span>
       </el-skeleton>
       <el-skeleton v-else-if="data.type === 'dropdownCheckBox'" :loading="!data.show" :rows="1" class="search-items">
+        <template slot="template">
+          <el-skeleton-item variant="p" style="padding-right:65px;position: absolute;" />
+        </template>
         <template>
           <dropdown
             v-for="(item, j) in data.children"
@@ -34,11 +41,12 @@
             @focus="casFocus"
           ></dropdown>
         </template>
-        <span v-show="contentWidth < data.width"
-              :style="{top: `${moreBtnTop(data.type)}px`}"
-              class="search-more"
-              @click="changShowMore(type)">
-              {{$t('overall.more')}}<i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
+        <span
+          v-show="contentWidth < data.width"
+          :style="{top: `${moreBtnTop(data.type)}px`}"
+          class="search-more"
+          @click="changShowMore(type)">
+          {{$t('overall.more')}}<i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
         </span>
       </el-skeleton>
     </div>
