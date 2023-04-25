@@ -118,11 +118,11 @@ export default {
             }
           })
           // && n.alertRule.dashboardId
-          if (n.alertRule) {
-            n.alertRule.dashboardId = 1487
+          if (n.alertRule && n.alertRule.dashboardId) {
+            // n.alertRule.dashboardId = 1487
             this.cardNames.push({
               key: 'dashboard',
-              label: this.$t('dashboard')
+              label: this.$t('overall.dashboard')
             })
           }
           if (n.alertRule && n.alertRule.trbShot && n.alertRule.trbShot != '<div  class="editor-core ql-container ql-snow"><div class="ql-editor"><p><br></p></div></div>') {

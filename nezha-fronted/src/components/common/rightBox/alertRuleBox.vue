@@ -327,7 +327,7 @@
           <!--panel-->
           <el-form-item
             class="form-item--half-width"
-            :label="$t('overall.dashboard')"
+            :label="$t('overall.associateDashboard')"
             prop="dashboard"
           >
             <select-panel @setPanelName="setPanelName" ref="selectPanel" :disabled="false" :filter-panel="filterPanel" :chart-box="true" :panel-lock="true" :show-panel="showPanel" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel">
