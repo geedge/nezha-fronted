@@ -80,6 +80,7 @@
   div.el-skeleton{
     display: flex !important;
     align-items: center !important;
+    position: relative;
   }
   &.search-items--checkbox .el-skeleton {
     height: 40px;
