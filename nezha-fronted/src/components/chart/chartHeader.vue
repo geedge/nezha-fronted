@@ -66,7 +66,7 @@
            <i class="nz-icon nz-icon-replay tool__icon"></i>
         </div>
       </span>
-      <span v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.type!=='group'" class="chart-header__tool" @click="showFullscreen">
+      <span v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.type!=='group' && showTool" class="chart-header__tool" @click="showFullscreen">
         <div :title="$t('dashboard.screen')" effect="light" placement="top">
            <i class="nz-icon nz-icon-maxview tool__icon"></i>
         </div>

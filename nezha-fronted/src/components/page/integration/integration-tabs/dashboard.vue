@@ -174,7 +174,9 @@ export default {
             this.getData(this.filter)
           }
         }
-        this.chartListLoading = false
+        if (this.urlType === 'template') {
+          this.chartListLoading = false
+        }
       }).catch((error) => {
         this.chartListLoading = false
         if (error) {

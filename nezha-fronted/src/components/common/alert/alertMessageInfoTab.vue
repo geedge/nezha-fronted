@@ -118,8 +118,9 @@ export default {
             }
           })
           // && n.alertRule.dashboardId
+          n.alertRule && (n.alertRule.dashboardId = 102224)
           if (n.alertRule && n.alertRule.dashboardId) {
-            // n.alertRule.dashboardId = 1487
+            //
             this.cardNames.push({
               key: 'dashboard',
               label: this.$t('overall.dashboard')
