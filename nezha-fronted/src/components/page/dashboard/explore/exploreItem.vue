@@ -1,7 +1,7 @@
 <template>
-  <div class="explore list-page" :class="'nz-explore-' + tabIndex">
+  <div class="explore list-page" :class="'nz-explore-' + tabIndex" style="position:relative;">
     <div class="main-list">
-      <div class="main-container explore-split-box">
+      <div class="main-container explore-split-box" ref="exploreScrollbar" @mouseenter="tableHover = true" @mouseleave="tableHover = false">
         <!-- 关闭按钮 -->
         <div v-if="closable" class="explore-close">
           <span @click="split"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
@@ -40,22 +40,24 @@
                 <el-dropdown-item :disabled="saveDisabled" v-has="'main_add'">
                   <div>
                     <i class="nz-icon nz-icon-add" />
-                    <span v-if="showMetrics"
-                          id="explore-save-chart"
-                          :class="{'btn-disabled-cursor-not-allowed' : saveDisabled}"
-                          :disabled="saveDisabled"
-                          class="top-tool-btn top-tool-btn--text"
-                          type="button"
-                          @click="saveChart">
-                    {{$t('dashboard.metric.saveChart')}}
+                    <span
+                      v-if="showMetrics"
+                      id="explore-save-chart"
+                      :class="{'btn-disabled-cursor-not-allowed' : saveDisabled}"
+                      :disabled="saveDisabled"
+                      class="top-tool-btn top-tool-btn--text"
+                      type="button"
+                      @click="saveChart">
+                      {{$t('dashboard.metric.saveChart')}}
                   </span>
-                    <span v-else
-                          id="explore-save-chart-logs"
-                          :class="{'btn-disabled-cursor-not-allowed' : saveDisabled}"
-                          :disabled="saveDisabled"
-                          class="top-tool-btn top-tool-btn--text"
-                          type="button"
-                          @click="saveChartLogs">
+                  <span
+                    v-else
+                    id="explore-save-chart-logs"
+                    :class="{'btn-disabled-cursor-not-allowed' : saveDisabled}"
+                    :disabled="saveDisabled"
+                    class="top-tool-btn top-tool-btn--text"
+                    type="button"
+                    @click="saveChartLogs">
                     {{$t('dashboard.metric.saveChart')}}
                   </span>
                   </div>
@@ -3450,6 +3452,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
         </div>
       </div>
     </div>
+    <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="position:absolute;bottom: -20px;" v-show="showTopBtn" :title="$t('overall.backToTop')"><i class="nz-icon nz-icon-top"></i></button>
     <transition name="right-box">
       <chartRightBox v-if="rightBox.show" ref="addChartModal" :chart="chartData" :from="$CONSTANTS.fromRoute.explore" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'explore'}" @close="handleBox(false)" @on-create-success="createSuccess"></chartRightBox>
     </transition>
@@ -3546,7 +3549,10 @@ export default {
         'H', 'I', 'J', 'K', 'L', 'M', 'N',
         'O', 'P', 'Q', 'R', 'S', 'T',
         'U', 'V', 'W', 'X', 'Y', 'Z'
-      ]
+      ],
+      tableHover: false,
+      showTopBtn: false, // top按钮
+      scrollbarWrap: null
     }
   },
   created () {
@@ -3557,7 +3563,29 @@ export default {
     })
     this.selectMetricsLogs()
   },
+  mounted () {
+    this.scrollbarWrap = this.$refs.exploreScrollbar
+    this.scrollbarWrap.addEventListener('scroll', this.onScroll)
+  },
+  beforeDestroy () {
+    this.scrollbarWrap.removeEventListener('scroll', this.onScroll)
+  },
   methods: {
+    onScroll: bus.debounce(function () {
+      this.showTopBtn = this.scrollbarWrap.scrollTop > 50
+    }, 300),
+    toTop (wrap) {
+      let currentTop = wrap.scrollTop
+      const interval = currentTop / 10
+      const intervalFunc = setInterval(function () { // 花200ms分10次回到顶部，模拟动画效果
+        if (currentTop === 0) {
+          clearInterval(intervalFunc)
+        } else {
+          currentTop = (currentTop - interval) < interval * 0.5 ? 0 : currentTop - interval
+          wrap.scrollTop = currentTop
+        }
+      }, 20)
+    },
     jumpClick (id) {
       const dom = document.getElementsByClassName('nz-explore-' + this.tabIndex)[0]
       dom.querySelector(id).scrollIntoView(true)
