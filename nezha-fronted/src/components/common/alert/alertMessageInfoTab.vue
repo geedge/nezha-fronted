@@ -118,7 +118,7 @@ export default {
             }
           })
           // && n.alertRule.dashboardId
-          n.alertRule && (n.alertRule.dashboardId = 102224)
+          // n.alertRule && (n.alertRule.dashboardId = 101534)
           if (n.alertRule && n.alertRule.dashboardId) {
             //
             this.cardNames.push({
