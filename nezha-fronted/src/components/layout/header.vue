@@ -182,7 +182,7 @@ export default {
       this.$get('logout').then(() => {
         sessionStorage.setItem('nz-is-logout', '1')
         this.logoutSuccess()
-        document.location.href = '/'
+        // document.location.href = '/'
       })
     },
     showPinDialog () {
