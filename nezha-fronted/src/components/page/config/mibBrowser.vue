@@ -146,14 +146,14 @@
               <pl-table-column v-slot="{row}" label="Name/OID">
                 <copy :copyData='row.name ? row.name : row.oid' :showInfo='true'>
                   <template slot="copy-text">
-                     <div class="too-long-split" @click="searchParam.oid = row.oid">{{row.name ? row.name : row.oid}}</div>
+                     <div class="too-long-split text-ellipsis" @click="searchParam.oid = row.oid" :title="row.name ? row.name : row.oid">{{row.name ? row.name : row.oid}}</div>
                   </template>
                 </copy>
               </pl-table-column>
               <pl-table-column v-slot="{row}" label="Value">
                 <copy :copyData='row.value' :showInfo='row.value'>
                   <template slot="copy-text">
-                     <div @click="searchParam.oid = row.oid">{{row.value}}</div>
+                     <div @click="searchParam.oid = row.oid" :title="row.value" class="text-ellipsis">{{row.value}}</div>
                   </template>
                 </copy>
               </pl-table-column>
