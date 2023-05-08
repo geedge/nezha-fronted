@@ -219,7 +219,15 @@
     font-weight: bold;
     color: $--color-primary;
   }
-
+  .document-copy-text {
+    display: inline-block;
+    max-width: 100%;
+  }
+  .el-table__row:hover{
+    .document-copy-text {
+      max-width: calc(100% - 20px);
+    }
+  }
   .pagination-bottom {
     display: none;
   }
