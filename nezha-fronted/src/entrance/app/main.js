@@ -61,14 +61,14 @@ import hljs from 'highlight.js'
 VMdPreview.use(githubTheme, {
   Hljs: hljs
 })
-// Pace.options = {
-//   minTime: 0.1,
-//   ghostTime: 0.1,
-//   restartOnRequestAfter: 0.1
-// }
+Pace.options = {
+  minTime: 100,
+  ghostTime: 100,
+  restartOnRequestAfter: 100
+}
 window.Meta2d = Meta2d
 Vue.use(VMdPreview)
-Vue.use(Pace)
+// Vue.use(Pace)
 
 Vue.use(VueIntro)
 Vue.use(htmlToPdf)
