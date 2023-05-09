@@ -172,6 +172,7 @@
       justify-content: space-between;
       box-sizing: border-box;
       height: 32px;
+      transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
       .variable-title-left{
         width: 450px;
         text-overflow: ellipsis;
@@ -198,6 +199,9 @@
         font-size: 17px;
       }
     } 
+    .is-item-box-error .variable-title {
+      border-color: #F56C6C
+    }
     .add-variable{
       border: 1px solid $--border-color-light;
       border-radius: 2px;
