@@ -16,7 +16,7 @@
         <div class="pop-item-wider">
           <div class="dashboard-select-header">
             <el-input v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="small"></el-input>
-            <button v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-l-10" type="button" @click="addPlaylist" v-if="currentTab==='playlist'">
+            <button v-has="'main_add'" :title="$t('dashboard.createPlaylist')" class="top-tool-btn margin-l-10" type="button" @click="addPlaylist" v-if="currentTab==='playlist'">
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
           </div>
