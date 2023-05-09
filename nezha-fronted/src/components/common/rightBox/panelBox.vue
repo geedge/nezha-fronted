@@ -140,7 +140,7 @@
                       { validator: variableValidator,trigger: 'blur'},
                       ]"
                     >
-                      <el-input v-model="item.name" :placeholder="$t('overall.placeHolder')" size="small"  @change="hideError('variables', index)"/>
+                      <el-input v-model="item.name" :placeholder="$t('overall.placeHolder')" size="small"  @change="hideError('variables', index, 'name')"/>
                     </el-form-item>
                     <!-- Type -->
                     <el-form-item class="form-item--half-width" :label='$t("overall.type")' :prop="'param.variables.' + index + '.type'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}">
@@ -621,24 +621,20 @@ export default {
         }
       })
     },
-    hideError (key, index) {
+    hideError (key, index, type) {
       if (!this.editPanel.param[key] || !this.editPanel.param[key].length) {
         return
       }
-      this.$refs.form.validate((blooen, object) => {
-        console.log(Object.keys(object))
-        let flag = true
-        Object.keys(object).forEach(item => {
-          console.log(`param.${key}.${index}.`)
-          if (item.startsWith(`param.${key}.${index}.`)) {
-            flag = false
-          }
-        })
-        if (flag) {
+      if (type === 'name') {
+        const reg = /^[a-zA-Z_][a-zA-Z0-9_]*$/
+        if (reg.test(this.editPanel.param[key][index].name)) {
           this.editPanel.param[key][index].error = false
           this.$forceUpdate()
         }
-      })
+      } else {
+        this.editPanel.param[key][index].error = false
+        this.$forceUpdate()
+      }
     },
 
     /* 保存 */
