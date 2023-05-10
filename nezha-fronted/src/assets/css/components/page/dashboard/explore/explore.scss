@@ -132,8 +132,9 @@
     justify-content: space-between;
     font-size: 14px;
     color: $--color-text-regular;
-    span{
-      margin-right: 5px;
+    padding: 0 10px;
+    .el-switch{
+      margin-left: 5px;
     }
   }
   .explore-table {
