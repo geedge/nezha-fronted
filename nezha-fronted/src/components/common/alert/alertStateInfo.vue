@@ -18,7 +18,7 @@
       </div>
       <!-- body -->
       <div class="alert-label-box">
-        <span :class="that.auth ? 'green-bg' : 'red-bg'" class="active-icon"></span>
+        <span :class="that.auth === 'TRUE' ? 'green-bg' : 'red-bg'" class="active-icon"></span>
         <span class="alert-label-value">Auth</span>
       </div>
        <div class="alert-label-box" v-if="that.prometheus">
