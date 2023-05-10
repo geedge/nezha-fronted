@@ -34,7 +34,7 @@
             {{item.name}}
           </div>
           <div class="asset-name">
-            <span>{{item.severity?item.severity.name:'-'}} /
+            <span>
               <span v-if="item.type === 1">{{ $t('overall.metric') }}</span>
               <span v-else-if="item.type === 2">{{ $t('overall.logs') }}</span>
               <span v-else-if="item.type === 3">SNMP trap</span>
