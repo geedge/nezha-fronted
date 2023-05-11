@@ -85,6 +85,10 @@ export default new Router({
           component: resolve => require(['@/components/page/config/assetState'], resolve)
         },
         {
+          path: '/assetDiscovery',
+          component: resolve => require(['@/components/page/asset/assetDiscovery'], resolve)
+        },
+        {
           path: '/assetLabel',
           component: resolve => require(['@/components/page/config/assetMeta'], resolve)
         },

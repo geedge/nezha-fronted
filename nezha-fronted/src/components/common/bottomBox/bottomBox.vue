@@ -78,6 +78,8 @@
         <roles-tab v-if="from === fromRoute.role && targetTab === 'roles'" :from="from" :obj="obj"  :tabs="tabs.role" @changeTab="changeTab" :targetTab.sync="targetTab"></roles-tab>
         <!--issue Tab-->
         <!-- <issueTab v-if="from === fromRoute.issue && targetTab === 'issue'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertSilence" @changeTab="changeTab" :targetTab.sync="targetTab"></issueTab> -->
+        <!--Discovery Tab-->
+        <discovery-tab v-if="from === fromRoute.assetDiscovery && targetTab === 'assetDiscoveryTab'" :from="from" :obj="obj"  :tabs="tabs.discovery" @changeTab="changeTab" :targetTab.sync="targetTab"></discovery-tab>
       </div>
     </div>
   </div>
@@ -111,6 +113,7 @@ import scrapeEndpoint from '@/components/common/bottomBox/tabs/scrapeEndpoint'
 import cortexDetail from '@/components/common/bottomBox/tabs/cortexDetail'
 import lokiStatus from '@/components/common/bottomBox/tabs/lokiStatus'
 import rolesTab from '@/components/common/bottomBox/tabs/rolesTab'
+import discoveryTab from '@/components/common/bottomBox/tabs/discoveryTab'
 import IpDetails from '@/components/common/bottomBox/tabs/IpDetails'
 import recordRuleEvalLog from '@/components/common/bottomBox/tabs/recordRuleEvalLog'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
@@ -144,6 +147,7 @@ export default {
     recordRuleEvalLog,
     recordRulesQuery,
     issueTab,
+    discoveryTab,
     commentsBottomTab,
     vsysBottomTab,
     rolesTab
@@ -285,6 +289,9 @@ export default {
         ],
         role: [
           { prop: 'userTab', name: this.$t('config.operationlog.username'), active: true }
+        ],
+        discovery: [
+          { prop: 'assetDiscoveryTab', name: this.$t('assetDiscoveryTab'), active: true, hideHeader: true }
         ],
         issue: [
           // { prop: 'issue', name: this.$t('overall.issue'), active: true }

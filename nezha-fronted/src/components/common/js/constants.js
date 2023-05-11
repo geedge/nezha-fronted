@@ -423,6 +423,7 @@ export const fromRoute = {
   assetType: 'assetType',
   assetState: 'assetState',
   assetLabel: 'assetLabel',
+  assetDiscovery: 'assetDiscovery',
   user: 'user',
   agent: 'agent',
   recordRule: 'recordRule',
