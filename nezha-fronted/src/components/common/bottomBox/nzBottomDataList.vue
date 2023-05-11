@@ -2,8 +2,8 @@
   <div class="bottom-data-list">
     <div class="top-tools top-tools--sub">
       <div class="top-tool-left">
-        <div class="sub-list-title" v-if="showTitle">{{bottomHeaderTitle}}：<slot name="title"></slot></div>
-        <div class="sub-list-tabs">
+        <div class="sub-list-title" v-if="showTitle">{{bottomHeaderTitle}}<slot name="title"></slot></div>
+        <div class="sub-list-tabs" v-if="!hideHeader">
           <div v-for="tab in tabs" :key="tab.prop" :class="{'sub-list-tab--active': tab.active || tab.prop == targetTab }" :title='tab.name' class="sub-list-tab" @click="changeTab(tab.prop)">{{tab.name}}</div>
         </div>
       </div>
@@ -90,11 +90,15 @@ export default {
     },
     title: {
       type: String
+    },
+    hideHeader: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     bottomHeaderTitle () {
-      return this.title || this.$t('overall.name')
+      return this.title || (this.$t('overall.name') + ':')
     },
     subContentClass () {
       const className = []
