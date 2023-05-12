@@ -1,5 +1,5 @@
 <template>
-  <div v-clickoutside="{obj:editAssetDiscovery,func:clickOutside}" class="right-box right-box-prom">
+  <div v-clickoutside="{obj:editAssetDiscovery,func:clickOutside}" class="right-box right-box-prom asset-discovery-right-box">
     <!-- begin--标题-->
     <div class="right-box__header">
       <div class="header__title">{{editAssetDiscovery.id ? ($t("config.agent.editProm")) : $t("overall.createPrometheusServer")}}</div>
@@ -17,28 +17,46 @@
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetDiscovery.name" size="small" id="asset-discovery-box-input-name"></el-input>
           </el-form-item>
           <!--          ipSubnet-->
-          <el-form-item :label='$t("asset.ipSubnet")' prop="name">
+          <el-form-item :label='$t("asset.ipSubnet")' prop="subnet">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetDiscovery.subnet" size="small" id="asset-discovery-box-input-subnet"></el-input>
           </el-form-item>
           <!--          snmpCredentialIds-->
-          <el-form-item :label='$t("config.mib.credentials")' prop="name">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetDiscovery.snmpCredentialIds" size="small" id="asset-discovery-box-input-credentials"></el-input>
+          <el-form-item :label='$t("config.mib.credentials")' prop="snmpCredentialIds">
+            <el-select
+              v-model="editAssetDiscovery.snmpCredentialIds"
+              class="right-box__select"
+              popper-class="right-box-select-top prevent-clickoutside"
+              multiple placeholder="请选择"
+              size="small">
+              <el-option
+                v-for="item in credentialData"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
           <!--          schedule.type-->
-          <el-form-item :label='$t("alert.config.schedEnable")' prop="name">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetDiscovery.schedule.type" size="small" id="asset-discovery-box-input-type"></el-input>
+          <el-form-item :label='$t("alert.config.schedEnable")' prop="schedule.type" class="schedule-type">
+<!--            <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetDiscovery.schedule.type" size="small" id="asset-discovery-box-input-type"></el-input>-->
+            <el-radio-group v-model="editAssetDiscovery.schedule.type" size="medium">
+              <el-radio-button :label="1">One time only</el-radio-button>
+              <el-radio-button :label="2">Daily</el-radio-button>
+              <el-radio-button :label="3">Weekly</el-radio-button>
+              <el-radio-button :label="4">Monthly</el-radio-button>
+            </el-radio-group>
           </el-form-item>
           <!--         schedule.stime -->
-          <el-form-item :label='$t(" Start at")' prop="name">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetDiscovery.schedule.stime" size="small" id="asset-discovery-box-input-name"></el-input>
+          <el-form-item :label='$t(" Start at")' prop="schedule.stime">
+            <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetDiscovery.schedule.stime" size="small" id="asset-discovery-box-input-stime"></el-input>
           </el-form-item>
           <!--         schedule.repeat -->
-          <el-form-item :label='$t("Repeat every")' prop="name">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetDiscovery.schedule.repeat" size="small" id="asset-discovery-box-input-name"></el-input>
+          <el-form-item :label='$t("Repeat every")' prop="schedule.repeat">
+            <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetDiscovery.schedule.repeat" size="small" id="asset-discovery-box-input-repeat"></el-input>
           </el-form-item>
           <!--         schedule.nums -->
-          <el-form-item :label='$t("nums")' prop="name">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetDiscovery.schedule.nums" size="small" id="asset-discovery-box-input-name"></el-input>
+          <el-form-item :label='$t("nums")' prop="schedule.nums">
+            <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetDiscovery.schedule.nums" size="small" id="asset-discovery-box-input-nums"></el-input>
           </el-form-item>
           <!--remark-->
           <el-form-item :label="$t('overall.remark')">
@@ -74,18 +92,44 @@ export default {
   data () {
     return {
       rules: {
-        'dc.name': [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
-        ],
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: noSpecialChar, trigger: 'blur' }
+        ],
+        subnet: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        snmpCredentialIds: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        'schedule.type': [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        'schedule.stime': [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        'schedule.repeat': [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        'schedule.nums': [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ]
       },
-      editAssetDiscovery: {}
+      editAssetDiscovery: {},
+      credentialData: []
     }
   },
+  created () {
+    this.getCredentialData()
+  },
   methods: {
+    getCredentialData () {
+      this.$get('snmp/credential', { pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.credentialData = response.data.list
+        }
+      })
+    },
     /* 关闭弹框 */
     esc (refresh) {
       this.$emit('close', refresh)

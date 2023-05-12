@@ -195,12 +195,10 @@ export default {
       this.rightBox.metaShow = true
     },
     closeRightBox (refresh) {
-      this.rightBox.metaShow = false
-      this.rightBox.groupShow = false
+      this.rightBox.show = false
       if (refresh) {
         this.delFlag = true
         this.getTableData()
-        this.getGroup()
       }
     }
   },

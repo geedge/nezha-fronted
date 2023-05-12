@@ -1,0 +1,18 @@
+.asset-discovery-right-box {
+  .schedule-type {
+    .el-radio-group {
+      width: 100%;
+      .el-radio-button--medium {
+        width: 25%;
+        .el-radio-button__inner {
+          display: inline-block;
+          width: 100%;
+        }
+      }
+      .el-radio-button__orig-radio:checked + .el-radio-button__inner{
+        background: unset !important;
+        color: $--color-warning;
+      }
+    }
+  }
+}
