@@ -119,43 +119,43 @@ export default {
           minWidth: 250,
           sortable: 'custom'
         }, {
-          label: this.$t('IP subnet'),
+          label: this.$t('asset.ipSubnet'),
           prop: 'subnet',
           show: true,
           minWidth: 250,
           sortable: 'custom'
         }, {
-          label: this.$t('SNMP credentials'),
+          label: this.$t('config.mib.credentials'),
           prop: 'snmpCredentialIds',
           show: true,
           minWidth: 250,
           sortable: 'custom'
         }, {
-          label: this.$t('Schedule'),
+          label: this.$t('alert.config.schedEnable'),
           prop: 'schedule',
           show: true,
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('Last execute time'),
+          label: this.$t('asset.lastExecuteTime'),
           prop: 'uts',
           show: true,
           minWidth: 250,
           sortable: 'custom'
         }, {
-          label: this.$t('Duration'),
+          label: this.$t('config.terminallog.duration'),
           prop: 'duration',
           show: true,
           minWidth: 160,
           sortable: 'custom'
         }, {
-          label: this.$t('State'),
+          label: this.$t('overall.state'),
           prop: 'status',
           show: true,
           minWidth: 250,
           sortable: 'custom'
         }, {
-          label: this.$t('Discovery hosts'),
+          label: this.$t('asset.discoveryHosts'),
           prop: 'total',
           show: true,
           minWidth: 200,

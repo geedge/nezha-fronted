@@ -81,7 +81,13 @@
     </nz-data-list>
     <!--侧滑-->
     <transition name="right-box">
-
+      <assetDiscoveryBox v-if="rightBox.show"
+                 ref="assetBox"
+                 :from="fromRoute.assetDiscovery"
+                 :assetDiscovery="object"
+                 @close="closeRightBox"
+                 @refresh="getTableData">
+      </assetDiscoveryBox>
     </transition>
   </div>
 </template>
@@ -93,14 +99,15 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import assetDiscoveryTable from '@/components/common/table/asset/assetDiscoveryTable'
 import routerPathParams from '@/components/common/mixin/routerPathParams'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
-
+import assetDiscoveryBox from '@/components/common/rightBox/asset/assetDiscoveryBox'
 export default {
   name: 'assetDiscovery',
   components: {
     deleteButton,
     nzDataList,
     assetDiscoveryTable,
-    topToolMoreOptions
+    topToolMoreOptions,
+    assetDiscoveryBox
   },
   mixins: [dataListMixin, routerPathParams],
   data () {
@@ -143,14 +150,14 @@ export default {
       blankObject: {
         id: '',
         name: '',
-        metaKey: '',
-        groupIds: '',
-        group: {},
-        search: '0',
-        display: '0',
-        type: 'TEXT',
-        param: {},
-        remark: ''
+        subnet: '',
+        snmpCredentialIds: '',
+        schedule: {
+          type: 1,
+          stime: '2021-01-10 10:10:10',
+          repeat: 1,
+          nums: [1, 2, 3, 4, 5, 6, 7]
+        }
       },
       blankMetaGroup: {
         id: '',
@@ -168,8 +175,8 @@ export default {
   },
   methods: {
     add () {
-      this.object = JSON.parse(JSON.stringify(this.blankObject))
-      this.rightBox.metaShow = true
+      this.object = this.$loadsh.cloneDeep(this.blankObject)
+      this.rightBox.show = true
     },
     edit (row) {
       this.$get(`${this.url}/${row.id}`).then(response => {
