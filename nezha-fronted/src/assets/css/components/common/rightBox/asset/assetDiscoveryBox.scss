@@ -2,7 +2,7 @@
   .schedule-type {
     .el-radio-group {
       width: 100%;
-      .el-radio-button--medium {
+      .el-radio-button--small {
         width: 25%;
         .el-radio-button__inner {
           display: inline-block;
@@ -11,8 +11,57 @@
       }
       .el-radio-button__orig-radio:checked + .el-radio-button__inner{
         background: unset !important;
-        color: $--color-warning;
+        color: $--color-warning !important;
       }
     }
+  }
+  //.el-form-item__content .el-checkbox-button.line-feed {
+  //
+  //}
+  //.el-form-item__content .el-checkbox-button.line-feed .el-checkbox-button__inner{
+  //  //border-top: 0;
+  //  margin-top: -2px;
+  //}
+  .months-box {
+    width: 100%;
+    height: 176px;
+    //border-bottom:1px solid #ddd;
+    //border-right:1px solid #ddd;
+    position: relative;
+    .right-border {
+      height: 176px;
+      border-right: 1px solid #ddd;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+    .bottom-border {
+      width: 100%;
+      border-bottom: 1px solid #ddd;
+      position: absolute;
+      bottom: 1px;
+      left: 0;
+    }
+  }
+  .days-item {
+    width: calc(100% / 7 + 1px) !important;
+    text-align: center;
+    float: left;
+    border:1px solid #ddd;
+    height: 36px;box-sizing: border-box;
+    line-height: 36px;
+    margin-left: -1px;
+    margin-top: -1px;
+    cursor: pointer;
+    transition: all .5s;
+  }
+  .days-item-1,.days-item-8,.days-item-15,.days-item-22,.days-item-29 {
+    //margin-left: 0;
+  }
+  .days-item.is-checked{
+    z-index: 1;
+    background: $--color-warning;
+    border-color: $--border-select-color;
+    color: $--color-white;
   }
 }

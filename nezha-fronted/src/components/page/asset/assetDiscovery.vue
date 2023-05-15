@@ -10,7 +10,7 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
-        <button id="meta-add-meta" v-has="'asset_label_add'" :title="$t('overall.createLabel')" class="top-tool-btn margin-r-10"
+        <button id="meta-add-meta" v-has="'asset_discovery_edit'" :title="$t('overall.createLabel')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
@@ -21,15 +21,15 @@
           :params="searchLabel"
           :params2="searchCheckBox"
           :permissions="{
-            import: 'asset_add',
-            export: 'asset_edit'
+            import: 'asset_discovery_edit',
+            export: 'asset_discovery_view'
           }"
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="asset"
           export-url="/asset/asset/export"
           import-url="/asset/asset/import"
           @afterImport="getTableData"
-          v-has="['asset_add','asset_edit','asset_delete']"
+          v-has="['asset_discovery_view','asset_discovery_edit','asset_discovery_el']"
         >
           <template v-slot:before>
             <div>
@@ -43,7 +43,7 @@
                   :type="'link'"
                   :title="$t('overall.batchDel')"
                   id="asset-list-batch-delete"
-                  v-has="'asset_delete'"
+                  v-has="'asset_discovery_del'"
                   :api="url"
                   :delete-objs="batchDeleteObjs"
                   @after="getTableData"
@@ -66,6 +66,7 @@
           @del="del"
           @edit="edit"
           @copy="copy"
+          @force="force"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
@@ -154,9 +155,9 @@ export default {
         snmpCredentialIds: '',
         schedule: {
           type: 1,
-          stime: '2021-01-10 10:10:10',
+          stime: '',
           repeat: 1,
-          nums: [1, 2, 3, 4, 5, 6, 7]
+          nums: []
         }
       },
       blankMetaGroup: {
@@ -193,6 +194,9 @@ export default {
         this.object.name = u.name.substring(0, u.name.length - length) + '-copy'
       }
       this.rightBox.metaShow = true
+    },
+    force (item) {
+      console.log(item)
     },
     closeRightBox (refresh) {
       this.rightBox.show = false

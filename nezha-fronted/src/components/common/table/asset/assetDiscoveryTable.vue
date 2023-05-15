@@ -66,15 +66,16 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
 <!--        <button class="table-operation-item" @click.stop><i class="nz-icon nz-icon-view1"></i></button>-->
-        <button class="table-operation-item"  @click="$emit('showBottomBox', 'assetDiscoveryTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
-        <el-dropdown size="medium" v-has="['asset_label_edit','asset_label_delete']" trigger="click" @command="tableOperation">
+        <button class="table-operation-item" v-has="['asset_discovery_view']"  @click="$emit('showBottomBox', 'assetDiscoveryTab', scope.row)" :title="$t('overall.view')"><i class="nz-icon nz-icon-view1"></i></button>
+        <el-dropdown size="medium" v-has="['asset_discovery_edit','asset_label_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more" :title="$t('overall.moreOperations')">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
-            <el-dropdown-item v-has="'asset_label_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'asset_discovery_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
 <!--            <el-dropdown-item v-has="'asset_label_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>-->
-            <el-dropdown-item v-has="'asset_label_delete'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'asset_discovery_del'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'asset_discovery_edit'" :command="['force', scope.row]"><i class="nz-icon nz-icon-a-Diagnosisresult"></i><span class="operation-dropdown-text">{{$t('asset.discoveryForce')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -220,15 +221,15 @@ export default {
     statusToStr (status) {
       switch (status) {
         case '1' :
-          return 'Saving'
+          return this.$t('asset.discoverySaving')
         case '2' :
-          return 'Running'
+          return this.$t('asset.discoveryRunning')
         case '3' :
-          return 'Scheduled'
+          return this.$t('asset.discoveryScheduled')
         case '4' :
-          return 'Failed'
+          return this.$t('asset.discoveryFailed')
         case '5' :
-          return 'Finished'
+          return this.$t('asset.discoveryFinished')
       }
     }
   }
