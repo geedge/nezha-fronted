@@ -68,7 +68,7 @@
           <!--         schedule.nums -->
           <el-form-item :label='$t("backup.WeekOn")' prop="schedule.nums" v-if="editAssetDiscovery.schedule.type === 3">
             <el-checkbox-group v-model="editAssetDiscovery.schedule.nums" size="medium" @change="clearNumsError()">
-              <el-checkbox-button v-for="num in weeks" :label="num" :key="num">{{weekStr[num]}}</el-checkbox-button>
+              <el-checkbox-button v-for="num in weeks" :label="num" :key="num">{{weekStr[num - 1]}}</el-checkbox-button>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item :label='$t("backup.DayOfMonth")' prop="schedule.nums" v-if="editAssetDiscovery.schedule.type === 4">

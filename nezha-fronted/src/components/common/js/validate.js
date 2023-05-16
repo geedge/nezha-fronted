@@ -271,6 +271,27 @@ export function packageSizeValidator (rule, value, callback) {
     }
   }, 100)
 }
+// 验证retries
+export function retriesValidator (rule, value, callback) {
+  setTimeout(() => {
+    // 判断是否是数字
+    if (isNaN(Number(value))) {
+      callback(new Error(vm.$t('validate.number')))
+    } else {
+      // 判断是否是正整数
+      if (Number(value) >= 0 && (String(value).indexOf('.') == -1)) {
+        // 判断范围
+        if (value >= 1 && value <= 100) {
+          callback()
+        } else {
+          callback(new Error(vm.$t('validate.packageSize')))
+        }
+      } else {
+        callback(new Error(vm.$t('validate.positiveInteger')))
+      }
+    }
+  }, 100)
+}
 
 // 验证maxHops
 export function maxHopsValidator (rule, value, callback) {
