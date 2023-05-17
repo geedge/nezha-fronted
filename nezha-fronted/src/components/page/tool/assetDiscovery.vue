@@ -7,19 +7,22 @@
   >
     <template v-slot:top-tool-left>
       <div class="tools-header">
-        <div class="tools-header-left">
-          <span>{{$t('config.operationlog.ip')}}</span>
-          <vue-tags-input
-            class="ipInput"
-            style="height: 190px"
-            v-model="ip"
-            :placeholder="$t('overall.placeHolder')+' IP'"
-            :add-from-paste="false"
-            :tags="tags"
-            @tags-changed="newTags => tags = newTags"
-            @before-adding-tag="value => beforeAddTag(value)"
-            @adding-duplicate="value => addDuplicate(value)"
-          />
+        <div style="width: 360px;" class="nz-select-tag">
+          <span>{{$t('overall.IPAM')}}</span>
+          <el-select
+            v-model="discoveryForm.subnetIds"
+            class="right-box__select"
+            popper-class="right-box-select-top prevent-clickoutside"
+            multiple placeholder="请选择"
+            style="width: 240px"
+            size="small">
+            <el-option
+              v-for="item in ipamData"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </div>
 
         <div  class="tools-header-center">
@@ -182,11 +185,13 @@ export default {
       formRules: {
         timeout: [{ validator: timeoutValidator, trigger: 'blur' }],
         retries: [{ validator: retriesValidator, trigger: 'blur' }]
-      }
+      },
+      ipamData: []
     }
   },
   created () {
     this.getCredentialData()
+    this.getIpamData()
   },
   mounted () {
     const tiInput = document.getElementsByClassName('ti-input')[0]
@@ -265,22 +270,20 @@ export default {
         }
       })
     },
+    getIpamData () {
+      this.$get('ipam/subnet', { pageSize: -1, type: 4}).then(response => {
+        if (response.code === 200) {
+          this.ipamData = response.data.list
+        }
+      })
+    },
     // 开始任务
     startTask () {
       if (!this.flag) {
         return false
       }
       setTimeout(() => {
-        if (this.ip) {
-          // 校验ip格式
-          if (!ipv4.test(this.ip) && !ipv6.test(this.ip)) {
-            return this.validateHost()
-          }
-          // 判断ip是否重复
-          if (this.tags.some(item => item.text === this.ip)) {
-            return this.validateDuplicate()
-          }
-        } else if (!this.tags.length) {
+        if (!this.discoveryForm.subnetIds) {
           return this.validateHost()
         }
         // 表单校验输入内容是否合法
@@ -296,39 +299,42 @@ export default {
     async getId () {
       this.loading = true
       console.log(this.discoveryForm.snmpCredentialIds)
-      const ipArr = this.tags.map(item => item.text)
       const params = {
-        subnetIds: ipArr.join(','),
+        subnetIds: this.discoveryForm.subnetIds.join(','),
         snmpCredentialIds: this.discoveryForm.snmpCredentialIds.join(','),
         timeout: this.discoveryForm.timeout,
         retries: this.discoveryForm.retries
       }
-      this.$get('/tool/ping', params).then(response => {
+      this.$post('/tool/discovery', params).then(response => {
         // 清空上一次任务的数据
-        this.done = 0
-        this.total = 0
-        this.process = 0
-        this.tableData = []
-        this.tid = response.data.tid
-        this.isStart = true // 标记正在请求数据中
-        this.flag = true
-        this.timer = setInterval(() => {
-          if (parseInt(this.process) < 100) {
-            this.getData()
-          } else {
-            this.clearTask()
+        if (response.code === 200) {
+          this.done = 0
+          this.total = 0
+          this.process = 0
+          this.tableData = []
+          this.tid = response.data.tid
+          this.isStart = true // 标记正在请求数据中
+          this.flag = true
+          this.timer = setInterval(() => {
+            if (parseInt(this.process) < 100) {
+              this.getData()
+            } else {
+              this.clearTask()
+            }
+          }, 300)
+          // 如果没有数据，loading取消
+          if (!response.data.task.total) {
+            this.loading = false
           }
-        }, 300)
-        // 如果没有数据，loading取消
-        if (!response.data.task.total) {
-          this.loading = false
+        } else {
+          this.$message.error(response.msg || response.error)
         }
       })
     },
     // 请求表格数据
     getData () {
       const currentId = this.tid
-      this.$get('/tool/ping/result/' + this.tid).then(response => {
+      this.$get('/tool/discovery/' + this.tid).then(response => {
         if (currentId === this.tid && parseInt(this.process) < 100) {
           this.done = response.data.task.done
           this.total = response.data.task.total
@@ -351,7 +357,7 @@ export default {
         clearInterval(this.timer)
         this.timer = null
       }
-      await this.$get('/tool/ping/cancel/' + this.tid)
+      await this.$delete('tool/discovery/' + this.tid)
       this.isStart = false
       this.flag = true
       this.loading = false

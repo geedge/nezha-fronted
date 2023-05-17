@@ -7,7 +7,7 @@
     >
     <template v-slot:top-tool-left>
       <div class="tools-header">
-        <div class="tools-header-left">
+        <div class="tools-header-left tools-header-left-ping">
           <span>{{$t('config.operationlog.ip')}}</span>
           <vue-tags-input
             class="ipInput"

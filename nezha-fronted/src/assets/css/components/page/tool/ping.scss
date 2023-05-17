@@ -251,6 +251,30 @@
       width: 360px;
       display: flex;
       margin-left: 15px;
+    }
+    .nz-select-tag {
+      .el-select__tags{
+        max-height: 128px;
+        overflow-y: auto;
+      }
+      .el-tag--info {
+        min-width: 40px;
+        max-width: 220px;
+        overflow: hidden;
+        .el-select__tags-text {
+          width: calc(100% - 10px);
+          display: inline-block;
+          overflow: hidden;
+        }
+        .el-tag__close.el-icon-close {
+          vertical-align: super;
+        }
+      }
+    }
+    .tools-header-left.tools-header-left-ping{
+      width: 360px;
+      display: flex;
+      margin-left: 15px;
       > span{
         display: block;
         margin-right: 5px;
