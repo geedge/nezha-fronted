@@ -415,12 +415,12 @@ export default {
       }
       if (key === 'image') {
         obj.imageId = pen[key]
-        obj.name = pen.name
+        obj.name = pen.name === 'gif' ? pen.name : 'rectangle'
         obj.icon = ''
       }
       if (key === 'icon') {
         obj.imageId = pen[key]
-        obj.name = pen.name
+        obj.name = 'rectangle'
         obj.image = ''
       }
       getTopology(this.meta2dId).setValue(obj) // 更新pen

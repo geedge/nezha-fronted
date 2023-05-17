@@ -221,6 +221,10 @@ export default new Router({
           component: resolve => require(['@/components/page/tool/ping'], resolve)
         },
         {
+          path: '/discoveryAsset',
+          component: resolve => require(['@/components/page/tool/assetDiscovery'], resolve)
+        },
+        {
           path: '/trace',
           component: resolve => require(['@/components/page/tool/trace'], resolve)
         },
