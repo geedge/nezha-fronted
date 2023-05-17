@@ -7,6 +7,7 @@
     <div :id="`chart-canvas-${chartId}`" class="chart__canvas"></div>
     <chart-legend
       v-if="hasLegend"
+      ref="chartLegend"
       :chart-data="chartData"
       :chart-info="chartInfo"
       :legends="legends"
@@ -179,7 +180,8 @@ export default {
         getChart(this.chartId).on('dataZoom', function (params) {
           if (params.batch[0].startValue) {
             const chartInfo = self.chartInfo
-            const dataArg = self.$loadsh.cloneDeep(self.series)
+            let dataArg = self.$loadsh.cloneDeep(self.series)
+            dataArg = dataArg.filter((seriesItem, seriesIndex) => !this.$refs.chartLegend.isGrey[seriesIndex])
             dataArg.forEach(item => {
               item.data = item.data.filter(value => value[0] > params.batch[0].startValue && value[0] < params.batch[0].endValue)
             })
@@ -210,7 +212,8 @@ export default {
           } else {
             // 处理点击后的 Y轴
             const chartInfo = self.chartInfo
-            const dataArg = self.series
+            let dataArg = self.$loadsh.cloneDeep(self.series)
+            dataArg = dataArg.filter((seriesItem, seriesIndex) => !this.$refs.chartLegend.isGrey[seriesIndex])
             const maxValueCopies = self.getMaxValue(dataArg, chartInfo)
             const maxValue = maxValueCopies.maxValue
             const copies = maxValueCopies.copies
