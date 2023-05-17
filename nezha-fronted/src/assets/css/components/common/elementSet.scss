@@ -37,7 +37,7 @@
   border: 1px solid $--button-light-border-color !important;
   line-height: 1.5;
 }
-.custom-labels i {
+.custom-labels i.nz-icon-check{
   color: #04b330;
   font-size: 14px;
   position: absolute;
@@ -63,10 +63,25 @@
   background-color: $--background-color-empty;
 }
 .custom-label {
-  padding: 2px 0 2px 25px;
+  padding: 2px 25px;
   position: relative;
   cursor: default;
   font-size: 14px;
+  span{
+    width: 100%;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .nz-icon-sort{
+    font-size: 14px;
+    position: absolute;
+    right: 5px;
+    top: 2px;
+    margin: 0 !important;
+    cursor: grab;
+  }
 }
 .custom-title {
   padding: 2px 0 2px 2px;

@@ -371,7 +371,7 @@
   opacity: 1 !important;
   cursor: grab !important;
   background-color: $--background-color-empty;
-  .drag-sort .nz-icon-sort{
-    color: #FF8C0E;
+  .nz-icon-sort{
+    color: #FF8C0E !important;
   }
 }

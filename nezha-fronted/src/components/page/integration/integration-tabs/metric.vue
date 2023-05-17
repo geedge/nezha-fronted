@@ -13,7 +13,7 @@
         >
           <el-table-column
             v-for="(item, index) in tableTitle"
-            :key="`col-${index}`"
+            :key="`col-${index}-${item.prop}`"
             :label="item.label"
             :min-width="`${item.minWidth}`"
             :prop="item.prop"

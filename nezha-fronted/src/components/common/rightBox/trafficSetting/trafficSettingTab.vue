@@ -139,7 +139,7 @@
             show-overflow-tooltip
             v-for="(item, index) in tableLabels"
             :width="item.width"
-            :key="`col-${index}`"
+            :key="`col-${index}-${item.prop}`"
             style="max-height: 200px"
             >
             <template slot="header">

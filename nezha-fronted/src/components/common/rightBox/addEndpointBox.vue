@@ -57,7 +57,7 @@
                 </el-table-column>
                 <el-table-column
                   v-for="(item, index) in assetTableTitle"
-                  :key="`col-${index}`"
+                  :key="`col-${index}-${item.prop}`"
                   :fixed="item.fixed"
                   :label="item.label"
                   :min-width="`${item.minWidth}`"

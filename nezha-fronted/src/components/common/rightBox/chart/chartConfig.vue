@@ -14,9 +14,8 @@
       >
         <draggable
           v-model="chartConfig.elements"
-          :move="move"
-          @end="end"
           @start="start"
+          @end="end"
           :scroll-sensitivity="150"
           :options="{
             dragClass:'drag-chart-class',
@@ -690,7 +689,8 @@
         </div>
         <draggable
           v-model="chartConfig.param.columns"
-          @end="change"
+          @start="start"
+          @end="onEnd"
           :scroll-sensitivity="150"
           :options="{
           dragClass:'drag-columns-class',
@@ -791,7 +791,8 @@
           <el-row v-if="chartConfig.param.enable.valueMapping">
             <draggable
               v-model="chartConfig.param.valueMapping"
-              @end="change"
+              @start="start"
+              @end="onEnd"
               :scroll-sensitivity="150"
               :options="{
               dragClass:'drag-valueMapping-class',
@@ -1389,8 +1390,8 @@ export default {
       })
       this.change()
     },
-    move () {
-
+    start () {
+      document.body.classList.add('isDrag')
     },
     end (event) {
       this.expressions = []
@@ -1419,9 +1420,11 @@ export default {
         this.$refs.chartForm.clearValidate(arr)
       }
       this.change()
+      document.body.classList.remove('isDrag')
     },
-    start () {
-
+    onEnd () {
+      this.change()
+      document.body.classList.remove('isDrag')
     }
   },
   created () {

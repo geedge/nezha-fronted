@@ -439,7 +439,8 @@
         </div>
         <draggable
           v-model="chartConfig.param.columns"
-          @end="change"
+          @start="start"
+          @end="end"
           :scroll-sensitivity="150"
           :options="{
           dragClass:'drag-columns-class',
@@ -540,7 +541,8 @@
           <el-row v-if="chartConfig.param.enable.valueMapping">
             <draggable
               v-model="chartConfig.param.valueMapping"
-              @end="change"
+              @start="start"
+              @end="end"
               :scroll-sensitivity="150"
               :options="{
               dragClass:'drag-valueMapping-class',
@@ -1121,6 +1123,13 @@ export default {
     },
     showsystemInput (index, flag) {
       this.systemNameShow[index].hideInput = flag
+    },
+    start () {
+      document.body.classList.add('isDrag')
+    },
+    end () {
+      this.change()
+      document.body.classList.remove('isDrag')
     }
   },
   created () {

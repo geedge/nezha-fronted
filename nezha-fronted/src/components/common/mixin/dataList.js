@@ -1344,6 +1344,14 @@ export default {
     let localStorageTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
     localStorageTableTitle = localStorageTableTitle ? JSON.parse(localStorageTableTitle) : tableTitle
     if (tableTitle) {
+      // 先根据本地缓存中的prop进行排序
+      tableTitle.sort(function (a, b) {
+        return localStorageTableTitle.findIndex(function (c) {
+          return c.prop === a.prop
+        }) - localStorageTableTitle.findIndex(function (c) {
+          return c.prop === b.prop
+        })
+      })
       this.tools.customTableTitle = tableTitle.map((item, index) => { // 修复切换中英文的问题
         item.show = localStorageTableTitle[index].show
         return item

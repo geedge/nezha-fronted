@@ -19,7 +19,7 @@
       :resizable="true"
       v-for="(item, index) in customTableTitle"
       v-if="item.show"
-      :key="`col-${index}`"
+      :key="`col-${index}-${item.prop}`"
       :label="item.label">
       <template slot-scope="scope" :column="item">
         <span v-if="scope.row[item.prop]" :class="item.prop === 'remark'? 'el-table-remark':''">{{scope.row[item.prop]}}</span>

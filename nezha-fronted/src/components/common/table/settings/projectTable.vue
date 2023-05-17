@@ -22,7 +22,7 @@
     <el-table-column
       v-for="(item, index) in customTableTitle"
       v-if="item.show"
-      :key="`col-${index}`"
+      :key="`col-${index}-${item.prop}`"
       :fixed="item.fixed"
       :label="item.label"
       :min-width="`${item.minWidth}`"

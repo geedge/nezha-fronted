@@ -12,7 +12,7 @@
       <el-table-column
         v-for="(col, index) in columns"
         :prop="col.title"
-        :key="`col-${index}`"
+        :key="`col-${index}-${item.prop}`"
         :min-width="160"
         :sort-orders="['ascending', 'descending']"
         class="data-column"

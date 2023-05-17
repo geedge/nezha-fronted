@@ -63,7 +63,7 @@
               <el-table-column
                 v-for="(item, index) in tools.customTableTitle"
                 v-if="item.show"
-                :key="`col-${index}`"
+                :key="`col-${index}-${item.prop}`"
                 :label="item.label"
                 :prop="item.prop"
                 :resizable="false"

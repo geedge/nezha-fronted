@@ -18,7 +18,7 @@
       >
       <el-table-column
         v-for="(item, index) in columns"
-        :key="`col-${index}`"
+        :key="`col-${index}-${item.prop}`"
         :min-width="`${item.minWidth}`"
         :width="`${item.width}`"
         :prop="item.prop"

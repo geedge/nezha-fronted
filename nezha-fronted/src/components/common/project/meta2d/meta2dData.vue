@@ -45,21 +45,21 @@
         >
           <draggable
             v-model="elements"
-            :move="move"
-            @end="end"
             @start="start"
+            @end="end"
             :scroll-sensitivity="150"
             :options="{
-            dragClass:'drag-chart-class',
-            fallbackClass:'fallback-class',
-            forceFallback:true,
-            ghostClass:'chart-ghost',
-            chosenClass:'choose-class',
-            scroll:true,
-            filter: '.drag-disabled',
-            animation: 150,
-            handle: '.drag-sort'
-          }">
+              dragClass:'drag-chart-class',
+              fallbackClass:'fallback-class',
+              forceFallback:true,
+              ghostClass:'chart-ghost',
+              chosenClass:'choose-class',
+              scroll:true,
+              filter: '.drag-disabled',
+              animation: 150,
+              handle: '.drag-sort'
+            }"
+            >
             <el-row
               class="element-item form-row-item form-row-item-full thresholds-from-item"
               style="margin-bottom: 10px !important"
@@ -454,8 +454,8 @@ export default {
     hideError (key, index) {
       this.$forceUpdate()
     },
-    move () {
-
+    start () {
+      document.body.classList.add('isDrag')
     },
     end (event) {
       this.expressions = []
@@ -482,9 +482,7 @@ export default {
         })
       }
       this.change()
-    },
-    start () {
-
+      document.body.classList.remove('isDrag')
     },
     init () {
       // 重置相关属性

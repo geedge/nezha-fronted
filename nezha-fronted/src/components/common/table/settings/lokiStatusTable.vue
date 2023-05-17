@@ -7,7 +7,7 @@
           border>
             <el-table-column
             v-for="(item, index) in serviceTitle"
-            :key="`col-${index}`"
+            :key="`col-${index}-${item.prop}`"
             :fixed="item.fixed"
             :label="item.label"
             :min-width="`${item.minWidth}`"
@@ -31,7 +31,7 @@
           border>
             <el-table-column
             v-for="(item, index) in serviceTitleSub"
-            :key="`col-${index}`"
+            :key="`col-${index}-${item.prop}`"
             :fixed="item.fixed"
             :label="item.label"
             :min-width="`${item.minWidth}`"
@@ -61,7 +61,7 @@
              >
                 <el-table-column
                   v-for="(item, index) in ingesterTitle"
-                  :key="`col-${index}`"
+                  :key="`col-${index}-${item.prop}`"
                   :fixed="item.fixed"
                   :label="item.label"
                   :min-width="`${item.minWidth}`"

@@ -4,19 +4,73 @@
     <div class="pop-box custom-labels" @click.stop>
       <div style="height: 100%; overflow: auto;">
         <!--NotSet 为true不可设置-->
-        <div
-          v-for="(item,index) in custom"
-          :key="index"
-          class="custom-label"
-          @click.stop="handler(item,index)"
-          :id="'element-set-el-'+index"
-          :class="{'custom-title orange-font':item.type == 'title','custom-label-disabled':!allowedAll&&!item.allowed && (index==0 || index == 1 || item.NotSet)}"
-        >
-          <i class="nz-icon nz-icon-check" v-if="!allowedAll&&!item.allowed&&(index==0||index==1||item.visibility=='disabled')"></i>
-          <i v-else class="nz-icon nz-icon-check" v-show="item.show"></i>
-          <span>{{item.label}}</span>
-        </div>
-
+        <draggable
+          v-model="custom"
+          :move="move"
+          @start="start"
+          @end="end"
+          :scroll-sensitivity="30"
+          :options="{
+            dragClass:'drag-elementSet-class',
+            fallbackClass:'fallback-class',
+            forceFallback:true,
+            ghostClass:'chart-ghost',
+            chosenClass:'chosen-class',
+            scroll:true,
+            filter: '.drag-disabled',
+            animation: 150,
+            handle: '.drag-sort'
+          }"
+          >
+          <div
+            v-for="(item,index) in custom"
+            v-if="item.type!=='title'&&item.type!=='label'"
+            :key="index"
+            class="custom-label"
+            @click.stop="handler(item,index)"
+            :id="'element-set-el-'+index"
+            :class="{'custom-title orange-font':item.type == 'title','custom-label-disabled':!allowedAll&&!item.allowed && (index==0 || index == 1 || item.NotSet),'drag-disabled':index==0 || index == 1 || item.NotSet}"
+          >
+            <i class="nz-icon nz-icon-check" v-if="!allowedAll&&!item.allowed&&(index==0||index==1||item.visibility=='disabled')"></i>
+            <i v-else class="nz-icon nz-icon-check" v-show="item.show"></i>
+            <span>{{item.label}}</span>
+            <i class="nz-icon nz-icon-sort drag-sort" v-if="index!==0 && index !== 1 && !item.NotSet" @click.stop></i>
+          </div>
+        </draggable>
+        <!-- asset Attributes -->
+        <draggable
+          v-model="custom"
+          :move="move"
+          @start="start"
+          @end="end"
+          :scroll-sensitivity="30"
+          :options="{
+            dragClass:'drag-elementSet-class',
+            fallbackClass:'fallback-class',
+            forceFallback:true,
+            ghostClass:'chart-ghost',
+            chosenClass:'chosen-class',
+            scroll:true,
+            filter: '.drag-disabled',
+            animation: 150,
+            handle: '.drag-sort'
+          }"
+          >
+          <div
+            v-for="(item,index) in custom"
+            v-if="item.type==='title'||item.type==='label'"
+            :key="index"
+            class="custom-label"
+            @click.stop="handler(item,index)"
+            :id="'element-set-el-'+index"
+            :class="{'custom-title orange-font':item.type == 'title','custom-label-disabled':!allowedAll&&!item.allowed && (index==0 || index == 1 || item.NotSet),'drag-disabled':index==0 || index == 1 || item.NotSet}"
+          >
+            <i class="nz-icon nz-icon-check" v-if="!allowedAll&&!item.allowed&&(index==0||index==1||item.visibility=='disabled')"></i>
+            <i v-else class="nz-icon nz-icon-check" v-show="item.show"></i>
+            <span>{{item.label}}</span>
+            <i class="nz-icon nz-icon-sort drag-sort" v-if="index!==0 && index !== 1 && !item.NotSet" @click.stop></i>
+          </div>
+        </draggable>
       </div>
     </div>
     <div class="custom-bottom-btns" @click.stop>
@@ -39,6 +93,7 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 export default {
   props: {
     customTableTitle: Array, // 自定义的title
@@ -47,6 +102,9 @@ export default {
     allowedAll: { default: false },
     tableClass: Boolean,
     operationTrue: Boolean
+  },
+  components: {
+    draggable
   },
   data () {
     return {
@@ -113,6 +171,19 @@ export default {
         JSON.stringify(this.custom)
       )
       this.esc()
+    },
+    // 禁止拖动的对象
+    move (e) {
+      const index = e.relatedContext.index
+      const item = e.relatedContext.element
+      if (index == 0 || index == 1 || item.NotSet) return false
+      return true
+    },
+    start () {
+      document.body.classList.add('isDrag')
+    },
+    end () {
+      document.body.classList.remove('isDrag')
     }
   },
   computed: {

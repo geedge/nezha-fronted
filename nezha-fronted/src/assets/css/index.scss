@@ -23,6 +23,11 @@ html {
   overflow: hidden;
 }
 
+.isDrag *{
+  cursor: grab !important;
+}
+  
+
 /* 默认主题和暗色主题 */
 .theme-light {
   $--theme: light;

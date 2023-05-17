@@ -4,7 +4,7 @@
     <el-table-column
       class="table-column__head"
       v-for="(item, index) in customTableTitle"
-      :key="`col-${index}`"
+      :key="`col-${index}-${item.prop}`"
       :width="`${item.width}`"
       :min-width="`${item.minWidth}`"
       :label="item.label"

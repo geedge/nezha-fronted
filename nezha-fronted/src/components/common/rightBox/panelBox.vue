@@ -88,6 +88,8 @@
             </div>
             <draggable
               v-model="editPanel.param.variables"
+              @start="start"
+              @end="end"
               :scroll-sensitivity="150"
               :options="{
                 dragClass:'drag-columns-class',
@@ -99,7 +101,8 @@
                 filter: '.drag-disabled',
                 animation: 150,
                 handle: '.drag-sort'
-              }">
+              }"
+              >
               <el-row
                 v-for="(item,index) of editPanel.param.variables"
                 :key="item.uid"
@@ -530,6 +533,12 @@ export default {
     this.getUserData()
   },
   methods: {
+    start () {
+      document.body.classList.add('isDrag')
+    },
+    end () {
+      document.body.classList.remove('isDrag')
+    },
     // 变量类型改变 清空数据
     variableTypeChange (index) {
       this.$set(this.editPanel.param.variables[index], 'customOptions', '')

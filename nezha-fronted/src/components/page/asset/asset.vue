@@ -681,6 +681,9 @@ export default {
               const oldLabelTitle = title.slice(tableTitle.length, title.length) // 旧labelTitle
 
               const newLabel = showData.filter(item => { return !oldLabelTitle.find(t => { return item.label === t.label }) })
+              newLabel.forEach(item => {
+                item.minWidth = item.label.length * 16 + 20
+              })
               const keepLabel = oldLabelTitle.filter(item => showData.find(t => item.label === t.label))
 
               let result = originalTitle.concat([{ label: this.$t('overall.labels'), show: false, NotSet: true, type: 'title', prop: 'table-label' }])

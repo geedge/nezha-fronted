@@ -808,7 +808,8 @@
               <el-row class="el-form">
                 <draggable
                   v-model="pen.data.valueMapping"
-                  @end="change"
+                  @start="start"
+                  @end="end"
                   :scroll-sensitivity="150"
                   :options="{
                     dragClass:'drag-valueMapping-class',
@@ -1225,6 +1226,13 @@ export default {
   mounted () {
   },
   methods: {
+    start () {
+      document.body.classList.add('isDrag')
+    },
+    end () {
+      this.change()
+      document.body.classList.remove('isDrag')
+    },
     change (key) {
       if (key === 'lineDash') {
         const val = this.pen.borderType
