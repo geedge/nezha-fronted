@@ -310,7 +310,7 @@
         margin-bottom: 10px;
       }
       .right-content-box{
-        width: 380px;
+        min-width: 380px;
         color: $--color-text-primary;
       }
       .tools-header-right-content{
