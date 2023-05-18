@@ -8,7 +8,7 @@
     <template v-slot:top-tool-left>
       <div class="tools-header">
         <div style="width: 360px;" class="nz-select-tag">
-          <span>{{$t('overall.IPAM')}}</span>
+          <span style="vertical-align: top">{{$t('overall.IPAM')}}</span>
           <el-select
             v-model="discoveryForm.subnetIds"
             class="right-box__select"

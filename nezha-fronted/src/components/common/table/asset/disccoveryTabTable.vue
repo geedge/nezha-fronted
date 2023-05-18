@@ -122,13 +122,13 @@ export default {
           show: true,
           minWidth: 150
         }, {
-          label: this.$t('overall.SNMP'),
-          prop: 'state',
+          label: this.$t('asset.pingInfo'),
+          prop: 'ping',
           show: true,
           minWidth: 150
         }, {
-          label: this.$t('asset.pingInfo'),
-          prop: 'ping',
+          label: this.$t('overall.SNMP'),
+          prop: 'state',
           show: true,
           minWidth: 150
         }, {
