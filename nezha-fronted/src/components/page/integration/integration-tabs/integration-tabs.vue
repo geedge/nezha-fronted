@@ -8,7 +8,7 @@
       <automatic v-if="tabId==='automatic'"></automatic>
       <manual v-if="tabId==='manual'"></manual>
       <!-- module -->
-      <configuration v-if="tabId==='configuration'" :configuration="detailsObj.configuration"></configuration>
+      <configuration v-if="tabId==='configuration'" :configuration="$t(detailsObj.configuration)"></configuration>
       <dashboard v-if="tabId==='dashboard'" :tempId="detailsObj.tempId"></dashboard>
 <!--      <alert v-if="tabId==='alert'" :moduleId="detailsObj.id"></alert>-->
       <metric v-if="tabId==='metric'" :moduleId="detailsObj.id"></metric>

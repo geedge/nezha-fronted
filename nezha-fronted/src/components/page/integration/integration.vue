@@ -15,8 +15,8 @@
     <ul class="integration-list">
       <li class="integration-item" v-for="item in dataList" :key="item.id" @click="details(item)">
         <img class="integration-icon" :src="item.icon" alt="">
-        <h2 class="integration-name">{{item.name}}</h2>
-        <p class="integration-remark">{{item.remark}}</p>
+        <h2 class="integration-name" :title="$t(item.name)">{{item.name}}</h2>
+        <p class="integration-remark" :title="$t(item.remark)">{{$t(item.remark)}}</p>
       </li>
     </ul>
 
@@ -39,7 +39,7 @@
         </div>
         <div class="integration-dialog-introduce">
           <h2 class="integration-name">{{detailsObj.name}}</h2>
-          <p class="integration-remark">{{detailsObj.remark}}</p>
+          <p class="integration-remark">{{$t(detailsObj.remark)}}</p>
         </div>
       </div>
       <!-- tabs -->
