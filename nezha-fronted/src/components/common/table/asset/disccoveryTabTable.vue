@@ -54,6 +54,11 @@
             </div>
             <div style="display: inline-block;">{{typeToStr(scope.row[item.prop])}}</div>
           </template>
+          <template v-else-if="item.prop === 'ping'">
+            <div :class="{'active-icon green-bg':scope.row[item.prop] == 1,'active-icon red-bg':scope.row[item.prop]!= 1}" style="position: relative;display: inline-block;">
+            </div>
+            <div style="display: inline-block;">{{typeToStr(scope.row[item.prop])}}</div>
+          </template>
           <template v-else-if="item.prop === 'imported'">
             <span v-if="scope.row[item.prop] == 1">{{$t('tip.yes')}}</span>
             <span v-else>{{$t('tip.no')}}</span>
@@ -103,13 +108,13 @@ export default {
           prop: 'ip',
           show: true,
           minWidth: 200,
-          sortable: 'custom'
+          // sortable: 'custom'
         }, {
           label: this.$t('asset.hostName'),
           prop: 'sysName',
           show: true,
           minWidth: 200,
-          sortable: 'custom'
+          // sortable: 'custom'
         },
         {
           label: this.$t('overall.dc'),
@@ -119,6 +124,11 @@ export default {
         }, {
           label: this.$t('overall.SNMP'),
           prop: 'state',
+          show: true,
+          minWidth: 150
+        }, {
+          label: this.$t('asset.pingInfo'),
+          prop: 'ping',
           show: true,
           minWidth: 150
         }, {
@@ -145,9 +155,9 @@ export default {
     typeToStr (type) {
       switch (type) {
         case 1:
-          return 'Success'
+          return this.$t('overall.result.success')
         default:
-          return 'Failed'
+          return this.$t('config.terminallog.statusItem.connectionFailed')
       }
     }
   }
