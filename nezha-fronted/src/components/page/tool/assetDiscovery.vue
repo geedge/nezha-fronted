@@ -112,6 +112,7 @@
             ref="dataTable"
             :loading="loading"
             v-my-loading="loading"
+            :height="'calc(100% - 80px)'"
             :custom-table-title="tools.customTableTitle"
             :table-data="tableData"
             :api="url"
@@ -335,15 +336,20 @@ export default {
     getData () {
       const currentId = this.tid
       this.$get('/tool/discovery/' + this.tid).then(response => {
-        if (currentId === this.tid && parseInt(this.process) < 100) {
-          this.done = response.data.task.done
-          this.total = response.data.task.total
-          this.process = response.data.task.process
-          this.tableData.push(...response.data.list)
-          // 收到数据，loading取消
-          if (this.tableData.length) {
-            this.loading = false
+        if (response.code === 200) {
+          if (currentId === this.tid && parseInt(this.process) < 100) {
+            this.done = response.data.task.done
+            this.total = response.data.task.total
+            this.process = response.data.task.process
+            this.tableData.push(...response.data.list)
+            // 收到数据，loading取消
+            if (this.tableData.length) {
+              this.loading = false
+            }
           }
+        }else {
+          this.$message.error(response.msg || response.error)
+          this.clearTask()
         }
       })
     },

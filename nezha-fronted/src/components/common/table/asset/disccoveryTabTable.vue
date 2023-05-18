@@ -50,7 +50,9 @@
             <div>{{scope.row[item.prop] ? scope.row[item.prop].name : '-'}}</div>
           </template>
           <template v-else-if="item.prop === 'state'">
-            <div>{{typeToStr(scope.row[item.prop])}}</div>
+            <div :class="{'active-icon green-bg':scope.row[item.prop] == 1,'active-icon red-bg':scope.row[item.prop]!= 1}" style="position: relative;display: inline-block;">
+            </div>
+            <div style="display: inline-block;">{{typeToStr(scope.row[item.prop])}}</div>
           </template>
           <template v-else-if="item.prop === 'imported'">
             <span v-if="scope.row[item.prop] == 1">{{$t('tip.yes')}}</span>
@@ -115,7 +117,7 @@ export default {
           show: true,
           minWidth: 150
         }, {
-          label: this.$t('overall.type'),
+          label: this.$t('overall.SNMP'),
           prop: 'state',
           show: true,
           minWidth: 150
@@ -143,7 +145,9 @@ export default {
     typeToStr (type) {
       switch (type) {
         case 1:
-          return 'Server'
+          return 'Success'
+        default:
+          return 'Failed'
       }
     }
   }

@@ -253,6 +253,7 @@
       margin-left: 15px;
     }
     .nz-select-tag {
+      color: $--color-text-regular;
       .el-select__tags{
         max-height: 128px;
         overflow-y: auto;
@@ -262,7 +263,7 @@
         max-width: 220px;
         overflow: hidden;
         .el-select__tags-text {
-          width: calc(100% - 10px);
+          width: calc(100% - 15px);
           display: inline-block;
           overflow: hidden;
         }
