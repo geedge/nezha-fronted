@@ -2,7 +2,7 @@
   <div class="interval-refresh margin-r-10">
     <time-picker v-if="showTimePicker" ref="timePicker" v-model="searchTime" :default-pick="defaultPick" :show-empty="showEmpty" class="time-picker margin-r-10" size="small" @change="dateChange" :sign="sign"></time-picker>
     <multipleTime v-if="showMultiple" ref="multipleTime" :stepSearchTime="searchTime" class="multiple-time margin-r-10" @change="dateChange(searchTime)"/>
-    <chart-unit v-if="useChartUnit" v-model="unit" class="margin-r-10"></chart-unit>
+    <chart-unit v-if="useChartUnit" v-model="unit" ref="chartUnit" class="margin-r-10"></chart-unit>
     <div v-show="useRefresh" class="top-tool-btn-group">
       <button :id="id+'-refresh'" class="top-tool-btn top-tool-btn--text" @click="antiShake" :title="id === 'explore' ? '': $t('dashboard.refresh')">
         <i class="global-active-color nz-icon nz-icon-refresh" style="font-size: 14px"></i>&nbsp;

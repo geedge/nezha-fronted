@@ -76,7 +76,7 @@
               :metricOptionsParent="metricOptions"
               v-for="index of promqlKeys.length"
               :id="promqlKeys[index-1].id"
-              :pqid="tabIndex.toString()"
+              :pqid="promqlKeys[index-1].id"
               :key="promqlKeys[index-1].id"
               :ref="'promql-'+(index-1)"
               :expression-list="expressions"
@@ -96,7 +96,7 @@
             <promql-input
               v-for="index of promqlKeys.length"
               :id="promqlKeys[index-1].id"
-              :pqid="tabIndex.toString()"
+              :pqid="promqlKeys[index-1].id"
               :key="promqlKeys[index-1].id"
               :ref="'promql-'+(index-1)"
               :expression-list="expressions"
@@ -3510,9 +3510,9 @@ export default {
       selectIcon: 'nz-icon nz-icon-Metrics',
       // language: localStorage.getItem('nz-language') || 'en',
       showMetrics: true,
-      promqlCount: 1,
+      promqlCount: 0,
       promqlKeys: [],
-      expressions: [''],
+      expressions: [],
       filterTime: [
         bus.timeFormate(bus.getOffsetTimezoneData(-1)),
         bus.timeFormate(bus.getOffsetTimezoneData())
@@ -3538,7 +3538,7 @@ export default {
       tableData: [],
       saveDisabled: true,
       panelData: [],
-      chartUnit: 0,
+      chartUnit: 2,
       historyParam: { useHistory: true, key: 'expore-history' },
       chartData: {},
       collapseValue: ['1', '2'],
@@ -3557,15 +3557,12 @@ export default {
   },
   created () {
     this.getPanelData()
-    this.promqlKeys.push({
-      id: getUUID(),
-      state: 1
-    })
-    this.selectMetricsLogs()
+    this.resetExpression()
   },
   mounted () {
     this.scrollbarWrap = this.$refs.exploreScrollbar
     this.scrollbarWrap.addEventListener('scroll', this.onScroll)
+    this.initQueryFromPath()
   },
   beforeDestroy () {
     this.scrollbarWrap.removeEventListener('scroll', this.onScroll)
@@ -3981,17 +3978,83 @@ export default {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.pageObj.pageNo = 1
       this.setSearchTime(nowTimeType.type, nowTimeType.value)
-      if (this.showMetrics) {
-        if (this.expressions && this.expressions.length >= 1) {
+      if (this.expressions && this.expressions.length >= 1) {
+        if (this.showMetrics) {
           this.queryTableData()
           this.queryChartData()
           this.storeHistory()
-        }
-      } else {
-        if (this.expressions && this.expressions.length >= 1) {
+        } else {
           this.queryLogData()
         }
       }
+      this.updatePath()
+    },
+    initQueryFromPath () {
+      const param = this.$route.query[this.position]
+      if (param) {
+        const data = JSON.parse(param)
+        // 根据地址栏参数设置时间
+        const nowTimeType = data.nowTimeType
+        this.filterTime = data.searchTime
+        if (nowTimeType && nowTimeType.type) {
+          this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+        }
+        if (nowTimeType) {
+          nowTimeType.start_time = this.filterTime[0]
+          nowTimeType.end_time = this.filterTime[1]
+          this.$refs.pickTime.$refs.timePicker.setCustomTime(nowTimeType)
+        }
+        // 设置单位
+        this.chartUnit = data.unit || 2
+        this.$refs.pickTime.unit = this.chartUnit
+        this.$refs.pickTime.$refs.chartUnit.unit = this.chartUnit
+        // 设置selectValue
+        const find = this.searchMetrics.find(item => item.value == data.type)
+        this.selectMetricsLogs(find.label, find.icon, find.value)
+        // 设置表达式
+        this.promqlCount = data.queries.length
+        data.queries.forEach((item, index) => {
+          this.$set(this.expressions, index, item.expr)
+          if (this.promqlKeys[index]) {
+            this.promqlKeys[index].state = item.state
+          } else {
+            this.promqlKeys[index] = {
+              id: getUUID(),
+              state: item.state
+            }
+          }
+        })
+        setTimeout(() => {
+          this.expressionChange()
+        }, 200)
+      }
+    },
+    updatePath () {
+      const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+      const queries = this.expressions.map((item, index) => {
+        return {
+          expr: item,
+          state: this.promqlKeys[index].state
+        }
+      })
+      const q = {
+        type: this.showMetrics ? 'Metrics' : 'Logs',
+        unit: this.chartUnit,
+        queries: queries,
+        nowTimeType: nowTimeType,
+        searchTime: this.filterTime
+      }
+      const exploreItems = this.$parent.exploreItems
+      let param = JSON.parse(JSON.stringify(this.$route.query))
+      delete param.t
+      if (exploreItems.length === 1) { // 一列
+        param = {
+          left: JSON.stringify(q)
+        }
+      } else { // 两列
+        param[this.position] = JSON.stringify(q)
+      }
+      this.$router.replace({ query: param })
     },
     setSearchTime (type, val) { // 设置searchTime
       if (type === 'minute') {
@@ -4103,7 +4166,7 @@ export default {
       if (!temp) {
         this.showIntroduce = true
       }
-      // this.expressionChange()
+      this.updatePath()
     },
     addExpression (index) {
       this.expressions.splice(index + 1, 0, '')
@@ -4327,6 +4390,11 @@ export default {
   computed: {
     language () {
       return this.$store.getters.getLanguage
+    },
+    position () {
+      const exploreItems = this.$parent.exploreItems
+      const tabIndex = exploreItems.indexOf(this.tabIndex)
+      return tabIndex ? 'right' : 'left'
     }
   },
   watch: {

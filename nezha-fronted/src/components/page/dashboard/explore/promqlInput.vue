@@ -678,9 +678,9 @@ export default {
           ],
           doc: self.codeMirrorValue[self.index],
           editorState: {
-            changeByRange: self.newChange(),
-            changes: self.newDoc(),
-            facet: self.newChange()
+            changeByRange: self.newChange,
+            changes: self.newDoc,
+            facet: self.newChange
           }
         })
         const view = new EditorView({
