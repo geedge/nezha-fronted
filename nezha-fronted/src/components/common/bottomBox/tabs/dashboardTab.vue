@@ -880,8 +880,10 @@ export default {
     },
     showPanel: {
       handler () {
-        this.setDefaultTimeRange()
-        this.setDefaultRefresh()
+        if (this.from !== this.fromRoute.dashboardTemp) {
+          this.setDefaultTimeRange()
+          this.setDefaultRefresh()
+        }
       }
     },
     // 监听图表联动配置
