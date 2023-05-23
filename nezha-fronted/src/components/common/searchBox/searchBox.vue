@@ -126,7 +126,7 @@ export default {
       valueShow: false, // value 的下拉
       inputReadonly: false,
       dialogObjValueList: [],
-      selectIndex: 0,
+      selectIndex: -1,
       valueList: [],
       oldValueList: [],
       symbolList: [],
@@ -189,7 +189,10 @@ export default {
           value: 'not exist',
           remark: '不存在'
         }
-      ]
+      ],
+      keyword: [0, 1, 6, 7, 8, 9],
+      text: [0, 1, 6, 7, 8, 9],
+      number: [0, 1, 2, 3, 4, 5]
     }
   },
   methods: {
@@ -215,7 +218,7 @@ export default {
       }
       // 5
       if (e.keyCode == 38) { // 向上
-        if (this.selectIndex == 0) return
+        if (this.selectIndex == -1) return
         this.selectIndex--
       }
       if (e.keyCode == 40 && (this.keyShow || this.valueShow || this.symbolShow)) { // 向下
@@ -236,21 +239,31 @@ export default {
       // console.log(e, 'keyup')
       // console.log(this.searchStr)
       // 6
+      // console.log(this.keyShow)
       if (e.keyCode == 13 && (this.keyShow || this.valueShow || this.symbolShow)) {
         // 选择对应条件
         setTimeout(() => {
           if (this.keyShow) {
-            this.selectKey(this.searchList[this.selectIndex])
+            this.selectKey(this.searchList[this.selectIndex] || { name: this.searchStr })
           } else if (this.symbolShow) {
             this.selectSymbol(this.symbolList[this.selectIndex])
           } else if (this.valueShow) {
-            this.selectValue(this.valueList[this.selectIndex].label)
+            if (this.valueList[this.selectIndex]) {
+              this.selectValue(this.valueList[this.selectIndex].label)
+            } else {
+              this.addSelectArr(this.searchStr)
+              this.searchStr = ''
+              this.contentShow()
+              this.symbol = false
+              this.key = ''
+            }
           }
         }, 100)
         this.$refs.searchStr.focus()
         return
       }
       // 4
+      const index = this.searchStr.indexOf(':')
       if (e.keyCode == 13 && index !== -1 && this.symbol) {
         this.addSelectArr(this.searchStr)
         this.searchStr = ''
@@ -284,6 +297,7 @@ export default {
       switch (item.value) {
         case '=' :
           this.$refs.searchStr.focus()
+          this.inputEnd()
           break
         case '≠' :
           this.searchStr = '-' + this.searchStr
@@ -323,6 +337,7 @@ export default {
           this.$refs.searchStr.focus()
           break
       }
+      // console.log(' this.setValueList(\'\')')
       this.setValueList('')
       this.contentShow('value')
     },
@@ -387,9 +402,9 @@ export default {
       this.keyShow = false // key 的下拉
       this.symbolShow = false // symbol 的下拉
       this.valueShow = false // value 的下拉
-      console.log(key)
+      // console.log(key)
       if (key === 'symbol') {
-        this.setSymBolList()
+        this.setSymBolList(this.key)
         this.symbolShow = true
       }
       if (key === 'key') {
@@ -408,14 +423,13 @@ export default {
         this.key = keyStr
       }
       // console.log(this.key)
-      if (key === 'value') { // 处理valueList
+      if (key === 'symbol') { // 处理valueList
         const findItem = this.oldSearchList.find(item => item.name === this.key)
         if (findItem && findItem.type !== 'input') {
           // this.inputReadonly = true
           this.oldValueList = this[findItem.label]
         } else {
           this.oldValueList = []
-          this[key + 'Show'] = false
         }
       }
     },
@@ -429,17 +443,28 @@ export default {
       }
     },
     setSearchList (str) {
-      this.selectIndex = 0
+      this.selectIndex = -1
+      if (!str) {
+        this.searchList = this.$loadsh.cloneDeep(this.oldSearchList)
+        return
+      }
       this.searchList = this.oldSearchList.filter(item => item.name.indexOf(str) !== -1)
     },
     setSymBolList (str) {
+      let findItemType = 'text'
       const findItem = this.oldSearchList.find(item => item.name === this.key)
-      this.selectIndex = 0
-      this.symbolList = this.oldSymbolList
+      if (findItem) {
+        findItemType = findItem.type || 'keyword'
+      }
+      this.selectIndex = -1
+      this.symbolList = this.oldSymbolList.filter((item, index) => {
+        return this[findItemType].indexOf(index) !== -1
+      })
     },
     setValueList (str) {
-      this.selectIndex = 0
+      this.selectIndex = -1
       this.valueList = this.oldValueList.filter(item => item.label.indexOf(str) !== -1)
+      // console.log(this.valueList)
       if (!this.valueList.length) {
         this.valueShow = false
       } else {
@@ -459,8 +484,10 @@ export default {
           key,
           value: [value]
         })
-        this.setSearchList()
       }
+      this.setSearchList()
+      this.$emit('change', this.selectArr)
+      this.url
     },
     removeSelectArr (index) {
       this.selectArr.splice(index, 1)
@@ -542,12 +569,33 @@ export default {
     handleSelect () {
 
     },
+    inputEnd () { // 光标最后一位
+      // console.log('12313123')
+      const ele = this.$refs.searchStr.$el
+      const obj = ele.getElementsByClassName('el-input__inner')[0]
+      // console.log(obj)
+      obj.focus()
+      const len = obj.value.length
+      if (document.selection) {
+        const sel = obj.createTextRange()
+        sel.moveStart('character', len); sel.collapse(); sel.select()
+      } else if (typeof obj.selectionStart === 'number' && typeof obj.selectionEnd === 'number') {
+        setTimeout(() => {
+          obj.selectionStart = obj.selectionEnd = len
+        }, 100)
+      }
+    // this.searchStr = this.$loadsh.cloneDeep(this.searchStr)
+    },
     clickOutside () { // 点击页面其他地方触发
       this.visible = false
       this.keyShow = false // key 的下拉
       this.symbolShow = false // symbol 的下拉
       this.valueShow = false // value 的下拉
       this.inputWidth = 400
+      this.searchStr = ''
+      this.searchList = this.$loadsh.cloneDeep(this.oldSearchList)
+      this.symbolList = []
+      this.valueList = []
     }
   },
   watch: {
@@ -562,7 +610,7 @@ export default {
     },
     searchStr: {
       handler (n, o) {
-        console.log(n, o)
+        // console.log(n, o)
         // 2 3
         const index = this.searchStr.indexOf(':')
         if (index === -1) {
