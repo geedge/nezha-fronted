@@ -13,6 +13,7 @@
       ref="panelChart"
       :chart-info="chartInfo"
       :show-header="false"
+      from="meta2dTooltip"
     />
   </div>
 </template>

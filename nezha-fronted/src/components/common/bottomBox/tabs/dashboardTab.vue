@@ -880,8 +880,10 @@ export default {
     },
     showPanel: {
       handler () {
-        this.setDefaultTimeRange()
-        this.setDefaultRefresh()
+        if (this.from !== this.fromRoute.dashboardTemp) {
+          this.setDefaultTimeRange()
+          this.setDefaultRefresh()
+        }
       }
     },
     // 监听图表联动配置
@@ -936,6 +938,10 @@ export default {
     document.querySelector('#tableList') && document.querySelector('#tableList').removeEventListener('mouseleave', this.tableListLeave)
     this.scrollbarWrap && this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
     this.$store.dispatch('dispatchPanelLock', { flag: true })
+    this.$store.dispatch('dispatchPanelTime', {
+      time: [],
+      nowTimeType: {}
+    })
 
     // 页面销毁 清除图表联动
     this.$store.commit('setCurrentMousemove', 0)

@@ -503,7 +503,11 @@ export default {
         setTimeout(() => {
           const start = new Date().setHours(new Date().getHours() - 1)
           const end = new Date()
-          this.timeRange = [bus.computeTimezoneTime(start), bus.computeTimezoneTime(end)]
+          if (this.from === 'dashboard') {
+            this.timeRange = this.$store.getters.getTimeRange
+          } else {
+            this.timeRange = [bus.computeTimezoneTime(start), bus.computeTimezoneTime(end)]
+          }
           this.prevChart = {
             ...lodash.cloneDeep(this.editChart),
             loaded: true

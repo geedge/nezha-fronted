@@ -186,6 +186,7 @@ export default {
     aliasLegend (row) {
       let host = ''// up,
       let alias = ''
+      row.elements.legend = this.globalVariablesReplace(row.elements.legend)
       if (row.labels && Object.keys(row.labels).length > 0) {
         const metric = Object.keys(row.labels)
         if (metric.__name__) {
@@ -292,7 +293,9 @@ export default {
       deep: true,
       handler (n) {
         // this.tableData = this.tableData.reverse()
-        this.$emit('refreshLogs', this.operations)
+        this.$nextTick(() => {
+          this.$emit('refreshLogs', this.operations)
+        })
       }
     }
   }

@@ -37,7 +37,8 @@ export default {
     dialogPadding: {
       type: Number,
       default: 0
-    }
+    },
+    globalVariables: {}
   },
   computed: {
     filterTime () {
@@ -239,6 +240,9 @@ export default {
       const myParams = JSON.parse(JSON.stringify(params))
       myParams.$labels = JSON.parse(JSON.stringify(params))
       myParams.$value = myParams.value
+      if (this.from !== 'meta2dTooltip') {
+        aliasExpression = this.globalVariablesReplace(aliasExpression)
+      }
       if (/\{\{.+\}\}/.test(aliasExpression)) {
         const labelValue = aliasExpression.replace(/(\{\{.+?\}\})/g, function (i) {
           const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
@@ -274,6 +278,18 @@ export default {
         }
         return aliasExpression
       }
+    },
+    globalVariablesReplace (expression) {
+      let str = expression
+      if (str) {
+        this.globalVariables.forEach(item => {
+          const reg = new RegExp('{{\\' + item.name + '}}', 'g')
+          if (item.value != null) {
+            str = str.replace(reg, item.value)
+          }
+        })
+      }
+      return str
     },
     selectMapping (value, valueMapping, show) {
       let mapping = ''

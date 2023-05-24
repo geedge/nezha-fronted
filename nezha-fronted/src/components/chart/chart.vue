@@ -17,6 +17,7 @@
         :showAllData="showAllData"
         @chartIsNoData="chartIsNoData"
         :from="from"
+        :globalVariables="globalVariables"
       ></chart-time-series>
       <chart-doughnut
         :ref="'chart' + chartInfo.id"
@@ -26,6 +27,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-doughnut>
       <chart-rose
         :ref="'chart' + chartInfo.id"
@@ -35,6 +37,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-rose>
       <chart-bar
         :ref="'chart' + chartInfo.id"
@@ -44,6 +47,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-bar>
       <chartHexagonD3
         :ref="'chart'+chartInfo.id"
@@ -53,6 +57,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chartHexagonD3>
       <chart-url
         :ref="'chart' + chartInfo.id"
@@ -62,6 +67,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-url>
       <chart-text
         :ref="'chart' + chartInfo.id"
@@ -71,6 +77,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-text>
       <chart-treemap
         :ref="'chart' + chartInfo.id"
@@ -80,6 +87,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-treemap>
       <chart-log
         :ref="'chart' + chartInfo.id"
@@ -90,6 +98,7 @@
         :is-fullscreen="isFullscreen"
         @refreshLogs="refreshLogs"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-log>
       <chart-stat
         :ref="'chart' + chartInfo.id"
@@ -99,6 +108,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-stat>
       <chart-gauge
         :ref="'chart' + chartInfo.id"
@@ -108,6 +118,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-gauge>
       <chart-diagram
         :ref="'chart' + chartInfo.id"
@@ -117,6 +128,7 @@
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
         :chart-option="chartOption"
+        :globalVariables="globalVariables"
       ></chart-diagram>
       <chartAutotopology
         :ref="'chart' + chartInfo.id"
@@ -126,6 +138,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chartAutotopology>
       <chartMap
         :ref="'chart' + chartInfo.id"
@@ -135,6 +148,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chartMap>
       <chart-asset-info
         :ref="'chart' + chartInfo.id"
@@ -145,6 +159,7 @@
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
         :from="from"
+        :globalVariables="globalVariables"
       ></chart-asset-info>
       <chart-endpoint-info
         :ref="'chart' + chartInfo.id"
@@ -155,6 +170,7 @@
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
         :from="from"
+        :globalVariables="globalVariables"
       ></chart-endpoint-info>
       <chart-table
         :ref="'chart' + chartInfo.id"
@@ -164,6 +180,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-table>
       <chart-group
         :ref="'chart' + chartInfo.id"
@@ -176,6 +193,7 @@
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
         :chart-option="chartOption"
+        :globalVariables="globalVariables"
       ></chart-group>
       <chart-clock
         :ref="'chart' + chartInfo.id"
@@ -185,6 +203,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-clock>
       <chart-topology
         :ref="'chart' + chartInfo.id"
@@ -194,6 +213,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-topology>
       <chart-bubble
         :ref="'chart' + chartInfo.id"
@@ -203,6 +223,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-bubble>
       <chart-rank
         :ref="'chart' + chartInfo.id"
@@ -212,6 +233,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-rank>
       <chart-sankey
         :ref="'chart' + chartInfo.id"
@@ -221,6 +243,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-sankey>
       <chart-funnel
         :ref="'chart' + chartInfo.id"
@@ -230,6 +253,7 @@
         :chart-option="chartOption"
         :is-fullscreen="isFullscreen"
         @chartIsNoData="chartIsNoData"
+        :globalVariables="globalVariables"
       ></chart-funnel>
     </template>
   </div>
@@ -256,7 +280,6 @@ import chartText from './chart/chartText'
 import chartTimeSeries from './chart/chartTimeSeries'
 import chartTreemap from './chart/chartTreemap'
 import chartUrl from './chart/chartUrl'
-import chartValue from './chart/chartValue'
 import chartHexagonD3 from './chart/chartHexagonD3'
 import chartMap from './chart/chartMap'
 import chartTopology from './chart/chartTopology'
@@ -290,7 +313,6 @@ export default {
     chartTimeSeries,
     chartTreemap,
     chartUrl,
-    chartValue,
     chartHexagonD3,
     chartMap,
     chartTopology,
@@ -322,7 +344,8 @@ export default {
     isExportHtml: {
       type: Boolean,
       default: false
-    }
+    },
+    globalVariables: {}
   },
   data () {
     return {

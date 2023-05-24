@@ -43,6 +43,7 @@
     <!-- 数据查询后传入chart组件，chart组件内不查询，只根据接传递的数据来渲染 -->
     <chart
       ref="chart"
+      :globalVariables="globalVariables"
       :chart-data="chartData"
       :chart-info="chartInfo"
       :panelLock="panelLock"
@@ -75,10 +76,11 @@ import assetInfoData from '@/components/chart/assetInfoData'
 import endpointInfoData from '@/components/chart/endpointInfoData'
 import logsData from '@/components/chart/logsData'
 import lodash from 'lodash'
-
+import globalVariablesMixin from '@/components/common/mixin/globalVariables'
 export default {
   // 该组件用于获取chart的具体数据
   name: 'panelChart',
+  mixins: [globalVariablesMixin],
   components: {
     chartHeader,
     chart,
@@ -144,6 +146,27 @@ export default {
   },
   methods: {
     isGroup,
+    variablesHandle (searchTime) {
+      this.myVariables = []
+      // eslint-disable-next-line vue/no-mutating-props
+      this.chartInfo.elements = this.$loadsh.cloneDeep(this.chartInfo.oldElements.filter(item => item.state)) // 处理不显示的表达式
+      // eslint-disable-next-line vue/no-mutating-props
+      this.chartInfo.elements = this.chartInfo.elements.map((item, index) => { // 处理表达式的变量
+        // 全局变量替换
+        this.setGlobalVariablesValue(searchTime)
+        item.expression = this.globalVariablesReplace(item.expression, searchTime)
+        // group图表设置repeat的表达式替换
+        if (this.chartInfo.repeatVariable) {
+          item.expression = this.variablesReplaceRepeat(item.expression)
+        }
+        const variables = this.variablesReplace((item.expression))
+        this.myVariables.push(variables)
+        return {
+          ...item,
+          expression: variables
+        }
+      })
+    },
     dateChange (filter, multipleTime) {
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
@@ -152,6 +175,7 @@ export default {
       const step = bus.getStep(startTime, endTime)
       startTime = this.$stringTimeParseToUnix(startTime)
       endTime = this.$stringTimeParseToUnix(endTime)
+      this.variablesHandle([filter.start_time, filter.end_time])
       const elements = this.chartInfo.elements || []
       if (multipleTime.length) {
         const minusTime = (new Date(bus.formateTimeToTime(filter.start_time)).getTime() - new Date(bus.formateTimeToTime(multipleTime[0])).getTime())
@@ -169,7 +193,6 @@ export default {
         return
       }
       this.chartData = window.dataJson ? this.chartData : []
-      this.myVariables = []
       this.loading = true
       // TODO assetInfo、endpointInfo、echarts等进行不同的处理
       let startTime = ''
@@ -203,21 +226,7 @@ export default {
       if (!this.chartInfo.oldElements) { // 创建一个备份 用于判断变量替换 能拿到原本变量的位置
         this.chartInfo.oldElements = this.chartInfo.elements ? JSON.parse(JSON.stringify(this.chartInfo.elements)) : []
       }
-      // eslint-disable-next-line vue/no-mutating-props
-      this.chartInfo.elements = this.$loadsh.cloneDeep(this.chartInfo.oldElements.filter(item => item.state)) // 处理不显示的表达式
-      // eslint-disable-next-line vue/no-mutating-props
-      this.chartInfo.elements = this.chartInfo.elements.map((item, index) => { // 处理表达式的变量
-        // group图表设置repeat的表达式替换
-        if (this.chartInfo.repeatVariable) {
-          item.expression = this.variablesReplaceRepeat(item.expression)
-        }
-        const variables = this.variablesReplace((item.expression))
-        this.myVariables.push(variables)
-        return {
-          ...item,
-          expression: variables
-        }
-      })
+      this.variablesHandle()
       const elements = this.chartInfo.elements || []
       if (this.isExportHtml) {
         this.chartInfo.loaded && this.queryData(elements, startTime, endTime, step, params)

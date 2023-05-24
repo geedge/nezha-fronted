@@ -1268,6 +1268,10 @@ export default {
     document.removeEventListener('keydown', this.escExit)
     bus.$off('refreshPanel')
     this.$store.dispatch('dispatchPanelLock', { flag: true })
+    this.$store.dispatch('dispatchPanelTime', {
+      time: [],
+      nowTimeType: {}
+    })
     if (document.querySelector('#tableList')) {
       document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)
       document.querySelector('#tableList').removeEventListener('mouseleave', this.tableListLeave)

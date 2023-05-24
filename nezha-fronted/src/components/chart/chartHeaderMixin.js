@@ -120,6 +120,7 @@ export default {
           str = str.replace(reg, item.checked.map(label => label.replace(/\\"/g, '"').replace(/\\'/g, "'")).join('+'))
         })
       }
+      this.chartInfo.varName = str
       return str
     }
   },

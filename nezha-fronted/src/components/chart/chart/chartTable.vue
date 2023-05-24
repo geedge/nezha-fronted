@@ -12,7 +12,7 @@
       <el-table-column
         v-for="(col, index) in columns"
         :prop="col.title"
-        :key="`col-${index}-${item.prop}`"
+        :key="`col-${index}`"
         :min-width="160"
         :sort-orders="['ascending', 'descending']"
         class="data-column"
@@ -206,6 +206,7 @@ export default {
           oldValue: ''
         }
         if (/\{\{.+\}\}/.test(column.display)) {
+          column.display = this.globalVariablesReplace(column.display)
           const labelValue = column.display.replace(/(\{\{.+?\}\})/g, function (i) {
             const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
             let value = null
