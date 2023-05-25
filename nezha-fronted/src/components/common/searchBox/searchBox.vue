@@ -179,21 +179,25 @@ export default {
           value: 'not wildcard',
           remark: '反向模糊匹配'
         },
-        {
-          label: 'exist',
-          value: 'exist',
-          remark: '存在'
-        },
-        {
-          label: 'not exist',
-          value: 'not exist',
-          remark: '不存在'
-        }
+        // {
+        //   label: 'exist',
+        //   value: 'exist',
+        //   remark: '存在'
+        // },
+        // {
+        //   label: 'not exist',
+        //   value: 'not exist',
+        //   remark: '不存在'
+        // }
       ],
       keyword: [0, 1, 6, 7, 8, 9],
       text: [0, 1, 6, 7, 8, 9],
-      number: [0, 1, 2, 3, 4, 5]
+      number: [0, 1, 2, 3, 4, 5],
+      enum: [0, 1]
     }
+  },
+  mounted () {
+    this.initSelectArr()
   },
   methods: {
     /*
@@ -455,8 +459,14 @@ export default {
       if (findItem) {
         findItemType = findItem.type || 'keyword'
       }
+      if (findItemType === 'enum') {
+        this.inputReadonly = true
+      }
       this.selectIndex = -1
       this.symbolList = this.oldSymbolList.filter((item, index) => {
+        if (!this[findItemType]) {
+          return true
+        }
         return this[findItemType].indexOf(index) !== -1
       })
     },
@@ -486,7 +496,8 @@ export default {
       }
       this.setSearchList()
       this.$emit('change', this.selectArr)
-      this.url
+      this.inputReadonly = false
+      // todo 更新路径参数
     },
     removeSelectArr (index) {
       this.selectArr.splice(index, 1)
@@ -585,6 +596,13 @@ export default {
       }
     // this.searchStr = this.$loadsh.cloneDeep(this.searchStr)
     },
+    initSelectArr () {
+      // 初始化已选择的条件
+
+      // 普通表格页面
+
+      // 底部弹窗页面
+    },
     clickOutside () { // 点击页面其他地方触发
       this.visible = false
       this.keyShow = false // key 的下拉
@@ -595,6 +613,7 @@ export default {
       this.searchList = this.$loadsh.cloneDeep(this.oldSearchList)
       this.symbolList = []
       this.valueList = []
+      this.inputReadonly = false
     }
   },
   watch: {
