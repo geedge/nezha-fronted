@@ -205,9 +205,9 @@ export default {
           display: '',
           oldValue: ''
         }
-        if (/\{\{.+\}\}/.test(column.display)) {
-          column.display = this.globalVariablesReplace(column.display)
-          const labelValue = column.display.replace(/(\{\{.+?\}\})/g, function (i) {
+        const display = this.globalVariablesReplace(column.display)
+        if (/\{\{.+\}\}/.test(display)) {
+          const labelValue = display.replace(/(\{\{.+?\}\})/g, function (i) {
             const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
             let value = null
             if (lodash.get(params, label)) {
@@ -237,7 +237,7 @@ export default {
             }
             return value || ''
           })
-          const oldLabelValue = column.display.replace(/(\{\{.+?\}\})/g, function (i) {
+          const oldLabelValue = display.replace(/(\{\{.+?\}\})/g, function (i) {
             const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
             let value = null
             if (lodash.get(params, label)) {
@@ -270,8 +270,8 @@ export default {
           }
         } else {
           obj[column.title + 'display'] = {
-            display: column.display,
-            oldValue: column.display
+            display: display,
+            oldValue: display
           }
         }
       })
