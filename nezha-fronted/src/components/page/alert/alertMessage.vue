@@ -892,12 +892,15 @@ export default {
       } else {
         delete this.searchLabel.orderBy
       }
+      if (!this.searchLabel.body) {
+        this.searchLabel.body = {}
+      }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.$set(this.searchLabel, 'state', this.state)
       if (this.searchTime && this.searchTime.length > 1 && this.searchTime[0] && this.searchTime[1]) {
-        this.$set(this.searchLabel, 'startAt', bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[0])), 'YYYY-MM-DD HH:mm:ss'))
-        this.$set(this.searchLabel, 'endAt', bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[1])), 'YYYY-MM-DD HH:mm:ss'))
+        this.$set(this.searchLabel.body, 'startAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[0])), 'YYYY-MM-DD HH:mm:ss')])
+        this.$set(this.searchLabel.body, 'endAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[1])), 'YYYY-MM-DD HH:mm:ss')])
       } else {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
@@ -913,14 +916,13 @@ export default {
       //   delete this.searchLabel.endAt
       // }
       const param = {
-        ...this.searchLabel,
-        ...this.searchCheckBox
+        ...this.searchLabel
       }
       const path = this.fromRoute.alertMessage
       const routePathParams = lodash.cloneDeep(param)
       delete routePathParams.statistics
       this.updatePath(routePathParams, path)
-      this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
+      this.$get('/alert/message/query', { ...this.searchLabel }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
@@ -1193,17 +1195,19 @@ export default {
       if (this.searchLabel.orderBy) {
         orderBy = this.searchLabel.orderBy
       }
-      this.searchLabel = {}
-      this.pageObj.pageNo = 1
-      for (const item in searchObj) {
-        if (searchObj[item]) {
-          if (item == 'alertMessageState') {
-            this.$set(this.searchLabel, 'state', searchObj[item])
-          } else {
-            this.$set(this.searchLabel, item, searchObj[item])
-          }
-        }
+      this.searchLabel = {
+        body: searchObj
       }
+      this.pageObj.pageNo = 1
+      // for (const item in searchObj) {
+      //   if (searchObj[item]) {
+      //     if (item == 'alertMessageState') {
+      //       this.$set(this.searchLabel, 'state', searchObj[item])
+      //     } else {
+      //       this.$set(this.searchLabel, item, searchObj[item])
+      //     }
+      //   }
+      // }
       if (orderBy) {
         this.$set(this.searchLabel, 'orderBy', orderBy)
       }

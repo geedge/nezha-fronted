@@ -37,20 +37,32 @@
           <el-input size="mini" v-model="searchStr" @focus="searchInputFocus" @keydown.native="keydown" @keyup.native="keyup" ref="searchStr" @keypress.native="keypress" :readonly="inputReadonly" @input="changeSearchStr"></el-input>
         </div>
       </div>
-      <div class="search-content">
-        <div class="search-key" v-if="keyShow">
-          <div v-for="(item, index) in searchList" @click="selectKey(item)" @mouseenter="selectIndex = index" :key="index" class="search-item" :class="{'search-item-select': index === selectIndex}">
-            <span class="icon-k">K</span>  {{item.name}} <span style="margin-left: 30px" class="content-remark">{{item.type}}</span>
+      <div class="search-content" ref="list" style="max-height: 300px;overflow-y: auto">
+        <div class="search-key" v-if="keyShow" v-my-loading="keywordLoad">
+          <div v-for="(item, index) in searchList" @click="selectKey(item)" @mouseenter="selectIndex = index" :key="index" class="search-item" :ref="'search-item' + index" :class="{'search-item-select': index === selectIndex}">
+            <span class="icon-k">K</span>  {{$t(item.i18n || item.name)}} <span style="margin-left: 30px" class="content-remark">{{item.type}}</span>
           </div>
         </div>
         <div class="search-symbol" v-if="symbolShow">
-          <div v-for="(item, index) in symbolList" @click="selectSymbol(item)"  @mouseenter="selectIndex = index" :key="index" class="search-item" :class="{'search-item-select': index === selectIndex}">
+          <div v-for="(item, index) in symbolList" @click="selectSymbol(item)"  @mouseenter="selectIndex = index" :key="index" class="search-item" :ref="'search-item' + index" :class="{'search-item-select': index === selectIndex}">
             <span class="icon-s">:</span> {{item.label}}    <span style="margin-left: 30px" class="content-remark">{{item.remark}}</span>
           </div>
         </div>
-        <div class="search-value" v-if="valueShow">
-          <div v-for="(item, index) in valueList" @click="selectValue(item.label)"  @mouseenter="selectIndex = index" :key="index" class="search-item" :class="{'search-item-select': index === selectIndex}">
-            <span class="icon-v">V</span> {{item.label}}    <span style="margin-left: 30px" class="content-remark">{{item.remark}}</span>
+        <div class="search-value" v-if="valueShow && valueList.length" v-my-loading="valueListInfo.loading">
+          <!--非枚举类型-->
+          <div v-if="searchBoxType!== 'enum'">
+            <div v-for="(item, index) in valueList" @click="selectValue(item)"  @mouseenter="selectIndex = index" :key="index" class="search-item" :ref="'search-item' + index" :class="{'search-item-select': index === selectIndex}">
+              <span class="icon-v">V</span> {{item}}    <span style="margin-left: 30px" class="content-remark">{{item.remark}}</span>
+            </div>
+            <div v-if="valueListInfo.total > oldValueList.length" class="search-item" :ref="'search-item' + valueList.length" @click="valueListLoad" :class="{'search-item-select': selectIndex === valueList.length}" style="min-height: 28px">
+              加载更多。。。
+            </div>
+          </div>
+          <!--枚举类型-->
+          <div v-else>
+            <div v-for="(item, index) in valueList" @click="selectValue(item.label)"  @mouseenter="selectIndex = index" :key="index" class="search-item" :ref="'search-item' + index" :class="{'search-item-select': index === selectIndex}">
+              <span class="icon-v">V</span> {{item.label}}    <span style="margin-left: 30px" class="content-remark">{{item.remark}}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -104,14 +116,17 @@ export default {
   name: 'searchBox',
   mixins: [searchBoxInfo],
   props: {
-    searchMsg: {},
-    from: {},
-    inTransform: {}
+    searchMsg: {}, // 默认搜索条件
+    from: {}, // 来自那个页面
+    // inTransform: {}
+    position: {}, // 底弹窗页面
+    targetTab: {} // 底弹窗页面 所选择的
   },
   data () {
     return {
       inputWidth: 400,
       visible: false, // 显示下拉框
+      searchBoxType: '', // 查询接口的 type 和name参数
       searchStr: '', // input 的内容
       oldSearchStr: '', // 上一次的内容
       searchList: [], // 搜索条件列表
@@ -179,24 +194,32 @@ export default {
           value: 'not wildcard',
           remark: '反向模糊匹配'
         },
-        // {
-        //   label: 'exist',
-        //   value: 'exist',
-        //   remark: '存在'
-        // },
-        // {
-        //   label: 'not exist',
-        //   value: 'not exist',
-        //   remark: '不存在'
-        // }
+        {
+          label: 'exist',
+          value: 'exist',
+          remark: '存在'
+        },
+        {
+          label: 'not exist',
+          value: 'not exist',
+          remark: '不存在'
+        }
       ],
       keyword: [0, 1, 6, 7, 8, 9],
       text: [0, 1, 6, 7, 8, 9],
-      number: [0, 1, 2, 3, 4, 5],
-      enum: [0, 1]
+      number: [0, 1, 2, 3, 4, 5, 8, 9],
+      enum: [0, 1],
+      keywordLoad: false,
+      valueListInfo: {
+        pageNo: 1,
+        pageSize: 10,
+        total: 0,
+        loading: false
+      }
     }
   },
   mounted () {
+    this.keywordLoad = true
     this.initSelectArr()
   },
   methods: {
@@ -214,7 +237,6 @@ export default {
     },
     keydown (e) {
       // 1 删除
-      // console.log(e, 'keydown')
       if (e.keyCode == 8 && !this.searchStr && this.selectArr.length) {
         this.selectArr.pop()
       } else if (e.keyCode == 8) {
@@ -222,8 +244,9 @@ export default {
       }
       // 5
       if (e.keyCode == 38) { // 向上
-        if (this.selectIndex == -1) return
+        if (this.selectIndex == -1 || this.selectIndex == 0) return
         this.selectIndex--
+        this.scroll()
       }
       if (e.keyCode == 40 && (this.keyShow || this.valueShow || this.symbolShow)) { // 向下
         if (this.keyShow && this.selectIndex == this.searchList.length - 1) {
@@ -232,18 +255,21 @@ export default {
         if (this.symbolShow && this.selectIndex == this.symbolList.length - 1) {
           return
         }
-        if (this.valueShow && this.selectIndex == this.valueList.length - 1) {
+        if (this.valueShow && this.valueListInfo.total > this.valueList.length && this.selectIndex != this.valueList.length) {
+          this.selectIndex++
+          this.scroll()
+          return
+        }
+        if (this.valueShow && (this.selectIndex == this.valueList.length - 1 || this.selectIndex == this.valueList.length)) {
           return
         }
         this.selectIndex++
+        this.scroll()
       }
       this.oldSearchStr = this.searchStr
     },
     keyup (e) {
-      // console.log(e, 'keyup')
-      // console.log(this.searchStr)
       // 6
-      // console.log(this.keyShow)
       if (e.keyCode == 13 && (this.keyShow || this.valueShow || this.symbolShow)) {
         // 选择对应条件
         setTimeout(() => {
@@ -253,7 +279,9 @@ export default {
             this.selectSymbol(this.symbolList[this.selectIndex])
           } else if (this.valueShow) {
             if (this.valueList[this.selectIndex]) {
-              this.selectValue(this.valueList[this.selectIndex].label)
+              this.selectValue(this.valueList[this.selectIndex])
+            } else if (this.selectIndex == this.valueList.length) {
+              this.valueListLoad()
             } else {
               this.addSelectArr(this.searchStr)
               this.searchStr = ''
@@ -277,7 +305,7 @@ export default {
     },
     selectKey (item) {
       this.key = item.name
-      this.searchStr = item.name + ':'
+      this.searchStr = this.$t(item.i18n || item.name) + ':'
       this.contentShow('symbol')
       this.$refs.searchStr.focus()
       this.setSymBolList()
@@ -304,7 +332,11 @@ export default {
           this.inputEnd()
           break
         case '≠' :
-          this.searchStr = '-' + this.searchStr
+          if (this.searchBoxType === 'number') {
+            this.searchStr += '-'
+          } else {
+            this.searchStr = '-' + this.searchStr
+          }
           this.$refs.searchStr.focus()
           break
         case '>=' :
@@ -341,8 +373,7 @@ export default {
           this.$refs.searchStr.focus()
           break
       }
-      // console.log(' this.setValueList(\'\')')
-      this.setValueList('')
+      this.setValueList()
       this.contentShow('value')
     },
     delSymbol () {
@@ -417,29 +448,50 @@ export default {
         this.valueShow = true
       }
       const keyStr = this.searchStr.split(':')[0]
-      // console.log(keyStr, this.searchStr.split(':'))
       if (keyStr[0] === '-' && keyStr[1] === '*') {
-        this.key = keyStr.substring(2)
-      } else if (keyStr[0] === '-' || keyStr[0] === '*') {
-        this.key = keyStr.substring(1)
-      } else {
-        this.key = keyStr
-      }
-      // console.log(this.key)
-      if (key === 'symbol') { // 处理valueList
-        const findItem = this.oldSearchList.find(item => item.name === this.key)
-        if (findItem && findItem.type !== 'input') {
-          // this.inputReadonly = true
-          this.oldValueList = this[findItem.label]
+        const findItem = this.oldSearchList.find(item => this.$t(item.i18n) == keyStr.substring(2))
+        if (findItem) {
+          this.key = findItem.name
         } else {
-          this.oldValueList = []
+          this.key = keyStr.substring(2)
         }
+      } else if (keyStr[0] === '-' || keyStr[0] === '*') {
+        const findItem = this.oldSearchList.find(item => this.$t(item.i18n) == keyStr.substring(1))
+        if (findItem) {
+          this.key = findItem.name
+        } else {
+          this.key = keyStr.substring(1)
+        }
+      } else {
+        const findItem = this.oldSearchList.find(item => this.$t(item.i18n) == keyStr)
+        if (findItem) {
+          this.key = findItem.name
+        } else {
+          this.key = keyStr
+        }
+      }
+      console.log(this.key)
+      if (key === 'symbol') { // 处理valueList
+        // this.setValueList('')
+        // const findItem = this.oldSearchList.find(item => item.name === this.key)
+        // if (findItem && findItem.type !== 'input') {
+        //   // this.inputReadonly = true
+        //   this.oldValueList = this[findItem.label]
+        // } else {
+        //   this.oldValueList = []
+        // }
       }
     },
     changeSearchStr () {
-      // console.log(this.searchStr, 'changeSearchStr')
+      this.selectIndex = -1
       const arr = this.searchStr.split(':')
       if (arr.length > 1) {
+        if (this.searchBoxType === 'enum') {
+          this.valueList = this.oldValueList.filter(item => item.label.indexOf(arr[1]) !== -1)
+        }
+        if (this.searchBoxType !== 'keyword') {
+          return
+        }
         this.setValueList(arr[1])
       } else {
         this.setSearchList(arr[0])
@@ -451,7 +503,7 @@ export default {
         this.searchList = this.$loadsh.cloneDeep(this.oldSearchList)
         return
       }
-      this.searchList = this.oldSearchList.filter(item => item.name.indexOf(str) !== -1)
+      this.searchList = this.oldSearchList.filter(item => this.$t(item.i18n).indexOf(str) !== -1)
     },
     setSymBolList (str) {
       let findItemType = 'text'
@@ -460,8 +512,9 @@ export default {
         findItemType = findItem.type || 'keyword'
       }
       if (findItemType === 'enum') {
-        this.inputReadonly = true
+        // this.inputReadonly = true
       }
+      this.searchBoxType = findItemType
       this.selectIndex = -1
       this.symbolList = this.oldSymbolList.filter((item, index) => {
         if (!this[findItemType]) {
@@ -471,39 +524,113 @@ export default {
       })
     },
     setValueList (str) {
+      const findItem = this.oldSearchList.find(item => this.$t(item.i18n) == this.key || this.key == item.name)
       this.selectIndex = -1
-      this.valueList = this.oldValueList.filter(item => item.label.indexOf(str) !== -1)
-      // console.log(this.valueList)
-      if (!this.valueList.length) {
-        this.valueShow = false
-      } else {
-        this.valueShow = true
+      this.valueShow = false
+      this.searchBoxType = ''
+      if (findItem.type === 'enum') {
+        this.oldValueList = []
+        this.valueList = []
+        this.valueListInfo.pageNo = 0
+        this.valueListInfo.total = -1
+        this.selectEnum(findItem)
+        this.searchBoxType = findItem.type
+        return
       }
+      if (!findItem || findItem.type !== 'keyword') {
+        this.valueList = []
+        return
+      } else {
+        this.searchBoxType = findItem.type
+      }
+      this.oldValueList = []
+      this.valueList = []
+      this.valueListInfo.pageNo = 0
+      this.valueListInfo.total = -1
+      this.valueListLoad('')
+    },
+    valueListLoad () {
+      this.valueListInfo.pageNo++
+      this.valueListInfo.loading = true
+      let name = ''
+      if (this.key) {
+        name = this.key
+      } else {
+        name = this.searchStr.split(':')[0]
+      }
+      const params = {
+        name: name,
+        text: this.searchStr.split(':')[1],
+        pageNo: this.valueListInfo.pageNo
+      }
+      this.$get('/fulltext/keyword', params).then(res => {
+        this.valueListInfo.loading = false
+        if (res.code == 200) {
+          this.oldValueList = [...this.oldValueList, ...res.data.list]
+          this.valueList = [...this.oldValueList]
+          this.valueListInfo.total = res.data.total
+          // if (!this.valueList.length) {
+          //   this.valueShow = false
+          // } else {
+          //   this.valueShow = true
+          // }
+        } else {
+          this.$message.error(res.msg || res.error)
+        }
+      })
     },
     addSelectArr (str) {
       const key = str.split(':')[0]
       const value = str.split(':')[1]
+      let realValue = value
+      console.log(this.searchBoxType)
+      if (this.searchBoxType === 'enum') {
+        const findItem = this.oldValueList.find(item => item.label === value)
+        console.log(findItem)
+        realValue = findItem ? findItem.value : value
+      }
       const findItem = this.selectArr.find(item => item.key === key)
+      let idKey = this.key
+      if (key[0] === '-' && key[1] === '*') {
+        idKey = '-*' + this.key
+      } else if (key[0] === '-' || key[0] === '*') {
+        idKey = key[0] + this.key
+      }
       if (findItem) {
         if (findItem.value.indexOf(value) === -1) {
           findItem.value.push(value)
+          findItem.realValue.push(realValue)
         }
       } else {
         this.selectArr.push({
           key,
+          idKey: idKey,
+          realValue: [realValue],
           value: [value]
         })
       }
       this.setSearchList()
-      this.$emit('change', this.selectArr)
+      this.emitSearch()
       this.inputReadonly = false
       // todo 更新路径参数
+      // todo 更新历史记录
+    },
+    emitSearch () {
+      const obj = {}
+      this.selectArr.forEach(item => {
+        obj[item.idKey] = item.realValue
+      })
+      this.$emit('search', obj)
     },
     removeSelectArr (index) {
       this.selectArr.splice(index, 1)
+      this.emitSearch()
     },
     removeTagValue (tIndex, key) {
-      this.selectArr.find(item => item.key === key).splice(tIndex, 1)
+      const findItem = this.selectArr.find(item => item.key === key)
+      findItem.value.splice(tIndex, 1)
+      findItem.realValue.splice(tIndex, 1)
+      this.emitSearch()
     },
     editTag (tag, index) {
       this.editTagIndex = index
@@ -511,7 +638,6 @@ export default {
       this.dialogShow = true
       this.editDialogObj.value = this.editTagObj.value
       const keyStr = this.editTagObj.key
-      // console.log(keyStr, this.searchStr.split(':'))
       if (keyStr[0] === '-' && keyStr[1] === '*') {
         this.editDialogObj.key = keyStr.substring(2)
         this.editDialogObj.symbol = 4
@@ -560,7 +686,6 @@ export default {
       const findItem = this.selectArr.find(item => item.key === this.editTagObj.key)
       if (findItem) {
         this.selectArr.splice(this.editTagIndex, 1)
-        // console.log(findItem, this.editDialogObj.value)
         findItem.value = findItem.value.concat(this.editDialogObj.value)
         findItem.value = findItem.value.filter(function (item, index) {
           return findItem.value.indexOf(item) === index // 因为indexOf 只能查找到第一个
@@ -570,20 +695,16 @@ export default {
       }
     },
     querySearch (queryString, cb) {
-      const restaurants = this.oldSearchList.map(item => { return { value: item.name } })
-      // console.log(restaurants)
+      const restaurants = this.oldSearchList.map(item => { return { value: this.$t(item.i18n || item.name) } })
       const results = queryString ? restaurants.filter(name => name.value.indexOf(queryString) !== -1) : restaurants
-      // console.log(results)
       cb(results)
     },
     handleSelect () {
 
     },
     inputEnd () { // 光标最后一位
-      // console.log('12313123')
       const ele = this.$refs.searchStr.$el
       const obj = ele.getElementsByClassName('el-input__inner')[0]
-      // console.log(obj)
       obj.focus()
       const len = obj.value.length
       if (document.selection) {
@@ -594,14 +715,40 @@ export default {
           obj.selectionStart = obj.selectionEnd = len
         }, 100)
       }
-    // this.searchStr = this.$loadsh.cloneDeep(this.searchStr)
     },
     initSelectArr () {
+      // console.log(this.from)
+      // console.log(this.inTransform)
+      // console.log(this.position)
+      // console.log(this.targetTab)
       // 初始化已选择的条件
-
+      const type = this.calcType()
+      this.$get(`/fulltext/metadata/${type}`).then(res => {
+        if (res.code == 200) {
+          this.searchList = res.data.list || []
+          this.oldSearchList = res.data.list || []
+        } else {
+          this.$message.error(res.msg || res.error)
+        }
+        this.keywordLoad = false
+      })
       // 普通表格页面
 
       // 底部弹窗页面
+    },
+    calcType () { // 处理各个页面的from targetTab 确定查询的type
+      if (this.from && !this.targetTab) {
+        switch (this.from) {
+          case 'alertMessage':
+            return 'alertmessage'
+        }
+      }
+      if (this.targetTab) {
+        switch (this.targetTab) {
+          case 'alertMessageTab':
+            return 'alertmessage'
+        }
+      }
     },
     clickOutside () { // 点击页面其他地方触发
       this.visible = false
@@ -614,18 +761,48 @@ export default {
       this.symbolList = []
       this.valueList = []
       this.inputReadonly = false
+    },
+    scroll () { // 键盘上下选择 显示已选择的选项
+      const ulBox = this.$refs.list
+      let liBox = this.$refs['search-item' + this.selectIndex]
+      if (!liBox) {
+        return
+      } else if (liBox[0]) {
+        liBox = liBox[0]
+      }
+      const liHeight = liBox.clientHeight
+      const height = ulBox.clientHeight
+      const offsetTop = liBox.offsetTop - ulBox.offsetTop
+      const scrollTop = ulBox.scrollTop
+      // liBox.focus()
+      if (offsetTop - scrollTop < 0) {
+        ulBox.scrollTop = offsetTop
+      } else if (offsetTop - scrollTop >= height - liHeight) {
+        ulBox.scrollTop = offsetTop - height + liHeight
+      }
+    },
+    selectEnum (findItem) { // 选择对应的枚举类型
+      console.log(findItem)
+      switch (findItem.name) {
+        case 'priority':
+          this.valueList = [...this.severity]
+          this.oldValueList = [...this.severity]
+          break
+        default:
+          this.valueList = []
+      }
     }
   },
   watch: {
-    searchMsg: {
-      immediate: true,
-      deep: true,
-      handler (n) {
-        // console.log(n)
-        this.searchList = n.searchLabelList || []
-        this.oldSearchList = n.searchLabelList || []
-      }
-    },
+    // searchMsg: {
+    //   immediate: true,
+    //   deep: true,
+    //   handler (n) {
+    //     // console.log(n)
+    //     this.searchList = n.searchLabelList || []
+    //     this.oldSearchList = n.searchLabelList || []
+    //   }
+    // },
     searchStr: {
       handler (n, o) {
         // 2 3

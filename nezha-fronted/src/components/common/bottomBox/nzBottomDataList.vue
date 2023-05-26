@@ -9,7 +9,8 @@
       </div>
       <div class="top-tool-right" v-if="!customTool">
         <div v-if="layout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20">
-          <search-input v-if="searchInputShow" :searchMsg="searchMsg" :position="'bottom' + targetTab + obj.id" @search="search" :targetTab="targetTab"></search-input>
+          <search-input v-if="targetTab!== 'alertMessageTab' && searchInputShow"  :searchMsg="searchMsg" :position="'bottom' + targetTab + obj.id" @search="search" :targetTab="targetTab"></search-input>
+          <search-box v-if="targetTab == 'alertMessageTab'" :from="from" :position="'bottom' + targetTab + obj.id" :targetTab="targetTab" :searchMsg="searchMsg" @search="search"></search-box>
         </div>
         <slot name="top-tool-right"></slot>
         <button v-if="layout.indexOf('elementSet') > -1" id="account-column-setting" class="top-tool-btn margin-r-20"
@@ -47,8 +48,12 @@
 
 <script>
 import { fromRoute } from '@/components/common/js/constants'
+import SearchBox from '@/components/common/searchBox/searchBox'
 export default {
   name: 'nzBottomDataList',
+  components: {
+    SearchBox
+  },
   props: {
     from: {
       type: String,
