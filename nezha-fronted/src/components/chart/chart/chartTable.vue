@@ -279,11 +279,11 @@ export default {
     },
     showValueMapping (row, column, col) {
       const obj = lodash.cloneDeep(row)
-      lodash.keys(obj).forEach(key => {
-        if (obj[key].$value) {
-          obj[key].$value = obj[key].showValue
-        }
-      })
+      // lodash.keys(obj).forEach(key => {
+      //   if (obj[key].$value) {
+      //     obj[key].$value = obj[key].showValue
+      //   }
+      // })
       const params = {
         ...obj
       }
