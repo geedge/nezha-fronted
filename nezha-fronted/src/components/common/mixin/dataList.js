@@ -345,7 +345,14 @@ export default {
       let str = ''
       if (!lodash.isEmpty(params)) {
         for (const key in params) {
-          str += key + '=' + params[key] + '&'
+          const arr = params[key]
+          if (arr.length > 1) {
+            arr.forEach(item => {
+              str += key + '=' + item + '&'
+            })
+          } else {
+            str += key + '=' + params[key][0] + '&'
+          }
         }
       }
       const linkTarget = `${protocol}://${host}:${port + metricsPath}${str ? '?' + str.slice(0, str.length - 1) : ''}`
