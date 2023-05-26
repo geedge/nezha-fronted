@@ -435,6 +435,20 @@ export default {
         if (!this.chart.groupId || this.chart.groupId == -1) {
           this.chart.groupId = ''
         }
+        if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point') && !this.chart.param.rightYAxis) {
+          this.chart.param.rightYAxis = {
+            elementNames: [],
+            style: 'line',
+            unit: 2,
+            label: '',
+            min: undefined,
+            max: undefined
+          }
+        }
+        if (this.chart.type === 'stat') {
+          if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }
+          if (!this.chart.param.comparison) { this.chart.param.comparison = 'none' }
+        }
       } else {
         this.rightBox.loading = true
         this.$get('visual/dashboard/chart/' + data.id).then(res => {
@@ -449,7 +463,10 @@ export default {
             } else {
               this.chart.param = {}
             }
-            if (!this.chart.param.rightYAxis) {
+            if (!this.chart.groupId || this.chart.groupId == -1) {
+              this.chart.groupId = ''
+            }
+            if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point') && !this.chart.param.rightYAxis) {
               this.chart.param.rightYAxis = {
                 elementNames: [],
                 style: 'line',
@@ -458,9 +475,6 @@ export default {
                 min: undefined,
                 max: undefined
               }
-            }
-            if (!this.chart.groupId || this.chart.groupId == -1) {
-              this.chart.groupId = ''
             }
             if (this.chart.type === 'stat') {
               if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }
