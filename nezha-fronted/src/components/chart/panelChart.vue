@@ -147,13 +147,13 @@ export default {
   methods: {
     isGroup,
     variablesHandle (searchTime) {
+      this.setGlobalVariablesValue(searchTime)
       this.myVariables = []
       // eslint-disable-next-line vue/no-mutating-props
       this.chartInfo.elements = this.$loadsh.cloneDeep(this.chartInfo.oldElements.filter(item => item.state)) // 处理不显示的表达式
       // eslint-disable-next-line vue/no-mutating-props
       this.chartInfo.elements = this.chartInfo.elements.map((item, index) => { // 处理表达式的变量
         // 全局变量替换
-        this.setGlobalVariablesValue(searchTime)
         item.expression = this.globalVariablesReplace(item.expression, searchTime)
         // group图表设置repeat的表达式替换
         if (this.chartInfo.repeatVariable) {
