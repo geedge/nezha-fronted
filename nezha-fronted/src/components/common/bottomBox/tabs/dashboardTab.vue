@@ -240,7 +240,8 @@ export default {
             label: '',
             min: undefined,
             max: undefined
-          }
+          },
+          dataLink: []
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '', name: 'A', state: 1, orderNum: 0 }],
         panel: '',
@@ -274,12 +275,7 @@ export default {
         type: this.from,
         id: null
       },
-      blankChartTemp: {
-        varType: 1,
-        pid: '',
-        dashboardId: null,
-        varIds: []
-      },
+
       // removeModal: false, // 删除弹出
       // deleteObj: {}, // 删除对象
       // ---图表相关参数--end
@@ -368,17 +364,7 @@ export default {
         this.$refs.addChartModal.isStable = 'stable'
       })
     },
-    addChartByTemp () {
-      this.chart = JSON.parse(JSON.stringify(this.blankChartTemp))
-      this.chart.dashboardId = this.showPanel.id
-      if (this.from === fromRoute.endpoint) {
-        this.chart.varType = 2
-      }
-      if (this.from === fromRoute.asset || this.from === fromRoute.endpoint) {
-        this.chart.varIds.push(this.obj.id)
-      }
-      this.rightBox.chartTemp.show = true
-    },
+
     newChart () {
       return JSON.parse(JSON.stringify(this.blankChart))
     },
@@ -435,6 +421,23 @@ export default {
         if (!this.chart.groupId || this.chart.groupId == -1) {
           this.chart.groupId = ''
         }
+        if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point') && !this.chart.param.rightYAxis) {
+          this.chart.param.rightYAxis = {
+            elementNames: [],
+            style: 'line',
+            unit: 2,
+            label: '',
+            min: undefined,
+            max: undefined
+          }
+        }
+        if (this.chart.type === 'stat') {
+          if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }
+          if (!this.chart.param.comparison) { this.chart.param.comparison = 'none' }
+        }
+        if (!this.chart.param.dataLink) {
+          this.chart.param.dataLink = []
+        }
       } else {
         this.rightBox.loading = true
         this.$get('visual/dashboard/chart/' + data.id).then(res => {
@@ -449,7 +452,10 @@ export default {
             } else {
               this.chart.param = {}
             }
-            if (!this.chart.param.rightYAxis) {
+            if (!this.chart.groupId || this.chart.groupId == -1) {
+              this.chart.groupId = ''
+            }
+            if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point') && !this.chart.param.rightYAxis) {
               this.chart.param.rightYAxis = {
                 elementNames: [],
                 style: 'line',
@@ -459,12 +465,12 @@ export default {
                 max: undefined
               }
             }
-            if (!this.chart.groupId || this.chart.groupId == -1) {
-              this.chart.groupId = ''
-            }
             if (this.chart.type === 'stat') {
               if (!this.chart.param.sparklineMode) { this.chart.param.sparklineMode = 'none' }
               if (!this.chart.param.comparison) { this.chart.param.comparison = 'none' }
+            }
+            if (!this.chart.param.dataLink) {
+              this.chart.param.dataLink = []
             }
             if (this.chart.type == 'table') {
               const arr = this.chart.param.indexs ? this.chart.param.indexs.split(',') : []

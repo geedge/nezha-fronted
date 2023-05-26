@@ -26,6 +26,10 @@
           <div style="display: inline-block">{{tooltip.value}}</div>
         </div>
       </div>
+      <div class="chart-canvas-tooltip-content">
+        <div>percent</div>
+        <div>{{tooltip.percent}}%</div>
+      </div>
     </div>
   </div>
 </template>
@@ -87,6 +91,7 @@ export default {
         y: 0,
         title: 0,
         value: 0,
+        percent: 0,
         mapping: {},
         show: false
       },
@@ -180,6 +185,12 @@ export default {
         .sort(null)
         .value(d => d.value)
       const arcs = pie(doughnutData)
+
+      // 计算百分比
+      arcs.forEach(function (d) {
+        const percentage = (d.data.value / d3.sum(doughnutData, function (d) { return d.value })) * 100
+        d.percent = percentage.toFixed(2)
+      })
 
       function doughnutOver (e, d) {
         chart.select('.path-' + d.index)
@@ -297,6 +308,7 @@ export default {
     doughnutEnter (e, node) { // 移入气泡
       this.tooltip.title = node.data.alias
       this.tooltip.value = node.data.showValue
+      this.tooltip.percent = node.percent
       this.tooltip.mapping = node.data.mapping
       this.tooltip.show = true
       this.setPosition(e)

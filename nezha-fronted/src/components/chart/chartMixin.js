@@ -115,6 +115,7 @@ export default {
             }
             if (chartInfo.param.enable && chartInfo.param.enable.thresholds && !lodash.isEmpty(chartInfo.param.thresholds) && chartInfo.param.thresholds.length) { // 阈值
               s.markLine = {
+                silent: true,
                 symbol: 'circle',
                 symbolSize: 5
               }
@@ -481,9 +482,6 @@ export default {
     this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
   },
   beforeDestroy () {
-    try {
-      getChart(this.chartId) && getChart(this.chartId).getZr().off('mousemove')
-    } catch (error) {}
     getChart(this.chartId) && setChart(this.chartId, null)
   }
 }

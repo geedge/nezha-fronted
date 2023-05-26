@@ -685,6 +685,11 @@ export default {
         this.$emit('change', this.chartConfig)
       })
     },
+    tagsChange (newTags) {
+      this.chartConfig.param.tags = newTags
+      this.chartConfig.param.indexs = newTags.map(item => item.text).join(',')
+      this.change()
+    },
     addColumns () {
       this.chartConfig.param.columns.push({
         title: '',
@@ -706,9 +711,25 @@ export default {
       this.chartConfig.param.columns[index].show = !this.chartConfig.param.columns[index].show
       this.change()
     },
-    tagsChange (newTags) {
-      this.chartConfig.param.tags = newTags
-      this.chartConfig.param.indexs = newTags.map(item => item.text).join(',')
+    addDataLink () {
+      this.chartConfig.param.dataLink.push({
+        show: true,
+        title: '',
+        url: '',
+        openIn: 'newTab'
+      })
+      this.change()
+    },
+    copyDataLink (index) {
+      this.chartConfig.param.dataLink.push({ ...this.chartConfig.param.dataLink[index] })
+      this.change()
+    },
+    removeDataLink (index) {
+      this.chartConfig.param.dataLink.splice(index, 1)
+      this.change()
+    },
+    showDataLink (index) {
+      this.chartConfig.param.dataLink[index].show = !this.chartConfig.param.dataLink[index].show
       this.change()
     },
     enableChange (type) {

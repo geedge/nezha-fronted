@@ -715,6 +715,7 @@ export default {
     bus.$off('creat-chart-success', this.createChartSuccess)
     bus.$off('groupChildMove', this.moveChart)
     window.removeEventListener('resize', this.resize)
+    document.onmousemove = null
   },
   watch: {
     isShrink: {

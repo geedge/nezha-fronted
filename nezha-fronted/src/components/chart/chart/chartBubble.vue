@@ -175,7 +175,7 @@ export default {
         })
         .style('font-size', function (d) {
           let fontSize
-          fontSize = d.r / 4 > 10 ? d.r / 4 : 0
+          fontSize = d.r / 3 > 10 ? d.r / 3 : 0
           fontSize = fontSize > 30 ? 30 : fontSize
           return fontSize
         })

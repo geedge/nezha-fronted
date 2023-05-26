@@ -289,6 +289,93 @@
         </transition>
       </div>
 
+      <!--Data link-->
+      <template v-if="chartConfig.type!=='group'">
+        <div class="form__sub-title" >
+          <span>{{$t('dashboard.dashboard.chartForm.dataLink')}}</span>
+        </div>
+        <draggable
+          v-model="chartConfig.param.dataLink"
+          @start="start"
+          @end="onEnd"
+          :scroll-sensitivity="150"
+          :options="{
+          dragClass:'drag-dataLink-class',
+          fallbackClass:'fallback-class',
+          forceFallback:true,
+          ghostClass:'chart-ghost',
+          chosenClass:'choose-class',
+          scroll:true,
+          filter: '.drag-disabled',
+          animation: 150,
+          handle: '.drag-sort'
+        }">
+          <div v-for="(item,index) in chartConfig.param.dataLink" :key="index" :class="item.error? 'is-item-box-error' : ''">
+            <div class="chart-title chart-title-config">
+              <span class="chart-title-content">
+                <i class="nz-icon nz-icon-arrow-down" :class="item.show?'':'is-active'" @click="showDataLink(index)"></i>
+                <span v-show="!item.show" class="title-content-left">
+                  <span>
+                    {{item.title}}
+                  </span>
+                </span>
+              </span>
+              <span>
+                <span @click="addDataLink()" :title="$t('tip.add')">
+                  <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
+                </span>
+                <span style="margin-right: 5px" :title="$t('overall.duplicate')">
+                  <i @click="copyDataLink(index)" class="nz-icon nz-icon-override"></i>
+                </span>
+                <span style="margin-right: 5px" class="nz-icon-minus-medium" :title="$t('overall.delete')">
+                  <i @click="removeDataLink(index)" class="nz-icon nz-icon-minus"></i>
+                </span>
+                <span style="margin-right: 5px;fontSize:17px;cursor: grab;" class="drag-sort" :title="$t('dashboard.dashboard.chartForm.sort')">
+                  <i class="nz-icon nz-icon-sort" style="cursor: grab;"></i>
+                </span>
+              </span>
+            </div>
+            <transition-group appear tag="div" name="el-zoom-in-top">
+              <el-row class="thresholds-item" v-show="item.show" :key="1">
+                <div>
+                  <div class='mapping-display'>{{$t("dashboard.dashboard.chartForm.title")}}</div>
+                </div>
+                <!-- Title -->
+                <el-form-item :prop="'param.dataLink.' + index + '.title'" class="thresholds-from-item">
+                  <el-input size="small" v-model="item.title" @change="change"></el-input>
+                </el-form-item>
+                <div>
+                  <div class='mapping-display'>{{$t('dashboard.dashboard.chartForm.openIn')}}</div>
+                </div>
+                <!-- Open in -->
+                <el-form-item :prop="'param.dataLink.' + index + '.openIn'" class="thresholds-from-item">
+                  <el-select
+                    v-model="item.openIn"
+                    size="small"
+                    @change="change"
+                  >
+                    <el-option value="newTab" :label="$t('dashboard.dashboard.chartForm.newTab')"></el-option>
+                    <el-option value="currentTab" :label="$t('dashboard.dashboard.chartForm.currentTab')"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-row>
+              <el-row class="thresholds-item" v-show="item.show" :key="2">
+                <div>
+                  <div class='mapping-display'>{{$t('dashboard.dashboard.chartForm.dataLinkUrl')}}</div>
+                </div>
+                <!-- url -->
+                <el-form-item :prop="'param.dataLink.' + index + '.url'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
+                  <el-input v-model="item.url" size="small"  @change="change('dataLink',index)"/>
+                </el-form-item>
+              </el-row>
+            </transition-group>
+          </div>
+        </draggable>
+        <div @click="addDataLink" class="thresholds-add">
+          {{$t('overall.addDataLink')}}
+        </div>
+      </template>
+
     </el-form>
   </div>
 </template>
@@ -298,12 +385,14 @@ import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import diagram from '@/components/common/ChartDiagram/diagram'
 import richTextEditor from '@/components/chart/richTextEditor'
+import draggable from 'vuedraggable'
 export default {
   name: 'otherChartConfig',
   mixins: [publicConfig, chartTypeShow],
   components: {
     diagram,
-    richTextEditor
+    richTextEditor,
+    draggable
   },
   watch: {
     // 'chartConfig.param.text': {
@@ -373,7 +462,8 @@ export default {
             },
             repeat: {
               variable: ''
-            }
+            },
+            dataLink: this.chartConfig.param.dataLink
           }
           break
         case 'text':
@@ -389,7 +479,8 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
-            }
+            },
+            dataLink: this.chartConfig.param.dataLink
           }
           break
         case 'diagram':
@@ -405,7 +496,8 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
-            }
+            },
+            dataLink: this.chartConfig.param.dataLink
           }
           break
         case 'url':
@@ -421,7 +513,8 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
-            }
+            },
+            dataLink: this.chartConfig.param.dataLink
           }
           break
         case 'clock':
@@ -437,7 +530,8 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
-            }
+            },
+            dataLink: this.chartConfig.param.dataLink
           }
           break
       }
@@ -455,6 +549,13 @@ export default {
       this.chartConfig.param.text = html
       this.$refs.chartForm.validateField('param.text')
       this.change()
+    },
+    start () {
+      document.body.classList.add('isDrag')
+    },
+    onEnd () {
+      this.change()
+      document.body.classList.remove('isDrag')
     }
   },
   created () {

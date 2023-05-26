@@ -537,6 +537,9 @@ export default {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
     this.chartInfo.loaded && this.initChart(this.chartOption)
+  },
+  beforeDestroy () {
+    getChart(this.chartId) && getChart(this.chartId).getZr().off('mousemove')
   }
 }
 </script>

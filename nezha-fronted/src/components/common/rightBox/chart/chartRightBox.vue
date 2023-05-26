@@ -233,8 +233,14 @@ export default {
             delete item.uid
           })
         }
+        if (params.param.dataLink) {
+          params.param.dataLink.forEach(item => {
+            delete item.error
+          })
+        }
         if (params.type === 'group') {
           params.height = 1
+          delete params.param.dataLink
         }
         if (!params.groupId) {
           params.groupId = 0
@@ -389,7 +395,8 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
-            }
+            },
+            dataLink: this.editChart.param.dataLink
           }
         }
       }
@@ -415,7 +422,8 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
-            }
+            },
+            dataLink: this.editChart.param.dataLink
           }
         }
       }
@@ -456,7 +464,8 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
-            }
+            },
+            dataLink: this.editChart.param.dataLink
           }
         }
         delete this.editChart.elements
@@ -481,7 +490,8 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
-            }
+            },
+            dataLink: this.editChart.param.dataLink
           }
         }
         delete this.editChart.elements
