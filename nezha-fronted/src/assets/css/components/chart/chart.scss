@@ -221,6 +221,7 @@
 .panel-chart.panel-chart--fullscreen {
   border: none;
   .nz-chart__component {
+    position: relative;
     &.nz-chart__component--bottom {
       .legend-container {
         max-height: 135px;
@@ -462,12 +463,11 @@
     justify-content: space-between;
     align-items: center;
     min-width: 150px;
-    max-width: 600px;
+    max-width: 500px;
     line-height: 18px;
     font-size: 12px;
 
     .row__label {
-      max-width: 500px;
       white-space: nowrap;
       overflow-x: hidden;
       text-overflow: ellipsis;
@@ -623,8 +623,6 @@
 }
 .chart-canvas-tooltip{
   position: fixed;
-  min-width: 150px;
-  max-width: 600px;
   display: block;
   border-style: solid;
   white-space: nowrap;
@@ -633,13 +631,14 @@
   transition: opacity 0.2s cubic-bezier(0.23, 1, 0.32, 1) 0s, visibility 0.2s cubic-bezier(0.23, 1, 0.32, 1) 0s, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s;
   border-width: 1px;
   border-radius: 4px;
-  font: 14 px/ 21px "Microsoft YaHei";
+  font: 14px / 21px "Microsoft YaHei";
   padding: 10px;
   z-index: 99999999;
   pointer-events: none;
   overflow: hidden;
 }
 .chart-canvas-tooltip-title{
+  min-width: 150px;
   max-width: 500px;
   white-space: nowrap;
   overflow: hidden;
@@ -648,65 +647,40 @@
   font-size: 14px;
 }
 .chart-canvas-tooltip-content{
-  font-size: 12px;
+  max-width: 500px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 12px;
+  overflow: hidden;
 }
 
 .chart-dataLink-tooltip{
-  position: fixed;
-  min-width: 150px;
-  max-width: 600px;
-  display: block;
-  white-space: nowrap;
-  will-change: transform;
-  transition: opacity 0.2s cubic-bezier(0.23, 1, 0.32, 1) 0s, visibility 0.2s cubic-bezier(0.23, 1, 0.32, 1) 0s, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s;
-  border-radius: 4px;
-  font: 14 px/ 21px "Microsoft YaHei";
-  padding-top: 10px;
-  z-index: 9999999999;
-  overflow: hidden;
-  background-color: $--tooltip-background-color !important;
-  border: 2px solid $--tooltip-border-color !important;
-  border-color: $--tooltip-border-color !important;
-  color: $--color-text-regular !important;
-  box-shadow: none !important;
-  .chart-dataLink-title{
-    margin-bottom: 5px;
-    padding: 0 10px;
-    box-sizing: border-box;
-    max-width: 500px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 14px;
-    color: $--color-text-primary !important;
-    font-weight: 600;
-  }
-  .chart-dataLink-content{
-    padding: 0 10px;
-    box-sizing: border-box;
-    font-size: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+  padding-bottom: 2px;
+  z-index: 999999999;
+  pointer-events: auto;
   .chart-dataLink-list{
+    width: calc(100% + 20px);
+    margin-left: -10px;
     margin-top: 10px;
     border-top: 1px solid $--border-color-light;
     .chart-dataLink-item{
+      min-width: 120px;
+      max-width: 500px;
       padding: 0 10px;
       height: 32px;
       line-height: 32px;
       font-size: 14px;
       cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       &:hover{
         background: $--background-color-base;
         color: $--color-primary !important;
       }
       .nz-icon{
-        margin-right: 2px;
+        margin-right: 4px;
       }
     }
   }
@@ -807,4 +781,21 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+.chart-cursor-default{
+  cursor: default !important;
+  *{
+    cursor: default !important;
+  }
+}
+
+.chart-cursor-pointer{
+  cursor: pointer;
+}
+
+.tabel-chart{
+  .chart-canvas-tooltip{
+    height: auto !important;
+  }
 }

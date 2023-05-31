@@ -8,12 +8,32 @@
       <div
         :id="isFullscreen?('chart-gauge-screen-' + chartInfo.id + '-' + index):('chart-gauge-' + chartInfo.id + '-' + index)"
         class="chart-gauge-content"
+        :class="{'chart-cursor-default':!dataLink.length}"
       ></div>
       <div
         v-if="item.height > 48 && chartInfo.param &&( chartInfo.param.text === 'legend' || chartInfo.param.text === 'all' )"
         class="chart-gauge-legend"
       >
         {{item.alias}}
+      </div>
+    </div>
+    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
+      <div class="chart-canvas-tooltip-title tooltip-title">{{tooltip.title}}</div>
+      <div class="chart-canvas-tooltip-content">
+        <div>value</div>
+        <div>
+          <div v-if="tooltip.mapping && tooltip.mapping.icon" style="display: inline-block">
+            <i :class="tooltip.mapping.icon" :style="{color: tooltip.mapping.color.icon}"></i>
+          </div>
+          <div style="display: inline-block">{{tooltip.value}}</div>
+        </div>
+      </div>
+      <!-- dataLink -->
+      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+          <i class="nz-icon nz-icon-link"></i>
+          <span>{{item.title}}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -39,11 +59,21 @@ export default {
       boxHeight: 0,
       boxPadding: 5,
       chartInstances: [],
-      timer: null
+      timer: null,
+      tooltip: {
+        x: 0,
+        y: 0,
+        title: 0,
+        value: 0,
+        mapping: {},
+        show: false,
+        dataLinkShow: ''
+      }
     }
   },
   methods: {
     initChart () {
+      this.setDataLink()
       if (this.timer) {
         clearTimeout(this.timer)
         this.timer = null
@@ -157,6 +187,8 @@ export default {
     gaugeChartInit () {
       this.chartInstances.forEach(item => {
         if (item) {
+          item.off('click')
+          item.off('mousedown')
           item.dispose()
         }
       })
@@ -200,6 +232,7 @@ export default {
           }
         }
         option.tooltip.formatter = this.formatterFunc
+        option.tooltip.position = this.tooltipPosition
         if (navigator.userAgent.match(/Mobi/i) ||
           navigator.userAgent.match(/Android/i) ||
           navigator.userAgent.match(/iPhone/i)) {
@@ -210,6 +243,15 @@ export default {
         // option.tooltip.position = this.formatterFunc
         option.series[0].min = item.max == item.min ? 0 : item.min
         myChart.setOption(option)
+        if (this.dataLink.length) {
+          myChart.on('click', this.chartClick)
+          myChart.on('mousedown', (params) => {
+            if (this.tooltip.show) {
+              const e = params.event.event
+              e.stopPropagation()
+            }
+          })
+        }
         this.chartInstances.push(myChart)
       })
     },
@@ -231,22 +273,74 @@ export default {
     },
     formatterFunc: function (params, ticket, callback) {
       const self = this
-      return `<div>
-                    <div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;  min-width: 150px; max-width: 600px; line-height: 18px; font-size: 14px;">
-                        <div class="tooltip-title" style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${params.data.alias}</div>
-                        <div style="font-size:12px;display:flex;justify-content: space-between;">
-                            <div>value</div>
-                            <div>
-                              <div style="display: ${params.data.mapping && params.data.mapping.icon ? 'inline-block' : 'none'}">
-                                <i class="${params.data.mapping && params.data.mapping.icon}" style="color: ${params.data.mapping && params.data.mapping.color && params.data.mapping.color.icon}"></i>
-                              </div>
-                              <div style="display: ${params.data.mapping && params.data.mapping.display ? 'none' : 'inline-block'}">${params.data.showValue}</div>
-                              <div style="display: ${params.data.mapping && params.data.mapping.display ? 'inline-block' : 'none'}">${self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue })}</div>
-                            </div>
-                        </div>
-                    </div>
+      return `
+              <div class="chart-canvas-tooltip-title tooltip-title">${params.data.alias}</div>
+              <div class="chart-canvas-tooltip-content">
+                <div>value</div>
+                <div>
+                  <div style="display: ${params.data.mapping && params.data.mapping.icon ? 'inline-block' : 'none'}">
+                    <i class="${params.data.mapping && params.data.mapping.icon}" style="color: ${params.data.mapping && params.data.mapping.color && params.data.mapping.color.icon}"></i>
+                  </div>
+                  <div style="display: ${params.data.mapping && params.data.mapping.display ? 'none' : 'inline-block'}">${params.data.showValue}</div>
+                  <div style="display: ${params.data.mapping && params.data.mapping.display ? 'inline-block' : 'none'}">${self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue })}</div>
                 </div>
+              </div>
                `
+    },
+    setPosition (e) {
+      const windowWidth = window.innerWidth// 窗口宽度
+      const windowHeight = window.innerHeight// 窗口高度
+      this.$nextTick(() => {
+        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        if (box) {
+          const boxWidth = box.offsetWidth
+          const boxHeight = box.offsetHeight
+          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            this.tooltip.x = e.pageX + 15
+          } else {
+            this.tooltip.x = e.pageX - boxWidth - 15
+          }
+          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            this.tooltip.y = e.pageY + 15
+          } else {
+            this.tooltip.y = e.pageY - boxHeight - 10
+          }
+        } else {
+          this.tooltip.y = e.pageY + 15
+          this.tooltip.x = e.pageX + 15
+        }
+      })
+    },
+    chartClick (params) {
+      const option = {
+        tooltip: {
+          extraCssText: 'z-index:99999999;visibility:hidden;transition:none;'
+        }
+      }
+      this.chartInstances.forEach(item => {
+        item.setOption(option)
+      })
+      this.tooltip.title = params.data.alias
+      this.tooltip.value = params.data.mapping && params.data.mapping.display ? this.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
+      this.tooltip.mapping = params.data.mapping
+      this.tooltip.show = true
+      this.tooltip.dataLinkShow = true
+      const e = params.event.event
+      this.setPosition(e)
+    },
+    clickout () {
+      if (this.dataLink.length) {
+        this.tooltip.show = false
+        this.tooltip.dataLinkShow = false
+        const option = {
+          tooltip: {
+            extraCssText: 'z-index:99999999;visibility:visible;'
+          }
+        }
+        this.chartInstances.forEach(item => {
+          item.setOption(option)
+        })
+      }
     }
   },
   mounted () {
@@ -257,6 +351,8 @@ export default {
   beforeDestroy () {
     this.chartInstances.forEach(item => {
       if (item && item.dispose) {
+        item.off('click')
+        item.off('mousedown')
         item.dispose()
       }
     })

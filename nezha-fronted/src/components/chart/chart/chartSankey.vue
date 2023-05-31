@@ -5,10 +5,11 @@
     @mouseleave="mouseLeaveChart"
     index="300"
   >
-    <div :id="`chart-canvas-${chartId}`" class="chart__canvas">
+    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!dataLink.length}">
       <svg :id="`sankey-svg-${chartId}`" width="100%" height="100%"></svg>
     </div>
-    <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
+
+    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
       <div class="chart-canvas-tooltip-title tooltip-title">
         {{tooltip.title}}
       </div>
@@ -19,6 +20,13 @@
             <i :class="tooltip.mapping.icon" :style="{color: tooltip.mapping.color.icon}"></i>
           </div>
           <div style="display: inline-block">{{tooltip.value}}</div>
+        </div>
+      </div>
+      <!-- dataLink -->
+      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+          <i class="nz-icon nz-icon-link"></i>
+          <span>{{item.title}}</span>
         </div>
       </div>
     </div>
@@ -58,13 +66,15 @@ export default {
         title: 0,
         value: 0,
         mapping: {},
-        show: false
+        show: false,
+        dataLinkShow: ''
       },
       svg: null
     }
   },
   methods: {
     initChart () {
+      this.setDataLink()
       this.linksData = this.initsankeyData(this.chartInfo, this.chartData) // 生成links
       this.isNoData = !this.linksData.length
       this.$emit('chartIsNoData', this.isNoData)
@@ -73,8 +83,8 @@ export default {
       }
       // 根据link获取node
       this.linksData.forEach(item => {
-        this.nodesData.push({ node: item.source })
-        this.nodesData.push({ node: item.target })
+        this.nodesData.push({ node: item.source, labels: item.labels })
+        this.nodesData.push({ node: item.target, labels: item.labels })
       })
       // 去重相同的node
       for (let i = 0; i < this.nodesData.length; i++) {
@@ -98,13 +108,12 @@ export default {
       const decimals = this.chartInfo.param.decimals || 2
       this.isNoData = true
       originalDatas.forEach((originalData) => {
-        originalData.forEach((data, dataIndex) => {
+        originalData.forEach((data) => {
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
           const obj = {
             value: value,
             realValue: value,
-            labels: data.metric,
-            dataIndex: dataIndex
+            labels: data.metric
           }
           if (data.metric[chartInfo.param.sourceLabel] && data.metric[chartInfo.param.targetLabel]) {
             obj.source = data.metric[chartInfo.param.sourceLabel]
@@ -163,7 +172,7 @@ export default {
       let allZero = false
       if (linksData.every(item => item.value == 0)) {
         linksData.forEach(item => {
-          item.value = 100 // 目的是显示图表 与值大小无关
+          item.value = 100
         })
         allZero = true
       }
@@ -255,13 +264,14 @@ export default {
 
       // 划过连线
       chart.selectAll('path')
-        .on('mouseover', (e, d) => {
+        .on('mouseenter', (e, d) => {
           chart.selectAll('.node, path').style('fill-opacity', '0.1').style('stroke-opacity', '0.1')
           chart.selectAll('.node').selectAll('foreignObject').style('opacity', '0.1')
           const hoverNodes = d3.select(e.target).style('stroke-opacity', '0.8').attr('linkNodes').split(' ')
           hoverNodes.forEach((index) => {
             chart.selectAll('[index=' + index + ']').style('fill-opacity', '1').selectAll('foreignObject').style('opacity', '1')
           })
+          if (this.tooltip.dataLinkShow) { return }
           // 显示悬浮框
           this.tooltip.title = d.source.node + '  ——>  ' + d.target.node
           this.tooltip.value = d.showValue
@@ -270,20 +280,22 @@ export default {
           this.setPosition(e)
         })
         .on('mousemove', (e) => {
-          if (this.tooltip.show) {
-            this.setPosition(e)
-          }
+          if (this.tooltip.dataLinkShow) { return }
+          this.tooltip.show = true
+          this.setPosition(e)
         })
         .on('mouseleave', () => {
           chart.selectAll('.node, path').style('fill-opacity', '1').style('stroke-opacity', '0.5')
           chart.selectAll('.node').selectAll('foreignObject').style('opacity', '1')
+          if (this.tooltip.dataLinkShow) { return }
           // 隐藏悬浮框
           this.tooltip.show = false
         })
+        .on('click', this.chartClick)
 
       // 划过节点
       chart.selectAll('.node')
-        .on('mouseover', (e, d) => {
+        .on('mouseenter', (e, d) => {
           chart.selectAll('.node, path').style('fill-opacity', '0.1').style('stroke-opacity', '0.1')
           chart.selectAll('.node').selectAll('foreignObject').style('opacity', '0.1')
           chart.selectAll('[linkNodes~=' + 'i-' + d.index + ']')
@@ -291,59 +303,62 @@ export default {
             .style('stroke-opacity', '0.8')
             .selectAll('foreignObject')
             .style('opacity', '1')
-            // 显示悬浮框
+          if (this.tooltip.dataLinkShow) { return }
+          // 显示悬浮框
           this.tooltip.title = d.node
-          this.tooltip.value = d.showValue
+          this.tooltip.value = d.mapping && d.mapping.display ? this.handleDisplay(d.mapping.display, { ...d.labels, value: d.showValue }) : d.showValue
           this.tooltip.mapping = d.mapping
           this.tooltip.show = true
           this.setPosition(e)
         })
         .on('mousemove', (e) => {
-          if (this.tooltip.show) {
-            this.setPosition(e)
-          }
+          if (this.tooltip.dataLinkShow) { return }
+          this.tooltip.show = true
+          this.setPosition(e)
         })
         .on('mouseleave', () => {
           chart.selectAll('.node, path').style('fill-opacity', '1').style('stroke-opacity', '0.5')
           chart.selectAll('.node').selectAll('foreignObject').style('opacity', '1')
+          if (this.tooltip.dataLinkShow) { return }
           // 隐藏悬浮框
           this.tooltip.show = false
         })
+        .on('click', this.chartClick)
     },
-
     setPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
-      const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
-      if (box) {
-        const boxWidth = box.offsetWidth
-        const boxHeight = box.offsetHeight
-        if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-          this.tooltip.x = e.pageX + 15
+      this.$nextTick(() => {
+        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        if (box) {
+          const boxWidth = box.offsetWidth
+          const boxHeight = box.offsetHeight
+          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            this.tooltip.x = e.pageX + 15
+          } else {
+            this.tooltip.x = e.pageX - boxWidth - 15
+          }
+          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            this.tooltip.y = e.pageY + 15
+          } else {
+            this.tooltip.y = e.pageY - boxHeight - 10
+          }
         } else {
-          this.tooltip.x = e.pageX - boxWidth - 15
-        }
-        if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
           this.tooltip.y = e.pageY + 15
-        } else {
-          this.tooltip.y = e.pageY - boxHeight - 10
+          this.tooltip.x = e.pageX + 15
         }
-      } else {
-        this.tooltip.y = e.pageY + 15
-        this.tooltip.x = e.pageX + 15
-      }
+      })
     },
-
     // 处理label
     sankeyFormatterLabel (data) {
       let str = ''
       let valueStr = ''
       if (this.chartInfo.param.text === 'all') {
         str += data.node
-        valueStr = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { value: data.showValue }) : data.showValue
+        valueStr = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
       }
       if (this.chartInfo.param.text === 'value' || !this.chartInfo.param.text) {
-        valueStr = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { value: data.showValue }) : data.showValue
+        valueStr = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
       }
       if (this.chartInfo.param.text === 'legend') {
         str += data.node
@@ -390,14 +405,32 @@ export default {
     },
     dispose () {
       if (this.svg) {
-        this.svg.selectAll('path').on('mouseover', null)
+        this.svg.selectAll('path').on('mouseenter', null)
         this.svg.selectAll('path').on('mousemove', null)
         this.svg.selectAll('path').on('mouseleave', null)
-        this.svg.selectAll('.node').on('mouseover', null)
+        this.svg.selectAll('path').on('click', null)
+        this.svg.selectAll('.node').on('mouseenter', null)
         this.svg.selectAll('.node').on('mousemove', null)
         this.svg.selectAll('.node').on('mouseleave', null)
+        this.svg.selectAll('.node').on('click', null)
         this.svg.selectAll('g').remove()
         this.svg = null
+      }
+    },
+    chartClick (e, data) {
+      if (this.dataLink.length) {
+        this.tooltip.title = data.node ? data.node : data.source.node + '  ——>  ' + data.target.node
+        this.tooltip.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
+        this.tooltip.mapping = data.mapping
+        this.tooltip.show = true
+        this.tooltip.dataLinkShow = true
+        this.setPosition(e)
+      }
+    },
+    clickout () {
+      if (this.dataLink.length) {
+        this.tooltip.show = false
+        this.tooltip.dataLinkShow = false
       }
     }
   },

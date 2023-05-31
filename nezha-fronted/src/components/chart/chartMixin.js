@@ -22,7 +22,8 @@ export default {
       },
       chartId: '',
       isNoData: true,
-      series: []
+      series: [],
+      dataLink: []
     }
   },
   props: {
@@ -280,18 +281,6 @@ export default {
         return aliasExpression
       }
     },
-    globalVariablesReplace (expression) {
-      let str = expression
-      if (str) {
-        this.globalVariables.forEach(item => {
-          const reg = new RegExp('{{\\' + item.name + '}}', 'g')
-          if (item.value != null) {
-            str = str.replace(reg, item.value)
-          }
-        })
-      }
-      return str
-    },
     selectMapping (value, valueMapping, show) {
       let mapping = ''
       if (show && valueMapping) {
@@ -340,31 +329,17 @@ export default {
       const pointX = point[0]
       const pointY = point[1]
       // 外层div大小
-      const viewWidth = size.viewSize[0]
+      // const viewWidth = size.viewSize[0]
       // const viewHeight = size.viewSize[1]
       // 提示框大小
       const boxWidth = size.contentSize[0]
       const boxHeight = size.contentSize[1]
-      if (!this.isFullscreen) { // 本地显示
-        const chartDom = document.getElementById('chart-local-' + this.chartInfo.id)
-        if (chartDom) {
-          if (windowMouse.x < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-            x = pointX + 15
-          } else {
-            x = pointX - boxWidth - 15
-          }
-          if (windowMouse.y + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
-            y = pointY + 15
-          } else {
-            y = pointY - boxHeight - 10
-          }
-          return [x, y]
-        }
-      } else {
-        if (pointX < (viewWidth / 2)) { // 说明鼠标在左边放不下提示框
-          x = pointX + 10
+      const chartDom = document.getElementById('chart-local-' + this.chartInfo.id)
+      if (chartDom) {
+        if (windowMouse.x < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+          x = pointX + 15
         } else {
-          x = pointX - boxWidth
+          x = pointX - boxWidth - 15
         }
         if (windowMouse.y + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
           y = pointY + 15
@@ -453,6 +428,38 @@ export default {
       setTimeout(() => {
         getChart(this.chartId) && getChart(this.chartId).resize()
       }, 100)
+    },
+    // 全局变量替换
+    globalVariablesReplace (expression) {
+      let str = expression
+      if (str) {
+        this.globalVariables.forEach(item => {
+          const reg = new RegExp('{{\\' + item.name + '}}', 'g')
+          if (item.value != null) {
+            str = str.replace(reg, item.value)
+          }
+        })
+      }
+      return str
+    },
+    // 设置dataLink
+    setDataLink () {
+      if (this.chartInfo.param.dataLink && this.chartInfo.param.dataLink.length) {
+        this.dataLink = this.chartInfo.param.dataLink.map(item => {
+          return {
+            ...item,
+            url: this.globalVariablesReplace(item.url)
+          }
+        })
+      }
+    },
+    linkClick (data) {
+      if (data.openIn === 'newTab') {
+        window.open(data.url)
+      } else {
+        window.location.href = data.url
+      }
+      this.clickout()
     }
   },
   watch: {
@@ -482,6 +489,11 @@ export default {
     this.chartId = `${this.chartInfo.id}${this.isFullscreen ? '-fullscreen' : ''}`
   },
   beforeDestroy () {
+    try {
+      getChart(this.chartId) && getChart(this.chartId).off('click')
+      getChart(this.chartId) && getChart(this.chartId).off('mousedown')
+      getChart(this.chartId) && getChart(this.chartId).getZr().off('mousemove')
+    } catch (error) {}
     getChart(this.chartId) && setChart(this.chartId, null)
   }
 }

@@ -25,7 +25,7 @@ const chartTreemapOption = {
   },
   series: [
     {
-      name: 'Disk Usage',
+      name: 'Parent',
       type: 'treemap',
       visibleMin: 40,
       childrenVisibleMin: 40,

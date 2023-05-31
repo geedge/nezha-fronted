@@ -1,7 +1,7 @@
 <template>
   <div :ref="`chart-canvas-${chartId}`" style="height: 100%;width: 100%">
     <div :id="`chart-canvas-${chartId}`" class="chart__canvas chart-svg"></div>
-    <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
+    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
       <div class="chart-canvas-tooltip-title tooltip-title">
         {{tooltip.title}}
       </div>
@@ -12,6 +12,13 @@
             <i :class="tooltip.mapping.icon" :style="{color: tooltip.mapping.color.icon}"></i>
           </div>
           <div style="display: inline-block">{{tooltip.value}}</div>
+        </div>
+      </div>
+      <!-- dataLink -->
+      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+          <i class="nz-icon nz-icon-link"></i>
+          <span>{{item.title}}</span>
         </div>
       </div>
     </div>
@@ -43,7 +50,8 @@ export default {
         title: 0,
         value: 0,
         mapping: {},
-        show: false
+        show: false,
+        dataLinkShow: ''
       },
       svg: null,
       spaceBetweenHexa: 3,
@@ -53,6 +61,7 @@ export default {
   methods: {
     hexbin,
     initChart () {
+      this.setDataLink()
       if (this.timer) {
         clearTimeout(this.timer)
         this.timer = null
@@ -181,47 +190,52 @@ export default {
         hexa.attr('fill', color) // Paints hexagon
         g.on('mouseenter', self.hexagonOver.bind(self, point))
         g.on('mouseleave', self.hexagonOut.bind(self, point))
+        g.on('click', self.chartClick.bind(self, point))
         self.drawText(this.svg, vals, point, color, hexaRadius, g) // 文本
         data[i].fcolor = color
       }
       return this.svg.node()
     },
     hexagonOver (that, e) { // 移入六边形
+      if (this.tooltip.dataLinkShow) { return }
       this.tooltip.title = that.alias
-      this.tooltip.value = that.showValue
+      this.tooltip.value = that.mapping && that.mapping.display ? this.handleDisplay(that.mapping.display, { ...that.metrics, legend: that.alias, value: that.showValue }) : that.showValue
       this.tooltip.mapping = that.mapping
       this.tooltip.show = true
       this.setPosition(e)
     },
     hexagonMove (e) { // 六边形内移动
-      if (this.tooltip.show) {
-        this.setPosition(e)
-      }
+      if (this.tooltip.dataLinkShow) { return }
+      this.tooltip.show = true
+      this.setPosition(e)
     },
-    hexagonOut (that) {
+    hexagonOut () {
+      if (this.tooltip.dataLinkShow) { return }
       this.tooltip.show = false
     },
     setPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
-      const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
-      if (box) {
-        const boxWidth = box.offsetWidth
-        const boxHeight = box.offsetHeight
-        if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-          this.tooltip.x = e.pageX + 15
+      this.$nextTick(() => {
+        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        if (box) {
+          const boxWidth = box.offsetWidth
+          const boxHeight = box.offsetHeight
+          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            this.tooltip.x = e.pageX + 15
+          } else {
+            this.tooltip.x = e.pageX - boxWidth - 15
+          }
+          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            this.tooltip.y = e.pageY + 15
+          } else {
+            this.tooltip.y = e.pageY - boxHeight - 10
+          }
         } else {
-          this.tooltip.x = e.pageX - boxWidth - 15
-        }
-        if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
           this.tooltip.y = e.pageY + 15
-        } else {
-          this.tooltip.y = e.pageY - boxHeight - 10
+          this.tooltip.x = e.pageX + 15
         }
-      } else {
-        this.tooltip.y = e.pageY + 15
-        this.tooltip.x = e.pageX + 15
-      }
+      })
     },
     formatStr (d) {
       const self = this
@@ -238,6 +252,7 @@ export default {
         .attr('stroke-linejoin', 'round')
         .attr('stroke-width', 1)
         .attr('transform', 'translate(' + x + ',' + y + ')')
+        .style('cursor', this.dataLink.length ? 'pointer' : 'default')
       return hexagon
     },
     drawText (svg, vals, point, color, hexbinRadius, group) {
@@ -273,6 +288,7 @@ export default {
           .attr('alignment-baseline', 'central')
           .style('font-size', fontSize)
           .style('fill', textColor)
+          .style('pointer-events', 'none')
         const scrollDiv = fObj.append('xhtml:div')
         scrollDiv
           .html(`<div style="color:${textColor};width:${hexWidth}px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px;box-sizing: border-box;padding: 0 10px;text-align: center">${str}</div>`)
@@ -295,6 +311,7 @@ export default {
           .attr('alignment-baseline', 'central')
           .style('font-size', fontSize)
           .style('fill', textColor)
+          .style('pointer-events', 'none')
         const scrollDiv2 = fObj2.append('xhtml:div')
         scrollDiv2
           .html(
@@ -315,6 +332,7 @@ export default {
           .attr('alignment-baseline', 'central')
           .style('font-size', fontSize)
           .style('fill', textColor)
+          .style('pointer-events', 'none')
         const scrollDiv = fObj.append('xhtml:div')
         scrollDiv
           .html(
@@ -342,6 +360,7 @@ export default {
           .attr('alignment-baseline', 'central')
           .style('font-size', fontSize)
           .style('fill', textColor)
+          .style('pointer-events', 'none')
         const scrollDiv = fObj.append('xhtml:div')
         scrollDiv
           .html(
@@ -415,6 +434,7 @@ export default {
         this.svg.on('mousemove', null)
         this.svg.selectAll('g').on('mouseenter', null)
         this.svg.selectAll('g').on('mouseleave', null)
+        this.svg.selectAll('g').on('click', null)
         this.svg.remove()
         this.svg = null
       }
@@ -431,6 +451,22 @@ export default {
 
         })
       }, 50)
+    },
+    chartClick (data, e) {
+      if (this.dataLink.length) {
+        this.tooltip.title = data.alias
+        this.tooltip.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.metrics, legend: data.alias, value: data.showValue }) : data.showValue
+        this.tooltip.mapping = data.mapping
+        this.tooltip.show = true
+        this.tooltip.dataLinkShow = true
+        this.setPosition(e)
+      }
+    },
+    clickout () {
+      if (this.dataLink.length) {
+        this.tooltip.show = false
+        this.tooltip.dataLinkShow = false
+      }
     }
   },
   mounted () {
