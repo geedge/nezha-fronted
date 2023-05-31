@@ -383,7 +383,12 @@ export default {
           this.$refs.searchStr.focus()
           break
         case '≠' :
-          this.searchStr = this.searchStr.substring(1)
+          if (this.searchBoxType !== 'number') {
+            if (this.searchStr[0] !== '-') {
+              return
+            }
+            this.searchStr = this.searchStr.substring(1)
+          }
           this.$refs.searchStr.focus()
           break
         case '>=' :
@@ -404,10 +409,18 @@ export default {
           break
         case 'wildcard' :
           this.searchStr = this.searchStr.substring(1)
+          if (this.searchStr[0] !== '*') {
+            return
+          }
           this.$refs.searchStr.focus()
           break
         case 'not wildcard' :
-          this.searchStr = this.searchStr.substring(2)
+          if (this.searchStr[0] === '-') {
+            this.searchStr = this.searchStr.substring(1)
+          }
+          if (this.searchStr[0] === '*') {
+            this.searchStr = this.searchStr.substring(1)
+          }
           this.$refs.searchStr.focus()
           break
         case 'exist' :
@@ -415,7 +428,9 @@ export default {
           // this.$refs.searchStr.focus()
           break
         case 'not exist' :
-          this.searchStr = this.searchStr.substring(2)
+          if (this.searchStr[0] === '-') {
+            this.searchStr = this.searchStr.substring(1)
+          }
           // this.searchStr = '-' + this.searchStr + '*'
           // this.selectValue('*')
           this.$refs.searchStr.focus()
