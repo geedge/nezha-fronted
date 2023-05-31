@@ -1,12 +1,14 @@
 <template>
-  <div class="chart-stat" ref="chart-stat-box" @mousemove="statMouseMove">
+  <div class="chart-stat" ref="chart-stat-box">
     <div
       class="chart-stat-item"
       v-for="(item,index) in statData"
       :key="index"
       @mouseenter="statMouseEnter(item,$event)"
+      @mousemove="statMouseMove"
       @mouseleave="statMouseleave(item)"
-      :class="statData.length===1 ?'only-stat' : ''"
+      @click="chartClick($event,item)"
+      :class="{'only-stat':statData.length===1,'chart-cursor-pointer':dataLink.length}"
       :style="{
         background:item.mapping ? item.mapping.color.bac : (statData.length===1 ? '' : colorList[index]),
         height:item.height+'px',
@@ -74,10 +76,8 @@
       <!-- sparkline -->
       <div class="sparkline" :id="`chart-canvas-${chartId}-${index}`" v-if="chartInfo.param.sparklineMode && chartInfo.param.sparklineMode !== 'none'"></div>
     </div>
-    <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
-      <div class="chart-canvas-tooltip-title tooltip-title">
-        {{tooltip.title}}
-      </div>
+    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
+      <div class="chart-canvas-tooltip-title tooltip-title">{{tooltip.title}}</div>
       <div class="chart-canvas-tooltip-content">
         <div>value</div>
         <div>
@@ -85,6 +85,13 @@
             <i :class="tooltip.mapping.icon" :style="{color: tooltip.mapping.color.icon}"></i>
           </div>
           <div style="display: inline-block">{{tooltip.value}}</div>
+        </div>
+      </div>
+      <!-- dataLink -->
+      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+          <i class="nz-icon nz-icon-link"></i>
+          <span>{{item.title}}</span>
         </div>
       </div>
     </div>
@@ -120,7 +127,8 @@ export default {
         title: 0,
         value: 0,
         mapping: {},
-        show: false
+        show: false,
+        dataLinkShow: ''
       },
       fontSize: 12,
       customFontSize: '',
@@ -133,6 +141,7 @@ export default {
   methods: {
     randomcolor,
     initChart () {
+      this.setDataLink()
       this.initStatData(this.chartInfo, this.chartData).then(() => {
         if (this.isNoData) {
           return
@@ -422,36 +431,27 @@ export default {
         })
       }, 100)
     },
+    statMouseEnter (data, e) {
+      if (this.tooltip.dataLinkShow) { return }
+      this.tooltip.title = data.legend
+      this.tooltip.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.label, value: data.showValue }) : data.showValue
+      this.tooltip.mapping = data.mapping
+      this.tooltip.show = true
+      this.setPosition(e)
+    },
     statMouseMove (e) {
+      if (this.tooltip.dataLinkShow) { return }
+      this.tooltip.show = true
+      this.setPosition(e)
+    },
+    statMouseleave () {
+      if (this.tooltip.dataLinkShow) { return }
+      this.tooltip.show = false
+    },
+    setPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
-      const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
-      if (box) {
-        const boxWidth = box.offsetWidth
-        const boxHeight = box.offsetHeight
-        if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-          this.tooltip.x = e.pageX + 15
-        } else {
-          this.tooltip.x = e.pageX - boxWidth - 15
-        }
-        if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
-          this.tooltip.y = e.pageY + 15
-        } else {
-          this.tooltip.y = e.pageY - boxHeight - 10
-        }
-      } else {
-        this.tooltip.y = e.pageY + 15
-        this.tooltip.x = e.pageX + 15
-      }
-    },
-    statMouseEnter (that, e) {
-      this.tooltip.title = this.$loadsh.cloneDeep(that.legend)
-      this.tooltip.value = this.$loadsh.cloneDeep(that.showValue)
-      this.tooltip.mapping = this.$loadsh.cloneDeep(that.mapping)
-      this.tooltip.show = true
       this.$nextTick(() => {
-        const windowWidth = window.innerWidth// 窗口宽度
-        const windowHeight = window.innerHeight// 窗口高度
         const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
         if (box) {
           const boxWidth = box.offsetWidth
@@ -471,9 +471,6 @@ export default {
           this.tooltip.x = e.pageX + 15
         }
       })
-    },
-    statMouseleave () {
-      this.tooltip.show = false
     },
     setFontSize (item) {
       let fontSize = ''
@@ -513,6 +510,22 @@ export default {
           break
       }
       return this.chartInfo.param.comparison && this.chartInfo.param.comparison !== 'none' && item.height > minHeight && item.width > minWidth
+    },
+    chartClick (e, data) {
+      if (this.dataLink.length) {
+        this.tooltip.title = data.legend
+        this.tooltip.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.label, value: data.showValue }) : data.showValue
+        this.tooltip.mapping = data.mapping
+        this.tooltip.show = true
+        this.tooltip.dataLinkShow = true
+        this.setPosition(e)
+      }
+    },
+    clickout () {
+      if (this.dataLink.length) {
+        this.tooltip.show = false
+        this.tooltip.dataLinkShow = false
+      }
     }
   },
   mounted () {

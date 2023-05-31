@@ -72,7 +72,7 @@ export default {
             break
           }
           case '$G.chart.name': {
-            item.value = this.chartInfo.varName
+            item.value = this.chartInfo.modifiedName
             break
           }
           case '$G.interval.ms': {

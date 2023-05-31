@@ -3,10 +3,11 @@
     ref="rank-chart-box"
     class="nz-chart__component"
   >
-    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" style="overflow-y:auto;">
+    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!dataLink.length}" style="overflow-y:auto;">
       <svg :id="`rank-svg-${chartId}`" width="100%" style="vertical-align: top;"></svg>
     </div>
-    <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
+
+    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
       <div class="chart-canvas-tooltip-title tooltip-title">
         {{tooltip.title}}
       </div>
@@ -19,10 +20,16 @@
           <div style="display: inline-block">{{tooltip.value}}</div>
         </div>
       </div>
-
       <div class="chart-canvas-tooltip-content">
         <div>rank</div>
         <div>{{tooltip.rank+1}}</div>
+      </div>
+      <!-- dataLink -->
+      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+          <i class="nz-icon nz-icon-link"></i>
+          <span>{{item.title}}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -63,13 +70,15 @@ export default {
         value: 0,
         mapping: {},
         rank: 0,
-        show: false
+        show: false,
+        dataLinkShow: ''
       },
       svg: null
     }
   },
   methods: {
     initChart () {
+      this.setDataLink()
       this.legends = []
       this.initRankData(this.chartInfo, this.chartData)
       this.isNoData = !this.rankData.length
@@ -171,6 +180,7 @@ export default {
         .on('mouseenter', this.rankEnter)
         .on('mousemove', this.rankMove)
         .on('mouseleave', this.rankLeave)
+        .on('click', this.chartClick)
       bars.exit().remove()
 
       // 文本标签
@@ -183,6 +193,7 @@ export default {
         .on('mouseenter', this.rankEnter)
         .on('mousemove', this.rankMove)
         .on('mouseleave', this.rankLeave)
+        .on('click', this.chartClick)
         .html((d) => {
           return this.rankFormatterLabel(d)
         })
@@ -243,44 +254,47 @@ export default {
             `
       }
     },
-
     rankEnter (e, data) { // 移入
+      if (this.tooltip.dataLinkShow) { return }
       this.tooltip.title = data.alias
-      this.tooltip.value = data.showValue
+      this.tooltip.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
       this.tooltip.mapping = data.mapping
       this.tooltip.rank = data.rank
       this.tooltip.show = true
       this.setPosition(e)
     },
     rankMove (e) { // 移动
-      if (this.tooltip.show) {
-        this.setPosition(e)
-      }
+      if (this.tooltip.dataLinkShow) { return }
+      this.tooltip.show = true
+      this.setPosition(e)
     },
     rankLeave () { // 移出
+      if (this.tooltip.dataLinkShow) { return }
       this.tooltip.show = false
     },
     setPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
-      const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
-      if (box) {
-        const boxWidth = box.offsetWidth
-        const boxHeight = box.offsetHeight
-        if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-          this.tooltip.x = e.pageX + 15
+      this.$nextTick(() => {
+        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        if (box) {
+          const boxWidth = box.offsetWidth
+          const boxHeight = box.offsetHeight
+          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            this.tooltip.x = e.pageX + 15
+          } else {
+            this.tooltip.x = e.pageX - boxWidth - 15
+          }
+          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            this.tooltip.y = e.pageY + 15
+          } else {
+            this.tooltip.y = e.pageY - boxHeight - 10
+          }
         } else {
-          this.tooltip.x = e.pageX - boxWidth - 15
-        }
-        if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
           this.tooltip.y = e.pageY + 15
-        } else {
-          this.tooltip.y = e.pageY - boxHeight - 10
+          this.tooltip.x = e.pageX + 15
         }
-      } else {
-        this.tooltip.y = e.pageY + 15
-        this.tooltip.x = e.pageX + 15
-      }
+      })
     },
     resize () {
       setTimeout(() => {
@@ -292,14 +306,31 @@ export default {
         this.svg.selectAll('rect').on('mouseenter', null)
         this.svg.selectAll('rect').on('mousemove', null)
         this.svg.selectAll('rect').on('mouseleave', null)
+        this.svg.selectAll('rect').on('click', null)
         this.svg.selectAll('foreignObject').on('mouseenter', null)
         this.svg.selectAll('foreignObject').on('mousemove', null)
         this.svg.selectAll('foreignObject').on('mouseleave', null)
+        this.svg.selectAll('foreignObject').on('click', null)
         this.svg.selectAll('g').remove()
         this.svg = null
       }
+    },
+    chartClick (e, data) {
+      if (this.dataLink.length) {
+        this.tooltip.title = data.alias
+        this.tooltip.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
+        this.tooltip.mapping = data.mapping
+        this.tooltip.show = true
+        this.tooltip.dataLinkShow = true
+        this.setPosition(e)
+      }
+    },
+    clickout () {
+      if (this.dataLink.length) {
+        this.tooltip.show = false
+        this.tooltip.dataLinkShow = false
+      }
     }
-
   },
   mounted () {
     this.colorList = initColor(20)

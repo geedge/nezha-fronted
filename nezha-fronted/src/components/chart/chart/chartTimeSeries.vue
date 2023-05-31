@@ -6,7 +6,7 @@
     v-my-loading="chartLoading"
   >
     <div class="chart__canvas" style="position:relative">
-      <div :id="`chart-canvas-${chartId}`"></div>
+      <div :id="`chart-canvas-${chartId}`" :class="{'chart-cursor-default':!dataLink.length}"></div>
       <!-- 右y轴name -->
       <p class="rightYAxis-name" v-if="hasRightYAxis">
         <span>{{chartInfo.param.rightYAxis.label}}</span>
@@ -20,6 +20,16 @@
       :series="series"
       :is-fullscreen="isFullscreen"
     ></chart-legend>
+    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
+      <div v-html="tooltip.tooltipHtml"></div>
+      <!-- dataLink -->
+      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+          <i class="nz-icon nz-icon-link"></i>
+          <span>{{item.title}}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -54,7 +64,18 @@ export default {
       stackTotalColorRight: null,
       isStack: false,
       hasRightYAxis: false,
-      chartLoading: false
+      chartLoading: false,
+      tooltip: {
+        x: 0,
+        y: 0,
+        title: 0,
+        value: 0,
+        mapping: {},
+        show: false,
+        dataLinkShow: '',
+        tooltipHtml: ''
+      },
+      tooltipHtml: ''
     }
   },
   computed: {
@@ -116,6 +137,7 @@ export default {
   },
   methods: {
     initChart (chartOptions = this.chartOption) {
+      this.setDataLink()
       try {
         this.isStack = this.chartInfo.param.stack
       } catch (e) {}
@@ -201,6 +223,15 @@ export default {
               }
             })
           }
+        }
+        if (this.isInit && this.dataLink.length) {
+          myChart.on('click', this.chartClick)
+          myChart.on('mousedown', (params) => {
+            if (this.tooltip.show) {
+              const e = params.event.event
+              e.stopPropagation()
+            }
+          })
         }
         this.chartLoading = false
         this.isInit = false
@@ -479,6 +510,7 @@ export default {
         }
 
         str += '</div>'
+        self.tooltipHtml = str
         return str
       }
     },
@@ -528,6 +560,66 @@ export default {
       if (option.yAxis[1].min && option.yAxis[1].max) {
         this.hasRightYAxis = true
       }
+    },
+    setPosition (e) {
+      const windowWidth = window.innerWidth// 窗口宽度
+      const windowHeight = window.innerHeight// 窗口高度
+      this.$nextTick(() => {
+        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        if (box) {
+          const boxWidth = box.offsetWidth
+          const boxHeight = box.offsetHeight
+          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            this.tooltip.x = e.pageX + 15
+          } else {
+            this.tooltip.x = e.pageX - boxWidth - 15
+          }
+          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            this.tooltip.y = e.pageY + 15
+          } else {
+            this.tooltip.y = e.pageY - boxHeight - 10
+          }
+        } else {
+          this.tooltip.y = e.pageY + 15
+          this.tooltip.x = e.pageX + 15
+        }
+      })
+    },
+    chartClick (params) {
+      // 先取消多表联动 防止其它图表setOption
+      if (this.isConnect !== 'none') {
+        echarts.disconnect('timeSeriesGroup')
+      }
+      echarts.disconnect('timeSeriesGroup')
+      const option = {
+        tooltip: {
+          extraCssText: 'z-index:99999999;visibility:hidden;transition:none;'
+        }
+      }
+      getChart(this.chartId).setOption(option)
+      getChart(this.chartId).dispatchAction({
+        type: 'hideTip'
+      })
+      this.tooltip.tooltipHtml = this.tooltipHtml
+      this.tooltip.show = true
+      this.tooltip.dataLinkShow = true
+      const e = params.event.event
+      this.setPosition(e)
+      if (this.isConnect !== 'none') {
+        echarts.connect('timeSeriesGroup')
+      }
+    },
+    clickout () {
+      if (this.dataLink.length) {
+        this.tooltip.show = false
+        this.tooltip.dataLinkShow = false
+        const option = {
+          tooltip: {
+            extraCssText: 'z-index:99999999;visibility:visible;'
+          }
+        }
+        getChart(this.chartId).setOption(option)
+      }
     }
   },
   mounted () {
@@ -537,9 +629,6 @@ export default {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
     this.chartInfo.loaded && this.initChart(this.chartOption)
-  },
-  beforeDestroy () {
-    getChart(this.chartId) && getChart(this.chartId).getZr().off('mousemove')
   }
 }
 </script>

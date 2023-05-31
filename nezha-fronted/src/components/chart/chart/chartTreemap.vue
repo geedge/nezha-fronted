@@ -5,7 +5,7 @@
     class="nz-chart__component nz-chart__component--time-series" @mouseenter="mouseEnterChart"
     @mouseleave="mouseLeaveChart"
   >
-    <div :id="`chart-canvas-${chartId}`" class="chart__canvas"></div>
+    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!dataLink.length}"></div>
     <chart-legend
       v-if="hasLegend"
       :chart-data="chartData"
@@ -14,6 +14,26 @@
       :series="series"
       :is-fullscreen="isFullscreen"
     ></chart-legend>
+
+    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
+      <div class="chart-canvas-tooltip-title tooltip-title">{{tooltip.title}}</div>
+      <div class="chart-canvas-tooltip-content">
+        <div>value</div>
+        <div>
+          <div v-if="tooltip.mapping && tooltip.mapping.icon" style="display: inline-block">
+            <i :class="tooltip.mapping.icon" :style="{color: tooltip.mapping.color.icon}"></i>
+          </div>
+          <div style="display: inline-block">{{tooltip.value}}</div>
+        </div>
+      </div>
+      <!-- dataLink -->
+      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+          <i class="nz-icon nz-icon-link"></i>
+          <span>{{item.title}}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -44,7 +64,7 @@ export default {
   computed: {
     hasLegend () {
       try {
-        return [chartLegendPlacement.bottom, chartLegendPlacement.left, chartLegendPlacement.right].indexOf(this.chartInfo.param.legend.placement) > -1
+        return [chartLegendPlacement.bottom, chartLegendPlacement.left, chartLegendPlacement.right].indexOf(this.chartInfo.param.legend.placement) > -1 && this.chartInfo.param.enable.legend
       } catch (e) {
         return false
       }
@@ -74,11 +94,21 @@ export default {
         active: '#53a3cb',
         inactive: '#7e7e7e'
       },
-      chartId: ''
+      chartId: '',
+      tooltip: {
+        x: 0,
+        y: 0,
+        title: 0,
+        value: 0,
+        mapping: {},
+        show: false,
+        dataLinkShow: ''
+      }
     }
   },
   methods: {
     initChart (chartOption = this.chartOption) {
+      this.setDataLink()
       this.legends = []
       this.series = chartOption.series = this.initTreeMapData(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
       chartOption.tooltip.formatter = this.formatterFunc
@@ -98,6 +128,15 @@ export default {
         }
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
+        if (this.isInit && this.dataLink.length) {
+          myChart.on('click', this.chartClick)
+          myChart.on('mousedown', (params) => {
+            if (this.tooltip.show && params.dataIndex) {
+              const e = params.event.event
+              e.stopPropagation()
+            }
+          })
+        }
         this.isInit = false
       }, 200)
     },
@@ -148,28 +187,74 @@ export default {
     },
     formatterFunc (params, ticket, callback) {
       const self = this
-      if (!params.data) {
+      if (!params.data || !params.dataIndex) {
         return ''
       }
       return `
+              <div class="chart-canvas-tooltip-title tooltip-title">${params.data.alias}</div>
+              <div class="chart-canvas-tooltip-content">
+                <div>value</div>
                 <div>
-                    <div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;  min-width: 150px; max-width: 600px; line-height: 18px; font-size: 14px;">
-                        <div class="tooltip-title" style="max-width: 500px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom: 5px">${params.data.alias}</div>
-                        <div style="font-size:12px;display:flex;justify-content: space-between;">
-                            <div>value</div>
-                            <div>
-                              <div style="display: ${params.data.mapping && params.data.mapping.icon ? 'inline-block' : 'none'}">
-                                <i class="${params.data.mapping && params.data.mapping.icon}" style="color: ${params.data.mapping && params.data.mapping.color && params.data.mapping.color.icon}"></i>
-                              </div>
-                              <div style="display: ${(params.data.mapping && params.data.mapping.display) ? 'none' : 'inline-block'}">${params.data.showValue}</div>
-                              <div style="display: ${(params.data.mapping && params.data.mapping.display) ? 'inline-block' : 'none'}">
-                                  ${(params.data.mapping && params.data.mapping.display) ? self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : ''}
-                              </div>
-                            </div>
-                        </div>
-                    </div>
+                  <div style="display: ${params.data.mapping && params.data.mapping.icon ? 'inline-block' : 'none'}">
+                    <i class="${params.data.mapping && params.data.mapping.icon}" style="color: ${params.data.mapping && params.data.mapping.color && params.data.mapping.color.icon}"></i>
+                  </div>
+                  <div style="display: ${params.data.mapping && params.data.mapping.display ? 'none' : 'inline-block'}">${params.data.showValue}</div>
+                  <div style="display: ${params.data.mapping && params.data.mapping.display ? 'inline-block' : 'none'}">${self.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue })}</div>
                 </div>
+              </div>
                `
+    },
+    setPosition (e) {
+      const windowWidth = window.innerWidth// 窗口宽度
+      const windowHeight = window.innerHeight// 窗口高度
+      this.$nextTick(() => {
+        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        if (box) {
+          const boxWidth = box.offsetWidth
+          const boxHeight = box.offsetHeight
+          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            this.tooltip.x = e.pageX + 15
+          } else {
+            this.tooltip.x = e.pageX - boxWidth - 15
+          }
+          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            this.tooltip.y = e.pageY + 15
+          } else {
+            this.tooltip.y = e.pageY - boxHeight - 10
+          }
+        } else {
+          this.tooltip.y = e.pageY + 15
+          this.tooltip.x = e.pageX + 15
+        }
+      })
+    },
+    chartClick (params) {
+      if (!params.dataIndex) { return } // 点击父节点(空白间隙)
+      const option = {
+        tooltip: {
+          extraCssText: 'z-index:99999999;visibility:hidden;transition:none;'
+        }
+      }
+      getChart(this.chartId).setOption(option)
+      this.tooltip.title = params.data.alias
+      this.tooltip.value = params.data.mapping && params.data.mapping.display ? this.handleDisplay(params.data.mapping.display, { ...params.data.labels, value: params.data.showValue }) : params.data.showValue
+      this.tooltip.mapping = params.data.mapping
+      this.tooltip.show = true
+      this.tooltip.dataLinkShow = true
+      const e = params.event.event
+      this.setPosition(e)
+    },
+    clickout () {
+      if (this.dataLink.length) {
+        this.tooltip.show = false
+        this.tooltip.dataLinkShow = false
+        const option = {
+          tooltip: {
+            extraCssText: 'z-index:99999999;visibility:visible;'
+          }
+        }
+        getChart(this.chartId).setOption(option)
+      }
     }
   },
   mounted () {

@@ -3,8 +3,11 @@
     ref="funnel-chart-box"
     class="nz-chart__component"
   >
-    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" style="display:flex;justify-content: center;align-items: center;"></div>
-    <div :class="`chart-canvas-tooltip-${chartId}`" :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show">
+    <div :id="`chart-canvas-${chartId}`" class="chart__canvas" :class="{'chart-cursor-default':!dataLink.length}">
+      <svg :id="`funnel-svg-${chartId}`" width="100%" height="100%"></svg>
+    </div>
+
+    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
       <div class="chart-canvas-tooltip-title tooltip-title">
         {{tooltip.title}}
       </div>
@@ -17,18 +20,24 @@
           <div style="display: inline-block">{{tooltip.value}}</div>
         </div>
       </div>
+      <!-- dataLink -->
+      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+          <i class="nz-icon nz-icon-link"></i>
+          <span>{{item.title}}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import D3Funnel from './d3-funnel/index.js'
+import * as d3 from 'd3'
 import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
 import { getMetricTypeValue } from '@/components/common/js/tools'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import { initColor } from '@/components/chart/chart/tools'
-import { getChart, setChart } from '@/components/common/js/common'
 import lodash from 'lodash'
 
 export default {
@@ -56,12 +65,15 @@ export default {
         title: 0,
         value: 0,
         mapping: {},
-        show: false
-      }
+        show: false,
+        dataLinkShow: ''
+      },
+      svg: null
     }
   },
   methods: {
-    initChart (customAnimate) {
+    initChart (animate) {
+      this.setDataLink()
       this.legends = []
       this.initData(this.chartInfo, this.chartData)
       if (this.isNoData) {
@@ -69,7 +81,7 @@ export default {
       }
       /* 使用setTimeout延迟渲染图表，避免样式错乱 */
       setTimeout(() => {
-        this.drawChart(customAnimate)
+        this.drawChart(animate)
       }, 200)
     },
     initData (chartInfo, originalDatas) {
@@ -97,7 +109,7 @@ export default {
             seriesIndex: expressionIndex,
             dataIndex: dataIndex,
             mapping: mapping,
-            backgroundColor: mapping ? mapping.color.bac.substr(0, 7) : this.colorList[colorIndex], // 仅限十六进制
+            background: mapping ? mapping.color.bac.substr(0, 7) : this.colorList[colorIndex], // 仅限十六进制
             label: legend.alias
           })
           colorIndex++
@@ -106,7 +118,7 @@ export default {
       this.funnelData.sort((a, b) => b.value - a.value)
       this.$emit('chartIsNoData', this.isNoData)
     },
-    drawChart (customAnimate) {
+    drawChart (animate) {
       let funnelData = lodash.cloneDeep(this.funnelData)
       const everyZeor = funnelData.every(item => item.value == 0)
       // 判断值是否全部为0
@@ -120,42 +132,120 @@ export default {
       } else {
         funnelData = funnelData.filter(item => item.value !== 0)
       }
-      this.$nextTick(() => {
-        const options = {
-          chart: {
-            width: '85%',
-            height: '85%',
-            bottomPinch: funnelData.length > 1 ? 1 : 0,
-            customAnimate: customAnimate === true || this.isInit
-          },
-          block: {
-            dynamicHeight: false,
-            highlight: true
-          },
-          label: {
-            format: this.formatterLabel
-          },
-          events: {
-            mouseenter: {
-              block: this.chartEnter
-            },
-            mousemove: {
-              block: this.chartMove
-            },
-            mouseleave: {
-              block: this.chartLeave
-            }
-          }
-        }
+      this.dispose()
+      // 获取svg宽高 初始化画布
+      const svgDom = document.getElementById(`funnel-svg-${this.chartId}`)
+      if (!svgDom) {
+        return false
+      }
+      const width = svgDom.getBoundingClientRect().width
+      const height = svgDom.getBoundingClientRect().height
+      const margin = 20
+      const chartWidth = width - margin * 2
+      const chartHeight = height - margin * 2
 
-        const myChart = new D3Funnel(document.getElementById(`chart-canvas-${this.chartId}`))
-        myChart.draw(funnelData, options)
-        setChart(this.chartId, myChart)
-        this.isInit = false
-      })
+      // 每个块的高度
+      const trapezoidPadding = 2
+      const trapezoidsHeight = (chartHeight - trapezoidPadding * (funnelData.length - 1)) / funnelData.length
+
+      const scale = d3.scaleLinear()
+        .domain([0, d3.max(funnelData, (d) => d.value)])
+        .range([0, chartWidth * 0.8])
+
+      // 数据处理
+      funnelData = funnelData.map((d, i, array) => {
+        d.index = i
+        if (i !== array.length - 1) {
+          d.nextValue = array[i + 1].value
+        } else {
+          d.nextValue = 0
+        }
+        return d
+      }
+      )
+      this.svg = d3.select(`#funnel-svg-${this.chartId}`)
+      const chart = this.svg.append('g').attr('width', chartWidth).attr('height', chartHeight).attr('transform', `translate(${margin}, ${margin})`)
+
+      // 渲染梯形
+      const trapezoids = chart
+        .append('g')
+        .attr('class', 'traps')
+        .attr('transform', 'translate(' + chartWidth / 2 + ',0)')
+        .selectAll('.trap')
+        .data(funnelData)
+      trapezoids.enter()
+        .append('polygon')
+        .attr('class', (d) => 'trap  trap-' + d.index)
+        .merge(trapezoids)
+        .attr('points', (d) => getPoints(scale(d.value), scale(d.nextValue), trapezoidsHeight))
+        .attr('transform', (d, i) => 'translate(0,' + i * (trapezoidPadding + trapezoidsHeight) + ')')
+        .attr('fill', (d) => d.background)
+        .style('opacity', 0)
+        .transition('opacity').duration(animate === true ? 600 : 0)
+        .style('opacity', 1)
+        .style('cursor', 'pointer')
+      trapezoids.exit()
+        .remove()
+
+      // 绑定交互事件
+      chart.selectAll('.trap')
+        .on('mouseover', (e, d) => {
+          // 划过变色
+          d3.select(e.target).transition('fill').attr('fill', this.shade(d.background, 0.2))
+          this.chartEnter(e, d)
+        })
+        .on('mousemove', this.chartMove)
+        .on('mouseleave', (e, d) => {
+          d3.select(e.target).transition('fill').attr('fill', d.background)
+          this.chartLeave()
+        })
+        .on('click', this.chartClick)
+
+      function getPoints (topWidth, bottomWidth, height) {
+        const points = []
+        points.push(-topWidth / 2 + ',' + 0)
+        points.push(topWidth / 2 + ',' + 0)
+        if (bottomWidth === 0) {
+          points.push(0 + ',' + height)
+        } else {
+          points.push(bottomWidth / 2 + ',' + height)
+          points.push(-bottomWidth / 2 + ',' + height)
+        }
+        return points.join(' ')
+      }
+
+      // 渲染文本标签
+      const texts = chart.select('.traps')
+        .selectAll('.foreign')
+        .data(funnelData)
+      texts.enter()
+        .append('foreignObject')
+        .attr('class', 'foreign')
+        .merge(texts)
+        .html((d) => this.formatterLabel(d, trapezoidsHeight))
+        .attr('x', 0)
+        .attr('y', (d, i) => i * (trapezoidPadding + trapezoidsHeight) + trapezoidsHeight / 2)
+      // 绑定交互事件
+        .on('mouseover', (e, d) => {
+          chart.select('.trap-' + d.index).transition('fill').attr('fill', this.shade(d.background, 0.2))
+          this.chartEnter(e, d)
+        })
+        .on('mousemove', this.chartMove)
+        .on('mouseleave', (e, d) => {
+          chart.select('.trap-' + d.index).transition('fill').attr('fill', d.background)
+          this.chartLeave()
+        })
+        .on('click', this.chartClick)
+        .style('opacity', 0)
+        .transition('opacity').duration(animate === true ? 600 : 0)
+        .style('opacity', 1)
+      texts.exit()
+        .remove()
+
+      this.isInit = false
     },
     // 处理label
-    formatterLabel   (label, value, e, data) {
+    formatterLabel   (data, height) {
       let str = ''
       let valueStr = ''
       if (this.chartInfo.param.text === 'all') {
@@ -172,27 +262,36 @@ export default {
         str += ''
       }
       if (str && valueStr) {
-        return `<div style="width:100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;cursor: pointer;color:#000000">
-                  <p class='text-ellipsis' style="width: 80%;text-align:center;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+        if (height < 32) {
+          return ''
+        }
+        return `<div class="foreign-label-wrap">
+                  <p class="funnel-label" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                     <span>${str}</span>
                   </p>
-                  <p class='text-ellipsis' style="width: 80%;text-align:center;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+                  <p class="funnel-label" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                     <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                     <span>${valueStr}</span>
                   </p>
                 </div>
               `
       } else if (str) {
-        return `<div style="width:100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;cursor: pointer;color:#000000">
-                  <p class='text-ellipsis' style="width: 80%;text-align:center;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+        if (height < 16) {
+          return ''
+        }
+        return `<div class="foreign-label-wrap">
+                  <p class="funnel-label" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                     <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                     <span>${str}</span>
                   </p>
                 </div>
               `
       } else if (valueStr) {
-        return `<div style="width:100%;height: 100%;display: flex;align-items: center;justify-content: center;flex-direction: column;cursor: pointer;color:#000000">
-                  <p class='text-ellipsis' style="width: 80%;text-align:center;color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+        if (height < 16) {
+          return ''
+        }
+        return `<div class="foreign-label-wrap">
+                  <p class="funnel-label" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                     <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                     <span>${valueStr}</span>
                   </p>
@@ -200,45 +299,118 @@ export default {
               `
       }
     },
-    resize () {
-      setTimeout(() => {
-        this.drawChart()
-      }, 50)
-    },
-    chartEnter (e, node) {
-      this.tooltip.title = node.data.alias
-      this.tooltip.value = node.data.showValue
-      this.tooltip.mapping = node.data.mapping
+    chartEnter (e, data) {
+      if (this.tooltip.dataLinkShow) { return }
+      this.tooltip.title = data.alias
+      this.tooltip.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
+      this.tooltip.mapping = data.mapping
       this.tooltip.show = true
       this.setPosition(e)
     },
     chartMove (e) {
+      if (this.tooltip.dataLinkShow) { return }
       this.tooltip.show = true
       this.setPosition(e)
     },
     chartLeave () {
+      if (this.tooltip.dataLinkShow) { return }
       this.tooltip.show = false
     },
     setPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
       const windowHeight = window.innerHeight// 窗口高度
-      const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
-      if (box) {
-        const boxWidth = box.offsetWidth
-        const boxHeight = box.offsetHeight
-        if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
-          this.tooltip.x = e.pageX + 15
+      this.$nextTick(() => {
+        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        if (box) {
+          const boxWidth = box.offsetWidth
+          const boxHeight = box.offsetHeight
+          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            this.tooltip.x = e.pageX + 15
+          } else {
+            this.tooltip.x = e.pageX - boxWidth - 15
+          }
+          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            this.tooltip.y = e.pageY + 15
+          } else {
+            this.tooltip.y = e.pageY - boxHeight - 10
+          }
         } else {
-          this.tooltip.x = e.pageX - boxWidth - 15
-        }
-        if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
           this.tooltip.y = e.pageY + 15
-        } else {
-          this.tooltip.y = e.pageY - boxHeight - 10
+          this.tooltip.x = e.pageX + 15
         }
-      } else {
-        this.tooltip.y = e.pageY + 15
-        this.tooltip.x = e.pageX + 15
+      })
+    },
+    /**
+     * Convert a hex color to an RGB object.
+     *
+     * @param {string} color
+     *
+     * @returns {{R: Number, G: number, B: number}}
+     */
+    hexToRgb (color) {
+      let hex = color.slice(1)
+      if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
+      }
+      const f = parseInt(hex, 16)
+      const R = f >> 16
+      const G = (f >> 8) & 0x00FF
+      const B = f & 0x0000FF
+      return { R, G, B }
+    },
+    /**
+     * Shade a color to the given percentage.
+     *
+     * @param {string} color A hex color.
+     * @param {number} shade The shade adjustment. Can be positive or negative.
+     *
+     * @return {string}
+     */
+    shade (color, shade) {
+      const { R, G, B } = this.hexToRgb(color)
+      const t = shade < 0 ? 0 : 255
+      const p = shade < 0 ? shade * -1 : shade
+
+      const converted = 0x1000000 +
+            ((Math.round((t - R) * p) + R) * 0x10000) +
+            ((Math.round((t - G) * p) + G) * 0x100) +
+            (Math.round((t - B) * p) + B)
+
+      return `#${converted.toString(16).slice(1)}`
+    },
+    resize () {
+      setTimeout(() => {
+        this.drawChart()
+      }, 50)
+    },
+    dispose () {
+      if (this.svg) {
+        this.svg.selectAll('.trap').on('mouseover', null)
+        this.svg.selectAll('.trap').on('mousemove', null)
+        this.svg.selectAll('.trap').on('mouseleave', null)
+        this.svg.selectAll('.trap').on('click', null)
+        this.svg.selectAll('foreignObject').on('mouseover', null)
+        this.svg.selectAll('foreignObject').on('mousemove', null)
+        this.svg.selectAll('foreignObject').on('mouseleave', null)
+        this.svg.selectAll('foreignObject').on('click', null)
+        this.svg.selectAll('g').remove()
+        this.svg = null
+      }
+    },
+    chartClick (e, data) {
+      if (this.dataLink.length) {
+        this.tooltip.title = data.alias
+        this.tooltip.value = data.mapping && data.mapping.display ? this.handleDisplay(data.mapping.display, { ...data.labels, value: data.showValue }) : data.showValue
+        this.tooltip.mapping = data.mapping
+        this.tooltip.show = true
+        this.tooltip.dataLinkShow = true
+        this.setPosition(e)
+      }
+    },
+    clickout () {
+      if (this.dataLink.length) {
+        this.tooltip.show = false
+        this.tooltip.dataLinkShow = false
       }
     }
   },
@@ -247,7 +419,7 @@ export default {
     this.chartInfo.loaded && this.initChart(true)
   },
   beforeDestroy () {
-    getChart(this.chartId) && getChart(this.chartId).destroy()
+    this.dispose()
   }
 }
 </script>

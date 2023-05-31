@@ -1,5 +1,5 @@
 <template>
-  <div class="nz-table-list" style="height: 100%;padding: 0 10px 10px 10px;box-sizing: border-box">
+  <div class="nz-table-list tabel-chart" style="height: 100%;padding: 0 10px 10px 10px;box-sizing: border-box">
     <el-table
       ref="dataTable"
       class="chart-table"
@@ -23,24 +23,42 @@
           <span class="data-column__span">{{col.title}}</span>
         </template>
         <template slot-scope="scope" :column="col">
-          <div v-if="scope.row.valueMapping && scope.row.valueMapping[col.title + 'mapping']" :style="{
-            background: scope.row.valueMapping[col.title + 'mapping'].color.bac,
-            color: scope.row.valueMapping[col.title + 'mapping'].color.text + ' !important',
-            clear: 'both',
-          }"
-               class="value-mapping-table"
+          <div
+            v-if="scope.row.valueMapping && scope.row.valueMapping[col.title + 'mapping']"
+            :style="{
+              background: scope.row.valueMapping[col.title + 'mapping'].color.bac,
+              color: scope.row.valueMapping[col.title + 'mapping'].color.text + ' !important',
+              clear: 'both',
+            }"
+            class="value-mapping-table"
+            :class="{'chart-cursor-pointer':dataLink.length}"
+            @click="chartClick($event,{title:col.title,value:showValueMapping(scope.row,col.title, col)})"
           >
             <template v-if="scope.row.valueMapping && scope.row.valueMapping[col.title + 'mapping']">
               <i :class="scope.row.valueMapping[col.title + 'mapping'].icon" :style="{color: scope.row.valueMapping[col.title + 'mapping'].color.icon}"></i>
             </template>
             {{showValueMapping(scope.row,col.title, col)}}
           </div>
-          <div class="value-mapping-table" v-else>
+          <div v-else class="value-mapping-table" :class="{'chart-cursor-pointer':dataLink.length}" @click="chartClick($event,{title:col.title,value:scope.row.display[col.title + 'display'].display})">
             {{scope.row.display[col.title + 'display'].display}}
           </div>
         </template>
       </el-table-column>
     </el-table>
+    <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
+      <div class="chart-canvas-tooltip-title tooltip-title">{{tooltip.title}}</div>
+      <div class="chart-canvas-tooltip-content">
+        <div>value</div>
+        <div>{{tooltip.value}}</div>
+      </div>
+      <!-- dataLink -->
+      <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+          <i class="nz-icon nz-icon-link"></i>
+          <span>{{item.title}}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -59,11 +77,21 @@ export default {
       oldTableData: [],
       columns: [],
       valueMapping: {},
-      tableTimer: null
+      tableTimer: null,
+      tooltip: {
+        x: 0,
+        y: 0,
+        title: 0,
+        value: 0,
+        mapping: {},
+        show: false,
+        dataLinkShow: ''
+      }
     }
   },
   methods: {
     initChart () {
+      this.setDataLink()
       if (this.tableTimer) {
         clearTimeout(this.tableTimer)
         this.tableTimer = null
@@ -354,6 +382,45 @@ export default {
         } else {
           return 0
         }
+      }
+    },
+    setPosition (e) {
+      const windowWidth = window.innerWidth// 窗口宽度
+      const windowHeight = window.innerHeight// 窗口高度
+      this.$nextTick(() => {
+        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        if (box) {
+          const boxWidth = box.offsetWidth
+          const boxHeight = box.offsetHeight
+          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            this.tooltip.x = e.pageX + 15
+          } else {
+            this.tooltip.x = e.pageX - boxWidth - 15
+          }
+          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            this.tooltip.y = e.pageY + 15
+          } else {
+            this.tooltip.y = e.pageY - boxHeight - 10
+          }
+        } else {
+          this.tooltip.y = e.pageY + 15
+          this.tooltip.x = e.pageX + 15
+        }
+      })
+    },
+    chartClick (e, data) {
+      if (this.dataLink.length) {
+        this.tooltip.title = data.title
+        this.tooltip.value = data.value
+        this.tooltip.show = true
+        this.tooltip.dataLinkShow = true
+        this.setPosition(e)
+      }
+    },
+    clickout () {
+      if (this.dataLink.length) {
+        this.tooltip.show = false
+        this.tooltip.dataLinkShow = false
       }
     }
   },

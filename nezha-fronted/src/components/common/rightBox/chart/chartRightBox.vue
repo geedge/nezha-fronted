@@ -240,7 +240,6 @@ export default {
         }
         if (params.type === 'group') {
           params.height = 1
-          delete params.param.dataLink
         }
         if (!params.groupId) {
           params.groupId = 0
@@ -396,7 +395,7 @@ export default {
               varValue: '',
               result: 'show'
             },
-            dataLink: this.editChart.param.dataLink
+            dataLink: []
           }
         }
       }
@@ -423,7 +422,7 @@ export default {
               varValue: '',
               result: 'show'
             },
-            dataLink: this.editChart.param.dataLink
+            dataLink: []
           }
         }
       }
@@ -465,7 +464,7 @@ export default {
               varValue: '',
               result: 'show'
             },
-            dataLink: this.editChart.param.dataLink
+            dataLink: []
           }
         }
         delete this.editChart.elements
@@ -490,8 +489,7 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
-            },
-            dataLink: this.editChart.param.dataLink
+            }
           }
         }
         delete this.editChart.elements
