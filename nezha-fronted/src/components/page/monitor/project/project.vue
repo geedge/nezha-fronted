@@ -39,7 +39,7 @@
       </edit-endpoint-box>
     </transition>
     <el-dialog
-      :title="'123'"
+      :title="currentProject.name"
       :visible.sync="isPreview.show"
       fullscreen
       class="no-transform-dialog"
