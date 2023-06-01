@@ -176,7 +176,7 @@ export default {
         .attr('id', 'svgHex' + this.chartId)
         .attr('width', width)
         .attr('height', height)
-        .on('mousemove', this.hexagonMove)
+        // .on('mousemove', this.hexagonMove)
       for (let i = 0; i < data.length; i++) {
         const point = data[i]
         const col = point.x
@@ -189,6 +189,7 @@ export default {
         const hexa = self.drawHexagon(g, hexaRadius, spaceBetweenHexa, x, y, hexbin) // Draws hexagon
         hexa.attr('fill', color) // Paints hexagon
         g.on('mouseenter', self.hexagonOver.bind(self, point))
+        g.on('mousemove', self.hexagonMove.bind(self, point))
         g.on('mouseleave', self.hexagonOut.bind(self, point))
         g.on('click', self.chartClick.bind(self, point))
         self.drawText(this.svg, vals, point, color, hexaRadius, g) // 文本
@@ -204,7 +205,7 @@ export default {
       this.tooltip.show = true
       this.setPosition(e)
     },
-    hexagonMove (e) { // 六边形内移动
+    hexagonMove (that, e) { // 六边形内移动
       if (this.tooltip.dataLinkShow) { return }
       this.tooltip.show = true
       this.setPosition(e)
