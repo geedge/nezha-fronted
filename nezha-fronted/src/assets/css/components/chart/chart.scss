@@ -518,6 +518,7 @@
   flex-direction: row;
   align-items: center;
   align-content: center;
+  position: relative;
   .chart-stat-item{
     display: flex;
     justify-content: center;
@@ -570,6 +571,7 @@
   flex-wrap: wrap;
   padding: 5px;
   box-sizing: border-box;
+  position: relative;
   .chart-gauge-item{
     display: flex;
     position: relative;
@@ -656,6 +658,7 @@
 }
 
 .chart-dataLink-tooltip{
+  position: absolute;
   padding-bottom: 2px;
   z-index: 999999999;
   pointer-events: auto;
@@ -794,7 +797,8 @@
   cursor: pointer;
 }
 
-.tabel-chart{
+.tabel-chart-box{
+  position: relative;
   .chart-canvas-tooltip{
     height: auto !important;
   }

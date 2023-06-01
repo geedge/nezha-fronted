@@ -1,5 +1,5 @@
 <template>
-  <div :ref="`chart-canvas-${chartId}`" style="height: 100%;width: 100%">
+  <div :ref="`chart-canvas-${chartId}`" style="height: 100%;width: 100%;position: relative;">
     <div :id="`chart-canvas-${chartId}`" class="chart__canvas chart-svg"></div>
     <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
       <div class="chart-canvas-tooltip-title tooltip-title">
@@ -233,8 +233,8 @@ export default {
             this.tooltip.y = e.pageY - boxHeight - 10
           }
         } else {
-          this.tooltip.y = e.pageY + 15
           this.tooltip.x = e.pageX + 15
+          this.tooltip.y = e.pageY + 15
         }
       })
     },
@@ -453,6 +453,29 @@ export default {
         })
       }, 50)
     },
+    datalinkPosition (e) {
+      const windowWidth = window.innerWidth// 窗口宽度
+      const windowHeight = window.innerHeight// 窗口高度
+      this.$nextTick(() => {
+        const box = document.getElementById(`chart-canvas-tooltip-${this.chartId}`)
+        const left = e.pageX - this.$refs[`chart-canvas-${this.chartId}`].getBoundingClientRect().left
+        const top = e.pageY - this.$refs[`chart-canvas-${this.chartId}`].getBoundingClientRect().top
+        if (box) {
+          const boxWidth = box.offsetWidth
+          const boxHeight = box.offsetHeight
+          if (e.pageX < (windowWidth / 2)) { // 说明鼠标在左边放不下提示框
+            this.tooltip.x = left + 15
+          } else {
+            this.tooltip.x = left - boxWidth - 15
+          }
+          if (e.pageY + 50 + boxHeight < windowHeight) { // 说明鼠标上面放不下提示框
+            this.tooltip.y = top + 15
+          } else {
+            this.tooltip.y = top - boxHeight - 10
+          }
+        }
+      })
+    },
     chartClick (data, e) {
       if (this.dataLink.length) {
         this.tooltip.title = data.alias
@@ -460,7 +483,7 @@ export default {
         this.tooltip.mapping = data.mapping
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
-        this.setPosition(e)
+        this.datalinkPosition(e)
       }
     },
     clickout () {
