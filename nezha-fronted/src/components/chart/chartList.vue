@@ -1,5 +1,7 @@
 <template>
-  <div id="chart-list">
+  <div id="chart-list" :style="{
+    width: isGroup ? '100%': 'calc(100% - 10px)',
+  }">
   <div :id='`chartList${(isGroup ? "Group" : "") + timestamp}`' class="chart-list" v-my-loading="gridLayoutLoading" ref="layoutBox">
     <grid-layout
       ref="layout"
@@ -10,7 +12,7 @@
       :is-draggable="!panelLock"
       :is-resizable="!panelLock"
       :layout.sync="copyDataList"
-      :margin="[10, 10]"
+      :margin="isGroup ? [10, 10] : [10, 10]"
       :row-height="stepWidth"
       :vertical-compact="true"
       :use-css-transforms="false"

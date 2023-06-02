@@ -87,7 +87,7 @@
       <!--图表-->
       <div id="tableList" class="table-list" style="padding-top: 0;overflow: hidden">
         <div id="dashboardScrollbar" class="table-list-box">
-          <div class="box-content"  ref="dashboardScrollbar" v-my-loading="chartListLoading" style="overflow-y: auto;display: flex;flex-direction: column;overflow-x: hidden">
+          <div class="box-content"  ref="dashboardScrollbar" v-my-loading="chartListLoading" style="overflow-y: scroll;display: flex;flex-direction: column;overflow-x: hidden">
             <panel-variables :labelArrs="variables" :time-range="searchTime" @getPanelData="getPanelData"></panel-variables>
             <chart-list
               ref="chartList"
