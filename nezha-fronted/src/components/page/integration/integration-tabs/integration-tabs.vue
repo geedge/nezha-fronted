@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import bus from '../../../../libs/bus'
 import manual from './manual.vue'
 import automatic from './automatic.vue'
 import configuration from './configuration.vue'
@@ -39,14 +40,14 @@ export default {
   },
   computed: {
     filterTabs () {
-      return this.tabs.filter(item=> item.id !== 'alert')
+      return this.tabs.filter(item => item.id !== 'alert')
     }
   },
   data () {
     return {
       tabs: [],
       tabId: '',
-      time: [0, 15]
+      time: bus.getTimezontDateRange()
     }
   },
   methods: {
