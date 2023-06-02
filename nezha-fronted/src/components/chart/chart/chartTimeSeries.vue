@@ -7,7 +7,7 @@
     v-my-loading="chartLoading"
   >
     <div class="chart__canvas" style="position:relative">
-      <div :id="`chart-canvas-${chartId}`" :class="{'chart-cursor-default':!dataLink.length}"></div>
+      <div :id="`chart-canvas-${chartId}`"></div>
       <!-- 右y轴name -->
       <p class="rightYAxis-name" v-if="hasRightYAxis">
         <span>{{chartInfo.param.rightYAxis.label}}</span>
