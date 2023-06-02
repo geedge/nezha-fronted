@@ -194,16 +194,16 @@ export default {
           value: 'not wildcard',
           remark: '反向模糊匹配'
         },
-        {
-          label: 'exist',
-          value: 'exist',
-          remark: '存在'
-        },
-        {
-          label: 'not exist',
-          value: 'not exist',
-          remark: '不存在'
-        }
+        // {
+        //   label: 'exist',
+        //   value: 'exist',
+        //   remark: '存在'
+        // },
+        // {
+        //   label: 'not exist',
+        //   value: 'not exist',
+        //   remark: '不存在'
+        // }
       ],
       keyword: [0, 1, 6, 7, 8, 9],
       text: [0, 1, 6, 7, 8, 9],
@@ -239,6 +239,7 @@ export default {
       // 1 删除
       if (e.keyCode == 8 && !this.searchStr && this.selectArr.length) {
         this.selectArr.pop()
+        this.emitSearch()
       } else if (e.keyCode == 8) {
         // console.log(this.oldSearchStr, this.searchStr)
       }
@@ -279,7 +280,11 @@ export default {
             this.selectSymbol(this.symbolList[this.selectIndex])
           } else if (this.valueShow) {
             if (this.valueList[this.selectIndex]) {
-              this.selectValue(this.valueList[this.selectIndex])
+              if (this.searchBoxType === 'enum') {
+                this.selectValue(this.valueList[this.selectIndex].label)
+              } else {
+                this.selectValue(this.valueList[this.selectIndex])
+              }
             } else if (this.selectIndex == this.valueList.length) {
               this.valueListLoad()
             } else {
@@ -747,8 +752,8 @@ export default {
         }
         this.keywordLoad = false
       })
+      // todo 初始化已选择的参数
       // 普通表格页面
-
       // 底部弹窗页面
     },
     calcType () { // 处理各个页面的from targetTab 确定查询的type
@@ -776,6 +781,7 @@ export default {
       this.symbolList = []
       this.valueList = []
       this.inputReadonly = false
+      // this.emitSearch()
     },
     scroll () { // 键盘上下选择 显示已选择的选项
       const ulBox = this.$refs.list
