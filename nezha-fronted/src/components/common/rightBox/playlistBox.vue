@@ -24,6 +24,7 @@
                 size="small"
                 :controls="false"
                 :min="1"
+                :precision="0"
                 v-model="editPlaylist.intvl">
               </el-input-number>
               <div class="el-input-group__append" style="text-transform:capitalize;">{{$t('config.system.basic.minute')}}</div>
