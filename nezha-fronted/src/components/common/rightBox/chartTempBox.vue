@@ -280,7 +280,7 @@ export default {
         this.editChartTemp.varIds = this.$refs.transfer.selectedData.map(item => item.id)
       }
       this.$refs.userForm.validate((valid) => {
-        const params = this.$loadsh.cloneDeep(this.editChartTemp)
+        const params = this.$lodash.cloneDeep(this.editChartTemp)
         params.pid = Number(params.pid)
         if (valid) {
           if (params.id) {

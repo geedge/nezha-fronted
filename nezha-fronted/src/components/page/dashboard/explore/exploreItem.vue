@@ -4057,7 +4057,7 @@ export default {
       }
     },
     handlerRowData (data) {
-      const metric = this.$loadsh.cloneDeep(data)
+      const metric = this.$lodash.cloneDeep(data)
       const metricName = metric.__name__ || ''
       let temp = metricName
       const labelColor = '#588874'// #66d9ef

@@ -169,8 +169,8 @@ export default {
           this.panelData = response.data.list
           if (this.panelData.length > 0) {
             this.filter.dashboardId = this.panelData[0].id
-            this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
-            this.variables = this.$loadsh.get(this.panelData, '[0].param.variables')
+            this.showPanel = this.$lodash.cloneDeep(this.panelData[0])
+            this.variables = this.$lodash.get(this.panelData, '[0].param.variables')
             this.getData(this.filter)
           }
         }

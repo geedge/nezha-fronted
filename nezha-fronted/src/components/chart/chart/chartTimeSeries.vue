@@ -258,7 +258,7 @@ export default {
           datas = [...datas, ...data.values]
         })
       })
-      const timeSorted = this.$loadsh.sortBy(datas, function (o) { return o[0] })
+      const timeSorted = this.$lodash.sortBy(datas, function (o) { return o[0] })
       const valueSorted = datas.sort((a, b) => {
         const a1 = isNaN(a[1]) || !a[1] ? 0 : Number(a[1])
         const b1 = isNaN(b[1]) || !b[1] ? 0 : Number(b[1])

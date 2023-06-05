@@ -801,7 +801,7 @@ export default {
         if (!document.getElementById('topology-canvas' + this.topologyIndexF)) {
           return
         }
-        data = this.$loadsh.cloneDeep(data)
+        data = this.$lodash.cloneDeep(data)
         const canvasOptions = {
           rotateCursor: '/static/roteCursor.cur',
           disableEmptyLine: true,
@@ -945,7 +945,7 @@ export default {
               data.background = '#FFFFFF00'
             }
             if (!res.data.topo.newData) {
-              data.pens = this.$loadsh.orderBy(data.pens, 'type', 'desc') // 先处理线 再处理点 因为新版本 将连线开始结束放在的 点上控制
+              data.pens = this.$lodash.orderBy(data.pens, 'type', 'desc') // 先处理线 再处理点 因为新版本 将连线开始结束放在的 点上控制
               data.pens = data.pens.map(item => {
                 if (item.type === 0) {
                   item = disposeTopoOldData(item, data.pens)
@@ -977,7 +977,7 @@ export default {
                 }
                 return item
               })
-              data.pens = this.$loadsh.orderBy(data.pens, 'type', 'asc')
+              data.pens = this.$lodash.orderBy(data.pens, 'type', 'asc')
             }
             resolve(data)
           }, 100)
@@ -1221,7 +1221,7 @@ export default {
     },
 
     onUpdateProps (node) {
-      const obj = this.$loadsh.cloneDeep(node)
+      const obj = this.$lodash.cloneDeep(node)
       delete obj.x
       delete obj.y
       delete obj.center

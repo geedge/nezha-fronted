@@ -14,7 +14,7 @@ import router from '@/router/exportHtmlRouter'
 import VueResource from 'vue-resource'
 import axios from 'axios'
 // import { hasPermission } from '@/permission'
-import loadsh from 'lodash'
+import lodash from 'lodash'
 
 import { post, get, put, del } from '@/http.js'
 import { clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet, cancelWithChange, myLoading } from '@/components/common/js/tools.js'
@@ -38,7 +38,7 @@ Vue.prototype.$post = post
 Vue.prototype.$get = get
 Vue.prototype.$put = put
 Vue.prototype.$delete = del
-Vue.prototype.$loadsh = loadsh
+Vue.prototype.$lodash = lodash
 Vue.prototype.$CONSTANTS = constants
 Vue.prototype.$TOOLS = tools
 Vue.prototype.$bottomBoxWindow = bottomBoxWindow // 底部上滑框控制

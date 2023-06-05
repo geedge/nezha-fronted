@@ -109,8 +109,8 @@ export default {
             return label
           }
           let value = null
-          if (params && self.$loadsh.get(myParams, label)) {
-            value = self.$loadsh.get(myParams, label)
+          if (params && self.$lodash.get(myParams, label)) {
+            value = self.$lodash.get(myParams, label)
           }
           if (label) {
             const reg = new RegExp(label + '=".+?"', 'g')

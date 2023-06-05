@@ -3,7 +3,7 @@ import MessageBox from 'element-ui/packages/message-box/src/main'
 import i18n from '../i18n'
 import bus from '@/libs/bus'
 import moment from 'moment-timezone'
-import loadsh from 'lodash'
+import lodash from 'lodash'
 /* 弹窗点击外部后关闭 */
 const exceptClassName = ['prevent-clickoutside', 'config-dropdown', 'nz-pop', 'el-picker', 'chart-box-dropdown', 'metric-dropdown', 'el-cascader__dropdown', 'no-style-class', 'el-message-box', 'nz-dashboard-dropdown', 'el-autocomplete-suggestion', 'nz-temp-box', 'el-time-panel', 'el-dropdown-menu', 'el-select-dropdown', 'no-close'] // clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
 export const clickoutside = {
@@ -13,9 +13,9 @@ export const clickoutside = {
       if (!binding.expression) return
       const unsavedChange = localStorage.getItem('nz-unsaved-change')
       try {
-        el.__oldValue__ = loadsh.cloneDeep(binding.value.obj)
+        el.__oldValue__ = lodash.cloneDeep(binding.value.obj)
         el.__newValue__ = el.__oldValue__
-        el.__oldData__ = loadsh.cloneDeep(binding.value.oldData)
+        el.__oldData__ = lodash.cloneDeep(binding.value.oldData)
       } catch (e) {
 
       }
@@ -39,7 +39,7 @@ export const clickoutside = {
             return false
           }
           if (el.__oldValue__) {
-            // const newValue = loadsh.cloneDeep(binding.value.obj)
+            // const newValue = lodash.cloneDeep(binding.value.obj)
             const oldData = el.__oldData__ || el.__oldValue__
             if (unsavedChange == 'on' && !isEqual(oldData, el.__newValue__) && !el.isShow) {
               el.isShow = true
@@ -78,7 +78,7 @@ export const clickoutside = {
   update (el, binding, vnode) {
     if (binding.arg && binding.arg != 'stable') {
       if (binding.value.obj.datasource !== '0') {
-        el.__oldValue__ = loadsh.cloneDeep(binding.value.obj)
+        el.__oldValue__ = lodash.cloneDeep(binding.value.obj)
       }
     }
     el.__newValue__ = binding.value.obj
@@ -220,7 +220,7 @@ export const cancelWithChange = {
     setTimeout(() => {
       if (!binding.value || !binding.value.obj) return
       const unsavedChange = localStorage.getItem('nz-unsaved-change')
-      el.__oldValue__ = loadsh.cloneDeep(binding.value.obj)
+      el.__oldValue__ = lodash.cloneDeep(binding.value.obj)
       el.__newValue__ = el.__oldValue__
       function domClick (e) {
         if (unsavedChange == 'on' && !isEqual(el.__oldValue__, el.__newValue__)) {
@@ -243,7 +243,7 @@ export const cancelWithChange = {
   },
   update (el, binding, vnode) {
     if (binding.arg && binding.arg != 'stable') {
-      el.__oldValue__ = loadsh.cloneDeep(binding.value.obj)
+      el.__oldValue__ = lodash.cloneDeep(binding.value.obj)
     }
     el.__newValue__ = binding.value.obj
   },

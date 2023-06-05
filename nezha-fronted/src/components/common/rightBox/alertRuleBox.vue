@@ -797,11 +797,11 @@ export default {
       immediate: true,
       handler (n, o) {
         this.isEdit = true
-        const obj = this.$loadsh.cloneDeep(n)
+        const obj = this.$lodash.cloneDeep(n)
         if (!obj.dashboardId) {
           obj.dashboardId = ''
         }
-        this.editAlertRule = this.$loadsh.cloneDeep(obj)
+        this.editAlertRule = this.$lodash.cloneDeep(obj)
         this.showPanel.id = this.editAlertRule.dashboardId
         // 获取缓存中的告警等级列表
         const severityData = JSON.parse(localStorage.getItem('nz-severityDataWeight'))

@@ -146,7 +146,7 @@ export default {
         this.process = false
         this.finish = false
         this.forceDelete = 0
-        this.deleteData = this.$loadsh.cloneDeep(this.deleteObjs).map(item => {
+        this.deleteData = this.$lodash.cloneDeep(this.deleteObjs).map(item => {
           item.type = this.from
           return item
         })
@@ -166,7 +166,7 @@ export default {
           this.process = false
           this.finish = false
           this.forceDelete = 0
-          this.deleteData = this.$loadsh.cloneDeep(this.deleteObjs).map(item => {
+          this.deleteData = this.$lodash.cloneDeep(this.deleteObjs).map(item => {
             item.type = this.from
             return item
           })

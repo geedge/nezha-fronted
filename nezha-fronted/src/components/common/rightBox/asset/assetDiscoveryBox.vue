@@ -220,7 +220,7 @@ export default {
         if (valid) {
           this.prevent_opt.save = true
           console.log(this.editAssetDiscovery)
-          const params = this.$loadsh.cloneDeep(this.editAssetDiscovery)
+          const params = this.$lodash.cloneDeep(this.editAssetDiscovery)
           params.schedule.stime = this.momentStrToTimestamp(params.schedule.stime)
           if (this.editAssetDiscovery.id) {
             this.$put('/tool/discovery', params).then(response => {
@@ -253,11 +253,11 @@ export default {
     assetDiscovery: {
       immediate: true,
       handler (n) {
-        const editAssetDiscovery = this.$loadsh.cloneDeep(n)
+        const editAssetDiscovery = this.$lodash.cloneDeep(n)
         if (editAssetDiscovery.schedule && editAssetDiscovery.schedule.stime) {
           editAssetDiscovery.schedule.stime = this.momentTz(editAssetDiscovery.schedule.stime)
         }
-        this.editAssetDiscovery = this.$loadsh.cloneDeep(editAssetDiscovery)
+        this.editAssetDiscovery = this.$lodash.cloneDeep(editAssetDiscovery)
       }
     }
   }

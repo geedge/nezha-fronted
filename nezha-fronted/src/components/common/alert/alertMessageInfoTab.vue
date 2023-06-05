@@ -151,7 +151,7 @@ export default {
     findData (key) {
       if (key) {
         const obj = {
-          ...this.$loadsh.cloneDeep(this.infoData[key]),
+          ...this.$lodash.cloneDeep(this.infoData[key]),
           type: key
         }
         if (key === 'dc') {
@@ -165,7 +165,7 @@ export default {
     findData2 (key) {
       if (key) {
         const obj = {
-          ...this.$loadsh.cloneDeep(this.infoData[key]),
+          ...this.$lodash.cloneDeep(this.infoData[key]),
           type: key,
           position: {
             top: 0,

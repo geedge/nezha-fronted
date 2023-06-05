@@ -31,11 +31,11 @@
 
        例子
         var object = { 'a': [{ 'b': { 'c': 3 } }] };
-        this.loadsh.get(object, 'a[0].b.c') => 3
+        this.lodash.get(object, 'a[0].b.c') => 3
 
-        this.loadsh.get(object, ['a', '0', 'b', 'c']); => 3
+        this.lodash.get(object, ['a', '0', 'b', 'c']); => 3
 
-        this.loadsh.get(object, 'a.b.c', 'default'); => 'default'
+        this.lodash.get(object, 'a.b.c', 'default'); => 'default'
 
 * 3 数组去重
 

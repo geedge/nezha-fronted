@@ -112,7 +112,7 @@ export default {
       this.setDataLink()
       this.legends = []
       this.initDoughnutData(this.chartInfo, this.chartData)
-      this.selectData = this.$loadsh.cloneDeep(this.doughnutData)
+      this.selectData = this.$lodash.cloneDeep(this.doughnutData)
       if (this.isNoData) {
         return
       }
@@ -361,7 +361,7 @@ export default {
     },
     clickLegendD3 (isGrey) {
       const data = this.doughnutData.filter((item, i) => !isGrey[i])
-      this.selectData = this.$loadsh.cloneDeep(data)
+      this.selectData = this.$lodash.cloneDeep(data)
       this.drawDoughnutChart(true)
     },
     resize () {

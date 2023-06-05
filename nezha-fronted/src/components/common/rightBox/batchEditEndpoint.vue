@@ -219,7 +219,7 @@ export default {
       }
       this.$refs.endpointEditForm.validate((valid) => {
         if (valid && !this.showError) {
-          const params = this.$loadsh.cloneDeep(this.editData)
+          const params = this.$lodash.cloneDeep(this.editData)
           if (params.editType === 1) {
             delete params.enable
           } else {

@@ -64,7 +64,7 @@ export default {
       this.dropdownMenuShow = false
     },
     duplicate () {
-      const obj = this.$loadsh.cloneDeep(this.chartInfo)
+      const obj = this.$lodash.cloneDeep(this.chartInfo)
       obj.elements = obj.oldElements
       delete obj.oldElements
       this.$store.dispatch('dispatchEditChart', {
@@ -111,7 +111,7 @@ export default {
           confirmReg.push(item)
         }
       })
-      confirmReg = this.$loadsh.orderBy(confirmReg, function (item) { // 根据 匹配的name的长度排序 避免匹配的 $a 没匹配 $asset的问题
+      confirmReg = this.$lodash.orderBy(confirmReg, function (item) { // 根据 匹配的name的长度排序 避免匹配的 $a 没匹配 $asset的问题
         return item.name.length
       }, 'desc')
       if (confirmReg.length) {

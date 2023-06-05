@@ -621,8 +621,8 @@ export default {
             delete item.chartId
           })
         }
-        this.editChart = this.$loadsh.cloneDeep(obj)
-        this.oldData = this.$loadsh.cloneDeep(obj)
+        this.editChart = this.$lodash.cloneDeep(obj)
+        this.oldData = this.$lodash.cloneDeep(obj)
         if (this.stableTime) {
           clearTimeout(this.stableTime)
           this.stableTime = null

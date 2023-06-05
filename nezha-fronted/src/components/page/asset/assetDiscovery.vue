@@ -176,7 +176,7 @@ export default {
   },
   methods: {
     add () {
-      this.object = this.$loadsh.cloneDeep(this.blankObject)
+      this.object = this.$lodash.cloneDeep(this.blankObject)
       this.rightBox.show = true
     },
     edit (row) {

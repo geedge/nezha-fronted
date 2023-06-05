@@ -1491,7 +1491,7 @@ export default {
       if (!this.chartConfig.elements.length) {
         this.addExpression()
       } else {
-        const expressionsShow = this.$loadsh.cloneDeep(this.expressionsShow)
+        const expressionsShow = this.$lodash.cloneDeep(this.expressionsShow)
         this.chartConfig.elements.forEach((item, index) => {
           this.expressions.push(item.expression)
           this.expressionName.push(item.name)
@@ -1504,7 +1504,7 @@ export default {
           // expressionsShow调整顺序
           expressionsShow.forEach((subItem) => {
             if (item.name == subItem.oldName) {
-              this.$set(this.expressionsShow, index, this.$loadsh.cloneDeep(subItem))
+              this.$set(this.expressionsShow, index, this.$lodash.cloneDeep(subItem))
             }
           })
         })

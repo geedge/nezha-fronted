@@ -463,7 +463,7 @@ export default {
       this.$get('visual/dashboard/' + u.id).then(res => {
         if (res.code === 200) {
           this.panel = res.data
-          if (!this.$loadsh.get(this.panel, 'param.report', '')) {
+          if (!this.$lodash.get(this.panel, 'param.report', '')) {
             this.panel = {
               ...this.panel,
               param: {
@@ -488,13 +488,13 @@ export default {
             }
           }
           this.panel.param.report.schedule.type = this.panel.param.report.schedule.type + ''
-          const startTime = this.$loadsh.get(this.panel, 'param.report.schedule.stime', '')
+          const startTime = this.$lodash.get(this.panel, 'param.report.schedule.stime', '')
           if (startTime !== '') {
             this.panel.param.report.schedule.stime = this.utcTimeToTimezoneStr(this.panel.param.report.schedule.stime, 'YYYY-MM-DD HH:mm:ss')
           } else {
             this.panel.param.report.schedule.stime = ''
           }
-          const endTime = this.$loadsh.get(this.panel, 'param.report.schedule.etime', '')
+          const endTime = this.$lodash.get(this.panel, 'param.report.schedule.etime', '')
           if (endTime !== '') {
             this.panel.param.report.schedule.etime = this.utcTimeToTimezoneStr(this.panel.param.report.schedule.etime, 'YYYY-MM-DD HH:mm:ss')
           } else {
@@ -773,7 +773,7 @@ export default {
       setTimeout(() => {
         this.variablesInit = false
         this.showPanel = val
-        this.variables = this.$loadsh.cloneDeep(this.$loadsh.get(this, 'showPanel.param.variables', []) || [])
+        this.variables = this.$lodash.cloneDeep(this.$lodash.get(this, 'showPanel.param.variables', []) || [])
         this.showPanel.type = 'dashboard'
         this.filter.dashboardId = this.showPanel.id
         this.dashboardId = this.showPanel.id
@@ -907,7 +907,7 @@ export default {
           this.$message.error(response)
         }
       }
-      this.variables = this.$loadsh.get(this, 'showPanel.param.variables', []) || []
+      this.variables = this.$lodash.get(this, 'showPanel.param.variables', []) || []
 
       function handler (panelData) {
         panelData.forEach(panel => {
@@ -1120,12 +1120,12 @@ export default {
     setDefaultTimeRange () {
       this.$nextTick(() => {
         if (this.$route.query.searchTime) return
-        let nowTimeType = this.$loadsh.cloneDeep(this.timeData[3])
-        const defaultTimeRange = this.$loadsh.get(this.showPanel, 'param.defaultTimeRange')
+        let nowTimeType = this.$lodash.cloneDeep(this.timeData[3])
+        const defaultTimeRange = this.$lodash.get(this.showPanel, 'param.defaultTimeRange')
         if (defaultTimeRange) {
           nowTimeType = this.timeData.find(item => item.id == defaultTimeRange)
         }
-        this.nowTimeType = this.$loadsh.cloneDeep(nowTimeType)
+        this.nowTimeType = this.$lodash.cloneDeep(nowTimeType)
         // 刷新时间范围
         this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType)
         this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
@@ -1139,8 +1139,8 @@ export default {
     setDefaultRefresh () {
       this.$nextTick(() => {
         if (this.$route.query.refresh) return
-        let refresh = this.$loadsh.cloneDeep(this.intervalList[0])
-        const defaultRefresh = this.$loadsh.get(this.showPanel, 'param.refresh')
+        let refresh = this.$lodash.cloneDeep(this.intervalList[0])
+        const defaultRefresh = this.$lodash.get(this.showPanel, 'param.refresh')
         if (defaultRefresh) {
           refresh = this.intervalList.find(item => item.value == defaultRefresh)
         }

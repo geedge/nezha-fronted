@@ -611,8 +611,8 @@ export default {
         this[key] = orderType
         let isDirArr = this.oldFileList.filter(item => item.isDir)
         let isRegArr = this.oldFileList.filter(item => !item.isDir)
-        isDirArr = this.$loadsh.orderBy(isDirArr, [user => user.name.toLowerCase()], [orderType])
-        isRegArr = this.$loadsh.orderBy(isRegArr, [user => user.name.toLowerCase()], [orderType])
+        isDirArr = this.$lodash.orderBy(isDirArr, [user => user.name.toLowerCase()], [orderType])
+        isRegArr = this.$lodash.orderBy(isRegArr, [user => user.name.toLowerCase()], [orderType])
         this.fileList = []
         if (orderType === 'asc') {
           this.fileList = this.fileList.concat(isDirArr, isRegArr)
@@ -623,8 +623,8 @@ export default {
         this[key] = orderType
         let isDirArr = this.oldFileList.filter(item => item.isDir)
         let isRegArr = this.oldFileList.filter(item => !item.isDir)
-        isDirArr = this.$loadsh.orderBy(isDirArr, order, orderType)
-        isRegArr = this.$loadsh.orderBy(isRegArr, order, orderType)
+        isDirArr = this.$lodash.orderBy(isDirArr, order, orderType)
+        isRegArr = this.$lodash.orderBy(isRegArr, order, orderType)
         this.fileList = []
         if (orderType === 'asc') {
           this.fileList = this.fileList.concat(isDirArr, isRegArr)

@@ -173,18 +173,18 @@ export default {
         height: this.terminal.height,
         cols: this.terminal.cols,
         rows: this.terminal.rows,
-        host: this.$loadsh.get(this.terminal, 'custom.host', ''),
-        port: this.$loadsh.get(this.terminal, 'custom.port', ''),
-        assetId: this.$loadsh.get(this.terminal, 'assetId', ''),
-        accountId: this.$loadsh.get(this.terminal, 'accountId', ''),
-        authProtocol: this.$loadsh.get(this.terminal, 'custom.authProtocol', ''),
-        authProtocolPort: this.$loadsh.get(this.terminal, 'custom.authProtocolPort', ''),
-        authType: this.$loadsh.get(this.terminal, 'custom.authType', ''),
-        authUsername: this.$loadsh.get(this.terminal, 'custom.authUsername', ''),
-        authPin: this.$loadsh.get(this.terminal, 'custom.authPin', ''),
-        authPriKey: this.$loadsh.get(this.terminal, 'custom.authPriKey', ''),
-        authUserTip: this.$loadsh.get(this.terminal, 'custom.authUserTip', ''),
-        authPinTip: this.$loadsh.get(this.terminal, 'custom.authPinTip', '')
+        host: this.$lodash.get(this.terminal, 'custom.host', ''),
+        port: this.$lodash.get(this.terminal, 'custom.port', ''),
+        assetId: this.$lodash.get(this.terminal, 'assetId', ''),
+        accountId: this.$lodash.get(this.terminal, 'accountId', ''),
+        authProtocol: this.$lodash.get(this.terminal, 'custom.authProtocol', ''),
+        authProtocolPort: this.$lodash.get(this.terminal, 'custom.authProtocolPort', ''),
+        authType: this.$lodash.get(this.terminal, 'custom.authType', ''),
+        authUsername: this.$lodash.get(this.terminal, 'custom.authUsername', ''),
+        authPin: this.$lodash.get(this.terminal, 'custom.authPin', ''),
+        authPriKey: this.$lodash.get(this.terminal, 'custom.authPriKey', ''),
+        authUserTip: this.$lodash.get(this.terminal, 'custom.authUserTip', ''),
+        authPinTip: this.$lodash.get(this.terminal, 'custom.authPinTip', '')
       }
       this.$post('/terminal/login', params).then(res => {
         if (res.code == 200) {

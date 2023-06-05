@@ -104,7 +104,7 @@ export default {
       if (data.type === 0 || data.type === 1) {
         data.lineWidth = data.data.lineWidth
       }
-      const obj = this.$loadsh.cloneDeep(data)
+      const obj = this.$lodash.cloneDeep(data)
       delete obj.x
       delete obj.y
       delete obj.center

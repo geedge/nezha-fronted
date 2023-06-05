@@ -101,7 +101,7 @@ export default {
           n.map(item => {
             if (!item.position) {
               const obj = {
-                ...this.$loadsh.cloneDeep(item),
+                ...this.$lodash.cloneDeep(item),
                 type: 'user',
                 position: {
                   top: 0,

@@ -784,7 +784,7 @@ export default {
         if (!document.getElementById('topology-canvas' + this.topologyIndexF)) {
           return
         }
-        data = this.$loadsh.cloneDeep(data)
+        data = this.$lodash.cloneDeep(data)
         if (!getTopology(this.topologyIndex)) {
           let canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
           // canvas.open(data)

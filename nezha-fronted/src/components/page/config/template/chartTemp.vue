@@ -264,7 +264,7 @@ export default {
       }
     },
     copy (u, copyParams) {
-      const copyName = this.$loadsh.get(copyParams, 'copyName', '-copy')
+      const copyName = this.$lodash.get(copyParams, 'copyName', '-copy')
       this.object = { ...u, name: u.name + copyName, id: '' }
       if (this.object.name.length > 64) {
         const length = this.object.name.length - 64

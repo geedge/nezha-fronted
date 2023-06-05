@@ -113,7 +113,7 @@ export default {
       this.setDataLink()
       this.legends = []
       this.initRoseData(this.chartInfo, this.chartData)
-      this.selectData = this.$loadsh.cloneDeep(this.roseData)
+      this.selectData = this.$lodash.cloneDeep(this.roseData)
       if (this.isNoData) {
         return
       }
@@ -377,7 +377,7 @@ export default {
     },
     clickLegendD3 (isGrey) {
       const data = this.roseData.filter((item, i) => !isGrey[i])
-      this.selectData = this.$loadsh.cloneDeep(data)
+      this.selectData = this.$lodash.cloneDeep(data)
       this.drawRoseChart(true)
     },
     resize () {

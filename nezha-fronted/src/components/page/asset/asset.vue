@@ -813,7 +813,7 @@ export default {
           } else {
             detailViewRightObj = this.tableData[0]
           }
-          this.detailViewRightObj = this.$loadsh.cloneDeep(detailViewRightObj)
+          this.detailViewRightObj = this.$lodash.cloneDeep(detailViewRightObj)
           this.pageObj.total = response.data.total
           this.pageObj.pages = response.data.pages
           if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {

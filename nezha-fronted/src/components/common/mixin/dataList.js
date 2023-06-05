@@ -149,7 +149,7 @@ export default {
           } else {
             detailViewRightObj = this.tableData[0]
           }
-          this.detailViewRightObj = this.$loadsh.cloneDeep(detailViewRightObj)
+          this.detailViewRightObj = this.$lodash.cloneDeep(detailViewRightObj)
           this.pageObj.total = response.data.total
           this.pageObj.pages = response.data.pages
           if (!this.scrollbarWrap && this.$refs.dataTable && this.$refs.dataTable.$refs.dataTable) {
@@ -234,7 +234,7 @@ export default {
       })
     },
     copy (u, copyParams) {
-      const copyName = this.$loadsh.get(copyParams, 'copyName', '-copy')
+      const copyName = this.$lodash.get(copyParams, 'copyName', '-copy')
       this.object = { ...u, name: u.name + copyName, id: '' }
       if (this.object.name.length > 64) {
         const length = this.object.name.length - 64
@@ -316,7 +316,7 @@ export default {
           { name: type + '_id', value: row.id, regex: 0 }
         ]
       } else if (type === 'alertMessage') {
-        let labels = this.$loadsh.cloneDeep(row.labels)
+        let labels = this.$lodash.cloneDeep(row.labels)
         if (typeof labels === 'string') labels = JSON.parse(labels)
         this.objectSilence.matchers = []
         const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type', 'nz_agent_id', 'rule_id', 'rule_name']
