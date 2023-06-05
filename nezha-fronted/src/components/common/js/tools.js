@@ -1093,3 +1093,37 @@ export function dealLegendAlias (legend, expression) {
     return expression
   }
 }
+// 滚动加载更多
+let heightLoad = function () {
+
+}
+export const loadMore = {
+  bind (el, binding) {
+    console.log(el, binding)
+    // 获取element，定义scroll
+    const selectDom = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
+    // selectDom.addEventListener('scroll', function (e) {
+    //   console.log(e)
+    //   const height = this.scrollHeight - this.scrollTop <= this.clientHeight
+    //   if (height) {
+    //     binding.value()
+    //   }
+    // })
+    heightLoad = function () {
+      const height = this.scrollHeight - this.scrollTop <= this.clientHeight
+      if (height && el.hasMore) {
+        binding.value.load()
+      }
+    }
+    selectDom.addEventListener('scroll', heightLoad)
+  },
+  update (el, binding) {
+    el.hasMore = binding.value.hasMore
+  },
+  unbind (el, binding) {
+    const selectDom = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
+    if (selectDom) {
+      selectDom.removeEventListener('scroll', heightLoad)
+    }
+  }
+}
