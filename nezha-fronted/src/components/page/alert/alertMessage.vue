@@ -15,10 +15,10 @@
         <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top" style="width: 100px">
           <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
-        <button id="asset-filter" :class="[dataListLayout.indexOf('clickSearch') > -1?'is-focus':'' ]" class="top-tool-btn margin-r-10" @click.stop="showClickSearch" :title="$t('dashboard.dashboard.chartForm.filter')">
-          <i class="nz-icon nz-icon-funnel"></i>
-        </button>
-        <pick-time ref="pickTime" v-model="searchTime" sign="message" :default-pick="10" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
+<!--        <button id="asset-filter" :class="[dataListLayout.indexOf('clickSearch') > -1?'is-focus':'' ]" class="top-tool-btn margin-r-10" @click.stop="showClickSearch" :title="$t('dashboard.dashboard.chartForm.filter')">-->
+<!--          <i class="nz-icon nz-icon-funnel"></i>-->
+<!--        </button>-->
+        <pick-time ref="pickTime" v-model="searchTime" sign="message" :default-pick="11" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
         <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcel')" class="top-tool-btn margin-r-10" type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
         </button>
@@ -218,7 +218,8 @@ export default {
       chartInfo: {},
       alertMessageNzTableHeightOffset: 242,
       stateOptions: alertMessageConstant.states,
-      dataListLayout: localStorage.getItem('dataList-layout' + 'alertMessageTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'alertMessageTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
+      // dataListLayout: localStorage.getItem('dataList-layout' + 'alertMessageTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'alertMessageTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
+      dataListLayout: localStorage.getItem('dataList-layout' + 'alertMessageTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'alertMessageTable')) : ['searchInput', 'elementSet', 'pagination'],
       state: '1',
       dialogShowText: false,
       dialogText: '',
@@ -436,125 +437,10 @@ export default {
       this.selectValue.projectIds = [Number(localStorage.getItem('alertMessageProjectId'))]
       this.searchCheckBox.projectIds = this.selectValue.projectIds.join(',')
     }
-    const searchKeys = {
-      // key: path 键
-      // value: vue set 参数
-      pageNo: { target: this.pageObj, propertyName: 'pageNo', type: 'number' },
-      pageSize: { target: this.pageObj, propertyName: 'pageSize', type: 'number' },
-      orderBy: { target: this.$data, propertyName: 'orderBy', type: 'string' },
-      sign: '',
-      ids: {
-        target: this.searchLabel,
-        isSearchInput: true,
-        propertyName: 'ids',
-        type: 'number',
-        defaultJson: {
-          disabled: false,
-          id: 26,
-          label: 'ids',
-          name: 'ID',
-          type: 'id',
-          val: ''
-        },
-        jsonKey: 'val'
-      },
-      endpointName: {
-        target: this.searchLabel,
-        isSearchInput: true,
-        propertyName: 'endpointName',
-        type: 'string',
-        defaultJson: {
-          disabled: false,
-          label: 'endpointName',
-          name: 'Endpoint',
-          type: 'input',
-          val: ''
-        },
-        jsonKey: 'val'
-      },
-      summary: {
-        target: this.searchLabel,
-        isSearchInput: true,
-        propertyName: 'summary',
-        type: 'number',
-        defaultJson: {
-          disabled: false,
-          label: 'summary',
-          name: 'Summary',
-          type: 'input',
-          val: ''
-        },
-        jsonKey: 'val'
-      },
-      ruleName: {
-        target: this.searchLabel,
-        isSearchInput: true,
-        propertyName: 'ruleName',
-        type: 'string',
-        defaultJson: {
-          disabled: false,
-          label: 'ruleName',
-          name: 'Alert rule',
-          type: 'input',
-          val: ''
-        },
-        jsonKey: 'val'
-      },
-      assetName: {
-        target: this.searchLabel,
-        isSearchInput: true,
-        propertyName: 'assetName',
-        type: 'string',
-        defaultJson: {
-          disabled: false,
-          label: 'assetName',
-          name: 'Asset ',
-          type: 'input',
-          val: ''
-        },
-        jsonKey: 'val'
-      },
-      labels: {
-        target: this.searchLabel,
-        isSearchInput: true,
-        propertyName: 'labels',
-        type: 'string',
-        defaultJson: {
-          disabled: false,
-          label: 'labels',
-          name: 'Label',
-          type: 'input',
-          val: ''
-        },
-        jsonKey: 'val'
-      },
-      ack: {
-        target: this.searchLabel,
-        isSearchInput: true,
-        propertyName: 'acknowledge',
-        type: 'string',
-        defaultJson: {
-          id: 4,
-          label: 'ack',
-          name: this.$t('overall.acknowledge'),
-          val: '',
-          valnum: '',
-          valString: '',
-          listStr: 'ack',
-          type: 'select',
-          readonly: true,
-          disabled: false
-        },
-        jsonKey: 'valnum'
-      },
-      dcIds: { target: this.searchCheckBox, propertyName: 'dcIds', type: 'string', target2: this.selectValue, type2: 'array' },
-      moduleIds: { target: this.searchCheckBox, propertyName: 'moduleIds', type: 'string', target2: this.selectValue, type2: 'array' },
-      projectIds: { target: this.searchCheckBox, propertyName: 'projectIds', type: 'string', target2: this.selectValue, type2: 'array' },
-      severityIds: { target: this.searchCheckBox, propertyName: 'severityIds', type: 'string', target2: this.selectValue, type2: 'array' }
-    }
-    this.initQueryFromPath(searchKeys)
+    this.initQueryFromPath()
   },
   mounted () {
+    console.log(this.switchTab)
     if (localStorage.getItem('alertMessageProjectId')) {
       this.selectValue.projectIds = [Number(localStorage.getItem('alertMessageProjectId'))]
       // this.$refs.clickSearch.selectValueOut.projectIds = [localStorage.getItem('endpointProjectId')]
@@ -901,6 +787,7 @@ export default {
       if (this.searchTime && this.searchTime.length > 1 && this.searchTime[0] && this.searchTime[1]) {
         this.$set(this.searchLabel.body, 'startAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[0])), 'YYYY-MM-DD HH:mm:ss')])
         this.$set(this.searchLabel.body, 'endAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[1])), 'YYYY-MM-DD HH:mm:ss')])
+        this.$set(this.searchLabel.body, 'state', this.state)
       } else {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
