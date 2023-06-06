@@ -321,7 +321,6 @@
         <div class="alert-label-title">{{ $t("overall.module") }}</div>
         <div class="alert-label-value">
           <i
-            style="cursor: pointer"
             class="nz-icon nz-icon-overview-module monitorColor"
           />&nbsp;
           <span>{{
@@ -431,7 +430,6 @@
         <div class="alert-label-title">{{ $t("overall.module") }}</div>
         <div class="alert-label-value">
           <i
-            style="cursor: pointer"
             class="nz-icon nz-icon-overview-module monitorColor"
           />&nbsp;
           <span>{{
@@ -494,18 +492,16 @@
               {{ $t("overall.metric") }}
             </span>
             <span
-              v-if="alertLabelData && alertLabelData.configs[0].state === 0"
+              v-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[0].state === 0"
             >
               <span class="active-icon red-bg inline-block"></span>
             </span>
             <span
-              v-else-if="
-                alertLabelData && alertLabelData.configs[0].state === 1
-              "
+              v-else-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[0].state === 1"
             >
               <span class="active-icon green-bg inline-block"></span>
             </span>
-            <span v-else-if="alertLabelData && alertLabelData.configs[0].state">
+            <span v-else-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[0].state">
               <span class="active-icon gray-bg inline-block"></span>
             </span>
           </span>
@@ -515,18 +511,16 @@
               {{ $t("overall.logs") }}
             </span>
             <span
-              v-if="alertLabelData && alertLabelData.configs[1].state === 0"
+              v-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[1].state === 0"
             >
               <span class="active-icon red-bg inline-block"></span>
             </span>
             <span
-              v-else-if="
-                alertLabelData && alertLabelData.configs[1].state === 1
-              "
+              v-else-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[1].state === 1"
             >
               <span class="active-icon green-bg inline-block"></span>
             </span>
-            <span v-else-if="alertLabelData && alertLabelData.configs[1].state">
+            <span v-else-if="alertLabelData && alertLabelData.configs && alertLabelData.configs[1].state">
               <span class="active-icon gray-bg inline-block"></span>
             </span>
           </span>

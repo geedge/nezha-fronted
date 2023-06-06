@@ -60,24 +60,27 @@
           <template v-else-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
           <template v-else-if="item.prop === 'state'">{{scope.row.state ? scope.row.state.name : '-'}}</template>
           <template v-else-if="item.prop === 'endpointNum'">
-            <span style="cursor: pointer" @click.stop="$emit('showBottomBox', 'endpointTab', scope.row)" @dblclick.stop=""><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span></span>
+            <span class="num-cursor" @click.stop="$emit('showBottomBox', 'endpointTab', scope.row)" @dblclick.stop="">
+              <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>
+              <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span>
+            </span>
           </template>
           <template v-else-if="item.prop === 'alertNum'">
-            <!--          v-my-loading:ldsFacebook="scope.row.trendLoading"-->
-            <span style="cursor: pointer" @click.stop="$emit('showBottomBox', 'alertMessageTab', scope.row)" @dblclick.stop="">
-            <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
-            <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
-              <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
-              <div class="severity-info" style='justify-content: space-between'>
-                <div class="severity-name">{{$t('overall.result.total')}}</div>
-                <div class="severity-value">{{scope.row.alertNum}}</div>
+            <!-- v-my-loading:ldsFacebook="scope.row.trendLoading" -->
+            <span class="num-cursor" @click.stop="$emit('showBottomBox', 'alertMessageTab', scope.row)" @dblclick.stop="">
+              <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
+              <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
+                <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
+                <div class="severity-info" style='justify-content: space-between'>
+                  <div class="severity-name">{{$t('overall.result.total')}}</div>
+                  <div class="severity-value">{{scope.row.alertNum}}</div>
+                </div>
               </div>
-            </div>
-            <alertDaysInfo
-              v-show="!scope.row.trendLoading"
-              :alertDaysData="scope.row.alertDaysData"
-            />
-          </span>
+              <alertDaysInfo
+                v-show="!scope.row.trendLoading"
+                :alertDaysData="scope.row.alertDaysData"
+              />
+            </span>
           </template>
           <template v-else-if="item.prop === 'dc'">{{scope.row.dc ? scope.row.dc.name : '-'}}</template>
           <template v-else-if="item.prop === 'cabinet'">
@@ -96,7 +99,6 @@
           <template v-else-if="item.prop === 'parent'">
           <span
             v-if="scope.row.parent"
-            style="cursor: pointer"
             @mouseenter="labelHover(scope.row, 'asset', true, false, $event)"
             @mouseleave="labelHover(scope.row, 'asset', false, false)">
             {{scope.row.parent.name}}

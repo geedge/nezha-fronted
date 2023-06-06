@@ -63,13 +63,13 @@
             <template v-else>-</template>
           </template>
           <template v-else-if="item.prop === 'assetNum'">
-          <span style="cursor: pointer" class="asset-num"  @click.stop="showBottomBox('asset', scope.row)" @dblclick.stop="">
-             <i class="nz-icon nz-icon-overview-project monitorColor" :class="scope.row[item.prop]>0?'color23BF9A':'color23BF9A'"/>
-          {{scope.row[item.prop]}}
+          <span class="num-cursor" @click.stop="showBottomBox('asset', scope.row)" @dblclick.stop="">
+            <i class="nz-icon nz-icon-overview-project monitorColor" :class="scope.row[item.prop]>0?'color23BF9A':'color23BF9A'"/>
+            {{scope.row[item.prop]}}
           </span>
           </template>
           <template v-else-if="item.prop === 'alertNum'">
-           <span style="cursor: pointer" @click.stop="$emit('showBottomBox', 'alertMessageTab', scope.row)" @dblclick.stop="">
+           <span class="num-cursor" @click.stop="$emit('showBottomBox', 'alertMessageTab', scope.row)" @dblclick.stop="">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
               <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
@@ -86,7 +86,7 @@
           </template>
 
           <template v-else-if="item.prop === 'cabinetNum'">
-          <span style="cursor: pointer" class="cabinet-num" @click.stop="showBottomBox('cabinet', scope.row)" @dblclick.stop="">
+          <span class="num-cursor" @click.stop="showBottomBox('cabinet', scope.row)" @dblclick.stop="">
             <i class="nz-icon nz-icon-cabinet monitorColor" :class="scope.row[item.prop]>0?'color23BF9A':'colorEF7458'"/>
             {{scope.row[item.prop]}}
           </span>

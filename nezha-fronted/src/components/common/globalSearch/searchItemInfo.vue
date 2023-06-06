@@ -77,7 +77,7 @@
 <!--              {{priority.name}} {{position.operator || '>'}} {{priority.value || '-'}}-->
 <!--            </div>-->
 <!--          </div>-->
-          <div style="cursor: pointer" v-else-if="item.key === 'alertNum'">
+          <div v-else-if="item.key === 'alertNum'">
             <i :class="Number(getPathContent(item.key)) ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover('',true, $event)" @mouseleave="tooltipHover('',false, $event)"></i>
             <div v-if="alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: position.left + 'px',top:position.top + 'px'}">
               <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>

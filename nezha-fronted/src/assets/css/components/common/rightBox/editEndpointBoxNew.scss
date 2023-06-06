@@ -183,6 +183,7 @@
     background: $--background-color-copy;
     border: 1px solid $--span-nz-icon-border-color;
     color: $--nz-icon-color;
+    cursor: pointer;
   }
   #module-box-relabel .vue-tags-input{
     max-width: unset;
