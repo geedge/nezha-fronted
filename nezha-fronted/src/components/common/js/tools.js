@@ -1099,18 +1099,11 @@ let heightLoad = function () {
 }
 export const loadMore = {
   bind (el, binding) {
-    console.log(el, binding)
+    console.log(el, binding, el.parentNode, 'bind')
     // 获取element，定义scroll
-    const selectDom = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
-    // selectDom.addEventListener('scroll', function (e) {
-    //   console.log(e)
-    //   const height = this.scrollHeight - this.scrollTop <= this.clientHeight
-    //   if (height) {
-    //     binding.value()
-    //   }
-    // })
+    const selectDom = binding.dom ? el.querySelector(binding.dom) : el
     heightLoad = function () {
-      const height = this.scrollHeight - this.scrollTop <= this.clientHeight
+      const height = this.scrollHeight - this.scrollTop - 20 <= this.clientHeight
       if (height && el.hasMore) {
         binding.value.load()
       }
@@ -1121,7 +1114,8 @@ export const loadMore = {
     el.hasMore = binding.value.hasMore
   },
   unbind (el, binding) {
-    const selectDom = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
+    const selectDom = binding.dom ? el.querySelector(binding.dom) : el
+    console.log(selectDom, 'unbind')
     if (selectDom) {
       selectDom.removeEventListener('scroll', heightLoad)
     }

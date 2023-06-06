@@ -18,7 +18,7 @@
               :append-to-body="false"
             >
               <div class="tag-box-content">
-                <div v-for="(tag, tIndex) in item.value" :key="tIndex">
+                <div v-for="(tag, tIndex) in item.realValue" :key="tIndex">
                   <span  class="search-box-tag" @click="editTag(item, index)">
                     {{item.i18n}} :
                     <span >{{tag}}</span>
@@ -37,24 +37,36 @@
           <el-input size="mini" v-model="searchStr" @focus="searchInputFocus" @keydown.native="keydown" @blur="changeSearchStr" @keyup.native="keyup" ref="searchStr" @keypress.native="keypress" :readonly="inputReadonly" @input="inputSearchStr"></el-input>
         </div>
       </div>
-      <div class="search-content" ref="list" style="max-height: 300px;overflow-y: auto">
-        <div class="search-key" v-if="keyShow && searchList.length" v-my-loading="keywordLoad" infinite-scroll-disabled="disabled">
+      <div
+        class="search-content"
+        id="search-box-scroll"
+        ref="list"
+        style="max-height: 300px;overflow-y: auto"
+        infinite-scroll-disabled="disabled"
+        v-loadMore="{
+           load: valueListLoad,
+           hasMore: (valueShow && valueList.length)&&(valueListInfo.total > valueList.length),
+        }"
+      >
+        <div class="search-key" v-if="keyShow && searchList.length" v-my-loading="keywordLoad">
           <div v-for="(item, index) in searchList" @click="selectKey(item)" @mouseenter="selectIndex = index" :key="index" class="search-item" :ref="'search-item' + index" :class="{'search-item-select': index === selectIndex}">
             <span class="icon-k">K</span>  {{$t(item.i18n || item.name)}} <span style="margin-left: 30px" class="content-remark">{{item.type}}</span>
           </div>
         </div>
-        <div class="search-symbol" v-if="symbolShow" infinite-scroll-disabled="disabled">
+        <div class="search-symbol" v-if="symbolShow" >
           <div v-for="(item, index) in symbolList" @click="selectSymbol(item)"  @mouseenter="selectIndex = index" :key="index" class="search-item" :ref="'search-item' + index" :class="{'search-item-select': index === selectIndex}">
             <span class="icon-s">:</span> {{item.label}}    <span style="" class="content-remark">{{item.remark}}</span>
           </div>
         </div>
         <div class="search-value" v-if="valueShow && valueList.length" v-my-loading="valueListInfo.loading">
           <!--非枚举类型-->
-          <div v-if="searchBoxType!== 'enum'" infinite-scroll-disabled="disabled">
+          <div
+            v-if="searchBoxType!== 'enum'"
+            class="select-value-box">
             <div v-for="(item, index) in valueList" @click="selectValue(item)"  @mouseenter="selectIndex = index" :key="index" class="search-item" :ref="'search-item' + index" :class="{'search-item-select': index === selectIndex}">
               <span class="icon-v">V</span> {{item}}    <span style="margin-left: 30px" class="content-remark">{{item.remark}}</span>
             </div>
-            <div v-if="valueListInfo.total > oldValueList.length" class="search-item" :ref="'search-item' + valueList.length" @click="valueListLoad" :class="{'search-item-select': selectIndex === valueList.length}" style="min-height: 28px">
+            <div v-if="valueListInfo.total > oldValueList.length" class="search-item" :ref="'search-item' + valueList.length" :class="{'search-item-select': selectIndex === valueList.length}" style="min-height: 28px">
               正在加载...
             </div>
           </div>
@@ -95,7 +107,8 @@
             :filter-method="dialogValueListSet"
             v-loadMore="{
               load: dialogValueListLoad,
-              hasMore: valueListInfo.total > valueList.length
+              hasMore: valueListInfo.total > valueList.length,
+              dom: '.el-select-dropdown .el-select-dropdown__wrap'
             }"
             ref="dialogValueSelect"
           >
@@ -110,7 +123,7 @@
             v-if="editDialogObj.type == 'enum'"
             size="small"
             :placeholder="''"
-            v-model="editDialogObj.value"
+            v-model="editDialogObj.realValue"
             multiple
             filterable
             allow-create
@@ -118,7 +131,8 @@
             :filter-method="dialogValueListSet"
             v-loadMore="{
               load: dialogValueListLoad,
-              hasMore: false
+              hasMore: false,
+              dom: '.el-select-dropdown .el-select-dropdown__wrap'
             }"
             ref="dialogValueSelect"
           >
@@ -710,7 +724,7 @@ export default {
     addSelectArr (str) {
       const key = str.split(':')[0]
       const value = str.split(':')[1]
-      let realValue = value
+      let realValue = value // 主要用于枚举类型 value存的是 i18n realValue存的是查询的值 非枚举类型 value 和 realValue一样
       console.log(this.searchBoxType)
       if (this.searchBoxType === 'enum') {
         const findItem = this.oldValueList.find(item => item.label == value)
@@ -794,6 +808,7 @@ export default {
       this.dialogShow = true
       console.log(tag, this.editTagObj)
       this.editDialogObj.value = this.editTagObj.value
+      this.editDialogObj.realValue = this.editTagObj.realValue
       this.editDialogObj.name = this.editTagObj.name
       this.editDialogObj.i18n = this.editTagObj.i18n
       this.editTagObj.type = ''
@@ -811,13 +826,13 @@ export default {
         this.editDialogObj.symbol = 1
       }
       const findItem = this.oldSearchList.find(item => this.editDialogObj.name == item.name)
+      this.editDialogObj.type = findItem.type
       if (findItem.type === 'enum') {
         this.oldValueList = []
         this.valueList = []
         this.valueListInfo.pageNo = 0
         this.valueListInfo.total = -1
         this.selectEnum(findItem)
-        this.editDialogObj.type = findItem.type
         this.contentShow('')
         this.dialogStr = this.editDialogObj.name
         return
@@ -843,6 +858,7 @@ export default {
       * 成功修改时 需要判断 成功修改的key 是否已存在 如果存在 需要合并 去重
       * */
       this.dialogShow = false
+      this.searchBoxType = ''
       this.dialogStr = ''
       this.dialogSraechStr = ''
       this.dialogObjValueList = []
@@ -850,7 +866,7 @@ export default {
       switch (this.editDialogObj.symbol) {
         case 1:
           this.editDialogObj.i18n = this.$t(findSearch.i18n)
-          this.editDialogObj.name = this.editDialogObj.name
+          this.editDialogObj.name = this.editDialogObj.name + ''
           break
         case 2:
           this.editDialogObj.i18n = '-' + this.$t(findSearch.i18n)
@@ -865,12 +881,13 @@ export default {
           this.editDialogObj.name = '-*' + this.editDialogObj.name
           break
       }
-      this.editDialogObj.realValue = this.editDialogObj.value
       if (this.editDialogObj.type === 'enum') { // 处理枚举类型
-        this.editDialogObj.realValue = this.editTagObj.value
+        // this.editDialogObj.realValue = this.editTagObj.value
         this.editTagObj.value = this.editTagObj.realValue.map(item => {
           return this.oldValueList.find(i => i.value === item).label
         })
+      } else {
+        this.editDialogObj.realValue = this.editDialogObj.value
       }
       const findItem = this.selectArr.find(item => item.name === this.editDialogObj.name)
       if (findItem && findItem.name != this.editTagObj.name) {
