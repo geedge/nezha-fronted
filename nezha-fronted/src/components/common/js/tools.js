@@ -1102,12 +1102,15 @@ export const loadMore = {
     console.log(el, binding, el.parentNode, 'bind')
     // 获取element，定义scroll
     const selectDom = binding.dom ? el.querySelector(binding.dom) : el
-    heightLoad = function () {
-      const height = this.scrollHeight - this.scrollTop - 20 <= this.clientHeight
-      if (height && el.hasMore) {
+    heightLoad = bus.debounce(function () {
+      if (!el.hasMore) {
+        return
+      }
+      const height = this.scrollHeight - this.scrollTop - 10 <= this.clientHeight
+      if (height) {
         binding.value.load()
       }
-    }
+    }, 100)
     selectDom.addEventListener('scroll', heightLoad)
   },
   update (el, binding) {

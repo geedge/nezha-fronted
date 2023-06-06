@@ -18,7 +18,7 @@
 <!--        <button id="asset-filter" :class="[dataListLayout.indexOf('clickSearch') > -1?'is-focus':'' ]" class="top-tool-btn margin-r-10" @click.stop="showClickSearch" :title="$t('dashboard.dashboard.chartForm.filter')">-->
 <!--          <i class="nz-icon nz-icon-funnel"></i>-->
 <!--        </button>-->
-        <pick-time ref="pickTime" v-model="searchTime" sign="message" :default-pick="11" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
+        <pick-time ref="pickTime" v-model="searchTime" sign="message" :default-pick="defaultPick" :refresh-data-func="dateChange" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
         <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcel')" class="top-tool-btn margin-r-10" type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
         </button>
@@ -195,7 +195,6 @@ import routerPathParams from '@/components/common/mixin/routerPathParams'
 import alertMessageInfo from '@/components/common/alert/alertMessageInfo'
 import lineData from '@/components/chart/defaultLineData'
 import logData from '@/components/chart/defaultLogData'
-import lodash from 'lodash'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 
 export default {
@@ -232,7 +231,7 @@ export default {
       chartDatas: [],
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
       legend: [],
-      searchTime: [bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 24 * 7)), bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))],
+      searchTime: [bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 24 * 30)), bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime()))), '30d'],
       searchTimeDialog: [],
       searchTimeSelect: bus.getTimezontDateRange(),
       currentMsg: {},
@@ -404,7 +403,8 @@ export default {
         { name: 'JSON', value: 3 }
       ],
       errorContent: '',
-      isError: false
+      isError: false,
+      defaultPick: 11
     }
   },
   computed: {
@@ -440,7 +440,6 @@ export default {
     this.initQueryFromPath()
   },
   mounted () {
-    console.log(this.switchTab)
     if (localStorage.getItem('alertMessageProjectId')) {
       this.selectValue.projectIds = [Number(localStorage.getItem('alertMessageProjectId'))]
       // this.$refs.clickSearch.selectValueOut.projectIds = [localStorage.getItem('endpointProjectId')]
@@ -607,7 +606,7 @@ export default {
       const severityData = JSON.parse(localStorage.getItem('nz-severityDataWeight'))
       const conditionArr = JSON.parse(this.currentMsg.alertRule.condition)
       if (this.currentMsg.alertRule.type === 1 || this.currentMsg.alertRule.type === 3) {
-        chartInfo = lodash.cloneDeep(lineData)
+        chartInfo = this.$lodash.cloneDeep(lineData)
         chartInfo.elements = [{}]
         if (conditionArr.length) {
           chartInfo.param.enable.thresholds = true
@@ -622,7 +621,7 @@ export default {
         }
         chartInfo.elements && (chartInfo.elements[0].expression = this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\r|\n+/g, ''))
       } else if (this.currentMsg.alertRule.type === 2) {
-        chartInfo = lodash.cloneDeep(logData)
+        chartInfo = this.$lodash.cloneDeep(logData)
         chartInfo.elements = [{}]
         if (conditionArr.length) {
           chartInfo.param.enable.thresholds = true
@@ -783,7 +782,8 @@ export default {
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      this.$set(this.searchLabel, 'state', this.state)
+      // this.$set(this.searchLabel, 'state', this.state)
+      console.log(this.searchTime)
       if (this.searchTime && this.searchTime.length > 1 && this.searchTime[0] && this.searchTime[1]) {
         this.$set(this.searchLabel.body, 'startAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[0])), 'YYYY-MM-DD HH:mm:ss')])
         this.$set(this.searchLabel.body, 'endAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[1])), 'YYYY-MM-DD HH:mm:ss')])
@@ -806,8 +806,9 @@ export default {
         ...this.searchLabel
       }
       const path = this.fromRoute.alertMessage
-      const routePathParams = lodash.cloneDeep(param)
+      const routePathParams = this.$lodash.cloneDeep(param)
       delete routePathParams.statistics
+      routePathParams.body = JSON.stringify(routePathParams.body)
       this.updatePath(routePathParams, path)
       this.$get('/alert/message/query', { ...this.searchLabel }).then(response => {
         this.tools.loading = false

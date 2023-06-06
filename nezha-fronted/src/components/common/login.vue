@@ -595,7 +595,6 @@ export default {
         }
       }
       this.constellation.forEach(item => {
-        // console.log(item.data('id'))
         const position = item.node.getBoundingClientRect()
         if (item.data('speedX') === 0) {
           item.data('speedX', this.r(-1, 1, 0.3))
