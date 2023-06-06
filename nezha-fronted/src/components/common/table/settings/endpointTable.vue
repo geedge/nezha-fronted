@@ -49,7 +49,7 @@
           </template>
           <template v-else-if="item.prop === 'project'">
             <div class="document-copy-block">
-              <span class="pointer document-copy-text"
+              <span class="document-copy-text"
               @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
               @mouseleave="labelHover(scope.row, item.prop, false,true)">
               {{scope.row[item.prop].name}}
@@ -59,11 +59,11 @@
           </template>
           <template v-else-if="item.prop === 'module'">
             <div class="document-copy-block">
-               <span class="pointer document-copy-text"
-               @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
-               @mouseleave="labelHover(scope.row, item.prop, false,true)">
-              <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>
-              {{scope.row[item.prop].name}}
+              <span class="document-copy-text"
+                @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
+                @mouseleave="labelHover(scope.row, item.prop, false,true)">
+                <i class="nz-icon nz-icon-overview-module monitorColor"/>
+                {{scope.row[item.prop].name}}
               </span>
               <i v-if="scope.row[item.prop].name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.copyText')"></i>
             </div>
@@ -71,17 +71,17 @@
           <template v-else-if="item.prop === 'asset'">
            <div class="document-copy-block">
               <span
-              class="pointer document-copy-text"
-              @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
-              @mouseleave="labelHover(scope.row, item.prop, false,true)">
-              <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
-              {{scope.row.asset&&scope.row.asset.name}}
-             </span>
+                class="document-copy-text"
+                @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
+                @mouseleave="labelHover(scope.row, item.prop, false,true)">
+                <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
+                {{scope.row.asset&&scope.row.asset.name}}
+              </span>
               <i v-if="scope.row.asset&&scope.row.asset.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.asset.name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
           <template v-else-if="item.prop === 'alerts'">
-          <span style="cursor: pointer"  @click.stop="showBottomBox('endpointAlertMessage', scope.row)" @dblclick.stop="">
+          <span class="num-cursor" @click.stop="showBottomBox('endpointAlertMessage', scope.row)" @dblclick.stop="">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
               <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
@@ -111,42 +111,44 @@
           </template>
 
           <template v-else-if="item.prop === 'state'">
-            <!--          metrics-->
-            <span style="width: auto;display: inline-block;cursor: pointer"
-                  @mouseenter="labelHoverConfigs(scope.row, 0, true, $event)"
-                  @mouseleave="labelHoverConfigs(scope.row, 0, false, $event)"
+            <!-- metrics -->
+            <span
+              style="width: auto;display: inline-block"
+              @mouseenter="labelHoverConfigs(scope.row, 0, true, $event)"
+              @mouseleave="labelHoverConfigs(scope.row, 0, false, $event)"
             >
-            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('overall.metric')}} </span>
-            <span v-if="scope.row.configs[0].state===0 || !scope.row.configs[0].state">
-              <span class="active-icon red-bg inline-block"></span>
+              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('overall.metric')}} </span>
+              <span v-if="scope.row.configs[0].state===0 || !scope.row.configs[0].state">
+                <span class="active-icon red-bg inline-block"></span>
+              </span>
+              <span v-else-if="scope.row.configs[0].state===1">
+                <span class="active-icon green-bg inline-block"></span>
+              </span>
+              <span v-else-if="scope.row.configs[0].state">
+                <span class="active-icon gray-bg inline-block"></span>
+              </span>
             </span>
-            <span v-else-if="scope.row.configs[0].state===1">
-              <span class="active-icon green-bg inline-block"></span>
-            </span>
-            <span v-else-if="scope.row.configs[0].state">
-              <span class="active-icon gray-bg inline-block"></span>
-            </span>
-          </span>
             <nz-tooltip :that="scope.row.configs[0]"  v-if="scope.row.configs[0] && scope.row.configs[0].loading && scope.row.configs[0].state  > 1" :type="'configs[0]'">
               <div name="default">
                 <div v-html="suspendedStr(scope.row.configs[0].state)"></div>
               </div>
             </nz-tooltip>
-            <!--          logs-->
-            <span style="width: auto;display: inline-block;cursor: pointer"
-                  @mouseenter="labelHoverConfigs(scope.row, 1, true, $event)"
-                  @mouseleave="labelHoverConfigs(scope.row, 1, false, $event)">
-           <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('dashboard.dashboard.chartForm.typeVal.log.label')}} </span>
-           <span v-if="scope.row.configs[1].state===0 || !scope.row.configs[1].state">
-             <span class="active-icon red-bg inline-block"></span>
-           </span>
-           <span v-else-if="scope.row.configs[1].state===1">
-             <span class="active-icon green-bg inline-block"></span>
-           </span>
-           <span v-else-if="scope.row.configs[1].state">
-             <span class="active-icon gray-bg inline-block"></span>
-           </span>
-         </span>
+            <!-- logs -->
+            <span
+              style="width: auto;display: inline-block"
+              @mouseenter="labelHoverConfigs(scope.row, 1, true, $event)"
+              @mouseleave="labelHoverConfigs(scope.row, 1, false, $event)">
+              <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('dashboard.dashboard.chartForm.typeVal.log.label')}} </span>
+              <span v-if="scope.row.configs[1].state===0 || !scope.row.configs[1].state">
+                <span class="active-icon red-bg inline-block"></span>
+              </span>
+              <span v-else-if="scope.row.configs[1].state===1">
+                <span class="active-icon green-bg inline-block"></span>
+              </span>
+              <span v-else-if="scope.row.configs[1].state">
+                <span class="active-icon gray-bg inline-block"></span>
+              </span>
+            </span>
             <nz-tooltip :that="scope.row.configs[1]"  v-if="scope.row.configs[1] && scope.row.configs[1].loading && scope.row.configs[1].state > 1" :type="'configs[1]'" :isTopoInfo="isTopoInfo">
               <div name="default">
                 <div v-html="suspendedStr(scope.row.configs[1].state)"></div>

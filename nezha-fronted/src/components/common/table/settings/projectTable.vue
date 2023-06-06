@@ -46,20 +46,19 @@
           </div>
         </template>
         <template v-else-if="item.prop === 'moduleNum'" >
-          <span class="module-num" @click="jumpModule(scope.row)">
+          <span class="num-cursor" @click="jumpModule(scope.row)">
             <i class="nz-icon nz-icon-overview-module monitorColor"/>
             {{scope.row[item.prop]}}
           </span>
         </template>
         <template v-else-if="item.prop === 'endpointNum'">
-          <span style="cursor: pointer" class="endpoint-num" @click="jumpEndpoint(scope.row)" >
-              <i class="nz-icon nz-icon-overview-endpoint monitorColor"/>
+          <span class="num-cursor" @click="jumpEndpoint(scope.row)" >
+            <i class="nz-icon nz-icon-overview-endpoint monitorColor"/>
             {{scope.row[item.prop]}}
           </span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-         <span class="alert-num">
-           <span style="cursor: pointer" @click="jumpAlertMessage(scope.row)">
+          <span class="num-cursor" @click="jumpAlertMessage(scope.row)">
             <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
             <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
               <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>
@@ -72,7 +71,6 @@
               v-show="!scope.row.trendLoading"
               :alertDaysData="scope.row.alertDaysData"
             />
-          </span>
           </span>
         </template>
         <span v-else-if="item.prop === 'id'" :id="'globalSearch' + scope.row.id">{{scope.row[item.prop]}}</span>

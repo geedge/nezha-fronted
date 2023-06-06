@@ -5,7 +5,6 @@
     class="calendar"
     v-clickoutside="changeDropdownFlag"
   >
-
     <div @click="showDropdown(true)" class="date-range-text">
       <div class="calendar-popover-text">
         <i class="nz-icon nz-icon-time"></i>
@@ -20,13 +19,13 @@
         </div>
       </div>
       <div class="calendar-popover-text" v-else>
-    <el-tooltip class="item" effect="light"  placement="bottom">
-      <div slot="content"> {{searchTime[0]}}<br/><p style="text-align:center">{{$t("dashboard.dashboard.to")}} </p>{{searchTime[1]}}</div>
-      <div class="time-no-data">{{ showTime.text }}</div>
-    </el-tooltip>
+      <el-tooltip class="item" effect="light"  placement="bottom">
+        <div slot="content"> {{searchTime[0]}}<br/><p style="text-align:center">{{$t("dashboard.dashboard.to")}} </p>{{searchTime[1]}}</div>
+        <div class="time-no-data">{{ showTime.text }}</div>
+      </el-tooltip>
         <!-- <div class="time-no-data">{{ showTime.text }}</div> -->
       </div>
-      <div class="calendar-popover-text" style="cursor:pointer">
+      <div class="calendar-popover-text">
         <i class="el-icon-arrow-down"></i>
       </div>
     </div>
@@ -60,7 +59,7 @@
             <div class="content-title">{{$t('dashboard.dashboard.chartForm.valMapping.from')}}</div>
             <div  tabindex="1" class="content-input" :class="oldSearchTimeError[0] ? 'input-error' : ''">
               <el-input   @focus="searchTimeValue = oldSearchTime[0]"  v-model="oldSearchTime[0]" @change="dateInputChange('start',oldSearchTime[0])" size="mini"> </el-input>
-              <div @click="myDatePickerShow()" class="nz-icon-box">
+              <div @click="myDatePickerShow()" class="nz-icon-box" style="cursor:pointer">
                 <i class="nz-icon nz-icon-date"/>
               </div>
               <div class="input-hint">{{inputError}}</div>
@@ -68,7 +67,7 @@
             <div class="content-title">{{$t('dashboard.dashboard.to')}}</div>
             <div tabindex="2" class="content-input" :class="oldSearchTimeError[1] ? 'input-error' : ''">
               <el-input  @focus="searchTimeValue = oldSearchTime[1]" v-model="oldSearchTime[1]" @change="dateInputChange('end',oldSearchTime[1])" size="mini"> </el-input>
-              <div  @click="myDatePickerShow()" class="nz-icon-box">
+              <div  @click="myDatePickerShow()" class="nz-icon-box" style="cursor:pointer">
                 <i class="nz-icon nz-icon-date"/>
               </div>
               <div class="input-hint">{{$t('date.formatError')}}</div>

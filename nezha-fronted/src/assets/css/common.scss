@@ -521,6 +521,11 @@ textarea {
   align-items: center;
   transform: scale(0.95);
 }
+
+i.nz-icon-override{
+  cursor: pointer;
+}
+
 .is-disabled{
   color: $--color-text-disabled !important;
 }
@@ -711,4 +716,17 @@ textarea {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+.el-table{
+  .num-cursor{
+    cursor: pointer;
+  }
+}
+.bottom-data-list{
+  .el-table{
+    .num-cursor{
+      cursor: default;
+    }
+  }
 }

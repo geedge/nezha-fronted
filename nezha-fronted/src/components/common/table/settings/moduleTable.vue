@@ -1,5 +1,5 @@
 <template>
-  <div style="">
+  <div style="height: 100%">
     <el-table
       id="userTable"
       ref="dataTable"
@@ -50,7 +50,7 @@
           </template>
           <template v-else-if="item.prop === 'project'">
             <div class="document-copy-block">
-              <span class="pointer document-copy-text"
+              <span class="document-copy-text"
               @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
               @mouseleave="labelHover(scope.row, item.prop, false,true)">
               {{scope.row[item.prop].name}}
@@ -59,13 +59,13 @@
             </div>
           </template>
           <template v-else-if="item.prop === 'endpointNum'">
-            <span class="endpoint-num"  @click.stop="showBottomBox('endpoint', scope.row)" @dblclick.stop="">
+            <span class="num-cursor" @click.stop="showBottomBox('endpoint', scope.row)" @dblclick.stop="">
               <i class="nz-icon nz-icon-overview-endpoint monitorColor"/>
             {{scope.row[item.prop]}}
             </span>
           </template>
           <template v-else-if="item.prop === 'alertNum'">
-            <span style="cursor: pointer"  @click.stop="showBottomBox('moduleAlertMessage', scope.row)" @dblclick.stop="">
+            <span class="num-cursor" @click.stop="showBottomBox('moduleAlertMessage', scope.row)" @dblclick.stop="">
               <i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert vertical-align-top;"  @mouseenter="tooltipHover(scope.row,true, $event)" @mouseleave="tooltipHover(scope.row,false, $event)"></i>
               <div v-if="scope.row.alertNumtooltipShow" class="alert-days-info-tooltip" :style="{left: scope.row.left + 'px',top:scope.row.top + 'px'}">
                 <div class="tooltip-title">{{$t('project.topology.alert')}}({{$t('overall.active')}})</div>

@@ -51,7 +51,7 @@
         </template>
         <template v-else-if="item.prop === 'alertNum'">
           <span
-            style="cursor: pointer"
+            class="num-cursor"
             @click="$emit('showBottomBox', 'alertMessageTab', scope.row)"
           >
             <i
