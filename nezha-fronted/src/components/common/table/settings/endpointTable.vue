@@ -100,7 +100,7 @@
           <span class="configs-endpoint metrics"
                 @mouseenter="labelHover1(scope.row, item.prop, true, $event)"
                 @mouseleave="labelHover1(scope.row, item.prop, false, $event, true)">
-            [{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'logs' : ''}}]
+            [{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'Logs' : ''}}]
           </span>
           <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop" @tipHover="tipHover($event,scope.row, item.prop,)" >
               <div name="default">
