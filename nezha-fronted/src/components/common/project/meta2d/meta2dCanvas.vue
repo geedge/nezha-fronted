@@ -241,6 +241,7 @@ export default {
         }
       }
       getTopology(this.meta2dId).setValue(obj)
+      this.$forceUpdate()
     },
     copyPen (item) {
       const obj = deepClone(item)
