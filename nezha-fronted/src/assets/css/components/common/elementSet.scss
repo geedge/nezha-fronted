@@ -63,10 +63,11 @@
   background-color: $--background-color-empty;
 }
 .custom-label {
+  font-size: 14px;
   padding: 2px 25px;
   position: relative;
-  cursor: default;
-  font-size: 14px;
+  // cursor: default;
+  cursor: pointer;
   span{
     width: 100%;
     display: inline-block;

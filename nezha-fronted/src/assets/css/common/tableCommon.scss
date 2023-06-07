@@ -179,7 +179,7 @@
         text-align: center;
         box-sizing: border-box;
         line-height: 40px;
-
+        cursor: pointer;
         &.sub-list-tab--active {
           border-bottom: 2px solid $--color-primary;
           color: $--color-primary;
