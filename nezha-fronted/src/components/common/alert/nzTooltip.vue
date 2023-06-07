@@ -22,8 +22,7 @@ export default {
     alertTableDialog: Boolean,
     isTopoInfo: Boolean,
     width: {
-      type: Number,
-      default: 150
+      type: Number
     }
   },
   data () {
@@ -90,7 +89,11 @@ export default {
           labelPosition.right =
             clientWidth - position.left - leftOffSetView + 'px'
         }
-        labelPosition.width = this.width + 'px'
+        if (this.width) {
+          labelPosition.width = this.width + 'px'
+        } else {
+          labelPosition.width = 'auto'
+        }
         return labelPosition
       }
     },
