@@ -12,7 +12,15 @@
         <i class="nz-icon nz-icon-time"/>
       </div>
       <div class="search-content history-content">
-        <div v-for="(item, index) in historyArr"  @mouseenter="historyIndex = index" :key="index" class="search-item" :ref="'search-item' + index" :class="{'search-item-select': index === historyIndex}">
+        <div
+          v-for="(item, index) in historyArr"
+          @mouseenter="historyIndex = index"
+          :key="index"
+          class="search-item text-ellipsis"
+          :ref="'search-item' + index"
+          :class="{'search-item-select': index === historyIndex}"
+          :title="renderHistoryTitle(item)"
+        >
           <span  v-for="(tag, tIndex) in item" :key="index + '-' +tIndex" class="search-box-tag" style="margin-right: 3px">
             <span>{{tag.i18n}}:</span>
             <span v-for="(value, vIndex) in tag.value" :key="value">{{value}} <span v-if="tag.value.length - 1 > vIndex">,</span></span>
@@ -547,6 +555,19 @@ export default {
     historyFocus () {
       this.$refs.history.focus()
     },
+    renderHistoryTitle (item) {
+      let str = ''
+      item.forEach(tag => {
+        str += this.$t(tag.code)
+        str += ':'
+        tag.value.forEach(value => {
+          str += value + ','
+        })
+        str = str.substring(0, str.length - 1)
+        str += '; '
+      })
+      return str
+    },
     contentShow (key) {
       this.keyShow = false // key 的下拉
       this.symbolShow = false // symbol 的下拉
@@ -647,7 +668,9 @@ export default {
         this.valueList = []
         this.valueListInfo.pageNo = 0
         this.valueListInfo.total = -1
-        this.selectEnum(findItem)
+        const arr = this.selectEnum(findItem)
+        this.valueList = [...arr]
+        this.oldValueList = [...arr]
         this.searchBoxType = findItem.type
         return
       }
@@ -679,7 +702,9 @@ export default {
         this.valueList = []
         this.valueListInfo.pageNo = 0
         this.valueListInfo.total = -1
-        this.selectEnum(findItem)
+        const arr = this.selectEnum(findItem)
+        this.valueList = [...arr]
+        this.oldValueList = [...arr]
         this.searchBoxType = findItem.type
         return
       }
@@ -879,7 +904,9 @@ export default {
         this.valueList = []
         this.valueListInfo.pageNo = 0
         this.valueListInfo.total = -1
-        this.selectEnum(findItem)
+        const arr = this.selectEnum(findItem)
+        this.valueList = [...arr]
+        this.oldValueList = [...arr]
         this.contentShow('')
         this.dialogStr = this.editDialogObj.name
         return
@@ -1058,15 +1085,64 @@ export default {
     selectEnum (findItem) { // 选择对应的枚举类型
       switch (findItem.name) {
         case 'priority':
-          this.valueList = [...this.severity]
-          this.oldValueList = [...this.severity]
-          break
+          return this.severity
         default:
-          this.valueList = []
+          return []
       }
     },
-    renderSelectArr () { // 将路右上方的 body参数回显
+    renderSelectArr () { // 将路由上方的 body参数回显
+      let body = this.$route.query.body
+      try {
+        if (body) {
+          body = JSON.parse(body)
+          console.log('body', body)
+          Object.keys(body).forEach(key => {
+            let initialKey = key
+            let str = ''
+            if (initialKey[0] === '-' && initialKey[1] === '*') {
+              initialKey = initialKey.substring(2)
+              str = '-*'
+            } else if (initialKey[0] === '-') {
+              initialKey = initialKey.substring(1)
+              str = '-'
+            } else if (initialKey[0] === '*') {
+              initialKey = initialKey.substring(1)
+              str = '*'
+            } else {
+              initialKey = initialKey + ''
+            }
+            const findKeyItem = this.oldSearchList.find(item => item.name === initialKey)
+            if (findKeyItem) {
+              const realValue = this.$lodash.cloneDeep(body[key])
+              let value = this.$lodash.cloneDeep(realValue)
+              if (findKeyItem.type === 'enum') { // 枚举类型需要特殊处理
+                value = this.enumRenderValue(findKeyItem, value)
+              }
+              this.selectArr.push({
+                i18n: str + this.$t(findKeyItem.i18n),
+                code: findKeyItem.i18n,
+                name: key,
+                realValue: realValue,
+                value: value
+              })
+            }
+          })
+          // this.selectArr.forEach(item => {
+          //   obj[item.name] = item.realValue
+          // })
+        }
+      } catch (e) {
 
+      }
+
+      console.log()
+    },
+    enumRenderValue (searchInfo, realValue) { // 处理枚举类型的回显
+      const arr = this.selectEnum(searchInfo)
+      const value = realValue.map(item => {
+        return arr.find(enumItem => enumItem.value === item).label
+      })
+      return value
     }
   },
   watch: {

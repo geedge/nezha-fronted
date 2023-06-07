@@ -2,7 +2,7 @@ import lodash from 'lodash'
 export default {
   methods: {
   // 解析请求参数，初始化 searchLabel
-    initQueryFromPath (searchKeys) {
+    initQueryFromPath (searchKeys, cb) {
       const q = this.$route.query
       lodash.forIn(searchKeys, (val, key) => {
         let qv = lodash.get(q, key)
@@ -27,6 +27,12 @@ export default {
         }, 200)
         qv && this.$set(val.target, val.propertyName, qv)
       })
+      if (q.body) {
+        this.searchLabel.body = JSON.parse(q.body)
+        if (cb) {
+          cb()
+        }
+      }
       if (q.bottomBox && JSON.parse(q.bottomBox)) {
         this.$nextTick(() => {
           this.detailType = q.detailType

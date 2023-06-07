@@ -437,7 +437,7 @@ export default {
       this.selectValue.projectIds = [Number(localStorage.getItem('alertMessageProjectId'))]
       this.searchCheckBox.projectIds = this.selectValue.projectIds.join(',')
     }
-    this.initQueryFromPath()
+    this.initQueryFromPath('', this.renderDefaultParams)
   },
   mounted () {
     if (localStorage.getItem('alertMessageProjectId')) {
@@ -447,6 +447,25 @@ export default {
     // this.getTitleSearch()
   },
   methods: {
+    renderDefaultParams () {
+      const q = JSON.parse(this.$route.query.body)
+      this.state = q.state
+      this.searchTime[0] = q.startAt
+      this.searchTime[1] = q.endAt
+      this.searchTime[2] = q.timeType
+      switch (q.timeType) {
+        case '7d' :
+          this.defaultPick = 10
+          break
+        case '30d' :
+          this.defaultPick = 11
+          break
+        default:
+          this.defaultPick = 0
+      }
+      console.log(this.defaultPick)
+      // this.defaultPick = 11
+    },
     batchAck () {
       if (this.batchDeleteObjs.length < 1) return
       this.$confirm(this.$t('tip.confirmBatchAck', [this.batchDeleteObjs.length]), {
@@ -808,9 +827,15 @@ export default {
       const path = this.fromRoute.alertMessage
       const routePathParams = this.$lodash.cloneDeep(param)
       delete routePathParams.statistics
+      routePathParams.body.timeType = this.searchTime[2]
       routePathParams.body = JSON.stringify(routePathParams.body)
       this.updatePath(routePathParams, path)
-      this.$get('/alert/message/query', { ...this.searchLabel }).then(response => {
+      const queryParams = {
+        ...this.searchLabel,
+        body: encodeURIComponent(JSON.stringify(this.searchLabel.body))
+      }
+      console.log(this.searchLabel.body)
+      this.$get('/alert/message/query', { ...queryParams }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)

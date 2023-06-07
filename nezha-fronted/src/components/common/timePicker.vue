@@ -555,12 +555,15 @@ export default {
     defaultPick: {
       immediate: true,
       handler (n, o) {
-        if (n && Number.isInteger(n)) {
+        if (Number.isInteger(n)) {
           const showTime = this.timeData.find((item) => item.id == n)
           if (showTime) {
             this.showTime = Object.assign({}, showTime)
             this.searchTime = this.$parent.searchTime
             this.nowTimeType = this.showTime
+            if (showTime.id == 0) {
+              this.isCustom = true
+            }
           }
           if (this.showEmpty && this.defaultPick === 12) {
             this.searchTime = []

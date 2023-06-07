@@ -1,9 +1,14 @@
 #nz-search-box{
   .history-icon {
-    border-right: 1px solid $--border-color-light;
+    border: 1px solid $--border-color-light;
+    border-right: none;
     width: 28px;
     text-align: center;
     display: inline-block;
+    height: 28px;
+    line-height: 28px;
+    vertical-align: middle;
+    margin-right: -4px;
   }
   .el-popover.el-popper {
     border: none;
@@ -129,8 +134,13 @@
   }
   .history-content {
     border: 1px solid $--border-color-light;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    overflow: auto;
+    max-height: 300px;
     .search-item{
       display: inline-block;
+      width: 100%;
       white-space: nowrap;
     }
   }
