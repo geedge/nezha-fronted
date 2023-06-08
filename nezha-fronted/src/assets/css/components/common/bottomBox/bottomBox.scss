@@ -76,6 +76,7 @@
   height: 50%;
   position: relative;
   padding: 0;
+  z-index: 10;
   .top-tools.top-tools--sub {
     border-bottom: 1px solid $--border-color-light;
     .top-tool-right {

@@ -66,6 +66,7 @@
                 v-for="(item,index) of editPanel.param.variables"
                 :key="item.uid"
                 style="margin-top: 10px"
+                :class="item.error? 'is-item-box-error' : ''"
               >
                 <div class="variable-title">
                   <span class="variable-title-left">
@@ -92,7 +93,7 @@
                   </span>
                 </div>
                 <transition name="el-zoom-in-top">
-                  <div class="form-items--half-width-group" v-if="!item.collapse" style="margin-top: 16px">
+                  <div class="form-items--half-width-group" v-show="!item.collapse" style="margin-top: 16px">
                     <!-- Name -->
                     <el-form-item class="form-item--half-width" :label='$t("overall.name")' :prop="'param.variables.' + index + '.name'"
                       :rules="[
@@ -101,7 +102,7 @@
                       { validator: variableValidator,trigger: 'blur'},
                       ]"
                     >
-                      <el-input v-model="item.name" :placeholder="$t('overall.placeHolder')" size="small"/>
+                      <el-input v-model="item.name" :placeholder="$t('overall.placeHolder')" size="small"  @change="hideError('variables', index)"/>
                     </el-form-item>
                     <!-- Type -->
                     <el-form-item class="form-item--half-width" :label='$t("overall.type")' :prop="'param.variables.' + index + '.type'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}">
@@ -137,7 +138,7 @@
                           </span>
                         </el-popover>
                       </div>
-                      <el-input v-model="item.expression" placeholder="labels_names()" size="small"/>
+                      <el-input v-model="item.expression" placeholder="labels_names()" size="small" @change="hideError('variables', index)"/>
                     </el-form-item>
                     <!-- Regex -->
                     <el-form-item v-if="item.type==='query'" :label="$t('dashboard.panel.regex')" :prop="'param.variables.' + index + '.regex'" key="regex" style="width: 100%;" >
@@ -145,7 +146,7 @@
                     </el-form-item>
                     <!-- Custom values -->
                     <el-form-item v-if="item.type==='custom'" :label="$t('dashboard.panel.customValues')" :prop="'param.variables.' + index + '.customOptions'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" key="customOptions" style="width: 100%;" >
-                      <el-input v-model="item.customOptions" placeholder="1,10,myKey:myValue" size="small"/>
+                      <el-input v-model="item.customOptions" placeholder="1,10,myKey:myValue" size="small" @change="hideError('variables', index)"/>
                     </el-form-item>
                     <!-- Multi-value -->
                     <el-form-item class="form-item--half-width" :prop="'param.variables.' + index + '.multi'" style="margin-bottom: 0px">
@@ -533,6 +534,35 @@ export default {
       this.esc(false)
     },
 
+    showError () {
+      this.$refs.form.validate((blooen, object) => {
+        Object.keys(object).forEach(item => {
+          const keyArr = item.split('.')
+          if (keyArr.length >= 4) {
+            this.editPanel[keyArr[0]][keyArr[1]][keyArr[2]].error = true
+          }
+        })
+        if (!blooen) {
+          this.$forceUpdate()
+        }
+      })
+    },
+    hideError (key, index, type) {
+      if (!this.editPanel.param[key] || !this.editPanel.param[key].length) {
+        return
+      }
+      if (type === 'name') {
+        const reg = /^[a-zA-Z_][a-zA-Z0-9_]*$/
+        if (reg.test(this.editPanel.param[key][index].name)) {
+          this.editPanel.param[key][index].error = false
+          this.$forceUpdate()
+        }
+      } else {
+        this.editPanel.param[key][index].error = false
+        this.$forceUpdate()
+      }
+    },
+
     /* 保存 */
     save () {
       // 保存时把无用属性删除 再传入后台
@@ -540,6 +570,7 @@ export default {
         const temp = JSON.parse(JSON.stringify(item))
         delete temp.collapse
         delete temp.uid
+        delete temp.error
         return temp
       })
       const params = {
@@ -598,6 +629,7 @@ export default {
             })
           }
         } else {
+          this.showError()
           this.prevent_opt.save = false
           return false
         }
