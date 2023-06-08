@@ -183,7 +183,10 @@ export default {
   computed: {
     chartLastPosition () {
       return this.$store.getters.getChartLastPosition
-    }
+    },
+    timeRange () {
+      return this.$store.getters.getTimeRange
+    },
   },
   data () {
     return {
@@ -198,7 +201,7 @@ export default {
         id: '',
         name: ''
       },
-      timeRange: [],
+      // timeRange: [],
       prevChart: '',
       filterPanel: '',
       groupArr: [],
@@ -507,9 +510,9 @@ export default {
       if (show) {
         this.prevChart = ''
         setTimeout(() => {
-          const start = new Date().setHours(new Date().getHours() - 1)
-          const end = new Date()
-          this.timeRange = [bus.computeTimezoneTime(start), bus.computeTimezoneTime(end)]
+          // const start = new Date().setHours(new Date().getHours() - 1)
+          // const end = new Date()
+          // this.timeRange = [bus.computeTimezoneTime(start), bus.computeTimezoneTime(end)]
           this.prevChart = {
             ...lodash.cloneDeep(this.editChart),
             loaded: true
