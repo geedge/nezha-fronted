@@ -8,6 +8,7 @@
       :isExportHtml="isExportHtml"
       :isError="isError"
       :from="from"
+      :nowTimeType="nowTimeType"
       :chartData="chartData"
       :chart-info="chartInfo"
       :showAllData.sync="showAllData"
@@ -28,6 +29,7 @@
       :is-group="isGroup(chartInfo.type)"
       :isError="isError"
       :from="from"
+      :nowTimeType="nowTimeType"
       :chartData="chartData"
       :chart-info="chartInfo"
       :showAllData.sync="showAllData"
@@ -97,6 +99,9 @@ export default {
     showHeader: { // 是否显示header
       type: Boolean,
       default: true
+    },
+    nowTimeType: {
+      type: Object
     },
     isExportHtml: { // 是否是导出的html
       type: Boolean,
