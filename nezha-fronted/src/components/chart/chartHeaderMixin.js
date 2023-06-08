@@ -27,6 +27,9 @@ export default {
       type: Boolean,
       default: false
     },
+    nowTimeType: {
+      type: Number
+    },
     hiddenText: { // 隐藏图表的悬浮文字
       type: String
     }

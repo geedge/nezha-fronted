@@ -199,8 +199,13 @@ export default {
       this.searchTime[1] = bus.timeFormate(this.timeRange[1])
       this.nowType.start_time = this.searchTime[0]
       this.nowType.end_time = this.searchTime[1]
-      this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
-      this.setSearchTime(this.nowType.type, this.nowType.value, this.nowType)
+      if (!this.nowTimeType) {
+        this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
+        this.setSearchTime(this.nowType.type, this.nowType.value, this.nowType)
+      } else {
+        this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowTimeType)
+        this.setSearchTime(this.nowType.type, this.nowType.value, this.nowTimeType)
+      }
     }
   }
 }
