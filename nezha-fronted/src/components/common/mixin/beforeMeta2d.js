@@ -18,9 +18,9 @@ export default {
   },
   methods: {
     reload () {
+      console.log(123213)
       if (this.currentProject.id) {
         this.$get('monitor/project/topo', { projectId: this.currentProject.id }).then(res => {
-
           if (res.data && res.data.topo) {
             this.topoData = res.data.topo || {}
             if (res.data.topo.topo) {
@@ -38,6 +38,26 @@ export default {
             }
           }
         })
+      } else if (this.isChart) {
+        const res = {
+          data: this.chartInfo.param
+        }
+        if (res.data && res.data.topo) {
+          this.topoData = res.data.topo || {}
+          if (res.data.topo.topo) {
+            this.topoData = res.data.topo.topo || {}
+          }
+          this.querysArray = res.data.topo.elements || []
+          this.params = {
+            timeType: res.data.topo.timeType || 5
+          }
+        } else {
+          this.topoData = {}
+          this.querysArray = []
+          this.params = {
+            timeType: 5
+          }
+        }
       }
     }
   }

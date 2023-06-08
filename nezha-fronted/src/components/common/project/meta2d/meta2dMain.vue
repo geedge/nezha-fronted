@@ -13,7 +13,7 @@
       @getNodesArr="getNodesArr"
     />
     <div class="meta2d-main" :class="isChart ? 'meta2d-chart': 'meta2d-project'" @contextmenu="onContextMenu($event)" style="position: relative">
-      <div v-for="(item,index) in nodesArr" v-if="!editFlag"
+      <div v-for="(item,index) in nodesArr" v-if="!editFlag && project"
            :key="index"
            v-show="(item.y + offsetY - 48 > -20) && (item.x + item.width/2 + offsetX - 24 > - 20)"
            :style="{position: 'absolute',top:item.y + offsetY - 48 + 'px',left:item.x + item.width/2 + offsetX - 24 +'px', 'z-index': 10}"
@@ -110,7 +110,7 @@
 <script>
 import meta2dHeader from '@/components/common/project/meta2d/meta2dHeader'
 import meta2dProps from '@/components/common/project/meta2d/meta2dProps'
-import meta2dMain from '@/components/common/project/meta2d/js/meta2dMain'
+import meta2dMainCalc from '@/components/common/project/meta2d/js/meta2dMainCalc'
 import meta2dTooltip from '@/components/common/project/meta2d/meta2dTooltip'
 import CanvasContextMenu from '@/components/common/project/meta2d/CanvasContextMenu'
 import popDataMain from '@/components/common/project/popData/Main'
@@ -124,7 +124,7 @@ import bus from '@/libs/bus'
 import { globalStore } from '@meta2d/core'
 export default {
   name: 'meta2dMain',
-  mixins: [meta2dMain, topoUtil],
+  mixins: [meta2dMainCalc, topoUtil],
   props: {
     meta2dId: {}, // 唯一id 不可重复
     iconArray: {
@@ -167,6 +167,7 @@ export default {
     topoData: {
       immediate: false,
       handler () {
+        console.log(123213)
         if (!this.isChart) {
           this.reload()
         }

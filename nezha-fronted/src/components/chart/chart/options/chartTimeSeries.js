@@ -137,6 +137,7 @@ export const chartTimeSeriesLineOption = {
   ],
   series: [{
     name: '',
+    cursor: 'pointer',
     type: 'line',
     symbol: 'emptyCircle', // 去掉点
     connectNulls: true,

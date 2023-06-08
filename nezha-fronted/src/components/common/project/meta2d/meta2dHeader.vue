@@ -9,7 +9,7 @@
        >
       </topology-top-tool>
     </div>
-    <div v-if="!editFlag" class="top-tool-right">
+    <div v-if="!isChart && !editFlag" class="top-tool-right">
       <pick-time
         v-show="!editFlag"
         ref="pickTime"

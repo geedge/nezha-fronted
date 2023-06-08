@@ -141,7 +141,8 @@
       <el-form-item v-if="isDiagram(chartConfig.type)" >
         <div class="topology-box">
           <div class="topology-mc"></div>
-          <diagram :topoData="chartConfig.param.topo" :fromChartBox="true" :topologyIndexF="-1"/>
+<!--          <diagram :topoData="chartConfig.param.topo" :fromChartBox="true" :topologyIndexF="-1"/>-->
+          <meta2dMain :meta2dId="'rightBoxChart'" :topoData="chartConfig.param.topo" :querysArray="[]" :params="params" :iconArray="iconArray" @reload="reload"/>
         </div>
       </el-form-item>
       <!--topplogy-->
@@ -298,9 +299,12 @@ import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import diagram from '@/components/common/ChartDiagram/diagram'
 import richTextEditor from '@/components/chart/richTextEditor'
+import beforeMeta2d from '@/components/common/mixin/beforeMeta2d'
+import meta2dMain from '@/components/common/project/meta2d/meta2dMain'
+import { clearTopology } from '@/components/common/js/common'
 export default {
   name: 'otherChartConfig',
-  mixins: [publicConfig, chartTypeShow],
+  mixins: [publicConfig, chartTypeShow, beforeMeta2d],
   components: {
     diagram,
     richTextEditor
