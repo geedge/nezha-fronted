@@ -20,6 +20,7 @@
           :ref="'search-item' + index"
           :class="{'search-item-select': index === historyIndex}"
           :title="renderHistoryTitle(item)"
+          @click="selectHistory(item)"
         >
           <span  v-for="(tag, tIndex) in item" :key="index + '-' +tIndex" class="search-box-tag" style="margin-right: 3px">
             <span>{{tag.i18n}}:</span>
@@ -568,6 +569,10 @@ export default {
       })
       return str
     },
+    selectHistory (item) {
+      this.selectArr = item
+      this.emitSearch()
+    },
     contentShow (key) {
       this.keyShow = false // key 的下拉
       this.symbolShow = false // symbol 的下拉
@@ -1034,6 +1039,11 @@ export default {
         this.where = this.$route.path + this.position
       }
       const historyArr = localStorage.getItem('nz-history-' + this.where) ? JSON.parse(localStorage.getItem('nz-history-' + this.where)) : []
+      historyArr.forEach(item => { // todo 后续还需要处理枚举类型的中英切换
+        item.forEach((searchInfo) => {
+          searchInfo.i18n = this.$t(searchInfo.code)
+        })
+      })
       this.historyArr = historyArr
     },
     calcType () { // 处理各个页面的from targetTab 确定查询的type

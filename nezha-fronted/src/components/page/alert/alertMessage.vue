@@ -231,7 +231,7 @@ export default {
       chartDatas: [],
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
       legend: [],
-      searchTime: [bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 24 * 30)), bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime()))), '30d'],
+      searchTime: [bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 24 * 30)), bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime()))), '7d'],
       searchTimeDialog: [],
       searchTimeSelect: bus.getTimezontDateRange(),
       currentMsg: {},
@@ -404,7 +404,7 @@ export default {
       ],
       errorContent: '',
       isError: false,
-      defaultPick: 11
+      defaultPick: 10
     }
   },
   computed: {
@@ -449,9 +449,10 @@ export default {
   methods: {
     renderDefaultParams () {
       const q = JSON.parse(this.$route.query.body)
+      console.log(q, 'q')
       this.state = q.state
-      this.searchTime[0] = q.startAt
-      this.searchTime[1] = q.endAt
+      this.searchTime[0] = this.momentTz(q.startAt)
+      this.searchTime[1] = this.momentTz(q.endAt)
       this.searchTime[2] = q.timeType
       switch (q.timeType) {
         case '7d' :
@@ -827,6 +828,8 @@ export default {
       const path = this.fromRoute.alertMessage
       const routePathParams = this.$lodash.cloneDeep(param)
       delete routePathParams.statistics
+      routePathParams.body.startAt = this.momentStrToTimestamp(this.searchTime[0])
+      routePathParams.body.endAt = this.momentStrToTimestamp(this.searchTime[1])
       routePathParams.body.timeType = this.searchTime[2]
       routePathParams.body = JSON.stringify(routePathParams.body)
       this.updatePath(routePathParams, path)

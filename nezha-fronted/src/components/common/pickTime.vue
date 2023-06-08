@@ -149,7 +149,8 @@ export default {
       }
       const startTime = bus.timeFormate(timeRange[0], this.pickTimer)
       const endTime = bus.timeFormate(timeRange[1], this.pickTimer)
-      return [startTime, endTime]
+      const timeType = timeRange[2]
+      return [startTime, endTime, timeType || '']
     },
     dateChange (time) {
       this.searchTime = time
