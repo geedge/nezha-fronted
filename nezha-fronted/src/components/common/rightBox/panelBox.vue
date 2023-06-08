@@ -102,7 +102,7 @@
                       { validator: variableValidator,trigger: 'blur'},
                       ]"
                     >
-                      <el-input v-model="item.name" :placeholder="$t('overall.placeHolder')" size="small"  @change="hideError('variables', index)"/>
+                      <el-input v-model="item.name" :placeholder="$t('overall.placeHolder')" size="small"  @change="hideError('variables', index, 'name')"/>
                     </el-form-item>
                     <!-- Type -->
                     <el-form-item class="form-item--half-width" :label='$t("overall.type")' :prop="'param.variables.' + index + '.type'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}">
