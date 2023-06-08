@@ -121,6 +121,11 @@
     >
       <panel-chart
         v-if="prevChart"
+        :nowTimeType="{
+          id: 4,
+          type: 'hour',
+          value: 1
+        }"
         style="height: 100%;width: 100%"
         :ref="'chart-fullscreen-previewShow'"
         :chart-info="prevChart"
