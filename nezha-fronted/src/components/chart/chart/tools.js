@@ -143,25 +143,19 @@ export function isFunnel (type) {
 export function getGroupHeight (arr) {
   if (arr.length) {
     let lastItem = []
-    let maxY = arr[0].y
+    let maxY = arr[0].y + arr[0].height
     arr.forEach((children, index) => {
-      if (maxY == children.y) {
+      if (maxY == (children.y + children.height)) {
         lastItem.push(children)
-      } else if (maxY < children.y) {
-        maxY = children.y
+      } else if (maxY < (children.y + children.height)) {
+        maxY = children.y + children.height
         lastItem = [children]
-      }
-    })
-    let maxHeight = 0
-    lastItem.forEach(last => {
-      if (maxHeight < last.height) {
-        maxHeight = last.height
       }
     })
     if (maxY < 0) {
       maxY = 0
     }
-    return maxHeight + maxY
+    return maxY
   } else {
     return 1
   }
