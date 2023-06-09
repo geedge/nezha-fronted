@@ -83,6 +83,7 @@ export default {
     chartDetailInfo: Object,
     from: String,
     filter: {},
+    currentMsg: Object,
     showHeader: {
       type: Boolean,
       default: true
@@ -325,6 +326,7 @@ export default {
       this.$get('/alert/message/' + this.chartInfo.id).then(res => {
         if (res.code === 200) {
           this.infoData = res.data
+          this.infoData.alertRule = this.currentMsg.alertRule
           this.tabNoData = false
         } else {
           this.tabNoData = true

@@ -828,7 +828,7 @@ export default {
         }
       } else {
         this.selectArr.push({
-          i18n: key,
+          i18n: this.$t(findKeyItem.i18n),
           code: findKeyItem.i18n,
           name: name,
           realValue: [realValue],

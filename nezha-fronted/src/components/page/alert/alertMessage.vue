@@ -155,6 +155,7 @@
         :chart-info="chartInfo"
         :from="fromRoute.alertMessage"
         :filter="{}"
+        :currentMsg="currentMsg"
         :is-fullscreen="true"
         :time-range="searchTimeDialog"
         @showFullscreen="showFullscreen"
@@ -599,6 +600,7 @@ export default {
       // this.sign = Number(row.alertRule.id)
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
+        console.log(this.currentMsg)
         this.$nextTick(() => {
           this.searchTimeDialog = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
           this.$store.dispatch('dispatchPanelTime', {

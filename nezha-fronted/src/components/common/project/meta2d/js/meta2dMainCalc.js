@@ -127,11 +127,13 @@ export default {
       const endTime = new Date().getTime()
       const startTime = endTime - 60 * this.params.timeType * 1000
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
-        this.clacTopoData(this.topoData, arr).then((data) => {
+        this.clacTopoData(this.$lodash.cloneDeep(this.topoData), arr).then((data) => {
           if (!getTopology(this.meta2dId)) {
             return
           }
-          this.getModule()
+          if (this.project) {
+            this.getModule()
+          }
           getTopology(this.meta2dId).resize()
           getTopology(this.meta2dId).open(data)
           if (this.isChart) {
@@ -439,6 +441,9 @@ export default {
       if (isRefresh) {
         this.$emit('reload')
       }
+      if (this.isChart) {
+        this.$emit('exit', false)
+      }
     },
     beforeEdit () {
       // const endTime = new Date().getTime()
@@ -596,6 +601,9 @@ export default {
       if (key === 'asset' || key === 'alert' || key === 'endpoint') {
         this.showNodeTools()
       }
+    },
+    saveChart (params) {
+      this.$emit('save', params)
     }
   },
   beforeDestroy () {
