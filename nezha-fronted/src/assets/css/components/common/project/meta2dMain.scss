@@ -19,7 +19,7 @@
 .meta2d-project{
   height: calc(100% - 78px);
   border: 1px solid;
-  border-color: $--border-color-light;
+  border-color: $--border-color-light !important;
 }
 .meta2d-chart {
   //border: 1px solid;
