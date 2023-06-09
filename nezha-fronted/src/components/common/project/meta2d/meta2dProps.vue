@@ -2,7 +2,7 @@
   <div class="props-box props" @keypress.stop="" @keydown.stop="" @keyup.stop="">
     <el-tabs v-model="activeName" type="card"  :before-leave="beforeLeave">
       <el-tab-pane :label="$t('project.topology.element')" name="elements" v-if="selectPens.length === 1">
-        <meta2dElement :modules="modules" :selectPens.sync="selectPens" @change="change" :elements="elements"/>
+        <meta2dElement :modules="modules" :selectPens.sync="selectPens" @change="change" :elements="elements" :isChart="isChart"/>
       </el-tab-pane>
       <el-tab-pane :label="$t('project.topology.canvas')" name="canvas">
         <meta2dCanvas :canvasProps="canvasProps"  :params.sync="params" :meta2dId='meta2dId' @changeActiveName="changeActiveName" ref ='meta2dCanvas'/>

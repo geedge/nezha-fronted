@@ -142,7 +142,7 @@
         <div class="topology-box">
           <div class="topology-mc"></div>
 <!--          <diagram :topoData="chartConfig.param.topo" :fromChartBox="true" :topologyIndexF="-1"/>-->
-          <meta2dMain :meta2dId="'rightBoxChart'" :topoData="chartConfig.param.topo" :querysArray="querysArray" :params="{timeType: 5}" :iconArray="iconArray" @reload="reloadTopo" :isChart="true"/>
+          <meta2dMain v-if="iconArrayLoad" :meta2dId="'rightBoxChart'" :topoData="chartConfig.param.topo" :querysArray="querysArray" :params="{timeType: 5}" :iconArray="iconArray" @reload="reloadTopo" :isChart="true"/>
         </div>
       </el-form-item>
       <!--topplogy-->
@@ -392,6 +392,7 @@ export default {
       querysArray: [],
       meta2dType: '',
       iconArray: [],
+      iconArrayLoad: false,
       isPreview: {
         show: false,
         topoData: {},
@@ -504,7 +505,7 @@ export default {
       if (flag) {
         setTimeout(() => {
           this.$refs.rightBoxChartEdit.$refs.header.editMeta2d()
-        }, 200)
+        }, 500)
       }
       if (data) {
         this.chartConfig.param.topo = data
@@ -546,6 +547,7 @@ export default {
     this.init()
     this.$get('/topology/icon').then(res => {
       this.iconArray = [...res.data.list]
+      this.iconArrayLoad = true
     })
   },
   destroyed () {

@@ -1,6 +1,7 @@
 export const Tools = [
   {
     group: 'General',
+    show: false,
     children: [
       {
         name: 'rectangle',
@@ -11,21 +12,21 @@ export const Tools = [
       },
       {
         name: 'rectangle',
-        icon: '\ue730;',
+        icon: '\ue730',
         id: 'e730;',
         nzClassName: 'nz-icon-rectangle1',
         unit: 'General'
       },
       {
         name: 'rectangle',
-        icon: '\ue731;',
+        icon: '\ue731',
         id: '731',
         nzClassName: 'nz-icon-EMAC1',
         unit: 'General'
       },
       {
         name: 'rectangle',
-        icon: '\ue67f;',
+        icon: '\ue67f',
         id: 'e67f',
         nzClassName: 'nz-icon-module5',
         unit: 'General'
@@ -64,7 +65,7 @@ export const Tools = [
         id: 'e680',
         nzClassName: 'nz-icon-module6',
         unit: 'General'
-      },
+      }
     ]
   }
 ]

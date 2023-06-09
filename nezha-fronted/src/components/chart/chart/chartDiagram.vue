@@ -9,7 +9,7 @@
 <!--      :isPanel="true"-->
 <!--      ref="diagram"-->
 <!--      :chartInfo="chartInfo" />-->
-    <meta2dMain :meta2dId="chartInfo.id + '-' + isFullscreen" :topoData="chartInfo.param.topo" :querysArray="querysArray" :params="{ timeType: 5}" :iconArray="iconArray" :isChart="true"/>
+    <meta2dMain v-if="iconArrayLoad" :meta2dId="chartInfo.id + '-' + isFullscreen" :topoData="chartInfo.param.topo" :querysArray="querysArray" :params="{ timeType: 5}" :iconArray="iconArray" :isChart="true"/>
   </div>
 </template>
 
@@ -28,6 +28,7 @@ export default {
   },
   data () {
     return {
+      isChart: true,
       isPreview: {
         show: false,
         topoData: {},
@@ -37,12 +38,15 @@ export default {
       }
     }
   },
+  created () {
+    this.$get('/topology/icon').then(res => {
+      this.iconArray = [...res.data.list]
+      this.iconArrayLoad = true
+    })
+  },
   mounted () {
     bus.$on('showMeta2dPreview', (params) => {
       this.isPreview = params
-    })
-    this.$get('/topology/icon').then(res => {
-      this.iconArray = [...res.data.list]
     })
     this.reload()
   },

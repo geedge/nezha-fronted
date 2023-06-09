@@ -28,7 +28,7 @@
                 @change="change('nzName')"></el-input>
             </div>
           </div>
-          <div class="form-row-item form-row-item-full" v-if="!pen.type">
+          <div class="form-row-item form-row-item-full" v-if="!pen.type && !isChart">
             <div class="form-row-key">
               {{$t('overall.module')}}
             </div>
@@ -122,6 +122,25 @@
                   v-model.number="pen.height"
                   required
                   @change="change('height')"></el-input-number>
+              </div>
+            </div>
+            <div class="form-row-item">
+              <div class="form-row-key">
+                <div>{{ $t('project.topology.padding') }}</div>
+              </div>
+              <div class="form-row-value">
+                <el-input-number
+                  @focus="inputFocus"
+                  @blur="inputBlur"
+                  :step="1"
+                  :precision="2"
+                  controls-position="right"
+                  size="small"
+                  name="globalAlpha"
+                  class="input"
+                  v-model.number="pen.paddingTop"
+                  required
+                  @change="change('paddingTop')"></el-input-number>
               </div>
             </div>
             <div class="form-row-item">
@@ -946,30 +965,6 @@
                             @change="change('valueMapping', index)"
                           ></el-input>
                         </div>
-                      </el-row>
-                      <el-row v-show="item.show" :key="2" class="thresholds-item">
-                        <div>
-                          <div class='mapping-display'>{{$t('config.assetLabel.display')}}</div>
-                        </div>
-                        <div :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">
-                          <el-input v-model="item.display" style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)" class="mapping-display-input">
-                            <!--                              <el-dropdown trigger="click" slot="prefix" placement="top-start">-->
-                            <!--                                <div class="el-dropdown-link">-->
-                            <!--                                  <i v-if="item.icon" class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>-->
-                            <!--                                  <div v-else class="mapping-iconSelect" :title="$t('tip.add')">-->
-                            <!--                                    <i class="nz-icon nz-icon-create-square"></i>-->
-                            <!--                                  </div>-->
-                            <!--                                </div>-->
-                            <!--                                <el-dropdown-menu slot="dropdown" class="mapping-iconPop">-->
-                            <!--                                  <ul class="mapping-iconList">-->
-                            <!--                                    <li class="mapping-iconItem" :class="{active:item.icon===subItem.value}" v-for="subItem in mappingIconList" @click="iconActive(item,subItem,index)" :key="subItem.value">-->
-                            <!--                                      <i :class="subItem.value"></i>-->
-                            <!--                                    </li>-->
-                            <!--                                  </ul>-->
-                            <!--                                </el-dropdown-menu>-->
-                            <!--                              </el-dropdown>-->
-                          </el-input>
-                        </div>
                         <nezhaColor
                           :color-val="item.color"
                           :single="false"
@@ -977,6 +972,36 @@
                           @colorChange="(val,key)=>{valueMappingColorChange(val, key, index)}"
                         />
                       </el-row>
+<!--                      <el-row v-show="item.show" :key="2" class="thresholds-item">-->
+<!--                        <div>-->
+<!--                          <div class='mapping-display'>{{$t('config.assetLabel.display')}}</div>-->
+<!--                        </div>-->
+<!--                        <div :prop="'param.valueMapping.' + index + '.display'" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" class="thresholds-from-item">-->
+<!--                          <el-input v-model="item.display" style="margin-right: 10px" :placeholder="$t('placeholder.chart.display')" size="small" @change="change('valueMapping', index)" class="mapping-display-input">-->
+<!--                            &lt;!&ndash;                              <el-dropdown trigger="click" slot="prefix" placement="top-start">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                <div class="el-dropdown-link">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                  <i v-if="item.icon" class="mapping-icon" :class="item.icon" :style="{ color: item.color.icon }"></i>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                  <div v-else class="mapping-iconSelect" :title="$t('tip.add')">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                    <i class="nz-icon nz-icon-create-square"></i>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                  </div>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                <el-dropdown-menu slot="dropdown" class="mapping-iconPop">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                  <ul class="mapping-iconList">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                    <li class="mapping-iconItem" :class="{active:item.icon===subItem.value}" v-for="subItem in mappingIconList" @click="iconActive(item,subItem,index)" :key="subItem.value">&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                      <i :class="subItem.value"></i>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                    </li>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                  </ul>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                                </el-dropdown-menu>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                              </el-dropdown>&ndash;&gt;-->
+<!--                          </el-input>-->
+<!--                        </div>-->
+<!--                        <nezhaColor-->
+<!--                          :color-val="item.color"-->
+<!--                          :single="false"-->
+<!--                          :value-arr="[{name:'bac',value:item.color.bac,key:'bac'},{name:'text',value:item.color.text,key:'text'},{name:'border',value:item.color.icon,key:'icon'}]"-->
+<!--                          @colorChange="(val,key)=>{valueMappingColorChange(val, key, index)}"-->
+<!--                        />-->
+<!--                      </el-row>-->
                     </transition-group>
                   </div>
                 </draggable>
@@ -1042,12 +1067,12 @@
             {{$t('project.topology.legends')}}
           </div>
           <div class="form-row-value" style="margin-bottom: 10px;display: flex;justify-content: space-between" v-for="(legend, index) in pen.data.tooltip.legends" :key="legend.parent + legend.legend">
-            <div style="display: inline-block;width: calc(20% - 10px)">
+            <div style="display: inline-block;width: calc(30% - 10px)">
               <el-select v-model="legend.parent" size="small" style="width: 100%" clearable @change="legendParentChange(legend)">
-                <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name' :title='item.name' style="width: 60px"></el-option>
+                <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name' :title='item.name' style="width: 300px"></el-option>
               </el-select>
             </div>
-            <div style="display: inline-block;width: calc(40% - 10px)">
+            <div style="display: inline-block;width: calc(30% - 10px)">
               <el-select v-model="legend.legend" size="small" style="width: 100%" clearable>
                 <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => (query.parent === legend.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'  :title='item.name' style="width: 170px"></el-option>
               </el-select>
@@ -1088,7 +1113,8 @@ export default {
   props: {
     selectPens: {},
     elements: {},
-    modules: {}
+    modules: {},
+    isChart: {}
   },
   watch: {
     selectPens: {
@@ -1253,6 +1279,11 @@ export default {
       if (key === 'lineAnimateType') {
         this.pen.autoPlay = false
       }
+      if (key === 'paddingTop') {
+        this.pen.paddingBottom = this.pen.paddingTop
+        this.pen.paddingLeft = this.pen.paddingTop
+        this.pen.paddingRight = this.pen.paddingTop
+      }
       this.$emit('change', key)
       this.$forceUpdate()
     },
@@ -1303,8 +1334,14 @@ export default {
       this.elements[key] = !this.elements[key]
     },
     inputFocus (e) {
-      e.path[2].children[0].setAttribute('tabindex', '-10')
-      e.path[2].children[1].setAttribute('tabindex', '-11')
+      const decrease = document.getElementsByClassName('el-input-number__decrease')
+      decrease.forEach(item => {
+        item.setAttribute('tabindex', '-10')
+      })
+      const increase = document.getElementsByClassName('el-input-number__increase')
+      increase.forEach(item => {
+        item.setAttribute('tabindex', '-11')
+      })
     },
     inputBlur (e) {
     },

@@ -295,11 +295,11 @@ export default {
       pen.autoPlay = false
     },
     pensActive (pens, e) { // 选中节点
-      this.selectPens = pens
-      this.modulesDiff(pens[0])
       setTimeout(() => {
+        this.selectPens = pens
+        this.modulesDiff(pens[0])
         this.$refs.meta2dProps && (this.$refs.meta2dProps.isUpdate = true)
-      })
+      }, 600)
     },
     topoClick (params, e) { // 点击节点
       if (!params.pen && this.$refs.meta2dProps) {
@@ -425,6 +425,12 @@ export default {
         obj.imageId = pen[key]
         obj.name = 'rectangle'
         obj.image = ''
+      }
+      if (key === 'paddingTop') {
+        obj.paddingTop = pen.paddingTop
+        obj.paddingBottom = pen.paddingBottom
+        obj.paddingLeft = pen.paddingLeft
+        obj.paddingRight = pen.paddingRight
       }
       getTopology(this.meta2dId).setValue(obj) // 更新pen
       if (key === 'lineAnimateType') {
