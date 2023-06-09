@@ -21,6 +21,10 @@
   border: 1px solid;
   border-color: $--border-color-light;
 }
+.meta2d-chart {
+  //border: 1px solid;
+  border-color: $--border-color-light !important;
+}
 .meta2d-map {
   right: unset;
   left: 0px;

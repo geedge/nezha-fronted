@@ -12,7 +12,7 @@
     <!--selectImg-->
     <el-dialog
       :title="$t('project.topology.image')"
-      custom-class="nz-select-img-dialog nz-new-dialog"
+      custom-class="nz-select-img-dialog nz-new-dialog prevent-clickoutside"
       :visible.sync="selectBoxShow"
       width="auto"
       :append-to-body="true"
