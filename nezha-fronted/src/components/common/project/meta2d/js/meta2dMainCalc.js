@@ -295,11 +295,11 @@ export default {
       pen.autoPlay = false
     },
     pensActive (pens, e) { // 选中节点
-      this.selectPens = pens
-      this.modulesDiff(pens[0])
       setTimeout(() => {
+        this.selectPens = pens
+        this.modulesDiff(pens[0])
         this.$refs.meta2dProps && (this.$refs.meta2dProps.isUpdate = true)
-      })
+      }, 600)
     },
     topoClick (params, e) { // 点击节点
       if (!params.pen && this.$refs.meta2dProps) {
