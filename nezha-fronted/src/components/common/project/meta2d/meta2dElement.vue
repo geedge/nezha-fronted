@@ -28,7 +28,7 @@
                 @change="change('nzName')"></el-input>
             </div>
           </div>
-          <div class="form-row-item form-row-item-full" v-if="!pen.type">
+          <div class="form-row-item form-row-item-full" v-if="!pen.type && !isChart">
             <div class="form-row-key">
               {{$t('overall.module')}}
             </div>
@@ -1087,7 +1087,8 @@ export default {
   props: {
     selectPens: {},
     elements: {},
-    modules: {}
+    modules: {},
+    isChart: {}
   },
   watch: {
     selectPens: {
