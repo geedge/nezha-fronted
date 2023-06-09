@@ -6,7 +6,7 @@
     @mouseleave="mouseLeaveChart"
     v-my-loading="chartLoading"
   >
-    <div class="chart__canvas" style="position:relative">
+    <div class="chart__canvas" style="position:relative" :class="{'chart-cursor-default':cursorFlag}">
       <div :id="`chart-canvas-${chartId}`"></div>
       <!-- 右y轴name -->
       <p class="rightYAxis-name" v-if="hasRightYAxis">
@@ -76,7 +76,8 @@ export default {
         dataLinkShow: '',
         tooltipHtml: ''
       },
-      tooltipHtml: ''
+      tooltipHtml: '',
+      cursorFlag: false
     }
   },
   computed: {
@@ -213,8 +214,8 @@ export default {
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
         this.$store.commit('setCurrentMousemove', 0)
+        // timeSeries类型图表设置group 用于多表联动
         if (this.isInit && !this.isFullscreen) {
-          // timeSeries类型图表设置group 用于多表联动
           myChart.group = 'timeSeriesGroup'
           if (this.isConnect === 'crosshair') {
             myChart.getZr().on('mousemove', params => {
@@ -225,12 +226,28 @@ export default {
             })
           }
         }
+
+        // 点击图表显示dataLink
         if (this.isInit && this.dataLink.length) {
           myChart.on('click', this.chartClick)
           myChart.on('mousedown', (params) => {
             if (this.tooltip.show) {
               const e = params.event.event
               e.stopPropagation()
+            }
+          })
+        // 未设置dataLink的图表 鼠标样式为default
+        } else if (this.isInit && !this.dataLink.length) {
+          myChart.getZr().on('mousemove', (params) => {
+            // 获取鼠标在图表中的坐标
+            const pointInPixel = [params.offsetX, params.offsetY]
+            const option = myChart.getOption()
+            const zoomState = this.$lodash.get(option, 'toolbox[0].feature.dataZoom.iconStatus.zoom', 'normal')
+            // 判断鼠标在坐标轴中且zoom未被激活
+            if (myChart.containPixel('grid', pointInPixel) && zoomState === 'normal') {
+              this.cursorFlag = true
+            } else {
+              this.cursorFlag = false
             }
           })
         }

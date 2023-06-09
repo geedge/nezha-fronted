@@ -78,11 +78,7 @@ export default {
             return
           }
           this.isNoData = false
-
           let s = lodash.cloneDeep(seriesTemplate)
-          if (!this.dataLink.length) {
-            s.cursor = 'default'
-          }
 
           // 设置右y轴
           if (chartInfo.param.enable.rightYAxis) {
@@ -112,6 +108,7 @@ export default {
           } else {
             s.connectNulls = false
           }
+
           if (s) {
             s.data = data.values
             s.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
