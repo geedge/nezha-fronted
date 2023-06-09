@@ -1,5 +1,5 @@
 <template>
-  <div v-clickOutside:[isStable]="{obj: editChart,oldData: oldData, func:clickOutside}" :class="boxClass" class="right-box right-box-chart">
+  <div v-clickoutside:[isStable]="{obj: editChart,oldData: oldData, func:clickOutside}" :class="boxClass" class="right-box right-box-chart">
     <transition v-if="from !== 'chartTemp'" name="right-box">
 <!--      <panel-box v-if="!showPanel.type" ref="panelBox2" :panel="panel" @reload="panelReload"></panel-box>-->
     </transition>
