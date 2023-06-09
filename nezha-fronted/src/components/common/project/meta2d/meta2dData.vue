@@ -439,8 +439,8 @@ export default {
       this.$set(this.expressionsShow, index - 1, this.expressionsShow[index - 1])
     },
     unitSelected: function (value) {
+      this.expressionChange()
       // this.unit=value[value.length-1];
-      this.change()
     },
     change (key, index) {
       this.$nextTick(() => {
