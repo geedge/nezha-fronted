@@ -5,7 +5,8 @@ export default {
       querysArray: [],
       meta2dType: '',
       params: {},
-      iconArray: []
+      iconArray: [],
+      iconArrayLoad: false
     }
   },
   watch: {
