@@ -142,11 +142,24 @@
         <div class="topology-box">
           <div class="topology-mc"></div>
 <!--          <diagram :topoData="chartConfig.param.topo" :fromChartBox="true" :topologyIndexF="-1"/>-->
-          <meta2dMain :meta2dId="'rightBoxChart'" :topoData="chartConfig.param.topo" :querysArray="[]" :params="params" :iconArray="iconArray" @reload="reload"/>
+          <meta2dMain :meta2dId="'rightBoxChart'" :topoData="chartConfig.param.topo" :querysArray="querysArray" :params="{timeType: 5}" :iconArray="iconArray" @reload="reloadTopo" :isChart="true"/>
         </div>
       </el-form-item>
       <!--topplogy-->
-      <diagram :topoData="chartConfig.param.topo" class="topology-dialog" v-if="topologyDialog" @change="topologyDialogChange" :topologyIndexF="-2" ref="topologyDialog" :fromTopologyDialog="true"/>
+      <meta2dMain
+        @save="saveTopo"
+        class="topology-dialog"
+        v-if="topologyDialog"
+        ref="rightBoxChartEdit"
+        :meta2dId="'rightBoxChartEdit'"
+        :topoData="chartConfig.param.topo"
+        :querysArray="querysArray"
+        :params="{timeType: 5}"
+        :iconArray="iconArray"
+        @reload="reloadTopo"
+        @exit="topologyDialogChange"
+        :isChart="true"
+      />
       <!--text-->
       <el-form-item  v-if="isText(chartConfig.type)"  :rules="{ required: true,  message: $t('validate.required'), trigger: 'change' }" prop="param.text">
         <rich-text-editor ref="richTextEditor" :edit-data="chartConfig.param.text" @textChange="textChange"></rich-text-editor>
@@ -291,23 +304,47 @@
       </div>
 
     </el-form>
+    <el-dialog
+      :title="this.chartConfig.name || 'Chart'"
+      :visible.sync="isPreview.show"
+      fullscreen
+      class="no-transform-dialog"
+      custom-class="nz-new-dialog meta2d-preview"
+      :append-to-body="false"
+      :modal-append-to-body="false"
+      @close="isPreview.show = false"
+      destroy-on-close
+    >
+      <div v-if="isPreview.show" style="width: 100%;height: 100%">
+        <meta2dMain
+          :meta2dId="'projectIdIsPreview'"
+          :is-preview="true"
+          :name="'preview'"
+          :topoData="isPreview.topoData"
+          :querysArray="isPreview.querysArray"
+          :project="isPreview.currentProject"
+          :params="isPreview.params"
+          :iconArray="iconArray"
+        />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
-import diagram from '@/components/common/ChartDiagram/diagram'
 import richTextEditor from '@/components/chart/richTextEditor'
 import beforeMeta2d from '@/components/common/mixin/beforeMeta2d'
 import meta2dMain from '@/components/common/project/meta2d/meta2dMain'
 import { clearTopology } from '@/components/common/js/common'
+import bus from "@/libs/bus";
 export default {
   name: 'otherChartConfig',
-  mixins: [publicConfig, chartTypeShow, beforeMeta2d],
+  mixins: [publicConfig, chartTypeShow],
   components: {
-    diagram,
-    richTextEditor
+    richTextEditor,
+    meta2dMain
   },
   watch: {
     // 'chartConfig.param.text': {
@@ -350,12 +387,27 @@ export default {
           id: 'clock',
           name: this.$t('dashboard.dashboard.chartForm.typeVal.clock.label')
         }
-      ]
+      ],
+      topoData: {},
+      querysArray: [],
+      meta2dType: '',
+      iconArray: [],
+      isPreview: {
+        show: false,
+        topoData: {},
+        querysArray: {},
+        currentProject: {},
+        params: {}
+      }
     }
   },
   methods: {
     init () {
       this.chartConfig = JSON.parse(JSON.stringify(this.params))
+      this.reloadTopo()
+      bus.$on('showMeta2dPreview', (params) => {
+        this.isPreview = params
+      })
     },
     chartTypeChange (type) {
       switch (type) {
@@ -449,20 +501,56 @@ export default {
     },
     topologyDialogChange (flag, data) {
       this.topologyDialog = flag
+      if (flag) {
+        setTimeout(() => {
+          this.$refs.rightBoxChartEdit.$refs.header.editMeta2d()
+        }, 200)
+      }
       if (data) {
         this.chartConfig.param.topo = data
         this.change()
       }
+    },
+    saveTopo (topo) {
+      this.topologyDialogChange(false, topo)
     },
     textChange (val) {
       const html = `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${val}</div></div>`
       this.chartConfig.param.text = html
       this.$refs.chartForm.validateField('param.text')
       this.change()
+    },
+    reloadTopo () {
+      const res = {
+        data: this.chartConfig.param
+      }
+      if (res.data && res.data.topo) {
+        this.topoData = res.data.topo || {}
+        if (res.data.topo.topo) {
+          this.topoData = res.data.topo.topo || {}
+        }
+        this.querysArray = res.data.topo.elements || []
+        // this.params = {
+        //   timeType: res.data.topo.timeType || 5
+        // }
+      } else {
+        this.topoData = {}
+        this.querysArray = []
+        // this.params = {
+        //   timeType: 5
+        // }
+      }
     }
   },
   created () {
     this.init()
+    this.$get('/topology/icon').then(res => {
+      this.iconArray = [...res.data.list]
+    })
+  },
+  destroyed () {
+    clearTopology()
+    bus.$off('showMeta2dPreview')
   }
 }
 </script>

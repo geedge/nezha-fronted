@@ -8,7 +8,7 @@
         <meta2dCanvas :canvasProps="canvasProps"  :params.sync="params" :meta2dId='meta2dId' @changeActiveName="changeActiveName" ref ='meta2dCanvas'/>
       </el-tab-pane>
       <el-tab-pane :label="$t('project.topology.data')" name="data">
-        <meta2dData :querysArray.sync="querysArray" :params.sync="params" ref="meta2dData"/>
+        <meta2dData :querysArray.sync="querysArray" :params.sync="params" ref="meta2dData" :isChart="isChart"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -33,7 +33,8 @@ export default {
     querysArray: {},
     params: {},
     meta2dId: {},
-    modules: {}
+    modules: {},
+    isChart: {}
   },
   components: {
     meta2dElement,

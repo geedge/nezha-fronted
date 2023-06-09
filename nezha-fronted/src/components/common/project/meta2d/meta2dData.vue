@@ -1,7 +1,7 @@
 <template>
   <div class="pens-data right-box__container">
     <div class="form-row-box chart-config">
-      <div class="form-row-item form-row-item-full">
+      <div class="form-row-item form-row-item-full" v-if="!isChart">
         <div class="form-row-key">
           {{$t('project.topology.timeRange')}}
         </div>
@@ -197,7 +197,8 @@ export default {
   mixins: [promqlInputMixin, rz],
   props: {
     querysArray: {},
-    params: {}
+    params: {},
+    isChart: {}
   },
   components: {
     draggable,

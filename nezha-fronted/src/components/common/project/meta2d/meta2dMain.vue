@@ -10,6 +10,7 @@
       @edit="beforeEdit"
       @exitEdit="exitEdit"
       @reload="reload"
+      @saveChart="saveChart"
       @getNodesArr="getNodesArr"
     />
     <div class="meta2d-main" :class="isChart ? 'meta2d-chart': 'meta2d-project'" @contextmenu="onContextMenu($event)" style="position: relative">
@@ -51,6 +52,7 @@
       :selectPens.sync="selectPens"
       :querysArray="querysArray"
       :params="params"
+      :is-chart="isChart"
       :meta2dId="meta2dId"
       @updatePens="updatePens"
     />

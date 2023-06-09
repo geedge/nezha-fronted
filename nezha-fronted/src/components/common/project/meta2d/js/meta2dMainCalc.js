@@ -142,7 +142,7 @@ export default {
             getTopology(this.meta2dId).centerView()
           }
           getTopology(this.meta2dId).lock(1)
-          // this.getNodesArr()
+          this.getNodesArr()
         })
       })
     },
@@ -441,6 +441,9 @@ export default {
       if (isRefresh) {
         this.$emit('reload')
       }
+      if (this.isChart) {
+        this.$emit('exit', false)
+      }
     },
     beforeEdit () {
       // const endTime = new Date().getTime()
@@ -598,6 +601,9 @@ export default {
       if (key === 'asset' || key === 'alert' || key === 'endpoint') {
         this.showNodeTools()
       }
+    },
+    saveChart (params) {
+      this.$emit('save', params)
     }
   },
   beforeDestroy () {
