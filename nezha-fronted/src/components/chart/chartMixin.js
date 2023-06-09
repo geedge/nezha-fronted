@@ -9,6 +9,7 @@ import {
   chartTimeSeriesAreaOption,
   chartTimeSeriesScatterOption
 } from './chart/options/chartTimeSeries'
+import { tooltip } from 'leaflet'
 export default {
   data () {
     return {
@@ -23,7 +24,17 @@ export default {
       chartId: '',
       isNoData: true,
       series: [],
-      dataLink: []
+      dataLink: [],
+      tooltip: {
+        x: 0,
+        y: 0,
+        title: 0,
+        value: 0,
+        mapping: {},
+        show: false,
+        dataLinkShow: '',
+        metric: {}
+      }
     }
   },
   props: {
@@ -111,7 +122,13 @@ export default {
 
           if (s) {
             s.data = data.values
-            s.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
+            const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
+            s.name = legend.name
+            s.labels = {
+              ...data.metric,
+              legend: legend.alias
+            }
+            s.seriesIndex = expressionIndex
             if (chartInfo.param.stack) { // 堆叠
               s.stack = 'Total' + s.yAxisIndex
             }
@@ -455,10 +472,18 @@ export default {
       }
     },
     linkClick (data) {
+      const url = data.url.replace(/(\{\{.+?\}\})/g, (match) => {
+        const label = match.substr(match.indexOf('{{') + 2, match.indexOf('}}') - match.indexOf('{{') - 2)
+        if (this.tooltip.metric.labels[label]) {
+          return this.tooltip.metric.labels[label]
+        } else {
+          return this.chartInfo.elements[this.tooltip.metric.expressionIndex].expression || ''
+        }
+      })
       if (data.openIn === 'newTab') {
-        window.open(data.url)
+        window.open(url)
       } else {
-        window.location.href = data.url
+        window.location.href = url
       }
       this.clickout()
     }

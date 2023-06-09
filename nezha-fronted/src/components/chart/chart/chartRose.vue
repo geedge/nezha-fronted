@@ -433,6 +433,8 @@ export default {
         this.tooltip.mapping = data.data.mapping
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
+        this.tooltip.metric.labels = data.data.labels
+        this.tooltip.metric.expressionIndex = data.data.seriesIndex
         this.datalinkPosition(e)
       }
     },

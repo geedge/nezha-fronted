@@ -59,16 +59,7 @@ export default {
       boxHeight: 0,
       boxPadding: 5,
       chartInstances: [],
-      timer: null,
-      tooltip: {
-        x: 0,
-        y: 0,
-        title: 0,
-        value: 0,
-        mapping: {},
-        show: false,
-        dataLinkShow: ''
-      }
+      timer: null
     }
   },
   methods: {
@@ -106,9 +97,7 @@ export default {
               height: '',
               legend: '',
               oldValue: '',
-              mapping: {
-
-              }
+              mapping: {}
             }
             const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex)
             gauge.value = getMetricTypeValue(data.values, chartInfo.param.statistics || 'last')
@@ -120,6 +109,7 @@ export default {
             gauge.label = data.metric
             gauge.legend = legend.alias
             gauge.label.legend = gauge.legend
+            gauge.seriesIndex = expressionIndex
             gauge.name = legend.name
             gauge.alias = legend.alias
             gauge.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(gauge.value, null, -1, decimals)
@@ -324,6 +314,8 @@ export default {
       this.tooltip.mapping = params.data.mapping
       this.tooltip.show = true
       this.tooltip.dataLinkShow = true
+      this.tooltip.metric.labels = params.data.label
+      this.tooltip.metric.expressionIndex = params.data.seriesIndex
       const e = params.event.event
       this.datalinkPosition(e)
     },

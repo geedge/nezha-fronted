@@ -94,16 +94,7 @@ export default {
         active: '#53a3cb',
         inactive: '#7e7e7e'
       },
-      chartId: '',
-      tooltip: {
-        x: 0,
-        y: 0,
-        title: 0,
-        value: 0,
-        mapping: {},
-        show: false,
-        dataLinkShow: ''
-      }
+      chartId: ''
     }
   },
   methods: {
@@ -269,6 +260,8 @@ export default {
       this.tooltip.mapping = params.data.mapping
       this.tooltip.show = true
       this.tooltip.dataLinkShow = true
+      this.tooltip.metric.labels = params.data.labels
+      this.tooltip.metric.expressionIndex = params.data.seriesIndex
       const e = params.event.event
       this.datalinkPosition(e)
     },

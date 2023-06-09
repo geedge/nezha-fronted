@@ -32,14 +32,14 @@
             }"
             class="value-mapping-table"
             :class="{'chart-cursor-pointer':dataLink.length}"
-            @click="chartClick($event,{title:col.title,value:showValueMapping(scope.row,col.title, col)})"
+            @click="chartClick($event,col,scope.row)"
           >
             <template v-if="scope.row.valueMapping && scope.row.valueMapping[col.title + 'mapping']">
               <i :class="scope.row.valueMapping[col.title + 'mapping'].icon" :style="{color: scope.row.valueMapping[col.title + 'mapping'].color.icon}"></i>
             </template>
             {{showValueMapping(scope.row,col.title, col)}}
           </div>
-          <div v-else class="value-mapping-table" :class="{'chart-cursor-pointer':dataLink.length}" @click="chartClick($event,{title:col.title,value:scope.row.display[col.title + 'display'].display})">
+          <div v-else class="value-mapping-table" :class="{'chart-cursor-pointer':dataLink.length}" @click="chartClick($event,col,scope.row)">
             {{scope.row.display[col.title + 'display'].display}}
           </div>
         </template>
@@ -77,16 +77,7 @@ export default {
       oldTableData: [],
       columns: [],
       valueMapping: {},
-      tableTimer: null,
-      tooltip: {
-        x: 0,
-        y: 0,
-        title: 0,
-        value: 0,
-        mapping: {},
-        show: false,
-        dataLinkShow: ''
-      }
+      tableTimer: null
     }
   },
   methods: {
@@ -146,6 +137,7 @@ export default {
           data.showValue = showValue
           data.$legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
           data.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
+          data.seriesIndex = expressionIndex
           // data.mapping = mapping
           data.keys = ''
           // eslint-disable-next-line vue/no-mutating-props
@@ -407,12 +399,28 @@ export default {
         }
       })
     },
-    chartClick (e, data) {
+    chartClick (e, col, row) {
       if (this.dataLink.length) {
-        this.tooltip.title = data.title
-        this.tooltip.value = data.value
+        // 对象扁平化
+        let flattenedObject
+        for (const key in row) {
+          if (key !== 'display' && key !== 'valueMapping') {
+            flattenedObject = { ...row[key] }
+          }
+        }
+        this.tooltip.title = col.title
+        if (row.valueMapping && row.valueMapping[col.title + 'mapping']) {
+          this.tooltip.value = this.showValueMapping(row, col.title, col)
+        } else {
+          this.tooltip.value = row.display[col.title + 'display'].display
+        }
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
+        this.tooltip.metric.labels = {
+          ...flattenedObject.metric,
+          legend: flattenedObject.$legend
+        }
+        this.tooltip.metric.expressionIndex = flattenedObject.seriesIndex
         this.datalinkPosition(e)
       }
     },

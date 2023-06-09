@@ -59,15 +59,6 @@ export default {
       chartId: '',
       linksData: [],
       nodesData: [],
-      tooltip: {
-        x: 0,
-        y: 0,
-        title: 0,
-        value: 0,
-        mapping: {},
-        show: false,
-        dataLinkShow: ''
-      },
       svg: null
     }
   },
@@ -82,8 +73,8 @@ export default {
       }
       // 根据link获取node
       this.linksData.forEach(item => {
-        this.nodesData.push({ node: item.source, labels: item.labels })
-        this.nodesData.push({ node: item.target, labels: item.labels })
+        this.nodesData.push({ node: item.source, labels: item.labels, seriesIndex: item.seriesIndex })
+        this.nodesData.push({ node: item.target, labels: item.labels, seriesIndex: item.seriesIndex })
       })
       // 去重相同的node
       for (let i = 0; i < this.nodesData.length; i++) {
@@ -106,13 +97,18 @@ export default {
       const sankeyData = []
       const decimals = this.chartInfo.param.decimals || 2
       this.isNoData = true
-      originalDatas.forEach((originalData) => {
-        originalData.forEach((data) => {
+      originalDatas.forEach((originalData, expressionIndex) => {
+        originalData.forEach((data, dataIndex) => {
           const value = getMetricTypeValue(data.values, chartInfo.param.statistics)
+          const legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, 0)
           const obj = {
             value: value,
             realValue: value,
-            labels: data.metric
+            labels: {
+              ...data.metric,
+              legend: legend.alias
+            },
+            seriesIndex: expressionIndex
           }
           if (data.metric[chartInfo.param.sourceLabel] && data.metric[chartInfo.param.targetLabel]) {
             obj.source = data.metric[chartInfo.param.sourceLabel]
@@ -446,6 +442,8 @@ export default {
         this.tooltip.mapping = data.mapping
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
+        this.tooltip.metric.labels = data.labels
+        this.tooltip.metric.expressionIndex = data.seriesIndex
         this.datalinkPosition(e)
       }
     },

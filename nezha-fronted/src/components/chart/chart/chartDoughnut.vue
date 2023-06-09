@@ -95,15 +95,6 @@ export default {
       chartId: '',
       doughnutData: [],
       selectData: [],
-      tooltip: {
-        x: 0,
-        y: 0,
-        title: 0,
-        value: 0,
-        mapping: {},
-        show: false,
-        dataLinkShow: ''
-      },
       svg: null
     }
   },
@@ -417,6 +408,8 @@ export default {
         this.tooltip.mapping = data.data.mapping
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
+        this.tooltip.metric.labels = data.data.labels
+        this.tooltip.metric.expressionIndex = data.data.seriesIndex
         this.datalinkPosition(e)
       }
     },

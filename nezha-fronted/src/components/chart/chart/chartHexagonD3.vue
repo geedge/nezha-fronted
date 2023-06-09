@@ -44,15 +44,6 @@ export default {
       boxWidth: 0,
       boxHeight: 0,
       boxPadding: 5,
-      tooltip: {
-        x: 0,
-        y: 0,
-        title: 0,
-        value: 0,
-        mapping: {},
-        show: false,
-        dataLinkShow: ''
-      },
       svg: null,
       spaceBetweenHexa: 3,
       hexagonTimer: null
@@ -108,6 +99,7 @@ export default {
             Hexagon.label = data.metric
             Hexagon.legend = legend.alias
             Hexagon.label.legend = Hexagon.legend
+            Hexagon.seriesIndex = expressionIndex
             Hexagon.name = legend.name
             Hexagon.alias = legend.alias
             Hexagon.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(Hexagon.value, null, -1, decimals)
@@ -483,6 +475,8 @@ export default {
         this.tooltip.mapping = data.mapping
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
+        this.tooltip.metric.labels = data.metrics
+        this.tooltip.metric.expressionIndex = data.seriesIndex
         this.datalinkPosition(e)
       }
     },
