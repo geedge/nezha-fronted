@@ -28,6 +28,7 @@ export default {
   },
   data () {
     return {
+      isChart: true,
       isPreview: {
         show: false,
         topoData: {},

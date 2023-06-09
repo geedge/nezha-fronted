@@ -505,7 +505,7 @@ export default {
       if (flag) {
         setTimeout(() => {
           this.$refs.rightBoxChartEdit.$refs.header.editMeta2d()
-        }, 200)
+        }, 500)
       }
       if (data) {
         this.chartConfig.param.topo = data

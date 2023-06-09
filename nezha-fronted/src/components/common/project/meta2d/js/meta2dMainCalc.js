@@ -426,6 +426,12 @@ export default {
         obj.name = 'rectangle'
         obj.image = ''
       }
+      if (key === 'paddingTop') {
+        obj.paddingTop = pen.paddingTop
+        obj.paddingBottom = pen.paddingBottom
+        obj.paddingLeft = pen.paddingLeft
+        obj.paddingRight = pen.paddingRight
+      }
       getTopology(this.meta2dId).setValue(obj) // 更新pen
       if (key === 'lineAnimateType') {
         if (!pen[key]) {
