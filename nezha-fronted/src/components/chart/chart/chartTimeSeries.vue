@@ -6,7 +6,7 @@
     @mouseleave="mouseLeaveChart"
     v-my-loading="chartLoading"
   >
-    <div class="chart__canvas" style="position:relative" :class="{'chart-cursor-default':cursorFlag}">
+    <div class="chart__canvas" style="position:relative" :class="{'chart-cursor-default':cursorDefault}">
       <div :id="`chart-canvas-${chartId}`"></div>
       <!-- 右y轴name -->
       <p class="rightYAxis-name" v-if="hasRightYAxis">
@@ -76,8 +76,7 @@ export default {
         dataLinkShow: '',
         tooltipHtml: ''
       },
-      tooltipHtml: '',
-      cursorFlag: false
+      cursorDefault: false
     }
   },
   computed: {
@@ -213,6 +212,7 @@ export default {
         myChart.clear()
         myChart.setOption(chartOption)
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
+
         this.$store.commit('setCurrentMousemove', 0)
         // timeSeries类型图表设置group 用于多表联动
         if (this.isInit && !this.isFullscreen) {
@@ -228,28 +228,33 @@ export default {
         }
 
         // 点击图表显示dataLink
-        if (this.isInit && this.dataLink.length) {
-          myChart.on('click', this.chartClick)
-          myChart.on('mousedown', (params) => {
-            if (this.tooltip.show) {
-              const e = params.event.event
-              e.stopPropagation()
-            }
-          })
-        // 未设置dataLink的图表 鼠标样式为default
-        } else if (this.isInit && !this.dataLink.length) {
+        if (this.isInit) {
+          // 未设置dataLink的图表 鼠标样式为default
           myChart.getZr().on('mousemove', (params) => {
-            // 获取鼠标在图表中的坐标
+          // 获取鼠标在图表中的坐标
             const pointInPixel = [params.offsetX, params.offsetY]
             const option = myChart.getOption()
             const zoomState = this.$lodash.get(option, 'toolbox[0].feature.dataZoom.iconStatus.zoom', 'normal')
             // 判断鼠标在坐标轴中且zoom未被激活
             if (myChart.containPixel('grid', pointInPixel) && zoomState === 'normal') {
-              this.cursorFlag = true
+              this.cursorDefault = true
             } else {
-              this.cursorFlag = false
+              this.cursorDefault = false
             }
           })
+          if (this.dataLink.length) {
+            // 设置dataLink的图表 划过节点时鼠标样式为pointer
+            myChart.on('mousemove', () => {
+              this.cursorDefault = false
+            })
+            myChart.on('click', this.chartClick)
+            myChart.on('mousedown', (params) => {
+              if (this.tooltip.show) {
+                const e = params.event.event
+                e.stopPropagation()
+              }
+            })
+          }
         }
         this.chartLoading = false
         this.isInit = false
@@ -469,6 +474,7 @@ export default {
             `
             }
 
+            // 根据左右轴设置图标
             let className = 'row__color-block'
             if (item.yAxisIndex == 0) {
               className = 'yAxis-icon nz-icon nz-icon-zuozongzhou'
@@ -528,7 +534,6 @@ export default {
         }
 
         str += '</div>'
-        self.tooltipHtml = str
         return str
       }
     },
@@ -618,7 +623,53 @@ export default {
       getChart(this.chartId).dispatchAction({
         type: 'hideTip'
       })
-      this.tooltip.tooltipHtml = this.tooltipHtml
+      // 生成dataLink tooltip
+      const nameArr = params.seriesName.split('-')
+      if (nameArr.length > 1) {
+        nameArr.splice(nameArr.length - 1, 1)
+      }
+      const seriesName = nameArr.join('-')
+      if (this.series[params.seriesIndex]) {
+        params.yAxisIndex = this.series[params.seriesIndex].yAxisIndex
+      }
+      const decimals = this.chartInfo.param.decimals || 2
+      let unit = this.chartInfo.unit ? this.chartInfo.unit : 2
+      if (params.yAxisIndex == 1) {
+        unit = lodash.get(this, 'chartInfo.param.rightYAxis.unit', 2)
+      }
+      // title
+      const value = bus.computeTimezone(params.data[0] * 1000)
+      const tData = new Date(value)
+      // value
+      let paramsDot = bus.countDecimals(params.data[1])
+      if (paramsDot < this.chartDot) {
+        paramsDot = this.chartDot
+      } else if (paramsDot > 6) {
+        paramsDot = 6
+      }
+      const val = formatScientificNotation(params.data[1], paramsDot)
+      // 根据左右轴设置图标
+      let className = 'row__color-block'
+      if (params.yAxisIndex == 0) {
+        className = 'yAxis-icon nz-icon nz-icon-zuozongzhou'
+      } else if (params.yAxisIndex == 1) {
+        className = 'yAxis-icon nz-icon nz-icon-youzongzhou'
+      }
+      const color = this.colorList[params.seriesIndex]
+      this.tooltip.tooltipHtml = `
+        <div class="nz-chart__tooltip">
+          <div class="tooltip-title" style="margin-bottom: 5px">${bus.timeFormate(tData)}</div>
+          <div class="tooltip__row">
+            <div class="row__label">
+              <span class="${className}" style="background-color: ${color};color: ${color}"></span>
+              <span>${seriesName}</span>
+            </div>
+            <div class="row__value">
+              <span>${chartDataFormat.getUnit(unit).compute(val, null, -1, decimals)}</span>
+            </div>
+          </div>
+        </div>
+        `
       this.tooltip.show = true
       this.tooltip.dataLinkShow = true
       const e = params.event.event

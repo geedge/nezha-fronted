@@ -787,14 +787,17 @@
 }
 
 .chart-cursor-default{
-  cursor: default !important;
-  *{
-    cursor: default !important;
+  cursor: default;
+  canvas{
+    cursor: default;
   }
 }
 
 .chart-cursor-pointer{
   cursor: pointer;
+  canvas{
+    cursor: pointer;
+  }
 }
 
 .tabel-chart-box{

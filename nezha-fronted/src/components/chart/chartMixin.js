@@ -493,6 +493,7 @@ export default {
     try {
       getChart(this.chartId) && getChart(this.chartId).off('click')
       getChart(this.chartId) && getChart(this.chartId).off('mousedown')
+      getChart(this.chartId) && getChart(this.chartId).off('mousemove')
       getChart(this.chartId) && getChart(this.chartId).getZr().off('mousemove')
     } catch (error) {}
     getChart(this.chartId) && setChart(this.chartId, null)
