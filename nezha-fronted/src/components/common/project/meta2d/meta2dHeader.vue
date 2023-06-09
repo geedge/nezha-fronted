@@ -9,7 +9,7 @@
        >
       </topology-top-tool>
     </div>
-    <div v-if="!editFlag" class="top-tool-right">
+    <div v-if="!isChart && !editFlag" class="top-tool-right">
       <pick-time
         v-show="!editFlag"
         ref="pickTime"
@@ -27,7 +27,7 @@
       </button>
     </div>
     <div v-if="editFlag" class="top-tool-right float-right">
-      <button @click="previewTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light"
+      <button @click="previewTopology" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"
               style="margin-right: 20px"
       >
         {{$t('overall.preview')}}
@@ -37,13 +37,13 @@
 <!--      >-->
 <!--        {{$t('project.topology.previewExit')}}-->
 <!--      </button>-->
-      <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="saveMeta2d"
+      <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveMeta2d"
               :disabled="prevent_opt.save"
               :class="{'nz-btn-disabled':prevent_opt.save}"
               style="margin-right: 20px">
         {{$t('overall.save')}}
       </button>
-      <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-right: 20px" @click="cancelTopology">
+      <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" style="margin-right: 20px" @click="cancelTopology">
         {{$t('project.topology.exit')}}
       </button>
     </div>
@@ -117,7 +117,14 @@ export default {
       }
     },
     saveChart () {
-
+      const elements = this.$parent.$refs.meta2dProps.$refs.meta2dData.elements
+      const timeType = this.$parent.$refs.meta2dProps.$refs.meta2dData.dataTimeType
+      const params = {
+        ...getTopology(this.meta2dId).data()
+      }
+      params.elements = elements
+      params.timeType = timeType
+      this.$emit('saveChart', params)
     },
     saveProject () {
       const elements = this.$parent.$refs.meta2dProps.$refs.meta2dData.elements
@@ -174,10 +181,12 @@ export default {
         params: {
           timeType: topoData.timeType || 5
         },
-        currentProject: {
-          id: this.project.id
-        },
         show: true
+      }
+      if (this.project) {
+        params.currentProject = {
+          id: this.project.id
+        }
       }
       bus.$emit('showMeta2dPreview', params)
       // console.log(getTopology(this.meta2dId).data())
