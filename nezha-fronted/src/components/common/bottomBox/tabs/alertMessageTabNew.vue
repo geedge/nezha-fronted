@@ -97,6 +97,7 @@
         :chart-info="chartInfo"
         :from="fromRoute.alertMessage"
         :filter="{}"
+        :currentMsg="currentMsg"
         :is-fullscreen="true"
         :time-range="searchTime"
         @showFullscreen="showFullscreen"
