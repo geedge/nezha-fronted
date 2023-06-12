@@ -2,7 +2,7 @@
   <div class="meta2d-box list-page" :class="editFlag ? 'topology-dialog' : ''" v-my-loading="meta2dLoading" ref="meta2dBox" v-clickoutside="showNodeTools">
     <meta2dHeader
       ref="header"
-      v-if="!isPreview"
+      v-if="!isPreview && showHeader"
       :meta2dId="meta2dId"
       :isChart="isChart"
       :project="project"
@@ -150,7 +150,11 @@ export default {
     showZoom: {
       type: Boolean,
       default: true
-    }
+    },
+    showHeader: {
+      type: Boolean,
+      default: true
+    },
   },
   computed: {
   },

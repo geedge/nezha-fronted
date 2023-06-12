@@ -9,7 +9,7 @@
 <!--      :isPanel="true"-->
 <!--      ref="diagram"-->
 <!--      :chartInfo="chartInfo" />-->
-    <meta2dMain v-if="iconArrayLoad" :meta2dId="chartInfo.id + '-' + isFullscreen" :topoData="chartInfo.param.topo" :querysArray="querysArray" :params="{ timeType: 5}" :iconArray="iconArray" :isChart="true"/>
+    <meta2dMain v-if="iconArrayLoad" :showHeader="false" :meta2dId="chartInfo.id + '-' + isFullscreen" :topoData="chartInfo.param.topo" :querysArray="querysArray" :params="{ timeType: 5}" :iconArray="iconArray" :isChart="true"/>
   </div>
 </template>
 
