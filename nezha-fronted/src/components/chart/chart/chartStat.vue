@@ -121,15 +121,6 @@ export default {
       boxHeight: 0,
       boxPadding: 2,
       statTimer: null,
-      tooltip: {
-        x: 0,
-        y: 0,
-        title: 0,
-        value: 0,
-        mapping: {},
-        show: false,
-        dataLinkShow: ''
-      },
       fontSize: 12,
       customFontSize: '',
       minFontSzie: 12,
@@ -181,6 +172,7 @@ export default {
             stat.label = data.metric
             stat.legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
             stat.label.legend = stat.legend
+            stat.seriesIndex = expressionIndex
             stat.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
             stat.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(stat.value, null, -1, decimals)
             stat.mapping = this.selectMapping(stat.value, chartInfo.param.valueMapping, chartInfo.param.enable && this.chartInfo.param.enable.valueMapping)
@@ -541,6 +533,8 @@ export default {
         this.tooltip.mapping = data.mapping
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
+        this.tooltip.metric.labels = data.label
+        this.tooltip.metric.expressionIndex = data.seriesIndex
         this.datalinkPosition(e)
       }
     },

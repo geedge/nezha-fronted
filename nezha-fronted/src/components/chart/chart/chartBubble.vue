@@ -58,15 +58,6 @@ export default {
       isInit: true, // 是否是初始化，初始化时为true，图表初始化结束后设为false
       chartId: '',
       bubbleData: [],
-      tooltip: {
-        x: 0,
-        y: 0,
-        title: 0,
-        value: 0,
-        mapping: {},
-        show: false,
-        dataLinkShow: ''
-      },
       svg: null
     }
   },
@@ -333,6 +324,8 @@ export default {
         this.tooltip.mapping = data.data.mapping
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
+        this.tooltip.metric.labels = data.data.labels
+        this.tooltip.metric.expressionIndex = data.data.seriesIndex
         this.datalinkPosition(e)
       }
     },

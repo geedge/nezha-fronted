@@ -66,16 +66,6 @@ export default {
       isStack: false,
       hasRightYAxis: false,
       chartLoading: false,
-      tooltip: {
-        x: 0,
-        y: 0,
-        title: 0,
-        value: 0,
-        mapping: {},
-        show: false,
-        dataLinkShow: '',
-        tooltipHtml: ''
-      },
       cursorDefault: false
     }
   },
@@ -672,6 +662,8 @@ export default {
         `
       this.tooltip.show = true
       this.tooltip.dataLinkShow = true
+      this.tooltip.metric.labels = this.series[params.seriesIndex].labels
+      this.tooltip.metric.expressionIndex = this.series[params.seriesIndex].seriesIndex
       const e = params.event.event
       this.datalinkPosition(e)
       if (this.isConnect !== 'none') {
