@@ -13,7 +13,8 @@
             v-model="discoveryForm.subnetIds"
             class="right-box__select"
             popper-class="right-box-select-top prevent-clickoutside"
-            multiple placeholder="请选择"
+            multiple
+            :placeholder="$t('el.select.placeholder')"
             style="width: 240px"
             size="small">
             <el-option
@@ -32,7 +33,8 @@
                 v-model="discoveryForm.snmpCredentialIds"
                 class="right-box__select"
                 popper-class="right-box-select-top prevent-clickoutside"
-                multiple placeholder="请选择"
+                multiple
+                :placeholder="$t('el.select.placeholder')"
                 size="small">
                 <el-option
                   v-for="item in credentialData"
@@ -100,7 +102,7 @@
           </el-step> -->
           <el-step>
             <span class="nz-icon nz-icon-search" slot="icon"></span>
-            <p class="txt" slot="title">Discovery asset</p>
+            <p class="txt" slot="title">{{$t('tool.discoveryAsset')}}</p>
           </el-step>
         </el-steps>
       </div>
@@ -272,7 +274,7 @@ export default {
       })
     },
     getIpamData () {
-      this.$get('ipam/subnet', { pageSize: -1, type: 4}).then(response => {
+      this.$get('ipam/subnet', { pageSize: -1, type: 4 }).then(response => {
         if (response.code === 200) {
           this.ipamData = response.data.list
         }
@@ -347,7 +349,7 @@ export default {
               this.loading = false
             }
           }
-        }else {
+        } else {
           this.$message.error(response.msg || response.error)
           this.clearTask()
         }
