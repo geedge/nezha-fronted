@@ -250,6 +250,7 @@ export default {
         .on('mousemove', this.roseMove)
         .on('mouseleave', this.roseLeave)
         .on('click', this.chartClick)
+        .on('mousedown', this.chartMousedown)
         .transition().duration(animate === true ? 600 : 0)
         .attrTween('d', function (d) {
           const i = d3.interpolate({ startAngle: 0, endAngle: 0 }, d)
@@ -275,6 +276,7 @@ export default {
         .on('mousemove', this.roseMove)
         .on('mouseleave', this.roseLeave)
         .on('click', this.chartClick)
+        .on('mousedown', this.chartMousedown)
         .style('opacity', 0)
         .html((d) => {
           return d.endAngle - d.startAngle > 0.25 ? this.formatterLabel(d) : ''
@@ -393,12 +395,14 @@ export default {
         this.svg.selectAll('path').on('mousemove', null)
         this.svg.selectAll('path').on('mouseleave', null)
         this.svg.selectAll('path').on('click', null)
+        this.svg.selectAll('path').on('mousedown', null)
         this.svg.selectAll('foreignObject').on('mouseover', null)
         this.svg.selectAll('foreignObject').on('mouseout', null)
         this.svg.selectAll('foreignObject').on('mouseenter', null)
         this.svg.selectAll('foreignObject').on('mousemove', null)
         this.svg.selectAll('foreignObject').on('mouseleave', null)
         this.svg.selectAll('foreignObject').on('click', null)
+        this.svg.selectAll('foreignObject').on('mousedown', null)
         this.svg.remove()
         this.svg = null
       }
@@ -438,8 +442,13 @@ export default {
         this.datalinkPosition(e)
       }
     },
+    chartMousedown (e) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+        e.stopPropagation()
+      }
+    },
     clickout () {
-      if (this.dataLink.length) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
       }

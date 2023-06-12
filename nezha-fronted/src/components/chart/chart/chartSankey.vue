@@ -287,6 +287,7 @@ export default {
           this.tooltip.show = false
         })
         .on('click', this.chartClick)
+        .on('mousedown', this.chartMousedown)
 
       // 划过节点
       chart.selectAll('.node')
@@ -319,6 +320,7 @@ export default {
           this.tooltip.show = false
         })
         .on('click', this.chartClick)
+        .on('mousedown', this.chartMousedown)
     },
     setPosition (e) {
       const windowWidth = window.innerWidth// 窗口宽度
@@ -404,10 +406,12 @@ export default {
         this.svg.selectAll('path').on('mousemove', null)
         this.svg.selectAll('path').on('mouseleave', null)
         this.svg.selectAll('path').on('click', null)
+        this.svg.selectAll('path').on('mousedown', null)
         this.svg.selectAll('.node').on('mouseenter', null)
         this.svg.selectAll('.node').on('mousemove', null)
         this.svg.selectAll('.node').on('mouseleave', null)
         this.svg.selectAll('.node').on('click', null)
+        this.svg.selectAll('.node').on('mousedown', null)
         this.svg.selectAll('g').remove()
         this.svg = null
       }
@@ -447,8 +451,13 @@ export default {
         this.datalinkPosition(e)
       }
     },
+    chartMousedown (e) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+        e.stopPropagation()
+      }
+    },
     clickout () {
-      if (this.dataLink.length) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
       }

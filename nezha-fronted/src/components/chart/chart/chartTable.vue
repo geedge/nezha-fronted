@@ -33,13 +33,14 @@
             class="value-mapping-table"
             :class="{'chart-cursor-pointer':dataLink.length}"
             @click="chartClick($event,col,scope.row)"
+            @mousedown="chartMousedown($event)"
           >
             <template v-if="scope.row.valueMapping && scope.row.valueMapping[col.title + 'mapping']">
               <i :class="scope.row.valueMapping[col.title + 'mapping'].icon" :style="{color: scope.row.valueMapping[col.title + 'mapping'].color.icon}"></i>
             </template>
             {{showValueMapping(scope.row,col.title, col)}}
           </div>
-          <div v-else class="value-mapping-table" :class="{'chart-cursor-pointer':dataLink.length}" @click="chartClick($event,col,scope.row)">
+          <div v-else class="value-mapping-table" :class="{'chart-cursor-pointer':dataLink.length}" @click="chartClick($event,col,scope.row)" @mousedown="chartMousedown($event)">
             {{scope.row.display[col.title + 'display'].display}}
           </div>
         </template>
@@ -424,8 +425,13 @@ export default {
         this.datalinkPosition(e)
       }
     },
+    chartMousedown (e) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+        e.stopPropagation()
+      }
+    },
     clickout () {
-      if (this.dataLink.length) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
       }

@@ -171,6 +171,7 @@ export default {
         .on('mousemove', this.rankMove)
         .on('mouseleave', this.rankLeave)
         .on('click', this.chartClick)
+        .on('mousedown', this.chartMousedown)
       bars.exit().remove()
 
       // 文本标签
@@ -184,6 +185,7 @@ export default {
         .on('mousemove', this.rankMove)
         .on('mouseleave', this.rankLeave)
         .on('click', this.chartClick)
+        .on('mousedown', this.chartMousedown)
         .html((d) => {
           return this.rankFormatterLabel(d)
         })
@@ -297,10 +299,12 @@ export default {
         this.svg.selectAll('rect').on('mousemove', null)
         this.svg.selectAll('rect').on('mouseleave', null)
         this.svg.selectAll('rect').on('click', null)
+        this.svg.selectAll('rect').on('mousedown', null)
         this.svg.selectAll('foreignObject').on('mouseenter', null)
         this.svg.selectAll('foreignObject').on('mousemove', null)
         this.svg.selectAll('foreignObject').on('mouseleave', null)
         this.svg.selectAll('foreignObject').on('click', null)
+        this.svg.selectAll('foreignObject').on('mousedown', null)
         this.svg.selectAll('g').remove()
         this.svg = null
       }
@@ -340,8 +344,13 @@ export default {
         this.datalinkPosition(e)
       }
     },
+    chartMousedown (e) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+        e.stopPropagation()
+      }
+    },
     clickout () {
-      if (this.dataLink.length) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
       }

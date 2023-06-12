@@ -8,6 +8,7 @@
       @mousemove="statMouseMove"
       @mouseleave="statMouseleave(item)"
       @click="chartClick($event,item)"
+      @mousedown="chartMousedown($event)"
       :class="{'only-stat':statData.length===1,'chart-cursor-pointer':dataLink.length}"
       :style="{
         background:item.mapping ? item.mapping.color.bac : (statData.length===1 ? '' : colorList[index]),
@@ -538,8 +539,13 @@ export default {
         this.datalinkPosition(e)
       }
     },
+    chartMousedown (e) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+        e.stopPropagation()
+      }
+    },
     clickout () {
-      if (this.dataLink.length) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
       }

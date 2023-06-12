@@ -184,6 +184,7 @@ export default {
         g.on('mousemove', self.hexagonMove.bind(self, point))
         g.on('mouseleave', self.hexagonOut.bind(self, point))
         g.on('click', self.chartClick.bind(self, point))
+        g.on('mousedown', self.chartMousedown)
         self.drawText(this.svg, vals, point, color, hexaRadius, g) // 文本
         data[i].fcolor = color
       }
@@ -428,6 +429,7 @@ export default {
         this.svg.selectAll('g').on('mouseenter', null)
         this.svg.selectAll('g').on('mouseleave', null)
         this.svg.selectAll('g').on('click', null)
+        this.svg.selectAll('g').on('mousedown', null)
         this.svg.remove()
         this.svg = null
       }
@@ -480,8 +482,13 @@ export default {
         this.datalinkPosition(e)
       }
     },
+    chartMousedown (e) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+        e.stopPropagation()
+      }
+    },
     clickout () {
-      if (this.dataLink.length) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
       }

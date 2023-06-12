@@ -155,7 +155,7 @@ export default {
         if (this.isInit && this.dataLink.length) {
           myChart.on('click', this.chartClick)
           myChart.on('mousedown', (params) => {
-            if (this.tooltip.show) {
+            if (this.tooltip.dataLinkShow) {
               const e = params.event.event
               e.stopPropagation()
             }

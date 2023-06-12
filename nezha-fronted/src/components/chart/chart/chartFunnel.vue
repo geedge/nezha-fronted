@@ -191,6 +191,7 @@ export default {
           this.chartLeave()
         })
         .on('click', this.chartClick)
+        .on('mousedown', this.chartMousedown)
 
       function getPoints (topWidth, bottomWidth, height) {
         const points = []
@@ -227,6 +228,7 @@ export default {
           this.chartLeave()
         })
         .on('click', this.chartClick)
+        .on('mousedown', this.chartMousedown)
         .style('opacity', 0)
         .transition('opacity').duration(animate === true ? 600 : 0)
         .style('opacity', 1)
@@ -380,10 +382,12 @@ export default {
         this.svg.selectAll('.trap').on('mousemove', null)
         this.svg.selectAll('.trap').on('mouseleave', null)
         this.svg.selectAll('.trap').on('click', null)
+        this.svg.selectAll('.trap').on('mousedown', null)
         this.svg.selectAll('foreignObject').on('mouseover', null)
         this.svg.selectAll('foreignObject').on('mousemove', null)
         this.svg.selectAll('foreignObject').on('mouseleave', null)
         this.svg.selectAll('foreignObject').on('click', null)
+        this.svg.selectAll('foreignObject').on('mousedown', null)
         this.svg.selectAll('g').remove()
         this.svg = null
       }
@@ -423,8 +427,13 @@ export default {
         this.datalinkPosition(e)
       }
     },
+    chartMousedown (e) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+        e.stopPropagation()
+      }
+    },
     clickout () {
-      if (this.dataLink.length) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
       }

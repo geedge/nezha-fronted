@@ -188,6 +188,7 @@ export default {
       bubbles.on('mousemove', this.bubbleMove)
       bubbles.on('mouseleave', this.bubbleLeave)
       bubbles.on('click', this.chartClick)
+      bubbles.on('mousedown', this.chartMousedown)
     },
     // 处理label
     bubbleFormatterLabel (node) {
@@ -290,6 +291,7 @@ export default {
         this.svg.selectAll('.bubble').on('mousemove', null)
         this.svg.selectAll('.bubble').on('mouseleave', null)
         this.svg.selectAll('.bubble').on('click', null)
+        this.svg.selectAll('.bubble').on('mousedown', null)
         this.svg.selectAll('g').remove()
         this.svg = null
       }
@@ -329,8 +331,13 @@ export default {
         this.datalinkPosition(e)
       }
     },
+    chartMousedown (e) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
+        e.stopPropagation()
+      }
+    },
     clickout () {
-      if (this.dataLink.length) {
+      if (this.dataLink.length && this.tooltip.dataLinkShow) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
       }
