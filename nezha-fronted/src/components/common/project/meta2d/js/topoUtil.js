@@ -140,6 +140,9 @@ export default {
     },
     clacTopoData (data, queryValues) { // 主要处理 属性为原始属性 处理动画属性对原始属性的影响
       return new Promise(resolve => { // 处理加载数据
+        if (!data) {
+          data = {}
+        }
         if (!data.pens) {
           data.pens = []
         }
