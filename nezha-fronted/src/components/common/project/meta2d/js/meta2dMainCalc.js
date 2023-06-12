@@ -143,6 +143,9 @@ export default {
           }
           getTopology(this.meta2dId).lock(1)
           this.getNodesArr()
+          if (this.meta2dId === 'rightBoxChartEdit') {
+            this.$refs.header.editMeta2d()
+          }
         })
       })
     },
@@ -299,7 +302,7 @@ export default {
         this.selectPens = pens
         this.modulesDiff(pens[0])
         this.$refs.meta2dProps && (this.$refs.meta2dProps.isUpdate = true)
-      }, 600)
+      }, 200)
     },
     topoClick (params, e) { // 点击节点
       if (!params.pen && this.$refs.meta2dProps) {
