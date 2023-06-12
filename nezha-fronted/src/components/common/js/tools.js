@@ -1101,7 +1101,7 @@ export const loadMore = {
   bind (el, binding) {
     console.log(el, binding, el.parentNode, 'bind')
     // 获取element，定义scroll
-    const selectDom = binding.dom ? el.querySelector(binding.dom) : el
+    const selectDom = binding.value.dom ? el.querySelector(binding.value.dom) : el
     heightLoad = bus.debounce(function () {
       if (!el.hasMore) {
         return
@@ -1117,8 +1117,7 @@ export const loadMore = {
     el.hasMore = binding.value.hasMore
   },
   unbind (el, binding) {
-    const selectDom = binding.dom ? el.querySelector(binding.dom) : el
-    console.log(selectDom, 'unbind')
+    const selectDom = binding.value.dom ? el.querySelector(binding.value.dom) : el
     if (selectDom) {
       selectDom.removeEventListener('scroll', heightLoad)
     }

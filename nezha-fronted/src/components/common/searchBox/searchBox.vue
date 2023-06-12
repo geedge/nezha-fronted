@@ -15,7 +15,7 @@
         <div
           v-for="(item, index) in historyArr"
           @mouseenter="historyIndex = index"
-          :key="index"
+          :key="'search-item-history' + index"
           class="search-item text-ellipsis"
           :ref="'search-item' + index"
           :class="{'search-item-select': index === historyIndex}"
@@ -24,7 +24,7 @@
         >
           <span  v-for="(tag, tIndex) in item" :key="index + '-' +tIndex" class="search-box-tag" style="margin-right: 3px">
             <span>{{tag.i18n}}:</span>
-            <span v-for="(value, vIndex) in tag.value" :key="value">{{value}} <span v-if="tag.value.length - 1 > vIndex">,</span></span>
+            <span v-for="(value, vIndex) in tag.value" :key="'history-item-'+index + '-' +tIndex+'-' + vIndex">{{value}} <span v-if="tag.value.length - 1 > vIndex">,</span></span>
           </span>
         </div>
       </div>
@@ -112,12 +112,12 @@
     <el-dialog :title="$t('overall.edit')" class="no-transform-dialog" :visible.sync="dialogShow" @close="dialogClose" :append-to-body="false" :modal-append-to-body="false" :destroy-on-close="true">
       <el-form ref="tagEdit" v-model="editDialogObj" v-if="dialogShow">
         <el-form-item prop="key" title="key">
-          <el-select prop="key" v-model="editDialogObj.name" size="small">
+          <el-select prop="key" v-model="editDialogObj.name" size="small" :popper-append-to-body="false">
             <el-option v-for="item in oldSearchList" :value="item.name" :label="$t(item.i18n)" :key="item.name"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="symbol" title="symbol" size="small">
-          <el-select v-model="editDialogObj.symbol">
+        <el-form-item prop="symbol" title="symbol" size="small" >
+          <el-select v-model="editDialogObj.symbol" :popper-append-to-body="false">
             <el-option :value="1" :label="$t('searchBox.belong')"></el-option>
             <el-option :value="2" :label="$t('searchBox.notbelong')"></el-option>
             <el-option :value="3" :label="$t('searchBox.wildcard')"></el-option>
@@ -135,6 +135,7 @@
             allow-create
             default-first-option
             :filter-method="dialogValueListSet"
+            :popper-append-to-body="false"
             v-loadMore="{
               load: dialogValueListLoad,
               hasMore: valueListInfo.total > valueList.length,
@@ -162,13 +163,14 @@
             v-loadMore="{
               load: dialogValueListLoad,
               hasMore: false,
-              dom: '.el-select-dropdown .el-select-dropdown__wrap'
+              dom: '.el-select-dropdown__wrap .el-scrollbar__wrap'
             }"
+            :popper-append-to-body="false"
             ref="dialogValueSelect"
           >
             <el-option
               v-for="(item, index) in valueList"
-              :key="index"
+              :key="'dialogValueSelect' + '-' + index"
               :label="item.label"
               :value="item.value">
             </el-option>
@@ -767,6 +769,7 @@ export default {
       this.dialogValueListLoad()
     },
     dialogValueListLoad () {
+      this.contentShow('')
       if (this.editDialogObj.type == 'enum') {
         this.valueList = this.oldValueList.filter(item => item.label.indexOf(this.dialogSraechStr) !== -1)
         return
