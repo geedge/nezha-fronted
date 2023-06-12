@@ -502,11 +502,11 @@ export default {
     },
     topologyDialogChange (flag, data) {
       this.topologyDialog = flag
-      if (flag) {
-        setTimeout(() => {
-          this.$refs.rightBoxChartEdit.$refs.header.editMeta2d()
-        }, 500)
-      }
+      // if (flag) {
+      //   setTimeout(() => {
+      //     this.$refs.rightBoxChartEdit.$refs.header.editMeta2d()
+      //   }, 1000)
+      // }
       if (data) {
         this.chartConfig.param.topo = data
         this.change()
