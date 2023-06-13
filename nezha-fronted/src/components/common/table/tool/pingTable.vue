@@ -1,12 +1,12 @@
 <template>
   <el-table
-      id="pingTable"
-      ref="dataTable"
-      :height="'calc(100% - 80px)'"
-      :row-key="rowKey"
-      :data="tableData"
-      border
-      @header-dragend="dragend"
+    id="pingTable"
+    ref="dataTable"
+    :height="'calc(100% - 80px)'"
+    :row-key="rowKey"
+    :data="tableData"
+    border
+    @header-dragend="dragend"
     >
     <el-table-column type="expand">
       <template #header>
@@ -30,6 +30,7 @@
       :resizable="true"
       :width="`${item.width}`"
       class="data-column"
+      :sort-orders="['ascending', 'descending']"
       :sortable="item.sortable"
     >
       <template slot="header">

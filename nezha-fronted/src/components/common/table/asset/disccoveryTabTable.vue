@@ -30,6 +30,7 @@
         :sort-orders="['ascending', 'descending']"
         :sortable="item.sortable"
         :width="`${item.width}`"
+        :sort-method="item.sortMethod"
       >
         <template slot="header">
           <span class="data-column__span" :class="{'margin-l-10': item.prop === 'name'}">{{item.label}}</span>
@@ -73,7 +74,9 @@
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
-          <button class="table-operation-item" @click="tableOperation(['uploadAsset', scope.row])" :title="$t('overall.upload')"><i class="nz-icon nz-icon-Upload1"></i></button>
+          <button class="table-operation-item" :class="{'table-operation-item--disable':scope.row['imported'] == 1}" :disabled="scope.row['imported'] == 1" @click="tableOperation(['uploadAsset', scope.row])" :title="$t('overall.upload')">
+            <i class="nz-icon nz-icon-Upload1"></i>
+          </button>
         </div>
       </el-table-column>
       <template slot="empty">
@@ -92,7 +95,7 @@
 <script>
 import table from '@/components/common/mixin/table'
 import copy from '@/components/common/copy'
-
+import lodash from 'lodash'
 export default {
   name: 'disccoveryTabTable',
   mixins: [table],
@@ -108,44 +111,52 @@ export default {
           prop: 'ip',
           show: true,
           minWidth: 200,
-          // sortable: 'custom'
+          sortable: true
         }, {
           label: this.$t('asset.hostName'),
           prop: 'sysName',
           show: true,
           minWidth: 200,
-          // sortable: 'custom'
+          sortable: true
         },
         {
           label: this.$t('overall.dc'),
           prop: 'dc',
           show: true,
-          minWidth: 150
+          minWidth: 150,
+          sortable: true,
+          sortMethod: this.sortMethod('dc.name')
         }, {
           label: this.$t('asset.pingInfo'),
           prop: 'ping',
           show: true,
-          minWidth: 150
+          minWidth: 150,
+          sortable: true
         }, {
           label: this.$t('overall.SNMP'),
           prop: 'state',
           show: true,
-          minWidth: 150
+          minWidth: 150,
+          sortable: true
         }, {
           label: this.$t('asset.model'),
           prop: 'model',
           show: true,
-          minWidth: 200
+          minWidth: 200,
+          sortable: true,
+          sortMethod: this.sortMethod('model.name')
         }, {
           label: this.$t('asset.objectID'),
           prop: 'sysObjectId',
           show: true,
-          minWidth: 150
+          minWidth: 150,
+          sortable: true
         }, {
           label: this.$t('asset.imported'),
           prop: 'imported',
           show: true,
-          minWidth: 150
+          minWidth: 150,
+          sortable: true
         }
       ],
       mfaEnable: localStorage.getItem('nz-mfa-enable')
@@ -158,6 +169,20 @@ export default {
           return this.$t('overall.result.success')
         default:
           return this.$t('config.terminallog.statusItem.connectionFailed')
+      }
+    },
+    // 防止prop为对象时 排序不正确
+    sortMethod (prop) {
+      return function (a, b) {
+        const val1 = lodash.get(a, prop, '')
+        const val2 = lodash.get(b, prop, '')
+        if (val1 < val2) {
+          return -1
+        } else if (val1 > val2) {
+          return 1
+        } else {
+          return 0
+        }
       }
     }
   }

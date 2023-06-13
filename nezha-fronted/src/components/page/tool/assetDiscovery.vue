@@ -1,145 +1,161 @@
 <template>
-  <nz-data-list
+  <div>
+    <nz-data-list
     ref="dataList"
     :layout="[]"
     :from="fromRoute.ping"
     class="radar-box"
-  >
-    <template v-slot:top-tool-left>
-      <div class="tools-header">
-        <div style="width: 360px;" class="nz-select-tag">
-          <span style="vertical-align: top">{{$t('overall.IPAM')}}</span>
-          <el-select
-            v-model="discoveryForm.subnetIds"
-            class="right-box__select"
-            popper-class="right-box-select-top prevent-clickoutside"
-            multiple placeholder="请选择"
-            style="width: 240px"
-            size="small">
-            <el-option
-              v-for="item in ipamData"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </div>
-
-        <div  class="tools-header-center">
-          <el-form size="small" ref="discoveryForm" :model="discoveryForm" :rules="formRules" label-position="right" label-width="150px">
-            <el-form-item :label='$t("config.mib.credentials")' prop="snmpCredentialIds">
-              <el-select
-                v-model="discoveryForm.snmpCredentialIds"
-                class="right-box__select"
-                popper-class="right-box-select-top prevent-clickoutside"
-                multiple placeholder="请选择"
-                size="small">
-                <el-option
-                  v-for="item in credentialData"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <!-- retries -->
-            <el-form-item prop="retries" style="margin-bottom:14px" :label="$t('Retries')">
-              <div class="wrap" style="height:32px">
-                <el-input v-model.number="discoveryForm.retries" placeholder="">
-                </el-input>
-              </div>
-            </el-form-item>
-            <!-- Timeout -->
-            <el-form-item prop="timeout" style="margin-bottom:14px" :label="$t('ping.timeout')">
-              <div class="wrap" style="height:32px">
-                <el-input v-model.number="discoveryForm.timeout" placeholder="">
-                  <template slot="append">{{$t('overall.ms')}}</template>
-                </el-input>
-              </div>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="tools-header-right">
-          <div class="radar">
-            <div class="first-circle"></div>
-            <div class="second-circle"></div>
-            <div class="third-circle"></div>
-            <div class="sector" :class="isStart?'active':''"></div>
-            <div class="radar-line"></div>
+    >
+      <template v-slot:top-tool-left>
+        <div class="tools-header">
+          <div style="width: 360px;" class="nz-select-tag">
+            <span style="vertical-align: top">{{$t('asset.ipSubnets')}}</span>
+            <el-select
+              v-model="discoveryForm.subnetIds"
+              class="right-box__select"
+              popper-class="right-box-select-top prevent-clickoutside ipSubnet-select"
+              multiple
+              placeholder="请选择"
+              style="width: 240px"
+              size="small">
+              <el-option
+                v-for="item in ipamData"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+                <div class="subnet-item">
+                  <div class="subnet-item-left">{{item.name}}</div>
+                  <div class="subnet-item-right">{{item.addr}}/{{item.mask}}</div>
+                </div>
+              </el-option>
+            </el-select>
           </div>
-          <div class="tools-header-right-content">
-            <div class="tools-header-right-title right-content-text">{{$t('dashboard.dashboard.chartForm.statistics')}}</div>
-            <div class="right-content-text right-content-box">
-              <span class="margin-l-5">{{$t('asset.total')}}:<span class="margin-l-10 margin-r-30">{{total}}</span></span>
-              <span>{{$t('ping.done')}}:<span class="margin-l-10 margin-r-30">{{done}}</span></span>
-              <span>{{$t('ping.progress')}}:<span class="margin-l-10 margin-r-30">{{process}}%</span></span>
+
+          <div  class="tools-header-center">
+            <el-form size="small" ref="discoveryForm" :model="discoveryForm" :rules="formRules" label-position="right" label-width="150px">
+              <el-form-item :label='$t("config.mib.credentials")' prop="snmpCredentialIds">
+                <el-select
+                  v-model="discoveryForm.snmpCredentialIds"
+                  class="right-box__select"
+                  popper-class="right-box-select-top prevent-clickoutside"
+                  multiple
+                  placeholder="请选择"
+                  size="small">
+                  <el-option
+                    v-for="item in credentialData"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <!-- retries -->
+              <el-form-item prop="retries" style="margin-bottom:14px" :label="$t('Retries')">
+                <div class="wrap" style="height:32px">
+                  <el-input v-model.number="discoveryForm.retries" placeholder="">
+                  </el-input>
+                </div>
+              </el-form-item>
+              <!-- Timeout -->
+              <el-form-item prop="timeout" style="margin-bottom:14px" :label="$t('ping.timeout')">
+                <div class="wrap" style="height:32px">
+                  <el-input v-model.number="discoveryForm.timeout" placeholder="">
+                    <template slot="append">{{$t('overall.ms')}}</template>
+                  </el-input>
+                </div>
+              </el-form-item>
+            </el-form>
+          </div>
+          <div class="tools-header-right">
+            <div class="radar">
+              <div class="first-circle"></div>
+              <div class="second-circle"></div>
+              <div class="third-circle"></div>
+              <div class="sector" :class="isStart?'active':''"></div>
+              <div class="radar-line"></div>
             </div>
-            <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-if="!isStart" @click="startTask">
-              {{$t('Discovery')}}
-            </el-button>
-            <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-else @click="clearTask">
-              {{$t('config.terminallog.stop')}}
-            </el-button>
+            <div class="tools-header-right-content">
+              <div class="tools-header-right-title right-content-text">{{$t('dashboard.dashboard.chartForm.statistics')}}</div>
+              <div class="right-content-text right-content-box">
+                <span class="margin-l-5">{{$t('asset.total')}}:<span class="margin-l-10 margin-r-30">{{total}}</span></span>
+                <span>{{$t('ping.done')}}:<span class="margin-l-10 margin-r-30">{{done}}</span></span>
+                <span>{{$t('ping.progress')}}:<span class="margin-l-10 margin-r-30">{{process}}%</span></span>
+              </div>
+              <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-if="!isStart" @click="startTask">
+                {{$t('Discovery')}}
+              </el-button>
+              <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal" v-else @click="clearTask">
+                {{$t('config.terminallog.stop')}}
+              </el-button>
+            </div>
+          </div>
+          <div class="tools-header-title">{{$t('overall.config')}}</div>
+        </div>
+      </template>
+
+      <template v-slot:default>
+        <!-- 初始展示的内容 -->
+        <div class="empty" v-if="tid===undefined">
+          <el-steps align-center>
+            <el-step>
+              <span class="nz-icon nz-icon-edit" slot="icon"></span>
+              <p class="txt" slot="title">{{$t('overall.placeHolder')}} IP</p>
+            </el-step>
+            <!-- <el-step>
+              <span class="el-icon-more" slot="icon"></span>
+              <p class="txt" slot="title">{{$t('ping.filter')}}</p>
+            </el-step> -->
+            <el-step>
+              <span class="nz-icon nz-icon-search" slot="icon"></span>
+              <p class="txt" slot="title">Discovery asset</p>
+            </el-step>
+          </el-steps>
+        </div>
+        <!-- 存在任务id时展示表格 -->
+        <div class="data-wrap" v-show="tid!==undefined">
+          <span>{{$t('ping.results')}}</span>
+          <div class="data-bottom">
+            <disccoveryTabTable
+              ref="dataTable"
+              :loading="loading"
+              v-my-loading="loading"
+              :height="'calc(100% - 80px)'"
+              :custom-table-title="tools.customTableTitle"
+              :table-data="tableData"
+              :api="url"
+              :orderByFa="orderBy"
+              @uploadAsset="uploadAsset"
+            >
+            </disccoveryTabTable>
           </div>
         </div>
-        <div class="tools-header-title">{{$t('overall.config')}}</div>
-      </div>
-    </template>
-
-    <template v-slot:default>
-      <!-- 初始展示的内容 -->
-      <div class="empty" v-if="tid===undefined">
-        <el-steps align-center>
-          <el-step>
-            <span class="nz-icon nz-icon-edit" slot="icon"></span>
-            <p class="txt" slot="title">{{$t('overall.placeHolder')}} IP</p>
-          </el-step>
-          <!-- <el-step>
-            <span class="el-icon-more" slot="icon"></span>
-            <p class="txt" slot="title">{{$t('ping.filter')}}</p>
-          </el-step> -->
-          <el-step>
-            <span class="nz-icon nz-icon-search" slot="icon"></span>
-            <p class="txt" slot="title">Discovery asset</p>
-          </el-step>
-        </el-steps>
-      </div>
-      <!-- 存在任务id时展示表格 -->
-      <div class="data-wrap" v-show="tid!==undefined">
-        <span>{{$t('ping.results')}}</span>
-        <div class="data-bottom">
-          <disccoveryTabTable
-            ref="dataTable"
-            :loading="loading"
-            v-my-loading="loading"
-            :height="'calc(100% - 80px)'"
-            :custom-table-title="tools.customTableTitle"
-            :table-data="tableData"
-            :api="url"
-            :orderByFa="orderBy"
-          >
-          </disccoveryTabTable>
-        </div>
-      </div>
-    </template>
-  </nz-data-list>
+      </template>
+    </nz-data-list>
+    <transition name="right-box">
+      <asset-box
+        v-if="rightBox.show"
+        ref="assetBox"
+        :from="fromRoute.assetDiscovery"
+        :obj="object"
+        @close="closeRightBox"
+        @refresh="getTableData">
+      </asset-box>
+    </transition>
+  </div>
 </template>
 
 <script>
-import bus from '@/libs/bus'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
-import VueTagsInput from '@johmun/vue-tags-input'
 import { timeoutValidator, retriesValidator } from '../../common/js/validate'
 import disccoveryTabTable from '@/components/common/table/asset/disccoveryTabTable'
-const ipv4 = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\:\d{0,5})?$/
-const ipv6 = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/
+import assetBox from '@/components/common/rightBox/asset/assetBox'
 export default {
   mixins: [dataListMixin],
   components: {
     nzDataList,
     disccoveryTabTable,
-    VueTagsInput
+    assetBox
   },
   data () {
     return {
@@ -187,7 +203,43 @@ export default {
         timeout: [{ validator: timeoutValidator, trigger: 'blur' }],
         retries: [{ validator: retriesValidator, trigger: 'blur' }]
       },
-      ipamData: []
+      ipamData: [],
+      rightBox: {
+        show: false
+      },
+      blankObject: {
+        id: '',
+        name: '',
+        pid: '',
+        sn: '',
+        manageIp: '',
+        stateId: 2,
+        purchaseDate: null,
+        dcId: '',
+        cabinetId: '',
+        brandId: '',
+        cabinetStart: '',
+        cabinetEnd: '',
+        brand: { id: '', name: '' },
+        modelId: '',
+        model: { id: '', name: '' },
+        type: { name: '', id: '' },
+        number: '',
+        brandAndModel: [],
+        typeId: '',
+        snmpCredentialId: '',
+        clientPort: '10092',
+        clientToken: '',
+        authProtocolPort: '',
+        authType: '',
+        authUsername: '',
+        authPin: '',
+        authPriKey: '',
+        authUserTip: '',
+        authPinTip: '',
+        fields: [],
+        accounts: []
+      }
     }
   },
   created () {
@@ -195,39 +247,26 @@ export default {
     this.getIpamData()
   },
   mounted () {
-    const tiInput = document.getElementsByClassName('ti-input')[0]
-    tiInput.addEventListener('click', (e) => {
-      const event = e || window.event
-      if (event && event.stopPropagation) {
-        event.stopPropagation()
-      } else {
-        event.cancelBubble = true
-      }
-      if (event.path[0].className === 'ti-input') {
-        const tiInputBox = document.getElementsByClassName('ti-new-tag-input')[0]
-        tiInputBox.focus()
-      }
-    })
   },
   methods: {
-    // 防止标签输入框失去焦点校验和开始任务校验重复(连续两次message提示)
-    validateHost: bus.debounce(function () {
-      this.$message.error(this.$t('validate.host'))
-    }, 50),
-    // 防止标签输入框失去焦点校验和开始任务校验重复(连续两次message提示)
-    validateDuplicate: bus.debounce(function () {
-      this.$message.error(this.$t('ping.duplicate') + ' IP')
-    }, 50),
-    // 添加标签之前
-    beforeAddTag ({ tag, addTag }) {
-      if (!ipv4.test(tag.text) && !ipv6.test(tag.text)) {
-        return this.validateHost()
-      }
-      addTag()
+    closeRightBox () {
+      this.rightBox.show = false
     },
-    // 添加重复的标签
-    addDuplicate () {
-      return this.validateDuplicate()
+    async uploadAsset (row) {
+      console.log(row)
+      this.object = this.newObject()
+      this.object.name = row.name
+      this.object.manageIp = row.ip
+      this.object.dc = row.dc
+      if (row.model && row.model.id) {
+        const response = await this.$get('asset/model/' + row.model.id)
+        if (response.code === 200) {
+          this.object.model = response.data
+          this.object.type = response.data.type
+          this.object.brand = response.data.brand
+        }
+      }
+      this.rightBox.show = true
     },
     close () {
       this.visible = false
@@ -272,7 +311,7 @@ export default {
       })
     },
     getIpamData () {
-      this.$get('ipam/subnet', { pageSize: -1, type: 4}).then(response => {
+      this.$get('ipam/subnet', { pageSize: -1, type: 4 }).then(response => {
         if (response.code === 200) {
           this.ipamData = response.data.list
         }
@@ -284,9 +323,6 @@ export default {
         return false
       }
       setTimeout(() => {
-        if (!this.discoveryForm.subnetIds) {
-          return this.validateHost()
-        }
         // 表单校验输入内容是否合法
         this.$refs.discoveryForm.validate((valid) => {
           if (valid) {
@@ -299,7 +335,6 @@ export default {
     // 请求任务id
     async getId () {
       this.loading = true
-      console.log(this.discoveryForm.snmpCredentialIds)
       const params = {
         subnetIds: this.discoveryForm.subnetIds.join(','),
         snmpCredentialIds: this.discoveryForm.snmpCredentialIds.join(','),
@@ -347,7 +382,7 @@ export default {
               this.loading = false
             }
           }
-        }else {
+        } else {
           this.$message.error(response.msg || response.error)
           this.clearTask()
         }

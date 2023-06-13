@@ -597,7 +597,7 @@ export default {
             }
           }
         }
-        this.$refs.form.clearValidate()
+        this.$refs.form && this.$refs.form.clearValidate()
         this.editAsset.brandAndModel = [this.editAsset.brand.id, this.editAsset.model.id]
       }
     }

@@ -17,9 +17,6 @@
       height: 148px;
       margin-top: 38px;
       box-shadow: unset;
-      .tools-header-left>span{
-        margin-right: 10px !important;
-      }
       .tools-header-center{
         width: 391px;
       }
@@ -146,6 +143,9 @@
       .el-icon-more{
         font-size: 22px;
       }
+      .nz-icon-search{
+        font-size: 22px;
+      }
       .msg{
         font-size: 18px;
       }
@@ -219,6 +219,7 @@
   max-height: 144px;
   overflow-y: auto;
 }
+
 .radar-box{
   .top-tools {
     width: 100%;
@@ -247,16 +248,24 @@
       line-height: 30px;
       font-weight: 400;
     }
-    .tools-header-left {
-      width: 360px;
-      display: flex;
-      margin-left: 15px;
-    }
     .nz-select-tag {
       color: $--color-text-regular;
+      display: flex;
+      margin-left: 15px;
+      align-items: flex-start;
+      > span{
+        margin-right: 10px;
+        font-size: 14px;
+        color: $--color-text-regular;
+        letter-spacing: 0;
+        text-align: right;
+        line-height: 30px;
+        font-weight: 400;
+      }
       .el-select__tags{
         max-height: 128px;
         overflow-y: auto;
+        cursor: pointer;
       }
       .el-tag--info {
         min-width: 40px;
@@ -272,13 +281,12 @@
         }
       }
     }
-    .tools-header-left.tools-header-left-ping{
+    .tools-header-left{
       width: 360px;
       display: flex;
       margin-left: 15px;
       > span{
-        display: block;
-        margin-right: 5px;
+        margin-right: 10px;
         font-size: 14px;
         color: $--color-text-regular;
         letter-spacing: 0;
@@ -293,6 +301,7 @@
       .el-select__tags{
         height: 24px;
         overflow-y: auto;
+        cursor: pointer;
       }
     }
     .tools-header-right {
@@ -498,6 +507,24 @@ td.el-table__expanded-cell:hover {
         font-size: 14px;
         margin-left: 3px;
       }
+    }
+  }
+}
+
+
+.ipSubnet-select{
+  .subnet-item {
+    display: flex;
+    justify-content: space-between;
+    .subnet-item-left{
+      padding-right: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .subnet-item-right{
+      color: $--color-text-secondary;
+      font-size: 12px;
     }
   }
 }
