@@ -819,9 +819,12 @@ export default {
         return
       }
       let name = this.key
+      let symbol = ''
       if (key[0] === '-' && key[1] === '*') {
+        symbol = '-*'
         name = '-*' + this.key
       } else if (key[0] === '-' || key[0] === '*') {
+        symbol = key[0]
         name = key[0] + this.key
       }
       if (findItem) {
@@ -831,7 +834,7 @@ export default {
         }
       } else {
         this.selectArr.push({
-          i18n: this.$t(findKeyItem.i18n),
+          i18n: symbol + this.$t(findKeyItem.i18n),
           code: findKeyItem.i18n,
           name: name,
           realValue: [realValue],

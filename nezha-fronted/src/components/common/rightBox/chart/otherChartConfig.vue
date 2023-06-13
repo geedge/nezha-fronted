@@ -142,7 +142,7 @@
         <div class="topology-box">
           <div class="topology-mc"></div>
 <!--          <diagram :topoData="chartConfig.param.topo" :fromChartBox="true" :topologyIndexF="-1"/>-->
-          <meta2dMain v-if="iconArrayLoad" :meta2dId="'rightBoxChart'" :topoData="chartConfig.param.topo" :querysArray="querysArray" :params="{timeType: 5}" :iconArray="iconArray" @reload="reloadTopo" :isChart="true"/>
+          <meta2dMain v-if="iconArrayLoad" :showHeader="false" :meta2dId="'rightBoxChart'" :topoData="chartConfig.param.topo" :querysArray="querysArray" :params="{timeType: 5}" :iconArray="iconArray" @reload="reloadTopo" :isChart="true"/>
         </div>
       </el-form-item>
       <!--topplogy-->
@@ -338,7 +338,7 @@ import richTextEditor from '@/components/chart/richTextEditor'
 import beforeMeta2d from '@/components/common/mixin/beforeMeta2d'
 import meta2dMain from '@/components/common/project/meta2d/meta2dMain'
 import { clearTopology } from '@/components/common/js/common'
-import bus from "@/libs/bus";
+import bus from '@/libs/bus'
 export default {
   name: 'otherChartConfig',
   mixins: [publicConfig, chartTypeShow],
@@ -505,11 +505,15 @@ export default {
       // if (flag) {
       //   setTimeout(() => {
       //     this.$refs.rightBoxChartEdit.$refs.header.editMeta2d()
-      //   }, 1000)
+      //   }, 500)
       // }
       if (data) {
-        this.chartConfig.param.topo = data
-        this.change()
+        this.iconArrayLoad = false
+        this.$nextTick(() => {
+          this.iconArrayLoad = true
+          this.chartConfig.param.topo = data
+          this.change()
+        })
       }
     },
     saveTopo (topo) {

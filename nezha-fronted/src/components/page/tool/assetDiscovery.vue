@@ -15,7 +15,7 @@
               class="right-box__select"
               popper-class="right-box-select-top prevent-clickoutside ipSubnet-select"
               multiple
-              placeholder="请选择"
+              :placeholder="$t('el.select.placeholder')"
               style="width: 240px"
               size="small">
               <el-option
@@ -39,7 +39,7 @@
                   class="right-box__select"
                   popper-class="right-box-select-top prevent-clickoutside"
                   multiple
-                  placeholder="请选择"
+                  :placeholder="$t('el.select.placeholder')"
                   size="small">
                   <el-option
                     v-for="item in credentialData"
@@ -107,7 +107,7 @@
             </el-step> -->
             <el-step>
               <span class="nz-icon nz-icon-search" slot="icon"></span>
-              <p class="txt" slot="title">Discovery asset</p>
+              <p class="txt" slot="title">{{$t('tool.discoveryAsset')}}</p>
             </el-step>
           </el-steps>
         </div>
