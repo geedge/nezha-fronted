@@ -38,7 +38,7 @@
               :loading="chartListLoading"
             />
           </div>
-          <div v-if="dataJson.type" id="explore" class="explores" style='overflow:hidden;background: #fffffe; overflow-y: auto;height: calc(100% - 60px);display: flex;flex-direction: column'>
+          <div v-if="dataJson.type" id="explore" class="explores" style='overflow:hidden;background: #fffffe;height: calc(100% - 72px);display: flex;flex-direction: column'>
             <exploreItem
               ref="exploreItem"
               :key="dataJson.type"

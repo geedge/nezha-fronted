@@ -253,9 +253,8 @@ export default {
       this.rightBox.show = false
     },
     async uploadAsset (row) {
-      console.log(row)
       this.object = this.newObject()
-      this.object.name = row.name
+      this.object.name = row.sysName
       this.object.manageIp = row.ip
       this.object.dc = row.dc
       if (row.model && row.model.id) {
@@ -376,6 +375,10 @@ export default {
             this.done = response.data.task.done
             this.total = response.data.task.total
             this.process = response.data.task.process
+            // 防止数据为underfind 表格排序错误
+            response.data.list.forEach(item => {
+              item.sysName = item.sysName ? item.sysName : ''
+            })
             this.tableData.push(...response.data.list)
             // 收到数据，loading取消
             if (this.tableData.length) {

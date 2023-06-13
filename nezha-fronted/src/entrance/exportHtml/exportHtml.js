@@ -27,12 +27,32 @@ import pickTime from '@/components/common/pickTime'
 import nzDataList from '@/components/common/table/nzDataList'
 import mainMixin from '@/components/common/mixin/mainMixinFun'
 import Pagination from '@/components/common/pagination'
+import VueClipboard from 'vue-clipboard2'
+
+// 二次封装message 显示自动关闭进度条
+import Message from '@/components/common/message/index'
 
 Vue.component('element-set', elementSet) // 公用设置表头
 Vue.component('pick-time', pickTime)
 Vue.component('nzDataList', nzDataList)
 Vue.component('chartList', chartList)
 Vue.component('Pagination', Pagination) // 公用分页组件
+
+Vue.config.productionTip = false
+Vue.use(ElementUI)
+Vue.use(Vuex)
+Vue.use(VueResource)
+Vue.use(VueClipboard)
+const hasPermission = {
+  install (Vue, options) {
+    Vue.directive('has', {
+      inserted: (el, binding, vnode) => {}
+    })
+  }
+}
+Vue.use(hasPermission)
+
+Vue.prototype.$message = Message
 Vue.prototype.$axios = axios
 Vue.prototype.$post = post
 Vue.prototype.$get = get
@@ -89,19 +109,6 @@ Vue.mixin({
   },
   ...mainMixin
 })
-
-Vue.config.productionTip = false
-Vue.use(ElementUI)
-Vue.use(Vuex)
-Vue.use(VueResource)
-const hasPermission = {
-  install (Vue, options) {
-    Vue.directive('has', {
-      inserted: (el, binding, vnode) => {}
-    })
-  }
-}
-Vue.use(hasPermission)
 
 /* 指令 */
 Vue.directive('cancel', cancelWithChange)

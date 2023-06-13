@@ -1,5 +1,5 @@
 <template>
-  <div  class="explore list-page" style="background: #fffffe;padding: 10px 15px;">
+  <div  class="explore list-page" style="background: #fffffe;padding: 10px 15px;overflow-y: auto;">
     <div style="display: flex;justify-content: space-between;align-items: center;margin-bottom: 10px;">
       <span>{{dataJson.type == 1 ? 'Metric expression' : 'Log expression'}}</span>
       <span>
@@ -27,18 +27,24 @@
         </el-collapse-item>
         <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
           <div slot="title" class="explore-table-title">
-            {{$t('dashboard.dashboard.chartForm.typeVal.table.label')}}
+            <span>{{tableMode==='table'?$t('dashboard.dashboard.chartForm.typeVal.table.label'):$t('explore.row')}}</span>
+            <!-- 判断是否折叠 -->
+            <div class="tableMode" v-show="collapseValue.some(item=>item==2)">
+              <div class="tableMode-item" :class="{'active':tableMode==='table'}" @click.stop="tableMode='table'" tabindex="0">{{$t('dashboard.dashboard.chartForm.typeVal.table.label')}}</div>
+              <div class="tableMode-item" :class="{'active':tableMode==='row'}" @click.stop="tableMode='row'" tabindex="0">{{$t('explore.row')}}</div>
+            </div>
             <i
+              v-if="tableMode==='table'"
               class="nz-icon-gear nz-icon"
-              style="position: absolute;right: 10px;top: 8px"
+              style="position: absolute;right: 0px;top: 0px"
               @click.stop="tools.showCustomTableTitle = true"
               :title="$t('overall.selectColumns')"
-            >
-            </i>
+              tabindex="0"
+            ></i>
             <!-- 自定义table列 -->
             <transition name="el-zoom-in-top">
               <element-set
-                @click.stop
+                @click.stop="()=>{}"
                 v-if="tools.showCustomTableTitle"
                 :tableId="tableId"
                 ref="customTableTitle"
@@ -50,44 +56,102 @@
               ></element-set>
             </transition>
           </div>
-          <!-- 自定义table列 -->
-          <div class="nz-table-list explore-table">
-            <el-table
-              ref="exploreTable"
-              v-my-loading="tools.loading"
-              class="metric-table"
-              :data="tableData"
-              border
-              :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
-              tooltip-effect="light">
-              <el-table-column
-                v-for="(item, index) in tools.customTableTitle"
-                v-if="item.show"
-                :key="`col-${index}-${item.prop}`"
-                :label="item.label"
-                :prop="item.prop"
-                :resizable="false"
-                min-width="110px"
-                show-overflow-tooltip
-              >
-                <template slot-scope="scope" :column="item">
-                  <template v-if="item.prop === 'time'">{{timeFormate(scope.row.time)}}</template>
-                  <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-                  <template v-else>-</template>
+          <!-- table模式 -->
+          <template v-if="tableMode==='table'">
+            <div class="nz-table-list explore-table">
+              <el-table
+                ref="exploreTable"
+                v-my-loading="tools.loading"
+                class="metric-table"
+                :data="tableData"
+                :border="false"
+                :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
+                tooltip-effect="light">
+                <el-table-column
+                  v-for="(item, index) in tools.customTableTitle"
+                  v-if="item.show"
+                  :key="`col-${index}-${item.prop}`"
+                  :label="item.label"
+                  :prop="item.prop"
+                  :resizable="false"
+                  :min-width="110"
+                  show-overflow-tooltip
+                >
+                  <template slot-scope="scope" :column="item">
+                    <template v-if="item.prop === 'time'">{{timeFormate(scope.row.time)}}</template>
+                    <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+                    <template v-else>-</template>
+                  </template>
+                </el-table-column>
+                <template slot="empty">
+                  <div v-if="!tools.loading" class="table-no-data">
+                    <svg class="icon" aria-hidden="true">
+                      <use xlink:href="#nz-icon-no-data-list"></use>
+                    </svg>
+                    <div class="table-no-data__title">No results found</div>
+                  </div>
+                  <div v-else>&nbsp;</div>
                 </template>
-              </el-table-column>
-              <template slot="empty">
-                <div v-if="!tools.loading" class="table-no-data">
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#nz-icon-no-data-list"></use>
-                  </svg>
-                  <div class="table-no-data__title">No results found</div>
-                </div>
-                <div v-else>&nbsp;</div>
-              </template>
-            </el-table>
-          </div>
-          <pagination ref="Pagination" :page-obj="pageObj" @pageNo='pageNo' @pageSize='pageSize'></pagination>
+              </el-table>
+            </div>
+            <pagination ref="Pagination" :page-obj="pageObj" @pageNo='pageNo' @pageSize='pageSize'></pagination>
+          </template>
+          <!-- row模式 -->
+          <template v-else>
+            <div class="expand-results">
+              <div>
+                <span>{{$t('explore.expandResults')}}</span>
+                <el-switch v-model="expandResults" @click.native.stop tabindex="0"></el-switch>
+              </div>
+              <span>{{$t('explore.resultSeries')}}：{{this.storedTableData.length}}</span>
+            </div>
+            <div class="nz-table-list explore-table">
+              <el-table
+                v-my-loading="tools.loading"
+                class="row-table"
+                :class="{'expand-results-table':expandResults}"
+                :data="storedTableData"
+                :show-header="false"
+                :cell-style="{verticalAlign: 'top'}">
+                <el-table-column
+                  prop="element"
+                  :resizable="true"
+                  :min-width="1000"
+                  column-key="element"
+                  :label="$t('dashboard.dashboard.chartForm.element')">
+                  <template slot-scope="scope">
+                    <copy :copyData='scope.row.element' :showInfo='scope.row.element'>
+                      <template slot="copy-text">
+                        <span v-if="expandResults" v-html="scope.row.expandElement"></span>
+                        <span v-else v-html="scope.row.colorElement"></span>
+                      </template>
+                    </copy>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  :resizable="false"
+                  prop="value"
+                  column-key="value"
+                  :label="$t('overall.value')"
+                  :min-width="110"
+                  align="right">
+                  <template slot-scope="scope">
+                    <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
+                    <span>{{scope.row.value||'-'}}</span>
+                  </template>
+                </el-table-column>
+                <template slot="empty">
+                  <div v-if="!tools.loading" class="table-no-data">
+                    <svg class="icon" aria-hidden="true">
+                      <use xlink:href="#nz-icon-no-data-list"></use>
+                    </svg>
+                    <div class="table-no-data__title">No results found</div>
+                  </div>
+                  <div v-else>&nbsp;</div>
+                </template>
+              </el-table>
+            </div>
+          </template>
         </el-collapse-item>
       </template>
       <!--log-->
@@ -111,7 +175,7 @@ import bus from '@/libs/bus'
 import chart from '@/components/page/dashboard/overview/chart'
 import logTab from '@/components/page/dashboard/explore/logTab'
 import chartUnit from '@/components/common/chartUnit'
-
+import copy from '@/components/common/copy'
 const dataJson = window.dataJson || {}
 export default {
   name: 'exploreItemHtml',
@@ -124,7 +188,8 @@ export default {
   components: {
     chart,
     logTab,
-    'chart-unit': chartUnit
+    'chart-unit': chartUnit,
+    copy
   },
   data () {
     return {
@@ -150,7 +215,10 @@ export default {
       showTab: ['1', '2'],
       chartLoading: false,
       logData: [],
-      logTabNoData: []
+      logTabNoData: [],
+      storedTableData: [],
+      tableMode: 'table',
+      expandResults: false
     }
   },
   mounted () {
@@ -168,6 +236,38 @@ export default {
     window.addEventListener('resize', this.logsCollapseChange)
   },
   methods: {
+    handlerRowData (data) {
+      const metric = this.$lodash.cloneDeep(data)
+      const metricName = metric.__name__ || ''
+      let temp = metricName
+      const labelColor = '#588874'// #66d9ef
+      const valueColor = '#A21615'// #74e680
+      let colorTemp = `<span>${metricName}</span>`
+      delete metric.__name__
+      temp += '{'
+      colorTemp += '<span>{</span>'
+      let expandTemp = colorTemp
+      const keys = Object.keys(metric)
+      for (const index in keys) {
+        const key = keys[index]
+        temp += key + '="' + metric[key] + '",'
+        colorTemp += `<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">"${metric[key]}"</span>`
+        expandTemp += `<span style="display:block;text-indent:1em"><span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">"${metric[key]}"</span>`
+        if (index < keys.length - 1) {
+          colorTemp += ','
+          expandTemp += ','
+        }
+        expandTemp += '</span>'
+      }
+      if (temp.endsWith(',')) {
+        temp = temp.substr(0, temp.length - 1)
+      }
+      temp += '}'
+      colorTemp += '<span>}</span>'
+      expandTemp += '<span>}</span>'
+      const rowData = { element: temp, colorElement: colorTemp, expandElement: expandTemp }
+      return rowData
+    },
     logsCollapseChange (activeNames, a, b) {
       this.$nextTick(() => {
         if (this.$refs.exploreChart) {
@@ -224,7 +324,7 @@ export default {
             const data = response.data.result
             if (data) {
               data.forEach((result, i) => {
-                const metrics = Object.assign({}, result.metric)
+                let metrics = Object.assign({}, result.metric)
                 if (!Array.isArray(result.values)) {
                   const val = result
                   result = {
@@ -232,7 +332,6 @@ export default {
                   }
                 }
                 this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnitType || 2).compute(result.values[0][1], null, 2))
-
                 this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.values[0][0] * 1000)))
                 for (const key in metrics) {
                   const label = {
@@ -247,6 +346,10 @@ export default {
                     tLabels.push(label)
                   }
                 }
+                // 处理row模式数据
+                const rowData = this.handlerRowData(result.metric)
+                rowData.value = metrics['value#' + index]
+                metrics = Object.assign(metrics, rowData)
                 tData.push(metrics)
               })
             }

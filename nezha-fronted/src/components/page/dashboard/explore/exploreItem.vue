@@ -113,7 +113,7 @@
             ></promql-input>
           </template>
         </div>
-        <div ref="scrollWrap" style="position: relative;z-index: 1;height: auto; padding: 0 20px 10px;">
+        <div style="position: relative;z-index: 1;height: auto; padding: 0 20px 10px;">
           <el-collapse v-show="!showIntroduce" v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
             <!--metric-->
             <template v-if="showMetrics">
@@ -3535,8 +3535,6 @@ import logTab from './logTab'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import copy from '@/components/common/copy'
-import { Loading } from 'element-ui'
-
 export default {
   name: 'exploreItem',
   components: {
@@ -3993,13 +3991,6 @@ export default {
                   }
                   data.forEach((result, i) => {
                     let metrics = Object.assign({}, result.metric)
-                    // if (!Array.isArray(result.value)) {
-                    //   const val = result
-                    //   result = {
-                    //     metric: {},
-                    //     value: ['', val]
-                    //   }
-                    // }
                     this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit || 2).compute(result.value[1], null, 2))
                     this.$set(metrics, 'time', bus.timeFormate(bus.computeTimezone(result.value[0] * 1000)))
                     for (const key in metrics) {
