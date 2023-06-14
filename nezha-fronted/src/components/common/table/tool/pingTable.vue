@@ -25,6 +25,8 @@
       :width="`${item.width}`"
       class="data-column"
       :sortable="item.sortable"
+      :sort-orders="['ascending', 'descending']"
+      :sort-method="item.sortMethod"
     >
       <template slot="header">
         <span class="data-column__span">{{item.label}}</span>
@@ -56,6 +58,7 @@
 
 <script>
 import table from '@/components/common/mixin/table'
+import lodash from 'lodash'
 export default {
   name: 'pingTable',
   mixins: [table],
@@ -69,7 +72,8 @@ export default {
           label: this.$t('overall.dc'),
           prop: 'dc',
           sortable: true,
-          minWidth: 200
+          minWidth: 200,
+          sortMethod: this.sortMethod('dc.name')
         }, {
           label: this.$t('ping.sourceIp'),
           prop: 'source',
@@ -111,6 +115,20 @@ export default {
     }
   },
   methods: {
+    // 防止prop为对象时 排序不正确
+    sortMethod (prop) {
+      return function (a, b) {
+        const val1 = lodash.get(a, prop, '')
+        const val2 = lodash.get(b, prop, '')
+        if (val1 < val2) {
+          return -1
+        } else if (val1 > val2) {
+          return 1
+        } else {
+          return 0
+        }
+      }
+    }
   }
 }
 </script>
