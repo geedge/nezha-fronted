@@ -7,7 +7,7 @@
           <span @click="split"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
         </div>
         <!-- 顶部工具栏 -->
-        <div class="top-tools" style="z-index: 2001;position:relative;">
+        <div class="top-tools" style="z-index: 2">
           <el-row class="block-col-2" style="width: 300px;">
             <el-col>
               <el-dropdown trigger="click">
@@ -111,7 +111,7 @@
             ></promql-input>
           </template>
         </div>
-        <div ref="scrollWrap" style="height: auto; padding: 0 20px 4px;">
+        <div ref="scrollWrap" style="position: relative;z-index: 1;height: auto; padding: 0 20px 4px;">
           <el-collapse v-show="!showIntroduce" v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
             <!--metric-->
             <template v-if="showMetrics">
