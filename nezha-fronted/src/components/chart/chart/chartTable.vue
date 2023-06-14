@@ -330,8 +330,12 @@ export default {
     // 本地正序
     asce (prop) {
       return function (obj1, obj2) {
-        const val1 = obj1.display[prop + 'display'].display.replace(/\s*/g, '')
-        const val2 = obj2.display[prop + 'display'].display.replace(/\s*/g, '')
+        let val1 = obj1.display[prop + 'display'].display.replace(/\s*/g, '')
+        let val2 = obj2.display[prop + 'display'].display.replace(/\s*/g, '')
+        if (!isNaN(val1) && !isNaN(val2)) {
+          val1 = Number(val1)
+          val2 = Number(val2)
+        }
         if (val1 < val2) {
           return -1
         } else if (val1 > val2) {
@@ -344,8 +348,12 @@ export default {
     // 本地倒序
     desc (prop) {
       return function (obj1, obj2) {
-        const val1 = obj1.display[prop + 'display'].display.replace(/\s*/g, '')
-        const val2 = obj2.display[prop + 'display'].display.replace(/\s*/g, '')
+        let val1 = obj1.display[prop + 'display'].display.replace(/\s*/g, '')
+        let val2 = obj2.display[prop + 'display'].display.replace(/\s*/g, '')
+        if (!isNaN(val1) && !isNaN(val2)) {
+          val1 = Number(val1)
+          val2 = Number(val2)
+        }
         if (val1 < val2) {
           return -1
         } else if (val1 > val2) {

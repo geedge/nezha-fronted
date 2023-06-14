@@ -572,9 +572,9 @@ export default {
           if (!obj.param.visibility) {
             obj.param.visibility = {
               varName: '',
-              operator: '',
+              operator: 'equal',
               varValue: '',
-              result: ''
+              result: 'show'
             }
           }
           if (obj.type === 'group' && !obj.param.repeat) {
