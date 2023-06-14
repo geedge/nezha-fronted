@@ -18,7 +18,7 @@
               <span>  {{dateFormat(dataJson.start * 1000)}} - {{dateFormat(dataJson.end * 1000)}} ({{dataJson.timezone}})</span>
             </div>
           </div>
-          <div v-if="!dataJson.type" id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow:hidden; overflow-y: auto;height: calc(100% - 60px);display: flex;flex-direction: column'>
+          <div v-if="!dataJson.type" id="dashboardScrollbar" class="box-content"  ref="dashboardScrollbar" style='overflow:hidden; overflow-y: auto;height: calc(100% - 72px);display: flex;flex-direction: column'>
             <chartList
               ref="chartList"
               name="dashboard"
@@ -38,7 +38,7 @@
               :loading="chartListLoading"
             />
           </div>
-          <div v-if="dataJson.type" id="explore" class="explores" style='overflow:hidden;background: #fffffe; overflow-y: auto;height: calc(100% - 60px);display: flex;flex-direction: column'>
+          <div v-if="dataJson.type" id="explore" class="explores" style='overflow:hidden;background: #fffffe; height: calc(100% - 72px);display: flex;flex-direction: column'>
             <exploreItem
               ref="exploreItem"
               :key="dataJson.type"
@@ -137,6 +137,5 @@ export default {
     text-align: left;
     color: #2c3e50;
     margin-top: 10px;
-    padding-bottom: 20px;
   }
 </style>

@@ -1,107 +1,109 @@
 <template>
-  <div  class="explore list-page" style="background: #fffffe;padding: 10px 15px;">
-    <div style="display: flex;justify-content: space-between;align-items: center;margin-bottom: 10px;">
-      <span>{{dataJson.type == 1 ? 'Metric expression' : 'Log expression'}}</span>
-      <span>
-       <chart-unit v-if="showMetrics" v-model="chartUnitType" ref="chartUnit" class="margin-r-10"></chart-unit>
-      </span>
-    </div>
-    <div v-for="(item, index) in dataJson.data" :key = 'index' style="display: flex;margin-bottom: 10px">
-      <div style="flex: 1;margin-right: 10px;border: 1px solid #ddd;border-radius: 2px;padding: 0 8px;line-height: 30px;width: calc(100% - 30px);word-break: break-word;">{{item.expression}}</div>
-      <button
-        class="top-tool-btn"
-        :title="item.state?$t('overall.enabled'):$t('profile.close')"
-        @click="stateChange(index)"
-      >
-        <i  v-if="item.state" class="nz-icon nz-icon-mimakejian"></i>
-        <i v-else class="nz-icon nz-icon-mimabukejian" style="fontSize:16px"></i>
-      </button>
-    </div>
-    <el-collapse v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
-      <!--metric-->
-      <template v-if="showMetrics">
-        <el-collapse-item name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
-          <div class="chart-room">
-            <chart ref="exploreChart" :unit="chartUnitType" :timeRange="filterTime"></chart>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
-          <div slot="title" class="explore-table-title">
-            {{$t('dashboard.dashboard.chartForm.typeVal.table.label')}}
-            <i
-              class="nz-icon-gear nz-icon"
-              style="position: absolute;right: 10px;top: 8px"
-              @click.stop="tools.showCustomTableTitle = true"
-              :title="$t('overall.selectColumns')"
-            >
-            </i>
-            <!-- 自定义table列 -->
-            <transition name="el-zoom-in-top">
-              <element-set
-                @click.stop
-                v-if="tools.showCustomTableTitle"
-                :tableId="tableId"
-                ref="customTableTitle"
-                :custom-table-title="tools.customTableTitle"
-                :original-table-title="tableTitle"
-                :operation-true="true"
-                @close="tools.showCustomTableTitle = false"
-                @update="updateCustomTableTitle"
-              ></element-set>
-            </transition>
-          </div>
-          <!-- 自定义table列 -->
-          <div class="nz-table-list explore-table">
-            <el-table
-              ref="exploreTable"
-              v-my-loading="tools.loading"
-              class="metric-table"
-              :data="tableData"
-              border
-              :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
-              tooltip-effect="light">
-              <el-table-column
-                v-for="(item, index) in tools.customTableTitle"
-                v-if="item.show"
-                :key="`col-${index}`"
-                :label="item.label"
-                :prop="item.prop"
-                :resizable="false"
-                min-width="110px"
-                show-overflow-tooltip
+  <div style="height:100%;position:relative;">
+    <div class="explore list-page" style="background: #fffffe;padding: 10px 15px;overflow-x: hidden;overflow-y: auto;">
+      <div style="display: flex;justify-content: space-between;align-items: center;margin-bottom: 10px;">
+        <span>{{dataJson.type == 1 ? 'Metric expression' : 'Log expression'}}</span>
+        <span>
+        <chart-unit v-if="showMetrics" v-model="chartUnitType" ref="chartUnit" class="margin-r-10"></chart-unit>
+        </span>
+      </div>
+      <div v-for="(item, index) in dataJson.data" :key = 'index' style="display: flex;margin-bottom: 10px">
+        <div style="flex: 1;margin-right: 10px;border: 1px solid #ddd;border-radius: 2px;padding: 0 8px;line-height: 30px;width: calc(100% - 30px);word-break: break-word;">{{item.expression}}</div>
+        <button
+          class="top-tool-btn"
+          :title="item.state?$t('overall.enabled'):$t('profile.close')"
+          @click="stateChange(index)"
+        >
+          <i  v-if="item.state" class="nz-icon nz-icon-mimakejian"></i>
+          <i v-else class="nz-icon nz-icon-mimabukejian" style="fontSize:16px"></i>
+        </button>
+      </div>
+      <el-collapse v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
+        <!--metric-->
+        <template v-if="showMetrics">
+          <el-collapse-item name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+            <div class="chart-room">
+              <chart ref="exploreChart" :unit="chartUnitType" :timeRange="filterTime"></chart>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
+            <div slot="title" class="explore-table-title">
+              {{$t('dashboard.dashboard.chartForm.typeVal.table.label')}}
+              <i
+                class="nz-icon-gear nz-icon"
+                style="position: absolute;right: 10px;top: 8px"
+                @click.stop="tools.showCustomTableTitle = true"
+                :title="$t('overall.selectColumns')"
               >
-                <template slot-scope="scope" :column="item">
-                  <template v-if="item.prop === 'time'">{{timeFormate(scope.row.time)}}</template>
-                  <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-                  <template v-else>-</template>
+              </i>
+              <!-- 自定义table列 -->
+              <transition name="el-zoom-in-top">
+                <element-set
+                  @click.stop
+                  v-if="tools.showCustomTableTitle"
+                  :tableId="tableId"
+                  ref="customTableTitle"
+                  :custom-table-title="tools.customTableTitle"
+                  :original-table-title="tableTitle"
+                  :operation-true="true"
+                  @close="tools.showCustomTableTitle = false"
+                  @update="updateCustomTableTitle"
+                ></element-set>
+              </transition>
+            </div>
+            <!-- 自定义table列 -->
+            <div class="nz-table-list explore-table">
+              <el-table
+                ref="exploreTable"
+                v-my-loading="tools.loading"
+                class="metric-table"
+                :data="tableData"
+                border
+                :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
+                tooltip-effect="light">
+                <el-table-column
+                  v-for="(item, index) in tools.customTableTitle"
+                  v-if="item.show"
+                  :key="`col-${index}`"
+                  :label="item.label"
+                  :prop="item.prop"
+                  :resizable="false"
+                  min-width="110px"
+                  show-overflow-tooltip
+                >
+                  <template slot-scope="scope" :column="item">
+                    <template v-if="item.prop === 'time'">{{timeFormate(scope.row.time)}}</template>
+                    <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+                    <template v-else>-</template>
+                  </template>
+                </el-table-column>
+                <template slot="empty">
+                  <div v-if="!tools.loading" class="table-no-data">
+                    <svg class="icon" aria-hidden="true">
+                      <use xlink:href="#nz-icon-no-data-list"></use>
+                    </svg>
+                    <div class="table-no-data__title">No results found</div>
+                  </div>
+                  <div v-else>&nbsp;</div>
                 </template>
-              </el-table-column>
-              <template slot="empty">
-                <div v-if="!tools.loading" class="table-no-data">
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#nz-icon-no-data-list"></use>
-                  </svg>
-                  <div class="table-no-data__title">No results found</div>
-                </div>
-                <div v-else>&nbsp;</div>
-              </template>
-            </el-table>
-          </div>
-          <pagination ref="Pagination" :page-obj="pageObj" @pageNo='pageNo' @pageSize='pageSize'></pagination>
-        </el-collapse-item>
-      </template>
-      <!--log-->
-      <template v-else>
-        <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
-          <div class="chart-room">
-            <chart ref="logChart" :unit="chartUnitType" v-my-loading="chartLoading" :timeRange="filterTime"></chart>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-          <log-tab ref="logDetail" :timeRange="filterTime" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="0" v-my-loading="chartLoading"></log-tab>
-        </el-collapse-item>
-      </template>
-    </el-collapse>
+              </el-table>
+            </div>
+            <pagination ref="Pagination" :page-obj="pageObj" @pageNo='pageNo' @pageSize='pageSize'></pagination>
+          </el-collapse-item>
+        </template>
+        <!--log-->
+        <template v-else>
+          <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+            <div class="chart-room">
+              <chart ref="logChart" :unit="chartUnitType" v-my-loading="chartLoading" :timeRange="filterTime"></chart>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
+            <log-tab ref="logDetail" :timeRange="filterTime" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="0" v-my-loading="chartLoading"></log-tab>
+          </el-collapse-item>
+        </template>
+      </el-collapse>
+    </div>
   </div>
 </template>
 
@@ -119,7 +121,8 @@ export default {
     triggerButtonClass: { // 触发下拉事件的按钮的class
       type: String,
       default: 'top-tool-btn'
-    }
+    },
+    tabIndex: Number
   },
   components: {
     chart,
