@@ -378,6 +378,7 @@ export default {
             // 防止数据为underfind 表格排序错误
             response.data.list.forEach(item => {
               item.sysName = item.sysName ? item.sysName : ''
+              item.sysObjectId = item.sysObjectId ? item.sysObjectId : ''
             })
             this.tableData.push(...response.data.list)
             // 收到数据，loading取消

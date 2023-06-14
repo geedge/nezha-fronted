@@ -30,7 +30,6 @@
       :resizable="true"
       :width="`${item.width}`"
       class="data-column"
-      :sort-orders="['ascending', 'descending']"
       :sortable="item.sortable"
       :sort-orders="['ascending', 'descending']"
       :sort-method="item.sortMethod"
