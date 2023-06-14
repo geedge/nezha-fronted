@@ -1,171 +1,173 @@
 <template>
-  <div  class="explore list-page" style="background: #fffffe;padding: 10px 15px;overflow-y: auto;">
-    <div style="display: flex;justify-content: space-between;align-items: center;margin-bottom: 10px;">
-      <span>{{dataJson.type == 1 ? 'Metric expression' : 'Log expression'}}</span>
-      <span>
-       <chart-unit v-if="showMetrics" v-model="chartUnitType" ref="chartUnit" class="margin-r-10"></chart-unit>
-      </span>
-    </div>
-    <div v-for="(item, index) in dataJson.data" :key = 'index' style="display: flex;margin-bottom: 10px">
-      <div style="flex: 1;margin-right: 10px;border: 1px solid #ddd;border-radius: 2px;padding: 0 8px;line-height: 30px;width: calc(100% - 30px);word-break: break-word;">{{item.expression}}</div>
-      <button
-        class="top-tool-btn"
-        :title="item.state?$t('overall.enabled'):$t('profile.close')"
-        @click="stateChange(index)"
-      >
-        <i  v-if="item.state" class="nz-icon nz-icon-mimakejian"></i>
-        <i v-else class="nz-icon nz-icon-mimabukejian" style="fontSize:16px"></i>
-      </button>
-    </div>
-    <el-collapse v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
-      <!--metric-->
-      <template v-if="showMetrics">
-        <el-collapse-item name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
-          <div class="chart-room">
-            <chart ref="exploreChart" :unit="chartUnitType" :timeRange="filterTime"></chart>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
-          <div slot="title" class="explore-table-title">
-            <span>{{tableMode==='table'?$t('dashboard.dashboard.chartForm.typeVal.table.label'):$t('explore.row')}}</span>
-            <!-- 判断是否折叠 -->
-            <div class="tableMode" v-show="collapseValue.some(item=>item==2)">
-              <div class="tableMode-item" :class="{'active':tableMode==='table'}" @click.stop="tableMode='table'" tabindex="0">{{$t('dashboard.dashboard.chartForm.typeVal.table.label')}}</div>
-              <div class="tableMode-item" :class="{'active':tableMode==='row'}" @click.stop="tableMode='row'" tabindex="0">{{$t('explore.row')}}</div>
+  <div style="height:100%;position:relative;">
+    <div class="explore list-page" style="background: #fffffe;padding: 10px 15px;overflow-x: hidden;overflow-y: auto;">
+      <div style="display: flex;justify-content: space-between;align-items: center;margin-bottom: 10px;">
+        <span>{{dataJson.type == 1 ? 'Metric expression' : 'Log expression'}}</span>
+        <span>
+        <chart-unit v-if="showMetrics" v-model="chartUnitType" ref="chartUnit" class="margin-r-10"></chart-unit>
+        </span>
+      </div>
+      <div v-for="(item, index) in dataJson.data" :key = 'index' style="display: flex;margin-bottom: 10px">
+        <div style="flex: 1;margin-right: 10px;border: 1px solid #ddd;border-radius: 2px;padding: 0 8px;line-height: 30px;width: calc(100% - 30px);word-break: break-word;">{{item.expression}}</div>
+        <button
+          class="top-tool-btn"
+          :title="item.state?$t('overall.enabled'):$t('profile.close')"
+          @click="stateChange(index)"
+        >
+          <i  v-if="item.state" class="nz-icon nz-icon-mimakejian"></i>
+          <i v-else class="nz-icon nz-icon-mimabukejian" style="fontSize:16px"></i>
+        </button>
+      </div>
+      <el-collapse v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
+        <!--metric-->
+        <template v-if="showMetrics">
+          <el-collapse-item name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+            <div class="chart-room">
+              <chart ref="exploreChart" :unit="chartUnitType" :timeRange="filterTime"></chart>
             </div>
-            <i
-              v-if="tableMode==='table'"
-              class="nz-icon-gear nz-icon"
-              style="position: absolute;right: 0px;top: 0px"
-              @click.stop="tools.showCustomTableTitle = true"
-              :title="$t('overall.selectColumns')"
-              tabindex="0"
-            ></i>
-            <!-- 自定义table列 -->
-            <transition name="el-zoom-in-top">
-              <element-set
-                @click.stop="()=>{}"
-                v-if="tools.showCustomTableTitle"
-                :tableId="tableId"
-                ref="customTableTitle"
-                :custom-table-title="tools.customTableTitle"
-                :original-table-title="tableTitle"
-                :operation-true="true"
-                @close="tools.showCustomTableTitle = false"
-                @update="updateCustomTableTitle"
-              ></element-set>
-            </transition>
-          </div>
-          <!-- table模式 -->
-          <template v-if="tableMode==='table'">
-            <div class="nz-table-list explore-table">
-              <el-table
-                ref="exploreTable"
-                v-my-loading="tools.loading"
-                class="metric-table"
-                :data="tableData"
-                :border="false"
-                :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
-                tooltip-effect="light">
-                <el-table-column
-                  v-for="(item, index) in tools.customTableTitle"
-                  v-if="item.show"
-                  :key="`col-${index}-${item.prop}`"
-                  :label="item.label"
-                  :prop="item.prop"
-                  :resizable="false"
-                  :min-width="110"
-                  show-overflow-tooltip
-                >
-                  <template slot-scope="scope" :column="item">
-                    <template v-if="item.prop === 'time'">{{timeFormate(scope.row.time)}}</template>
-                    <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-                    <template v-else>-</template>
-                  </template>
-                </el-table-column>
-                <template slot="empty">
-                  <div v-if="!tools.loading" class="table-no-data">
-                    <svg class="icon" aria-hidden="true">
-                      <use xlink:href="#nz-icon-no-data-list"></use>
-                    </svg>
-                    <div class="table-no-data__title">No results found</div>
-                  </div>
-                  <div v-else>&nbsp;</div>
-                </template>
-              </el-table>
-            </div>
-            <pagination ref="Pagination" :page-obj="pageObj" @pageNo='pageNo' @pageSize='pageSize'></pagination>
-          </template>
-          <!-- row模式 -->
-          <template v-else>
-            <div class="expand-results">
-              <div>
-                <span>{{$t('explore.expandResults')}}</span>
-                <el-switch v-model="expandResults" @click.native.stop tabindex="0"></el-switch>
+          </el-collapse-item>
+          <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
+            <div slot="title" class="explore-table-title">
+              <span>{{tableMode==='table'?$t('dashboard.dashboard.chartForm.typeVal.table.label'):$t('explore.row')}}</span>
+              <!-- 判断是否折叠 -->
+              <div class="tableMode" v-show="collapseValue.some(item=>item==2)">
+                <div class="tableMode-item" :class="{'active':tableMode==='table'}" @click.stop="tableMode='table'" tabindex="0">{{$t('dashboard.dashboard.chartForm.typeVal.table.label')}}</div>
+                <div class="tableMode-item" :class="{'active':tableMode==='row'}" @click.stop="tableMode='row'" tabindex="0">{{$t('explore.row')}}</div>
               </div>
-              <span>{{$t('explore.resultSeries')}}：{{this.storedTableData.length}}</span>
+              <i
+                v-if="tableMode==='table'"
+                class="nz-icon-gear nz-icon"
+                style="position: absolute;right: 0px;top: 0px"
+                @click.stop="tools.showCustomTableTitle = true"
+                :title="$t('overall.selectColumns')"
+                tabindex="0"
+              ></i>
+              <!-- 自定义table列 -->
+              <transition name="el-zoom-in-top">
+                <element-set
+                  @click.stop="()=>{}"
+                  v-if="tools.showCustomTableTitle"
+                  :tableId="tableId"
+                  ref="customTableTitle"
+                  :custom-table-title="tools.customTableTitle"
+                  :original-table-title="tableTitle"
+                  :operation-true="true"
+                  @close="tools.showCustomTableTitle = false"
+                  @update="updateCustomTableTitle"
+                ></element-set>
+              </transition>
             </div>
-            <div class="nz-table-list explore-table">
-              <el-table
-                v-my-loading="tools.loading"
-                class="row-table"
-                :class="{'expand-results-table':expandResults}"
-                :data="storedTableData"
-                :show-header="false"
-                :cell-style="{verticalAlign: 'top'}">
-                <el-table-column
-                  prop="element"
-                  :resizable="true"
-                  :min-width="1000"
-                  column-key="element"
-                  :label="$t('dashboard.dashboard.chartForm.element')">
-                  <template slot-scope="scope">
-                    <copy :copyData='scope.row.element' :showInfo='scope.row.element'>
-                      <template slot="copy-text">
-                        <span v-if="expandResults" v-html="scope.row.expandElement"></span>
-                        <span v-else v-html="scope.row.colorElement"></span>
-                      </template>
-                    </copy>
+            <!-- table模式 -->
+            <template v-if="tableMode==='table'">
+              <div class="nz-table-list explore-table">
+                <el-table
+                  ref="exploreTable"
+                  v-my-loading="tools.loading"
+                  class="metric-table"
+                  :data="tableData"
+                  :border="false"
+                  :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
+                  tooltip-effect="light">
+                  <el-table-column
+                    v-for="(item, index) in tools.customTableTitle"
+                    v-if="item.show"
+                    :key="`col-${index}-${item.prop}`"
+                    :label="item.label"
+                    :prop="item.prop"
+                    :resizable="false"
+                    :min-width="110"
+                    show-overflow-tooltip
+                  >
+                    <template slot-scope="scope" :column="item">
+                      <template v-if="item.prop === 'time'">{{timeFormate(scope.row.time)}}</template>
+                      <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+                      <template v-else>-</template>
+                    </template>
+                  </el-table-column>
+                  <template slot="empty">
+                    <div v-if="!tools.loading" class="table-no-data">
+                      <svg class="icon" aria-hidden="true">
+                        <use xlink:href="#nz-icon-no-data-list"></use>
+                      </svg>
+                      <div class="table-no-data__title">No results found</div>
+                    </div>
+                    <div v-else>&nbsp;</div>
                   </template>
-                </el-table-column>
-                <el-table-column
-                  :resizable="false"
-                  prop="value"
-                  column-key="value"
-                  :label="$t('overall.value')"
-                  :min-width="110"
-                  align="right">
-                  <template slot-scope="scope">
-                    <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
-                    <span>{{scope.row.value||'-'}}</span>
+                </el-table>
+              </div>
+              <pagination ref="Pagination" :page-obj="pageObj" @pageNo='pageNo' @pageSize='pageSize'></pagination>
+            </template>
+            <!-- row模式 -->
+            <template v-else>
+              <div class="expand-results">
+                <div>
+                  <span>{{$t('explore.expandResults')}}</span>
+                  <el-switch v-model="expandResults" @click.native.stop tabindex="0"></el-switch>
+                </div>
+                <span>{{$t('explore.resultSeries')}}：{{this.storedTableData.length}}</span>
+              </div>
+              <div class="nz-table-list explore-table">
+                <el-table
+                  v-my-loading="tools.loading"
+                  class="row-table"
+                  :class="{'expand-results-table':expandResults}"
+                  :data="storedTableData"
+                  :show-header="false"
+                  :cell-style="{verticalAlign: 'top'}">
+                  <el-table-column
+                    prop="element"
+                    :resizable="true"
+                    :min-width="1000"
+                    column-key="element"
+                    :label="$t('dashboard.dashboard.chartForm.element')">
+                    <template slot-scope="scope">
+                      <copy :copyData='scope.row.element' :showInfo='scope.row.element'>
+                        <template slot="copy-text">
+                          <span v-if="expandResults" v-html="scope.row.expandElement"></span>
+                          <span v-else v-html="scope.row.colorElement"></span>
+                        </template>
+                      </copy>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    :resizable="false"
+                    prop="value"
+                    column-key="value"
+                    :label="$t('overall.value')"
+                    :min-width="110"
+                    align="right">
+                    <template slot-scope="scope">
+                      <h2 class="expand-value" v-if="expandResults">{{$t('overall.value')}}</h2>
+                      <span>{{scope.row.value||'-'}}</span>
+                    </template>
+                  </el-table-column>
+                  <template slot="empty">
+                    <div v-if="!tools.loading" class="table-no-data">
+                      <svg class="icon" aria-hidden="true">
+                        <use xlink:href="#nz-icon-no-data-list"></use>
+                      </svg>
+                      <div class="table-no-data__title">No results found</div>
+                    </div>
+                    <div v-else>&nbsp;</div>
                   </template>
-                </el-table-column>
-                <template slot="empty">
-                  <div v-if="!tools.loading" class="table-no-data">
-                    <svg class="icon" aria-hidden="true">
-                      <use xlink:href="#nz-icon-no-data-list"></use>
-                    </svg>
-                    <div class="table-no-data__title">No results found</div>
-                  </div>
-                  <div v-else>&nbsp;</div>
-                </template>
-              </el-table>
+                </el-table>
+              </div>
+            </template>
+          </el-collapse-item>
+        </template>
+        <!--log-->
+        <template v-else>
+          <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
+            <div class="chart-room">
+              <chart ref="logChart" :unit="chartUnitType" v-my-loading="chartLoading" :timeRange="filterTime"></chart>
             </div>
-          </template>
-        </el-collapse-item>
-      </template>
-      <!--log-->
-      <template v-else>
-        <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" :title="$t('explore.graph')" class="el-collapse-item__height">
-          <div class="chart-room">
-            <chart ref="logChart" :unit="chartUnitType" v-my-loading="chartLoading" :timeRange="filterTime"></chart>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-          <log-tab ref="logDetail" :timeRange="filterTime" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="0" v-my-loading="chartLoading"></log-tab>
-        </el-collapse-item>
-      </template>
-    </el-collapse>
+          </el-collapse-item>
+          <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
+            <log-tab ref="logDetail" :timeRange="filterTime" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="0" v-my-loading="chartLoading"></log-tab>
+          </el-collapse-item>
+        </template>
+      </el-collapse>
+    </div>
   </div>
 </template>
 
@@ -183,7 +185,8 @@ export default {
     triggerButtonClass: { // 触发下拉事件的按钮的class
       type: String,
       default: 'top-tool-btn'
-    }
+    },
+    tabIndex: Number
   },
   components: {
     chart,
