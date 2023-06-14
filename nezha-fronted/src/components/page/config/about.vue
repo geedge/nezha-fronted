@@ -54,6 +54,24 @@ export default {
       },
       activities: [
         {
+          timestamp: 'Release 23.07 - Jul 2023',
+          content: [{
+            chinese: '[FEATURE] 新增资产发现功能',
+            english: '[FEATURE] Added Asset Discovery feature'
+          }, {
+            chinese: '[FEATURE] 图表支持数据链接，构建链接时可以使用变量',
+            english: '[FEATURE] Charts support data links, and variables can be used when building links'
+          }, {
+            chinese: '[ENHANCEMENT] 告警消息页面检索功能增强，支持模糊匹配，正向筛选，反向筛选',
+            english: '[ENHANCEMENT] The retrieval function of the alert message page is enhanced, supporting fuzzy matching, forward filtering, and reverse filtering'
+          }, {
+            chinese: '[ENHANCEMENT] 探索页面支持表格、原始两种查看模式',
+            english: '[ENHANCEMENT] The explore page supports table and raw viewing modes'
+          }, {
+            chinese: '[ENHANCEMENT] 表格列表显示顺序支持用户自定义',
+            english: '[ENHANCEMENT] Table list display order supports user-defined'
+          }]
+        }, {
           timestamp: 'Release 23.04 - Apr 2023',
           content: [{
             chinese: '[FEATURE] 通过集成，您可以便捷的实现对新组件的指标采集和可视化',
