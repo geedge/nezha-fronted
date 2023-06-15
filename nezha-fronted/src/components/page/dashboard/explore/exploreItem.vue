@@ -4350,13 +4350,25 @@ export default {
         params.direction = this.$refs.logDetail ? this.$refs.logDetail.getDescending() : 'backward'
       }
       this.$store.dispatch('dispatchHomeLoading', true)
-      this.$get('/visual/explore/snapshot', params, 'blob').then(res => {
+      let total = 10
+      let loaded = 0
+      this.$get('/visual/explore/snapshot', params, {
+        onDownloadProgress: function (progressEvent) {
+          // 处理原生进度事件
+          total = progressEvent.total
+          loaded = progressEvent.loaded
+        }
+      }).then(res => {
         this.$store.dispatch('dispatchHomeLoading', false)
         const self = this
         let fileName = this.showMetrics ? 'Metrics explore' : 'Logs explore'
         const resFileName = ''
         if (resFileName) {
           fileName = resFileName
+        }
+        if (loaded < total) {
+          this.$message.error(res.msg || res.error || res || this.$t('NetWork Error'))
+          return
         }
         if (res.type == 'application/json') {
           const reader = new FileReader() // 创建一个FileReader实例
