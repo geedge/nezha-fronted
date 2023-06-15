@@ -18,16 +18,29 @@ export default {
         panelId: this.showPanel.id,
         start: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[0])),
         end: this.$stringTimeParseToUnix(bus.formateTimeToTime(this.searchTime[1])),
+        t: new Date().getTime(),
         vars: vars
       }
       this.$store.dispatch('dispatchHomeLoading', true)
-      this.$get('/visual/panel/snapshot', params, 'blob').then(res => {
+      let total = 10
+      let loaded = 0
+      this.$get('/visual/panel/snapshot', params, {
+        onDownloadProgress: function (progressEvent) {
+          // 处理原生进度事件
+          total = progressEvent.total
+          loaded = progressEvent.loaded
+        }
+      }).then(res => {
         this.$store.dispatch('dispatchHomeLoading', false)
         const self = this
         let fileName = name
         const resFileName = ''
         if (resFileName) {
           fileName = resFileName
+        }
+        if (loaded < total) {
+          this.$message.error(res.msg || res.error || res || this.$t('NetWork Error'))
+          return
         }
         if (res.type == 'application/json') {
           const reader = new FileReader() // 创建一个FileReader实例
@@ -54,8 +67,6 @@ export default {
           window.URL.revokeObjectURL(href) // 释放blob对象
         }
         this.$refs.topTool.closeDialog()
-      }, () => {
-        this.$message.error('123')
       })
     }
   }

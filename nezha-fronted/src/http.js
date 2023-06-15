@@ -103,12 +103,18 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-export function get (url, params, responseType) {
-  const config = {
-    params: params
-  }
-  if (responseType) {
-    config.responseType = responseType
+export function get (url, params, configs) {
+  let config = {}
+  if (configs) {
+    config = {
+      ...configs,
+      ...config,
+      params: params
+    }
+  } else {
+    config = {
+      params: params
+    }
   }
   return new Promise((resolve) => {
     axios.get(url, config).then(response => {
