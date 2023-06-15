@@ -330,6 +330,9 @@ function numberWithEConvent (num) {
       return num
     }
   }
+  if (isNaN(num) || num === null) {
+    return num
+  }
   return 0
 }
 /*
@@ -340,6 +343,9 @@ function numberWithEConvent (num) {
 * dot：保留的小数位，
 * */
 function asciiCompute (num, ascii, units, dot = 2) {
+  if (isNaN(num) || num === null) {
+    return num
+  }
   const scientificNotationValue = formatScientificNotation(num, dot)
   if (!numberWithEConvent(scientificNotationValue)) {
     return scientificNotationValue
@@ -446,6 +452,9 @@ function timeCompute (value, unit, dot = 0) {
 }
 // 保留两位有效数字
 function keepDoubleNumber (num) {
+  if (num === null) {
+    return num
+  }
   const decimal = num.toString()
   let returnNum = ''
   if (num == 0) {
