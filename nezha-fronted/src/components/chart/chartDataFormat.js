@@ -10,6 +10,9 @@ function none (value, index) {
   if (!numberWithEConvent(scientificNotationValue)) {
     return scientificNotationValue
   }
+  if (isNaN(value) || value=== null) {
+    return value
+  }
   return keepDoubleNumber(value)
 }
 function short (value, index, type = 1, dot) {
