@@ -137,7 +137,15 @@ export default {
     },
     // 导出快照
     downloadSnapshot () {
-      this.$get('/visual/dashboard/snapshot/download/' + this.tid, {}, 'blob').then(res => {
+      let total = 10
+      let loaded = 0
+      this.$get('/visual/dashboard/snapshot/download/' + this.tid, {}, {
+        onDownloadProgress: function (progressEvent) {
+          // 处理原生进度事件
+          total = progressEvent.total
+          loaded = progressEvent.loaded
+        }
+      }).then(res => {
         const self = this
         const fileName = this.showPanel.name
         if (res.type == 'application/json') {
@@ -147,6 +155,10 @@ export default {
             const { msg } = JSON.parse(reader.result)
             self.$message.error(msg) // 弹出错误提示
           }
+          return
+        }
+        if (loaded < total) {
+          this.$message.error(res.msg || res.error || res || this.$t('NetWork Error'))
           return
         }
         if (window.navigator.msSaveOrOpenBlob) {
@@ -166,8 +178,8 @@ export default {
         }
         this.prevent_opt.import = false
         this.$emit('update:snapshotVisible', false)
-      }, () => {
-        this.$message.error('123')
+      }, (res) => {
+        this.$message.error(res.msg || res.error)
       })
     },
     // 关闭定时器 取消任务
