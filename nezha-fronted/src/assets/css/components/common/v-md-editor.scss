@@ -21,6 +21,27 @@
       code{
         color: $--color-text-regular;
       }
+      &.copy-code-mode .v-md-copy-code-btn{
+        top: 1em;
+        right: 1em;
+        background: transparent;
+        box-shadow: none;
+        width: 16px;
+        height: 16px;
+        i{
+          font-size: 16px;
+          color: $--color-text-regular;
+        }
+      }
+    }
+    blockquote{
+      font-size: 13px;
+      font-weight: 600;
+      padding: 3px 15px;
+      margin-bottom: -1px;
+      color: $--color-text-regular;
+      border: 1px solid $--border-color-light;
+      background: $--alert-rule-background-color;
     }
   }
 }

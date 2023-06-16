@@ -50,24 +50,30 @@ import VMdPreview from '@kangc/v-md-editor/lib/preview'
 import '@kangc/v-md-editor/lib/style/preview.css'
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
 import '@kangc/v-md-editor/lib/theme/style/github.css'
+import hljs from 'highlight.js'
+// markdown支持代码复制
+import createCopyCodePlugin from '@/components/common/copy-code/index'
+import '@/components/common/copy-code/copy-code.css'
+VMdPreview.use(githubTheme, {
+  Hljs: hljs
+})
+VMdPreview.use(createCopyCodePlugin())
+Vue.use(VMdPreview)
+
 // Pace.on("done", function() {
 //   $self.isShowAuth = false;
 //   Pace.off("done");
 // })
 // highlightjs
-import hljs from 'highlight.js'
 
 // Pace.start();
-VMdPreview.use(githubTheme, {
-  Hljs: hljs
-})
+
 Pace.options = {
   minTime: 100,
   ghostTime: 100,
   restartOnRequestAfter: 100
 }
 window.Meta2d = Meta2d
-Vue.use(VMdPreview)
 // Vue.use(Pace)
 
 Vue.use(VueIntro)

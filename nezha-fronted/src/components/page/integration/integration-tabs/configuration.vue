@@ -1,7 +1,7 @@
 <template>
   <div class="integration-configuration">
     <div class="integration-configuration-scroll">
-      <v-md-preview :text="configuration"></v-md-preview>
+      <v-md-preview :text="configuration" @copy-code-success="handleCopyCodeSuccess"></v-md-preview>
     </div>
   </div>
 </template>
@@ -17,7 +17,9 @@ export default {
     }
   },
   methods: {
-
+    handleCopyCodeSuccess (code) {
+      this.$message.success({ message: this.$t('overall.copySuccess') })
+    }
   }
 }
 </script>
