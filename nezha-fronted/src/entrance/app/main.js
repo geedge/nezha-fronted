@@ -54,6 +54,12 @@ import hljs from 'highlight.js'
 // markdown支持代码复制
 import createCopyCodePlugin from '@/components/common/copy-code/index'
 import '@/components/common/copy-code/copy-code.css'
+VMdPreview.xss.extend({
+  // extend white list
+  whiteList: {
+    button: ['title']
+  }
+})
 VMdPreview.use(githubTheme, {
   Hljs: hljs
 })
