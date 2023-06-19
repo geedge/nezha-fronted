@@ -450,7 +450,6 @@ export default {
   methods: {
     renderDefaultParams () {
       const q = JSON.parse(this.$route.query.body)
-      console.log(q, 'q')
       this.state = q.state
       this.searchTime[0] = this.momentTz(q.startAt)
       this.searchTime[1] = this.momentTz(q.endAt)
@@ -465,7 +464,6 @@ export default {
         default:
           this.defaultPick = 0
       }
-      console.log(this.defaultPick)
       // this.defaultPick = 11
     },
     batchAck () {
@@ -600,7 +598,6 @@ export default {
       // this.sign = Number(row.alertRule.id)
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
-        console.log(this.currentMsg)
         this.$nextTick(() => {
           this.searchTimeDialog = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
           this.$store.dispatch('dispatchPanelTime', {
@@ -805,7 +802,6 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       // this.$set(this.searchLabel, 'state', this.state)
-      console.log(this.searchTime)
       if (this.searchTime && this.searchTime.length > 1 && this.searchTime[0] && this.searchTime[1]) {
         this.$set(this.searchLabel.body, 'startAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[0])), 'YYYY-MM-DD HH:mm:ss')])
         this.$set(this.searchLabel.body, 'endAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[1])), 'YYYY-MM-DD HH:mm:ss')])
@@ -839,7 +835,6 @@ export default {
         ...this.searchLabel,
         body: encodeURIComponent(JSON.stringify(this.searchLabel.body))
       }
-      console.log(this.searchLabel.body)
       this.$get('/alert/message/query', { ...queryParams }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {

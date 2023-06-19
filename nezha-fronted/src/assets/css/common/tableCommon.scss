@@ -49,6 +49,7 @@
     }
     .top-tool-left {
       display: flex;
+      position: relative;
       .nz-icon-xingzhuang{
         color: $--color-text-regular;
         cursor: pointer;

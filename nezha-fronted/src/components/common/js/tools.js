@@ -1099,7 +1099,6 @@ let heightLoad = function () {
 }
 export const loadMore = {
   bind (el, binding) {
-    console.log(el, binding, el.parentNode, 'bind')
     // 获取element，定义scroll
     const selectDom = binding.value.dom ? el.querySelector(binding.value.dom) : el
     heightLoad = bus.debounce(function () {

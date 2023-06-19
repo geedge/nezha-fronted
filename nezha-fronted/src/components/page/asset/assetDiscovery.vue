@@ -196,7 +196,6 @@ export default {
       this.rightBox.metaShow = true
     },
     force (item) {
-      console.log(item)
     },
     closeRightBox (refresh) {
       this.rightBox.show = false

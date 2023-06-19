@@ -219,7 +219,6 @@ export default {
       this.$refs.assetDiscoveryForm.validate(valid => {
         if (valid) {
           this.prevent_opt.save = true
-          console.log(this.editAssetDiscovery)
           const params = this.$lodash.cloneDeep(this.editAssetDiscovery)
           params.schedule.stime = this.momentStrToTimestamp(params.schedule.stime)
           if (this.editAssetDiscovery.id) {

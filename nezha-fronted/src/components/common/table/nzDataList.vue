@@ -6,13 +6,13 @@
       <div class="main-modal"></div>
       <div class="main-container">
         <div v-show="bottomBox.mainResizeShow" class="top-tools">
-          <div class="top-tool-left" style="min-width: 300px">
+          <div class="top-tool-left" style="min-width: 300px;flex: 1;">
+            <search-box v-if="from === fromRoute.alertMessage" :from="from" :position='from' :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-box>
             <slot name="top-tool-left"></slot>
           </div>
           <div :class="{'top-tool-main-right-to-left': bottomBox.showSubList}" class="top-tool-right">
             <div v-if="showLayout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20" :class="{'project-search alert-table asset-table endpoint-table': searchRight}">
               <search-input v-if="from!== fromRoute.alertMessage" ref="searchInput" :from="from" :position='from' :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
-              <search-box v-else :from="from" :position='from' :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-box>
             </div>
             <template>
               <slot name="top-tool-right"></slot>

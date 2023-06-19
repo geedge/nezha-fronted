@@ -4,36 +4,41 @@
       placement="bottom-start"
       :width="inputWidth"
       trigger="click"
-      style="display: inline-block"
+      ref="historyPopover"
+      style="display: inline-block;vertical-align: middle"
       :append-to-body="false"
     >
       <div slot="reference" class="history-icon" @click="historyFocus">
         <el-input ref="history" style="display: none" @keydown.native="keydown"/>
         <i class="nz-icon nz-icon-time"/>
       </div>
-      <div class="search-content history-content">
-        <div
-          v-for="(item, index) in historyArr"
-          @mouseenter="historyIndex = index"
-          :key="'search-item-history' + index"
-          class="search-item text-ellipsis"
-          :ref="'search-item' + index"
-          :class="{'search-item-select': index === historyIndex}"
-          :title="renderHistoryTitle(item)"
-          @click="selectHistory(item)"
-        >
-          <span  v-for="(tag, tIndex) in item" :key="index + '-' +tIndex" class="search-box-tag" style="margin-right: 3px">
-            <span>{{tag.i18n}}:</span>
-            <span v-for="(value, vIndex) in tag.value" :key="'history-item-'+index + '-' +tIndex+'-' + vIndex">{{value}} <span v-if="tag.value.length - 1 > vIndex">,</span></span>
+      <div class="history-content-box">
+        <div class="history-content-header">{{$t('search.recentSearch')}} <i class="nz-icon nz-icon-close" @click="closeHistoryPopover"/></div>
+        <div class="search-content history-content" v-if="historyArr.length">
+          <div
+            v-for="(item, index) in historyArr"
+            @mouseenter="historyIndex = index"
+            :key="'search-item-history' + index"
+            class="search-item text-ellipsis"
+            :ref="'search-item-history' + index"
+            :class="{'search-item-select': index === historyIndex}"
+            :title="renderHistoryTitle(item)"
+            @click="selectHistory(item, index)"
+          >
+          <span  v-for="(tag, tIndex) in item" :key="index + '-' +tIndex" style="margin-right: 3px">
+            <span>{{tag.i18n}}:[</span>
+            <span v-for="(value, vIndex) in tag.value" :key="'history-item-'+index + '-' +tIndex+'-' + vIndex">"{{value}}"<span v-if="tag.value.length - 1 > vIndex">,</span></span>]
           </span>
+          </div>
         </div>
+        <div v-else class="search-history-box-noData">{{$t('overall.noData')}}</div>
       </div>
     </el-popover>
     <el-popover
       placement="bottom-start"
-      :width="inputWidth"
       trigger="manual"
-      style="display: inline-block"
+      :popper-class="'search-content-box'"
+      style="display: inline-block;width: calc(100% - 32px);vertical-align: middle;position: relative;"
       :append-to-body="false"
       v-model="visible">
       <div  slot="reference" class="search-box-input" tabindex="-99" @focus="focusSearchInput">
@@ -50,28 +55,41 @@
                 <div v-for="(tag, tIndex) in item.value" :key="tIndex">
                   <span  class="search-box-tag" @click="editTag(item, index)">
                     {{item.i18n}} :
-                    <span >{{tag}}</span>
+                    <span  style="margin-left: 4px">{{tag}}</span>
                     <i class="nz-icon nz-icon-close" @click.stop="removeTagValue(tIndex, item.i18n)"/>
                   </span>
                 </div>
               </div>
               <span slot="reference" :key="index" class="search-box-tag" @click.stop="editTag(item, index)">
                 {{item.i18n}} :
-                <span v-if="item.value.length === 1">{{item.value[0]}}</span>
-                <span v-else>{{item.value.length}}项</span>
+                <span v-if="item.value.length === 1" style="margin-left: 4px">{{item.value[0]}}</span>
+                <span v-else  style="margin-left: 4px">{{item.value.length}} {{$t('items')}}</span>
                 <i class="nz-icon nz-icon-close" @click.stop="removeSelectArr(index)"/>
               </span>
             </el-popover>
           </div>
-          <el-input size="mini" v-model="searchStr" @focus="searchInputFocus" @keydown.native="keydown" @blur="changeSearchStr" @keyup.native="keyup" ref="searchStr" @keypress.native="keypress" :readonly="inputReadonly" @input="inputSearchStr"></el-input>
+          <el-input
+            size="mini"
+            v-model="searchStr"
+            @focus="searchInputFocus"
+            @keydown.native="keydown"
+            @blur="changeSearchStr"
+            @keyup.native="keyup"
+            ref="searchStr"
+            @keypress.native="keypress"
+            :readonly="inputReadonly"
+            @input="inputSearchStr"
+            clearable
+          >
+            <i slot="append" class="nz-icon nz-icon-search" @click="emitSearch"/>
+          </el-input>
         </div>
-        <i class="nz-icon nz-icon-search" @click="emitSearch"/>
+        <div class="col-line"></div>
       </div>
       <div
         class="search-content"
         id="search-box-scroll"
         ref="list"
-        v-if="(keyShow && searchList.length) || (symbolShow) || (valueShow && valueList.length)"
         infinite-scroll-disabled="disabled"
         v-loadMore="{
            load: valueListLoad,
@@ -83,12 +101,12 @@
             <span class="icon-k">K</span>  <span :title="$t(item.i18n || item.name)" class="search-item-content text-ellipsis">{{$t(item.i18n || item.name)}}</span> <span class="content-remark text-ellipsis" :title="item.type">{{item.type}}</span>
           </div>
         </div>
-        <div class="search-symbol" v-if="symbolShow" >
+        <div class="search-symbol" v-else-if="symbolShow" >
           <div v-for="(item, index) in symbolList" @click="selectSymbol(item)"  @mouseenter="selectIndex = index" :key="index" class="search-item" :ref="'search-item' + index" :class="{'search-item-select': index === selectIndex}">
             <span class="icon-s">:</span> <span :title="item.label" class="search-item-content text-ellipsis">{{item.label}}</span>    <span class="content-remark text-ellipsis" :title="item.remark">{{item.remark}}</span>
           </div>
         </div>
-        <div class="search-value" v-if="valueShow && valueList.length" v-my-loading="valueListInfo.loading">
+        <div class="search-value" v-else-if="valueShow && valueList.length" v-my-loading="valueListInfo.loading">
           <!--非枚举类型-->
           <div
             v-if="searchBoxType!== 'enum'"
@@ -107,7 +125,11 @@
             </div>
           </div>
         </div>
+        <div v-else class="search-item-title search-item-nodata" style="border-bottom: none">
+          {{$t('overall.noDataAvailable')}}
+        </div>
       </div>
+      <div class="search-item-title">{{$t('searchBox.enterNext')}}</div>
     </el-popover>
     <el-dialog :title="$t('overall.edit')" class="no-transform-dialog" :visible.sync="dialogShow" @close="dialogClose" :append-to-body="false" :modal-append-to-body="false" :destroy-on-close="true">
       <el-form ref="tagEdit" v-model="editDialogObj" v-if="dialogShow">
@@ -200,7 +222,7 @@ export default {
   },
   data () {
     return {
-      inputWidth: 400,
+      inputWidth: 380,
       visible: false, // 显示下拉框
       searchBoxType: '', // 查询接口的 type 和name参数
       searchStr: '', // input 的内容
@@ -421,7 +443,6 @@ export default {
       }
     },
     selectSymbol (item) {
-      console.log(item)
       this.symbol = true
       if (!item) {
         this.selectSymbolValue = '='
@@ -557,6 +578,10 @@ export default {
     },
     historyFocus () {
       this.$refs.history.focus()
+      this.visible = false
+    },
+    closeHistoryPopover () { // 关闭历史记录弹窗
+      this.$refs.historyPopover.doClose()
     },
     renderHistoryTitle (item) {
       let str = ''
@@ -571,8 +596,12 @@ export default {
       })
       return str
     },
-    selectHistory (item) {
+    selectHistory (item, index) { // 选择历史记录后 更新顺序
       this.selectArr = item
+      this.historyArr.splice(index, 1)
+      this.historyArr.unshift(item)
+      localStorage.setItem('nz-history-' + this.where, JSON.stringify(this.historyArr))
+      this.closeHistoryPopover()
       this.emitSearch()
     },
     contentShow (key) {
@@ -663,7 +692,6 @@ export default {
       })
     },
     setValueList: bus.debounce(function () {
-      console.log(123123123)
       const key = this.dialogStr || this.key
       const findItem = this.oldSearchList.find(item => this.$t(item.i18n) == key || key == item.name)
       this.selectIndex = -1
@@ -698,7 +726,6 @@ export default {
       }
     }, 200),
     setValueListFn () {
-      console.log(123123123)
       const key = this.dialogStr || this.key
       const findItem = this.oldSearchList.find(item => this.$t(item.i18n) == key || key == item.name)
       this.selectIndex = -1
@@ -732,7 +759,6 @@ export default {
       }
     },
     valueListLoad () {
-      console.log('load')
       this.valueListInfo.pageNo++
       this.valueListInfo.loading = true
       let name = ''
@@ -886,6 +912,7 @@ export default {
       this.emitSearch()
     },
     editTag (tag, index) {
+      return false
       this.editTagIndex = index
       this.editTagObj = this.$lodash.cloneDeep(tag)
       this.dialogSraechStr = ''
@@ -1037,7 +1064,10 @@ export default {
       // this.emitSearch()
     },
     setHistoryArr () {
-      this.historyArr.push(this.$lodash.cloneDeep(this.selectArr))
+      this.historyArr.unshift(this.$lodash.cloneDeep(this.selectArr))
+      if (this.historyArr.length > 20) {
+        this.historyArr.pop()
+      }
       localStorage.setItem('nz-history-' + this.where, JSON.stringify(this.historyArr))
     },
     initHistory () {
@@ -1047,7 +1077,16 @@ export default {
       const historyArr = localStorage.getItem('nz-history-' + this.where) ? JSON.parse(localStorage.getItem('nz-history-' + this.where)) : []
       historyArr.forEach(item => { // todo 后续还需要处理枚举类型的中英切换
         item.forEach((searchInfo) => {
-          searchInfo.i18n = this.$t(searchInfo.code)
+          let str = ''
+          const initialKey = searchInfo.i18n
+          if (initialKey[0] === '-' && initialKey[1] === '*') {
+            str = '-*'
+          } else if (initialKey[0] === '-') {
+            str = '-'
+          } else if (initialKey[0] === '*') {
+            str = '*'
+          }
+          searchInfo.i18n = str + this.$t(searchInfo.code)
         })
       })
       this.historyArr = historyArr
@@ -1068,15 +1107,17 @@ export default {
     },
     clickOutside () { // 点击页面其他地方触发
       this.visible = false
-      this.keyShow = false // key 的下拉
-      this.symbolShow = false // symbol 的下拉
-      this.valueShow = false // value 的下拉
-      this.inputWidth = 400
-      // this.searchStr = ''
-      this.searchList = this.$lodash.cloneDeep(this.oldSearchList)
-      this.symbolList = []
-      this.valueList = []
-      this.inputReadonly = false
+      this.$nextTick(() => {
+        this.keyShow = false // key 的下拉
+        this.symbolShow = false // symbol 的下拉
+        this.valueShow = false // value 的下拉
+        this.inputWidth = 400
+        // this.searchStr = ''
+        this.searchList = this.$lodash.cloneDeep(this.oldSearchList)
+        this.symbolList = []
+        this.valueList = []
+        this.inputReadonly = false
+      })
       // this.emitSearch()
     },
     scroll () { // 键盘上下选择 显示已选择的选项
@@ -1111,7 +1152,6 @@ export default {
       try {
         if (body) {
           body = JSON.parse(body)
-          console.log('body', body)
           Object.keys(body).forEach(key => {
             let initialKey = key
             let str = ''
@@ -1150,8 +1190,6 @@ export default {
       } catch (e) {
 
       }
-
-      console.log()
     },
     enumRenderValue (searchInfo, realValue) { // 处理枚举类型的回显
       const arr = this.selectEnum(searchInfo)
