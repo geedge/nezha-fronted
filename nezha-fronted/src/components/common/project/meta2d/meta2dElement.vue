@@ -1068,13 +1068,13 @@
           </div>
           <div class="form-row-value" style="margin-bottom: 10px;display: flex;justify-content: space-between" v-for="(legend, index) in pen.data.tooltip.legends" :key="legend.parent + legend.legend">
             <div style="display: inline-block;width: calc(30% - 10px)">
-              <el-select v-model="legend.parent" size="small" style="width: 100%" clearable @change="legendParentChange(legend)">
+              <el-select v-model="legend.parent" size="small"  :title="legend.parent" style="width: 100%" clearable @change="legendParentChange(legend)">
                 <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name' :title='item.name' style="width: 300px"></el-option>
               </el-select>
             </div>
             <div style="display: inline-block;width: calc(30% - 10px)">
-              <el-select v-model="legend.legend" size="small" style="width: 100%" clearable>
-                <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => (query.parent === legend.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'  :title='item.name' style="width: 170px"></el-option>
+              <el-select v-model="legend.legend" size="small" :title="legend.legend" style="width: 100%" clearable>
+                <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => (query.parent === legend.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'  :title='item.name' style="width: 300px"></el-option>
               </el-select>
             </div>
             <div style="display: inline-block;width: calc(40% - 10px)">
