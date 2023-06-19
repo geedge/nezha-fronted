@@ -14,7 +14,7 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box right-box__container chart-right-box">
-      <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px">
+      <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px" @submit.native.prevent>
         <el-form-item :label='$t("overall.name")' prop="name">
           <div style="display:flex;align-items:center">
             <el-input style="flex:1;margin-right:10px" maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>

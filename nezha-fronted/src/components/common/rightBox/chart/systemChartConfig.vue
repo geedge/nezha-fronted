@@ -6,6 +6,7 @@
       :rules="rules"
       label-position= "top"
       label-width="120px"
+      @submit.native.prevent
     >
 
       <div  v-my-loading="loading" v-for="(item, index) in chartConfig.param.datasource " :key="index" class="chart-system-top-box">
