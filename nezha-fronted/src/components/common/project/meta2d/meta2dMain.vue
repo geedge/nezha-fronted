@@ -200,6 +200,10 @@ export default {
     },
     zoomMap (num) {
       getTopology(this.meta2dId).scale(getTopology(this.meta2dId).store.data.scale + num)
+    },
+    resize () {
+      getTopology(this.meta2dId).resize()
+      getTopology(this.meta2dId).centerView()
     }
   },
   beforeDestroy () {
