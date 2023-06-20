@@ -91,6 +91,10 @@ export default {
           }
         })
         if (chartData && this.$refs.panelChart) {
+          if (chartData.length) {
+            console.log(chartData[0][0].elements.unit)
+            this.chartInfo.unit = chartData[0][0].elements.unit
+          }
           this.chartInfo.elements = elements
           this.$refs.panelChart.chartData = chartData
           this.$refs.panelChart.loading = false
