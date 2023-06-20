@@ -111,6 +111,47 @@ export default {
 
         node.addEventListener('animationend', handleAnimationEnd, { once: true })
       })
+    },
+    handleLegendAlias (legend, aliasExpression, params) {
+      const self = this
+      const myParams = JSON.parse(JSON.stringify(params))
+      myParams.$labels = JSON.parse(JSON.stringify(params))
+      myParams.$value = myParams.value
+      if (/\{\{.+\}\}/.test(aliasExpression)) {
+        const labelValue = aliasExpression.replace(/(\{\{.+?\}\})/g, function (i) {
+          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
+          if (!legend) {
+            return label
+          }
+          let value = null
+          if (params && self.$lodash.get(myParams, label)) {
+            value = self.$lodash.get(myParams, label)
+          }
+          if (label) {
+            const reg = new RegExp(label + '=".+?"', 'g')
+            if (reg.test(legend)) {
+              const ans = legend.match(reg)
+              let find = ''
+              ans.forEach(item => {
+                const index = legend.indexOf(item)
+                if (legend[index - 1] !== '_') {
+                  find = item
+                }
+              })
+              value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
+            }
+          }
+          return value || ''
+        })
+        return labelValue
+      } else {
+        if (!aliasExpression) {
+          return legend
+          // let result =legend.substr(legend.indexOf('"') + 1,legend.lastIndexOf('"') - legend.indexOf('"') - 1);
+          // return result
+        }
+        return aliasExpression
+      }
     }
   }
 }

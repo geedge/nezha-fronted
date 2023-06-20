@@ -354,7 +354,9 @@ export default {
         this.chartParams = {
           ...pen.data.tooltip,
           unit: this.params.unit,
-          statistic: this.params.statistic
+          statistic: this.params.statistic,
+          legend: pen.data.legend,
+          parent: pen.data.parent
         }
         this.timer3 = setTimeout(() => {
           let ePosition = window.ePosition
