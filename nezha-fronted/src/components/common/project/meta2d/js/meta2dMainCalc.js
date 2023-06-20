@@ -127,7 +127,7 @@ export default {
       const endTime = new Date().getTime()
       const startTime = endTime - 60 * this.params.timeType * 1000
       this.getQueryValues(this.querysArray, startTime, endTime).then((arr) => {
-        this.clacTopoData(this.$loadsh.cloneDeep(this.topoData), arr).then((data) => {
+        this.clacTopoData(this.$lodash.cloneDeep(this.topoData), arr).then((data) => {
           if (!getTopology(this.meta2dId)) {
             return
           }
@@ -346,10 +346,13 @@ export default {
         if (!positionShow) {
           return
         }
+        console.log(pen)
         this.chartParams = {
           ...pen.data.tooltip,
           unit: this.params.unit,
-          statistic: this.params.statistic
+          statistic: this.params.statistic,
+          legend: pen.data.legend,
+          parent: pen.data.parent
         }
         this.timer3 = setTimeout(() => {
           let ePosition = window.ePosition

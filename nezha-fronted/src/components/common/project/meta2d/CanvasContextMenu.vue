@@ -146,7 +146,7 @@ export default {
       getTopology(this.meta2dId).paste()
     },
     isNull (val) {
-      return this.$loadsh.isNull(val)
+      return this.$lodash.isNull(val)
     }
   }
 }

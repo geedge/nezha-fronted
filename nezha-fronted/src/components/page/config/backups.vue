@@ -170,7 +170,7 @@ export default {
     },
     edit (row) {
       this.object = {
-        ...this.$loadsh.cloneDeep(row),
+        ...this.$lodash.cloneDeep(row),
         checkDay: '',
         checkDays: '',
         datepicker: ''

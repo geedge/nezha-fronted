@@ -464,7 +464,7 @@ export default {
       if (!this.elements.length) {
         this.addExpression()
       } else {
-        const expressionsShow = this.$loadsh.cloneDeep(this.expressionsShow)
+        const expressionsShow = this.$lodash.cloneDeep(this.expressionsShow)
         this.elements.forEach((item, index) => {
           this.expressions.push(item.expression)
           this.expressionName.push(item.name)
@@ -477,7 +477,7 @@ export default {
           // expressionsShow调整顺序
           expressionsShow.forEach((subItem) => {
             if (item.name == subItem.oldName) {
-              this.$set(this.expressionsShow, index, this.$loadsh.cloneDeep(subItem))
+              this.$set(this.expressionsShow, index, this.$lodash.cloneDeep(subItem))
             }
           })
         })
@@ -492,7 +492,7 @@ export default {
       this.expressions = []
       this.expressionsShow = []
       this.expressionName = []
-      this.elements = this.$loadsh.cloneDeep(this.querysArray)
+      this.elements = this.$lodash.cloneDeep(this.querysArray)
       this.dataTimeType = this.params.timeType || 1
       this.dataStatistic = this.params.statistic || 'last'
       this.dataUnit = this.params.unit || 1

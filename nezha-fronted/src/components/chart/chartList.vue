@@ -512,11 +512,11 @@ export default {
       }
       this.showHidden = {}
       this.dataList.forEach(item => {
-        const visibility = this.$loadsh.get(item, 'param.enable.visibility', false)
-        const varName = this.$loadsh.get(item, 'param.visibility.varName')
-        const operator = this.$loadsh.get(item, 'param.visibility.operator')
-        const varValue = this.$loadsh.get(item, 'param.visibility.varValue')
-        const result = this.$loadsh.get(item, 'param.visibility.result')
+        const visibility = this.$lodash.get(item, 'param.enable.visibility', false)
+        const varName = this.$lodash.get(item, 'param.visibility.varName')
+        const operator = this.$lodash.get(item, 'param.visibility.operator')
+        const varValue = this.$lodash.get(item, 'param.visibility.varValue')
+        const result = this.$lodash.get(item, 'param.visibility.result')
         // 相反结果 若result为show则contraryResult为hidden
         const contraryResult = result === 'show' ? 'hidden' : 'show'
         // 是否启用显示隐藏功能
@@ -557,15 +557,15 @@ export default {
                 }
               }
               if (flag === true) {
-                this.$loadsh.set(this.showHidden, item.id + '.visibility', result)
+                this.$lodash.set(this.showHidden, item.id + '.visibility', result)
               } else {
-                this.$loadsh.set(this.showHidden, item.id + '.visibility', contraryResult)
+                this.$lodash.set(this.showHidden, item.id + '.visibility', contraryResult)
               }
 
               // 隐藏图表的悬浮文字赋值
-              if (this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'hidden') {
+              if (this.$lodash.get(this.showHidden[item.id], 'visibility') === 'hidden') {
                 const hiddenText = `“${varName}=${varValue}”Hidden`
-                this.$loadsh.set(this.showHidden, item.id + '.hiddenText', hiddenText)
+                this.$lodash.set(this.showHidden, item.id + '.hiddenText', hiddenText)
               }
             }
           })
@@ -576,13 +576,13 @@ export default {
       }
       for (let i = 0; i < this.copyDataList.length; i++) {
         const item = this.copyDataList[i]
-        if ((this.$loadsh.get(this.showHidden[item.id], 'visibility') && this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'hidden') && item.id !== -2) {
+        if ((this.$lodash.get(this.showHidden[item.id], 'visibility') && this.$lodash.get(this.showHidden[item.id], 'visibility') === 'hidden') && item.id !== -2) {
           this.copyDataList.splice(i, 1)
           i--
         }
       }
       this.tempList.forEach(item => {
-        if ((!this.$loadsh.get(this.showHidden[item.id], 'visibility') || this.$loadsh.get(this.showHidden[item.id], 'visibility') === 'show') && item.id !== -2 && !this.copyDataList.find(chart => chart.id === item.id)) {
+        if ((!this.$lodash.get(this.showHidden[item.id], 'visibility') || this.$lodash.get(this.showHidden[item.id], 'visibility') === 'show') && item.id !== -2 && !this.copyDataList.find(chart => chart.id === item.id)) {
           this.copyDataList.push(item)
         }
       })
@@ -615,21 +615,21 @@ export default {
       }
       this.$nextTick(() => {
         // 先让数组根据 y 排序 之后直接判断顺序 即可判断 Group 是否相邻
-        let arr = this.$loadsh.cloneDeep(this.copyDataList)
-        arr = this.$loadsh.orderBy(arr, function (item) {
+        let arr = this.$lodash.cloneDeep(this.copyDataList)
+        arr = this.$lodash.orderBy(arr, function (item) {
           return item.y
         })
         const variablesRepeat = {}
         for (let index = 0; index < arr.length; index++) { // 遍历找出所有需要 repeat的group 按照 name进行多次的分组
           const item = arr[index]
-          const repeatVariable = this.$loadsh.get(item.param.repeat, 'variable')
-          const repeatEnable = this.$loadsh.get(item.param.enable, 'repeat')
-          const visibility = this.$loadsh.get(this.showHidden[item.id], 'visibility') !== 'hidden'
+          const repeatVariable = this.$lodash.get(item.param.repeat, 'variable')
+          const repeatEnable = this.$lodash.get(item.param.enable, 'repeat')
+          const visibility = this.$lodash.get(this.showHidden[item.id], 'visibility') !== 'hidden'
           if (item.type === 'group' && repeatVariable && repeatEnable && visibility) {
             const itemPrev = arr[index - 1]
-            const repeatPrevVariable = this.$loadsh.get(itemPrev.param.repeat, 'variable')
-            const repeatPrevEnable = this.$loadsh.get(itemPrev.param.enable, 'repeat')
-            const itemVisibility = this.$loadsh.get(this.showHidden[itemPrev.id], 'visibility') !== 'hidden'
+            const repeatPrevVariable = this.$lodash.get(itemPrev.param.repeat, 'variable')
+            const repeatPrevEnable = this.$lodash.get(itemPrev.param.enable, 'repeat')
+            const itemVisibility = this.$lodash.get(this.showHidden[itemPrev.id], 'visibility') !== 'hidden'
             if (itemPrev && itemPrev.type === 'group' && repeatPrevVariable === repeatVariable && repeatPrevEnable && itemVisibility) {
               const arr = variablesRepeat[repeatVariable]
               arr[arr.length - 1].repeatArr.push(item)
@@ -656,7 +656,7 @@ export default {
               group.repeatArr.forEach(item => {
                 if (subIndex > 0) {
                   // 复制数据 重新设置id
-                  const repeatItem = this.$loadsh.cloneDeep(item)
+                  const repeatItem = this.$lodash.cloneDeep(item)
                   repeatItem.id = item.id + '-' + 'repeat-' + subIndex
                   repeatItem.i = repeatItem.id
                   repeatItem.repeatIndex = subIndex

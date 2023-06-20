@@ -259,7 +259,7 @@ export default {
       })
     },
     startPlay (val) {
-      const data = this.$loadsh.cloneDeep(val)
+      const data = this.$lodash.cloneDeep(val)
       data.dashboardIds = JSON.parse(data.dashboardIds)
       if (data.dashboardIds.length) {
         this.esc()

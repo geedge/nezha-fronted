@@ -445,7 +445,7 @@ export default {
     setSearchList (str) {
       this.selectIndex = -1
       if (!str) {
-        this.searchList = this.$loadsh.cloneDeep(this.oldSearchList)
+        this.searchList = this.$lodash.cloneDeep(this.oldSearchList)
         return
       }
       this.searchList = this.oldSearchList.filter(item => item.name.indexOf(str) !== -1)
@@ -497,7 +497,7 @@ export default {
     },
     editTag (tag, index) {
       this.editTagIndex = index
-      this.editTagObj = this.$loadsh.cloneDeep(this.selectArr[index])
+      this.editTagObj = this.$lodash.cloneDeep(this.selectArr[index])
       this.dialogShow = true
       this.editDialogObj.value = this.editTagObj.value
       const keyStr = this.editTagObj.key
@@ -556,7 +556,7 @@ export default {
           return findItem.value.indexOf(item) === index // 因为indexOf 只能查找到第一个
         })
       } else {
-        this.selectArr[this.editTagIndex] = this.$loadsh.cloneDeep(this.editTagObj)
+        this.selectArr[this.editTagIndex] = this.$lodash.cloneDeep(this.editTagObj)
       }
     },
     querySearch (queryString, cb) {
@@ -584,7 +584,7 @@ export default {
           obj.selectionStart = obj.selectionEnd = len
         }, 100)
       }
-    // this.searchStr = this.$loadsh.cloneDeep(this.searchStr)
+    // this.searchStr = this.$lodash.cloneDeep(this.searchStr)
     },
     clickOutside () { // 点击页面其他地方触发
       this.visible = false
@@ -593,7 +593,7 @@ export default {
       this.valueShow = false // value 的下拉
       this.inputWidth = 400
       this.searchStr = ''
-      this.searchList = this.$loadsh.cloneDeep(this.oldSearchList)
+      this.searchList = this.$lodash.cloneDeep(this.oldSearchList)
       this.symbolList = []
       this.valueList = []
     }

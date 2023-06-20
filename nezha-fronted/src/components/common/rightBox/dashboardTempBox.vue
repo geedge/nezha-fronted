@@ -211,7 +211,7 @@ export default {
   methods: {
     // 选中的模板变化
     tempChange: bus.debounce(function (val) {
-      const newValue = this.$loadsh.get(val, ['0', 'varType'])
+      const newValue = this.$lodash.get(val, ['0', 'varType'])
       const oldValue = this.templateType
       this.templateType = newValue
       // 判断varType是否变化
@@ -228,7 +228,7 @@ export default {
     getDashboardTempData () {
       if (this.from === 'integration') {
         this.editDashboard.tmplId = String(this.$parent.tempId)
-        this.templateList = this.$loadsh.cloneDeep(this.$parent.panelData)
+        this.templateList = this.$lodash.cloneDeep(this.$parent.panelData)
       } else {
         this.$get('visual/dashboard', { type: 'template', pageSize: -1 }).then(response => {
           if (response.code === 200) {
@@ -268,7 +268,7 @@ export default {
         return
       }
       this.prevent_opt.save = true
-      const params = this.$loadsh.cloneDeep(this.editDashboard)
+      const params = this.$lodash.cloneDeep(this.editDashboard)
       this.$refs.form.validate((valid) => {
         if (valid) {
           // 模板varType ≠ 0时link有效且必填

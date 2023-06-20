@@ -91,7 +91,7 @@ export default {
       this.$emit('stopPlaylist')
     },
     changePlay () {
-      let data = this.$loadsh.cloneDeep(this.playlistDashboard[this.currentIndex])
+      let data = this.$lodash.cloneDeep(this.playlistDashboard[this.currentIndex])
       if (!data) {
         data = {
           id: this.playlistObj.dashboardIds[this.currentIndex],

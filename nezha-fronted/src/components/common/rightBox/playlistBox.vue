@@ -166,7 +166,7 @@ export default {
       deep: true,
       handler (n) {
         this.isEdit = true
-        this.editPlaylist = this.$loadsh.cloneDeep(n)
+        this.editPlaylist = this.$lodash.cloneDeep(n)
       }
     }
   }

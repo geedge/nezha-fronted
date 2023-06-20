@@ -320,7 +320,7 @@ export default new Vue({
     },
     // 数组对象扁平化
     flatten (arr) {
-      const tempArr = this.$loadsh.cloneDeep(arr)
+      const tempArr = this.$lodash.cloneDeep(arr)
       // 递归调用
       function handler (tempArr) {
         const newArr = []

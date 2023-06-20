@@ -1,11 +1,11 @@
 <template>
   <div class="tooltip-box" style="width: 400px;height: 300px;display: flex;flex-direction: column">
-    <div v-if="params.titleShow && params.title" style="margin-bottom: 5px" class="tooltip-box-title">{{params.title}}</div>
+    <div v-if="params.titleShow && params.title" style="margin-bottom: 5px" class="tooltip-box-title">{{ title || params.title}}</div>
 
     <div
       v-if="params.chartType === 'text'"
     >
-      {{params.content}}
+      {{content || params.content}}
     </div>
     <panelChart
       v-else
@@ -38,7 +38,10 @@ export default {
   },
   data () {
     return {
-      chartInfo: { ...defaultLineData, loaded: false }
+      chartInfo: { ...defaultLineData, loaded: false },
+      dataSource: {},
+      title: '',
+      content: ''
     }
   },
   mounted () {
@@ -55,7 +58,13 @@ export default {
         this.chartInfo.id = this.meta2dId + 'meta2DTooltip'
         const chartData = []
         const elements = []
-        const obj = {}
+        const source = this.queryValues.find(query => query.name === this.params.legend && query.parent === this.params.parent)
+        if (source) {
+          this.dataSource = source
+          console.log(this.params.title, this.dataSource.elements.expression, this.dataSource.metric)
+          this.title = this.handleLegendAlias(this.params.title, this.params.title, this.dataSource.metric) || this.params.title
+          this.content = this.handleLegendAlias(this.params.content, this.params.content, this.dataSource.metric) || this.params.content
+        }
         this.params.legends.forEach(item => {
           const findItem = this.queryValues.find(query => query.name === item.legend && query.parent === item.parent)
           // if (findItem) {
@@ -93,6 +102,8 @@ export default {
         }
       }
     }
+  },
+  methods: {
   }
 }
 </script>

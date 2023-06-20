@@ -735,8 +735,8 @@ export default {
       immediate: true,
       handler (n, o) {
         this.isEdit = true
-        const obj = this.$loadsh.cloneDeep(n)
-        this.editAlertRule = this.$loadsh.cloneDeep(obj)
+        const obj = this.$lodash.cloneDeep(n)
+        this.editAlertRule = this.$lodash.cloneDeep(obj)
         // 获取缓存中的告警等级列表
         const severityData = JSON.parse(localStorage.getItem('nz-severityDataWeight'))
         // 给condition赋值

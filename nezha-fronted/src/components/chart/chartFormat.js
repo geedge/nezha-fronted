@@ -39,8 +39,8 @@ export default {
         const labelValue = display.replace(/(\{\{.+?\}\})/g, function (i) {
           const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
           let value = null
-          if (self.$loadsh.get(myParams, label)) {
-            value = self.$loadsh.get(myParams, label)
+          if (self.$lodash.get(myParams, label)) {
+            value = self.$lodash.get(myParams, label)
           }
           // return value || label
           return value || ''
