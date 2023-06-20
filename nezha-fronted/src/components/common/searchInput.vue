@@ -419,7 +419,9 @@ export default {
     select_list: {
       // 监听下拉列表
       handler (newData, oldData) {
-        this.$refs.searchScrollbar.update()
+        this.$nextTick(() => {
+          this.$refs.searchScrollbar.update()
+        })
         if (newData.length == 0) {
           this.change_sreach_show = true
           this.clearSearchShow = false
@@ -597,9 +599,9 @@ export default {
       setTimeout(function () {
         _this.getHeight()
       })
-      /* this.$nextTick(() => {
-                  this.$refs.searchScrollbar.update();
-                }); */
+      this.$nextTick(() => {
+        this.$refs.searchScrollbar.update()
+      })
     },
     // 一层下拉点击
     tr_selectTypeInfo (val) {
@@ -1075,6 +1077,10 @@ export default {
       this.input_list = true
       this.restructure_historyDate()
 
+      this.$nextTick(() => {
+        this.$refs.searchScrollbar.update()
+      })
+
       this.$emit('search', objectInfo)
     },
     // 清空历史记录
@@ -1299,9 +1305,6 @@ export default {
       this.searchLabelList = []
       JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
         this.searchLabelList.push(val)
-      })
-      this.$nextTick(() => {
-        this.$refs.searchScrollbar.update()
       })
       this.select()
     },
