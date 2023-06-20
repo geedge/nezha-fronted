@@ -218,14 +218,10 @@ export default {
       getTopology(this.meta2dId).off('leave', this.penLeave) // 移出画笔·
       getTopology(this.meta2dId).off('add', this.appPen) // 添加新画笔·
       getTopology(this.meta2dId).off('click', this.topoClick) // click画笔·
-      if (this.isChart) {
-        getTopology(this.meta2dId).destroy()
-      } else {
-        getTopology(this.meta2dId).destroy(true)
-        for (const k in globalStore) {
-          if (!globalStore[k]) {
-            delete globalStore[k]
-          }
+      getTopology(this.meta2dId).destroy(true)
+      for (const k in globalStore) {
+        if (!globalStore[k]) {
+          delete globalStore[k]
         }
       }
       setTopology(this.meta2dId, null)
