@@ -1,6 +1,7 @@
 #nz-search-box{
   flex: 1;
   min-height: 32px;
+  width: 100%;
   .history-icon {
     border: 1px solid $--border-color-light;
     border-right: none;
@@ -18,6 +19,18 @@
     .nz-icon-time {
       color: $--search-box-icon-k-text;
     }
+  }
+  .nz-icon-search-box {
+    display: inline-block;
+    background: $--background-color-base;
+    height: 30px;
+    width: 30px;
+    border-radius: 0 2px 2px 0;
+    line-height: 30px;
+    text-align: center;
+    border: 1px solid $--border-color-light;
+    vertical-align: middle;
+    margin-left: -6px;
   }
   .el-popover.el-popper {
     border: none;
@@ -56,13 +69,15 @@
   .search-box-input {
     border: 1px solid  $--border-color-light;
     border-left: none;
+    border-right: none;
     width: 100%;
     height: 30px;
+    margin-left: -1px;
     white-space: nowrap;
     overflow: hidden;
     display: flex;
-    align-items: center;
-    border-radius: 0 2px 2px 0;
+    //align-items: center;
+    //border-radius: 0 2px 2px 0;
     .col-line {
       width: 0;
       height: 18px;
@@ -79,6 +94,19 @@
       overflow-y: hidden;
       display: flex;
       align-items: center;
+      // 调整滚动条样式
+      &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+        border-radius: 3px;
+      }
+      &::-webkit-scrollbar-thumb {
+        width: 6px;
+        height: 6px;
+        background-color: $--scrollbar-background-color;
+        border-radius: 3px;
+        cursor: pointer;
+      }
       .el-input__inner{
         border: none;
         height: 30px;

@@ -38,7 +38,7 @@
       placement="bottom-start"
       trigger="manual"
       :popper-class="'search-content-box'"
-      style="display: inline-block;width: calc(100% - 32px);vertical-align: middle;position: relative;"
+      style="display: inline-block;width: calc(100% - 66px);vertical-align: middle;position: relative;"
       :append-to-body="false"
       v-model="visible">
       <div  slot="reference" class="search-box-input" tabindex="-99" @focus="focusSearchInput">
@@ -81,7 +81,6 @@
             @input="inputSearchStr"
             clearable
           >
-            <i slot="append" class="nz-icon nz-icon-search" @click="emitSearch"/>
           </el-input>
         </div>
         <div class="col-line"></div>
@@ -131,6 +130,10 @@
       </div>
       <div class="search-item-title">{{$t('searchBox.enterNext')}}</div>
     </el-popover>
+    <span class="nz-icon-search-box">
+      <i class="nz-icon nz-icon-search" @click="emitSearch"/>
+    </span>
+    <!--编辑暂未用到-->
     <el-dialog :title="$t('overall.edit')" class="no-transform-dialog" :visible.sync="dialogShow" @close="dialogClose" :append-to-body="false" :modal-append-to-body="false" :destroy-on-close="true">
       <el-form ref="tagEdit" v-model="editDialogObj" v-if="dialogShow">
         <el-form-item prop="key" title="key">
