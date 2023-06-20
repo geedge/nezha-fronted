@@ -143,7 +143,7 @@
         <div class="topology-box">
           <div class="topology-mc"></div>
 <!--          <diagram :topoData="chartConfig.param.topo" :fromChartBox="true" :topologyIndexF="-1"/>-->
-          <meta2dMain v-if="iconArrayLoad" :showHeader="false" :meta2dId="'rightBoxChart' + new Date().getTime()" :topoData="chartConfig.param.topo" :querysArray="querysArray" :params="{timeType: 5}" :iconArray="iconArray" @reload="reloadTopo" :isChart="true"/>
+          <meta2dMain v-if="iconArrayLoad" :showHeader="false" :meta2dId="'rightBoxChart'" :topoData="chartConfig.param.topo" :querysArray="querysArray" :params="{timeType: 5}" :iconArray="iconArray" @reload="reloadTopo" :isChart="true"/>
         </div>
       </el-form-item>
       <!--topplogy-->
@@ -152,7 +152,7 @@
         class="topology-dialog"
         v-if="topologyDialog"
         ref="rightBoxChartEdit"
-        :meta2dId="'rightBoxChartEdit' + + new Date().getTime()"
+        :meta2dId="'rightBoxChartEdit'"
         :topoData="chartConfig.param.topo"
         :querysArray="querysArray"
         :params="{timeType: 5}"
