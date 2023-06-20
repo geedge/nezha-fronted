@@ -301,7 +301,9 @@ export default {
       setTimeout(() => {
         this.selectPens = pens
         this.modulesDiff(pens[0])
-        this.$refs.meta2dProps && (this.$refs.meta2dProps.isUpdate = true)
+        this.$nextTick(() => {
+          this.$refs.meta2dProps && (this.$refs.meta2dProps.isUpdate = true)
+        })
       }, 200)
     },
     topoClick (params, e) { // 点击节点

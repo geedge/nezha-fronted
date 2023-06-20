@@ -70,7 +70,7 @@
                   <span class="hide-input-nzName text-ellipsis" v-if="!editFlag[index]">
                     {{item.nzName}}
                   </span>
-                  <i @click="changeEditFlag(index)" v-if="!editFlag[index]"  class="nz-icon nz-icon-edit1"/>
+                  <i @click.stop="changeEditFlag(index)" v-if="!editFlag[index]"  class="nz-icon nz-icon-edit1"/>
                 </span>
               <span>
                   <span @click.stop="penChange(item, 'locked')" class="pen-tools-item" :title="!item.locked?$t('overall.locked'): $t('overall.unlocked')">
@@ -204,7 +204,7 @@ export default {
         getTopology(this.meta2dId).active([item])
         getTopology(this.meta2dId).render()
         // getTopology(this.meta2dId).setValue(item)
-        bus.$emit('changeSelectPens', [item])
+        // bus.$emit('changeSelectPens', [item])
       })
     },
     penChange (item, key) {
@@ -222,7 +222,7 @@ export default {
           getTopology(this.meta2dId).active([item])
           getTopology(this.meta2dId).render()
           // getTopology(this.meta2dId).setValue(item)
-          bus.$emit('changeSelectPens', [item])
+          // bus.$emit('changeSelectPens', [item])
         }
       }
       if (key === 'locked') {
@@ -237,7 +237,7 @@ export default {
           getTopology(this.meta2dId).active([item])
           getTopology(this.meta2dId).render()
           // getTopology(this.meta2dId).setValue(item)
-          bus.$emit('changeSelectPens', [item])
+          // bus.$emit('changeSelectPens', [item])
         }
       }
       getTopology(this.meta2dId).setValue(obj)
