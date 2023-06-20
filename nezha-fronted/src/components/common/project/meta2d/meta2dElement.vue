@@ -466,7 +466,7 @@
                       </el-select>
                     </div>
                     <div style="display: inline-block;width: calc(70% - 13px);margin-left: 10px">
-                      <el-select v-model="pen.data.textLegend" size="small">
+                      <el-select v-model="pen.data.textLegend" size="small" filterable allow-create clearable default-first-option>
                         <el-option v-for="item in queryValues.filter(query => (query.parent === pen.data.textParent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name' :title="item.name" style="width: 302px"> </el-option>
                       </el-select>
                     </div>
@@ -817,7 +817,7 @@
                   </el-select>
                 </div>
                 <div style="display: inline-block;width: calc(70% - 13px);margin-left: 10px">
-                  <el-select v-model="pen.data.legend" size="small" clearable>
+                  <el-select v-model="pen.data.legend" size="small" filterable allow-create clearable default-first-option>
                     <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => (query.parent === pen.data.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name' :title="item.name" style="width: 302px;"></el-option>
                   </el-select>
                 </div>
@@ -1073,7 +1073,15 @@
               </el-select>
             </div>
             <div style="display: inline-block;width: calc(30% - 10px)">
-              <el-select v-model="legend.legend" size="small" :title="legend.legend" style="width: 100%" clearable>
+              <el-select
+                v-model="legend.legend"
+                size="small"
+                :title="legend.legend"
+                style="width: 100%"
+                filterable
+                allow-create
+                default-first-option
+                clearable>
                 <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => (query.parent === legend.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'  :title='item.name' style="width: 300px"></el-option>
               </el-select>
             </div>
