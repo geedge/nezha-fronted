@@ -127,7 +127,9 @@ export default {
           this.tableData = response.data.list
           this.total = response.data.total
         } else {
-          this.$message.error(response.msg)
+          if (response.msg || response.error) {
+            this.$message.error(response.msg || response.error)
+          }
         }
       })
     },

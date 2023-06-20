@@ -6,6 +6,7 @@
       :rules="rules"
       label-position= "top"
       label-width="120px"
+      @submit.native.prevent
     >
       <!--title-->
       <div class="form__sub-title">

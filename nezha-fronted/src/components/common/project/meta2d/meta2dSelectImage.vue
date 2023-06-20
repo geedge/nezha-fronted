@@ -48,18 +48,18 @@
         </el-card>
       </div>
       <div slot="footer" class="nz-select-img-dialog-footer">
-        <button class="nz-btn nz-btn-size-normal nz-btn-style-light"  @click="uploadPicChange">
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button"  @click="uploadPicChange">
           <i class="el-icon-plus"></i>
           <span>
              {{ $t('overall.uploadCustomPicture') }}
           </span>
         </button>
         <span>
-          <button class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-right: 20px" @click="changeSelectBoxShow(false)">
+          <button class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-right: 20px" type="button" @click="changeSelectBoxShow(false)">
              {{$t('overall.cancel')}}
           </button>
 
-          <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="changImage" :disabled="prevent_opt.save"
+          <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="changImage" :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
                       style="">
              {{$t('el.datepicker.confirm')}}
@@ -73,7 +73,7 @@
       :visible.sync="uploadPicShow"
       custom-class="nz-select-img-dialog nz-new-dialog"
       width="452px"
-      :append-to-body="true"
+      :append-to-body="false"
       :modal-append-to-body="false"
       @close="uploadPicShow = false"
       destroy-on-close>
@@ -118,11 +118,11 @@
       </el-row>
       <div slot="footer" class="upload-pic-row" style="text-align: right;margin-bottom: 0;width: 100%">
             <span>
-               <button class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-right: 20px" @click="uploadPicShow=false">
+               <button class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button" style="margin-right: 20px" @click="uploadPicShow=false">
              {{$t('project.topology.exit')}}
            </button>
 
-              <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="imgUpload" :disabled="prevent_opt.save"
+              <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="imgUpload" :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
                       style="">
              {{$t('overall.save')}}
@@ -144,7 +144,7 @@ export default {
     imgId: {},
     showDefault: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   data () {
@@ -311,6 +311,7 @@ export default {
       })
     },
     uploadPicChange () {
+      console.log(131123123123)
       this.unitArr = []
       this.tools.forEach((item, index) => {
         if (index > 0) {
