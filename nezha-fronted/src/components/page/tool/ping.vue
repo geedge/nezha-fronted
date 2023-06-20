@@ -392,6 +392,9 @@ export default {
       await this.clearTask()
     }
     next()
+  },
+  beforeDestroy () {
+    this.clearTask()
   }
 }
 </script>
