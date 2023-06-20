@@ -324,6 +324,11 @@ export default {
       this.offsetY = getTopology(this.meta2dId).store.data.y
       this.showNodeTools()
       this.popDataShowUpdate('', true)
+      this.renderTopology()
+    },
+    renderTopology () {
+      console.log('render')
+      getTopology(this.meta2dId).render()
     },
     penEnter (pen, e) { // 移入节点
       if (this.timer3) {
