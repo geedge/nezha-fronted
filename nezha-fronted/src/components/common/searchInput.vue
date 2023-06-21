@@ -501,6 +501,7 @@ export default {
     defaultItem: {},
     defaultValue: {},
     inTransform: {},
+    isNzTransfet: {},
     position: {
       type: String,
       default: ''
@@ -1544,6 +1545,12 @@ export default {
       const inputListDom = this.$refs['input-center-box']
       if (inputListDom) {
         this.$nextTick(() => {
+          if (this.isNzTransfet) {
+            const position = inputListDom.getBoundingClientRect()
+            this.selectDom.top = position.top + 36 + 'px'
+            this.selectDom.left = position.left + 'px'
+            return
+          }
           if (this.inTransform) {
             const position = inputListDom.getBoundingClientRect()
             this.selectDom.top = position.top + 36 + 'px'
