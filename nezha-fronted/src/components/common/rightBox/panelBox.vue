@@ -43,7 +43,7 @@
 
           <!-- chartShare -->
           <el-form-item :label="$t('dashboard.dashboard.chartTooltip')" class="item-receivers" prop="chartShare">
-            <el-select v-model="editPanel.param.chartShare" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
+            <el-select v-model="editPanel.param.chartShare" placeholder="" popper-class="right-box-select-top prevent-clickoutside right-box-select-width" size="small">
               <el-option value="none" :label="$t('config.assetLabel.default')"></el-option>
               <el-option value="crosshair" :label="$t('dashboard.dashboard.crosshair')"></el-option>
               <el-option value="tooltip" :label="$t('dashboard.dashboard.shareTooltip')"></el-option>
@@ -53,7 +53,7 @@
 
           <!-- defaultTimeRange -->
           <el-form-item :label="$t('dashboard.defaultTimeRange')" class="item-receivers" prop="defaultTimeRange">
-            <el-select v-model="editPanel.param.defaultTimeRange" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
+            <el-select v-model="editPanel.param.defaultTimeRange" placeholder="" popper-class="right-box-select-top prevent-clickoutside right-box-select-width" size="small">
               <el-option
                 v-for="item in timeData"
                 :value="item.id"
@@ -67,7 +67,7 @@
 
         <!-- Auto refresh -->
           <el-form-item :label="$t('dashboard.autoRefresh')" class="item-receivers" prop="refresh">
-            <el-select v-model="editPanel.param.refresh" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
+            <el-select v-model="editPanel.param.refresh" placeholder="" popper-class="right-box-select-top prevent-clickoutside right-box-select-width" size="small">
               <el-option
                 v-for="item in intervalList"
                 :value="item.value"
@@ -347,7 +347,7 @@
                   <el-form-item :label="$t('dashboard.dashboard.receivers')" class="item-receivers" prop="param.report.receivers">
                     <el-select
                     class="right-box__select"
-                    v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
+                    v-model="editPanel.param.report.receivers" clearable multiple placeholder="" popper-class="right-box-select-top prevent-clickoutside right-box-select-width" size="small" value-key="chartType">
                       <el-option
                       style="width: 620px"
                       v-for="item in userData" :key="item.id"
