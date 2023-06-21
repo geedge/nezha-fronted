@@ -94,7 +94,8 @@ export default {
       this.term = new Terminal({
         cursorStyle: 'block', // 光标样式  null | 'block' | 'underline' | 'bar'
         disableStdin: false, // 是否应禁用输入
-        fontSize: 16
+        fontSize: 16,
+        lineHeight: 1.2
       })
       this.term.open(terminalContainer)
       this.term.focus()
