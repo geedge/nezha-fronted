@@ -370,7 +370,7 @@ export default {
             } else {
               this.position.left = ePosition.layerX - 20 - 400
             }
-            if (boxHeight > (ePosition.layerY + 300)) {
+            if (boxHeight / 2 > ePosition.layerY) {
               this.position.top = ePosition.layerY + 50
             } else {
               this.position.top = ePosition.layerY - 300
