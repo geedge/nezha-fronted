@@ -175,6 +175,7 @@ export default {
     },
     viewGraph () {
       this.$refs.recordRulesQueryTab.viewGraph()
+      this.dropdownHandler(true)
     },
     dropdownHandler (show) {
       if (!show) {

@@ -98,18 +98,9 @@ import { deepClone, s8 } from '@meta2d/core'
 import lineData from './js/defaultPenLineData'
 export default {
   name: 'topologyTopTool',
+  inject: ['option'],
   data () {
     return {
-      option: {
-        lineName: 'curve',
-        lineWidth: 1,
-        fromArrow: '',
-        toArrow: 'triangleSolid',
-        scale: 100,
-        grid: false,
-        rule: false,
-        map: false
-      },
       dragstartFlag: false,
       drawLineFlag: false,
       scaleNum: 100,

@@ -131,6 +131,11 @@ import { globalStore } from '@meta2d/core'
 export default {
   name: 'meta2dMain',
   mixins: [meta2dMainCalc, topoUtil],
+  provide () {
+    return {
+      option: this.option
+    }
+  },
   props: {
     meta2dId: {}, // 唯一id 不可重复
     iconArray: {
@@ -159,6 +164,20 @@ export default {
       type: Boolean,
       default: true
     },
+  },
+  data () {
+    return {
+      option: {
+        lineName: 'curve',
+        lineWidth: 1,
+        fromArrow: '',
+        toArrow: 'triangleSolid',
+        scale: 100,
+        grid: false,
+        rule: false,
+        map: false
+      },
+    }
   },
   computed: {
   },
