@@ -264,25 +264,25 @@ export default {
           prop: 'id',
           minWidth: 48
         }, {
-          label: 'Name',
+          label: this.$t('overall.name'),
           prop: 'name',
           minWidth: 100
         }, {
-          label: 'Manage Ip',
+          label: this.$t('asset.manageIp'),
           prop: 'manageIp',
           minWidth: 132
         }, {
-          label: 'Type',
+          label: this.$t('overall.type'),
           prop: 'type',
           minWidth: 86
         }, {
-          label: 'Model',
+          label: this.$t('asset.model'),
           prop: 'model',
-          minWidth: 106
+          minWidth: 102
         }, {
-          label: 'Datacenter',
+          label: this.$t('overall.dc'),
           prop: 'dc',
-          minWidth: 94
+          minWidth: 98
         }
       ],
       rules: {
