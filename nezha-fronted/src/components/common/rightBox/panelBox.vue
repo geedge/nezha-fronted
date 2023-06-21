@@ -775,7 +775,7 @@ export default {
     'editPanel.param.report.schedule.stime': {
       deep: true,
       handler (n) {
-        const startTime = this.$loadsh.get(this.editPanel, 'param.report.schedule.stime', '')
+        const startTime = this.$lodash.get(this.editPanel, 'param.report.schedule.stime', '')
         if (startTime !== '') {
           this.editPanel.param.report.schedule.stime = bus
             .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')
@@ -785,7 +785,7 @@ export default {
     'editPanel.param.report.schedule.etime': {
       deep: true,
       handler (n) {
-        const endTime = this.$loadsh.get(this.editPanel, 'param.report.schedule.etime', '')
+        const endTime = this.$lodash.get(this.editPanel, 'param.report.schedule.etime', '')
         if (endTime !== '') {
           this.editPanel.param.report.schedule.etime = bus
             .timeFormate(new Date(n), 'YYYY-MM-DD HH:mm:ss')

@@ -215,7 +215,7 @@ export default {
     this.getItem()
     this.getUtcStr()
     this.getRangeHistoryArr()
-    const timeTemp = this.$loadsh.cloneDeep(this.searchTime)
+    const timeTemp = this.$lodash.cloneDeep(this.searchTime)
     this.oldSearchTime[0] = timeTemp[0]
     this.oldSearchTime[1] = timeTemp[1]
     // 监听dateFormat变化 改变日期格式
@@ -230,7 +230,7 @@ export default {
         const timeEnd = this.momentStrToTimestamp(this.oldSearchTime[1], this.timeFormatMain)
         this.$set(this.oldSearchTime, 0, this.momentTz(timeStart))
         this.$set(this.oldSearchTime, 1, this.momentTz(timeEnd))
-        this.searchTime = this.$loadsh.cloneDeep(this.oldSearchTime)
+        this.searchTime = this.$lodash.cloneDeep(this.oldSearchTime)
         this.$emit('change', this.searchTime)
         // 更新vuex日期格式
         this.$store.commit('setTimeFormatMain', localStorage.getItem('nz-default-dateFormat') || 'YYYY-MM-DD HH:mm:ss')
@@ -297,7 +297,7 @@ export default {
       if (this.oldSearchTimeError[0] || this.oldSearchTimeError[1]) {
         return
       }
-      this.searchTime = this.$loadsh.cloneDeep(this.oldSearchTime)
+      this.searchTime = this.$lodash.cloneDeep(this.oldSearchTime)
       this.showTime = this.nowTimeType = {
         id: 0,
         text: this.searchTime[0] + ' ' + this.$t('dashboard.dashboard.to') + ' ' + this.searchTime[1],
@@ -319,7 +319,7 @@ export default {
       this.$emit('change', this.searchTime)
     },
     showDropdown (value) {
-      const timeTemp = this.$loadsh.cloneDeep(this.searchTime)
+      const timeTemp = this.$lodash.cloneDeep(this.searchTime)
       this.oldSearchTime[0] = timeTemp[0]
       this.oldSearchTime[1] = timeTemp[1]
       this.oldSearchTimeError[0] = false
@@ -468,7 +468,7 @@ export default {
       this.$set(this.showTime, 'id', nowTimeType.id)
       this.$set(this.showTime, 'text', nowTimeType.text)
       this.setSearchTime(nowTimeType.type, nowTimeType.value)
-      const timeTemp = this.$loadsh.cloneDeep(this.searchTime)
+      const timeTemp = this.$lodash.cloneDeep(this.searchTime)
       this.oldSearchTime[0] = timeTemp[0]
       this.oldSearchTime[1] = timeTemp[1]
       this.oldSearchTimeError[0] = false

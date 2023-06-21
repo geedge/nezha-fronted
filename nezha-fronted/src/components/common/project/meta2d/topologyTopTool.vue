@@ -148,7 +148,7 @@ export default {
         } else {
           this.redoFlag = false
         }
-        if (historyIndex > -1 && !this.$loadsh.isNull(historyIndex)) {
+        if (historyIndex > -1 && !this.$lodash.isNull(historyIndex)) {
           this.undoFlag = true
         } else {
           this.undoFlag = false

@@ -17,7 +17,7 @@ import router from '@/router'
 import VueResource from 'vue-resource'
 import axios from 'axios'
 import { hasPermission, hasButton } from '@/permission'
-import loadsh from 'lodash'
+import lodash from 'lodash'
 import plTable from 'pl-table'
 import VueClipboard from 'vue-clipboard2'
 import 'pl-table/themes/index.css'
@@ -109,7 +109,7 @@ Vue.prototype.$post = post
 Vue.prototype.$get = get
 Vue.prototype.$put = put
 Vue.prototype.$delete = del
-Vue.prototype.$loadsh = loadsh // JavaScript 实用工具库  https://www.lodashjs.com/
+Vue.prototype.$lodash = lodash // JavaScript 实用工具库  https://www.lodashjs.com/
 Vue.prototype.$CONSTANTS = constants
 Vue.prototype.$TOOLS = tools
 Vue.prototype.$bottomBoxWindow = bottomBoxWindow // 底部上滑框控制

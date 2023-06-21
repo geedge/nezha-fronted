@@ -735,7 +735,7 @@ export default {
       this.$get('visual/dashboard/' + this.params.dashboardId).then(res => {
         if (res.code === 200) {
           this.panel = res.data
-          if (!this.$loadsh.get(this.panel, 'param.report', '')) {
+          if (!this.$lodash.get(this.panel, 'param.report', '')) {
             this.panel = {
               ...this.panel,
               param: {
@@ -760,13 +760,13 @@ export default {
             }
           }
           this.panel.param.report.schedule.type = this.panel.param.report.schedule.type + ''
-          const startTime = this.$loadsh.get(this.panel, 'param.report.schedule.stime', '')
+          const startTime = this.$lodash.get(this.panel, 'param.report.schedule.stime', '')
           if (startTime !== '') {
             this.panel.param.report.schedule.stime = this.utcTimeToTimezoneStr(this.panel.param.report.schedule.stime, 'YYYY-MM-DD HH:mm:ss')
           } else {
             this.panel.param.report.schedule.stime = ''
           }
-          const endTime = this.$loadsh.get(this.panel, 'param.report.schedule.etime', '')
+          const endTime = this.$lodash.get(this.panel, 'param.report.schedule.etime', '')
           if (endTime !== '') {
             this.panel.param.report.schedule.etime = this.utcTimeToTimezoneStr(this.panel.param.report.schedule.etime, 'YYYY-MM-DD HH:mm:ss')
           } else {

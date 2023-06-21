@@ -445,9 +445,9 @@ export default {
       }
     },
     statMouseEnter (that, e) {
-      this.tooltip.title = this.$loadsh.cloneDeep(that.legend)
-      this.tooltip.value = this.$loadsh.cloneDeep(that.showValue)
-      this.tooltip.mapping = this.$loadsh.cloneDeep(that.mapping)
+      this.tooltip.title = this.$lodash.cloneDeep(that.legend)
+      this.tooltip.value = this.$lodash.cloneDeep(that.showValue)
+      this.tooltip.mapping = this.$lodash.cloneDeep(that.mapping)
       this.tooltip.show = true
       this.$nextTick(() => {
         const windowWidth = window.innerWidth// 窗口宽度

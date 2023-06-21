@@ -171,8 +171,8 @@ export default {
                   }
                 }
               })
-              arr = this.$loadsh.uniqBy(arr, 'value')
-              // arr = this.$loadsh.uniqBy(arr, 'label')
+              arr = this.$lodash.uniqBy(arr, 'value')
+              // arr = this.$lodash.uniqBy(arr, 'label')
               arr.filter(item => item.value)
               response = arr
             }
@@ -201,7 +201,7 @@ export default {
               label: item
             }
           })
-          arr = this.$loadsh.uniqBy(arr, 'value')
+          arr = this.$lodash.uniqBy(arr, 'value')
           arr.filter(item => item.value)
           resolve(arr)
         })
@@ -230,7 +230,7 @@ export default {
                 label: item
               }
             })
-            arr = this.$loadsh.uniqBy(arr, 'value')
+            arr = this.$lodash.uniqBy(arr, 'value')
             arr = arr.filter(item => item.value)
             resolve(arr)
           })
@@ -254,7 +254,7 @@ export default {
                 label: item[label]
               }
             })
-            arr = this.$loadsh.uniqBy(arr, 'value')
+            arr = this.$lodash.uniqBy(arr, 'value')
             arr.filter(item => item.value)
             resolve(arr)
           })

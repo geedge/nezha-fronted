@@ -616,8 +616,8 @@ export default {
               this.panelData = response.data.list
               if (this.panelData.length > 0) {
                 this.filter.dashboardId = this.panelData[0].id
-                this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
-                this.variables = this.$loadsh.cloneDeep(this.$loadsh.get(this, 'showPanel.param.variables', []) || [])
+                this.showPanel = this.$lodash.cloneDeep(this.panelData[0])
+                this.variables = this.$lodash.cloneDeep(this.$lodash.get(this, 'showPanel.param.variables', []) || [])
                 this.getData(this.filter)
               }
             }
@@ -634,8 +634,8 @@ export default {
               this.panelData = response.data.list
               if (this.panelData.length > 0) {
                 this.filter.dashboardId = this.panelData[0].id
-                this.showPanel = this.$loadsh.cloneDeep(this.panelData[0])
-                this.variables = this.$loadsh.cloneDeep(this.$loadsh.get(this, 'showPanel.param.variables', []) || [])
+                this.showPanel = this.$lodash.cloneDeep(this.panelData[0])
+                this.variables = this.$lodash.cloneDeep(this.$lodash.get(this, 'showPanel.param.variables', []) || [])
                 this.getData(this.filter)
               } else {
                 this.chartListLoading = false
@@ -838,12 +838,12 @@ export default {
     // 时间选择器设置默认时间范围
     setDefaultTimeRange () {
       this.$nextTick(() => {
-        let nowTimeType = this.$loadsh.cloneDeep(this.timeData[3])
-        const defaultTimeRange = this.$loadsh.get(this.showPanel, 'param.defaultTimeRange')
+        let nowTimeType = this.$lodash.cloneDeep(this.timeData[3])
+        const defaultTimeRange = this.$lodash.get(this.showPanel, 'param.defaultTimeRange')
         if (defaultTimeRange) {
           nowTimeType = this.timeData.find(item => item.id == defaultTimeRange)
         }
-        this.nowTimeType = this.$loadsh.cloneDeep(nowTimeType)
+        this.nowTimeType = this.$lodash.cloneDeep(nowTimeType)
         // 刷新时间范围
         this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType)
         this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
@@ -856,8 +856,8 @@ export default {
     // 设置默认刷新
     setDefaultRefresh () {
       this.$nextTick(() => {
-        let refresh = this.$loadsh.cloneDeep(this.intervalList[0])
-        const defaultRefresh = this.$loadsh.get(this.showPanel, 'param.refresh')
+        let refresh = this.$lodash.cloneDeep(this.intervalList[0])
+        const defaultRefresh = this.$lodash.get(this.showPanel, 'param.refresh')
         if (defaultRefresh) {
           refresh = this.intervalList.find(item => item.value == defaultRefresh)
         }

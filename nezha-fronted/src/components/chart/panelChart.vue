@@ -204,7 +204,7 @@ export default {
         this.chartInfo.oldElements = this.chartInfo.elements ? JSON.parse(JSON.stringify(this.chartInfo.elements)) : []
       }
       // eslint-disable-next-line vue/no-mutating-props
-      this.chartInfo.elements = this.$loadsh.cloneDeep(this.chartInfo.oldElements.filter(item => item.state)) // 处理不显示的表达式
+      this.chartInfo.elements = this.$lodash.cloneDeep(this.chartInfo.oldElements.filter(item => item.state)) // 处理不显示的表达式
       // eslint-disable-next-line vue/no-mutating-props
       this.chartInfo.elements = this.chartInfo.elements.map((item, index) => { // 处理表达式的变量
         // group图表设置repeat的表达式替换
@@ -403,9 +403,9 @@ export default {
             if (this.from === fromRoute.chartTemp || this.from === fromRoute.dashboardTemp) {
               let tempData
               if (this.chartInfo.type === 'assetInfo') {
-                tempData = this.$loadsh.cloneDeep(assetInfoData.data)
+                tempData = this.$lodash.cloneDeep(assetInfoData.data)
               } else if (this.chartInfo.type === 'endpointInfo') {
-                tempData = this.$loadsh.cloneDeep(endpointInfoData.data)
+                tempData = this.$lodash.cloneDeep(endpointInfoData.data)
               } else {
                 tempData = [chartTempData.data.result]
               }
@@ -659,7 +659,7 @@ export default {
           confirmReg.push(item)
         }
       })
-      confirmReg = this.$loadsh.orderBy(confirmReg, function (item) { // 根据 匹配的name的长度排序 避免匹配的 $a 没匹配 $asset的问题
+      confirmReg = this.$lodash.orderBy(confirmReg, function (item) { // 根据 匹配的name的长度排序 避免匹配的 $a 没匹配 $asset的问题
         return item.name.length
       }, 'desc')
       if (confirmReg.length) {
@@ -873,7 +873,7 @@ export default {
     },
     variablesArr: {
       handler (n) {
-        const elements = this.$loadsh.cloneDeep(this.chartInfo.oldElements) || []
+        const elements = this.$lodash.cloneDeep(this.chartInfo.oldElements) || []
         const variables = elements.map((element) => {
           return this.variablesReplace(element.expression)
         })

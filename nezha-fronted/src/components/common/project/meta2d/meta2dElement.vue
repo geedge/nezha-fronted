@@ -466,7 +466,7 @@
                       </el-select>
                     </div>
                     <div style="display: inline-block;width: calc(70% - 13px);margin-left: 10px">
-                      <el-select v-model="pen.data.textLegend" size="small">
+                      <el-select v-model="pen.data.textLegend" size="small" filterable allow-create clearable default-first-option>
                         <el-option v-for="item in queryValues.filter(query => (query.parent === pen.data.textParent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name' :title="item.name" style="width: 302px"> </el-option>
                       </el-select>
                     </div>
@@ -789,6 +789,31 @@
           </div>
         </div>
       </div>
+      <!--source-->
+      <div class="form-row-title">
+        {{$t('dashboard.dashboard.chartForm.datasource')}}
+      </div>
+      <div class="el-form">
+        <div  class="form-row-content">
+          <div class="form-row-item form-row-item-full">
+            <div class="form-row-key">
+              {{$t('dashboard.dashboard.chartForm.legend')}}
+            </div>
+            <div class="form-row-value">
+              <div style="display: inline-block;width: calc(30% - 3px)">
+                <el-select v-model="pen.data.parent" size="small" clearable @change="penDataParentChange">
+                  <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name' :title="item.name" style="width: 133px;"></el-option>
+                </el-select>
+              </div>
+              <div style="display: inline-block;width: calc(70% - 13px);margin-left: 10px">
+                <el-select v-model="pen.data.legend" size="small" filterable allow-create clearable default-first-option>
+                  <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => (query.parent === pen.data.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name' :title="item.name" style="width: 302px;"></el-option>
+                </el-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!--         valueMapping -->
       <div class="form-row-title">
@@ -806,23 +831,6 @@
       <transition name="el-zoom-in-top">
         <div class="el-form" v-show="elements.valueMapping && pen.data.enable.valueMapping">
           <div  class="form-row-content">
-            <div class="form-row-item form-row-item-full">
-              <div class="form-row-key">
-                {{$t('dashboard.dashboard.chartForm.legend')}}
-              </div>
-              <div class="form-row-value">
-                <div style="display: inline-block;width: calc(30% - 3px)">
-                  <el-select v-model="pen.data.parent" size="small" clearable @change="penDataParentChange">
-                    <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => query.type === 'title')" :key="item.id" :value="item.name" :label='item.name' :title="item.name" style="width: 133px;"></el-option>
-                  </el-select>
-                </div>
-                <div style="display: inline-block;width: calc(70% - 13px);margin-left: 10px">
-                  <el-select v-model="pen.data.legend" size="small" clearable>
-                    <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => (query.parent === pen.data.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name' :title="item.name" style="width: 302px;"></el-option>
-                  </el-select>
-                </div>
-              </div>
-            </div>
             <div class="form-row-item form-row-item-full chart-config">
               <el-row class="el-form">
                 <draggable
@@ -1073,7 +1081,15 @@
               </el-select>
             </div>
             <div style="display: inline-block;width: calc(30% - 10px)">
-              <el-select v-model="legend.legend" size="small" :title="legend.legend" style="width: 100%" clearable>
+              <el-select
+                v-model="legend.legend"
+                size="small"
+                :title="legend.legend"
+                style="width: 100%"
+                filterable
+                allow-create
+                default-first-option
+                clearable>
                 <el-option class="text-ellipsis" v-for="item in queryValues.filter(query => (query.parent === legend.parent) && query.type === 'item')" :key="item.id" :value="item.name" :label='item.name'  :title='item.name' style="width: 300px"></el-option>
               </el-select>
             </div>
