@@ -98,18 +98,9 @@ import { deepClone, s8 } from '@meta2d/core'
 import lineData from './js/defaultPenLineData'
 export default {
   name: 'topologyTopTool',
+  inject: ['option'],
   data () {
     return {
-      option: {
-        lineName: 'curve',
-        lineWidth: 1,
-        fromArrow: '',
-        toArrow: 'triangleSolid',
-        scale: 100,
-        grid: false,
-        rule: false,
-        map: false
-      },
       dragstartFlag: false,
       drawLineFlag: false,
       scaleNum: 100,
@@ -277,10 +268,12 @@ export default {
     undo () { // 撤销
       getTopology(this.meta2dId).undo()
       // getTopology(this.meta2dId).inactive()
+      this.showMap()
       bus.$emit('changeSelectPens', [])
     },
     redo () { // 重做
       getTopology(this.meta2dId).redo()
+      this.showMap()
       // getTopology(this.meta2dId).render()
       // getTopology(this.meta2dId).inactive()
       bus.$emit('changeSelectPens', [])

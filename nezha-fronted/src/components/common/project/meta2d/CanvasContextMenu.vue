@@ -65,6 +65,7 @@ export default {
       historiesLength: 0
     }
   },
+  inject: ['option'],
   props: {
     meta2dId: {
       require: true
@@ -81,10 +82,16 @@ export default {
     undo () { // 撤销
       getTopology(this.meta2dId).undo()
       // getTopology(this.meta2dId).inactive()
+      if (this.option.map) {
+        getTopology(this.meta2dId).showMap()
+      }
       bus.$emit('changeSelectPens', [])
     },
     redo () { // 重做
       getTopology(this.meta2dId).redo()
+      if (this.option.map) {
+        getTopology(this.meta2dId).showMap()
+      }
       // getTopology(this.meta2dId).inactive()
       bus.$emit('changeSelectPens', [])
     },
