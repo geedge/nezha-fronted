@@ -13,7 +13,11 @@
       @saveChart="saveChart"
       @getNodesArr="getNodesArr"
     />
-    <div class="meta2d-main" :class="isChart ? 'meta2d-chart': 'meta2d-project'" @contextmenu="onContextMenu($event)" style="position: relative" :style="{border: editFlag ? '1px solid' : ''}">
+    <div class="meta2d-main" :class="{
+      'meta2d-chart-hide-header': !showHeader,
+      'meta2d-chart': isChart,
+      'meta2d-project': !isChart
+    }" @contextmenu="onContextMenu($event)" style="position: relative" :style="{border: editFlag ? '1px solid' : ''}">
       <div v-for="(item,index) in nodesArr" v-if="!editFlag && project"
            :key="index"
            v-show="(item.y + offsetY - 48 > -20) && (item.x + item.width/2 + offsetX - 24 > - 20)"

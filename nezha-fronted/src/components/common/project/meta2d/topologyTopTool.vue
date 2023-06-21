@@ -277,10 +277,12 @@ export default {
     undo () { // 撤销
       getTopology(this.meta2dId).undo()
       // getTopology(this.meta2dId).inactive()
+      this.showMap()
       bus.$emit('changeSelectPens', [])
     },
     redo () { // 重做
       getTopology(this.meta2dId).redo()
+      this.showMap()
       // getTopology(this.meta2dId).render()
       // getTopology(this.meta2dId).inactive()
       bus.$emit('changeSelectPens', [])
