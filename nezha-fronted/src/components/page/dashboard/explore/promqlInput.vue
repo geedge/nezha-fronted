@@ -1,5 +1,5 @@
 <template>
-  <div class="promqlInput">
+  <div class="promqlInput" :class=" errorMsg || appendMsg ? 'mb10' : ''">
     <div class="query-row">
       <!--explore页面的样式-->
       <template v-if="styleType == 1">
@@ -101,10 +101,10 @@
           >
           </el-input>
 
-          <div v-if="errorMsg" class="append-msg error">
+          <div v-if="errorMsg" class="append-msg error" style="position: absolute">
             <span>{{ errorMsg }}</span>
           </div>
-          <div v-if="appendMsg" class="append-msg error">
+          <div v-if="appendMsg" class="append-msg error" style="position: absolute">
             <span>{{ appendMsg }}</span>
           </div>
         </div>
@@ -273,12 +273,12 @@
                 class="not-fixed-height no-resize"
                 ref="elInput"
               ></el-input>
-              <div class="append-msg error" v-if="errorMsg">
-                <span>{{ errorMsg }}</span>
-              </div>
-              <div class="append-msg error" v-if="appendMsg">
-                <span>{{ appendMsg }}</span>
-              </div>
+            </div>
+            <div class="append-msg error" v-if="errorMsg">
+              <span>{{ errorMsg }}</span>
+            </div>
+            <div class="append-msg error" v-if="appendMsg">
+              <span>{{ appendMsg }}</span>
             </div>
           </el-col>
         </el-row>
