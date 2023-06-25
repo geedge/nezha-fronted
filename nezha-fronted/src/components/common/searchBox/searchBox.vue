@@ -78,7 +78,7 @@
             v-model="editDialogObj.value"
             multiple
             filterable
-            allow-create
+            allow-create :maxlength="64"
             default-first-option
           >
             <el-option

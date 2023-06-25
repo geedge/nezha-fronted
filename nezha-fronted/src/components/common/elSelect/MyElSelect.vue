@@ -48,6 +48,7 @@
         :class="[selectSize ? `is-${ selectSize }` : '']"
         :disabled="selectDisabled"
         :autocomplete="autoComplete || autocomplete"
+        :maxlength = "maxlength"
         @focus="handleFocus"
         @blur="softFocus = false"
         @click.stop
@@ -72,6 +73,7 @@
       v-model="selectedLabel"
       type="text"
       :placeholder="currentPlaceholder"
+      :maxlength = "maxlength"
       :name="name"
       :id="id"
       :autocomplete="autoComplete || autocomplete"
@@ -301,6 +303,9 @@ export default {
     popperAppendToBody: {
       type: Boolean,
       default: true
+    },
+    maxlength: {
+      type: Number
     }
   },
 
@@ -332,6 +337,9 @@ export default {
   },
 
   watch: {
+    maxlength (n) {
+      console.log(n)
+    },
     selectDisabled () {
       this.$nextTick(() => {
         this.resetInputHeight()

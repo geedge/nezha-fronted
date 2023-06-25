@@ -16,6 +16,7 @@
              id="traffic-setting-asset"
              popper-class="no-style-class"
              size="small"
+             :maxlength="64"
              v-model="assetSetting.host"
            ></el-autocomplete>
           <el-popover @hide="popHide" @show="popShow" placement="bottom" popper-class="no-style-class" trigger="hover">
@@ -177,6 +178,7 @@
                     :trigger-on-focus="true"
                     popper-class="no-style-class"
                     size="mini"
+                    :maxlength="64"
                     :highlight-first-item="true"
                     @input="ifIndexInputChange(scope.row[item.prop],scope.row,scope.$index)"
                   ></el-autocomplete>
