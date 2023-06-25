@@ -40,8 +40,8 @@
               </el-switch>
             </el-form-item>
             <el-form-item :label='$t("overall.type")' prop="type">
-              <el-select v-model="editAssetMeta.type" :popper-append-to-body="false" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="selectType">
-                <el-option v-for="(item, index) in typeData" :key="index" :value="item.value" :disabled="item.disabled">
+              <el-select v-model="editAssetMeta.type" :popper-append-to-body="false" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside right-box-select-width" size="small" @change="selectType">
+                <el-option v-for="(item, index) in typeData" :key="index" :value="item.value" :disabled="item.disabled" :label="item.name">
                   <div><i :class="item.icon"></i>&nbsp;&nbsp;<span>{{item.name}}</span></div>
                 </el-option>
               </el-select>
