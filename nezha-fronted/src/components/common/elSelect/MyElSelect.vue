@@ -337,9 +337,6 @@ export default {
   },
 
   watch: {
-    maxlength (n) {
-      console.log(n)
-    },
     selectDisabled () {
       this.$nextTick(() => {
         this.resetInputHeight()

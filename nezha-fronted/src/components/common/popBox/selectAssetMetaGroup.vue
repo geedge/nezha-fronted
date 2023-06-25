@@ -30,13 +30,13 @@
               </span>
               <el-row class="block-col-2" style="width: 35px;">
                 <el-col>
-                  <el-dropdown placement="bottom-end" trigger="click">
+                  <el-dropdown placement="bottom-end" trigger="click" v-if="data.id != -1">
                     <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
                     <el-dropdown-menu class="right-box-select-top" slot="dropdown"  v-has="['asset_label_delete', 'asset_label_edit']">
-                      <el-dropdown-item>
+                      <el-dropdown-item class="select-meta-group-button">
                         <span @click.stop="edit(data)"><i v-has="'asset_label_edit'" class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</span>
                       </el-dropdown-item>
-                      <el-dropdown-item>
+                      <el-dropdown-item class="select-meta-group-button">
                         <span @click.stop="del(data)" v-has="'asset_label_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</span>
                       </el-dropdown-item>
                     </el-dropdown-menu>
