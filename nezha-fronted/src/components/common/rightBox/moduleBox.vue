@@ -52,6 +52,7 @@
             <!--              <el-input placeholder="" v-model=""></el-input>-->
             <el-autocomplete
               id="module-box-input-pattern"
+              :maxlength="64"
               v-model="editModule.endpointNameTmpl"
               :fetch-suggestions="querySearch"
               :placeholder="$t('overall.placeHolder')"

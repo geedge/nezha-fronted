@@ -692,7 +692,7 @@
                         style="margin-right: 10px"
                         @change="change('valueMapping', index)"
                         filterable
-                        allow-create
+                        allow-create :maxlength="64"
                         default-first-option
                       >
                       <el-option
@@ -771,7 +771,7 @@
                 size="small"
                 @change="change"
                 filterable
-                allow-create
+                allow-create :maxlength="64"
                 default-first-option
               >
                 <el-option

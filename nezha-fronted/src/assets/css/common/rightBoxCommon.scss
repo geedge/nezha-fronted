@@ -325,7 +325,12 @@
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   max-width: 626px !important;
-
+  .hidden-padding {
+    padding: 0;
+    > span{
+      padding: 0 20px;
+    }
+  }
 }
 .api-select.right-box-select-top.right-public-box-dropdown-top {
   .el-scrollbar__view.el-select-dropdown__list {

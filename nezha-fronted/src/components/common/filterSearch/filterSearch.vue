@@ -12,7 +12,7 @@
         <div class="condition__column">
           <div v-if="meta.nameIsEditing">
             <el-select
-              allow-create
+              allow-create :maxlength="64"
               filterable
               size="mini"
               v-model="meta.name"
@@ -35,7 +35,7 @@
         <div class="condition__column">
           <div v-if="meta.operIsEditing">
             <el-select
-              allow-create
+              allow-create :maxlength="64"
               filterable
               size="mini"
               v-model="meta.oper"
