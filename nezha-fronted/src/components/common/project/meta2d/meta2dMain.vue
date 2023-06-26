@@ -164,6 +164,10 @@ export default {
       type: Boolean,
       default: true
     },
+    paddingTop: {
+      type: Number,
+      default: 20
+    }
   },
   data () {
     return {

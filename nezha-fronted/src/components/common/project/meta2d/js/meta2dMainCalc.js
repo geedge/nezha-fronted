@@ -137,7 +137,7 @@ export default {
           getTopology(this.meta2dId).resize()
           getTopology(this.meta2dId).open(data)
           if (this.isChart) {
-            getTopology(this.meta2dId).fitView(true, 20)
+            getTopology(this.meta2dId).fitView(true, this.paddingTop)
           } else {
             getTopology(this.meta2dId).centerView()
           }
