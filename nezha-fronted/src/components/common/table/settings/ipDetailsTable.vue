@@ -38,15 +38,15 @@
         <template v-else-if="item.prop === 'state'">
           <div v-if="scope.row[item.prop] === 1">
             <span class="nz-icon nz-icon-circle ip-detail-available"></span>
-            {{ 'Available' }}
+            {{ $t('overall.ipam.available') }}
           </div>
           <div v-else-if="scope.row[item.prop] === 2">
             <span class="nz-icon nz-icon-circle ip-detail-transient"></span>
-            {{ 'Transient' }}
+            {{ $t('overall.ipam.available') }}
           </div>
           <div v-else-if="scope.row[item.prop] === 3">
             <span class="nz-icon nz-icon-circle ip-detail-used"></span>
-            {{ 'Used' }}
+            {{ $t('overall.ipam.used') }}
           </div>
         </template>
         <span v-else-if="scope.row[item.prop]" :class="item.prop === 'remark'? 'el-table-remark':''">{{scope.row[item.prop]}}</span>
