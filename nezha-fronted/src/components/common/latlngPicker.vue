@@ -7,9 +7,8 @@
         </el-input>
       </div>
       <div class="input-box-item" v-if="showZoom">
-        <el-input v-model="zoom" :max="mapParam.maxZoom" :min="mapParam.minZoom" :step="1"  controls-position="right">
-          <template v-if="showZoom" slot="prepend">{{$t('config.system.basic.zoom')}}</template>
-        </el-input>
+        <el-input-number v-model="zoom" :max="mapParam.maxZoom" :precision="0" :min="mapParam.minZoom"  :controls="false" class="prepend_unit" :data-unit="$t('config.system.basic.zoom')">
+        </el-input-number>
       </div>
       <div class="input-box-item" style="margin-right: unset !important;width: 30px !important;flex:unset;" @click="mapConfigVisible = true"><i class="nz-icon nz-icon-weizhi" style="color:rgb(238, 157, 63)"></i></div>
     </div>
@@ -209,9 +208,7 @@ export default {
             } else {
               this.mapParam = { ...mapParam }
             }
-            if (!this.zoom) {
-              this.zoom = mapParam.zoom
-            }
+            this.zoom = mapParam.zoom
             resolve()
           }
         })
