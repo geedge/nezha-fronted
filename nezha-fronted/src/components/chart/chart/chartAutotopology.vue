@@ -19,6 +19,7 @@
               :is-chart="true"
               :iconArray="iconArray"
               :ref="'topology' + index"
+              :paddingTop="40"
             />
           </el-carousel-item>
         </el-carousel>
