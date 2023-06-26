@@ -281,6 +281,9 @@ export default {
         event.cancelBubble = true
       }
       this.checked = this.checked.filter(dcId => dcId !== id)
+      const checkedCount = this.checked.length
+      this.checkAll = checkedCount === this.dataCenter.length
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.dataCenter.length
     },
     // 开始任务
     startTask () {
