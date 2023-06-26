@@ -37,9 +37,9 @@
       </template>
       <template slot-scope="scope" :column="item">
         <span v-if="item.prop==='varType'">
-          <template v-if="scope.row[item.prop] == 0 ">None</template>
-          <template v-if="scope.row[item.prop] == 1 ">Asset</template>
-          <template v-if="scope.row[item.prop] == 2 ">Endpoint</template>
+          <template v-if="scope.row[item.prop] == 0 ">{{$t('project.topology.none')}}</template>
+          <template v-if="scope.row[item.prop] == 1 ">{{$t('asset.asset')}}</template>
+          <template v-if="scope.row[item.prop] == 2 ">{{$t('asset.endpoint')}}</template>
         </span>
         <template v-else-if="item.prop === 'name'">
           <copy :copyData='scope.row[item.prop]' :showInfo='scope.row[item.prop]'>
