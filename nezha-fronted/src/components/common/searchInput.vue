@@ -1112,7 +1112,16 @@ export default {
     // 获取历史记录  数据进行处理以便循环展示
     restructure_historyDate () {
       if (localStorage.getItem('nz-history-' + this.where) !== undefined && localStorage.getItem('nz-history-' + this.where) !== null) {
-        this.history_once = JSON.parse(localStorage.getItem('nz-history-' + this.where))
+        const arr = JSON.parse(localStorage.getItem('nz-history-' + this.where))
+        arr.forEach(labelArr => {
+          labelArr.forEach((item)=>{
+            const findItem = this.searchMsg.searchLabelList.find(searchLabel => searchLabel.id == item.id)
+            if(findItem) {
+              item.name = findItem.name
+            }
+          })
+        })
+        this.history_once = arr
       }
     },
     clear_search_list (e) {
