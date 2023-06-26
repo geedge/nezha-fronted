@@ -6,7 +6,7 @@
     margin-right: 20px;
     flex: 1;
   }
-  .latlng .input-box .el-input,.latlng .input-box .el-input-number{
+  .latlng .input-box .input-box-item .el-input,.latlng .input-box .input-box-item .el-input-number{
     width: 100%;
   }
   .latlng .map-config-dialog .el-dialog{
@@ -19,4 +19,25 @@
   .latlng .input-box .el-input .el-input-group__prepend{
     padding:0px 5px!important;
   }
+
+
+.prepend_unit{
+  display: flex;
+  .el-input--small .el-input__inner {
+    border-radius: 0 4px 4px 0;
+    border-left: none;
+  }
+  &::before{
+    content: attr(data-unit);
+    //position: absolute;
+    display: inline-block;
+    top: 0;
+    right: 100%;
+    padding: 0 5px;
+    color: $--color-text-secondary;
+    background-color: $--background-color-base;
+    border: 1px solid $--border-color-light;
+    border-radius:4px 0 0 4px;
+  }
+}
 
