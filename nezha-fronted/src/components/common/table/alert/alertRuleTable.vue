@@ -268,6 +268,9 @@ export default {
       ],
       weekList: [
         {
+          value: 1,
+          label: this.$t('week.SunAbbreviation')
+        }, {
           value: 2,
           label: this.$t('week.MonAbbreviation')
         }, {
@@ -285,9 +288,6 @@ export default {
         }, {
           value: 7,
           label: this.$t('week.SatAbbreviation')
-        }, {
-          value: 1,
-          label: this.$t('week.SunAbbreviation')
         }
       ]
     }
