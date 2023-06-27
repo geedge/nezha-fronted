@@ -520,23 +520,20 @@
   border: unset !important;
 }
 .chart-table ,.chart-preview-dialog {
-  .nz-table .el-table__row .costom-value .cell{
+  .nz-table .el-table__row .custom-value .cell{
     padding: 1px 0;
   }
 }
 .chart-table {
-  .costom-value{
+  .custom-value{
     padding: 0 !important;
   }
-  .el-table__row .costom-value .cell{
+  .el-table__row .custom-value .cell{
     padding: 2px 1px;
+    display: block;
   }
   div{
     padding: 0;
-  }
-  .value-mapping-table {
-    padding: 10px;
-    color: $--color-text-primary !important;
   }
 }
 .line-area-box{

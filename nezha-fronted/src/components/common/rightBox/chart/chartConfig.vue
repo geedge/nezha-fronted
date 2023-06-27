@@ -682,7 +682,7 @@
         </transition>
       </div>
 
-      <!--      table column-->
+      <!-- table column -->
       <div v-if="isTable(chartConfig.type)">
         <div class="form__sub-title">
           <span>{{$t('dashboard.dashboard.chartForm.columns')}}</span>
@@ -777,7 +777,91 @@
         </div>
       </div>
 
-      <!--      valueMapping  -->
+      <!-- table options -->
+      <div v-if="isTable(chartConfig.type)">
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.dashboard.chartForm.tableOptions')}}</span>
+        </div>
+        <div class="form-items--half-width-group">
+          <!-- show table header -->
+          <el-form-item
+            :label="$t('dashboard.dashboard.chartForm.showTableHeader')"
+            class="form-item--half-width"
+            prop="param.tableOptions.showTableHeader"
+          >
+            <el-select
+              id="chart-box-type"
+              v-model="chartConfig.param.tableOptions.showTableHeader"
+              popper-class="right-box-select-top prevent-clickoutside"
+              size="small"
+              @change="change"
+              >
+              <el-option :label="$t('overall.enabled')" value="enabled"></el-option>
+              <el-option :label="$t('overall.disabled')" value="disabled"></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- pagination -->
+          <el-form-item
+            :label="$t('dashboard.dashboard.chartForm.pagination')"
+            class="form-item--half-width"
+            prop="param.tableOptions.pagination"
+          >
+            <el-select
+              id="chart-box-type"
+              v-model="chartConfig.param.tableOptions.pagination"
+              popper-class="right-box-select-top prevent-clickoutside"
+              size="small"
+              @change="change"
+              >
+              <el-option :label="$t('overall.enabled')" value="enabled"></el-option>
+              <el-option :label="$t('overall.disabled')" value="disabled"></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- default sort column-->
+          <el-form-item
+            :label="$t('dashboard.dashboard.chartForm.defaultSortColumn')"
+            class="form-item--half-width"
+            prop="param.tableOptions.defaultSortColumn"
+          >
+            <el-select
+              id="chart-box-type"
+              v-model="chartConfig.param.tableOptions.defaultSortColumn"
+              :placeholder="$t('overall.auto')"
+              popper-class="right-box-select-top prevent-clickoutside"
+              size="small"
+              @change="change"
+              >
+              <el-option
+                v-for="item in chartConfig.param.columns.filter(item=> item.title)"
+                :value="item.title"
+                :label="item.title"
+                :key="item.title"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!-- default sort-->
+          <el-form-item
+            :label="$t('dashboard.dashboard.chartForm.defaultSort')"
+            class="form-item--half-width"
+            prop="param.tableOptions.defaultSort"
+          >
+            <el-select
+              id="chart-box-type"
+              v-model="chartConfig.param.tableOptions.defaultSort"
+              :placeholder="$t('overall.auto')"
+              popper-class="right-box-select-top prevent-clickoutside"
+              size="small"
+              @change="change"
+              >
+              <el-option :label="$t('dashboard.dashboard.chartForm.asc')" value="asc"></el-option>
+              <el-option :label="$t('dashboard.dashboard.chartForm.desc')" value="desc"></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+      </div>
+
+      <!-- valueMapping  -->
       <div v-if="isShowValueMapping(chartConfig.type) || isTable(chartConfig.type)">
         <div class="form__sub-title">
           <span>{{$t('dashboard.dashboard.chartForm.valueMapping')}}</span>
@@ -1155,6 +1239,7 @@
                   <el-select
                     v-model="item.openIn"
                     size="small"
+                    popper-class="right-box-select-top prevent-clickoutside"
                     @change="change"
                   >
                     <el-option value="newTab" :label="$t('dashboard.dashboard.chartForm.newTab')"></el-option>
@@ -1415,6 +1500,12 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
+            },
+            tableOptions: {
+              showTableHeader: 'enabled',
+              pagination: 'enabled',
+              defaultSortColumn: null,
+              defaultSort: null
             },
             dataLink: this.chartConfig.param.dataLink
           }

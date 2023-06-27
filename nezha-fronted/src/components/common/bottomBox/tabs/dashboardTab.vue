@@ -438,6 +438,16 @@ export default {
         if (!this.chart.param.dataLink) {
           this.chart.param.dataLink = []
         }
+        if (this.chart.type == 'table') {
+          if (!this.chart.param.tableOptions) {
+            this.chart.param.tableOptions = {
+              showTableHeader: 'enabled',
+              pagination: 'enabled',
+              defaultSortColumn: null,
+              defaultSort: null
+            }
+          }
+        }
       } else {
         this.rightBox.loading = true
         this.$get('visual/dashboard/chart/' + data.id).then(res => {
@@ -480,6 +490,14 @@ export default {
                   tiClasses: ['ti-valid']
                 }
               })
+              if (!this.chart.param.tableOptions) {
+                this.chart.param.tableOptions = {
+                  showTableHeader: 'enabled',
+                  pagination: 'enabled',
+                  defaultSortColumn: null,
+                  defaultSort: null
+                }
+              }
             }
             this.$nextTick(() => {
               this.$refs.addChartModal.isStable = 'stable'

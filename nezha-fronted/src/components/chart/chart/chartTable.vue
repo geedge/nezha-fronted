@@ -4,20 +4,21 @@
       ref="dataTable"
       class="chart-table"
       :data="tableData"
-      :height="'calc(100% - 0px)'"
+      :height="'100%'"
       :width="'100%'"
       border
       @sort-change="tableDataSort"
+      :show-header="showHeader"
     >
       <el-table-column
         v-for="(col, index) in columns"
         :prop="col.title"
         :key="`col-${index}`"
-        :min-width="160"
-        :sort-orders="['ascending', 'descending']"
         class="data-column"
-        class-name="costom-value"
-        sortable
+        class-name="custom-value"
+        :sort-orders="['ascending', 'descending']"
+        sortable="custom"
+        :min-width="160"
       >
         <template slot="header">
           <span class="data-column__span">{{col.title}}</span>
@@ -46,6 +47,18 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- pagination -->
+    <div class="tabel-chart-pagination" v-if="showPagination">
+      <el-pagination
+        @current-change="pageNo"
+        :page-size="pageObj.pageSize"
+        :current-page.sync="pageObj.pageNo"
+        :total="pageObj.total"
+        layout="prev, pager, next"
+        :pager-count="5"
+      >
+      </el-pagination>
+    </div>
     <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
       <div class="chart-canvas-tooltip-title tooltip-title">{{tooltip.title}}</div>
       <div class="chart-canvas-tooltip-content">
@@ -78,10 +91,71 @@ export default {
       oldTableData: [],
       columns: [],
       valueMapping: {},
-      tableTimer: null
+      tableTimer: null,
+      pageObj: {
+        pageNo: 1,
+        pageSize: 1,
+        total: 0
+      },
+      orderBy: {}
+    }
+  },
+  computed: {
+    showHeader () {
+      if (this.chartInfo.param.tableOptions && this.chartInfo.param.tableOptions.showTableHeader === 'disabled') {
+        return false
+      } else {
+        return true
+      }
+    },
+    showPagination () {
+      if (this.chartInfo.param.tableOptions && this.chartInfo.param.tableOptions.pagination === 'disabled') {
+        return false
+      } else {
+        return true
+      }
     }
   },
   methods: {
+    resize () {
+      this.$nextTick(async () => {
+        this.$refs.dataTable && this.$refs.dataTable.doLayout()
+        await this.setPageSize()
+        this.tableData = this.sortShowData()
+      })
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.tableData = this.sortShowData()
+    },
+    filterShowData (source, pageObj) {
+      if (source) return source.slice((pageObj.pageNo - 1) * pageObj.pageSize, pageObj.pageNo * pageObj.pageSize)
+    },
+    // 设置默认排序
+    setDefaultSort () {
+      const columns = this.chartInfo.param.columns
+      const defaultSortColumn = lodash.get(this, 'chartInfo.param.tableOptions.defaultSortColumn', columns[0].title)
+      const defaultSort = lodash.get(this, 'chartInfo.param.tableOptions.defaultSort', 'asc')
+      const order = defaultSort === 'asc' ? 'ascending' : 'descending'
+      this.$refs.dataTable.sort(defaultSortColumn, order)
+    },
+    // 设置pageSize
+    setPageSize () {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          // 有分页时根据表格高度计算显示条数
+          if (this.showPagination) {
+            const trHeight = 48
+            const tableHeight = this.$refs.dataTable.bodyWrapper.clientHeight
+            const pageSize = Math.floor(tableHeight / trHeight) || 1
+            this.pageObj.pageSize = pageSize
+          } else {
+            this.pageObj.pageSize = this.oldTableData.length
+          }
+          resolve()
+        }, 200)
+      })
+    },
     initChart () {
       this.setDataLink()
       if (this.tableTimer) {
@@ -108,9 +182,14 @@ export default {
         arr.forEach(item => {
           item.valueMapping = this.selectTableMapping(item, this.valueMapping)
         })
-        this.tableData = arr
         this.oldTableData = lodash.cloneDeep(arr)
-        this.$refs.dataTable && this.$refs.dataTable.doLayout()
+        this.pageObj.pageNo = 1
+        this.$nextTick(async () => {
+          this.$refs.dataTable && this.$refs.dataTable.doLayout()
+          await this.setPageSize()
+          this.setDefaultSort()
+          this.pageObj.total = this.oldTableData.length
+        })
         this.isInit = false
       }, 200)
     },
@@ -167,23 +246,6 @@ export default {
       })
       this.$emit('chartIsNoData', this.isNoData)
       return returnData
-    },
-    filterShowData (source) {
-      let orderBy = null
-      let sourceData = null
-      sourceData = this.oldTableData
-      orderBy = this.orderBy
-      if (!orderBy || !orderBy.order) { // 没有排序 恢复默认值
-        source = Object.assign([], sourceData)
-      } else { // 排序之后的顺序
-        if (orderBy.order === 'ascending') {
-          source = source.sort(this.asce(orderBy.prop))
-        }
-        if (orderBy.order === 'descending') {
-          source = source.sort(this.desc(orderBy.prop))
-        }
-      }
-      return source
     },
     selectTableMapping (row, valueMapping) {
       const obj = {}
@@ -347,7 +409,23 @@ export default {
     },
     tableDataSort (orderBy) {
       this.orderBy = { order: orderBy.order, prop: orderBy.prop }
-      this.tableData = this.filterShowData(this.tableData)
+      this.tableData = this.sortShowData()
+    },
+    sortShowData () {
+      const orderBy = this.orderBy
+      const originalData = lodash.cloneDeep(this.oldTableData)
+      let data = null
+      if (!orderBy || !orderBy.order) { // 没有排序 恢复默认值
+        data = Object.assign([], originalData)
+      } else { // 排序之后的顺序
+        if (orderBy.order === 'ascending') {
+          data = originalData.sort(this.asce(orderBy.prop))
+        }
+        if (orderBy.order === 'descending') {
+          data = originalData.sort(this.desc(orderBy.prop))
+        }
+      }
+      return this.filterShowData(data, this.pageObj)
     },
     // 本地正序
     asce (prop) {
@@ -377,9 +455,9 @@ export default {
           val2 = Number(val2)
         }
         if (val1 < val2) {
-          return -1
-        } else if (val1 > val2) {
           return 1
+        } else if (val1 > val2) {
+          return -1
         } else {
           return 0
         }
@@ -447,10 +525,14 @@ export default {
   },
   mounted () {
     this.chartInfo.loaded && this.initChart()
+    if (this.isFullscreen) {
+      window.addEventListener('resize', this.resize)
+    }
   },
   beforeDestroy () {
     clearTimeout(this.tableTimer)
     this.tableTimer = null
+    window.removeEventListener('resize', this.resize)
   }
 }
 </script>

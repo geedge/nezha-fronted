@@ -805,6 +805,27 @@
 
 .tabel-chart-box{
   position: relative;
+  display: flex;
+  flex-direction: column;
+  .chart-table{
+    .value-mapping-table {
+      padding: 10px;
+      color: $--color-text-primary !important;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+  .tabel-chart-pagination{
+    height: auto !important;
+    padding-top: 6px;
+    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    .el-pagination{
+      text-align: center;
+    }
+  }
   .chart-canvas-tooltip{
     height: auto !important;
   }

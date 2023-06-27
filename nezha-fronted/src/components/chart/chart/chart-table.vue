@@ -66,7 +66,7 @@
                 {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
               </template>
             </el-table-column>
-            <el-table-column :label="$t('overall.value')" class-name="costom-value" min-width="90" prop="value"
+            <el-table-column :label="$t('overall.value')" class-name="custom-value" min-width="90" prop="value"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}" >
@@ -99,7 +99,7 @@
                 {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
               </template>
             </el-table-column>
-            <el-table-column :label="$t('overall.value')" class-name="costom-value" min-width="90" prop="value"
+            <el-table-column :label="$t('overall.value')" class-name="custom-value" min-width="90" prop="value"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}" >
