@@ -72,6 +72,7 @@
       :visible.sync="fullscreen.visible"
       :show-close="false"
       class="nz-dialog chart-fullscreen"
+      :class="fullscreen.chartInfo.type === 'map' ? 'no-transform-dialog' : ''"
       destroy-on-close
       fullscreen
       :modal-append-to-body="false"

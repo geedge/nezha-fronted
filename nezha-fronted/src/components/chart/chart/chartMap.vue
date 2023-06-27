@@ -31,7 +31,7 @@
               <div class="partition"></div>
               <div class="legend-value legend-value-agent">
                 <div class="map-asset">
-                  <div class="progress-title">{{$t('overall.agent')}} {{$t('config.agent.up')}}}</div>
+                  <div class="progress-title">{{$t('overall.agent')}} {{$t('config.agent.up')}}</div>
                   <div class="success-progress progress-box">
                     <div class="top-progress" :style="{width: (dcStat.agent.up / (dcStat.agent.up + dcStat.agent.down)) * 100 + '%'}"></div>
                     <div style="width: 100%" class="bottom-progress"></div>
