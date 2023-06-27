@@ -22,7 +22,7 @@
 
           <!--varType-->
           <el-form-item v-if="from==='dashboardTemp'" :label="$t('dashboard.dashboard.chartForm.varType')" class="item-receivers" prop="varType">
-            <el-select v-model="editPanel.varType" clearable :disabled="!!editPanel.id" popper-class="right-box-select-top prevent-clickoutside" placeholder="" size="small">
+            <el-select v-model="editPanel.varType" clearable :disabled="!!editPanel.id" popper-class="right-box-select-top prevent-clickoutside right-box-select-width" placeholder="" size="small">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
