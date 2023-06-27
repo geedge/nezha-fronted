@@ -21,7 +21,7 @@
                        placeholder=""
                        @change="validValueType"
                        :disabled="!!editipam.id"
-                       popper-class="right-box-select-top right-box__select-width prevent-clickoutside"
+                       popper-class="right-box-select-top prevent-clickoutside right-box-select-width"
                        size="small">
               <template v-for="item in typeList">
                 <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
