@@ -8,6 +8,7 @@
           :search-msg="searchMsg"
           :show-history="false"
           :show-search="false"
+          :isNzTransfet="true"
           style="width:100%"
           @search="search"
         ></search-input>

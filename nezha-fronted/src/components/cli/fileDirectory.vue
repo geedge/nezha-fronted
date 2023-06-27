@@ -150,6 +150,9 @@
 <!--            <i class="nz-icon nz-icon-delete" v-if="!item.isDir" @click="delFile(item)"></i>-->
           </div>
         </div>
+        <div class="file-item">
+          {{$t('fileDirectory.overNum', {num: overNum})}}
+        </div>
       </div>
     </div>
     <el-dialog
@@ -280,6 +283,8 @@ export default {
       breadcrumb: [],
       fileList: [],
       oldFileList: [],
+      overNum: false,
+      showNum: 10000,
       newFolderBoxShow: false,
       folder: '',
       fileDirectoryLoading: false,
@@ -409,6 +414,12 @@ export default {
         if (res.code === 200) {
           this.fileDirectoryLoading = false
           this.fileDirectory = res.data.path
+          if (res.data.list.length > this.showNum) {
+            this.overNum = res.data.list.length - this.showNum
+            res.data.list.splice(this.showNum, res.data.list.length)
+          } else {
+            this.overNum = false
+          }
           res.data.list.forEach(item => {
             if (item.name[0] === '.') {
               item.isHide = true

@@ -137,7 +137,7 @@ export default {
           getTopology(this.meta2dId).resize()
           getTopology(this.meta2dId).open(data)
           if (this.isChart) {
-            getTopology(this.meta2dId).fitView(true, 20)
+            getTopology(this.meta2dId).fitView(true, this.paddingTop)
           } else {
             getTopology(this.meta2dId).centerView()
           }
@@ -366,12 +366,12 @@ export default {
           this.position.top = ePosition.layerY
           this.$nextTick(() => {
             if ((boxWidth / 2) > ePosition.layerX) {
-              this.position.left = ePosition.layerX + 20
+              this.position.left = ePosition.layerX + 15
             } else {
-              this.position.left = ePosition.layerX - 20 - 400
+              this.position.left = ePosition.layerX - 15 - 400
             }
             if (boxHeight / 2 > ePosition.layerY) {
-              this.position.top = ePosition.layerY + 50
+              this.position.top = ePosition.layerY + 15
             } else {
               this.position.top = ePosition.layerY - 300
             }

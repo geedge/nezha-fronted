@@ -65,6 +65,9 @@ export default {
           console.log(this.params.title, this.dataSource.elements.expression, this.dataSource.metric)
           this.title = this.handleLegendAlias(this.params.title, this.params.title, this.dataSource.metric) || this.params.title
           this.content = this.handleLegendAlias(this.params.content, this.params.content, this.dataSource.metric) || this.params.content
+        } else {
+          this.title = this.params.title
+          this.content = this.params.content
         }
         this.params.legends.forEach(item => {
           const findItem = this.queryValues.find(query => query.name === item.legend && query.parent === item.parent)

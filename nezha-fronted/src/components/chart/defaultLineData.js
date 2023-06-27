@@ -4,7 +4,7 @@ const data = {
   showHeader: true,
   name: '',
   dashboardId: 1244,
-  groupId: 0,
+  groupId: undefined,
   span: 4,
   height: 4,
   updateBy: 381,

@@ -182,7 +182,7 @@
             v-model="editDialogObj.realValue"
             multiple
             filterable
-            allow-create
+            allow-create :maxlength="64"
             default-first-option
             :filter-method="dialogValueListSet"
             v-loadMore="{

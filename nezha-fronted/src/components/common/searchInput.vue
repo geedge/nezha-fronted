@@ -501,6 +501,7 @@ export default {
     defaultItem: {},
     defaultValue: {},
     inTransform: {},
+    isNzTransfet: {},
     position: {
       type: String,
       default: ''
@@ -1111,7 +1112,16 @@ export default {
     // 获取历史记录  数据进行处理以便循环展示
     restructure_historyDate () {
       if (localStorage.getItem('nz-history-' + this.where) !== undefined && localStorage.getItem('nz-history-' + this.where) !== null) {
-        this.history_once = JSON.parse(localStorage.getItem('nz-history-' + this.where))
+        const arr = JSON.parse(localStorage.getItem('nz-history-' + this.where))
+        arr.forEach(labelArr => {
+          labelArr.forEach((item)=>{
+            const findItem = this.searchMsg.searchLabelList.find(searchLabel => searchLabel.id == item.id)
+            if(findItem) {
+              item.name = findItem.name
+            }
+          })
+        })
+        this.history_once = arr
       }
     },
     clear_search_list (e) {
@@ -1544,6 +1554,12 @@ export default {
       const inputListDom = this.$refs['input-center-box']
       if (inputListDom) {
         this.$nextTick(() => {
+          if (this.isNzTransfet) {
+            const position = inputListDom.getBoundingClientRect()
+            this.selectDom.top = position.top + 36 + 'px'
+            this.selectDom.left = position.left + 'px'
+            return
+          }
           if (this.inTransform) {
             const position = inputListDom.getBoundingClientRect()
             this.selectDom.top = position.top + 36 + 'px'
