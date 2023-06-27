@@ -2,7 +2,7 @@
   <span style="position: relative">
     <el-select
       id="module-box-logs-pipeline-type"
-      class="right-box__select"
+      class="right-box__select right-box__select-pipeline"
       placeholder=""
       popper-class="right-box-select-top prevent-clickoutside pipeline"
       size="small"
@@ -22,7 +22,7 @@
         </el-option>
       </el-option-group>
     </el-select>
-    <i class="nz-icon nz-icon-plus" @click="addPipelineShow" :title="$t('tip.add')"></i>
+    <i class="nz-icon nz-icon-plus" @click="addPipelineShow" :title="$t('tip.add')" style="top: 2px"></i>
   </span>
 </template>
 

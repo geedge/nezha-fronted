@@ -16,6 +16,9 @@
     border: none !important;
   }
 }
+.meta2d-chart-hide-header {
+  height: calc(100% - 78px);
+}
 .meta2d-project{
   height: calc(100% - 78px);
   border: 1px solid;

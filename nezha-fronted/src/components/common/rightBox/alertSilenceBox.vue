@@ -75,6 +75,7 @@
                   popper-class="right-box-select-top right-public-box-dropdown-top"
                   placeholder="key"
                   size="mini"
+                  :maxlength="64"
                   @select="handleSelect"
                 ></el-autocomplete>
               </el-form-item>

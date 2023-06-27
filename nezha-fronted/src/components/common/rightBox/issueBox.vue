@@ -33,7 +33,7 @@
                         :placeholder="editIssue.type"
                         style="margin-right: 10px"
                         filterable
-                        allow-create
+                        allow-create :maxlength="64"
                         default-first-option
                       >
                       <el-option

@@ -38,7 +38,7 @@
           ref="deleteButton"
           :single="false"
           :from="'assetMeta'"
-          :forceDeleteShow="false"
+          :forceDeleteShow="true"
           :delete-objs="batchDeleteObjs"
           @after="getTableData"
           id="meta-msg-batch-delete"

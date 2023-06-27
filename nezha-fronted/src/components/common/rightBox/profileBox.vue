@@ -138,6 +138,7 @@ export default {
                 this.esc(true)
                 if (this.editProfile.lang !== localStorage.getItem('nz-language')) {
                   localStorage.setItem('nz-language', this.editProfile.lang)
+                  this.$store.commit('setLanguage', this.editProfile.lang)
                   this.$i18n.locale = this.editProfile.lang
                   this.$emit('clickProfile', true)
                 } else {
