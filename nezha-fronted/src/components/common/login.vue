@@ -318,6 +318,7 @@ export default {
               localStorage.setItem('nz-username', this.loginData.username)
               localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
               localStorage.setItem('nz-language', this.lang)
+              this.$store.commit('setLanguage', this.lang)
               this.loginSuccess(res)
             }
           } else {
@@ -339,6 +340,7 @@ export default {
           localStorage.setItem('nz-username', this.loginData.username)
           localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
           localStorage.setItem('nz-language', this.lang)
+          this.$store.commit('setLanguage', this.lang)
           res.data.user = {
             ...this.userInfo
           }

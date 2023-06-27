@@ -221,6 +221,9 @@ export default {
       if (this.username != localStorage.getItem('nz-username')) {
         this.$router.go(0)
       }
+      if (this.$store.getters.getLanguage && (this.$store.getters.getLanguage !== localStorage.getItem('nz-language'))) {
+        localStorage.setItem('nz-language', this.$store.getters.getLanguage)
+      }
     }
   },
   mounted () {

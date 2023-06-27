@@ -77,6 +77,7 @@
       v-if="fullscreen.visible"
       :visible.sync="fullscreen.visible"
       :show-close="false"
+      :class="fullscreen.chartInfo.type === 'map' ? 'no-transform-dialog' : ''"
       destroy-on-close
       fullscreen
       :append-to-body="true"
