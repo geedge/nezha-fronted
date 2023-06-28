@@ -246,6 +246,36 @@ export default {
           }
         ]
       },
+      searchMsgSilence: { // 给搜索框子组件传递的信息
+        searchLabelList: [
+          {
+            name: this.$t('alert.alertRule'),
+            type: 'input',
+            label: 'ruleName',
+            disabled: false
+          }, {
+            name: this.$t('asset.asset'),
+            type: 'input',
+            label: 'assetName',
+            disabled: false
+          }, {
+            name: this.$t('asset.endpoint'),
+            type: 'input',
+            label: 'endpointName',
+            disabled: false
+          }, {
+            name: this.$t('alert.summary'),
+            type: 'input',
+            label: 'summary',
+            disabled: false
+          }, {
+            name: this.$t('alert.list.labels'),
+            type: 'input',
+            label: 'labels',
+            disabled: false
+          }
+        ]
+      },
       rightBox: {
         editShow: false,
         show: false
@@ -275,6 +305,12 @@ export default {
       isError: false,
       errorContent: '',
       chartInfo: {}
+    }
+  },
+  created () {
+    console.log(this.from, fromRoute.alertSilence)
+    if (this.from === fromRoute.alertSilence) {
+      this.searchMsg = this.searchMsgSilence
     }
   },
   methods: {
