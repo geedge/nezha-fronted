@@ -308,7 +308,6 @@ export default {
     }
   },
   created () {
-    console.log(this.from, fromRoute.alertSilence)
     if (this.from === fromRoute.alertSilence) {
       this.searchMsg = this.searchMsgSilence
     }
