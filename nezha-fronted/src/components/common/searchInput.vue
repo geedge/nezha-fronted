@@ -1119,7 +1119,7 @@ export default {
             const findItem = this.searchMsg.searchLabelList.find(searchLabel => searchLabel.id == item.id)
             if (findItem) {
               item.name = findItem.name
-              if (item.valString) {
+              if (item.valString) { // 判断 有valString 显示对应国际化内容 以防中英文出现问题
                 item.valString = this.selectInfoList[item.type].find(selectInfo => selectInfo.value == item.val).label
               }
             }
