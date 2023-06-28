@@ -120,7 +120,7 @@
                   @before="delFlag=true"
                   ></delete-button>
               </el-dropdown-item>
-            <el-dropdown-item v-has="'user_edit'" :command="['reset_mfa', scope.row]"><i class="nz-icon nz-icon-zhongzhi2FA"></i><span class="operation-dropdown-text">{{$t('config.user.resetMfa')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'user_edit'" :command="['reset_mfa', scope.row]"><i class="nz-icon nz-icon-zhongzhi2FA1"></i><span class="operation-dropdown-text">{{$t('config.user.resetMfa')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
