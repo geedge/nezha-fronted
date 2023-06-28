@@ -31,6 +31,8 @@
 .meta2d-map {
   right: unset;
   left: 0px;
+  background: $--background-color-empty;
+  border: 1px solid $--border-color-light;
 }
 .meta2d-box {
   @keyframes model-error-animation {
