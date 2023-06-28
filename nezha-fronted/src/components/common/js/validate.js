@@ -314,3 +314,15 @@ export function maxHopsValidator (rule, value, callback) {
     }
   }, 100)
 }
+// 验证mac地址
+export function validateMAC (rule, value, callback) {
+  const macRule = /^([0-9a-fA-F]{2}(:|-)){5}[0-9a-fA-F]{2}$/
+  setTimeout(() => {
+    if (value == '') return callback()
+    if (macRule.test(value)) {
+      callback()
+    } else {
+      callback(new Error(vm.$t('validate.macError')))
+    }
+  }, 100)
+}

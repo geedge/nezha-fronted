@@ -53,6 +53,7 @@
 
 <script>
 import editRigthBox from '../mixin/editRigthBox'
+import { validateMAC } from '@/components/common/js/validate'
 import vm from '../../../entrance/app/main'
 
 export default {
@@ -95,6 +96,9 @@ export default {
         addr: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: detailsIpv, trigger: 'blur' }
+        ],
+        mac: [
+          { validator: validateMAC, trigger: 'blur' }
         ]
       }
     }
