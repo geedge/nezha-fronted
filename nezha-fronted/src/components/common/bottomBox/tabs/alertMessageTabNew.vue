@@ -342,12 +342,13 @@ export default {
         type: 'warning'
       }).then(() => {
         let url = ''
-        if (this.from === fromRoute.alertSilence) {
-          this.alertSilenceUrl = `/alert/silence/${this.obj.id}/rel`
-          url = this.alertSilenceUrl
-        } else {
-          url = this.url
-        }
+        // if (this.from === fromRoute.alertSilence) {
+        //   this.alertSilenceUrl = `/alert/silence/${this.obj.id}/rel`
+        //   url = this.alertSilenceUrl
+        // } else {
+        //   url = this.url
+        // }
+        url = this.url
         this.$delete(url + '?ids=' + row.id + '&state=' + row.state).then(response => {
           if (response.code === 200) {
             self.delFlag = true
