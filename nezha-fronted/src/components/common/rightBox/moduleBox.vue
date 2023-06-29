@@ -72,7 +72,7 @@
             :language="language"
             title="DashboardSearch"
             key-field="id"
-            :width="634"
+            :width="626"
             v-model="editModule.dashboardId"
             show-field="name"
             class="form-control"

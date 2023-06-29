@@ -50,7 +50,7 @@ export default {
       assetList: [],
       // asset表头
       assetColumns: [
-        { title: 'id', data: 'id' },
+        { title: 'ID', data: 'id' },
         {
           title: this.$t('overall.name'),
           data: function (row) {
@@ -60,7 +60,7 @@ export default {
             return row.name
           }
         },
-        { title: 'Manage Ip', data: 'manageIp' },
+        { title: this.$t('asset.manageIp'), data: 'manageIp' },
         {
           title: this.$t('overall.type'),
           data: (row) => {

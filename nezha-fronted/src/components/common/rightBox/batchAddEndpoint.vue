@@ -26,7 +26,7 @@
               title="ChartSearch"
               key-field="id"
               show-field="name"
-              :width="625"
+              :width="640"
               v-model="batchEndpoint.moduleIds"
               class="form-control"
               :result-format="resultFormat"
@@ -45,7 +45,7 @@
               title="ChartSearch"
               key-field="id"
               show-field="name"
-              :width="625"
+              :width="640"
               v-model="batchEndpoint.assetIds"
               class="form-control"
               :result-format="resultFormat"
@@ -218,7 +218,7 @@ export default {
         }
       ],
       columns: [
-        { title: 'id', data: 'id' },
+        { title: 'ID', data: 'id' },
         {
           title: this.$t('overall.name'),
           data: function (row) {
@@ -229,7 +229,7 @@ export default {
           },
           key: 'name'
         },
-        { title: 'Manage Ip', data: 'manageIp', key: 'manageIp' },
+        { title: this.$t('asset.manageIp'), data: 'manageIp', key: 'manageIp' },
         {
           title: this.$t('overall.type'),
           data: (row) => {
