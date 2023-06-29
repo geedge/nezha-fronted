@@ -56,6 +56,7 @@
               title="ChartSearch"
               key-field="id"
               show-field="name"
+              :width="626"
               v-model="editEndpoint.assetId"
               class="form-control"
               ref="sp"
@@ -924,9 +925,9 @@ export default {
           ]
         }],
       columns: [
-        { title: 'id', data: 'id' },
+        { title: 'ID', data: 'id' },
         {
-          title: 'name',
+          title: this.$t('overall.name'),
           data: function (row) {
             if (row.name.length > 15) {
               return row.name.substring(0, 12) + '...'
@@ -934,21 +935,21 @@ export default {
             return row.name
           }
         },
-        { title: 'Manage Ip', data: 'manageIp' },
+        { title: this.$t('asset.manageIp'), data: 'manageIp' },
         {
-          title: 'Type',
+          title: this.$t('overall.type'),
           data: (row) => {
             return row.type ? row.type.name : ''
           }
         },
         {
-          title: 'Model',
+          title: this.$t('asset.model'),
           data: (row) => {
             return row.model ? row.model.name : ''
           }
         },
         {
-          title: 'Datacenter',
+          title: this.$t('overall.dc'),
           data: (row) => {
             return row.dc ? row.dc.name : ''
           }

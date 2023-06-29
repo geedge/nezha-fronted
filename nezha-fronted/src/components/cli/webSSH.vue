@@ -375,21 +375,21 @@ export default {
             return row.name
           }
         },
-        { title: 'Manage Ip', data: 'manageIp' },
+        { title: this.$t('asset.manageIp'), data: 'manageIp' },
         {
-          title: 'Type',
+          title: this.$t('overall.type'),
           data: (row) => {
             return row.type ? row.type.name : ''
           }
         },
         {
-          title: 'Model',
+          title: this.$t('asset.model'),
           data: (row) => {
             return row.model ? row.model.name : ''
           }
         },
         {
-          title: 'Datacenter',
+          title: this.$t('overall.dc'),
           data: (row) => {
             return row.dc ? row.dc.name : ''
           }
