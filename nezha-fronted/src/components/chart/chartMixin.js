@@ -498,6 +498,11 @@ export default {
         }
         if (!this.isInit) {
           this.initChart(this.chartOption)
+          if (this.resize) {
+            setTimeout(() => {
+              this.resize()
+            }, 200)
+          }
         }
       }
     }
