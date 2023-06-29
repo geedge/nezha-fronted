@@ -6,6 +6,7 @@
       :tableId="tableId"
       :custom-table-title.sync="tools.customTableTitle"
       :layout="['searchInput', 'elementSet']"
+      :title="$t('config.user.name')"
       :search-msg="searchMsg"
       :tabs="tabs"
       :targetTab="targetTab"

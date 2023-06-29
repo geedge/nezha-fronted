@@ -1114,10 +1114,13 @@ export default {
       if (localStorage.getItem('nz-history-' + this.where) !== undefined && localStorage.getItem('nz-history-' + this.where) !== null) {
         const arr = JSON.parse(localStorage.getItem('nz-history-' + this.where))
         arr.forEach(labelArr => {
-          labelArr.forEach((item)=>{
+          labelArr.forEach((item) => {
             const findItem = this.searchMsg.searchLabelList.find(searchLabel => searchLabel.id == item.id)
-            if(findItem) {
+            if (findItem) {
               item.name = findItem.name
+              if (item.valString) {
+                item.valString = this.selectInfoList[item.type].find(selectInfo => selectInfo.value == item.val).label
+              }
             }
           })
         })
