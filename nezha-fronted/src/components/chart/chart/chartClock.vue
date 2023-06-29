@@ -180,7 +180,7 @@ export default {
     // eslint-disable-next-line vue/no-mutating-props
     this.chartOption.color || (this.chartOption.color = initColor(20))
     this.colorList = this.chartOption.color
-    this.chartInfo.loaded && this.initChart(this.chartOption)
+    this.initChart(this.chartOption)
   },
   destroyed () {
     clearInterval(this.localTimer)
