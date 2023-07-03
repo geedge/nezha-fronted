@@ -6,6 +6,7 @@
     :height="height"
     :show-header="false"
     tooltip-effect="light"
+    class="resize-rich-text-editor-table"
     border
     @header-dragend="dragend"
     @sort-change="tableDataSort"
@@ -39,7 +40,7 @@
             <i v-if="scope.row.createUser.id == userId" class="nz-icon nz-icon-edit descriptions-button" @click="edit(scope.row.id)" :title="$t('overall.edit')" style="margin-right: 18px;cursor: pointer;"></i>
             <i v-if="scope.row.createUser.id == userId" class="nz-icon nz-icon-delete descriptions-button" @click="$emit('del', scope.row)" :title="$t('overall.delete')" style="cursor: pointer;"></i>
           </div>
-          <div v-if="editContentId == scope.row.id" class="textarea-box" style="height:184px;margin-top: 5px;">
+          <div v-if="editContentId == scope.row.id" class="textarea-box" style="height:184px;margin-top: 5px;min-height: 184px">
             <rich-text-editor class="comment-editor" ref="richTextEditor" :edit-data="editComment.html" @textChange="textChange(arguments)" style="height:100%;">
               <div class="textarea-button">
                 <button class="nz-btn nz-btn-size-mini nz-btn-style-normal" style="margin-right: 10px" type="button"  @click="$emit('save', editComment,true)"><span>{{$t('overall.save')}}</span></button>
