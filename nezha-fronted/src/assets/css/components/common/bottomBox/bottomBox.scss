@@ -364,11 +364,14 @@
     height: 100%;
   }
   .textarea-box {
+    overflow: hidden;
+    resize: vertical;
     // border: 1px solid $--border-color-light;
     background-color: $--background-color-empty;
     .textarea-small.el-textarea {
       height: 100% !important;
       border: 1px solid $--border-color-light;
+      box-sizing: border-box;
     }
     .textarea-big.el-textarea {
       height: calc(100% - 40px) !important;
@@ -385,6 +388,7 @@
     border: 1px solid $--border-color-light;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     .ql-toolbar.ql-snow {
       border-top: unset !important;
       border-left: unset !important;
@@ -494,5 +498,13 @@
 #terminalLogRecordTab {
   .pagination-bottom{
     bottom: 5px;
+  }
+}
+.resize-rich-text-editor-table {
+  .el-table--border td:first-child .cell {
+    padding-right: 20px;
+  }
+  .el-table__body-wrapper {
+    overflow-x: hidden;
   }
 }

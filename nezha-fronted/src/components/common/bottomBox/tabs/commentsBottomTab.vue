@@ -14,7 +14,7 @@
   >
     <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
     <template v-slot>
-      <div class="textarea-box" :style="{height: rowBox ?'184px':'33px','margin-bottom': '10px'}">
+      <div class="textarea-box" :style="{height: rowBox ?'184px':'33px','margin-bottom': '10px', 'min-height': rowBox ?'184px':'33px'}">
         <el-input
           v-if="!rowBox"
           type="textarea"
