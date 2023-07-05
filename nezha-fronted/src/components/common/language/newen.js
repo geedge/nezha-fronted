@@ -30,15 +30,17 @@ const newen = {
     },
     redis: {
       configTitle: 'Configure Redis connection',
-      configTip: "Please set the configuration parameters for connection to this redis,Press 'Next' button when done"
+      configTip: "Please set the configuration parameters for connection to this redis,Press 'Next' button when done",
+      masterName: 'Master name'
     },
     system: {
       configTitle: 'System configuration',
       configTip: 'Please enter username and password for administrator ,and set the Nezha WEB module install information,like IP:port',
       federation: 'Federation',
       federationEnable: 'Enable',
-      federationDisable: 'Disable'
-
+      federationDisable: 'Disable',
+      adminAccount: 'Administrator account',
+      defaultTimezone: 'Default timezone'
     },
     name: 'Database name',
     username: 'Username',
@@ -59,7 +61,15 @@ const newen = {
     hadConfig: 'Someone has started to configure the system',
     invalidCode: "The authentication is invalid ,please follow the description in {page} 'To continue'",
     welcomePage: 'Welcome page',
-    inited: 'The system has been initialized'
+    inited: 'The system has been initialized',
+    standalone: 'Standalone',
+    masterMaster: 'Master-Master',
+    sentinel: 'Sentinel',
+    dms: 'Dynamic master slave',
+    ipPlaceholder: 'Please enter IP',
+    portPlaceholder: 'Please enter port',
+    usernamePlaceholder: 'Please enter user name',
+    passwordPlaceholder: 'Please enter password'
   },
   login: {
     username: 'Username',
@@ -86,10 +96,13 @@ const newen = {
     number: 'Numberic',
     port: 'Invalid port',
     special: 'Cannot contain special characters',
-    unavailable: 'Unavailable'
+    unavailable: 'Unavailable',
+    duplicate: 'is duplicate'
   },
   profile: {
-    username: 'User name'
+    username: 'User name',
+    confirmPassword: 'Confirm password',
+    confirmPasswordError: 'The two inputs are inconsistent'
   },
   license: {
     downloadID: 'Download c2v file'
@@ -100,6 +113,41 @@ const newen = {
     enabled: 'Enabled',
     disabled: 'Disabled',
     unavailable: 'Unavailable'
+  },
+  dashboard: {
+    mode: 'Mode'
+  },
+  alert: {
+    config: {
+      second: 'second'
+    }
+  },
+  project: {
+    endpoint: {
+      scrape_interval: 'Scrape interval'
+    }
+  },
+  config: {
+    system: {
+      system: 'Appearances',
+      basic: {
+        language: 'Default language',
+        assetPingInterval: 'Ping interval',
+        scrapeTimeout: 'Scrape timeout',
+        snmpTrapPort: 'SNMP TRAP port'
+      },
+      monitor: {
+        asset_ping_from: 'Ping from'
+      }
+    },
+    user: {
+      reinputPin: 'Enter password again'
+    }
+  },
+  buttons: {
+    system: {
+      monitor: 'APM settings'
+    }
   },
   ...enLocale
 }

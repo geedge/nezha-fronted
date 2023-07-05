@@ -1,6 +1,20 @@
 import vm from '../../../entrance/app/main'
 import lodash from 'lodash'
 
+// ipv4校验 不包括端口
+export function ip (rule, value, callback) {
+  if (!value || value.trim() == '') {
+    callback()
+  }
+  const ipReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+  setTimeout(() => {
+    if (ipReg.test(value)) {
+      callback()
+    } else {
+      callback(new Error(vm.$t('validate.host')))
+    }
+  }, 100)
+}
 // ipv4 ip校验
 export function host (rule, value, callback) {
   if (!value || value.trim() == '') {

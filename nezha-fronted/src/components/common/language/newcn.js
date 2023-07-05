@@ -24,14 +24,17 @@ const newcn = {
     },
     redis: {
       configTitle: '配置Redis连接',
-      configTip: '请设置连接到此redis的配置参数，完成后按“下一步”按钮'
+      configTip: '请设置连接到此redis的配置参数，完成后按“下一步”按钮',
+      masterName: '主节点名称'
     },
     system: {
       configTitle: '系统配置',
       configTip: '请输入管理员的用户名和密码，并设置Nezha WEB模块的安装信息，如IP:port',
       federation: '集群',
       federationEnable: '可用',
-      federationDisable: '不可用'
+      federationDisable: '不可用',
+      adminAccount: '管理员账号',
+      defaultTimezone: '默认时区'
     },
     name: '数据库名称',
     username: '用户名',
@@ -52,12 +55,21 @@ const newcn = {
     hadConfig: '已经有人开始配置系统',
     invalidCode: '身份验证无效，请按照{page}中的描述继续',
     welcomePage: '欢迎页面',
-    inited: '系统已经被初始化'
+    inited: '系统已经被初始化',
+    standalone: '单例',
+    masterMaster: '主-主',
+    sentinel: '哨兵',
+    dms: '动态主从',
+    ipPlaceholder: '请输入IP',
+    portPlaceholder: '请输入端口',
+    usernamePlaceholder: '请输入用户名',
+    passwordPlaceholder: '请输入密码'
   },
   login: {
     username: '登录名',
     pin: '密码',
     login: '登录',
+    upload: '上传许可证',
     verify: '验证',
     verifyDialogTitle: '双因子认证设置',
     verifyTitle: '双因子认证',
@@ -78,10 +90,13 @@ const newcn = {
     number: '必须是数字',
     port: '不合法的端口',
     special: '不能包含特殊字符',
-    unavailable: '不可用'
+    unavailable: '不可用',
+    duplicate: '重复'
   },
   profile: {
-    username: '用户名'
+    username: '用户名',
+    confirmPassword: '确认密码',
+    confirmPasswordError: '两次输入不一致'
   },
   license: {
     downloadID: '下载c2v文件'
@@ -92,6 +107,41 @@ const newcn = {
     enabled: '启用',
     disabled: '已禁用',
     unavailable: '不可用'
+  },
+  dashboard: {
+    mode: '模式'
+  },
+  alert: {
+    config: {
+      second: '秒'
+    }
+  },
+  project: {
+    endpoint: {
+      scrape_interval: '时间间隔'
+    }
+  },
+  config: {
+    system: {
+      system: '个性化配置',
+      basic: {
+        language: '默认语言',
+        assetPingInterval: 'Ping 间隔',
+        scrapeTimeout: '指标抓取超时',
+        snmpTrapPort: 'SNMP TRAP 端口'
+      },
+      monitor: {
+        asset_ping_from: 'Ping from'
+      }
+    },
+    user: {
+      reinputPin: '请再次输入密码'
+    }
+  },
+  buttons: {
+    system: {
+      monitor: 'APM配置'
+    }
   },
   ...zhLocale
 }
