@@ -164,7 +164,7 @@
                   <!-- database -->
                   <el-form-item :label="$t('setup.step1')" prop="database" key="rdDatabase">
                     <el-select v-model="redis.database" :placeholder="$t('el.select.placeholder')" style="width: 100%">
-                      <el-option :label="index" :value="index" v-for="(item,index) in 17" :key="index"></el-option>
+                      <el-option :label="index" :value="index" v-for="(item,index) in 16" :key="index"></el-option>
                     </el-select>
                   </el-form-item>
                   <!-- pin -->
@@ -331,7 +331,7 @@ export default {
         pinConfirm: '',
         timezone: '',
         language: 'en',
-        federationEnabled: '',
+        federationEnabled: '1',
         asset_ping_from: '1',
         asset_ping_interval: '300',
         default_scrape_interval: '30',
