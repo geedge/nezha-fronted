@@ -501,6 +501,15 @@ export default {
         if (findIndex !== lastIndex) {
           callback(new Error(this.$t('error.nameDuplicate')))
         } else {
+          // 没有重复的 则清除校验
+          nameArr.forEach((item, index) => {
+            const findIndex = nameArr.indexOf(item)
+            const lastIndex = nameArr.lastIndexOf(item)
+            const reg = /^[a-zA-Z_][a-zA-Z0-9_]*$/
+            if (item && reg.test(item) && findIndex == lastIndex) {
+              this.$refs.form.clearValidate('param.variables.' + index + '.name')
+            }
+          })
           callback()
         }
       }, 100)
