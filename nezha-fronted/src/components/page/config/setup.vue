@@ -383,7 +383,7 @@ export default {
       if (this.redis.mode === 'standalone') {
         this.$set(this.redis, 'url', [{ ip: '', port: 6379 }])
       } else if (this.redis.mode === 'sentinel') {
-        this.$set(this.redis, 'url', [{ ip: '', port: 6379 }, { ip: '', port: 6379 }, { ip: '', port: 6379 }, { ip: '', port: 6379 }])
+        this.$set(this.redis, 'url', [{ ip: '', port: 6379 }, { ip: '', port: 6379 }, { ip: '', port: 6379 }])
       } else if (this.redis.mode === 'dms') {
         this.$set(this.redis, 'url', [{ ip: '', port: 6379 }, { ip: '', port: 6379 }])
       }
