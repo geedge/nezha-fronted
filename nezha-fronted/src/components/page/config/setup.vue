@@ -383,7 +383,7 @@ export default {
       if (this.redis.mode === 'standalone') {
         this.$set(this.redis, 'url', [{ ip: '', port: 6379 }])
       } else if (this.redis.mode === 'sentinel') {
-        this.$set(this.redis, 'url', [{ ip: '', port: 6379 }, { ip: '', port: 6379 }, { ip: '', port: 6379 }])
+        this.$set(this.redis, 'url', [{ ip: '', port: 6379 }, { ip: '', port: 6379 }, { ip: '', port: 6379 }, { ip: '', port: 6379 }])
       } else if (this.redis.mode === 'dms') {
         this.$set(this.redis, 'url', [{ ip: '', port: 6379 }, { ip: '', port: 6379 }])
       }
@@ -421,17 +421,14 @@ export default {
       if (flag && urlArr.some((item, index) => item === urlArr[currentIndex] && index != currentIndex)) {
         callback(new Error('URL ' + this.$t('validate.duplicate')))
       } else {
-        const arr = urlArr.filter(item => {
-          const ip = item.split(':')[0]
-          const port = item.split(':')[1]
-          return ipReg.test(ip) && !isNaN(Number(port)) && !(port < 1 || port > 65535)
-        })
         // 没有重复的 则清除校验
-        if (arr.length == new Set(arr).size) {
-          urlArr.forEach((item, index) => {
+        urlArr.forEach((item, index) => {
+          const findIndex = urlArr.indexOf(item)
+          const lastIndex = urlArr.lastIndexOf(item)
+          if (findIndex == lastIndex) {
             this.$refs[formName].clearValidate('urlItem' + index)
-          })
-        }
+          }
+        })
         callback()
       }
     },
