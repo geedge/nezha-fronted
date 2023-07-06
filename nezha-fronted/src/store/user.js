@@ -5,7 +5,7 @@ import { returnMenuCode, sortByOrderNum } from '@/permission'
 import moment from 'moment-timezone'
 import { theme } from '@/components/common/js/constants'
 
-const noJumpPath = ['/', '/login', '/ui/login']
+const noJumpPath = ['/', '/login', '/ui/login', '/setup']
 const user = {
   state: {
     menuList: [],
