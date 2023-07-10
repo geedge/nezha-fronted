@@ -3,7 +3,7 @@
     <div class="right-box right-box-asset-meta" v-clickoutside="{obj:editAssetMeta,func:clickOutside}">
       <!-- begin--标题-->
       <div class="right-box__header">
-        <div class="header__title">{{editAssetMeta.id ? $t("config.assetLabel.editMeta"): $t("overall.createLabel")}}
+        <div class="header__title">{{editAssetMeta.id ? $t("config.assetLabel.editMeta"): $t("config.assetLabel.addMeta")}}
         </div>
         <div class="header__operation">
           <span v-cancel="{obj: editAssetMeta, func: esc}"><i class="nz-icon nz-icon-close" :title="$t('overall.close')"></i></span>
@@ -172,12 +172,12 @@ export default {
           value: 'TEXT',
           name: this.$t('config.assetLabel.text')
         },
-        {
-          icon: 'nz-icon nz-icon-multitext',
-          disabled: true,
-          value: 'MULTITEXT',
-          name: this.$t('config.assetLabel.multitext')
-        },
+        // {
+        //   icon: 'nz-icon nz-icon-multitext',
+        //   disabled: true,
+        //   value: 'MULTITEXT',
+        //   name: this.$t('config.assetLabel.multitext')
+        // },
         {
           icon: 'nz-icon nz-icon-textarea',
           disabled: true,
