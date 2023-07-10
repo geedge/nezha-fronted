@@ -29,7 +29,7 @@
           </div>
         </rich-text-editor>
       </div>
-      <div :style="{height: rowBox ?'calc(100% - 184px)':'calc(100% - 35px)'}">
+      <div style="height:calc(100% - 45px)">
         <assetCommentTable
           ref="dataTable"
           :orderByFa="'id'"
