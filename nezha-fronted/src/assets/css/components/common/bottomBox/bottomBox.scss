@@ -22,7 +22,7 @@
   }
 }
 .bottom-data-list .sub-container {
-  height: calc(100% - 50px);
+  height: calc(100% - 45px);
   background-color: $--background-color-base;
   overflow-y: auto;
   & > div {
@@ -222,7 +222,7 @@
   bottom: 0;
 }
 .bottom-box .sub-container {
-  height: calc(100% - 50px);
+  height: calc(100% - 45px);
 }
 .bottom-box .sub-container .nz-table-list {
   height: calc(100% - 20px);
@@ -363,7 +363,7 @@
   .sub-container .nz-table-list {
     height: 100%;
     overflow-y: auto;
-    padding-bottom: 0 !important;
+    padding-bottom: 20px !important;
   }
   .textarea-box {
     overflow: hidden;
@@ -422,7 +422,6 @@
     }
   }
   #assetCommentTable {
-    height: calc(100% - 25px) !important;
     .descriptions-info {
       font-size: 14px;
       font-family: Roboto-Regular;
