@@ -3,7 +3,6 @@
     id="assetCommentTable"
     ref="dataTable"
     :data="tableData"
-    :height="height"
     :show-header="false"
     tooltip-effect="light"
     class="resize-rich-text-editor-table"

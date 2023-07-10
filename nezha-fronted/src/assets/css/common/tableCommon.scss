@@ -246,7 +246,7 @@
     width: 100%;
     box-sizing: border-box;
     flex: auto;
-    height: calc(100% - 58px);
+    height: calc(100% - 60px);
 
     .el-table:not(.chart-table) {
       width: 100%;
@@ -423,7 +423,7 @@
   /* end--覆盖el-table边框、gutter等样式 */
   .pagination-bottom {
     position: absolute;
-    bottom: 1px;
+    bottom: 0px;
     height: 48px;
     z-index: 1;
     width: calc(100% - 20px);
