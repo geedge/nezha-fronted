@@ -275,7 +275,8 @@ export default {
       this.$confirm(this.$t('tip.confirmDelete'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
+        type: 'warning',
+        modal: false
       }).then(() => {
         this.delImg(item)
       })
@@ -284,7 +285,8 @@ export default {
       this.$confirm(this.$t('tip.confirmDelete'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
+        type: 'warning',
+        modal: false
       }).then(() => {
         this.delCollpseTitle(item)
       })
