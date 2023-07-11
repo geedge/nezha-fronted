@@ -4,6 +4,12 @@
       ref="dataList"
     >
       <template v-slot:top-tool-right>
+        <div class="margin-r-10" style="width: 240px">
+          <el-select v-model="searchParam.snmpCredentialId" placeholder="Select credential" size="small" value-key="id">
+            <el-option v-for="(item, index) in credentialData" :key="index" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </div>
+        <!-- IP -->
         <el-autocomplete
           id="mib-browser-host"
           v-model="searchParam.host"
@@ -12,7 +18,7 @@
           placeholder="IP"
           size="small"
           popper-class="mib-browser-right-box-dropdown right-box-select-top right-public-box-dropdown-top"
-          style="width: 100%;"
+          style="width: 240px;"
           value-key="manageIp"
           @input="assetChange"
         >
@@ -20,14 +26,16 @@
             <div>{{ item.manageIp }}</div>
           </template>
         </el-autocomplete>
-        <el-input id="mib-browser-oid" v-model="searchParam.oid" class="margin-r-20" placeholder="OID" size="small"></el-input>
-        <div class="margin-r-10" style="width: 50%">
+        <!-- OID -->
+        <el-input id="mib-browser-oid" v-model="searchParam.oid" class="margin-r-20" style="width: 240px;" placeholder="OID" size="small"></el-input>
+        <!-- operation -->
+        <div class="margin-r-10" style="width: 120px">
           <el-select id="mib-browser-host" v-model="searchParam.operation" size="small" popper-class="right-box-select-top right-public-box-dropdown-top">
             <el-option v-for="item in operationData" :key="item" :value="item"></el-option>
           </el-select>
         </div>
         <div class="top-tool-btn-group">
-          <el-popover :offset="-143" placement="bottom" trigger="click" popper-class="right-box-select-top right-public-box-dropdown-top" width="300">
+          <!-- <el-popover :offset="-143" placement="bottom" trigger="click" popper-class="right-box-select-top right-public-box-dropdown-top" width="300">
             <div class="mib-browser-ad-search">
               <el-select v-model="searchParam.snmpCredentialId" placeholder="Select credential" size="mini" style="width: 300px" value-key="id">
                 <el-option v-for="(item, index) in credentialData" :key="index" :label="item.name" :value="item.id"></el-option>
@@ -36,8 +44,8 @@
             <button id="browser-advanced" slot="reference" class="top-tool-btn" style="border-right: none;"  :title="$t('overall.more')">
               <i class="el-icon-more"></i>
             </button>
-          </el-popover>
-          <button id="browser-go" :class="{'nz-btn-disabled': loading}" class="top-tool-btn" @click="search(false)">Go</button>
+          </el-popover> -->
+          <button id="browser-go" :class="{'nz-btn-disabled': loading}" :disabled="loading" class="top-tool-btn" @click="search(false)">Go</button>
         </div>
       </template>
       <template v-slot>
@@ -168,6 +176,33 @@
         </div>
       </template>
     </nz-data-list>
+
+    <el-dialog
+      class="nz-dialog"
+      title="SNMP SET"
+      :show-close="true"
+      :visible.sync="snmpSetFormVisible"
+      width="580px"
+      :z-index="1000"
+      >
+      <el-form ref="form" :model="searchParam" :rules="rules" label-width="auto">
+        <el-form-item label="OID" prop="oid">
+          <el-input size="small" v-model="searchParam.oid" placeholder=""></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('config.mib.dataType')" prop="type">
+          <el-select size="small" v-model="searchParam.type" placeholder="" style="width:100%">
+            <el-option v-for="(item, index) in typeData" :key="index" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('overall.value')" prop="value">
+          <el-input size="small" v-model="searchParam.value" placeholder=""></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <button @click="snmpSetFormVisible = false" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-20">{{$t("overall.cancel")}}</button>
+        <button @click="search(true)" class="nz-btn nz-btn-size-normal nz-btn-style-normal" :class="{'nz-btn-disabled': loading}" :disabled="loading">{{$t('el.datepicker.confirm')}}</button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -176,7 +211,6 @@ import fileSaver from 'file-saver'
 import nzDataList from '@/components/common/table/nzDataList'
 import xlsx from 'xlsx'
 import copy from '@/components/common/copy'
-
 export default {
   name: 'mibBrowser',
   props: {
@@ -191,6 +225,17 @@ export default {
       loading: false,
       treeLoading: false,
       snmpSetFormVisible: false, // snmp set表单
+      rules: {
+        oid: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        value: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
+      },
       searchParam: {
         host: '',
         oid: '',
@@ -198,7 +243,9 @@ export default {
         operation: 'get',
         version: 2,
         community: 'public',
-        snmpCredentialId: null
+        snmpCredentialId: null,
+        type: '',
+        value: ''
       },
       /* searchParam: {
         manageIp: '',
@@ -246,7 +293,6 @@ export default {
       showTable: true,
       typeData: ['OctetString', 'Integer', 'OID', 'Gauge', 'Counter32', 'IpAddress', 'TimeTicks', 'Counter64', 'UnsignedInteger', 'BITS', 'Float', 'DateAndTime'],
       assetInputTimer: null,
-
       credentialData: []
     }
   },
@@ -323,30 +369,38 @@ export default {
       }
       this.getWalkData()
     },
-    search (set) {
-      /* if (this.loading) {
+
+    async search (set) {
+      if (this.loading) {
         return
-      } */
+      }
 
       // this.popShow(); this.popHide() // 再调用一次，对数据赋值
 
       /* 处理snmpset */
-      /* if (!set) {
+      if (!set) {
         if (this.searchParam.operation == 'set') {
           this.snmpSetFormVisible = true
           return
         }
       }
       if (this.snmpSetFormVisible) {
-        if (!this.searchParam.oid || !this.searchParam.type || !this.searchParam.value) {
-          this.$message.error(this.$t('validate.required'))
-          return
+        try {
+          await this.$refs.form.validate()
+          this.snmpSetFormVisible = false
+        } catch (error) {
+          return false
         }
-        this.snmpSetFormVisible = false
-      } */
+      }
+
       this.loading = true
+      const params = this.$lodash.cloneDeep(this.searchParam)
+      if (params.operation != 'set') {
+        delete params.type
+        delete params.value
+      }
       setTimeout(() => {
-        this.$post('mib/browser', this.searchParam).then(response => {
+        this.$post('mib/browser', params).then(response => {
           this.loading = false
           if (response.code === 200) {
             this.resultData = this.resultData.concat(response.data.list)
