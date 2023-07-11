@@ -115,7 +115,7 @@
   }
   .mib-browser-detail-row:last-of-type div:last-of-type {
     position: absolute;
-    left: calc(25% + 2px);
+    left: calc(25% + 4px);
     width: calc(75% - 20px);
     height: 100%;
     padding-right: 12px;
@@ -246,9 +246,6 @@
   min-height: 28px;
   line-height: 28px;
 }
-.mib-browser .el-dialog .el-dialog__footer {
-  margin-top: 0;
-}
 .mib-browser .el-button:focus, .mib-browser .el-button:hover {
   color: unset;
   border-color: unset;
@@ -258,5 +255,14 @@
   .el-table:not(.chart-table) .gutter{
     right: 65px !important;
     height: 40px !important;
+  }
+}
+
+.mib-browser .el-dialog{
+  .el-dialog__body{
+    padding: 30px 30px 0;
+  }
+  .el-dialog__footer{
+    padding: 15px 30px;
   }
 }
