@@ -17,6 +17,7 @@ const Message = function (options) {
       message: options
     }
   }
+  if (!options || !options.message) return
   const userOnClose = options.onClose
   const id = 'message_' + seed++
 
