@@ -39,6 +39,13 @@
                 inactive-value="0">
               </el-switch>
             </el-form-item>
+            <el-form-item :label='$t("validate.required")' prop="display">
+              <el-switch
+                v-model="editAssetMeta.required"
+                active-value="1"
+                inactive-value="0">
+              </el-switch>
+            </el-form-item>
             <el-form-item :label='$t("overall.type")' prop="type">
               <el-select v-model="editAssetMeta.type" :popper-append-to-body="false" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside right-box-select-width" size="small" @change="selectType">
                 <el-option v-for="(item, index) in typeData" :key="index" :value="item.value" :disabled="item.disabled" :label="item.name">
@@ -48,11 +55,11 @@
             </el-form-item>
             <div class="right-box-sub-title" style="margin-bottom: 20px" v-if="showParam">
               <span>{{$t('config.assetLabel.params')}}</span>
-              <span v-if="editAssetMeta.type.toUpperCase()!=='DATETIME'&&editAssetMeta.type.toUpperCase()!=='DOUBLE'" class="float-right" style="height: 19px;display: inline-block;line-height: 1;" @click="addParam">
-              <span class="create-square-box" :title="$t('tip.add')">
-                <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
+              <span v-if="editAssetMeta.type.toUpperCase()!=='DATETIME'&&editAssetMeta.type.toUpperCase()!=='DOUBLE'&&editAssetMeta.type.toUpperCase()!=='TEXT'&&editAssetMeta.type.toUpperCase()!=='TEXTAREA'&&editAssetMeta.type.toUpperCase()!=='INTEGER'&&editAssetMeta.type.toUpperCase()!=='PASSWORD'" class="float-right" style="height: 19px;display: inline-block;line-height: 1;" @click="addParam">
+                <span class="create-square-box" :title="$t('tip.add')">
+                  <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
+                </span>
               </span>
-            </span>
             </div>
             <el-form-item prop="param" v-if="showParam" class="asset-meta-param">
               <div v-if="editAssetMeta.type.toUpperCase()==='RADIO' || editAssetMeta.type.toUpperCase()==='CHECKBOX' || editAssetMeta.type.toUpperCase()==='SELECT'" class="meta-option-box">
@@ -108,8 +115,38 @@
               </div>
               <div v-if="editAssetMeta.type.toUpperCase()==='DOUBLE'">
                 <el-row>
-                  <span class="datetime-header">{{$t('config.assetLabel.decimals')}}: </span>
-                  <el-input-number v-model="editAssetMeta.param.decimals" @change="$forceUpdate()" :min="0" :max="10" :controls="false" size="small"></el-input-number>
+                  <el-col :span="12" style="display: flex;align-items: center">
+                    <span class="datetime-header">{{$t('config.assetLabel.decimals')}}: </span>
+                    <el-input-number v-model="editAssetMeta.param.decimals" @change="$forceUpdate()" :min="0" :max="10" :controls="false" size="small" style="flex: 1"></el-input-number>
+                  </el-col>
+                  <el-col :span="12" style="display: flex;align-items: center">
+                    <span class="datetime-header">{{$t('config.assetLabel.default')}}: </span>
+                    <el-input-number v-model="editAssetMeta.param.default" @change="$forceUpdate()" :controls="false" :precision="editAssetMeta.param.decimals" size="small" style="flex: 1"></el-input-number>
+                  </el-col>
+                </el-row>
+              </div>
+              <div v-if="editAssetMeta.type.toUpperCase()==='TEXT'">
+                <el-row style="display: flex">
+                    <span class="datetime-header">{{$t('config.assetLabel.default')}}: </span>
+                    <el-input v-model="editAssetMeta.param.default" @change="$forceUpdate()" :controls="false" size="small" style="flex: 1"></el-input>
+                </el-row>
+              </div>
+              <div v-if="editAssetMeta.type.toUpperCase()==='TEXTAREA'">
+                <el-row style="display: flex">
+                  <span class="datetime-header">{{$t('config.assetLabel.default')}}: </span>
+                  <el-input type="textarea" v-model="editAssetMeta.param.default" @change="$forceUpdate()" :controls="false" size="small" style="flex: 1"></el-input>
+                </el-row>
+              </div>
+              <div v-if="editAssetMeta.type.toUpperCase()==='INTEGER'">
+                <el-row style="display: flex">
+                  <span class="datetime-header">{{$t('config.assetLabel.default')}}: </span>
+                  <el-input-number v-model="editAssetMeta.param.default" @change="$forceUpdate()" :precision="0" :controls="false" size="small" style="flex: 1"></el-input-number>
+                </el-row>
+              </div>
+              <div v-if="editAssetMeta.type.toUpperCase()==='PASSWORD'">
+                <el-row style="display: flex">
+                  <span class="datetime-header">{{$t('config.assetLabel.default')}}: </span>
+                  <el-input v-model="editAssetMeta.param.default" @change="$forceUpdate()" type="password" size="small" style="flex: 1"  autocomplete='off' name="PASSWORD_DEFAULT"></el-input>
                 </el-row>
               </div>
             </el-form-item>
@@ -215,6 +252,12 @@ export default {
           name: this.$t('config.assetLabel.double')
         },
         {
+          icon: 'nz-icon nz-icon-password',
+          disabled: true,
+          value: 'PASSWORD',
+          name: this.$t('login.pin')
+        },
+        {
           icon: 'nz-icon nz-icon-dingshishijian',
           disabled: true,
           value: 'DATETIME',
@@ -241,6 +284,7 @@ export default {
           groupId: n.groupId ? Number(n.groupId) : '',
           search: `${n.search}`,
           display: `${n.display}`,
+          required: n.required ? `${n.required}` : '0',
           param: n.param && ((typeof n.param) === 'string') ? JSON.parse(n.param) : {},
           type: n.type.toUpperCase()
         }
@@ -385,6 +429,10 @@ export default {
           case 'SELECT' :
           case 'DATETIME' :
           case 'DOUBLE' :
+          case 'TEXT' :
+          case 'TEXTAREA' :
+          case 'INTEGER' :
+          case 'PASSWORD' :
             this.showParam = true
             break
           default:
@@ -419,7 +467,32 @@ export default {
             case 'DOUBLE' :
               this.showParam = true
               this.editAssetMeta.param = {
-                decimals: 2
+                decimals: 2,
+                default: undefined
+              }
+              break
+            case 'TEXT' :
+              this.showParam = true
+              this.editAssetMeta.param = {
+                default: ''
+              }
+              break
+            case 'TEXTAREA' :
+              this.showParam = true
+              this.editAssetMeta.param = {
+                default: ''
+              }
+              break
+            case 'INTEGER' :
+              this.showParam = true
+              this.editAssetMeta.param = {
+                default: undefined
+              }
+              break
+            case 'PASSWORD' :
+              this.showParam = true
+              this.editAssetMeta.param = {
+                default: ''
               }
               break
             default:

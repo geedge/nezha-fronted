@@ -160,6 +160,7 @@ export default {
         group: {},
         search: '0',
         display: '0',
+        required: '0',
         type: 'TEXT',
         param: {},
         remark: ''
