@@ -3519,7 +3519,7 @@ level=info ts=2020-10-23T20:32:18.068866235Z caller=metrics.go:81 org_id=29 trac
     </div>
     <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="position:absolute;bottom: -10px;" v-show="showTopBtn" :title="$t('overall.backToTop')"><i class="nz-icon nz-icon-top"></i></button>
     <transition name="right-box">
-      <chartRightBox v-if="rightBox.show" ref="addChartModal" :chart="chartData" :from="$CONSTANTS.fromRoute.explore" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'explore'}" @close="handleBox(false)" @on-create-success="createSuccess"></chartRightBox>
+      <chartRightBox v-if="rightBox.show" ref="addChartModal" :chart="chartData" :from="$CONSTANTS.fromRoute.explore" :panel-data="panelData" :show-panel="showPanel" @close="handleBox(false)" @on-create-success="createSuccess"></chartRightBox>
     </transition>
   </div>
 </template>
@@ -3605,9 +3605,10 @@ export default {
       expandResults: false,
       tableData: [],
       saveDisabled: true,
-      panelData: [],
       chartUnit: 2,
       historyParam: { useHistory: true, key: 'expore-history' },
+      panelData: [],
+      showPanel: { id: -1, name: '', type: 'explore' },
       chartData: {},
       collapseValue: ['1', '2'],
       showTab: ['1', '2'],
