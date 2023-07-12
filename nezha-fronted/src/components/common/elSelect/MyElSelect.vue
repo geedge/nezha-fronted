@@ -290,7 +290,7 @@ export default {
     placeholder: {
       type: String,
       default () {
-        return t('el.select.placeholder')
+        return this.$t('el.select.placeholder')
       }
     },
     defaultFirstOption: Boolean,
