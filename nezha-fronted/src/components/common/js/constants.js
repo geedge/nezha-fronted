@@ -176,7 +176,8 @@ export const asset = {
     INTEGER: 'INTEGER',
     DOUBLE: 'DOUBLE',
     DATETIME: 'DATETIME',
-    EMAIL: 'EMAIL'
+    EMAIL: 'EMAIL',
+    PASSWORD: 'PASSWORD'
   },
   labelSubTypeData: {
     date: 'date',

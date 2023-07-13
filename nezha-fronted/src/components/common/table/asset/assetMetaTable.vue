@@ -75,6 +75,7 @@
           <div v-else-if="scope.row[item.prop].toUpperCase() == 'DOUBLE'"><i class="nz-icon nz-icon-double"></i>&nbsp;&nbsp;DOUBLE</div>
           <div v-else-if="scope.row[item.prop].toUpperCase() == 'DATETIME'"><i class="nz-icon nz-icon-dingshishijian"></i>&nbsp;&nbsp;DATETIME</div>
           <div v-else-if="scope.row[item.prop].toUpperCase() == 'EMAIL'"><i class="nz-icon nz-icon-email"></i>&nbsp;&nbsp;EMAIL</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'PASSWORD'"><i class="nz-icon nz-icon-password"></i>&nbsp;&nbsp;PASSWORD</div>
         </div>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
         <template v-else>-</template>

@@ -41,7 +41,7 @@
             </el-form-item>
             <el-form-item :label='$t("validate.required")' prop="display">
               <el-switch
-                v-model="editAssetMeta.required"
+                v-model="editAssetMeta.param.required"
                 active-value="1"
                 inactive-value="0">
               </el-switch>
@@ -279,15 +279,19 @@ export default {
       immediate: true,
       handler (n) {
         this.isEdit = true
+        const param = n.param && ((typeof n.param) === 'string') ? JSON.parse(n.param) : {}
+        if (!param.required) {
+          param.required = '0'
+        }
         this.editAssetMeta = {
           ...n,
           groupId: n.groupId ? Number(n.groupId) : '',
           search: `${n.search}`,
           display: `${n.display}`,
-          required: n.required ? `${n.required}` : '0',
-          param: n.param && ((typeof n.param) === 'string') ? JSON.parse(n.param) : {},
+          param: param,
           type: n.type.toUpperCase()
         }
+
         this.selectType(this.editAssetMeta.type, true)
       }
     },
@@ -359,11 +363,7 @@ export default {
               }
             }
           }
-          if (param.type !== 'RADIO' && param.type !== 'CHECKBOX' && param.type !== 'SELECT' && param.type !== 'DATETIME' && param.type !== 'DOUBLE') {
-            delete param.param
-          } else {
-            param.param = JSON.stringify(param.param)
-          }
+          param.param = JSON.stringify(param.param)
           if (this.editAssetMeta.id) {
             this.$put('asset/field/meta', param).then(response => {
               this.prevent_opt.save = false
@@ -432,7 +432,7 @@ export default {
           case 'TEXT' :
           case 'TEXTAREA' :
           case 'INTEGER' :
-          case 'PASSWORD' :
+          // case 'PASSWORD' :
             this.showParam = true
             break
           default:
@@ -441,13 +441,15 @@ export default {
         }
       } else {
         if (this.ready) {
+          const required = this.editAssetMeta.param.required
           switch (val) {
             case 'RADIO' :
             case 'CHECKBOX' :
             case 'SELECT' :
               this.showParam = true
               this.editAssetMeta.param = {
-                items: []
+                items: [],
+                required: required
               }
               this.editAssetMeta.param.items = [{
                 name: 'Option 1',
@@ -460,6 +462,7 @@ export default {
             case 'DATETIME' :
               this.showParam = true
               this.editAssetMeta.param = {
+                required: required,
                 subType: 'date',
                 interval: false
               }
@@ -468,31 +471,41 @@ export default {
               this.showParam = true
               this.editAssetMeta.param = {
                 decimals: 2,
-                default: undefined
+                default: undefined,
+                required: required
               }
               break
             case 'TEXT' :
               this.showParam = true
               this.editAssetMeta.param = {
-                default: ''
+                default: '',
+                required: required
               }
               break
             case 'TEXTAREA' :
               this.showParam = true
               this.editAssetMeta.param = {
-                default: ''
+                default: '',
+                required: required
               }
               break
             case 'INTEGER' :
               this.showParam = true
               this.editAssetMeta.param = {
-                default: undefined
+                default: undefined,
+                required: required
               }
               break
             case 'PASSWORD' :
-              this.showParam = true
+              this.showParam = false
               this.editAssetMeta.param = {
-                default: ''
+                required: required
+              }
+              break
+            case 'EMAIL' :
+              this.showParam = false
+              this.editAssetMeta.param = {
+                required: required
               }
               break
             default:

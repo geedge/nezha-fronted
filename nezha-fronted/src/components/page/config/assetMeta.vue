@@ -160,9 +160,8 @@ export default {
         group: {},
         search: '0',
         display: '0',
-        required: '0',
         type: 'TEXT',
-        param: {},
+        param: JSON.stringify({ required: '0' }),
         remark: ''
       },
       blankMetaGroup: {

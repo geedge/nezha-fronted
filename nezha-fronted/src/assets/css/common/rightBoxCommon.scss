@@ -181,6 +181,14 @@
         }
       }
     }
+    .form__dotted-item-required {
+      .el-form-item__label {
+        display: flex;
+        .form__labels-label {
+          flex: 1;
+        }
+      }
+    }
     .form__create-btn {
       margin-bottom: 20px;
       width: 300px;

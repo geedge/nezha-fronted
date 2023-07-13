@@ -84,8 +84,8 @@
           </el-form-item>
           <!-- labels -->
           <div class="form__sub-title">{{$t('overall.labels')}}</div>
-          <div v-for="(label, i) in editAsset.fields" :key="i" class="form__dotted-item">
-            <el-form-item :prop="'fields.' + i + '.value'">
+          <div v-for="(label, i) in editAsset.fields" :key="i" class="form__dotted-item form__dotted-item-required">
+            <el-form-item :prop="'fields.' + i + '.value.0'" :rules="[ { required: JSON.parse(label.param).required === '1', message: $t('validate.required'), trigger: 'blur' }]">
               <template v-slot:label>
                 <div class="form__labels-label">
                   <span>{{label.name}}</span>
@@ -97,6 +97,9 @@
               <template v-if="label.action !== 1">
                 <template v-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXT">
                   <el-input v-model="label.value[0]" size="small"/>
+                </template>
+                <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.PASSWORD">
+                  <el-input v-model="label.value[0]" type="password" size="small"/>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.MULTITEXT">
                   <div v-for="(value, i) in label.value" :key="i" class="label__multi-text">
@@ -666,6 +669,7 @@ export default {
       label.value.splice(index, 1)
     },
     blankLabelValue (label) {
+      const defaultValue = JSON.parse(label.param).default || ''
       if (label.type.toUpperCase() === this.assetConstants.labelTypeData.CHECKBOX) {
         const arr = []
         if (label.param && JSON.parse(label.param).items) {
@@ -677,7 +681,7 @@ export default {
         }
         return arr
       } else if (label.type.toUpperCase() === this.assetConstants.labelTypeData.MULTITEXT || label.type.toUpperCase() === assetConstants.labelTypeData.TEXT || label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA) {
-        return ['']
+        return [defaultValue]
       } else if (label.type.toUpperCase() === this.assetConstants.labelTypeData.RADIO || label.type.toUpperCase() === assetConstants.labelTypeData.SELECT) {
         const arr = ['']
         if (label.param && JSON.parse(label.param).items) {
@@ -689,7 +693,7 @@ export default {
         }
         return arr
       } else {
-        return ['']
+        return [defaultValue]
       }
     },
     getParentAsset () {
