@@ -39,13 +39,6 @@
                 inactive-value="0">
               </el-switch>
             </el-form-item>
-            <el-form-item :label='$t("validate.required")' prop="display">
-              <el-switch
-                v-model="editAssetMeta.param.required"
-                active-value="1"
-                inactive-value="0">
-              </el-switch>
-            </el-form-item>
             <el-form-item :label='$t("overall.type")' prop="type">
               <el-select v-model="editAssetMeta.type" :popper-append-to-body="false" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside right-box-select-width" size="small" @change="selectType">
                 <el-option v-for="(item, index) in typeData" :key="index" :value="item.value" :disabled="item.disabled" :label="item.name">
@@ -143,12 +136,20 @@
                   <el-input-number v-model="editAssetMeta.param.default" @change="$forceUpdate()" :precision="0" :controls="false" size="small" style="flex: 1"></el-input-number>
                 </el-row>
               </div>
-              <div v-if="editAssetMeta.type.toUpperCase()==='PASSWORD'">
-                <el-row style="display: flex">
-                  <span class="datetime-header">{{$t('config.assetLabel.default')}}: </span>
-                  <el-input v-model="editAssetMeta.param.default" @change="$forceUpdate()" type="password" size="small" style="flex: 1"  autocomplete='off' name="PASSWORD_DEFAULT"></el-input>
-                </el-row>
-              </div>
+<!--              <div v-if="editAssetMeta.type.toUpperCase()==='PASSWORD'">-->
+<!--                <el-row style="display: flex">-->
+<!--                  <span class="datetime-header">{{$t('config.assetLabel.default')}}: </span>-->
+<!--                  <el-input v-model="editAssetMeta.param.default" @change="$forceUpdate()" type="password" size="small" style="flex: 1"  autocomplete='off' name="PASSWORD_DEFAULT"></el-input>-->
+<!--                </el-row>-->
+<!--              </div>-->
+              <el-row v-if="showRequired">
+                <span class="datetime-header">{{$t("validate.required")}}: </span>
+                <el-switch
+                  v-model="editAssetMeta.param.required"
+                  active-value="1"
+                  inactive-value="0">
+                </el-switch>
+              </el-row>
             </el-form-item>
             <el-form-item :label='$t("overall.remark")' prop="remark">
               <el-input placeholder="" maxlength="256" type="textarea" show-word-limit v-model="editAssetMeta.remark" size="small" :rows="2" id="editAssetMeta-box-input-remark"></el-input>
@@ -186,6 +187,24 @@ export default {
   },
   components: { assetTagEx },
   mixins: [editRigthBox],
+  computed: {
+    showRequired () {
+      let flag = false
+      switch (this.editAssetMeta.type) {
+        case 'DOUBLE' :
+        case 'TEXT' :
+        case 'TEXTAREA' :
+        case 'INTEGER' :
+        case 'PASSWORD' :
+          flag = true
+          break
+        default:
+          flag = false
+          break
+      }
+      return flag
+    }
+  },
   data () {
     return {
       ready: false,
@@ -432,7 +451,7 @@ export default {
           case 'TEXT' :
           case 'TEXTAREA' :
           case 'INTEGER' :
-          // case 'PASSWORD' :
+          case 'PASSWORD' :
             this.showParam = true
             break
           default:
@@ -497,7 +516,7 @@ export default {
               }
               break
             case 'PASSWORD' :
-              this.showParam = false
+              this.showParam = true
               this.editAssetMeta.param = {
                 required: required
               }
