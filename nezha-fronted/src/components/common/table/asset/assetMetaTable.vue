@@ -131,7 +131,7 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80,
+          width: 150,
           sortable: 'custom'
         }, {
           label: this.$t('overall.name'),
@@ -143,7 +143,7 @@ export default {
           label: this.$t('overall.key'),
           prop: 'metaKey',
           show: true,
-          width: 200,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('dashboard.dashboard.chartForm.group'),
@@ -154,17 +154,17 @@ export default {
         }, {
           label: this.$t('overall.search'),
           prop: 'search',
-          width: 120,
+          minWidth: 120,
           show: true
         }, {
           label: this.$t('config.assetLabel.display'),
           prop: 'display',
-          width: 120,
+          minWidth: 120,
           show: true
         }, {
           label: this.$t('overall.type'),
           prop: 'type',
-          width: 150,
+          minWidth: 150,
           show: true
         }, {
           label: this.$t('config.assetLabel.params'),
