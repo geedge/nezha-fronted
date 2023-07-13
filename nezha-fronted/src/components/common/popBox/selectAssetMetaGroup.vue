@@ -28,16 +28,16 @@
                   <span slot="reference">{{ node.label }}</span>
                 </el-popover>
               </span>
-              <el-row class="block-col-2" style="width: 35px;">
+              <el-row class="block-col-2" style="margin-left: 10px; margin-right: 8px;">
                 <el-col>
                   <el-dropdown placement="bottom-end" trigger="click" v-if="data.id != -1">
                     <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
-                    <el-dropdown-menu class="right-box-select-top" slot="dropdown"  v-has="['asset_label_delete', 'asset_label_edit']">
-                      <el-dropdown-item class="hidden-padding">
-                        <span @click.stop="edit(data)"><i v-has="'asset_label_edit'" class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</span>
+                    <el-dropdown-menu class="right-box-select-top nz-el-dropdown-menu" slot="dropdown"  v-has="['asset_label_delete', 'asset_label_edit']">
+                      <el-dropdown-item>
+                        <div @click="edit(data)"><i v-has="'asset_label_edit'" class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</div>
                       </el-dropdown-item>
-                      <el-dropdown-item class="hidden-padding">
-                        <span @click.stop="del(data)" v-has="'asset_label_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</span>
+                      <el-dropdown-item>
+                        <div @click="del(data)" v-has="'asset_label_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</div>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -102,6 +102,7 @@ export default {
     },
     edit (data) {
       this.$emit('edit', data)
+      this.esc()
     },
     esc () {
       this.popBox.show = false

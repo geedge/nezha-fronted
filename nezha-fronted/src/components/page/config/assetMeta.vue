@@ -10,8 +10,16 @@
       @search="search"
     >
       <template v-slot:top-tool-left>
-        <select-group ref="selectGroup" :filter-object="filterGroup" :object-data="groupData" :placement="'bottom-start'"
-                      :show-object="showGroup" @del="delGroup" @edit="editGroup" @selectObject="groupChange">
+        <select-group
+          ref="selectGroup"
+          :filter-object="filterGroup"
+          :object-data="groupData"
+          :placement="'bottom-start'"
+          :show-object="showGroup"
+          @del="delGroup"
+          @edit="editGroup"
+          @selectObject="groupChange"
+        >
           <template v-slot:header>
             <div class="panel-select-header">
               <el-input id="panel-list-search" v-model="filterGroup" :placeholder="$t('overall.search')" clearable size="mini" style="width: 280px;"></el-input>
@@ -231,6 +239,7 @@ export default {
     addGroup () {
       this.metaGroup = JSON.parse(JSON.stringify(this.blankMetaGroup))
       this.rightBox.groupShow = true
+      this.$refs.selectGroup && this.$refs.selectGroup.esc()
     },
     editGroup (group) {
       this.metaGroup = JSON.parse(JSON.stringify(group))
