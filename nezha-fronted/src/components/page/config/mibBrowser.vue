@@ -4,11 +4,6 @@
       ref="dataList"
     >
       <template v-slot:top-tool-right>
-        <div class="margin-r-10" style="width: 240px">
-          <el-select v-model="searchParam.snmpCredentialId" placeholder="Select credential" size="small" value-key="id">
-            <el-option v-for="(item, index) in credentialData" :key="index" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </div>
         <!-- IP -->
         <el-autocomplete
           id="mib-browser-host"
@@ -26,25 +21,17 @@
             <div>{{ item.manageIp }}</div>
           </template>
         </el-autocomplete>
+        <!-- snmpCredentialId -->
+        <el-select v-model="searchParam.snmpCredentialId" placeholder="Select credential" size="small" value-key="id" class="margin-r-10" style="width: 200px">
+          <el-option v-for="(item, index) in credentialData" :key="index" :label="item.name" :value="item.id"></el-option>
+        </el-select>
         <!-- OID -->
-        <el-input id="mib-browser-oid" v-model="searchParam.oid" class="margin-r-20" style="width: 240px;" placeholder="OID" size="small"></el-input>
+        <el-input id="mib-browser-oid" v-model="searchParam.oid" placeholder="OID" size="small" class="margin-r-20" style="width: 240px;"></el-input>
         <!-- operation -->
-        <div class="margin-r-10" style="width: 120px">
-          <el-select id="mib-browser-host" v-model="searchParam.operation" size="small" popper-class="right-box-select-top right-public-box-dropdown-top">
-            <el-option v-for="item in operationData" :key="item" :value="item"></el-option>
-          </el-select>
-        </div>
+        <el-select id="mib-browser-host" v-model="searchParam.operation" size="small" popper-class="right-box-select-top right-public-box-dropdown-top" class="margin-r-10" style="width: 130px" >
+          <el-option v-for="item in operationData" :key="item" :value="item"></el-option>
+        </el-select>
         <div class="top-tool-btn-group">
-          <!-- <el-popover :offset="-143" placement="bottom" trigger="click" popper-class="right-box-select-top right-public-box-dropdown-top" width="300">
-            <div class="mib-browser-ad-search">
-              <el-select v-model="searchParam.snmpCredentialId" placeholder="Select credential" size="mini" style="width: 300px" value-key="id">
-                <el-option v-for="(item, index) in credentialData" :key="index" :label="item.name" :value="item.id"></el-option>
-              </el-select>
-            </div>
-            <button id="browser-advanced" slot="reference" class="top-tool-btn" style="border-right: none;"  :title="$t('overall.more')">
-              <i class="el-icon-more"></i>
-            </button>
-          </el-popover> -->
           <button id="browser-go" :class="{'nz-btn-disabled': loading}" :disabled="loading" class="top-tool-btn" @click="search(false)">Go</button>
         </div>
       </template>

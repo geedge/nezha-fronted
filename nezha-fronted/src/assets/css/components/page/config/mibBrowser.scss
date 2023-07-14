@@ -259,10 +259,21 @@
 }
 
 .mib-browser .el-dialog{
+  .el-dialog__header{
+    padding: 16px 20px;
+    .el-dialog__title{
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
   .el-dialog__body{
-    padding: 30px 30px 0;
+    padding: 20px 30px 30px 30px;
   }
   .el-dialog__footer{
-    padding: 15px 30px;
+    padding: 20px;
+    .nz-btn.nz-btn-size-normal{
+      height: 32px;
+      line-height: 32px;
+    }
   }
 }
