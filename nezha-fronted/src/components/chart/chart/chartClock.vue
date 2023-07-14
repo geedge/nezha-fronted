@@ -124,6 +124,7 @@ export default {
         this.isInit && setChart(this.chartId, myChart) // 缓存；不使用vue的data是为避免整个chart被监听导致卡顿
         this.isInit = false
         if (this.chartInfo.param && this.chartInfo.param.timeType === 'local') {
+          clearInterval(_soft.localTimer)
           _soft.localTimer = setInterval(function () {
             const date = new Date()
             const second = date.getSeconds()
@@ -146,6 +147,7 @@ export default {
             myChart.setOption(chartOption)
           }, 1000)
         } else {
+          clearInterval(_soft.serverTimer)
           _soft.serverTimer = setInterval(function () {
             _soft.querySystemState()
             chartOption.animationDurationUpdate = 300
