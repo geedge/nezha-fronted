@@ -1,7 +1,7 @@
 <template>
   <div class="home" :class="mode" v-my-loading.dark="loading" >
     <left-menu @refresh="refresh" v-show="showMenu"></left-menu>
-    <div ref="body" class="body">
+    <div ref="body" class="body" :class="{'isShrink':isShrink}">
       <Header v-show="showHeader"></Header>
       <container v-if="containerShow" ref="container"></container>
     </div>
@@ -40,6 +40,9 @@ export default {
     }
   },
   computed: {
+    isShrink () {
+      return this.$store.getters.getIsShrink
+    },
     // 查看模式
     mode () {
       return this.$store.state.panel.mode

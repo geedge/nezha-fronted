@@ -29,6 +29,14 @@
         </el-menu-item>
       </template>
     </el-menu>
+    <!-- collapse -->
+    <div class="collapse-btn" :class="{'isCollapse-btn':isShrink}" @click="shrink">
+      <div class="copy-right" v-if="!isShrink">
+        <span>Copyright © 2019 - 2023</span>
+        <span>Geedge Networks. All rights reserved.</span>
+      </div>
+      <i class="collapse-icon nz-icon nz-icon-drop-down"></i>
+    </div>
   </div>
 </template>
 
@@ -83,6 +91,9 @@ export default {
     }
   },
   methods: {
+    shrink () {
+      this.$store.commit('isShrink')
+    },
     jump (route) {
       if (route === this.route) {
         this.refresh()
