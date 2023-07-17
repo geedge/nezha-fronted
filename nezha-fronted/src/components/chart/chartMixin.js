@@ -114,6 +114,10 @@ export default {
             s.yAxisIndex = 1
           }
 
+          if (!this.dataLink.length) {
+            s.cursor = 'default'
+          }
+
           if (s.param && s.param.nullType) {
             s.connectNulls = s.param.nullType !== 'null'
           } else {
