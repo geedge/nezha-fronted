@@ -1,11 +1,8 @@
 <template>
   <div class="bottom-data-list">
     <div class="top-tools top-tools--sub">
-      <div class="top-tool-left">
-        <div class="sub-list-title" v-if="showTitle">{{bottomHeaderTitle}}：<slot name="title"></slot></div>
-        <div class="sub-list-tabs">
-          <div v-for="tab in tabs" :key="tab.prop" :class="{'sub-list-tab--active': tab.active || tab.prop == targetTab }" :title='tab.name' class="sub-list-tab" @click="changeTab(tab.prop)">{{tab.name}}</div>
-        </div>
+      <div v-if="customTool" class="top-tool-right">
+        <slot name="top-tool-right"></slot>
       </div>
       <div class="top-tool-right" v-if="!customTool">
         <div v-if="layout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20">
@@ -17,8 +14,14 @@
           <i class="nz-icon-gear nz-icon"></i>
         </button>
       </div>
-      <div v-else class="top-tool-right">
-        <slot name="top-tool-right"></slot>
+      <div class="top-tool-left">
+        <div class="sub-list-title" v-if="showTitle">{{bottomHeaderTitle}}：<slot name="title"></slot></div>
+        <div class="sub-list-tabs">
+          <!--          <div v-for="tab in tabs" :key="tab.prop" :class="{'sub-list-tab&#45;&#45;active': tab.active || tab.prop == targetTab }" :title='tab.name' class="sub-list-tab" @click="changeTab(tab.prop)">{{tab.name}}</div>-->
+          <el-tabs v-model="activeTargetTab" @tab-click="changeTab" class="sub-list-tabs-nz-tabs">
+            <el-tab-pane v-for="tab in tabs" :label="tab.name" :name="tab.prop" :key="tab.prop"  class="sub-list-tab"></el-tab-pane>
+          </el-tabs>
+        </div>
       </div>
     </div>
     <!-- 自定义table列 -->
@@ -126,7 +129,8 @@ export default {
         toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
         tableHover: false, // 控制滚动条和top按钮同时出现
         showCustomTableTitle: false // 自定义列弹框是否显示
-      }
+      },
+      activeTargetTab: ''
     }
   },
   watch: {
@@ -136,11 +140,16 @@ export default {
         this.searchInputShow = true
       }, 100)
     },
-    targetTab (n) {
-      this.searchInputShow = false
-      setTimeout(() => {
-        this.searchInputShow = true
-      }, 100)
+    targetTab: {
+      immediate: true,
+      handler (n) {
+        this.searchInputShow = false
+        this.activeTargetTab = n
+        console.log(n)
+        setTimeout(() => {
+          this.searchInputShow = true
+        }, 100)
+      }
     },
     showDeleteTableRel (n) {
       if (!n) {
@@ -156,8 +165,9 @@ export default {
       this.$emit('search', searchObj)
     },
     // 切换tab
-    changeTab (tab) {
-      this.$emit('changeTab', tab)
+    changeTab (tab, event) {
+      console.log(tab, event)
+      this.$emit('changeTab', tab.name)
     }
   }
 }
