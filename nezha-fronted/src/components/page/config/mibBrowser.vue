@@ -171,6 +171,7 @@
       :visible.sync="snmpSetFormVisible"
       width="580px"
       :z-index="1000"
+      @close="closeDialog"
       >
       <el-form ref="form" :model="searchParam" :rules="rules" label-width="auto">
         <el-form-item label="OID" prop="oid">
@@ -291,6 +292,16 @@ export default {
     }
   },
   methods: {
+    closeDialog () {
+      setTimeout(() => {
+        this.searchParam.type = ''
+        this.searchParam.value = ''
+        this.$nextTick(() => {
+          this.$refs.form.clearValidate()
+        })
+      }, 200)
+    },
+
     toFileTab () {
       this.$emit('toFileTab')
     },
