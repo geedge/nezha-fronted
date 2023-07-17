@@ -13,7 +13,7 @@
     font-size: 18px;
   }
   >.el-menu:not(.el-menu--collapse) {
-    width: 240px;
+    width: 252px;
   }
   >.el-menu.menu-list {
     height: calc(100% - 110px);
@@ -104,5 +104,43 @@
   }
   .el-menu-item:hover,.el-submenu__title:hover {
     background-color: $--left-menu-background-color-hover !important;
+  }
+}
+.collapse-btn{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 252px;
+  height: 52px;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  .copy-right{
+    padding: 6px 0 6px 12px;
+    text-align: left;
+    span{
+      display: block;
+      font-size: 13px;
+      line-height: 20px;
+      color: $--color-text-secondary;
+      white-space: nowrap;
+    }
+  }
+  .collapse-icon{
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    font-size: 16px;
+    color: $--color-text-secondary;
+    transform: rotate(90deg);
+  }
+  &.isCollapse-btn{
+    width: 64px;
+    .collapse-icon{
+      left: 0;
+      right: 0;
+      margin: auto;
+      text-align: center;
+      transform: rotate(-90deg);
+    }
   }
 }
