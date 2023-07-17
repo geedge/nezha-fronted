@@ -19,17 +19,20 @@
                 :panel-lock="panelLock"
                 :placement="'bottom-start'"
                 :show-panel="showPanel"
-                style="display: inline-block;padding: 0"
+                class="selectDashboard"
                 @deletePanel="del"
                 @editPanel="edit"
                 @selectDashboard="panelChange"
                 @startPlay="startPlay"
                 >
                 <template v-slot:trigger>
-                  <i style="color: #BEBEBE" class="el-icon-menu"></i>
-                  <span :title="showPanel.name  + ' (' + (showPanel.chartNum || 0) +' charts)' " class="show-panel-name">{{showPanel.name||$t('overall.notFound')}}</span>
-                  <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred===1" class="nz-icon nz-icon-a-xingzhuang2" :title ="$t('overall.starred')"></i>
-                  <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang" :title ="$t('overall.unstarred')"></i>
+                  <div class="selectDashboard-select">
+                    <i style="color: #BEBEBE" class="el-icon-menu"></i>
+                    <span :title="showPanel.name  + ' (' + (showPanel.chartNum || 0) +' charts)' " class="show-panel-name">{{showPanel.name||$t('overall.notFound')}}</span>
+                    <i @click.stop="delStarred(showPanel)" v-if="showPanel.starred===1" class="nz-icon nz-icon-a-xingzhuang2" :title ="$t('overall.starred')"></i>
+                    <i @click.stop="addStarred(showPanel)" v-else class="nz-icon nz-icon-xingzhuang" :title ="$t('overall.unstarred')"></i>
+                    <i class="el-icon-arrow-down"></i>
+                  </div>
                 </template>
                 <!-- 按钮插槽 -->
                 <template slot="button">

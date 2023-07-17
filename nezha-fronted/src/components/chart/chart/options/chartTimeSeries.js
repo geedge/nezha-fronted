@@ -16,6 +16,7 @@ export const chartTimeSeriesLineOption = {
     showTitle: true,
     feature: {
       dataZoom: {
+        show: false,
         yAxisIndex: false,
         title: {
           zoom: i18n.t('overall.toolBox.zoom'),
@@ -24,7 +25,7 @@ export const chartTimeSeriesLineOption = {
       },
       // stack使用自定义按钮
       myStack: {
-        show: true,
+        show: false,
         title: i18n.t('overall.toolBox.stack'),
         icon: stackIconSvg,
         iconStyle: {}
@@ -51,7 +52,7 @@ export const chartTimeSeriesLineOption = {
   grid: {
     left: 20,
     right: 35,
-    top: 42,
+    top: 20,
     bottom: 15,
     containLabel: true
   },

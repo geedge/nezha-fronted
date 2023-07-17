@@ -247,6 +247,18 @@
   }
 }
 
+.selectDashboard{
+  .selectDashboard-select{
+    display: flex;
+    align-items: center;
+    i.el-icon-arrow-down{
+      font-size: 16px;
+      margin-left: 5px;
+      color: $--color-text-regular;
+    }
+  }
+}
+
 .right-box-playlist{
   .el-input-group__append{
     background-color: $--right-box-sub-title-background-color;
