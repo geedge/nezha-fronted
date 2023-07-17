@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="left-menu--pin" :class="!isShrink?'left-menu--pin-normal':'left-menu--pin-reverse'" @click="shrink"><i :class="{'icon-reverse': isShrink,}" class="el-icon-s-fold" :title="isShrink ? $t('overall.expandMenu') : $t('overall.collapseMenu')"></i></div>
+    <!-- <div class="left-menu--pin" :class="!isShrink?'left-menu--pin-normal':'left-menu--pin-reverse'" @click="shrink"><i :class="{'icon-reverse': isShrink,}" class="el-icon-s-fold" :title="isShrink ? $t('overall.expandMenu') : $t('overall.collapseMenu')"></i></div> -->
     <el-breadcrumb class="nz-breakcrumb" separator="/">
       <el-breadcrumb-item v-for="crumb in breadcrumb" :key="crumb.code">{{$t(crumb.i18n)}}</el-breadcrumb-item>
     </el-breadcrumb>
