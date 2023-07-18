@@ -31,6 +31,9 @@
   .panel-loading{
     left: 64px;
   }
+  .resize-modal {
+    width: calc(100% - 64px);
+  }
 }
 
 .home.tv,.home.se{
