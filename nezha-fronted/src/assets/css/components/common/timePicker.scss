@@ -165,7 +165,6 @@
 .calendar-popover-text:last-of-type {
   margin-right: 0;
 }
-
 .date-range-panel {
   // height: 460px;
   width: 500px;
@@ -310,8 +309,25 @@
     }
   }
 }
+@media (max-height: 900px) {
+  .date-range-panel {
+    .date-range-panel-content-right {
+      height: 180px;
+      overflow-y: auto;
+    }
+    .date-range-panel-content-left {
+      height: 180px;
+      overflow-y: auto;
+    }
+  }
+}
 .date-range-panel--top {
   top: -460px;
+}
+@media (max-height: 900px) {
+  .date-range-panel--top {
+    top: -215px;
+  }
 }
 .el-date-range-picker.el-picker-panel__body__only,.el-picker-panel__body {
   width: 324px;
