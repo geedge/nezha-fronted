@@ -80,7 +80,7 @@ export default {
   methods: {
     init: function () {
       const meta2dOptions = {
-        minScale: 0.25,
+        minScale: this.minScale,
         maxScale: 2,
         autoAnchor: false
       }
