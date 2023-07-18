@@ -787,7 +787,7 @@ export default {
         }
         const tempList = n.map(item => {
           let param = ''
-          let height = ''
+          let height = item.height || ''
           if (this.isPhone && item.type !== 'group') {
             item.x = 0
             item.y = 0
