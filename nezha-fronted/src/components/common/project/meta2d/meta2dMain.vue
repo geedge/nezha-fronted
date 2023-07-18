@@ -149,6 +149,10 @@ export default {
       type: Boolean,
       default: false
     },
+    minScale: {
+      type: Number,
+      default: 0.25
+    },
     querysArray: {},
     params: {},
     project: {},

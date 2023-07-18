@@ -76,7 +76,6 @@
   height: 50%;
   position: relative;
   padding: 0;
-  z-index: 10;
   .top-tools.top-tools--sub {
     border-bottom: 1px solid $--border-color-light;
     .top-tool-right {
@@ -151,7 +150,7 @@
   height: calc(100% - 9px);
   position: absolute;
   width: 100%;
-  z-index: 1;
+  z-index: 10;
   top: 9px;
 
   .sub-list__tabs {
@@ -217,7 +216,7 @@
   position: fixed;
   cursor: ns-resize;
   display: none;
-  z-index: 20;
+  z-index: 200;
   vertical-align: bottom;
   bottom: 0;
 }

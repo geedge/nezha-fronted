@@ -382,7 +382,8 @@ export default {
         }, 600)
       }
       const subListDom = document.querySelector('.sub-list') // 副列表
-      if (subListDom.offsetHeight < 505) {
+      const height = window.innerHeight > 900 ? 505 : 250
+      if (subListDom.offsetHeight < height) {
         this.$store.dispatch('dispatchTimeBoxClass', 'date-range-panel--top')
       } else {
         this.$store.dispatch('dispatchTimeBoxClass', '')

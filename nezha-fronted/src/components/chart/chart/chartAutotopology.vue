@@ -10,6 +10,7 @@
               v-if="item.isLoad"
               :meta2dId="'autoTopology' + item.id + (isFullscreen ? 'screen' : '')"
               :topoData="item.topoData"
+              :minScale="0.01"
               :isPreview="true"
               :querysArray="item.querysArray"
               :project="item"
