@@ -829,7 +829,7 @@ export default {
       })
     },
     setSearchData (statistics) {
-      this.assetNzTableHeightOffset = 2
+      this.assetNzTableHeightOffset = 2 + 60 + 20
       Object.keys(this.titleSearchList).forEach(key => {
         const keys = key === 'assetLabel' ? 'meta' : key
         if (key === 'assetLabel') {
@@ -841,7 +841,7 @@ export default {
             this.titleSearchList[key].hide = !res.length
             this.detailSearchList[key].hide = !res.length
             if (res.length) {
-              this.assetNzTableHeightOffset += 57
+              this.assetNzTableHeightOffset += 41
             }
           })
         } else if (key === 'model') {
@@ -853,7 +853,7 @@ export default {
             this.titleSearchList[key].hide = !res.length
             this.detailSearchList[key].hide = !res.length
             if (res.length) {
-              this.assetNzTableHeightOffset += 57
+              this.assetNzTableHeightOffset += 41
             }
           })
         } else {
@@ -862,7 +862,7 @@ export default {
           this.titleSearchList[key].hide = !this.titleSearchList[key].children.length
           this.detailSearchList[key].hide = !this.detailSearchList[key].children.length
           if (this.detailSearchList[key].children.length) {
-            this.assetNzTableHeightOffset += 57
+            this.assetNzTableHeightOffset += 41
           }
         }
         if (this.titleSearchList[key].children.length === 0) {
