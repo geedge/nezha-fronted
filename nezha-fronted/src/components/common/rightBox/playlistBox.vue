@@ -39,7 +39,7 @@
               v-model="editPlaylist.dashboardIds"
               multiple
               :placeholder="$t('el.select.placeholder')"
-              popper-class="right-box-select-top prevent-clickoutside"
+              popper-class="right-box-select-top prevent-clickoutside right-box-select-width"
               size="small"
               class="el-select-multiple-width640"
             >

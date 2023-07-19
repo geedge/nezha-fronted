@@ -30,7 +30,7 @@
       </template>
     </el-menu>
     <!-- collapse -->
-    <div class="collapse-btn" :class="{'isCollapse-btn':isShrink}" @click="shrink">
+    <div class="collapse-btn" :class="{'isCollapse-btn':isShrink}" :style="{height:copyright==1?'52px':'46px'}" @click="shrink">
       <template v-if="copyright==1">
         <div class="copy-right" v-show="!isShrink">
           <span>Copyright © 2019 - 2023</span>
@@ -39,7 +39,7 @@
       </template>
       <template v-else>
         <div class="collapse-text" v-show="!isShrink">
-          <span>{{$t('overall.collapseSidebar')}}</span>
+          <span>Collapse sidebar</span>
         </div>
       </template>
       <i class="collapse-icon nz-icon nz-icon-drop-down"></i>
