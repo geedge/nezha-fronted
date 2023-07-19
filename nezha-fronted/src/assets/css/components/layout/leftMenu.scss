@@ -23,20 +23,16 @@
     .el-menu {
       background-color: $--left-menu-background-color-base;
     }
-    >.el-submenu.is-opened .el-submenu__title {
-      background-color: $--left-menu-background-color-active !important;
+    .el-submenu.is-opened .el-menu-item, .el-submenu.is-opened .el-submenu__title {
+      background-color: $--left-menu-background-color-open !important;
     }
-    .el-submenu.is-opened>.el-submenu__title, .el-submenu.is-opened>.el-submenu__title>i {
+    .el-submenu.is-active>.el-submenu__title, .el-submenu.is-active>.el-submenu__title>i {
       color: white !important;
     }
-    .el-submenu.is-opened .el-menu-item:not(.is-active), .el-submenu.is-opened .el-submenu__title {
-      background-color: $--left-menu-background-color-open !important;
-    }
-    .is-opened.is-active{
-      background-color: $--left-menu-background-color-open !important;
+    .el-submenu.is-active:not(.is-opened)>.el-submenu__title{
+      border-left: 3px $--color-primary solid;
     }
     .el-menu-item.is-active {
-      background-color: $--left-menu-background-color-active !important;
       border-left: 3px $--color-primary solid;
     }
     .el-menu-item, .el-submenu__title {
@@ -50,6 +46,13 @@
       position: absolute;
       top: 26px;
       right: 20px;
+    }
+
+    .el-menu-item:focus{
+      background-color: $--left-menu-background-color-base;
+    }
+    .el-menu-item:hover{
+      background-color: $--menu-item-hover-fill;
     }
   }
 
@@ -105,21 +108,33 @@
 }
 .collapse-btn{
   position: fixed;
-  bottom: 0;
+  bottom: 0px;
   left: 0;
   width: 252px;
   height: 52px;
+  box-sizing: border-box;
+  padding: 6px 0;
   transition: all 0.4s ease 0s;
   cursor: pointer;
   .copy-right{
-    padding: 6px 0 6px 12px;
+    padding-left: 12px;
+    line-height: 20px;
     text-align: left;
     span{
       display: block;
-      font-size: 13px;
-      line-height: 20px;
-      color: $--color-text-secondary;
       white-space: nowrap;
+      font-size: 13px;
+      color: $--color-text-secondary;
+    }
+  }
+  .collapse-text{
+    line-height: 20px;
+    text-align: center;
+    span{
+      display: block;
+      white-space: nowrap;
+      font-size: 14px;
+      color: $--color-text-secondary;
     }
   }
   .collapse-icon{
