@@ -1,6 +1,6 @@
 <template>
   <transition name="el-zoom-in-center">
-    <div v-show="browserWindowZoom" class="zoom" style="z-index: 101;">
+    <div v-show="browserWindowZoom" class="zoom" style="z-index: 1001;">
       <i class="nz-icon nz-icon-about-full"></i>
       <span>{{$t('tip.zoomStatusPrompt')}}</span>
       <button class="zoom-button" @click="doNotAskAgain">{{$t('tip.doNotAskAgain')}}</button>

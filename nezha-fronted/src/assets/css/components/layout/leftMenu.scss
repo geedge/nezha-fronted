@@ -23,10 +23,10 @@
     .el-menu {
       background-color: $--left-menu-background-color-base;
     }
-    >.el-submenu.is-active .el-submenu__title {
+    >.el-submenu.is-opened .el-submenu__title {
       background-color: $--left-menu-background-color-active !important;
     }
-    .el-submenu.is-active>.el-submenu__title, .el-submenu.is-active>.el-submenu__title>i {
+    .el-submenu.is-opened>.el-submenu__title, .el-submenu.is-opened>.el-submenu__title>i {
       color: white !important;
     }
     .el-submenu.is-opened .el-menu-item:not(.is-active), .el-submenu.is-opened .el-submenu__title {
@@ -34,9 +34,6 @@
     }
     .is-opened.is-active{
       background-color: $--left-menu-background-color-open !important;
-    }
-    .el-submenu.is-active:not(.is-opened)>.el-submenu__title{
-      border-left: 3px $--color-primary solid;
     }
     .el-menu-item.is-active {
       background-color: $--left-menu-background-color-active !important;
@@ -47,7 +44,7 @@
       line-height: 46px;
       font-size: 14px;
       position: relative;
-      border-left: 3px $--left-menu-background-color-active solid;
+      border-left: 3px transparent solid;
     }
     .el-submenu__icon-arrow {
       position: absolute;
