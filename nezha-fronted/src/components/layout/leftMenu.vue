@@ -31,10 +31,17 @@
     </el-menu>
     <!-- collapse -->
     <div class="collapse-btn" :class="{'isCollapse-btn':isShrink}" @click="shrink">
-      <div class="copy-right" v-if="!isShrink">
-        <span>Copyright © 2019 - 2023</span>
-        <span>Geedge Networks. All rights reserved.</span>
-      </div>
+      <template v-if="copyright==1">
+        <div class="copy-right" v-show="!isShrink">
+          <span>Copyright © 2019 - 2023</span>
+          <span>Geedge Networks. All rights reserved.</span>
+        </div>
+      </template>
+      <template v-else>
+        <div class="collapse-text" v-show="!isShrink">
+          <span>{{$t('overall.collapseSidebar')}}</span>
+        </div>
+      </template>
       <i class="collapse-icon nz-icon nz-icon-drop-down"></i>
     </div>
   </div>
@@ -50,6 +57,7 @@ export default {
     return {
       imgUrl,
       systemName: localStorage.getItem('nz-sys-name'),
+      copyright: localStorage.getItem('nz-copyright'),
       logo: ''
     }
   },
