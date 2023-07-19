@@ -242,7 +242,7 @@ export default {
         batchShow: false
       },
       silenceBoxShow: false,
-      dataListLayout: localStorage.getItem('dataList-layout' + 'assetTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'assetTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
+      dataListLayout: localStorage.getItem('dataList-layoutassetNzTableHeightOffset' + 'assetTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'assetTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
       assetNzTableHeightOffset: 287, // 包含click-search时nz-table的高度
       blankObject: {
         id: '',
@@ -826,6 +826,7 @@ export default {
       })
     },
     setSearchData (statistics) {
+      this.assetNzTableHeightOffset = 2
       Object.keys(this.titleSearchList).forEach(key => {
         const keys = key === 'assetLabel' ? 'meta' : key
         if (key === 'assetLabel') {
@@ -836,6 +837,9 @@ export default {
             this.detailSearchList.assetLabel.show = true
             this.titleSearchList[key].hide = !res.length
             this.detailSearchList[key].hide = !res.length
+            if (res.length) {
+              this.assetNzTableHeightOffset += 57
+            }
           })
         } else if (key === 'model') {
           this.getModelData(statistics[keys]).then(res => {
@@ -845,12 +849,18 @@ export default {
             this.detailSearchList.model.show = true
             this.titleSearchList[key].hide = !res.length
             this.detailSearchList[key].hide = !res.length
+            if (res.length) {
+              this.assetNzTableHeightOffset += 57
+            }
           })
         } else {
           this.titleSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
           this.detailSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
           this.titleSearchList[key].hide = !this.titleSearchList[key].children.length
           this.detailSearchList[key].hide = !this.detailSearchList[key].children.length
+          if (this.detailSearchList[key].children.length) {
+            this.assetNzTableHeightOffset += 57
+          }
         }
         if (this.titleSearchList[key].children.length === 0) {
           // delete this.titleSearchList[key]
