@@ -842,6 +842,10 @@ export default {
         this.$set(this.searchTime, 2, val + 'd')
       }
       this.$refs.pickTime && (this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime)
+      this.$store.dispatch('dispatchPanelTime', {
+        time: this.searchTime,
+        nowTimeType: this.nowTimeType
+      })
     },
     /* 时间条件查询--end */
     // 公用操作
