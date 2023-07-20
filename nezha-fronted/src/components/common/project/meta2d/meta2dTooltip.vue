@@ -62,7 +62,6 @@ export default {
         const source = this.queryValues.find(query => query.name === this.params.legend && query.parent === this.params.parent)
         if (source) {
           this.dataSource = source
-          console.log(this.params.title, this.dataSource.elements.expression, this.dataSource.metric)
           this.title = this.handleLegendAlias(this.params.title, this.params.title, this.dataSource.metric) || this.params.title
           this.content = this.handleLegendAlias(this.params.content, this.params.content, this.dataSource.metric) || this.params.content
         } else {
@@ -96,7 +95,6 @@ export default {
         })
         if (chartData && this.$refs.panelChart) {
           if (chartData.length) {
-            console.log(chartData[0][0].elements.unit)
             this.chartInfo.unit = chartData[0][0].elements.unit
           }
           this.chartInfo.elements = elements

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './user'
 import panel from './panel'
+import timePicker from './timePicker'
 import terminalFile from './terminalFile'
 import meta2dStore from '@/components/common/project/meta2d/js/meta2dStore'
 // import topology from './topology'
@@ -12,7 +13,8 @@ const store = new Vuex.Store({
     user,
     panel,
     terminalFile,
-    meta2dStore
+    meta2dStore,
+    timePicker
   },
   state: {
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */

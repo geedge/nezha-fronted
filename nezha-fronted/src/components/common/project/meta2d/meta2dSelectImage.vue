@@ -313,7 +313,6 @@ export default {
       })
     },
     uploadPicChange () {
-      console.log(131123123123)
       this.unitArr = []
       this.tools.forEach((item, index) => {
         if (index > 0) {

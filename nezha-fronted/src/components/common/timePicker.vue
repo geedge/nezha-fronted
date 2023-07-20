@@ -5,7 +5,7 @@
     class="calendar"
     v-clickoutside="changeDropdownFlag"
   >
-    <div @click="showDropdown(true)" class="date-range-text">
+    <div @click="showDropdown(!dropdownFlag)" class="date-range-text">
       <div class="calendar-popover-text">
         <i class="nz-icon nz-icon-time"></i>
       </div>
@@ -26,6 +26,7 @@
         <!-- <div class="time-no-data">{{ showTime.text }}</div> -->
       </div>
       <div class="calendar-popover-text">
+        <i class="nz-icon" v-if="showLocked" @click.stop="changeLocked" :class="timePickerLocked ? 'nz-icon-push-pin-line colorfa901c' : 'nz-icon-push-pin-line'" style="margin-right: 5px;cursor: pointer"/>
         <i class="el-icon-arrow-down"></i>
       </div>
     </div>
@@ -151,10 +152,12 @@ export default {
     size: {
       type: String
     },
-    sign: [Number, String]
+    sign: [Number, String],
+    showLocked: { type: Boolean, default: false },
   },
   data () {
     return {
+      timePickerLocked: false, // 该参数只用于图标状态的切换 实际时间的控制 由原页面控制
       whoChoose: '',
       searchTimeValue: '',
       rangeHistory: [],
@@ -210,6 +213,7 @@ export default {
     }
   },
   mounted () {
+    this.timePickerLocked = localStorage.getItem('nz-time-picker-locked') ? JSON.parse(localStorage.getItem('nz-time-picker-locked')) : false
     this.timeShowData = JSON.parse(JSON.stringify(this.timeData))
     this.timeShowData.shift()
     this.getItem()
@@ -325,6 +329,11 @@ export default {
       this.oldSearchTimeError[0] = false
       this.oldSearchTimeError[1] = false
       this.dropdownFlag = value
+    },
+    changeLocked () {
+      this.timePickerLocked = !this.timePickerLocked
+      localStorage.setItem('nz-time-picker-locked', JSON.stringify(this.timePickerLocked))
+      this.$store.dispatch('dispatchTimePickerLocked', this.timePickerLocked)
     },
     dateInputChange (type, v) {
       const timeFormatMain = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
@@ -462,12 +471,12 @@ export default {
         }
       }
     },
-    setTimeRange (nowTimeType) {
+    setTimeRange (nowTimeType, time) {
       this.isCustom = false
       this.nowTimeType = nowTimeType
       this.$set(this.showTime, 'id', nowTimeType.id)
       this.$set(this.showTime, 'text', nowTimeType.text)
-      this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      this.setSearchTime(nowTimeType.type, nowTimeType.value, time)
       const timeTemp = this.$lodash.cloneDeep(this.searchTime)
       this.oldSearchTime[0] = timeTemp[0]
       this.oldSearchTime[1] = timeTemp[1]
@@ -529,6 +538,7 @@ export default {
         this.$set(this.searchTime, 1, endTime)
         this.$set(this.searchTime, 2, val + 'd')
       } else {
+        this.isCustom = true
         this.$set(this.searchTime, 0, time[0])
         this.$set(this.searchTime, 1, time[1])
       }

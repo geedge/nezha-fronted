@@ -103,6 +103,7 @@ export default {
       this.$store.commit('isShrink')
     },
     jump (route) {
+      this.$store.commit('setTimePickerRange', []) // 切换路由时清空已选择的时间
       if (route === this.route) {
         this.refresh()
       }

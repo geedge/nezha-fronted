@@ -51,7 +51,7 @@
               <!-- 仪表盘轮播 -->
               <playlist v-if="playListControls" :playlistObj="playlistObj" :panelData="panelData" @stopPlaylist="stopPlaylist" @changePlay="panelChange"></playlist>
 
-              <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" class="margin-r-10" :sign="showPanel.id" :from="fromRoute.dashboard"></pick-time>
+              <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :show-locked="true"  class="margin-r-10" :sign="showPanel.id" :from="fromRoute.dashboard"></pick-time>
 
               <template v-if="!playListControls">
                 <!-- 切换查看模式 -->
@@ -373,6 +373,12 @@ export default {
     },
     panelLock () {
       return this.$store.getters.getPanelLock
+    },
+    timePickerLocked () {
+      return this.$store.getters.getTimePickerLocked
+    },
+    timePickerRange () {
+      return this.$store.getters.getTimePickerRange
     }
   },
   methods: {
@@ -816,6 +822,10 @@ export default {
         time: this.searchTime,
         nowTimeType: this.nowTimeType
       })
+      this.$store.dispatch('dispatchTimePickerRange', {
+        time: this.searchTime,
+        nowTimeType: this.nowTimeType
+      })
       // 选择时间范围时更新路由
       if (route) {
         const param = { ...this.$route.query }
@@ -1154,7 +1164,20 @@ export default {
           time: this.searchTime,
           nowTimeType: this.nowTimeType
         })
+        this.$store.dispatch('dispatchTimePickerRange', {
+          time: this.searchTime,
+          nowTimeType: this.nowTimeType
+        })
       })
+    },
+    setTimePickerRange () {
+      if (!this.timePickerRange.nowTimeType) {
+        this.setDefaultTimeRange()
+      }
+      const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
+      this.searchTime = this.timePickerRange.time
+      this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.searchTime)
+      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
     },
     // 设置默认刷新
     setDefaultRefresh () {
@@ -1213,7 +1236,11 @@ export default {
   watch: {
     showPanel: {
       handler () {
-        this.setDefaultTimeRange()
+        if (this.timePickerLocked && this.timePickerRange && this.timePickerRange.nowTimeType) {
+          this.setTimePickerRange()
+        } else {
+          this.setDefaultTimeRange()
+        }
         this.setDefaultRefresh()
       }
     },

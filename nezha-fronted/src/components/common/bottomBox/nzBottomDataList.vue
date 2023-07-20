@@ -154,7 +154,6 @@ export default {
       handler (n) {
         this.searchInputShow = false
         this.activeTargetTab = n
-        console.log(n)
         setTimeout(() => {
           this.searchInputShow = true
         }, 100)
@@ -175,7 +174,6 @@ export default {
     },
     // 切换tab
     changeTab (tab, event) {
-      console.log(tab, event)
       this.$emit('changeTab', tab.name)
     }
   }
