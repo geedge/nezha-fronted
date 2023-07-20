@@ -28,7 +28,7 @@
           <div class="top-tool-right">
             <button v-if="!closable" class="top-tool-btn top-tool-btn--text margin-r-10" style="cursor: pointer;" type="button" @click="split">
               {{$t('overall.split')}}</button>
-            <pick-time id="explore" ref="pickTime" v-model="filterTime" :class="{'margin-r-10': showMetrics}" :refresh-data-func="expressionChange" @unitChange="chartUnitChange">
+            <pick-time id="explore" ref="pickTime" :show-locked="true" v-model="filterTime" :class="{'margin-r-10': showMetrics}" :refresh-data-func="expressionChange" @unitChange="chartUnitChange">
              <!-- <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template> -->
               <template slot="added-text">{{$t('overall.query')}}</template>
             </pick-time>
@@ -3631,6 +3631,7 @@ export default {
   mounted () {
     this.scrollbarWrap = this.$refs.exploreScrollbar
     this.scrollbarWrap.addEventListener('scroll', this.onScroll)
+    this.setTimePickerRange()
     this.initQueryFromPath()
   },
   beforeDestroy () {
@@ -3655,6 +3656,16 @@ export default {
     jumpClick (id) {
       const dom = document.getElementsByClassName('nz-explore-' + this.tabIndex)[0]
       dom.querySelector(id).scrollIntoView(true)
+    },
+    setTimePickerRange () {
+      console.log(this.timePickerLocked, !this.timePickerRange.nowTimeType)
+      if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
+        return
+      }
+      const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
+      this.filterTime = this.timePickerRange.time
+      this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.filterTime)
+      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
     },
     selectMetricsLogs (val, icon, label) {
       if (val) {
@@ -4513,6 +4524,12 @@ export default {
       const exploreItems = this.$parent.exploreItems
       const tabIndex = exploreItems.indexOf(this.tabIndex)
       return tabIndex ? 'right' : 'left'
+    },
+    timePickerLocked () {
+      return this.$store.getters.getTimePickerLocked
+    },
+    timePickerRange () {
+      return this.$store.getters.getTimePickerRange
     }
   },
   watch: {

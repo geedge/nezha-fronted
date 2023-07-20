@@ -26,7 +26,13 @@
         <!-- <div class="time-no-data">{{ showTime.text }}</div> -->
       </div>
       <div class="calendar-popover-text">
-        <i class="nz-icon" v-if="showLocked" @click.stop="changeLocked" :class="timePickerLocked ? 'nz-icon-push-pin-line colorfa901c' : 'nz-icon-push-pin-line'" style="margin-right: 5px;cursor: pointer"/>
+        <i class="nz-icon"
+           v-if="showLocked"
+           @click.stop="changeLocked"
+           :title="timePickerLocked ? $t('timepicker.unlockTime') : $t('timepicker.lockTime')"
+           :class="timePickerLocked ? 'nz-icon-push-pin-line colorfa901c' : 'nz-icon-push-pin-line'"
+           style="margin-right: 5px;cursor: pointer"
+        />
         <i class="el-icon-arrow-down"></i>
       </div>
     </div>
@@ -153,7 +159,7 @@ export default {
       type: String
     },
     sign: [Number, String],
-    showLocked: { type: Boolean, default: false },
+    showLocked: { type: Boolean, default: false }
   },
   data () {
     return {
@@ -210,6 +216,9 @@ export default {
   computed: {
     timeBoxClass () {
       return this.$store.getters.getTimeBoxClass
+    },
+    nztimePickerLocked () {
+      return this.$store.getters.getTimePickerLocked
     }
   },
   mounted () {
@@ -334,6 +343,13 @@ export default {
       this.timePickerLocked = !this.timePickerLocked
       localStorage.setItem('nz-time-picker-locked', JSON.stringify(this.timePickerLocked))
       this.$store.dispatch('dispatchTimePickerLocked', this.timePickerLocked)
+      if (this.timePickerLocked) {
+        console.log(this.searchTime, this.nowTimeType)
+        this.$store.dispatch('dispatchTimePickerRange', {
+          time: this.searchTime,
+          nowTimeType: this.nowTimeType
+        })
+      }
     },
     dateInputChange (type, v) {
       const timeFormatMain = localStorage.getItem('nz-default-dateFormat') ? localStorage.getItem('nz-default-dateFormat') : 'YYYY-MM-DD HH:mm:ss'
@@ -590,6 +606,9 @@ export default {
           this.getRangeHistoryArr()
         }
       }
+    },
+    nztimePickerLocked (n) {
+      this.timePickerLocked = n
     }
   },
   beforeDestroy () {

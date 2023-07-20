@@ -351,7 +351,7 @@ export default {
           } else {
             str += [month, day].join('-')
           }
-          if (diffSec <= secOneDay) { // 同一天
+          if (diffSec <= secOneDay - 100) { // 同一天
             return [hour, minute].join(':')
           } else if (diffSec < secOneMonth) { // 大于1天，小于30天
             return str + '\n' + [hour, minute].join(':')
