@@ -204,7 +204,6 @@ export default {
     topoData: {
       immediate: false,
       handler () {
-        console.log(123213)
         if (!this.isChart) {
           this.reload()
         }
