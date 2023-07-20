@@ -44,7 +44,7 @@
         </div>
         <!-- endpoint -->
         <div v-else-if="from === fromRoute.endpoint" style="display: flex">
-          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'dashboard' + obj.id"></pick-time>
+          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :show-locked="true" :use-chart-unit="false" :sign="'dashboard' + obj.id"></pick-time>
           <button id="endpoint-create-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChartBefore">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
