@@ -15,7 +15,7 @@
       <template v-slot:top-tool-right>
         <!-- asset -->
         <div v-if="from === fromRoute.asset" style="display: flex">
-          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false" :sign="'dashboard' + obj.id"></pick-time>
+          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :show-locked="true" :use-chart-unit="false" :sign="'dashboard' + obj.id"></pick-time>
           <button id="panel-add-chart" v-has="'main_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" type="button" @click="addChartBefore">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
@@ -176,6 +176,12 @@ export default {
     },
     panelLock () {
       return this.$store.getters.getPanelLock
+    },
+    timePickerLocked () {
+      return this.$store.getters.getTimePickerLocked
+    },
+    timePickerRange () {
+      return this.$store.getters.getTimePickerRange
     }
   },
   data () {
@@ -574,6 +580,10 @@ export default {
           time: this.searchTime,
           nowTimeType: this.nowTimeType
         })
+        this.$store.dispatch('dispatchTimePickerRange', {
+          time: this.searchTime,
+          nowTimeType: this.nowTimeType
+        })
       }
     },
     /* 时间条件查询--end */
@@ -851,7 +861,20 @@ export default {
           time: this.searchTime,
           nowTimeType: this.nowTimeType
         })
+        this.$store.dispatch('dispatchTimePickerRange', {
+          time: this.searchTime,
+          nowTimeType: this.nowTimeType
+        })
       })
+    },
+    setTimePickerRange () {
+      if (!this.timePickerRange.nowTimeType) {
+        this.setDefaultTimeRange()
+      }
+      const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
+      this.searchTime = this.timePickerRange.time
+      this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.searchTime)
+      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
     },
     // 设置默认刷新
     setDefaultRefresh () {
@@ -895,7 +918,11 @@ export default {
     showPanel: {
       handler () {
         if (this.from !== this.fromRoute.dashboardTemp) {
-          this.setDefaultTimeRange()
+          if (this.timePickerLocked && this.timePickerRange && this.timePickerRange.nowTimeType) {
+            this.setTimePickerRange()
+          } else {
+            this.setDefaultTimeRange()
+          }
           this.setDefaultRefresh()
         }
       }

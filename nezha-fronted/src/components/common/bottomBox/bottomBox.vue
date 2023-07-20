@@ -161,6 +161,33 @@ export default {
     obj: {
       immediate: true,
       handler (n) {
+        if (this.from === this.fromRoute.asset) {
+          const hasSub = this.obj && this.obj.childrenNum
+          const hasProcess = this.obj && this.obj.clientState == '1'
+          const hasVays = this.obj && this.obj.model && this.obj.model.tsgAppliance == '1'
+          if (this.targetTab === 'assetSubTab' && !hasSub) {
+            this.$nextTick(() => {
+              this.changeTab('dashboardTab')
+            })
+          }
+          if (this.targetTab === 'process' && !hasProcess) {
+            this.$nextTick(() => {
+              this.changeTab('dashboardTab')
+            })
+          }
+          if (this.targetTab === 'vsys' && !hasVays) {
+            this.$nextTick(() => {
+              this.changeTab('dashboardTab')
+            })
+          }
+        }
+        if (this.from === this.fromRoute.endpoint) {
+          const config = this.obj.configs.find(c => c.type === 'logs')
+          const hasLog = config && config.enable === 1
+          if (this.targetTab === 'log' && !hasLog) {
+            this.changeTab('dashboardTab')
+          }
+        }
       }
     }
   },
@@ -309,11 +336,12 @@ export default {
       return config && config.enable === 1
     },
     assetTabs () {
+      const id = this.obj.id
       const hasSub = this.obj && this.obj.childrenNum
       const hasProcess = this.obj && this.obj.clientState == '1'
       const hasVays = this.obj && this.obj.model && this.obj.model.tsgAppliance == '1'
       const tabs = [
-        { prop: 'dashboardTab', name: this.$t('overall.dashboard') },
+        { prop: 'dashboardTab', name: this.$t('overall.dashboard'), id: id },
         { prop: 'alertMessageTab', name: this.$t('overall.alert') },
         { prop: 'endpointTab', name: this.$t('asset.endpoint') },
         { prop: 'log', name: this.$t('dashboard.dashboard.chartForm.typeVal.log.label') }
@@ -331,10 +359,11 @@ export default {
       return tabs
     },
     endpointTabs () {
+      const id = this.obj.id
       const config = this.obj.configs.find(c => c.type === 'logs')
       const hasLog = config && config.enable === 1
       const tabs = [
-        { prop: 'dashboardTab', name: this.$t('overall.dashboard') },
+        { prop: 'dashboardTab', name: this.$t('overall.dashboard'), id: id },
         { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
         { prop: 'Metrics', name: this.$t('overall.metric') }
       ]
