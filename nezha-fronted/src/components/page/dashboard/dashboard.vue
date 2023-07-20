@@ -103,7 +103,6 @@
               <chart-list
                 ref="chartList"
                 :variablesInit="variablesInit"
-                :timerInit="true"
                 name="dashboard"
                 :dashboardId="showPanel.id"
                 :class="{'show-top':showTopBtn, 'is-dashboard': true}"
