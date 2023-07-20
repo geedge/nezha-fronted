@@ -891,7 +891,6 @@ export default {
   mounted () {
     bus.$on('refreshPanel', this.refreshPanel)
     this.scrollbarWrap = this.$refs.dashboardScrollbar
-    this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
     document.querySelector('#tableList').addEventListener('mouseleave', this.tableListLeave)
     this.$store.dispatch('dispatchPanelTime', {
@@ -925,6 +924,7 @@ export default {
           }
           this.setDefaultRefresh()
         }
+        this.onScroll()
       }
     },
     // 监听图表联动配置
