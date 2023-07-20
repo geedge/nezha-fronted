@@ -3990,6 +3990,10 @@ export default {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       this.pageObj.pageNo = 1
       this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      this.$store.dispatch('dispatchTimePickerRange', {
+        time: this.searchTime,
+        nowTimeType: this.nowTimeType
+      })
       if (this.expressions && this.expressions.length >= 1) {
         if (this.showMetrics) {
           this.queryTableData()
