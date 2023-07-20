@@ -1157,7 +1157,8 @@ export default {
       })
     },
     setTimePickerRange () {
-      if (!this.timePickerRange.nowTimeType) {
+      if (this.$route.query.searchTime) return
+      if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
         this.setDefaultTimeRange()
       }
       const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
@@ -1188,6 +1189,10 @@ export default {
       mode: { target: this, propertyName: 'mode', type: 'string' }
     }
     this.initQueryFromPath(searchKeys)
+    this.$store.dispatch('dispatchTimePickerRange', {
+      time: this.searchTime,
+      nowTimeType: this.nowTimeType
+    })
     this.showPanel.id = this.dashboardId
     this.filter.dashboardId = this.dashboardId
     // 设置查看模式

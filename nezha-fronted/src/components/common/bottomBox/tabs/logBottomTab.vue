@@ -30,7 +30,7 @@
         </el-select>
         <button  slot="suffix" class="search-icon-btn"><i class="el-icon-search" @click="dateChange()"></i></button>
       </el-input>
-      <pick-time id="explore" ref="pickTime" v-model="filterTime" :refresh-data-func="getData" :sign="sign" :use-chart-unit="false" :use-refresh="false">
+      <pick-time id="explore" ref="pickTime" v-model="filterTime" :refresh-data-func="getData" :show-locked="true" :sign="sign" :use-chart-unit="false" :use-refresh="false">
         <template slot="added-text">{{$t('overall.query')}}</template>
       </pick-time>
     </template>
@@ -73,7 +73,16 @@ export default {
       matchContent: '',
       loading: true,
       endpointLoading: false,
-      limit: 100
+      limit: 100,
+      nowTimeType: {}
+    }
+  },
+  computed: {
+    timePickerLocked () {
+      return this.$store.getters.getTimePickerLocked
+    },
+    timePickerRange () {
+      return this.$store.getters.getTimePickerRange
     }
   },
   methods: {
@@ -119,7 +128,44 @@ export default {
       this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.refresh()
     },
     getData () {
+      const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+      this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      this.$store.dispatch('dispatchTimePickerRange', {
+        time: this.searchTime,
+        nowTimeType: this.nowTimeType
+      })
       this.queryLogData()
+    },
+    setTimePickerRange () {
+      if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
+        return
+      }
+      const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
+      this.filterTime = this.timePickerRange.time
+      this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.filterTime)
+      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+    },
+    setSearchTime (type, val) { // 设置searchTime
+      if (type === 'minute') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        this.$set(this.filterTime, 0, startTime)
+        this.$set(this.filterTime, 1, endTime)
+        this.$set(this.filterTime, 2, val + 'm')
+      } else if (type === 'hour') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        this.$set(this.filterTime, 0, startTime)
+        this.$set(this.filterTime, 1, endTime)
+        this.$set(this.filterTime, 2, val + 'h')
+      } else if (type === 'date') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+        this.$set(this.filterTime, 0, startTime)
+        this.$set(this.filterTime, 1, endTime)
+        this.$set(this.filterTime, 2, val + 'd')
+      }
+      this.$refs.pickTime.$refs.timePicker.searchTime = this.filterTime
     },
     queryLogData (limit) { // log的chart和table是一个请求
       this.loading = true
@@ -162,6 +208,7 @@ export default {
     } else if (this.from === fromRoute.asset) {
       this.expressions = [`{asset="${this.obj.name}"}`]
     }
+    this.setTimePickerRange()
     this.$nextTick(() => {
       this.queryLogData()
     })

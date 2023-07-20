@@ -28,7 +28,7 @@
           <div class="top-tool-right">
             <button v-if="!closable" class="top-tool-btn top-tool-btn--text margin-r-10" style="cursor: pointer;" type="button" @click="split">
               {{$t('overall.split')}}</button>
-            <pick-time id="explore" ref="pickTime" :show-locked="true" v-model="filterTime" :class="{'margin-r-10': showMetrics}" :refresh-data-func="expressionChange" @unitChange="chartUnitChange">
+            <pick-time id="explore" ref="pickTime" v-model="filterTime" :class="{'margin-r-10': showMetrics}" :refresh-data-func="expressionChange" @unitChange="chartUnitChange">
              <!-- <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template> -->
               <template slot="added-text">{{$t('overall.query')}}</template>
             </pick-time>
@@ -3563,7 +3563,6 @@ export default {
   mounted () {
     this.scrollbarWrap = this.$refs.exploreScrollbar
     this.scrollbarWrap.addEventListener('scroll', this.onScroll)
-    this.setTimePickerRange()
     this.initQueryFromPath()
   },
   beforeDestroy () {
@@ -3987,13 +3986,6 @@ export default {
       }
     },
     expressionChange () {
-      const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-      this.pageObj.pageNo = 1
-      this.setSearchTime(nowTimeType.type, nowTimeType.value)
-      this.$store.dispatch('dispatchTimePickerRange', {
-        time: this.searchTime,
-        nowTimeType: this.nowTimeType
-      })
       if (this.expressions && this.expressions.length >= 1) {
         if (this.showMetrics) {
           this.queryTableData()

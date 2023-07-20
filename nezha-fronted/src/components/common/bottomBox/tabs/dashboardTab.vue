@@ -868,7 +868,7 @@ export default {
       })
     },
     setTimePickerRange () {
-      if (!this.timePickerRange.nowTimeType) {
+      if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
         this.setDefaultTimeRange()
       }
       const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
