@@ -3657,14 +3657,16 @@ export default {
       dom.querySelector(id).scrollIntoView(true)
     },
     setTimePickerRange () {
-      console.log(this.timePickerLocked, !this.timePickerRange.nowTimeType)
-      if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
-        return
-      }
-      const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
-      this.filterTime = this.timePickerRange.time
-      this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.filterTime)
-      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+      this.$nextTick(() => {
+        console.log(this.timePickerLocked, !this.timePickerRange.nowTimeType)
+        if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
+          return
+        }
+        const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
+        this.filterTime = this.timePickerRange.time
+        this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.filterTime)
+        this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+      })
     },
     selectMetricsLogs (val, icon, label) {
       if (val) {
