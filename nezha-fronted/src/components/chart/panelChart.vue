@@ -111,6 +111,10 @@ export default {
       type: Boolean,
       default: true
     },
+    timerInit: {
+      type: Boolean,
+      default: true
+    },
     hiddenText: { // 隐藏图表的悬浮文字
       type: String
     }
@@ -165,7 +169,7 @@ export default {
     },
     // 参数 isRefresh 标识是否是刷新操作
     getChartData (isRefresh, params) { // 获取chart的数据前的准备 主要用于处理时间参数
-      if (!this.variablesInit) { // 变量未加载完成 不请求数据
+      if (!this.variablesInit || !this.timerInit) { // 变量未加载完成 不请求数据
         return
       }
       this.chartData = window.dataJson ? this.chartData : []

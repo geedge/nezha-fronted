@@ -103,6 +103,7 @@
               <chart-list
                 ref="chartList"
                 :variablesInit="variablesInit"
+                :timerInit="true"
                 name="dashboard"
                 :dashboardId="showPanel.id"
                 :class="{'show-top':showTopBtn, 'is-dashboard': true}"
@@ -1157,14 +1158,17 @@ export default {
       })
     },
     setTimePickerRange () {
-      if (this.$route.query.searchTime) return
-      if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
-        this.setDefaultTimeRange()
-      }
-      const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
-      this.searchTime = this.timePickerRange.time
-      this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.searchTime)
-      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+      this.$nextTick(() => {
+        console.log(13123213,this.timePickerLocked, this.timePickerRange.nowTimeType)
+        if (this.$route.query.searchTime) return
+        if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
+          this.setDefaultTimeRange()
+        }
+        const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
+        this.searchTime = this.timePickerRange.time
+        this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.searchTime)
+        this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+      })
     },
     // 设置默认刷新
     setDefaultRefresh () {
@@ -1189,10 +1193,12 @@ export default {
       mode: { target: this, propertyName: 'mode', type: 'string' }
     }
     this.initQueryFromPath(searchKeys)
-    this.$store.dispatch('dispatchTimePickerRange', {
-      time: this.searchTime,
-      nowTimeType: this.nowTimeType
-    })
+    if (this.$route.query.searchTime) {
+      this.$store.dispatch('dispatchTimePickerRange', {
+        time: this.searchTime,
+        nowTimeType: this.nowTimeType
+      })
+    }
     this.showPanel.id = this.dashboardId
     this.filter.dashboardId = this.dashboardId
     // 设置查看模式

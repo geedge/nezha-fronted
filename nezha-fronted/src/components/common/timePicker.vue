@@ -28,7 +28,7 @@
       <div class="calendar-popover-text">
         <i class="nz-icon"
            v-if="showLocked"
-           @click.stop="changeLocked"
+           @click.stop="changeLocked()"
            :title="timePickerLocked ? $t('timepicker.unlockTime') : $t('timepicker.lockTime')"
            :class="timePickerLocked ? 'nz-icon-push-pin-line colorfa901c' : 'nz-icon-push-pin-line'"
            style="margin-right: 5px;cursor: pointer"

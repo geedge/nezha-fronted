@@ -608,6 +608,10 @@ export default {
         this.$set(this.searchTime, 2, val + 'd')
       }
       this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime
+      this.$store.dispatch('dispatchPanelTime', {
+        time: this.searchTime,
+        nowTimeType: this.nowTimeType
+      })
     },
     getVarType (from) {
       if (from === this.fromRoute.asset) {
@@ -868,13 +872,15 @@ export default {
       })
     },
     setTimePickerRange () {
-      if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
-        this.setDefaultTimeRange()
-      }
-      const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
-      this.searchTime = this.timePickerRange.time
-      this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.searchTime)
-      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+      this.$nextTick(() => {
+        if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
+          this.setDefaultTimeRange()
+        }
+        const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
+        this.searchTime = this.timePickerRange.time
+        this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.searchTime)
+        this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+      })
     },
     // 设置默认刷新
     setDefaultRefresh () {

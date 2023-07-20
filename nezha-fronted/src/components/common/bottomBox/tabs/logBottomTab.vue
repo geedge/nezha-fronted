@@ -137,13 +137,15 @@ export default {
       this.queryLogData()
     },
     setTimePickerRange () {
-      if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
-        return
-      }
-      const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
-      this.filterTime = this.timePickerRange.time
-      this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.filterTime)
-      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+      this.$nextTick(() => {
+        if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
+          return
+        }
+        const nowTimeType = this.nowTimeType = this.timePickerRange.nowTimeType
+        this.filterTime = this.timePickerRange.time
+        this.$refs.pickTime && this.$refs.pickTime.$refs.timePicker.setTimeRange(this.nowTimeType, this.filterTime)
+        this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+      })
     },
     setSearchTime (type, val) { // 设置searchTime
       if (type === 'minute') {
