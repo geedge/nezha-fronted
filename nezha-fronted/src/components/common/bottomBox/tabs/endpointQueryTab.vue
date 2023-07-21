@@ -431,6 +431,7 @@ export default {
       })
     },
     queryChartDate () {
+      this.setSearchTime('searchTime')
       const start = this.searchTime[0] ? this.searchTime[0] : this.getTime(-1, 'h')
       const end = this.searchTime[1] ? this.searchTime[1] : this.getTime(0, 'h')
       this.searchTime = [start, end]

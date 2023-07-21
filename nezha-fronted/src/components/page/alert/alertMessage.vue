@@ -785,6 +785,7 @@ export default {
     },
 
     dateChange () {
+      this.setSearchTime('searchTime')
       this.getTableData()
     },
     getTableData (state) {
