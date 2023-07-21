@@ -1154,15 +1154,14 @@ export default {
           time: this.searchTime,
           nowTimeType: this.nowTimeType
         })
-        this.$store.dispatch('dispatchTimePickerRange', {
-          time: this.searchTime,
-          nowTimeType: this.nowTimeType
-        })
+        // this.$store.dispatch('dispatchTimePickerRange', {
+        //   time: this.searchTime,
+        //   nowTimeType: this.nowTimeType
+        // })
       })
     },
     setTimePickerRange () {
       this.$nextTick(() => {
-        console.log(13123213,this.timePickerLocked, this.timePickerRange.nowTimeType)
         if (this.$route.query.searchTime) return
         if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
           this.setDefaultTimeRange()
@@ -1236,12 +1235,14 @@ export default {
   watch: {
     showPanel: {
       handler () {
-        if (this.timePickerLocked && this.timePickerRange && this.timePickerRange.nowTimeType) {
-          this.setTimePickerRange()
-        } else {
-          this.setDefaultTimeRange()
-        }
-        this.setDefaultRefresh()
+        this.$nextTick(() => {
+          if (this.timePickerLocked && this.timePickerRange && this.timePickerRange.nowTimeType) {
+            this.setTimePickerRange()
+          } else {
+            this.setDefaultTimeRange()
+          }
+          this.setDefaultRefresh()
+        })
       }
     },
     // 监听图表联动配置
