@@ -68,6 +68,11 @@ export default {
         self.logo = e.value
       }
     })
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'nz-time-picker-range') {
+        this.initTimePicker()
+      }
+    })
     this.logo = localStorage.getItem('nz-sys-logo')
   },
   computed: {
@@ -144,6 +149,15 @@ export default {
           break
       }
       return className
+    },
+    initTimePicker () {
+      const timePickerLocked = localStorage.getItem('nz-time-picker-locked') ? JSON.parse(localStorage.getItem('nz-time-picker-locked')) : false
+      if (timePickerLocked) {
+        const timePickerRange = localStorage.getItem('nz-time-picker-range') ? JSON.parse(localStorage.getItem('nz-time-picker-range')) : {}
+        this.$store.dispatch('dispatchTimePickerRange', timePickerRange)
+        console.log('mounted', timePickerRange, this.timePickerLocked)
+      }
+      this.$store.dispatch('dispatchTimePickerLocked', timePickerLocked)
     }
   }
 }
