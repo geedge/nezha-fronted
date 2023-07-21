@@ -875,10 +875,10 @@ export default {
           time: this.searchTime,
           nowTimeType: this.nowTimeType
         })
-        this.$store.dispatch('dispatchTimePickerRange', {
-          time: this.searchTime,
-          nowTimeType: this.nowTimeType
-        })
+        // this.$store.dispatch('dispatchTimePickerRange', {
+        //   time: this.searchTime,
+        //   nowTimeType: this.nowTimeType
+        // })
       })
     },
     setTimePickerRange () {

@@ -207,8 +207,8 @@ export default {
         this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
         this.setSearchTime(this.nowType.type, this.nowType.value, this.nowType)
       } else {
-        this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowTimeType)
-        this.setSearchTime(this.nowType.type, this.nowType.value, this.nowTimeType)
+        this.$refs.pickTime.$refs.timePicker.setCustomTime(this.nowType)
+        this.setSearchTime(this.nowType.type, this.nowType.value, this.nowType)
       }
     }
   }
