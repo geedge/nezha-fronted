@@ -152,6 +152,38 @@ export default {
         }
         return aliasExpression
       }
+    },
+    /* 时间条件查询--end */
+    setSearchTime (key, cb) { // 设置searchTime
+      if (this.$refs.pickTime) {
+        const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+        this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+        const type = nowTimeType.type
+        const val = nowTimeType.value
+        if (type === 'minute') {
+          const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val))
+          const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+          this.$set(this[key], 0, startTime)
+          this.$set(this[key], 1, endTime)
+          this.$set(this[key], 2, val + 'm')
+        } else if (type === 'hour') {
+          const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val))
+          const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+          this.$set(this[key], 0, startTime)
+          this.$set(this[key], 1, endTime)
+          this.$set(this[key], 2, val + 'h')
+        } else if (type === 'date') {
+          const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val))
+          const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))
+          this.$set(this[key], 0, startTime)
+          this.$set(this[key], 1, endTime)
+          this.$set(this[key], 2, val + 'd')
+        }
+        this.$refs.pickTime.$refs.timePicker.searchTime = this[key]
+      }
+      if (cb) {
+        this.cb()
+      }
     }
   }
 }

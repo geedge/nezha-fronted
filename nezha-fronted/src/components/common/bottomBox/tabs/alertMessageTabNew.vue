@@ -382,6 +382,7 @@ export default {
       })
     },
     dateChange () {
+      this.setSearchTime('searchTimeHeader')
       this.getTableData()
     },
     getTableData (state) {

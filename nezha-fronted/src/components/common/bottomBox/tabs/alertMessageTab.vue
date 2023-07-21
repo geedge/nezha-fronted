@@ -531,6 +531,7 @@ export default {
       })
     },
     getAlertList () {
+      this.setSearchTime('searchTime')
       this.tableData = []
       this.loading = true
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)

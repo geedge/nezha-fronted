@@ -1,7 +1,7 @@
 const timePicker = {
   state: {
     timePickerLocked: localStorage.getItem('nz-time-picker-locked') ? JSON.parse(localStorage.getItem('nz-time-picker-locked')) : false,
-    timePickerRange:  localStorage.getItem('nz-time-picker-range') ? JSON.parse(localStorage.getItem('nz-time-picker-range')) : {},
+    timePickerRange: localStorage.getItem('nz-time-picker-range') ? JSON.parse(localStorage.getItem('nz-time-picker-range')) : {}
   },
   mutations: {
     setTimePickerLocked (state, flag) {

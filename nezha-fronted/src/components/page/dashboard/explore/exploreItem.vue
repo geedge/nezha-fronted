@@ -3988,6 +3988,11 @@ export default {
       }
     },
     expressionChange () {
+      if (this.$refs.pickTime) {
+        const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+        this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+        this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      }
       if (this.expressions && this.expressions.length >= 1) {
         if (this.showMetrics) {
           this.queryTableData()
