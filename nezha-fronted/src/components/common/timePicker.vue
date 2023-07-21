@@ -221,6 +221,15 @@ export default {
       return this.$store.getters.getTimePickerLocked
     }
   },
+  beforeCreate () {
+    const timePickerLocked = localStorage.getItem('nz-time-picker-locked') ? JSON.parse(localStorage.getItem('nz-time-picker-locked')) : false
+    if (timePickerLocked) {
+      const timePickerRange = localStorage.getItem('nz-time-picker-range') ? JSON.parse(localStorage.getItem('nz-time-picker-range')) : {}
+      this.$store.dispatch('dispatchTimePickerRange', timePickerRange)
+      console.log('mounted', timePickerRange, this.timePickerLocked)
+    }
+    this.$store.dispatch('dispatchTimePickerLocked', timePickerLocked)
+  },
   mounted () {
     this.timePickerLocked = localStorage.getItem('nz-time-picker-locked') ? JSON.parse(localStorage.getItem('nz-time-picker-locked')) : false
     this.timeShowData = JSON.parse(JSON.stringify(this.timeData))
