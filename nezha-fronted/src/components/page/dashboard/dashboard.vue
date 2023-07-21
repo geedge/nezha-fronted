@@ -1274,7 +1274,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        localStorage.setItem('dashboardTime', JSON.stringify(n))
+        // localStorage.setItem('dashboardTime', JSON.stringify(n))
       }
     },
     chartRightBoxShow: {

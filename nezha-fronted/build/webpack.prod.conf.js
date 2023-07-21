@@ -31,7 +31,7 @@ const { VueLoaderPlugin } = require('vue-loader')
 const createJson = function () {
   // serverConfig.version=config.build.version +"-"+gitRevisionPlugin.commithash();
   serverConfig.baseUrl = '/'
-  serverConfig.version = config.build.version
+  serverConfig.version = serverConfig.version || config.build.version
   return JSON.stringify(serverConfig)
 }
 
