@@ -93,6 +93,10 @@ const newcn = {
     disabled: '已禁用',
     unavailable: '不可用'
   },
+  tip: {
+    zoomStatusPrompt: '您的浏览器目前处于缩放状态，页面可能会出现错位，建议100%大小。',
+    doNotAskAgain: '不再询问'
+  },
   ...zhLocale
 }
 export default newcn

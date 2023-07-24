@@ -101,6 +101,10 @@ const newen = {
     disabled: 'Disabled',
     unavailable: 'Unavailable'
   },
+  tip: {
+    zoomStatusPrompt: 'Your browser is currently in zoom state, the page may appear dislocation, the proposed 100% size.',
+    doNotAskAgain: 'Do not ask again'
+  },
   ...enLocale
 }
 export default newen
