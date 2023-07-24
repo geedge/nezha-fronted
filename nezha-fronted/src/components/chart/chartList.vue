@@ -794,6 +794,12 @@ export default {
             item.span = 12
             item.height = 2
           }
+          if (item.type === 'group') {
+            const chartGroupExpand = localStorage.getItem('nz-chart-group-expand') ? JSON.parse(localStorage.getItem('nz-chart-group-expand')) : {}
+            if (typeof chartGroupExpand[item.id] !== 'undefined') {
+              item.param.collapse = chartGroupExpand[item.id]
+            }
+          }
           if (item.param) {
             param = JSON.parse(JSON.stringify(item.param))
             // try {

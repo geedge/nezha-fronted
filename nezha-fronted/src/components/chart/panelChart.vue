@@ -762,6 +762,11 @@ export default {
         this.chartInfo.param = {}
       }
       this.chartInfo.param.collapse = flag
+      const chartGroupExpand = localStorage.getItem('nz-chart-group-expand') ? JSON.parse(localStorage.getItem('nz-chart-group-expand')) : {}
+      if (this.chartInfo.id && this.chartInfo.id > 0) {
+        chartGroupExpand[this.chartInfo.id] = this.chartInfo.param.collapse
+        localStorage.setItem('nz-chart-group-expand', JSON.stringify(chartGroupExpand))
+      }
       this.groupInit()
       bus.$emit('groupMove', '', '', true)
       this.$emit('groupShow', this.chartInfo)
