@@ -530,6 +530,13 @@
         line-height: 22px !important;
       }
     }
+    .nz-dropdown-icon{
+      line-height: 22px;
+      cursor: pointer;
+      i {
+        line-height: 22px;
+      }
+    }
     .el-input__inner:focus, .el-cascader .el-input.is-focus .el-input__inner {
       border-color: $--border-color-base-focus !important;
     }
