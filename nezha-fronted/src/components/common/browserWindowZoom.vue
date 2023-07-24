@@ -54,7 +54,6 @@ export default {
       let lastPixelRatio = originPixelRatio
       const currentPixelRatio = window.devicePixelRatio
       if (currentPixelRatio !== lastPixelRatio) {
-        // console.log('缩放比例是：' + Math.round(1000 * (currentPixelRatio / originPixelRatio)) / 10 + '%');
         // 计算缩放百分比
         const zoom = Math.round(1000 * (currentPixelRatio / originPixelRatio)) / 10 + '%'
         if (zoom != '100%') {
