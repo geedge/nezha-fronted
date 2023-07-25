@@ -730,3 +730,8 @@ i.nz-icon-override{
     }
   }
 }
+.required-content:before{
+  content: '*';
+  color: #EC7F66;
+  margin-right: 4px;
+}
