@@ -279,7 +279,7 @@ export default {
     language () { return this.$store.getters.getLanguage },
     // 判断是否是dashboard
     isDashboard () {
-      return this.importUrl === '/visual/dashboard/import'
+      return this.exportUrl === '/visual/dashboard/export'
     },
     // asset，endpoint dashboard导出选项不支持 all data
     assetOrEndpoint () {
