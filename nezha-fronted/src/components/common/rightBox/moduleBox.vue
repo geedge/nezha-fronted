@@ -541,20 +541,20 @@
                         <el-form-item
                           :label="'Expression'"
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expression'"
-                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                          :rules="[{ required: false, message: $t('validate.required'), trigger: 'blur' }]"
                         >
                           <el-input v-model="item2.expression" placeholder="" size="mini"></el-input>
                         </el-form-item>
                         <el-form-item
                           :label="'Source'"
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
-                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                          :rules="[{ required: false, message: $t('validate.required'), trigger: 'blur' }]"
                         >
                           <el-input v-model="item2.source" placeholder="" size="mini"></el-input>
                         </el-form-item>
                       </div>
                       <div v-if="item2.type === 'json'">
-                        <label class="module-form__label">Expressions</label>
+                        <label class="module-form__label required-content">Expressions</label>
                         <div  v-for="(expressions, eindex) in item2.expressions"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
                           <el-form-item
                             :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expressions.'+eindex+'.key'"
@@ -617,7 +617,7 @@
                         </el-form-item>
                       </div>
                       <div v-if="item2.type === 'labels'">
-                        <label class="module-form__label" style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Key/value</label>
+                        <label class="module-form__label required-content" style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Key/value</label>
                         <div  v-for="(expressions, eindex) in item2.labels"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
                           <el-form-item
                             :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.labels.'+eindex+'.key'"
