@@ -244,7 +244,7 @@ export default {
         url = '/prom/api/v1/series'
         return new Promise(resolve => {
           this.$get(url, params).then(res => {
-            if (res.status === 'error') {
+            if (res.status === 'error' || res.code !== 200) {
               resolve([])
               return
             }
@@ -350,7 +350,7 @@ export default {
       const url = '/prom/api/v1/series'
       return new Promise(resolve => {
         this.$get(url, params).then(res => {
-          if (res.status === 'error') {
+          if (res.status === 'error' || res.code !== 200) {
             resolve([])
             return
           }
