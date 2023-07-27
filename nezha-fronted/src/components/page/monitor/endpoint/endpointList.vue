@@ -107,7 +107,7 @@
           <template v-slot:before>
             <div>
               <el-dropdown-item>
-                <div id="batch-add" v-has="'monitor_endpoint_add'" @click="batchAdd"><i class="nz-icon nz-icon-batchadd"></i>{{$t('overall.batchAdd')}}</div>
+                <div id="batch-add" v-has="'monitor_endpoint_add'" @click="batchAdd"><i class="nz-icon nz-icon-batchadd" style="font-size:14px;margin-right:7px;"></i>{{$t('overall.batchAdd')}}</div>
               </el-dropdown-item>
               <el-dropdown-item>
                 <div id="asset-batch-asset" v-has="'asset_edit'" @click="batchEdit"><i class="nz-icon nz-icon-batch-edit"></i>{{$t('overall.batchEdit')}}</div>
@@ -523,7 +523,7 @@ export default {
         type: []
       },
       searchCheckBox: {},
-      endpointNzTableHeightOffset: 204,
+      endpointNzTableHeightOffset: 205,
       needAlertDaysData: true,
       trendKey: 'endpointId'
     }
@@ -794,7 +794,7 @@ export default {
     },
     getSearchableStateData (data) {
       return new Promise(resolve => {
-        setTimeout(()=>{
+        setTimeout(() => {
           // this.$get('asset/model?pageSize=-1').then(response => {
           let states = []
           if (this.$route.query && this.$route.query.state) {
@@ -835,6 +835,7 @@ export default {
       })
     },
     setSearchData (statistics) {
+      this.endpointNzTableHeightOffset = 2 + 60 + 20
       Object.keys(this.titleSearchList).forEach(key => {
         let keys = key
         if (key === 'projectIds') {
@@ -850,12 +851,18 @@ export default {
             this.detailSearchList.state.show = true
             this.titleSearchList[key].hide = !this.titleSearchList[key].children.length
             this.detailSearchList[key].hide = !this.detailSearchList[key].children.length
+            if (this.detailSearchList[key].children) {
+              this.endpointNzTableHeightOffset += 41
+            }
           })
         } else {
           this.titleSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id, key: d.name, name: d.name } })
           this.detailSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id, key: d.name, name: d.name } })
           this.titleSearchList[key].hide = !this.titleSearchList[key].children.length
           this.detailSearchList[key].hide = !this.detailSearchList[key].children.length
+          if (this.detailSearchList[key].children) {
+            this.endpointNzTableHeightOffset += 41
+          }
         }
         this.titleSearchList[key].show = true
         this.detailSearchList[key].show = true
