@@ -92,12 +92,6 @@ export default {
   methods: {
     async startTimer () {
       this.prevent_opt.import = true
-
-      // 定时获取运行时间
-      this.timer = createWorker(() => {
-        this.elapsedTime += 100
-      }, 100)
-
       const vars = this.$store.getters.getVariablesArr.map(item => {
         return {
           name: item.name,
@@ -114,8 +108,15 @@ export default {
       // 创建任务
       const res = await this.$post('/visual/dashboard/snapshot/task', params)
       if (res.code === 200) {
+        // 定时获取运行时间
+        this.timer = createWorker(() => {
+          this.elapsedTime += 100
+        }, 100)
         this.tid = res.data.tid
         this.getResult()
+      } else {
+        this.prevent_opt.import = false
+        this.$message.error(res.msg)
       }
     },
     // 任务进度查询
