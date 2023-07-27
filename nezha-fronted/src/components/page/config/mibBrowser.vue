@@ -173,17 +173,17 @@
       :z-index="1000"
       @close="closeDialog"
       >
-      <el-form ref="form" :model="searchParam" :rules="rules" label-width="auto">
+      <el-form ref="form" :model="setForm" :rules="rules" label-width="auto">
         <el-form-item label="OID" prop="oid">
-          <el-input size="small" v-model="searchParam.oid" placeholder=""></el-input>
+          <el-input size="small" v-model="setForm.oid" placeholder=""></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.mib.dataType')" prop="type">
-          <el-select size="small" v-model="searchParam.type" placeholder="" style="width:100%">
+          <el-select size="small" v-model="setForm.type" placeholder="" style="width:100%">
             <el-option v-for="(item, index) in typeData" :key="index" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('overall.value')" prop="value">
-          <el-input size="small" v-model="searchParam.value" placeholder=""></el-input>
+          <el-input size="small" v-model="setForm.value" placeholder=""></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -231,7 +231,10 @@ export default {
         operation: 'get',
         version: 2,
         community: 'public',
-        snmpCredentialId: null,
+        snmpCredentialId: null
+      },
+      setForm: {
+        oid: '',
         type: '',
         value: ''
       },
@@ -294,8 +297,9 @@ export default {
   methods: {
     closeDialog () {
       setTimeout(() => {
-        this.searchParam.type = ''
-        this.searchParam.value = ''
+        this.setForm.oid = ''
+        this.setForm.type = ''
+        this.setForm.value = ''
         this.$nextTick(() => {
           this.$refs.form.clearValidate()
         })
@@ -378,6 +382,7 @@ export default {
       /* 处理snmpset */
       if (!set) {
         if (this.searchParam.operation == 'set') {
+          this.setForm.oid = this.searchParam.oid
           this.snmpSetFormVisible = true
           return
         }
@@ -393,9 +398,10 @@ export default {
 
       this.loading = true
       const params = this.$lodash.cloneDeep(this.searchParam)
-      if (params.operation != 'set') {
-        delete params.type
-        delete params.value
+      if (params.operation == 'set') {
+        params.oid = this.setForm.oid
+        params.type = this.setForm.type
+        params.value = this.setForm.value
       }
       setTimeout(() => {
         this.$post('mib/browser', params).then(response => {
