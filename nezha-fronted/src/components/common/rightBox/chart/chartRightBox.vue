@@ -33,18 +33,18 @@
         <!--panel-->
         <el-form-item
           class="form-item--half-width"
-          v-if="showPanel.type !== fromRoute.project && showPanel.type !== fromRoute.asset && showPanel.type !== fromRoute.endpoint && showPanel.type !== fromRoute.model && from!=='dashboardTemp'"
+          v-if="showPanel.type !== fromRoute.project && showPanel.type !== fromRoute.asset && showPanel.type !== fromRoute.endpoint && showPanel.type !== fromRoute.model"
           :label="$t('overall.dashboard')"
           prop="panelName"
         >
-          <select-panel ref="selectPanel" :disabled="showPanel.type === 'dashboard'" :filter-panel="filterPanel" :chart-box="true" :panel-lock="true" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel">
+          <select-panel ref="selectPanel" :disabled="showPanel.type === 'dashboard' || from ==='dashboardTemp'" :filter-panel="filterPanel" :chart-box="true" :panel-lock="true" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel">
             <template v-slot:header>
               <div class="panel-select-header">
                 <el-input id="chart-box-panelname" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="small" style="width: 596px"></el-input>
               </div>
             </template>
             <template v-slot:trigger>
-              <el-input placeholder="" readonly="readonly" size="small" v-model="editChart.panelName" :disabled="showPanel.type==='dashboard'"></el-input>
+              <el-input placeholder="" readonly="readonly" size="small" v-model="editChart.panelName" :disabled="showPanel.type==='dashboard' || from ==='dashboardTemp'"></el-input>
             </template>
           </select-panel>
         </el-form-item>
