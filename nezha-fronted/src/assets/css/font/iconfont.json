@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "36651290",
+      "name": "Batch Synchronize",
+      "font_class": "a-BatchSynchronize",
+      "unicode": "e7e7",
+      "unicode_decimal": 59367
+    },
+    {
       "icon_id": "34816567",
       "name": "下一播放",
       "font_class": "xiayibofang",

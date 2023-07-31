@@ -116,6 +116,7 @@
       ref="diagnosisTab"
       :diagnosisTabData ="diagnosisTabData"
     ></diagnosis-tab>
+    <config-sync ref="configSync" type="single" :from="from" :batch-objs="syncObj"></config-sync>
   </div>
 </template>
 
@@ -129,6 +130,7 @@ import routerPathParams from '@/components/common/mixin/routerPathParams'
 import SearchBox from '@/components/common/searchBox/searchBox'
 import deleteButton from '@/components/common/deleteButton'
 import diagnosisTab from '@/components/common/diagnosisTab'
+import configSync from '@/components/common/configSync'
 export default {
   name: 'nzDataList',
   mixins: [routerPathParams],
@@ -137,7 +139,8 @@ export default {
     bottomBox,
     panelChart,
     deleteButton,
-    diagnosisTab
+    diagnosisTab,
+    configSync
   },
   props: {
     from: {
@@ -218,13 +221,21 @@ export default {
       showLayout: [],
       timeRange: [new Date(), new Date()],
       // 故障诊断数据
-      diagnosisTabData: {}
+      diagnosisTabData: {},
+      // 配置同步数据
+      syncObj: []
     }
   },
   mounted () {
     bus.$on('delTableRow', this.delTableRow)
   },
   methods: {
+    configSync (row) {
+      this.syncObj = [row]
+      this.$nextTick(() => {
+        this.$refs.configSync.showDialog()
+      })
+    },
     delTableRelRow (url, row, forceDeleteShow = false, single = false, deleteTitle = '') {
       this.api = url
       this.singleDelete = [row]

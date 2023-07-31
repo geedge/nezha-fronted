@@ -132,6 +132,9 @@
                   @after="getTableData"
                   @before="delFlag=true"></delete-button>
               </el-dropdown-item>
+              <el-dropdown-item v-has="'asset_edit'" :disabled="batchDeleteObjs.length==0">
+                <config-sync type="batch" from="asset" :batch-objs="batchDeleteObjs"></config-sync>
+              </el-dropdown-item>
             </div>
           </template>
         </top-tool-more-options>
@@ -196,6 +199,7 @@
 
 <script>
 import deleteButton from '@/components/common/deleteButton'
+import configSync from '@/components/common/configSync'
 import assetBox from '@/components/common/rightBox/asset/assetBox'
 import assetBatchEditBox from '@/components/common/rightBox/asset/assetBatchEditBox'
 import nzDataList from '@/components/common/table/nzDataList'
@@ -215,6 +219,7 @@ export default {
   name: 'asset',
   components: {
     deleteButton,
+    configSync,
     assetBox,
     nzDataList,
     assetBatchEditBox,

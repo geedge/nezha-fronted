@@ -85,7 +85,7 @@
     </span>
     </el-dialog>
   </div>
-  </template>
+</template>
 
 <script>
 import loading from '@/components/common/loading'

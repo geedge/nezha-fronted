@@ -185,6 +185,7 @@
               <el-dropdown-item v-has="'asset_add'" :command="['topology', scope.row, 'endpoint']"><i class="nz-icon nz-icon-Topology"></i><span class="operation-dropdown-text">{{$t('overall.topology')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'monitor_endpoint_add'" :command="['diagnosis', scope.row,{from:'endpoint'}]"><i class="nz-icon nz-icon-diagnosis"></i><span class="operation-dropdown-text">{{$t('overall.diagnosis')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'monitor_endpoint_add'" :command="['metricTarget', scope.row, 'endpoint']" :disabled="scope.row.configs[0].config.protocol !== ('http'||'https')"><i class="nz-icon nz-icon-Metrics"></i><span class="operation-dropdown-text">{{$t('endpoints.metricTarget')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'monitor_endpoint_edit'" :command="['configSync', scope.row]"><i class="nz-icon nz-icon-sync"></i><span class="operation-dropdown-text">{{$t('overall.synchronize')}}</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>

@@ -119,6 +119,9 @@
                   @before="delFlag=true"
                 ></delete-button>
               </el-dropdown-item>
+              <el-dropdown-item v-has="'monitor_module_edit'" :disabled="batchDeleteObjs.length==0">
+                <config-sync type="batch" from="module" :batch-objs="batchDeleteObjs"></config-sync>
+              </el-dropdown-item>
             </div>
           </template>
         </top-tool-more-options>
@@ -160,6 +163,7 @@
 </template>
 <script>
 import deleteButton from '@/components/common/deleteButton'
+import configSync from '@/components/common/configSync'
 import moduleBox from '@/components/common/rightBox/moduleBox'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
@@ -178,6 +182,7 @@ export default {
     nzDataList,
     moduleBox,
     deleteButton,
+    configSync,
     moduleTable,
     alertSilenceBox,
     topToolMoreOptions,

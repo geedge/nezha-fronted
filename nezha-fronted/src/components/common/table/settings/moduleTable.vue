@@ -106,6 +106,7 @@
               <el-dropdown-item v-has="'main_edit'" :command="['sync', scope.row]"><i class="nz-icon nz-icon-sync"></i><span class="operation-dropdown-text">{{$t('overall.syncChart')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'module']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_add'" :command="['topology', scope.row, 'module']"><i class="nz-icon nz-icon-Topology"></i><span class="operation-dropdown-text">{{$t('overall.topology')}}</span></el-dropdown-item>
+              <el-dropdown-item v-has="'monitor_module_edit'" :command="['configSync', scope.row]"><i class="nz-icon nz-icon-sync"></i><span class="operation-dropdown-text">{{$t('overall.synchronize')}}</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>

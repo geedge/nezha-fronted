@@ -1273,10 +1273,6 @@ li {
     &>span{
       margin-right: 12px;
     }
-    .select-auto{
-      top: auto !important;
-      left: auto !important;
-    }
   }
   .import-select-list{
     .import-select-item{
@@ -1624,4 +1620,9 @@ li {
 }
 .hover .user-username{
   color: $--color-primary;
+}
+
+.select-auto{
+  top: auto !important;
+  left: auto !important;
 }
