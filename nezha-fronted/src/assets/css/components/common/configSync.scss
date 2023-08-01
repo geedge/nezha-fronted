@@ -1,0 +1,88 @@
+.configSync-dialog{
+  .dialog-header {
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    color: $--color-text-primary;
+    span{
+      word-break: break-word;
+    }
+    i.nz-icon-jinggao{
+      color: $--color-primary;
+    }
+  }
+  .el-dialog__body {
+    padding: 0 20px;
+  }
+  .batch-sync-tree{
+    border: 1px solid $--border-color-light;
+    .tree-header{
+      background: $--background-color-base;
+      padding: 7px 10px;
+      font-weight: 600;
+      margin-bottom: 0 !important;
+      .batch-sync-item-id, .batch-sync-item-name{
+        font-weight: 600;
+      }
+    }
+    .tree-body{
+      box-sizing: content-box;
+      padding-top: 10px;
+      height: 160px;
+      overflow-y: auto;
+    }
+    .tree-body-item{
+      display: flex;
+      width: 100%;
+      font-size: 14px;
+      color: $--color-text-primary;
+      font-weight: 400;
+      margin-bottom: 10px;
+      padding-left: 10px;
+      box-sizing: border-box;
+      line-height: 22px;
+      .nz-icon{
+        vertical-align: middle;
+      }
+      .batch-sync-item-id{
+        margin-left: 28px;
+        margin-right: 28px;
+        width: 100px;
+        transition: all 0.3s;
+        flex-shrink: 0;
+      }
+      .batch-sync-item-name{
+        margin-left: 14px;
+        flex: 1;
+        flex-shrink: 0;
+        width: calc(100% - 190px);
+      }
+    }
+    .batch-sync-item-text{
+      display: inline-block;
+      width: calc(100% - 30px);
+      vertical-align: middle;
+    }
+    .el-checkbox-group{
+      font-size: 14px;
+      .el-checkbox__label{
+        display: none;
+      }
+    }
+  }
+  .sync-select-list{
+    padding-top: 5px;
+    padding-bottom: 10px;
+    .sync-select-item{
+      margin-top: 6px;
+      .el-checkbox__input.is-checked+.el-checkbox__label{
+        color: $--checkbox-font-color !important;
+      }
+    }
+  }
+  .el-dialog__footer{
+    .footer__btn{
+      margin-right: 0;
+      margin-left: 10px;
+    }
+  }
+}

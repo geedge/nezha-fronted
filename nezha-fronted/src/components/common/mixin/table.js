@@ -101,6 +101,10 @@ export default {
           })
           break
         }
+        case 'configSync': {
+          this.$parent.configSync(row)
+          break
+        }
         default:
           this.$emit(command, row, param)
           break
