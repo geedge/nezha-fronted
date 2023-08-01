@@ -6,7 +6,6 @@
   :height="height"
   border
   @header-dragend="dragend"
-  @sort-change="tableDataSort"
   @selection-change="selectionChange"
   >
   <el-table-column
@@ -35,7 +34,7 @@
     </template>
     <template slot-scope="scope" :column="item">
       <template v-if="item.prop === 'endpoint'">{{scope.row.discoveredLabels.endpoint ? scope.row.discoveredLabels.endpoint : '-'}}</template>
-      <template v-else-if="item.prop === 'lastScrape'">{{time}}</template>
+      <template v-else-if="item.prop === 'lastScrape'">{{lastScrapeFormate(scope.row.lastScrape)}}</template>
       <template v-else-if="item.prop === 'labels'" class="labels">
           <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
             <span>
@@ -122,15 +121,18 @@ export default {
         }, {
           label: this.$t('config.scrapeEndpoint.lastScrape'),
           prop: 'lastScrape',
-          show: true
+          show: true,
+          sortable: true
         }, {
           label: this.$t('config.scrapeEndpoint.scrapeDuration'),
           prop: 'lastScrapeDuration',
-          show: true
+          show: true,
+          sortable: true
         }, {
           label: this.$t('overall.state'),
           prop: 'health',
-          show: true
+          show: true,
+          sortable: true
         }, {
           label: this.$t('ERROR'),
           prop: 'lastError',
@@ -153,16 +155,16 @@ export default {
     }
   },
   watch: {
-    currentTableData: {
-      immediate: true,
-      deep: true,
-      handler (n) {
-        n.forEach(e => {
-          const lastScrape = new Date(e.lastScrape).getTime()
-          this.time = bus.timeFormate(lastScrape, this.timeFormatMain)
-        })
-      }
-    }
+    // currentTableData: {
+    //   immediate: true,
+    //   deep: true,
+    //   handler (n) {
+    //     n.forEach(e => {
+    //       const lastScrape = new Date(e.lastScrape).getTime()
+    //       this.time = bus.timeFormate(lastScrape, this.timeFormatMain)
+    //     })
+    //   }
+    // }
   },
   methods: {
     // 对于 labels 传入数据做处理
@@ -218,6 +220,10 @@ export default {
         this.$set(item[type], 'position', position)
       }
       this.$set(item[type], 'loading', loading)
+    },
+    lastScrapeFormate (time) {
+      const lastScrape = new Date(time).getTime()
+      return bus.timeFormate(lastScrape, this.timeFormatMain)
     },
     // scrape duration
     lastScrapeDurationTimer (time) {
