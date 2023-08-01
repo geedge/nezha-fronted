@@ -136,6 +136,7 @@ export default {
     return {
       url: 'agent',
       tableId: 'promTable', // 需要分页的table的id，用于记录每页数量
+      detailType: 'list',
       blankObject: {
         id: '',
         name: '',

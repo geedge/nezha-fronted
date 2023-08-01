@@ -10,6 +10,7 @@
   .dialog-header {
     margin-bottom: 10px;
     word-wrap: break-word;
+    color: $--color-text-primary;
     span{
       word-break: break-word;
     }
@@ -49,6 +50,7 @@
     margin-bottom: 10px;
     padding-left: 10px;
     box-sizing: border-box;
+    line-height: 22px;
     .nz-icon{
       vertical-align: middle;
     }
