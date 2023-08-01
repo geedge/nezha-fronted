@@ -80,7 +80,7 @@
     </el-dialog>
     <delete-button
       ref="deleteButton"
-      :from="'endpoint'"
+      :from="triggerFrom"
       :forceDeleteShow="forceDeleteShow"
       :deleteTitle="deleteTitle"
       type=''
@@ -193,7 +193,8 @@ export default {
       deleteTitle: '',
       forceDeleteShow: false,
       singleDelete: [],
-      diagnosisTabData: {}
+      diagnosisTabData: {},
+      triggerFrom: ''
     }
   },
   methods: {
@@ -232,7 +233,8 @@ export default {
     showFullscreen (flag) {
       this.$store.commit('setTopologyShow', flag)
     },
-    delTableRelRow (url, row, forceDeleteShow = false, single = false, deleteTitle = '') {
+    delTableRelRow (url, row, forceDeleteShow = false, single = false, deleteTitle = '', from) {
+      this.triggerFrom = from || this.from
       this.api = url
       this.singleDelete = [row]
       this.forceDeleteShow = forceDeleteShow
@@ -268,7 +270,7 @@ export default {
     },
     showDeleteTableRel (n) {
       if (n) {
-        this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single, this.deleteTableRel.deleteTitle)
+        this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single, this.deleteTableRel.deleteTitle, this.deleteTableRel.from)
       }
     },
     diagnosisTab (n) {
