@@ -575,10 +575,13 @@
             }
 
             #pane-trbShot {
+              // .editor-core.ql-container.ql-snow {
+              //   background-color: #23241E;
+              //   border-radius: 2px;
+              //   color: #fff;
+              // }
               .editor-core.ql-container.ql-snow {
-                background-color: #23241E;
-                border-radius: 2px;
-                color: #fff;
+                border: none;
               }
             }
           }

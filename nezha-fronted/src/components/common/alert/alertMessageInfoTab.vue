@@ -26,8 +26,7 @@
           />
         </div>
         <div v-else-if="item.key === 'trbShot' && activeName === 'trbShot'">
-          <div v-html="infoData.alertRule.trbShot" v-if="infoData.alertRule.trbShot">
-          </div>
+          <div class="rich-text-editor" v-html="infoData.alertRule.trbShot" v-if="infoData.alertRule.trbShot"></div>
         </div>
       </el-tab-pane>
     </el-tabs>
