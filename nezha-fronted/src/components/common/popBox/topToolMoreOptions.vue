@@ -465,6 +465,10 @@ export default {
             return
           }
           try {
+            fileString.topo.pens.forEach(item => {
+              item.imageId = ''
+            })
+            console.log(fileString)
             this.$post(this.importUrl, fileString).then(response => {
               if (response.code == 200 && response.msg == 'success') {
                 this.$message.success(this.$t('overall.result.success'))
@@ -477,7 +481,7 @@ export default {
               reader = null
             })
           } catch (e) {
-            this.$message.error(this.$t('IMPORT_FORMAT_ERROR',{ 0: '' }))
+            this.$message.error(this.$t('IMPORT_FORMAT_ERROR', { 0: '' }))
           }
         }
       } else {
