@@ -6,7 +6,6 @@
     <el-dialog
       class="configSync-dialog"
       :title="$t('deleteButton.confirm')"
-      v-if="dialogVisible"
       :visible.sync="dialogVisible"
       @close='handleClose'
       width="580px"
@@ -61,8 +60,8 @@ export default {
       batchData: [],
       idArr: [],
       syncBox: {
-        endpoint: undefined,
-        dashboard: undefined
+        endpoint: false,
+        dashboard: false
       },
       checkAll: false,
       isIndeterminate: false
@@ -102,8 +101,8 @@ export default {
     },
     handleClose () {
       this.dialogVisible = false
-      this.syncBox.endpoint = undefined
-      this.syncBox.dashboard = undefined
+      this.syncBox.endpoint = false
+      this.syncBox.dashboard = false
     },
     checkAllChange (value) {
       const allId = this.batchData.map(item => {
