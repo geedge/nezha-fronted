@@ -149,6 +149,9 @@ export default {
         })
       })
     },
+    reloadProject () {
+      this.$emit('reload')
+    },
     nodeInit (pen, name) { // 初始化节点参数
       if (pen.data && pen.data.params) {
         return

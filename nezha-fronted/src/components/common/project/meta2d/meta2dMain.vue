@@ -10,6 +10,7 @@
       @edit="beforeEdit"
       @exitEdit="exitEdit"
       @reload="reload"
+      @reloadProject="reloadProject"
       @saveChart="saveChart"
       @getNodesArr="getNodesArr"
     />
