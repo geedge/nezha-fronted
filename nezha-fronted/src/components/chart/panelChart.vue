@@ -569,6 +569,7 @@ export default {
             this.chartData = []
             elements.forEach((element, index) => {
               const data = this.dataJson[this.chartInfo.id + '_' + index].data.result.map(item => {
+                this.allDataLength++
                 return {
                   ...item,
                   elements: element
