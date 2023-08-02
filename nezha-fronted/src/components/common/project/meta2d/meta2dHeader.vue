@@ -19,9 +19,32 @@
         :use-chart-unit="false"
         class="pickTime margin-r-10">
       </pick-time>
-      <button v-has="'project_edit'" class="top-tool-btn margin-r-10" type="button" @click="editMeta2d()" :title="$t('overall.edit')">
-        <i class="nz-icon nz-icon-edit"></i>
-      </button>
+      <top-tool-more-options
+        :delete-objs="[]"
+        ref="export"
+        id="project-tools"
+        :params="{}"
+        :permissions="{
+            import: 'project_add',
+            export: 'project_edit'
+          }"
+        :isTopo="true"
+        :onlyJson="true"
+        class="top-tool-export margin-l-10 margin-r-10"
+        export-file-name="project-topo"
+        @afterImport="afterImport"
+        :export-url="`/monitor/project/topo/${project.id}/export`"
+        :import-url="`/monitor/project/topo/${project.id}/import`"
+        v-has="['project_add','project_edit','project_delete']"
+      >
+        <template v-slot:before>
+          <div>
+            <el-dropdown-item>
+              <div id="asset-batch-asset" v-has="'project_edit'" @click="editMeta2d"><i class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</div>
+            </el-dropdown-item>
+          </div>
+        </template>
+      </top-tool-more-options>
       <button class="top-tool-btn" type="button" @click="changeScreen" :title="topoScreen? $t('dashboard.screen.exit') : $t('dashboard.screen')">
         <i :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'" class="nz-icon"></i>
       </button>
@@ -57,13 +80,15 @@ import { deepClone } from '@meta2d/core'
 import bus from '@/libs/bus'
 import topologyTopTool from '@/components/common/project/meta2d/topologyTopTool'
 import meta2dMainOther from '@/components/common/project/meta2d/meta2dMain'
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 
 export default {
   name: 'meta2dHeader',
   mixins: [topoUtil],
   components: {
     topologyTopTool,
-    meta2dMainOther
+    meta2dMainOther,
+    topToolMoreOptions
   },
   props: {
     meta2dId: {},
@@ -227,8 +252,11 @@ export default {
       }
       this.$emit('exitEdit', true)
     },
+    afterImport () {
+      this.$emit('reloadProject')
+    },
     reload () {
-
+      this.$emit('reloadProject')
     }
   }
 }
