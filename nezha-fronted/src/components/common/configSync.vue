@@ -73,13 +73,6 @@ export default {
     from: String, // 通过 from 确认删除的 icon
     batchObjs: Array
   },
-  created () {
-    switch (this.from) {
-      case 'asset': this.api = '/asset/asset/sync'; break
-      case 'module': this.api = '/monitor/module/sync'; break
-      case 'endpoint': this.api = '/monitor/endpoint/sync'; break
-    }
-  },
   methods: {
     showDialog () {
       this.dialogVisible = true
@@ -92,6 +85,7 @@ export default {
     },
     async configSync () {
       this.prevent_opt.save = true
+      this.setApi()
       const params = {
         ids: this.idArr,
         endpoint: this.syncBox.endpoint ? 1 : 0,
@@ -123,6 +117,13 @@ export default {
       this.checkAll = checkedCount > 0
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.batchData.length
     },
+    setApi () {
+      switch (this.from) {
+        case 'asset': this.api = '/asset/asset/sync'; break
+        case 'module': this.api = '/monitor/module/sync'; break
+        case 'endpoint': this.api = '/monitor/endpoint/sync'; break
+      }
+    },
     selectIcon (type) {
       switch (type) {
         case 'asset' : return 'nz-icon monitorColor nz-icon-overview-project'
@@ -130,6 +131,13 @@ export default {
         case 'endpoint' : return 'nz-icon monitorColor nz-icon-overview-endpoint'
       }
       return ' '
+    }
+  },
+  watch: {
+    dialogVisible (n) {
+      if (!n) {
+        this.$store.dispatch('dispatchShowConfigSync', false)
+      }
     }
   }
 }

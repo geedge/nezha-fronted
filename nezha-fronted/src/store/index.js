@@ -56,7 +56,9 @@ const store = new Vuex.Store({
     deleteTableRel: {},
     showDeleteTableRel: false,
     diagnosisTab: {}, // 故障诊断
-    showDiagnosisTab: false
+    showDiagnosisTab: false,
+    configSync: {}, // 配置同步
+    showConfigSync: false
   },
   getters: {
     getGlobalSearchId (state) {
@@ -124,6 +126,12 @@ const store = new Vuex.Store({
     },
     getShowDiagnosisTab (state) {
       return state.showDiagnosisTab
+    },
+    getConfigSync (state) {
+      return state.configSync
+    },
+    getShowConfigSync (state) {
+      return state.showConfigSync
     }
   },
   mutations: {
@@ -246,6 +254,15 @@ const store = new Vuex.Store({
     },
     setShowDiagnosisTab (state, flag) {
       state.showDiagnosisTab = flag
+    },
+    setConfigSync (state, payload) {
+      state.configSync = payload
+    },
+    setShowConfigSync (state, flag) {
+      state.showConfigSync = flag
+      if (!flag) {
+        state.configSync = {}
+      }
     }
   },
   actions: {
@@ -262,6 +279,13 @@ const store = new Vuex.Store({
     },
     dispatchShowDiagnosisTab (store, flag) {
       store.commit('setShowDiagnosisTab', flag)
+    },
+    configSync (store, payload) { // 配置同步
+      store.commit('setConfigSync', payload)
+      store.commit('setShowConfigSync', true)
+    },
+    dispatchShowConfigSync (store, flag) {
+      store.commit('setShowConfigSync', flag)
     }
   }
 })

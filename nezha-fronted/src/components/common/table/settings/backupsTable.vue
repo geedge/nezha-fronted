@@ -57,7 +57,7 @@
           </div>
           <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item v-has="'backup_restore'" :command="['restore', scope.row]" disabled><i class="nz-icon-shujubeifenhuifu nz-icon"></i><span>{{$t('backup.RestoreNow')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'backup_del'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'backup_del'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true,from:'backups'}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>

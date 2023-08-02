@@ -80,7 +80,7 @@
     </el-dialog>
     <delete-button
       ref="deleteButton"
-      :from="'endpoint'"
+      :from="triggerFrom"
       :forceDeleteShow="forceDeleteShow"
       :deleteTitle="deleteTitle"
       type=''
@@ -94,6 +94,7 @@
       ref="diagnosisTab"
       :diagnosisTabData ="diagnosisTabData"
     ></diagnosis-tab>
+    <config-sync ref="configSync" type="single" :from="triggerFrom" :batch-objs="syncObj"></config-sync>
   </div>
 </template>
 
@@ -104,14 +105,15 @@ import detailViewRight from '@/components/common/detailView/view/detailViewRight
 import panelChart from '@/components/chart/panelChart'
 import deleteButton from '@/components/common/deleteButton'
 import diagnosisTab from '@/components/common/diagnosisTab'
-
+import configSync from '@/components/common/configSync'
 export default {
   name: 'nzDataList',
   components: {
     detailViewRight,
     panelChart,
     deleteButton,
-    diagnosisTab
+    diagnosisTab,
+    configSync
   },
   props: {
     from: {
@@ -167,6 +169,12 @@ export default {
     },
     diagnosisTab () {
       return this.$store.getters.getDiagnosisTab
+    },
+    showConfigSync () {
+      return this.$store.getters.getShowConfigSync
+    },
+    configSync () {
+      return this.$store.getters.getConfigSync
     }
   },
   data () {
@@ -193,7 +201,10 @@ export default {
       deleteTitle: '',
       forceDeleteShow: false,
       singleDelete: [],
-      diagnosisTabData: {}
+      diagnosisTabData: {},
+      // 配置同步数据
+      syncObj: [],
+      triggerFrom: ''
     }
   },
   methods: {
@@ -232,7 +243,15 @@ export default {
     showFullscreen (flag) {
       this.$store.commit('setTopologyShow', flag)
     },
-    delTableRelRow (url, row, forceDeleteShow = false, single = false, deleteTitle = '') {
+    configSyncRow (row, from) {
+      this.triggerFrom = from || this.from
+      this.syncObj = [row]
+      this.$nextTick(() => {
+        this.$refs.configSync.showDialog()
+      })
+    },
+    delTableRelRow (url, row, forceDeleteShow = false, single = false, deleteTitle = '', from) {
+      this.triggerFrom = from || this.from
       this.api = url
       this.singleDelete = [row]
       this.forceDeleteShow = forceDeleteShow
@@ -268,11 +287,16 @@ export default {
     },
     showDeleteTableRel (n) {
       if (n) {
-        this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single, this.deleteTableRel.deleteTitle)
+        this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single, this.deleteTableRel.deleteTitle, this.deleteTableRel.from)
       }
     },
     diagnosisTab (n) {
       this.diagnosisTabData = n
+    },
+    showConfigSync (n) {
+      if (n) {
+        this.configSyncRow(this.configSync.row, this.configSync.from)
+      }
     }
   }
 }

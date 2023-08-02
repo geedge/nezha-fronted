@@ -102,7 +102,10 @@ export default {
           break
         }
         case 'configSync': {
-          this.$parent.configSync(row)
+          this.$store.dispatch('configSync', {
+            row: row,
+            ...param
+          })
           break
         }
         default:

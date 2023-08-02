@@ -156,7 +156,7 @@
                 $t("overall.duplicate")
               }}</span></el-dropdown-item
             >
-             <el-dropdown-item v-has="'alertSilence_expire'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true, deleteTitle:'overall.silence'}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+             <el-dropdown-item v-has="'alertSilence_expire'" :command="['delete-rel', scope.row, {forceDeleteShow:false, single:true, deleteTitle:'overall.silence',from:'alertSilence'}]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>

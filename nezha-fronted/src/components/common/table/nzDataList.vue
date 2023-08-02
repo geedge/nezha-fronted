@@ -102,7 +102,7 @@
     </el-dialog>
     <delete-button
       ref="deleteButton"
-      :from="'endpoint'"
+      :from="triggerFrom"
       :forceDeleteShow="forceDeleteShow"
       :deleteTitle="deleteTitle"
       type=''
@@ -116,7 +116,7 @@
       ref="diagnosisTab"
       :diagnosisTabData ="diagnosisTabData"
     ></diagnosis-tab>
-    <config-sync ref="configSync" type="single" :from="from" :batch-objs="syncObj"></config-sync>
+    <config-sync ref="configSync" type="single" :from="triggerFrom" :batch-objs="syncObj"></config-sync>
   </div>
 </template>
 
@@ -191,6 +191,12 @@ export default {
     },
     diagnosisTab () {
       return this.$store.getters.getDiagnosisTab
+    },
+    showConfigSync () {
+      return this.$store.getters.getShowConfigSync
+    },
+    configSync () {
+      return this.$store.getters.getConfigSync
     }
   },
   data () {
@@ -223,20 +229,23 @@ export default {
       // 故障诊断数据
       diagnosisTabData: {},
       // 配置同步数据
-      syncObj: []
+      syncObj: [],
+      triggerFrom: ''
     }
   },
   mounted () {
     bus.$on('delTableRow', this.delTableRow)
   },
   methods: {
-    configSync (row) {
+    configSyncRow (row, from) {
+      this.triggerFrom = from || this.from
       this.syncObj = [row]
       this.$nextTick(() => {
         this.$refs.configSync.showDialog()
       })
     },
-    delTableRelRow (url, row, forceDeleteShow = false, single = false, deleteTitle = '') {
+    delTableRelRow (url, row, forceDeleteShow = false, single = false, deleteTitle = '', from) {
+      this.triggerFrom = from || this.from
       this.api = url
       this.singleDelete = [row]
       this.forceDeleteShow = forceDeleteShow
@@ -316,11 +325,16 @@ export default {
     },
     showDeleteTableRel (n) {
       if (n) {
-        this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single, this.deleteTableRel.deleteTitle)
+        this.delTableRelRow(this.deleteTableRel.url, this.deleteTableRel.row, this.deleteTableRel.forceDeleteShow, this.deleteTableRel.single, this.deleteTableRel.deleteTitle, this.deleteTableRel.from)
       }
     },
     diagnosisTab (n) {
       this.diagnosisTabData = n
+    },
+    showConfigSync (n) {
+      if (n) {
+        this.configSyncRow(this.configSync.row, this.configSync.from)
+      }
     }
   },
   beforeDestroy () {
