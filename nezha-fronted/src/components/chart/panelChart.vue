@@ -459,7 +459,14 @@ export default {
           case 'logs': {
             this.chartData = []
             elements.forEach((element, index) => {
-              this.chartData.push(this.dataJson[this.chartInfo.id + '_' + index].data.result)
+              const data = this.dataJson[this.chartInfo.id + '_' + index].data.result.map(item => {
+                this.allDataLength++
+                return {
+                  ...item,
+                  elements: element
+                }
+              })
+              this.chartData.push(data)
             })
             break
           }
