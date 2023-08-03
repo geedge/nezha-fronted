@@ -20,6 +20,7 @@
           id="expression-template-list"
           export-url="/visual/dashboard/export"
           import-url="/visual/dashboard/import"
+          :only-json="true"
           export-file-name="chart-temp"
           :params="searchLabel"
           :params2="{

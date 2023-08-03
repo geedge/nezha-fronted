@@ -74,7 +74,8 @@ export default {
         total: 0
       },
       timer: null,
-      sameLabels: ['endpointLabels', 'labelsType', 'lastScrape', 'lastScrapeDuration', 'health', 'lastError']
+      sameLabels: ['endpointLabels', 'labelsType', 'lastScrape', 'lastScrapeDuration', 'health', 'lastError'],
+      orderBy: {}
     }
   },
   watch: {
@@ -247,12 +248,62 @@ export default {
     },
     // 计算当前分页需要返回数据的条数
     handleCurrentChange () {
-      this.pageObj.total = this.tableData.length
-      this.currentTableData = this.tableData.slice(
+      const data = this.sortShowData()
+      this.pageObj.total = data.length
+      this.currentTableData = data.slice(
         (this.pageObj.pageNo - 1) * this.pageObj.pageSize,
         this.pageObj.pageNo * this.pageObj.pageSize
       )
+    },
+    tableDataSort (orderBy) {
+      this.orderBy = orderBy
+      this.handleCurrentChange()
+    },
+    sortShowData () {
+      const orderBy = this.orderBy
+      const originalData = this.$lodash.cloneDeep(this.tableData)
+      let data = null
+      if (!orderBy || !orderBy.order) { // 没有排序 恢复默认值
+        data = Object.assign([], originalData)
+      } else { // 排序之后的顺序
+        if (orderBy.order === 'ascending') {
+          data = originalData.sort(this.asce(orderBy.prop))
+        }
+        if (orderBy.order === 'descending') {
+          data = originalData.sort(this.desc(orderBy.prop))
+        }
+      }
+      return data
+    },
+    // 本地正序
+    asce (prop) {
+      return function (obj1, obj2) {
+        const val1 = obj1[prop]
+        const val2 = obj2[prop]
+        if (val1 < val2) {
+          return -1
+        } else if (val1 > val2) {
+          return 1
+        } else {
+          return 0
+        }
+      }
+    },
+    // 本地倒序
+    desc (prop) {
+      return function (obj1, obj2) {
+        const val1 = obj1[prop]
+        const val2 = obj2[prop]
+        if (val1 < val2) {
+          return 1
+        } else if (val1 > val2) {
+          return -1
+        } else {
+          return 0
+        }
+      }
     }
+
   },
   mounted () {
   },
