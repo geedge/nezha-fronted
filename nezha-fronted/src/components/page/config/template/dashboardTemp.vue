@@ -20,6 +20,7 @@
           id="dashboard-template-list"
           export-url="/visual/dashboard/export"
           import-url="/visual/dashboard/import"
+          :only-json="true"
           export-file-name="dashboard-temp"
           :params="searchLabel"
           :paramsType="'template'"

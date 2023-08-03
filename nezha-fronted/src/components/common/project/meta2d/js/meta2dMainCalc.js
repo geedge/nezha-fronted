@@ -149,6 +149,9 @@ export default {
         })
       })
     },
+    reloadProject () {
+      this.$emit('reload')
+    },
     nodeInit (pen, name) { // 初始化节点参数
       if (pen.data && pen.data.params) {
         return
@@ -581,6 +584,9 @@ export default {
           this.$get('stat/module/abnormal', { moduleId: item.moduleId }).then(res => {
             if (res.code == 200) {
               const module = res.data.list[0]
+              if (!module) {
+                return
+              }
               item.moduleData.state.error = item.moduleData.error = !module.state
               item.moduleData.state.asset = !!module.asset
               item.moduleData.state.alert = !!module.alert

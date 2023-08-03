@@ -78,6 +78,7 @@
                   export-file-name="chart"
                   export-url="/visual/dashboard/export"
                   import-url="/visual/dashboard/import"
+                  :only-json="true"
                   @export="exportType"
                   @afterImport="afterImport"
                 >

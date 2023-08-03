@@ -45,13 +45,13 @@
       <!-- 新版导入 -->
       <div v-if="importBox.type == 1">
         <div class="upload-body">
-          <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false" :file-list="importFileList" :on-change="importChange" :accept="!isDashboard?'.xlsx,.xls,.csv,.json':'.json'" action="" class="import-upload" drag>
+          <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false" :file-list="importFileList" :on-change="importChange" :accept="!onlyJson?'.xlsx,.xls,.csv,.json':'.json'" action="" class="import-upload" drag>
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
-            <div class="el-upload__tip" >{{!isDashboard?$t('overall.importSupport'):$t('overall.supportJson')}}</div>
+            <div class="el-upload__tip" >{{!onlyJson?$t('overall.importSupport'):$t('overall.supportJson')}}</div>
           </el-upload>
         </div>
-        <div class="import-select">
+        <div class="import-select" v-if="!isTopo">
           <div class="exists">
             <span>{{$t('overall.existed')}}</span>
             <el-select v-model="importBox.existed" :popper-append-to-body="false" style="flex:1" size="medium" popper-class="select-auto">
@@ -75,10 +75,10 @@
             </li>
           </ul>
         </div>
-        <div class="footer">
+        <div class="footer" :style="isTopo? 'marginTop:15px' : ''">
           <div class="el-message-box__btns" style="text-align: right;">
             <el-popover
-              v-if="!isDashboard"
+              v-if="!onlyJson"
               placement="bottom-start"
               trigger="click">
               <div class="template-pop">
@@ -108,7 +108,7 @@
           <div class="export-box">
             <span class="export-title">{{$t('export.records')}}</span>
             <el-radio-group v-model="importBox.record"  size="small">
-              <el-radio-button :label="item.value" v-for="(item,index) in recordArr" :key="index" :disabled="(item.value==='records'&&!deleteObjs.length) || (item.value==='all'&&assetOrEndpoint)">
+              <el-radio-button :label="item.value" v-for="(item,index) in recordArr" :key="index" :disabled="(item.value==='records'&&!deleteObjs.length) || (item.value==='all'&&(assetOrEndpoint || isTopo))">
                 {{item.name}}
                 <span v-if="item.value==='records'&&deleteObjs.length">({{deleteObjs.length}})</span>
               </el-radio-button>
@@ -117,7 +117,7 @@
           <div class="export-box">
             <span class="export-title">{{$t('export.fileFormat')}}</span>
             <el-radio-group v-model="importBox.format"  size="small">
-              <el-radio-button :label="item.value" v-for="(item,index) in formatArr" :key="index" :disabled="isDashboard&&item.name!='JSON'">{{item.name}}</el-radio-button>
+              <el-radio-button :label="item.value" v-for="(item,index) in formatArr" :key="index" :disabled="onlyJson&&item.name!='JSON'">{{item.name}}</el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -272,8 +272,14 @@ export default {
       type: String,
       default: ''
     },
+    isTopo: {
+      type: Boolean, default: false
+    },
     deleteObjs: Array,
-    type: String
+    type: String,
+    onlyJson: {
+      type: Boolean, default: false
+    }
   },
   computed: {
     language () { return this.$store.getters.getLanguage },
@@ -404,6 +410,10 @@ export default {
       })
     },
     importExcel () {
+      if (this.isTopo) {
+        this.importTopo()
+        return
+      }
       if (this.importFile && this.importFile.raw) {
         this.prevent_opt.import = true
         const form = new FormData()
@@ -438,6 +448,42 @@ export default {
           }
           this.prevent_opt.import = false
         })
+      } else {
+        this.$message.error(this.$t('tip.noImportFile'))
+      }
+    },
+    importTopo () {
+      if (this.importFile && this.importFile.raw) {
+        let reader = new FileReader()// 新建一个FileReader
+        reader.readAsText(this.importFile.raw, 'UTF-8')// 读取文件
+        reader.onload = (evt) => { // 读取完文件之后会回来这里
+          let fileString = evt.target.result // 读取文件内容
+          fileString = JSON.parse(fileString)
+          console.log(fileString)
+          if (!fileString.topo) {
+            this.$message.error(this.$t('IMPORT_FORMAT_ERROR', { 0: '' }))
+            return
+          }
+          try {
+            fileString.topo.pens.forEach(item => {
+              item.imageId = ''
+            })
+            console.log(fileString)
+            this.$post(this.importUrl, fileString).then(response => {
+              if (response.code == 200 && response.msg == 'success') {
+                this.$message.success(this.$t('overall.result.success'))
+                this.importBox.show = false
+                this.$emit('afterImport')
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.import = false
+              reader = null
+            })
+          } catch (e) {
+            this.$message.error(this.$t('IMPORT_FORMAT_ERROR', { 0: '' }))
+          }
+        }
       } else {
         this.$message.error(this.$t('tip.noImportFile'))
       }
@@ -703,11 +749,14 @@ export default {
       this.importBox.show = true
       this.importBox.type = type
 
-      if (this.assetOrEndpoint) {
+      if (this.assetOrEndpoint || this.isTopo) {
         this.importBox.record = 'current'
       }
       // isDashboard 只支持JSON
       if (this.isDashboard) {
+        this.importBox.format = 3
+      }
+      if (this.onlyJson) {
         this.importBox.format = 3
       }
       if (type == 2 && (!this.showCur)) {
