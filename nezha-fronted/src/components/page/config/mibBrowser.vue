@@ -187,7 +187,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <button @click="snmpSetFormVisible = false" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-20">{{$t("overall.cancel")}}</button>
+        <button @click="snmpSetFormVisible = false" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-10">{{$t("overall.cancel")}}</button>
         <button @click="search(true)" class="nz-btn nz-btn-size-normal nz-btn-style-normal" :class="{'nz-btn-disabled': loading}" :disabled="loading">{{$t('el.datepicker.confirm')}}</button>
       </div>
     </el-dialog>

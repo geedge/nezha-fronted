@@ -1,12 +1,9 @@
-.batch-delete-footer{
-  box-shadow: none !important;
-  height: auto !important;
-  display: flex;
-  justify-content: space-between !important;
-  flex-direction: row-reverse;
-}
 .batch-delete-dialog{
   transition: all 0.3s;
+  .el-dialog__title{
+    font-size: 14px;
+    font-weight: 600;
+  }
   .dialog-header {
     margin-bottom: 10px;
     word-wrap: break-word;
@@ -27,80 +24,97 @@
   .el-dialog__body {
     padding: 0 20px;
   }
-  .tree-header{
-    background: $--background-color-base;
-    padding: 7px 10px 7px 0px;
-    font-weight: 600;
-    .batch-delete-item-id, .batch-delete-item-name{
+  .batch-delete-tree{
+    border: 1px solid $--border-color-light;
+    .tree-header{
+      background: $--background-color-base;
+      padding: 7px 10px 7px 0px;
       font-weight: 600;
+      margin-bottom: 0 !important;
+      .batch-delete-item-id, .batch-delete-item-name{
+        font-weight: 600;
+      }
     }
-  }
-  .tree-body{
-    //min-height: 160px;
-    //max-height: 220px;
-    height: 160px;
-    overflow-y: auto;
-  }
-  .tree-body-item{
-    display: flex;
-    width: 100%;
-    font-size: 14px;
-    color: $--color-text-primary;
-    font-weight: 400;
-    margin-bottom: 10px;
-    padding-left: 10px;
-    box-sizing: border-box;
-    line-height: 22px;
-    .nz-icon{
+    .tree-body{
+      box-sizing: content-box;
+      padding-top: 10px;
+      height: 160px;
+      overflow-y: auto;
+    }
+    .tree-body-item{
+      display: flex;
+      width: 100%;
+      font-size: 14px;
+      color: $--color-text-primary;
+      font-weight: 400;
+      margin-bottom: 10px;
+      padding-left: 10px;
+      box-sizing: border-box;
+      line-height: 22px;
+      .nz-icon{
+        vertical-align: middle;
+      }
+      .batch-delete-item-id{
+        margin-left: 28px;
+        margin-right: 28px;
+        width: 100px;
+        transition: all 0.3s;
+        flex-shrink: 0;
+      }
+      .batch-delete-item-name{
+        margin-left: 14px;
+        flex: 1;
+        flex-shrink: 0;
+        width: calc(100% - 190px);
+        .tree-body-children:nth-of-type(1){
+          margin-top: 10px;
+        }
+        transition: all 0.3s;
+      }
+    }
+    .tree-body-children{
+      padding-left: 25px;
+      display: block;
+    }
+    .batch-delete-item-text{
+      display: inline-block;
+      width: calc(100% - 45px);
       vertical-align: middle;
     }
-    .batch-delete-item-id{
-      margin-left: 28px;
-      margin-right: 28px;
-      width: 100px;
-      transition: all 0.3s;
-      flex-shrink: 0;
-    }
-    .batch-delete-item-name{
-      margin-left: 14px;
-      flex: 1;
-      flex-shrink: 0;
-      width: calc(100% - 190px);
-      .tree-body-children:nth-of-type(1){
-        margin-top: 10px;
+    .el-checkbox-group{
+      font-size: 14px;
+      .el-checkbox__label{
+        display: none;
       }
+    }
+    .nz-icon-caret-right{
+      display:inline-block;
+      transition: all 0.3s;
+      color: $--border-color-base-focus;
+    }
+    .rotate90 {
+      display:inline-block;
+      transform: rotate(90deg);
       transition: all 0.3s;
     }
   }
-  .tree-body-children{
-    padding-left: 25px;
-    display: block;
+  .el-dialog__footer{
+    padding-top: 20px;
   }
-  .batch-delete-item-text{
-    display: inline-block;
-    width: calc(100% - 45px);
-    vertical-align: middle;
-  }
-  .el-checkbox-group{
-    font-size: 14px;
+  .forceDelete-check{
+    padding-top: 10px;
     .el-checkbox__label{
-      display: none;
+      color: $--checkbox-font-color !important;
+      padding-left: 6px;
     }
   }
-  .nz-icon-caret-right{
-    display:inline-block;
-    transition: all 0.3s;
-    color: $--border-color-base-focus;
-  }
-  .rotate90 {
-    display:inline-block;
-    transform: rotate(90deg);
-    transition: all 0.3s;
-  }
-  .check-title{
-    color: $--color-text-regular;
-    vertical-align: middle;
-  }
+}
+.batch-delete-footer{
+  box-shadow: none !important;
+  height: auto !important;
+  display: flex;
+  justify-content: space-between !important;
+  flex-direction: row-reverse;
 }
 .delete-button{
   margin-right: 10px;

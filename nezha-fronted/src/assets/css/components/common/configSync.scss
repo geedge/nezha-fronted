@@ -1,4 +1,8 @@
 .configSync-dialog{
+  .el-dialog__title{
+    font-size: 14px;
+    font-weight: 600;
+  }
   .dialog-header {
     margin-bottom: 10px;
     word-wrap: break-word;
@@ -69,20 +73,17 @@
       }
     }
   }
+  .el-dialog__footer{
+    padding-top: 20px;
+  }
   .sync-select-list{
     padding-top: 5px;
-    padding-bottom: 15px;
     .sync-select-item{
       margin-top: 6px;
-      .el-checkbox__input.is-checked+.el-checkbox__label{
+      .el-checkbox__label{
         color: $--checkbox-font-color !important;
+        padding-left: 6px;
       }
-    }
-  }
-  .el-dialog__footer{
-    .footer__btn{
-      margin-right: 0;
-      margin-left: 10px;
     }
   }
 }

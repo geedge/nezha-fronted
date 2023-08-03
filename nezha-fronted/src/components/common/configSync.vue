@@ -43,8 +43,8 @@
         </li>
       </ul>
       <div slot="footer">
-        <button @click="dialogVisible = false" class="footer__btn footer__btn--light">{{$t("overall.cancel")}}</button>
-        <button @click="configSync" class="footer__btn" :class="{'nz-btn-disabled': prevent_opt.save||!idArr.length}" :disabled="prevent_opt.save||!idArr.length">{{$t('overall.synchronize')}}</button>
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-10" @click="dialogVisible = false">{{$t("overall.cancel")}}</button>
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" :class="{'nz-btn-disabled': prevent_opt.save||!idArr.length}" :disabled="prevent_opt.save||!idArr.length" @click="configSync">{{$t('overall.synchronize')}}</button>
       </div>
     </el-dialog>
   </div>

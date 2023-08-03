@@ -13,11 +13,11 @@
       ref="batchDeleteDialog"
       id="batch-delete-dialog"
       class="batch-delete-dialog"
-      :title="$t('deleteButton.confirm')"
+      :title="$t('overall.hint')"
       v-if="dialogVisible"
       :visible.sync="dialogVisible"
       @close='handleClose'
-      width="660px"
+      width="580px"
       :modal-append-to-body="true"
       :append-to-body="true"
     >
@@ -36,7 +36,7 @@
         <i class="nz-icon nz-icon-import-success1"></i>
         <span>{{$t('batch.finish', {title: $t(deleteTitle)})}}</span>
       </div>
-      <div class="batch-delete-tree">
+      <div class="batch-delete-tree" :style="{marginBottom:finish?'40px':0}">
         <div class="tree-header tree-body-item">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="checkAllChange" v-if="!finish"></el-checkbox>
           <div class="batch-delete-item-id" v-if="idShow">ID</div>
@@ -71,17 +71,14 @@
           </div>
         </el-checkbox-group>
       </div>
+      <div v-if="!finish&&forceDeleteShow" class="forceDelete-check">
+        <el-checkbox v-model="forceDelete" text-color="black" name="type" :true-label="1" :false-label="0">{{$t('batch.forceDelete')}}</el-checkbox>
+      </div>
       <!-- 底部按钮 -->
-      <span slot="footer" class="dialog-footer right-box__footer batch-delete-footer" v-if="!finish">
-        <div>
-          <button id="batch-delete-cancel" class="footer__btn footer__btn--light" style="margin-top: 8px;"  type="button" @click="dialogVisible = false">{{$t('tip.no')}}</button>
-          <button id="batch-delete-next" class="footer__btn"  type="button" @click="batchDeleteYes">{{$t('tip.yes')}}</button>
-        </div>
-        <div v-if="forceDeleteShow">
-          <el-checkbox v-model="forceDelete" text-color="black" name="type" :true-label="1" :false-label="0"></el-checkbox>
-          <span class="check-title">{{$t('batch.forceDelete')}}</span>
-        </div>
-      </span>
+      <div slot="footer" class="dialog-footer" v-if="!finish">
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-10" @click="dialogVisible = false">{{$t('tip.no')}}</button>
+        <button class="nz-btn nz-btn-size-normal nz-btn-style-error" :class="{'nz-btn-disabled': prevent_opt.save||!idStr.length}" :disabled="prevent_opt.save||!idStr.length" @click="batchDeleteYes">{{$t('overall.delete')}}</button>
+      </div>
     </el-dialog>
   </div>
 </template>
