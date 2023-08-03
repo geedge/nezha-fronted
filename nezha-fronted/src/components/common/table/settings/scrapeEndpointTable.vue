@@ -6,6 +6,7 @@
   :height="height"
   border
   @header-dragend="dragend"
+  @sort-change="tableDataSort"
   @selection-change="selectionChange"
   >
   <el-table-column
@@ -122,17 +123,17 @@ export default {
           label: this.$t('config.scrapeEndpoint.lastScrape'),
           prop: 'lastScrape',
           show: true,
-          sortable: true
+          sortable: 'custom'
         }, {
           label: this.$t('config.scrapeEndpoint.scrapeDuration'),
           prop: 'lastScrapeDuration',
           show: true,
-          sortable: true
+          sortable: 'custom'
         }, {
           label: this.$t('overall.state'),
           prop: 'health',
           show: true,
-          sortable: true
+          sortable: 'custom'
         }, {
           label: this.$t('ERROR'),
           prop: 'lastError',
@@ -229,6 +230,9 @@ export default {
     lastScrapeDurationTimer (time) {
       const date = (time * 1000).toFixed(3)
       return date + 'ms'
+    },
+    tableDataSort (orderBy) {
+      this.$emit('orderBy', orderBy)
     }
   },
   mounted () {
