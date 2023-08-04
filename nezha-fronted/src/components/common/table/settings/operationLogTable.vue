@@ -75,9 +75,14 @@
       :width="200"
       :type="alertLabelType"
       @tipHover='tipHover'
+      ref="nzTooltip"
+      class="data-column__"
     >
       <div style="word-break: break-all">
-        {{alertLabelObj[alertLabelType]}}
+        <div name="default">
+          <span class="copy-value-content" :title="$t('overall.duplicate')"> <i class="nz-icon nz-icon-override" @click="copyValue(alertLabelObj[alertLabelType])"></i></span>
+          <pre class="copy-value-content__pre">{{JSON.stringify(JSON.parse(alertLabelObj[alertLabelType]),null,2)}}</pre>
+        </div>
       </div>
     </nzTooltip>
   </div>
@@ -183,6 +188,21 @@ export default {
       } else {
         return '-'
       }
+    },
+    copyValue (item) {
+      const str = item
+      // const domUrl = document.createElement('input')
+      // domUrl.value = JSON.stringify(str)
+      // domUrl.id = 'creatDom'
+      // document.body.appendChild(domUrl)
+      // domUrl.select() // 选择对象
+      // document.execCommand('Copy') // 执行浏览器复制命令
+      // const creatDom = document.getElementById('creatDom')
+      // creatDom.parentNode.removeChild(creatDom)
+      // this.$message.success(this.$t('overall.copySuccess'))
+      this.$copyText(JSON.stringify(str)).then(() => {
+        this.$message.success({ message: this.$t('overall.copySuccess') })
+      })
     }
   }
 }

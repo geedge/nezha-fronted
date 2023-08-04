@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="operation-log">
     <nz-data-list
       ref="dataList"
       :api="url"
