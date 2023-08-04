@@ -1,4 +1,4 @@
-#endpointTable {
+#endpointTable, #operation-log {
     .bagEF7458 {
         background: #ef7458;
         color: #fff;
@@ -39,11 +39,15 @@
     }
     .alert-label__border.alert-label {
         width: auto !important;
+        max-width: 1024px;
     }
     .copy-value-content__pre {
         width: auto;
-        height: 200px;
+        max-width: 1024px;
+        max-height: 200px;
         margin-top: 20px;
+        padding-right: 5px;
+        box-sizing: border-box;
         overflow-y: scroll;
         overflow-x: scroll;
     }
