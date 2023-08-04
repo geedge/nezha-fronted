@@ -45,11 +45,11 @@
                     <i class="nz-icon nz-icon-SFTP"></i>
                     {{$t('terminal.sftp')}}
                   </div>
-                  <div @click="clearTerminal(item, index)"  class="webshell-box-item"  v-if="item.terminal.isLogin && item.terminal.terminalType == '1'">
-                    <i class="nz-icon nz-icon-Clear"></i>
-<!--                    {{$t('terminal.sftp')}}-->
-                  Clear Screen CLS
-                  </div>
+<!--                  <div @click="clearTerminal(item, index)"  class="webshell-box-item"  v-if="item.terminal.isLogin && item.terminal.terminalType == '1'">-->
+<!--                    <i class="nz-icon nz-icon-Clear"></i>-->
+<!--&lt;!&ndash;                    {{$t('terminal.sftp')}}&ndash;&gt;-->
+<!--                  Clear Screen CLS-->
+<!--                  </div>-->
                 </div>
                 <div class="webshell-box-item webshell-box-bottom" @click="closeShell(item,index)">
                   <div >
