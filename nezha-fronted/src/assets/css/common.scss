@@ -583,7 +583,7 @@ i.nz-icon-override{
   color: $--color-text-primary;
 }
 #entrance {
-  .el-icon-arrow-right {
+  .el-icon-arrow-right ,.el-icon-arrow-left{
     font-family: "nz-icon" !important;
     font-size: 16px;
     font-style: normal;
@@ -592,6 +592,9 @@ i.nz-icon-override{
   }
   .el-icon-arrow-right:before {
     content: "\e6ad";
+  }
+  .el-icon-arrow-left::before{
+    content: '\e6ae';
   }
   .el-icon-arrow-up{
     font-family: nz-icon!important;
@@ -610,12 +613,6 @@ i.nz-icon-override{
   }
   .el-icon-check::before{
     content: '\e689';
-  }
-  .el-icon-arrow-left{
-    font-family: nz-icon!important;
-  }
-  .el-icon-arrow-left::before{
-    content: '\e6ae';
   }
   //.chart__canvas {
   //  .chart-time-series {
