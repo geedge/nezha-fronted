@@ -267,6 +267,9 @@ export default {
         this.fileDirectoryShow = show
       })
     },
+    clearTerminal () {
+      this.term.clear()
+    },
     enterStr (message) {
       if (this.terminalSocket && this.terminal.isLogin) {
         this.term.send(message)
