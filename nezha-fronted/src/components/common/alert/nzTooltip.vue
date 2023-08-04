@@ -57,7 +57,7 @@ export default {
         let labelPosition = {
           top: 0,
           left: 0,
-          right: 0,
+          right: 0
         }
         if (this.alertTableDialog) {
           let dialog = document.querySelector(
@@ -128,6 +128,18 @@ export default {
     },
     tipHover (tipLoading) {
       this.$emit('tipHover', tipLoading)
+    },
+    renderHeightList () {
+      this.heightList = this.$refs.alertLabels.getBoundingClientRect().height
+    }
+  },
+  watch: {
+    that (n) {
+      if (n.id && this.$refs.alertLabels) {
+        this.$nextTick(()=>{
+          this.heightList = this.$refs.alertLabels.getBoundingClientRect().height
+        })
+      }
     }
   },
   mounted () {
