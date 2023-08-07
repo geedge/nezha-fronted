@@ -604,6 +604,9 @@ export default {
         if (!this.chart.groupId || this.chart.groupId == -1) {
           this.chart.groupId = ''
         }
+        if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
+          this.chart.param.collapse = false
+        }
         if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point') && !this.chart.param.rightYAxis) {
           this.chart.param.rightYAxis = {
             elementNames: [],
@@ -647,6 +650,9 @@ export default {
             }
             if (!this.chart.groupId || this.chart.groupId == -1) {
               this.chart.groupId = ''
+            }
+            if (this.chart.type === 'group' && !this.chart.param.collapse == undefined) {
+              this.chart.param.collapse = false
             }
             if ((this.chart.type === 'line' || this.chart.type === 'area' || this.chart.type === 'point') && !this.chart.param.rightYAxis) {
               this.chart.param.rightYAxis = {
