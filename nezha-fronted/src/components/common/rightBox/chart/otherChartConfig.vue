@@ -40,14 +40,18 @@
           </el-select>
         </el-form-item>
         <!--Default collapse-->
-        <el-form-item class="form-item--half-width" v-if="isGroup(chartConfig.type)" :label='$t("dashboard.dashboard.chartForm.collapse")' prop="param.collapse">
-          <el-switch
+        <el-form-item class="form-item--half-width" v-if="isGroup(chartConfig.type)" :label='$t("dashboard.dashboard.chartForm.collapseState")' prop="param.collapse">
+          <el-select
             id="chart-box-collapse"
             v-model="chartConfig.param.collapse"
-            :active-value="true"
-            :inactive-value="false"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
             @change="change"
-            size="small"/>
+          >
+            <el-option :label="$t('overall.expand')" :value="false"></el-option>
+            <el-option :label="$t('overall.collapse')"  :value="true"></el-option>
+          </el-select>
         </el-form-item>
       </div>
       <div class="form-items--half-width-group" v-if="!isGroup(chartConfig.type)">
@@ -417,7 +421,7 @@ export default {
           this.chartConfig.span = 12
           this.chartConfig.param = {
             link: this.chartConfig.param.link,
-            collapse: true,
+            collapse: false,
             enable: {
               visibility: false,
               repeat: false
