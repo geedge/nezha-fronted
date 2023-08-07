@@ -12,12 +12,12 @@
                     <div class="list_box_content" v-if="history_once.length>0">
                         <ul>
                             <li v-for="(val,ind) in history_once" @click="select_history(ind,$event)" :key="ind" :id="'search-history-pick-'+ind" >
-                                <span v-for="(item,key) in val" :key="key" :title="item.name + ':' + (item.val ? (item.val+' ') :  ' ')">
-                                    <span class="name">{{item.name}}: </span>
-                                    <span class="value" v-if="item.valString">{{item.valString+' '}}</span>
-                                    <span class="value" v-else-if="item.val">{{item.val+' '}}</span>
-                                    <span class="value" v-else>{{' '}}</span>
-                                </span>
+                              <span v-for="(item,key) in val" :key="key" :title="item.name + ':' + (item.val ? (item.val+' ') :  ' ')">
+                                <span class="name">{{item.name}}: </span>
+                                <span class="value" v-if="item.valString">{{item.valString+' '}}</span>
+                                <span class="value" v-else-if="item.val">{{item.val+' '}}</span>
+                                <span class="value" v-else>{{' '}}</span>
+                              </span>
                             </li>
                         </ul>
                     </div>
@@ -258,7 +258,7 @@
                         >
                         </my-date-picker>
                     </li>
-<!-- 最开始的input框-->
+                    <!-- 最开始的input框-->
                     <li class="select_input" v-if="change_sreach_show">
                         <input type="text" autocomplete="off" @click="read_input" v-model="no_condition" @keyup="enter_one" :id="'one-input' + position" @keydown="clear_search_list" :placeholder="placeholder">
                     </li>
@@ -1116,7 +1116,7 @@ export default {
         const arr = JSON.parse(localStorage.getItem('nz-history-' + this.where))
         arr.forEach(labelArr => {
           labelArr.forEach((item) => {
-            const findItem = this.searchMsg.searchLabelList.find(searchLabel => searchLabel.id == item.id)
+            const findItem = this.searchMsg.searchLabelList.find(searchLabel => item.id && (searchLabel.id == item.id))
             if (findItem) {
               item.name = findItem.name
               if (item.valString) { // 判断 有valString 显示对应国际化内容 以防中英文出现问题
