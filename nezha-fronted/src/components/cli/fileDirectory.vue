@@ -150,7 +150,7 @@
 <!--            <i class="nz-icon nz-icon-delete" v-if="!item.isDir" @click="delFile(item)"></i>-->
           </div>
         </div>
-        <div class="file-item">
+        <div class="file-item" v-if="overNum">
           {{$t('fileDirectory.overNum', {num: overNum})}}
         </div>
       </div>
