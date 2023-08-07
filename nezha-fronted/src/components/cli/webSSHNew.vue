@@ -45,11 +45,10 @@
                     <i class="nz-icon nz-icon-SFTP"></i>
                     {{$t('terminal.sftp')}}
                   </div>
-<!--                  <div @click="clearTerminal(item, index)"  class="webshell-box-item"  v-if="item.terminal.isLogin && item.terminal.terminalType == '1'">-->
-<!--                    <i class="nz-icon nz-icon-Clear"></i>-->
-<!--&lt;!&ndash;                    {{$t('terminal.sftp')}}&ndash;&gt;-->
-<!--                  Clear Screen CLS-->
-<!--                  </div>-->
+                  <div @click="clearTerminal(item, index)"  class="webshell-box-item"  v-if="item.terminal.isLogin && item.terminal.terminalType == '1'">
+                    <i class="nz-icon nz-icon-Clear"></i>
+                    {{$t('terminal.clear')}}
+                  </div>
                 </div>
                 <div class="webshell-box-item webshell-box-bottom" @click="closeShell(item,index)">
                   <div >
@@ -791,7 +790,7 @@ export default {
       }
     },
     clearTerminal (item, index) {
-      this.$refs['console' + index][0].clearTerminal(true)
+      this.$refs['console' + index][0].clearTerminal()
       if (this.$refs['popover' + index] && this.$refs['popover' + index][0]) {
         this.$refs['popover' + index][0].doClose()
       }
