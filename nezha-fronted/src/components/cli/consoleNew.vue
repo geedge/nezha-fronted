@@ -141,6 +141,11 @@ export default {
           //that.term.write(data);
         } */
       })
+      // 监听选中文字的事件
+      this.term.on('selection', (p,a) => {
+        console.log(this.term.getSelection())
+        this.$copyText(this.term.getSelection())
+      })
       // 返回
       this.terminalSocket.onmessage = function (evt) {
         let backContent = evt.data
@@ -196,8 +201,8 @@ export default {
       this.terminalSocket.onerror = (e) => {
         this.terminal.isLogin = false
       }
-      // 选中 复制
-      this.term.on('selection', function () {})
+      // // 选中 复制
+      // this.term.on('selection', function () {})
       this.term.attachCustomKeyEventHandler(function (ev) { })
 
       this.term.attach(this.terminalSocket)
