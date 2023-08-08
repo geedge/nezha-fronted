@@ -63,6 +63,11 @@ export default {
     webSSHNew,
     fileListState
   },
+  provide () {
+    return {
+      terminalSetting: this.terminalSetting
+    }
+  },
   data () {
     return {
       imageUrl,
@@ -73,7 +78,16 @@ export default {
       placeholder: this.$t('terminal.placeholder'),
       visible: false,
       // 历史命令记录
-      historyArr: []
+      historyArr: [],
+      terminalSetting: {
+        watermark: false,
+        scrollbackLines: 25000,
+        rightClick: 'menu',
+        wordSeparator: "\\ :;~`!@#$%^&*()-=+|[]{}'\",.<>/?",
+        copyOnSelect: false,
+        copyWithFormatting: false,
+        copyTrimEnd: false
+      }
     }
   },
   computed: {

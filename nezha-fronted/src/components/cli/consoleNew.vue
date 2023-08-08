@@ -1,5 +1,5 @@
 <template>
-    <div :id="'ternimalContainer'+idIndex" class="console">
+    <div :id="'ternimalContainer'+idIndex" class="console" v-watermark="{text: waterMarkText, text1: terminal.host || '',  textColor: 'rgba(215, 215, 215, 0.5)'}">
       <div :id="'terminal'+idIndex" style="height: 100%;width: 100%"></div>
       <fileDirectory :host="host" v-clickoutside="closeFileDir" :uuid="terminal.uuid" v-show="fileDirectoryShow" @close="showFileDir(false)" :fileDirectoryShow="fileDirectoryShow" ref="fileDirectory"/>
     </div>
@@ -25,6 +25,7 @@ export default {
     },
     fontSize: {}
   },
+  inject: ['terminalSetting'],
   data () {
     return {
       term: null,
@@ -49,7 +50,8 @@ export default {
       inputSecret: false,
       userName: '',
       fileDirectoryShow: false,
-      host: ''
+      host: '',
+      waterMarkText: 'Nezha'
     }
   },
   watch: {
@@ -95,7 +97,9 @@ export default {
         cursorStyle: 'block', // 光标样式  null | 'block' | 'underline' | 'bar'
         disableStdin: false, // 是否应禁用输入
         fontSize: 16,
-        lineHeight: 1.2
+        lineHeight: 1.2,
+        allowTransparency: true,
+        background: 'transparent'
       })
       this.term.open(terminalContainer)
       this.term.focus()
@@ -115,6 +119,7 @@ export default {
       let url = ''
       this.terminal.height = document.body.clientHeight - 100
       this.terminal.width = document.body.clientWidth
+      this.waterMarkText = this.terminal.userName
       if (this.terminal.type === 'asset') {
         url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.term.cols + '&rows=' + this.term.rows + '&token=' + token + '&assetId=' + this.terminal.assetId + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
       } else if (this.terminal.type === 'custom') {
@@ -273,7 +278,7 @@ export default {
       })
     },
     clearTerminal () {
-      this.term.clear()
+      this.term.reset()
     },
     enterStr (message) {
       if (this.terminalSocket && this.terminal.isLogin) {
@@ -292,6 +297,7 @@ export default {
   },
   mounted () {
     this.beforeCreate()
+    console.log(this.terminalSetting)
   },
   beforeDestroy () {
     this.closeSocket()

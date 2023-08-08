@@ -23,7 +23,7 @@ import VueClipboard from 'vue-clipboard2'
 import 'pl-table/themes/index.css'
 import { post, get, put, del } from '@/http.js'
 import { Meta2d } from '@meta2d/core'
-import { clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet, cancelWithChange, myLoading, loadMore } from '@/components/common/js/tools.js'
+import { clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet, cancelWithChange, myLoading, loadMore, watermark } from '@/components/common/js/tools.js'
 import * as tools from '@/components/common/js/tools.js'
 import * as constants from '@/components/common/js/constants.js'
 
@@ -182,6 +182,7 @@ Vue.mixin({
 /* 指令 */
 Vue.directive('cancel', cancelWithChange)
 Vue.directive('clickoutside', clickoutside)
+Vue.directive('watermark', watermark)
 Vue.directive('loadMore', loadMore)
 Vue.directive('myLoading', myLoading)
 window.resizing = false
