@@ -364,9 +364,7 @@ export default {
     renderTerminalSetting () {
       this.showWatermark = this.terminalSetting.watermark
       this.wordSeparator = this.terminalSetting.wordSeparator
-      this.term.setOption({
-        scrollback: this.terminalSetting.scrollbackLines
-      })
+      this.term.setOption('scrollback', this.terminalSetting.scrollbackLines)
     },
     copySelection () {
       let str = this.term.getSelection()
