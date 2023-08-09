@@ -309,5 +309,11 @@
       text-align: center;
     }
   }
+  .terminal-menu {
+    position: fixed;
+    width: 150px;
+    border-radius: 2px;
+    z-index: 1000;
+  }
 }
 

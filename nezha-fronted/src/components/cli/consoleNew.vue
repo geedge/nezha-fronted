@@ -1,7 +1,32 @@
 <template>
-    <div :id="'ternimalContainer'+idIndex" class="console" v-watermark="{text: waterMarkText, text1: terminal.host || '',  textColor: 'rgba(215, 215, 215, 0.5)'}">
+    <div :id="'ternimalContainer'+idIndex" class="console" v-watermark="{show: showWatermark,text: waterMarkText, text1: terminal.host || '',  textColor: 'rgba(215, 215, 215, 0.5)'}" v-clickoutside="clickHide">
       <div :id="'terminal'+idIndex" style="height: 100%;width: 100%"></div>
       <fileDirectory :host="host" v-clickoutside="closeFileDir" :uuid="terminal.uuid" v-show="fileDirectoryShow" @close="showFileDir(false)" :fileDirectoryShow="fileDirectoryShow" ref="fileDirectory"/>
+      <div
+        v-if="terminal.isLogin && showMenu"
+        class="terminal-menu menus"
+        :style="{
+           left: menuPosition.left + 'px',
+           top: menuPosition.top + 'px'
+        }"
+      >
+        <div>
+          <span @click="copySelection()">{{$t('overall.duplicate')}}</span>
+        </div>
+        <div>
+          <span @click="paste()">{{$t('project.topology.paste')}}</span>
+        </div>
+        <div>
+          <span @click="clearTerminal()">{{$t('terminal.clear')}}</span>
+        </div>
+        <div class="line"></div>
+        <div>
+          <span @click="showFileDir(true)">{{$t('terminal.sftp')}}</span>
+        </div>
+        <div>
+          <span @click="closeTerminal(true)"> {{$t('overall.close')}}</span>
+        </div>
+      </div>
     </div>
 </template>
 <script>
@@ -23,9 +48,12 @@ export default {
       type: Boolean,
       default: false
     },
+    terminalSetting: {
+      type: Object,
+      default: () => {}
+    },
     fontSize: {}
   },
-  inject: ['terminalSetting'],
   data () {
     return {
       term: null,
@@ -51,9 +79,21 @@ export default {
       userName: '',
       fileDirectoryShow: false,
       host: '',
-      waterMarkText: 'Nezha'
+      waterMarkText: 'Nezha',
+      showWatermark: false,
+      wordSeparator: "\\ :;~`!@#$%^&*()-=+|[]{}'\",.<>/?",
+      showMenu: false,
+      menuPosition: {
+        left: 0,
+        top: 0
+      }
     }
   },
+  // computed: {
+  //   terminalSetting () {
+  //     return this.provObj.terminalSetting
+  //   }
+  // },
   watch: {
   },
   methods: {
@@ -99,7 +139,8 @@ export default {
         fontSize: 16,
         lineHeight: 1.2,
         allowTransparency: true,
-        background: 'transparent'
+        background: 'transparent',
+        scrollback: this.terminalSetting.scrollbackLines
       })
       this.term.open(terminalContainer)
       this.term.focus()
@@ -134,6 +175,7 @@ export default {
       // 连接成功onclose
       this.terminalSocket.onopen = () => {
         this.terminal.isLogin = true
+        this.showMenu = false
         this.isInit = true
         this.term.focus()
       }
@@ -146,11 +188,8 @@ export default {
           //that.term.write(data);
         } */
       })
-      // 监听选中文字的事件
-      this.term.on('selection', (p,a) => {
-        console.log(this.term.getSelection())
-        this.$copyText(this.term.getSelection())
-      })
+      // 个性化配置
+      this.initTerminalSetting()
       // 返回
       this.terminalSocket.onmessage = function (evt) {
         let backContent = evt.data
@@ -278,7 +317,10 @@ export default {
       })
     },
     clearTerminal () {
-      this.term.reset()
+      this.term.clear()
+    },
+    closeTerminal () {
+      this.$emit('close')
     },
     enterStr (message) {
       if (this.terminalSocket && this.terminal.isLogin) {
@@ -293,16 +335,120 @@ export default {
     // 新增历史记录
     historyChange (message) {
       this.$emit('historyChange', message)
+    },
+    initTerminalSetting () { // 个性化配置
+      // 1 render
+      this.showWatermark = this.terminalSetting.watermark
+      console.log(this.terminalSetting.watermark)
+      this.term.on('selection', (p, a) => {
+        if (this.terminalSetting.copyOnSelect) {
+          this.copySelection()
+        }
+      })
+      // this.term.on('click', () => {
+      //   console.log('click')
+      //   console.log(this.term.getSelection())
+      // })
+      // this.term.on('dbclick', () => {
+      //   console.log('doubleclick123')
+      //   console.log(this.term.getSelection())
+      // })
+      this.term.selectionManager._isCharWordSeparator = (charData) => {
+        console.log(charData)
+        if (charData[2] === 0) {
+          return false
+        }
+        return this.wordSeparator.indexOf(charData[1]) >= 0
+      }
+    },
+    renderTerminalSetting () {
+      this.showWatermark = this.terminalSetting.watermark
+      this.wordSeparator = this.terminalSetting.wordSeparator
+      this.term.setOption({
+        scrollback: this.terminalSetting.scrollbackLines
+      })
+    },
+    copySelection () {
+      let str = this.term.getSelection()
+      if (!this.terminalSetting.copyWithFormatting) {
+        str = str.replace(/[\r\n]/g, '')
+      }
+      if (this.terminalSetting.copyTrimEnd) {
+        str = str.replace(/(\s*$)/g, '')
+      }
+      this.$copyText(str)
+    },
+    dblclick () {
+      if (this.term) {
+        if (this.terminalSetting.copyOnSelect) {
+          this.copySelection()
+        }
+      }
+    },
+    async contextmenu (event) {
+      event.preventDefault()
+      event.stopPropagation()
+      if (this.terminalSetting.rightClick === 'none') {
+        return
+      }
+      if (this.terminalSetting.rightClick === 'menu') {
+        this.tiggerMenu(true, event)
+      }
+      if (this.terminalSetting.rightClick === 'paste') {
+        if (!document.execCommand('paste')) {
+          const text = await navigator.clipboard.readText()
+          this.term.send(text)
+        }
+      }
+    },
+    async paste () {
+      if (!document.execCommand('paste')) {
+        const text = await navigator.clipboard.readText()
+        this.term.send(text)
+      }
+    },
+    tiggerMenu (flag, event) {
+      this.showMenu = false
+      if (flag) {
+        let top = 0
+        let left = 0
+        if (event.clientY < document.body.clientHeight / 2) {
+          top = event.clientY + 10
+        } else {
+          top = event.clientY - 180 - 10
+        }
+        if (event.clientX < document.body.clientWidth / 2) {
+          left = event.clientX + 10
+        } else {
+          left = event.clientX - 150 - 10
+        }
+        this.menuPosition = {
+          left: left,
+          top: top
+        }
+      }
+      this.showMenu = flag
+    },
+    clickHide () {
+      this.showMenu = false
     }
   },
   mounted () {
     this.beforeCreate()
-    console.log(this.terminalSetting)
+    this.showWatermark = this.terminalSetting.watermark
+    const dom = document.getElementById('ternimalContainer' + this.idIndex)
+    dom.addEventListener('dblclick', this.dblclick)
+    dom.addEventListener('contextmenu', this.contextmenu)
+    dom.addEventListener('click', this.clickHide)
   },
   beforeDestroy () {
     this.closeSocket()
     this.term.off('selection')
     this.term.off('data')
+    const dom = document.getElementById('ternimalContainer' + this.idIndex)
+    dom && dom.removeEventListener('dblclick', this.dblclick)
+    dom &&  dom.removeEventListener('contextmenu', this.contextmenu)
+    dom && dom.removeEventListener('click', this.clickHide)
   }
 }
 </script>

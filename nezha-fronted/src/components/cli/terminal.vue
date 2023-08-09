@@ -16,6 +16,9 @@
                 <div class="personal-dropdown__name">@{{name}}</div>
               </div>
               <el-dropdown-item>
+                <div id="header-to-personalization" @click="showPersonalization"><i class="nz-icon nz-icon-personalization"></i>{{$t('terminal.personal')}}</div>
+              </el-dropdown-item>
+              <el-dropdown-item>
                 <div id="header-to-logout" @click="logout"><i class="nz-icon nz-icon-exit"></i>{{$t('overall.signOut')}}</div>
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -24,7 +27,7 @@
       </div>
     </div>
     <fileListState v-clickoutside="hideFileState" ref="fileListState"/>
-    <webSSHNew ref="websshNew" />
+    <webSSHNew ref="websshNew" :terminalSetting="terminalSetting" />
     <div class="shell-input">
       <el-input ref="shellInput" :placeholder="placeholder" size="small" v-model="message" @keyup.enter.native="sendMessage" @focus="placeholderChange('focus')"  @blur="placeholderChange('blur')">
         <i slot="suffix" class="nz-icon nz-icon-history no-style-class" :class="{'active':visible}" :title="$t('terminal.history')" @click="toggleHistory"></i>
@@ -48,6 +51,54 @@
         </div>
       </transition>
     </div>
+    <!--弹窗-->
+    <el-dialog :modal-append-to-body='false' :z-index="1000" :show-close="true" :visible.sync="personalization" @close="personalization = false" class="nz-dialog webshell-selectAsset" width="650px">
+      <div slot="title">{{$t('webshell.selAsset')}}</div>
+      <div>
+        <el-form v-model="newTerminalSetting" label-width="180px" size="small" ref="terminalForm"  :validate-on-rule-change="false">
+          <div class="system-title">{{$t('terminal.render')}}</div>
+          <el-form-item :label="$t('waterMaker')" prop="watermark">
+            <el-switch v-model="newTerminalSetting.watermark" :active-value='true' :inactive-value='false' id="terminal-setting-watermark_change" size="small">
+            </el-switch>
+          </el-form-item>
+          <el-form-item :label="$t('terminal.scrollbackLines')" prop="scrollbackLines">
+            <el-input-number :min="1" :precision="0" :controls="false" :placeholder="'默认25000'" v-model="newTerminalSetting.scrollbackLines" size="small"></el-input-number>
+          </el-form-item>
+          <div class="system-title">{{$t('terminal.mouse')}}</div>
+          <el-form-item :label="$t('terminal.rightClick')" prop="rightClick">
+            <el-radio-group  v-model="newTerminalSetting.rightClick" size="small">
+              <el-radio-button label="none">{{$t('project.topology.none')}}</el-radio-button>
+              <el-radio-button label="menu">{{$t('terminal.menu')}}</el-radio-button>
+              <el-radio-button label="paste">{{$t('terminal.paste')}}</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item :label="$t('terminal.wordSeparator')" prop="wordSeparator">
+            <el-input size="small" v-model="newTerminalSetting.wordSeparator"></el-input>
+          </el-form-item>
+          <div class="system-title">{{$t('terminal.clipboard')}}</div>
+          <el-form-item :label="$t('terminal.copySelect')" prop="copyOnSelect">
+            <el-switch v-model="newTerminalSetting.copyOnSelect" :active-value='true' :inactive-value='false' id="terminal-setting-watermark_change">
+            </el-switch>
+          </el-form-item>
+          <el-form-item :label="$t('terminal.copyFormatting')" prop="copyWithFormatting">
+            <el-switch v-model="newTerminalSetting.copyWithFormatting" :active-value='true' :inactive-value='false' id="terminal-setting-watermark_change">
+            </el-switch>
+          </el-form-item>
+          <el-form-item :label="$t('terminal.copyTrimEnd')" prop="copyTrimEnd">
+            <el-switch v-model="newTerminalSetting.copyTrimEnd" :active-value='true' :inactive-value='false' id="terminal-setting-watermark_change">
+            </el-switch>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer">
+        <button class="footer__btn footer__btn--light" @click="personalization = false">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button class="footer__btn" :disabled="prevent_opt.save" @click.prevent="savePersonalization">
+          <span>{{$t('overall.save')}}</span>
+        </button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -79,13 +130,15 @@ export default {
       visible: false,
       // 历史命令记录
       historyArr: [],
+      personalization: false,
+      newTerminalSetting: {},
       terminalSetting: {
-        watermark: false,
+        watermark: true,
         scrollbackLines: 25000,
         rightClick: 'menu',
         wordSeparator: "\\ :;~`!@#$%^&*()-=+|[]{}'\",.<>/?",
         copyOnSelect: false,
-        copyWithFormatting: false,
+        copyWithFormatting: true,
         copyTrimEnd: false
       }
     }
@@ -110,6 +163,7 @@ export default {
     const self = this
     this.name = localStorage.getItem('nz-username')
     this.username = localStorage.getItem('nz-username')
+    this.initTerminalSetting()
     window.opener.name = 'parent'
     window.onbeforeunload = () => {
       const opener = window.opener
@@ -199,6 +253,39 @@ export default {
           isLogout: true
         })
       )
+    },
+    showPersonalization () {
+      this.personalization = true
+      this.newTerminalSetting = this.$lodash.cloneDeep(this.terminalSetting)
+    },
+    savePersonalization () {
+      this.$put('/sys/user/preference', { terminal: JSON.stringify(this.newTerminalSetting) }).then(res => {
+        if (res.code === 200) {
+          this.terminalSetting = this.$lodash.cloneDeep(this.newTerminalSetting)
+          this.$refs.websshNew.renderTerminalSetting()
+          this.personalization = false
+        } else {
+          this.$message.error(res.msg || res.error)
+        }
+      })
+    },
+    initTerminalSetting () {
+      this.$get('/sys/user/preference', { key: 'terminal' }).then(res => {
+        if (res.code === 200) {
+          if (res.data.terminal) {
+            let terminal = {}
+            try {
+              terminal = JSON.parse(res.data.terminal)
+            } catch (e) {}
+            this.terminalSetting = {
+              ...this.terminalSetting,
+              ...terminal
+            }
+          }
+        } else {
+          this.$message.error(res.msg || res.error)
+        }
+      })
     }
   }
 }
