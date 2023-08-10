@@ -262,8 +262,11 @@ export default {
       this.$put('/sys/user/preference', { terminal: JSON.stringify(this.newTerminalSetting) }).then(res => {
         if (res.code === 200) {
           this.terminalSetting = this.$lodash.cloneDeep(this.newTerminalSetting)
-          this.$refs.websshNew.renderTerminalSetting()
-          this.personalization = false
+          this.$nextTick(() => {
+            this.$refs.websshNew.renderTerminalSetting()
+            this.personalization = false
+          })
+          this.$message.success(this.$t('overall.success'))
         } else {
           this.$message.error(res.msg || res.error)
         }

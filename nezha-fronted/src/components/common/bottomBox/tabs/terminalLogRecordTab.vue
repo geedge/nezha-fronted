@@ -36,6 +36,8 @@
 
 <script>
 import Terminal from '../../js/Xterm'
+import { AttachAddon } from 'xterm-addon-attach'
+import { FitAddon } from 'xterm-addon-fit'
 import bus from '../../../../libs/bus'
 // import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
