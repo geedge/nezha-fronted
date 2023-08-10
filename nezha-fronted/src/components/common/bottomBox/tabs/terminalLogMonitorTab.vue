@@ -45,7 +45,9 @@ export default {
       },
       terminal: null,
       term: null,
+      termFitAddon: null,
       terminalSocket: null,
+      termAttachAddon: null,
       recordData: [],
       isNeedStop: false, // 是否需要停止
       playedCount: 0, // 当前已经播放完的数量
@@ -83,9 +85,7 @@ export default {
         this.terminalSocket.close()
       }
       if (this.terminal) {
-        this.terminal.off('selection')
-        this.terminal.off('data')
-        this.terminal.destroy()
+        this.terminal.dispose()
       }
       this.terminal = new Terminal({
         rows: parseInt(this.$refs.recordConsole.offsetHeight / 18),
@@ -94,8 +94,10 @@ export default {
         // bellStyle:'sound',
         disableStdin: true// 是否应禁用输入
       })
+      this.termFitAddon = new FitAddon()
+      this.terminal.loadAddon(this.termFitAddon)
       this.terminal.open(document.getElementById(this.obj.uuid))
-
+      this.termFitAddon.fut()
       const token = localStorage.getItem('nz-token')
       let baseUrl = this.$axios.defaults.baseURL
       if (baseUrl.startsWith('/')) {
@@ -112,14 +114,6 @@ export default {
       // 连接成功
       this.terminalSocket.onopen = () => {
       }
-      // 登录后，你输入的内容从后台服务返回
-      this.terminal.on('data', function (data) {
-        // let code = data.charCodeAt(0);
-        // if(code==13){
-        // }else {
-        //   that.term.write(data);
-        // }
-      })
       // 返回
       this.terminalSocket.onmessage = function (evt) {
         let backContent = evt.data
@@ -184,15 +178,10 @@ export default {
       // 错误
       this.terminalSocket.onerror = (e) => {
       }
-      // 选中 复制
-      this.terminal.on('selection', function () {
-      })
-      this.terminal.attachCustomKeyEventHandler(function (ev) {
-      })
-
-      this.terminal.attach(this.terminalSocket)
+      this.termAttachAddon = new AttachAddon(this.terminalSocket)
+      this.term.loadAddon(this.termAttachAddon)
       this.terminal._initialized = true
-      this.terminal.fit()// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
+      this.termFitAddon.fit()// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
       // this.$nextTick(()=>{// 解决进入全屏和退出全屏是底部隐藏
       //   this.setFontSize(this.fontSize);
       // })
@@ -204,7 +193,7 @@ export default {
         this.terminalSocket.close()
       }
       if (this.terminal) {
-        this.terminal.destroy()
+        this.terminal.dispose()
       }
     },
     // 切换tab
@@ -225,9 +214,8 @@ export default {
     },
 
     consoleResize () {
-      this.terminal && this.terminal.resize(parseInt(this.$refs.recordConsole.offsetWidth / 11), parseInt(this.$refs.recordConsole.offsetHeight / 18))
       this.$nextTick(() => {
-        this.terminal && this.terminal.fit()
+        this.terminal && this.termFitAddon.fit()
       })
     },
     shutdown () {
@@ -290,8 +278,6 @@ export default {
   beforeDestroy () {
     window.removeEventListener('resize', bus.debounce)
     this.closeSocket()
-    this.terminal.off('selection')
-    this.terminal.off('data')
   }
 }
 </script>

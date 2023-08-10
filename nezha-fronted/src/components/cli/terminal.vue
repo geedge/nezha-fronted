@@ -266,7 +266,7 @@ export default {
             this.$refs.websshNew.renderTerminalSetting()
             this.personalization = false
           })
-          this.$message.success(this.$t('overall.success'))
+          this.$message.success(this.$t('tip.saveSuccess'))
         } else {
           this.$message.error(res.msg || res.error)
         }
