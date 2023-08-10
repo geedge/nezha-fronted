@@ -92,12 +92,15 @@ export default {
         cols: parseInt(this.$refs.recordConsole.offsetWidth / 11),
         cursorStyle: 'block', // 光标样式  null | 'block' | 'underline' | 'bar'
         // bellStyle:'sound',
+        overviewRulerWidth: 8,
+        lineHeight: 1.2,
+        fontSize: 16,
         disableStdin: true// 是否应禁用输入
       })
       this.termFitAddon = new FitAddon()
       this.terminal.loadAddon(this.termFitAddon)
       this.terminal.open(document.getElementById(this.obj.uuid))
-      this.termFitAddon.fut()
+      this.termFitAddon.fit()
       const token = localStorage.getItem('nz-token')
       let baseUrl = this.$axios.defaults.baseURL
       if (baseUrl.startsWith('/')) {
@@ -179,7 +182,7 @@ export default {
       this.terminalSocket.onerror = (e) => {
       }
       this.termAttachAddon = new AttachAddon(this.terminalSocket)
-      this.term.loadAddon(this.termAttachAddon)
+      this.terminal.loadAddon(this.termAttachAddon)
       this.terminal._initialized = true
       this.termFitAddon.fit()// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
       // this.$nextTick(()=>{// 解决进入全屏和退出全屏是底部隐藏
