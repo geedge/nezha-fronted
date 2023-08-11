@@ -11,9 +11,9 @@
     <template v-slot:title><span :title="obj.uuid.substring(0, 8).toUpperCase()">{{obj.uuid.substring(0, 8).toUpperCase()}}</span></template>
     <template v-slot>
       <div ref="replayTab" class="replay-tab">
-        <div class="replay-container">
+        <div class="replay-container" style="height: 100%">
           <div ref="recordConsole" class="record-console">
-            <div :id="obj.uuid" class="record-terminal"></div>
+            <div :id="'record-terminal' + obj.uuid" class="record-terminal" style="height: 100%;width: 100%"></div>
           </div>
         </div>
       </div>
@@ -25,6 +25,7 @@
 import Terminal from '../../js/Xterm'
 import { AttachAddon } from 'xterm-addon-attach'
 import { FitAddon } from 'xterm-addon-fit'
+import { CanvasAddon } from 'xterm-addon-canvas'
 import bus from '../../../../libs/bus'
 import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
@@ -80,6 +81,7 @@ export default {
   methods: {
     // 创建连接
     create () {
+      console.log('create')
       const that = this
       if (this.terminalSocket) {
         this.terminalSocket.close()
@@ -88,10 +90,7 @@ export default {
         this.terminal.dispose()
       }
       this.terminal = new Terminal({
-        rows: parseInt(this.$refs.recordConsole.offsetHeight / 18),
-        cols: parseInt(this.$refs.recordConsole.offsetWidth / 11),
         cursorStyle: 'block', // 光标样式  null | 'block' | 'underline' | 'bar'
-        // bellStyle:'sound',
         overviewRulerWidth: 8,
         lineHeight: 1.2,
         fontSize: 16,
@@ -99,8 +98,7 @@ export default {
       })
       this.termFitAddon = new FitAddon()
       this.terminal.loadAddon(this.termFitAddon)
-      this.terminal.open(document.getElementById(this.obj.uuid))
-      this.termFitAddon.fit()
+      this.terminal.loadAddon(new CanvasAddon())
       const token = localStorage.getItem('nz-token')
       let baseUrl = this.$axios.defaults.baseURL
       if (baseUrl.startsWith('/')) {
@@ -114,9 +112,6 @@ export default {
         this.terminalSocket.close()
       }
       this.terminalSocket = new WebSocket(url)
-      // 连接成功
-      this.terminalSocket.onopen = () => {
-      }
       // 返回
       this.terminalSocket.onmessage = function (evt) {
         let backContent = evt.data
@@ -172,19 +167,13 @@ export default {
           }
         }
       }
-      // 关闭
-      this.terminalSocket.onclose = () => {
-        // 报错sorry的，还没来得及看信息就关闭
-        // this.$emit("closeConsole",this.terminal.name);//应该调用父窗口
-      }
-
-      // 错误
-      this.terminalSocket.onerror = (e) => {
-      }
       this.termAttachAddon = new AttachAddon(this.terminalSocket)
       this.terminal.loadAddon(this.termAttachAddon)
-      this.terminal._initialized = true
-      this.termFitAddon.fit()// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
+      this.$nextTick(() => {
+        const dom = document.getElementById('record-terminal' + this.obj.uuid)
+        this.terminal.open(dom)
+        this.termFitAddon.fit()
+      })// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
       // this.$nextTick(()=>{// 解决进入全屏和退出全屏是底部隐藏
       //   this.setFontSize(this.fontSize);
       // })
@@ -217,8 +206,9 @@ export default {
     },
 
     consoleResize () {
+      console.log('consoleResize')
       this.$nextTick(() => {
-        this.terminal && this.termFitAddon.fit()
+        this.termFitAddon.fit()
       })
     },
     shutdown () {
@@ -253,7 +243,7 @@ export default {
           }
           setTimeout(() => {
             this.create()
-          }, 200)
+          }, 300)
         }
       }
     },

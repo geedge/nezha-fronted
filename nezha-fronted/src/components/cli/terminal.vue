@@ -53,40 +53,49 @@
     </div>
     <!--弹窗-->
     <el-dialog :modal-append-to-body='false' :z-index="1000" :show-close="true" :visible.sync="personalization" @close="personalization = false" class="nz-dialog webshell-selectAsset" width="650px">
-      <div slot="title">{{$t('webshell.selAsset')}}</div>
+      <div slot="title">{{$t('terminal.personal')}}</div>
       <div>
         <el-form v-model="newTerminalSetting" label-width="180px" size="small" ref="terminalForm"  :validate-on-rule-change="false">
-          <div class="system-title">{{$t('terminal.render')}}</div>
-          <el-form-item :label="$t('waterMaker')" prop="watermark">
+          <div class="system-title" style="padding-top: 15px">{{$t('terminal.render')}}</div>
+          <el-form-item :label="$t('terminal.waterMaker')" prop="watermark">
             <el-switch v-model="newTerminalSetting.watermark" :active-value='true' :inactive-value='false' id="terminal-setting-watermark_change" size="small">
             </el-switch>
+            <div class="el-form-item__tip" style="margin: 0">{{$t('terminal.waterMakerInfo')}}</div>
           </el-form-item>
           <el-form-item :label="$t('terminal.scrollbackLines')" prop="scrollbackLines">
-            <el-input-number :min="1" :precision="0" :controls="false" :placeholder="'默认25000'" v-model="newTerminalSetting.scrollbackLines" size="small"></el-input-number>
+            <el-input-number :min="1" :precision="0" :controls="false" :placeholder="'默认25000'" v-model="newTerminalSetting.scrollbackLines" size="small">
+            </el-input-number>
+            <div class="el-form-item__tip" style="margin: 0">{{$t('terminal.scrollbackLinesInfo')}}</div>
           </el-form-item>
-          <div class="system-title">{{$t('terminal.mouse')}}</div>
+          <div class="system-title system-title-border" style="width: 100%;margin-top: 50px">{{$t('terminal.mouse')}}</div>
           <el-form-item :label="$t('terminal.rightClick')" prop="rightClick">
             <el-radio-group  v-model="newTerminalSetting.rightClick" size="small">
               <el-radio-button label="none">{{$t('project.topology.none')}}</el-radio-button>
               <el-radio-button label="menu">{{$t('terminal.menu')}}</el-radio-button>
               <el-radio-button label="paste">{{$t('terminal.paste')}}</el-radio-button>
             </el-radio-group>
+<!--            <div class="el-form-item__tip" style="margin: 0">{{$t('config.system.basic.pinPolicyValue')}}</div>-->
           </el-form-item>
           <el-form-item :label="$t('terminal.wordSeparator')" prop="wordSeparator">
-            <el-input size="small" v-model="newTerminalSetting.wordSeparator"></el-input>
+            <el-input size="small" v-model="newTerminalSetting.wordSeparator">
+            </el-input>
+            <div class="el-form-item__tip" style="margin: 0">{{$t('terminal.wordSeparatorInfo')}}</div>
           </el-form-item>
-          <div class="system-title">{{$t('terminal.clipboard')}}</div>
+          <div class="system-title system-title-border" style="width: 100%;margin-top: 50px">{{$t('terminal.clipboard')}}</div>
           <el-form-item :label="$t('terminal.copySelect')" prop="copyOnSelect">
             <el-switch v-model="newTerminalSetting.copyOnSelect" :active-value='true' :inactive-value='false' id="terminal-setting-watermark_change">
             </el-switch>
+<!--            <div class="el-form-item__tip" style="margin: 0">{{$t('config.system.basic.pinPolicyValue')}}</div>-->
           </el-form-item>
           <el-form-item :label="$t('terminal.copyFormatting')" prop="copyWithFormatting">
             <el-switch v-model="newTerminalSetting.copyWithFormatting" :active-value='true' :inactive-value='false' id="terminal-setting-watermark_change">
             </el-switch>
+<!--            <div class="el-form-item__tip" style="margin: 0">{{$t('terminal.copyFormattingInfo')}}</div>-->
           </el-form-item>
           <el-form-item :label="$t('terminal.copyTrimEnd')" prop="copyTrimEnd">
             <el-switch v-model="newTerminalSetting.copyTrimEnd" :active-value='true' :inactive-value='false' id="terminal-setting-watermark_change">
             </el-switch>
+            <div class="el-form-item__tip" style="margin: 0">{{$t('terminal.copyTrimEndInfo')}}</div>
           </el-form-item>
         </el-form>
       </div>

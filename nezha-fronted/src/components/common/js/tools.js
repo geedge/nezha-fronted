@@ -1162,7 +1162,6 @@ function addWaterMarker (parentNode, text, font, textColor, width, height, textR
   cans.textBaseline = 'middle'
   cans.fillText(text, 200, 150)
   cans.fillText(text1, 200, 170)
-  console.log(show)
   if (show) {
     parentNode.style.backgroundImage = 'url(' + can.toDataURL('image/png') + ')'
   } else {

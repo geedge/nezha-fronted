@@ -27,7 +27,7 @@
           </div>
         </div>
         <div ref="recordConsole" class="record-console">
-          <div :id="obj.uuid" class="record-terminal"></div>
+          <div :id="obj.uuid" class="record-terminal" style="height: 100%;width: 100%"></div>
         </div>
       </div>
     </template>
@@ -38,6 +38,7 @@
 import Terminal from '../../js/Xterm'
 import { AttachAddon } from 'xterm-addon-attach'
 import { FitAddon } from 'xterm-addon-fit'
+import { CanvasAddon } from 'xterm-addon-canvas'
 import bus from '../../../../libs/bus'
 // import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
@@ -117,12 +118,17 @@ export default {
           this.termFitAddon.fit()
         } else {
           this.terminal = new Terminal({
-            rows: parseInt(this.$refs.recordConsole.offsetHeight / 18),
-            cols: parseInt(this.$refs.recordConsole.offsetWidth / 11)
+            cursorStyle: 'block', // 光标样式  null | 'block' | 'underline' | 'bar'
+            overviewRulerWidth: 8,
+            lineHeight: 1.2,
+            fontSize: 16,
+            disableStdin: true// 是否应禁用输入
           })
+          this.terminal.loadAddon(new CanvasAddon())
           this.termFitAddon = new FitAddon()
           this.terminal.loadAddon(this.termFitAddon)
           this.terminal.open(document.getElementById(this.obj.uuid))
+          this.terminal && this.termFitAddon.fit()
         }
 
         if (this.recordData.length > 0) {
