@@ -128,7 +128,7 @@ export default {
             self.$refs.websshNew.addConsole(asset.id, asset.manageIp, '', '', 'asset', asset, 'father')
           })
         } catch (e) {
-          console.log(e)
+          // console.log(e)
         }
       }
     })

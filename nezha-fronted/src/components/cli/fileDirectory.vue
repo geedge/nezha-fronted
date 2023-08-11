@@ -203,6 +203,7 @@
         </div>
       </div>
     </el-dialog>
+    <!-- 删除对话框 -->
     <el-dialog
       class="nz-dialog snapshot-dialog"
       width="472px"
@@ -227,7 +228,7 @@
       </div>
     </el-dialog>
 
-<!--    fileInfo-->
+    <!-- fileInfo -->
     <el-dialog
       class="nz-dialog snapshot-dialog"
       width="472px"
@@ -261,7 +262,6 @@
         </div>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -526,7 +526,6 @@ export default {
       })
     },
     selIcon (item) {
-      // console.log(item)
       let str = ''
       if (item.isDir) {
         str = '#nz-icon-muluwenjian'

@@ -1,6 +1,6 @@
 <template>
   <div>
-<!--    显示进度-->
+    <!-- 显示进度 -->
     <div class="file-state-panel" v-show="fileStateBox && fileList.length" :style="{'top': position.top + 'px', right: '10px'}" ref="fileStatePanel" :class="position.top>0? 'translationOriginDown': 'translationOriginUp'">
       <div class="file-state-panel-header">
         <span class="file-state-panel-title">{{$t('terminal.filetransfer')}}</span>
@@ -34,7 +34,7 @@
         <div class="table-no-data__title">No results found</div>
       </div>
     </div>
-    <!--    上传文件-->
+    <!-- 上传文件 -->
     <div style="display: none">
       <el-upload
         :ref="'upload'"
@@ -47,6 +47,28 @@
         drag>
       </el-upload>
     </div>
+    <!-- 确认覆盖弹窗 -->
+    <el-dialog
+      class="nz-dialog snapshot-dialog no-style-class"
+      width="472px"
+      :title="$t('deleteButton.confirm')"
+      destroy-on-close
+      :modal-append-to-body="false"
+      :visible.sync="checkDialog"
+      @close="checkDialog = false"
+    >
+      <div style="display: flex; align-items: center" >{{$t('terminal.replace')}}</div>
+      <div slot="footer">
+        <div class="el-message-box__btns">
+          <button class="nz-btn el-button el-button--small el-button--default" @click="checkDialog = false" >
+            <span>{{$t('tip.no')}}</span>
+          </button>
+          <button class="nz-btn el-button--small nz-btn-style-normal" @click="checkConfirm">
+            <span style="text-transform:Capitalize">{{$t('tip.yes')}}</span>
+          </button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -65,13 +87,14 @@ export default {
   },
   data () {
     return {
-      myFileList: [],
-      importFileList: [],
       position: {
         top: 50,
         right: 0
       },
-      fileStateBox: false
+      fileStateBox: false,
+      chunkSize: 10 * 1024 * 1024, // 每个分片大小为10MB
+      importFileList: [],
+      checkDialog: false
     }
   },
   watch: {
@@ -174,90 +197,114 @@ export default {
         reader.readAsText(error.response.data)
       })
     },
-    importChange (file, fileList) {
+    async importChange (file, fileList) {
       if (fileList.length > 0) {
         this.uploadItem.importFileList = [fileList[fileList.length - 1]]
       }
-      if (this.uploadItem.importFileList.length) {
+      const params = {
+        uuid: this.uploadItem.uuid,
+        path: this.uploadItem.path,
+        fileName: file.name
+      }
+      const res = await this.$get('/terminal/sftp/upload/check', params)
+      if (res.code === 200) { // 存在同名文件
+        this.checkDialog = true
+      } else { // 不存在同名文件
         this.$store.dispatch('dispatchAddFileList', this.uploadItem)
       }
+    },
+    checkConfirm () {
+      this.$store.dispatch('dispatchAddFileList', this.uploadItem)
+      this.checkDialog = false
+    },
+    async upload (item) {
+      const file = item.importFileList[0].raw
+      item.name = file.name
+      // 计算总共有多少个分片
+      const totalChunks = Math.ceil(file.size / this.chunkSize)
+      const chunks = this.sliceFile(file, totalChunks)
+      this.uploadChunk(item, file, chunks)
+    },
+    // 分片上传
+    async uploadChunk (item, file, chunks) {
+      const self = this
+      const CancelToken = axios.CancelToken
+      for (const chunk of chunks) {
+        const findIndex = this.fileList.findIndex(subItem => item.myId == subItem.myId)
+        if (findIndex == -1) { // 上传被取消时 终止循环
+          return
+        }
+        item.cancel = CancelToken.source()
+        const form = new FormData()
+        form.append('uuid', item.uuid)
+        form.append('path', item.path)
+        form.append('fileName', file.name)
+        form.append('replace', 1)
+        form.append('totalSize', file.size)
+        form.append('chunkSize', chunk.file.size)
+        form.append('chunkStart', chunk.chunkStart)
+        form.append('chunkFile', chunk.file)
+        try {
+          const response = await axios({
+            url: '/terminal/sftp/upload',
+            method: 'PUT',
+            headers: { 'Content-Type': 'multipart/form-data' },
+            data: form,
+            cancelToken: item.cancel.token,
+            onUploadProgress: function (progressEvent) {
+              // 处理原生进度事件
+              item.total = file.size
+              const loaded = item.fileLength + progressEvent.loaded
+              item.speed = loaded / ((new Date().getTime() - item.startTime) / 1000)
+              item.speed = self.bytes(item.speed, 0, 0) + '/s'
+              item.done = Math.min((loaded / item.total) * 100, 100)
+            }
+          })
+          const res = response.data
+          if (res.code == 200) {
+            item.fileLength += res.data.uploadSize
+          } else {
+            item.isError = true
+            this.$message.error(res.msg)
+            return false
+          }
+        } catch (error) {
+          item.isError = true
+          this.$message.error(error)
+          return false
+        }
+      }
+      item.isFinish = true
+      this.$store.dispatch('upDateConsole', item.uuid)
+    },
+    sliceFile (file, totalChunks) {
+      if (totalChunks == 0) { // file为0字节时
+        return [{
+          file: file,
+          chunkStart: 0
+        }]
+      }
+      // 定义一个数组存放所有的分片
+      const chunks = []
+      // 遍历所有的分片
+      for (let i = 0; i < totalChunks; i++) {
+        // 利用slice方法获取每个分片
+        const start = i * this.chunkSize
+        const end = Math.min(start + this.chunkSize, file.size)
+        const blob = file.slice(start, end)
+        // 将每个分片添加到数组中
+        chunks.push({
+          file: blob,
+          chunkStart: start
+        })
+      }
+      return chunks
     },
     removeRecord (item) {
       if (!item.isFinish) {
         item.cancel.cancel('operation canceled by the user.')
-        if (item.done || (item.fileLength === item.total)) { // 取消 上传 50-100
-          clearInterval(item.timer)
-          if (item.tid) {
-            this.$delete('/terminal/sftp/cancel/' + item.tid).then(res => {
-              if (res.code === 200) {
-              } else {
-                this.$message.error(res.msg)
-              }
-            })
-          }
-        }
       }
       this.$store.dispatch('dispatchDelFileList', item)
-    },
-    upload (item) {
-      const self = this
-      const CancelToken = axios.CancelToken
-      item.cancel = CancelToken.source()
-      const form = new FormData()
-      const importFile = item.importFileList[0]
-      item.name = importFile.name
-      form.append('file', importFile.raw)
-      form.append('uuid', item.uuid)
-      form.append('path', item.path)
-      axios({
-        url: '/terminal/sftp/upload',
-        method: 'PUT',
-        headers: { 'Content-Type': 'multipart/form-data' },
-        data: form,
-        cancelToken: item.cancel.token,
-        onUploadProgress: function (progressEvent) {
-          // 处理原生进度事件
-          item.total = progressEvent.total
-          item.fileLength = progressEvent.loaded
-          item.speed = item.fileLength / ((new Date().getTime() - item.startTime) / 1000)
-          item.speed = self.bytes(item.speed, 0, 0) + '/s'
-          item.done = (item.fileLength / (item.total * 2)) * 100
-        }
-
-      }).then(response => {
-        const res = response.data
-        // item.isFinish = true
-        if (res.code == 200) {
-          self.nextUpload(item, res.data.tid)
-        } else {
-          this.$message.error(res.msg)
-        }
-      }).catch(err => {
-        item.isError = true
-      })
-    },
-    nextUpload (item, tid) {
-      // this.$message.success(response.msg)
-      item.timer = setInterval(() => { // 上传 50-100
-        item.tid = tid
-        this.$get('/terminal/sftp/process/' + tid).then((res) => {
-          if (res.code == 200) {
-            item.done = 50 + parseInt(res.data.done) / 2
-            item.speed = (item.fileLength + (item.done * 0.01 * item.total)) / ((new Date().getTime() - item.startTime) / 1000)
-            item.speed = this.bytes(item.speed, 0, 0) + '/s'
-            if (item.done === 100) {
-              item.isFinish = true
-              clearInterval(item.timer)
-              // todo 上传成功后 刷新对应terminal
-              this.$store.dispatch('upDateConsole', item.uuid)
-            }
-          } else {
-            item.isError = true
-            clearInterval(item.timer)
-            this.$store.dispatch('upDateConsole', item.uuid)
-          }
-        })
-      }, 200)
     },
     fileStateShow (flag, type) {
       if (JSON.stringify(flag) == JSON.stringify(this.fileStateBox)) {
