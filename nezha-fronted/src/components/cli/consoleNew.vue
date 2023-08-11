@@ -13,7 +13,7 @@
         <div>
           <span @click="copySelection()">{{$t('overall.duplicate')}}</span>
         </div>
-        <div>
+        <div v-if="showPaste">
           <span @click="paste()">{{$t('project.topology.paste')}}</span>
         </div>
         <div>
@@ -91,7 +91,8 @@ export default {
       menuPosition: {
         left: 0,
         top: 0
-      }
+      },
+      showPaste: false
     }
   },
   // computed: {
@@ -441,6 +442,7 @@ export default {
     const dom = document.getElementById('ternimalContainer' + this.idIndex)
     dom.addEventListener('contextmenu', this.contextmenu)
     dom.addEventListener('click', this.clickHide)
+    this.showPaste = navigator.clipboard
   },
   beforeDestroy () {
     this.closeSocket()

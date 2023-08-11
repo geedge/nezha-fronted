@@ -74,7 +74,7 @@
               <el-radio-button label="menu">{{$t('terminal.menu')}}</el-radio-button>
               <el-radio-button label="paste">{{$t('terminal.paste')}}</el-radio-button>
             </el-radio-group>
-<!--            <div class="el-form-item__tip" style="margin: 0">{{$t('config.system.basic.pinPolicyValue')}}</div>-->
+            <div class="el-form-item__tip" style="margin: 0">{{$t('terminal.rightClickInfo')}}</div>
           </el-form-item>
           <el-form-item :label="$t('terminal.wordSeparator')" prop="wordSeparator">
             <el-input size="small" v-model="newTerminalSetting.wordSeparator">
@@ -139,6 +139,7 @@ export default {
       visible: false,
       // 历史命令记录
       historyArr: [],
+      showPaste: false,
       personalization: false,
       newTerminalSetting: {},
       terminalSetting: {
@@ -172,6 +173,7 @@ export default {
     const self = this
     this.name = localStorage.getItem('nz-username')
     this.username = localStorage.getItem('nz-username')
+    this.showPaste = navigator.clipboard
     this.initTerminalSetting()
     window.opener.name = 'parent'
     window.onbeforeunload = () => {
