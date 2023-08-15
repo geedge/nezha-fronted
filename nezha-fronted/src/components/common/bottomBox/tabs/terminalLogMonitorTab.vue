@@ -11,9 +11,9 @@
     <template v-slot:title><span :title="obj.uuid.substring(0, 8).toUpperCase()">{{obj.uuid.substring(0, 8).toUpperCase()}}</span></template>
     <template v-slot>
       <div ref="replayTab" class="replay-tab">
-        <div class="replay-container">
+        <div class="replay-container" style="height: 100%">
           <div ref="recordConsole" class="record-console">
-            <div :id="obj.uuid" class="record-terminal"></div>
+            <div :id="'record-terminal' + obj.uuid" class="record-terminal" style="height: 100%;width: 100%"></div>
           </div>
         </div>
       </div>
@@ -23,6 +23,9 @@
 
 <script>
 import Terminal from '../../js/Xterm'
+import { AttachAddon } from 'xterm-addon-attach'
+import { FitAddon } from 'xterm-addon-fit'
+import { CanvasAddon } from 'xterm-addon-canvas'
 import bus from '../../../../libs/bus'
 import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
@@ -43,7 +46,9 @@ export default {
       },
       terminal: null,
       term: null,
+      termFitAddon: null,
       terminalSocket: null,
+      termAttachAddon: null,
       recordData: [],
       isNeedStop: false, // 是否需要停止
       playedCount: 0, // 当前已经播放完的数量
@@ -76,24 +81,24 @@ export default {
   methods: {
     // 创建连接
     create () {
+      console.log('create')
       const that = this
       if (this.terminalSocket) {
         this.terminalSocket.close()
       }
       if (this.terminal) {
-        this.terminal.off('selection')
-        this.terminal.off('data')
-        this.terminal.destroy()
+        this.terminal.dispose()
       }
       this.terminal = new Terminal({
-        rows: parseInt(this.$refs.recordConsole.offsetHeight / 18),
-        cols: parseInt(this.$refs.recordConsole.offsetWidth / 11),
         cursorStyle: 'block', // 光标样式  null | 'block' | 'underline' | 'bar'
-        // bellStyle:'sound',
+        overviewRulerWidth: 8,
+        lineHeight: 1.2,
+        fontSize: 16,
         disableStdin: true// 是否应禁用输入
       })
-      this.terminal.open(document.getElementById(this.obj.uuid))
-
+      this.termFitAddon = new FitAddon()
+      this.terminal.loadAddon(this.termFitAddon)
+      this.terminal.loadAddon(new CanvasAddon())
       const token = localStorage.getItem('nz-token')
       let baseUrl = this.$axios.defaults.baseURL
       if (baseUrl.startsWith('/')) {
@@ -107,17 +112,6 @@ export default {
         this.terminalSocket.close()
       }
       this.terminalSocket = new WebSocket(url)
-      // 连接成功
-      this.terminalSocket.onopen = () => {
-      }
-      // 登录后，你输入的内容从后台服务返回
-      this.terminal.on('data', function (data) {
-        // let code = data.charCodeAt(0);
-        // if(code==13){
-        // }else {
-        //   that.term.write(data);
-        // }
-      })
       // 返回
       this.terminalSocket.onmessage = function (evt) {
         let backContent = evt.data
@@ -173,24 +167,13 @@ export default {
           }
         }
       }
-      // 关闭
-      this.terminalSocket.onclose = () => {
-        // 报错sorry的，还没来得及看信息就关闭
-        // this.$emit("closeConsole",this.terminal.name);//应该调用父窗口
-      }
-
-      // 错误
-      this.terminalSocket.onerror = (e) => {
-      }
-      // 选中 复制
-      this.terminal.on('selection', function () {
-      })
-      this.terminal.attachCustomKeyEventHandler(function (ev) {
-      })
-
-      this.terminal.attach(this.terminalSocket)
-      this.terminal._initialized = true
-      this.terminal.fit()// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
+      this.termAttachAddon = new AttachAddon(this.terminalSocket)
+      this.terminal.loadAddon(this.termAttachAddon)
+      this.$nextTick(() => {
+        const dom = document.getElementById('record-terminal' + this.obj.uuid)
+        this.terminal.open(dom)
+        this.termFitAddon.fit()
+      })// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
       // this.$nextTick(()=>{// 解决进入全屏和退出全屏是底部隐藏
       //   this.setFontSize(this.fontSize);
       // })
@@ -202,7 +185,7 @@ export default {
         this.terminalSocket.close()
       }
       if (this.terminal) {
-        this.terminal.destroy()
+        this.terminal.dispose()
       }
     },
     // 切换tab
@@ -223,9 +206,9 @@ export default {
     },
 
     consoleResize () {
-      this.terminal && this.terminal.resize(parseInt(this.$refs.recordConsole.offsetWidth / 11), parseInt(this.$refs.recordConsole.offsetHeight / 18))
+      console.log('consoleResize')
       this.$nextTick(() => {
-        this.terminal && this.terminal.fit()
+        this.termFitAddon.fit()
       })
     },
     shutdown () {
@@ -260,7 +243,7 @@ export default {
           }
           setTimeout(() => {
             this.create()
-          }, 200)
+          }, 300)
         }
       }
     },
@@ -288,8 +271,6 @@ export default {
   beforeDestroy () {
     window.removeEventListener('resize', bus.debounce)
     this.closeSocket()
-    this.terminal.off('selection')
-    this.terminal.off('data')
   }
 }
 </script>

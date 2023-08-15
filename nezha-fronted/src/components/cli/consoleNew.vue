@@ -1,11 +1,39 @@
 <template>
-    <div :id="'ternimalContainer'+idIndex" class="console" v-watermark="{text: waterMarkText, text1: terminal.host || '',  textColor: 'rgba(215, 215, 215, 0.5)'}">
+    <div :id="'ternimalContainer'+idIndex" class="console" v-watermark="{show: showWatermark,text: waterMarkText, text1: terminal.host || '',  textColor: 'rgba(215, 215, 215, 0.5)'}" v-clickoutside="clickHide">
       <div :id="'terminal'+idIndex" style="height: 100%;width: 100%"></div>
       <fileDirectory :host="host" v-clickoutside="closeFileDir" :uuid="terminal.uuid" v-show="fileDirectoryShow" @close="showFileDir(false)" :fileDirectoryShow="fileDirectoryShow" ref="fileDirectory"/>
+      <div
+        v-if="terminal.isLogin && showMenu"
+        class="terminal-menu menus"
+        :style="{
+           left: menuPosition.left + 'px',
+           top: menuPosition.top + 'px'
+        }"
+      >
+        <div>
+          <span @click="copySelection()">{{$t('overall.duplicate')}}</span>
+        </div>
+        <div v-if="showPaste">
+          <span @click="paste()">{{$t('project.topology.paste')}}</span>
+        </div>
+        <div>
+          <span @click="clearTerminal()">{{$t('terminal.clear')}}</span>
+        </div>
+        <div class="line"></div>
+        <div>
+          <span @click="showFileDir(true)">{{$t('terminal.sftp')}}</span>
+        </div>
+        <div>
+          <span @click="closeTerminal(true)"> {{$t('overall.close')}}</span>
+        </div>
+      </div>
     </div>
 </template>
 <script>
 import Terminal from '../common/js/Xterm'
+import { AttachAddon } from 'xterm-addon-attach'
+import { FitAddon } from 'xterm-addon-fit'
+import { CanvasAddon } from 'xterm-addon-canvas'
 import fileDirectory from './fileDirectory'
 export default {
   name: 'console',
@@ -23,13 +51,18 @@ export default {
       type: Boolean,
       default: false
     },
+    terminalSetting: {
+      type: Object,
+      default: () => {}
+    },
     fontSize: {}
   },
-  inject: ['terminalSetting'],
   data () {
     return {
       term: null,
       terminalSocket: null,
+      termAttachAddon: null,
+      termFitAddon: null,
       termimalRows: 15,
       termimalHeight: 270,
       topMenuHeight: 30,
@@ -51,9 +84,22 @@ export default {
       userName: '',
       fileDirectoryShow: false,
       host: '',
-      waterMarkText: 'Nezha'
+      waterMarkText: 'Nezha',
+      showWatermark: false,
+      wordSeparator: "\\ :;~`!@#$%^&*()-=+|[]{}'\",.<>/?",
+      showMenu: false,
+      menuPosition: {
+        left: 0,
+        top: 0
+      },
+      showPaste: false
     }
   },
+  // computed: {
+  //   userInfo () {
+  //     return this.$store.getters.getUserInfo
+  //   }
+  // },
   watch: {
   },
   methods: {
@@ -61,13 +107,16 @@ export default {
       term.write('\r\n ')// term.write('\r\n~$ ');
     },
     resize (consoleHeigt, consoleWidth) {
-      this.term.fit()
+      this.termFitAddon.fit()
       this.resizeServiceConsole()
     },
     resizeServiceConsole () {
       const consoleBox = document.getElementById('ternimalContainer' + this.idIndex)
       const width = document.body.clientWidth - 10// 可视宽度
       const height = parseInt(consoleBox.offsetHeight) - 10
+      console.log(width, height)
+      console.log(this.term.cols)
+      console.log(this.term.rows)
       const winStyle = {
         width: width,
         height: height,
@@ -76,7 +125,8 @@ export default {
       }
       this.$post('terminal/resize', winStyle).then(response => {
         if (response.code === 200) {
-          this.term.fit()
+          // this.term.resize()
+          this.termFitAddon.fit()
         } else {
           this.$message.error(response.msg)
         }
@@ -94,17 +144,30 @@ export default {
       rows = parseInt(rows)
       const terminalContainer = document.getElementById('terminal' + this.idIndex)
       this.term = new Terminal({
+        allowTransparency: true,
+        allowProposedApi: true,
+        overviewRulerWidth: 8,
         cursorStyle: 'block', // 光标样式  null | 'block' | 'underline' | 'bar'
         disableStdin: false, // 是否应禁用输入
-        fontSize: 16,
+        fontSize: 18,
         lineHeight: 1.2,
-        allowTransparency: true,
-        background: 'transparent'
+        letterSpacing: 0,
+        background: 'transparent',
+        scrollback: this.terminalSetting.scrollbackLines,
+        wordSeparator: this.terminalSetting.wordSeparator
       })
-      this.term.open(terminalContainer)
-      this.term.focus()
-      this.term.fit()
-      this.create()
+      this.termFitAddon = new FitAddon()
+      this.term.loadAddon(this.termFitAddon)
+      // const attachAddon = new AttachAddon()
+      // this.term.loadAddon(attachAddon)
+      // this.term.loadAddon(fitAddon)
+      setTimeout(() => {
+        this.term.open(terminalContainer)
+        this.term.loadAddon(new CanvasAddon())
+        this.term.focus()
+        this.termFitAddon.fit()
+        this.create()
+      }, 100)
     },
     create () {
       const that = this
@@ -119,7 +182,10 @@ export default {
       let url = ''
       this.terminal.height = document.body.clientHeight - 100
       this.terminal.width = document.body.clientWidth
-      this.waterMarkText = this.terminal.userName
+      const userInfo = localStorage.getItem('nz-userInfo') ? JSON.parse(localStorage.getItem('nz-userInfo')) : ''
+      if (userInfo) {
+        this.waterMarkText = `${userInfo.username}(${userInfo.name})`
+      }
       if (this.terminal.type === 'asset') {
         url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.term.cols + '&rows=' + this.term.rows + '&token=' + token + '&assetId=' + this.terminal.assetId + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
       } else if (this.terminal.type === 'custom') {
@@ -131,26 +197,16 @@ export default {
         })
       }
       this.terminalSocket = new WebSocket(url)
+      this.termAttachAddon = new AttachAddon(this.terminalSocket)
       // 连接成功onclose
       this.terminalSocket.onopen = () => {
         this.terminal.isLogin = true
+        this.showMenu = false
         this.isInit = true
         this.term.focus()
       }
-      // 登录后，你输入的内容从后台服务返回
-      this.term.on('data', function (data) {
-        /*
-        let code = data.charCodeAt(0);
-        if(code==13){
-        }else {
-          //that.term.write(data);
-        } */
-      })
-      // 监听选中文字的事件
-      this.term.on('selection', (p,a) => {
-        console.log(this.term.getSelection())
-        this.$copyText(this.term.getSelection())
-      })
+      // 个性化配置
+      this.initTerminalSetting()
       // 返回
       this.terminalSocket.onmessage = function (evt) {
         let backContent = evt.data
@@ -199,18 +255,14 @@ export default {
         this.terminal.isLogin = false
         // 报错sorry的，还没来得及看信息就关闭
         // this.$emit("closeConsole",this.terminal.name);//
-        this.term && this.term.setOption('disableStdin', true)
+        this.term && (this.term.options.disableStdin = true)
       }
 
       // 错误
       this.terminalSocket.onerror = (e) => {
         this.terminal.isLogin = false
       }
-      // // 选中 复制
-      // this.term.on('selection', function () {})
-      this.term.attachCustomKeyEventHandler(function (ev) { })
-
-      this.term.attach(this.terminalSocket)
+      this.term.loadAddon(this.termAttachAddon)
       this.term._initialized = true
       // this.term.fit()// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
       this.$nextTick(() => { // 解决进入全屏和退出全屏是底部隐藏
@@ -224,13 +276,13 @@ export default {
         this.terminalSocket = ''
       }
       if (this.term) {
-        this.term.destroy()
+        this.term.dispose()
       }
       // 初始化console的高度
       this.conFinish = false
     },
     setFontSize (fontSize) {
-      this.term && this.term.setOption('fontSize', fontSize)
+      this.term && (this.term.options.fontSize = fontSize)
       const consoleBox = document.getElementById('ternimalContainer' + this.idIndex)
       const width = document.body.clientWidth// 可视宽度
       let height = parseInt(consoleBox.offsetHeight)
@@ -247,7 +299,7 @@ export default {
         this.term.resize(this.term.cols, this.term.rows)
         this.$post('terminal/resize', winStyle).then(response => {
           if (response.code === 200) {
-            this.term.fit()
+            this.termFitAddon.fit()
           } else {
             this.$message.error(response.msg)
           }
@@ -278,13 +330,16 @@ export default {
       })
     },
     clearTerminal () {
-      this.term.reset()
+      this.term.clear()
+    },
+    closeTerminal () {
+      this.$emit('close')
     },
     enterStr (message) {
       if (this.terminalSocket && this.terminal.isLogin) {
-        this.term.send(message)
+        this.terminalSocket.send(message)
         setTimeout(() => {
-          this.term.send('\n')
+          this.terminalSocket.send('\n')
         }, 100)
         this.term.scrollToBottom()
         this.historyChange(message)
@@ -293,16 +348,107 @@ export default {
     // 新增历史记录
     historyChange (message) {
       this.$emit('historyChange', message)
+    },
+    initTerminalSetting () { // 个性化配置
+      // 1 render
+      this.showWatermark = this.terminalSetting.watermark
+      this.term.onSelectionChange((p, a) => {
+        if (this.terminalSetting.copyOnSelect) {
+          setTimeout(() => {
+            this.copySelection()
+          })
+        }
+      })
+      // this.term.selectionManager._isCharWordSeparator = (charData) => {
+      //   if (charData[2] === 0) {
+      //     return false
+      //   }
+      //   return this.wordSeparator.indexOf(charData[1]) >= 0
+      // }
+    },
+    renderTerminalSetting () {
+      console.log('renderTerminalSetting')
+      this.showWatermark = this.terminalSetting.watermark
+      this.wordSeparator = this.terminalSetting.wordSeparator
+      this.term.options = {
+        scrollback: this.terminalSetting.scrollbackLines,
+        wordSeparator: this.terminalSetting.wordSeparator
+      }
+      console.log(this.term)
+    },
+    copySelection () {
+      let str = this.term.getSelection()
+      if (!this.terminalSetting.copyWithFormatting) {
+        str = str.replace(/[\r\n]/g, '')
+      }
+      if (this.terminalSetting.copyTrimEnd) {
+        str = str.replace(/(\s*$)/g, '')
+      }
+      this.$copyText(str).then((res) => {
+        console.log(res)
+      })
+    },
+    async contextmenu (event) {
+      event.preventDefault()
+      event.stopPropagation()
+      if (this.terminalSetting.rightClick === 'none') {
+        return
+      }
+      if (this.terminalSetting.rightClick === 'menu') {
+        this.tiggerMenu(true, event)
+      }
+      if (this.terminalSetting.rightClick === 'paste') {
+        if (!document.execCommand('paste')) {
+          const text = await navigator.clipboard.readText()
+          this.term.write(text)
+        }
+      }
+    },
+    async paste () {
+      if (!document.execCommand('paste')) {
+        const text = await navigator.clipboard.readText()
+        this.term.write(text)
+      }
+    },
+    tiggerMenu (flag, event) {
+      this.showMenu = false
+      if (flag) {
+        let top = 0
+        let left = 0
+        if (event.clientY < document.body.clientHeight / 2) {
+          top = event.clientY + 10
+        } else {
+          top = event.clientY - 180 - 10
+        }
+        if (event.clientX < document.body.clientWidth / 2) {
+          left = event.clientX + 10
+        } else {
+          left = event.clientX - 150 - 10
+        }
+        this.menuPosition = {
+          left: left,
+          top: top
+        }
+      }
+      this.showMenu = flag
+    },
+    clickHide () {
+      this.showMenu = false
     }
   },
   mounted () {
     this.beforeCreate()
-    console.log(this.terminalSetting)
+    this.showWatermark = this.terminalSetting.watermark
+    const dom = document.getElementById('ternimalContainer' + this.idIndex)
+    dom.addEventListener('contextmenu', this.contextmenu)
+    dom.addEventListener('click', this.clickHide)
+    this.showPaste = navigator.clipboard
   },
   beforeDestroy () {
     this.closeSocket()
-    this.term.off('selection')
-    this.term.off('data')
+    const dom = document.getElementById('ternimalContainer' + this.idIndex)
+    dom && dom.removeEventListener('contextmenu', this.contextmenu)
+    dom && dom.removeEventListener('click', this.clickHide)
   }
 }
 </script>

@@ -293,6 +293,7 @@ export default {
             this.theme = res.data.user.theme
             this.userInfo = res.data.user
             localStorage.setItem('nz-token', res.data.authToken)
+            localStorage.setItem('nz-userInfo', JSON.stringify( this.userInfo))
             if (res.data.authFlag === 1) {
               if (res.data.authBind === 0) {
                 this.verifyShow = true
