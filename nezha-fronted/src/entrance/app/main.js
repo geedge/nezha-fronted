@@ -1,6 +1,6 @@
 // import '@/assets/stylus/index.scss'
 // import 'element-ui/lib/theme-chalk/index.css'
-import 'xterm/dist/xterm.css'
+import 'xterm/css/xterm.css'
 import '@/assets/css/main.scss'
 import '@/assets/css/animate.css'
 import '@/assets/css/font/iconfont.js'

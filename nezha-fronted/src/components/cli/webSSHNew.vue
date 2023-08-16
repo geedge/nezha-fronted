@@ -64,12 +64,14 @@
 
         <terminal
           :fontSize="fontSize"
+          :terminalSetting="terminalSetting"
           :terminalType="item.terminal.terminalType"
           :idIndex="index"
           :ref="'console'+index"
           :terminal="item.terminal"
           @loginFail="loginFail"
           @closeConsole="removeTab"
+          @close="closeShell(item,index)"
           @refreshConsoleTitle="refreshTabTitle"
           @historyChange="(message)=>{$parent.historyChange(message)}"
         ></terminal>
@@ -199,6 +201,12 @@ export default {
   components: {
     terminal,
     selectTable
+  },
+  props: {
+    terminalSetting: {
+      type: Object,
+      default: () => {}
+    },
   },
   computed: {
     language () { return this.$store.getters.getLanguage },
@@ -448,6 +456,7 @@ export default {
           this.$refs['console' + el.index][0].resize()
           this.$refs['console' + el.index][0].term.scrollToBottom()
           this.$refs['console' + el.index][0].focusConsole()
+          this.$refs['console' + el.index][0].clickHide()
         })
       }
     },
@@ -804,6 +813,11 @@ export default {
     sendMessage (message) {
       this.editableTabs.forEach((item, index) => {
         this.$refs['console' + index][0].enterStr(message)
+      })
+    },
+    renderTerminalSetting () {
+      this.editableTabs.forEach((item, index) => {
+        this.$refs['console' + index][0].renderTerminalSetting()
       })
     }
   },
