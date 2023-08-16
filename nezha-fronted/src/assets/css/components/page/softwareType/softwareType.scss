@@ -1,6 +1,48 @@
 .right-box-editSoftwareType {
   .el-dropdown-link {
-    border: 1px solid $--border-color-light;
-    border-radius: 2px;
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed $--border-color-light;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    padding: 5px;
+    width: 178px;
+    height: 178px;
+    box-sizing: border-box;
+  }
+  .nz-icon-circle-close {
+    display: none;
+    position: absolute;
+    color: $--color-danger;
+    top: -6px;
+    right: 6px;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: $--border-color-light-hover;
+    .nz-icon-circle-close {
+      display: inline-block;
+    }
+  }
+
+  .avatar-uploader-icon {
+    font-size: 28px;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 168px;
+    height: 168px;
+    display: block;
+  }
+}
+#softwareTypeTable {
+  .table-image {
+    width: 32px;
+    height: 32px;
+    display: block;
   }
 }
