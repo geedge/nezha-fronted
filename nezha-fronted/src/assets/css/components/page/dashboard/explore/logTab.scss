@@ -19,6 +19,7 @@
     padding: 10px 0 0 0;
     position: relative;
     background-color: $--background-color-empty;
+    border: none;
     .el-table__body {
       border-collapse: separate;
       border-spacing: 0 6px;
@@ -91,6 +92,26 @@
           white-space: unset;
         }
       }
+
+      .context-cell{
+        visibility: hidden;
+        vertical-align: middle;
+        .cell{
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          .nz-icon{
+            font-size: 18px;
+            color: $--color-text-regular;
+            cursor: pointer;
+          }
+        }
+      }
+      tr:hover{
+        .context-cell{
+          visibility: visible;
+        }
+      }
     }
   }
 
@@ -133,6 +154,13 @@
 .chart-log.log-detail {
   height: 100%;
   .log-table {
+    overflow-y: auto;
+    padding: 10px;
+    padding-bottom: 0;
+    .nz-table-list{
+      height: auto;
+      padding: 0 !important;
+    }
     .nz-table-list::before{
       display: none;
       height: 0px;
@@ -141,10 +169,73 @@
       padding: 10px;
       box-sizing: border-box;
       .el-table__body-wrapper {
-        height: 100% !important;
         border: none;
         box-shadow: none;
         width: 100%;
+      }
+    }
+  }
+}
+
+.logContext-dialog{
+  .el-dialog{
+    width: 85%;
+    max-height: 80%;
+    .el-dialog__body{
+      box-sizing: border-box;
+      padding-top: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      .log-detail{
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .context-header{
+        padding: 8px 16px;
+        border: 1px solid $--border-color-light;
+        color: $--color-text-primary;
+      }
+      .macth-before{
+        font-size: 14px;
+        color: $--color-text-primary;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        .operation-label {
+          padding-right: 10px;
+          color: $--color-text-regular;
+        }
+      }
+      .macth-after{
+        font-size: 14px;
+        color: $--color-text-primary;
+        padding-top: 10px;
+      }
+      .context-loading-wrap{
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .context-list{
+        overflow: auto;
+        .log-table{
+          min-height: unset;
+          .el-table{
+            padding: 0;
+          }
+          .el-table:before{
+            height: 0;
+          }
+          .currentRow{
+            background-color: $--table-row-hover-background-color;
+            &>td{
+              padding: 8px 0;
+            }
+          }
+        }
       }
     }
   }

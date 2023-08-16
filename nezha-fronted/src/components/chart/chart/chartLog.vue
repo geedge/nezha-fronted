@@ -34,7 +34,6 @@
       <el-table
         :cell-class-name="cellClassName"
         :data="tableData"
-        style="height: 100%"
         :show-header="false"
         ref="logTable"
         class="nz-table-list"
@@ -51,7 +50,7 @@
         <el-table-column
           v-if="time"
           prop="date"
-          width="140"
+          width="160"
         >
           <template slot-scope="{ row }">{{utcTimeToTimezoneStr(row.date)}}</template>
         </el-table-column>
@@ -65,10 +64,18 @@
         </el-table-column>
         <el-table-column
           prop="message"
-          width="auto"
         >
           <template slot-scope="{ row }">
             <div style="width: 100%;" class="text-ellipsis" :title="row.message">{{row.message}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="!dataJson"
+          class-name="context-cell"
+          width="24"
+        >
+          <template slot-scope="{ row }">
+            <i class="nz-icon nz-icon-zhankai" :title="$t('explore.showContext')" @click="rowClick(row)"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -82,24 +89,23 @@
         <div v-else style="border: none">&nbsp;</div>
       </template>
     </div>
+    <!-- 查看上下文 -->
+    <logContext  v-if="contextVisible" :contextVisible.sync="contextVisible" :rowData="currentRow"></logContext>
   </div>
 </template>
 
 <script>
-import legend from '@/components/chart/chart/legend'
 import chartMixin from '@/components/chart/chartMixin'
 import chartFormat from '@/components/chart/chartFormat'
-import { chartLegendPlacement } from '@/components/common/js/constants'
-import * as echarts from 'echarts'
-import { getChart, setChart } from '@/components/common/js/common'
-import { dealLegendAlias, formatScientificNotation, getMetricTypeValue } from '@/components/common/js/tools'
-import chartDataFormat from '@/components/chart/chartDataFormat'
-import { initColor } from '@/components/chart/chart/tools'
-import lodash from 'lodash'
+import { dealLegendAlias } from '@/components/common/js/tools'
 import axios from 'axios'
+import logContext from '@/components/chart/logContext'
 export default {
   name: 'chart-log', // 日志列表，纯日志，不再包含图形
   mixins: [chartMixin, chartFormat],
+  components: {
+    logContext
+  },
   props: {
     chartInfo: Object,
     chartData: Array,
@@ -108,6 +114,7 @@ export default {
   },
   data () {
     return {
+      dataJson: window.dataJson,
       operations: {
         levels: [0, 1, 2, 3, 4, 5, 6],
         descending: true
@@ -157,10 +164,17 @@ export default {
       timeFormatData: [],
       tableChartData: [],
       myChart: null,
-      noData: false
+      noData: false,
+      contextVisible: false,
+      currentRow: {}
     }
   },
   methods: {
+    rowClick (row) {
+      this.currentRow = this.$lodash.cloneDeep(row)
+      this.currentRow.current = true
+      this.contextVisible = true
+    },
     initChart () {
       this.tableData = []
       this.isInit = false

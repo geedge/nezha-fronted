@@ -195,8 +195,10 @@
   height: calc(100% - 30px);
 }
 .bottom-log {
+  box-sizing: border-box;
   padding: 15px;
   height: 100%;
+  overflow-y: auto;
 }
 .bottom-common {
   padding: 20px;

@@ -80,6 +80,15 @@
             <div style="width: 100%;" class="text-ellipsis" :title="row.message">{{row.message}}</div>
           </template>
         </el-table-column>
+        <el-table-column
+          v-if="!dataJson"
+          class-name="context-cell"
+          width="24"
+        >
+          <template slot-scope="{ row }">
+            <i class="nz-icon nz-icon-zhankai" :title="$t('explore.showContext')" @click="rowClick(row)"></i>
+          </template>
+        </el-table-column>
       </el-table>
       <template v-if="exploreItem">
         <div v-if="exploreLogTable && !tableData.length" class="table-no-data">
@@ -100,6 +109,8 @@
         <div v-else>&nbsp;</div>
       </template>
     </div>
+    <!-- 查看上下文 -->
+    <logContext  v-if="contextVisible" :contextVisible.sync="contextVisible" :rowData="currentRow"></logContext>
   </div>
 </template>
 
@@ -108,8 +119,12 @@ import * as echarts from 'echarts'
 import chartConfig from '@/components/page/dashboard/overview/chartConfig'
 import { dealLegendAlias } from '@/components/common/js/tools'
 import bus from '@/libs/bus'
+import logContext from '@/components/chart/logContext'
 export default {
   name: 'logTab',
+  components: {
+    logContext
+  },
   props: {
     logData: Array,
     tabIndex: Number,
@@ -183,7 +198,9 @@ export default {
       tableChartData: [],
       myChart: null,
       noData: false,
-      filterData: []
+      filterData: [],
+      contextVisible: false,
+      currentRow: {}
     }
   },
   created () {
@@ -193,6 +210,11 @@ export default {
     }
   },
   methods: {
+    rowClick (row) {
+      this.currentRow = this.$lodash.cloneDeep(row)
+      this.currentRow.current = true
+      this.contextVisible = true
+    },
     resetOperation () {
       this.operations = {
         levels: [0, 1, 2, 3, 4, 5, 6],
