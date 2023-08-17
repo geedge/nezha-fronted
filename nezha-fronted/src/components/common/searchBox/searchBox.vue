@@ -41,7 +41,7 @@
       style="display: inline-block;width: calc(100% - 66px);vertical-align: middle;position: relative;"
       :append-to-body="false"
       v-model="visible">
-      <div  slot="reference" class="search-box-input" tabindex="-99" @focus="focusSearchInput">
+      <div  slot="reference" class="search-box-input" tabindex="-99" @focus="focusSearchInput" ref="searchBoxInput">
         <div class="search-box-input-content" ref="search-box-input-content">
           <div v-for="(item, index) in selectArr" :key="index">
             <el-popover
@@ -887,6 +887,11 @@ export default {
       this.oldSearchStr = ''
       // todo 更新历史记录
       this.setHistoryArr()
+      setTimeout(() => {
+        this.visible = false
+        this.$refs.searchStr.$el.scrollIntoView()
+        this.$refs.searchStr.blur()
+      })
     },
     emitSearch: bus.debounce(function () {
       this.$nextTick(() => {
