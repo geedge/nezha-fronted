@@ -11,11 +11,11 @@
         <el-form ref="modelForm" :model="editSoftwareType" :rules="rules" label-position="top" label-width="120px">
           <!--name-->
           <el-form-item :label="$t('config.model.name')" prop="name">
-            <el-input maxlength="64" show-word-limit v-model="editSoftwareType.name" size="small" type="text"></el-input>
+            <el-input maxlength="128" show-word-limit v-model="editSoftwareType.name" size="small" type="text"></el-input>
           </el-form-item>
           <!--category-->
           <el-form-item :label="$t('softwareType.category')" prop="category">
-            <el-input maxlength="64" show-word-limit v-model="editSoftwareType.category" size="small" type="text"></el-input>
+            <el-input maxlength="128" show-word-limit v-model="editSoftwareType.category" size="small" type="text"></el-input>
           </el-form-item>
           <!--icon-->
           <el-form-item :label="$t('config.menus.icon')" prop="icon">
