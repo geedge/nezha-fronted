@@ -185,6 +185,7 @@ export default {
     return {
       stateOptions: alertMessageConstant.states,
       url: 'alert/message',
+      urlNew: 'alert/message/query',
       alertSilenceUrl: '',
       tableId: 'alertMessageModule', // 需要分页的table的id，用于记录每页数量
       state: '1',
@@ -349,7 +350,7 @@ export default {
         // } else {
         //   url = this.url
         // }
-        url = this.url
+        url = this.urlNew
         this.$delete(url + '?ids=' + row.id + '&state=' + row.state).then(response => {
           if (response.code === 200) {
             self.delFlag = true
@@ -395,15 +396,20 @@ export default {
       } else {
         delete this.searchLabel.orderBy
       }
+      if (!this.searchLabel.body) {
+        this.searchLabel.body = {
+          q: ''
+        }
+      }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      this.$set(this.searchLabel, 'state', this.state)
+      this.$set(this.searchLabel.body, 'state', this.state)
       if (this.searchTimeHeader && this.searchTimeHeader.length > 1 && this.searchTimeHeader[0] && this.searchTimeHeader[1]) {
-        this.$set(this.searchLabel, 'startAt', bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTimeHeader[0])), 'YYYY-MM-DD HH:mm:ss'))
-        this.$set(this.searchLabel, 'endAt', bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTimeHeader[1])), 'YYYY-MM-DD HH:mm:ss'))
+        this.$set(this.searchLabel.body, 'startAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTimeHeader[0])), 'YYYY-MM-DD HH:mm:ss')])
+        this.$set(this.searchLabel.body, 'endAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTimeHeader[1])), 'YYYY-MM-DD HH:mm:ss')])
       } else {
-        delete this.searchLabel.startAt
-        delete this.searchLabel.endAt
+        delete this.searchLabel.body.startAt
+        delete this.searchLabel.body.endAt
       }
       this.tools.loading = true
       // if (state) {
@@ -411,24 +417,41 @@ export default {
       //   delete this.searchLabel.endAt
       // }
       if (this.from === fromRoute.module) {
-        this.searchLabel.moduleIds = this.obj.id
+        this.searchLabel.body.moduleId = [this.obj.id]
       } else if (this.from === fromRoute.endpoint) {
-        this.searchLabel.endpointIds = this.obj.id
+        this.searchLabel.body.endpointId = [this.obj.id]
       } else if (this.from === fromRoute.asset) {
-        this.searchLabel.assetIds = this.obj.id
+        this.searchLabel.body.assetId = [this.obj.id]
       } else if (this.from === fromRoute.alertRule) {
-        this.searchLabel.ruleIds = this.obj.id
+        this.searchLabel.body.ruleId = [this.obj.id]
       } else if (this.from === fromRoute.dc) {
-        this.searchLabel.dcIds = this.obj.id
+        this.searchLabel.body.dcId = [this.obj.id]
       }
       let url = ''
       if (this.from === fromRoute.alertSilence) {
-        this.alertSilenceUrl = `/alert/silence/${this.obj.id}/rel`
-        url = this.alertSilenceUrl
+        // this.alertSilenceUrl = `/alert/silence/${this.obj.id}/rel`
+        this.$set(this.searchLabel.body, 'state', this.state)
+        this.$set(this.searchLabel.body, 'silenceId', [this.obj.id])
+        url = this.urlNew
       } else {
-        url = this.url
+        url = this.urlNew
       }
-      this.$get(url, this.searchLabel).then(response => {
+      const param = {
+        ...this.searchLabel
+      }
+      // const path = this.fromRoute.alertMessage
+      const routePathParams = this.$lodash.cloneDeep(param)
+      delete routePathParams.statistics
+      routePathParams.body.startAt = this.momentStrToTimestamp(this.searchTimeHeader[0])
+      routePathParams.body.endAt = this.momentStrToTimestamp(this.searchTimeHeader[1])
+      routePathParams.body.timeType = this.searchTime[2]
+      routePathParams.body = JSON.stringify(routePathParams.body)
+      // this.updatePath(routePathParams, path)
+      const queryParams = {
+        ...this.searchLabel,
+        body: encodeURIComponent(JSON.stringify(this.searchLabel.body))
+      }
+      this.$get(url, queryParams).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
@@ -529,7 +552,7 @@ export default {
             this.alertSilenceUrl = `/alert/silence/${this.obj.id}/rel`
             url = this.alertSilenceUrl
           } else {
-            url = this.url
+            url = this.urlNew
           }
           this.$put(url, this.deleteBox).then(res => {
             if (res.code === 200) {
@@ -657,17 +680,11 @@ export default {
       if (this.searchLabel.orderBy) {
         orderBy = this.searchLabel.orderBy
       }
-      this.searchLabel = {}
-      this.pageObj.pageNo = 1
-      for (const item in searchObj) {
-        if (searchObj[item]) {
-          if (item == 'alertMessageState') {
-            this.$set(this.searchLabel, 'state', searchObj[item])
-          } else {
-            this.$set(this.searchLabel, item, searchObj[item])
-          }
-        }
+      console.log(searchObj);
+      this.searchLabel = {
+        body: searchObj
       }
+      this.pageObj.pageNo = 1
       if (orderBy) {
         this.$set(this.searchLabel, 'orderBy', orderBy)
       }

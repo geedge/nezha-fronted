@@ -223,7 +223,7 @@ export default {
       state: '1',
       dialogShowText: false,
       dialogText: '',
-      url: 'alert/message',
+      url: '/alert/message/query',
       // 导出相关
       importBox: { show: false, title: this.$t('overall.exportExcel'), type: 1, record: 'all', format: 1 },
       deleteBox: { show: false, ids: '', remark: '', state: 2 },
