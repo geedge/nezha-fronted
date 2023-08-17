@@ -56,6 +56,12 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   word-break: break-word;
+  .overflowSpan {
+    .el-popover__reference {
+      display: inline-block;
+      width: 100%;
+    }
+  }
 }
 .tree--operation {
   opacity: 0;
@@ -113,14 +119,14 @@
         }
       }
       .dashboard-select-item:hover{
-        color: $--color-primary; 
+        color: $--color-primary;
         background: $--background-color-base;
         i{
           color: $--color-primary;
         }
       }
       .dashboard-select-item.active{
-        color: $--color-primary;  
+        color: $--color-primary;
         background: $--background-color-base;
         i{
           color: $--color-primary;
