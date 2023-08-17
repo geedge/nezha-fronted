@@ -881,7 +881,7 @@ export default {
             delete params[key]
           }
         })
-        params.bottomSelectArr = this.$lodash.cloneDeep(this.selectArr)
+        params.bottomSelectArr = JSON.stringify(this.$lodash.cloneDeep(this.selectArr))
         this.$router.replace({ path: this.$route.path, query: params }).catch(err => {})
       }
       this.oldSearchStr = ''

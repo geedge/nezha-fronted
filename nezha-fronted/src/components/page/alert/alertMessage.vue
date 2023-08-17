@@ -451,15 +451,52 @@ export default {
     renderDefaultParams () {
       const q = JSON.parse(this.$route.query.body)
       this.state = q.state
-      this.searchTime[0] = this.momentTz(q.startAt)
-      this.searchTime[1] = this.momentTz(q.endAt)
+      this.searchTime[0] = q.startAt ? this.momentTz(q.startAt) : ''
+      this.searchTime[1] = q.endAt ? this.momentTz(q.endAt) : ''
       this.searchTime[2] = q.timeType
-      switch (q.timeType) {
+      if (!q.startAt) {
+        this.searchTime[2] = 'all'
+      }
+      console.log(this.searchTime[2], this.searchTime[0], this.searchTime[1])
+      switch (this.searchTime[2]) {
+        case '5m' :
+          this.defaultPick = 1
+          break
+        case '15m' :
+          this.defaultPick = 2
+          break
+        case '30m' :
+          this.defaultPick = 3
+          break
+        case '1h' :
+          this.defaultPick = 4
+          break
+        case '3h' :
+          this.defaultPick = 5
+          break
+        case '6h' :
+          this.defaultPick = 6
+          break
+        case '12h' :
+          this.defaultPick = 7
+          break
+        case '1d' :
+          this.defaultPick = 8
+          break
+        case '24h' :
+          this.defaultPick = 8
+          break
+        case '2d' :
+          this.defaultPick = 9
+          break
         case '7d' :
           this.defaultPick = 10
           break
         case '30d' :
           this.defaultPick = 11
+          break
+        case 'all' :
+          this.defaultPick = 12
           break
         default:
           this.defaultPick = 0
@@ -806,11 +843,11 @@ export default {
       if (this.searchTime && this.searchTime.length > 1 && this.searchTime[0] && this.searchTime[1]) {
         this.$set(this.searchLabel.body, 'startAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[0])), 'YYYY-MM-DD HH:mm:ss')])
         this.$set(this.searchLabel.body, 'endAt', [bus.timeFormate(this.timezoneToUtcTime(bus.formateTimeToTime(this.searchTime[1])), 'YYYY-MM-DD HH:mm:ss')])
-        this.$set(this.searchLabel.body, 'state', this.state)
       } else {
-        delete this.searchLabel.startAt
-        delete this.searchLabel.endAt
+        delete this.searchLabel.body.startAt
+        delete this.searchLabel.body.endAt
       }
+      this.$set(this.searchLabel.body, 'state', this.state)
       if (this.$route.path === '/alertMessage') {
         this.$set(this.searchLabel, 'statistics', 1)
       }/* else {
@@ -827,8 +864,9 @@ export default {
       const path = this.fromRoute.alertMessage
       const routePathParams = this.$lodash.cloneDeep(param)
       delete routePathParams.statistics
-      routePathParams.body.startAt = this.momentStrToTimestamp(this.searchTime[0])
-      routePathParams.body.endAt = this.momentStrToTimestamp(this.searchTime[1])
+      console.log(this.searchTime)
+      routePathParams.body.startAt = this.searchTime[0] ? this.momentStrToTimestamp(this.searchTime[0]) : ''
+      routePathParams.body.endAt = this.searchTime[1] ? this.momentStrToTimestamp(this.searchTime[1]) : ''
       routePathParams.body.timeType = this.searchTime[2]
       routePathParams.body = JSON.stringify(routePathParams.body)
       this.updatePath(routePathParams, path)

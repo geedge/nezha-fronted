@@ -313,8 +313,60 @@ export default {
     if (this.from === fromRoute.alertSilence) {
       this.searchMsg = this.searchMsgSilence
     }
+    this.renderDefaultParams()
   },
   methods: {
+    renderDefaultParams () {
+      const q = JSON.parse(this.$route.query.bottomSelectArr)
+      this.state = q.state
+      this.searchTimeHeader[0] = q.startAt ? this.momentTz(q.startAt) : ''
+      this.searchTimeHeader[1] = q.endAt ? this.momentTz(q.endAt) : ''
+      this.searchTimeHeader[2] = q.timeType
+      switch (this.searchTimeHeader[2]) {
+        case '5m' :
+          this.defaultPick = 1
+          break
+        case '15m' :
+          this.defaultPick = 2
+          break
+        case '30m' :
+          this.defaultPick = 3
+          break
+        case '1h' :
+          this.defaultPick = 4
+          break
+        case '3h' :
+          this.defaultPick = 5
+          break
+        case '6h' :
+          this.defaultPick = 6
+          break
+        case '12h' :
+          this.defaultPick = 7
+          break
+        case '1d' :
+          this.defaultPick = 8
+          break
+        case '24h' :
+          this.defaultPick = 8
+          break
+        case '2d' :
+          this.defaultPick = 9
+          break
+        case '7d' :
+          this.defaultPick = 10
+          break
+        case '30d' :
+          this.defaultPick = 11
+          break
+        case 'all' :
+          this.defaultPick = 12
+          break
+        default:
+          this.defaultPick = 0
+      }
+      // this.defaultPick = 11
+    },
     labelsSort (obj) {
       const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'project', 'datacenter', 'parent_asset', 'user']
       const labels = JSON.parse(JSON.stringify(obj))
@@ -442,8 +494,8 @@ export default {
       // const path = this.fromRoute.alertMessage
       const routePathParams = this.$lodash.cloneDeep(param)
       delete routePathParams.statistics
-      routePathParams.body.startAt = this.momentStrToTimestamp(this.searchTimeHeader[0])
-      routePathParams.body.endAt = this.momentStrToTimestamp(this.searchTimeHeader[1])
+      routePathParams.body.startAt = this.searchTimeHeader[0] ? this.momentStrToTimestamp(this.searchTimeHeader[0]) : ''
+      routePathParams.body.endAt = this.searchTimeHeader[1] ? this.momentStrToTimestamp(this.searchTimeHeader[1]) : ''
       routePathParams.body.timeType = this.searchTime[2]
       routePathParams.body = JSON.stringify(routePathParams.body)
       // this.updatePath(routePathParams, path)
@@ -680,7 +732,6 @@ export default {
       if (this.searchLabel.orderBy) {
         orderBy = this.searchLabel.orderBy
       }
-      console.log(searchObj);
       this.searchLabel = {
         body: searchObj
       }
