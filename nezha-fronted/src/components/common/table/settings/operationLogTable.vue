@@ -44,13 +44,13 @@
           <span v-else-if="item.prop === 'createDate'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
           <span v-else-if="item.prop === 'response'"  @mouseenter="labelHover(scope.row, 'response', true, false, $event)"
                 @mouseleave="labelHover(scope.row, 'response', false, false)">
-          <div class="text-ellipsis" style="width: 100%" >
+          <div class="text-ellipsis" style="width: 100%" :title="scope.row[item.prop]">
             {{scope.row[item.prop]}}
           </div>
         </span>
           <span v-else-if="item.prop === 'params'"  @mouseenter="labelHover(scope.row, 'params', true, false, $event)"
                 @mouseleave="labelHover(scope.row, 'params', false, false)">
-          <div class="text-ellipsis" style="width: 100%" >
+          <div class="text-ellipsis" style="width: 100%" :title="scope.row[item.prop]">
             {{scope.row[item.prop]}}
           </div>
         </span>

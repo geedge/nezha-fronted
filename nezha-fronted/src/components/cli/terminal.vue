@@ -12,8 +12,8 @@
             <div class="personal-avatar"><span>{{name ? name.substr(0, 1) : ''}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
             <el-dropdown-menu  slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top" style="width: 142px; line-height: 36px;">
               <div class="personal-dropdown">
-                <div class="personal-dropdown__username">{{name}}</div>
-                <div class="personal-dropdown__name">@{{name}}</div>
+                <div class="personal-dropdown__username" :title="name">{{name}}</div>
+                <div class="personal-dropdown__name" :title="name">@{{name}}</div>
               </div>
               <el-dropdown-item>
                 <div id="header-to-personalization" @click="showPersonalization"><i class="nz-icon nz-icon-personalization"></i>{{$t('terminal.personal')}}</div>
@@ -43,7 +43,7 @@
             <ul class="terminal-history-list">
               <li class="terminal-history-item" v-for="(item,index) in historyArr" :key="index" @click="historyClick(item)">
                 <span class="terminal-history-num">{{index+1}}</span>
-                <span class="terminal-history-text">{{item}}</span>
+                <span class="terminal-history-text" :title="item">{{item}}</span>
               </li>
             </ul>
           </div>

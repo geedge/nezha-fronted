@@ -2,7 +2,7 @@
   <div :ref="`chart-canvas-${chartId}`" style="height: 100%;width: 100%;position: relative;">
     <div :id="`chart-canvas-${chartId}`" class="chart__canvas chart-svg"></div>
     <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
-      <div class="chart-canvas-tooltip-title tooltip-title">
+      <div class="chart-canvas-tooltip-title tooltip-title" :title="tooltip.title">
         {{tooltip.title}}
       </div>
       <div class="chart-canvas-tooltip-content">
@@ -16,7 +16,7 @@
       </div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
-        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
         </div>

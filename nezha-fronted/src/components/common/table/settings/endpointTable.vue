@@ -40,7 +40,7 @@
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop === 'name'">
             <div class="document-copy-block">
-              <span class="document-copy-text">{{scope.row[item.prop]}}</span>
+              <span class="document-copy-text" :title="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
@@ -50,6 +50,7 @@
           <template v-else-if="item.prop === 'project'">
             <div class="document-copy-block">
               <span class="document-copy-text"
+                    :title="scope.row[item.prop].name"
               @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
               @mouseleave="labelHover(scope.row, item.prop, false,true)">
               {{scope.row[item.prop].name}}
@@ -60,6 +61,7 @@
           <template v-else-if="item.prop === 'module'">
             <div class="document-copy-block">
               <span class="document-copy-text"
+                    :title="scope.row[item.prop].name"
                 @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
                 @mouseleave="labelHover(scope.row, item.prop, false,true)">
                 <i class="nz-icon nz-icon-overview-module monitorColor"/>
@@ -72,6 +74,7 @@
            <div class="document-copy-block">
               <span
                 class="document-copy-text"
+                :title="scope.row.asset&&scope.row.asset.name"
                 @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
                 @mouseleave="labelHover(scope.row, item.prop, false,true)">
                 <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>

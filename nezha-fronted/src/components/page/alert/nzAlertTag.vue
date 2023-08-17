@@ -1,6 +1,6 @@
 <template>
   <span class="nz-alert-tag" :class="['nz-alert-tag_' + type]" :style="{cursor: cursorPoint ? 'default' : 'default'}" @click="$emit('click')">
-    <span class="nz-alert-tag__label"> {{label=='dc'?'datacenter':label}}</span>
+    <span class="nz-alert-tag__label" :title="label=='dc'?'datacenter':label"> {{label=='dc'?'datacenter':label}}</span>
     <span class="nz-alert-tag__content"><span v-if="!!regex"> ~ </span> <slot></slot></span>
   </span>
 </template>

@@ -339,7 +339,7 @@
               <template v-slot:trigger>
 <!--                <el-input placeholder="" size="small" clearable v-model="panelName" :disabled="false"></el-input>-->
                 <div class="alert-rule-box-dashboard">
-                  <div class="text-ellipsis alert-rule-box-dashboard-name">{{panelName}}</div>
+                  <div class="text-ellipsis alert-rule-box-dashboard-name" :title="panelName">{{panelName}}</div>
                   <i class="nz-icon nz-icon-guanbi2" @click.stop="clearDashboard()"/>
                 </div>
               </template>

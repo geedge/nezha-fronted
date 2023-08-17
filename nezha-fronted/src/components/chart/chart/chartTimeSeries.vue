@@ -25,7 +25,7 @@
       <div v-html="tooltip.tooltipHtml"></div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
-        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
         </div>
@@ -473,7 +473,7 @@ export default {
             }
 
             str += `
-            <div class="tooltip__row">
+            <div class="tooltip__row" title="${seriesName}">
               <div class="row__label">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${seriesName}</span>
@@ -511,7 +511,7 @@ export default {
 
             str += `
             <div class="tooltip__row">
-              <div class="row__label">
+              <div class="row__label" title="${self.$t('dashboard.dashboard.chartTotal')}">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${self.$t('dashboard.dashboard.chartTotal')}</span>
               </div>
@@ -650,7 +650,7 @@ export default {
         <div class="nz-chart__tooltip">
           <div class="tooltip-title" style="margin-bottom: 5px">${bus.timeFormate(tData)}</div>
           <div class="tooltip__row">
-            <div class="row__label">
+            <div class="row__label" :title=">${seriesName}">
               <span class="${className}" style="background-color: ${color};color: ${color}"></span>
               <span>${seriesName}</span>
             </div>

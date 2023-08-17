@@ -78,6 +78,7 @@
                 :label="item.label"
                 :type="tagType(item.label)"
                 style="margin: 5px 0 5px 5px;"
+                :title="item.value"
               >
                {{item.value}}
               </nz-alert-tag>

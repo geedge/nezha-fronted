@@ -25,7 +25,7 @@
         :class="item.id === detailViewRightObj.id ? 'selected' : ''"
         @click="detailViewRightShow(item)"
       >
-        <div class="detail-row-info" @mouseenter="labelHover(item, 'user', true, false, $event)"
+        <div class="detail-row-info" :title="item.name" @mouseenter="labelHover(item, 'user', true, false, $event)"
              @mouseleave="labelHover(item, 'user', false, false,)">
           <div class="asset-manageIp">
              <div class="user-name-td">
