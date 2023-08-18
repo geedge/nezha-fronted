@@ -34,7 +34,7 @@
             </template>
             <div  class="el-dropdown-link" slot="reference">
               <i class="nz-icon nz-icon-time" style="width:20px;"></i>
-              <span class="panel-list-title" id="timePickerContent">{{showTime.text}}</span>
+              <span class="panel-list-title" id="timePickerContent" :title="showTime.text">{{showTime.text}}</span>
               <span class="dropdown--suffix">
             <i class="el-icon-arrow-down"></i>
           </span>
@@ -42,7 +42,7 @@
           </el-popover>
           <el-dropdown-menu class="nz-dashboard-dropdown right-box-select-top right-public-box-dropdown-top popper-z-index" slot="dropdown">
             <template v-for="(item, index) in timeData" >
-              <el-dropdown-item v-if="item.id !== 12" :key="index" :class="showTime.id === item.id ? 'nz-dashboard-dropdown-bg' : ''" :command="item">
+              <el-dropdown-item v-if="item.id !== 12" :key="index" :class="showTime.id === item.id ? 'nz-dashboard-dropdown-bg' : ''" :command="item" :title="item.text">
                 {{item.text}}
               </el-dropdown-item>
             </template>

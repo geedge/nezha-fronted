@@ -41,7 +41,7 @@
         <template v-if="item.prop === 'name'">
 
           <div class="document-copy-block">
-              <span class="document-copy-text">{{scope.row[item.prop]}}</span>
+              <span class="document-copy-text" :title="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
           </div>
         </template>

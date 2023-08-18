@@ -148,6 +148,9 @@ export default {
       if (timeRange && timeRange.length < 2) {
         return []
       }
+      if (!timeRange[0]) {
+        return []
+      }
       const startTime = bus.timeFormate(timeRange[0], this.pickTimer)
       const endTime = bus.timeFormate(timeRange[1], this.pickTimer)
       const timeType = timeRange[2]

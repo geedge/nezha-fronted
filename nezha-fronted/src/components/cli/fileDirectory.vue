@@ -32,7 +32,7 @@
     </div>
     <div style="padding: 0 20px;height: calc(100% - 50px)" v-my-loading="fileDirectoryLoading">
       <div class="directory-content-header">
-        <div class="text-ellipsis file-name">
+        <div class="text-ellipsis file-name" :title="$t('overall.name')">
           <div class="file-arrow-header" style="cursor: pointer"  @click.stop="orderBy('nameOrderType','' , 'name')">
             <div>
               {{$t('overall.name')}}
@@ -47,7 +47,7 @@
             </div>
           </div>
         </div>
-        <div class="text-ellipsis file-size">
+        <div class="text-ellipsis file-size" :title="$t('backup.size')">
           <div class="file-arrow-header" style="cursor: pointer"  @click.stop="orderBy('sizeOrderType','' , 'size')">
             <div>
               {{$t('backup.size')}}
@@ -62,7 +62,7 @@
             </div>
           </div>
         </div>
-        <div class="text-ellipsis file-date">
+        <div class="text-ellipsis file-date" :title="$t('issue.createTime')">
           <div class="file-arrow-header" style="cursor: pointer"  @click.stop="orderBy('dateOrderType','' , 'cts')">
             <div>
               {{$t('issue.createTime')}}
@@ -77,7 +77,7 @@
             </div>
           </div>
         </div>
-        <div class="text-ellipsis file-opt">
+        <div class="text-ellipsis file-opt" :title="$t('overall.option')">
           {{$t('overall.option')}}
         </div>
       </div>
@@ -108,10 +108,10 @@
             </svg>
             {{item.name}} <span v-if="item.isLink">-> {{item.linkName}}</span>
           </div>
-          <div class="text-ellipsis file-size">
+          <div class="text-ellipsis file-size" :title="bytes(item.size, 0, 0)">
             <span v-if="!item.isDir">{{bytes(item.size, 0, 0)}}</span>
           </div>
-          <div class="text-ellipsis file-date">
+          <div class="text-ellipsis file-date" :title="momentTz(item.cts * 1000)">
             <span>{{momentTz(item.cts * 1000)}}</span>
           </div>
           <div class="text-ellipsis file-opt">

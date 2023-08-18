@@ -38,7 +38,7 @@
         <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
         <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
           <div class="document-copy-block">
-              <span class="link document-copy-text" @click="downloadMib(scope.row)">{{scope.row[item.prop]}}</span>
+              <span class="link document-copy-text" @click="downloadMib(scope.row)" :title="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop])" :title="$t('overall.copyText')"></i>
             </div>
         </template>

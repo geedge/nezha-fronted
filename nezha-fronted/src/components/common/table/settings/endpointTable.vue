@@ -40,7 +40,7 @@
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop === 'name'">
             <div class="document-copy-block">
-              <span class="document-copy-text">{{scope.row[item.prop]}}</span>
+              <span class="document-copy-text" :title="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <i v-if="scope.row[item.prop]" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row.name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
@@ -50,6 +50,7 @@
           <template v-else-if="item.prop === 'project'">
             <div class="document-copy-block">
               <span class="document-copy-text"
+                    :title="scope.row[item.prop].name"
               @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
               @mouseleave="labelHover(scope.row, item.prop, false,true)">
               {{scope.row[item.prop].name}}
@@ -60,6 +61,7 @@
           <template v-else-if="item.prop === 'module'">
             <div class="document-copy-block">
               <span class="document-copy-text"
+                    :title="scope.row[item.prop].name"
                 @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
                 @mouseleave="labelHover(scope.row, item.prop, false,true)">
                 <i class="nz-icon nz-icon-overview-module monitorColor"/>
@@ -72,6 +74,7 @@
            <div class="document-copy-block">
               <span
                 class="document-copy-text"
+                :title="scope.row.asset&&scope.row.asset.name"
                 @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
                 @mouseleave="labelHover(scope.row, item.prop, false,true)">
                 <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
@@ -184,7 +187,13 @@
               <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'endpoint']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'asset_add'" :command="['topology', scope.row, 'endpoint']"><i class="nz-icon nz-icon-Topology"></i><span class="operation-dropdown-text">{{$t('overall.topology')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'monitor_endpoint_add'" :command="['diagnosis', scope.row,{from:'endpoint'}]"><i class="nz-icon nz-icon-diagnosis"></i><span class="operation-dropdown-text">{{$t('overall.diagnosis')}}</span></el-dropdown-item>
-              <el-dropdown-item  v-if="scope.row.configs[0].enable" v-has="'monitor_endpoint_add'" :command="['metricTarget', scope.row, 'endpoint']" :disabled="scope.row.configs[0].config.protocol !== ('http'||'https')"><i class="nz-icon nz-icon-Metrics"></i><span class="operation-dropdown-text">{{$t('endpoints.metricTarget')}}</span></el-dropdown-item>
+              <el-dropdown-item
+                v-if="scope.row.configs[0].enable"
+                v-has="'monitor_endpoint_add'"
+                :command="['metricTarget', scope.row, 'endpoint']"
+                :disabled="scope.row.configs[0].config.protocol !== 'http' && scope.row.configs[0].config.protocol !=='https'"
+              >
+                <i class="nz-icon nz-icon-Metrics"></i><span class="operation-dropdown-text">{{$t('endpoints.metricTarget')}}</span></el-dropdown-item>
               <el-dropdown-item v-has="'monitor_endpoint_edit'" :command="['configSync', scope.row,{from:'endpoint'}]"><i class="nz-icon nz-icon-sync"></i><span class="operation-dropdown-text">{{$t('overall.synchronize')}}</span></el-dropdown-item>
 
             </el-dropdown-menu>

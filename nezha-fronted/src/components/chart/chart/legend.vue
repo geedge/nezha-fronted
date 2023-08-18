@@ -6,7 +6,7 @@
         <div class="legend--table-row table-header">
           <div class="legend--table-cell"></div>
           <div v-for="statistics in chartInfo.param.legend.values" :key="statistics" class="legend--table-cell">
-            <span v-if="statisticsList.find(key=>key.value === statistics)">{{$t(statisticsList.find(key=>key.value === statistics).label)}}</span>
+            <span v-if="statisticsList.find(key=>key.value === statistics)" :title="$t(statisticsList.find(key=>key.value === statistics).label)">{{$t(statisticsList.find(key=>key.value === statistics).label)}}</span>
             <span v-else>--</span>
           </div>
         </div>
@@ -22,7 +22,7 @@
           <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
             <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
             <span v-else :style="{background: item.color}" class="legend-shape"></span>
-            <span>{{item.alias ? item.alias : item.name}}</span>
+            <span :title="item.alias ? item.alias : item.name">{{item.alias ? item.alias : item.name}}</span>
           </div>
           <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value))}}</div>
         </div>
@@ -38,7 +38,7 @@
           <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
             <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
             <span v-else :style="{background: item.color}" class="legend-shape"></span>
-            <span>{{item.alias ? item.alias : item.name}}</span>
+            <span :title="item.alias ? item.alias : item.name">{{item.alias ? item.alias : item.name}}</span>
           </div>
           <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value))}}</div>
         </div>
