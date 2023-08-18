@@ -133,6 +133,11 @@ export default {
         this.isStack = this.chartInfo.param.stack
       } catch (e) {}
       const chartOption = lodash.cloneDeep(chartOptions)
+
+      if (this.$lodash.get(this.chartInfo, 'param.enable.tooltip', false) && this.$lodash.get(this.chartInfo, 'param.tooltip.mode', 'all') === 'single') {
+        chartOption.tooltip.trigger = 'item'
+      }
+
       // 防止tootip超出内容区域
       if (this.from === 'integration' || this.from === 'dashboardTemp') {
         chartOption.tooltip.appendToBody = false
@@ -367,6 +372,9 @@ export default {
     tooltipFormatter (hasTotal) { // 堆叠图需要total数据
       const self = this
       return function (params) {
+        if (!params.length) { // tooltip mode为single
+          params = [params]
+        }
         const decimals = self.chartInfo.param.decimals || 2
         let str = '<div class="nz-chart__tooltip">'
         // 区分左y轴右y轴
@@ -393,6 +401,32 @@ export default {
           if (!arr.length) {
             return
           }
+
+          // tooltip排序
+          let sortBy
+          if (self.$lodash.get(self.chartInfo, 'param.enable.tooltip') && self.$lodash.get(self.chartInfo, 'param.tooltip.mode') !== 'single' && self.$lodash.get(self.chartInfo, 'param.tooltip.sort') !== 'none') {
+            sortBy = self.$lodash.get(self.chartInfo, 'param.tooltip.sort')
+          }
+          const previousIndex = arr.findIndex(item => item.seriesName.indexOf('Previous') !== -1)
+          if (previousIndex != -1) { // 对比状态
+            const arrNow = arr.slice(0, previousIndex)
+            const arrPrevious = arr.slice(previousIndex)
+            if (sortBy === 'asc') {
+              arrNow.sort((a, b) => a.data[1] - b.data[1])
+              arrPrevious.sort((a, b) => a.data[1] - b.data[1])
+            } else if (sortBy === 'desc') {
+              arrNow.sort((a, b) => b.data[1] - a.data[1])
+              arrPrevious.sort((a, b) => b.data[1] - a.data[1])
+            }
+            arr = [...arrNow, ...arrPrevious]
+          } else {
+            if (sortBy === 'asc') {
+              arr.sort((a, b) => a.data[1] - b.data[1])
+            } else if (sortBy === 'desc') {
+              arr.sort((a, b) => b.data[1] - a.data[1])
+            }
+          }
+
           let sum = 0
           let flag = true
           arr.forEach((item, i) => {

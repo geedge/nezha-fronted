@@ -84,6 +84,9 @@ export const chartTimeSeriesLineOption = {
     },
     axisTick: {
       show: false
+    },
+    axisPointer: {
+      snap: true
     }
   },
   yAxis: [

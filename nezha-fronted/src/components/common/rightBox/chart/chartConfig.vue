@@ -448,7 +448,7 @@
       </div>
 
       <!-- Right Y Axis   -->
-      <div v-if="isShowRightYAxis(chartConfig.type)">
+      <div v-if="isTimeSeries(chartConfig.type)">
         <div class="form__sub-title">
           <span>{{$t('dashboard.dashboard.chartForm.rightYAxis')}}</span>
           <el-switch
@@ -569,6 +569,62 @@
                 show-word-limit
                 :placeholder="chartConfig.param.rightYAxis.max?'':'Auto'"
                 v-model="chartConfig.param.rightYAxis.max"/>
+            </el-form-item>
+          </div>
+        </transition>
+      </div>
+
+      <!-- Tooltip   -->
+      <div v-if="isTimeSeries(chartConfig.type)">
+        <div class="form__sub-title">
+          <span>{{$t('dashboard.dashboard.chartForm.tooltip')}}</span>
+          <el-switch
+            v-model="chartConfig.param.enable.tooltip"
+            size="small"
+            @change="change"
+          ></el-switch>
+        </div>
+        <transition name="el-zoom-in-top">
+          <div
+            v-if="chartConfig.param.enable.tooltip"
+            class="form-items--half-width-group"
+          >
+          <!-- Mode -->
+            <el-form-item
+              :label="$t('dashboard.mode')"
+              class="form-item--half-width"
+              prop="param.tooltip.mode"
+              :rules="{ required: true, message: $t('validate.required'), trigger: 'change'}"
+            >
+              <el-select
+                v-model="chartConfig.param.tooltip.mode"
+                placeholder=""
+                popper-class="right-box-select-top prevent-clickoutside"
+                size="small"
+                @change="change"
+              >
+                <el-option :label="$t('dashboard.dashboard.chartForm.single')" value="single"></el-option>
+                <el-option :label="$t('overall.exportAll')" value="all"></el-option>
+              </el-select>
+            </el-form-item>
+            <!-- Sort -->
+            <el-form-item
+              v-if="chartConfig.param.tooltip.mode!=='single'"
+              :label="$t('dashboard.dashboard.chartForm.sort')"
+              class="form-item--half-width"
+              prop="param.tooltip.sort"
+            >
+              <el-select
+                v-model="chartConfig.param.tooltip.sort"
+                placeholder=""
+                popper-class="right-box-select-top prevent-clickoutside"
+                size="small"
+                @change="change"
+              >
+                <el-option :label="$t('project.topology.none')" value="none"></el-option>
+                <el-option :label="$t('dashboard.explore.ascending')" value="asc"></el-option>
+                <el-option :label="$t('dashboard.explore.descending')" value="desc"></el-option>
+              </el-select>
             </el-form-item>
           </div>
         </transition>
@@ -1380,7 +1436,8 @@ export default {
               valueMapping: false,
               thresholds: false,
               visibility: false,
-              rightYAxis: false
+              rightYAxis: false,
+              tooltip: true
             },
             showHeader: this.chartConfig.param.showHeader,
             visibility: {
@@ -1397,7 +1454,11 @@ export default {
               min: undefined,
               max: undefined
             },
-            dataLink: this.chartConfig.param.dataLink
+            dataLink: this.chartConfig.param.dataLink,
+            tooltip: {
+              mode: 'all',
+              sort: 'none'
+            }
           }
           this.$nextTick(() => {
             this.chartConfig.param.thresholds.push({ value: undefined, color: randomcolor() })
