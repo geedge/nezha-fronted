@@ -28,7 +28,7 @@
         <terminal-log-cmd-tab v-if="from === fromRoute.terminalLog && targetTab === 'cmdTab'" :from="from" :obj="obj" :tabs="hasTerminalLogTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-cmd-tab>
         <terminal-log-sftp-tab v-if="from === fromRoute.terminalLog && targetTab === 'sftpTab' && obj.protocol == 'SSH'" :from="from" :obj="obj" :tabs="hasTerminalLogTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-sftp-tab>
         <terminal-log-record-tab v-if="from === fromRoute.terminalLog && targetTab === 'recordTab'" ref="reminalLogRecordTab" :from="from" :obj="obj" :tabs="hasTerminalLogTabs" @changeTab="changeTab" :targetTab.sync="targetTab"></terminal-log-record-tab>
-        <terminal-log-monitor-tab v-if="from === fromRoute.terminalLog && targetTab === 'monitorTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.monitor" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></terminal-log-monitor-tab>
+        <terminal-log-monitor-tab v-if="from === fromRoute.terminalLog && targetTab === 'monitorTab'" ref="reminalLogMonitorTab" :from="from" :obj="obj" :tabs="tabs.terminalLog.monitor" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></terminal-log-monitor-tab>
 
         <asset-tab v-if="from === fromRoute.dc && targetTab === 'asset'" :tabs="tabs.dc.asset" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList" :targetTab.sync="targetTab"></asset-tab>
 
@@ -408,6 +408,10 @@ export default {
       } else if (this.from === this.fromRoute.terminalLog && this.targetTab === 'recordTab') {
         setTimeout(() => {
           this.$refs.reminalLogRecordTab.consoleResize()
+        }, 600)
+      } else if (this.from === this.fromRoute.terminalLog && this.targetTab === 'monitorTab') {
+        setTimeout(() => {
+          this.$refs.reminalLogMonitorTab.consoleResize()
         }, 600)
       }
       const subListDom = document.querySelector('.sub-list') // 副列表

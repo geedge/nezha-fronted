@@ -1122,3 +1122,49 @@ export const loadMore = {
     }
   }
 }
+// 水印
+export const watermark = {
+  bind (el, binding) {
+    const text = binding.value.text
+    const text1 = binding.value.text1
+    const show = binding.value.show
+    const font = binding.value.font || '24px Roboto-Regular'
+    const textColor = binding.value.textColor || 'rgba(215, 215, 215, 0.5)'
+    const width = binding.value.width || 400
+    const height = binding.value.height || 200
+    const textRotate = binding.value.textRotate || -30
+    addWaterMarker(el, text, font, textColor, width, height, textRotate, show, text1)
+  },
+  update (el, binding) {
+    const text = binding.value.text
+    const text1 = binding.value.text1
+    const show = binding.value.show
+    const font = binding.value.font || '16px Roboto-Regular'
+    const textColor = binding.value.textColor || 'rgba(215, 215, 215, 0.5)'
+    const width = binding.value.width || 400
+    const height = binding.value.height || 200
+    const textRotate = binding.value.textRotate || -20
+    addWaterMarker(el, text, font, textColor, width, height, textRotate, show, text1)
+  },
+}
+function addWaterMarker (parentNode, text, font, textColor, width, height, textRotate, show, text1) {
+  const can = document.createElement('canvas')
+  parentNode.appendChild(can)
+  can.width = width
+  can.height = height
+  can.style.display = 'none'
+  const cans = can.getContext('2d')
+  cans.moveTo(10, 10)
+  cans.rotate(textRotate * Math.PI / 180)
+  cans.font = font
+  cans.fillStyle = textColor
+  cans.textAlign = 'center'
+  cans.textBaseline = 'middle'
+  cans.fillText(text, 200, 150)
+  cans.fillText(text1, 200, 170)
+  if (show) {
+    parentNode.style.backgroundImage = 'url(' + can.toDataURL('image/png') + ')'
+  } else {
+    parentNode.style.backgroundImage = ''
+  }
+}

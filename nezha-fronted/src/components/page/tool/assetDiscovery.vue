@@ -24,7 +24,7 @@
                 :label="item.name"
                 :value="item.id">
                 <div class="subnet-item">
-                  <div class="subnet-item-left">{{item.name}}</div>
+                  <div class="subnet-item-left" :title="item.name">{{item.name}}</div>
                   <div class="subnet-item-right">{{item.addr}}/{{item.mask}}</div>
                 </div>
               </el-option>

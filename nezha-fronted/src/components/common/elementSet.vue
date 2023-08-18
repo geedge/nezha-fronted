@@ -33,7 +33,7 @@
           >
             <i class="nz-icon nz-icon-check" v-if="!allowedAll&&!item.allowed&&(index==0||index==1||item.visibility=='disabled')"></i>
             <i v-else class="nz-icon nz-icon-check" v-show="item.show"></i>
-            <span>{{item.label}}</span>
+            <span :title="item.label">{{item.label}}</span>
             <i class="nz-icon nz-icon-sort drag-sort" v-if="index!==0 && index !== 1 && !item.NotSet" @click.stop></i>
           </div>
         </draggable>
@@ -67,7 +67,7 @@
           >
             <i class="nz-icon nz-icon-check" v-if="!allowedAll&&!item.allowed&&(index==0||index==1||item.visibility=='disabled')"></i>
             <i v-else class="nz-icon nz-icon-check" v-show="item.show"></i>
-            <span>{{item.label}}</span>
+            <span :title="item.label">{{item.label}}</span>
             <i class="nz-icon nz-icon-sort drag-sort" v-if="index!==0 && index !== 1 && !item.NotSet" @click.stop></i>
           </div>
         </draggable>

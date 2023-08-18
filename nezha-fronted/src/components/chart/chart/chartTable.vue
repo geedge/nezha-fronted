@@ -32,6 +32,7 @@
               clear: 'both',
             }"
             class="value-mapping-table"
+            :title="showValueMapping(scope.row,col.title, col)"
             :class="{'chart-cursor-pointer':dataLink.length}"
             @click="chartClick($event,col,scope.row)"
             @mousedown="chartMousedown($event)"
@@ -41,7 +42,7 @@
             </template>
             {{showValueMapping(scope.row,col.title, col)}}
           </div>
-          <div v-else class="value-mapping-table" :class="{'chart-cursor-pointer':dataLink.length}" @click="chartClick($event,col,scope.row)" @mousedown="chartMousedown($event)">
+          <div v-else class="value-mapping-table"  :title="scope.row.display[col.title + 'display'].display"  :class="{'chart-cursor-pointer':dataLink.length}" @click="chartClick($event,col,scope.row)" @mousedown="chartMousedown($event)">
             {{scope.row.display[col.title + 'display'].display}}
           </div>
         </template>
@@ -60,14 +61,14 @@
       </el-pagination>
     </div>
     <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
-      <div class="chart-canvas-tooltip-title tooltip-title">{{tooltip.title}}</div>
+      <div class="chart-canvas-tooltip-title tooltip-title" :title="tooltip.title">{{tooltip.title}}</div>
       <div class="chart-canvas-tooltip-content">
         <div>value</div>
         <div>{{tooltip.value}}</div>
       </div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
-        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
         </div>

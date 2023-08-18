@@ -27,7 +27,7 @@
           </div>
         </div>
         <div ref="recordConsole" class="record-console">
-          <div :id="obj.uuid" class="record-terminal"></div>
+          <div :id="obj.uuid" class="record-terminal" style="height: 100%;width: 100%"></div>
         </div>
       </div>
     </template>
@@ -36,6 +36,9 @@
 
 <script>
 import Terminal from '../../js/Xterm'
+import { AttachAddon } from 'xterm-addon-attach'
+import { FitAddon } from 'xterm-addon-fit'
+import { CanvasAddon } from 'xterm-addon-canvas'
 import bus from '../../../../libs/bus'
 // import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
@@ -56,7 +59,7 @@ export default {
         uuid: ''
       },
       terminal: null,
-
+      termFitAddon: null,
       recordData: [],
       isNeedStop: false, // 是否需要停止
       playedCount: 0, // 当前已经播放完的数量
@@ -101,9 +104,9 @@ export default {
     },
 
     consoleResize () {
-      this.terminal && this.terminal.resize(parseInt(this.$refs.recordConsole.offsetWidth / 11), parseInt(this.$refs.recordConsole.offsetHeight / 18))
+      // this.terminal && this.terminal.resize(parseInt(this.$refs.recordConsole.offsetWidth / 11), parseInt(this.$refs.recordConsole.offsetHeight / 18))
       this.$nextTick(() => {
-        this.terminal && this.terminal.fit()
+        this.terminal && this.termFitAddon.fit()
       })
     },
 
@@ -111,13 +114,21 @@ export default {
       this.$nextTick(() => {
         // terminal初始化
         if (this.terminal) {
-          this.terminal.reset(parseInt(this.$refs.recordConsole.offsetWidth / 11), parseInt(this.$refs.recordConsole.offsetHeight / 18))
+          // this.terminal.reset(parseInt(this.$refs.recordConsole.offsetWidth / 11), parseInt(this.$refs.recordConsole.offsetHeight / 18))
+          this.termFitAddon.fit()
         } else {
           this.terminal = new Terminal({
-            rows: parseInt(this.$refs.recordConsole.offsetHeight / 18),
-            cols: parseInt(this.$refs.recordConsole.offsetWidth / 11)
+            cursorStyle: 'block', // 光标样式  null | 'block' | 'underline' | 'bar'
+            overviewRulerWidth: 8,
+            lineHeight: 1.2,
+            fontSize: 16,
+            disableStdin: true// 是否应禁用输入
           })
+          this.terminal.loadAddon(new CanvasAddon())
+          this.termFitAddon = new FitAddon()
+          this.terminal.loadAddon(this.termFitAddon)
           this.terminal.open(document.getElementById(this.obj.uuid))
+          this.terminal && this.termFitAddon.fit()
         }
 
         if (this.recordData.length > 0) {

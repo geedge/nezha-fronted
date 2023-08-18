@@ -53,8 +53,8 @@
         <div class="personal-avatar"><span>{{name ? name.substr(0, 1) : ''}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
         <el-dropdown-menu  slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top" style="width: 142px; line-height: 36px;">
           <div class="personal-dropdown">
-            <div class="personal-dropdown__username">{{name}}</div>
-            <div class="personal-dropdown__name">@{{username}}</div>
+            <div class="personal-dropdown__username" :title="name">{{name}}</div>
+            <div class="personal-dropdown__name" :title="username">@{{username}}</div>
           </div>
           <el-dropdown-item>
             <div id="header-to-profile" @click="showPinDialog"><i class="nz-icon nz-icon-user"></i>{{$t('overall.personalCenter')}}</div>

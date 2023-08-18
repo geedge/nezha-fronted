@@ -24,8 +24,9 @@
                 <el-popover
                   placement="right"
                   trigger="hover"
+                  class="overflowSpan"
                   :content="node.label">
-                  <span slot="reference">{{ node.label }}</span>
+                  <span slot="reference" class="">{{ node.label }}</span>
                 </el-popover>
               </span>
               <el-row class="block-col-2" style="margin-left: 10px; margin-right: 8px;">

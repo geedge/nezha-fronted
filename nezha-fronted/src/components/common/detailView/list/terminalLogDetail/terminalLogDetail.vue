@@ -25,8 +25,8 @@
         :class="item.id === detailViewRightObj.id ? 'selected' : ''"
         @click="detailViewRightShow(item)"
       >
-        <div class="detail-row-info">
-          <div class="asset-manageIp">
+        <div class="detail-row-info" :title="getRemoteText(item)">
+          <div class="asset-manageIp" :title="getRemoteText(item)">
             <el-tooltip effect="light" placement="right">
               <div slot="content">
                 {{$t(getStatusText(item.status))}}

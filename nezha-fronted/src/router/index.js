@@ -231,6 +231,10 @@ export default new Router({
         {
           path: '/integration',
           component: resolve => require(['@/components/page/integration/integration'], resolve)
+        },
+        {
+          path: '/softwareType',
+          component: resolve => require(['@/components/page/asset/software/softwareType'], resolve)
         }
       ]
     },

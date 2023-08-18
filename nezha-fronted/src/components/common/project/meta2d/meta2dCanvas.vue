@@ -67,7 +67,7 @@
                       {{$t('terminal.confirm')}}
                     </span>
                   </el-input>
-                  <span class="hide-input-nzName text-ellipsis" v-if="!editFlag[index]">
+                  <span class="hide-input-nzName text-ellipsis" v-if="!editFlag[index]" :title="item.nzName">
                     {{item.nzName}}
                   </span>
                   <i @click.stop="changeEditFlag(index)" v-if="!editFlag[index]"  class="nz-icon nz-icon-edit1"/>

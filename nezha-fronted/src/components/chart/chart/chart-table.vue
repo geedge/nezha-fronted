@@ -22,7 +22,7 @@
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title">
 <!--              <span class="chart-title-text">{{chartData.name}}</span>-->
-              <span class="chart-title-text" v-on:mouseover="changeActive()" v-on:mouseout="removeActive()">{{chartData.name}}</span>
+              <span class="chart-title-text" :title="chartData.name" v-on:mouseover="changeActive()" v-on:mouseout="removeActive()">{{chartData.name}}</span>
               <transition  name="el-fade-in-linear">
                 <span v-show="chartDataList" class="chart-title-pit" >{{chartData.name}}</span>
               </transition>

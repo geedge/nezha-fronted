@@ -16,7 +16,7 @@
     ></chart-legend>
 
     <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
-      <div class="chart-canvas-tooltip-title tooltip-title">
+      <div class="chart-canvas-tooltip-title tooltip-title" :title="tooltip.title">
         {{tooltip.title}}
       </div>
       <div class="chart-canvas-tooltip-content">
@@ -34,7 +34,7 @@
       </div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
-        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :key="index" @click="linkClick(item)">
+        <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
         </div>
@@ -308,10 +308,10 @@ export default {
       }
       if (str && valueStr) {
         return `<div class="foreign-label-wrap">
-                  <p class="rose-label" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+                  <p class="rose-label" title="${str}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                     <span>${str}</span>
                   </p>
-                  <p class="rose-label" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+                  <p class="rose-label" title="${valueStr}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                     <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                     <span>${valueStr}</span>
                   </p>
@@ -319,7 +319,7 @@ export default {
               `
       } else if (str) {
         return `<div class="foreign-label-wrap">
-                  <p class="rose-label" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+                  <p class="rose-label" title="${str}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                     <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                     <span>${str}</span>
                   </p>
@@ -327,7 +327,7 @@ export default {
               `
       } else if (valueStr) {
         return `<div class="foreign-label-wrap">
-                  <p class="rose-label" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
+                  <p class="rose-label" title="${valueStr}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.text};">
                     <i class="${data.mapping && data.mapping.icon}" style="color: ${data.mapping && data.mapping.color && data.mapping.color.icon};font-size:1em;"></i>
                     <span>${valueStr}</span>
                   </p>

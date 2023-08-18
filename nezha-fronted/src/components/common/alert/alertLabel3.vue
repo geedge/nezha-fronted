@@ -42,7 +42,9 @@
       </div> -->
      <div class="alert-label-box document-copy-block">
         <div class="alert-label-title">{{ $t("asset.manageIp") }}</div>
-        <div class="alert-label-value document-copy-text">
+        <div class="alert-label-value document-copy-text" :title="alertLabelData && alertLabelData.manageIp
+              ? alertLabelData.manageIp
+              : '--'">
           {{
             alertLabelData && alertLabelData.manageIp
               ? alertLabelData.manageIp
@@ -194,7 +196,7 @@
       <div class="alert-label-box name-labe">
          <div class="document-copy-block">
            <div class="alert-label-title">{{$t('overall.name')}}</div>
-           <div class="alert-label-value document-copy-text">
+           <div class="alert-label-value document-copy-text" :title="alertLabelData && alertLabelData.name ? alertLabelData.name : '--'">
              {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
            </div>
            <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
@@ -290,7 +292,7 @@
        <div class="alert-label-box name-labe">
         <div class="document-copy-block">
            <div class="alert-label-title">{{$t('overall.name')}}</div>
-           <div class="alert-label-value document-copy-text">
+           <div class="alert-label-value document-copy-text" :title="alertLabelData && alertLabelData.name ? alertLabelData.name : '--'">
              {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
            </div>
            <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
@@ -388,7 +390,7 @@
       <div class="alert-label-box name-labe">
         <div class="document-copy-block">
            <div class="alert-label-title">{{$t('overall.name')}}</div>
-            <div class="alert-label-value document-copy-text">
+            <div class="alert-label-value document-copy-text" :title="alertLabelData && alertLabelData.name ? alertLabelData.name : '--'">
               {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
             </div>
            <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
@@ -523,7 +525,7 @@
        <div class="alert-label-box name-labe">
          <div class="document-copy-block">
            <div class="alert-label-title">{{$t('overall.name')}}</div>
-           <div class="alert-label-value  document-copy-text">
+           <div class="alert-label-value  document-copy-text" :title="alertLabelData && alertLabelData.name ? alertLabelData.name : '--'">
               {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
           </div>
            <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>

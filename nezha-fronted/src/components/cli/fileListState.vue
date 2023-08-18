@@ -10,7 +10,7 @@
         <div v-for="item in fileList" :key="item.myId" class="file-state-panel-item">
           <div class="item-icon"> <i class="nz-icon" :class="{'nz-icon-upload':item.type === 'upload','nz-icon-download1':item.type === 'download'}"/></div>
           <div class="item-progress">
-            <div class="item-progress-top text-ellipsis">{{item.name}}</div>
+            <div class="item-progress-top text-ellipsis" :title="item.name">{{item.name}}</div>
             <div class="item-progress-middle">
               <el-progress :show-text="false" :percentage="item.done" :color="customColorMethod(item.done, item)"></el-progress>
             </div>

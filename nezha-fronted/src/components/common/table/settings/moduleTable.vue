@@ -51,6 +51,7 @@
           <template v-else-if="item.prop === 'project'">
             <div class="document-copy-block">
               <span class="document-copy-text"
+                    :title="scope.row[item.prop].name"
               @mouseenter="labelHover(scope.row, item.prop, true,true, $event)"
               @mouseleave="labelHover(scope.row, item.prop, false,true)">
               {{scope.row[item.prop].name}}
