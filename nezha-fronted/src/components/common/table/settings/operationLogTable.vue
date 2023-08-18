@@ -190,7 +190,7 @@ export default {
       }
     },
     copyValue (item) {
-      const str = item
+      const str = JSON.stringify(JSON.parse(item), null, 2)
       // const domUrl = document.createElement('input')
       // domUrl.value = JSON.stringify(str)
       // domUrl.id = 'creatDom'
@@ -200,7 +200,7 @@ export default {
       // const creatDom = document.getElementById('creatDom')
       // creatDom.parentNode.removeChild(creatDom)
       // this.$message.success(this.$t('overall.copySuccess'))
-      this.$copyText(JSON.stringify(str)).then(() => {
+      this.$copyText(str).then(() => {
         this.$message.success({ message: this.$t('overall.copySuccess') })
       })
     }
