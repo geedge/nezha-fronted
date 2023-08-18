@@ -79,6 +79,7 @@
                 :type="'info'"
                 :label="item1.label"
                 :regex="item1.regex"
+                :title="item1.value"
                 style="margin: 5px 0 5px 5px">
                 {{ item1.value }}
               </nz-alert-tag>

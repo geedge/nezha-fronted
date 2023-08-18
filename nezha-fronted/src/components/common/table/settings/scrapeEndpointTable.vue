@@ -46,6 +46,7 @@
                 :label="item.label"
                 :type="'info'"
                 style="margin: 5px 0 5px 5px;"
+                :title="item.value"
               >
                {{item.value}}
               </nz-alert-tag>

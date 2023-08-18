@@ -75,6 +75,7 @@
                   :cursor-point="tagType(label.label) !== 'info'"
                   :label="label.label"
                   :type="tagType(label.label)"
+                  :title="label.value"
                   style="margin: 5px 0 5px 5px"
                 >
                   {{ label.value }}
