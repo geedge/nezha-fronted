@@ -50,6 +50,7 @@ export const chartTimeSeriesLineOption = {
   },
   dataZoom: [
     {
+      disabled: true,
       type: 'inside',
       zoomOnMouseWheel: 'ctrl'
     }

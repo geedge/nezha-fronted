@@ -202,9 +202,40 @@ export default {
             })
           }
         }
+        if (this.isInit) {
+          // 修复echarts bug(dataZoom设置为inside 未按住ctrl 页面无法滚动)
+          // 监听按键按下事件
+          document.addEventListener('keydown', this.keydown)
+          // 监听按键松开事件
+          document.addEventListener('keyup', this.keyup)
+        }
         this.chartLoading = false
         this.isInit = false
       }, 200)
+    },
+    keydown (event) {
+      // 监听按键按下事件
+      // 判断是否按下了Ctrl键
+      if (event.ctrlKey) {
+        // 如果按下了Ctrl键，则启用Echarts的dataZoom功能
+        getChart(this.chartId).setOption({
+          dataZoom: [{
+            disabled: false
+          }]
+        })
+      }
+    },
+    keyup (event) {
+      // 监听按键松开事件
+      // 判断是否释放了Ctrl键
+      if (!event.ctrlKey) {
+        // 如果释放了Ctrl键，则禁用Echarts的dataZoom功能
+        getChart(this.chartId).setOption({
+          dataZoom: [{
+            disabled: true
+          }]
+        })
+      }
     },
     getMinMaxFromData (originalDatas, chartUnit = 2) {
       let minTime = null
@@ -537,6 +568,10 @@ export default {
       this.isStack = this.chartInfo.param.stack
     } catch (e) {}
     this.chartInfo.loaded && this.initChart(this.chartOption)
+  },
+  beforeDestroy () {
+    document.removeEventListener('keydown', this.keydown)
+    document.removeEventListener('keyup', this.keyup)
   }
 }
 </script>
