@@ -113,7 +113,7 @@
 <script>
 // import { host, port } from '@/components/common/js/validate'
 import editRigthBox from '../../mixin/editRigthBox'
-
+import bus from '@/libs/bus'
 export default {
   name: 'userBox',
   components: {
@@ -246,6 +246,15 @@ export default {
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
+                const userInfo = localStorage.getItem('nz-userInfo') ? JSON.parse(localStorage.getItem('nz-userInfo')) : ''
+                if (userInfo.id == this.editUser.id) {
+                  const obj = this.$lodash.cloneDeep(this.editUser)
+                  delete obj.roles
+                  delete obj.pin
+                  delete obj.pinChange
+                  localStorage.setItem('nz-userInfo', JSON.stringify(obj))
+                  bus.$emit('login')
+                }
               } else {
                 this.$message.error(res.msg)
               }

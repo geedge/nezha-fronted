@@ -427,7 +427,8 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         clientPort: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          { validator: port, trigger: 'blur' }
         ]
       },
       cabRules: {
