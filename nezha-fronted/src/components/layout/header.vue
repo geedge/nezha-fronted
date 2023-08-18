@@ -202,8 +202,9 @@ export default {
 
     initEvent () {
       bus.$on('login', () => {
-        this.username = localStorage.getItem('nz-username')
-        this.name = localStorage.getItem('nz-username')
+        const userInfo = localStorage.getItem('nz-userInfo') ? JSON.parse(localStorage.getItem('nz-userInfo')) : ''
+        this.username = userInfo.username
+        this.name = userInfo.name
         // this.refreshLang()
       })
       // if (window.history && window.history.pushState) {
@@ -218,7 +219,7 @@ export default {
       this.$store.commit('isShrink')
     },
     testUser () {
-      if (this.username != localStorage.getItem('nz-username')) {
+      if (this.name != localStorage.getItem('nz-username')) {
         this.$router.go(0)
       }
       if (this.$store.getters.getLanguage && (this.$store.getters.getLanguage !== localStorage.getItem('nz-language'))) {
@@ -233,8 +234,9 @@ export default {
     // for (let i = 97; i < 123; i++) {
     //   this.fontData.push(String.fromCharCode(i))
     // }
-    this.name = localStorage.getItem('nz-username')
-    this.username = localStorage.getItem('nz-username')
+    const userInfo = localStorage.getItem('nz-userInfo') ? JSON.parse(localStorage.getItem('nz-userInfo')) : ''
+    this.name = userInfo.name
+    this.username = userInfo.username
     this.language = localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en'
     this.$i18n.locale = this.language
     if (localStorage.getItem('nz-token')) {
