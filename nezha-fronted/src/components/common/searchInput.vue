@@ -1120,7 +1120,14 @@ export default {
             if (findItem) {
               item.name = findItem.name
               if (item.valString) { // 判断 有valString 显示对应国际化内容 以防中英文出现问题
-                item.valString = this.selectInfoList[item.type].find(selectInfo => selectInfo.value == item.val).label
+                let arr = []
+                if (this.selectInfoList[item.type]) {
+                  arr = this.selectInfoList[item.type]
+                } else if (this.selectInfoList[item.label]) {
+                  arr = this.selectInfoList[item.label]
+                }
+                const find = arr.find(selectInfo => selectInfo.value == item.val)
+                item.valString = find ? find.label : ''
               }
             }
           })
