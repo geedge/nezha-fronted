@@ -72,6 +72,7 @@
                 :label="item1.name"
                 :type="tagType(item1.name)"
                 :regex="item1.regex"
+                :title="item1.value"
                 style="margin: 5px 0 5px 5px"
               >
                 {{ item1.value }}
