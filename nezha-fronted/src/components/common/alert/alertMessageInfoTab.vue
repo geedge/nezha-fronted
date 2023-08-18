@@ -118,7 +118,7 @@ export default {
           })
           // && n.alertRule.dashboardId
           // n.alertRule && (n.alertRule.dashboardId = 101534)
-          if (n.alertRule && n.alertRule.dashboardId) {
+          if (n.alertRule && n.alertRule.dashboardId && n.alertRule.dashboardId != -1) {
             //
             this.cardNames.push({
               key: 'dashboard',
