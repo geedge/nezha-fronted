@@ -19,7 +19,7 @@
         <div class="sub-list-title" v-if="showTitle">{{bottomHeaderTitle}}：<slot name="title"></slot></div>
         <div class="sub-list-tabs">
           <!--          <div v-for="tab in tabs" :key="tab.prop" :class="{'sub-list-tab&#45;&#45;active': tab.active || tab.prop == targetTab }" :title='tab.name' class="sub-list-tab" @click="changeTab(tab.prop)">{{tab.name}}</div>-->
-          <el-tabs v-model="activeTargetTab" @tab-click="changeTab" class="sub-list-tabs-nz-tabs">
+          <el-tabs v-model="activeTargetTab" @tab-click="changeTab" class="sub-list-tabs-nz-tabs" :class="customClassName">
             <el-tab-pane v-for="tab in tabs" :label="tab.name" :name="tab.prop" :key="tab.prop"  class="sub-list-tab"></el-tab-pane>
           </el-tabs>
         </div>
@@ -59,6 +59,10 @@ export default {
   },
   props: {
     from: {
+      type: String,
+      default: ''
+    },
+    customClassName: {
       type: String,
       default: ''
     },
@@ -106,7 +110,7 @@ export default {
   },
   computed: {
     bottomHeaderTitle () {
-      return this.title || (this.$t('overall.name') + ':')
+      return this.title || (this.$t('overall.name'))
     },
     subContentClass () {
       const className = []
