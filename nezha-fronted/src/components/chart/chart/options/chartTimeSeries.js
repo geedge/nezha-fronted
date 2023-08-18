@@ -48,6 +48,12 @@ export const chartTimeSeriesLineOption = {
       }
     }
   },
+  dataZoom: [
+    {
+      type: 'inside',
+      zoomOnMouseWheel: 'ctrl'
+    }
+  ],
   color: initColor(),
   grid: {
     left: 20,
