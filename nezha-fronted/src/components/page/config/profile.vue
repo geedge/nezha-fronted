@@ -12,7 +12,7 @@
             trigger="hover"
             :content="userList.name">
             <div slot="reference">
-              <span :class="(mfaEnable == '1' || mfaLevel > 0)?'MfaName':'name'">
+              <span :class="(mfaEnable == '1' || mfaLevel > 0)?'MfaName':'name'" :title="userList.username">
                 {{userList.name}}
               </span>
               <span class="profile-left__header-username-span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span>
@@ -23,7 +23,7 @@
             trigger="hover"
             :content="'@' + userList.username">
             <div slot="reference">
-              <span :class="(mfaEnable == '1' || mfaLevel > 0)?'MfaName':'name'">
+              <span :class="(mfaEnable == '1' || mfaLevel > 0)?'MfaName':'name'" :title="userList.username">
                 @{{userList.username}}
               </span>
             </div>

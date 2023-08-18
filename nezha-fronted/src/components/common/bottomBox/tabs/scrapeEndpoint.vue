@@ -74,7 +74,7 @@ export default {
         total: 0
       },
       timer: null,
-      sameLabels: ['endpointLabels', 'labelsType', 'lastScrape', 'lastScrapeDuration', 'health', 'lastError'],
+      sameLabels: ['endpointLabels', 'labelsType', 'lastScrape', 'lastScrapeDuration', 'health', 'lastError', 'str'],
       orderBy: {}
     }
   },
@@ -188,6 +188,7 @@ export default {
         const user = date.user
         const labels = date.labels
         const discoveredLabels = date.discoveredLabels
+        const str = JSON.stringify(date.discoveredLabels)
         const tableData = {
           endpointLabels,
           endpoint,
@@ -204,7 +205,8 @@ export default {
           parent_asset,
           user,
           labels,
-          discoveredLabels
+          discoveredLabels,
+          str
         }
         let simpleTemp = ''
         const keys = Object.keys(tableData)
@@ -219,6 +221,7 @@ export default {
         if (simpleTemp.indexOf(',') !== -1) {
           simpleTemp = simpleTemp.substr(0, simpleTemp.length - 1)
         }
+        console.log(simpleTemp)
         tableData.tableDateAll = simpleTemp
         tableDates.push(tableData)
       }

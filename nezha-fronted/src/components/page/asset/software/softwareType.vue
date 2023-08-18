@@ -51,7 +51,6 @@
       </template>
       <template v-slot="slotProps">
         <softwareTypeTable
-
           ref="dataTable"
           :orderByFa="orderBy"
           v-my-loading="tools.loading"

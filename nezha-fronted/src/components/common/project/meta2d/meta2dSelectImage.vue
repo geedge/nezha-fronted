@@ -2,7 +2,7 @@
   <div class="meta2d-image-box">
     <div @click="changeSelectBoxShow(true)" style="position: relative">
       <div class="image-input">
-        <span v-if="imageName" class="image-input-message text-ellipsis">{{unit}} / {{imageName}}</span>
+        <span v-if="imageName" class="image-input-message text-ellipsis" :title="unit + '/' + imageName">{{unit}} / {{imageName}}</span>
         <i class="el-icon-circle-close" style="position: absolute;top: 10px;right: 10px;font-size: 14px" @click.stop="selectImageChange({image: '', id: ''}, true)"/>
       </div>
     </div>
@@ -29,7 +29,7 @@
                 <span class="nz-icon-caret-right-box">
                   <i class="nz-icon nz-icon-caret-right" :class="item.show ? 'rotate90': ''" />
                 </span>
-                <div class="text-ellipsis nz-collapse-header-content">{{item.group}}</div>
+                <div class="text-ellipsis nz-collapse-header-content" :title="item.group">{{item.group}}</div>
                 <i class="nz-icon nz-icon-delete title-delete" v-if="item.group!== 'General'" @click.stop="tooltipDeleteTitle(item)" :title="$t('overall.delete')" />
                 <span class="title-all">{{item.children.length}}</span>
               </div>

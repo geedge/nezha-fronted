@@ -34,6 +34,7 @@
           :table-data="tableData"
           @del="del"
           @edit="edit"
+          @copy="copy"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"></menu-table>

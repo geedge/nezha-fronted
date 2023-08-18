@@ -234,7 +234,7 @@ export default new Router({
         },
         {
           path: '/softwareType',
-          component: resolve => require(['@/components/page/software/softwareType'], resolve)
+          component: resolve => require(['@/components/page/asset/software/softwareType'], resolve)
         }
       ]
     },

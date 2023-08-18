@@ -36,7 +36,7 @@
       </template>
       <template slot-scope="scope" :column="item">
         <div v-if="item.prop === 'group'">
-          <copy :copyData='scope.row[item.prop].name' :showInfo='scope.row[item.prop]'>
+          <copy v-if="scope.row[item.prop]" :copyData='scope.row[item.prop].name' :showInfo='scope.row[item.prop]'>
                   <template slot="copy-text">
                      {{scope.row[item.prop]?scope.row[item.prop].name:'-'}}
                   </template>

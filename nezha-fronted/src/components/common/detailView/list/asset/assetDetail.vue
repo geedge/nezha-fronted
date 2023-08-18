@@ -26,7 +26,7 @@
         @click="detailViewRightShow(item)"
         @mouseenter="labelHover(item, 'asset', true, $event)"
         @mouseleave="labelHover(item, 'asset', false)">
-        <div class="detail-row-info">
+        <div class="detail-row-info" :title="item.name">
           <div class="asset-manageIp">
             <i class="nz-icon nz-icon-overview-alert" :class="item.alertNum>0?'colorEF7458':'color23BF9A'"/>
             {{item.name}}
