@@ -1052,8 +1052,10 @@ export default {
       const type = this.calcType()
       this.$get(`/fulltext/metadata/${type}`).then(res => {
         if (res.code == 200) {
-          this.searchList = res.data.list || []
-          this.oldSearchList = res.data.list || []
+          let arr = res.data.list || []
+          arr = arr.filter(item => item.show === '1')
+          this.searchList = arr
+          this.oldSearchList = arr
         } else {
           this.$message.error(res.msg || res.error)
         }
