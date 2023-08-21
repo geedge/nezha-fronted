@@ -10,7 +10,7 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'model_add'" :title="$t('overall.createSoftwareType')" class="top-tool-btn margin-r-10" type="button" @click="add">
+        <button id="account-add" v-has="'software_type_add'" :title="$t('overall.createSoftwareType')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
        <top-tool-more-options
@@ -19,13 +19,13 @@
           id="model"
           :params="searchLabel"
           :permissions="{
-            import: 'model_add',
-            export: 'model_edit'
+            import: 'software_type_add',
+            export: 'software_type_edit'
           }"
           class="top-tool-export margin-r-10"
           export-file-name="asset-model"
           @afterImport="getTableData"
-          v-has="['model_add','model_edit','model_delete']"
+          v-has="['software_type_add','software_type_edit','software_type_delete']"
         >
           <template v-slot:before>
             <div>
@@ -33,12 +33,12 @@
                 <delete-button
                   ref="deleteButton"
                   :single="false"
-                  :from="'model'"
+                  :from="'software_type'"
                   :forceDeleteShow="true"
                   :type="'link'"
                   :title="$t('overall.batchDel')"
                   id="account-list-batch-delete"
-                  v-has="'model_delete'"
+                  v-has="'software_type_delete'"
                   :api="url"
                   :delete-objs="batchDeleteObjs"
                   @after="getTableData"
@@ -117,6 +117,11 @@ export default {
           name: this.$t('overall.name'),
           type: 'input',
           label: 'name',
+          disabled: false
+        }, {
+          name: this.$t('softwareType.category'),
+          type: 'input',
+          label: 'category',
           disabled: false
         }]
       }

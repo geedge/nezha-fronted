@@ -161,6 +161,8 @@ export default {
           if (this.detailType === 'view') {
             this.$refs.dataDetail && (this.$refs.dataDetail.$refs.dataTable.scrollTop = 0)
           }
+        } else {
+          this.$message.error(response.error || response.msg)
         }
       })
     },

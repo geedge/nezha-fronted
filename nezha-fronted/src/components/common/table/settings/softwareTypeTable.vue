@@ -139,32 +139,35 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80,
+          width: 120,
           sortable: 'custom'
         }, {
           label: this.$t('config.model.name'),
           prop: 'name',
           show: true,
-          minWidth: 350,
+          width: 350,
           sortable: 'custom'
         }, {
           label: this.$t('softwareType.category'),
           prop: 'category',
           show: true,
-          width: 200,
-          sortable: 'custom'
-        }, {
-          label: this.$t('config.menus.icon'),
-          prop: 'icon',
-          show: true,
-          width: 120,
-          sortable: 'custom'
-        }, {
-          label: this.$t('config.assetLabel.params'),
-          prop: 'params',
           minWidth: 200,
-          show: true
-        }, {
+          sortable: 'custom'
+        },
+        // {
+        //   label: this.$t('config.menus.icon'),
+        //   prop: 'icon',
+        //   show: true,
+        //   width: 120,
+        //   sortable: 'custom'
+        // },
+        // {
+        //   label: this.$t('config.assetLabel.params'),
+        //   prop: 'params',
+        //   minWidth: 200,
+        //   show: true
+        // },
+        {
           label: this.$t('issue.createTime'),
           prop: 'cts',
           minWidth: 200,
