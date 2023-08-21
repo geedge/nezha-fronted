@@ -9,6 +9,7 @@
       :targetTab="targetTab"
       @changeTab="changeTab"
       class="full-width-height"
+      :customClassName="'dashboard-tab-temp'"
       :showPagination="false"
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>

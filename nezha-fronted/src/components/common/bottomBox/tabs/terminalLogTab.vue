@@ -73,34 +73,38 @@ export default {
         zheze_none: true,
         searchLabelList: [
           {
-            id: 11,
-            name: this.$t('config.terminallog.loginHost'),
+            id: 15,
+            name: this.$t('config.terminallog.SessionID'),
             type: 'input',
-            label: 'host',
+            label: 'uuid',
             disabled: false
-          }, {
-            id: 12,
-            name: this.$t('config.terminallog.loginUser'),
-            type: 'input',
-            label: 'loginUser',
-            disabled: false
-          }, {
-            id: 13,
-            name: this.$t('ping.sourceIp'),
-            type: 'input',
-            label: 'remoteAddr',
-            disabled: false
-          }, {
+          },
+          {
             id: 14,
             name: this.$t('config.terminallog.sourceUser'),
             type: 'input',
             label: 'username',
             disabled: false
-          }, {
-            id: 15,
-            name: this.$t('config.terminallog.uuid'),
+          },
+          {
+            id: 13,
+            name: this.$t('ping.sourceIp'),
             type: 'input',
-            label: 'uuid',
+            label: 'remoteAddr',
+            disabled: false
+          },
+          {
+            id: 12,
+            name: this.$t('config.terminallog.loginUser'),
+            type: 'input',
+            label: 'loginUser',
+            disabled: false
+          },
+          {
+            id: 11,
+            name: this.$t('config.terminallog.loginHost'),
+            type: 'input',
+            label: 'host',
             disabled: false
           }, {
             id: 16,

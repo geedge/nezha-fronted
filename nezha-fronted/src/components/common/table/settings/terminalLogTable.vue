@@ -153,8 +153,9 @@ export default {
           prop: 'uuid',
           minWidth: 200,
           show: true
-        }, {
-          label: this.$t('config.operationlog.username'),
+        },
+        {
+          label: this.$t('config.terminallog.sourceUser'),
           prop: 'username',
           minWidth: 200,
           show: true
@@ -165,6 +166,18 @@ export default {
           minWidth: 115,
           show: true,
           sortable: 'custom'
+        },
+        {
+          label: this.$t('config.terminallog.loginUser'),
+          prop: 'loginUser',
+          minWidth: 200,
+          show: true
+        },
+        {
+          label: this.$t('config.terminallog.loginHost'),
+          prop: 'host',
+          minWidth: 200,
+          show: true
         },
         {
           label: this.$t('config.terminallog.remote'),
