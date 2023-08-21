@@ -47,7 +47,7 @@
       <span v-show="chartInfo.param.collapse" class="collapse-content">({{chartData ? chartData.length : 0}} charts)</span>
     </div>
     <div class="temp"></div>
-    <div class="chart-header__tools" v-if="chartInfo.type !== 'endpointInfo' && chartInfo.type !== 'assetInfo' && !isExportHtml">
+    <div class="chart-header__tools" v-if="chartInfo.type !== 'endpointInfo' && chartInfo.type !== 'assetInfo' && !isExportHtml && showTool">
       <span v-if="chartInfo.param.link" :title="$t('overall.link')" class="chart-header__tool" @click="openUrl">
        <i class="nz-icon nz-icon-more-app tool__icon"></i>
       </span>
