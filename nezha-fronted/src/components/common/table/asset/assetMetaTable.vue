@@ -65,17 +65,17 @@
           <div v-else-if="scope.row[item.prop] === 0">Disabled</div>
         </div>
         <div v-else-if=" item.prop === 'type' ">
-          <div v-if="scope.row[item.prop].toUpperCase() == 'TEXT'"><i class="nz-icon nz-icon-text"></i>&nbsp;&nbsp;TEXT</div>
-          <div v-else-if="scope.row[item.prop].toUpperCase() == 'MULTITEXT'"><i class="nz-icon nz-icon-multitext"></i>&nbsp;&nbsp;MULTITEXT</div>
-          <div v-else-if="scope.row[item.prop].toUpperCase() == 'TEXTAREA'"><i class="nz-icon nz-icon-textarea"></i>&nbsp;&nbsp;TEXTAREA</div>
-          <div v-else-if="scope.row[item.prop].toUpperCase() == 'RADIO'"><i class="nz-icon nz-icon-radio"></i>&nbsp;&nbsp;RADI0</div>
-          <div v-else-if="scope.row[item.prop].toUpperCase() == 'CHECKBOX'"><i class="nz-icon nz-icon-checkbox"></i>&nbsp;&nbsp;CHECKBOX</div>
-          <div v-else-if="scope.row[item.prop].toUpperCase() == 'SELECT'"><i class="nz-icon nz-icon-xialaxuanze"></i>&nbsp;&nbsp;SELECT</div>
-          <div v-else-if="scope.row[item.prop].toUpperCase() == 'INTEGER'"><i class="nz-icon nz-icon-integer"></i>&nbsp;&nbsp;INTEGER</div>
-          <div v-else-if="scope.row[item.prop].toUpperCase() == 'DOUBLE'"><i class="nz-icon nz-icon-double"></i>&nbsp;&nbsp;DOUBLE</div>
-          <div v-else-if="scope.row[item.prop].toUpperCase() == 'DATETIME'"><i class="nz-icon nz-icon-dingshishijian"></i>&nbsp;&nbsp;DATETIME</div>
-          <div v-else-if="scope.row[item.prop].toUpperCase() == 'EMAIL'"><i class="nz-icon nz-icon-email"></i>&nbsp;&nbsp;EMAIL</div>
-          <div v-else-if="scope.row[item.prop].toUpperCase() == 'PASSWORD'"><i class="nz-icon nz-icon-password"></i>&nbsp;&nbsp;PASSWORD</div>
+          <div v-if="scope.row[item.prop].toUpperCase() == 'TEXT'"><i class="nz-icon nz-icon-text"></i>&nbsp;&nbsp;{{typeData[0].name}}</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'MULTITEXT'"><i class="nz-icon nz-icon-multitext"></i>&nbsp;&nbsp;{{typeData[1].name}}</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'TEXTAREA'"><i class="nz-icon nz-icon-textarea"></i>&nbsp;&nbsp;{{typeData[1].name}}</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'RADIO'"><i class="nz-icon nz-icon-radio"></i>&nbsp;&nbsp;{{typeData[2].name}}</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'CHECKBOX'"><i class="nz-icon nz-icon-checkbox"></i>&nbsp;&nbsp;{{typeData[3].name}}</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'SELECT'"><i class="nz-icon nz-icon-xialaxuanze"></i>&nbsp;&nbsp;{{typeData[4].name}}</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'INTEGER'"><i class="nz-icon nz-icon-integer"></i>&nbsp;&nbsp;{{typeData[5].name}}</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'DOUBLE'"><i class="nz-icon nz-icon-double"></i>&nbsp;&nbsp;{{typeData[6].name}}</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'PASSWORD'"><i class="nz-icon nz-icon-password"></i>&nbsp;&nbsp;{{typeData[7].name}}</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'DATETIME'"><i class="nz-icon nz-icon-dingshishijian"></i>&nbsp;&nbsp;{{typeData[8].name}}</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'EMAIL'"><i class="nz-icon nz-icon-email"></i>&nbsp;&nbsp;{{typeData[9].name}}</div>
         </div>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
         <template v-else>-</template>
@@ -177,7 +177,75 @@ export default {
           minWidth: 200,
           show: true
         }
-      ]
+      ],
+      typeData: [
+        {
+          icon: 'nz-icon nz-icon-text',
+          disabled: true,
+          value: 'TEXT',
+          name: this.$t('config.assetLabel.text')
+        },
+        // {
+        //   icon: 'nz-icon nz-icon-multitext',
+        //   disabled: true,
+        //   value: 'MULTITEXT',
+        //   name: this.$t('config.assetLabel.multitext')
+        // },
+        {
+          icon: 'nz-icon nz-icon-textarea',
+          disabled: true,
+          value: 'TEXTAREA',
+          name: this.$t('config.assetLabel.textarea')
+        },
+        {
+          icon: 'nz-icon nz-icon-radio',
+          disabled: true,
+          value: 'RADIO',
+          name: this.$t('config.assetLabel.radio')
+        },
+        {
+          icon: 'nz-icon nz-icon-checkbox',
+          disabled: true,
+          value: 'CHECKBOX',
+          name: this.$t('config.assetLabel.checkbox')
+        },
+        {
+          icon: 'nz-icon nz-icon-xialaxuanze',
+          disabled: true,
+          value: 'SELECT',
+          name: this.$t('config.assetLabel.select')
+        },
+        {
+          icon: 'nz-icon nz-icon-integer',
+          disabled: true,
+          value: 'INTEGER',
+          name: this.$t('config.assetLabel.integer')
+        },
+        {
+          icon: 'nz-icon nz-icon-double',
+          disabled: true,
+          value: 'DOUBLE',
+          name: this.$t('config.assetLabel.double')
+        },
+        {
+          icon: 'nz-icon nz-icon-password',
+          disabled: true,
+          value: 'PASSWORD',
+          name: this.$t('login.pin')
+        },
+        {
+          icon: 'nz-icon nz-icon-dingshishijian',
+          disabled: true,
+          value: 'DATETIME',
+          name: this.$t('config.assetLabel.datetime')
+        },
+        {
+          icon: 'nz-icon nz-icon-email',
+          disabled: true,
+          value: 'EMAIL',
+          name: this.$t('config.assetLabel.email')
+        }
+      ],
     }
   },
   methods: {
