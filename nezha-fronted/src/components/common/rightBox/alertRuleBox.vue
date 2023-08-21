@@ -298,7 +298,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item style="margin-top: -15px;">
+          <el-form-item style="margin-top: -5px;">
             <el-time-picker
               style="width: calc(50% - 5px);display: inline-block"
               :value-format="'HH:mm'"
