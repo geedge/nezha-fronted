@@ -906,6 +906,8 @@ export default {
           obj.q = ''
           this.oldSearchStr = ''
         }
+        this.visible = false
+        this.$refs.searchStr.blur()
         this.$emit('search', obj)
       })
     }, 100),
