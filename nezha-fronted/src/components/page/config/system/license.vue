@@ -285,6 +285,7 @@ export default {
       this.$post('/sys/license/upload', form).then(res => {
         if (res.code == 200) {
           this.licenseGetStatus()
+          this.$message.success(this.$t('overall.success'))
         } else {
           this.$message.error(res.msg)
         }
