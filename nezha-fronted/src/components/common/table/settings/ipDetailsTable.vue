@@ -42,7 +42,7 @@
           </div>
           <div v-else-if="scope.row[item.prop] === 2">
             <span class="nz-icon nz-icon-circle ip-detail-transient"></span>
-            {{ $t('overall.ipam.available') }}
+            {{ $t('overall.ipam.transient') }}
           </div>
           <div v-else-if="scope.row[item.prop] === 3">
             <span class="nz-icon nz-icon-circle ip-detail-used"></span>
