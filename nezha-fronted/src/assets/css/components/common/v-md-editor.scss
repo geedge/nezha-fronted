@@ -45,3 +45,44 @@
     }
   }
 }
+
+.markdownEditor{
+  box-sizing: border-box;
+  border-radius: 0;
+  border: 1px solid $--border-color-light; 
+  box-shadow: none;
+  background: transparent;
+  .v-md-editor__toolbar{
+    border-bottom: 1px solid $--border-color-light; 
+    .v-md-editor__tooltip{
+      display: none;
+    }
+    .v-md-editor__toolbar-item:hover,.v-md-editor__toolbar-item--active{
+      background: transparent;
+    }
+    .v-md-editor__menu{
+      background: $--background-color-empty;
+      border: 1px solid $--border-color-light; 
+      .v-md-editor__menu-item{
+        color: $--color-text-regular;
+      }
+      .v-md-editor__menu-item:hover{
+        background: $--background-color-base;
+      }
+    }
+  }
+  .v-md-textarea-editor{
+    &>textarea{
+      padding: 12px 15px;
+      background: transparent;  
+      color: $--color-text-regular;
+      font-family: menlo,Ubuntu Mono,consolas,Courier New,Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei,sans-serif !important;
+    }
+    &>pre{
+      padding: 12px 15px;
+      section{
+        font-family: menlo,Ubuntu Mono,consolas,Courier New,Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei,sans-serif !important;
+      }
+    }
+  }
+}

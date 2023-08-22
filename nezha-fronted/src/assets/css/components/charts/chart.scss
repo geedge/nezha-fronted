@@ -519,6 +519,18 @@
 .chart-text-preview .ql-container.ql-snow {
   border: unset !important;
 }
+.rich-text-container{
+  .v-md-editor-preview{
+    white-space: initial;
+    box-sizing: border-box;
+    padding: 12px 15px;
+  }
+  .v-md-copy-code-btn{
+    display: none !important;
+  }
+}
+
+
 .chart-table ,.chart-preview-dialog {
   .nz-table .el-table__row .custom-value .cell{
     padding: 1px 0;

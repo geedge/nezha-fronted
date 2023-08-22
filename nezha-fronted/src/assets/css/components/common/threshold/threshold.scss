@@ -1,5 +1,9 @@
 .rich-text-editor {
   color: $--color-text-regular;
+  .ql-toolbar.ql-snow{
+    padding: 7px;
+    height: 40px;
+  }
   .ql-toolbar {
     border: 1px solid $--border-color-light;
   }

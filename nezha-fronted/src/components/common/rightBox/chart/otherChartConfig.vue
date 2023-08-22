@@ -53,6 +53,20 @@
             <el-option :label="$t('overall.collapse')"  :value="true"></el-option>
           </el-select>
         </el-form-item>
+        <!--Editor type-->
+        <el-form-item class="form-item--half-width" v-if="isText(chartConfig.type)" :label='$t("dashboard.dashboard.chartForm.editorType")' prop="param.editorType">
+          <el-select
+            id="chart-box-collapse"
+            v-model="chartConfig.param.editorType"
+            placeholder=""
+            popper-class="right-box-select-top prevent-clickoutside"
+            size="small"
+            @change="editorTypeChange"
+          >
+            <el-option :label="$t('dashboard.dashboard.chartForm.richText')" value="richText"></el-option>
+            <el-option :label="$t('dashboard.dashboard.chartForm.markDown')" value="markdown"></el-option>
+          </el-select>
+        </el-form-item>
       </div>
       <div class="form-items--half-width-group" v-if="!isGroup(chartConfig.type)">
         <!--width-->
@@ -166,8 +180,9 @@
         :isChart="true"
       />
       <!--text-->
-      <el-form-item  v-if="isText(chartConfig.type)"  :rules="{ required: true,  message: $t('validate.required'), trigger: 'change' }" prop="param.text">
-        <rich-text-editor ref="richTextEditor" :edit-data="chartConfig.param.text" @textChange="textChange"></rich-text-editor>
+      <el-form-item v-if="isText(chartConfig.type)" :rules="{ required: true,  message: $t('validate.required'), trigger: 'change' }" prop="param.text">
+        <markdownEditor v-if="chartConfig.param.editorType==='markdown'" :edit-data="chartConfig.param.text" @textChange="textChange"></markdownEditor>
+        <rich-text-editor v-else ref="richTextEditor" :edit-data="chartConfig.param.text" @textChange="textChange"></rich-text-editor>
       </el-form-item>
 
       <!-- visibility -->
@@ -340,6 +355,7 @@
 import publicConfig from '@/components/common/rightBox/chart/publicConfig'
 import chartTypeShow from '@/components/common/rightBox/chart/chartTypeShow'
 import richTextEditor from '@/components/chart/richTextEditor'
+import markdownEditor from '@/components/chart/markdownEditor'
 import beforeMeta2d from '@/components/common/mixin/beforeMeta2d'
 import meta2dMain from '@/components/common/project/meta2d/meta2dMain'
 import { clearTopology } from '@/components/common/js/common'
@@ -349,6 +365,7 @@ export default {
   mixins: [publicConfig, chartTypeShow],
   components: {
     richTextEditor,
+    markdownEditor,
     meta2dMain
   },
   watch: {
@@ -408,6 +425,10 @@ export default {
     }
   },
   methods: {
+    editorTypeChange () {
+      this.chartConfig.param.text = ''
+      this.change()
+    },
     init () {
       this.chartConfig = JSON.parse(JSON.stringify(this.params))
       this.reloadTopo()
@@ -451,7 +472,8 @@ export default {
               operator: 'equal',
               varValue: '',
               result: 'show'
-            }
+            },
+            editorType: 'richText'
           }
           break
         case 'diagram':
@@ -525,9 +547,13 @@ export default {
       this.topologyDialogChange(false, topo)
     },
     textChange (val) {
-      const html = `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${val}</div></div>`
-      this.chartConfig.param.text = html
-      this.$refs.chartForm.validateField('param.text')
+      if (this.$lodash.get(this.chartConfig, 'param.editorType', 'richText') === 'richText') {
+        const html = `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${val}</div></div>`
+        this.chartConfig.param.text = html
+      } else {
+        this.chartConfig.param.text = val
+      }
+      this.$refs.chartForm && this.$refs.chartForm.validateField('param.text')
       this.change()
     },
     reloadTopo () {

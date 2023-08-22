@@ -45,15 +45,20 @@ import htmlToPdf from '@/components/common/js/htmlToPdf'
 import mainMixin from '@/components/common/mixin/mainMixinFun'
 import introJS from 'intro.js'
 
-// v-md-editor
+// v-md-editor 预览组件
 import VMdPreview from '@kangc/v-md-editor/lib/preview'
 import '@kangc/v-md-editor/lib/style/preview.css'
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
 import '@kangc/v-md-editor/lib/theme/style/github.css'
-import hljs from 'highlight.js'
 // markdown支持代码复制
 import createCopyCodePlugin from '@/components/common/copy-code/index'
 import '@/components/common/copy-code/copy-code.css'
+// highlightjs
+import hljs from 'highlight.js'
+// markdown编辑器
+import VMdEditor from '@kangc/v-md-editor'
+import '@kangc/v-md-editor/lib/style/base-editor.css'
+
 VMdPreview.xss.extend({
   // extend white list
   whiteList: {
@@ -65,6 +70,10 @@ VMdPreview.use(githubTheme, {
 })
 VMdPreview.use(createCopyCodePlugin())
 Vue.use(VMdPreview)
+VMdEditor.use(githubTheme, {
+  Hljs: hljs
+})
+Vue.use(VMdEditor)
 
 // Pace.on("done", function() {
 //   $self.isShowAuth = false;

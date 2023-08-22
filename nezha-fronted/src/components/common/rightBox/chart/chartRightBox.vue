@@ -400,7 +400,11 @@ export default {
               varValue: '',
               result: 'show'
             },
-            dataLink: []
+            dataLink: [],
+            tooltip: {
+              mode: 'all',
+              sort: 'none'
+            }
           }
         }
       }

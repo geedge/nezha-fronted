@@ -648,6 +648,9 @@ export default {
             }
           }
         }
+        if (this.chart.type == 'text' && !this.chart.param.editorType) {
+          this.chart.param.editorType = 'richText'
+        }
       } else {
         this.rightBox.loading = true
         this.$get('visual/dashboard/chart/' + data.id).then(res => {
@@ -710,6 +713,9 @@ export default {
                   defaultSort: null
                 }
               }
+            }
+            if (this.chart.type == 'text' && !this.chart.param.editorType) {
+              this.chart.param.editorType = 'richText'
             }
             setTimeout(() => {
               this.$refs.addChartModal.isStable = 'stable'
