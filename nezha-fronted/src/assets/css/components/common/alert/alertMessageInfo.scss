@@ -596,6 +596,11 @@
     }
   }
 }
+#viewGraphDialog {
+  .el-dialog.is-fullscreen {
+    overflow: hidden;
+  }
+}
 
 
 
