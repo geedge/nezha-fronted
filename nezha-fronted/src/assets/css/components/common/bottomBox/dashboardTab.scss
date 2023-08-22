@@ -229,6 +229,14 @@
     color: #F0BF84;
   }
 }
+.dashboard-tab-temp {
+  .el-tabs__item{
+    width: 175px !important;
+  }
+  .el-tabs__active-bar {
+    width: 175px !important;
+  }
+}
 .nz-dashboard-dropdown {
   z-index: 3001 !important;
 }

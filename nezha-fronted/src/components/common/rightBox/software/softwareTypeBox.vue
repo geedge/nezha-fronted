@@ -18,26 +18,33 @@
             <el-input maxlength="128" show-word-limit v-model="editSoftwareType.category" size="small" type="text"></el-input>
           </el-form-item>
           <!--icon-->
-          <el-form-item :label="$t('config.menus.icon')" prop="icon">
-            <el-upload
-              class="avatar-uploader"
-              action="#"
-              :show-file-list="false"
-              :on-change="beforeAvatarUpload"
-              :auto-upload="false"
-              accept=".jpg,.png"
-              :limit="1"
-              :on-remove="handleRemove"
-              ref="avatarUploader"
-              :fileList="fileList"
-            >
-              <img v-if="imageUrl" :src="imageUrl" class="avatar">
-              <i v-else class="nz-icon nz-icon-create-square avatar-uploader-icon"></i>
-              <i class="nz-icon nz-icon-circle-close" v-if="imageUrl" @click.stop="removeIcon" :title="$t('overall.delete')"/>
-            </el-upload>
+<!--          <el-form-item :label="$t('config.menus.icon')" prop="icon">-->
+<!--            <el-upload-->
+<!--              class="avatar-uploader"-->
+<!--              action="#"-->
+<!--              :show-file-list="false"-->
+<!--              :on-change="beforeAvatarUpload"-->
+<!--              :auto-upload="false"-->
+<!--              accept=".jpg,.png"-->
+<!--              :limit="1"-->
+<!--              :on-remove="handleRemove"-->
+<!--              ref="avatarUploader"-->
+<!--              :fileList="fileList"-->
+<!--            >-->
+<!--              <img v-if="imageUrl" :src="imageUrl" class="avatar">-->
+<!--              <i v-else class="nz-icon nz-icon-create-square avatar-uploader-icon"></i>-->
+<!--              <i class="nz-icon nz-icon-circle-close" v-if="imageUrl" @click.stop="removeIcon" :title="$t('overall.delete')"/>-->
+<!--            </el-upload>-->
+<!--          </el-form-item>-->
+          <!--remark-->
+          <el-form-item :label="$t('overall.remark')" prop="remark">
+            <el-input maxlength="256" show-word-limit v-model="editSoftwareType.remark" size="small" :rows="2" type="textarea"></el-input>
           </el-form-item>
           <!--params-->
-          <el-form-item :label="$t('config.assetLabel.params')" prop="paramObj">
+          <div class="form__sub-title" >
+            <span>{{$t('softwareType.params')}}</span>
+          </div>
+          <el-form-item prop="paramObj">
             <div v-for="(label, i) in editSoftwareType.paramObj" :key="i" class="form__dotted-item form__dotted-item-required">
               <el-form-item :prop="'paramObj.' + i + '.value.0'" :rules="[ { required: JSON.parse(label.param).required === '1', message: $t('validate.required'), trigger: 'blur' }]">
                 <template v-slot:label>
@@ -144,10 +151,6 @@
               ></el-cascader>
             </div>
           </el-form-item>
-          <!--remark-->
-          <el-form-item :label="$t('overall.remark')" prop="remark">
-            <el-input maxlength="256" show-word-limit v-model="editSoftwareType.remark" size="small" :rows="2" type="textarea"></el-input>
-          </el-form-item>
         </el-form>
       </div>
     </div>
@@ -225,14 +228,8 @@ export default {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
-        brandId: [
+        category: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
-        ],
-        typeId: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
-        ],
-        sysObjectId: [
-          { validator: sysObjectIdInput, trigger: 'blur' }
         ]
       },
       labelCascProp: {
