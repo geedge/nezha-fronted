@@ -107,7 +107,7 @@ import deleteButton from '@/components/common/deleteButton'
 import diagnosisTab from '@/components/common/diagnosisTab'
 import configSync from '@/components/common/configSync'
 export default {
-  name: 'nzDataList',
+  name: 'nzDetailView',
   components: {
     detailViewRight,
     panelChart,
@@ -181,6 +181,7 @@ export default {
     return {
       fromRoute: fromRoute,
       /* 二级页面相关 */
+      api: '',
       bottomBox: {
         object: {},
         mainResizeShow: true, // dom高度改变时是否展示|隐藏

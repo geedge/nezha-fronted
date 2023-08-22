@@ -64,6 +64,7 @@ export default {
         case 'recordRule':
         case 'response':
         case 'params':
+        case 'other':
           return false
         default: return true
       }
