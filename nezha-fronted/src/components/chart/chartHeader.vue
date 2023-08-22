@@ -80,13 +80,13 @@
               <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i>
               <span>{{$t('overall.edit')}}</span>
             </li>
-            <li v-has="'main_delete'" class="el-dropdown-menu__item" @click="removeChart">
-              <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>
-              <span>{{$t('overall.delete')}}</span>
-            </li>
             <li v-has="'main_add'" class="el-dropdown-menu__item" @click="duplicate">
               <i class="el-icon-copy-document" style="font-size: 16px;"></i>
               <span>{{$t('overall.duplicate')}}</span>
+            </li>
+             <li v-has="'main_delete'" class="el-dropdown-menu__item" @click="removeChart">
+              <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>
+              <span>{{$t('overall.delete')}}</span>
             </li>
             <li v-if="from !== this.$CONSTANTS.fromRoute.chartTemp && chartInfo.pid" v-has="'main_edit'" class="el-dropdown-menu__item" @click="sync">
               <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>
