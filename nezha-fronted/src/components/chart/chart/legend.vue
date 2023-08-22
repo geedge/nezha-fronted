@@ -18,6 +18,8 @@
           :class="{'row--inactive': isGrey[index]}"
           class="legend--table-row"
           @click="clickLegend(item.name, index)"
+          @mouseenter="hoverLegend(item.name, index,'highlight')"
+          @mouseleave="hoverLegend(item.name, index,'downplay')"
         >
           <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
             <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
@@ -34,6 +36,8 @@
           :class="{'row--inactive': isGrey[index]}"
           class="legend--table-row"
           @click="clickLegend(item.name, index)"
+          @mouseenter="hoverLegend(item.name, index,'highlight')"
+          @mouseleave="hoverLegend(item.name, index,'downplay')"
         >
           <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
             <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
@@ -55,6 +59,8 @@
         :title="item.alias ? item.alias : item.name"
         class="legend-item"
         @click="clickLegend(item.name, index)"
+        @mouseenter="hoverLegend(item.name, index,'highlight')"
+        @mouseleave="hoverLegend(item.name, index,'downplay')"
       >
         <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
         <span v-else :style="{background: item.color}" class="legend-shape"></span>
@@ -69,6 +75,8 @@
         :title="item.alias ? item.alias : item.name"
         class="legend-item"
         @click="clickLegend(item.name, index)"
+        @mouseenter="hoverLegend(item.name, index,'highlight')"
+        @mouseleave="hoverLegend(item.name, index,'downplay')"
       >
         <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
         <span v-else :style="{background: item.color}" class="legend-shape"></span>
@@ -225,6 +233,20 @@ export default {
         data[0].data = data[0].data.filter((item, i) => !this.isGrey[i])
         echarts.setOption({
           series: data
+        })
+      }
+    },
+    hoverLegend (legendName, index, type) {
+      if (this.isTimeSeries) {
+        getChart(this.chartId).dispatchAction({
+          type: type,
+          seriesIndex: index,
+          name: legendName
+        })
+      } else {
+        getChart(this.chartId).dispatchAction({
+          type: type,
+          name: legendName
         })
       }
     },

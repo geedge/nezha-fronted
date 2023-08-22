@@ -221,6 +221,7 @@
 .panel-chart.panel-chart--fullscreen {
   border: none;
   .nz-chart__component {
+    position: relative;
     &.nz-chart__component--bottom {
       .legend-container {
         max-height: 135px;
@@ -462,12 +463,11 @@
     justify-content: space-between;
     align-items: center;
     min-width: 150px;
-    max-width: 600px;
+    max-width: 500px;
     line-height: 18px;
     font-size: 12px;
 
     .row__label {
-      max-width: 500px;
       white-space: nowrap;
       overflow-x: hidden;
       text-overflow: ellipsis;
@@ -483,6 +483,10 @@
     .row__value {
       padding-left: 5px;
     }
+  }
+  .tooltip__row.highlight{
+    color: $--color-text-primary;
+    font-weight: bold;
   }
 }
 .endpoint-query-metrics.chart-fullscreen.nz-dialog,.recordRules-query-metrics.chart-fullscreen.nz-dialog {
@@ -518,6 +522,7 @@
   flex-direction: row;
   align-items: center;
   align-content: center;
+  position: relative;
   .chart-stat-item{
     display: flex;
     justify-content: center;
@@ -570,6 +575,7 @@
   flex-wrap: wrap;
   padding: 5px;
   box-sizing: border-box;
+  position: relative;
   .chart-gauge-item{
     display: flex;
     position: relative;
@@ -623,8 +629,6 @@
 }
 .chart-canvas-tooltip{
   position: fixed;
-  min-width: 150px;
-  max-width: 600px;
   display: block;
   border-style: solid;
   white-space: nowrap;
@@ -633,13 +637,14 @@
   transition: opacity 0.2s cubic-bezier(0.23, 1, 0.32, 1) 0s, visibility 0.2s cubic-bezier(0.23, 1, 0.32, 1) 0s, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s;
   border-width: 1px;
   border-radius: 4px;
-  font: 14 px/ 21px "Microsoft YaHei";
+  font: 14px / 21px "Microsoft YaHei";
   padding: 10px;
   z-index: 99999999;
   pointer-events: none;
   overflow: hidden;
 }
 .chart-canvas-tooltip-title{
+  min-width: 150px;
   max-width: 500px;
   white-space: nowrap;
   overflow: hidden;
@@ -648,11 +653,49 @@
   font-size: 14px;
 }
 .chart-canvas-tooltip-content{
-  font-size: 12px;
+  max-width: 500px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 12px;
+  overflow: hidden;
+  &>div:last-of-type{
+    padding-left: 5px;
+  }
 }
+
+.chart-dataLink-tooltip{
+  position: absolute;
+  padding-bottom: 2px;
+  z-index: 999999999;
+  pointer-events: auto;
+  .chart-dataLink-list{
+    width: calc(100% + 20px);
+    margin-left: -10px;
+    margin-top: 10px;
+    border-top: 1px solid $--border-color-light;
+    .chart-dataLink-item{
+      min-width: 120px;
+      max-width: 500px;
+      padding: 0 10px;
+      height: 32px;
+      line-height: 32px;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      &:hover{
+        background: $--background-color-base;
+        color: $--color-primary !important;
+      }
+      .nz-icon{
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
 .graph-icon-info-box{
   position: absolute;
   top: 50%;

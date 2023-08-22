@@ -64,6 +64,9 @@ const chartBarOption = {
       },
       labelLine: {
         show: true
+      },
+      emphasis: {
+        focus: 'series'
       }
     }
   ]
