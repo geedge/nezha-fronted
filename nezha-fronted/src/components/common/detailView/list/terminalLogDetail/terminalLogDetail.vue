@@ -20,10 +20,12 @@
       <li
         v-for="(item,index) in tableData"
         :key="index"
-       class="detail-row"
+        class="detail-row"
         :id="'globalSearch' + item.id"
         :class="item.id === detailViewRightObj.id ? 'selected' : ''"
         @click="detailViewRightShow(item)"
+        @mouseenter="labelHover(item, 'other', true, false, $event)"
+        @mouseleave="labelHover(item, 'other', false, false,)"
       >
         <div class="detail-row-info" :title="getRemoteText(item)">
           <div class="asset-manageIp" :title="getRemoteText(item)">
@@ -41,6 +43,26 @@
         </div>
       </li>
     </ul>
+    <nzTooltip
+      v-if="alertLabelShow"
+      :id="alertLabelId"
+      :that="alertLabelObj"
+      :detailList="true"
+      :type="alertLabelType"
+      @tipHover='tipHover'
+      ref="nzTooltip"
+      class="data-column__"
+      style="padding: 0;border: none !important;"
+    >
+      <div style="word-break: break-all">
+        <div name="default">
+          <terminalLogInfo
+            :alertLabelData="alertLabelObj"
+            :detailList="false"
+          ></terminalLogInfo>
+        </div>
+      </div>
+    </nzTooltip>
   </div>
 </template>
 
@@ -50,11 +72,16 @@ import detailViewLeftMixin from '@/components/common/mixin/detailViewLeftMixin'
 import alertLabel from '@/components/common/alert/alertLabel'
 import { terminalLog } from '@/components/common/js/constants'
 import { calcDurationByStringTimeB } from '@/components/common/js/tools'
+import alertLabelMixin from '@/components/common/mixin/alertLabelMixin'
+import terminalLogInfo from '@/components/common/alert/terminalLogInfo'
+import nzTooltip from '@/components/common/alert/nzTooltip'
 export default {
   name: 'terminalLogDetail',
-  mixins: [detailViewLeftMixin],
+  mixins: [detailViewLeftMixin, alertLabelMixin],
   components: {
-    alertLabel
+    alertLabel,
+    nzTooltip,
+    terminalLogInfo
   },
   computed: {
     getStatusText () {
@@ -153,16 +180,6 @@ export default {
     }
   },
   methods: {
-    // label 鼠标划入
-    labelHover (item, type, loading, e) {
-      if (e) {
-        const dom = e.currentTarget
-        const position = dom.getBoundingClientRect()
-        this.$set(item, 'position', position)
-      }
-      this.$set(item, 'loading', loading)
-      // this.$set(this.tableData,index,item);// 调用父组件
-    }
   }
 }
 </script>

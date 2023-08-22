@@ -3953,6 +3953,8 @@ export default {
               } else {
                 if (response.error) {
                   this.$refs['promql-' + promqlIndex][0].setError(response.error)
+                } else if(response.msg) {
+                  this.$refs['promql-' + promqlIndex][0].setError(response.msg)
                 } else {
                   this.$refs['promql-' + promqlIndex][0].setError(response)
                 }

@@ -292,7 +292,7 @@ export default {
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
       legend: [],
       searchTime: [],
-      searchTimeHeader: [bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 24 * 7)), bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())))],
+      searchTimeHeader: [bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 24 * 7)), bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime()))), '7d'],
       searchTimeSelect: bus.getTimezontDateRange(),
       currentMsg: {},
       chartUnit: 5,
@@ -313,7 +313,7 @@ export default {
     if (this.from === fromRoute.alertSilence) {
       this.searchMsg = this.searchMsgSilence
     }
-    this.renderDefaultParams()
+    this.$route.query.bottomSelectArr && this.renderDefaultParams()
   },
   methods: {
     renderDefaultParams () {

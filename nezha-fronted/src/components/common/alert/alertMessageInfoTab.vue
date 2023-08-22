@@ -6,7 +6,7 @@
           <alert-message-info-detail :info-data="infoData"/>
         </div>
         <div v-else-if="item.key === 'dashboard' && activeName === 'dashboard'" class="alert-message-info-dashboard">
-          <dashboard :temp-id="infoData.alertRule.dashboardId" :showImport="false" :showName="false" :url-type="'dashboard'" :time="timeRange" :from="fromRoute.dashboard"></dashboard>
+          <dashboard :temp-id="infoData.alertRule.dashboardId" :showImport="false" :showName="false" :url-type="'dashboard'" :time="timeRange" class="message-info-dashboard" :from="fromRoute.dashboard"></dashboard>
         </div>
         <div v-else-if="(activeName === item.key) && infoData[item.key]" class="no-position-alert-label">
 <!--          <searchItemInfo :obj="findData(item.key)" :severityData="severityData" :fa-loading="false"></searchItemInfo>-->

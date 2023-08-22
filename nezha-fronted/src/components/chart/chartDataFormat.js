@@ -10,7 +10,7 @@ function none (value, index) {
   if (!numberWithEConvent(scientificNotationValue)) {
     return scientificNotationValue
   }
-  if (isNaN(value) || value=== null) {
+  if (isNaN(value) || value === null) {
     return value
   }
   return keepDoubleNumber(value)
@@ -55,12 +55,19 @@ function localFormat (value, index) {
   return result
 }
 function bits (value, index, type = 1, dot = 0) {
+  const num = value / 8
+  if (value < 8) {
+    return value + 'b'
+  }
+  if (num < 1024) {
+    return num + 'B'
+  }
   if (type == 1) {
-    return asciiCompute(value, 1024, ['b', 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0)
+    return asciiCompute(num, 1024, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 0)
   } else if (type == -1) {
-    return asciiCompute(value, 1024, ['b', 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot)
+    return asciiCompute(num, 1024, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], dot)
   } else {
-    return asciiCompute(value, 1024, ['b', 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
+    return asciiCompute(num, 1024, ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'], 2)
   }
 }
 function bytes (value, index, type = 1, dot) {
