@@ -60,8 +60,10 @@ dev_build:
     - zip -q -r $FILE_NAME ./*
 
     # 将 dist zip 上传到 minio
+    - md5sum $FILE_NAME > $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-latest.tar.gz.md5sum.txt
     - mc cp $FILE_NAME nz/ci-cd/nz-gui/$FILE_NAME
     - mc cp $FILE_NAME nz/ci-cd/nz-gui/nz-gui-$CI_COMMIT_REF_NAME-latest.zip
+    - mc cp $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-latest.tar.gz.md5sum.txt nz/ci-cd/nz-gui/$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-latest.tar.gz.md5sum.txt
   artifacts:
     name: "nz-gui-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     when: on_success
