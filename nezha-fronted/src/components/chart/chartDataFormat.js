@@ -369,6 +369,11 @@ function asciiCompute (num, ascii, units, dot = 2) {
     carry = parseInt(log)
     num = num / Math.pow(ascii, carry)
   }
+  // if (num > 255) {
+  //   const log = Math.log(num) / Math.log(ascii)
+  //   carry = parseInt(log)
+  //   num = num / Math.pow(ascii, carry)
+  // }
   if (Number.isInteger(num)) {
     return num * SIGN + ' ' + units[carry]
   } else {
@@ -847,6 +852,11 @@ export default {
         interVal = Math.ceil(interVal) * Math.pow(1024, pow)
       }
       interVal = !isNaN(interVal) ? interVal : 1
+      if (interVal >= 1 && interVal <= 512) {
+        interVal = 512
+      } else if (interVal > 512 && interVal <= 1024) {
+        interVal = 1024
+      }
       return interVal
     }
     if (type === 'DataRate' || type === 'Misc') {
