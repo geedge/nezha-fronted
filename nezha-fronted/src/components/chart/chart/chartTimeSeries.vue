@@ -663,16 +663,33 @@ export default {
       if (this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
-      const index = this.tooltip.clickIndex
-      getChart(this.chartId).dispatchAction({
-        type: 'legendInverseSelect'
+      this.legends.forEach((item, index) => {
+        if (index == this.tooltip.clickIndex) {
+          getChart(this.chartId).dispatchAction({
+            type: 'legendSelect',
+            name: item.name
+          })
+        } else {
+          getChart(this.chartId).dispatchAction({
+            type: 'legendUnSelect',
+            name: item.name
+          })
+        }
       })
-      getChart(this.chartId).dispatchAction({
-        type: 'legendSelect',
-        name: this.legends[index].name
-      })
-      this.isGrey = this.isGrey.map((g, i) => i !== index)
+      this.isGrey = this.isGrey.map((g, i) => i !== this.tooltip.clickIndex)
       this.$refs.legend.isGrey = this.isGrey
+
+      // 点击后 处理Y轴的刻度边的
+      const chartInfo = this.chartInfo
+      const series = this.$lodash.cloneDeep(this.series)
+      const dataArg = series.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
+      const option = this.renderYAxis(dataArg, chartInfo, 'legend')
+      getChart(this.chartId) && getChart(this.chartId).setOption({
+        yAxis: [
+          ...option.yAxis
+        ]
+      })
+
       if (this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
@@ -687,6 +704,18 @@ export default {
       })
       this.isGrey = this.isGrey.map(() => false)
       this.$refs.legend.isGrey = this.isGrey
+
+      // 点击后 处理Y轴的刻度边的
+      const chartInfo = this.chartInfo
+      const series = this.$lodash.cloneDeep(this.series)
+      const dataArg = series.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
+      const option = this.renderYAxis(dataArg, chartInfo, 'legend')
+      getChart(this.chartId) && getChart(this.chartId).setOption({
+        yAxis: [
+          ...option.yAxis
+        ]
+      })
+
       if (this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }

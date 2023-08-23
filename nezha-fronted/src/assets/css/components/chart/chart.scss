@@ -396,8 +396,8 @@
   box-sizing: border-box;
 
   .legend-item {
+    padding: 0 8px;
     white-space: nowrap;
-    margin-right: 10px;
     cursor: pointer;
     display: inline-block;
     line-height: 20px;
@@ -406,14 +406,25 @@
   .legend-item, .legend--table-row {
     &.legend-item--inactive, &.row--inactive {
       color: $--color-text-secondary;
-
       .legend-shape {
         background-color: $--background-color-1 !important;
       }
-
       .nz-icon{
         color: $--background-color-1 !important;
       }
+    }
+  }
+  .nz-icon-override{
+    visibility: hidden;
+    font-size: 15px;
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+  .legend-item:hover {
+    background-color: $--background-color-1;
+    cursor: pointer;
+    .nz-icon-override{
+      visibility: visible;
     }
   }
 
@@ -429,6 +440,9 @@
     .legend--table-row:not(:first-of-type):hover {
       background-color: $--background-color-1;
       cursor: pointer;
+      .nz-icon-override{
+        visibility: visible;
+      }
     }
     .legend--table-row:first-of-type {
       color:#33a2e5;
