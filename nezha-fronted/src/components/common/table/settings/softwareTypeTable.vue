@@ -52,10 +52,10 @@
             </div>
           </span>
           <template v-else-if="item.prop === 'cts'">
-            <template>{{scope.row[item.prop] ? utcTimeToTimezoneStr(scope.row[item.prop]) : '-'}}</template>
+            <template>{{scope.row[item.prop] ? momentTz(scope.row[item.prop]) : '-'}}</template>
           </template>
           <template v-else-if="item.prop === 'uts'">
-            <template>{{scope.row[item.prop] ? utcTimeToTimezoneStr(scope.row[item.prop]) : '-'}}</template>
+            <template>{{scope.row[item.prop] ? momentTz(scope.row[item.prop]) : '-'}}</template>
           </template>
           <div v-else-if="item.prop === 'icon'"
                     @mouseenter="labelHover(scope.row, 'icon', true, false, $event)"
