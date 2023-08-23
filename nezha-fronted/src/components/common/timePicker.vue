@@ -564,6 +564,9 @@ export default {
         this.$set(this.searchTime, 2, val + 'd')
       } else {
         this.isCustom = true
+        if (!time[0]) {
+          this.isCustom = false
+        }
         this.$set(this.searchTime, 0, time[0])
         this.$set(this.searchTime, 1, time[1])
       }
