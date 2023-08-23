@@ -84,7 +84,6 @@ export default {
       this.isNoData = true
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
-          console.log(data, 'data')
           if (colorIndex >= 20 && !this.showAllData) {
             colorIndex++
             return
