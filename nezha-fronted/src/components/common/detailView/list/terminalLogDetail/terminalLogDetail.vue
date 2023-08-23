@@ -27,8 +27,8 @@
         @mouseenter="labelHover(item, 'other', true, false, $event)"
         @mouseleave="labelHover(item, 'other', false, false,)"
       >
-        <div class="detail-row-info" :title="getRemoteText(item)">
-          <div class="asset-manageIp" :title="getRemoteText(item)">
+        <div class="detail-row-info">
+          <div class="asset-manageIp">
             <el-tooltip effect="light" placement="right">
               <div slot="content">
                 {{$t(getStatusText(item.status))}}

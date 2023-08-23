@@ -535,7 +535,6 @@ export default {
             } else if (item.yAxisIndex == 1) {
               className = 'yAxis-icon nz-icon nz-icon-youzongzhou'
             }
-
             str += `
             <div class="tooltip__row" title="${seriesName}">
               <div class="row__label">
@@ -572,7 +571,6 @@ export default {
               }
               color = self.stackTotalColorRight
             }
-
             str += `
             <div class="tooltip__row">
               <div class="row__label" title="${self.$t('dashboard.dashboard.chartTotal')}">
