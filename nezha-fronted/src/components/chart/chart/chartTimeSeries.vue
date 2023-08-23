@@ -721,15 +721,22 @@ export default {
       if (this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
-      const index = this.tooltip.clickIndex
-      getChart(this.chartId).dispatchAction({
-        type: 'legendInverseSelect'
+
+      this.legends.forEach((item, index) => {
+        if (index == this.tooltip.clickIndex) {
+          getChart(this.chartId).dispatchAction({
+            type: 'legendSelect',
+            name: item.name
+          })
+        } else {
+          getChart(this.chartId).dispatchAction({
+            type: 'legendUnSelect',
+            name: item.name
+          })
+        }
       })
-      getChart(this.chartId).dispatchAction({
-        type: 'legendSelect',
-        name: this.legends[index].name
-      })
-      this.isGrey = this.isGrey.map((g, i) => i !== index)
+
+      this.isGrey = this.isGrey.map((g, i) => i !== this.tooltip.clickIndex)
       this.$refs.legend.isGrey = this.isGrey
       if (this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')

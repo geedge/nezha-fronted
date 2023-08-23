@@ -25,6 +25,7 @@
             <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
             <span v-else :style="{background: item.color}" class="legend-shape"></span>
             <span>{{item.alias ? item.alias : item.name}}</span>
+            <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name)" :title="$t('overall.copyText')"></i>
           </div>
           <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value))}}</div>
         </div>
@@ -43,6 +44,7 @@
             <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
             <span v-else :style="{background: item.color}" class="legend-shape"></span>
             <span>{{item.alias ? item.alias : item.name}}</span>
+            <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name)" :title="$t('overall.copyText')"></i>
           </div>
           <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value))}}</div>
         </div>
@@ -65,6 +67,7 @@
         <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
         <span v-else :style="{background: item.color}" class="legend-shape"></span>
         <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
+        <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name.split('-')[0])" :title="$t('overall.copyText')"></i>
       </div>
       <!-- 右y轴legend -->
       <div
@@ -81,6 +84,7 @@
         <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
         <span v-else :style="{background: item.color}" class="legend-shape"></span>
         <span>{{item.alias ? item.alias : item.name.split('-')[0]}}</span>
+        <i class="nz-icon nz-icon-override" @click.stop="onCopy(item.alias ? item.alias : item.name.split('-')[0])" :title="$t('overall.copyText')"></i>
       </div>
     </template>
   </div>
@@ -123,6 +127,11 @@ export default {
     }
   },
   methods: {
+    onCopy (txt) {
+      this.$copyText(txt).then(() => {
+        this.$message.success({ message: this.$t('overall.copySuccess') })
+      })
+    },
     clickLegend (legendName, index) {
       /* 点击legend
           * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
@@ -238,13 +247,13 @@ export default {
     },
     hoverLegend (legendName, index, type) {
       if (this.isTimeSeries) {
-        getChart(this.chartId).dispatchAction({
+        getChart(this.chartId) && getChart(this.chartId).dispatchAction({
           type: type,
           seriesIndex: index,
           name: legendName
         })
       } else {
-        getChart(this.chartId).dispatchAction({
+        getChart(this.chartId) && getChart(this.chartId).dispatchAction({
           type: type,
           name: legendName
         })
