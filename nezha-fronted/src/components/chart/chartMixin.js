@@ -84,6 +84,7 @@ export default {
       this.isNoData = true
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
+          console.log(data, 'data')
           if (colorIndex >= 20 && !this.showAllData) {
             colorIndex++
             return
@@ -97,6 +98,9 @@ export default {
             chartInfo.param.rightYAxis && chartInfo.param.rightYAxis.elementNames.forEach(item => {
               if (data.elements.name == item) {
                 s.yAxisIndex = 1
+                data.yAxisIndex = 1
+              } else {
+                data.yAxisIndex = 0
               }
             })
           }
@@ -114,9 +118,6 @@ export default {
             s.yAxisIndex = 1
           }
 
-          if (!this.dataLink.length) {
-            s.cursor = 'default'
-          }
           if (chartInfo.param && chartInfo.param.nullType) {
             s.connectNulls = chartInfo.param.nullType !== 'null'
           } else {
@@ -131,7 +132,7 @@ export default {
               ...data.metric,
               legend: legend.alias
             }
-            s.seriesIndex = expressionIndex
+            s.expressionIndex = expressionIndex
             if (chartInfo.param.stack) { // 堆叠
               s.stack = 'Total' + s.yAxisIndex
             }
@@ -187,6 +188,11 @@ export default {
         })
       })
       this.$emit('chartIsNoData', this.isNoData)
+      if (!this.dataLink.length && this.series.length == 1) {
+        series.forEach(item => {
+          item.cursor = 'default'
+        })
+      }
       return series
     },
     // 单个legend

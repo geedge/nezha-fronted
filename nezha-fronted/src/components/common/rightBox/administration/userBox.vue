@@ -16,7 +16,7 @@
           </el-form-item>
           <!--username-->
           <el-form-item :label="$t('login.username')" prop="username">
-            <el-input id="account-input-username" v-model="editUser.username" :disabled="editUser.username==='admin' && editUser.id==1"
+            <el-input id="account-input-username" v-model="editUser.username" :disabled="(editUser.username==='admin' && editUser.id==1) || !!editUser.id"
                       maxlength="64" placeholder="" show-word-limit size="small" type="text"></el-input>
           </el-form-item>
           <!--password-->

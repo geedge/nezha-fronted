@@ -10,7 +10,7 @@
       <div class="container__form">
         <el-form ref="profileForm" :model="editProfile" :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label="$t('overall.name')" prop="name">
-            <el-input maxlength="64" show-word-limit v-model="editProfile.name" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="editProfile.name" size="small" type="text" :disabled="editProfile.username==='admin' && editProfile.id==1"></el-input>
           </el-form-item>
           <el-form-item :label="$t('profile.username')" prop="username">
             <el-input maxlength="64" show-word-limit v-model="editProfile.username" disabled size="small" type="text"></el-input>
@@ -66,6 +66,7 @@
 <script>
 import editRigthBox from '@/components/common/mixin/editRigthBox'
 import { theme } from '@/components/common/js/constants'
+import bus from "@/libs/bus";
 
 export default {
   name: 'profilebox',
@@ -144,6 +145,9 @@ export default {
                 } else {
                   this.$emit('clickProfile', false)
                 }
+                console.log(this.editProfile)
+                localStorage.setItem('nz-userInfo', JSON.stringify(this.editProfile))
+                bus.$emit('login')
               } else {
                 this.$message.error(res.msg)
               }

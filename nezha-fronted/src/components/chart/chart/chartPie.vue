@@ -127,7 +127,7 @@ export default {
               name: legend.name,
               alias: legend.alias,
               labels: data.metric,
-              seriesIndex: expressionIndex,
+              expressionIndex: expressionIndex,
               dataIndex: dataIndex,
               mapping: mapping,
               label: {

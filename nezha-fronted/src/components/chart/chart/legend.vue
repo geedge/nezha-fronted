@@ -18,6 +18,8 @@
           :class="{'row--inactive': isGrey[index]}"
           class="legend--table-row"
           @click="clickLegend(item.name, index)"
+          @mouseenter="hoverLegend(item.name, index,'highlight')"
+          @mouseleave="hoverLegend(item.name, index,'downplay')"
         >
           <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
             <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
@@ -34,6 +36,8 @@
           :class="{'row--inactive': isGrey[index]}"
           class="legend--table-row"
           @click="clickLegend(item.name, index)"
+          @mouseenter="hoverLegend(item.name, index,'highlight')"
+          @mouseleave="hoverLegend(item.name, index,'downplay')"
         >
           <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
             <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
@@ -55,6 +59,8 @@
         :title="item.alias ? item.alias : item.name"
         class="legend-item"
         @click="clickLegend(item.name, index)"
+        @mouseenter="hoverLegend(item.name, index,'highlight')"
+        @mouseleave="hoverLegend(item.name, index,'downplay')"
       >
         <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
         <span v-else :style="{background: item.color}" class="legend-shape"></span>
@@ -69,6 +75,8 @@
         :title="item.alias ? item.alias : item.name"
         class="legend-item"
         @click="clickLegend(item.name, index)"
+        @mouseenter="hoverLegend(item.name, index,'highlight')"
+        @mouseleave="hoverLegend(item.name, index,'downplay')"
       >
         <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
         <span v-else :style="{background: item.color}" class="legend-shape"></span>
@@ -84,8 +92,10 @@ import { getChart } from '@/components/common/js/common'
 import chartDataFormat from '@/components/chart/chartDataFormat'
 import { statisticsList } from '@/components/common/js/constants'
 import * as chart from 'echarts'
+import renderChart from '@/components/chart/renderChart'
 export default {
   name: 'chartLegend',
+  mixins: [renderChart],
   props: {
     chartInfo: Object,
     chartData: Array,
@@ -174,6 +184,17 @@ export default {
         if (this.isTimeSeries) {
           this.$parent.legendChange(this.isGrey)
         }
+        // 点击后 处理Y轴的刻度边的
+        const chartInfo = this.chartInfo
+        const series = this.$lodash.cloneDeep(this.series)
+        const dataArg = series.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
+        const option = this.renderYAxis(dataArg, chartInfo, 'legend')
+        console.log(option)
+        getChart(this.chartId) && getChart(this.chartId).setOption({
+          yAxis: [
+            ...option.yAxis
+          ]
+        })
         // 判断timeSeries类型图表 建立多表联动
         if (this.isTimeSeries && (this.isConnect && this.isConnect !== 'none')) {
           chart.connect('timeSeriesGroup')
@@ -242,11 +263,29 @@ export default {
       }
       this.$emit('clickLegendD3', this.isGrey)
     },
+    hoverLegend (legendName, index, type) {
+      if (this.chartInfo.type === 'pie' || this.chartInfo.type === 'doughnut' || this.chartInfo.type === 'rose') {
+        if (!this.isGrey[index]) {
+          this.$emit('hoverLegendD3', legendName, index, type)
+        }
+      } else if (this.isTimeSeries) {
+        getChart(this.chartId).dispatchAction({
+          type: type,
+          seriesIndex: index,
+          name: legendName
+        })
+      } else {
+        getChart(this.chartId).dispatchAction({
+          type: type,
+          name: legendName
+        })
+      }
+    },
     // 四舍五入保留2位小数（不够位数，则用0替补）
     keepTwoDecimalFull (num, type = 'left') {
       let chartUnit = this.chartInfo.unit
       if (type === 'right') {
-        chartUnit = this.chartInfo.param.rightYAxis.unit
+        chartUnit = this.$lodash.get(this, 'chartInfo.param.rightYAxis.unit', 2)
       }
       let result = parseFloat(num)
       if (isNaN(result)) {
@@ -255,7 +294,14 @@ export default {
       result = chartDataFormat.getUnit(chartUnit || 2).compute(result, null, -1, 2)
       return result
     },
-    getMaxValue (dataArg, chartInfo) {
+    getMaxValue (dataArg, chartInfo, params) {
+      if (params && params.max && params.min) {
+        const a = params.max
+        if (params.max < params.min) {
+          params.max = params.min
+          params.min = a
+        }
+      }
       let maxValue = 0
       let minValue = 0
       if (dataArg.length > 0) {
@@ -268,6 +314,14 @@ export default {
               minValue = (minValue > Number(dataArg[j].data[i][1]) ? Number(dataArg[j].data[i][1]) : minValue)
             }
           }
+        }
+      }
+      if (params) {
+        if (params.max) {
+          maxValue = params.max
+        }
+        if (params.min) {
+          minValue = params.min
         }
       }
       const chartUnit = chartInfo.unit ? chartInfo.unit : 2

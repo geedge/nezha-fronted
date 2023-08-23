@@ -104,7 +104,7 @@ export default {
               ...data.metric,
               legend: legend.alias
             },
-            seriesIndex: expressionIndex,
+            expressionIndex: expressionIndex,
             dataIndex: dataIndex,
             mapping: mapping
           })
@@ -340,7 +340,7 @@ export default {
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
         this.tooltip.metric.labels = data.labels
-        this.tooltip.metric.expressionIndex = data.seriesIndex
+        this.tooltip.metric.expressionIndex = data.expressionIndex
         this.datalinkPosition(e)
       }
     },
