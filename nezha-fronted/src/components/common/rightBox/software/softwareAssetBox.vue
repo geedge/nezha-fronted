@@ -16,7 +16,7 @@
           <!--type-->
           <el-form-item :label="$t('softwareType.text')" prop="typeId" class="select-warp">
 <!--            <el-input maxlength="128" show-word-limit v-model="editSoftwareAsset.type" size="small" type="text"></el-input>-->
-            <el-select v-model="editSoftwareAsset.typeId" size="small" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" x>
+            <el-select v-model="editSoftwareAsset.typeId" size="small" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" @change="renderParams">
               <el-option v-for="item in softwareTypeArr" :key="item.id" :value="item.id" :label="item.name"></el-option>
             </el-select>
           </el-form-item>
@@ -55,7 +55,7 @@
           </el-form-item>
           <!--params-->
           <div class="form__sub-title" >
-            <span>{{$t('softwareAsset.params')}}</span>
+            <span>{{$t('softwareAsset.Connector')}}</span>
           </div>
         </el-form>
       </div>
@@ -174,6 +174,7 @@ export default {
   created () {
     this.getProjectList()
     this.getAsset()
+    this.getSoftwareTypeList()
   },
   mounted () {
   },
@@ -242,9 +243,18 @@ export default {
         }
       })
     },
+    /* 获取asset列表 */
     getAsset () {
       this.$get('asset/asset', { pageSize: -1 }).then(res => {
         this.assetList = res.data.list
+      })
+    },
+    /* 获取softwareType列表 */
+    getSoftwareTypeList () {
+      this.$get('asset/software/type', { pageSize: -1, pageNo: 1 }).then(response => {
+        if (response.code === 200) {
+          this.softwareTypeArr = response.data.list
+        }
       })
     },
     resultFormat (resp) {
@@ -254,6 +264,9 @@ export default {
         assetData.totalRow = resp.data.total
         return assetData
       }
+    },
+    renderParams () {
+      this.editSoftwareAsset.params = {}
     }
   }
 }
