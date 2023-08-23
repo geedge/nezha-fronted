@@ -30,6 +30,9 @@ const chartPieOption = {
       },
       labelLine: {
         show: true
+      },
+      emphasis: {
+        focus: 'series'
       }
     }
   ]

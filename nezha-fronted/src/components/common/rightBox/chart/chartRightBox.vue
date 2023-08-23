@@ -400,6 +400,14 @@ export default {
               varValue: '',
               result: 'show'
             },
+            rightYAxis: {
+              elementNames: [],
+              style: 'line',
+              unit: 2,
+              label: '',
+              min: undefined,
+              max: undefined
+            },
             dataLink: []
           }
         }

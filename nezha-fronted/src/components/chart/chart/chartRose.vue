@@ -13,6 +13,7 @@
       :legends="legends"
       :is-fullscreen="isFullscreen"
       @clickLegendD3="clickLegendD3"
+      @hoverLegendD3="hoverLegendD3"
     ></chart-legend>
 
     <div :id="`chart-canvas-tooltip-${chartId}`" class="chart-canvas-tooltip no-style-class" :class="{'chart-dataLink-tooltip':tooltip.dataLinkShow}" :style="{left:tooltip.x+'px',top:tooltip.y+'px'}" v-if="tooltip.show" v-clickoutside="clickout">
@@ -105,7 +106,8 @@ export default {
         show: false,
         dataLinkShow: false
       },
-      svg: null
+      svg: null,
+      drawing: false
     }
   },
   methods: {
@@ -145,7 +147,7 @@ export default {
               ...data.metric,
               legend: legend.alias
             },
-            seriesIndex: expressionIndex,
+            expressionIndex: expressionIndex,
             dataIndex: dataIndex,
             mapping: mapping,
             background: mapping ? mapping.color.bac : this.colorList[colorIndex]
@@ -215,7 +217,9 @@ export default {
         d.percent = percentage.toFixed(2)
       })
 
+      const self = this
       function roseOver (e, d) {
+        if (self.drawing) { return }
         chart.select('.path-' + d.index)
           .transition()
           .attr('d', d3.arc()
@@ -227,6 +231,7 @@ export default {
           )
       }
       function roseOut (e, d) {
+        if (self.drawing) { return }
         chart.select('.path-' + d.index)
           .transition()
           .attr('d', d3.arc()
@@ -235,6 +240,8 @@ export default {
             .cornerRadius(radius)
           )
       }
+
+      this.drawing = true
       // 图形
       chart.selectAll('path')
         .data(arcs)
@@ -286,6 +293,7 @@ export default {
         .style('opacity', 1)
         .on('end', function () {
           d3.select(this).classed('no-events', false)
+          self.drawing = false
         })
     },
 
@@ -382,6 +390,21 @@ export default {
       this.selectData = this.$lodash.cloneDeep(data)
       this.drawRoseChart(true)
     },
+    hoverLegendD3 (legendName, index, type) {
+      if (this.svg) {
+        const data = this.$lodash.cloneDeep(this.selectData)
+        data.sort((a, b) => b.value - a.value)
+        const findIndex = data.findIndex(item => item.name === legendName)
+        const chart = this.svg.select('g')
+        const mouseover = new CustomEvent('mouseover')
+        const mouseout = new CustomEvent('mouseout')
+        if (type === 'highlight') {
+          chart.select('.path-' + findIndex).node().dispatchEvent(mouseover)
+        } else {
+          chart.select('.path-' + findIndex).node().dispatchEvent(mouseout)
+        }
+      }
+    },
     resize () {
       setTimeout(() => {
         this.drawRoseChart(false)
@@ -438,7 +461,7 @@ export default {
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
         this.tooltip.metric.labels = data.data.labels
-        this.tooltip.metric.expressionIndex = data.data.seriesIndex
+        this.tooltip.metric.expressionIndex = data.data.expressionIndex
         this.datalinkPosition(e)
       }
     },

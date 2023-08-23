@@ -18,6 +18,8 @@
           :class="{'row--inactive': isGrey[index]}"
           class="legend--table-row"
           @click="clickLegend(item.name, index)"
+          @mouseenter="hoverLegend(item.name, index,'highlight')"
+          @mouseleave="hoverLegend(item.name, index,'downplay')"
         >
           <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
             <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
@@ -34,6 +36,8 @@
           :class="{'row--inactive': isGrey[index]}"
           class="legend--table-row"
           @click="clickLegend(item.name, index)"
+          @mouseenter="hoverLegend(item.name, index,'highlight')"
+          @mouseleave="hoverLegend(item.name, index,'downplay')"
         >
           <div :title="item.alias ? item.alias : item.name" class="legend--table-cell">
             <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
@@ -55,6 +59,8 @@
         :title="item.alias ? item.alias : item.name"
         class="legend-item"
         @click="clickLegend(item.name, index)"
+        @mouseenter="hoverLegend(item.name, index,'highlight')"
+        @mouseleave="hoverLegend(item.name, index,'downplay')"
       >
         <i v-if="isTimeSeries&&series[index].yAxisIndex==0" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-zuozongzhou"></i>
         <span v-else :style="{background: item.color}" class="legend-shape"></span>
@@ -69,6 +75,8 @@
         :title="item.alias ? item.alias : item.name"
         class="legend-item"
         @click="clickLegend(item.name, index)"
+        @mouseenter="hoverLegend(item.name, index,'highlight')"
+        @mouseleave="hoverLegend(item.name, index,'downplay')"
       >
         <i v-if="isTimeSeries&&series[index].yAxisIndex==1" :style="{color: item.color}" class="yAxis-icon nz-icon nz-icon-youzongzhou"></i>
         <span v-else :style="{background: item.color}" class="legend-shape"></span>
@@ -241,6 +249,24 @@ export default {
         this.$set(this.isGrey, index, !this.isGrey[index])
       }
       this.$emit('clickLegendD3', this.isGrey)
+    },
+    hoverLegend (legendName, index, type) {
+      if (this.chartInfo.type === 'pie' || this.chartInfo.type === 'doughnut' || this.chartInfo.type === 'rose') {
+        if (!this.isGrey[index]) {
+          this.$emit('hoverLegendD3', legendName, index, type)
+        }
+      } else if (this.isTimeSeries) {
+        getChart(this.chartId).dispatchAction({
+          type: type,
+          seriesIndex: index,
+          name: legendName
+        })
+      } else {
+        getChart(this.chartId).dispatchAction({
+          type: type,
+          name: legendName
+        })
+      }
     },
     // 四舍五入保留2位小数（不够位数，则用0替补）
     keepTwoDecimalFull (num) {

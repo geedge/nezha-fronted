@@ -190,7 +190,7 @@ export default {
                 ...data.metric,
                 legend: legend.alias
               },
-              seriesIndex: expressionIndex,
+              expressionIndex: expressionIndex,
               dataIndex: dataIndex,
               mapping: mapping,
               label: {
@@ -261,7 +261,7 @@ export default {
       this.tooltip.show = true
       this.tooltip.dataLinkShow = true
       this.tooltip.metric.labels = params.data.labels
-      this.tooltip.metric.expressionIndex = params.data.seriesIndex
+      this.tooltip.metric.expressionIndex = params.data.expressionIndex
       const e = params.event.event
       this.datalinkPosition(e)
     },

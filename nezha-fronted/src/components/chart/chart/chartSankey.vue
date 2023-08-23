@@ -73,8 +73,8 @@ export default {
       }
       // 根据link获取node
       this.linksData.forEach(item => {
-        this.nodesData.push({ node: item.source, labels: item.labels, seriesIndex: item.seriesIndex })
-        this.nodesData.push({ node: item.target, labels: item.labels, seriesIndex: item.seriesIndex })
+        this.nodesData.push({ node: item.source, labels: item.labels, expressionIndex: item.expressionIndex })
+        this.nodesData.push({ node: item.target, labels: item.labels, expressionIndex: item.expressionIndex })
       })
       // 去重相同的node
       for (let i = 0; i < this.nodesData.length; i++) {
@@ -108,7 +108,7 @@ export default {
               ...data.metric,
               legend: legend.alias
             },
-            seriesIndex: expressionIndex
+            expressionIndex: expressionIndex
           }
           if (data.metric[chartInfo.param.sourceLabel] && data.metric[chartInfo.param.targetLabel]) {
             obj.source = data.metric[chartInfo.param.sourceLabel]
@@ -447,7 +447,7 @@ export default {
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
         this.tooltip.metric.labels = data.labels
-        this.tooltip.metric.expressionIndex = data.seriesIndex
+        this.tooltip.metric.expressionIndex = data.expressionIndex
         this.datalinkPosition(e)
       }
     },

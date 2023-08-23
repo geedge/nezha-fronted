@@ -114,10 +114,6 @@ export default {
             s.yAxisIndex = 1
           }
 
-          if (!this.dataLink.length) {
-            s.cursor = 'default'
-          }
-
           if (s.param && s.param.nullType) {
             s.connectNulls = s.param.nullType !== 'null'
           } else {
@@ -132,7 +128,7 @@ export default {
               ...data.metric,
               legend: legend.alias
             }
-            s.seriesIndex = expressionIndex
+            s.expressionIndex = expressionIndex
             if (chartInfo.param.stack) { // 堆叠
               s.stack = 'Total' + s.yAxisIndex
             }
@@ -188,6 +184,11 @@ export default {
         })
       })
       this.$emit('chartIsNoData', this.isNoData)
+      if (!this.dataLink.length && this.series.length == 1) {
+        series.forEach(item => {
+          item.cursor = 'default'
+        })
+      }
       return series
     },
     // 单个legend

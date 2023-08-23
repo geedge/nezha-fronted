@@ -97,7 +97,7 @@ export default {
               ...data.metric,
               legend: legend.alias
             },
-            seriesIndex: expressionIndex,
+            expressionIndex: expressionIndex,
             dataIndex: dataIndex,
             mapping: mapping,
             background: mapping ? mapping.color.bac.substr(0, 7) : this.colorList[colorIndex], // 仅限十六进制
@@ -423,7 +423,7 @@ export default {
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
         this.tooltip.metric.labels = data.labels
-        this.tooltip.metric.expressionIndex = data.seriesIndex
+        this.tooltip.metric.expressionIndex = data.expressionIndex
         this.datalinkPosition(e)
       }
     },

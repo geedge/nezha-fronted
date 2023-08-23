@@ -99,7 +99,7 @@ export default {
             Hexagon.label = data.metric
             Hexagon.legend = legend.alias
             Hexagon.label.legend = Hexagon.legend
-            Hexagon.seriesIndex = expressionIndex
+            Hexagon.expressionIndex = expressionIndex
             Hexagon.name = legend.name
             Hexagon.alias = legend.alias
             Hexagon.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(Hexagon.value, null, -1, decimals)
@@ -478,7 +478,7 @@ export default {
         this.tooltip.show = true
         this.tooltip.dataLinkShow = true
         this.tooltip.metric.labels = data.metrics
-        this.tooltip.metric.expressionIndex = data.seriesIndex
+        this.tooltip.metric.expressionIndex = data.expressionIndex
         this.datalinkPosition(e)
       }
     },

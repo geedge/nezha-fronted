@@ -110,7 +110,7 @@ export default {
             gauge.label = data.metric
             gauge.legend = legend.alias
             gauge.label.legend = gauge.legend
-            gauge.seriesIndex = expressionIndex
+            gauge.expressionIndex = expressionIndex
             gauge.name = legend.name
             gauge.alias = legend.alias
             gauge.showValue = chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(gauge.value, null, -1, decimals)
@@ -316,7 +316,7 @@ export default {
       this.tooltip.show = true
       this.tooltip.dataLinkShow = true
       this.tooltip.metric.labels = params.data.label
-      this.tooltip.metric.expressionIndex = params.data.seriesIndex
+      this.tooltip.metric.expressionIndex = params.data.expressionIndex
       const e = params.event.event
       this.datalinkPosition(e)
     },

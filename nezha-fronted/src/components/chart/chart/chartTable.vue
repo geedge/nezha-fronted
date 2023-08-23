@@ -218,7 +218,7 @@ export default {
           data.showValue = showValue
           data.$legend = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).alias
           data.name = this.handleLegend(chartInfo, data, expressionIndex, dataIndex, colorIndex).name
-          data.seriesIndex = expressionIndex
+          data.expressionIndex = expressionIndex
           // data.mapping = mapping
           data.keys = ''
           // eslint-disable-next-line vue/no-mutating-props
@@ -508,7 +508,7 @@ export default {
           ...flattenedObject.metric,
           legend: flattenedObject.$legend
         }
-        this.tooltip.metric.expressionIndex = flattenedObject.seriesIndex
+        this.tooltip.metric.expressionIndex = flattenedObject.expressionIndex
         this.datalinkPosition(e)
       }
     },

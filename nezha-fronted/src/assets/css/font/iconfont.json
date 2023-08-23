@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "37041244",
+      "name": "Show all series",
+      "font_class": "a-Showallseries",
+      "unicode": "e7f0",
+      "unicode_decimal": 59376
+    },
+    {
+      "icon_id": "37041245",
+      "name": "Show seleted series",
+      "font_class": "a-Showseletedseries",
+      "unicode": "e7ef",
+      "unicode_decimal": 59375
+    },
+    {
+      "icon_id": "680107",
+      "name": "展开",
+      "font_class": "zhankai",
+      "unicode": "e6dd",
+      "unicode_decimal": 59101
+    },
+    {
       "icon_id": "7775074",
       "name": "个性化",
       "font_class": "personalization",

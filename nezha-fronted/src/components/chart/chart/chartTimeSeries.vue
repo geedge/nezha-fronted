@@ -14,6 +14,7 @@
       </p>
     </div>
     <chart-legend
+      ref="legend"
       v-if="hasLegend"
       :chart-data="chartData"
       :chart-info="chartInfo"
@@ -25,6 +26,16 @@
       <div v-html="tooltip.tooltipHtml"></div>
       <!-- dataLink -->
       <div class="chart-dataLink-list" v-if="tooltip.dataLinkShow">
+        <!-- 只有一条数据时显示 -->
+        <div class="chart-dataLink-item select-series" v-if="isGrey.filter(value => value === false).length==1" @click="showAllSeries">
+          <i class="nz-icon nz-icon-a-Showallseries"></i>
+          <span>{{$t('dashboard.showAllSeries')}}</span>
+        </div>
+        <!-- 有多条数据时显示 -->
+        <div class="chart-dataLink-item select-series" v-else @click="showSelectedSeries">
+          <i class="nz-icon nz-icon-a-Showseletedseries"></i>
+          <span>{{$t('dashboard.showSelectedSeries')}}</span>
+        </div>
         <div class="chart-dataLink-item" v-for="(item,index) in dataLink" :title='item.title' :key="index" @click="linkClick(item)">
           <i class="nz-icon nz-icon-link"></i>
           <span>{{item.title}}</span>
@@ -66,7 +77,20 @@ export default {
       isStack: false,
       hasRightYAxis: false,
       chartLoading: false,
-      cursorDefault: false
+      cursorDefault: false,
+      tooltip: {
+        x: 0,
+        y: 0,
+        title: 0,
+        value: 0,
+        mapping: {},
+        show: false,
+        dataLinkShow: '',
+        metric: {},
+        activeIndex: undefined,
+        clickIndex: undefined
+      },
+      isGrey: []
     }
   },
   computed: {
@@ -148,6 +172,8 @@ export default {
       }
       this.legends = []
       this.series = chartOption.series = this.handleTimeSeries(this.chartInfo, chartOption.series[0], this.chartData) // 生成series和legends
+
+      this.isGrey = this.legends.map(() => false)
       chartOption.color = this.colorList
       if (!this.series.length) {
         this.isNoData = true
@@ -232,8 +258,8 @@ export default {
               this.cursorDefault = false
             }
           })
-          if (this.dataLink.length) {
-            // 设置dataLink的图表 划过节点时鼠标样式为pointer
+          // 设置dataLink的图表 或存在多条数据时 划过节点时鼠标样式为pointer（可点击）
+          if (this.dataLink.length || this.series.length > 1) {
             myChart.on('mousemove', () => {
               this.cursorDefault = false
             })
@@ -245,6 +271,13 @@ export default {
               }
             })
           }
+
+          myChart.on('mouseover', (params) => {
+            this.tooltip.activeIndex = params.seriesIndex
+          })
+          myChart.on('mouseout', () => {
+            this.tooltip.activeIndex = undefined
+          })
 
           // 修复echarts bug(dataZoom设置为inside 未按住ctrl 页面无法滚动)
           // 监听按键按下事件
@@ -502,8 +535,9 @@ export default {
               className = 'yAxis-icon nz-icon nz-icon-youzongzhou'
             }
 
+            // 鼠标悬浮 series data symbol 时，tooltip 中相应的legend 高亮显示
             str += `
-            <div class="tooltip__row" title="${seriesName}">
+            <div class="${(self.tooltip.activeIndex == item.seriesIndex && self.isGrey.filter(value => value === false).length > 1) ? 'tooltip__row highlight' : 'tooltip__row'}" title="${seriesName}">
               <div class="row__label">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${seriesName}</span>
@@ -589,6 +623,7 @@ export default {
       }, 100)
     },
     legendChange (isGrey) {
+      this.isGrey = isGrey
       let flag = false
       // 点击legend 如果右y轴数据有一个不是灰色 则显示右y轴name
       isGrey.forEach((item, index) => {
@@ -632,7 +667,6 @@ export default {
       if (this.isConnect !== 'none') {
         echarts.disconnect('timeSeriesGroup')
       }
-      echarts.disconnect('timeSeriesGroup')
       const option = {
         tooltip: {
           extraCssText: 'z-index:99999999;visibility:hidden;transition:none;',
@@ -693,7 +727,8 @@ export default {
       this.tooltip.show = true
       this.tooltip.dataLinkShow = true
       this.tooltip.metric.labels = this.series[params.seriesIndex].labels
-      this.tooltip.metric.expressionIndex = this.series[params.seriesIndex].seriesIndex
+      this.tooltip.metric.expressionIndex = this.series[params.seriesIndex].expressionIndex
+      this.tooltip.clickIndex = params.seriesIndex
       const e = params.event.event
       this.datalinkPosition(e)
       if (this.isConnect !== 'none') {
@@ -701,7 +736,7 @@ export default {
       }
     },
     clickout () {
-      if (this.dataLink.length) {
+      if (this.dataLink.length || this.series.length > 1) {
         this.tooltip.show = false
         this.tooltip.dataLinkShow = false
         const option = {
@@ -711,6 +746,39 @@ export default {
         }
         getChart(this.chartId).setOption(option)
       }
+    },
+    showSelectedSeries () {
+      if (this.isConnect !== 'none') {
+        echarts.disconnect('timeSeriesGroup')
+      }
+      const index = this.tooltip.clickIndex
+      getChart(this.chartId).dispatchAction({
+        type: 'legendInverseSelect'
+      })
+      getChart(this.chartId).dispatchAction({
+        type: 'legendSelect',
+        name: this.legends[index].name
+      })
+      this.isGrey = this.isGrey.map((g, i) => i !== index)
+      this.$refs.legend.isGrey = this.isGrey
+      if (this.isConnect !== 'none') {
+        echarts.disconnect('timeSeriesGroup')
+      }
+      this.clickout()
+    },
+    showAllSeries () {
+      if (this.isConnect !== 'none') {
+        echarts.disconnect('timeSeriesGroup')
+      }
+      getChart(this.chartId).dispatchAction({
+        type: 'legendAllSelect'
+      })
+      this.isGrey = this.isGrey.map(() => false)
+      this.$refs.legend.isGrey = this.isGrey
+      if (this.isConnect !== 'none') {
+        echarts.disconnect('timeSeriesGroup')
+      }
+      this.clickout()
     }
   },
   mounted () {

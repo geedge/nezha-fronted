@@ -156,6 +156,9 @@ export const chartTimeSeriesLineOption = {
     lineStyle: {
       width: 1,
       opacity: 0.9
+    },
+    emphasis: {
+      focus: 'series'
     }
   }],
   useUTC: false // 使用本地时间
@@ -173,6 +176,9 @@ export const chartTimeSeriesScatterOption = {
     name: '',
     type: 'scatter',
     data: [],
-    z: 9
+    z: 9,
+    emphasis: {
+      focus: 'series'
+    }
   }]
 }

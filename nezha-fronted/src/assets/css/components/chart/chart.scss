@@ -484,6 +484,10 @@
       padding-left: 5px;
     }
   }
+  .tooltip__row.highlight{
+    color: $--color-text-primary;
+    font-weight: bold;
+  }
 }
 .endpoint-query-metrics.chart-fullscreen.nz-dialog,.recordRules-query-metrics.chart-fullscreen.nz-dialog {
   .chart-screen-header .chart-header__tools #browser-go {
@@ -688,6 +692,9 @@
       .nz-icon{
         margin-right: 4px;
       }
+    }
+    .select-series+.chart-dataLink-item{
+      border-top: 1px solid $--border-color-light;
     }
   }
 }
