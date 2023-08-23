@@ -48,6 +48,7 @@
 <script>
 import legend from './legend'
 import chartMixin from '@/components/chart/chartMixin'
+import renderChart from '@/components/chart/renderChart'
 import * as echarts from 'echarts'
 import moment from 'moment-timezone'
 import bus from '@/libs/bus'
@@ -69,7 +70,7 @@ export default {
     multipleTime: {},
     minusTime: {}
   },
-  mixins: [chartMixin],
+  mixins: [chartMixin, renderChart],
   data () {
     return {
       stackTotalColor: null,
@@ -194,49 +195,9 @@ export default {
         chartOption.tooltip.appendToBody = false
         delete chartOption.tooltip.position
       }
-      // 左y轴
-      const leftData = this.chartData.filter(item => !item[0].yAxisIndex)
-      console.log(leftData)
-      const leftInfo = this.getMinMaxFromData(leftData, this.chartInfo.unit) //
-      chartOption.yAxis[0].minInterval = chartDataFormat.Interval(leftInfo.maxValue, leftInfo.copies, leftInfo.unit.type, 'min')
-      chartOption.yAxis[0].maxInterval = chartDataFormat.Interval(leftInfo.maxValue, leftInfo.copies, leftInfo.unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
-      if (this.chartInfo.param.stack) {
-        chartOption.yAxis[0].maxInterval = chartOption.yAxis[0].maxInterval * (Math.ceil(chartOption.series.length / 5) + 1)
-      }
-      if (unit.type === 'Time' || unit.type === 'Date & Time') {
-        delete chartOption.yAxis[0].minInterval
-        delete chartOption.yAxis[0].maxInterval
-      }
-      chartOption.yAxis[0].min = this.chartInfo.param.min ? this.chartInfo.param.min : undefined
-      chartOption.yAxis[0].max = this.chartInfo.param.max ? this.chartInfo.param.max : undefined
-      chartOption.yAxis[0].axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, decimals)
-
-      // 右y轴
-      if (this.chartInfo.param.enable.rightYAxis) {
-        // 如果全都为右y轴数据 则右y轴显示网格
-        const unit = chartDataFormat.getUnit(lodash.get(this, 'chartInfo.param.rightYAxis.unit', 2))
-        const allRight = this.series.every(item => item.yAxisIndex == 1)
-        chartOption.yAxis[1].splitLine.show = allRight
-        const rightData = this.chartData.filter(item => item[0].yAxisIndex)
-        console.log(rightData, unit)
-        const rightInfo = this.getMinMaxFromData(rightData, lodash.get(this, 'chartInfo.param.rightYAxis.unit', 2)) //
-        chartOption.yAxis[1].minInterval = chartDataFormat.Interval(rightInfo.maxValue, rightInfo.copies, rightInfo.unit.type, 'min')
-        chartOption.yAxis[1].maxInterval = chartDataFormat.Interval(rightInfo.maxValue, rightInfo.copies, rightInfo.unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
-        if (this.chartInfo.param.stack) {
-          chartOption.yAxis[1].maxInterval = chartOption.yAxis[1].maxInterval * (Math.ceil(chartOption.series.length / 5) + 1)
-        }
-        if (unit.type === 'Time' || unit.type === 'Date & Time') {
-          delete chartOption.yAxis[1].minInterval
-          delete chartOption.yAxis[1].maxInterval
-        }
-        chartOption.yAxis[1].axisLabel.formatter = this.yAxisLabelFormatter(undefined, undefined, undefined, unit, decimals)
-        chartOption.yAxis[1].min = this.chartInfo.param.rightYAxis.min ? this.chartInfo.param.rightYAxis.min : undefined
-        chartOption.yAxis[1].max = this.chartInfo.param.rightYAxis.max ? this.chartInfo.param.rightYAxis.max : undefined
-
-        // 有右y轴数据则显示name
-        this.hasRightYAxis = this.series.some(item => item.yAxisIndex == 1)
-      }
-
+      const option = this.renderYAxis(this.chartData, this.chartInfo)
+      chartOption.yAxis[0] = { ...chartOption.yAxis[0], ...option.yAxis[0] }
+      chartOption.yAxis[1] = { ...chartOption.yAxis[1], ...option.yAxis[1] }
       if (chartOption.toolbox.feature) {
         chartOption.toolbox.feature.myStack.iconStyle.borderColor = this.isStack ? this.toolboxIconColor.active : this.toolboxIconColor.inactive
         chartOption.toolbox.feature.myStack.onclick = this.stackEvent() // 自定义stack事件
@@ -334,76 +295,6 @@ export default {
           }]
         })
       }
-    },
-    getMinMaxFromData (originalDatas, chartUnit = 2) {
-      let minTime = null
-      let maxTime = null
-      let minValue = null
-      let maxValue = null
-      // 将数据提为二维数组
-      let datas = []
-      let seriesIndex = 0
-      originalDatas.forEach((originalData, expressionIndex) => {
-        originalData.forEach((data, dataIndex) => {
-          if (seriesIndex >= this.series.length) { // 只取跟series 一样长度作比较
-            return
-          }
-          seriesIndex++
-          if (!data.values) {
-            data.values = []
-          }
-          datas = [...datas, ...data.values]
-        })
-      })
-      const timeSorted = this.$lodash.sortBy(datas, function (o) { return o[0] })
-      const valueSorted = datas.sort((a, b) => {
-        const a1 = isNaN(a[1]) || !a[1] ? 0 : Number(a[1])
-        const b1 = isNaN(b[1]) || !b[1] ? 0 : Number(b[1])
-        return a1 - b1
-      })
-      minTime = timeSorted.length ? timeSorted[0][0] : ''
-      maxTime = timeSorted.length ? timeSorted[timeSorted.length - 1][0] : ''
-      minValue = valueSorted.length ? valueSorted[0][1] : 0
-      maxValue = valueSorted.length ? valueSorted[valueSorted.length - 1][1] : 0
-      const unit = chartDataFormat.getUnit(chartUnit)
-      minValue = minValue > 0 ? 0 : minValue
-      if (!isNaN(maxValue)) {
-        maxValue = Number(maxValue)
-      } else {
-        maxValue = 0
-      }
-      if (!isNaN(minValue)) {
-        minValue = Number(minValue)
-      } else {
-        minValue = 0
-      }
-      if (maxValue < 0) {
-        maxValue = Math.abs(maxValue)
-      }
-      if (Math.abs(minValue) > Math.abs(maxValue)) {
-        maxValue = Math.abs(minValue)
-      }
-      maxValue = maxValue - minValue
-      maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii) // 取最大值后 需要对其进行取整
-      let oldValue = maxValue
-      let dot = 0
-      if (oldValue == 1) {
-        dot++
-      }
-      if (oldValue > 10) {
-        while (oldValue > 10) {
-          oldValue = oldValue / 10
-        }
-      } else if (oldValue < 1 && maxValue !== 0) {
-        while (oldValue < 1 && oldValue > 0) {
-          oldValue = oldValue * 10
-          dot++
-        }
-        maxValue = Math.floor(oldValue) / Math.pow(10, dot)
-        dot++
-      }
-      const copies = chartDataFormat.copies(Number(oldValue), unit.type)
-      return { minTime, maxTime, minValue, maxValue, copies, unit, dot }
     },
     xAxisLabelFormatter (minTime, maxTime) {
       const self = this
