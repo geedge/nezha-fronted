@@ -4042,6 +4042,7 @@ export default {
               tLabels.forEach(tLabel => {
                 if (filterArr.indexOf(tLabel.prop) !== -1) {
                   tLabel.show = false
+                  tLabel.allowed = true
                 }
               })
             })
