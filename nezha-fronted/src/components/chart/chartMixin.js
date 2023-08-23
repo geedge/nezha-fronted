@@ -84,6 +84,7 @@ export default {
       this.isNoData = true
       originalDatas.forEach((originalData, expressionIndex) => {
         originalData.forEach((data, dataIndex) => {
+          console.log(data, 'data')
           if (colorIndex >= 20 && !this.showAllData) {
             colorIndex++
             return
@@ -97,6 +98,9 @@ export default {
             chartInfo.param.rightYAxis && chartInfo.param.rightYAxis.elementNames.forEach(item => {
               if (data.elements.name == item) {
                 s.yAxisIndex = 1
+                data.yAxisIndex = 1
+              } else {
+                data.yAxisIndex = 0
               }
             })
           }
@@ -114,8 +118,8 @@ export default {
             s.yAxisIndex = 1
           }
 
-          if (s.param && s.param.nullType) {
-            s.connectNulls = s.param.nullType !== 'null'
+          if (chartInfo.param && chartInfo.param.nullType) {
+            s.connectNulls = chartInfo.param.nullType !== 'null'
           } else {
             s.connectNulls = false
           }

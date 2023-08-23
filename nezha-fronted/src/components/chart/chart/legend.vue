@@ -44,7 +44,7 @@
             <span v-else :style="{background: item.color}" class="legend-shape"></span>
             <span :title="item.alias ? item.alias : item.name">{{item.alias ? item.alias : item.name}}</span>
           </div>
-          <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value))}}</div>
+          <div v-for="(statistics, index) in item.statistics" :key="index" :class="{'legend-item--inactive': isGrey[index]}" class="legend--table-cell">{{(keepTwoDecimalFull(statistics.value, 'right'))}}</div>
         </div>
       </div>
     </template>
@@ -269,12 +269,16 @@ export default {
       }
     },
     // 四舍五入保留2位小数（不够位数，则用0替补）
-    keepTwoDecimalFull (num) {
+    keepTwoDecimalFull (num, type = 'left') {
+      let chartUnit = this.chartInfo.unit
+      if (type === 'right') {
+        chartUnit = this.chartInfo.param.rightYAxis.unit
+      }
       let result = parseFloat(num)
       if (isNaN(result)) {
         return '--'
       }
-      result = chartDataFormat.getUnit(this.chartInfo.unit ? this.chartInfo.unit : 2).compute(result, null, -1, 2)
+      result = chartDataFormat.getUnit(chartUnit || 2).compute(result, null, -1, 2)
       return result
     },
     getMaxValue (dataArg, chartInfo) {

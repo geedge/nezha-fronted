@@ -195,18 +195,40 @@ export default {
         delete chartOption.tooltip.position
       }
       // 左y轴
-      chartOption.yAxis[0].axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, decimals)
-
+      const leftData = this.chartData.filter(item => !item[0].yAxisIndex)
+      console.log(leftData)
+      const leftInfo = this.getMinMaxFromData(leftData, this.chartInfo.unit) //
+      chartOption.yAxis[0].minInterval = chartDataFormat.Interval(leftInfo.maxValue, leftInfo.copies, leftInfo.unit.type, 'min')
+      chartOption.yAxis[0].maxInterval = chartDataFormat.Interval(leftInfo.maxValue, leftInfo.copies, leftInfo.unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
+      if (this.chartInfo.param.stack) {
+        chartOption.yAxis[0].maxInterval = chartOption.yAxis[0].maxInterval * (Math.ceil(chartOption.series.length / 5) + 1)
+      }
+      if (unit.type === 'Time' || unit.type === 'Date & Time') {
+        delete chartOption.yAxis[0].minInterval
+        delete chartOption.yAxis[0].maxInterval
+      }
       chartOption.yAxis[0].min = this.chartInfo.param.min ? this.chartInfo.param.min : undefined
       chartOption.yAxis[0].max = this.chartInfo.param.max ? this.chartInfo.param.max : undefined
+      chartOption.yAxis[0].axisLabel.formatter = this.yAxisLabelFormatter(minValue, maxValue, copies, unit, decimals)
 
       // 右y轴
       if (this.chartInfo.param.enable.rightYAxis) {
         // 如果全都为右y轴数据 则右y轴显示网格
+        const unit = chartDataFormat.getUnit(lodash.get(this, 'chartInfo.param.rightYAxis.unit', 2))
         const allRight = this.series.every(item => item.yAxisIndex == 1)
         chartOption.yAxis[1].splitLine.show = allRight
-
-        const unit = chartDataFormat.getUnit(lodash.get(this, 'chartInfo.param.rightYAxis.unit', 2))
+        const rightData = this.chartData.filter(item => item[0].yAxisIndex)
+        console.log(rightData, unit)
+        const rightInfo = this.getMinMaxFromData(rightData, lodash.get(this, 'chartInfo.param.rightYAxis.unit', 2)) //
+        chartOption.yAxis[1].minInterval = chartDataFormat.Interval(rightInfo.maxValue, rightInfo.copies, rightInfo.unit.type, 'min')
+        chartOption.yAxis[1].maxInterval = chartDataFormat.Interval(rightInfo.maxValue, rightInfo.copies, rightInfo.unit.type, 'max') * Math.ceil(chartOption.series.length / 5)
+        if (this.chartInfo.param.stack) {
+          chartOption.yAxis[1].maxInterval = chartOption.yAxis[1].maxInterval * (Math.ceil(chartOption.series.length / 5) + 1)
+        }
+        if (unit.type === 'Time' || unit.type === 'Date & Time') {
+          delete chartOption.yAxis[1].minInterval
+          delete chartOption.yAxis[1].maxInterval
+        }
         chartOption.yAxis[1].axisLabel.formatter = this.yAxisLabelFormatter(undefined, undefined, undefined, unit, decimals)
         chartOption.yAxis[1].min = this.chartInfo.param.rightYAxis.min ? this.chartInfo.param.rightYAxis.min : undefined
         chartOption.yAxis[1].max = this.chartInfo.param.rightYAxis.max ? this.chartInfo.param.rightYAxis.max : undefined
@@ -572,7 +594,6 @@ export default {
               }
               color = self.stackTotalColorRight
             }
-
             str += `
             <div class="tooltip__row">
               <div class="row__label" title="${self.$t('dashboard.dashboard.chartTotal')}">
