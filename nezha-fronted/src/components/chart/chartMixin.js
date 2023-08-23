@@ -117,9 +117,8 @@ export default {
           if (!this.dataLink.length) {
             s.cursor = 'default'
           }
-
-          if (s.param && s.param.nullType) {
-            s.connectNulls = s.param.nullType !== 'null'
+          if (chartInfo.param && chartInfo.param.nullType) {
+            s.connectNulls = chartInfo.param.nullType !== 'null'
           } else {
             s.connectNulls = false
           }
