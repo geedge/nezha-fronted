@@ -69,7 +69,19 @@
             </el-form-item>
           <!-- inr -->
           <el-form-item :label='$t("config.assetLabel.interval")' prop="inr">
-            <el-input-number v-model="editRecordRule.inr" size="small" style="width: 100%" :placeholder="$t('recordRule.defalutInterval')" :max="9999999999" :precision="0" :min="1"  :controls="false" class="append_unit" :data-unit="$t('overall.seconds')">
+            <el-input-number
+              v-model="editRecordRule.inr"
+              size="small"
+              style="width: 100%"
+              :placeholder="$t('recordRule.defalutInterval')"
+              :max="9999999999"
+              :precision="0"
+              :min="0"
+              :controls="false"
+              class="append_unit"
+              :data-unit="$t('overall.seconds')"
+              @change="changeInr"
+            >
             </el-input-number>
           </el-form-item>
           <!--state-->
@@ -197,7 +209,7 @@ export default {
           ...this.editRecordRule,
           state: Number(this.editRecordRule.state),
           type: Number(this.editRecordRule.type),
-          inr: Number(this.editRecordRule.inr),
+          inr: this.editRecordRule.inr ? Number(this.editRecordRule.inr) : '',
           labels: this.editRecordRule.labels[0].label != '' ? JSON.stringify(obj) : '{}'
         }
 
@@ -265,6 +277,14 @@ export default {
         return result
       }
       return obj
+    },
+    changeInr () {
+      if (!this.editRecordRule.inr) {
+        setTimeout(() => {
+          console.log(123123)
+          this.editRecordRule.inr = undefined
+        }, 100)
+      }
     }
   },
   watch: {
@@ -277,7 +297,7 @@ export default {
         this.editRecordRule = {
           ...editObj,
           type: editObj.type + '',
-          inr: editObj.inr + '',
+          inr: isNaN(editObj.inr) || !editObj.inr ? undefined : editObj.inr,
           labels: typeof editObj.labels != 'object' ? this.labelsSort(editObj.labels) : editObj.labels,
           state: editObj.state + ''
         }
