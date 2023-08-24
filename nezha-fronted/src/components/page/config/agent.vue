@@ -70,6 +70,7 @@
           </el-form-item>
           <el-form-item   class="half-form-item">
             <button :class="{'nz-btn-disabled':downloadAgentFlag}" :disabled="downloadAgentFlag" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="downloadAgent">{{$t('overall.download')}}</button>
+            <span class="downloading" v-if="downloadAgentFlag">{{$t('overall.downloading')}}</span>
           </el-form-item>
           <div class="right-box-sub-title">{{$t('config.agent.agent.autoScript')}}</div>
           <div style="margin-bottom: 20px;width: 100%"></div>

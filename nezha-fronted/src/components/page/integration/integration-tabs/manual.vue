@@ -16,6 +16,7 @@
           <button :class="{'nz-btn-disabled':newDownloadFlag}" :disabled="newDownloadFlag" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="newDownload">
             <i class="nz-icon nz-icon-download"></i>{{$t('overall.download')}}
           </button>
+          <span class="downloading" v-if="newDownloadFlag">{{$t('overall.downloading')}}</span>
         </div>
       </div>
     </div>
@@ -71,6 +72,7 @@
           <button :class="{'nz-btn-disabled':upDownloadFlag}" :disabled="upDownloadFlag" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="upDownload">
             <i class="nz-icon nz-icon-download"></i>{{$t('overall.download')}}
           </button>
+          <span class="downloading" v-if="upDownloadFlag">{{$t('overall.downloading')}}</span>
         </div>
       </div>
     </div>
