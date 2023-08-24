@@ -163,12 +163,13 @@
           >
             <el-dropdown
               class="metric-selector"
+              style="width: 100%"
               v-if="plugins.indexOf('metric-selector') > -1"
             >
               <el-dropdown-menu style="display: none"></el-dropdown-menu>
               <span
                 :class="{ 'expr-title': projectRightBox }"
-                style="cursor: pointer"
+                style="cursor: pointer;width: 100%;display: inline-block"
                 @click="toggleDropdown"
                 >{{
                   type === "log"

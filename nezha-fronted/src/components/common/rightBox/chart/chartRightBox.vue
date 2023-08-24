@@ -75,7 +75,7 @@
             <chart-config :variables="variables" ref="childrenFrommetrics" :type="'metrics'" v-if="editChart.datasource == 'metrics'" :params.sync="editChart" @change="editChartChange"/>
           </el-tab-pane>
           <el-tab-pane :label="$t('overall.logs')" name="logs">
-            <chart-config :variables="variables" ref="childrenFromlogs" :type="'log'" v-if="editChart.datasource == 'logs'" :params.sync="editChart" @change="editChartChange"/>
+            <chart-config :variables="variables" ref="childrenFromlogs" :type="'log'" v-if="editChart.datasource == 'logs'" :params.sync="editChart" @change="editChartChange" class="datasource-log"/>
           </el-tab-pane>
           <el-tab-pane :label="$t('overall.system')" name="system">
             <system-chart-config :variables="variables" ref="childrenFromsystem" v-if="editChart.datasource == 'system'" :params.sync="editChart" @change="editChartChange"/>
