@@ -21,9 +21,6 @@
             </el-select>
           </el-form-item>
           <el-form-item :label='$t("asset.asset")' label-width="125px" prop="assetId" v-if="!disabled">
-            <!--            <el-select id="module-box-input-asset"  @change="renderEndpoint" v-model="editEndpoint.assetId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">-->
-            <!--              <el-option v-for="item in assetList" :id="'asset-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
-            <!--            </el-select>-->
             <v-selectpage
               :data="assetList"
               :tb-columns="columns"
@@ -260,7 +257,7 @@ export default {
         //     editSoftwareAsset.paramObj.push(editSoftwareAsset.params[key])
         //   })
         // }
-        editSoftwareAsset.assetId = editSoftwareAsset.assetId + ''
+        editSoftwareAsset.assetId = ''
         this.editSoftwareAsset = editSoftwareAsset
       }
     }
@@ -271,13 +268,15 @@ export default {
     this.getSoftwareTypeList()
   },
   mounted () {
+    setTimeout(() => {
+      this.editSoftwareAsset.assetId = this.obj.assetId + ''
+    }, 500)
   },
   methods: {
     clickOutside () {
       this.esc(false)
     },
     iconActive (subItem) {
-      console.log(subItem, this.editSoftwareAsset.icon)
       if (this.editSoftwareAsset.icon === subItem.value) {
         this.editSoftwareAsset.icon = undefined
         this.$set(this.editSoftwareAsset, 'icon', '')
@@ -299,7 +298,13 @@ export default {
           }
           params.params = {}
           params.paramObj.forEach(item => {
-            params.params[item.name] = item.value
+            if (item.type === 'CHECKBOX') {
+              params.params[item.name] = item.value
+            } else if (item.type === 'DATETIME' && JSON.parse(item.param).interval) {
+              params.params[item.name] = item.value
+            } else {
+              params.params[item.name] = item.value[0]
+            }
           })
           params.icon = this.imageUrl
           if (this.editSoftwareAsset.id) {
@@ -367,10 +372,15 @@ export default {
       const findItem = this.softwareTypeArr.find(item => item.id == this.editSoftwareAsset.typeId)
       if (findItem.params) {
         Object.keys(findItem.params).forEach(key => {
-          findItem.params[key].value = this.editSoftwareAsset.params[key] ? this.editSoftwareAsset.params[key].value : findItem.params[key].value
+          if (findItem.params[key].type === 'CHECKBOX') {
+            findItem.params[key].value = this.editSoftwareAsset.params[key] ? this.editSoftwareAsset.params[key] : findItem.params[key].value
+          } else if (findItem.params[key].type === 'DATETIME' && JSON.parse(findItem.params[key].param).interval) {
+            findItem.params[key].value = this.editSoftwareAsset.params[key] ? this.editSoftwareAsset.params[key] : findItem.params[key].value
+          } else {
+            findItem.params[key].value = this.editSoftwareAsset.params[key] ? [this.editSoftwareAsset.params[key]] : findItem.params[key].value
+          }
           this.editSoftwareAsset.paramObj.push(findItem.params[key])
         })
-        console.log(this.editSoftwareAsset.paramObj)
       }
     }
   }
