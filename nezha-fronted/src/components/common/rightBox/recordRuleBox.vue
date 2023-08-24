@@ -69,7 +69,8 @@
             </el-form-item>
           <!-- inr -->
           <el-form-item :label='$t("config.assetLabel.interval")' prop="inr">
-            <el-input v-model="editRecordRule.inr" maxlength="10" show-word-limit :placeholder="''" size="small"></el-input>
+            <el-input-number v-model="editRecordRule.inr" size="small" style="width: 100%" :placeholder="$t('recordRule.defalutInterval')" :max="9999999999" :precision="0" :min="1"  :controls="false" class="append_unit" :data-unit="$t('overall.seconds')">
+            </el-input-number>
           </el-form-item>
           <!--state-->
           <el-form-item :label="$t('overall.state')" prop="state" >

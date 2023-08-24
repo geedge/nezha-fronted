@@ -39,10 +39,10 @@
     <div class="notificationMessage">
       <i class="nz-icon nz-icon-info-normal"></i>
       <div style="margin-left: 15px">
-        <div>. Please make sure the script file exists and has executable permissions</div>
-        <div>. The script file receives two parameters:</div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;① Notification account</div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;② Alert message(json)
+        <div>. {{$t('noftiyMethod.permissions')}}</div>
+        <div>. {{$t('noftiyMethod.parameters')}}</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;① {{$t('noftiyMethod.account')}}</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;② {{$t('noftiyMethod.json')}}
           <el-tooltip placement="top" effect="light">
               <pre slot="content" style="word-break: break-all">
                {
