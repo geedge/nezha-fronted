@@ -735,3 +735,11 @@ i.nz-icon-override{
 .xterm .xterm-viewport {
   background-color: transparent !important;
 }
+.downloading {
+  opacity: .6;
+  color: $--color-primary;
+  margin-left: 10px;
+}
+.el-form-item__error {
+  padding-top: 0;
+}

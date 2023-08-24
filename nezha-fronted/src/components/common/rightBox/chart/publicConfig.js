@@ -31,13 +31,13 @@ export default {
       spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       unitOptions: chartDataFormat.unitOptions(),
       nullTypeList: [{
-        label: 'connected',
+        label: this.$t('chart.connected'),
         value: 'connected'
       }, {
-        label: 'null',
+        label: this.$t('chart.null'),
         value: 'null'
       }, {
-        label: 'zero',
+        label: this.$t('chart.zero'),
         value: 'zero'
       }],
       statisticsList: this.$CONSTANTS.statisticsList,

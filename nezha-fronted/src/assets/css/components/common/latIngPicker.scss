@@ -41,4 +41,24 @@
     width: 48px;
   }
 }
+.append_unit{
+  display: flex;
+  .el-input--small .el-input__inner {
+    border-radius: 4px 0 0 4px;
+    border-right: none;
+  }
+  &::after{
+    content: attr(data-unit);
+    //position: absolute;
+    display: inline-block;
+    top: 0;
+    right: 100%;
+    padding: 0 20px;
+    color: $--color-text-secondary;
+    background-color: $--background-color-base;
+    border: 1px solid $--border-color-light;
+    border-radius:0 4px 4px 0;
+    width: auto;
+  }
+}
 
