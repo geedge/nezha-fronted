@@ -3644,18 +3644,14 @@ export default {
       try {
         // eslint-disable-next-line no-undef
         const go = new Go()
-        console.log(WebAssembly.instantiateStreaming, 'log11')
-        const result = await WebAssembly.instantiateStreaming(fetch('/static/wasm/promqlparser.wasm', {
-          headers: {
-            'content-type': 'application/wasm'
-          }
-        }), go.importObject)
+        const response = await fetch('/static/wasm/promqlparser.wasm')
+        const buffer = await response.arrayBuffer()
+        const result = await WebAssembly.instantiate(buffer, go.importObject)
         go.run(result.instance)
         // eslint-disable-next-line no-undef
-        console.log(parsePromQL, 'log')
         this.parsePromQL = parsePromQL
       } catch (error) {
-        console.error(error, 'log')
+        console.error(error)
       }
     },
     parsePromQL () {},
@@ -4129,7 +4125,6 @@ export default {
           this.expressions.forEach((item, index) => {
             if (item != '' && this.promqlKeys[index].state) {
               const res = this.parsePromQL(item)
-              console.log(res, 'log')
               if (res.status === 'error') {
                 error = true
                 this.$refs['promql-' + index][0].setError(res.message)

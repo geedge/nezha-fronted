@@ -344,13 +344,13 @@ if (arg === 'html') {
       minimizer: [
         new CssMinimizerPlugin(), // 去重压缩css
         new TerserPlugin({ // 压缩JS代码
-          // terserOptions: {
-          //   compress: {
-          //     warnings: false,
-          //     drop_console: true, // 去除console
-          //     pure_funcs: ['console.log']
-          //   }
-          // },
+          terserOptions: {
+            compress: {
+              warnings: false,
+              drop_console: true, // 去除console
+              pure_funcs: ['console.log']
+            }
+          },
           exclude: /manifest.+js/,
           sourceMap: config.build.productionSourceMap
         })
