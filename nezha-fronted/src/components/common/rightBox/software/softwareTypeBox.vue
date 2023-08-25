@@ -47,7 +47,7 @@
                   <vue-tags-input
                     v-model="item.tags"
                     :maxlength="32"
-                    :placeholder="$t('overall.addParameter')"
+                    :placeholder="$t('tagsInput.placeholder')"
                     :tags="item.value"
                     @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
                   />

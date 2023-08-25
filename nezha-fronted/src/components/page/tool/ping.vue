@@ -13,7 +13,7 @@
             class="ipInput"
             style="height: 190px"
             v-model="ip"
-            :placeholder="$t('overall.placeHolder')+' IP'"
+            :placeholder="$t('tagsInput.placeholder')+' IP'"
             :add-from-paste="false"
             :tags="tags"
             @tags-changed="newTags => tags = newTags"
