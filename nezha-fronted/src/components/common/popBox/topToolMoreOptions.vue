@@ -459,7 +459,6 @@ export default {
         reader.onload = (evt) => { // 读取完文件之后会回来这里
           let fileString = evt.target.result // 读取文件内容
           fileString = JSON.parse(fileString)
-          console.log(fileString)
           if (!fileString.topo) {
             this.$message.error(this.$t('IMPORT_FORMAT_ERROR', { 0: '' }))
             return
@@ -468,7 +467,6 @@ export default {
             fileString.topo.pens.forEach(item => {
               item.imageId = ''
             })
-            console.log(fileString)
             this.$post(this.importUrl, fileString).then(response => {
               if (response.code == 200 && response.msg == 'success') {
                 this.$message.success(this.$t('overall.result.success'))

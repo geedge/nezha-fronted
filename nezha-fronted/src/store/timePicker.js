@@ -25,7 +25,6 @@ const timePicker = {
       store.commit('setTimePickerLocked', flag)
     },
     dispatchTimePickerRange (store, range) {
-      console.log('dispatchTimePickerRange', range)
       store.commit('setTimePickerRange', range)
     }
   }

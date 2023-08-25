@@ -457,7 +457,6 @@ export default {
       if (!q.startAt) {
         this.searchTime[2] = 'all'
       }
-      console.log(this.searchTime[2], this.searchTime[0], this.searchTime[1])
       switch (this.searchTime[2]) {
         case '5m' :
           this.defaultPick = 1
@@ -864,7 +863,6 @@ export default {
       const path = this.fromRoute.alertMessage
       const routePathParams = this.$lodash.cloneDeep(param)
       delete routePathParams.statistics
-      console.log(this.searchTime)
       routePathParams.body.startAt = this.searchTime[0] ? this.momentStrToTimestamp(this.searchTime[0]) : ''
       routePathParams.body.endAt = this.searchTime[1] ? this.momentStrToTimestamp(this.searchTime[1]) : ''
       routePathParams.body.timeType = this.searchTime[2]
