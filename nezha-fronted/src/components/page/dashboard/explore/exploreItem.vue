@@ -3644,7 +3644,7 @@ export default {
       try {
         // eslint-disable-next-line no-undef
         const go = new Go()
-        const result = await WebAssembly.instantiateStreaming(fetch('/static/promqlparser.wasm'), go.importObject)
+        const result = await WebAssembly.instantiateStreaming(fetch('/static/wasm/promqlparser.wasm'), go.importObject)
         go.run(result.instance)
         // eslint-disable-next-line no-undef
         this.parsePromQL = parsePromQL
