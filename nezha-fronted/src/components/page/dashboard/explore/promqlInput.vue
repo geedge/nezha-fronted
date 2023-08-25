@@ -1158,10 +1158,20 @@ export default {
       this.expressionList[this.index] = insertTxt
       this.codeMirrorValue[this.index] = insertTxt
       this.initCodeMirror()
-    }
+    },
     /* setMsg:function(){
         this.appendMsg
       } */
+    prettyCode () {
+      this.$nextTick(() => {
+        const text = this.newView.state.doc.toString()
+        this.newView.dispatch(
+          this.newView.state.update({
+            changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
+          })
+        )
+      })
+    }
   },
   watch: {
     dropDownVisible (n, o) {
