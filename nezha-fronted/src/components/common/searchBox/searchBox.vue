@@ -1113,6 +1113,9 @@ export default {
       if (this.targetTab) {
         switch (this.targetTab) {
           case 'alertMessageTab':
+          case 'moduleAlertMessage':
+          case 'endpointAlertMessage':
+          case 'alertRuleAlertMessage':
             return 'alertmessage'
         }
       }
