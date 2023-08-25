@@ -185,7 +185,7 @@ if (arg === 'html') {
         {
           from: path.resolve(__dirname, '../static'),
           to: config.build.assetsSubDirectory,
-          ignore: ['*']
+          ignore: ['**/Titles/**']
         }
       ])
     ]
@@ -336,7 +336,7 @@ if (arg === 'html') {
         {
           from: path.resolve(__dirname, '../static'),
           to: config.build.assetsSubDirectory,
-          ignore: ['*']
+          ignore: ['**/Titles/**']
         }
       ])
     ],
@@ -387,8 +387,7 @@ if (process.env.NODE_ENV == 'development') {
             path.join(__dirname, '../dist', '/static')
           ],
           copy: [
-            { source: path.join(__dirname, '../dist', '/config.json'), destination: path.join(__dirname, '../dist', '/static/config.json') },
-            { source: path.join(__dirname, '../dist', '/wasm/promqlparser.wasm'), destination: path.join(__dirname, '../dist', '/static/wasm/promqlparser.wasm') }
+            { source: path.join(__dirname, '../dist', '/config.json'), destination: path.join(__dirname, '../dist', '/static/config.json') }
           ]
         },
         {
@@ -422,8 +421,7 @@ if (process.env.NODE_ENV == 'development') {
           path.join(__dirname, '../dist', '/static')
         ],
         copy: [
-          { source: path.join(__dirname, '../dist', '/config.json'), destination: path.join(__dirname, '../dist', '/static/config.json') },
-          { source: path.join(__dirname, '../dist', '/wasm/promqlparser.wasm'), destination: path.join(__dirname, '../dist', '/static/wasm/promqlparser.wasm') }
+          { source: path.join(__dirname, '../dist', '/config.json'), destination: path.join(__dirname, '../dist', '/static/config.json') }
         ]
       },
       {
