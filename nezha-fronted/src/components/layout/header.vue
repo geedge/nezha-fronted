@@ -78,6 +78,7 @@ import bus from '../../libs/bus'
 import { mapActions } from 'vuex'
 import guide from '@/components/common/popBox/guide'
 import intro from '@/components/common/intro'
+import { theme } from '@/components/common/js/constants'
 export default {
   name: 'Header',
   components: {
@@ -171,12 +172,28 @@ export default {
       })
     },
     changeLocal (lang) {
-      localStorage.setItem('nz-language', lang)
-      this.$store.commit('setLanguage', lang)
-      this.$i18n.locale = lang
-      setTimeout(() => {
-        window.location.reload()
-      }, 800)
+      this.$get('/sys/user/profile').then(response => {
+        if (response.code === 200) {
+          const userInfo = response.user
+          userInfo.roleIds = userInfo.roles[0].id
+          userInfo.lang = lang
+          this.$put('sys/user/profile', userInfo).then(res => {
+            this.prevent_opt.save = false
+            if (res.code === 200) {
+              localStorage.setItem('nz-language', lang)
+              this.$store.commit('setLanguage', lang)
+              this.$i18n.locale = lang
+              setTimeout(() => {
+                window.location.reload()
+              }, 800)
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        } else {
+          this.$message.error(response.msg)
+        }
+      })
     },
     logout () {
       this.$get('logout').then(() => {

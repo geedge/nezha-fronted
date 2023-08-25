@@ -594,7 +594,6 @@ export default {
       })
       this.onScroll(this.scrollTop)
     },
-
     // group设置repeat 便利变量重复渲染图表
     repeatVariableFn () {
       // 防止group中的chartList执行
@@ -742,7 +741,6 @@ export default {
       handler (newVal, oldVal) {
         // 比较变量 图表是否显示/隐藏
         this.compareVariables()
-
         this.repeatVariableFn()
       }
     },
@@ -785,7 +783,8 @@ export default {
           const position = getLayoutPosition(n)
           this.$store.commit('setChartLastPosition', position)
         }
-        const tempList = n.map(item => {
+        const cloneDataList = this.$lodash.cloneDeep(n)
+        const tempList = cloneDataList.map(item => {
           let param = ''
           let height = item.height || ''
           if (this.isPhone && item.type !== 'group') {
@@ -848,11 +847,10 @@ export default {
           })
         }
         this.$nextTick(() => {
-          this.copyDataList = JSON.parse(JSON.stringify(tempList))
+          this.copyDataList = this.$lodash.cloneDeep(tempList)
           this.tempList = JSON.parse(JSON.stringify(this.copyDataList))
           // 比较变量 图表是否显示/隐藏
           this.compareVariables()
-
           this.repeatVariableFn()
           setTimeout(() => {
             this.gridLayoutShow = true

@@ -160,7 +160,6 @@ export default {
   methods: {
     init () {
       this.loading = false
-      console.log(this.alertLabelData)
     },
     getRemoteText (record) {
       return `${record.loginUser}@${record.host}:${record.port}`

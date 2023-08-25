@@ -3535,6 +3535,8 @@ import logTab from './logTab'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
 import chartRightBox from '@/components/common/rightBox/chart/chartRightBox'
 import copy from '@/components/common/copy'
+import './promqlparser/wasm_exec.js'
+
 export default {
   name: 'exploreItem',
   components: {
@@ -3624,19 +3626,33 @@ export default {
       scrollbarWrap: null
     }
   },
-  created () {
+  async created () {
     this.getPanelData()
     this.resetExpression()
+    await this.loadWebAssembly()
+    this.initQueryFromPath()
   },
   mounted () {
     this.scrollbarWrap = this.$refs.exploreScrollbar
     this.scrollbarWrap.addEventListener('scroll', this.onScroll)
-    this.initQueryFromPath()
   },
   beforeDestroy () {
     this.scrollbarWrap.removeEventListener('scroll', this.onScroll)
   },
   methods: {
+    async loadWebAssembly () {
+      try {
+        // eslint-disable-next-line no-undef
+        const go = new Go()
+        const result = await WebAssembly.instantiateStreaming(fetch('/static/wasm/promqlparser.wasm'), go.importObject)
+        go.run(result.instance)
+        // eslint-disable-next-line no-undef
+        this.parsePromQL = parsePromQL
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    parsePromQL () {},
     onScroll: bus.debounce(function () {
       this.showTopBtn = this.scrollbarWrap.scrollTop > 50
     }, 300),
@@ -3658,7 +3674,6 @@ export default {
     },
     setTimePickerRange () {
       this.$nextTick(() => {
-        console.log(this.timePickerLocked, !this.timePickerRange.nowTimeType)
         if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
           return
         }
@@ -3953,7 +3968,7 @@ export default {
               } else {
                 if (response.error) {
                   this.$refs['promql-' + promqlIndex][0].setError(response.error)
-                } else if(response.msg) {
+                } else if (response.msg) {
                   this.$refs['promql-' + promqlIndex][0].setError(response.msg)
                 } else {
                   this.$refs['promql-' + promqlIndex][0].setError(response)
@@ -4102,6 +4117,24 @@ export default {
         this.setSearchTime(nowTimeType.type, nowTimeType.value)
       }
       if (this.expressions && this.expressions.length >= 1) {
+        let error = false
+        // 对 promql 格式校验及format
+        if (this.showMetrics) {
+          this.expressions.forEach((item, index) => {
+            if (item != '' && this.promqlKeys[index].state) {
+              const res = this.parsePromQL(item)
+              if (res.status === 'error') {
+                error = true
+                this.$refs['promql-' + index][0].setError(res.message)
+              } else {
+                this.$set(this.expressions, index, res.result)
+                this.$refs['promql-' + index][0].prettyCode()
+                this.$refs['promql-' + index][0].setError('')
+              }
+            }
+          })
+        }
+        if (error) { return }
         if (this.showMetrics) {
           this.queryTableData()
           this.queryChartData()

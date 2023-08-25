@@ -114,9 +114,6 @@ export default {
       const consoleBox = document.getElementById('ternimalContainer' + this.idIndex)
       const width = document.body.clientWidth - 10// 可视宽度
       const height = parseInt(consoleBox.offsetHeight) - 10
-      console.log(width, height)
-      console.log(this.term.cols)
-      console.log(this.term.rows)
       const winStyle = {
         width: width,
         height: height,
@@ -367,14 +364,12 @@ export default {
       // }
     },
     renderTerminalSetting () {
-      console.log('renderTerminalSetting')
       this.showWatermark = this.terminalSetting.watermark
       this.wordSeparator = this.terminalSetting.wordSeparator
       this.term.options = {
         scrollback: this.terminalSetting.scrollbackLines,
         wordSeparator: this.terminalSetting.wordSeparator
       }
-      console.log(this.term)
     },
     copySelection () {
       let str = this.term.getSelection()

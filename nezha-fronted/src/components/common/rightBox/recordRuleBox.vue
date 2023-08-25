@@ -281,7 +281,6 @@ export default {
     changeInr () {
       if (!this.editRecordRule.inr) {
         setTimeout(() => {
-          console.log(123123)
           this.editRecordRule.inr = undefined
         }, 100)
       }

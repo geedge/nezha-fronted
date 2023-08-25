@@ -221,7 +221,6 @@ export default {
         if (simpleTemp.indexOf(',') !== -1) {
           simpleTemp = simpleTemp.substr(0, simpleTemp.length - 1)
         }
-        console.log(simpleTemp)
         tableData.tableDateAll = simpleTemp
         tableDates.push(tableData)
       }

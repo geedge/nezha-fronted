@@ -6,7 +6,6 @@ export default {
   methods: {
     renderYAxis (chartDatas, chartInfo, type) {
       let chartData = lodash.cloneDeep(chartDatas)
-      console.log(chartData)
       if (type === 'legend') {
         chartData.forEach(item => {
           item.values = item.data
@@ -32,7 +31,6 @@ export default {
       // 左y轴
       const leftData = chartData.filter(item => item[0] && !item[0].yAxisIndex)
       const leftInfo = this.getMinMaxFromData(leftData, chartInfo.unit, chartInfo.param) //
-      console.log(leftData, leftInfo)
       chartOption.yAxis[0].minInterval = chartDataFormat.Interval(leftInfo.maxValue, leftInfo.copies, leftInfo.unit.type, 'min')
       chartOption.yAxis[0].maxInterval = chartDataFormat.Interval(leftInfo.maxValue, leftInfo.copies, leftInfo.unit.type, 'max') * Math.ceil(this.series.length / 5)
       if (chartInfo.param.stack) {
@@ -65,7 +63,6 @@ export default {
         const allRight = this.series.every(item => item.yAxisIndex == 1)
         chartOption.yAxis[1].splitLine.show = allRight
         const rightData = chartData.filter(item => item[0] && item[0].yAxisIndex)
-        console.log(rightData, unit)
         const rightInfo = this.getMinMaxFromData(rightData, lodash.get(chartInfo, 'param.rightYAxis.unit', 2), lodash.get(chartInfo, 'param.rightYAxis', {}))//
         chartOption.yAxis[1].minInterval = chartDataFormat.Interval(rightInfo.maxValue, rightInfo.copies, rightInfo.unit.type, 'min')
         chartOption.yAxis[1].maxInterval = chartDataFormat.Interval(rightInfo.maxValue, rightInfo.copies, rightInfo.unit.type, 'max') * Math.ceil(this.series.length / 5)
@@ -95,7 +92,6 @@ export default {
           delete chartOption.yAxis[1].max
         }
       }
-      console.log(chartOption)
       return chartOption
     },
     getMinMaxFromData (originalDatas, chartUnit = 2, params) {

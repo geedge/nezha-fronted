@@ -188,7 +188,7 @@
                     <vue-tags-input
                       v-model="item.tags"
                       :maxlength="32"
-                      :placeholder="$t('overall.addParameter')"
+                      :placeholder="$t('tagsInput.placeholder')"
                       :tags="item.value"
                       @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
                     />
@@ -250,7 +250,7 @@
                         :maxlength="32"
                         ref="relabelTag"
                         tabindex="9999"
-                        :placeholder="$t('overall.addParameter')"
+                        :placeholder="$t('tagsInput.placeholder')"
                         :tags="item.source_labels"
                         @before-adding-tag="beforeAddingTag"
                         @blur="relabelTabBlur"
@@ -421,7 +421,7 @@
                       <vue-tags-input
                         v-model="item.namespaces.tags"
                         :maxlength="32"
-                        :placeholder="$t('overall.addParameter')"
+                        :placeholder="$t('tagsInput.placeholder')"
                         :tags="item.namespaces.names"
                         @tags-changed="(newTags)=>{logsTagsChange(newTags,item)}"
                       />
@@ -475,7 +475,7 @@
                               :maxlength="32"
                               :ref="'logsRelabelTag'+index+subIndex"
                               tabindex="9999"
-                              :placeholder="$t('overall.addParameter')"
+                              :placeholder="$t('tagsInput.placeholder')"
                               :tags="subItem.source_labels"
                               @before-adding-tag="beforeAddingTag"
                               @blur="logsRelabelTabBlur(index,subIndex)"
