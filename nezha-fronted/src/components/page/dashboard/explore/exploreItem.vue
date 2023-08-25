@@ -3658,7 +3658,6 @@ export default {
     },
     setTimePickerRange () {
       this.$nextTick(() => {
-        console.log(this.timePickerLocked, !this.timePickerRange.nowTimeType)
         if (!this.timePickerLocked || !this.timePickerRange.nowTimeType) {
           return
         }

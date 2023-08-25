@@ -155,7 +155,6 @@ export default {
       if (timePickerLocked) {
         const timePickerRange = localStorage.getItem('nz-time-picker-range') ? JSON.parse(localStorage.getItem('nz-time-picker-range')) : {}
         this.$store.dispatch('dispatchTimePickerRange', timePickerRange)
-        console.log('mounted', timePickerRange, this.timePickerLocked)
       }
       this.$store.dispatch('dispatchTimePickerLocked', timePickerLocked)
     }

@@ -332,7 +332,6 @@ export default {
       this.renderTopology()
     },
     renderTopology () {
-      console.log('render')
       getTopology(this.meta2dId).render()
     },
     penEnter (pen, e) { // 移入节点

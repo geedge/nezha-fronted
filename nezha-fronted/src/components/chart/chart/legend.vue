@@ -198,7 +198,6 @@ export default {
         const series = this.$lodash.cloneDeep(this.series)
         const dataArg = series.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
         const option = this.renderYAxis(dataArg, chartInfo, 'legend')
-        console.log(option)
         getChart(this.chartId) && getChart(this.chartId).setOption({
           yAxis: [
             ...option.yAxis

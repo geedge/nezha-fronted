@@ -226,7 +226,6 @@ export default {
     if (timePickerLocked) {
       const timePickerRange = localStorage.getItem('nz-time-picker-range') ? JSON.parse(localStorage.getItem('nz-time-picker-range')) : {}
       this.$store.dispatch('dispatchTimePickerRange', timePickerRange)
-      console.log('mounted', timePickerRange, this.timePickerLocked)
     }
     this.$store.dispatch('dispatchTimePickerLocked', timePickerLocked)
   },
@@ -353,7 +352,6 @@ export default {
       localStorage.setItem('nz-time-picker-locked', JSON.stringify(this.timePickerLocked))
       this.$store.dispatch('dispatchTimePickerLocked', this.timePickerLocked)
       if (this.timePickerLocked) {
-        console.log(this.searchTime, this.nowTimeType)
         this.$store.dispatch('dispatchTimePickerRange', {
           time: this.searchTime,
           nowTimeType: this.nowTimeType

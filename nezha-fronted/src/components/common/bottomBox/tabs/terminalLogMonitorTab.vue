@@ -81,7 +81,6 @@ export default {
   methods: {
     // 创建连接
     create () {
-      console.log('create')
       const that = this
       if (this.terminalSocket) {
         this.terminalSocket.close()
@@ -206,7 +205,6 @@ export default {
     },
 
     consoleResize () {
-      console.log('consoleResize')
       this.$nextTick(() => {
         this.termFitAddon.fit()
       })

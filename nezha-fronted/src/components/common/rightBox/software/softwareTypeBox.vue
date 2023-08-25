@@ -187,7 +187,6 @@ export default {
       this.esc(false)
     },
     iconActive (subItem) {
-      console.log(subItem, this.editSoftwareType.icon)
       if (this.editSoftwareType.icon === subItem.value) {
         this.editSoftwareType.icon = undefined
         this.$set(this.editSoftwareType, 'icon', '')
