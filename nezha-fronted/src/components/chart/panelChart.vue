@@ -52,6 +52,7 @@
       :isExportHtml="isExportHtml"
       :filter="filter"
       :from="from"
+      :showTool="showTool"
       @refreshLogs="refreshLogs"
       :show-header="showHeader"
       :isError="isError"

@@ -412,6 +412,9 @@
       .nz-icon{
         color: $--background-color-1 !important;
       }
+      .nz-icon-override{
+        color: $--color-text-regular !important;
+      }
     }
   }
   .nz-icon-override{
@@ -419,6 +422,7 @@
     font-size: 15px;
     margin-left: 5px;
     vertical-align: middle;
+    color: $--color-text-regular !important;
   }
   .legend-item:hover {
     background-color: $--background-color-1;

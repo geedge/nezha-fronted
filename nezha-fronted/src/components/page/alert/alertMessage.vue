@@ -564,7 +564,7 @@ export default {
         })
         arrState.forEach(state => {
           const batchDeleteArr = this.batchDeleteObjs.filter(m => m.state === state)
-          promiseArr.push(this.$delete(this.url + '?ids=' + batchDeleteArr.map(m => m.id).join(',') + '&state=' + state))
+          promiseArr.push(this.$delete('/alert/message' + '?ids=' + batchDeleteArr.map(m => m.id).join(',') + '&state=' + state))
         })
         Promise.all(promiseArr)
           .then(res => {
@@ -595,7 +595,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete(this.url + '?ids=' + row.id + '&state=' + row.state).then(response => {
+        this.$delete('/alert/message' + '?ids=' + row.id + '&state=' + row.state).then(response => {
           if (response.code === 200) {
             this.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })

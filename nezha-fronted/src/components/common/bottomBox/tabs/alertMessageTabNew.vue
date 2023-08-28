@@ -402,7 +402,7 @@ export default {
         // } else {
         //   url = this.url
         // }
-        url = this.urlNew
+        url = this.url
         this.$delete(url + '?ids=' + row.id + '&state=' + row.state).then(response => {
           if (response.code === 200) {
             self.delFlag = true
@@ -604,7 +604,7 @@ export default {
             this.alertSilenceUrl = `/alert/silence/${this.obj.id}/rel`
             url = this.alertSilenceUrl
           } else {
-            url = this.urlNew
+            url = this.url
           }
           this.$put(url, this.deleteBox).then(res => {
             if (res.code === 200) {

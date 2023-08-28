@@ -114,7 +114,6 @@ export default {
         }, {
           label: 'URL',
           prop: 'url',
-          visibility: 'disabled',
           show: true
         }
       ],

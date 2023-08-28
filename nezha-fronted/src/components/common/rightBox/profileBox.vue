@@ -43,7 +43,7 @@
                        v-model="editProfile.theme"
                        popper-class="right-box-select-top prevent-clickoutside"
                        size="small">
-                <el-option v-for="item in theme" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in theme" :key="item.value" :label="item.label === 'light' ? $t('theme.light'):$t('theme.dark')" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('profile.source')" prop="source">
