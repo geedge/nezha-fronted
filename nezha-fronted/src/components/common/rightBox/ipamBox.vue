@@ -31,13 +31,14 @@
           <div class="cidr-title">CIDR</div>
           <div class="cidr">
             <el-form-item class="cidr-addr" prop="addr">
-              <el-input maxlength="256" rows="4" show-word-limit :placeholder="$t('overall.address')" v-model="editipam.addr" size="small"></el-input>
+              <el-input maxlength="256" rows="4" show-word-limit :placeholder="$t('overall.address')" v-model="editipam.addr" :disabled="!!editipam.id" size="small"></el-input>
             </el-form-item>
             <el-form-item prop="mask">
               <el-select id="account-input-language"
                          class="right-box__select"
                          v-model="editipam.mask"
                          placeholder="mask"
+                         :disabled="!!editipam.id"
                          popper-class="right-box-select-top right-box__select-width prevent-clickoutside"
                          size="small">
                 <template v-for="(item, index) in maskList">
