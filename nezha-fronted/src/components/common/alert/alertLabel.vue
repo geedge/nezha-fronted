@@ -645,17 +645,19 @@
           {{ alertLabelData && alertLabelData.id ? alertLabelData.id : "--" }}
         </div>
       </div>
-       <div class="alert-label-box name-labe">
+      <div class="alert-label-box name-labe document-copy-block">
         <div class="alert-label-title">{{$t('overall.name')}}</div>
-        <div class="alert-label-value">
+        <div class="alert-label-value document-copy-text">
           {{ alertLabelData && alertLabelData.name ? alertLabelData.name : "--" }}
         </div>
+        <i v-if="alertLabelData && alertLabelData.name" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.name)" :title="$t('overall.copyText')"></i>
       </div>
-      <div class="alert-label-box">
+      <div class="alert-label-box document-copy-block">
         <div class="alert-label-title">{{ $t("profile.username") }}</div>
-        <div class="alert-label-value">
+        <div class="alert-label-value document-copy-text">
           {{ alertLabelData && alertLabelData.username ? alertLabelData.username : "--" }}
         </div>
+        <i v-if="alertLabelData && alertLabelData.username" class="nz-icon nz-icon-override" style="visibility: hidden" @click.stop="onCopy(alertLabelData.username)" :title="$t('overall.copyText')"></i>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{ $t("profile.role") }}</div>
