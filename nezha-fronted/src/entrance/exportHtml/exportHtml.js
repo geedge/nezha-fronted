@@ -31,13 +31,27 @@ import VueClipboard from 'vue-clipboard2'
 
 // 二次封装message 显示自动关闭进度条
 import Message from '@/components/common/message/index'
-
+// v-md-editor 预览组件
+import VMdPreview from '@kangc/v-md-editor/lib/preview'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github'
+import hljs from 'highlight.js'
+import createCopyCodePlugin from '@/components/common/copy-code'
 Vue.component('element-set', elementSet) // 公用设置表头
 Vue.component('pick-time', pickTime)
 Vue.component('nzDataList', nzDataList)
 Vue.component('chartList', chartList)
 Vue.component('Pagination', Pagination) // 公用分页组件
-
+VMdPreview.xss.extend({
+  // extend white list
+  whiteList: {
+    button: ['title']
+  }
+})
+VMdPreview.use(githubTheme, {
+  Hljs: hljs
+})
+VMdPreview.use(createCopyCodePlugin())
+Vue.use(VMdPreview)
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(Vuex)
