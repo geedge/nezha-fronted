@@ -376,3 +376,8 @@
     color: #FF8C0E !important;
   }
 }
+.datasource-log {
+  .el-tabs__content {
+    overflow: unset;
+  }
+}

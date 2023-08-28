@@ -32,7 +32,7 @@
                         v-model="tag"
                         :maxlength="32"
                         :class="monitor.interface_name.length !== 0 ? 'interface-name' : ''"
-                        :placeholder="$t('overall.add.interface_name')"
+                        :placeholder="$t('tagsInput.placeholder')"
                         :tags="monitor.interface_name"
                         @tags-changed="newTags=> monitor.interface_name = newTags"
                       />

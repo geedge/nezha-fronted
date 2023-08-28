@@ -76,25 +76,37 @@
                :show-close="true" width="620px" class="nz-dialog" @closed="closeDialog">
 
       <div v-my-loading="dialogLoading">
-        <div class="login-dialog-title">
-          1 Download your preferred authenticator app to your phone (any will work). If you don't
+        <div class="login-dialog-title" v-if="lang === 'en'">
+          1. Download your preferred authenticator app to your phone (any will work). If you don't
           have a preferred app, we recommend using <span @click="jumpDlw" class="verify-link">Google Authenticator.</span>
         </div>
-        <div class="login-dialog-title">
-          2 Use your app to take a photo of the QR code.
+        <div class="login-dialog-title" v-else-if="lang=== 'zh'">
+          1. 将您喜欢的验证器应用程序下载到您的手机上（任何应用程序都可以）。
+          如果您没有首选应用程序，我们建议您使用 <span @click="jumpDlw" class="verify-link">Google Authenticator.</span>
+        </div>
+        <div class="login-dialog-title" v-if="lang=== 'en'">
+          2. Use your app to take a photo of the QR code.
+        </div>
+        <div class="login-dialog-title" v-else-if="lang=== 'zh'">
+          2. 使用您的应用程序为二维码拍照。
         </div>
         <div class="qrCode-box">
           <div id="qrCode" ref="qrCodeDiv" class="qrCode-content"></div>
           <div class="qrCode-text">
-            <div>Type this code down if you can't take a photo.</div>
+            <div v-if="lang=== 'en'">Type this code down if you can't take a photo.</div>
+            <div v-else-if="lang=== 'zh'">如果你不能拍照，请键入此代码。</div>
             <div class="qrCode-authKey">{{authKey}}</div>
           </div>
         </div>
 
-        <div class="login-dialog-title">
+        <div class="login-dialog-title" v-if="lang=== 'en'">
           3. Enter the 6-digit code provided by your app and then verify.
         </div>
-        <div class="enter-code">Enter Code</div>
+        <div class="login-dialog-title" v-else-if="lang=== 'zh'">
+          3. 输入应用程序提供的6位数代码，然后进行验证。
+        </div>
+        <div class="enter-code" v-if="lang=== 'en'">Enter Code</div>
+        <div class="enter-code" v-else-if="lang=== 'zh'">输入代码</div>
         <el-input v-model="bindAuthCode" size="small" style="width: 50%" @keydown.enter="bindCode"></el-input>
       </div>
       <div slot="footer" class="footer">
@@ -108,9 +120,13 @@
     </el-dialog>
     <el-dialog :visible.sync="fileShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false' :show-close="true" width="620px" class="nz-dialog" @closed="fileClosed">
       <div>
-        <div class="login-dialog-title">
+        <div class="login-dialog-title"  v-if="lang=== 'en'">
           Should you ever lose your phone or access to your one time password secret, each of these recovery codes can be used one time each to regain access to your account.
           Please save them in a safe place, or you will lose access to your account.
+        </div>
+        <div class="login-dialog-title"  v-else-if="lang=== 'zh'">
+          如果您丢失了您的手机或一次性密码密码，每个恢复代码都可以使用一次，以重新访问您的帐户。
+          请将它们保存在安全的地方，否则您将无法访问您的帐户。
         </div>
         <div class="login-dialog-title2">
           <div class="login-dialog-recover">
@@ -214,6 +230,7 @@ export default {
       ],
       // 后台数据
       userList: {},
+      lang: this.$store.getters.getLanguage || 'en',
       // 头像 name
       profileName: '',
       rules: {

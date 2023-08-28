@@ -67,6 +67,9 @@
               <i v-if="scope.row[item.prop].name" class="nz-icon nz-icon-override" style="visibility: hidden" @click="onCopy(scope.row[item.prop].name)" :title="$t('overall.copyText')"></i>
             </div>
           </template>
+          <template v-else-if="item.prop === 'type'">
+            {{scope.row.type ? scope.row.type.name : '-'}}
+          </template>
           <span v-else-if="scope.row[item.prop]" :class="item.prop === 'remark'? 'el-table-remark':''">{{scope.row[item.prop]}}</span>
           <span v-else>-</span>
         </template>

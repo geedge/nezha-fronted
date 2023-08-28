@@ -21,9 +21,6 @@
             </el-select>
           </el-form-item>
           <el-form-item :label='$t("asset.asset")' label-width="125px" prop="assetId" v-if="!disabled">
-            <!--            <el-select id="module-box-input-asset"  @change="renderEndpoint" v-model="editEndpoint.assetId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">-->
-            <!--              <el-option v-for="item in assetList" :id="'asset-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
-            <!--            </el-select>-->
             <v-selectpage
               :data="assetList"
               :tb-columns="columns"
@@ -57,6 +54,92 @@
           <div class="form__sub-title" >
             <span>{{$t('softwareAsset.Connector')}}</span>
           </div>
+<!--          <el-form-item v-for="(value, key) in editSoftwareAsset.params" :label="key" :key="key">-->
+<!--            <el-input maxlength="128" show-word-limit v-model="editSoftwareAsset.params[key]" size="small" type="text" @input="$forceUpdate()"></el-input>-->
+<!--          </el-form-item>-->
+          <el-form-item prop="paramObj">
+            <div v-for="(label, i) in editSoftwareAsset.paramObj" :key="i" class="form__dotted-item form__dotted-item-required">
+              <el-form-item :prop="'paramObj.' + i + '.value.0'" :rules="[ { required: JSON.parse(label.param).required === '1', message: $t('validate.required'), trigger: 'blur' }]">
+                <template v-slot:label>
+                  <div class="form__labels-label">
+                    <span>{{label.name}}</span>
+                  </div>
+                </template>
+                <template v-if="label.action !== 1">
+                  <template v-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXT">
+                    <el-input v-model="label.value[0]" size="small"/>
+                  </template>
+                  <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.PASSWORD">
+                    <el-input v-model="label.value[0]" type="password" size="small"/>
+                  </template>
+                  <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA">
+                    <el-input v-model="label.value[0]" :maxlength="4096" show-word-limit size="small" :rows="2" type="textarea"/>
+                  </template>
+                  <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.RADIO">
+                    <el-radio-group v-model="label.value[0]">
+                      <el-radio v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name">{{item.name}}</el-radio>
+                    </el-radio-group>
+                  </template>
+                  <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.CHECKBOX">
+                    <el-checkbox-group v-model="label.value">
+                      <el-checkbox v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name" :value="item.name"></el-checkbox>
+                    </el-checkbox-group>
+                  </template>
+                  <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.SELECT">
+                    <el-select v-model="label.value[0]" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small">
+                      <el-option v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name" :value="item.name"></el-option>
+                    </el-select>
+                  </template>
+                  <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.INTEGER">
+                    <el-input v-model="label.value[0]" oninput="value=value.replace(/[^\d]/g,'')" size="small"></el-input>
+                  </template>
+                  <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.DOUBLE">
+                    <el-input-number v-model="label.value[0]" :controls="false" size="small" :precision="JSON.parse(label.param).decimals" style="width: 100%;text-align: left" :max="10000000000000000000" :min="-10000000000000000000"></el-input-number>
+                  </template>
+                  <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.DATETIME">
+                    <template v-if="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.time">
+                      <div v-if="JSON.parse(label.param).interval" style="display: flex; justify-content: space-between">
+                        <el-time-select v-model="label.value[0]" size="small"></el-time-select>
+                        <el-time-select v-model="label.value[1]" size="small"></el-time-select>
+                      </div>
+                      <template v-else>
+                        <el-time-select v-model="label.value[0]" size="small" style="width: 100%"></el-time-select>
+                      </template>
+                    </template>
+                    <template v-else>
+                      <template v-if="JSON.parse(label.param).interval">
+                        <my-date-picker
+                          id="asset-box-input-purchase-date"
+                          v-model="label.value"
+                          :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'daterange' : 'datetimerange'"
+                          placeholder=""
+                          popper-class="right-box-select-top"
+                          size="small"
+                          :format="timeFormatStrToDatePickFormat(timeFormatMain,JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date)"
+                          style="width: 100%">
+                        </my-date-picker>
+                      </template>
+                      <template v-else>
+                        <my-date-picker
+                          id="asset-box-input-parchase-date"
+                          v-model="label.value[0]"
+                          :type="JSON.parse(label.param).subType"
+                          placeholder=""
+                          popper-class="right-box-select-top"
+                          size="small"
+                          style="width: 100%"
+                          :format="timeFormatStrToDatePickFormat(timeFormatMain, JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date)">
+                        </my-date-picker>
+                      </template>
+                    </template>
+                  </template>
+                  <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.EMAIL">
+                    <el-input v-model="label.value[0]" size="small"/>
+                  </template>
+                </template>
+              </el-form-item>
+            </div>
+          </el-form-item>
         </el-form>
       </div>
     </div>
@@ -100,6 +183,7 @@ export default {
     const vm = this
     return {
       assetConstants,
+      disabled: false,
       editSoftwareAsset: {
         id: '',
         name: '',
@@ -157,7 +241,7 @@ export default {
             return row.dc ? row.dc.name : ''
           }
         }
-      ],
+      ]
     }
   },
   watch: {
@@ -167,9 +251,16 @@ export default {
       handler (n) {
         this.isEdit = true
         const editSoftwareAsset = JSON.parse(JSON.stringify(n))
+        editSoftwareAsset.paramObj = []
+        // if (editSoftwareAsset.params) {
+        //   Object.keys(editSoftwareAsset.params).forEach(key => {
+        //     editSoftwareAsset.paramObj.push(editSoftwareAsset.params[key])
+        //   })
+        // }
+        editSoftwareAsset.assetId = ''
         this.editSoftwareAsset = editSoftwareAsset
       }
-    },
+    }
   },
   created () {
     this.getProjectList()
@@ -177,13 +268,15 @@ export default {
     this.getSoftwareTypeList()
   },
   mounted () {
+    setTimeout(() => {
+      this.editSoftwareAsset.assetId = this.obj.assetId + ''
+    }, 500)
   },
   methods: {
     clickOutside () {
       this.esc(false)
     },
     iconActive (subItem) {
-      console.log(subItem, this.editSoftwareAsset.icon)
       if (this.editSoftwareAsset.icon === subItem.value) {
         this.editSoftwareAsset.icon = undefined
         this.$set(this.editSoftwareAsset, 'icon', '')
@@ -203,11 +296,17 @@ export default {
           const params = {
             ...this.editSoftwareAsset
           }
-          params.icon = this.imageUrl
           params.params = {}
           params.paramObj.forEach(item => {
-            params.params[item.name] = item
+            if (item.type === 'CHECKBOX') {
+              params.params[item.name] = item.value
+            } else if (item.type === 'DATETIME' && JSON.parse(item.param).interval) {
+              params.params[item.name] = item.value
+            } else {
+              params.params[item.name] = item.value[0]
+            }
           })
+          params.icon = this.imageUrl
           if (this.editSoftwareAsset.id) {
             this.$put(this.url, params).then(res => {
               this.prevent_opt.save = false
@@ -254,6 +353,9 @@ export default {
       this.$get('asset/software/type', { pageSize: -1, pageNo: 1 }).then(response => {
         if (response.code === 200) {
           this.softwareTypeArr = response.data.list
+          if (this.editSoftwareAsset.typeId) {
+            this.renderParams()
+          }
         }
       })
     },
@@ -266,7 +368,20 @@ export default {
       }
     },
     renderParams () {
-      this.editSoftwareAsset.params = {}
+      this.editSoftwareAsset.paramObj = []
+      const findItem = this.softwareTypeArr.find(item => item.id == this.editSoftwareAsset.typeId)
+      if (findItem.params) {
+        Object.keys(findItem.params).forEach(key => {
+          if (findItem.params[key].type === 'CHECKBOX') {
+            findItem.params[key].value = this.editSoftwareAsset.params[key] ? this.editSoftwareAsset.params[key] : findItem.params[key].value
+          } else if (findItem.params[key].type === 'DATETIME' && JSON.parse(findItem.params[key].param).interval) {
+            findItem.params[key].value = this.editSoftwareAsset.params[key] ? this.editSoftwareAsset.params[key] : findItem.params[key].value
+          } else {
+            findItem.params[key].value = this.editSoftwareAsset.params[key] ? [this.editSoftwareAsset.params[key]] : findItem.params[key].value
+          }
+          this.editSoftwareAsset.paramObj.push(findItem.params[key])
+        })
+      }
     }
   }
 }

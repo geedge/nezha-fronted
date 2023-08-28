@@ -145,7 +145,6 @@ export default {
                 } else {
                   this.$emit('clickProfile', false)
                 }
-                console.log(this.editProfile)
                 localStorage.setItem('nz-userInfo', JSON.stringify(this.editProfile))
                 bus.$emit('login')
               } else {

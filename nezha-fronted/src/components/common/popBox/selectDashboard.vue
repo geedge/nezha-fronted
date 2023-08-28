@@ -383,8 +383,7 @@ export default {
           this.$set(this.$parent.showPanel, 'starred', this.starredList.some(item => item.id === this.showPanel.id) ? 1 : 0)
         }
       })
-    },
-    300, true),
+    }, 300, true),
     // 删除收藏
     delStarred: bus.debounceFn(function (data) {
       this.$delete('/sys/user/starred?type=dashboard&tid=' + data.id).then(async response => {

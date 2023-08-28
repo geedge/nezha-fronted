@@ -163,12 +163,13 @@
           >
             <el-dropdown
               class="metric-selector"
+              style="width: 100%"
               v-if="plugins.indexOf('metric-selector') > -1"
             >
               <el-dropdown-menu style="display: none"></el-dropdown-menu>
               <span
                 :class="{ 'expr-title': projectRightBox }"
-                style="cursor: pointer"
+                style="cursor: pointer;width: 100%;display: inline-block"
                 @click="toggleDropdown"
                 >{{
                   type === "log"
@@ -1157,10 +1158,20 @@ export default {
       this.expressionList[this.index] = insertTxt
       this.codeMirrorValue[this.index] = insertTxt
       this.initCodeMirror()
-    }
+    },
     /* setMsg:function(){
         this.appendMsg
       } */
+    prettyCode () {
+      this.$nextTick(() => {
+        const text = this.newView.state.doc.toString()
+        this.newView.dispatch(
+          this.newView.state.update({
+            changes: { from: 0, to: text.length, insert: this.codeMirrorValue[this.index] }
+          })
+        )
+      })
+    }
   },
   watch: {
     dropDownVisible (n, o) {

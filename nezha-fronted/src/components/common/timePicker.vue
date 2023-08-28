@@ -226,7 +226,6 @@ export default {
     if (timePickerLocked) {
       const timePickerRange = localStorage.getItem('nz-time-picker-range') ? JSON.parse(localStorage.getItem('nz-time-picker-range')) : {}
       this.$store.dispatch('dispatchTimePickerRange', timePickerRange)
-      console.log('mounted', timePickerRange, this.timePickerLocked)
     }
     this.$store.dispatch('dispatchTimePickerLocked', timePickerLocked)
   },
@@ -353,7 +352,6 @@ export default {
       localStorage.setItem('nz-time-picker-locked', JSON.stringify(this.timePickerLocked))
       this.$store.dispatch('dispatchTimePickerLocked', this.timePickerLocked)
       if (this.timePickerLocked) {
-        console.log(this.searchTime, this.nowTimeType)
         this.$store.dispatch('dispatchTimePickerRange', {
           time: this.searchTime,
           nowTimeType: this.nowTimeType
@@ -381,10 +379,14 @@ export default {
           this.oldSearchTime[1] = bus.timeFormate(this.oldSearchTime[1])
         }
       }
-      if (moment(this.oldSearchTime[0], timeFormatMain).isValid() && moment(this.oldSearchTime[1], timeFormatMain).isValid() && !moment(this.oldSearchTime[0]).isBefore(this.oldSearchTime[1])) {
+      let isBefore = true
+      if (moment(this.oldSearchTime[0], timeFormatMain).isValid() && moment(this.oldSearchTime[1], timeFormatMain).isValid()) {
+        isBefore = this.momentStrToTimestamp(this.oldSearchTime[0]) < this.momentStrToTimestamp(this.oldSearchTime[1])
+      }
+      if (moment(this.oldSearchTime[0], timeFormatMain).isValid() && moment(this.oldSearchTime[1], timeFormatMain).isValid() && !isBefore) {
         this.oldSearchTimeError[0] = true
         this.inputError = this.$t('date.fromGreaterTo')
-      } else if (moment(this.oldSearchTime[0], timeFormatMain).isValid() && moment(this.oldSearchTime[1], timeFormatMain).isValid() && moment(this.oldSearchTime[0]).isBefore(this.oldSearchTime[1])) {
+      } else if (moment(this.oldSearchTime[0], timeFormatMain).isValid() && moment(this.oldSearchTime[1], timeFormatMain).isValid() && isBefore) {
         this.oldSearchTimeError[0] = false
       }
     },
