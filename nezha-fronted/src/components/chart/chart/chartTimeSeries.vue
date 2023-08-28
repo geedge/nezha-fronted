@@ -246,9 +246,31 @@ export default {
           }
 
           myChart.on('mouseover', (params) => {
+            if (this.chartInfo.type !== 'point') {
+              if (this.tooltip.activeIndex != params.seriesIndex) {
+                const option = myChart.getOption()
+                option.series[params.seriesIndex].symbol = 'circle'
+                option.series[params.seriesIndex].emphasis.itemStyle = {
+                  opacity: 1,
+                  borderColor: this.hexToRgb(params.color, 0.4),
+                  borderWidth: 6
+                }
+                myChart.setOption(option, true)
+              }
+            }
             this.tooltip.activeIndex = params.seriesIndex
           })
-          myChart.on('mouseout', () => {
+          myChart.on('mouseout', (params) => {
+            if (this.chartInfo.type !== 'point') {
+              const option = myChart.getOption()
+              option.series.forEach(item => {
+                item.symbol = 'emptyCircle'
+                item.emphasis.itemStyle = {
+                  opacity: 1
+                }
+              })
+              myChart.setOption(option, true)
+            }
             this.tooltip.activeIndex = undefined
           })
 
@@ -509,7 +531,7 @@ export default {
 
             // 鼠标悬浮 series data symbol 时，tooltip 中相应的legend 高亮显示
             str += `
-            <div class="${(self.tooltip.activeIndex == item.seriesIndex && self.isGrey.filter(value => value === false).length > 1) ? 'tooltip__row highlight' : 'tooltip__row'}">
+            <div class="${(self.tooltip.activeIndex == item.seriesIndex) ? 'tooltip__row highlight' : 'tooltip__row'}">
               <div class="row__label">
                 <span class="${className}" style="background-color: ${color};color: ${color}"></span>
                 <span>${seriesName}</span>

@@ -246,6 +246,10 @@ export default {
       }
     },
     hoverLegend (legendName, index, type) {
+      // legend 已经取消显示，鼠标悬浮，不开启 高亮效果
+      if (this.isGrey[index]) {
+        return false
+      }
       if (this.isTimeSeries) {
         getChart(this.chartId) && getChart(this.chartId).dispatchAction({
           type: type,

@@ -114,6 +114,7 @@ export default {
             }
             if (chartInfo.param.enable && chartInfo.param.enable.thresholds && !lodash.isEmpty(chartInfo.param.thresholds) && chartInfo.param.thresholds.length) { // 阈值
               s.markLine = {
+                silent: true,
                 symbol: 'circle',
                 symbolSize: 5
               }
