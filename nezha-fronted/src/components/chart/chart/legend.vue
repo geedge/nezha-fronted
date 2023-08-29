@@ -272,10 +272,12 @@ export default {
       this.$emit('clickLegendD3', this.isGrey)
     },
     hoverLegend (legendName, index, type) {
+      // legend 已经取消显示，鼠标悬浮，不开启 高亮效果
+      if (this.isGrey[index]) {
+        return false
+      }
       if (this.chartInfo.type === 'pie' || this.chartInfo.type === 'doughnut' || this.chartInfo.type === 'rose') {
-        if (!this.isGrey[index]) {
-          this.$emit('hoverLegendD3', legendName, index, type)
-        }
+        this.$emit('hoverLegendD3', legendName, index, type)
       } else if (this.isTimeSeries) {
         getChart(this.chartId) && getChart(this.chartId).dispatchAction({
           type: type,
