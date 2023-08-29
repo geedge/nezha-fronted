@@ -156,7 +156,7 @@ export const chartTimeSeriesLineOption = {
     smooth: 0.2, // 曲线变平滑
     // showSymbol: false,
     itemStyle: {
-      opacity: 0
+      opacity: 0.001
     },
     data: [],
     lineStyle: {
